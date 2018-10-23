@@ -27,7 +27,7 @@ function search(str) {
     return;
   }
 
-  var categories = { "blog": [], "groups": [], "software": [], "tactics": [], "techniques": [] };
+  var categories = { "techniques": [], "tactics": [], "groups": [], "software": [] };
 
   $(".search-results").css('visibility', 'visible');
   $(".search-results").html("");
