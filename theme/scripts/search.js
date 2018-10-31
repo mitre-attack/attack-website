@@ -75,7 +75,7 @@ function search(str) {
             $("." + key).append(categories[key][i]);
           } else {
             if (descriptionHeader) {
-              $(".search-results").html($(".search-results").html() + "<span class='text-muted'>Term found in description</span>");
+              $(".search-results").html($(".search-results").html() + "<span class='text-muted'>Term found on page</span>");
             }
             descriptionHeader = false;
             $(".search-results").html($(".search-results").html() + categories[key][i]);
