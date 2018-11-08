@@ -5,7 +5,7 @@ $.ajax({
   success: function (data) {
     idx = lunr.Index.load(data)
   }
-})
+});
 
 $(document).keypress(
   function(e){
@@ -16,11 +16,12 @@ $(document).keypress(
 
 function search(str) {
   if (str == "") {
+    $(".search-results").html("");
     return
   }
-  str = str.replace(/\s+$/, '')
-  data = idx.search("*" + str + "*")
-  data = data.concat(idx.search(str));
+
+  str = str.replace(/\s+$/, '');
+  var data = idx.search(str);
 
   if (data.length == 0) {
     $(".search-results").html("No results found.");
@@ -35,18 +36,18 @@ function search(str) {
   var len = data.length;
   var upperBound;
   if (len < 10) {
-    var upperBound  = len;
+    upperBound  = len;
   } else {
-    var upperBound = 10;
+    upperBound = 10;
   }
 
   for (var i = 0; i < upperBound; i++) {
     var tokens = data[i]["ref"].split("|||");
-    url = tokens[0];
-    title = tokens[1];
+    var url = tokens[0];
+    var title = tokens[1];
 
     if (title.toLowerCase().includes(str.toLowerCase())) {
-      highlightIdx = title.toLowerCase().indexOf(str.toLowerCase());
+      var highlightIdx = title.toLowerCase().indexOf(str.toLowerCase());
       if (highlightIdx == 0) {
         title = "<strong class='search-highlight'>" + title.substring(0, str.length) + "</strong>" + title.substring(str.length);
       } else if (highlightIdx == title.length - 1) {
