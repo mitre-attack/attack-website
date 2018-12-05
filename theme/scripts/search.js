@@ -15,16 +15,17 @@ $(document).keypress(
 });
 
 function search(str) {
+  str = str.replace(/\s+$/, '');
+
   if (str == "") {
     $(".search-results").html("");
     return
   }
 
-  str = str.replace(/\s+$/, '');
   var data = idx.search(str);
-
   if (data.length == 0) {
     $(".search-results").html("No results found.");
+    $(".search-results").css('visibility', 'visible');
     return;
   }
 
@@ -75,13 +76,12 @@ function search(str) {
             // $(".search-results").html($(".search-results").html() + categories[key][i]);
             $("." + key).append(categories[key][i]);
           } else {
-            if (descriptionHeader) {
-              $(".search-results").html($(".search-results").html() + "<span class='text-muted'>Term found on page</span>");
-            }
-            descriptionHeader = false;
-            $(".search-results").html($(".search-results").html() + categories[key][i]);
+              if (descriptionHeader) {
+                  $(".search-results").html($(".search-results").html() + "<span class='text-muted'>Term found on page</span>");
+              }
+              descriptionHeader = false;
+              $(".search-results").html($(".search-results").html() + categories[key][i]);
           }
-          
         }
       }
     }
