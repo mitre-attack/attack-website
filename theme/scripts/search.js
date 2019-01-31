@@ -24,11 +24,14 @@ function search(str) {
 
   var data = idx.search(str);
   if (data.length == 0) {
-    $(".search-results").html("No results found.");
-    $(".search-results").css('visibility', 'visible');
-    return;
+    str = str.replace(/\\/g, '\\\\');
+    data = idx.search(str);
+    if (data.length == 0) {
+      $(".search-results").html("No results found.");
+      $(".search-results").css('visibility', 'visible');
+      return;
+    }
   }
-
   var categories = { "techniques": [], "tactics": [], "groups": [], "software": [] };
 
   $(".search-results").css('visibility', 'visible');
@@ -36,10 +39,10 @@ function search(str) {
 
   var len = data.length;
   var upperBound;
-  if (len < 10) {
+  if (len < 20) {
     upperBound  = len;
   } else {
-    upperBound = 10;
+    upperBound = 20;
   }
 
   for (var i = 0; i < upperBound; i++) {
