@@ -1,7 +1,7 @@
 # MITRE ATT&amp;CK Website
 
 ## Content Errors on the Website
-If you find errors or typos on the site related to content, please let us know by sending an email to attack@mitre.org with the title **Website Content Error**.
+If you find errors or typos on the site related to content, please let us know by sending an email to attack@mitre.org with the subject **Website Content Error**.
 
 #### Please let us know the following:
 1. The url where you found the error.
