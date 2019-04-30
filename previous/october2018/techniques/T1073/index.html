@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+        <!-- Global site tag (gtag.js) - Google Analytics -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=UA-62667723-1"></script>
+        <script src="/previous/october2018/theme/scripts/analytics.js"></script>
+        <meta name="google-site-verification" content="2oJKLqNN62z6AOCb0A0IXGtbQuj-lev5YPAHFF_cbHQ"/>
+        <meta charset='utf-8'>
+        <meta name='viewport' content='width=device-width, initial-scale=1, shrink-to-fit=no'>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <link rel='shortcut icon' href="/previous/october2018/theme/favicon.ico" type='image/x-icon'>
+        <title>Technique: DLL Side-Loading - MITRE ATT&CK&trade;</title>
+        <!-- Bootstrap CSS -->
+        <link rel='stylesheet' href="/previous/october2018/theme/style/bootstrap.min.css" />
+        <link rel='stylesheet' href="/previous/october2018/theme/style/bootstrap-glyphicon.min.css" />
+        <link rel="stylesheet" type="text/css" href="/previous/october2018/theme/style.min.css?d1d7b359">
+</head>
+
+<body>
+<!--stopindex-->
+<header>
+        <nav class='navbar navbar-expand-lg navbar-dark fixed-top bg-mitre-red border-bottom'>
+            <a class='navbar-brand' href="/previous/october2018/"><img src="/previous/october2018/theme/images/mitre_attack.png" height="50px"/></a>
+            <button class='navbar-toggler' type='button' data-toggle='collapse' data-target='#navbarCollapse'
+                    aria-controls='navbarCollapse' aria-expanded='false' aria-label='Toggle navigation'>
+                <span class='navbar-toggler-icon' onclick="search('')"></span>
+            </button>
+            <div class='collapse navbar-collapse' id='navbarCollapse'>
+                <ul class='nav nav-tabs ml-auto'>
+                            <li class="nav-item"><a href="/previous/october2018/matrices/enterprise"  class="nav-link" ><b>Matrices</b></a></li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="/previous/october2018/tactics/enterprise" id="navbarDropdown" role="button"
+                                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <b>Tactics</b>
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                        <a class="dropdown-item" href="/previous/october2018/tactics/pre">PRE-ATT&CK</a>
+                                        <a class="dropdown-item" href="/previous/october2018/tactics/enterprise">Enterprise</a>
+                                        <a class="dropdown-item" href="/previous/october2018/tactics/mobile">Mobile</a>
+                                </div>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="/previous/october2018/techniques/enterprise" id="navbarDropdown" role="button"
+                                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <b>Techniques</b>
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                        <a class="dropdown-item" href="/previous/october2018/techniques/pre">PRE-ATT&CK</a>
+                                        <a class="dropdown-item" href="/previous/october2018/techniques/enterprise">Enterprise</a>
+                                        <a class="dropdown-item" href="/previous/october2018/techniques/mobile">Mobile</a>
+                                </div>
+                            </li>
+                            <li class="nav-item"><a href="/previous/october2018/groups/"  class="nav-link" ><b>Groups</b></a></li>
+                            <li class="nav-item"><a href="/previous/october2018/software/"  class="nav-link" ><b>Software</b></a></li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="/previous/october2018/resources/" id="navbarDropdown" role="button"
+                                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <b>Resources</b>
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <a class="dropdown-item" href="/previous/october2018/resources/">General Information</a>
+                                    <a class="dropdown-item" href="/previous/october2018/resources/getting-started/">Getting Started</a>
+                                    <a class="dropdown-item" href="/previous/october2018/resources/attackcon/">ATT&CKcon</a>
+                                    <a class="dropdown-item" href="/previous/october2018/resources/working-with-attack/">Working with ATT&CK</a>
+                                    <a class="dropdown-item" href="/previous/october2018/resources/faq/">FAQ</a>
+                                    <a class="dropdown-item" href="/resources/updates/">Updates</a>
+                                    <a class="dropdown-item" href="/resources/previous-versions/">Previous Versions</a>
+                                    <a class="dropdown-item" href="/previous/october2018/resources/related-projects/">Related Projects</a>
+                                </div>
+                            </li>
+                            <li class="nav-item"><a href="https://medium.com/mitre-attack/" target="_blank"  class="nav-link" ><b>Blog</b>&nbsp;<img src="/previous/october2018/theme/images/external-site.svg"
+                                                                                                               alt="External site" class="external-icon" /></a></li>
+                            <li class="nav-item"><a href="/previous/october2018/resources/contribute"  class="nav-link" ><b>Contribute</b></a></li>
+                </ul>
+                <ul class='navbar-nav flex-row d-md-flex' style="float: right">  <!-- ml-md-auto d-none-->
+                    <li>
+                        <form class='form-inline pl-2'>
+                            <input class='form-control' type='text' placeholder='Search site' aria-label='Search' id="search"
+                                   autocomplete="off">
+                        </form>
+                        <div class="search-results"></div>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        </header>
+        <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the previous-versions feature -->
+        <div class="container-fluid version-banner"><div class="icon-inline baseline mr-1"><img src="/previous/october2018/theme/images/icon-warning-24px.svg"></div>This is a preserved version of the site that was live between Oct. 23, 2018 and April 30, 2019. <a href="/resources/previous-versions/">See other versions</a> or <a href="/">the current version</a>.</div>
+        <!--startindex-->
+<div id='content'>    <div class='container-fluid'>
+        <div class='row'>
+ 
+             
+<!--stopindex-->
+    <div class="nav flex-column col-xl-2 col-lg-2 col-md-3  sidebar nav pt-5 pb-3 pl-3 border-right" id="v-tab" role="tablist" aria-orientation="vertical">
+        <button class="btn btn-default dropdown-toggle heading-dropdown" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">ENTERPRISE</button><br>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <a class="dropdown-item" href="/previous/october2018/techniques/enterprise">ENTERPRISE</a>
+            <a class="dropdown-item" href="/previous/october2018/techniques/mobile">MOBILE</a>
+            <a class="dropdown-item" href="/previous/october2018/techniques/pre">PRE-ATT&CK</a>
+        </div>
+        <span class="heading" id="v-home-tab" aria-selected="false">TECHNIQUES</span>
+        <!-- <a class="nav-link side active show" id="v-overview-tab" data-toggle="tab" href="#v-overview" role="tab" aria-controls="v-overview" aria-selected="false">Overview</a> -->
+        <a class="nav-link side expand-title " id="v-{}-tab"  href="/previous/october2018/techniques/enterprise" role="tab" aria-expanded="false" aria-controls="{}">All</a> <a class="nav-link side expand-title" id="v-initial access-tab" data-toggle="collapse" href="#initial access" role="tab" aria-expanded="false" aria-controls="initial access"><span id="initial_access-tooltip" title="Initial Access">Initial Access</span ><span class="glyphicon glyphicon-plus float-right expand-icon" aria-hidden="true"></span></a>
+ <div class="collapse" id="initial access" aria-labelledby="v-initial access-tab">
+ <div class="nav flex-column nav pl-3" id="v-tab" role="tablist" aria-orientation="vertical">
+ <a class="nav-link side" id="v-Drive-by Compromise-initial access-tab" href="/previous/october2018/techniques/T1189" aria-controls="v-Drive-by Compromise-initial access" aria-selected="false">Drive-by Compromise</a>
+ <a class="nav-link side" id="v-Exploit Public-Facing Application-initial access-tab" href="/previous/october2018/techniques/T1190" aria-controls="v-Exploit Public-Facing Application-initial access" aria-selected="false">Exploit Public-Facing Application</a>
+ <a class="nav-link side" id="v-Hardware Additions-initial access-tab" href="/previous/october2018/techniques/T1200" aria-controls="v-Hardware Additions-initial access" aria-selected="false">Hardware Additions</a>
+ <a class="nav-link side" id="v-Replication Through Removable Media-initial access-tab" href="/previous/october2018/techniques/T1091" aria-controls="v-Replication Through Removable Media-initial access" aria-selected="false">Replication Through Removable Media</a>
+ <a class="nav-link side" id="v-Spearphishing Attachment-initial access-tab" href="/previous/october2018/techniques/T1193" aria-controls="v-Spearphishing Attachment-initial access" aria-selected="false">Spearphishing Attachment</a>
+ <a class="nav-link side" id="v-Spearphishing Link-initial access-tab" href="/previous/october2018/techniques/T1192" aria-controls="v-Spearphishing Link-initial access" aria-selected="false">Spearphishing Link</a>
+ <a class="nav-link side" id="v-Spearphishing via Service-initial access-tab" href="/previous/october2018/techniques/T1194" aria-controls="v-Spearphishing via Service-initial access" aria-selected="false">Spearphishing via Service</a>
+ <a class="nav-link side" id="v-Supply Chain Compromise-initial access-tab" href="/previous/october2018/techniques/T1195" aria-controls="v-Supply Chain Compromise-initial access" aria-selected="false">Supply Chain Compromise</a>
+ <a class="nav-link side" id="v-Trusted Relationship-initial access-tab" href="/previous/october2018/techniques/T1199" aria-controls="v-Trusted Relationship-initial access" aria-selected="false">Trusted Relationship</a>
+ <a class="nav-link side" id="v-Valid Accounts-initial access-tab" href="/previous/october2018/techniques/T1078" aria-controls="v-Valid Accounts-initial access" aria-selected="false">Valid Accounts</a>
+</div>
+</div> <a class="nav-link side expand-title" id="v-execution-tab" data-toggle="collapse" href="#execution" role="tab" aria-expanded="false" aria-controls="execution"><span id="execution-tooltip" title="Execution">Execution</span ><span class="glyphicon glyphicon-plus float-right expand-icon" aria-hidden="true"></span></a>
+ <div class="collapse" id="execution" aria-labelledby="v-execution-tab">
+ <div class="nav flex-column nav pl-3" id="v-tab" role="tablist" aria-orientation="vertical">
+ <a class="nav-link side" id="v-AppleScript-execution-tab" href="/previous/october2018/techniques/T1155" aria-controls="v-AppleScript-execution" aria-selected="false">AppleScript</a>
+ <a class="nav-link side" id="v-CMSTP-execution-tab" href="/previous/october2018/techniques/T1191" aria-controls="v-CMSTP-execution" aria-selected="false">CMSTP</a>
+ <a class="nav-link side" id="v-Command-Line Interface-execution-tab" href="/previous/october2018/techniques/T1059" aria-controls="v-Command-Line Interface-execution" aria-selected="false">Command-Line Interface</a>
+ <a class="nav-link side" id="v-Compiled HTML File-execution-tab" href="/previous/october2018/techniques/T1223" aria-controls="v-Compiled HTML File-execution" aria-selected="false">Compiled HTML File</a>
+ <a class="nav-link side" id="v-Control Panel Items-execution-tab" href="/previous/october2018/techniques/T1196" aria-controls="v-Control Panel Items-execution" aria-selected="false">Control Panel Items</a>
+ <a class="nav-link side" id="v-Dynamic Data Exchange-execution-tab" href="/previous/october2018/techniques/T1173" aria-controls="v-Dynamic Data Exchange-execution" aria-selected="false">Dynamic Data Exchange</a>
+ <a class="nav-link side" id="v-Execution through API-execution-tab" href="/previous/october2018/techniques/T1106" aria-controls="v-Execution through API-execution" aria-selected="false">Execution through API</a>
+ <a class="nav-link side" id="v-Execution through Module Load-execution-tab" href="/previous/october2018/techniques/T1129" aria-controls="v-Execution through Module Load-execution" aria-selected="false">Execution through Module Load</a>
+ <a class="nav-link side" id="v-Exploitation for Client Execution-execution-tab" href="/previous/october2018/techniques/T1203" aria-controls="v-Exploitation for Client Execution-execution" aria-selected="false">Exploitation for Client Execution</a>
+ <a class="nav-link side" id="v-Graphical User Interface-execution-tab" href="/previous/october2018/techniques/T1061" aria-controls="v-Graphical User Interface-execution" aria-selected="false">Graphical User Interface</a>
+ <a class="nav-link side" id="v-InstallUtil-execution-tab" href="/previous/october2018/techniques/T1118" aria-controls="v-InstallUtil-execution" aria-selected="false">InstallUtil</a>
+ <a class="nav-link side" id="v-Launchctl-execution-tab" href="/previous/october2018/techniques/T1152" aria-controls="v-Launchctl-execution" aria-selected="false">Launchctl</a>
+ <a class="nav-link side" id="v-Local Job Scheduling-execution-tab" href="/previous/october2018/techniques/T1168" aria-controls="v-Local Job Scheduling-execution" aria-selected="false">Local Job Scheduling</a>
+ <a class="nav-link side" id="v-LSASS Driver-execution-tab" href="/previous/october2018/techniques/T1177" aria-controls="v-LSASS Driver-execution" aria-selected="false">LSASS Driver</a>
+ <a class="nav-link side" id="v-Mshta-execution-tab" href="/previous/october2018/techniques/T1170" aria-controls="v-Mshta-execution" aria-selected="false">Mshta</a>
+ <a class="nav-link side" id="v-PowerShell-execution-tab" href="/previous/october2018/techniques/T1086" aria-controls="v-PowerShell-execution" aria-selected="false">PowerShell</a>
+ <a class="nav-link side" id="v-Regsvcs/Regasm-execution-tab" href="/previous/october2018/techniques/T1121" aria-controls="v-Regsvcs/Regasm-execution" aria-selected="false">Regsvcs/Regasm</a>
+ <a class="nav-link side" id="v-Regsvr32-execution-tab" href="/previous/october2018/techniques/T1117" aria-controls="v-Regsvr32-execution" aria-selected="false">Regsvr32</a>
+ <a class="nav-link side" id="v-Rundll32-execution-tab" href="/previous/october2018/techniques/T1085" aria-controls="v-Rundll32-execution" aria-selected="false">Rundll32</a>
+ <a class="nav-link side" id="v-Scheduled Task-execution-tab" href="/previous/october2018/techniques/T1053" aria-controls="v-Scheduled Task-execution" aria-selected="false">Scheduled Task</a>
+ <a class="nav-link side" id="v-Scripting-execution-tab" href="/previous/october2018/techniques/T1064" aria-controls="v-Scripting-execution" aria-selected="false">Scripting</a>
+ <a class="nav-link side" id="v-Service Execution-execution-tab" href="/previous/october2018/techniques/T1035" aria-controls="v-Service Execution-execution" aria-selected="false">Service Execution</a>
+ <a class="nav-link side" id="v-Signed Binary Proxy Execution-execution-tab" href="/previous/october2018/techniques/T1218" aria-controls="v-Signed Binary Proxy Execution-execution" aria-selected="false">Signed Binary Proxy Execution</a>
+ <a class="nav-link side" id="v-Signed Script Proxy Execution-execution-tab" href="/previous/october2018/techniques/T1216" aria-controls="v-Signed Script Proxy Execution-execution" aria-selected="false">Signed Script Proxy Execution</a>
+ <a class="nav-link side" id="v-Source-execution-tab" href="/previous/october2018/techniques/T1153" aria-controls="v-Source-execution" aria-selected="false">Source</a>
+ <a class="nav-link side" id="v-Space after Filename-execution-tab" href="/previous/october2018/techniques/T1151" aria-controls="v-Space after Filename-execution" aria-selected="false">Space after Filename</a>
+ <a class="nav-link side" id="v-Third-party Software-execution-tab" href="/previous/october2018/techniques/T1072" aria-controls="v-Third-party Software-execution" aria-selected="false">Third-party Software</a>
+ <a class="nav-link side" id="v-Trap-execution-tab" href="/previous/october2018/techniques/T1154" aria-controls="v-Trap-execution" aria-selected="false">Trap</a>
+ <a class="nav-link side" id="v-Trusted Developer Utilities-execution-tab" href="/previous/october2018/techniques/T1127" aria-controls="v-Trusted Developer Utilities-execution" aria-selected="false">Trusted Developer Utilities</a>
+ <a class="nav-link side" id="v-User Execution-execution-tab" href="/previous/october2018/techniques/T1204" aria-controls="v-User Execution-execution" aria-selected="false">User Execution</a>
+ <a class="nav-link side" id="v-Windows Management Instrumentation-execution-tab" href="/previous/october2018/techniques/T1047" aria-controls="v-Windows Management Instrumentation-execution" aria-selected="false">Windows Management Instrumentation</a>
+ <a class="nav-link side" id="v-Windows Remote Management-execution-tab" href="/previous/october2018/techniques/T1028" aria-controls="v-Windows Remote Management-execution" aria-selected="false">Windows Remote Management</a>
+ <a class="nav-link side" id="v-XSL Script Processing-execution-tab" href="/previous/october2018/techniques/T1220" aria-controls="v-XSL Script Processing-execution" aria-selected="false">XSL Script Processing</a>
+</div>
+</div> <a class="nav-link side expand-title" id="v-persistence-tab" data-toggle="collapse" href="#persistence" role="tab" aria-expanded="false" aria-controls="persistence"><span id="persistence-tooltip" title="Persistence">Persistence</span ><span class="glyphicon glyphicon-plus float-right expand-icon" aria-hidden="true"></span></a>
+ <div class="collapse" id="persistence" aria-labelledby="v-persistence-tab">
+ <div class="nav flex-column nav pl-3" id="v-tab" role="tablist" aria-orientation="vertical">
+ <a class="nav-link side" id="v-.bash_profile and .bashrc-persistence-tab" href="/previous/october2018/techniques/T1156" aria-controls="v-.bash_profile and .bashrc-persistence" aria-selected="false">.bash_profile and .bashrc</a>
+ <a class="nav-link side" id="v-Accessibility Features-persistence-tab" href="/previous/october2018/techniques/T1015" aria-controls="v-Accessibility Features-persistence" aria-selected="false">Accessibility Features</a>
+ <a class="nav-link side" id="v-Account Manipulation-persistence-tab" href="/previous/october2018/techniques/T1098" aria-controls="v-Account Manipulation-persistence" aria-selected="false">Account Manipulation</a>
+ <a class="nav-link side" id="v-AppCert DLLs-persistence-tab" href="/previous/october2018/techniques/T1182" aria-controls="v-AppCert DLLs-persistence" aria-selected="false">AppCert DLLs</a>
+ <a class="nav-link side" id="v-AppInit DLLs-persistence-tab" href="/previous/october2018/techniques/T1103" aria-controls="v-AppInit DLLs-persistence" aria-selected="false">AppInit DLLs</a>
+ <a class="nav-link side" id="v-Application Shimming-persistence-tab" href="/previous/october2018/techniques/T1138" aria-controls="v-Application Shimming-persistence" aria-selected="false">Application Shimming</a>
+ <a class="nav-link side" id="v-Authentication Package-persistence-tab" href="/previous/october2018/techniques/T1131" aria-controls="v-Authentication Package-persistence" aria-selected="false">Authentication Package</a>
+ <a class="nav-link side" id="v-BITS Jobs-persistence-tab" href="/previous/october2018/techniques/T1197" aria-controls="v-BITS Jobs-persistence" aria-selected="false">BITS Jobs</a>
+ <a class="nav-link side" id="v-Bootkit-persistence-tab" href="/previous/october2018/techniques/T1067" aria-controls="v-Bootkit-persistence" aria-selected="false">Bootkit</a>
+ <a class="nav-link side" id="v-Browser Extensions-persistence-tab" href="/previous/october2018/techniques/T1176" aria-controls="v-Browser Extensions-persistence" aria-selected="false">Browser Extensions</a>
+ <a class="nav-link side" id="v-Change Default File Association-persistence-tab" href="/previous/october2018/techniques/T1042" aria-controls="v-Change Default File Association-persistence" aria-selected="false">Change Default File Association</a>
+ <a class="nav-link side" id="v-Component Firmware-persistence-tab" href="/previous/october2018/techniques/T1109" aria-controls="v-Component Firmware-persistence" aria-selected="false">Component Firmware</a>
+ <a class="nav-link side" id="v-Component Object Model Hijacking-persistence-tab" href="/previous/october2018/techniques/T1122" aria-controls="v-Component Object Model Hijacking-persistence" aria-selected="false">Component Object Model Hijacking</a>
+ <a class="nav-link side" id="v-Create Account-persistence-tab" href="/previous/october2018/techniques/T1136" aria-controls="v-Create Account-persistence" aria-selected="false">Create Account</a>
+ <a class="nav-link side" id="v-DLL Search Order Hijacking-persistence-tab" href="/previous/october2018/techniques/T1038" aria-controls="v-DLL Search Order Hijacking-persistence" aria-selected="false">DLL Search Order Hijacking</a>
+ <a class="nav-link side" id="v-Dylib Hijacking-persistence-tab" href="/previous/october2018/techniques/T1157" aria-controls="v-Dylib Hijacking-persistence" aria-selected="false">Dylib Hijacking</a>
+ <a class="nav-link side" id="v-External Remote Services-persistence-tab" href="/previous/october2018/techniques/T1133" aria-controls="v-External Remote Services-persistence" aria-selected="false">External Remote Services</a>
+ <a class="nav-link side" id="v-File System Permissions Weakness-persistence-tab" href="/previous/october2018/techniques/T1044" aria-controls="v-File System Permissions Weakness-persistence" aria-selected="false">File System Permissions Weakness</a>
+ <a class="nav-link side" id="v-Hidden Files and Directories-persistence-tab" href="/previous/october2018/techniques/T1158" aria-controls="v-Hidden Files and Directories-persistence" aria-selected="false">Hidden Files and Directories</a>
+ <a class="nav-link side" id="v-Hooking-persistence-tab" href="/previous/october2018/techniques/T1179" aria-controls="v-Hooking-persistence" aria-selected="false">Hooking</a>
+ <a class="nav-link side" id="v-Hypervisor-persistence-tab" href="/previous/october2018/techniques/T1062" aria-controls="v-Hypervisor-persistence" aria-selected="false">Hypervisor</a>
+ <a class="nav-link side" id="v-Image File Execution Options Injection-persistence-tab" href="/previous/october2018/techniques/T1183" aria-controls="v-Image File Execution Options Injection-persistence" aria-selected="false">Image File Execution Options Injection</a>
+ <a class="nav-link side" id="v-Kernel Modules and Extensions-persistence-tab" href="/previous/october2018/techniques/T1215" aria-controls="v-Kernel Modules and Extensions-persistence" aria-selected="false">Kernel Modules and Extensions</a>
+ <a class="nav-link side" id="v-Launch Agent-persistence-tab" href="/previous/october2018/techniques/T1159" aria-controls="v-Launch Agent-persistence" aria-selected="false">Launch Agent</a>
+ <a class="nav-link side" id="v-Launch Daemon-persistence-tab" href="/previous/october2018/techniques/T1160" aria-controls="v-Launch Daemon-persistence" aria-selected="false">Launch Daemon</a>
+ <a class="nav-link side" id="v-Launchctl-persistence-tab" href="/previous/october2018/techniques/T1152" aria-controls="v-Launchctl-persistence" aria-selected="false">Launchctl</a>
+ <a class="nav-link side" id="v-LC_LOAD_DYLIB Addition-persistence-tab" href="/previous/october2018/techniques/T1161" aria-controls="v-LC_LOAD_DYLIB Addition-persistence" aria-selected="false">LC_LOAD_DYLIB Addition</a>
+ <a class="nav-link side" id="v-Local Job Scheduling-persistence-tab" href="/previous/october2018/techniques/T1168" aria-controls="v-Local Job Scheduling-persistence" aria-selected="false">Local Job Scheduling</a>
+ <a class="nav-link side" id="v-Login Item-persistence-tab" href="/previous/october2018/techniques/T1162" aria-controls="v-Login Item-persistence" aria-selected="false">Login Item</a>
+ <a class="nav-link side" id="v-Logon Scripts-persistence-tab" href="/previous/october2018/techniques/T1037" aria-controls="v-Logon Scripts-persistence" aria-selected="false">Logon Scripts</a>
+ <a class="nav-link side" id="v-LSASS Driver-persistence-tab" href="/previous/october2018/techniques/T1177" aria-controls="v-LSASS Driver-persistence" aria-selected="false">LSASS Driver</a>
+ <a class="nav-link side" id="v-Modify Existing Service-persistence-tab" href="/previous/october2018/techniques/T1031" aria-controls="v-Modify Existing Service-persistence" aria-selected="false">Modify Existing Service</a>
+ <a class="nav-link side" id="v-Netsh Helper DLL-persistence-tab" href="/previous/october2018/techniques/T1128" aria-controls="v-Netsh Helper DLL-persistence" aria-selected="false">Netsh Helper DLL</a>
+ <a class="nav-link side" id="v-New Service-persistence-tab" href="/previous/october2018/techniques/T1050" aria-controls="v-New Service-persistence" aria-selected="false">New Service</a>
+ <a class="nav-link side" id="v-Office Application Startup-persistence-tab" href="/previous/october2018/techniques/T1137" aria-controls="v-Office Application Startup-persistence" aria-selected="false">Office Application Startup</a>
+ <a class="nav-link side" id="v-Path Interception-persistence-tab" href="/previous/october2018/techniques/T1034" aria-controls="v-Path Interception-persistence" aria-selected="false">Path Interception</a>
+ <a class="nav-link side" id="v-Plist Modification-persistence-tab" href="/previous/october2018/techniques/T1150" aria-controls="v-Plist Modification-persistence" aria-selected="false">Plist Modification</a>
+ <a class="nav-link side" id="v-Port Knocking-persistence-tab" href="/previous/october2018/techniques/T1205" aria-controls="v-Port Knocking-persistence" aria-selected="false">Port Knocking</a>
+ <a class="nav-link side" id="v-Port Monitors-persistence-tab" href="/previous/october2018/techniques/T1013" aria-controls="v-Port Monitors-persistence" aria-selected="false">Port Monitors</a>
+ <a class="nav-link side" id="v-Rc.common-persistence-tab" href="/previous/october2018/techniques/T1163" aria-controls="v-Rc.common-persistence" aria-selected="false">Rc.common</a>
+ <a class="nav-link side" id="v-Re-opened Applications-persistence-tab" href="/previous/october2018/techniques/T1164" aria-controls="v-Re-opened Applications-persistence" aria-selected="false">Re-opened Applications</a>
+ <a class="nav-link side" id="v-Redundant Access-persistence-tab" href="/previous/october2018/techniques/T1108" aria-controls="v-Redundant Access-persistence" aria-selected="false">Redundant Access</a>
+ <a class="nav-link side" id="v-Registry Run Keys / Startup Folder-persistence-tab" href="/previous/october2018/techniques/T1060" aria-controls="v-Registry Run Keys / Startup Folder-persistence" aria-selected="false">Registry Run Keys / Startup Folder</a>
+ <a class="nav-link side" id="v-Scheduled Task-persistence-tab" href="/previous/october2018/techniques/T1053" aria-controls="v-Scheduled Task-persistence" aria-selected="false">Scheduled Task</a>
+ <a class="nav-link side" id="v-Screensaver-persistence-tab" href="/previous/october2018/techniques/T1180" aria-controls="v-Screensaver-persistence" aria-selected="false">Screensaver</a>
+ <a class="nav-link side" id="v-Security Support Provider-persistence-tab" href="/previous/october2018/techniques/T1101" aria-controls="v-Security Support Provider-persistence" aria-selected="false">Security Support Provider</a>
+ <a class="nav-link side" id="v-Service Registry Permissions Weakness-persistence-tab" href="/previous/october2018/techniques/T1058" aria-controls="v-Service Registry Permissions Weakness-persistence" aria-selected="false">Service Registry Permissions Weakness</a>
+ <a class="nav-link side" id="v-Setuid and Setgid-persistence-tab" href="/previous/october2018/techniques/T1166" aria-controls="v-Setuid and Setgid-persistence" aria-selected="false">Setuid and Setgid</a>
+ <a class="nav-link side" id="v-Shortcut Modification-persistence-tab" href="/previous/october2018/techniques/T1023" aria-controls="v-Shortcut Modification-persistence" aria-selected="false">Shortcut Modification</a>
+ <a class="nav-link side" id="v-SIP and Trust Provider Hijacking-persistence-tab" href="/previous/october2018/techniques/T1198" aria-controls="v-SIP and Trust Provider Hijacking-persistence" aria-selected="false">SIP and Trust Provider Hijacking</a>
+ <a class="nav-link side" id="v-Startup Items-persistence-tab" href="/previous/october2018/techniques/T1165" aria-controls="v-Startup Items-persistence" aria-selected="false">Startup Items</a>
+ <a class="nav-link side" id="v-System Firmware-persistence-tab" href="/previous/october2018/techniques/T1019" aria-controls="v-System Firmware-persistence" aria-selected="false">System Firmware</a>
+ <a class="nav-link side" id="v-Time Providers-persistence-tab" href="/previous/october2018/techniques/T1209" aria-controls="v-Time Providers-persistence" aria-selected="false">Time Providers</a>
+ <a class="nav-link side" id="v-Trap-persistence-tab" href="/previous/october2018/techniques/T1154" aria-controls="v-Trap-persistence" aria-selected="false">Trap</a>
+ <a class="nav-link side" id="v-Valid Accounts-persistence-tab" href="/previous/october2018/techniques/T1078" aria-controls="v-Valid Accounts-persistence" aria-selected="false">Valid Accounts</a>
+ <a class="nav-link side" id="v-Web Shell-persistence-tab" href="/previous/october2018/techniques/T1100" aria-controls="v-Web Shell-persistence" aria-selected="false">Web Shell</a>
+ <a class="nav-link side" id="v-Windows Management Instrumentation Event Subscription-persistence-tab" href="/previous/october2018/techniques/T1084" aria-controls="v-Windows Management Instrumentation Event Subscription-persistence" aria-selected="false">Windows Management Instrumentation Event Subscription</a>
+ <a class="nav-link side" id="v-Winlogon Helper DLL-persistence-tab" href="/previous/october2018/techniques/T1004" aria-controls="v-Winlogon Helper DLL-persistence" aria-selected="false">Winlogon Helper DLL</a>
+</div>
+</div> <a class="nav-link side expand-title" id="v-privilege escalation-tab" data-toggle="collapse" href="#privilege escalation" role="tab" aria-expanded="false" aria-controls="privilege escalation"><span id="privilege_escalation-tooltip" title="Privilege Escalation">Privilege Escalation</span ><span class="glyphicon glyphicon-plus float-right expand-icon" aria-hidden="true"></span></a>
+ <div class="collapse" id="privilege escalation" aria-labelledby="v-privilege escalation-tab">
+ <div class="nav flex-column nav pl-3" id="v-tab" role="tablist" aria-orientation="vertical">
+ <a class="nav-link side" id="v-Access Token Manipulation-privilege escalation-tab" href="/previous/october2018/techniques/T1134" aria-controls="v-Access Token Manipulation-privilege escalation" aria-selected="false">Access Token Manipulation</a>
+ <a class="nav-link side" id="v-Accessibility Features-privilege escalation-tab" href="/previous/october2018/techniques/T1015" aria-controls="v-Accessibility Features-privilege escalation" aria-selected="false">Accessibility Features</a>
+ <a class="nav-link side" id="v-AppCert DLLs-privilege escalation-tab" href="/previous/october2018/techniques/T1182" aria-controls="v-AppCert DLLs-privilege escalation" aria-selected="false">AppCert DLLs</a>
+ <a class="nav-link side" id="v-AppInit DLLs-privilege escalation-tab" href="/previous/october2018/techniques/T1103" aria-controls="v-AppInit DLLs-privilege escalation" aria-selected="false">AppInit DLLs</a>
+ <a class="nav-link side" id="v-Application Shimming-privilege escalation-tab" href="/previous/october2018/techniques/T1138" aria-controls="v-Application Shimming-privilege escalation" aria-selected="false">Application Shimming</a>
+ <a class="nav-link side" id="v-Bypass User Account Control-privilege escalation-tab" href="/previous/october2018/techniques/T1088" aria-controls="v-Bypass User Account Control-privilege escalation" aria-selected="false">Bypass User Account Control</a>
+ <a class="nav-link side" id="v-DLL Search Order Hijacking-privilege escalation-tab" href="/previous/october2018/techniques/T1038" aria-controls="v-DLL Search Order Hijacking-privilege escalation" aria-selected="false">DLL Search Order Hijacking</a>
+ <a class="nav-link side" id="v-Dylib Hijacking-privilege escalation-tab" href="/previous/october2018/techniques/T1157" aria-controls="v-Dylib Hijacking-privilege escalation" aria-selected="false">Dylib Hijacking</a>
+ <a class="nav-link side" id="v-Exploitation for Privilege Escalation-privilege escalation-tab" href="/previous/october2018/techniques/T1068" aria-controls="v-Exploitation for Privilege Escalation-privilege escalation" aria-selected="false">Exploitation for Privilege Escalation</a>
+ <a class="nav-link side" id="v-Extra Window Memory Injection-privilege escalation-tab" href="/previous/october2018/techniques/T1181" aria-controls="v-Extra Window Memory Injection-privilege escalation" aria-selected="false">Extra Window Memory Injection</a>
+ <a class="nav-link side" id="v-File System Permissions Weakness-privilege escalation-tab" href="/previous/october2018/techniques/T1044" aria-controls="v-File System Permissions Weakness-privilege escalation" aria-selected="false">File System Permissions Weakness</a>
+ <a class="nav-link side" id="v-Hooking-privilege escalation-tab" href="/previous/october2018/techniques/T1179" aria-controls="v-Hooking-privilege escalation" aria-selected="false">Hooking</a>
+ <a class="nav-link side" id="v-Image File Execution Options Injection-privilege escalation-tab" href="/previous/october2018/techniques/T1183" aria-controls="v-Image File Execution Options Injection-privilege escalation" aria-selected="false">Image File Execution Options Injection</a>
+ <a class="nav-link side" id="v-Launch Daemon-privilege escalation-tab" href="/previous/october2018/techniques/T1160" aria-controls="v-Launch Daemon-privilege escalation" aria-selected="false">Launch Daemon</a>
+ <a class="nav-link side" id="v-New Service-privilege escalation-tab" href="/previous/october2018/techniques/T1050" aria-controls="v-New Service-privilege escalation" aria-selected="false">New Service</a>
+ <a class="nav-link side" id="v-Path Interception-privilege escalation-tab" href="/previous/october2018/techniques/T1034" aria-controls="v-Path Interception-privilege escalation" aria-selected="false">Path Interception</a>
+ <a class="nav-link side" id="v-Plist Modification-privilege escalation-tab" href="/previous/october2018/techniques/T1150" aria-controls="v-Plist Modification-privilege escalation" aria-selected="false">Plist Modification</a>
+ <a class="nav-link side" id="v-Port Monitors-privilege escalation-tab" href="/previous/october2018/techniques/T1013" aria-controls="v-Port Monitors-privilege escalation" aria-selected="false">Port Monitors</a>
+ <a class="nav-link side" id="v-Process Injection-privilege escalation-tab" href="/previous/october2018/techniques/T1055" aria-controls="v-Process Injection-privilege escalation" aria-selected="false">Process Injection</a>
+ <a class="nav-link side" id="v-Scheduled Task-privilege escalation-tab" href="/previous/october2018/techniques/T1053" aria-controls="v-Scheduled Task-privilege escalation" aria-selected="false">Scheduled Task</a>
+ <a class="nav-link side" id="v-Service Registry Permissions Weakness-privilege escalation-tab" href="/previous/october2018/techniques/T1058" aria-controls="v-Service Registry Permissions Weakness-privilege escalation" aria-selected="false">Service Registry Permissions Weakness</a>
+ <a class="nav-link side" id="v-Setuid and Setgid-privilege escalation-tab" href="/previous/october2018/techniques/T1166" aria-controls="v-Setuid and Setgid-privilege escalation" aria-selected="false">Setuid and Setgid</a>
+ <a class="nav-link side" id="v-SID-History Injection-privilege escalation-tab" href="/previous/october2018/techniques/T1178" aria-controls="v-SID-History Injection-privilege escalation" aria-selected="false">SID-History Injection</a>
+ <a class="nav-link side" id="v-Startup Items-privilege escalation-tab" href="/previous/october2018/techniques/T1165" aria-controls="v-Startup Items-privilege escalation" aria-selected="false">Startup Items</a>
+ <a class="nav-link side" id="v-Sudo-privilege escalation-tab" href="/previous/october2018/techniques/T1169" aria-controls="v-Sudo-privilege escalation" aria-selected="false">Sudo</a>
+ <a class="nav-link side" id="v-Sudo Caching-privilege escalation-tab" href="/previous/october2018/techniques/T1206" aria-controls="v-Sudo Caching-privilege escalation" aria-selected="false">Sudo Caching</a>
+ <a class="nav-link side" id="v-Valid Accounts-privilege escalation-tab" href="/previous/october2018/techniques/T1078" aria-controls="v-Valid Accounts-privilege escalation" aria-selected="false">Valid Accounts</a>
+ <a class="nav-link side" id="v-Web Shell-privilege escalation-tab" href="/previous/october2018/techniques/T1100" aria-controls="v-Web Shell-privilege escalation" aria-selected="false">Web Shell</a>
+</div>
+</div> <a class="nav-link side expand-title" id="v-defense evasion-tab" data-toggle="collapse" href="#defense evasion" role="tab" aria-expanded="false" aria-controls="defense evasion"><span id="defense evasion-tooltip" title="Defense Evasion">Defense Evasion</span><span class="glyphicon glyphicon-minus float-right expand-icon" aria-hidden="true"></span></a>
+ <div class="collapse show" id="defense evasion" aria-labelledby="v-defense evasion-tab">
+ <div class="nav flex-column nav pl-3" id="v-tab" role="tablist" aria-orientation="vertical">
+ <a class="nav-link side" id="v-Access Token Manipulation-defense evasion-tab" href="/previous/october2018/techniques/T1134" aria-controls="v-Access Token Manipulation-defense evasion" aria-selected="false">Access Token Manipulation</a>
+ <a class="nav-link side" id="v-Binary Padding-defense evasion-tab" href="/previous/october2018/techniques/T1009" aria-controls="v-Binary Padding-defense evasion" aria-selected="false">Binary Padding</a>
+ <a class="nav-link side" id="v-BITS Jobs-defense evasion-tab" href="/previous/october2018/techniques/T1197" aria-controls="v-BITS Jobs-defense evasion" aria-selected="false">BITS Jobs</a>
+ <a class="nav-link side" id="v-Bypass User Account Control-defense evasion-tab" href="/previous/october2018/techniques/T1088" aria-controls="v-Bypass User Account Control-defense evasion" aria-selected="false">Bypass User Account Control</a>
+ <a class="nav-link side" id="v-Clear Command History-defense evasion-tab" href="/previous/october2018/techniques/T1146" aria-controls="v-Clear Command History-defense evasion" aria-selected="false">Clear Command History</a>
+ <a class="nav-link side" id="v-CMSTP-defense evasion-tab" href="/previous/october2018/techniques/T1191" aria-controls="v-CMSTP-defense evasion" aria-selected="false">CMSTP</a>
+ <a class="nav-link side" id="v-Code Signing-defense evasion-tab" href="/previous/october2018/techniques/T1116" aria-controls="v-Code Signing-defense evasion" aria-selected="false">Code Signing</a>
+ <a class="nav-link side" id="v-Compiled HTML File-defense evasion-tab" href="/previous/october2018/techniques/T1223" aria-controls="v-Compiled HTML File-defense evasion" aria-selected="false">Compiled HTML File</a>
+ <a class="nav-link side" id="v-Component Firmware-defense evasion-tab" href="/previous/october2018/techniques/T1109" aria-controls="v-Component Firmware-defense evasion" aria-selected="false">Component Firmware</a>
+ <a class="nav-link side" id="v-Component Object Model Hijacking-defense evasion-tab" href="/previous/october2018/techniques/T1122" aria-controls="v-Component Object Model Hijacking-defense evasion" aria-selected="false">Component Object Model Hijacking</a>
+ <a class="nav-link side" id="v-Control Panel Items-defense evasion-tab" href="/previous/october2018/techniques/T1196" aria-controls="v-Control Panel Items-defense evasion" aria-selected="false">Control Panel Items</a>
+ <a class="nav-link side" id="v-DCShadow-defense evasion-tab" href="/previous/october2018/techniques/T1207" aria-controls="v-DCShadow-defense evasion" aria-selected="false">DCShadow</a>
+ <a class="nav-link side" id="v-Deobfuscate/Decode Files or Information-defense evasion-tab" href="/previous/october2018/techniques/T1140" aria-controls="v-Deobfuscate/Decode Files or Information-defense evasion" aria-selected="false">Deobfuscate/Decode Files or Information</a>
+ <a class="nav-link side" id="v-Disabling Security Tools-defense evasion-tab" href="/previous/october2018/techniques/T1089" aria-controls="v-Disabling Security Tools-defense evasion" aria-selected="false">Disabling Security Tools</a>
+ <a class="nav-link side" id="v-DLL Search Order Hijacking-defense evasion-tab" href="/previous/october2018/techniques/T1038" aria-controls="v-DLL Search Order Hijacking-defense evasion" aria-selected="false">DLL Search Order Hijacking</a>
+ <a class="nav-link side active show" id="v-DLL Side-Loading-defense evasion-tab" href="/previous/october2018/techniques/T1073" aria-controls="v-DLL Side-Loading-defense evasion" aria-selected="false">DLL Side-Loading</a>
+ <a class="nav-link side" id="v-Exploitation for Defense Evasion-defense evasion-tab" href="/previous/october2018/techniques/T1211" aria-controls="v-Exploitation for Defense Evasion-defense evasion" aria-selected="false">Exploitation for Defense Evasion</a>
+ <a class="nav-link side" id="v-Extra Window Memory Injection-defense evasion-tab" href="/previous/october2018/techniques/T1181" aria-controls="v-Extra Window Memory Injection-defense evasion" aria-selected="false">Extra Window Memory Injection</a>
+ <a class="nav-link side" id="v-File Deletion-defense evasion-tab" href="/previous/october2018/techniques/T1107" aria-controls="v-File Deletion-defense evasion" aria-selected="false">File Deletion</a>
+ <a class="nav-link side" id="v-File Permissions Modification-defense evasion-tab" href="/previous/october2018/techniques/T1222" aria-controls="v-File Permissions Modification-defense evasion" aria-selected="false">File Permissions Modification</a>
+ <a class="nav-link side" id="v-File System Logical Offsets-defense evasion-tab" href="/previous/october2018/techniques/T1006" aria-controls="v-File System Logical Offsets-defense evasion" aria-selected="false">File System Logical Offsets</a>
+ <a class="nav-link side" id="v-Gatekeeper Bypass-defense evasion-tab" href="/previous/october2018/techniques/T1144" aria-controls="v-Gatekeeper Bypass-defense evasion" aria-selected="false">Gatekeeper Bypass</a>
+ <a class="nav-link side" id="v-Hidden Files and Directories-defense evasion-tab" href="/previous/october2018/techniques/T1158" aria-controls="v-Hidden Files and Directories-defense evasion" aria-selected="false">Hidden Files and Directories</a>
+ <a class="nav-link side" id="v-Hidden Users-defense evasion-tab" href="/previous/october2018/techniques/T1147" aria-controls="v-Hidden Users-defense evasion" aria-selected="false">Hidden Users</a>
+ <a class="nav-link side" id="v-Hidden Window-defense evasion-tab" href="/previous/october2018/techniques/T1143" aria-controls="v-Hidden Window-defense evasion" aria-selected="false">Hidden Window</a>
+ <a class="nav-link side" id="v-HISTCONTROL-defense evasion-tab" href="/previous/october2018/techniques/T1148" aria-controls="v-HISTCONTROL-defense evasion" aria-selected="false">HISTCONTROL</a>
+ <a class="nav-link side" id="v-Image File Execution Options Injection-defense evasion-tab" href="/previous/october2018/techniques/T1183" aria-controls="v-Image File Execution Options Injection-defense evasion" aria-selected="false">Image File Execution Options Injection</a>
+ <a class="nav-link side" id="v-Indicator Blocking-defense evasion-tab" href="/previous/october2018/techniques/T1054" aria-controls="v-Indicator Blocking-defense evasion" aria-selected="false">Indicator Blocking</a>
+ <a class="nav-link side" id="v-Indicator Removal from Tools-defense evasion-tab" href="/previous/october2018/techniques/T1066" aria-controls="v-Indicator Removal from Tools-defense evasion" aria-selected="false">Indicator Removal from Tools</a>
+ <a class="nav-link side" id="v-Indicator Removal on Host-defense evasion-tab" href="/previous/october2018/techniques/T1070" aria-controls="v-Indicator Removal on Host-defense evasion" aria-selected="false">Indicator Removal on Host</a>
+ <a class="nav-link side" id="v-Indirect Command Execution-defense evasion-tab" href="/previous/october2018/techniques/T1202" aria-controls="v-Indirect Command Execution-defense evasion" aria-selected="false">Indirect Command Execution</a>
+ <a class="nav-link side" id="v-Install Root Certificate-defense evasion-tab" href="/previous/october2018/techniques/T1130" aria-controls="v-Install Root Certificate-defense evasion" aria-selected="false">Install Root Certificate</a>
+ <a class="nav-link side" id="v-InstallUtil-defense evasion-tab" href="/previous/october2018/techniques/T1118" aria-controls="v-InstallUtil-defense evasion" aria-selected="false">InstallUtil</a>
+ <a class="nav-link side" id="v-Launchctl-defense evasion-tab" href="/previous/october2018/techniques/T1152" aria-controls="v-Launchctl-defense evasion" aria-selected="false">Launchctl</a>
+ <a class="nav-link side" id="v-LC_MAIN Hijacking-defense evasion-tab" href="/previous/october2018/techniques/T1149" aria-controls="v-LC_MAIN Hijacking-defense evasion" aria-selected="false">LC_MAIN Hijacking</a>
+ <a class="nav-link side" id="v-Masquerading-defense evasion-tab" href="/previous/october2018/techniques/T1036" aria-controls="v-Masquerading-defense evasion" aria-selected="false">Masquerading</a>
+ <a class="nav-link side" id="v-Modify Registry-defense evasion-tab" href="/previous/october2018/techniques/T1112" aria-controls="v-Modify Registry-defense evasion" aria-selected="false">Modify Registry</a>
+ <a class="nav-link side" id="v-Mshta-defense evasion-tab" href="/previous/october2018/techniques/T1170" aria-controls="v-Mshta-defense evasion" aria-selected="false">Mshta</a>
+ <a class="nav-link side" id="v-Network Share Connection Removal-defense evasion-tab" href="/previous/october2018/techniques/T1126" aria-controls="v-Network Share Connection Removal-defense evasion" aria-selected="false">Network Share Connection Removal</a>
+ <a class="nav-link side" id="v-NTFS File Attributes-defense evasion-tab" href="/previous/october2018/techniques/T1096" aria-controls="v-NTFS File Attributes-defense evasion" aria-selected="false">NTFS File Attributes</a>
+ <a class="nav-link side" id="v-Obfuscated Files or Information-defense evasion-tab" href="/previous/october2018/techniques/T1027" aria-controls="v-Obfuscated Files or Information-defense evasion" aria-selected="false">Obfuscated Files or Information</a>
+ <a class="nav-link side" id="v-Plist Modification-defense evasion-tab" href="/previous/october2018/techniques/T1150" aria-controls="v-Plist Modification-defense evasion" aria-selected="false">Plist Modification</a>
+ <a class="nav-link side" id="v-Port Knocking-defense evasion-tab" href="/previous/october2018/techniques/T1205" aria-controls="v-Port Knocking-defense evasion" aria-selected="false">Port Knocking</a>
+ <a class="nav-link side" id="v-Process Doppelgänging-defense evasion-tab" href="/previous/october2018/techniques/T1186" aria-controls="v-Process Doppelgänging-defense evasion" aria-selected="false">Process Doppelgänging</a>
+ <a class="nav-link side" id="v-Process Hollowing-defense evasion-tab" href="/previous/october2018/techniques/T1093" aria-controls="v-Process Hollowing-defense evasion" aria-selected="false">Process Hollowing</a>
+ <a class="nav-link side" id="v-Process Injection-defense evasion-tab" href="/previous/october2018/techniques/T1055" aria-controls="v-Process Injection-defense evasion" aria-selected="false">Process Injection</a>
+ <a class="nav-link side" id="v-Redundant Access-defense evasion-tab" href="/previous/october2018/techniques/T1108" aria-controls="v-Redundant Access-defense evasion" aria-selected="false">Redundant Access</a>
+ <a class="nav-link side" id="v-Regsvcs/Regasm-defense evasion-tab" href="/previous/october2018/techniques/T1121" aria-controls="v-Regsvcs/Regasm-defense evasion" aria-selected="false">Regsvcs/Regasm</a>
+ <a class="nav-link side" id="v-Regsvr32-defense evasion-tab" href="/previous/october2018/techniques/T1117" aria-controls="v-Regsvr32-defense evasion" aria-selected="false">Regsvr32</a>
+ <a class="nav-link side" id="v-Rootkit-defense evasion-tab" href="/previous/october2018/techniques/T1014" aria-controls="v-Rootkit-defense evasion" aria-selected="false">Rootkit</a>
+ <a class="nav-link side" id="v-Rundll32-defense evasion-tab" href="/previous/october2018/techniques/T1085" aria-controls="v-Rundll32-defense evasion" aria-selected="false">Rundll32</a>
+ <a class="nav-link side" id="v-Scripting-defense evasion-tab" href="/previous/october2018/techniques/T1064" aria-controls="v-Scripting-defense evasion" aria-selected="false">Scripting</a>
+ <a class="nav-link side" id="v-Signed Binary Proxy Execution-defense evasion-tab" href="/previous/october2018/techniques/T1218" aria-controls="v-Signed Binary Proxy Execution-defense evasion" aria-selected="false">Signed Binary Proxy Execution</a>
+ <a class="nav-link side" id="v-Signed Script Proxy Execution-defense evasion-tab" href="/previous/october2018/techniques/T1216" aria-controls="v-Signed Script Proxy Execution-defense evasion" aria-selected="false">Signed Script Proxy Execution</a>
+ <a class="nav-link side" id="v-SIP and Trust Provider Hijacking-defense evasion-tab" href="/previous/october2018/techniques/T1198" aria-controls="v-SIP and Trust Provider Hijacking-defense evasion" aria-selected="false">SIP and Trust Provider Hijacking</a>
+ <a class="nav-link side" id="v-Software Packing-defense evasion-tab" href="/previous/october2018/techniques/T1045" aria-controls="v-Software Packing-defense evasion" aria-selected="false">Software Packing</a>
+ <a class="nav-link side" id="v-Space after Filename-defense evasion-tab" href="/previous/october2018/techniques/T1151" aria-controls="v-Space after Filename-defense evasion" aria-selected="false">Space after Filename</a>
+ <a class="nav-link side" id="v-Template Injection-defense evasion-tab" href="/previous/october2018/techniques/T1221" aria-controls="v-Template Injection-defense evasion" aria-selected="false">Template Injection</a>
+ <a class="nav-link side" id="v-Timestomp-defense evasion-tab" href="/previous/october2018/techniques/T1099" aria-controls="v-Timestomp-defense evasion" aria-selected="false">Timestomp</a>
+ <a class="nav-link side" id="v-Trusted Developer Utilities-defense evasion-tab" href="/previous/october2018/techniques/T1127" aria-controls="v-Trusted Developer Utilities-defense evasion" aria-selected="false">Trusted Developer Utilities</a>
+ <a class="nav-link side" id="v-Valid Accounts-defense evasion-tab" href="/previous/october2018/techniques/T1078" aria-controls="v-Valid Accounts-defense evasion" aria-selected="false">Valid Accounts</a>
+ <a class="nav-link side" id="v-Web Service-defense evasion-tab" href="/previous/october2018/techniques/T1102" aria-controls="v-Web Service-defense evasion" aria-selected="false">Web Service</a>
+ <a class="nav-link side" id="v-XSL Script Processing-defense evasion-tab" href="/previous/october2018/techniques/T1220" aria-controls="v-XSL Script Processing-defense evasion" aria-selected="false">XSL Script Processing</a>
+</div>
+</div> <a class="nav-link side expand-title" id="v-credential access-tab" data-toggle="collapse" href="#credential access" role="tab" aria-expanded="false" aria-controls="credential access"><span id="credential_access-tooltip" title="Credential Access">Credential Access</span ><span class="glyphicon glyphicon-plus float-right expand-icon" aria-hidden="true"></span></a>
+ <div class="collapse" id="credential access" aria-labelledby="v-credential access-tab">
+ <div class="nav flex-column nav pl-3" id="v-tab" role="tablist" aria-orientation="vertical">
+ <a class="nav-link side" id="v-Account Manipulation-credential access-tab" href="/previous/october2018/techniques/T1098" aria-controls="v-Account Manipulation-credential access" aria-selected="false">Account Manipulation</a>
+ <a class="nav-link side" id="v-Bash History-credential access-tab" href="/previous/october2018/techniques/T1139" aria-controls="v-Bash History-credential access" aria-selected="false">Bash History</a>
+ <a class="nav-link side" id="v-Brute Force-credential access-tab" href="/previous/october2018/techniques/T1110" aria-controls="v-Brute Force-credential access" aria-selected="false">Brute Force</a>
+ <a class="nav-link side" id="v-Credential Dumping-credential access-tab" href="/previous/october2018/techniques/T1003" aria-controls="v-Credential Dumping-credential access" aria-selected="false">Credential Dumping</a>
+ <a class="nav-link side" id="v-Credentials in Files-credential access-tab" href="/previous/october2018/techniques/T1081" aria-controls="v-Credentials in Files-credential access" aria-selected="false">Credentials in Files</a>
+ <a class="nav-link side" id="v-Credentials in Registry-credential access-tab" href="/previous/october2018/techniques/T1214" aria-controls="v-Credentials in Registry-credential access" aria-selected="false">Credentials in Registry</a>
+ <a class="nav-link side" id="v-Exploitation for Credential Access-credential access-tab" href="/previous/october2018/techniques/T1212" aria-controls="v-Exploitation for Credential Access-credential access" aria-selected="false">Exploitation for Credential Access</a>
+ <a class="nav-link side" id="v-Forced Authentication-credential access-tab" href="/previous/october2018/techniques/T1187" aria-controls="v-Forced Authentication-credential access" aria-selected="false">Forced Authentication</a>
+ <a class="nav-link side" id="v-Hooking-credential access-tab" href="/previous/october2018/techniques/T1179" aria-controls="v-Hooking-credential access" aria-selected="false">Hooking</a>
+ <a class="nav-link side" id="v-Input Capture-credential access-tab" href="/previous/october2018/techniques/T1056" aria-controls="v-Input Capture-credential access" aria-selected="false">Input Capture</a>
+ <a class="nav-link side" id="v-Input Prompt-credential access-tab" href="/previous/october2018/techniques/T1141" aria-controls="v-Input Prompt-credential access" aria-selected="false">Input Prompt</a>
+ <a class="nav-link side" id="v-Kerberoasting-credential access-tab" href="/previous/october2018/techniques/T1208" aria-controls="v-Kerberoasting-credential access" aria-selected="false">Kerberoasting</a>
+ <a class="nav-link side" id="v-Keychain-credential access-tab" href="/previous/october2018/techniques/T1142" aria-controls="v-Keychain-credential access" aria-selected="false">Keychain</a>
+ <a class="nav-link side" id="v-LLMNR/NBT-NS Poisoning-credential access-tab" href="/previous/october2018/techniques/T1171" aria-controls="v-LLMNR/NBT-NS Poisoning-credential access" aria-selected="false">LLMNR/NBT-NS Poisoning</a>
+ <a class="nav-link side" id="v-Network Sniffing-credential access-tab" href="/previous/october2018/techniques/T1040" aria-controls="v-Network Sniffing-credential access" aria-selected="false">Network Sniffing</a>
+ <a class="nav-link side" id="v-Password Filter DLL-credential access-tab" href="/previous/october2018/techniques/T1174" aria-controls="v-Password Filter DLL-credential access" aria-selected="false">Password Filter DLL</a>
+ <a class="nav-link side" id="v-Private Keys-credential access-tab" href="/previous/october2018/techniques/T1145" aria-controls="v-Private Keys-credential access" aria-selected="false">Private Keys</a>
+ <a class="nav-link side" id="v-Securityd Memory-credential access-tab" href="/previous/october2018/techniques/T1167" aria-controls="v-Securityd Memory-credential access" aria-selected="false">Securityd Memory</a>
+ <a class="nav-link side" id="v-Two-Factor Authentication Interception-credential access-tab" href="/previous/october2018/techniques/T1111" aria-controls="v-Two-Factor Authentication Interception-credential access" aria-selected="false">Two-Factor Authentication Interception</a>
+</div>
+</div> <a class="nav-link side expand-title" id="v-discovery-tab" data-toggle="collapse" href="#discovery" role="tab" aria-expanded="false" aria-controls="discovery"><span id="discovery-tooltip" title="Discovery">Discovery</span ><span class="glyphicon glyphicon-plus float-right expand-icon" aria-hidden="true"></span></a>
+ <div class="collapse" id="discovery" aria-labelledby="v-discovery-tab">
+ <div class="nav flex-column nav pl-3" id="v-tab" role="tablist" aria-orientation="vertical">
+ <a class="nav-link side" id="v-Account Discovery-discovery-tab" href="/previous/october2018/techniques/T1087" aria-controls="v-Account Discovery-discovery" aria-selected="false">Account Discovery</a>
+ <a class="nav-link side" id="v-Application Window Discovery-discovery-tab" href="/previous/october2018/techniques/T1010" aria-controls="v-Application Window Discovery-discovery" aria-selected="false">Application Window Discovery</a>
+ <a class="nav-link side" id="v-Browser Bookmark Discovery-discovery-tab" href="/previous/october2018/techniques/T1217" aria-controls="v-Browser Bookmark Discovery-discovery" aria-selected="false">Browser Bookmark Discovery</a>
+ <a class="nav-link side" id="v-File and Directory Discovery-discovery-tab" href="/previous/october2018/techniques/T1083" aria-controls="v-File and Directory Discovery-discovery" aria-selected="false">File and Directory Discovery</a>
+ <a class="nav-link side" id="v-Network Service Scanning-discovery-tab" href="/previous/october2018/techniques/T1046" aria-controls="v-Network Service Scanning-discovery" aria-selected="false">Network Service Scanning</a>
+ <a class="nav-link side" id="v-Network Share Discovery-discovery-tab" href="/previous/october2018/techniques/T1135" aria-controls="v-Network Share Discovery-discovery" aria-selected="false">Network Share Discovery</a>
+ <a class="nav-link side" id="v-Network Sniffing-discovery-tab" href="/previous/october2018/techniques/T1040" aria-controls="v-Network Sniffing-discovery" aria-selected="false">Network Sniffing</a>
+ <a class="nav-link side" id="v-Password Policy Discovery-discovery-tab" href="/previous/october2018/techniques/T1201" aria-controls="v-Password Policy Discovery-discovery" aria-selected="false">Password Policy Discovery</a>
+ <a class="nav-link side" id="v-Peripheral Device Discovery-discovery-tab" href="/previous/october2018/techniques/T1120" aria-controls="v-Peripheral Device Discovery-discovery" aria-selected="false">Peripheral Device Discovery</a>
+ <a class="nav-link side" id="v-Permission Groups Discovery-discovery-tab" href="/previous/october2018/techniques/T1069" aria-controls="v-Permission Groups Discovery-discovery" aria-selected="false">Permission Groups Discovery</a>
+ <a class="nav-link side" id="v-Process Discovery-discovery-tab" href="/previous/october2018/techniques/T1057" aria-controls="v-Process Discovery-discovery" aria-selected="false">Process Discovery</a>
+ <a class="nav-link side" id="v-Query Registry-discovery-tab" href="/previous/october2018/techniques/T1012" aria-controls="v-Query Registry-discovery" aria-selected="false">Query Registry</a>
+ <a class="nav-link side" id="v-Remote System Discovery-discovery-tab" href="/previous/october2018/techniques/T1018" aria-controls="v-Remote System Discovery-discovery" aria-selected="false">Remote System Discovery</a>
+ <a class="nav-link side" id="v-Security Software Discovery-discovery-tab" href="/previous/october2018/techniques/T1063" aria-controls="v-Security Software Discovery-discovery" aria-selected="false">Security Software Discovery</a>
+ <a class="nav-link side" id="v-System Information Discovery-discovery-tab" href="/previous/october2018/techniques/T1082" aria-controls="v-System Information Discovery-discovery" aria-selected="false">System Information Discovery</a>
+ <a class="nav-link side" id="v-System Network Configuration Discovery-discovery-tab" href="/previous/october2018/techniques/T1016" aria-controls="v-System Network Configuration Discovery-discovery" aria-selected="false">System Network Configuration Discovery</a>
+ <a class="nav-link side" id="v-System Network Connections Discovery-discovery-tab" href="/previous/october2018/techniques/T1049" aria-controls="v-System Network Connections Discovery-discovery" aria-selected="false">System Network Connections Discovery</a>
+ <a class="nav-link side" id="v-System Owner/User Discovery-discovery-tab" href="/previous/october2018/techniques/T1033" aria-controls="v-System Owner/User Discovery-discovery" aria-selected="false">System Owner/User Discovery</a>
+ <a class="nav-link side" id="v-System Service Discovery-discovery-tab" href="/previous/october2018/techniques/T1007" aria-controls="v-System Service Discovery-discovery" aria-selected="false">System Service Discovery</a>
+ <a class="nav-link side" id="v-System Time Discovery-discovery-tab" href="/previous/october2018/techniques/T1124" aria-controls="v-System Time Discovery-discovery" aria-selected="false">System Time Discovery</a>
+</div>
+</div> <a class="nav-link side expand-title" id="v-lateral movement-tab" data-toggle="collapse" href="#lateral movement" role="tab" aria-expanded="false" aria-controls="lateral movement"><span id="lateral_movement-tooltip" title="Lateral Movement">Lateral Movement</span ><span class="glyphicon glyphicon-plus float-right expand-icon" aria-hidden="true"></span></a>
+ <div class="collapse" id="lateral movement" aria-labelledby="v-lateral movement-tab">
+ <div class="nav flex-column nav pl-3" id="v-tab" role="tablist" aria-orientation="vertical">
+ <a class="nav-link side" id="v-AppleScript-lateral movement-tab" href="/previous/october2018/techniques/T1155" aria-controls="v-AppleScript-lateral movement" aria-selected="false">AppleScript</a>
+ <a class="nav-link side" id="v-Application Deployment Software-lateral movement-tab" href="/previous/october2018/techniques/T1017" aria-controls="v-Application Deployment Software-lateral movement" aria-selected="false">Application Deployment Software</a>
+ <a class="nav-link side" id="v-Distributed Component Object Model-lateral movement-tab" href="/previous/october2018/techniques/T1175" aria-controls="v-Distributed Component Object Model-lateral movement" aria-selected="false">Distributed Component Object Model</a>
+ <a class="nav-link side" id="v-Exploitation of Remote Services-lateral movement-tab" href="/previous/october2018/techniques/T1210" aria-controls="v-Exploitation of Remote Services-lateral movement" aria-selected="false">Exploitation of Remote Services</a>
+ <a class="nav-link side" id="v-Logon Scripts-lateral movement-tab" href="/previous/october2018/techniques/T1037" aria-controls="v-Logon Scripts-lateral movement" aria-selected="false">Logon Scripts</a>
+ <a class="nav-link side" id="v-Pass the Hash-lateral movement-tab" href="/previous/october2018/techniques/T1075" aria-controls="v-Pass the Hash-lateral movement" aria-selected="false">Pass the Hash</a>
+ <a class="nav-link side" id="v-Pass the Ticket-lateral movement-tab" href="/previous/october2018/techniques/T1097" aria-controls="v-Pass the Ticket-lateral movement" aria-selected="false">Pass the Ticket</a>
+ <a class="nav-link side" id="v-Remote Desktop Protocol-lateral movement-tab" href="/previous/october2018/techniques/T1076" aria-controls="v-Remote Desktop Protocol-lateral movement" aria-selected="false">Remote Desktop Protocol</a>
+ <a class="nav-link side" id="v-Remote File Copy-lateral movement-tab" href="/previous/october2018/techniques/T1105" aria-controls="v-Remote File Copy-lateral movement" aria-selected="false">Remote File Copy</a>
+ <a class="nav-link side" id="v-Remote Services-lateral movement-tab" href="/previous/october2018/techniques/T1021" aria-controls="v-Remote Services-lateral movement" aria-selected="false">Remote Services</a>
+ <a class="nav-link side" id="v-Replication Through Removable Media-lateral movement-tab" href="/previous/october2018/techniques/T1091" aria-controls="v-Replication Through Removable Media-lateral movement" aria-selected="false">Replication Through Removable Media</a>
+ <a class="nav-link side" id="v-Shared Webroot-lateral movement-tab" href="/previous/october2018/techniques/T1051" aria-controls="v-Shared Webroot-lateral movement" aria-selected="false">Shared Webroot</a>
+ <a class="nav-link side" id="v-SSH Hijacking-lateral movement-tab" href="/previous/october2018/techniques/T1184" aria-controls="v-SSH Hijacking-lateral movement" aria-selected="false">SSH Hijacking</a>
+ <a class="nav-link side" id="v-Taint Shared Content-lateral movement-tab" href="/previous/october2018/techniques/T1080" aria-controls="v-Taint Shared Content-lateral movement" aria-selected="false">Taint Shared Content</a>
+ <a class="nav-link side" id="v-Third-party Software-lateral movement-tab" href="/previous/october2018/techniques/T1072" aria-controls="v-Third-party Software-lateral movement" aria-selected="false">Third-party Software</a>
+ <a class="nav-link side" id="v-Windows Admin Shares-lateral movement-tab" href="/previous/october2018/techniques/T1077" aria-controls="v-Windows Admin Shares-lateral movement" aria-selected="false">Windows Admin Shares</a>
+ <a class="nav-link side" id="v-Windows Remote Management-lateral movement-tab" href="/previous/october2018/techniques/T1028" aria-controls="v-Windows Remote Management-lateral movement" aria-selected="false">Windows Remote Management</a>
+</div>
+</div> <a class="nav-link side expand-title" id="v-collection-tab" data-toggle="collapse" href="#collection" role="tab" aria-expanded="false" aria-controls="collection"><span id="collection-tooltip" title="Collection">Collection</span ><span class="glyphicon glyphicon-plus float-right expand-icon" aria-hidden="true"></span></a>
+ <div class="collapse" id="collection" aria-labelledby="v-collection-tab">
+ <div class="nav flex-column nav pl-3" id="v-tab" role="tablist" aria-orientation="vertical">
+ <a class="nav-link side" id="v-Audio Capture-collection-tab" href="/previous/october2018/techniques/T1123" aria-controls="v-Audio Capture-collection" aria-selected="false">Audio Capture</a>
+ <a class="nav-link side" id="v-Automated Collection-collection-tab" href="/previous/october2018/techniques/T1119" aria-controls="v-Automated Collection-collection" aria-selected="false">Automated Collection</a>
+ <a class="nav-link side" id="v-Clipboard Data-collection-tab" href="/previous/october2018/techniques/T1115" aria-controls="v-Clipboard Data-collection" aria-selected="false">Clipboard Data</a>
+ <a class="nav-link side" id="v-Data from Information Repositories-collection-tab" href="/previous/october2018/techniques/T1213" aria-controls="v-Data from Information Repositories-collection" aria-selected="false">Data from Information Repositories</a>
+ <a class="nav-link side" id="v-Data from Local System-collection-tab" href="/previous/october2018/techniques/T1005" aria-controls="v-Data from Local System-collection" aria-selected="false">Data from Local System</a>
+ <a class="nav-link side" id="v-Data from Network Shared Drive-collection-tab" href="/previous/october2018/techniques/T1039" aria-controls="v-Data from Network Shared Drive-collection" aria-selected="false">Data from Network Shared Drive</a>
+ <a class="nav-link side" id="v-Data from Removable Media-collection-tab" href="/previous/october2018/techniques/T1025" aria-controls="v-Data from Removable Media-collection" aria-selected="false">Data from Removable Media</a>
+ <a class="nav-link side" id="v-Data Staged-collection-tab" href="/previous/october2018/techniques/T1074" aria-controls="v-Data Staged-collection" aria-selected="false">Data Staged</a>
+ <a class="nav-link side" id="v-Email Collection-collection-tab" href="/previous/october2018/techniques/T1114" aria-controls="v-Email Collection-collection" aria-selected="false">Email Collection</a>
+ <a class="nav-link side" id="v-Input Capture-collection-tab" href="/previous/october2018/techniques/T1056" aria-controls="v-Input Capture-collection" aria-selected="false">Input Capture</a>
+ <a class="nav-link side" id="v-Man in the Browser-collection-tab" href="/previous/october2018/techniques/T1185" aria-controls="v-Man in the Browser-collection" aria-selected="false">Man in the Browser</a>
+ <a class="nav-link side" id="v-Screen Capture-collection-tab" href="/previous/october2018/techniques/T1113" aria-controls="v-Screen Capture-collection" aria-selected="false">Screen Capture</a>
+ <a class="nav-link side" id="v-Video Capture-collection-tab" href="/previous/october2018/techniques/T1125" aria-controls="v-Video Capture-collection" aria-selected="false">Video Capture</a>
+</div>
+</div> <a class="nav-link side expand-title" id="v-exfiltration-tab" data-toggle="collapse" href="#exfiltration" role="tab" aria-expanded="false" aria-controls="exfiltration"><span id="exfiltration-tooltip" title="Exfiltration">Exfiltration</span ><span class="glyphicon glyphicon-plus float-right expand-icon" aria-hidden="true"></span></a>
+ <div class="collapse" id="exfiltration" aria-labelledby="v-exfiltration-tab">
+ <div class="nav flex-column nav pl-3" id="v-tab" role="tablist" aria-orientation="vertical">
+ <a class="nav-link side" id="v-Automated Exfiltration-exfiltration-tab" href="/previous/october2018/techniques/T1020" aria-controls="v-Automated Exfiltration-exfiltration" aria-selected="false">Automated Exfiltration</a>
+ <a class="nav-link side" id="v-Data Compressed-exfiltration-tab" href="/previous/october2018/techniques/T1002" aria-controls="v-Data Compressed-exfiltration" aria-selected="false">Data Compressed</a>
+ <a class="nav-link side" id="v-Data Encrypted-exfiltration-tab" href="/previous/october2018/techniques/T1022" aria-controls="v-Data Encrypted-exfiltration" aria-selected="false">Data Encrypted</a>
+ <a class="nav-link side" id="v-Data Transfer Size Limits-exfiltration-tab" href="/previous/october2018/techniques/T1030" aria-controls="v-Data Transfer Size Limits-exfiltration" aria-selected="false">Data Transfer Size Limits</a>
+ <a class="nav-link side" id="v-Exfiltration Over Alternative Protocol-exfiltration-tab" href="/previous/october2018/techniques/T1048" aria-controls="v-Exfiltration Over Alternative Protocol-exfiltration" aria-selected="false">Exfiltration Over Alternative Protocol</a>
+ <a class="nav-link side" id="v-Exfiltration Over Command and Control Channel-exfiltration-tab" href="/previous/october2018/techniques/T1041" aria-controls="v-Exfiltration Over Command and Control Channel-exfiltration" aria-selected="false">Exfiltration Over Command and Control Channel</a>
+ <a class="nav-link side" id="v-Exfiltration Over Other Network Medium-exfiltration-tab" href="/previous/october2018/techniques/T1011" aria-controls="v-Exfiltration Over Other Network Medium-exfiltration" aria-selected="false">Exfiltration Over Other Network Medium</a>
+ <a class="nav-link side" id="v-Exfiltration Over Physical Medium-exfiltration-tab" href="/previous/october2018/techniques/T1052" aria-controls="v-Exfiltration Over Physical Medium-exfiltration" aria-selected="false">Exfiltration Over Physical Medium</a>
+ <a class="nav-link side" id="v-Scheduled Transfer-exfiltration-tab" href="/previous/october2018/techniques/T1029" aria-controls="v-Scheduled Transfer-exfiltration" aria-selected="false">Scheduled Transfer</a>
+</div>
+</div> <a class="nav-link side expand-title" id="v-command and control-tab" data-toggle="collapse" href="#command and control" role="tab" aria-expanded="false" aria-controls="command and control"><span id="command_and_control-tooltip" title="Command and Control">Command and Control</span ><span class="glyphicon glyphicon-plus float-right expand-icon" aria-hidden="true"></span></a>
+ <div class="collapse" id="command and control" aria-labelledby="v-command and control-tab">
+ <div class="nav flex-column nav pl-3" id="v-tab" role="tablist" aria-orientation="vertical">
+ <a class="nav-link side" id="v-Commonly Used Port-command and control-tab" href="/previous/october2018/techniques/T1043" aria-controls="v-Commonly Used Port-command and control" aria-selected="false">Commonly Used Port</a>
+ <a class="nav-link side" id="v-Communication Through Removable Media-command and control-tab" href="/previous/october2018/techniques/T1092" aria-controls="v-Communication Through Removable Media-command and control" aria-selected="false">Communication Through Removable Media</a>
+ <a class="nav-link side" id="v-Connection Proxy-command and control-tab" href="/previous/october2018/techniques/T1090" aria-controls="v-Connection Proxy-command and control" aria-selected="false">Connection Proxy</a>
+ <a class="nav-link side" id="v-Custom Command and Control Protocol-command and control-tab" href="/previous/october2018/techniques/T1094" aria-controls="v-Custom Command and Control Protocol-command and control" aria-selected="false">Custom Command and Control Protocol</a>
+ <a class="nav-link side" id="v-Custom Cryptographic Protocol-command and control-tab" href="/previous/october2018/techniques/T1024" aria-controls="v-Custom Cryptographic Protocol-command and control" aria-selected="false">Custom Cryptographic Protocol</a>
+ <a class="nav-link side" id="v-Data Encoding-command and control-tab" href="/previous/october2018/techniques/T1132" aria-controls="v-Data Encoding-command and control" aria-selected="false">Data Encoding</a>
+ <a class="nav-link side" id="v-Data Obfuscation-command and control-tab" href="/previous/october2018/techniques/T1001" aria-controls="v-Data Obfuscation-command and control" aria-selected="false">Data Obfuscation</a>
+ <a class="nav-link side" id="v-Domain Fronting-command and control-tab" href="/previous/october2018/techniques/T1172" aria-controls="v-Domain Fronting-command and control" aria-selected="false">Domain Fronting</a>
+ <a class="nav-link side" id="v-Fallback Channels-command and control-tab" href="/previous/october2018/techniques/T1008" aria-controls="v-Fallback Channels-command and control" aria-selected="false">Fallback Channels</a>
+ <a class="nav-link side" id="v-Multi-hop Proxy-command and control-tab" href="/previous/october2018/techniques/T1188" aria-controls="v-Multi-hop Proxy-command and control" aria-selected="false">Multi-hop Proxy</a>
+ <a class="nav-link side" id="v-Multi-Stage Channels-command and control-tab" href="/previous/october2018/techniques/T1104" aria-controls="v-Multi-Stage Channels-command and control" aria-selected="false">Multi-Stage Channels</a>
+ <a class="nav-link side" id="v-Multiband Communication-command and control-tab" href="/previous/october2018/techniques/T1026" aria-controls="v-Multiband Communication-command and control" aria-selected="false">Multiband Communication</a>
+ <a class="nav-link side" id="v-Multilayer Encryption-command and control-tab" href="/previous/october2018/techniques/T1079" aria-controls="v-Multilayer Encryption-command and control" aria-selected="false">Multilayer Encryption</a>
+ <a class="nav-link side" id="v-Port Knocking-command and control-tab" href="/previous/october2018/techniques/T1205" aria-controls="v-Port Knocking-command and control" aria-selected="false">Port Knocking</a>
+ <a class="nav-link side" id="v-Remote Access Tools-command and control-tab" href="/previous/october2018/techniques/T1219" aria-controls="v-Remote Access Tools-command and control" aria-selected="false">Remote Access Tools</a>
+ <a class="nav-link side" id="v-Remote File Copy-command and control-tab" href="/previous/october2018/techniques/T1105" aria-controls="v-Remote File Copy-command and control" aria-selected="false">Remote File Copy</a>
+ <a class="nav-link side" id="v-Standard Application Layer Protocol-command and control-tab" href="/previous/october2018/techniques/T1071" aria-controls="v-Standard Application Layer Protocol-command and control" aria-selected="false">Standard Application Layer Protocol</a>
+ <a class="nav-link side" id="v-Standard Cryptographic Protocol-command and control-tab" href="/previous/october2018/techniques/T1032" aria-controls="v-Standard Cryptographic Protocol-command and control" aria-selected="false">Standard Cryptographic Protocol</a>
+ <a class="nav-link side" id="v-Standard Non-Application Layer Protocol-command and control-tab" href="/previous/october2018/techniques/T1095" aria-controls="v-Standard Non-Application Layer Protocol-command and control" aria-selected="false">Standard Non-Application Layer Protocol</a>
+ <a class="nav-link side" id="v-Uncommonly Used Port-command and control-tab" href="/previous/october2018/techniques/T1065" aria-controls="v-Uncommonly Used Port-command and control" aria-selected="false">Uncommonly Used Port</a>
+ <a class="nav-link side" id="v-Web Service-command and control-tab" href="/previous/october2018/techniques/T1102" aria-controls="v-Web Service-command and control" aria-selected="false">Web Service</a>
+</div>
+</div>
+    </div>
+<!--startindex-->
+
+             
+            <div class="tab-content col-xl-10 col-lg-10 col-md-9 pt-4" id="v-tabContent">
+                <div class="tab-pane fade show active" id="v-attckmatrix" role="tabpanel" aria-labelledby="v-attckmatrix-tab">
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item"><a href="/previous/october2018/">Home</a></li>
+      <li class="breadcrumb-item"><a href="/previous/october2018/techniques/enterprise">Techniques</a></li>
+  <li class="breadcrumb-item"><a href="/previous/october2018/techniques/enterprise">Enterprise</a></li>
+  <li class="breadcrumb-item">DLL Side-Loading</li>
+</ol>
+<div class="tab-pane fade show active" id="v-" role="tabpanel" aria-labelledby="v--tab"></div>
+<div class="row">
+   <div class="col-xl-12">
+      <div class="jumbotron jumbotron-fluid bg-white">
+         <div class="container-fluid">
+            <h1>
+               DLL Side-Loading
+            </h1>            
+            <div class="row">
+               <div class="col-md-8 description-body">
+                  <p>Programs may specify DLLs that are loaded at runtime. Programs that improperly or vaguely specify a required DLL may be open to a vulnerability in which an unintended DLL is loaded. Side-loading vulnerabilities specifically occur when Windows Side-by-Side (WinSxS) manifests <span  id="scite-ref-1-a" class="scite-citeref-number" data-reference="MSDN Manifests"><sup><a href="https://msdn.microsoft.com/en-us/library/aa375365" target="_blank" data-hasqtip="0" aria-describedby="qtip-0">[1]</a></sup></span> are not explicit enough about characteristics of the DLL to be loaded. Adversaries may take advantage of a legitimate program that is vulnerable to side-loading to load a malicious DLL. <span  id="scite-ref-2-a" class="scite-citeref-number" data-reference="Stewart 2014"><sup><a href="https://www.fireeye.com/content/dam/fireeye-www/global/en/current-threats/pdfs/rpt-dll-sideloading.pdf" target="_blank" data-hasqtip="1" aria-describedby="qtip-1">[2]</a></sup></span></p><p>Adversaries likely use this technique as a means of masking actions they perform under a legitimate, trusted system or software process.</p>
+               </div>
+              
+               <div class="col-md-4">
+                  <div class="card">
+                     <div class="card-body">
+                        <div class="card-data"><span class="h5 card-title">ID</span>: T1073<br><br></div>
+                        <div class="card-data"><span class="h5 card-title"></span> </div>
+                        <div class="card-data"><span class="h5 card-title">Tactic</span>: Defense Evasion<br><br></div>
+                        <div class="card-data"><span class="h5 card-title">Platform:&nbsp;</span> Windows<br><br></div>
+                        <div class="card-data"><span class="h5 card-title"></span> </div>
+                        <div class="card-data"><span class="h5 card-title"></span> </div>
+                        <div class="card-data"><span class="h5 card-title">Data Sources:&nbsp;</span> Process use of network, Process monitoring, Loaded DLLs<br><br></div>
+                        <div class="card-data"><span class="h5 card-title"></span> </div>
+                        <div class="card-data"><span class="h5 card-title"></span> </div>
+                        <div class="card-data"><span class="h5 card-title">Defense Bypassed:&nbsp;</span> Process whitelisting, Anti-virus<br><br></div>
+                        <div class="card-data"><span class="h5 card-title"></span> </div>
+                        <div class="card-data"><span class="h5 card-title"></span> </div>
+                        <div class="card-data"><span class="h5 card-title"></span> </div>
+                        <div class="card-data"><span class="h5 card-title">Version</span>: 1.0</div>
+                      </div>
+                  </div>
+               </div>
+            </div>
+            
+            
+            <h2 class="pt-3" id ="examples">Examples</h2><table class="table table-bordered table-light mt-2"><thead><tr> <th scope="col">Name</th><th scope="col">Description</th></tr></thead><tbody class="bg-white"><tr><td><a href="/previous/october2018/groups/G0073">APT19</td><td><p><a href="/previous/october2018/groups/G0073">APT19</a> launched an HTTP malware variant and a Port 22 malware variant using a legitimate executable that loaded the malicious DLL.<span onclick=scrollToRef('scite-3')  id="scite-ref-3-a" class="scite-citeref-number" data-reference="Unit 42 C0d0so0 Jan 2016"><sup><a href="https://researchcenter.paloaltonetworks.com/2016/01/new-attacks-linked-to-c0d0s0-group/" target="_blank" data-hasqtip="2" aria-describedby="qtip-2">[3]</a></sup></span></p></a></td></tr><tr><td><a href="/previous/october2018/groups/G0022">APT3</td><td><p><a href="/previous/october2018/groups/G0022">APT3</a> has been known to side load DLLs with a valid version of Chrome with one of their tools.<span onclick=scrollToRef('scite-4')  id="scite-ref-4-a" class="scite-citeref-number" data-reference="FireEye Clandestine Fox"><sup><a href="https://www.fireeye.com/blog/threat-research/2014/04/new-zero-day-exploit-targeting-internet-explorer-versions-9-through-11-identified-in-targeted-attacks.html" target="_blank" data-hasqtip="3" aria-describedby="qtip-3">[4]</a></sup></span><span onclick=scrollToRef('scite-5')  id="scite-ref-5-a" class="scite-citeref-number" data-reference="FireEye Clandestine Fox Part 2"><sup><a href="https://www.fireeye.com/blog/threat-research/2014/06/clandestine-fox-part-deux.html" target="_blank" data-hasqtip="4" aria-describedby="qtip-4">[5]</a></sup></span></p></a></td></tr><tr><td><a href="/previous/october2018/groups/G0050">APT32</td><td><p><a href="/previous/october2018/groups/G0050">APT32</a> ran genuinely-signed executables from Symantec and McAfee which loaded a malicious DLL called rastls.dll.<span onclick=scrollToRef('scite-6')  id="scite-ref-6-a" class="scite-citeref-number" data-reference="ESET OceanLotus"><sup><a href="https://www.welivesecurity.com/2018/03/13/oceanlotus-ships-new-backdoor/" target="_blank" data-hasqtip="5" aria-describedby="qtip-5">[6]</a></sup></span></p></a></td></tr><tr><td><a href="/previous/october2018/software/S0128">BADNEWS</td><td><p><a href="/previous/october2018/software/S0128">BADNEWS</a> typically loads its DLL file into a legitimate signed Java or VMware executable.<span onclick=scrollToRef('scite-7')  id="scite-ref-7-a" class="scite-citeref-number" data-reference="Forcepoint Monsoon"><sup><a href="https://www.forcepoint.com/sites/default/files/resources/files/forcepoint-security-labs-monsoon-analysis-report.pdf" target="_blank" data-hasqtip="6" aria-describedby="qtip-6">[7]</a></sup></span><span onclick=scrollToRef('scite-8')  id="scite-ref-8-a" class="scite-citeref-number" data-reference="PaloAlto Patchwork Mar 2018"><sup><a href="https://researchcenter.paloaltonetworks.com/2018/03/unit42-patchwork-continues-deliver-badnews-indian-subcontinent/" target="_blank" data-hasqtip="7" aria-describedby="qtip-7">[8]</a></sup></span></p></a></td></tr><tr><td><a href="/previous/october2018/software/S0127">BBSRAT</td><td><p>DLL side-loading has been used to execute <a href="/previous/october2018/software/S0127">BBSRAT</a> through a legitimate Citrix executable ssonsvr.exe which is vulnerable to the technique. The Citrix executable was dropped along with <a href="/previous/october2018/software/S0127">BBSRAT</a> by the dropper.<span onclick=scrollToRef('scite-9')  id="scite-ref-9-a" class="scite-citeref-number" data-reference="Palo Alto Networks BBSRAT"><sup><a href="http://researchcenter.paloaltonetworks.com/2015/12/bbsrat-attacks-targeting-russian-organizations-linked-to-roaming-tiger/" target="_blank" data-hasqtip="8" aria-describedby="qtip-8">[9]</a></sup></span></p></a></td></tr><tr><td><a href="/previous/october2018/software/S0182">FinFisher</td><td><p><a href="/previous/october2018/software/S0182">FinFisher</a> uses DLL side-loading to load malicious programs.<span onclick=scrollToRef('scite-10')  id="scite-ref-10-a" class="scite-citeref-number" data-reference="FinFisher Citation"><sup><a href="http://www.finfisher.com/FinFisher/index.html" target="_blank" data-hasqtip="9" aria-describedby="qtip-9">[10]</a></sup></span><span onclick=scrollToRef('scite-11')  id="scite-ref-11-a" class="scite-citeref-number" data-reference="Microsoft FinFisher March 2018"><sup><a href="https://cloudblogs.microsoft.com/microsoftsecure/2018/03/01/finfisher-exposed-a-researchers-tale-of-defeating-traps-tricks-and-complex-virtual-machines/" target="_blank" data-hasqtip="10" aria-describedby="qtip-10">[11]</a></sup></span></p></a></td></tr><tr><td><a href="/previous/october2018/software/S0032">gh0st</td><td><p>A <a href="/previous/october2018/software/S0032">gh0st</a> variant has used DLL side-loading.<span onclick=scrollToRef('scite-12')  id="scite-ref-12-a" class="scite-citeref-number" data-reference="Arbor Musical Chairs Feb 2018"><sup><a href="https://www.arbornetworks.com/blog/asert/musical-chairs-playing-tetris/" target="_blank" data-hasqtip="11" aria-describedby="qtip-11">[12]</a></sup></span></p></a></td></tr><tr><td><a href="/previous/october2018/software/S0070">HTTPBrowser</td><td><p><a href="/previous/october2018/software/S0070">HTTPBrowser</a> has used DLL side-loading.<span onclick=scrollToRef('scite-13')  id="scite-ref-13-a" class="scite-citeref-number" data-reference="Dell TG-3390"><sup><a href="https://www.secureworks.com/research/threat-group-3390-targets-organizations-for-cyberespionage" target="_blank" data-hasqtip="12" aria-describedby="qtip-12">[13]</a></sup></span></p></a></td></tr><tr><td><a href="/previous/october2018/groups/G0045">menuPass</td><td><p><a href="/previous/october2018/groups/G0045">menuPass</a> has used DLL side-loading to launch versions of Mimikatz and PwDump6 as well as <a href="/previous/october2018/software/S0275">UPPERCUT</a>.<span onclick=scrollToRef('scite-14')  id="scite-ref-14-a" class="scite-citeref-number" data-reference="PWC Cloud Hopper Technical Annex April 2017"><sup><a href="https://www.pwc.co.uk/cyber-security/pdf/cloud-hopper-annex-b-final.pdf" target="_blank" data-hasqtip="13" aria-describedby="qtip-13">[14]</a></sup></span><span onclick=scrollToRef('scite-15')  id="scite-ref-15-a" class="scite-citeref-number" data-reference="FireEye APT10 Sept 2018"><sup><a href="https://www.fireeye.com/blog/threat-research/2018/09/apt10-targeting-japanese-corporations-using-updated-ttps.html" target="_blank" data-hasqtip="14" aria-describedby="qtip-14">[15]</a></sup></span></p></a></td></tr><tr><td><a href="/previous/october2018/software/S0072">OwaAuth</td><td><p><a href="/previous/october2018/software/S0072">OwaAuth</a> has been loaded onto Exchange servers and disguised as an ISAPI filter (DLL file). The IIS w3wp.exe process then loads the malicious DLL.<span onclick=scrollToRef('scite-13')  id="scite-ref-13-a" class="scite-citeref-number" data-reference="Dell TG-3390"><sup><a href="https://www.secureworks.com/research/threat-group-3390-targets-organizations-for-cyberespionage" target="_blank" data-hasqtip="12" aria-describedby="qtip-12">[13]</a></sup></span></p></a></td></tr><tr><td><a href="/previous/october2018/groups/G0040">Patchwork</td><td><p>A <a href="/previous/october2018/groups/G0040">Patchwork</a> .dll that contains <a href="/previous/october2018/software/S0128">BADNEWS</a> is loaded and executed using DLL side-loading.<span onclick=scrollToRef('scite-16')  id="scite-ref-16-a" class="scite-citeref-number" data-reference="TrendMicro Patchwork Dec 2017"><sup><a href="https://documents.trendmicro.com/assets/tech-brief-untangling-the-patchwork-cyberespionage-group.pdf" target="_blank" data-hasqtip="15" aria-describedby="qtip-15">[16]</a></sup></span></p></a></td></tr><tr><td><a href="/previous/october2018/software/S0013">PlugX</td><td><p><a href="/previous/october2018/software/S0013">PlugX</a> has used to use DLL side-loading to evade anti-virus and to maintain persistence on a victim.<span onclick=scrollToRef('scite-5')  id="scite-ref-5-a" class="scite-citeref-number" data-reference="FireEye Clandestine Fox Part 2"><sup><a href="https://www.fireeye.com/blog/threat-research/2014/06/clandestine-fox-part-deux.html" target="_blank" data-hasqtip="4" aria-describedby="qtip-4">[5]</a></sup></span><span onclick=scrollToRef('scite-13')  id="scite-ref-13-a" class="scite-citeref-number" data-reference="Dell TG-3390"><sup><a href="https://www.secureworks.com/research/threat-group-3390-targets-organizations-for-cyberespionage" target="_blank" data-hasqtip="12" aria-describedby="qtip-12">[13]</a></sup></span><span onclick=scrollToRef('scite-2')  id="scite-ref-2-a" class="scite-citeref-number" data-reference="Stewart 2014"><sup><a href="https://www.fireeye.com/content/dam/fireeye-www/global/en/current-threats/pdfs/rpt-dll-sideloading.pdf" target="_blank" data-hasqtip="1" aria-describedby="qtip-1">[2]</a></sup></span><span onclick=scrollToRef('scite-14')  id="scite-ref-14-a" class="scite-citeref-number" data-reference="PWC Cloud Hopper Technical Annex April 2017"><sup><a href="https://www.pwc.co.uk/cyber-security/pdf/cloud-hopper-annex-b-final.pdf" target="_blank" data-hasqtip="13" aria-describedby="qtip-13">[14]</a></sup></span><span onclick=scrollToRef('scite-17')  id="scite-ref-17-a" class="scite-citeref-number" data-reference="Palo Alto PlugX June 2017"><sup><a href="https://researchcenter.paloaltonetworks.com/2017/06/unit42-paranoid-plugx/" target="_blank" data-hasqtip="16" aria-describedby="qtip-16">[17]</a></sup></span></p></a></td></tr><tr><td><a href="/previous/october2018/software/S0074">Sakula</td><td><p><a href="/previous/october2018/software/S0074">Sakula</a> uses DLL side-loading, typically using a digitally signed sample of Kaspersky Anti-Virus (AV) 6.0 for Windows Workstations or McAfee's Outlook Scan About Box to load malicious DLL files.<span onclick=scrollToRef('scite-18')  id="scite-ref-18-a" class="scite-citeref-number" data-reference="Dell Sakula"><sup><a href="http://www.secureworks.com/cyber-threat-intelligence/threats/sakula-malware-family/" target="_blank" data-hasqtip="17" aria-describedby="qtip-17">[18]</a></sup></span></p></a></td></tr><tr><td><a href="/previous/october2018/software/S0098">T9000</td><td><p>During the <a href="/previous/october2018/software/S0098">T9000</a> installation process, it drops a copy of the legitimate Microsoft binary igfxtray.exe. The executable contains a side-loading weakness which is used to load a portion of the malware.<span onclick=scrollToRef('scite-19')  id="scite-ref-19-a" class="scite-citeref-number" data-reference="Palo Alto T9000 Feb 2016"><sup><a href="http://researchcenter.paloaltonetworks.com/2016/02/t9000-advanced-modular-backdoor-uses-complex-anti-analysis-techniques/" target="_blank" data-hasqtip="18" aria-describedby="qtip-18">[19]</a></sup></span></p></a></td></tr><tr><td><a href="/previous/october2018/groups/G0027">Threat Group-3390</td><td><p><a href="/previous/october2018/groups/G0027">Threat Group-3390</a> actors have used DLL side-loading. Actors have used legitimate Kaspersky anti-virus variants in which the DLL acts as a stub loader that loads and executes the shell code.<span onclick=scrollToRef('scite-13')  id="scite-ref-13-a" class="scite-citeref-number" data-reference="Dell TG-3390"><sup><a href="https://www.secureworks.com/research/threat-group-3390-targets-organizations-for-cyberespionage" target="_blank" data-hasqtip="12" aria-describedby="qtip-12">[13]</a></sup></span><span onclick=scrollToRef('scite-20')  id="scite-ref-20-a" class="scite-citeref-number" data-reference="SecureWorks BRONZE UNION June 2017"><sup><a href="https://www.secureworks.com/research/bronze-union" target="_blank" data-hasqtip="19" aria-describedby="qtip-19">[20]</a></sup></span><span onclick=scrollToRef('scite-21')  id="scite-ref-21-a" class="scite-citeref-number" data-reference="Securelist LuckyMouse June 2018"><sup><a href="https://securelist.com/luckymouse-hits-national-data-center/86083/" target="_blank" data-hasqtip="20" aria-describedby="qtip-20">[21]</a></sup></span></p></a></td></tr><tr><td><a href="/previous/october2018/software/S0176">Wingbird</td><td><p><a href="/previous/october2018/software/S0176">Wingbird</a> side loads a malicious file, sspisrv.dll, in part of a spoofed lssas.exe service.<span onclick=scrollToRef('scite-22')  id="scite-ref-22-a" class="scite-citeref-number" data-reference="Microsoft SIR Vol 21"><sup><a href="http://download.microsoft.com/download/E/B/0/EB0F50CC-989C-4B66-B7F6-68CD3DC90DE3/Microsoft_Security_Intelligence_Report_Volume_21_English.pdf" target="_blank" data-hasqtip="21" aria-describedby="qtip-21">[22]</a></sup></span><span onclick=scrollToRef('scite-23')  id="scite-ref-23-a" class="scite-citeref-number" data-reference="Microsoft Wingbird Nov 2017"><sup><a href="https://www.microsoft.com/wdsi/threats/malware-encyclopedia-description?Name=Backdoor:Win32/Wingbird.A!dha" target="_blank" data-hasqtip="22" aria-describedby="qtip-22">[23]</a></sup></span></p></a></td></tr><tr><td><a href="/previous/october2018/software/S0230">ZeroT</td><td><p><a href="/previous/october2018/software/S0230">ZeroT</a> has used DLL side-loading to load malicious payloads.<span onclick=scrollToRef('scite-24')  id="scite-ref-24-a" class="scite-citeref-number" data-reference="Proofpoint TA459 April 2017"><sup><a href="https://www.proofpoint.com/us/threat-insight/post/apt-targets-financial-analysts" target="_blank" data-hasqtip="23" aria-describedby="qtip-23">[24]</a></sup></span><span onclick=scrollToRef('scite-25')  id="scite-ref-25-a" class="scite-citeref-number" data-reference="Proofpoint ZeroT Feb 2017"><sup><a href="https://www.proofpoint.com/us/threat-insight/post/APT-targets-russia-belarus-zerot-plugx" target="_blank" data-hasqtip="24" aria-describedby="qtip-24">[25]</a></sup></span></p></a></td></tr></tbody></table>
+            <h2 class="pt-3" id="mitigation">Mitigation</h2>
+            <p>Update software regularly. Install software in write-protected locations. Use the program sxstrace.exe that is included with Windows along with manual inspection to check manifest files for side-loading vulnerabilities in software.</p>
+            <h2 class="pt-3" id="detection">Detection</h2>
+            <p>Monitor processes for unusual activity (e.g., a process that does not use the network begins to do so). Track DLL metadata, such as a hash, and compare DLLs that are loaded at process execution time against previous executions to detect differences that do not correlate with patching or updates.</p>
+            
+            
+            
+            
+            
+            
+            <h2 class="pt-3" id="references">References</h2><div class="row"><div class="col"><ol><li><span  id="scite-1" class="scite-citation"><span class="scite-citation-text"><a rel="nofollow" class="external text" name="scite-1" href="https://msdn.microsoft.com/en-us/library/aa375365" target="_blank">Microsoft. (n.d.). Manifests. Retrieved June 3, 2016.</a></span></span></li><li><span  id="scite-2" class="scite-citation"><span class="scite-citation-text"><a rel="nofollow" class="external text" name="scite-2" href="https://www.fireeye.com/content/dam/fireeye-www/global/en/current-threats/pdfs/rpt-dll-sideloading.pdf" target="_blank">Stewart, A. (2014). DLL SIDE-LOADING: A Thorn in the Side of the Anti-Virus Industry. Retrieved November 12, 2014.</a></span></span></li><li><span  id="scite-3" class="scite-citation"><span class="scite-citation-text"><a rel="nofollow" class="external text" name="scite-3" href="https://researchcenter.paloaltonetworks.com/2016/01/new-attacks-linked-to-c0d0s0-group/" target="_blank">Grunzweig, J., Lee, B. (2016, January 22). New Attacks Linked to C0d0so0 Group. Retrieved August 2, 2018.</a></span></span></li><li><span  id="scite-4" class="scite-citation"><span class="scite-citation-text"><a rel="nofollow" class="external text" name="scite-4" href="https://www.fireeye.com/blog/threat-research/2014/04/new-zero-day-exploit-targeting-internet-explorer-versions-9-through-11-identified-in-targeted-attacks.html" target="_blank">Chen, X., Scott, M., Caselden, D.. (2014, April 26). New Zero-Day Exploit targeting Internet Explorer Versions 9 through 11 Identified in Targeted Attacks. Retrieved January 14, 2016.</a></span></span></li><li><span  id="scite-5" class="scite-citation"><span class="scite-citation-text"><a rel="nofollow" class="external text" name="scite-5" href="https://www.fireeye.com/blog/threat-research/2014/06/clandestine-fox-part-deux.html" target="_blank">Scott, M.. (2014, June 10). Clandestine Fox, Part Deux. Retrieved January 14, 2016.</a></span></span></li><li><span  id="scite-6" class="scite-citation"><span class="scite-citation-text"><a rel="nofollow" class="external text" name="scite-6" href="https://www.welivesecurity.com/2018/03/13/oceanlotus-ships-new-backdoor/" target="_blank">Foltýn, T. (2018, March 13). OceanLotus ships new backdoor using old tricks. Retrieved May 22, 2018.</a></span></span></li><li><span  id="scite-7" class="scite-citation"><span class="scite-citation-text"><a rel="nofollow" class="external text" name="scite-7" href="https://www.forcepoint.com/sites/default/files/resources/files/forcepoint-security-labs-monsoon-analysis-report.pdf" target="_blank">Settle, A., et al. (2016, August 8). MONSOON - Analysis Of An APT Campaign. Retrieved September 22, 2016.</a></span></span></li><li><span  id="scite-8" class="scite-citation"><span class="scite-citation-text"><a rel="nofollow" class="external text" name="scite-8" href="https://researchcenter.paloaltonetworks.com/2018/03/unit42-patchwork-continues-deliver-badnews-indian-subcontinent/" target="_blank">Levene, B. et al.. (2018, March 7). Patchwork Continues to Deliver BADNEWS to the Indian Subcontinent. Retrieved March 31, 2018.</a></span></span></li><li><span  id="scite-9" class="scite-citation"><span class="scite-citation-text"><a rel="nofollow" class="external text" name="scite-9" href="http://researchcenter.paloaltonetworks.com/2015/12/bbsrat-attacks-targeting-russian-organizations-linked-to-roaming-tiger/" target="_blank">Lee, B. Grunzweig, J. (2015, December 22). BBSRAT Attacks Targeting Russian Organizations Linked to Roaming Tiger. Retrieved August 19, 2016.</a></span></span></li><li><span  id="scite-10" class="scite-citation"><span class="scite-citation-text"><a rel="nofollow" class="external text" name="scite-10" href="http://www.finfisher.com/FinFisher/index.html" target="_blank">FinFisher. (n.d.). Retrieved December 20, 2017.</a></span></span></li><li><span  id="scite-11" class="scite-citation"><span class="scite-citation-text"><a rel="nofollow" class="external text" name="scite-11" href="https://cloudblogs.microsoft.com/microsoftsecure/2018/03/01/finfisher-exposed-a-researchers-tale-of-defeating-traps-tricks-and-complex-virtual-machines/" target="_blank">Allievi, A.,Flori, E. (2018, March 01). FinFisher exposed: A researcher’s tale of defeating traps, tricks, and complex virtual machines. Retrieved July 9, 2018.</a></span></span></li><li><span  id="scite-12" class="scite-citation"><span class="scite-citation-text"><a rel="nofollow" class="external text" name="scite-12" href="https://www.arbornetworks.com/blog/asert/musical-chairs-playing-tetris/" target="_blank">Sabo, S. (2018, February 15). Musical Chairs Playing Tetris. Retrieved February 19, 2018.</a></span></span></li><li><span  id="scite-13" class="scite-citation"><span class="scite-citation-text"><a rel="nofollow" class="external text" name="scite-13" href="https://www.secureworks.com/research/threat-group-3390-targets-organizations-for-cyberespionage" target="_blank">Dell SecureWorks Counter Threat Unit Threat Intelligence. (2015, August 5). Threat Group-3390 Targets Organizations for Cyberespionage. Retrieved August 18, 2018.</a></span></span></li></ol> </div><div class="col"><ol start="14.5"><li><span  id="scite-14" class="scite-citation"><span class="scite-citation-text"><a rel="nofollow" class="external text" name="scite-14" href="https://www.pwc.co.uk/cyber-security/pdf/cloud-hopper-annex-b-final.pdf" target="_blank">PwC and BAE Systems. (2017, April). Operation Cloud Hopper: Technical Annex. Retrieved April 13, 2017.</a></span></span></li><li><span  id="scite-15" class="scite-citation"><span class="scite-citation-text"><a rel="nofollow" class="external text" name="scite-15" href="https://www.fireeye.com/blog/threat-research/2018/09/apt10-targeting-japanese-corporations-using-updated-ttps.html" target="_blank">Matsuda, A., Muhammad I. (2018, September 13). APT10 Targeting Japanese Corporations Using Updated TTPs. Retrieved September 17, 2018.</a></span></span></li><li><span  id="scite-16" class="scite-citation"><span class="scite-citation-text"><a rel="nofollow" class="external text" name="scite-16" href="https://documents.trendmicro.com/assets/tech-brief-untangling-the-patchwork-cyberespionage-group.pdf" target="_blank">Lunghi, D., et al. (2017, December). Untangling the Patchwork Cyberespionage Group. Retrieved July 10, 2018.</a></span></span></li><li><span  id="scite-17" class="scite-citation"><span class="scite-citation-text"><a rel="nofollow" class="external text" name="scite-17" href="https://researchcenter.paloaltonetworks.com/2017/06/unit42-paranoid-plugx/" target="_blank">Lancaster, T. and Idrizovic, E.. (2017, June 27). Paranoid PlugX. Retrieved July 13, 2017.</a></span></span></li><li><span  id="scite-18" class="scite-citation"><span class="scite-citation-text"><a rel="nofollow" class="external text" name="scite-18" href="http://www.secureworks.com/cyber-threat-intelligence/threats/sakula-malware-family/" target="_blank">Dell SecureWorks Counter Threat Unit Threat Intelligence. (2015, July 30). Sakula Malware Family. Retrieved January 26, 2016.</a></span></span></li><li><span  id="scite-19" class="scite-citation"><span class="scite-citation-text"><a rel="nofollow" class="external text" name="scite-19" href="http://researchcenter.paloaltonetworks.com/2016/02/t9000-advanced-modular-backdoor-uses-complex-anti-analysis-techniques/" target="_blank">Grunzweig, J. and Miller-Osborn, J.. (2016, February 4). T9000: Advanced Modular Backdoor Uses Complex Anti-Analysis Techniques. Retrieved April 15, 2016.</a></span></span></li><li><span  id="scite-20" class="scite-citation"><span class="scite-citation-text"><a rel="nofollow" class="external text" name="scite-20" href="https://www.secureworks.com/research/bronze-union" target="_blank">Counter Threat Unit Research Team. (2017, June 27). BRONZE UNION Cyberespionage Persists Despite Disclosures. Retrieved July 13, 2017.</a></span></span></li><li><span  id="scite-21" class="scite-citation"><span class="scite-citation-text"><a rel="nofollow" class="external text" name="scite-21" href="https://securelist.com/luckymouse-hits-national-data-center/86083/" target="_blank">Legezo, D. (2018, June 13). LuckyMouse hits national data center to organize country-level waterholing campaign. Retrieved August 18, 2018.</a></span></span></li><li><span  id="scite-22" class="scite-citation"><span class="scite-citation-text"><a rel="nofollow" class="external text" name="scite-22" href="http://download.microsoft.com/download/E/B/0/EB0F50CC-989C-4B66-B7F6-68CD3DC90DE3/Microsoft_Security_Intelligence_Report_Volume_21_English.pdf" target="_blank">Anthe, C. et al. (2016, December 14). Microsoft Security Intelligence Report Volume 21. Retrieved November 27, 2017.</a></span></span></li><li><span  id="scite-23" class="scite-citation"><span class="scite-citation-text"><a rel="nofollow" class="external text" name="scite-23" href="https://www.microsoft.com/wdsi/threats/malware-encyclopedia-description?Name=Backdoor:Win32/Wingbird.A!dha" target="_blank">Microsoft. (2017, November 9). Backdoor:Win32/Wingbird.A!dha. Retrieved November 27, 2017.</a></span></span></li><li><span  id="scite-24" class="scite-citation"><span class="scite-citation-text"><a rel="nofollow" class="external text" name="scite-24" href="https://www.proofpoint.com/us/threat-insight/post/apt-targets-financial-analysts" target="_blank">Axel F. (2017, April 27). APT Targets Financial Analysts with CVE-2017-0199. Retrieved February 15, 2018.</a></span></span></li><li><span  id="scite-25" class="scite-citation"><span class="scite-citation-text"><a rel="nofollow" class="external text" name="scite-25" href="https://www.proofpoint.com/us/threat-insight/post/APT-targets-russia-belarus-zerot-plugx" target="_blank">Huss, D., et al. (2017, February 2). Oops, they did it again: APT Targets Russia and Belarus with ZeroT and PlugX. Retrieved April 5, 2018.</a></span></span></li></ol> </div></div>
+          
+         </div>
+      </div>
+   </div>
+   <!-- <div class="col-xl-2 col-lg-2 col-md-0 d-block d-sm-none d-md-none d-lg-block">
+      <p>Content</p>
+      <div><a href="#description">Description</a></div>
+      <div><a href="#examples">Examples</a></div>
+      <div><a href="#techniques"></a></div>
+      <div><a href="#mitigation">Mitigation</a></div>
+      <div><a href="#detection">Detection</a></div>
+      <div><a href="#detectable"></a></div>
+      <div><a href="#difficulty"></a></div>
+      <div><a href="#references">References</a></div>
+   </div> -->
+</div>
+</div>
+
+                </div>
+            </div>
+        </div>  
+    </div>
+</div>
+<!--stopindex-->
+<footer class="footer p-3">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col">
+                <div class="footer-center-responsive my-auto">
+                    <a href="https://www.mitre.org" target="_blank" rel="noopener" aria-label="MITRE">
+                        <img src="/previous/october2018/theme/images/mitrelogowhiteontrans.gif" style="vertical-align: center" width="144" height="66">
+                    </a>
+                </div>
+            </div>
+            <!-- <div class="w-100 p-1 footer-responsive-break"></div> -->
+            <div class="col-6 text-center">
+                    <p>
+                        Copyright © 2018, The MITRE Corporation. MITRE ATT&CK and ATT&CK are trademarks of The MITRE Corporation.
+                    </p>
+                    <div class="row">
+                        <div class="col text-right">
+                            <small>
+                                <a href="/previous/october2018/resources/privacy" class="footer-link">Privacy Policy</a>
+                            </small>
+                        </div>
+                        <div class="col text-left">
+                            <small>
+                                <a href="/previous/october2018/resources/terms-of-use" class="footer-link">Terms of Use</a>
+                            </small>
+                        </div>
+                    </div>
+            </div>
+            <div class="w-100 p-2 footer-responsive-break"></div>
+            <div class="col">
+                <div class="footer-float-right-responsive">
+                    <div class="mb-1">
+                        <a href="https://twitter.com/MITREattack" class="btn btn-primary w-100">
+                            <!-- <i class="fa fa-twitter"></i> -->
+                            <img src="/previous/october2018/theme/images/twitter.png" class="mr-1" style="vertical-align: top" width="20" height="20">
+                            <b>@MITREattack</b>
+                        </a>
+                    </div>
+                    <div class="">
+                        <a href="/previous/october2018/contact" class="btn btn-primary w-100">
+                            Contact
+                        </a>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <!-- <div class="container-fluid text-center">
+        <a class="btn btn-primary float-right mr-4" href="https://twitter.com/MITREattack" target="_blank" rel="noopener"
+           aria-label="Twitter">
+            <img src="/previous/october2018/theme/images/twitter.png" class="mx-auto d-block" width="28" height="28"> Follow us!</a>
+        <a href="https://www.mitre.org" target="_blank" rel="noopener" aria-label="MITRE" class="float-left ml-4">
+            <img src="/previous/october2018/theme/images/mitrelogowhiteontrans.gif" width="144" height="66"></a>
+        <br />
+        <p>
+            <br />Copyright © 2018, The MITRE Corporation. MITRE ATT&CK and ATT&CK are trademarks of The MITRE
+            Corporation.</p>
+        <small><a href="/previous/october2018/resources/privacy" class="footer-link">Privacy Policy</a>&nbsp;&nbsp;<a href="/previous/october2018/resources/terms-of-use"
+                                                                                                 class="footer-link">Terms of Use</a></small>
+    </div> -->
+</footer>
+</div>
+    <!--SCRIPTS-->
+    <script src="/previous/october2018/theme/scripts/jquery-3.2.1.min.js"></script>
+    <script src="/previous/october2018/theme/scripts/popper.min.js"></script>
+    <script src="/previous/october2018/theme/scripts/bootstrap.min.js"></script>
+    <script src="/previous/october2018/theme/scripts/site.js"></script>
+    <script src="/previous/october2018/theme/scripts/lunr-2.3.3.js"></script>
+    <script src="/previous/october2018/theme/scripts/search.js"></script>
+    <script src="/previous/october2018/theme/scripts/index.js"></script>
+
+<!--SCRIPTS-->
+<script src="/previous/october2018/theme/scripts/techniques.js"></script>
+</body>
+
+</html>
+<!--startindex-->

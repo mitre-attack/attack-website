@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+        <!-- Global site tag (gtag.js) - Google Analytics -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=UA-62667723-1"></script>
+        <script src="/previous/october2018/theme/scripts/analytics.js"></script>
+        <meta name="google-site-verification" content="2oJKLqNN62z6AOCb0A0IXGtbQuj-lev5YPAHFF_cbHQ"/>
+        <meta charset='utf-8'>
+        <meta name='viewport' content='width=device-width, initial-scale=1, shrink-to-fit=no'>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <link rel='shortcut icon' href="/previous/october2018/theme/favicon.ico" type='image/x-icon'>
+        <title>Technique: Access Sensitive Data in Device Logs - MITRE ATT&CK&trade;</title>
+        <!-- Bootstrap CSS -->
+        <link rel='stylesheet' href="/previous/october2018/theme/style/bootstrap.min.css" />
+        <link rel='stylesheet' href="/previous/october2018/theme/style/bootstrap-glyphicon.min.css" />
+        <link rel="stylesheet" type="text/css" href="/previous/october2018/theme/style.min.css?d1d7b359">
+</head>
+
+<body>
+<!--stopindex-->
+<header>
+        <nav class='navbar navbar-expand-lg navbar-dark fixed-top bg-mitre-red border-bottom'>
+            <a class='navbar-brand' href="/previous/october2018/"><img src="/previous/october2018/theme/images/mitre_attack.png" height="50px"/></a>
+            <button class='navbar-toggler' type='button' data-toggle='collapse' data-target='#navbarCollapse'
+                    aria-controls='navbarCollapse' aria-expanded='false' aria-label='Toggle navigation'>
+                <span class='navbar-toggler-icon' onclick="search('')"></span>
+            </button>
+            <div class='collapse navbar-collapse' id='navbarCollapse'>
+                <ul class='nav nav-tabs ml-auto'>
+                            <li class="nav-item"><a href="/previous/october2018/matrices/enterprise"  class="nav-link" ><b>Matrices</b></a></li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="/previous/october2018/tactics/enterprise" id="navbarDropdown" role="button"
+                                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <b>Tactics</b>
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                        <a class="dropdown-item" href="/previous/october2018/tactics/pre">PRE-ATT&CK</a>
+                                        <a class="dropdown-item" href="/previous/october2018/tactics/enterprise">Enterprise</a>
+                                        <a class="dropdown-item" href="/previous/october2018/tactics/mobile">Mobile</a>
+                                </div>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="/previous/october2018/techniques/enterprise" id="navbarDropdown" role="button"
+                                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <b>Techniques</b>
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                        <a class="dropdown-item" href="/previous/october2018/techniques/pre">PRE-ATT&CK</a>
+                                        <a class="dropdown-item" href="/previous/october2018/techniques/enterprise">Enterprise</a>
+                                        <a class="dropdown-item" href="/previous/october2018/techniques/mobile">Mobile</a>
+                                </div>
+                            </li>
+                            <li class="nav-item"><a href="/previous/october2018/groups/"  class="nav-link" ><b>Groups</b></a></li>
+                            <li class="nav-item"><a href="/previous/october2018/software/"  class="nav-link" ><b>Software</b></a></li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="/previous/october2018/resources/" id="navbarDropdown" role="button"
+                                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <b>Resources</b>
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <a class="dropdown-item" href="/previous/october2018/resources/">General Information</a>
+                                    <a class="dropdown-item" href="/previous/october2018/resources/getting-started/">Getting Started</a>
+                                    <a class="dropdown-item" href="/previous/october2018/resources/attackcon/">ATT&CKcon</a>
+                                    <a class="dropdown-item" href="/previous/october2018/resources/working-with-attack/">Working with ATT&CK</a>
+                                    <a class="dropdown-item" href="/previous/october2018/resources/faq/">FAQ</a>
+                                    <a class="dropdown-item" href="/resources/updates/">Updates</a>
+                                    <a class="dropdown-item" href="/resources/previous-versions/">Previous Versions</a>
+                                    <a class="dropdown-item" href="/previous/october2018/resources/related-projects/">Related Projects</a>
+                                </div>
+                            </li>
+                            <li class="nav-item"><a href="https://medium.com/mitre-attack/" target="_blank"  class="nav-link" ><b>Blog</b>&nbsp;<img src="/previous/october2018/theme/images/external-site.svg"
+                                                                                                               alt="External site" class="external-icon" /></a></li>
+                            <li class="nav-item"><a href="/previous/october2018/resources/contribute"  class="nav-link" ><b>Contribute</b></a></li>
+                </ul>
+                <ul class='navbar-nav flex-row d-md-flex' style="float: right">  <!-- ml-md-auto d-none-->
+                    <li>
+                        <form class='form-inline pl-2'>
+                            <input class='form-control' type='text' placeholder='Search site' aria-label='Search' id="search"
+                                   autocomplete="off">
+                        </form>
+                        <div class="search-results"></div>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        </header>
+        <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the previous-versions feature -->
+        <div class="container-fluid version-banner"><div class="icon-inline baseline mr-1"><img src="/previous/october2018/theme/images/icon-warning-24px.svg"></div>This is a preserved version of the site that was live between Oct. 23, 2018 and April 30, 2019. <a href="/resources/previous-versions/">See other versions</a> or <a href="/">the current version</a>.</div>
+        <!--startindex-->
+<div id='content'>    <div class='container-fluid'>
+        <div class='row'>
+ 
+             
+<!--stopindex-->
+    <div class="nav flex-column col-xl-2 col-lg-2 col-md-3  sidebar nav pt-5 pb-3 pl-3 border-right" id="v-tab" role="tablist" aria-orientation="vertical">
+        <button class="btn btn-default dropdown-toggle heading-dropdown" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">MOBILE</button><br>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <a class="dropdown-item" href="/previous/october2018/techniques/enterprise">ENTERPRISE</a>
+            <a class="dropdown-item" href="/previous/october2018/techniques/mobile">MOBILE</a>
+            <a class="dropdown-item" href="/previous/october2018/techniques/pre">PRE-ATT&CK</a>
+        </div>
+        <span class="heading" id="v-home-tab" aria-selected="false">TECHNIQUES</span>
+        <!-- <a class="nav-link side active show" id="v-overview-tab" data-toggle="tab" href="#v-overview" role="tab" aria-controls="v-overview" aria-selected="false">Overview</a> -->
+        <a class="nav-link side expand-title " id="v-{}-tab"  href="/previous/october2018/techniques/mobile" role="tab" aria-expanded="false" aria-controls="{}">All</a> <a class="nav-link side expand-title" id="v-initial access-tab" data-toggle="collapse" href="#initial access" role="tab" aria-expanded="false" aria-controls="initial access"><span id="initial_access-tooltip" title="Initial Access">Initial Access</span ><span class="glyphicon glyphicon-plus float-right expand-icon" aria-hidden="true"></span></a>
+ <div class="collapse" id="initial access" aria-labelledby="v-initial access-tab">
+ <div class="nav flex-column nav pl-3" id="v-tab" role="tablist" aria-orientation="vertical">
+ <a class="nav-link side" id="v-Deliver Malicious App via Authorized App Store-initial access-tab" href="/previous/october2018/techniques/T1475" aria-controls="v-Deliver Malicious App via Authorized App Store-initial access" aria-selected="false">Deliver Malicious App via Authorized App Store</a>
+ <a class="nav-link side" id="v-Deliver Malicious App via Other Means-initial access-tab" href="/previous/october2018/techniques/T1476" aria-controls="v-Deliver Malicious App via Other Means-initial access" aria-selected="false">Deliver Malicious App via Other Means</a>
+ <a class="nav-link side" id="v-Drive-by Compromise-initial access-tab" href="/previous/october2018/techniques/T1456" aria-controls="v-Drive-by Compromise-initial access" aria-selected="false">Drive-by Compromise</a>
+ <a class="nav-link side" id="v-Exploit via Charging Station or PC-initial access-tab" href="/previous/october2018/techniques/T1458" aria-controls="v-Exploit via Charging Station or PC-initial access" aria-selected="false">Exploit via Charging Station or PC</a>
+ <a class="nav-link side" id="v-Exploit via Radio Interfaces-initial access-tab" href="/previous/october2018/techniques/T1477" aria-controls="v-Exploit via Radio Interfaces-initial access" aria-selected="false">Exploit via Radio Interfaces</a>
+ <a class="nav-link side" id="v-Install Insecure or Malicious Configuration-initial access-tab" href="/previous/october2018/techniques/T1478" aria-controls="v-Install Insecure or Malicious Configuration-initial access" aria-selected="false">Install Insecure or Malicious Configuration</a>
+ <a class="nav-link side" id="v-Lockscreen Bypass-initial access-tab" href="/previous/october2018/techniques/T1461" aria-controls="v-Lockscreen Bypass-initial access" aria-selected="false">Lockscreen Bypass</a>
+ <a class="nav-link side" id="v-Repackaged Application-initial access-tab" href="/previous/october2018/techniques/T1444" aria-controls="v-Repackaged Application-initial access" aria-selected="false">Repackaged Application</a>
+ <a class="nav-link side" id="v-Supply Chain Compromise-initial access-tab" href="/previous/october2018/techniques/T1474" aria-controls="v-Supply Chain Compromise-initial access" aria-selected="false">Supply Chain Compromise</a>
+</div>
+</div> <a class="nav-link side expand-title" id="v-persistence-tab" data-toggle="collapse" href="#persistence" role="tab" aria-expanded="false" aria-controls="persistence"><span id="persistence-tooltip" title="Persistence">Persistence</span ><span class="glyphicon glyphicon-plus float-right expand-icon" aria-hidden="true"></span></a>
+ <div class="collapse" id="persistence" aria-labelledby="v-persistence-tab">
+ <div class="nav flex-column nav pl-3" id="v-tab" role="tablist" aria-orientation="vertical">
+ <a class="nav-link side" id="v-Abuse Device Administrator Access to Prevent Removal-persistence-tab" href="/previous/october2018/techniques/T1401" aria-controls="v-Abuse Device Administrator Access to Prevent Removal-persistence" aria-selected="false">Abuse Device Administrator Access to Prevent Removal</a>
+ <a class="nav-link side" id="v-App Auto-Start at Device Boot-persistence-tab" href="/previous/october2018/techniques/T1402" aria-controls="v-App Auto-Start at Device Boot-persistence" aria-selected="false">App Auto-Start at Device Boot</a>
+ <a class="nav-link side" id="v-Modify cached executable code-persistence-tab" href="/previous/october2018/techniques/T1403" aria-controls="v-Modify cached executable code-persistence" aria-selected="false">Modify cached executable code</a>
+ <a class="nav-link side" id="v-Modify OS Kernel or Boot Partition-persistence-tab" href="/previous/october2018/techniques/T1398" aria-controls="v-Modify OS Kernel or Boot Partition-persistence" aria-selected="false">Modify OS Kernel or Boot Partition</a>
+ <a class="nav-link side" id="v-Modify System Partition-persistence-tab" href="/previous/october2018/techniques/T1400" aria-controls="v-Modify System Partition-persistence" aria-selected="false">Modify System Partition</a>
+ <a class="nav-link side" id="v-Modify Trusted Execution Environment-persistence-tab" href="/previous/october2018/techniques/T1399" aria-controls="v-Modify Trusted Execution Environment-persistence" aria-selected="false">Modify Trusted Execution Environment</a>
+</div>
+</div> <a class="nav-link side expand-title" id="v-privilege escalation-tab" data-toggle="collapse" href="#privilege escalation" role="tab" aria-expanded="false" aria-controls="privilege escalation"><span id="privilege_escalation-tooltip" title="Privilege Escalation">Privilege Escalation</span ><span class="glyphicon glyphicon-plus float-right expand-icon" aria-hidden="true"></span></a>
+ <div class="collapse" id="privilege escalation" aria-labelledby="v-privilege escalation-tab">
+ <div class="nav flex-column nav pl-3" id="v-tab" role="tablist" aria-orientation="vertical">
+ <a class="nav-link side" id="v-Exploit OS Vulnerability-privilege escalation-tab" href="/previous/october2018/techniques/T1404" aria-controls="v-Exploit OS Vulnerability-privilege escalation" aria-selected="false">Exploit OS Vulnerability</a>
+ <a class="nav-link side" id="v-Exploit TEE Vulnerability-privilege escalation-tab" href="/previous/october2018/techniques/T1405" aria-controls="v-Exploit TEE Vulnerability-privilege escalation" aria-selected="false">Exploit TEE Vulnerability</a>
+</div>
+</div> <a class="nav-link side expand-title" id="v-defense evasion-tab" data-toggle="collapse" href="#defense evasion" role="tab" aria-expanded="false" aria-controls="defense evasion"><span id="defense_evasion-tooltip" title="Defense Evasion">Defense Evasion</span ><span class="glyphicon glyphicon-plus float-right expand-icon" aria-hidden="true"></span></a>
+ <div class="collapse" id="defense evasion" aria-labelledby="v-defense evasion-tab">
+ <div class="nav flex-column nav pl-3" id="v-tab" role="tablist" aria-orientation="vertical">
+ <a class="nav-link side" id="v-Application Discovery-defense evasion-tab" href="/previous/october2018/techniques/T1418" aria-controls="v-Application Discovery-defense evasion" aria-selected="false">Application Discovery</a>
+ <a class="nav-link side" id="v-Disguise Root/Jailbreak Indicators-defense evasion-tab" href="/previous/october2018/techniques/T1408" aria-controls="v-Disguise Root/Jailbreak Indicators-defense evasion" aria-selected="false">Disguise Root/Jailbreak Indicators</a>
+ <a class="nav-link side" id="v-Download New Code at Runtime-defense evasion-tab" href="/previous/october2018/techniques/T1407" aria-controls="v-Download New Code at Runtime-defense evasion" aria-selected="false">Download New Code at Runtime</a>
+ <a class="nav-link side" id="v-Install Insecure or Malicious Configuration-defense evasion-tab" href="/previous/october2018/techniques/T1478" aria-controls="v-Install Insecure or Malicious Configuration-defense evasion" aria-selected="false">Install Insecure or Malicious Configuration</a>
+ <a class="nav-link side" id="v-Modify OS Kernel or Boot Partition-defense evasion-tab" href="/previous/october2018/techniques/T1398" aria-controls="v-Modify OS Kernel or Boot Partition-defense evasion" aria-selected="false">Modify OS Kernel or Boot Partition</a>
+ <a class="nav-link side" id="v-Modify System Partition-defense evasion-tab" href="/previous/october2018/techniques/T1400" aria-controls="v-Modify System Partition-defense evasion" aria-selected="false">Modify System Partition</a>
+ <a class="nav-link side" id="v-Modify Trusted Execution Environment-defense evasion-tab" href="/previous/october2018/techniques/T1399" aria-controls="v-Modify Trusted Execution Environment-defense evasion" aria-selected="false">Modify Trusted Execution Environment</a>
+ <a class="nav-link side" id="v-Obfuscated or Encrypted Payload-defense evasion-tab" href="/previous/october2018/techniques/T1406" aria-controls="v-Obfuscated or Encrypted Payload-defense evasion" aria-selected="false">Obfuscated or Encrypted Payload</a>
+</div>
+</div> <a class="nav-link side expand-title" id="v-credential access-tab" data-toggle="collapse" href="#credential access" role="tab" aria-expanded="false" aria-controls="credential access"><span id="credential access-tooltip" title="Credential Access">Credential Access</span><span class="glyphicon glyphicon-minus float-right expand-icon" aria-hidden="true"></span></a>
+ <div class="collapse show" id="credential access" aria-labelledby="v-credential access-tab">
+ <div class="nav flex-column nav pl-3" id="v-tab" role="tablist" aria-orientation="vertical">
+ <a class="nav-link side" id="v-Abuse Accessibility Features-credential access-tab" href="/previous/october2018/techniques/T1453" aria-controls="v-Abuse Accessibility Features-credential access" aria-selected="false">Abuse Accessibility Features</a>
+ <a class="nav-link side active show" id="v-Access Sensitive Data in Device Logs-credential access-tab" href="/previous/october2018/techniques/T1413" aria-controls="v-Access Sensitive Data in Device Logs-credential access" aria-selected="false">Access Sensitive Data in Device Logs</a>
+ <a class="nav-link side" id="v-Access Sensitive Data or Credentials in Files-credential access-tab" href="/previous/october2018/techniques/T1409" aria-controls="v-Access Sensitive Data or Credentials in Files-credential access" aria-selected="false">Access Sensitive Data or Credentials in Files</a>
+ <a class="nav-link side" id="v-Android Intent Hijacking-credential access-tab" href="/previous/october2018/techniques/T1416" aria-controls="v-Android Intent Hijacking-credential access" aria-selected="false">Android Intent Hijacking</a>
+ <a class="nav-link side" id="v-Capture Clipboard Data-credential access-tab" href="/previous/october2018/techniques/T1414" aria-controls="v-Capture Clipboard Data-credential access" aria-selected="false">Capture Clipboard Data</a>
+ <a class="nav-link side" id="v-Capture SMS Messages-credential access-tab" href="/previous/october2018/techniques/T1412" aria-controls="v-Capture SMS Messages-credential access" aria-selected="false">Capture SMS Messages</a>
+ <a class="nav-link side" id="v-Exploit TEE Vulnerability-credential access-tab" href="/previous/october2018/techniques/T1405" aria-controls="v-Exploit TEE Vulnerability-credential access" aria-selected="false">Exploit TEE Vulnerability</a>
+ <a class="nav-link side" id="v-Malicious Third Party Keyboard App-credential access-tab" href="/previous/october2018/techniques/T1417" aria-controls="v-Malicious Third Party Keyboard App-credential access" aria-selected="false">Malicious Third Party Keyboard App</a>
+ <a class="nav-link side" id="v-Network Traffic Capture or Redirection-credential access-tab" href="/previous/october2018/techniques/T1410" aria-controls="v-Network Traffic Capture or Redirection-credential access" aria-selected="false">Network Traffic Capture or Redirection</a>
+ <a class="nav-link side" id="v-URL Scheme Hijacking-credential access-tab" href="/previous/october2018/techniques/T1415" aria-controls="v-URL Scheme Hijacking-credential access" aria-selected="false">URL Scheme Hijacking</a>
+ <a class="nav-link side" id="v-User Interface Spoofing-credential access-tab" href="/previous/october2018/techniques/T1411" aria-controls="v-User Interface Spoofing-credential access" aria-selected="false">User Interface Spoofing</a>
+</div>
+</div> <a class="nav-link side expand-title" id="v-discovery-tab" data-toggle="collapse" href="#discovery" role="tab" aria-expanded="false" aria-controls="discovery"><span id="discovery-tooltip" title="Discovery">Discovery</span ><span class="glyphicon glyphicon-plus float-right expand-icon" aria-hidden="true"></span></a>
+ <div class="collapse" id="discovery" aria-labelledby="v-discovery-tab">
+ <div class="nav flex-column nav pl-3" id="v-tab" role="tablist" aria-orientation="vertical">
+ <a class="nav-link side" id="v-Application Discovery-discovery-tab" href="/previous/october2018/techniques/T1418" aria-controls="v-Application Discovery-discovery" aria-selected="false">Application Discovery</a>
+ <a class="nav-link side" id="v-Device Type Discovery-discovery-tab" href="/previous/october2018/techniques/T1419" aria-controls="v-Device Type Discovery-discovery" aria-selected="false">Device Type Discovery</a>
+ <a class="nav-link side" id="v-File and Directory Discovery-discovery-tab" href="/previous/october2018/techniques/T1420" aria-controls="v-File and Directory Discovery-discovery" aria-selected="false">File and Directory Discovery</a>
+ <a class="nav-link side" id="v-Local Network Configuration Discovery-discovery-tab" href="/previous/october2018/techniques/T1422" aria-controls="v-Local Network Configuration Discovery-discovery" aria-selected="false">Local Network Configuration Discovery</a>
+ <a class="nav-link side" id="v-Local Network Connections Discovery-discovery-tab" href="/previous/october2018/techniques/T1421" aria-controls="v-Local Network Connections Discovery-discovery" aria-selected="false">Local Network Connections Discovery</a>
+ <a class="nav-link side" id="v-Network Service Scanning-discovery-tab" href="/previous/october2018/techniques/T1423" aria-controls="v-Network Service Scanning-discovery" aria-selected="false">Network Service Scanning</a>
+ <a class="nav-link side" id="v-Process Discovery-discovery-tab" href="/previous/october2018/techniques/T1424" aria-controls="v-Process Discovery-discovery" aria-selected="false">Process Discovery</a>
+ <a class="nav-link side" id="v-System Information Discovery-discovery-tab" href="/previous/october2018/techniques/T1426" aria-controls="v-System Information Discovery-discovery" aria-selected="false">System Information Discovery</a>
+</div>
+</div> <a class="nav-link side expand-title" id="v-lateral movement-tab" data-toggle="collapse" href="#lateral movement" role="tab" aria-expanded="false" aria-controls="lateral movement"><span id="lateral_movement-tooltip" title="Lateral Movement">Lateral Movement</span ><span class="glyphicon glyphicon-plus float-right expand-icon" aria-hidden="true"></span></a>
+ <div class="collapse" id="lateral movement" aria-labelledby="v-lateral movement-tab">
+ <div class="nav flex-column nav pl-3" id="v-tab" role="tablist" aria-orientation="vertical">
+ <a class="nav-link side" id="v-Attack PC via USB Connection-lateral movement-tab" href="/previous/october2018/techniques/T1427" aria-controls="v-Attack PC via USB Connection-lateral movement" aria-selected="false">Attack PC via USB Connection</a>
+ <a class="nav-link side" id="v-Exploit Enterprise Resources-lateral movement-tab" href="/previous/october2018/techniques/T1428" aria-controls="v-Exploit Enterprise Resources-lateral movement" aria-selected="false">Exploit Enterprise Resources</a>
+</div>
+</div> <a class="nav-link side expand-title" id="v-effects-tab" data-toggle="collapse" href="#effects" role="tab" aria-expanded="false" aria-controls="effects"><span id="effects-tooltip" title="Effects">Effects</span ><span class="glyphicon glyphicon-plus float-right expand-icon" aria-hidden="true"></span></a>
+ <div class="collapse" id="effects" aria-labelledby="v-effects-tab">
+ <div class="nav flex-column nav pl-3" id="v-tab" role="tablist" aria-orientation="vertical">
+ <a class="nav-link side" id="v-Encrypt Files for Ransom-effects-tab" href="/previous/october2018/techniques/T1471" aria-controls="v-Encrypt Files for Ransom-effects" aria-selected="false">Encrypt Files for Ransom</a>
+ <a class="nav-link side" id="v-Generate Fraudulent Advertising Revenue-effects-tab" href="/previous/october2018/techniques/T1472" aria-controls="v-Generate Fraudulent Advertising Revenue-effects" aria-selected="false">Generate Fraudulent Advertising Revenue</a>
+ <a class="nav-link side" id="v-Lock User Out of Device-effects-tab" href="/previous/october2018/techniques/T1446" aria-controls="v-Lock User Out of Device-effects" aria-selected="false">Lock User Out of Device</a>
+ <a class="nav-link side" id="v-Manipulate App Store Rankings or Ratings-effects-tab" href="/previous/october2018/techniques/T1452" aria-controls="v-Manipulate App Store Rankings or Ratings-effects" aria-selected="false">Manipulate App Store Rankings or Ratings</a>
+ <a class="nav-link side" id="v-Premium SMS Toll Fraud-effects-tab" href="/previous/october2018/techniques/T1448" aria-controls="v-Premium SMS Toll Fraud-effects" aria-selected="false">Premium SMS Toll Fraud</a>
+ <a class="nav-link side" id="v-Wipe Device Data-effects-tab" href="/previous/october2018/techniques/T1447" aria-controls="v-Wipe Device Data-effects" aria-selected="false">Wipe Device Data</a>
+</div>
+</div> <a class="nav-link side expand-title" id="v-collection-tab" data-toggle="collapse" href="#collection" role="tab" aria-expanded="false" aria-controls="collection"><span id="collection-tooltip" title="Collection">Collection</span ><span class="glyphicon glyphicon-plus float-right expand-icon" aria-hidden="true"></span></a>
+ <div class="collapse" id="collection" aria-labelledby="v-collection-tab">
+ <div class="nav flex-column nav pl-3" id="v-tab" role="tablist" aria-orientation="vertical">
+ <a class="nav-link side" id="v-Abuse Accessibility Features-collection-tab" href="/previous/october2018/techniques/T1453" aria-controls="v-Abuse Accessibility Features-collection" aria-selected="false">Abuse Accessibility Features</a>
+ <a class="nav-link side" id="v-Access Calendar Entries-collection-tab" href="/previous/october2018/techniques/T1435" aria-controls="v-Access Calendar Entries-collection" aria-selected="false">Access Calendar Entries</a>
+ <a class="nav-link side" id="v-Access Call Log-collection-tab" href="/previous/october2018/techniques/T1433" aria-controls="v-Access Call Log-collection" aria-selected="false">Access Call Log</a>
+ <a class="nav-link side" id="v-Access Contact List-collection-tab" href="/previous/october2018/techniques/T1432" aria-controls="v-Access Contact List-collection" aria-selected="false">Access Contact List</a>
+ <a class="nav-link side" id="v-Access Sensitive Data in Device Logs-collection-tab" href="/previous/october2018/techniques/T1413" aria-controls="v-Access Sensitive Data in Device Logs-collection" aria-selected="false">Access Sensitive Data in Device Logs</a>
+ <a class="nav-link side" id="v-Access Sensitive Data or Credentials in Files-collection-tab" href="/previous/october2018/techniques/T1409" aria-controls="v-Access Sensitive Data or Credentials in Files-collection" aria-selected="false">Access Sensitive Data or Credentials in Files</a>
+ <a class="nav-link side" id="v-Capture Clipboard Data-collection-tab" href="/previous/october2018/techniques/T1414" aria-controls="v-Capture Clipboard Data-collection" aria-selected="false">Capture Clipboard Data</a>
+ <a class="nav-link side" id="v-Capture SMS Messages-collection-tab" href="/previous/october2018/techniques/T1412" aria-controls="v-Capture SMS Messages-collection" aria-selected="false">Capture SMS Messages</a>
+ <a class="nav-link side" id="v-Location Tracking-collection-tab" href="/previous/october2018/techniques/T1430" aria-controls="v-Location Tracking-collection" aria-selected="false">Location Tracking</a>
+ <a class="nav-link side" id="v-Malicious Third Party Keyboard App-collection-tab" href="/previous/october2018/techniques/T1417" aria-controls="v-Malicious Third Party Keyboard App-collection" aria-selected="false">Malicious Third Party Keyboard App</a>
+ <a class="nav-link side" id="v-Microphone or Camera Recordings-collection-tab" href="/previous/october2018/techniques/T1429" aria-controls="v-Microphone or Camera Recordings-collection" aria-selected="false">Microphone or Camera Recordings</a>
+ <a class="nav-link side" id="v-Network Traffic Capture or Redirection-collection-tab" href="/previous/october2018/techniques/T1410" aria-controls="v-Network Traffic Capture or Redirection-collection" aria-selected="false">Network Traffic Capture or Redirection</a>
+</div>
+</div> <a class="nav-link side expand-title" id="v-exfiltration-tab" data-toggle="collapse" href="#exfiltration" role="tab" aria-expanded="false" aria-controls="exfiltration"><span id="exfiltration-tooltip" title="Exfiltration">Exfiltration</span ><span class="glyphicon glyphicon-plus float-right expand-icon" aria-hidden="true"></span></a>
+ <div class="collapse" id="exfiltration" aria-labelledby="v-exfiltration-tab">
+ <div class="nav flex-column nav pl-3" id="v-tab" role="tablist" aria-orientation="vertical">
+ <a class="nav-link side" id="v-Alternate Network Mediums-exfiltration-tab" href="/previous/october2018/techniques/T1438" aria-controls="v-Alternate Network Mediums-exfiltration" aria-selected="false">Alternate Network Mediums</a>
+ <a class="nav-link side" id="v-Commonly Used Port-exfiltration-tab" href="/previous/october2018/techniques/T1436" aria-controls="v-Commonly Used Port-exfiltration" aria-selected="false">Commonly Used Port</a>
+ <a class="nav-link side" id="v-Standard Application Layer Protocol-exfiltration-tab" href="/previous/october2018/techniques/T1437" aria-controls="v-Standard Application Layer Protocol-exfiltration" aria-selected="false">Standard Application Layer Protocol</a>
+</div>
+</div> <a class="nav-link side expand-title" id="v-command and control-tab" data-toggle="collapse" href="#command and control" role="tab" aria-expanded="false" aria-controls="command and control"><span id="command_and_control-tooltip" title="Command and Control">Command and Control</span ><span class="glyphicon glyphicon-plus float-right expand-icon" aria-hidden="true"></span></a>
+ <div class="collapse" id="command and control" aria-labelledby="v-command and control-tab">
+ <div class="nav flex-column nav pl-3" id="v-tab" role="tablist" aria-orientation="vertical">
+ <a class="nav-link side" id="v-Alternate Network Mediums-command and control-tab" href="/previous/october2018/techniques/T1438" aria-controls="v-Alternate Network Mediums-command and control" aria-selected="false">Alternate Network Mediums</a>
+ <a class="nav-link side" id="v-Commonly Used Port-command and control-tab" href="/previous/october2018/techniques/T1436" aria-controls="v-Commonly Used Port-command and control" aria-selected="false">Commonly Used Port</a>
+ <a class="nav-link side" id="v-Standard Application Layer Protocol-command and control-tab" href="/previous/october2018/techniques/T1437" aria-controls="v-Standard Application Layer Protocol-command and control" aria-selected="false">Standard Application Layer Protocol</a>
+</div>
+</div> <a class="nav-link side expand-title" id="v-network effects-tab" data-toggle="collapse" href="#network effects" role="tab" aria-expanded="false" aria-controls="network effects"><span id="network_effects-tooltip" title="Network Effects">Network Effects</span ><span class="glyphicon glyphicon-plus float-right expand-icon" aria-hidden="true"></span></a>
+ <div class="collapse" id="network effects" aria-labelledby="v-network effects-tab">
+ <div class="nav flex-column nav pl-3" id="v-tab" role="tablist" aria-orientation="vertical">
+ <a class="nav-link side" id="v-Downgrade to Insecure Protocols-network effects-tab" href="/previous/october2018/techniques/T1466" aria-controls="v-Downgrade to Insecure Protocols-network effects" aria-selected="false">Downgrade to Insecure Protocols</a>
+ <a class="nav-link side" id="v-Eavesdrop on Insecure Network Communication-network effects-tab" href="/previous/october2018/techniques/T1439" aria-controls="v-Eavesdrop on Insecure Network Communication-network effects" aria-selected="false">Eavesdrop on Insecure Network Communication</a>
+ <a class="nav-link side" id="v-Exploit SS7 to Redirect Phone Calls/SMS-network effects-tab" href="/previous/october2018/techniques/T1449" aria-controls="v-Exploit SS7 to Redirect Phone Calls/SMS-network effects" aria-selected="false">Exploit SS7 to Redirect Phone Calls/SMS</a>
+ <a class="nav-link side" id="v-Exploit SS7 to Track Device Location-network effects-tab" href="/previous/october2018/techniques/T1450" aria-controls="v-Exploit SS7 to Track Device Location-network effects" aria-selected="false">Exploit SS7 to Track Device Location</a>
+ <a class="nav-link side" id="v-Jamming or Denial of Service-network effects-tab" href="/previous/october2018/techniques/T1464" aria-controls="v-Jamming or Denial of Service-network effects" aria-selected="false">Jamming or Denial of Service</a>
+ <a class="nav-link side" id="v-Manipulate Device Communication-network effects-tab" href="/previous/october2018/techniques/T1463" aria-controls="v-Manipulate Device Communication-network effects" aria-selected="false">Manipulate Device Communication</a>
+ <a class="nav-link side" id="v-Rogue Cellular Base Station-network effects-tab" href="/previous/october2018/techniques/T1467" aria-controls="v-Rogue Cellular Base Station-network effects" aria-selected="false">Rogue Cellular Base Station</a>
+ <a class="nav-link side" id="v-Rogue Wi-Fi Access Points-network effects-tab" href="/previous/october2018/techniques/T1465" aria-controls="v-Rogue Wi-Fi Access Points-network effects" aria-selected="false">Rogue Wi-Fi Access Points</a>
+ <a class="nav-link side" id="v-SIM Card Swap-network effects-tab" href="/previous/october2018/techniques/T1451" aria-controls="v-SIM Card Swap-network effects" aria-selected="false">SIM Card Swap</a>
+</div>
+</div> <a class="nav-link side expand-title" id="v-remote service effects-tab" data-toggle="collapse" href="#remote service effects" role="tab" aria-expanded="false" aria-controls="remote service effects"><span id="remote_service_effects-tooltip" title="Remote Service Effects">Remote Service Effects...</span ><span class="glyphicon glyphicon-plus float-right expand-icon" aria-hidden="true"></span></a>
+ <div class="collapse" id="remote service effects" aria-labelledby="v-remote service effects-tab">
+ <div class="nav flex-column nav pl-3" id="v-tab" role="tablist" aria-orientation="vertical">
+ <a class="nav-link side" id="v-Obtain Device Cloud Backups-remote service effects-tab" href="/previous/october2018/techniques/T1470" aria-controls="v-Obtain Device Cloud Backups-remote service effects" aria-selected="false">Obtain Device Cloud Backups</a>
+ <a class="nav-link side" id="v-Remotely Track Device Without Authorization-remote service effects-tab" href="/previous/october2018/techniques/T1468" aria-controls="v-Remotely Track Device Without Authorization-remote service effects" aria-selected="false">Remotely Track Device Without Authorization</a>
+ <a class="nav-link side" id="v-Remotely Wipe Data Without Authorization-remote service effects-tab" href="/previous/october2018/techniques/T1469" aria-controls="v-Remotely Wipe Data Without Authorization-remote service effects" aria-selected="false">Remotely Wipe Data Without Authorization</a>
+</div>
+</div>
+    </div>
+<!--startindex-->
+
+             
+            <div class="tab-content col-xl-10 col-lg-10 col-md-9 pt-4" id="v-tabContent">
+                <div class="tab-pane fade show active" id="v-attckmatrix" role="tabpanel" aria-labelledby="v-attckmatrix-tab">
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item"><a href="/previous/october2018/">Home</a></li>
+      <li class="breadcrumb-item"><a href="/previous/october2018/techniques/mobile">Techniques</a></li>
+  <li class="breadcrumb-item"><a href="/previous/october2018/techniques/mobile">Mobile</a></li>
+  <li class="breadcrumb-item">Access Sensitive Data in Device Logs</li>
+</ol>
+<div class="tab-pane fade show active" id="v-" role="tabpanel" aria-labelledby="v--tab"></div>
+<div class="row">
+   <div class="col-xl-12">
+      <div class="jumbotron jumbotron-fluid bg-white">
+         <div class="container-fluid">
+            <h1>
+               Access Sensitive Data in Device Logs
+            </h1>            
+            <div class="row">
+               <div class="col-md-8 description-body">
+                  <p>On versions of Android prior to 4.1, an adversary may use a malicious application that holds the READ_LOGS permission to obtain private keys, passwords, other credentials, or other sensitive data stored in the device's system log. On Android 4.1 and later, an adversary would need to attempt to perform an operating system privilege escalation attack to be able to access the log.</p>
+               </div>
+              
+               <div class="col-md-4">
+                  <div class="card">
+                     <div class="card-body">
+                        <div class="card-data"><span class="h5 card-title">ID</span>: T1413<br><br></div>
+                        <div class="card-data"><span class="h5 card-title">Tactic Type:&nbsp;</span> Post-Adversary Device Access<br><br></div>
+                        <div class="card-data"><span class="h5 card-title">Tactic</span>: Collection, Credential Access<br><br></div>
+                        <div class="card-data"><span class="h5 card-title">Platform:&nbsp;</span> Android<br><br></div>
+                        <div class="card-data"><span class="h5 card-title"></span> </div>
+                        <div class="card-data"><span class="h5 card-title"></span> </div>
+                        <div class="card-data"><span class="h5 card-title"></span> </div>
+                        <div class="card-data"><span class="h5 card-title"></span> </div>
+                        <div class="card-data"><span class="h5 card-title"></span> </div>
+                        <div class="card-data"><span class="h5 card-title"></span> </div>
+                        <div class="card-data"><span class="h5 card-title"></span> </div>
+                        <div class="card-data"><span class="h5 card-title">MTC ID:&nbsp;</span> <a href="https://pages.nist.gov/mobile-threat-catalogue/application-threats/APP-3.html" target="_blank">APP-3</a>, <a href="https://pages.nist.gov/mobile-threat-catalogue/application-threats/APP-13.html" target="_blank">APP-13</a><br><br></div>
+                        <div class="card-data"><span class="h5 card-title"></span> </div>
+                        <div class="card-data"><span class="h5 card-title">Version</span>: 1.0</div>
+                      </div>
+                  </div>
+               </div>
+            </div>
+            <h2 class="pt-3" id ="mitigations">Mitigations</h2><table class="table table-bordered table-light mt-2"><thead><tr> <th scope="col">Mitigation</th><th scope="col">Description</th></tr></thead><tbody class="bg-white"><tr><td><a href="/previous/october2018/mitigations/M1013">Application Developer Guidance</td><td>Application developers should be discouraged from writing sensitive data to the system log in production apps.</a></td></tr><tr><td><a href="/previous/october2018/mitigations/M1005">Application Vetting</td><td></a></td></tr><tr><td><a href="/previous/october2018/mitigations/M1001">Security Updates</td><td></a></td></tr><tr><td><a href="/previous/october2018/mitigations/M1006">Use Recent OS Version</td><td>Starting in Android 4.1, this technique requires privilege escalation for malicious applications to perform, as apps can no longer access the system log (other than log entries added by a particular app itself). (Additionally, with physical access to the device, the system log could be accessed via USB through the Android Debug Bridge.)<span onclick=scrollToRef('scite-1')  id="scite-ref-1-a" class="scite-citeref-number" data-reference="Android-ReadLogs"><sup><a href="https://groups.google.com/d/msg/android-developers/6U4A5irWang/AvZsrTdfICIJ" target="_blank" data-hasqtip="0" aria-describedby="qtip-0">[1]</a></sup></span></a></td></tr></tbody></table>
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            <h2 class="pt-3" id="references">References</h2><div class="row"><div class="col"><ol><li><span  id="scite-1" class="scite-citation"><span class="scite-citation-text"><a rel="nofollow" class="external text" name="scite-1" href="https://groups.google.com/d/msg/android-developers/6U4A5irWang/AvZsrTdfICIJ" target="_blank">Dianne Hackborn. (2012, July 12). Re: READ_LOGS permission is not granted to 3rd party applications in Jelly Bean (api 16). Retrieved December 21, 2016.</a></span></span></li></ol> </div><div class="col"> </div></div>
+          
+         </div>
+      </div>
+   </div>
+   <!-- <div class="col-xl-2 col-lg-2 col-md-0 d-block d-sm-none d-md-none d-lg-block">
+      <p>Content</p>
+      <div><a href="#description">Description</a></div>
+      <div><a href="#examples"></a></div>
+      <div><a href="#techniques"></a></div>
+      <div><a href="#mitigation">Mitigations</a></div>
+      <div><a href="#detection"></a></div>
+      <div><a href="#detectable"></a></div>
+      <div><a href="#difficulty"></a></div>
+      <div><a href="#references">References</a></div>
+   </div> -->
+</div>
+</div>
+
+                </div>
+            </div>
+        </div>  
+    </div>
+</div>
+<!--stopindex-->
+<footer class="footer p-3">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col">
+                <div class="footer-center-responsive my-auto">
+                    <a href="https://www.mitre.org" target="_blank" rel="noopener" aria-label="MITRE">
+                        <img src="/previous/october2018/theme/images/mitrelogowhiteontrans.gif" style="vertical-align: center" width="144" height="66">
+                    </a>
+                </div>
+            </div>
+            <!-- <div class="w-100 p-1 footer-responsive-break"></div> -->
+            <div class="col-6 text-center">
+                    <p>
+                        Copyright © 2018, The MITRE Corporation. MITRE ATT&CK and ATT&CK are trademarks of The MITRE Corporation.
+                    </p>
+                    <div class="row">
+                        <div class="col text-right">
+                            <small>
+                                <a href="/previous/october2018/resources/privacy" class="footer-link">Privacy Policy</a>
+                            </small>
+                        </div>
+                        <div class="col text-left">
+                            <small>
+                                <a href="/previous/october2018/resources/terms-of-use" class="footer-link">Terms of Use</a>
+                            </small>
+                        </div>
+                    </div>
+            </div>
+            <div class="w-100 p-2 footer-responsive-break"></div>
+            <div class="col">
+                <div class="footer-float-right-responsive">
+                    <div class="mb-1">
+                        <a href="https://twitter.com/MITREattack" class="btn btn-primary w-100">
+                            <!-- <i class="fa fa-twitter"></i> -->
+                            <img src="/previous/october2018/theme/images/twitter.png" class="mr-1" style="vertical-align: top" width="20" height="20">
+                            <b>@MITREattack</b>
+                        </a>
+                    </div>
+                    <div class="">
+                        <a href="/previous/october2018/contact" class="btn btn-primary w-100">
+                            Contact
+                        </a>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <!-- <div class="container-fluid text-center">
+        <a class="btn btn-primary float-right mr-4" href="https://twitter.com/MITREattack" target="_blank" rel="noopener"
+           aria-label="Twitter">
+            <img src="/previous/october2018/theme/images/twitter.png" class="mx-auto d-block" width="28" height="28"> Follow us!</a>
+        <a href="https://www.mitre.org" target="_blank" rel="noopener" aria-label="MITRE" class="float-left ml-4">
+            <img src="/previous/october2018/theme/images/mitrelogowhiteontrans.gif" width="144" height="66"></a>
+        <br />
+        <p>
+            <br />Copyright © 2018, The MITRE Corporation. MITRE ATT&CK and ATT&CK are trademarks of The MITRE
+            Corporation.</p>
+        <small><a href="/previous/october2018/resources/privacy" class="footer-link">Privacy Policy</a>&nbsp;&nbsp;<a href="/previous/october2018/resources/terms-of-use"
+                                                                                                 class="footer-link">Terms of Use</a></small>
+    </div> -->
+</footer>
+</div>
+    <!--SCRIPTS-->
+    <script src="/previous/october2018/theme/scripts/jquery-3.2.1.min.js"></script>
+    <script src="/previous/october2018/theme/scripts/popper.min.js"></script>
+    <script src="/previous/october2018/theme/scripts/bootstrap.min.js"></script>
+    <script src="/previous/october2018/theme/scripts/site.js"></script>
+    <script src="/previous/october2018/theme/scripts/lunr-2.3.3.js"></script>
+    <script src="/previous/october2018/theme/scripts/search.js"></script>
+    <script src="/previous/october2018/theme/scripts/index.js"></script>
+
+<!--SCRIPTS-->
+<script src="/previous/october2018/theme/scripts/techniques.js"></script>
+</body>
+
+</html>
+<!--startindex-->

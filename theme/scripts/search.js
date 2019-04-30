@@ -1,6 +1,10 @@
 
+// this is used for the previous-versions feature to prepend urls for index.json and search result links.
+// it gets parsed automatically when a version is preserved
+site_base_url = ""
+
 $.ajax({
-  url: "/index.json",
+  url: site_base_url + "/index.json",
   dataType: "json",
   success: function (data) {
     idx = lunr.Index.load(data)
@@ -63,7 +67,7 @@ function search(str) {
 
     for (var key in categories) {
       if (url.includes(key)) {
-        categories[key].push("<a href='" + url + "'>" + title + "</a>");
+        categories[key].push("<a href='" + site_base_url + url + "'>" + title + "</a>");
       }
     }
   }
