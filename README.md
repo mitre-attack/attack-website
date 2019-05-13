@@ -13,3 +13,11 @@ If you find errors or typos on the site related to content, please let us know b
 * 404 errors when links are clicked
 
 Thanks in advance for helping us improve the ATT&CK website!
+
+#### Docker Container
+
+```
+$ docker run --rm -p 80:80 -d -v $(pwd):/usr/share/nginx/html nginx
+OR 
+$ docker run --rm -p 80:80 -d -v ~/WEB_SITE_FILES_LOCATION:/usr/share/nginx/html nginx
+```
