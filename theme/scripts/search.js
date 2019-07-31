@@ -2,6 +2,7 @@
 // this is used for the previous-versions feature to prepend urls for index.json and search result links.
 // it gets parsed automatically when a version is preserved
 site_base_url = ""
+console.log("test!")
 
 $.ajax({
   url: site_base_url + "/index.json",
@@ -36,7 +37,7 @@ function search(str) {
       return;
     }
   }
-  var categories = { "techniques": [], "tactics": [], "groups": [], "software": [] };
+  var categories = { "techniques": [], "tactics": [], "groups": [], "software": [], "mitigations":[] };
 
   $(".search-results").css('visibility', 'visible');
   $(".search-results").html("");
