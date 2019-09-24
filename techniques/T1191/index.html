@@ -570,34 +570,7 @@
                             </div>
                         </div>
                     </div>
-                        <h2 class="pt-3" id ="mitigations">Mitigations</h2>
-                            <table class="table table-bordered table-alternate mt-2">
-                                <thead>
-                                    <tr> 
-                                        <th scope="col">Mitigation</th>
-                                        <th scope="col">Description</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                        <tr>
-                                            <td>
-                                                <a href="/mitigations/M1042"> Disable or Remove Feature or Program </a>
-                                            </td>
-                                            <td> 
-                                                CMSTP.exe may not be necessary within a given environment (unless using it for VPN connection installation).
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <a href="/mitigations/M1038"> Execution Prevention </a>
-                                            </td>
-                                            <td> 
-                                                Consider using application whitelisting configured to block execution of CMSTP.exe if it is not required for a given system or network to prevent potential misuse by adversaries.
-                                            </td>
-                                        </tr>
-                                </tbody>
-                            </table>
-                        <h2 class="pt-3" id ="examples">Examples</h2>
+                        <h2 class="pt-3" id ="examples">Procedure Examples</h2>
                         <table class="table table-bordered table-alternate mt-2">
                             <thead>
                                 <tr> 
@@ -644,6 +617,33 @@
                                     </tr>
                             </tbody>
                         </table>
+                        <h2 class="pt-3" id ="mitigations">Mitigations</h2>
+                            <table class="table table-bordered table-alternate mt-2">
+                                <thead>
+                                    <tr> 
+                                        <th scope="col">Mitigation</th>
+                                        <th scope="col">Description</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                        <tr>
+                                            <td>
+                                                <a href="/mitigations/M1042"> Disable or Remove Feature or Program </a>
+                                            </td>
+                                            <td> 
+                                                CMSTP.exe may not be necessary within a given environment (unless using it for VPN connection installation).
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/mitigations/M1038"> Execution Prevention </a>
+                                            </td>
+                                            <td> 
+                                                Consider using application whitelisting configured to block execution of CMSTP.exe if it is not required for a given system or network to prevent potential misuse by adversaries.
+                                            </td>
+                                        </tr>
+                                </tbody>
+                            </table>
                         <h2 class="pt-3" id="detection">Detection</h2>
                         <div>
                             <p>Use process monitoring to detect and analyze the execution and arguments of CMSTP.exe. Compare recent invocations of CMSTP.exe with prior history of known good arguments and loaded files to determine anomalous and potentially adversarial activity.</p><p>Sysmon events can also be used to identify potential abuses of CMSTP.exe. Detection strategy may depend on the specific adversary procedure, but potential rules include: <span onclick=scrollToRef('scite-6') id="scite-ref-6-a" class="scite-citeref-number" data-reference="Endurant CMSTP July 2018"><sup><a href="http://www.endurant.io/cmstp/detecting-cmstp-enabled-code-execution-and-uac-bypass-with-sysmon/" target="_blank" data-hasqtip="6" aria-describedby="qtip-6">[6]</a></sup></span></p><ul><li>To detect loading and execution of local/remote payloads - Event 1 (Process creation) where ParentImage contains CMSTP.exe and/or Event 3 (Network connection) where Image contains CMSTP.exe and DestinationIP is external.</li><li>To detect <a href="/techniques/T1088">Bypass User Account Control</a> via an auto-elevated COM interface - Event 10 (ProcessAccess) where CallTrace contains CMLUA.dll and/or Event 12 or 13 (RegistryEvent) where TargetObject contains CMMGR32.exe. Also monitor for events, such as the creation of processes (Sysmon Event 1), that involve auto-elevated CMSTP COM interfaces such as CMSTPLUA (3E5FC7F9-9A51-4367-9063-A120244FBEC7) and CMLUAUTIL (3E000D72-A845-4CD9-BD83-80C07C3B881F).</li></ul>

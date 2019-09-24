@@ -571,42 +571,7 @@
                             </div>
                         </div>
                     </div>
-                        <h2 class="pt-3" id ="mitigations">Mitigations</h2>
-                            <table class="table table-bordered table-alternate mt-2">
-                                <thead>
-                                    <tr> 
-                                        <th scope="col">Mitigation</th>
-                                        <th scope="col">Description</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                        <tr>
-                                            <td>
-                                                <a href="/mitigations/M1047"> Audit </a>
-                                            </td>
-                                            <td> 
-                                                Check for common UAC bypass weaknesses on Windows systems to be aware of the risk posture and address issues where appropriate.
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <a href="/mitigations/M1026"> Privileged Account Management </a>
-                                            </td>
-                                            <td> 
-                                                Remove users from the local administrator group on systems.
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <a href="/mitigations/M1052"> User Account Control </a>
-                                            </td>
-                                            <td> 
-                                                Although UAC bypass techniques exist, it is still prudent to use the highest enforcement level for UAC when possible and mitigate bypass opportunities that exist with techniques such as <a href="https://attack.mitre.org/techniques/T1038">DLL Search Order Hijacking</a>.
-                                            </td>
-                                        </tr>
-                                </tbody>
-                            </table>
-                        <h2 class="pt-3" id ="examples">Examples</h2>
+                        <h2 class="pt-3" id ="examples">Procedure Examples</h2>
                         <table class="table table-bordered table-alternate mt-2">
                             <thead>
                                 <tr> 
@@ -960,6 +925,41 @@
                                     </tr>
                             </tbody>
                         </table>
+                        <h2 class="pt-3" id ="mitigations">Mitigations</h2>
+                            <table class="table table-bordered table-alternate mt-2">
+                                <thead>
+                                    <tr> 
+                                        <th scope="col">Mitigation</th>
+                                        <th scope="col">Description</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                        <tr>
+                                            <td>
+                                                <a href="/mitigations/M1047"> Audit </a>
+                                            </td>
+                                            <td> 
+                                                Check for common UAC bypass weaknesses on Windows systems to be aware of the risk posture and address issues where appropriate.
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/mitigations/M1026"> Privileged Account Management </a>
+                                            </td>
+                                            <td> 
+                                                Remove users from the local administrator group on systems.
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/mitigations/M1052"> User Account Control </a>
+                                            </td>
+                                            <td> 
+                                                Although UAC bypass techniques exist, it is still prudent to use the highest enforcement level for UAC when possible and mitigate bypass opportunities that exist with techniques such as <a href="https://attack.mitre.org/techniques/T1038">DLL Search Order Hijacking</a>.
+                                            </td>
+                                        </tr>
+                                </tbody>
+                            </table>
                         <h2 class="pt-3" id="detection">Detection</h2>
                         <div>
                             <p>There are many ways to perform UAC bypasses when a user is in the local administrator group on a system, so it may be difficult to target detection on all variations. Efforts should likely be placed on mitigation and collecting enough information on process launches and actions that could be performed before and after a UAC bypass is performed. Monitor process API calls for behavior that may be indicative of <a href="/techniques/T1055">Process Injection</a> and unusual loaded DLLs through <a href="/techniques/T1038">DLL Search Order Hijacking</a>, which indicate attempts to gain access to higher privileged processes.</p><p>Some UAC bypass methods rely on modifying specific, user-accessible Registry settings. For example:</p><ul><li>The <code>eventvwr.exe</code> bypass uses the <code>[HKEY_CURRENT_USER]\Software\Classes\mscfile\shell\open\command</code> Registry key. <span onclick=scrollToRef('scite-6') id="scite-ref-6-a" class="scite-citeref-number" data-reference="enigma0x3 Fileless UAC Bypass"><sup><a href="https://enigma0x3.net/2016/08/15/fileless-uac-bypass-using-eventvwr-exe-and-registry-hijacking/" target="_blank" data-hasqtip="6" aria-describedby="qtip-6">[6]</a></sup></span></li><li>The <code>sdclt.exe</code> bypass uses the <code>[HKEY_CURRENT_USER]\Software\Microsoft\Windows\CurrentVersion\App Paths\control.exe</code> and <code>[HKEY_CURRENT_USER]\Software\Classes\exefile\shell\runas\command\isolatedCommand</code> Registry keys. <span onclick=scrollToRef('scite-35') id="scite-ref-35-a" class="scite-citeref-number" data-reference="enigma0x3 sdclt app paths"><sup><a href="https://enigma0x3.net/2017/03/14/bypassing-uac-using-app-paths/" target="_blank" data-hasqtip="35" aria-describedby="qtip-35">[35]</a></sup></span> <span onclick=scrollToRef('scite-36') id="scite-ref-36-a" class="scite-citeref-number" data-reference="enigma0x3 sdclt bypass"><sup><a href="https://enigma0x3.net/2017/03/17/fileless-uac-bypass-using-sdclt-exe/" target="_blank" data-hasqtip="36" aria-describedby="qtip-36">[36]</a></sup></span></li></ul><p>Analysts should monitor these Registry settings for unauthorized changes.</p>

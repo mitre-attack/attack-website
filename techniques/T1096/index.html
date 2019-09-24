@@ -570,26 +570,7 @@
                             </div>
                         </div>
                     </div>
-                        <h2 class="pt-3" id ="mitigations">Mitigations</h2>
-                            <table class="table table-bordered table-alternate mt-2">
-                                <thead>
-                                    <tr> 
-                                        <th scope="col">Mitigation</th>
-                                        <th scope="col">Description</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                        <tr>
-                                            <td>
-                                                <a href="/mitigations/M1022"> Restrict File and Directory Permissions </a>
-                                            </td>
-                                            <td> 
-                                                Consider adjusting read and write permissions for NTFS EA, though this should be tested to ensure routine OS operations are not impeded.
-                                            </td>
-                                        </tr>
-                                </tbody>
-                            </table>
-                        <h2 class="pt-3" id ="examples">Examples</h2>
+                        <h2 class="pt-3" id ="examples">Procedure Examples</h2>
                         <table class="table table-bordered table-alternate mt-2">
                             <thead>
                                 <tr> 
@@ -704,6 +685,25 @@
                                     </tr>
                             </tbody>
                         </table>
+                        <h2 class="pt-3" id ="mitigations">Mitigations</h2>
+                            <table class="table table-bordered table-alternate mt-2">
+                                <thead>
+                                    <tr> 
+                                        <th scope="col">Mitigation</th>
+                                        <th scope="col">Description</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                        <tr>
+                                            <td>
+                                                <a href="/mitigations/M1022"> Restrict File and Directory Permissions </a>
+                                            </td>
+                                            <td> 
+                                                Consider adjusting read and write permissions for NTFS EA, though this should be tested to ensure routine OS operations are not impeded.
+                                            </td>
+                                        </tr>
+                                </tbody>
+                            </table>
                         <h2 class="pt-3" id="detection">Detection</h2>
                         <div>
                             <p>Forensic techniques exist to identify information stored in NTFS EA. <span onclick=scrollToRef('scite-6') id="scite-ref-6-a" class="scite-citeref-number" data-reference="Journey into IR ZeroAccess NTFS EA"><sup><a href="http://journeyintoir.blogspot.com/2012/12/extracting-zeroaccess-from-ntfs.html" target="_blank" data-hasqtip="6" aria-describedby="qtip-6">[6]</a></sup></span> Monitor calls to the ZwSetEaFile and ZwQueryEaFile Windows API functions as well as binaries used to interact with EA, <span onclick=scrollToRef('scite-15') id="scite-ref-15-a" class="scite-citeref-number" data-reference="Oddvar Moe ADS1 Jan 2018"><sup><a href="https://oddvar.moe/2018/01/14/putting-data-in-alternate-data-streams-and-how-to-execute-it/" target="_blank" data-hasqtip="15" aria-describedby="qtip-15">[15]</a></sup></span> <span onclick=scrollToRef('scite-16') id="scite-ref-16-a" class="scite-citeref-number" data-reference="Oddvar Moe ADS2 Apr 2018"><sup><a href="https://oddvar.moe/2018/04/11/putting-data-in-alternate-data-streams-and-how-to-execute-it-part-2/" target="_blank" data-hasqtip="16" aria-describedby="qtip-16">[16]</a></sup></span> and consider regularly scanning for the presence of modified information. <span onclick=scrollToRef('scite-1') id="scite-ref-1-a" class="scite-citeref-number" data-reference="SpectorOps Host-Based Jul 2017"><sup><a href="https://posts.specterops.io/host-based-threat-modeling-indicator-design-a9dbbb53d5ea" target="_blank" data-hasqtip="1" aria-describedby="qtip-1">[1]</a></sup></span></p><p>There are many ways to create and interact with ADSs using Windows utilities. Monitor for operations (execution, copies, etc.) with file names that contain colons. This syntax (ex: <code>file.ext:ads[.ext]</code>) is commonly associated with ADSs. <span onclick=scrollToRef('scite-5') id="scite-ref-5-a" class="scite-citeref-number" data-reference="Microsoft ADS Mar 2014"><sup><a href="https://blogs.technet.microsoft.com/askcore/2013/03/24/alternate-data-streams-in-ntfs/" target="_blank" data-hasqtip="5" aria-describedby="qtip-5">[5]</a></sup></span> <span onclick=scrollToRef('scite-15') id="scite-ref-15-a" class="scite-citeref-number" data-reference="Oddvar Moe ADS1 Jan 2018"><sup><a href="https://oddvar.moe/2018/01/14/putting-data-in-alternate-data-streams-and-how-to-execute-it/" target="_blank" data-hasqtip="15" aria-describedby="qtip-15">[15]</a></sup></span> <span onclick=scrollToRef('scite-16') id="scite-ref-16-a" class="scite-citeref-number" data-reference="Oddvar Moe ADS2 Apr 2018"><sup><a href="https://oddvar.moe/2018/04/11/putting-data-in-alternate-data-streams-and-how-to-execute-it-part-2/" target="_blank" data-hasqtip="16" aria-describedby="qtip-16">[16]</a></sup></span> For a more exhaustive list of utilities that can be used to execute and create ADSs, see https://gist.github.com/api0cradle/cdd2d0d0ec9abb686f0e89306e277b8f.</p><p>The Streams tool of Sysinternals can be used to uncover files with ADSs. The <code>dir /r</code> command can also be used to display ADSs. <span onclick=scrollToRef('scite-17') id="scite-ref-17-a" class="scite-citeref-number" data-reference="Symantec ADS May 2009"><sup><a href="https://www.symantec.com/connect/articles/what-you-need-know-about-alternate-data-streams-windows-your-data-secure-can-you-restore" target="_blank" data-hasqtip="17" aria-describedby="qtip-17">[17]</a></sup></span> Many PowerShell commands (such as Get-Item, Set-Item, Remove-Item, and Get-ChildItem) can also accept a <code>-stream</code> parameter to interact with ADSs. <span onclick=scrollToRef('scite-4') id="scite-ref-4-a" class="scite-citeref-number" data-reference="MalwareBytes ADS July 2015"><sup><a href="https://blog.malwarebytes.com/101/2015/07/introduction-to-alternate-data-streams/" target="_blank" data-hasqtip="4" aria-describedby="qtip-4">[4]</a></sup></span> <span onclick=scrollToRef('scite-5') id="scite-ref-5-a" class="scite-citeref-number" data-reference="Microsoft ADS Mar 2014"><sup><a href="https://blogs.technet.microsoft.com/askcore/2013/03/24/alternate-data-streams-in-ntfs/" target="_blank" data-hasqtip="5" aria-describedby="qtip-5">[5]</a></sup></span></p>

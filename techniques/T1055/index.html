@@ -574,35 +574,7 @@
                             </div>
                         </div>
                     </div>
-                        <h2 class="pt-3" id ="mitigations">Mitigations</h2>
-                            <table class="table table-bordered table-alternate mt-2">
-                                <thead>
-                                    <tr> 
-                                        <th scope="col">Mitigation</th>
-                                        <th scope="col">Description</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                        <tr>
-                                            <td>
-                                                <a href="/mitigations/M1040"> Behavior Prevention on Endpoint </a>
-                                            </td>
-                                            <td> 
-                                                Some endpoint security solutions can be configured to block some types of process injection based on common sequences of behavior that occur during the injection process.
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <a href="/mitigations/M1026"> Privileged Account Management </a>
-                                            </td>
-                                            <td> 
-                                                >Linux</h3>
-<p>Utilize Yama to mitigate ptrace based process injection by restricting the use of ptrace to privileged users only. Other mitigation controls involve the deployment of security kernel modules that provide advanced access control and process restrictions such as SELinux, grsecurity, and AppAmour.
-                                            </td>
-                                        </tr>
-                                </tbody>
-                            </table>
-                        <h2 class="pt-3" id ="examples">Examples</h2>
+                        <h2 class="pt-3" id ="examples">Procedure Examples</h2>
                         <table class="table table-bordered table-alternate mt-2">
                             <thead>
                                 <tr> 
@@ -1447,6 +1419,34 @@
                                     </tr>
                             </tbody>
                         </table>
+                        <h2 class="pt-3" id ="mitigations">Mitigations</h2>
+                            <table class="table table-bordered table-alternate mt-2">
+                                <thead>
+                                    <tr> 
+                                        <th scope="col">Mitigation</th>
+                                        <th scope="col">Description</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                        <tr>
+                                            <td>
+                                                <a href="/mitigations/M1040"> Behavior Prevention on Endpoint </a>
+                                            </td>
+                                            <td> 
+                                                Some endpoint security solutions can be configured to block some types of process injection based on common sequences of behavior that occur during the injection process.
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/mitigations/M1026"> Privileged Account Management </a>
+                                            </td>
+                                            <td> 
+                                                >Linux</h3>
+<p>Utilize Yama to mitigate ptrace based process injection by restricting the use of ptrace to privileged users only. Other mitigation controls involve the deployment of security kernel modules that provide advanced access control and process restrictions such as SELinux, grsecurity, and AppAmour.
+                                            </td>
+                                        </tr>
+                                </tbody>
+                            </table>
                         <h2 class="pt-3" id="detection">Detection</h2>
                         <div>
                             <p>Monitoring Windows API calls indicative of the various types of code injection may generate a significant amount of data and may not be directly useful for defense unless collected under specific circumstances for known bad sequences of calls, since benign use of API functions may be common and difficult to distinguish from malicious behavior. API calls such as CreateRemoteThread, SuspendThread/SetThreadContext/ResumeThread, QueueUserAPC/NtQueueApcThread, and those that can be used to modify memory within another process, such as WriteProcessMemory, may be used for this technique. <span onclick=scrollToRef('scite-1') id="scite-ref-1-a" class="scite-citeref-number" data-reference="Endgame Process Injection July 2017"><sup><a href="https://www.endgame.com/blog/technical-blog/ten-process-injection-techniques-technical-survey-common-and-trending-process" target="_blank" data-hasqtip="1" aria-describedby="qtip-1">[1]</a></sup></span></p><p>Monitoring for Linux specific calls such as the ptrace system call, the use of LD_PRELOAD environment variable, or dlfcn dynamic linking API calls, should not generate large amounts of data due to their specialized nature, and can be a very effective method to detect some of the common process injection methods. <span onclick=scrollToRef('scite-84') id="scite-ref-84-a" class="scite-citeref-number" data-reference="ArtOfMemoryForensics"><sup>[84]</sup></span>  <span onclick=scrollToRef('scite-85') id="scite-ref-85-a" class="scite-citeref-number" data-reference="GNU Acct"><sup><a href="https://www.gnu.org/software/acct/" target="_blank" data-hasqtip="85" aria-describedby="qtip-85">[85]</a></sup></span>  <span onclick=scrollToRef('scite-86') id="scite-ref-86-a" class="scite-citeref-number" data-reference="RHEL auditd"><sup><a href="https://access.redhat.com/documentation/red_hat_enterprise_linux/6/html/security_guide/chap-system_auditing" target="_blank" data-hasqtip="86" aria-describedby="qtip-86">[86]</a></sup></span>  <span onclick=scrollToRef('scite-87') id="scite-ref-87-a" class="scite-citeref-number" data-reference="Chokepoint preload rootkits"><sup><a href="http://www.chokepoint.net/2014/02/detecting-userland-preload-rootkits.html" target="_blank" data-hasqtip="87" aria-describedby="qtip-87">[87]</a></sup></span></p><p>Monitor for named pipe creation and connection events (Event IDs 17 and 18) for possible indicators of infected processes with external modules. <span onclick=scrollToRef('scite-88') id="scite-ref-88-a" class="scite-citeref-number" data-reference="Microsoft Sysmon v6 May 2017"><sup><a href="https://docs.microsoft.com/sysinternals/downloads/sysmon" target="_blank" data-hasqtip="88" aria-describedby="qtip-88">[88]</a></sup></span></p><p>Monitor processes and command-line arguments for actions that could be done before or after code injection has occurred and correlate the information with related event information. Code injection may also be performed using <a href="/techniques/T1086">PowerShell</a> with tools such as PowerSploit, <span onclick=scrollToRef('scite-89') id="scite-ref-89-a" class="scite-citeref-number" data-reference="Powersploit"><sup><a href="https://github.com/mattifestation/PowerSploit" target="_blank" data-hasqtip="89" aria-describedby="qtip-89">[89]</a></sup></span> so additional PowerShell monitoring may be required to cover known implementations of this behavior.</p>

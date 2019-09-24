@@ -570,44 +570,7 @@
                             </div>
                         </div>
                     </div>
-                        <h2 class="pt-3" id ="mitigations">Mitigations</h2>
-                            <table class="table table-bordered table-alternate mt-2">
-                                <thead>
-                                    <tr> 
-                                        <th scope="col">Mitigation</th>
-                                        <th scope="col">Description</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                        <tr>
-                                            <td>
-                                                <a href="/mitigations/M1026"> Privileged Account Management </a>
-                                            </td>
-                                            <td> 
-                                                Limit permissions so that users and user groups cannot create tokens. This setting should be defined for the local system account only. GPO: Computer Configuration &gt; [Policies] &gt; Windows Settings &gt; Security Settings &gt; Local Policies &gt; User Rights Assignment: Create a token object. Also define who can create a process level token to only the local and network service through GPO: Computer Configuration &gt; [Policies] &gt; Windows Settings &gt; Security Settings &gt; Local Policies &gt; User Rights Assignment: Replace a process level token.
-                                                        <span onclick=scrollToRef('scite-6') id="scite-ref-6-a" class="scite-citeref-number" data-reference="Microsoft Create Token">
-                                                            <sup>
-                                                                <a aria-describedby="qtip-6" href="https://docs.microsoft.com/windows/device-security/security-policy-settings/create-a-token-object" target="_blank" data-hasqtip="6">[6]</a>
-                                                            </sup>
-                                                        </span>
-                                                        <span onclick=scrollToRef('scite-7') id="scite-ref-7-a" class="scite-citeref-number" data-reference="Microsoft Replace Process Token">
-                                                            <sup>
-                                                                <a aria-describedby="qtip-7" href="https://docs.microsoft.com/windows/device-security/security-policy-settings/replace-a-process-level-token" target="_blank" data-hasqtip="7">[7]</a>
-                                                            </sup>
-                                                        </span>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <a href="/mitigations/M1018"> User Account Management </a>
-                                            </td>
-                                            <td> 
-                                                An adversary must already have administrator level access on the local system to make full use of this technique; be sure to restrict users and accounts to the least privileges they require.  
-                                            </td>
-                                        </tr>
-                                </tbody>
-                            </table>
-                        <h2 class="pt-3" id ="examples">Examples</h2>
+                        <h2 class="pt-3" id ="examples">Procedure Examples</h2>
                         <table class="table table-bordered table-alternate mt-2">
                             <thead>
                                 <tr> 
@@ -815,6 +778,43 @@
                                     </tr>
                             </tbody>
                         </table>
+                        <h2 class="pt-3" id ="mitigations">Mitigations</h2>
+                            <table class="table table-bordered table-alternate mt-2">
+                                <thead>
+                                    <tr> 
+                                        <th scope="col">Mitigation</th>
+                                        <th scope="col">Description</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                        <tr>
+                                            <td>
+                                                <a href="/mitigations/M1026"> Privileged Account Management </a>
+                                            </td>
+                                            <td> 
+                                                Limit permissions so that users and user groups cannot create tokens. This setting should be defined for the local system account only. GPO: Computer Configuration &gt; [Policies] &gt; Windows Settings &gt; Security Settings &gt; Local Policies &gt; User Rights Assignment: Create a token object. Also define who can create a process level token to only the local and network service through GPO: Computer Configuration &gt; [Policies] &gt; Windows Settings &gt; Security Settings &gt; Local Policies &gt; User Rights Assignment: Replace a process level token.
+                                                        <span onclick=scrollToRef('scite-6') id="scite-ref-6-a" class="scite-citeref-number" data-reference="Microsoft Create Token">
+                                                            <sup>
+                                                                <a aria-describedby="qtip-6" href="https://docs.microsoft.com/windows/device-security/security-policy-settings/create-a-token-object" target="_blank" data-hasqtip="6">[6]</a>
+                                                            </sup>
+                                                        </span>
+                                                        <span onclick=scrollToRef('scite-7') id="scite-ref-7-a" class="scite-citeref-number" data-reference="Microsoft Replace Process Token">
+                                                            <sup>
+                                                                <a aria-describedby="qtip-7" href="https://docs.microsoft.com/windows/device-security/security-policy-settings/replace-a-process-level-token" target="_blank" data-hasqtip="7">[7]</a>
+                                                            </sup>
+                                                        </span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/mitigations/M1018"> User Account Management </a>
+                                            </td>
+                                            <td> 
+                                                An adversary must already have administrator level access on the local system to make full use of this technique; be sure to restrict users and accounts to the least privileges they require.  
+                                            </td>
+                                        </tr>
+                                </tbody>
+                            </table>
                         <h2 class="pt-3" id="detection">Detection</h2>
                         <div>
                             <p>If an adversary is using a standard command-line shell, analysts can detect token manipulation by auditing command-line activity. Specifically, analysts should look for use of the <code>runas</code> command. Detailed command-line logging is not enabled by default in Windows. <span onclick=scrollToRef('scite-25') id="scite-ref-25-a" class="scite-citeref-number" data-reference="Microsoft Command-line Logging"><sup><a href="https://technet.microsoft.com/en-us/windows-server-docs/identity/ad-ds/manage/component-updates/command-line-process-auditing" target="_blank" data-hasqtip="25" aria-describedby="qtip-25">[25]</a></sup></span></p><p>If an adversary is using a payload that calls the Windows token APIs directly, analysts can detect token manipulation only through careful analysis of user network activity, examination of running processes, and correlation with other endpoint and network behavior. </p><p>There are many Windows API calls a payload can take advantage of to manipulate access tokens (e.g., <code>LogonUser</code> <span onclick=scrollToRef('scite-26') id="scite-ref-26-a" class="scite-citeref-number" data-reference="Microsoft LogonUser"><sup><a href="https://msdn.microsoft.com/en-us/library/windows/desktop/aa378184(v=vs.85).aspx" target="_blank" data-hasqtip="26" aria-describedby="qtip-26">[26]</a></sup></span>, <code>DuplicateTokenEx</code> <span onclick=scrollToRef('scite-27') id="scite-ref-27-a" class="scite-citeref-number" data-reference="Microsoft DuplicateTokenEx"><sup><a href="https://msdn.microsoft.com/en-us/library/windows/desktop/aa446617(v=vs.85).aspx" target="_blank" data-hasqtip="27" aria-describedby="qtip-27">[27]</a></sup></span>, and <code>ImpersonateLoggedOnUser</code> <span onclick=scrollToRef('scite-28') id="scite-ref-28-a" class="scite-citeref-number" data-reference="Microsoft ImpersonateLoggedOnUser"><sup><a href="https://msdn.microsoft.com/en-us/library/windows/desktop/aa378612(v=vs.85).aspx" target="_blank" data-hasqtip="28" aria-describedby="qtip-28">[28]</a></sup></span>). Please see the referenced Windows API pages for more information.</p><p>Query systems for process and thread token information and look for inconsistencies such as user owns processes impersonating the local SYSTEM account. <span onclick=scrollToRef('scite-3') id="scite-ref-3-a" class="scite-citeref-number" data-reference="BlackHat Atkinson Winchester Token Manipulation"><sup><a href="https://www.blackhat.com/docs/eu-17/materials/eu-17-Atkinson-A-Process-Is-No-One-Hunting-For-Token-Manipulation.pdf" target="_blank" data-hasqtip="3" aria-describedby="qtip-3">[3]</a></sup></span></p>

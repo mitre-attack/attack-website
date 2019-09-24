@@ -569,6 +569,30 @@
                             </div>
                         </div>
                     </div>
+                        <h2 class="pt-3" id ="examples">Procedure Examples</h2>
+                        <table class="table table-bordered table-alternate mt-2">
+                            <thead>
+                                <tr> 
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                    <tr>
+                                        <td>
+                                            <a href="/software/S0192"> Pupy </a>
+                                        </td>
+                                        <td> 
+                                            <a href="https://attack.mitre.org/software/S0192">Pupy</a> can be used to establish persistence using a systemd service.
+                                                    <span onclick=scrollToRef('scite-8') id="scite-ref-8-a" class="scite-citeref-number" data-reference="GitHub Pupy">
+                                                        <sup>
+                                                            <a aria-describedby="qtip-8" href="https://github.com/n1nj4sec/pupy" target="_blank" data-hasqtip="8">[8]</a>
+                                                        </sup>
+                                                    </span>
+                                        </td>
+                                    </tr>
+                            </tbody>
+                        </table>
                         <h2 class="pt-3" id ="mitigations">Mitigations</h2>
                             <table class="table table-bordered table-alternate mt-2">
                                 <thead>
@@ -612,30 +636,6 @@
                                         </tr>
                                 </tbody>
                             </table>
-                        <h2 class="pt-3" id ="examples">Examples</h2>
-                        <table class="table table-bordered table-alternate mt-2">
-                            <thead>
-                                <tr> 
-                                    <th scope="col">Name</th>
-                                    <th scope="col">Description</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                    <tr>
-                                        <td>
-                                            <a href="/software/S0192"> Pupy </a>
-                                        </td>
-                                        <td> 
-                                            <a href="https://attack.mitre.org/software/S0192">Pupy</a> can be used to establish persistence using a systemd service.
-                                                    <span onclick=scrollToRef('scite-8') id="scite-ref-8-a" class="scite-citeref-number" data-reference="GitHub Pupy">
-                                                        <sup>
-                                                            <a aria-describedby="qtip-8" href="https://github.com/n1nj4sec/pupy" target="_blank" data-hasqtip="8">[8]</a>
-                                                        </sup>
-                                                    </span>
-                                        </td>
-                                    </tr>
-                            </tbody>
-                        </table>
                         <h2 class="pt-3" id="detection">Detection</h2>
                         <div>
                             <p>Systemd service unit files may be detected by auditing file creation and modification events within the <code>/etc/systemd/system</code>, <code>/usr/lib/systemd/system/</code>, and <code>/home/<username>/.config/systemd/user/</code> directories, as well as associated symbolic links. Suspicious processes or scripts spawned in this manner will have a parent process of ‘systemd’, a parent process ID of 1, and will usually execute as the ‘root’ user.</p><p>Suspicious systemd services can also be identified by comparing results against a trusted system baseline. Malicious systemd services may be detected by using the systemctl utility to examine system wide services: <code>systemctl list-units -–type=service –all</code>. Analyze the contents of <code>.service</code> files present on the file system and ensure that they refer to legitimate, expected executables.</p><p>Auditing the execution and command-line arguments of the 'systemctl' utility, as well related utilities such as <code>/usr/sbin/service</code> may reveal malicious systemd service execution.</p>

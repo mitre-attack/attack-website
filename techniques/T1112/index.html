@@ -570,26 +570,7 @@
                             </div>
                         </div>
                     </div>
-                        <h2 class="pt-3" id ="mitigations">Mitigations</h2>
-                            <table class="table table-bordered table-alternate mt-2">
-                                <thead>
-                                    <tr> 
-                                        <th scope="col">Mitigation</th>
-                                        <th scope="col">Description</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                        <tr>
-                                            <td>
-                                                <a href="/mitigations/M1024"> Restrict Registry Permissions </a>
-                                            </td>
-                                            <td> 
-                                                Ensure proper permissions are set for Registry hives to prevent users from modifying keys for system components that may lead to privilege escalation.
-                                            </td>
-                                        </tr>
-                                </tbody>
-                            </table>
-                        <h2 class="pt-3" id ="examples">Examples</h2>
+                        <h2 class="pt-3" id ="examples">Procedure Examples</h2>
                         <table class="table table-bordered table-alternate mt-2">
                             <thead>
                                 <tr> 
@@ -1316,6 +1297,25 @@
                                     </tr>
                             </tbody>
                         </table>
+                        <h2 class="pt-3" id ="mitigations">Mitigations</h2>
+                            <table class="table table-bordered table-alternate mt-2">
+                                <thead>
+                                    <tr> 
+                                        <th scope="col">Mitigation</th>
+                                        <th scope="col">Description</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                        <tr>
+                                            <td>
+                                                <a href="/mitigations/M1024"> Restrict Registry Permissions </a>
+                                            </td>
+                                            <td> 
+                                                Ensure proper permissions are set for Registry hives to prevent users from modifying keys for system components that may lead to privilege escalation.
+                                            </td>
+                                        </tr>
+                                </tbody>
+                            </table>
                         <h2 class="pt-3" id="detection">Detection</h2>
                         <div>
                             <p>Modifications to the Registry are normal and occur throughout typical use of the Windows operating system. Consider enabling Registry Auditing on specific keys to produce an alertable event (Event ID 4657) whenever a value is changed (though this may not trigger when values are created with Reghide or other evasive methods). <span onclick=scrollToRef('scite-64') id="scite-ref-64-a" class="scite-citeref-number" data-reference="Microsoft 4657 APR 2017"><sup><a href="https://docs.microsoft.com/windows/security/threat-protection/auditing/event-4657" target="_blank" data-hasqtip="64" aria-describedby="qtip-64">[64]</a></sup></span> Changes to Registry entries that load software on Windows startup that do not correlate with known software, patch cycles, etc., are suspicious, as are additions or changes to files within the startup folder. Changes could also include new services and modification of existing binary paths to point to malicious files. If a change to a service-related entry occurs, then it will likely be followed by a local or remote service start or restart to execute the file.</p><p>Monitor processes and command-line arguments for actions that could be taken to change or delete information in the Registry. Remote access tools with built-in features may interact directly with the Windows API to gather information. Information may also be acquired through Windows system management tools such as <a href="/techniques/T1047">Windows Management Instrumentation</a> and <a href="/techniques/T1086">PowerShell</a>, which may require additional logging features to be configured in the operating system to collect necessary information for analysis.</p><p>Monitor for processes, command-line arguments, and API calls associated with concealing Registry keys, such as Reghide. <span onclick=scrollToRef('scite-2') id="scite-ref-2-a" class="scite-citeref-number" data-reference="Microsoft Reghide NOV 2006"><sup><a href="https://docs.microsoft.com/sysinternals/downloads/reghide" target="_blank" data-hasqtip="2" aria-describedby="qtip-2">[2]</a></sup></span> Inspect and cleanup malicious hidden Registry entries using Native Windows API calls and/or tools such as Autoruns <span onclick=scrollToRef('scite-4') id="scite-ref-4-a" class="scite-citeref-number" data-reference="SpectorOps Hiding Reg Jul 2017"><sup><a href="https://posts.specterops.io/hiding-registry-keys-with-psreflect-b18ec5ac8353" target="_blank" data-hasqtip="4" aria-describedby="qtip-4">[4]</a></sup></span> and RegDelNull <span onclick=scrollToRef('scite-65') id="scite-ref-65-a" class="scite-citeref-number" data-reference="Microsoft RegDelNull July 2016"><sup><a href="https://docs.microsoft.com/en-us/sysinternals/downloads/regdelnull" target="_blank" data-hasqtip="65" aria-describedby="qtip-65">[65]</a></sup></span>.</p>

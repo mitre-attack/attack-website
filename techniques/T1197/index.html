@@ -570,47 +570,7 @@
                             </div>
                         </div>
                     </div>
-                        <h2 class="pt-3" id ="mitigations">Mitigations</h2>
-                            <table class="table table-bordered table-alternate mt-2">
-                                <thead>
-                                    <tr> 
-                                        <th scope="col">Mitigation</th>
-                                        <th scope="col">Description</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                        <tr>
-                                            <td>
-                                                <a href="/mitigations/M1037"> Filter Network Traffic </a>
-                                            </td>
-                                            <td> 
-                                                Modify network and/or host firewall rules, as well as other network controls, to only allow legitimate BITS traffic.
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <a href="/mitigations/M1028"> Operating System Configuration </a>
-                                            </td>
-                                            <td> 
-                                                Consider reducing the default BITS job lifetime in Group Policy or by editing the <code>JobInactivityTimeout</code> and <code>MaxDownloadTime</code> Registry values in <code> HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows\BITS</code>.
-                                                        <span onclick=scrollToRef('scite-2') id="scite-ref-2-a" class="scite-citeref-number" data-reference="Microsoft BITS">
-                                                            <sup>
-                                                                <a aria-describedby="qtip-2" href="https://msdn.microsoft.com/library/windows/desktop/bb968799.aspx" target="_blank" data-hasqtip="2">[2]</a>
-                                                            </sup>
-                                                        </span>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <a href="/mitigations/M1018"> User Account Management </a>
-                                            </td>
-                                            <td> 
-                                                Consider limiting access to the BITS interface to specific users or groups.
-                                            </td>
-                                        </tr>
-                                </tbody>
-                            </table>
-                        <h2 class="pt-3" id ="examples">Examples</h2>
+                        <h2 class="pt-3" id ="examples">Procedure Examples</h2>
                         <table class="table table-bordered table-alternate mt-2">
                             <thead>
                                 <tr> 
@@ -686,6 +646,46 @@
                                     </tr>
                             </tbody>
                         </table>
+                        <h2 class="pt-3" id ="mitigations">Mitigations</h2>
+                            <table class="table table-bordered table-alternate mt-2">
+                                <thead>
+                                    <tr> 
+                                        <th scope="col">Mitigation</th>
+                                        <th scope="col">Description</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                        <tr>
+                                            <td>
+                                                <a href="/mitigations/M1037"> Filter Network Traffic </a>
+                                            </td>
+                                            <td> 
+                                                Modify network and/or host firewall rules, as well as other network controls, to only allow legitimate BITS traffic.
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/mitigations/M1028"> Operating System Configuration </a>
+                                            </td>
+                                            <td> 
+                                                Consider reducing the default BITS job lifetime in Group Policy or by editing the <code>JobInactivityTimeout</code> and <code>MaxDownloadTime</code> Registry values in <code> HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows\BITS</code>.
+                                                        <span onclick=scrollToRef('scite-2') id="scite-ref-2-a" class="scite-citeref-number" data-reference="Microsoft BITS">
+                                                            <sup>
+                                                                <a aria-describedby="qtip-2" href="https://msdn.microsoft.com/library/windows/desktop/bb968799.aspx" target="_blank" data-hasqtip="2">[2]</a>
+                                                            </sup>
+                                                        </span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/mitigations/M1018"> User Account Management </a>
+                                            </td>
+                                            <td> 
+                                                Consider limiting access to the BITS interface to specific users or groups.
+                                            </td>
+                                        </tr>
+                                </tbody>
+                            </table>
                         <h2 class="pt-3" id="detection">Detection</h2>
                         <div>
                             <p>BITS runs as a service and its status can be checked with the Sc query utility (<code>sc query bits</code>). <span onclick=scrollToRef('scite-12') id="scite-ref-12-a" class="scite-citeref-number" data-reference="Microsoft Issues with BITS July 2011"><sup><a href="https://technet.microsoft.com/library/dd939934.aspx" target="_blank" data-hasqtip="12" aria-describedby="qtip-12">[12]</a></sup></span> Active BITS tasks can be enumerated using the <a href="/software/S0190">BITSAdmin</a> tool (<code>bitsadmin /list /allusers /verbose</code>). <span onclick=scrollToRef('scite-2') id="scite-ref-2-a" class="scite-citeref-number" data-reference="Microsoft BITS"><sup><a href="https://msdn.microsoft.com/library/windows/desktop/bb968799.aspx" target="_blank" data-hasqtip="2" aria-describedby="qtip-2">[2]</a></sup></span></p><p>Monitor usage of the <a href="/software/S0190">BITSAdmin</a> tool (especially the ‘Transfer’, 'Create', 'AddFile', 'SetNotifyFlags', 'SetNotifyCmdLine', 'SetMinRetryDelay', 'SetCustomHeaders', and 'Resume' command options)  <span onclick=scrollToRef('scite-2') id="scite-ref-2-a" class="scite-citeref-number" data-reference="Microsoft BITS"><sup><a href="https://msdn.microsoft.com/library/windows/desktop/bb968799.aspx" target="_blank" data-hasqtip="2" aria-describedby="qtip-2">[2]</a></sup></span>Admin and the Windows Event log for BITS activity. Also consider investigating more detailed information about jobs by parsing the BITS job database. <span onclick=scrollToRef('scite-4') id="scite-ref-4-a" class="scite-citeref-number" data-reference="CTU BITS Malware June 2016"><sup><a href="https://www.secureworks.com/blog/malware-lingers-with-bits" target="_blank" data-hasqtip="4" aria-describedby="qtip-4">[4]</a></sup></span></p><p>Monitor and analyze network activity generated by BITS. BITS jobs use HTTP(S) and SMB for remote connections and are tethered to the creating user and will only function when that user is logged on (this rule applies even if a user attaches the job to a service account). <span onclick=scrollToRef('scite-2') id="scite-ref-2-a" class="scite-citeref-number" data-reference="Microsoft BITS"><sup><a href="https://msdn.microsoft.com/library/windows/desktop/bb968799.aspx" target="_blank" data-hasqtip="2" aria-describedby="qtip-2">[2]</a></sup></span></p>
