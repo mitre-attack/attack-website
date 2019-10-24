@@ -1,3 +1,5 @@
+@import "_layouts.scss";
+
 /*Navigation styling*/
 // base style for nav-links in the top navigation bar (across the web site)
 %ele-state {
@@ -164,3 +166,39 @@
     /******/
 }
 /******/
+
+.sidenav {
+    width: 100%;
+    font-size: rem(0.8);
+    .sidenav-head {
+        a, &.collapsible { padding: rem(0); }
+        a {
+            display: block;
+            width: 100%;
+            height: 100%;
+            &:hover {
+                text-decoration: none; //disable underline
+            }
+        }        
+        &.collapsible { 
+            @include collapsible("after");
+        } //include collapsible arrow
+        &:not(.collapsible) { //is a link
+            &, &>a { color: on-color-deemphasis(body); }
+            &:hover {
+                background-color: color(primary);
+                &, &>a { color: on-color(primary) !important; }
+            }
+        }
+        
+        &.active { //current page
+            &, &>a { color: color(primary) !important; }
+            background-color: color-alternate(body); 
+            border-right: to-rem(3) solid color(primary);
+        }
+        
+    }
+    .sidenav { //nested
+        padding-left: to-rem(12);
+    }
+}

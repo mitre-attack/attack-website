@@ -14,7 +14,7 @@
         <!-- Bootstrap CSS -->
         <link rel='stylesheet' href='/theme/style/bootstrap.min.css' />
         <link rel='stylesheet' href='/theme/style/bootstrap-glyphicon.min.css' />
-        <link rel="stylesheet" type="text/css" href="/theme/style.min.css?104e35fc">
+        <link rel="stylesheet" type="text/css" href="/theme/style.min.css?215b26d9">
 </head>
 
 <body>
@@ -84,7 +84,7 @@
                                                                                                                alt="External site" class="external-icon" /></a></li>
                             <li class="nav-item"><a href="/resources/contribute"  class="nav-link" ><b>Contribute</b></a></li>
                 </ul>
-                <ul class='navbar-nav flex-row d-md-flex' style="float: right">  
+                <ul class='navbar-nav flex-row d-md-flex float-right'>
                     <li>
                         <form class='form-inline pl-2'>
                             <input class='form-control' type='text' placeholder='Search site' aria-label='Search' id="search"
@@ -162,7 +162,7 @@
                             </div>
                         </div>
                     </div>
-                    <h2 class="pt-3" id ="techniques">Techniques</h2><h6 class="table-object-count">Techniques: 59</h6>
+                    <h2 class="pt-3" id ="techniques">Techniques</h2><h6 class="table-object-count">Techniques: 63</h6>
                     <table class="table table-bordered table-alternate mt-2">
                         <thead>
                             <tr>
@@ -180,7 +180,7 @@
                                         <a class="technique-mapping" id="v-.bash_profile and .bashrc-persistence-tab" href="/techniques/T1156"> .bash_profile and .bashrc </a>
                                     </td>
                                     <td>
-                                        <p><code>~/.bash_profile</code> and <code>~/.bashrc</code> are executed in a user's context when a new shell opens or when a user logs in so that their environment is set correctly. <code>~/.bash_profile</code> is executed for login shells and <code>~/.bashrc</code> is executed for interactive non-login shells. This means that when a user logs in (via username and password) to the console (either locally or remotely via something like SSH), <code>~/.bash_profile</code> is executed before the initial command prompt is returned to the user. After that, every time a new shell is opened, <code>~/.bashrc</code> is executed. This allows users more fine grained control over when they want certain commands executed.</p>
+                                        <p><code>~/.bash_profile</code> and <code>~/.bashrc</code> are shell scripts that contain shell commands. These files are executed in a user's context when a new shell opens or when a user logs in so that their environment is set correctly. <code>~/.bash_profile</code> is executed for login shells and <code>~/.bashrc</code> is executed for interactive non-login shells. This means that when a user logs in (via username and password) to the console (either locally or remotely via something like SSH), the <code>~/.bash_profile</code> script is executed before the initial command prompt is returned to the user. After that, every time a new shell is opened, the <code>~/.bashrc</code> script is executed. This allows users more fine-grained control over when they want certain commands executed. These shell scripts are meant to be written to by the local user to configure their own environment. </p>
                                     </td>
                                 </tr>
                                 <tr>
@@ -213,7 +213,7 @@
                                         <a class="technique-mapping" id="v-AppCert DLLs-persistence-tab" href="/techniques/T1182"> AppCert DLLs </a>
                                     </td>
                                     <td>
-                                        <p>Dynamic-link libraries (DLLs) that are specified in the AppCertDLLs value in the Registry key <code>HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Session Manager</code> are loaded into every process that calls the ubiquitously used application programming interface (API) functions CreateProcess, CreateProcessAsUser, CreateProcessWithLoginW, CreateProcessWithTokenW, or WinExec. </p>
+                                        <p>Dynamic-link libraries (DLLs) that are specified in the AppCertDLLs Registry key under <code>HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Session Manager</code> are loaded into every process that calls the ubiquitously used application programming interface (API) functions CreateProcess, CreateProcessAsUser, CreateProcessWithLoginW, CreateProcessWithTokenW, or WinExec. </p>
                                     </td>
                                 </tr>
                                 <tr>
@@ -323,7 +323,7 @@
                                         <a class="technique-mapping" id="v-Create Account-persistence-tab" href="/techniques/T1136"> Create Account </a>
                                     </td>
                                     <td>
-                                        <p>Adversaries with a sufficient level of access may create a local system or domain account. Such accounts may be used for persistence that do not require persistent remote access tools to be deployed on the system.</p>
+                                        <p>Adversaries with a sufficient level of access may create a local system, domain, or cloud tenant account. Such accounts may be used for persistence that do not require persistent remote access tools to be deployed on the system.</p>
                                     </td>
                                 </tr>
                                 <tr>
@@ -346,6 +346,17 @@
                                     </td>
                                     <td>
                                         <p>macOS and OS X use a common method to look for required dynamic libraries (dylib) to load into a program based on search paths. Adversaries can take advantage of ambiguous paths to plant dylibs to gain privilege escalation or persistence.</p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <a class="technique-mapping" id="v-Emond-persistence-tab" href="/techniques/T1519"> T1519 </a>
+                                    </td>
+                                    <td>
+                                        <a class="technique-mapping" id="v-Emond-persistence-tab" href="/techniques/T1519"> Emond </a>
+                                    </td>
+                                    <td>
+                                        <p>Adversaries may use Event Monitor Daemon (emond) to establish persistence by scheduling malicious commands to run on predictable event triggers. Emond is a <a href="/techniques/T1160">Launch Daemon</a> that accepts events from various services, runs them through a simple rules engine, and takes action. The emond binary at <code>/sbin/emond</code> will load any rules from the <code>/etc/emond.d/rules/</code> directory and take action once an explicitly defined event takes place. The rule files are in the plist format and define the name, event type, and action to take. Some examples of event types include system startup and user authentication. Examples of actions are to run a system command or send an email. The emond service will not launch if there is no file present in the QueueDirectories path <code>/private/var/db/emondClients</code>, specified in the <a href="/techniques/T1160">Launch Daemon</a> configuration file at<code>/System/Library/LaunchDaemons/com.apple.emond.plist</code>.</p>
                                     </td>
                                 </tr>
                                 <tr>
@@ -412,6 +423,17 @@
                                     </td>
                                     <td>
                                         <p>Image File Execution Options (IFEO) enable a developer to attach a debugger to an application. When a process is created, a debugger present in an application’s IFEO will be prepended to the application’s name, effectively launching the new process under the debugger (e.g., “C:\dbg\ntsd.exe -g  notepad.exe”). </p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <a class="technique-mapping" id="v-Implant Container Image-persistence-tab" href="/techniques/T1525"> T1525 </a>
+                                    </td>
+                                    <td>
+                                        <a class="technique-mapping" id="v-Implant Container Image-persistence-tab" href="/techniques/T1525"> Implant Container Image </a>
+                                    </td>
+                                    <td>
+                                        <p>Amazon Web Service (AWS) Amazon Machine Images (AMI), Google Cloud Platform (GCP) Images, and Azure Images as well as popular container runtimes such as Docker can be implanted or backdoored to include malicious code. Depending on how the infrastructure is provisioned, this could provide persistent access if the infrastructure provisioning tool is instructed to always use the latest image.</p>
                                     </td>
                                 </tr>
                                 <tr>
@@ -603,6 +625,17 @@
                                 </tr>
                                 <tr>
                                     <td>
+                                        <a class="technique-mapping" id="v-PowerShell Profile-persistence-tab" href="/techniques/T1504"> T1504 </a>
+                                    </td>
+                                    <td>
+                                        <a class="technique-mapping" id="v-PowerShell Profile-persistence-tab" href="/techniques/T1504"> PowerShell Profile </a>
+                                    </td>
+                                    <td>
+                                        <p>Adversaries may gain persistence and elevate privileges in certain situations by abusing <a href="/techniques/T1086">PowerShell</a> profiles. A PowerShell profile  (<code>profile.ps1</code>) is a script that runs when PowerShell starts and can be used as a logon script to customize user environments. PowerShell supports several profiles depending on the user or host program. For example, there can be different profiles for PowerShell host programs such as the PowerShell console, PowerShell ISE or Visual Studio Code. An administrator can also configure a profile that applies to all users and host programs on the local computer.  </p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
                                         <a class="technique-mapping" id="v-Rc.common-persistence-tab" href="/techniques/T1163"> T1163 </a>
                                     </td>
                                     <td>
@@ -631,7 +664,7 @@
                                         <a class="technique-mapping" id="v-Redundant Access-persistence-tab" href="/techniques/T1108"> Redundant Access </a>
                                     </td>
                                     <td>
-                                        <p>Adversaries may use more than one remote access tool with varying command and control protocols as a hedge against detection. If one type of tool is detected and blocked or removed as a response but the organization did not gain a full understanding of the adversary's tools and access, then the adversary will be able to retain access to the network. Adversaries may also attempt to gain access to <a href="/techniques/T1078">Valid Accounts</a> to use <a href="/techniques/T1133">External Remote Services</a> such as external VPNs as a way to maintain access despite interruptions to remote access tools deployed within a target network. </p>
+                                        <p>Adversaries may use more than one remote access tool with varying command and control protocols or credentialed access to remote services so they can maintain access if an access mechanism is detected or mitigated. </p>
                                     </td>
                                 </tr>
                                 <tr>
@@ -653,7 +686,7 @@
                                         <a class="technique-mapping" id="v-Scheduled Task-persistence-tab" href="/techniques/T1053"> Scheduled Task </a>
                                     </td>
                                     <td>
-                                        <p>Utilities such as <a href="/software/S0110">at</a> and <a href="/software/S0111">schtasks</a>, along with the Windows Task Scheduler, can be used to schedule programs or scripts to be executed at a date and time. A task can also be scheduled on a remote system, provided the proper authentication is met to use RPC and file and printer sharing is turned on. Scheduling a task on a remote system typically required being a member of the Administrators group on the the remote system. </p>
+                                        <p>Utilities such as <a href="/software/S0110">at</a> and <a href="/software/S0111">schtasks</a>, along with the Windows Task Scheduler, can be used to schedule programs or scripts to be executed at a date and time. A task can also be scheduled on a remote system, provided the proper authentication is met to use RPC and file and printer sharing is turned on. Scheduling a task on a remote system typically required being a member of the Administrators group on the remote system. </p>
                                     </td>
                                 </tr>
                                 <tr>
@@ -680,13 +713,24 @@
                                 </tr>
                                 <tr>
                                     <td>
+                                        <a class="technique-mapping" id="v-Server Software Component-persistence-tab" href="/techniques/T1505"> T1505 </a>
+                                    </td>
+                                    <td>
+                                        <a class="technique-mapping" id="v-Server Software Component-persistence-tab" href="/techniques/T1505"> Server Software Component </a>
+                                    </td>
+                                    <td>
+                                        <p>Adversaries may abuse legitimate extensible development features of server applications to establish persistent access to systems. Enterprise server applications may include features that allow application developers to write and install software to extend the functionality of the main application. Adversaries may install malicious software components to maliciously extend and abuse server applications.</p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
                                         <a class="technique-mapping" id="v-Service Registry Permissions Weakness-persistence-tab" href="/techniques/T1058"> T1058 </a>
                                     </td>
                                     <td>
                                         <a class="technique-mapping" id="v-Service Registry Permissions Weakness-persistence-tab" href="/techniques/T1058"> Service Registry Permissions Weakness </a>
                                     </td>
                                     <td>
-                                        <p>Windows stores local service configuration information in the Registry under <code>HKLM\SYSTEM\CurrentControlSet\Services</code>. The information stored under a service's Registry keys can be manipulated to modify a service's execution parameters through tools such as the service controller, sc.exe, PowerShell, or <a href="/software/S0075">Reg</a>. Access to Registry keys is controlled through Access Control Lists and permissions. </p>
+                                        <p>Windows stores local service configuration information in the Registry under <code>HKLM\SYSTEM\CurrentControlSet\Services</code>. The information stored under a service's Registry keys can be manipulated to modify a service's execution parameters through tools such as the service controller, sc.exe, <a href="/techniques/T1086">PowerShell</a>, or <a href="/software/S0075">Reg</a>. Access to Registry keys is controlled through Access Control Lists and permissions. </p>
                                     </td>
                                 </tr>
                                 <tr>
@@ -807,7 +851,7 @@
                                         <a class="technique-mapping" id="v-Windows Management Instrumentation Event Subscription-persistence-tab" href="/techniques/T1084"> Windows Management Instrumentation Event Subscription </a>
                                     </td>
                                     <td>
-                                        <p>Windows Management Instrumentation (WMI) can be used to install event filters, providers, consumers, and bindings that execute code when a defined event occurs. Adversaries may use the capabilities of WMI to subscribe to an event and execute arbitrary code when that event occurs, providing persistence on a system. Adversaries may attempt to evade detection of this technique by compiling WMI scripts.  Examples of events that may be subscribed to are the wall clock time or the computer's uptime.  Several threat groups have reportedly used this technique to maintain persistence. </p>
+                                        <p>Windows Management Instrumentation (WMI) can be used to install event filters, providers, consumers, and bindings that execute code when a defined event occurs. Adversaries may use the capabilities of WMI to subscribe to an event and execute arbitrary code when that event occurs, providing persistence on a system. Adversaries may attempt to evade detection of this technique by compiling WMI scripts into Windows Management Object (MOF) files (.mof extension).  Examples of events that may be subscribed to are the wall clock time or the computer's uptime.  Several threat groups have reportedly used this technique to maintain persistence. </p>
                                     </td>
                                 </tr>
                                 <tr>
@@ -840,7 +884,7 @@
             <div class="col-4 col-sm-4 col-md-3">  
                 <div class="footer-center-responsive my-auto">
                     <a href="https://www.mitre.org" target="_blank" rel="noopener" aria-label="MITRE">
-                        <img src="/theme/images/mitrelogowhiteontrans.gif" style="vertical-align: center" width="144" height="66">
+                        <img src="/theme/images/mitrelogowhiteontrans.gif" class="mitre-logo-wtrans">
                     </a>
                 </div>
             </div>
@@ -868,7 +912,7 @@
                     <div class="mb-1">
                         <a href="https://twitter.com/MITREattack" class="btn btn-primary w-100">
                             <!-- <i class="fa fa-twitter"></i> -->
-                            <img src="/theme/images/twitter.png" class="mr-1" style="vertical-align: top" width="20" height="20">
+                            <img src="/theme/images/twitter.png" class="mr-1 twitter-icon">
                             <b>@MITREattack</b>
                         </a>
                     </div>

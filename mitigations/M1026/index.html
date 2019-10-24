@@ -14,7 +14,7 @@
         <!-- Bootstrap CSS -->
         <link rel='stylesheet' href='/theme/style/bootstrap.min.css' />
         <link rel='stylesheet' href='/theme/style/bootstrap-glyphicon.min.css' />
-        <link rel="stylesheet" type="text/css" href="/theme/style.min.css?104e35fc">
+        <link rel="stylesheet" type="text/css" href="/theme/style.min.css?215b26d9">
 </head>
 
 <body>
@@ -84,7 +84,7 @@
                                                                                                                alt="External site" class="external-icon" /></a></li>
                             <li class="nav-item"><a href="/resources/contribute"  class="nav-link" ><b>Contribute</b></a></li>
                 </ul>
-                <ul class='navbar-nav flex-row d-md-flex' style="float: right">  
+                <ul class='navbar-nav flex-row d-md-flex float-right'>
                     <li>
                         <form class='form-inline pl-2'>
                             <input class='form-control' type='text' placeholder='Search site' aria-label='Search' id="search"
@@ -119,6 +119,7 @@
                     <a class="nav-link side" id="v-Account Use Policies-tab" href="/mitigations/M1036" aria-controls="v-Account Use Policies" aria-selected="false">Account Use Policies</a>
                     <a class="nav-link side" id="v-Active Directory Configuration-tab" href="/mitigations/M1015" aria-controls="v-Active Directory Configuration" aria-selected="false">Active Directory Configuration</a>
                     <a class="nav-link side" id="v-Antivirus/Antimalware-tab" href="/mitigations/M1049" aria-controls="v-Antivirus/Antimalware" aria-selected="false">Antivirus/Antimalware</a>
+                    <a class="nav-link side" id="v-Application Developer Guidance-tab" href="/mitigations/M1013" aria-controls="v-Application Developer Guidance" aria-selected="false">Application Developer Guidance</a>
                     <a class="nav-link side" id="v-Application Isolation and Sandboxing-tab" href="/mitigations/M1048" aria-controls="v-Application Isolation and Sandboxing" aria-selected="false">Application Isolation and Sandboxing</a>
                     <a class="nav-link side" id="v-Audit-tab" href="/mitigations/M1047" aria-controls="v-Audit" aria-selected="false">Audit</a>
                     <a class="nav-link side" id="v-Behavior Prevention on Endpoint-tab" href="/mitigations/M1040" aria-controls="v-Behavior Prevention on Endpoint" aria-selected="false">Behavior Prevention on Endpoint</a>
@@ -168,6 +169,7 @@
                                     <a class="nav-link side" id="v-Account Use Policies-tab" href="/mitigations/M1036" aria-controls="v-Account Use Policies" aria-selected="false">Account Use Policies</a>
                                     <a class="nav-link side" id="v-Active Directory Configuration-tab" href="/mitigations/M1015" aria-controls="v-Active Directory Configuration" aria-selected="false">Active Directory Configuration</a>
                                     <a class="nav-link side" id="v-Antivirus/Antimalware-tab" href="/mitigations/M1049" aria-controls="v-Antivirus/Antimalware" aria-selected="false">Antivirus/Antimalware</a>
+                                    <a class="nav-link side" id="v-Application Developer Guidance-tab" href="/mitigations/M1013" aria-controls="v-Application Developer Guidance" aria-selected="false">Application Developer Guidance</a>
                                     <a class="nav-link side" id="v-Application Isolation and Sandboxing-tab" href="/mitigations/M1048" aria-controls="v-Application Isolation and Sandboxing" aria-selected="false">Application Isolation and Sandboxing</a>
                                     <a class="nav-link side" id="v-Audit-tab" href="/mitigations/M1047" aria-controls="v-Audit" aria-selected="false">Audit</a>
                                     <a class="nav-link side" id="v-Behavior Prevention on Endpoint-tab" href="/mitigations/M1040" aria-controls="v-Behavior Prevention on Endpoint" aria-selected="false">Behavior Prevention on Endpoint</a>
@@ -396,6 +398,21 @@
                                         Enterprise
                                     </td>
                                     <td>
+                                        <a href="/techniques/T1175">T1175</a>                     
+                                    </td>
+                                    <td>
+                                        <a href="/techniques/T1175">Component Object Model and Distributed COM</a>   
+                                    </td>
+                                    <td>
+                                        Modify Registry settings (directly or using Dcomcnfg.exe) in <code>HKEY_LOCAL_MACHINE\SOFTWARE\Classes\AppID\{AppID_GUID}</code> associated with the process-wide security of individual COM applications.</p>
+<p>Modify Registry settings (directly or using Dcomcnfg.exe) in <code>HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Ole</code> associated with system-wide security defaults for all COM applications that do no set their own process-wide security.
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Enterprise
+                                    </td>
+                                    <td>
                                         <a href="/techniques/T1136">T1136</a>                     
                                     </td>
                                     <td>
@@ -416,10 +433,10 @@
                                         <a href="/techniques/T1003">Credential Dumping</a>   
                                     </td>
                                     <td>
-                                        >Windows</h3>
-<p>Do not put user or admin domain accounts in the local administrator groups across systems unless they are tightly controlled, as this is often equivalent to having a local administrator account with the same password on all systems. Follow best practices for design and administration of an enterprise network to limit privileged account use across administrative tiers.</p>
-<h3>Linux</h3>
-<p>Scraping the passwords from memory requires root privileges. Follow best practices in restricting access to privileged accounts to avoid hostile programs from accessing such sensitive regions of memory.
+                                        Windows:
+Do not put user or admin domain accounts in the local administrator groups across systems unless they are tightly controlled, as this is often equivalent to having a local administrator account with the same password on all systems. Follow best practices for design and administration of an enterprise network to limit privileged account use across administrative tiers.</p>
+<p>Linux:
+Scraping the passwords from memory requires root privileges. Follow best practices in restricting access to privileged accounts to avoid hostile programs from accessing such sensitive regions of memory.
                                                 <span onclick=scrollToRef('scite-3') id="scite-ref-3-a" class="scite-citeref-number" data-reference="Microsoft Securing Privileged Access">
                                                     <sup>
                                                         <a aria-describedby="qtip-3" href="https://docs.microsoft.com/en-us/windows-server/identity/securing-privileged-access/securing-privileged-access-reference-material#a-nameesaebmaesae-administrative-forest-design-approach" target="_blank" data-hasqtip="3">[3]</a>
@@ -439,21 +456,6 @@
                                     </td>
                                     <td>
                                         If it is necessary that software must store credentials in the Registry, then ensure the associated accounts have limited permissions so they cannot be abused if obtained by an adversary.
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        Enterprise
-                                    </td>
-                                    <td>
-                                        <a href="/techniques/T1175">T1175</a>                     
-                                    </td>
-                                    <td>
-                                        <a href="/techniques/T1175">Distributed Component Object Model</a>   
-                                    </td>
-                                    <td>
-                                        Modify Registry settings (directly or using Dcomcnfg.exe) in <code>HKEY_LOCAL_MACHINE\SOFTWARE\Classes\AppID\{AppID_GUID}</code> associated with the process-wide security of individual COM applications.</p>
-<p>Modify Registry settings (directly or using Dcomcnfg.exe) in <code>HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Ole</code> associated with system-wide security defaults for all COM applications that do no set their own process-wide security.
                                     </td>
                                 </tr>
                                 <tr>
@@ -496,6 +498,20 @@
                                     </td>
                                     <td>
                                         Prevent adversary access to privileged accounts or access necessary to replace system firmware.
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Enterprise
+                                    </td>
+                                    <td>
+                                        <a href="/techniques/T1525">T1525</a>                     
+                                    </td>
+                                    <td>
+                                        <a href="/techniques/T1525">Implant Container Image</a>   
+                                    </td>
+                                    <td>
+                                        Limit permissions associated with creating and modifying platform images or containers based on the principle of least privilege.
                                     </td>
                                 </tr>
                                 <tr>
@@ -624,6 +640,20 @@
                                                         <a aria-describedby="qtip-10" href="https://technet.microsoft.com/library/dn221960.aspx" target="_blank" data-hasqtip="10">[10]</a>
                                                     </sup>
                                                 </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Enterprise
+                                    </td>
+                                    <td>
+                                        <a href="/techniques/T1505">T1505</a>                     
+                                    </td>
+                                    <td>
+                                        <a href="/techniques/T1505">Server Software Component</a>   
+                                    </td>
+                                    <td>
+                                        Do not allow administrator accounts that have permissions to add component software on these services to be used for day-to-day operations that may expose them to potential adversaries on unprivileged systems.
                                     </td>
                                 </tr>
                                 <tr>
@@ -845,6 +875,11 @@
                                     </td>
                                     <td>
                                         Prevent credential overlap across systems of administrator and privileged accounts.
+                                                <span onclick=scrollToRef('scite-4') id="scite-ref-4-a" class="scite-citeref-number" data-reference="FireEye WMI 2015">
+                                                    <sup>
+                                                        <a aria-describedby="qtip-4" href="https://www.fireeye.com/content/dam/fireeye-www/global/en/current-threats/pdfs/wp-windows-management-instrumentation.pdf" target="_blank" data-hasqtip="4">[4]</a>
+                                                    </sup>
+                                                </span>
                                     </td>
                                 </tr>
                                 <tr>
@@ -984,7 +1019,7 @@
             <div class="col-4 col-sm-4 col-md-3">  
                 <div class="footer-center-responsive my-auto">
                     <a href="https://www.mitre.org" target="_blank" rel="noopener" aria-label="MITRE">
-                        <img src="/theme/images/mitrelogowhiteontrans.gif" style="vertical-align: center" width="144" height="66">
+                        <img src="/theme/images/mitrelogowhiteontrans.gif" class="mitre-logo-wtrans">
                     </a>
                 </div>
             </div>
@@ -1012,7 +1047,7 @@
                     <div class="mb-1">
                         <a href="https://twitter.com/MITREattack" class="btn btn-primary w-100">
                             <!-- <i class="fa fa-twitter"></i> -->
-                            <img src="/theme/images/twitter.png" class="mr-1" style="vertical-align: top" width="20" height="20">
+                            <img src="/theme/images/twitter.png" class="mr-1 twitter-icon">
                             <b>@MITREattack</b>
                         </a>
                     </div>

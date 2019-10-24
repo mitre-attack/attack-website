@@ -47,6 +47,74 @@ a {
     list-style-type: none;
 }
 
+.overflow-x-auto {   
+    overflow-x: auto;
+}
+
+.fs-s {
+    font-size: small;
+}
+
+.capec-card {
+    background: rgb(128,0,0);
+
+    img {
+        margin: to-rem(8);
+        max-width: to-rem(160); 
+        max-height: to-rem(55); 
+        margin-left: auto; 
+        margin-right: auto; 
+        display: block;
+    }
+}
+
+.maec-card {
+    background: #212121;
+
+    img {
+        margin: to-rem(8); 
+        max-width: to-rem(146); 
+        margin-left: auto; 
+        margin-right: auto; 
+        display: block;
+    }
+}
+
+.default-img-size {
+    width: 100%; 
+    max-width: to-rem(1000);
+}
+
+.twitter-icon {
+    vertical-align: top;
+    width: to-rem(20);
+    height: to-rem(20);
+}
+
+.mitre-logo-wtrans {
+    width: to-rem(144);
+    height: to-rem(66);
+}
+
+// left column in the home page
+.home-left-col {
+    min-width: 50%;
+
+    .button-container {
+        text-align: center;
+        padding-left: 15px;
+        padding-right: 15px;
+
+        a:last-child {
+            margin-top: 0px;
+    
+            @media screen and (max-width: 47.9875rem), screen and (min-width: 992px) and (max-width: 1199.98px) {
+                margin-top: 5px;
+            }
+        }
+    }
+}
+
 // button style in the side navigation of MATRICES, TACTICS, TECHNIQUES, MITIGATIONS, GROUPS, and SOFTWARE
 .btn-default {
     background: color(body);
@@ -146,6 +214,7 @@ a {
         &.border {
             border: to-rem(1) solid border-color(body) !important;
         }
+            
         &.no-border {
             @include no-border(border);
         }
@@ -448,38 +517,52 @@ pre {
 }
 /******/
 
+@mixin collapsible($direction) {
+    display: flex;
+    flex-direction: row;
+
+    :first-child {
+        cursor: pointer;
+        display: inline-block;
+        flex-grow: 1;
+    }
+
+    &:#{$direction}, &::#{$direction} {
+        content: "";
+        cursor: pointer;
+        width: to-rem(24);
+        height: to-rem(24);
+        background-repeat: no-repeat;
+        display: inline-block;
+        vertical-align: top;
+        background-position: center;
+        background-image: url("data:image/svg+xml;charset=utf8,%3Csvg fill='#{escape-color(on-color(body))}' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z'/%3E%3Cpath d='M0 0h24v24H0z' fill='none'/%3E%3C/svg%3E");
+        z-index: 1;
+        transition: all 0.2s ease;
+    }
+    
+    
+    @if $direction == "before" {
+        &.collapsed:#{$direction}, &.collapsed::#{$direction} {
+            transform: rotate(-90deg);
+        }
+    } @else {
+        &:not(.collapsed):#{$direction}, &:not(.collapsed)::#{$direction} {
+            transform: rotate(-180deg);
+        }
+    }
+}
+
 /*Card Blocks*/
 // container of groups of cards
 .card-block {
     // style of card headers in collapsable cards in Getting Started and FAQ
     .card-header {
-        cursor: pointer;
-        display: flex;
-        flex-direction: row;
 
         h5 {
-            display: inline-block;
-            flex-grow: 1;
             @include font("Roboto-Regular");
         }
-
-        &:after {
-            margin-left: auto;
-            content: "";
-            width: to-rem(24);
-            height: to-rem(24);
-            background-repeat: no-repeat;
-            display: inline-block;
-            vertical-align: top;
-            background-position: center;
-            background-image: url("data:image/svg+xml;charset=utf8,%3Csvg fill='#{escape-color(on-color(body))}' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z'/%3E%3Cpath d='M0 0h24v24H0z' fill='none'/%3E%3C/svg%3E");
-            z-index: 1;
-            transition: all 0.2s ease;
-        }
-
-        &:not(.collapsed):after {
-            transform: rotate(-180deg);
-        }
+        @include collapsible("after");
     }
 
     // style of card titles in Related Projects
@@ -487,6 +570,12 @@ pre {
         display: inline-block;
         flex-grow: 1;
         @include font("Roboto-Regular");
+    }
+
+    .card:nth-child(5) {
+        a img {
+            margin-bottom: to-rem(15);
+        }
     }
 }
 /******/

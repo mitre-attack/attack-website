@@ -14,7 +14,7 @@
         <!-- Bootstrap CSS -->
         <link rel='stylesheet' href='/theme/style/bootstrap.min.css' />
         <link rel='stylesheet' href='/theme/style/bootstrap-glyphicon.min.css' />
-        <link rel="stylesheet" type="text/css" href="/theme/style.min.css?104e35fc">
+        <link rel="stylesheet" type="text/css" href="/theme/style.min.css?215b26d9">
 </head>
 
 <body>
@@ -84,7 +84,7 @@
                                                                                                                alt="External site" class="external-icon" /></a></li>
                             <li class="nav-item"><a href="/resources/contribute"  class="nav-link" ><b>Contribute</b></a></li>
                 </ul>
-                <ul class='navbar-nav flex-row d-md-flex' style="float: right">  
+                <ul class='navbar-nav flex-row d-md-flex float-right'>
                     <li>
                         <form class='form-inline pl-2'>
                             <input class='form-control' type='text' placeholder='Search site' aria-label='Search' id="search"
@@ -167,7 +167,7 @@ These techniques often overlap with Persistence techniques, as OS features that 
                             </div>
                         </div>
                     </div>
-                    <h2 class="pt-3" id ="techniques">Techniques</h2><h6 class="table-object-count">Techniques: 28</h6>
+                    <h2 class="pt-3" id ="techniques">Techniques</h2><h6 class="table-object-count">Techniques: 32</h6>
                     <table class="table table-bordered table-alternate mt-2">
                         <thead>
                             <tr>
@@ -185,7 +185,7 @@ These techniques often overlap with Persistence techniques, as OS features that 
                                         <a class="technique-mapping" id="v-Access Token Manipulation-privilege escalation-tab" href="/techniques/T1134"> Access Token Manipulation </a>
                                     </td>
                                     <td>
-                                        <p>Windows uses access tokens to determine the ownership of a running process. A user can manipulate access tokens to make a running process appear as though it belongs to someone other than the user that started the process. When this occurs, the process also takes on the security context associated with the new token. For example, Microsoft promotes the use of access tokens as a security best practice. Administrators should log in as a standard user but run their tools with administrator privileges using the built-in access token manipulation command <code>runas</code>. </p>
+                                        <p>Windows uses access tokens to determine the ownership of a running process. A user can manipulate access tokens to make a running process appear as though it belongs to someone other than the user that started the process. When this occurs, the process also takes on the security context associated with the new token. For example, Microsoft promotes the use of access tokens as a security best practice. Administrators should log in as a standard user but run their tools with administrator privileges using the built-in access token manipulation command <code>runas</code>.</p>
                                     </td>
                                 </tr>
                                 <tr>
@@ -207,7 +207,7 @@ These techniques often overlap with Persistence techniques, as OS features that 
                                         <a class="technique-mapping" id="v-AppCert DLLs-privilege escalation-tab" href="/techniques/T1182"> AppCert DLLs </a>
                                     </td>
                                     <td>
-                                        <p>Dynamic-link libraries (DLLs) that are specified in the AppCertDLLs value in the Registry key <code>HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Session Manager</code> are loaded into every process that calls the ubiquitously used application programming interface (API) functions CreateProcess, CreateProcessAsUser, CreateProcessWithLoginW, CreateProcessWithTokenW, or WinExec. </p>
+                                        <p>Dynamic-link libraries (DLLs) that are specified in the AppCertDLLs Registry key under <code>HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Session Manager</code> are loaded into every process that calls the ubiquitously used application programming interface (API) functions CreateProcess, CreateProcessAsUser, CreateProcessWithLoginW, CreateProcessWithTokenW, or WinExec. </p>
                                     </td>
                                 </tr>
                                 <tr>
@@ -263,6 +263,28 @@ These techniques often overlap with Persistence techniques, as OS features that 
                                     </td>
                                     <td>
                                         <p>macOS and OS X use a common method to look for required dynamic libraries (dylib) to load into a program based on search paths. Adversaries can take advantage of ambiguous paths to plant dylibs to gain privilege escalation or persistence.</p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <a class="technique-mapping" id="v-Elevated Execution with Prompt-privilege escalation-tab" href="/techniques/T1514"> T1514 </a>
+                                    </td>
+                                    <td>
+                                        <a class="technique-mapping" id="v-Elevated Execution with Prompt-privilege escalation-tab" href="/techniques/T1514"> Elevated Execution with Prompt </a>
+                                    </td>
+                                    <td>
+                                        <p>Adversaries may leverage the AuthorizationExecuteWithPrivileges API to escalate privileges by prompting the user for credentials. The purpose of this API is to give application developers an easy way to perform operations with root privileges, such as for application installation or updating.  This API does not validate that the program requesting root privileges comes from a reputable source or has been maliciously modified. Although this API is deprecated, it still fully functions in the latest releases of macOS. When calling this API, the user will be prompted to enter their credentials but no checks on the origin or integrity of the program are made. The program calling the API may also load world writable files which can be modified to perform malicious behavior with elevated privileges.</p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <a class="technique-mapping" id="v-Emond-privilege escalation-tab" href="/techniques/T1519"> T1519 </a>
+                                    </td>
+                                    <td>
+                                        <a class="technique-mapping" id="v-Emond-privilege escalation-tab" href="/techniques/T1519"> Emond </a>
+                                    </td>
+                                    <td>
+                                        <p>Adversaries may use Event Monitor Daemon (emond) to establish persistence by scheduling malicious commands to run on predictable event triggers. Emond is a <a href="/techniques/T1160">Launch Daemon</a> that accepts events from various services, runs them through a simple rules engine, and takes action. The emond binary at <code>/sbin/emond</code> will load any rules from the <code>/etc/emond.d/rules/</code> directory and take action once an explicitly defined event takes place. The rule files are in the plist format and define the name, event type, and action to take. Some examples of event types include system startup and user authentication. Examples of actions are to run a system command or send an email. The emond service will not launch if there is no file present in the QueueDirectories path <code>/private/var/db/emondClients</code>, specified in the <a href="/techniques/T1160">Launch Daemon</a> configuration file at<code>/System/Library/LaunchDaemons/com.apple.emond.plist</code>.</p>
                                     </td>
                                 </tr>
                                 <tr>
@@ -344,6 +366,17 @@ These techniques often overlap with Persistence techniques, as OS features that 
                                 </tr>
                                 <tr>
                                     <td>
+                                        <a class="technique-mapping" id="v-Parent PID Spoofing-privilege escalation-tab" href="/techniques/T1502"> T1502 </a>
+                                    </td>
+                                    <td>
+                                        <a class="technique-mapping" id="v-Parent PID Spoofing-privilege escalation-tab" href="/techniques/T1502"> Parent PID Spoofing </a>
+                                    </td>
+                                    <td>
+                                        <p>Adversaries may spoof the parent process identifier (PPID) of a new process to evade process-monitoring defenses or to elevate privileges. New processes are typically spawned directly from their parent, or calling, process unless explicitly specified. One way of explicitly assigning the PPID of a new process is via the <code>CreateProcess</code> API call, which supports a parameter that defines the PPID to use. This functionality is used by Windows features such as User Account Control (UAC) to correctly set the PPID after a requested elevated process is spawned by SYSTEM (typically via <code>svchost.exe</code> or <code>consent.exe</code>) rather than the current user context.</p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
                                         <a class="technique-mapping" id="v-Path Interception-privilege escalation-tab" href="/techniques/T1034"> T1034 </a>
                                     </td>
                                     <td>
@@ -377,6 +410,17 @@ These techniques often overlap with Persistence techniques, as OS features that 
                                 </tr>
                                 <tr>
                                     <td>
+                                        <a class="technique-mapping" id="v-PowerShell Profile-privilege escalation-tab" href="/techniques/T1504"> T1504 </a>
+                                    </td>
+                                    <td>
+                                        <a class="technique-mapping" id="v-PowerShell Profile-privilege escalation-tab" href="/techniques/T1504"> PowerShell Profile </a>
+                                    </td>
+                                    <td>
+                                        <p>Adversaries may gain persistence and elevate privileges in certain situations by abusing <a href="/techniques/T1086">PowerShell</a> profiles. A PowerShell profile  (<code>profile.ps1</code>) is a script that runs when PowerShell starts and can be used as a logon script to customize user environments. PowerShell supports several profiles depending on the user or host program. For example, there can be different profiles for PowerShell host programs such as the PowerShell console, PowerShell ISE or Visual Studio Code. An administrator can also configure a profile that applies to all users and host programs on the local computer.  </p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
                                         <a class="technique-mapping" id="v-Process Injection-privilege escalation-tab" href="/techniques/T1055"> T1055 </a>
                                     </td>
                                     <td>
@@ -394,7 +438,7 @@ These techniques often overlap with Persistence techniques, as OS features that 
                                         <a class="technique-mapping" id="v-Scheduled Task-privilege escalation-tab" href="/techniques/T1053"> Scheduled Task </a>
                                     </td>
                                     <td>
-                                        <p>Utilities such as <a href="/software/S0110">at</a> and <a href="/software/S0111">schtasks</a>, along with the Windows Task Scheduler, can be used to schedule programs or scripts to be executed at a date and time. A task can also be scheduled on a remote system, provided the proper authentication is met to use RPC and file and printer sharing is turned on. Scheduling a task on a remote system typically required being a member of the Administrators group on the the remote system. </p>
+                                        <p>Utilities such as <a href="/software/S0110">at</a> and <a href="/software/S0111">schtasks</a>, along with the Windows Task Scheduler, can be used to schedule programs or scripts to be executed at a date and time. A task can also be scheduled on a remote system, provided the proper authentication is met to use RPC and file and printer sharing is turned on. Scheduling a task on a remote system typically required being a member of the Administrators group on the remote system. </p>
                                     </td>
                                 </tr>
                                 <tr>
@@ -405,7 +449,7 @@ These techniques often overlap with Persistence techniques, as OS features that 
                                         <a class="technique-mapping" id="v-Service Registry Permissions Weakness-privilege escalation-tab" href="/techniques/T1058"> Service Registry Permissions Weakness </a>
                                     </td>
                                     <td>
-                                        <p>Windows stores local service configuration information in the Registry under <code>HKLM\SYSTEM\CurrentControlSet\Services</code>. The information stored under a service's Registry keys can be manipulated to modify a service's execution parameters through tools such as the service controller, sc.exe, PowerShell, or <a href="/software/S0075">Reg</a>. Access to Registry keys is controlled through Access Control Lists and permissions. </p>
+                                        <p>Windows stores local service configuration information in the Registry under <code>HKLM\SYSTEM\CurrentControlSet\Services</code>. The information stored under a service's Registry keys can be manipulated to modify a service's execution parameters through tools such as the service controller, sc.exe, <a href="/techniques/T1086">PowerShell</a>, or <a href="/software/S0075">Reg</a>. Access to Registry keys is controlled through Access Control Lists and permissions. </p>
                                     </td>
                                 </tr>
                                 <tr>
@@ -504,7 +548,7 @@ These techniques often overlap with Persistence techniques, as OS features that 
             <div class="col-4 col-sm-4 col-md-3">  
                 <div class="footer-center-responsive my-auto">
                     <a href="https://www.mitre.org" target="_blank" rel="noopener" aria-label="MITRE">
-                        <img src="/theme/images/mitrelogowhiteontrans.gif" style="vertical-align: center" width="144" height="66">
+                        <img src="/theme/images/mitrelogowhiteontrans.gif" class="mitre-logo-wtrans">
                     </a>
                 </div>
             </div>
@@ -532,7 +576,7 @@ These techniques often overlap with Persistence techniques, as OS features that 
                     <div class="mb-1">
                         <a href="https://twitter.com/MITREattack" class="btn btn-primary w-100">
                             <!-- <i class="fa fa-twitter"></i> -->
-                            <img src="/theme/images/twitter.png" class="mr-1" style="vertical-align: top" width="20" height="20">
+                            <img src="/theme/images/twitter.png" class="mr-1 twitter-icon">
                             <b>@MITREattack</b>
                         </a>
                     </div>

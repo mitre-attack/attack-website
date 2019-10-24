@@ -14,7 +14,7 @@
         <!-- Bootstrap CSS -->
         <link rel='stylesheet' href='/theme/style/bootstrap.min.css' />
         <link rel='stylesheet' href='/theme/style/bootstrap-glyphicon.min.css' />
-        <link rel="stylesheet" type="text/css" href="/theme/style.min.css?104e35fc">
+        <link rel="stylesheet" type="text/css" href="/theme/style.min.css?215b26d9">
 </head>
 
 <body>
@@ -84,7 +84,7 @@
                                                                                                                alt="External site" class="external-icon" /></a></li>
                             <li class="nav-item"><a href="/resources/contribute"  class="nav-link" ><b>Contribute</b></a></li>
                 </ul>
-                <ul class='navbar-nav flex-row d-md-flex' style="float: right">  
+                <ul class='navbar-nav flex-row d-md-flex float-right'>
                     <li>
                         <form class='form-inline pl-2'>
                             <input class='form-control' type='text' placeholder='Search site' aria-label='Search' id="search"
@@ -127,7 +127,6 @@
                     <a class="nav-link side" id="v-Lock Bootloader-tab" href="/mitigations/M1003" aria-controls="v-Lock Bootloader" aria-selected="false">Lock Bootloader</a>
                     <a class="nav-link side" id="v-Security Updates-tab" href="/mitigations/M1001" aria-controls="v-Security Updates" aria-selected="false">Security Updates</a>
                     <a class="nav-link side" id="v-System Partition Integrity-tab" href="/mitigations/M1004" aria-controls="v-System Partition Integrity" aria-selected="false">System Partition Integrity</a>
-                    <a class="nav-link side" id="v-Use Device-Provided Credential Storage-tab" href="/mitigations/M1008" aria-controls="v-Use Device-Provided Credential Storage" aria-selected="false">Use Device-Provided Credential Storage</a>
                     <a class="nav-link side" id="v-Use Recent OS Version-tab" href="/mitigations/M1006" aria-controls="v-Use Recent OS Version" aria-selected="false">Use Recent OS Version</a>
                     <a class="nav-link side" id="v-User Guidance-tab" href="/mitigations/M1011" aria-controls="v-User Guidance" aria-selected="false">User Guidance</a>
         </div>
@@ -194,7 +193,6 @@
                         <div class="nav flex-column nav pl-3" id="v-tab" role="tablist" aria-orientation="vertical">
                                     <a class="nav-link side" id="v-Security Updates-tab" href="/mitigations/M1001" aria-controls="v-Security Updates" aria-selected="false">Security Updates</a>
                                     <a class="nav-link side" id="v-System Partition Integrity-tab" href="/mitigations/M1004" aria-controls="v-System Partition Integrity" aria-selected="false">System Partition Integrity</a>
-                                    <a class="nav-link side" id="v-Use Device-Provided Credential Storage-tab" href="/mitigations/M1008" aria-controls="v-Use Device-Provided Credential Storage" aria-selected="false">Use Device-Provided Credential Storage</a>
                                     <a class="nav-link side" id="v-Use Recent OS Version-tab" href="/mitigations/M1006" aria-controls="v-Use Recent OS Version" aria-selected="false">Use Recent OS Version</a>
                                     <a class="nav-link side" id="v-User Guidance-tab" href="/mitigations/M1011" aria-controls="v-User Guidance" aria-selected="false">User Guidance</a>
                         </div>
@@ -272,7 +270,21 @@
                                         <a href="/techniques/T1453">Abuse Accessibility Features</a>   
                                     </td>
                                     <td>
-                                        An EMM/MDM can use the Android <code>DevicePolicyManager.setPermittedAccessibliityServices</code> method to whitelist the allowed apps that can use Android's accessibility features.
+                                        An EMM/MDM can use the Android <code>DevicePolicyManager.setPermittedAccessibilityServices</code> method to whitelist applications that are allowed to use Android's accessibility features.
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Mobile
+                                    </td>
+                                    <td>
+                                        <a href="/techniques/T1517">T1517</a>                     
+                                    </td>
+                                    <td>
+                                        <a href="/techniques/T1517">Access Notifications</a>   
+                                    </td>
+                                    <td>
+                                        On Android devices with a managed work profile (enterprise managed portion of the device), the <code>DevicePolicyManager.setPermittedCrossProfileNotificationListeners</code> method can be used to manage the list of applications (including setting it to an empty list) running within the primary user (personal side of the device) that can see notifications occurring within the managed profile. However, this policy only affects notifications generated within the managed profile, not by the rest of the device. The <code>DevicePolicyManager.setApplicationHidden</code> method can be used to disable unwanted applications that are accessing notifications, but using this method would block that entire application from running.
                                     </td>
                                 </tr>
                                 <tr>
@@ -286,7 +298,7 @@
                                         <a href="/techniques/T1476">Deliver Malicious App via Other Means</a>   
                                     </td>
                                     <td>
-                                        On iOS, the allowEnterpriseAppTrust and allowEnterpriseAppTrustModification configuration profile restrictions can be used to prevent users from installing apps signed using enterprise distribution keys.
+                                        On iOS, the <code>allowEnterpriseAppTrust</code> and <code>allowEnterpriseAppTrustModification</code> configuration profile restrictions can be used to prevent users from installing apps signed using enterprise distribution keys.
                                     </td>
                                 </tr>
                                 <tr>
@@ -301,6 +313,53 @@
                                     </td>
                                     <td>
                                         Enterprise policies should prevent enabling USB debugging on Android devices unless specifically needed (e.g., if the device is used for application development).
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Mobile
+                                    </td>
+                                    <td>
+                                        <a href="/techniques/T1417">T1417</a>                     
+                                    </td>
+                                    <td>
+                                        <a href="/techniques/T1417">Input Capture</a>   
+                                    </td>
+                                    <td>
+                                        When using Samsung Knox, third-party keyboards must be whitelisted in order to be available to the end-user.
+                                                <span onclick=scrollToRef('scite-2') id="scite-ref-2-a" class="scite-citeref-number" data-reference="Samsung Keyboards">
+                                                    <sup>
+                                                        <a aria-describedby="qtip-2" href="https://support.samsungknox.com/hc/en-us/articles/360001485027-3rd-party-keyboards-must-be-whitelisted-" target="_blank" data-hasqtip="2">[2]</a>
+                                                    </sup>
+                                                </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Mobile
+                                    </td>
+                                    <td>
+                                        <a href="/techniques/T1516">T1516</a>                     
+                                    </td>
+                                    <td>
+                                        <a href="/techniques/T1516">Input Injection</a>   
+                                    </td>
+                                    <td>
+                                        An EMM/MDM can use the Android <code>DevicePolicyManager.setPermittedAccessibilityServices</code> method to whitelist applications that are allowed to use Android's accessibility features.
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Mobile
+                                    </td>
+                                    <td>
+                                        <a href="/techniques/T1411">T1411</a>                     
+                                    </td>
+                                    <td>
+                                        <a href="/techniques/T1411">Input Prompt</a>   
+                                    </td>
+                                    <td>
+                                        An EMM/MDM can use the Android <code>DevicePolicyManager.setPermittedAccessibilityServices</code> method to whitelist applications that are allowed to use Android's accessibility features.
                                     </td>
                                 </tr>
                                 <tr>
@@ -336,6 +395,20 @@
                                         Enterprise policies could be provisioned to devices to control the Wi-Fi access points that they are allowed to connect to.
                                     </td>
                                 </tr>
+                                <tr>
+                                    <td>
+                                        Mobile
+                                    </td>
+                                    <td>
+                                        <a href="/techniques/T1513">T1513</a>                     
+                                    </td>
+                                    <td>
+                                        <a href="/techniques/T1513">Screen Capture</a>   
+                                    </td>
+                                    <td>
+                                        Enterprise policies should block access to the Android Debug Bridge (ADB) by preventing users from enabling USB debugging on Android devices unless specifically needed (e.g., if the device is used for application development). An EMM/MDM can use the Android <code>DevicePolicyManager.setPermittedAccessibliityServices</code> method to whitelist applications that are allowed to use Android's accessibility features.
+                                    </td>
+                                </tr>
                         </tbody>
                     </table>
 
@@ -356,6 +429,18 @@
                             </ol>
                         </div>
                         <div class="col">
+                                <ol start="2.0">
+                                            <li>
+                                                <span  id="scite-2" class="scite-citation">
+                                                    <span class="scite-citation-text">
+                                                        <a rel="nofollow" class="external text" name="scite-2" href="https://support.samsungknox.com/hc/en-us/articles/360001485027-3rd-party-keyboards-must-be-whitelisted-" target="_blank">
+                                                            Samsung. (2019, August 16). 3rd party keyboards must be whitelisted.. Retrieved September 1, 2019.
+                                                        </a>
+                                                    </span>
+                                                </span>
+                                            </li>
+ 
+                                </ol> 
                         </div>             
                     </div>
   
@@ -375,7 +460,7 @@
             <div class="col-4 col-sm-4 col-md-3">  
                 <div class="footer-center-responsive my-auto">
                     <a href="https://www.mitre.org" target="_blank" rel="noopener" aria-label="MITRE">
-                        <img src="/theme/images/mitrelogowhiteontrans.gif" style="vertical-align: center" width="144" height="66">
+                        <img src="/theme/images/mitrelogowhiteontrans.gif" class="mitre-logo-wtrans">
                     </a>
                 </div>
             </div>
@@ -403,7 +488,7 @@
                     <div class="mb-1">
                         <a href="https://twitter.com/MITREattack" class="btn btn-primary w-100">
                             <!-- <i class="fa fa-twitter"></i> -->
-                            <img src="/theme/images/twitter.png" class="mr-1" style="vertical-align: top" width="20" height="20">
+                            <img src="/theme/images/twitter.png" class="mr-1 twitter-icon">
                             <b>@MITREattack</b>
                         </a>
                     </div>
