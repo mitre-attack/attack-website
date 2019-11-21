@@ -1,0 +1,314 @@
+{% extends "general/two-column.html" -%} 
+{% set parsed = page.data | from_json %}
+{% import 'macros/navigation.html' as navigation %}
+
+{% if parsed.domain == "pre" %}
+    {% set title = parsed.name + " - PRE-ATT&CK | MITRE ATT&CK&trade;" -%}
+{% elif parsed.domain == "mobile" %}
+    {% set title = parsed.name + " - Mobile | MITRE ATT&CK&trade;" -%}
+{% else %} 
+    {% set title = parsed.name + " - Enterprise | MITRE ATT&CK&trade;" -%}
+{% endif %} 
+{% set active_page = "techniques" -%}
+
+{% block heading %}
+    {{ super () }}
+{%  endblock %}
+
+{% block innerleft %}
+<!--stopindex-->
+    {% if parsed.domain == "enterprise" %}
+        <button class="btn btn-default dropdown-toggle heading-dropdown mb-3" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">ENTERPRISE</button>
+    {% elif parsed.domain == "mobile" %}
+        <button class="btn btn-default dropdown-toggle heading-dropdown mb-3" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">MOBILE</button>
+    {% else %}
+        <button class="btn btn-default dropdown-toggle heading-dropdown mb-3" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">PRE-ATT&CK</button>
+    {% endif %}
+
+    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+        <a class="dropdown-item" href="/techniques/enterprise">ENTERPRISE</a>
+        <a class="dropdown-item" href="/techniques/mobile">MOBILE</a>
+        <a class="dropdown-item" href="/techniques/pre">PRE-ATT&CK</a>
+    </div>
+    <div id="v-tab" role="tablist" aria-orientation="vertical">
+        {{ navigation.sidenav(parsed.menu, output_file) }}  
+    </div>
+<!--startindex-->
+{% endblock %}
+
+{% block innerright %}
+    {{ super () }}
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/">Home</a></li>
+        {% if parsed.domain == 'enterprise' %}
+            <li class="breadcrumb-item"><a href="/techniques/enterprise">Techniques</a></li>
+        {% elif parsed.domain == 'pre' %}
+            <li class="breadcrumb-item"><a href="/techniques/pre">Techniques</a></li>
+        {% else %}
+            <li class="breadcrumb-item"><a href="/techniques/mobile">Techniques</a></li>
+        {% endif %}
+        {% if parsed.domain == 'enterprise' %}
+            <li class="breadcrumb-item"><a href="/techniques/enterprise">Enterprise</a></li>
+        {% elif parsed.domain == 'pre' %}
+            <li class="breadcrumb-item"><a href="/techniques/pre">PRE-ATT&CK</a></li>
+        {% else %}
+            <li class="breadcrumb-item"><a href="/techniques/mobile">Mobile</a></li>
+        {% endif %}
+        <li class="breadcrumb-item">{{parsed.name}}</li>
+    </ol>
+    <div class="tab-pane fade show active" id="v-{{pages.title}}" role="tabpanel" aria-labelledby="v-{{pages.title}}-tab"></div>
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="jumbotron jumbotron-fluid">
+                <div class="container-fluid">
+                    <h1>
+                        {{parsed.name}}
+                    </h1>            
+                    <div class="row">
+                        {% if parsed.descr %}
+                            <div class="col-md-8 description-body">
+                                {% if parsed.deprecated %}
+                                    <font color="red">****Deprecation Warning****</font>
+                                {% endif %}
+                                {{parsed.descr}}
+                            </div>
+                        {% endif %}
+                    
+                        <div class="col-md-4">
+                            <div class="card">
+                                <div class="card-body">
+                                    {% if parsed.attack_id %}
+                                        <div class="card-data"><span class="h5 card-title">ID:&nbsp;</span>{{parsed.attack_id}}</div>
+                                    {% endif %}
+                                    {% if parsed.tactic_type %}
+                                        <div class="card-data"><span class="h5 card-title">Tactic Type:&nbsp;</span>{{parsed.tactic_type}}</div>
+                                    {% endif %}
+                                    {% if parsed.tactics %}
+                                        <div class="card-data"><span class="h5 card-title">Tactic:</span>
+                                            {% for tactic in parsed.tactics %}
+                                                {{tactic}}{% if not loop.last %},{% endif %}
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                    {% if parsed.platforms %}
+                                        <div class="card-data"><span class="h5 card-title">Platform:&nbsp;</span>{{parsed.platforms}}</div>
+                                    {% endif %}
+                                    {% if parsed.sysreqs %}
+                                        <div class="card-data"><span class="h5 card-title">System Requirements:&nbsp;</span>{{parsed.sysreqs}}</div>
+                                    {% endif %}
+                                    {% if parsed.perms %}
+                                        <div class="card-data"><span class="h5 card-title">Permissions Required:&nbsp;</span>{{parsed.perms}}</div>
+                                    {% endif %}
+                                    {% if parsed.eff_perms%}
+                                        <div class="card-data"><span class="h5 card-title">Effective Permissions:&nbsp;</span>{{parsed.eff_perms}}</div>
+                                    {% endif %}
+                                    {% if parsed.data_sources %}
+                                        <div class="card-data"><span class="h5 card-title">Data Sources:&nbsp;</span>{{parsed.data_sources}}</div>
+                                    {% endif %}
+                                    {% if parsed.supports_remote %}
+                                        <div class="card-data"><span class="h5 card-title">Supports Remote:&nbsp;</span>{{parsed.supports_remote}}</div>
+                                    {% endif %}
+                                    {% if parsed.network_reqs %}
+                                        <div class="card-data"><span class="h5 card-title">Requires Network:&nbsp;</span>{{parsed.network_reqs}}</div>
+                                    {% endif %}
+                                    {% if parsed.def_bypass %}
+                                        <div class="card-data"><span class="h5 card-title">Defense Bypassed:&nbsp;</span>{{parsed.def_bypass}}</div>
+                                    {% endif %}
+                                    {% if parsed.impact_type %}
+                                        <div class="card-data"><span class="h5 card-title">Impact Type:&nbsp;</span>{{parsed.impact_type}}</div>
+                                    {% endif %}
+                                    {% if parsed.capecs %}
+                                        <div class="card-data"><span class="h5 card-title">CAPEC ID:</span>
+                                            {% for capec in parsed.capecs %}
+                                                <a href="{{capec.url}}" target="_blank">{{capec.id}}{% if not loop.last %},{% endif %}</a> 
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                    {% if parsed.mtcs %}
+                                        <div class="card-data"><span class="h5 card-title">MTC ID:</span>
+                                            {% for mtc in parsed.mtcs %}
+                                                <a href="{{mtc.url}}" target="_blank">{{mtc.id}}{% if not loop.last %},{% endif %}</a> 
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                    {% if parsed.contributors %}
+                                        <div class="card-data"><span class="h5 card-title">Contributors:&nbsp;</span>{{parsed.contributors}}</div>
+                                    {% endif %}
+                                    {% if parsed.version %}
+                                        <div class="card-data"><span class="h5 card-title">Version:&nbsp;</span>{{parsed.version}}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% if parsed.rel_techniques_table %}
+                        <h2 class="pt-3" id ="techniques">Similar Techniques by Tactic</h2>
+                        <table class="table table-bordered table-alternate mt-2">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Tactic</th>
+                                    <th scope="col">Technique</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for row in parsed.rel_techniques_table %}
+                                    <tr>
+                                        <td>
+                                            <a href="/tactics/{{row.tactic_id}}"> {{row.tactic_name}} </a>
+                                        </td>
+                                        <td> 
+                                            <a href="/techniques/{{row.technique_id}}"> {{row.technique_name}} </a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>                 
+                    {% endif %}
+                    {% if parsed.examples_table %}
+                        <h2 class="pt-3" id ="examples">Procedure Examples</h2>
+                        <table class="table table-bordered table-alternate mt-2">
+                            <thead>
+                                <tr> 
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for example in parsed.examples_table %}
+                                    <tr>
+                                        <td>
+                                            <a href="/{{example.path}}/{{example.id}}"> {{example.name}} </a>
+                                        </td>
+                                        <td> 
+                                            {{example.descr}}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    {% endif %}
+                    {% if parsed.domain != 'pre' %}
+                        <h2 class="pt-3" id ="mitigations">Mitigations</h2>
+                        {% if parsed.mitigation_table %}
+                            <table class="table table-bordered table-alternate mt-2">
+                                <thead>
+                                    <tr> 
+                                        <th scope="col">Mitigation</th>
+                                        <th scope="col">Description</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for mit in parsed.mitigation_table %}
+                                        <tr>
+                                            <td>
+                                                <a href="/mitigations/{{mit.mid}}"> {{mit.name}} </a>
+                                            </td>
+                                            <td> 
+                                                {{mit.descr}}
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        {% else %}
+                            <p>
+                                This type of attack technique cannot be easily mitigated with preventive controls since
+                                it is based on the abuse of system features.
+                            </p>
+                        {% endif %}
+                    {% endif %}
+                    {% if parsed.detection %}
+                        <h2 class="pt-3" id="detection">Detection</h2>
+                        <div>
+                            {{parsed.detection}}
+                        </div>
+                    {% endif %}
+                    {% if parsed.detectable %}
+                        <h2 class="pt-3" id="detectable">Detection</h2>
+                        <div>
+                            <p><b>Detectable by Common Defenses (Yes/No/Partial):&nbsp</b><span>{{parsed.detectable}}</span></p>
+                            {% if parsed.detectable_exp %}
+                                <p><b>Explanation:&nbsp</b><span>{{parsed.detectable_exp}}</span></p>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                    {% if parsed.diff_for_adv %}
+                        <h2 class="pt-3" id="difficulty">Difficulty for the Adversary</h2>
+                        <div>
+                            <p><b>Easy for the Adversary (Yes/No):&nbsp</b><span>{{parsed.diff_for_adv}}</span></p>
+                            {% if parsed.diff_for_adv_exp %}
+                                <p><b>Explanation:&nbsp</b><span>{{parsed.diff_for_adv_exp}}</span></p>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+
+                    {% if parsed.bottom_ref %}
+                        <h2 class="pt-3" id="references">References</h2>
+                        {% if parsed.bottom_ref|length % 2 == 0 %}
+                            {% set half = parsed.bottom_ref|length//2 %}
+                        {% else %}
+                            {% set half = (parsed.bottom_ref|length//2) + 1 %}
+                        {% endif %}
+                        <div class="row">
+                            <div class="col">
+                                <ol>
+                                    {% for j in range(0, half) %}
+                                        {% if parsed.bottom_ref[j].url %}
+                                            <li>
+                                                <span  id="scite-{{parsed.bottom_ref[j].number}}" class="scite-citation">
+                                                    <span class="scite-citation-text">
+                                                        <a rel="nofollow" class="external text" name="scite-{{parsed.bottom_ref[j].number}}" href="{{parsed.bottom_ref[j].url}}" target="_blank">
+                                                            {{parsed.bottom_ref[j].description}}
+                                                        </a>
+                                                    </span>
+                                                </span>
+                                            </li>
+                                        {% else %}
+                                            <li>
+                                                <span  id="scite-{{parsed.bottom_ref[j].number}}" class="scite-citation">
+                                                    <span class="scite-citation-text">{{parsed.bottom_ref[j].description}}</span>
+                                                </span>
+                                            </li>
+                                        {% endif %}
+                                    {% endfor %}
+                                </ol>
+                            </div>
+                            <div class="col">
+                                {% if parsed.bottom_ref|length > 1 %}
+                                    <ol start="{{half+1}}.0">
+                                        {% for j in range(half, parsed.bottom_ref|length) %}
+                                            {% if parsed.bottom_ref[j].url %}
+                                                <li>
+                                                    <span  id="scite-{{parsed.bottom_ref[j].number}}" class="scite-citation">
+                                                        <span class="scite-citation-text">
+                                                            <a rel="nofollow" class="external text" name="scite-{{parsed.bottom_ref[j].number}}" href="{{parsed.bottom_ref[j].url}}" target="_blank">
+                                                                {{parsed.bottom_ref[j].description}}
+                                                            </a>
+                                                        </span>
+                                                    </span>
+                                                </li>
+                                            {% else %}
+                                                <li>
+                                                    <span  id="scite-{{parsed.bottom_ref[j].number}}" class="scite-citation">
+                                                        <span class="scite-citation-text">{{parsed.bottom_ref[j].description}}</span>
+                                                    </span>
+                                                </li>
+                                            {% endif %}
+                                        {% endfor %}  
+                                    </ol>
+                                {% endif %}
+                            </div>             
+                        </div>
+                    {% endif %}   
+                </div>
+            </div>
+        </div>
+    </div>
+    {{page.scripts}}
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<!--SCRIPTS-->
+<script src="/theme/scripts/navigation.js"></script>
+{% endblock %}   

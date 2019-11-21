@@ -1,0 +1,247 @@
+{% extends "general/two-column.html" %}
+{% set parsed = page.data | from_json %}
+{% if parsed.aliases_list %}
+   {% set alias_string = parsed.aliases_list|join(", ") %} 
+   {% set title = parsed.name + ", " + alias_string + " | MITRE ATT&CK&trade;" -%} 
+{% else %}
+   {% set title = parsed.name + " | MITRE ATT&CK&trade;" -%} 
+{% endif %}
+{% set active_page = "groups" -%}
+{% import 'macros/navigator.html' as navigator %}
+{% import 'macros/references.html' as references %}
+{% import 'macros/navigation.html' as navigation %}
+
+{% block heading %}
+   {{ super () }}
+{%  endblock %}
+
+{% block innerleft %}
+<!--stopindex-->
+    <div class="group-nav-desktop-view">
+        {{ navigation.sidenav(parsed.side_menu_data, output_file) }} 
+    </div>
+    <div class="group-nav-mobile-view">
+        {{ navigation.sidenav(parsed.side_menu_mobile_view_data, output_file) }} 
+    </div>
+<!--startindex-->
+{% endblock %}
+
+{% block innerright %}
+{{ super () }}
+
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/">Home</a></li>
+        <li class="breadcrumb-item"><a href="/groups/">Groups</a></li>
+        <li class="breadcrumb-item">{{parsed.name}}</li>
+    </ol>
+    <div class="tab-pane fade show active" id="v-{{pages.title}}" role="tabpanel" aria-labelledby="v-{{pages.title}}-tab"></div>
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="jumbotron jumbotron-fluid">
+                <div class="container-fluid">
+                    <h1>
+                        {{parsed.name}}
+                    </h1>
+                    {% if parsed.descr %}
+                    <div class="row">
+                        <div class="col-md-8 description-body">
+                        {% if parsed.deprecated %}
+                            <font color="red">****Deprecation Warning****</font>
+                        {% endif %}
+                        {{parsed.descr}}
+                    </div>
+                    {% endif %}
+                    
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-body">
+                                {% if parsed.attack_id %}
+                                    <div class="card-data"><span class="h5 card-title">ID</span>: {{parsed.attack_id}}</div>
+                                {% endif %}
+                                {% if parsed.aliases_list %}
+                                    <div class="card-data"><span class="h5 card-title">Associated Groups</span>: {{parsed.aliases_list|join(", ")}}</div>
+                                {% endif %}
+                                {% if parsed.contributors_list %}
+                                    <div class="card-data"><span class="h5 card-title">Contributors</span>: {{parsed.contributors_list|join(", ")}}</div>
+                                {% endif %}
+                                {{parsed.contributors}}
+                                {% if parsed.version %}
+                                    <div class="card-data"><span class="h5 card-title">Version</span>: {{parsed.version}}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                    {% if parsed.alias_descriptions %}
+                        <h2 class="pt-3" id ="aliasDescription">Associated Group Descriptions</h2>
+                        <table class="table table-bordered table-alternate mt-2">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Description</th>
+                                </tr>
+                            </thead>
+                            <tbody> 
+                                {% for alias in parsed.alias_descriptions %}
+                                <tr>
+                                    <td>
+                                        {{alias.name}}
+                                    </td>
+                                    <td>
+                                        {{alias.descr}}
+                                    </td>
+                                </tr>
+                                {% endfor %} 
+                            </tbody>
+                        </table>
+                    {% endif %}
+                    
+                    {% if parsed.technique_table_data %}
+                        {{navigator.layer_links(parsed.attack_id, "groups", parsed.layers)}}
+                        <h2 class="pt-3" id="techniques">Techniques Used</h2>
+                        <table class="table table-bordered table-alternate mt-2">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Domain</th>
+                                    <th scope="col">ID</th>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Use</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                    {% for technique in parsed.technique_table_data %}
+                                    <tr>
+                                        <td>
+                                            {% if technique.domain == "enterprise" %}
+                                                Enterprise
+                                            {% elif technique.domain == "mobile" %}
+                                                Mobile 
+                                            {% else %}
+                                                PRE-ATT&CK 
+                                            {% endif %} 
+                                        </td>
+                                        <td>
+                                            <a href="/techniques/{{technique.id}}">{{technique.id}}</a>
+                                        </td>
+                                        <td>
+                                            <a href="/techniques/{{technique.id}}">{{technique.name}}</a>
+                                        </td>
+                                        <td>
+                                            {{technique.descr}}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    {% endif %}
+            
+                    {% if parsed.software_data %}
+                        <h2 class="pt-3" id="software">Software</h2>
+                        <table class="table table-bordered table-alternate mt-2">
+                            <thead>
+                                <tr>
+                                    <th scope="col">ID</th>
+                                    <th scope="col">Name</th>
+                                    {% if parsed.add_software_ref == True %}
+                                        <th scope="col">References</th>
+                                    {% endif %}
+                                    <th scope="col">Techniques</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for software in parsed.software_data %}
+                                    <tr>
+                                        <td>
+                                            <a href="/software/{{software.id}}">{{software.id}}</a>
+                                        </td>
+                                        <td>
+                                            <a href="/software/{{software.id}}">{{software.name}}</a>
+                                        </td>
+                                        {% if parsed.add_software_ref == True %}
+                                            <td>
+                                                {{software.descr}}
+                                                {{references.references(software.refs)}}
+                                            </td>
+                                        {% endif %}
+                                        <td>
+                                            {% for technique in software.techniques %}
+                                                <a href="/techniques/{{technique.id}}">{{technique.name}}{% if not loop.last %}, {% endif %}</a>
+                                            {% endfor %}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    {% endif %}
+
+                    {% if parsed.bottom_ref %}
+                        <h2 class="pt-3" id="references">References</h2>
+                        {% if parsed.bottom_ref|length % 2 == 0 %}
+                            {% set half = parsed.bottom_ref|length//2 %}
+                        {% else %}
+                            {% set half = (parsed.bottom_ref|length//2) + 1 %}
+                        {% endif %}
+
+                        <div class="row">
+                            <div class="col">
+                                <ol>
+                                    {% for j in range(0, half) %}
+                                        {% if parsed.bottom_ref[j].url %}
+                                            <li>
+                                                <span  id="scite-{{parsed.bottom_ref[j].number}}" class="scite-citation">
+                                                    <span class="scite-citation-text">
+                                                        <a rel="nofollow" class="external text" name="scite-{{parsed.bottom_ref[j].number}}" href="{{parsed.bottom_ref[j].url}}" target="_blank">
+                                                            {{parsed.bottom_ref[j].description}}
+                                                        </a>
+                                                    </span>
+                                                </span>
+                                            </li>
+                                        {% else %}
+                                            <li>
+                                                <span  id="scite-{{parsed.bottom_ref[j].number}}" class="scite-citation">
+                                                    <span class="scite-citation-text">{{parsed.bottom_ref[j].description}}</span>
+                                                </span>
+                                            </li>
+                                        {% endif %}
+                                    {% endfor %}
+                                </ol>
+                            </div>
+                            <div class="col">
+                                {% if parsed.bottom_ref|length > 1 %}
+                                    <ol start="{{half+1}}.0">
+                                        {% for j in range(half, parsed.bottom_ref|length) %}
+                                            {% if parsed.bottom_ref[j].url %}
+                                                <li>
+                                                    <span  id="scite-{{parsed.bottom_ref[j].number}}" class="scite-citation">
+                                                        <span class="scite-citation-text">
+                                                            <a rel="nofollow" class="external text" name="scite-{{parsed.bottom_ref[j].number}}" href="{{parsed.bottom_ref[j].url}}" target="_blank">
+                                                                {{parsed.bottom_ref[j].description}}
+                                                            </a>
+                                                        </span>
+                                                    </span>
+                                                </li>
+                                            {% else %}
+                                                <li>
+                                                    <span  id="scite-{{parsed.bottom_ref[j].number}}" class="scite-citation">
+                                                        <span class="scite-citation-text">{{parsed.bottom_ref[j].description}}</span>
+                                                    </span>
+                                                </li>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </ol>  
+                                {% endif %}
+                            </div>             
+                        </div>
+                    {% endif %}  
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    <!--SCRIPTS-->
+    <script src="/theme/scripts/navigation.js"></script>
+{% endblock %}

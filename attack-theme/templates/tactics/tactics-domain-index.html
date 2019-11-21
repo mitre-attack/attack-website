@@ -1,0 +1,99 @@
+{% extends "general/two-column.html" %}
+{% import 'macros/navigation.html' as navigation %}
+
+{% set parsed = page.data | from_json %}
+{% if parsed.domain == "pre" %}
+    {% set title = "Tactics - PRE-ATT&CK | MITRE ATT&CK&trade;" -%}
+{% elif parsed.domain == "mobile" %}
+    {% set title = "Tactics - Mobile | MITRE ATT&CK&trade;" -%}
+{% else %} 
+    {% set title = "Tactics - Enterprise | MITRE ATT&CK&trade;" -%}
+{% endif %}
+{% block innerleft %}
+    {% if parsed.domain == "pre" %}
+        <button class="btn btn-default dropdown-toggle heading-dropdown mb-3" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">PRE-ATT&CK</button>
+    {% elif parsed.domain == "mobile" %}
+        <button class="btn btn-default dropdown-toggle heading-dropdown mb-3" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">MOBILE</button>
+    {% else %} 
+        <button class="btn btn-default dropdown-toggle heading-dropdown mb-3" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">ENTERPRISE</button>
+    {% endif %}        
+    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+        <a class="dropdown-item" href="/tactics/enterprise">ENTERPRISE</a>
+        <a class="dropdown-item" href="/tactics/mobile">MOBILE</a>
+        <a class="dropdown-item" href="/tactics/pre">PRE-ATT&CK</a>
+    </div>
+    <div class="group-nav-desktop-view">
+        {{ navigation.sidenav(parsed.side_menu_data, output_file) }}
+    </div>
+{% endblock %}
+
+{% block innerright %}
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/">Home</a></li>
+        <li class="breadcrumb-item"><a href="/tactics/{{parsed.domain}}/">Tactics</a></li>
+        {% if parsed.domain == "pre" %}
+            <li class="breadcrumb-item">PRE-ATT&CK</li>
+        {% elif parsed.domain == "mobile" %}
+            <li class="breadcrumb-item">Mobile</li>
+        {% else %}
+            <li class="breadcrumb-item">Enterprise</li>
+        {% endif %}
+    </ol>
+    <div class="tab-pane fade show active" id="v-{{pages.title}}" role="tabpanel" aria-labelledby="v-{{pages.title}}-tab"></div>
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="jumbotron jumbotron-fluid">
+                <div class="container-fluid">
+                    <div class="overflow-x-auto">
+                        <h1>
+                            {% if parsed.domain == "pre" %}
+                                PRE-ATT&CK Tactics
+                            {% elif parsed.domain == "mobile" %}
+                                Mobile Tactics
+                            {% else %} 
+                                Enterprise Tactics
+                            {% endif %}
+                        </h1>
+                        {% if parsed.domain == "pre" %}
+                            <h6 class="table-object-count">PRE-ATT&CK Tactics: {{ parsed.tactics_list_len }}</h6>
+                        {% elif parsed.domain == "mobile" %}
+                            <h6 class="table-object-count">Mobile Tactics: {{ parsed.tactics_list_len }}</h6>
+                        {% else %} 
+                            <h6 class="table-object-count">Enterprise Tactics: {{ parsed.tactics_list_len }}</h6>
+                        {% endif %}
+                        <table class="table table-bordered table-alternate mt-2">
+                            <thead>
+                                <tr>
+                                    <th scope="col">ID</th>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            {% for tactic in parsed.tactics_table %}
+                                <tr>
+                                <td>
+                                    <a href="/tactics/{{tactic.tid}}">{{tactic.tid}}</a>
+                                </td>
+                                <td>
+                                    <a href="/tactics/{{tactic.tid}}">{{tactic.name}}</a>
+                                </td>
+                                <td>
+                                    {{tactic.description}}
+                                </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    <!--SCRIPTS-->
+    <script src="/theme/scripts/navigation.js"></script>
+{% endblock %}
