@@ -77,7 +77,7 @@ https://oasis-open.github.io/cti-documentation/
 ## Notice
 Copyright 2015-2019 The MITRE Corporation
 
-Approved for Public Release; Distribution Unlimited. Case Number 18-3139.
+Approved for Public Release; Distribution Unlimited. Case Number 19-3504.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
