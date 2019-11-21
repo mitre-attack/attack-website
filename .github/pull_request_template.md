@@ -1,6 +1,7 @@
 <!--  PULL REQUEST TEMPLATE                                                -->
 <!--  1. fill in the below sections to the best of your ability            -->
 <!--  2. Assign and/or mention a reviewer (typically @isaisabel)           -->
+<!--  3. Pull requests should target the develop branch                    -->
 
 ## Description of what has changed
 <!--  Add a short description of what changed                              -->
