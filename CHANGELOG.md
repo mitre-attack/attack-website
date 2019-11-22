@@ -26,6 +26,11 @@
 <!--          addition of notable features. When PATCH is 0 it can      -->
 <!--          be omitted                                                -->
 
+# 22 November 2019
+## ATT&CK Website version 1.0.1
+### Fixes
+- Fixed incorrect initial state for the side-navigation on the cloud matrix page.
+
 # 21 November 2019
 ## ATT&CK Website version 1.0
 This is the initial release of the website source code.
