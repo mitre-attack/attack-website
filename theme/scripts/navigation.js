@@ -43,7 +43,7 @@ $(document).ready(function () {
     // Open necessary panes
     $(".expand-button").each(function () {
         let tree = "";
-        for (i = 0; i < active_id.length - 1; i++) {
+        for (i = 0; i < active_id.length; i++) {
             tree += active_id[i] + "-";
             if ($(this).attr('id') === tree+"header") {
                 $(this).addClass("notransition");
@@ -54,7 +54,7 @@ $(document).ready(function () {
 
     $(".sidenav-body.collapse").each(function () {
         let tree = "";
-        for (i = 0; i < active_id.length - 1; i++) {
+        for (i = 0; i < active_id.length; i++) {
             tree += active_id[i] + "-";
             if ($(this).attr('id') === tree+"body") {
                 $(this).addClass("show");
