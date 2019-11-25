@@ -26,10 +26,15 @@
 <!--          addition of notable features. When PATCH is 0 it can      -->
 <!--          be omitted                                                -->
 
+# 25 November 2019
+## ATT&CK Website version 1.0.2
+### Fixes
+- Removed google analytics and google-site-verification from source code. See issue #11.
+
 # 22 November 2019
 ## ATT&CK Website version 1.0.1
 ### Fixes
-- Fixed incorrect initial state for the side-navigation on the cloud matrix page.
+- Fixed incorrect initial state for the side-navigation on the cloud matrix page. See issue #8.
 
 # 21 November 2019
 ## ATT&CK Website version 1.0
