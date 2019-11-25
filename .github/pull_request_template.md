@@ -2,6 +2,7 @@
 <!--  1. fill in the below sections to the best of your ability            -->
 <!--  2. Assign and/or mention a reviewer (typically @isaisabel)           -->
 <!--  3. Pull requests should target the develop branch                    -->
+<!--  4. Make sure to update CHANGELOG.md to reflect what has changed.     -->
 
 ## Description of what has changed
 <!--  Add a short description of what changed                              -->
