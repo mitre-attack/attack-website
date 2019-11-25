@@ -7,7 +7,7 @@ This repository contains the source code used to generate the MITRE ATT&CK<sup>&
 ## Usage
 The [Install and Run](#Install-and-Build) section below explains how to set up a local version of the site. You can also visit the live site at [attack.mitre.org](https://attack.mitre.org). See [Building the site with custom content](#Building-the-site-with-custom-content) for information about building the site with custom content.
 
-Use our [Github Issue Tracker](https://github.com/mitre-attack/attack-website/issues) to let us know of any bugs or other issues you encounter. We also encourage pull requests of you've extended the site in a cool way and want to share back to the community!
+Use our [Github Issue Tracker](https://github.com/mitre-attack/attack-website/issues) to let us know of any bugs or other issues you encounter. We also encourage pull requests if you've extended the site in a cool way and want to share back to the community!
 
 If you find errors or typos in the site content, please let us know by sending an email to attack@mitre.org with the subject **Website Content Error**, and make sure to include both a description of the error and the URL at which it can be found. 
 
@@ -41,8 +41,8 @@ The ATT&CK site uses a combination of Python, Pelican and Jinja to convert the S
 
 ### ATT&CK Archives
 
-The previous-versions feature, built to `/resources/previous-versions/` and `/previous/`, is used to display older versions of the ATT&CK site. This feature is reliant on the [attack-archives](github.com/mitre-attack/attack-archives) repository, which stores the archived versions and also provides the functionality to preserve the current site
-in the archive. For more information on how the previous-version system works, please see the [attack-archives repository on github](github.com/mitre-attack/attack-archives) or the [archives module](/modules/archives.py).
+The previous-versions feature, built to `/resources/previous-versions/` and `/previous/`, is used to display older versions of the ATT&CK site. This feature is reliant on the [attack-archives](https://github.com/mitre-attack/attack-archives/issues) repository, which stores the archived versions and also provides the functionality to preserve the current site
+in the archive. For more information on how the previous-version system works, please see the [attack-archives repository on github](https://github.com/mitre-attack/attack-archives/issues) or the [archives module](/modules/archives.py).
 
 ## Building the site with custom content
 
