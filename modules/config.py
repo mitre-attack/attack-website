@@ -13,13 +13,15 @@ from . import util
 settings_dict = {
     "banner_enabled": "false",
     "banner_message": "<a href='https://www.mitre.org/attackcon-streamed-live' target='_blank'> Register to stream ATT&CKcon 2.0 October 29-30</a>",
-    "domains": ["pre-attack", "enterprise-attack", "mobile-attack"],
+    "domains": ["amitt-attack", "pre-attack", "enterprise-attack", "mobile-attack"],
     "source_names": [
+        "amitt-attack",
         "mitre-pre-attack", 
         "mitre-attack", 
         "mitre-mobile-attack"
     ],
     "domain_aliases": [
+        ["AM!TT", "amitt"],
         ["PRE-ATT&CK", "pre"], 
         ["Enterprise", "enterprise"], 
         ["Mobile", "mobile"]
@@ -37,6 +39,17 @@ settings_dict = {
     ]
 }
 platform_to_path = {
+    "Advertising": "amitt/advertising",
+    "Audio": "amitt/audio",
+    "Augmented Reality": "amitt/augmented_reality",
+    "Digital Publication": "amitt/digital_pulication",
+    "Interactive Media": "amitt/interactive_media",
+    "Mobile": "amitt/mobile",
+    "Physical": "amitt/physical",
+    "Physical Publication": "amitt/physical_publication",
+    "Social Media": "amitt/social_media",
+    "Video": "amitt/video",
+    "Video Game": "amitt/video_game",
     "Windows": "enterprise/windows",
     "macOS": "enterprise/macos",
     "Linux": "enterprise/linux",
@@ -160,6 +173,103 @@ matrices = [
         ]
     },
     {
+        "name": "AM!TT",
+        "path": "amitt",
+        "matrix": "amitt-attack",
+        "platforms": ['Advertising', 'Audio', 'Augmented Reality', 'Digital Publication', 'Interactive Media', 'Mobile', 'Physical', 'Physical Publication', 'Social Media', 'Video', 'Video Game'],
+        "descr": "Below are the tactics and technique representing the AM!TT framework.",
+        "subtypes": [
+            {
+                "name": "Advertising",
+                "matrix": "amitt-attack",
+                "path": "amitt/advertising",
+                "platforms": ["Advertising"],
+                "descr": "Ad space.",
+                "subtypes": []
+            },
+            {
+                "name": "Audio",
+                "matrix": "amitt-attack",
+                "path": "amitt/audio",
+                "platforms": ["Audio"],
+                "descr": "Radio, Internet Radio, Podcasts, Music.",
+                "subtypes": []
+            },
+            {
+                "name": "Augmented Reality",
+                "matrix": "amitt-attack",
+                "path": "amitt/augmented_reality",
+                "platforms": ["Augmented Reality"],
+                "descr": "Where meat space and cyber space collide.",
+                "subtypes": []
+            },
+            {
+                "name": "Digital Publication",
+                "matrix": "amitt-attack",
+                "path": "amitt/digital_publication",
+                "platforms": ["Digital Publication"],
+                "descr": "News, Blogs, Zines, PDFs, Photos, Memes, Leaks, Research Articles, Manifestos.",
+                "subtypes": []
+            },
+            {
+                "name": "Interactive Media",
+                "matrix": "amitt-attack",
+                "path": "amitt/interactive_media",
+                "platforms": ["Interactive Media"],
+                "descr": "ARGs, Web Applications.",
+                "subtypes": []
+            },
+            {
+                "name": "Mobile",
+                "matrix": "amitt-attack",
+                "path": "amitt/mobile",
+                "platforms": ["Mobile"],
+                "descr": "Mobile Apps, Push Notifications, Emergency Broadcast Systems.",
+                "subtypes": []
+            },
+            {
+                "name": "Physical",
+                "matrix": "amitt-attack",
+                "path": "amitt/physical",
+                "platforms": ["Physical"],
+                "descr": "Protests, Flash Mobs, Book Burnings, Violence.",
+                "subtypes": []
+            },
+            {
+                "name": "Physical Publication",
+                "matrix": "amitt-attack",
+                "path": "amitt/physical_publication",
+                "platforms": ["Physical Publication"],
+                "descr": "Newspapers, Magazines, Leaflets, Billboards, Red Baseball Hats.",
+                "subtypes": []
+            },
+            {
+                "name": "Social Media",
+                "matrix": "amitt-attack",
+                "path": "amitt/social_media",
+                "platforms": ["Social Media"],
+                "descr": "Facebook, Twitter, Reddit, Chans, Group Chat.",
+                "subtypes": []
+            },
+            {
+                "name": "Video",
+                "matrix": "amitt-attack",
+                "path": "amitt/video",
+                "platforms": ["Video"],
+                "descr": "Film, Television, YouTube.",
+                "subtypes": []
+            },
+            {
+                "name": "Video Game",
+                "matrix": "amitt-attack",
+                "path": "amitt/video_game",
+                "platforms": ["Video Game"],
+                "descr": "PC, Mobile, Web App.",
+                "subtypes": []
+            }
+        ]
+    },
+    {
         "name": "Mobile",
         "matrix": "mobile-attack",
         "path": "mobile",
@@ -205,6 +315,7 @@ data_directory = "data"
 stix_directory = data_directory + "/stix"
 # STIX bundles for each domain
 attack_path = {
+    'amitt-attack': stix_directory + "/amitt-attack.json",
     'enterprise-attack': stix_directory + "/enterprise-attack.json",
     'mobile-attack': stix_directory + "/mobile-attack.json",
     'pre-attack': stix_directory + "/pre-attack.json"
@@ -291,6 +402,7 @@ attack_index_md = ("Title: ATT&CK Overview \n"
 
 # Old stix content
 last_attack_path = {
+    'amitt-attack': stix_directory + "/amitt-attack_old.json",
     'enterprise-attack': stix_directory + "/enterprise-attack_old.json",
     'mobile-attack': stix_directory + "/mobile-attack_old.json",
     'pre-attack': stix_directory + "/pre-attack_old.json"
@@ -356,6 +468,35 @@ mobile_redirect_dict = {
 
 # Redirect mapping dictionary
 redirects_domain = {
+    'amitt-attack': [
+        {'old': "AM!TT_Matrix", 'new': "/matrices/amitt"},
+        {'old': "AM!TT_Navigator", 'new': "https://github.com/mitre/attack-navigator"},
+        {'old': "Adversary_Emulation_Plans", 'new': "/resources/adversary-emulation-plans"},
+        {'old': "All_Techniques", 'new': "/techniques/amitt"},
+        {'old': "Contribute", 'new': "/resources/contribute"},
+        {'old': "Cyber_Analytics_Repository", 'new': "https://car.mitre.org"},
+        {'old': "Example_queries", 'new': "/resources/working-with-attack"},
+        {'old': "Groups", 'new': "/groups"},
+        {'old': "Introduction_and_Overview", 'new': "/resources/amitt-introduction"},
+        # {'old': "Advertising_Technique_Matrix", 'new': "/matrices/amitt/advertising"},
+        # {'old': "Cyber_Techniques", 'new': "/matrices/amitt/cyber"},
+        # {'old': "Physical_Techniques", 'new': "/matrices/amitt/physical"},
+        # {'old': "Physical_Technique_Matrix", 'new': "/matrices/amitt/physical"},
+        {'old': "Main_Page", 'new': "/"},
+        {'old': "Past_Blogs", 'new': "https://medium.com/mitre-attack"},
+        {'old': "Past_Updates", 'new': "/resources/updates"},
+        {'old': "Related_Efforts", 'new': "/resources/related-efforts"},
+        # {'old': "Software", 'new': "/software"},
+        {'old': "Technique_Matrix", 'new': "/matrices/amitt"},
+        {'old': "Technique_Matrix_Small", 'new': "https://mitre.github.io/attack-navigator"},
+        # {'old': "Updates_April_2017", 'new': "/resources/updates/updates-april-2017"},
+        # {'old': "Updates_April_2018", 'new': "/resources/updates/updates-april-2018"},
+        # {'old': "Updates_January_2018", 'new': "/resources/updates/updates-january-2018"},
+        # {'old': "Updates_July_2017", 'new': "/resources/updates/updates-july-2017"},
+        {'old': "Using_the_API", 'new': "/resources/working-with-attack"},
+        # {'old': "Windows_Technique_Matrix", 'new': "/matrices/amitt/windows"},
+        # {'old': "Windows_Techniques", 'new': "/matrices/amitt/windows"}
+    ],
     'enterprise-attack': [
         {'old': "ATT&CK_Matrix", 'new': "/matrices/enterprise"},
         {'old': "ATT&CK_Navigator", 'new': "https://github.com/mitre/attack-navigator"},
@@ -430,7 +571,8 @@ redirects_images_path = "w/img_auth.php/"
 
 # File paths dictionary
 redirects_paths = {
-    'enterprise-attack': "wiki/", 
+    'enterprise-attack': "wiki/",
+    'amitt-attack': "amitt/index.php/",
     'mobile-attack': "mobile/index.php/", 
     'pre-attack': "pre-attack/index.php/"
 }

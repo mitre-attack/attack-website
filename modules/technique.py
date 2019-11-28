@@ -344,15 +344,22 @@ def get_technique_side_menu_data(domain, technique_list, tactic_list):
         tactic_row['path'] = "/tactics/{}".format(util.get_attack_id(tactic))
         
         tactic_row['children'] = []
-        for technique in technique_list[tactic['x_mitre_shortname']]:
-            technique_row = {}
-            # Get technique id and name for each technique
-            technique_row['name'] = technique['name']
-            technique_row['id'] = technique['id']
-            technique_row['path'] = "/techniques/{}/".format(technique['id'])
-            technique_row['children'] = []
-            # Add technique data to tactic
-            tactic_row['children'].append(technique_row)
+
+        # AM!TT TA12 does not currently contain techniques which results in a KeyError when technique_list
+        # returned by get_techniques_list() fails to contain the TA12 phase_name and technique_dict.
+        # The fancy try except clause here excludes Tactics when no corresponding Techniques.
+        try:
+            for technique in technique_list[tactic['x_mitre_shortname']]:
+                technique_row = {}
+                # Get technique id and name for each technique
+                technique_row['name'] = technique['name']
+                technique_row['id'] = technique['id']
+                technique_row['path'] = "/techniques/{}/".format(technique['id'])
+                technique_row['children'] = []
+                # Add technique data to tactic
+                tactic_row['children'].append(technique_row)
+        except KeyError:
+            pass
         
         # Add tactic to table
         tactics_techniques_menu_data.append(tactic_row)
@@ -388,7 +395,7 @@ def get_techniques_list(techniques):
 
                         if elem['phase_name'] not in technique_list:
                             technique_list[elem['phase_name']] = []
-                            
+
                         technique_list[elem['phase_name']].append(technique_dict)
 
     for key, value in technique_list.items():

@@ -34,8 +34,13 @@ def get_stix_data(args):
         start_time = time.time()
 
         for domain in config.settings_dict['domains']:
-            r = requests.get(f"https://raw.githubusercontent.com/mitre/cti/master/{domain}/{domain}.json", 
+            # This is the unofficial STIX repository for AMITT for the time being.
+            # Store a local copy of amitt-attack.json because things are likely to break.
+            r = requests.get(f"https://raw.githubusercontent.com/VVX7/cti/master/{domain}/{domain}.json",
             verify=False, proxies=proxyDict)
+
+            # r = requests.get(f"https://raw.githubusercontent.com/mitre/cti/master/{domain}/{domain}.json",
+            #                  verify=False, proxies=proxyDict)
             
             with open(os.path.join(config.stix_directory, domain + "_old.json"), 'w+') as f:
                 f.write(json.dumps(r.json()))

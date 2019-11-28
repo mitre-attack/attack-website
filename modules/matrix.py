@@ -50,7 +50,7 @@ def generate_matrix_md(matrix, old_ms, techniques=None, old_techniques=None, sid
     # Filter techniques
     filtered_techniques = util.filter_techniques_by_platform(techniques, matrix['platforms'])
     filtered_old_techniques = util.filter_techniques_by_platform(old_techniques, matrix['platforms'])
-    
+
     data['name'] = matrix['name']
     data['timestamp'] = get_timestamp(matrix['matrix'], filtered_techniques, filtered_old_techniques)
     data['matrix'] = get_matrix_data(filtered_techniques) 
@@ -68,7 +68,7 @@ def generate_matrix_md(matrix, old_ms, techniques=None, old_techniques=None, sid
         tactics = stixhelpers.get_tactic_list(config.ms[matrix['matrix']], matrix_id=curr_matrix['id'])
         data['tactics'].append(get_tactics_data(tactics))
         data['max_len'].append(get_max_length(data['matrix'], tactics))
-    
+
     subs = config.matrix_md.substitute(data)
     subs = subs + json.dumps(data)
 
@@ -130,6 +130,12 @@ def get_default_date(proposed_default_date, domain, platform=None):
         date = addressible[domain][platform]
         target_date = get_recent_date(proposed_default_date, date)
         addressible[domain][platform] = target_date
+    elif domain == 'amitt-attack':
+        if platform == None:
+            platform = 'all'
+        date = addressible[domain][platform]
+        target_date = get_recent_date(proposed_default_date, date)
+        addressible[domain][platform] = target_date
     else:
         date = addressible[domain]
         target_date = get_recent_date(proposed_default_date, date)
@@ -173,12 +179,12 @@ def get_matrix_data(techniques):
         if ('revoked' not in technique or technique['revoked'] is False) and ('x_mitre_deprecated' not in technique or technique['x_mitre_deprecated'] is False):
             # Get attack id
             attack_id = util.get_attack_id(technique)
-            
+
             if attack_id:
                 row = {}
                 row['attack_id'] = attack_id
                 row['name'] = technique['name']
-                        
+
                 if technique.get('kill_chain_phases'):
                     for elem in technique['kill_chain_phases']:
                         if elem['phase_name'] not in matrix:
