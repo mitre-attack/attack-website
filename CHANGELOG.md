@@ -25,6 +25,10 @@
 <!--    PATCH updates are when a bugfix is made without the             -->
 <!--          addition of notable features. When PATCH is 0 it can      -->
 <!--          be omitted                                                -->
+# 28 November 2019
+## ATT&CK Website version 1.0.3
+### New Feature
+- Add support for AM!TT misinformation framework.
 
 # 25 November 2019
 ## ATT&CK Website version 1.0.2
