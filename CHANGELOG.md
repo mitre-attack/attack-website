@@ -33,7 +33,7 @@
 
 ## [ATT&CK Content version 6.2](https://github.com/mitre/cti/releases/tag/ATT%26CK-v6.2)
 ### Fixes
-- Updated contributors for T1036 and T497.
+- Updated contributors for T1036 and T1497.
 
 # 25 November 2019
 ## ATT&CK Website version 1.0.2
