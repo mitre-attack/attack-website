@@ -31,6 +31,10 @@
 ### Improvements
 - Updated roadmap to latest version. See issue [#31](https://github.com/mitre-attack/attack-website/issues/31).
 
+## [ATT&CK Content version 6.2](https://github.com/mitre/cti/releases/tag/ATT%26CK-v6.2)
+### Fixes
+- Updated contributors for T1036 and T497.
+
 # 25 November 2019
 ## ATT&CK Website version 1.0.2
 ### Fixes
