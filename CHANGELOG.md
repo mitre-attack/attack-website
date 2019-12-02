@@ -26,15 +26,20 @@
 <!--          addition of notable features. When PATCH is 0 it can      -->
 <!--          be omitted                                                -->
 
+# 2 December 2019
+## ATT&CK Website version 1.0.3
+### Improvements
+- Updated roadmap to latest version. See issue [#31](https://github.com/mitre-attack/attack-website/issues/31).
+
 # 25 November 2019
 ## ATT&CK Website version 1.0.2
 ### Fixes
-- Removed google analytics and google-site-verification from source code. See issue #11.
+- Removed google analytics and google-site-verification from source code. See issue [#11](https://github.com/mitre-attack/attack-website/issues/11).
 
 # 22 November 2019
 ## ATT&CK Website version 1.0.1
 ### Fixes
-- Fixed incorrect initial state for the side-navigation on the cloud matrix page. See issue #8.
+- Fixed incorrect initial state for the side-navigation on the cloud matrix page. See issue [#8](https://github.com/mitre-attack/attack-website/issues/8).
 
 # 21 November 2019
 ## ATT&CK Website version 1.0
