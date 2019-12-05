@@ -32,10 +32,10 @@ def generate_markdown_files():
     
     data['software_list_len'] = str(len(config.software_list))
 
-    side_menu_data = util.get_side_menu_data("sofware", "/software/", config.software_list)
+    side_menu_data = util.get_side_menu_data("software", "/software/", config.software_list)
     data['side_menu_data'] = side_menu_data
 
-    side_menu_mobile_view_data = util.get_side_menu_mobile_view_data("sofware", "/software/", config.software_list, group_by)
+    side_menu_mobile_view_data = util.get_side_menu_mobile_view_data("software", "/software/", config.software_list, group_by)
     data['side_menu_mobile_view_data'] = side_menu_mobile_view_data
 
     data['software_table'] = get_software_table_data()
