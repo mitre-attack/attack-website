@@ -26,6 +26,11 @@
 <!--          addition of notable features. When PATCH is 0 it can      -->
 <!--          be omitted                                                -->
 
+# 5 December 2019
+## ATT&CK Website version 1.0.4
+### Fixes
+- Fixed a typo in the software side-navigation header. See issue [#39](https://github.com/mitre-attack/attack-website/issues/39).
+
 # 2 December 2019
 ## ATT&CK Website version 1.0.3
 ### Improvements
