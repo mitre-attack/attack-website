@@ -26,6 +26,11 @@
 <!--          addition of notable features. When PATCH is 0 it can      -->
 <!--          be omitted                                                -->
 
+# 10 December 2019
+## ATT&CK Website version 1.1.0
+### Improvements
+- Added a website version number to the footer. See issue [#10](https://github.com/mitre-attack/attack-website/issues/10)
+
 # 5 December 2019
 ## ATT&CK Website version 1.0.4
 ### Fixes

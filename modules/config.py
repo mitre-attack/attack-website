@@ -11,6 +11,7 @@ from . import util
 
 # Settings dictionary to build website
 settings_dict = {
+    "version": "1.1.0",
     "banner_enabled": "false",
     "banner_message": "<a href='https://www.mitre.org/attackcon-streamed-live' target='_blank'> Register to stream ATT&CKcon 2.0 October 29-30</a>",
     "domains": ["pre-attack", "enterprise-attack", "mobile-attack"],
