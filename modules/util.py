@@ -18,6 +18,26 @@ def timestamp():
     timestamp = datetime.datetime.now().strftime("%H:%M:%S")
     return timestamp
 
+def get_created_and_modified_dates(obj):
+    """ Given an object, return the modified and created dates """
+    
+    dates = {}
+
+    if obj.get('created'):
+        dates['created'] = format_date(obj['created'])
+    if obj.get('modified'):
+        dates['modified'] = format_date(obj['modified'])
+
+    return dates
+
+def format_date(date):
+    """ Given a date string, format to %d %B %Y """
+
+    if isinstance(date, str):
+        date = datetime.datetime.strptime(date, "%Y-%m-%dT%H:%M:%S.%fZ")
+
+    return ("{} {} {}").format(date.strftime("%d"), date.strftime("%B"), date.strftime("%Y"))
+
 def find_index_id(ext_ref):
     """This method will search for the index of the external_id in the
        external reference list

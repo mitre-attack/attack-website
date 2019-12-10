@@ -98,15 +98,20 @@ def generate_technique_md(technique, domain, side_menu_data, tactic_list):
                     }
                     technique_dict['mtcs'].append(mtcs_dict)
 
-        # Get technique external references    
-        ext_ref = technique["external_references"]
-
         # Get initial reference list
         reference_list = []
         # Decleared as an object to be able to pass by reference
         next_reference_number = {}
         next_reference_number['value'] = 1
         reference_list = util.update_reference_list(reference_list, technique)
+
+        dates = util.get_created_and_modified_dates(technique)
+        
+        if dates.get('created'):
+            technique_dict['created'] = dates['created']
+
+        if dates.get('modified'):
+            technique_dict['modified'] = dates['modified']
 
         # Get technique description
         if technique.get("description"):

@@ -76,6 +76,14 @@ def generate_tactic_md(tactic, domain, tactic_list, techniques, side_menu_data):
         data['side_menu_data'] = side_menu_data
         data['domain'] = domain.split("-")[0]
 
+        dates = util.get_created_and_modified_dates(tactic)
+        
+        if dates.get('created'):
+            data['created'] = dates['created']
+
+        if dates.get('modified'):
+            data['modified'] = dates['modified']
+
         # Get techniques that are in the given tactic
         techniques_list = get_techniques_of_tactic(tactic, techniques)
 
