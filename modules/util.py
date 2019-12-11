@@ -298,6 +298,19 @@ def get_technique_table_data(tactic, techniques_list):
                 row['deprecated'] = True
 
             row['technique_name'] = tech['name']
+
+            # Get sub-techniques if available
+            row['subtechniques'] = []
+            if tech["id"] in config.subtechniques_of:
+                subtechniques = config.subtechniques_of[tech["id"]]
+                for subtechnique in subtechniques:
+                    sub_data = {}
+                    sub_data['name'] = subtechnique['object']['name']
+                    sub_data['id'] = get_attack_id(subtechnique['object']).split(".")[1]
+                    sub_data['descr'] = remove_citations(subtechnique['object']['description'], subtechnique['object']['external_references'])
+                    sub_data['descr'] = filter_urls(sub_data['descr'])
+                    row['subtechniques'].append(sub_data)
+
             technique_table.append(row)
 
     return technique_table
@@ -426,6 +439,110 @@ def is_tid(tid):
 
     pattern = re.compile("^T[0-9][0-9][0-9][0-9]$")
     return pattern.match(tid)
+
+def is_sub_tid(sub_tid):
+    """Check if input has a sub-technique id pattern"""
+
+    pattern = re.compile("^T[0-9][0-9][0-9][0-9].[0-9][0-9][0-9]$")
+    return pattern.match(sub_tid)
+
+def get_parent_technique_id(sub_tid):
+    """Given a sub-technique id, return parent"""
+
+    return sub_tid.split(".")[0]
+
+def get_sub_technique_id(sub_tid):
+    """Given a sub-technique id, remove parent ID and return"""
+
+    return sub_tid.split(".")[1]
+
+def get_technique_name(tid):
+    """ Given a technique id, return the technique name """
+
+    for technique in config.technique_list:
+        attack_id = get_attack_id(technique)
+        if attack_id == tid:
+            return technique['name']
+    
+    return config.NOT_FOUND
+
+def technique_used_helper(technique_list, technique, reference_list, next_reference_number):
+    """ Add technique to technique list and make distinction between techniques
+        subtechniques
+    """
+
+    attack_id = get_attack_id(technique['object'])
+    
+    if attack_id:
+        # Check if technique not already in technique_list dict
+        if attack_id not in technique_list:
+
+            # Check if attack id is a sub-technique
+            if is_sub_tid(attack_id):
+                parent_id = get_parent_technique_id(attack_id)
+
+                # If parent technique not already in list, add to list and add current sub-technique
+                if parent_id not in technique_list:
+                    technique_list[parent_id] = {}
+                    technique_list[parent_id] = parent_technique_used_helper(parent_id)
+
+                technique_list[parent_id]['subtechniques'].append(get_technique_data_helper(attack_id, technique, reference_list, next_reference_number))
+            
+            # Attack id is regular technique
+            else:
+                # Add technique to list
+                technique_list[attack_id] = {}
+                technique_list[attack_id] = get_technique_data_helper(attack_id, technique, reference_list, next_reference_number)
+
+        # Check if parent ID was added by sub-technique
+        # parent ID will not have description
+        elif 'descr' not in technique_list[attack_id]:
+            # Check if it has external references
+            if technique['relationship'].get('description'):
+                # Get filtered description
+                technique_list[attack_id]['descr'] = get_filtered_description(reference_list, next_reference_number, technique)
+    
+    return technique_list
+
+
+def get_technique_data_helper(attack_id, technique, reference_list, next_reference_number):
+    """ Given an attack id, technique object and reference information, 
+        return dictionary with technique data
+    """
+
+    technique_data = {}
+
+    technique_data['domain'] = config.technique_to_domain[attack_id].split('-')[0]
+
+    if is_sub_tid(attack_id):
+        technique_data['id'] = get_sub_technique_id(attack_id)
+    else:
+        technique_data['id'] = attack_id
+    
+    technique_data['name'] = technique['object']['name']
+
+    # Check if it has external references
+    if technique['relationship'].get('description'):
+        # Get filtered description
+        technique_data['descr'] = get_filtered_description(reference_list, next_reference_number, technique)
+    
+    technique_data['subtechniques'] = []
+    
+    return technique_data
+
+def parent_technique_used_helper(parent_id):
+    """ Given a parent technique id, add available information for 
+        parent
+    """
+
+    parent_data = {}
+
+    parent_data['domain'] = config.technique_to_domain[parent_id].split('-')[0]
+    parent_data['id'] = parent_id
+    parent_data['name'] = get_technique_name(parent_id)
+    parent_data['subtechniques'] = []
+
+    return parent_data
 
 def find_num_of_ref_in_list(reference_list, ref_sname):
     """Given a reference list and a reference, search for reference
@@ -615,6 +732,9 @@ def filter_techniques_by_platform(tech_list, platforms):
                     break
 
     return filtered_list
+
+def filter_out_subtechniques(techniques):
+    return list(filter(lambda t: not ("x_mitre_is_subtechnique" in t and t["x_mitre_is_subtechnique"]), techniques))
 
 def get_side_menu_matrices(children):
     """Given a matrix structure defined in config.py, return stripped structure

@@ -1,4 +1,7 @@
 {% extends "general/base.html" %}
+
+{% import 'macros/matrix.html' as matrix_macros %}
+
 {% set parsed = page.data | from_json %}
 
 {% block content %}
@@ -30,45 +33,21 @@
             </div>
         </div>
     </div>
-    <div class="container-fluid bg-alternate pt-5">
+    <div class="container-fluid bg-alternate p-5">
         <div class="container text-center">
             <h2>{{parsed.matrix_name}}</h2>
             {% if parsed.matrix_descr %}<p class="mb-0">{{parsed.matrix_descr}}</p>{% endif %}
         </div>
-        <div class="ml-5 pr-5 pt-3">
-            <div class="overflow-x-auto">
-                <table class="table table-matrix mb-5"> 
-                    <thead class="matrix-header">
-                        <tr>
-                            {% for tactic in parsed.tactics[0] %}
-                                <th scope="col">
-                                    <a class="matrix-tactics-url" href="/tactics/{{parsed.tactics[0][tactic].id}}/">{{parsed.tactics[0][tactic].name}}</a>
-                                </th>
-                            {% endfor %}
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for column in range(0, parsed.max_len[0]) %}
-                            <tr>
-                                {% for tactic in parsed.tactics[0] %}
-                                {% if column < parsed.matrix[tactic]|length %}
-                                <td class="border">
-                                    <a class="technique-mapping" id="v-{{parsed.matrix[tactic][column]['name']}}-{{parsed.tactics[0][tactic].name|lower}}-tab" href="/techniques/{{parsed.matrix[tactic][column]['attack_id']}}">{{parsed.matrix[tactic][column]['name']}}</a>
-                                </td>
-                                {% else %}
-                                    <td class="bg-alternate no-border"></td>
-                                {% endif %}
-                                {% endfor %}
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
+        <div>
+            {{matrix_macros.matrices(parsed.matrices, parsed.has_subtechniques)}}
         </div>
+        
     </div>
 
 {% endblock %}
 
 {% block scripts %}
     {{ super() }}
+    <!--SCRIPTS-->
+    <script src="/theme/scripts/matrix.js"></script>
 {% endblock %}

@@ -1,0 +1,205 @@
+<!--
+    create a new matrix supporting subtechniques and cell colors.
+    Params: tactics: Tactic[]
+
+    Tactic object format: {
+        id: uid of tactic
+        name: display name of tactic
+        url: url of the tactic page
+        techniques: Technique[]
+    }
+
+    Technique object format: {
+        id: uid of technique
+        name: technique name
+        url: url of the technique page
+        color: optional, the color with which to style the technique
+        subtechniques: Technique[] or []
+    }
+
+-->
+
+{% macro matrices(matrices, has_subtechniques) %}
+{% if has_subtechniques %}
+    <ul class="nav nav-tabs" role="tablist" id="layouts">
+        <li class="nav-item">
+            <a class="nav-link active" id="side-tab" data-toggle="tab" href="#side-layout" role="tab" aria-controls="side-layout" aria-selected="true">side</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="flat-tab" data-toggle="tab" href="#flat-layout" role="tab" aria-controls="flat-layout" aria-selected="false">flat</a>
+        </li>
+    </ul>
+    <div class="tab-content matrix-container" id="layouts-content">
+        <div class="tab-pane fade show active" id="side-layout" role="tabpanel" aria-labelledby="side-tab">
+            {% for matrix in matrices %}
+                <div class="p-3">
+                    {% if matrices | length > 1%}
+                        <h3>{{matrix.name}}</h3>
+                    {% endif %}
+                    <div class="overflow-x-auto pb-3">
+                        {{ matrix_side(matrix.tactics) }}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="tab-pane fade" id="flat-layout" role="tabpanel" aria-labelledby="flat-tab">
+            {% for matrix in matrices %}
+                <div class="p-3">
+                    {% if matrices | length > 1%}
+                        <h3>{{matrix.name}}</h3>
+                    {% endif %}
+                    <div class="overflow-x-auto pb-3">
+                        {{ matrix_flat(matrix.tactics) }}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% else %}
+    {% for matrix in matrices %}
+        <div class="p-3">
+            {% if matrices | length > 1%}
+                <h3>{{matrix.name}}</h3>
+            {% endif %}
+            <div class="overflow-x-auto pb-3">
+                {{ matrix_side(matrix.tactics) }}
+            </div>
+        </div>
+    {% endfor %}
+{% endif %}
+
+{% endmacro %}
+
+{% macro matrix_flat(tactics) %}
+<table class="matrix flat">
+    <thead>
+        <tr>
+            {% for tactic in tactics %}
+                <td class="tactic name"><a href="{{tactic.url}}">{{tactic.name}}</a></td>
+            {% endfor %}
+        </tr>
+        <tr>
+            {% for tactic in tactics %}
+                <td class="tactic count">
+                    {{tactic.techniques | length}}&nbsp;techniques
+                </td>
+            {% endfor %}
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            {% for tactic in tactics %}
+                <td class="tactic">
+                    {% for technique in tactic.techniques %}
+                        {% if technique.subtechniques | length == 0 %}
+                            {{ technique_cell(technique, False) }}
+                        {% else %}
+                            <table class="supertechnique">
+                                <tr>
+                                    <td class="sidebar technique sidebar--{{tactic.id}}--{{technique.id}}" onclick="matrix_toggle_technique('{{tactic.id}}', '{{technique.id}}')">
+                                        <div class="handle"> = </div>
+                                    </td>
+                                    <td class="technique">
+                                        {{ technique_cell(technique, True) }}
+                                    </td>
+                                </tr>
+                                <tr class="subtechniques-row hidden subtechniques--{{tactic.id}}--{{technique.id}}">
+                                    <td class="sidebar subtechniques">
+                                        <svg width="12px" height="12px">
+                                            <path d="M0 0H12V12Z"/>
+                                        </svg>
+                                    </td>
+                                    <td class="subtechniques">
+                                        <div class="subtechniques">
+                                            {% for subtechnique in technique.subtechniques %}
+                                                {{ technique_cell(subtechnique, False)}}
+                                            {% endfor %}
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        {% endif %}
+                    {% endfor %}
+                </td>
+            {% endfor %}
+        </tr>
+    </tbody>
+</table>
+{% endmacro %}
+
+{% macro matrix_side(tactics) %}
+<table class="matrix side">
+    <thead>
+        <tr>
+            {% for tactic in tactics %}
+                <td class="tactic name"><a href="{{tactic.url}}">{{tactic.name}}</a></td>
+            {% endfor %}
+        </tr>
+        <tr>
+            {% for tactic in tactics %}
+                <td class="tactic count">
+                    {{tactic.techniques | length}}&nbsp;techniques
+                </td>
+            {% endfor %}
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            {% for tactic in tactics %}
+                <td class="tactic">
+                    <table class="techniques-table">
+                        {% for technique in tactic.techniques %}
+                            <tr class="technique-row">
+                                <td>
+                                    {% if technique.subtechniques | length == 0 %}
+                                        {{ technique_cell(technique, False) }}
+                                    {% else %}
+                                    <table class="supertechnique">
+                                        <tr>
+                                            <td class="technique">
+                                                {{ technique_cell(technique, True) }}
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    {% endif %}
+                                </td>
+                                {% if technique.subtechniques | length > 0 %}
+                                <td class="sidebar sidebar--{{tactic.id}}--{{technique.id}}" onclick="matrix_toggle_technique('{{tactic.id}}', '{{technique.id}}')">
+                                    <div class="angle top">
+                                        <svg width="12px" height="12px">
+                                            <path d="M0 12H12V0Z"/>
+                                        </svg>
+                                    </div>
+                                    <div class="handle"> = </div>
+                                    <div class="angle bottom">
+                                        <svg width="12px" height="12px">
+                                            <path d="M0 0H12V12Z"/>
+                                        </svg>
+                                    </div>
+                                </td>
+                                {% endif %}
+                                <td class="subtechniques-td">
+                                    <div class="subtechniques hidden subtechniques--{{tactic.id}}--{{technique.id}}">
+                                        {% for subtechnique in technique.subtechniques %}
+                                        <div class="subtechnique">
+                                            {{ technique_cell(subtechnique, False) }}
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </td>
+            {% endfor %}
+        </tr>
+    </tbody>
+</table>
+{% endmacro %}
+
+<!-- Helper macro for creating a [sub]technique cell. Param is a Technique (defined above) and boolean noting whether or not it is a subtechnique-->
+{% macro technique_cell(technique, is_supertechnique) %}
+<div class="technique-cell {% if is_supertechnique %} supertechniquecell{% endif %}{% if technique.color %} colored{% endif %}" {% if technique.color %} style="background: {{technique.color}}"{% endif %}>
+    <a href="{{technique.url}}">{{technique.name}}{% if technique.subtechniques | length > 0 %}&nbsp;<sub>({{technique.subtechniques | length}})</sub>{% endif %}</a>
+</div>
+{% endmacro %}

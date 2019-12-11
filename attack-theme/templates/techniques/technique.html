@@ -1,13 +1,17 @@
 {% extends "general/two-column.html" -%} 
 {% set parsed = page.data | from_json %}
 {% import 'macros/navigation.html' as navigation %}
-
+{% if parsed.parent_name %}
+    {% set title = parsed.parent_name + ": " -%}
+{% else %}
+    {% set title = "" -%}
+{% endif %}
 {% if parsed.domain == "pre" %}
-    {% set title = parsed.name + " - PRE-ATT&CK | MITRE ATT&CK&trade;" -%}
+    {% set title = title + parsed.name + " - PRE-ATT&CK | MITRE ATT&CK&trade;" -%}
 {% elif parsed.domain == "mobile" %}
-    {% set title = parsed.name + " - Mobile | MITRE ATT&CK&trade;" -%}
+    {% set title = title + parsed.name + " - Mobile | MITRE ATT&CK&trade;" -%}
 {% else %} 
-    {% set title = parsed.name + " - Enterprise | MITRE ATT&CK&trade;" -%}
+    {% set title = title + parsed.name + " - Enterprise | MITRE ATT&CK&trade;" -%}
 {% endif %} 
 {% set active_page = "techniques" -%}
 
@@ -54,6 +58,9 @@
         {% else %}
             <li class="breadcrumb-item"><a href="/techniques/mobile">Mobile</a></li>
         {% endif %}
+        {% if parsed.is_subtechnique %}
+            <li class="breadcrumb-item"><a href="/techniques/{{parsed.parent_id}}">{{parsed.parent_name}}</a></li>
+        {% endif %}
         <li class="breadcrumb-item">{{parsed.name}}</li>
     </ol>
     <div class="tab-pane fade show active" id="v-{{pages.title}}" role="tabpanel" aria-labelledby="v-{{pages.title}}-tab"></div>
@@ -62,24 +69,88 @@
             <div class="jumbotron jumbotron-fluid">
                 <div class="container-fluid">
                     <h1>
-                        {{parsed.name}}
-                    </h1>            
-                    <div class="row">
-                        {% if parsed.descr %}
-                            <div class="col-md-8 description-body">
-                                {% if parsed.deprecated %}
-                                    <font color="red">****Deprecation Warning****</font>
-                                {% endif %}
-                                {{parsed.descr}}
-                            </div>
+                        {% if parsed.is_subtechnique %}
+                            {{parsed.parent_name}}:
                         {% endif %}
-                    
+                        {{parsed.name}}
+                    </h1> 
+
+                    <div class="row">
+                        <div class="col-md-8">
+                            {% if parsed.subtechniques and not (parsed.is_subtechnique and (parsed.subtechniques | length == 1)) %}
+                                <div class="card-block pb-2">
+                                    <div class="card">
+                                        <div class="card-header collapsed" id="card-header" data-toggle="collapse" data-target="#card-body" aria-expanded="false" aria-controls="card-body">
+                                            {% if parsed.is_subtechnique %}
+                                                <h5 class="mb-0" id ="sub-techniques">Other sub-techniques of {{parsed.parent_name}} ({{parsed.subtechniques|length}})</h5>
+                                            {% else %}
+                                                <h5 class="mb-0" id ="sub-techniques">Sub-techniques ({{parsed.subtechniques|length}})</h5>
+                                            {% endif %}
+                                        </div>
+                                        <div id="card-body" class="card-body p-0 collapse" aria-labelledby="card-header">
+                                            <table class="table table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th scope="col">ID</th>
+                                                        <th scope="col">Name</th>
+                                                    </tr>
+                                                </thead> 
+                                                <tbody>                                          
+                                                    {% for subtechnique in parsed.subtechniques %}
+                                                        <tr>
+                                                            {% if (output_file | clean_path) != subtechnique.path %}
+                                                                <td>
+                                                                    <a href="{{subtechnique.path}}"> {{subtechnique.id}} </a>
+                                                                </td>
+                                                                <td> 
+                                                                    <a href="{{subtechnique.path}}"> {{subtechnique.name}} </a>
+                                                                </td>
+                                                            {% else %}
+                                                                <td class="active">
+                                                                    {{subtechnique.id}}
+                                                                </td>
+                                                                <td class="active"> 
+                                                                    {{subtechnique.name}}
+                                                                </td>
+                                                            {% endif %}
+                                                        </tr>
+                                                    {% endfor %}                               
+                                                </tbody>                           
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endif %}   
+ 
+
+
+                            {% if parsed.descr %}
+                                <div class="description-body">
+                                    {% if parsed.deprecated %}
+                                        <font color="red">****Deprecation Warning****</font>
+                                    {% endif %}
+                                    {{parsed.descr}}
+                                </div>
+                            {% endif %}
+                        </div>
                         <div class="col-md-4">
                             <div class="card">
                                 <div class="card-body">
                                     {% if parsed.attack_id %}
                                         <div class="card-data"><span class="h5 card-title">ID:&nbsp;</span>{{parsed.attack_id}}</div>
                                     {% endif %}
+                                    
+                                    {% if not parsed.is_subtechnique %}
+                                        <div class="card-data"><span class="h5 card-title">Sub-techniques:&nbsp;</span>
+                                            {% if parsed.subtechniques %}
+                                                {% for subtechnique in parsed.subtechniques %}
+                                                    {{subtechnique.id}}{% if not loop.last %},{% endif %}
+                                                {% endfor %}
+                                            {% else %}
+                                                No sub-techniques
+                                            {% endif %}
+                                        </div>  
+                                    {% endif %} 
                                     {% if parsed.tactic_type %}
                                         <div class="card-data"><span class="h5 card-title">Tactic Type:&nbsp;</span>{{parsed.tactic_type}}</div>
                                     {% endif %}

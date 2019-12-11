@@ -251,29 +251,8 @@ def get_techniques_used_by_software_data(software, reference_list, next_referenc
         technique_list = {}
 
         for technique in techniques_used_by_software:
-
-            technique_stix_id = technique['object']['id']
-
-            # Check if technique not already in technique_list dict
-            if technique_stix_id not in technique_list:
-
-                attack_id = util.get_attack_id(technique['object'])
-                
-                if attack_id:
-                    technique_list[technique_stix_id] = {}
-
-                    domain = config.technique_to_domain[attack_id]
-    
-                    technique_list[technique_stix_id]['domain'] = domain.split('-')[0]
-
-                    technique_list[technique_stix_id]['id'] = attack_id
-                    technique_list[technique_stix_id]['name'] = technique['object']['name']
-
-                    if technique['relationship'].get('description'):
-
-                        # Get filtered description
-                        technique_list[technique_stix_id]['descr'] = util.get_filtered_description(reference_list, next_reference_number, technique)
-
+            technique_list = util.technique_used_helper(technique_list, technique, reference_list, next_reference_number)
+            
     technique_data = []
     for item in technique_list:
         technique_data.append(technique_list[item])

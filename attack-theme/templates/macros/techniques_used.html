@@ -1,0 +1,96 @@
+{% macro techniques_used(technique_table_data, title) %}
+<h2 class="pt-3" id="techniques">{{title}}</h2>
+<table class="techniques-used table-bordered">
+    <thead>
+        <tr>
+            <th class="p-2" scope="col">Domain</th>
+            <th class="p-2" colspan="2">ID</th>
+            <th class="p-2" scope="col">Name</th>
+            <th class="p-2" scope="col">Use</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for technique in technique_table_data %}
+            {% if technique.descr %}
+                <tr class="technique">
+                    <td>
+                        {% if technique.domain == "enterprise" %}
+                            Enterprise
+                        {% elif technique.domain == "mobile" %}
+                            Mobile 
+                        {% else %}
+                            PRE-ATT&CK 
+                        {% endif %} 
+                    </td>
+                    <td colspan="2">
+                        <a href="/techniques/{{technique.id}}">{{technique.id}}</a>
+                    </td>
+                    <td>
+                        <a href="/techniques/{{technique.id}}">{{technique.name}}</a>
+                    </td>
+                    <td>
+                        {{technique.descr}}
+                    </td>
+                </tr>
+                {% for subtechnique in technique.subtechniques %}
+                    <tr class="sub technique">
+                        <td></td>
+                        <td></td>
+                        <td>
+                            <a href="/techniques/{{technique.id}}/{{subtechnique.id}}">.{{subtechnique.id}}</a>
+                        </td>
+                        <td>
+                            <a href="/techniques/{{technique.id}}/{{subtechnique.id}}">{{subtechnique.name}}</a>
+                        </td>
+                        <td>
+                            {{subtechnique.descr}}
+                        </td>
+                    </tr>
+                {% endfor %}
+            {% else %}
+                {% for subtechnique in technique.subtechniques %}
+                    {% if loop.first %}
+                        <tr class="sub technique noparent">
+                            <td>
+                                {% if technique.domain == "enterprise" %}
+                                    Enterprise
+                                {% elif technique.domain == "mobile" %}
+                                    Mobile 
+                                {% else %}
+                                    PRE-ATT&CK 
+                                {% endif %} 
+                            </td>
+                            <td>
+                                <a href="/techniques/{{technique.id}}">{{technique.id}}</a>
+                            </td>
+                            <td>
+                                <a href="/techniques/{{technique.id}}/{{subtechnique.id}}">.{{subtechnique.id}}</a>
+                            </td>
+                            <td>
+                                <a href="/techniques/{{technique.id}}">{{technique.name}}</a>: <a href="/techniques/{{technique.id}}/{{subtechnique.id}}">{{subtechnique.name}}</a>
+                            </td>
+                            <td>
+                                {{subtechnique.descr}}
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr class="sub technique">
+                            <td></td>
+                            <td></td>
+                            <td>
+                                <a href="/techniques/{{technique.id}}/{{subtechnique.id}}">.{{subtechnique.id}}</a>
+                            </td>
+                            <td>
+                                <a href="/techniques/{{technique.id}}">{{technique.name}}</a>: <a href="/techniques/{{technique.id}}/{{subtechnique.id}}">{{subtechnique.name}}</a>
+                            </td>
+                            <td>
+                                {{subtechnique.descr}}
+                            </td>
+                        </tr>                        
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+        {% endfor %}
+    </tbody>
+</table>
+{% endmacro %}

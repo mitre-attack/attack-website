@@ -146,28 +146,16 @@ def get_techniques_addressed_data(mitigation, reference_list, next_reference_num
        the mitigation
     """
     
-    techniques_data = []
+    technique_list = {}
     for technique in config.mitigates_techniques.get(mitigation['id']):
-        t_id = util.get_attack_id(technique['object'])
-
-        if t_id:
-            row = {}
-            row['tid'] = t_id
-
-            if technique['object']['external_references'][0]['source_name'] == 'mitre-mobile-attack':
-                row['domain'] = "Mobile"
-            else:
-                row['domain'] = "Enterprise"
-
-            row['name'] = technique['object']['name']
-            techniques_data.append(row)
-
-            if technique['relationship'].get('description'):
-                # Get filtered description
-                row['descr'] = util.get_filtered_description(reference_list, next_reference_number, technique)             
+        technique_list = util.technique_used_helper(technique_list, technique, reference_list, next_reference_number)            
     
-        
-    techniques_data = sorted(techniques_data, key=lambda k: k['name'].lower())
-    techniques_data = sorted(techniques_data, key=lambda k: [config.custom_alphabet.index(c) for c in k['domain'].lower()])
+    technique_data = []
+    for item in technique_list:
+        technique_data.append(technique_list[item])
+    # Sort by technique name
+    technique_data = sorted(technique_data, key=lambda k: k['name'].lower())
 
-    return techniques_data
+    # Sort by domain name
+    technique_data = sorted(technique_data, key=lambda k: [config.custom_alphabet.index(c) for c in k['domain'].lower()])
+    return technique_data

@@ -35,15 +35,18 @@ def generate_domain_markdown(domain):
     full_techniques = stixhelpers.get_techniques(config.ms[domain])
     tactic_list = stixhelpers.get_tactic_list(config.ms[domain])
 
+    technique_list_no_sub = util.filter_out_subtechniques(full_techniques)
+
     data = {}
     
-    technique_list = get_techniques_list(full_techniques)
+    # Format technique list for side nagivation menu
+    technique_list = get_techniques_list(technique_list_no_sub)
 
     data['domain'] = domain.split("-")[0]
 
     # Get technique table data and number of techniques
-    data['technique_table'] = util.get_technique_table_data(None, full_techniques)
-    data['technique_list_len'] = str(len(full_techniques))
+    data['technique_table'] = util.get_technique_table_data(None, technique_list_no_sub)
+    data['technique_list_len'] = str(len(technique_list_no_sub))
     side_menu_data = get_technique_side_menu_data(domain, technique_list, tactic_list)
 
     # Get tactic-techniques table
@@ -57,7 +60,7 @@ def generate_domain_markdown(domain):
 
     # Create the markdown for the enterprise groups in the STIX
 
-    for technique in full_techniques:
+    for technique in technique_list_no_sub:
         if 'revoked' not in technique or technique['revoked'] is False:
             generate_technique_md(technique, domain, side_menu_data, tactic_list)
 
@@ -74,8 +77,61 @@ def generate_technique_md(technique, domain, side_menu_data, tactic_list):
         technique_dict['attack_id'] = attack_id
         technique_dict['domain'] = domain.split("-")[0]
         technique_dict['menu'] = side_menu_data
-        technique_dict['name'] = technique.get('name')
 
+        # Get subtechniques
+        technique_dict['subtechniques'] = get_subtechniques(technique)
+
+        # Generate data for technique
+        technique_dict = generate_data_for_md(technique_dict, technique, tactic_list)
+
+        subs = config.technique_md.substitute(technique_dict)
+        path = technique_dict['attack_id']
+
+        subs = subs + json.dumps(technique_dict)
+
+        #Write out the technique markdown file
+        with open(os.path.join(config.techniques_markdown_path, path + ".md"), "w", encoding='utf8') as md_file:
+            md_file.write(subs)
+
+        # Generate data for sub-techniques
+        if technique_dict['subtechniques']:
+
+            sub_tech_dict = {}
+
+            sub_tech_dict['domain'] = domain.split("-")[0]
+            sub_tech_dict['menu'] = side_menu_data
+            sub_tech_dict['parent_id'] = technique_dict['attack_id']
+            sub_tech_dict['parent_name'] = technique.get('name')
+            sub_tech_dict['subtechniques'] = technique_dict['subtechniques']
+
+            # Generate sub-technique markdown file for each sub technique
+            subtechniques = config.subtechniques_of[technique["id"]]
+            for subtechnique in subtechniques:
+                sub_tech_dict = generate_data_for_md(sub_tech_dict, subtechnique['object'], tactic_list, True)
+
+                subs = config.sub_technique_md.substitute(sub_tech_dict)
+                path = sub_tech_dict['parent_id'] + "-" + sub_tech_dict['sub_number']
+
+                subs = subs + json.dumps(sub_tech_dict)
+
+                #Write out the technique markdown file
+                with open(os.path.join(config.techniques_markdown_path, path + ".md"), "w", encoding='utf8') as md_file:
+                    md_file.write(subs)
+        
+
+def generate_data_for_md(technique_dict, technique, tactic_list, is_sub_technique = False):
+    """Given a technique or subtechnique, fill technique dictionary to create
+       markdown file
+    """
+
+    technique_dict['name'] = technique.get('name')
+
+    if is_sub_technique:
+        technique_dict['attack_id'] = util.get_attack_id(technique)
+        technique_dict['sub_number'] = technique_dict['attack_id'].split(".")[1]
+        technique_dict['is_subtechnique'] = True
+
+    if technique_dict['attack_id']:
         # Get capecs and mtcs
         for ref in technique['external_references']:
             if ref.get('source_name'):
@@ -212,13 +268,8 @@ def generate_technique_md(technique, domain, side_menu_data, tactic_list):
         # Add reference for bottom part of technique page
         if reference_list:
             technique_dict['bottom_ref'] = util.sort_reference_list(reference_list)
-
-        subs = config.technique_md.substitute(technique_dict)
-        subs = subs + json.dumps(technique_dict)
-
-        #Write out the markdown file
-        with open(os.path.join(config.techniques_markdown_path, technique_dict['attack_id'] +".md"), "w", encoding='utf8') as md_file:
-            md_file.write(subs)
+        
+    return technique_dict
 
 def get_related_techniques_data(technique, tactic_list):
     """Given a technique and a tactic list, return data of related techniques.
@@ -351,6 +402,18 @@ def get_technique_side_menu_data(domain, technique_list, tactic_list):
             technique_row['id'] = technique['id']
             technique_row['path'] = "/techniques/{}/".format(technique['id'])
             technique_row['children'] = []
+            # Add subtechniques as children if they are found:
+            if technique["stix_id"] in config.subtechniques_of:
+                subtechniques = config.subtechniques_of[technique["stix_id"]]
+                for subtechnique in subtechniques:
+                    child = {}
+                    child['name'] = subtechnique['object']['name']
+                    child['id'] = util.get_attack_id(subtechnique['object'])
+                    sub_number = child["id"].split(".")[1]
+                    child['path'] = "/techniques/{}/{}/".format(technique['id'], sub_number)
+                    child['children'] = []
+                    technique_row['children'].append(child)
+
             # Add technique data to tactic
             tactic_row['children'].append(technique_row)
         
@@ -378,7 +441,7 @@ def get_techniques_list(techniques):
 
                 technique_dict = {}
                 technique_dict['id'] = attack_id
-            
+                technique_dict['stix_id'] = technique['id']
                 technique_dict['name'] = technique['name']
                 technique_dict['description'] = technique['description']
 
@@ -410,3 +473,23 @@ def get_detection_string(detection, reference_list, next_reference_number):
     filtered_detection = util.get_descr_reference_sect(citations_from_descr, reference_list, next_reference_number, filtered_detection)
     
     return filtered_detection
+
+def get_subtechniques(technique):
+    """Given a technique, return the ID and name of the subtechnique"""
+
+    subtechs = []
+    attack_id = util.get_attack_id(technique)
+
+    if technique["id"] in config.subtechniques_of:
+        subtechniques = config.subtechniques_of[technique["id"]]
+        for subtechnique in subtechniques:
+            sub_data = {}
+            sub_data['stix_id'] = technique['id']
+            sub_data['name'] = subtechnique['object']['name']
+            sub_data['id'] = util.get_attack_id(subtechnique['object'])
+            sub_number = sub_data["id"].split(".")[1]
+            attack_id = util.get_attack_id(technique)
+            sub_data['path'] = "/techniques/{}/{}/".format(attack_id, sub_number)
+            subtechs.append(sub_data)
+    
+    return subtechs

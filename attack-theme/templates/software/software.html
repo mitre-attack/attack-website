@@ -5,6 +5,7 @@
 {% import 'macros/navigator.html' as navigator %}
 {% import 'macros/references.html' as references %}
 {% import 'macros/navigation.html' as navigation %}
+{% import 'macros/techniques_used.html' as techniques_used %}
 
 {% block heading %}
     {{ super () }}
@@ -97,41 +98,7 @@
                     
                     {% if parsed.technique_table_data %}
                         {{navigator.layer_links(parsed.attack_id, "software", parsed.layers)}}
-                        <h2 class="pt-3" id="techniques">Techniques Used</h2>
-                        <table class="table table-bordered table-alternate mt-2">
-                            <thead>
-                                <tr>
-                                    <th scope="col">Domain</th>
-                                    <th scope="col">ID</th>
-                                    <th scope="col">Name</th>
-                                    <th scope="col">Use</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                    {% for technique in parsed.technique_table_data %}
-                                    <tr>
-                                        <td>
-                                            {% if technique.domain == "enterprise" %}
-                                                Enterprise
-                                            {% elif technique.domain == "mobile" %}
-                                                Mobile 
-                                            {% else %}
-                                                PRE-ATT&CK 
-                                            {% endif %} 
-                                        </td>
-                                        <td>
-                                            <a href="/techniques/{{technique.id}}">{{technique.id}}</a>
-                                        </td>
-                                        <td>
-                                            <a href="/techniques/{{technique.id}}">{{technique.name}}</a>
-                                        </td>
-                                        <td>
-                                            {{technique.descr}}
-                                        </td>
-                                    </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
+                        {{techniques_used.techniques_used(parsed.technique_table_data, "Techniques Used")}}
                     {% endif %}
                 
                     {% if parsed.groups %}

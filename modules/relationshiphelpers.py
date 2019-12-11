@@ -173,6 +173,21 @@ def technique_related_to_technique(srcs):
     """
     return get_related(srcs, "attack-pattern", "related-to", "attack-pattern")
 
+# technique:subtechnique
+def subtechniques_of(srcs):
+    """ return technique_id => {subtechnique, relationship} for each subtechnique
+        of the technique. srcs should be an array of memorystores for enterprise,
+        mobile and pre
+    """
+    return get_related(srcs, "attack-pattern", "subtechnique-of", "attack-pattern", reverse=True)
+
+def parent_technique_of(srcs):
+    """ return subtechnique_id => {technique, relationship} describing the parent technique
+        of the subtechnique. srcs should be an array of memorystores for enterprise,
+        mobile and pre
+    """
+    return get_related(srcs, "attack-pattern", "subtechnique-of", "attack-pattern")
+
 def load(url):
     """Load stix data from file"""
     src = MemoryStore()

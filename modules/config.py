@@ -514,6 +514,12 @@ technique_md = Template("Title: ${name}-${tactics}-${domain}\n"
                         "save_as: techniques/${attack_id}/index.html\n"
                         "data: ")
 
+# String template for all techniques
+sub_technique_md = Template("Title: ${name}-${tactics}-${domain}\n"
+                            "Template: techniques/technique\n"
+                            "save_as: techniques/${parent_id}/${sub_number}/index.html\n"
+                            "data: ")
+
 # String template for domains	
 technique_domain_md = Template("Title: Techniques\n"
                                "Template: techniques/techniques-domain-index\n"
@@ -625,6 +631,8 @@ def init_shared_data():
     global tools_using_technique
     global malware_using_technique
     global groups_using_technique
+    global subtechniques_of
+    global parent_technique_of
     global ms
 
     domains = settings_dict["domains"]
@@ -684,7 +692,9 @@ def init_shared_data():
         rsh.technique_related_to_technique(srcs),
         rsh.tools_using_technique(srcs),
         rsh.malware_using_technique(srcs),
-        rsh.groups_using_technique(srcs)
+        rsh.groups_using_technique(srcs),
+        rsh.subtechniques_of(srcs),
+        rsh.parent_technique_of(srcs)
     ]
 
     number_of_workers = multiprocessing.cpu_count()
@@ -722,3 +732,7 @@ def init_shared_data():
 
     # Group using technique
     groups_using_technique = data[12]
+
+    # subtechniques
+    subtechniques_of = data[13]
+    parent_technique_of = data[14]
