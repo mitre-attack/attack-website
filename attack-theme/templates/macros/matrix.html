@@ -25,8 +25,8 @@
         <li class="nav-item">
             <a class="nav-link active" id="side-tab" data-toggle="tab" href="#side-layout" role="tab" aria-controls="side-layout" aria-selected="true">side</a>
         </li>
-        <li class="nav-item">
-            <a class="nav-link" id="flat-tab" data-toggle="tab" href="#flat-layout" role="tab" aria-controls="flat-layout" aria-selected="false">flat</a>
+        <li class="nav-item" id="tour-layout-option">
+            <a class="nav-link" id="flat-tab" data-toggle="tab" href="#flat-layout" role="tab" aria-controls="flat-layout" aria-selected="false" onclick="tour_layout_clicked()">flat</a>
         </li>
     </ul>
     <div class="tab-content matrix-container" id="layouts-content">
@@ -90,13 +90,14 @@
         <tr>
             {% for tactic in tactics %}
                 <td class="tactic">
-                    {% for technique in tactic.techniques %}
+                    {% for technique in tactic.techniques %}                        
                         {% if technique.subtechniques | length == 0 %}
                             {{ technique_cell(technique, False) }}
                         {% else %}
-                            <table class="supertechnique">
+                            {% set tour_technique = technique.id == 'attack-pattern--a93494bb-4b80-4ea1-8695-3236a49916fd' and tactic.id == 'x-mitre-tactic--2558fd61-8c75-4730-94c4-11926db2a263' %}
+                            <table class="supertechnique"{% if tour_technique %} id="tour-flat-technique" {% endif %}>
                                 <tr>
-                                    <td class="sidebar technique sidebar--{{tactic.id}}--{{technique.id}}" onclick="matrix_toggle_technique('{{tactic.id}}', '{{technique.id}}')">
+                                    <td class="sidebar technique sidebar--{{tactic.id}}--{{technique.id}}" onclick="matrix_toggle_technique('{{tactic.id}}', '{{technique.id}}');{% if tour_technique %} tour_technique_clicked();{% endif %}">
                                         <div class="handle"> = </div>
                                     </td>
                                     <td class="technique">
@@ -109,7 +110,7 @@
                                             <path d="M0 0H12V12Z"/>
                                         </svg>
                                     </td>
-                                    <td class="subtechniques">
+                                    <td class="subtechniques"{% if tour_technique %} id="tour-flat-subtechniques" {% endif %}>
                                         <div class="subtechniques">
                                             {% for subtechnique in technique.subtechniques %}
                                                 {{ technique_cell(subtechnique, False)}}
@@ -149,7 +150,8 @@
                 <td class="tactic">
                     <table class="techniques-table">
                         {% for technique in tactic.techniques %}
-                            <tr class="technique-row">
+                        {% set tour_technique = technique.id == 'attack-pattern--a93494bb-4b80-4ea1-8695-3236a49916fd' and tactic.id == 'x-mitre-tactic--2558fd61-8c75-4730-94c4-11926db2a263' %}
+                            <tr class="technique-row"{% if tour_technique %} id="tour-side-technique" {% endif %}>
                                 <td>
                                     {% if technique.subtechniques | length == 0 %}
                                         {{ technique_cell(technique, False) }}
@@ -164,7 +166,7 @@
                                     {% endif %}
                                 </td>
                                 {% if technique.subtechniques | length > 0 %}
-                                <td class="sidebar sidebar--{{tactic.id}}--{{technique.id}}" onclick="matrix_toggle_technique('{{tactic.id}}', '{{technique.id}}')">
+                                <td class="sidebar sidebar--{{tactic.id}}--{{technique.id}}" onclick="matrix_toggle_technique('{{tactic.id}}', '{{technique.id}}');{% if tour_technique %} tour_technique_clicked();{% endif %}">
                                     <div class="angle top">
                                         <svg width="12px" height="12px">
                                             <path d="M0 12H12V0Z"/>
@@ -178,7 +180,7 @@
                                     </div>
                                 </td>
                                 {% endif %}
-                                <td class="subtechniques-td">
+                                <td class="subtechniques-td"{% if tour_technique %} id="tour-side-subtechniques" {% endif %}>
                                     <div class="subtechniques hidden subtechniques--{{tactic.id}}--{{technique.id}}">
                                         {% for subtechnique in technique.subtechniques %}
                                         <div class="subtechnique">
