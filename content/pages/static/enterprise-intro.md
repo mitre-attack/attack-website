@@ -1,4 +1,4 @@
-Title: ATT&CK for Enterprise
+Title: ATT&CK for Enterprise Introduction
 Date: 2018
 Category: Cyber Threat Intelligence
 Authors: Blake Strom
