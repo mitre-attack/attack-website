@@ -26,7 +26,7 @@ def generate_index():
     if not os.path.isdir("output"):
         os.mkdir("output")
         
-    json.dump(index, open(os.path.join("output", "index.json"), mode="w"), indent=2)
+    json.dump(index, open(os.path.join("output", "index.json"), mode="w",  encoding="utf8"), indent=2)
     
 skiplines = ["breadcrumb-item", "nav-link"]
 def skipline(line):
@@ -36,7 +36,7 @@ def skipline(line):
 
 def clean(filepath):
     """clean the file of all HTML tags and unnecessary data"""
-    f = open(filepath, mode="r")
+    f = open(filepath, mode="r", encoding="utf8")
     lines = f.readlines()
     f.close()
 
