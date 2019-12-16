@@ -41,6 +41,10 @@ def clean_website_build():
     previous_path = os.path.join(config.resources_markdown_path, "previous.md")
     if os.path.isfile(previous_path):
         os.remove(previous_path)
+    # remove FAQ markdown file
+    faq_path = os.path.join(config.resources_markdown_path, "faq.md")
+    if os.path.isfile(faq_path):
+        os.remove(faq_path)
 
     # Remove output directory
     output_path = "output"

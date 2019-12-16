@@ -502,6 +502,12 @@ resources_md = ("Title: General Information\n"
                 "save_as: resources/index.html\n"
                 "data: ")
 
+# string template for faq.md
+faq_md = ("Title: Frequently Asked Questions\n"
+          "Template: resources/faq\n"
+          "save_as: resources/faq/index.html\n"
+          "data: ")
+
 # Constants used by technique.py
 # ----------------------------------------------------------------------------
 
