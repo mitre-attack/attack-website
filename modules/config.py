@@ -13,6 +13,7 @@ from . import util
 settings_dict = {
     "catalog_version": "6.2",
     "website_version": "1.1",
+    "changelog_location": "/resources/changelog.html",
     "banner_enabled": "false",
     "banner_message": "<a href='https://www.mitre.org/attackcon-streamed-live' target='_blank'> Register to stream ATT&CKcon 2.0 October 29-30</a>",
     "domains": ["pre-attack", "enterprise-attack", "mobile-attack"],

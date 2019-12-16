@@ -247,6 +247,7 @@ def generate_base_template():
                              "{% set DOMAINS = ${domains} -%}\n"
                              "{% set CATALOG_VERSION = \"${catalog_version}\" -%}\n"
                              "{% set WEBSITE_VERSION = \"${website_version}\" -%}\n"
+                             "{% set CHANGELOG_LOCATION = \"${changelog_location}\" -%}\n"
                              "{% set active_page = active_page|"
                              "default('index') -%}\n")
     
@@ -265,6 +266,7 @@ def generate_base_template():
         base_dict['domains'] = config.settings_dict['domain_aliases']
         base_dict['catalog_version'] = config.settings_dict['catalog_version']
         base_dict['website_version'] = config.settings_dict['website_version']
+        base_dict['changelog_location'] = config.settings_dict['changelog_location']
         jinja_settings = base_template.substitute(base_dict)
   
     with open(base_template_path, 'w+') as f:
