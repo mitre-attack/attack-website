@@ -502,6 +502,15 @@ resources_md = ("Title: General Information\n"
                 "save_as: resources/index.html\n"
                 "data: ")
 
+#markdown path for attackcon
+attackcon_markdown_path = "content/pages/resources/"
+
+# string template for attackcon.md
+attackcon_md = ("Title: ATT&CKcon\n"
+                "Template: resources/attackcon\n"
+                "save_as: resources/attackcon/index.html\n"
+                "data: ")
+
 # Constants used by technique.py
 # ----------------------------------------------------------------------------
 
