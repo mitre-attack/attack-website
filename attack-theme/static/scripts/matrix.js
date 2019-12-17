@@ -15,11 +15,17 @@ function matrix_toggle_all(visible) {
 }
 
 function show_side_matrix() {
+    $(".layout-button.side").addClass("active");
+    $(".layout-button.flat").removeClass("active");
+
     $(".matrix-type.side").removeClass("d-none");
     $(".matrix-type.flat").addClass("d-none");
 }
 
 function show_flat_matrix() {
+    $(".layout-button.flat").addClass("active");
+    $(".layout-button.side").removeClass("active");
+
     $(".matrix-type.flat").removeClass("d-none");
     $(".matrix-type.side").addClass("d-none");
 }
