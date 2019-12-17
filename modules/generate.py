@@ -4,6 +4,7 @@ import time
 import subprocess
 import os
 import shutil
+from modules import changelog
 from modules import clean
 from modules import config
 from modules import contribute
@@ -93,6 +94,13 @@ def resources_md_gen():
     resources.generate()
     end_time = time.time()
     util.progress_bar("Resources Page", end_time - start_time)
+
+def changelog_md_gen():
+    util.progress_bar("Changelog Page")
+    start_time = time.time()
+    changelog.generate()
+    end_time = time.time()
+    util.progress_bar("Changelog Page", end_time - start_time)
 
 def redirects_md_gen():
     util.progress_bar("Redirection Pages")

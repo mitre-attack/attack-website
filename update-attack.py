@@ -128,6 +128,11 @@ def update(args):
     if args.build:
         if 'resources' in args.build:
             generate.resources_md_gen()
+
+    # Generate resources markdowns
+    if args.build:
+        if 'changelog' in args.build:
+            generate.changelog_md_gen()
         
     # Generate redirects markdowns
     if args.build:

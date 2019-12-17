@@ -28,8 +28,9 @@
 
 # 10 December 2019
 ## ATT&CK Website version 1.1.0
-### Improvements
+### New Features
 - Added website and catalog version number to the footer. See issue [#10](https://github.com/mitre-attack/attack-website/issues/10)
+- Added changelog page to website referenced by version number on the footer.
 
 # 5 December 2019
 ## ATT&CK Website version 1.0.4
