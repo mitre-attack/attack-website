@@ -26,3 +26,18 @@ def generate_markdown_files():
     # write markdown to file
     with open(os.path.join(config.resources_markdown_path, "resources.md"), "w", encoding='utf8') as md_file:
         md_file.write(resources_content)
+
+def generate_changelog_page():
+    """Responsible for compiling original changelog markdown into changelog markdown file
+       for rendering on the HTML
+    """
+    
+    # Read local changelog
+    with open("CHANGELOG.md", "r") as f:
+        changelog = f.read()
+    
+    # Append changelog to mardown file
+    changelog_md = config.changelog_md + changelog
+
+    with open(os.path.join(config.changelog_markdown_path, "changelog.md"), "w", encoding='utf8') as md_file:
+        md_file.write(changelog_md)

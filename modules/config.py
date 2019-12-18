@@ -193,7 +193,7 @@ matrices = [
 ]
 
 # argument defaults and options for the CLI
-build_choices = ['resources', 'changelog', 'contribute', 'groups', 'search', 'matrices', 'mitigations', 'redirects', 'software', 'tactics', 'techniques', "prev_versions"]
+build_choices = ['resources', 'contribute', 'groups', 'search', 'matrices', 'mitigations', 'redirects', 'software', 'tactics', 'techniques', "prev_versions"]
 build_defaults = build_choices
 
 test_choices = ['size', 'links', 'external_links', 'citations']
@@ -492,17 +492,6 @@ previous_md = ("Title: Previous Versions\n"
                "data: ")
 previous_markdown_path = "content/pages/resources"
 
-# Constants used by changelog.py
-# ----------------------------------------------------------------------------
-
-# markdown path for changelog
-changelog_markdown_path = "content/pages/resources"
-
-# template for changelog.md
-changelog_md = ("Title: Changelog\n"
-                "Template: resources/changelog\n"
-                "save_as: resources/changelog.html\n\n")
-
 # Constants used by resources.py
 # ----------------------------------------------------------------------------
 
@@ -514,6 +503,14 @@ resources_md = ("Title: General Information\n"
                 "Template: resources/resources\n"
                 "save_as: resources/index.html\n"
                 "data: ")
+
+# markdown path for changelog
+changelog_markdown_path = "content/pages/resources"
+
+# template for changelog.md
+changelog_md = ("Title: Changelog\n"
+                "Template: resources/changelog\n"
+                "save_as: resources/changelog.html\n\n")
 
 # Constants used by technique.py
 # ----------------------------------------------------------------------------
