@@ -20,36 +20,62 @@
 -->
 
 {% macro matrices(matrices, has_subtechniques) %}
-{% if has_subtechniques %}
-<div class="matrix-controls">
-    <div class="btn-toolbar" role="toolbar" aria-label="matrix controls">
-        <div class="btn-group mr-2" role="group">
-            <div class="btn-group" role="group">
-                <button class="btn btn-default dropdown-toggle" id="layout-options" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">layouts</button>
-                <div class="dropdown-menu" aria-labelledby="layout-options">
-                    <a class="dropdown-item layout-button side active" href="#" onclick="show_side_matrix()">
-                        side layout
-                    </a>
-                    <a class="dropdown-item layout-button flat" href="#" onclick="show_flat_matrix(); tour_layout_clicked()">
-                        flat layout
-                    </a>
+<div id="tour-matrix-container">
+    {% if has_subtechniques %}
+    <div class="matrix-controls">
+        <div class="btn-toolbar" role="toolbar" aria-label="matrix controls">
+            <div class="btn-group mr-2" role="group">
+                <div class="btn-group" role="group">
+                    <button class="btn btn-default dropdown-toggle" id="layout-options" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">layouts</button>
+                    <div class="dropdown-menu" aria-labelledby="layout-options">
+                        <a class="dropdown-item layout-button side active" href="#" onclick="show_side_matrix()">
+                            side layout
+                        </a>
+                        <a class="dropdown-item layout-button flat" href="#" onclick="show_flat_matrix(); tour_layout_clicked()">
+                            flat layout
+                        </a>
+                    </div>
                 </div>
             </div>
+            <div class="btn-group mr-2" role="group">
+                <button type="button" class="btn btn-default" onclick="matrix_toggle_all(true)">show sub-techniques</button>
+                <button type="button" class="btn btn-default" onclick="matrix_toggle_all(false)">hide sub-techniques</button>
+            </div>
+    
+            <!-- help button disabled until tour feature has been implemented -->
+            <div class="btn-group" role="group">
+                <button type="button" class="btn btn-default" onclick="start_tour()">help</button>
+            </div>
+    
         </div>
-        <div class="btn-group mr-2" role="group">
-            <button type="button" class="btn btn-default" onclick="matrix_toggle_all(true)">show sub-techniques</button>
-            <button type="button" class="btn btn-default" onclick="matrix_toggle_all(false)">hide sub-techniques</button>
-        </div>
-
-        <!-- help button disabled until tour feature has been implemented -->
-        <!--<div class="btn-group" role="group">
-            <button type="button" class="btn btn-default" onclick="matrix_help()">help</button>
-        </div>-->
-
     </div>
-</div>
-<div class="matrix-container" id="layouts-content">
-    <div class="matrix-type side">
+    <div class="matrix-container" id="layouts-content">
+        <div class="matrix-type side">
+            {% for matrix in matrices %}
+                <div class="p-3">
+                    {% if matrices | length > 1%}
+                        <h3>{{matrix.name}}</h3>
+                    {% endif %}
+                    <div class="overflow-x-auto pb-3">
+                        {{ matrix_side(matrix.tactics) }}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="matrix-type flat d-none">
+            {% for matrix in matrices %}
+                <div class="p-3">
+                    {% if matrices | length > 1%}
+                        <h3>{{matrix.name}}</h3>
+                    {% endif %}
+                    <div class="overflow-x-auto pb-3">
+                        {{ matrix_flat(matrix.tactics) }}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% else %}
         {% for matrix in matrices %}
             <div class="p-3">
                 {% if matrices | length > 1%}
@@ -60,32 +86,8 @@
                 </div>
             </div>
         {% endfor %}
-    </div>
-    <div class="matrix-type flat d-none">
-        {% for matrix in matrices %}
-            <div class="p-3">
-                {% if matrices | length > 1%}
-                    <h3>{{matrix.name}}</h3>
-                {% endif %}
-                <div class="overflow-x-auto pb-3">
-                    {{ matrix_flat(matrix.tactics) }}
-                </div>
-            </div>
-        {% endfor %}
-    </div>
+    {% endif %}
 </div>
-{% else %}
-    {% for matrix in matrices %}
-        <div class="p-3">
-            {% if matrices | length > 1%}
-                <h3>{{matrix.name}}</h3>
-            {% endif %}
-            <div class="overflow-x-auto pb-3">
-                {{ matrix_side(matrix.tactics) }}
-            </div>
-        </div>
-    {% endfor %}
-{% endif %}
 {% endmacro %}
 
 

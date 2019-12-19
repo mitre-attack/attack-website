@@ -1,3 +1,5 @@
+//is the user doing a tour of the entire site, or just this module?
+isSiteTour = window.location.href.includes("?tour=true");
 
 //tour technique is scheduled task under privilege escalation
 let example_cell = {
@@ -11,24 +13,15 @@ function open_example() {
     setMatrixCellState(example_cell["tactic"], example_cell["technique"], "open")
 }
 function tour_technique_clicked() {
-    if (tour.getCurrentStep() == 2 || tour.getCurrentStep() == 5) tour.next(); //user was following prompt, triggering next step
+    if (tour.getCurrentStep() == 1 || tour.getCurrentStep() == 4) tour.next(); //user was following prompt, triggering next step
 }
 function tour_layout_clicked() {
-    if (tour.getCurrentStep() == 4) tour.next();
+    if (tour.getCurrentStep() == 3) tour.next();
 }
 
 let tour = new Tour({
     steps: [
         {
-            path: "/",
-            container: "#tour-start-container",
-            element: "#tour-start",
-            placement: "bottom",
-            title: "Welcome to the ATT&CK sub-techniques tour!",
-            content: "This guided tour will walk you through the new sub-techniques features of the ATT&CK Website."
-        },
-        {
-            path: "/matrices/enterprise/",
             container: "#tour-matrix-container",
             element: "#layouts-content",
             placement: "top",
@@ -40,7 +33,6 @@ let tour = new Tour({
             }
         },
         {
-            path: "/matrices/enterprise/",
             container: "#tour-matrix-container",
             element: "#tour-side-technique",
             placement: "right",
@@ -53,7 +45,6 @@ let tour = new Tour({
             }
         },
         {
-            path: "/matrices/enterprise/",
             container: "#tour-matrix-container",
             element: "#tour-side-subtechniques",
             placement: "top",
@@ -66,7 +57,6 @@ let tour = new Tour({
             }
         },
         {
-            path: "/matrices/enterprise/",
             container: "#tour-matrix-container",
             element: "#layout-options",
             placement: "top",
@@ -74,7 +64,6 @@ let tour = new Tour({
             content: "There are multiple ways subtechniques can be represented in the matrix. Click the 'layouts' dropdown and select 'flat layout' to see the alternate layout."
         },
         {
-            path: "/matrices/enterprise/",
             container: "#tour-matrix-container",
             element: "#tour-flat-technique",
             placement: "left",
@@ -87,7 +76,6 @@ let tour = new Tour({
             }
         },
         {
-            path: "/matrices/enterprise/",
             container: "#tour-matrix-container",
             element: "#tour-flat-subtechniques",
             placement: "left",
@@ -97,16 +85,26 @@ let tour = new Tour({
             onShow: function() {
                 showMatrix("flat");
                 open_example();
-            }
+            },
+            next: isSiteTour? 6 : -1, //if it's a site tour, there is a next page.
         },
+        {
+            onShow: function() { //go to the next tour module
+                window.location.href = "/techniques/T1053?tour=true"
+            }
+        }
     ],
-    debug: true
+    storage: false //no resuming tour if the page is reloaded.
 })
 
-tour.init();
 
-function start_subtechniques_tour() {
+function start_tour() {
+    tour.init()
     if (tour.ended()) tour.restart();
     else tour.start(true);
 }
 
+if (isSiteTour) {
+    console.log("continuing tour")
+    start_tour();
+}
