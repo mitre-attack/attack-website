@@ -4,6 +4,22 @@ function matrix_toggle_technique(tactic_id, technique_id) {
     $(".sidebar--" + joined).toggleClass("expanded");
 }
 
+// set the state of the given technique
+// state must be "open" or "closed"
+function setMatrixCellState(tactic_id, technique_id, state) {
+    if (state == "open") {
+        var joined = tactic_id + "--" + technique_id;
+        $(".subtechniques--" + joined).removeClass("hidden");
+        $(".sidebar--" + joined).addClass("expanded");
+    } else if (state == "closed") {
+        var joined = tactic_id + "--" + technique_id;
+        $(".subtechniques--" + joined).addClass("hidden");
+        $(".sidebar--" + joined).removeClass("expanded");
+    }
+}
+
+//open or close all techniques with sub-techniques
+//param is boolean, if true opens all, if false closes all
 function matrix_toggle_all(visible) {
     if (visible) {
         $(".sidebar").addClass("expanded");
@@ -12,6 +28,12 @@ function matrix_toggle_all(visible) {
         $(".sidebar").removeClass("expanded");
         $(".subtechniques-container").addClass("hidden");
     }
+}
+
+// switch tabs to the given matrix, param is either "flat" or "side"
+function showMatrix(whichMatrix) {
+    if (whichMatrix == "flat") show_flat_matrix();
+    if (whichMatrix == "side") show_side_matrix();
 }
 
 function show_side_matrix() {

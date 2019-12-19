@@ -19,37 +19,63 @@
 
 -->
 
-{% macro matrices(matrices, has_subtechniques) %}
-{% if has_subtechniques %}
-<div class="matrix-controls">
-    <div class="btn-toolbar" role="toolbar" aria-label="matrix controls">
-        <div class="btn-group mr-2" role="group">
-            <div class="btn-group" role="group">
-                <button class="btn btn-default dropdown-toggle" id="layout-options" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">layouts</button>
-                <div class="dropdown-menu" aria-labelledby="layout-options">
-                    <a class="dropdown-item layout-button side active" href="#" onclick="show_side_matrix()">
-                        side layout
-                    </a>
-                    <a class="dropdown-item layout-button flat" href="#" onclick="show_flat_matrix()">
-                        flat layout
-                    </a>
+{% macro matrices(matrices, has_subtechniques, isIndex) %}
+<div id="tour-matrix-container">
+    {% if has_subtechniques %}
+    <div class="matrix-controls">
+        <div class="btn-toolbar" role="toolbar" aria-label="matrix controls">
+            <div class="btn-group mr-2" role="group">
+                <div class="btn-group" role="group">
+                    <button class="btn btn-default dropdown-toggle" id="layout-options" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">layouts</button>
+                    <div class="dropdown-menu" aria-labelledby="layout-options">
+                        <a class="dropdown-item layout-button side active" href="#" onclick="show_side_matrix()">
+                            side layout
+                        </a>
+                        <a class="dropdown-item layout-button flat" href="#" onclick="show_flat_matrix(); tour_layout_clicked()">
+                            flat layout
+                        </a>
+                    </div>
                 </div>
             </div>
+            <div class="btn-group mr-2" role="group">
+                <button type="button" class="btn btn-default" onclick="matrix_toggle_all(true)">show sub-techniques</button>
+                <button type="button" class="btn btn-default" onclick="matrix_toggle_all(false)">hide sub-techniques</button>
+            </div>
+            <!-- no help button on index page -->
+            {% if not isIndex %}
+            <div class="btn-group" role="group">
+                <button type="button" class="btn btn-default" onclick="start_tour()">help</button>
+            </div>
+            {% endif %}
         </div>
-        <div class="btn-group mr-2" role="group">
-            <button type="button" class="btn btn-default" onclick="matrix_toggle_all(true)">show sub-techniques</button>
-            <button type="button" class="btn btn-default" onclick="matrix_toggle_all(false)">hide sub-techniques</button>
-        </div>
-
-        <!-- help button disabled until tour feature has been implemented -->
-        <!--<div class="btn-group" role="group">
-            <button type="button" class="btn btn-default" onclick="matrix_help()">help</button>
-        </div>-->
-
     </div>
-</div>
-<div class="matrix-container">
-    <div class="matrix-type side">
+    <div class="matrix-container" id="layouts-content">
+        <div class="matrix-type side">
+            {% for matrix in matrices %}
+                <div class="p-3">
+                    {% if matrices | length > 1%}
+                        <h3>{{matrix.name}}</h3>
+                    {% endif %}
+                    <div class="overflow-x-auto pb-3">
+                        {{ matrix_side(matrix.tactics) }}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="matrix-type flat d-none">
+            {% for matrix in matrices %}
+                <div class="p-3">
+                    {% if matrices | length > 1%}
+                        <h3>{{matrix.name}}</h3>
+                    {% endif %}
+                    <div class="overflow-x-auto pb-3">
+                        {{ matrix_flat(matrix.tactics) }}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% else %}
         {% for matrix in matrices %}
             <div class="p-3">
                 {% if matrices | length > 1%}
@@ -60,32 +86,8 @@
                 </div>
             </div>
         {% endfor %}
-    </div>
-    <div class="matrix-type flat d-none">
-        {% for matrix in matrices %}
-            <div class="p-3">
-                {% if matrices | length > 1%}
-                    <h3>{{matrix.name}}</h3>
-                {% endif %}
-                <div class="overflow-x-auto pb-3">
-                    {{ matrix_flat(matrix.tactics) }}
-                </div>
-            </div>
-        {% endfor %}
-    </div>
+    {% endif %}
 </div>
-{% else %}
-    {% for matrix in matrices %}
-        <div class="p-3">
-            {% if matrices | length > 1%}
-                <h3>{{matrix.name}}</h3>
-            {% endif %}
-            <div class="overflow-x-auto pb-3">
-                {{ matrix_side(matrix.tactics) }}
-            </div>
-        </div>
-    {% endfor %}
-{% endif %}
 {% endmacro %}
 
 
@@ -109,13 +111,15 @@
         <tr>
             {% for tactic in tactics %}
                 <td class="tactic">
-                    {% for technique in tactic.techniques %}
+                    {% for technique in tactic.techniques %}                        
                         {% if technique.subtechniques | length == 0 %}
                             {{ technique_cell(technique, False) }}
                         {% else %}
-                            <table class="supertechnique">
+                            <!-- tour technique is scheduled task under privilege escalation -->
+                            {% set tour_technique = technique.id == 'attack-pattern--35dd844a-b219-4e2b-a6bb-efa9a75995a9' and tactic.id == 'x-mitre-tactic--5e29b093-294e-49e9-a803-dab3d73b77dd' %}
+                            <table class="supertechnique"{% if tour_technique %} id="tour-flat-technique" {% endif %}>
                                 <tr>
-                                    <td class="sidebar technique sidebar--{{tactic.id}}--{{technique.id}}" onclick="matrix_toggle_technique('{{tactic.id}}', '{{technique.id}}')">
+                                    <td class="sidebar technique sidebar--{{tactic.id}}--{{technique.id}}" onclick="matrix_toggle_technique('{{tactic.id}}', '{{technique.id}}');{% if tour_technique %} tour_technique_clicked();{% endif %}">
                                         <div class="handle"> = </div>
                                     </td>
                                     <td class="technique">
@@ -128,7 +132,7 @@
                                             <path d="M0 0H12V12Z"/>
                                         </svg>
                                     </td>
-                                    <td class="subtechniques">
+                                    <td class="subtechniques"{% if tour_technique %} id="tour-flat-subtechniques" {% endif %}>
                                         <div class="subtechniques">
                                             {% for subtechnique in technique.subtechniques %}
                                                 {{ technique_cell(subtechnique, False)}}
@@ -168,7 +172,9 @@
                 <td class="tactic">
                     <table class="techniques-table">
                         {% for technique in tactic.techniques %}
-                            <tr class="technique-row">
+                        <!-- tour technique is scheduled task under privilege escalation -->
+                        {% set tour_technique = technique.id == 'attack-pattern--35dd844a-b219-4e2b-a6bb-efa9a75995a9' and tactic.id == 'x-mitre-tactic--5e29b093-294e-49e9-a803-dab3d73b77dd' %}
+                            <tr class="technique-row"{% if tour_technique %} id="tour-side-technique" {% endif %}>
                                 <td>
                                     {% if technique.subtechniques | length == 0 %}
                                         {{ technique_cell(technique, False) }}
@@ -183,7 +189,7 @@
                                     {% endif %}
                                 </td>
                                 {% if technique.subtechniques | length > 0 %}
-                                <td class="sidebar sidebar--{{tactic.id}}--{{technique.id}}" onclick="matrix_toggle_technique('{{tactic.id}}', '{{technique.id}}')">
+                                <td class="sidebar sidebar--{{tactic.id}}--{{technique.id}}" onclick="matrix_toggle_technique('{{tactic.id}}', '{{technique.id}}');{% if tour_technique %} tour_technique_clicked();{% endif %}">
                                     <div class="angle top">
                                         <svg width="12px" height="12px">
                                             <path d="M0 12H12V0Z"/>
@@ -197,7 +203,7 @@
                                     </div>
                                 </td>
                                 {% endif %}
-                                <td class="subtechniques-td">
+                                <td class="subtechniques-td"{% if tour_technique %} id="tour-side-subtechniques" {% endif %}>
                                     <div class="subtechniques hidden subtechniques-container subtechniques--{{tactic.id}}--{{technique.id}}">
                                         {% for subtechnique in technique.subtechniques %}
                                         <div class="subtechnique">
