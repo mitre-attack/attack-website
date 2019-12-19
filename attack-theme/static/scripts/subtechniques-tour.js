@@ -1,6 +1,8 @@
+
+//tour technique is scheduled task under privilege escalation
 let example_cell = {
-    "tactic": "x-mitre-tactic--2558fd61-8c75-4730-94c4-11926db2a263",
-    "technique": "attack-pattern--a93494bb-4b80-4ea1-8695-3236a49916fd"
+    "tactic": "x-mitre-tactic--5e29b093-294e-49e9-a803-dab3d73b77dd",
+    "technique": "attack-pattern--35dd844a-b219-4e2b-a6bb-efa9a75995a9"
 }
 function close_example() {
     setMatrixCellState(example_cell["tactic"], example_cell["technique"], "closed")
@@ -44,7 +46,7 @@ let tour = new Tour({
             placement: "right",
             backdrop: true,
             title: "Showing sub-techniques",
-            content: "Techniques which have sub-techniques are denoted by a gray sidebar. Not all techniques have sub-techniques. Click the gray sidebar to show the sub-techniques of 'brute force'.",
+            content: "Techniques which have sub-techniques are denoted by a gray sidebar. Not all techniques have sub-techniques. Click the gray sidebar to show the sub-techniques of the technique.",
             onShow: function() {
                 showMatrix("side");
                 close_example();
@@ -57,7 +59,7 @@ let tour = new Tour({
             placement: "top",
             backdrop: true,
             title: "Showing sub-techniques",
-            content: "The sub-techniques of 'brute force' are displayed in a subcolumn to the right.",
+            content: "The sub-techniques of the technique are displayed in a subcolumn to the right.",
             onShow: function() {
                 showMatrix("side");
                 open_example();
@@ -66,10 +68,10 @@ let tour = new Tour({
         {
             path: "/matrices/enterprise/",
             container: "#tour-matrix-container",
-            element: "#tour-layout-option",
+            element: "#layout-options",
             placement: "top",
             title: "Using the flat matrix layout",
-            content: "The 'flat' sub-techniques layout is a different way of representing sub-techniques in the matrix. Click the tab to see the flat layout."
+            content: "There are multiple ways subtechniques can be represented in the matrix. Click the 'layouts' dropdown and select 'flat layout' to see the alternate layout."
         },
         {
             path: "/matrices/enterprise/",
@@ -78,7 +80,7 @@ let tour = new Tour({
             placement: "left",
             backdrop: true,
             title: "Showing sub-techniques",
-            content: "Techniques which have sub-techniques are denoted by a gray sidebar. Click the gray sidebar to show the sub-techniques of 'brute force'.",
+            content: "Techniques which have sub-techniques are denoted by a gray sidebar. Click the gray sidebar to show the sub-techniques of the technique.",
             onShow: function() {
                 showMatrix("flat");
                 close_example();
@@ -91,7 +93,7 @@ let tour = new Tour({
             placement: "left",
             backdrop: true,
             title: "Showing sub-techniques",
-            content: "The sub-techniques of 'brute force' are displayed below the technique.",
+            content: "The sub-techniques of the technique are displayed below the technique.",
             onShow: function() {
                 showMatrix("flat");
                 open_example();

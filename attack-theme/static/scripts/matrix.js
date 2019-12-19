@@ -18,13 +18,36 @@ function setMatrixCellState(tactic_id, technique_id, state) {
     }
 }
 
+//open or close all techniques with sub-techniques
+//param is boolean, if true opens all, if false closes all
+function matrix_toggle_all(visible) {
+    if (visible) {
+        $(".sidebar").addClass("expanded");
+        $(".subtechniques-container").removeClass("hidden");
+    } else {
+        $(".sidebar").removeClass("expanded");
+        $(".subtechniques-container").addClass("hidden");
+    }
+}
+
 // switch tabs to the given matrix, param is either "flat" or "side"
 function showMatrix(whichMatrix) {
-    if (whichMatrix != "flat" && whichMatrix != "side") return;
-    let otherMatrix = whichMatrix == "flat"? "side" : "flat";
-    $("#" + whichMatrix + "-tab").addClass("active");
-    $("#" + otherMatrix + "-tab").removeClass("active");
+    if (whichMatrix == "flat") show_flat_matrix();
+    if (whichMatrix == "side") show_side_matrix();
+}
 
-    $("#" + whichMatrix + "-layout").addClass("show active");
-    $("#" + otherMatrix + "-layout").removeClass("show active");
+function show_side_matrix() {
+    $(".layout-button.side").addClass("active");
+    $(".layout-button.flat").removeClass("active");
+
+    $(".matrix-type.side").removeClass("d-none");
+    $(".matrix-type.flat").addClass("d-none");
+}
+
+function show_flat_matrix() {
+    $(".layout-button.flat").addClass("active");
+    $(".layout-button.side").removeClass("active");
+
+    $(".matrix-type.flat").removeClass("d-none");
+    $(".matrix-type.side").addClass("d-none");
 }
