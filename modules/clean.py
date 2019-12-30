@@ -37,10 +37,18 @@ def clean_website_build():
     resources_path = os.path.join(config.resources_markdown_path, "resources.md")
     if os.path.isfile(resources_path):
         os.remove(resources_path)
-           # Remove resources markdown file
+    # Remove previous markdown file
     previous_path = os.path.join(config.resources_markdown_path, "previous.md")
     if os.path.isfile(previous_path):
         os.remove(previous_path)
+    # Remove training markdown file
+    training_path = os.path.join(config.resources_markdown_path, "training.md")
+    if os.path.isfile(training_path):
+        os.remove(training_path)
+    # Remove training markdown file
+    training_cti_path = os.path.join(config.resources_markdown_path, "training_cti.md")
+    if os.path.isfile(training_cti_path):
+        os.remove(training_cti_path)
 
     # Remove output directory
     output_path = "output"

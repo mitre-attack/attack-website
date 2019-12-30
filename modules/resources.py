@@ -6,6 +6,8 @@ from datetime import datetime
 def generate():
     """Responsible for generating the resources pages"""
     generate_markdown_files()
+
+    # Generate training pages
     generate_training_pages()
 
 def generate_markdown_files():
@@ -30,4 +32,24 @@ def generate_markdown_files():
 
 def generate_training_pages():
     """ Responsible for generating the markdown pages of the training pages """
+
+    data = {}
+    
+    # Side navigation for training
+    data['menu'] = config.training_navigation
+
+    # Training Overview
+    training_md = config.training_md + json.dumps(data)
+
+    # write markdown to file
+    with open(os.path.join(config.resources_markdown_path, "training.md"), "w", encoding='utf8') as md_file:
+        md_file.write(training_md)
+
+    # CTI training
+    training_cti_md = config.training_cti_md + json.dumps(data)
+
+    # write markdown to file
+    with open(os.path.join(config.resources_markdown_path, "training_cti.md"), "w", encoding='utf8') as md_file:
+        md_file.write(training_cti_md)
+
 

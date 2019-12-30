@@ -26,6 +26,11 @@
 <!--          addition of notable features. When PATCH is 0 it can      -->
 <!--          be omitted                                                -->
 
+# 30 December 2019
+## ATT&CK Website version 1.1
+### New Features
+- Added ATT&CK training to website. See issue [#22](https://github.com/mitre-attack/attack-website/issues/22).
+
 # 5 December 2019
 ## ATT&CK Website version 1.0.4
 ### Fixes

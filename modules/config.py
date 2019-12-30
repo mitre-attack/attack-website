@@ -332,6 +332,20 @@ contributing_md = ("Title: Contributing_to_MITRE_ATTACK\n"
                    "RedirectLink: /resources/contribute\n"
                    "save_as: docs/Contributing_to_MITRE_ATTACK.pdf/index.html\n")
 
+# Training Redirection dictionary
+training_redict_dict = [
+    {
+        "title" : "Training Redirect",
+        "redirect_link" : "/resources/training",
+        "path" : "training"
+    },
+    {
+        "title" : "CTI Training Redirect",
+        "redirect_link" : "/resources/training/cti",
+        "path" : "training/cti"
+    }
+]
+
 # Redirect md string template
 redirect_md = Template("Title: ${title}\n"
                        "Template: general/redirect-index\n"
@@ -502,59 +516,30 @@ resources_md = ("Title: General Information\n"
                 "save_as: resources/index.html\n"
                 "data: ")
 
+training_md = ("Title: ATT&CK Training\n"
+               "Template: resources/training\n"
+               "save_as: resources/training/index.html\n"
+               "data: ")
+
+training_cti_md = ("Title: ATT&CK For CTI Training\n"
+                   "Template: resources/training-cti\n"
+                   "save_as: resources/training/cti/index.html\n"
+                   "data: ")
+
 # side navigation for training
-training_navigation = [
-    {
-        "name" : "CTI",
-        "id" : "cti",
-        "path" : "topics/cti",
-        "children" : [
-            {
-                "name" : "Exercise 1",
-                "id" : "exercise-1",
-                "path" : "topics/cti/1",
-                "children" : []
-            },
-            {
-                "name" : "Exercise 2",
-                "id" : "exercise-2",
-                "path" : "topics/cti/2",
-                "children" : []
-            },
-            {
-                "name" : "Exercise 3",
-                "id" : "exercise-3",
-                "path" : "topics/cti/3",
-                "children" : []
-            }
-        ]
-    },
-    {
-        "name" : "Mappings",
-        "id" : "mappings",
-        "path" : "topics/mappings",
-        "children" : [
-            {
-                "name" : "Exercise 1",
-                "id" : "exercise-1",
-                "path" : "topics/mappings/1",
-                "children" : []
-            },
-            {
-                "name" : "Exercise 2",
-                "id" : "exercise-2",
-                "path" : "topics/mappings/2",
-                "children" : []
-            },
-            {
-                "name" : "Exercise 3",
-                "id" : "exercise-3",
-                "path" : "topics/mappings/3",
-                "children" : []
-            }
-        ]
-    }
-]
+training_navigation = {
+    "name" : "Training",
+    "id" : "training",
+    "path" : "/resources/training/",
+    "children" : [    
+        {
+            "name" : "CTI Training",
+            "id" : "cti",
+            "path" : "/resources/training/cti/",
+            "children" : []
+        }
+    ]
+}
 
 # Constants used by technique.py
 # ----------------------------------------------------------------------------
