@@ -6,6 +6,7 @@ from datetime import datetime
 def generate():
     """Responsible for generating the resources pages"""
     generate_markdown_files()
+    generate_training_pages()
 
 def generate_markdown_files():
     """Responsible for compiling resources json into resources markdown files
@@ -26,3 +27,7 @@ def generate_markdown_files():
     # write markdown to file
     with open(os.path.join(config.resources_markdown_path, "resources.md"), "w", encoding='utf8') as md_file:
         md_file.write(resources_content)
+
+def generate_training_pages():
+    """ Responsible for generating the markdown pages of the training pages """
+

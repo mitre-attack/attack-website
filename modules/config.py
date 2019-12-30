@@ -502,6 +502,60 @@ resources_md = ("Title: General Information\n"
                 "save_as: resources/index.html\n"
                 "data: ")
 
+# side navigation for training
+training_navigation = [
+    {
+        "name" : "CTI",
+        "id" : "cti",
+        "path" : "topics/cti",
+        "children" : [
+            {
+                "name" : "Exercise 1",
+                "id" : "exercise-1",
+                "path" : "topics/cti/1",
+                "children" : []
+            },
+            {
+                "name" : "Exercise 2",
+                "id" : "exercise-2",
+                "path" : "topics/cti/2",
+                "children" : []
+            },
+            {
+                "name" : "Exercise 3",
+                "id" : "exercise-3",
+                "path" : "topics/cti/3",
+                "children" : []
+            }
+        ]
+    },
+    {
+        "name" : "Mappings",
+        "id" : "mappings",
+        "path" : "topics/mappings",
+        "children" : [
+            {
+                "name" : "Exercise 1",
+                "id" : "exercise-1",
+                "path" : "topics/mappings/1",
+                "children" : []
+            },
+            {
+                "name" : "Exercise 2",
+                "id" : "exercise-2",
+                "path" : "topics/mappings/2",
+                "children" : []
+            },
+            {
+                "name" : "Exercise 3",
+                "id" : "exercise-3",
+                "path" : "topics/mappings/3",
+                "children" : []
+            }
+        ]
+    }
+]
+
 # Constants used by technique.py
 # ----------------------------------------------------------------------------
 
