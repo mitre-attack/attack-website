@@ -26,6 +26,11 @@
 <!--          addition of notable features. When PATCH is 0 it can      -->
 <!--          be omitted                                                -->
 
+# 30 December 2019
+## ATT&CK Website version 1.0.5
+### Fixes
+- Fixed sub-technique from incorrectly inheriting values from other sub-technique siblings. See issue [#47](https://github.com/mitre-attack/attack-website/issues/47).
+
 # 5 December 2019
 ## ATT&CK Website version 1.0.4
 ### Fixes
