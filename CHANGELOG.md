@@ -29,8 +29,11 @@
 # Changes staged on develop
 ### New Features
 - Added created and last modified dates to object pages. See issue [#38](https://github.com/mitre-attack/attack-website/issues/38).
+
 ### Improvements
 - FAQ is more extensible, and now includes additional entries for sub-techniques and the relationships of ATT&CK and other models. See issues [#30](https://github.com/mitre-attack/attack-website/issues/30), [#41](https://github.com/mitre-attack/attack-website/issues/41).
+- Added website and content version number to the footer. See issue [#10](https://github.com/mitre-attack/attack-website/issues/10)
+- Added changelog page to website reachable by version number link in the footer.
 
 # 5 December 2019
 ## ATT&CK Website version 1.0.4

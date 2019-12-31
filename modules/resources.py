@@ -7,6 +7,7 @@ def generate():
     """Responsible for generating the resources pages"""
     generate_markdown_files()
     generate_faq_page()
+    generate_changelog_page()
 
 def generate_markdown_files():
     """Responsible for compiling resources json into resources markdown files
@@ -45,3 +46,18 @@ def generate_faq_page():
     # write markdown to file
     with open(os.path.join(config.resources_markdown_path, "faq.md"), "w", encoding='utf8') as md_file:
         md_file.write(faq_content)
+
+def generate_changelog_page():
+    """Responsible for compiling original changelog markdown into changelog markdown file
+       for rendering on the HTML
+    """
+    
+    # Read local changelog
+    with open("CHANGELOG.md", "r") as f:
+        changelog = f.read()
+    
+    # Append changelog to mardown file
+    changelog_md = config.changelog_md + changelog
+
+    with open(os.path.join(config.resources_markdown_path, "changelog.md"), "w", encoding='utf8') as md_file:
+        md_file.write(changelog_md)

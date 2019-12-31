@@ -11,6 +11,9 @@ from . import util
 
 # Settings dictionary to build website
 settings_dict = {
+    "content_version": "6.2",
+    "website_version": "1.1",
+    "changelog_location": "/resources/changelog.html",
     "banner_enabled": "false",
     "banner_message": "<a href='https://www.mitre.org/attackcon-streamed-live' target='_blank'> Register to stream ATT&CKcon 2.0 October 29-30</a>",
     "domains": ["pre-attack", "enterprise-attack", "mobile-attack"],
@@ -489,7 +492,6 @@ previous_md = ("Title: Previous Versions\n"
                "data: ")
 previous_markdown_path = "content/pages/resources"
 
-
 # Constants used by resources.py
 # ----------------------------------------------------------------------------
 
@@ -507,6 +509,11 @@ faq_md = ("Title: Frequently Asked Questions\n"
           "Template: resources/faq\n"
           "save_as: resources/faq/index.html\n"
           "data: ")
+
+# template for changelog.md
+changelog_md = ("Title: Changelog\n"
+                "Template: resources/changelog\n"
+                "save_as: resources/changelog.html\n\n")
 
 # Constants used by technique.py
 # ----------------------------------------------------------------------------

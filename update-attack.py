@@ -245,6 +245,9 @@ def generate_base_template():
                              "{% set BANNER_MESSAGE = \"${banner_message}\" %}\n"
                              "{% set NAVIGATION_MENU = ${navigation} -%}\n"
                              "{% set DOMAINS = ${domains} -%}\n"
+                             "{% set CONTENT_VERSION = \"${content_version}\" -%}\n"
+                             "{% set WEBSITE_VERSION = \"${website_version}\" -%}\n"
+                             "{% set CHANGELOG_LOCATION = \"${changelog_location}\" -%}\n"
                              "{% set active_page = active_page|"
                              "default('index') -%}\n")
     
@@ -261,6 +264,9 @@ def generate_base_template():
                                                             replace("\"", "'")
         base_dict['navigation'] = config.settings_dict['navigation_menu']
         base_dict['domains'] = config.settings_dict['domain_aliases']
+        base_dict['content_version'] = config.settings_dict['content_version']
+        base_dict['website_version'] = config.settings_dict['website_version']
+        base_dict['changelog_location'] = config.settings_dict['changelog_location']
         jinja_settings = base_template.substitute(base_dict)
   
     with open(base_template_path, 'w+') as f:
