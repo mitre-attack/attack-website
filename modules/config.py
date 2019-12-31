@@ -11,7 +11,7 @@ from . import util
 
 # Settings dictionary to build website
 settings_dict = {
-    "catalog_version": "6.2",
+    "content_version": "6.2",
     "website_version": "1.1",
     "changelog_location": "/resources/changelog.html",
     "banner_enabled": "false",

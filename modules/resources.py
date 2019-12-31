@@ -6,6 +6,7 @@ from datetime import datetime
 def generate():
     """Responsible for generating the resources pages"""
     generate_markdown_files()
+    generate_changelog_page()
 
 def generate_markdown_files():
     """Responsible for compiling resources json into resources markdown files
