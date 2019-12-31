@@ -14,9 +14,7 @@
             <li class="breadcrumb-item">ATT&CKcon</li>
     </ol>
 </div>
-<div class="container pt-3 text-center">
-    <img src="/theme/images/attckcon-banner.jpg" width="100%">
-</div>
+
 <div class="pt-3 container">
     <ul class="nav nav-tabs" role="tablist" id="years">
         {% for con in conventions %}
@@ -31,8 +29,14 @@
         {% for con in conventions %}
         {% set conID = "-".join(con.date.split(' ')) %}
         {% set active = conID == 'October-2019' %}
-        <div class="tab-pane fade{% if active %} show active{% endif %}" id="{{conID}}-body" role="tabpanel" aria-labelledby="{{conID}}-tab">
+        <div class="uniform-block tab-pane fade{% if active %} show active{% endif %}" id="{{conID}}-body" role="tabpanel" aria-labelledby="{{conID}}-tab">
             
+            {% if "banner_img" in con %}
+            <p>
+                <img src="{{ con.banner_img }}" width="100%">
+            </p>
+            {% endif %}
+
             {% if "description" in con %}
             <p>{{con.description}}</p>
             {% endif %}
@@ -40,8 +44,8 @@
             <p><a target="_blank" href="{{con.blogpost}}">Click here to read our blog post about {{con.title}}! <img src="/theme/images/external-site-dark.jpeg" alt="External site" class="external-icon"></a></p>
             {% endif %}
 
-
             <div class="presentations card-block">
+                <h2>Presentations</h2>
                 {% for presentation in con.presentations %}
                 {% set isPanel = "moderator" in presentation %}
                 <div class="card w-100 mt-1">
@@ -96,6 +100,23 @@
 
                 {% endfor %}
             </div>
+            {% if "sponsors_img" in con %}
+            <div>
+                <h2>Sponsors</h2>
+                <img src="{{ con.sponsors_img }}" width="100%">
+            </div>
+            {% elif "sponsors_img_list" in con %}
+            <div>
+                <h2>Sponsors</h2>
+                <div class="sponsors-block">
+                    {% for sponsor_img in con.sponsors_img_list %}
+                    <div class="img-container">
+                        <img src="{{sponsor_img}}">
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
         </div>
         {% endfor %}
     </div>
