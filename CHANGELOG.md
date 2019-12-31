@@ -26,8 +26,7 @@
 <!--          addition of notable features. When PATCH is 0 it can      -->
 <!--          be omitted                                                -->
 
-# 10 December 2019
-## ATT&CK Website version 1.1.0
+# Changes staged on develop
 ### New Features
 - Added created and last modified dates to object pages. See issue [#38](https://github.com/mitre-attack/attack-website/issues/38)
 
