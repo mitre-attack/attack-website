@@ -149,6 +149,10 @@ def update(args):
         generate.pelican_content()
         # Remove unwanted files created by pelican
         generate.remove_unwanted_output()
+
+    # Change directory root name
+    if 'subdirectory' in args:
+        generate.subdirectory_gen(args.subdirectory)
     
     if args.build:
         build_end = time.time()
@@ -209,6 +213,8 @@ def get_parsed_args():
     
     parser.add_argument('--proxy', help="set proxy")
 
+    parser.add_argument('--subdirectory', help="set subdirectory")
+
     parser.add_argument("--print-tests", 
                         dest="print_tests", 
                         action="store_true",
@@ -221,7 +227,7 @@ def get_parsed_args():
 
     args = parser.parse_args()
 
-    if (not args.clean) and (not args.refresh) and (args.build is None) and (args.tests is None):
+    if (not args.clean) and (not args.refresh) and (args.build is None) and (args.tests is None) and (not args.subdirectory):
         parser.print_help()
         exit(0)
 

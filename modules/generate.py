@@ -15,6 +15,7 @@ from modules import resources
 from modules import search
 from modules import software
 from modules import stixhelpers
+from modules import subdirectory
 from modules import tactic
 from modules import technique
 from string import Template
@@ -120,6 +121,13 @@ def previous_versions_gen():
     archives.deploy()
     end_time = time.time()
     util.progress_bar("Previous Versions", end_time - start_time)
+
+def subdirectory_gen(subdirectory_name):
+    util.progress_bar("Subdirectory")
+    start_time = time.time()
+    subdirectory.replace(subdirectory_name)
+    end_time = time.time()
+    util.progress_bar("Subdirectory", end_time - start_time)  
 
 def clean_website():
     util.progress_bar("Clean Build")
