@@ -26,6 +26,10 @@
 <!--          addition of notable features. When PATCH is 0 it can      -->
 <!--          be omitted                                                -->
 
+# Changes staged on develop
+### Improvements
+- FAQ is more extensible, and now includes additional entries for sub-techniques and the relationships of ATT&CK and other models. See issues [#30](https://github.com/mitre-attack/attack-website/issues/30), [#41](https://github.com/mitre-attack/attack-website/issues/41).
+
 # 5 December 2019
 ## ATT&CK Website version 1.0.4
 ### Fixes

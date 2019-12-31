@@ -88,11 +88,11 @@ def contribute_md_gen():
     util.progress_bar("Contribute Page", end_time - start_time)
 
 def resources_md_gen():
-    util.progress_bar("Resources Page")
+    util.progress_bar("Resources Pages")
     start_time = time.time()
     resources.generate()
     end_time = time.time()
-    util.progress_bar("Resources Page", end_time - start_time)
+    util.progress_bar("Resources Pages", end_time - start_time)
 
 def redirects_md_gen():
     util.progress_bar("Redirection Pages")
