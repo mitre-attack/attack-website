@@ -96,17 +96,17 @@ def generate_technique_md(technique, domain, side_menu_data, tactic_list):
         # Generate data for sub-techniques
         if technique_dict['subtechniques']:
 
-            sub_tech_dict = {}
-
-            sub_tech_dict['domain'] = domain.split("-")[0]
-            sub_tech_dict['menu'] = side_menu_data
-            sub_tech_dict['parent_id'] = technique_dict['attack_id']
-            sub_tech_dict['parent_name'] = technique.get('name')
-            sub_tech_dict['subtechniques'] = technique_dict['subtechniques']
-
             # Generate sub-technique markdown file for each sub technique
             subtechniques = config.subtechniques_of[technique["id"]]
             for subtechnique in subtechniques:
+                sub_tech_dict = {}
+
+                sub_tech_dict['domain'] = domain.split("-")[0]
+                sub_tech_dict['menu'] = side_menu_data
+                sub_tech_dict['parent_id'] = technique_dict['attack_id']
+                sub_tech_dict['parent_name'] = technique.get('name')
+                sub_tech_dict['subtechniques'] = technique_dict['subtechniques']
+
                 sub_tech_dict = generate_data_for_md(sub_tech_dict, subtechnique['object'], tactic_list, True)
 
                 subs = config.sub_technique_md.substitute(sub_tech_dict)
