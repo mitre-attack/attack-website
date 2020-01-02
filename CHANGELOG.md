@@ -26,6 +26,10 @@
 <!--          addition of notable features. When PATCH is 0 it can      -->
 <!--          be omitted                                                -->
 
+# Changes staged on develop
+## Improvements
+- Improved maintainability of ATT&CKcon page and added ATT&CKcon 2.0 content. See issue [#19](https://github.com/mitre-attack/attack-website/issues/19). 
+
 # 5 December 2019
 ## ATT&CK Website version 1.0.4
 ### Fixes
