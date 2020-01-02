@@ -42,6 +42,7 @@ def replace_links(filepath, subdirectory_name):
 
     html_str = substitute("src", html_str)
     html_str = substitute("href", html_str)
+    html_str = substitute("content=\"0; url", html_str)
 
     with open(filepath, mode="w", encoding='utf8') as updated_html:
         updated_html.write(html_str)
@@ -52,5 +53,3 @@ def replace(subdirectory_name):
         for filename in filter(lambda f: f.endswith(".html"), files):
             filepath = os.path.join(directory, filename)
             replace_links(filepath, subdirectory_name)
-
-    
