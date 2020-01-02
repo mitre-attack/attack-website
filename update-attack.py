@@ -151,8 +151,9 @@ def update(args):
         generate.remove_unwanted_output()
 
     # Change directory root name
-    if 'subdirectory' in args:
-        generate.subdirectory_gen(args.subdirectory)
+    if args.subdirectory:
+        config.set_subdirectory(args.subdirectory)
+        generate.subdirectory_gen()
     
     if args.build:
         build_end = time.time()

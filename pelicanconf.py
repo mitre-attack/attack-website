@@ -14,6 +14,8 @@ SITEURL = ''
 
 PATH = 'content'
 
+OUTPUT_PATH = 'output/'
+
 TIMEZONE = 'America/New_York'
 
 DEFAULT_LANG = 'en'

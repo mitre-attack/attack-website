@@ -1,6 +1,7 @@
 import colorama
 import json
 import multiprocessing
+import os
 import shutil
 from string import Template
 from . import relationshiphelpers as rsh
@@ -572,9 +573,21 @@ column_space = int(window_size/3) - 1
 status_space = int(float(column_space)*0.80)
 other_column_space = int(float(column_space)*1.10)
 
-
 # Declare file location of web pages
 web_directory = "output"
+
+# Declare as empty string
+subdirectory = ""
+
+def set_subdirectory(subdirectory_str):
+    """ Method to set globally the subdirectory """
+
+    global subdirectory
+    global web_directory
+    subdirectory = subdirectory_str
+
+    # Add subdirectory to web directory
+    web_directory = os.path.join(web_directory, subdirectory)
 
 test_report_directory = "reports"
 # Constants used by citationschecker.py

@@ -5,7 +5,7 @@ import json
 from datetime import datetime
 from . import config
 
-prev_versions_deploy_folder = os.path.join("output", "previous")
+prev_versions_deploy_folder = os.path.join(config.web_directory, "previous")
 
 # Error handler for windows by:
 # https://stackoverflow.com/questions/2656322/shutil-rmtree-fails-on-windows-with-access-is-denied
@@ -48,7 +48,7 @@ def deploy():
             shutil.copytree(os.path.join(config.archives_directory, version), os.path.join(prev_versions_deploy_folder, version))
     
     # write robots.txt to disallow crawlers
-    with open(os.path.join("output", "robots.txt"), "w", encoding='utf8') as robots:
+    with open(os.path.join(config.web_directory, "robots.txt"), "w", encoding='utf8') as robots:
         robots.write("User-agent: *\nDisallow: /previous/")
 
 def build_markdown():
