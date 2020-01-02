@@ -515,6 +515,12 @@ changelog_md = ("Title: Changelog\n"
                 "Template: resources/changelog\n"
                 "save_as: resources/changelog.html\n\n")
 
+# string template for attackcon.md
+attackcon_md = ("Title: ATT&CKcon\n"
+                "Template: resources/attackcon\n"
+                "save_as: resources/attackcon/index.html\n"
+                "data: ")
+
 # Constants used by technique.py
 # ----------------------------------------------------------------------------
 

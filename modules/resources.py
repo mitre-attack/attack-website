@@ -5,11 +5,12 @@ from datetime import datetime
 
 def generate():
     """Responsible for generating the resources pages"""
-    generate_markdown_files()
     generate_faq_page()
     generate_changelog_page()
+    generate_resources_page()
+    generate_attackcon_page()
 
-def generate_markdown_files():
+def generate_resources_page():
     """Responsible for compiling resources json into resources markdown files
        for rendering on the HMTL
     """
@@ -61,3 +62,19 @@ def generate_changelog_page():
 
     with open(os.path.join(config.resources_markdown_path, "changelog.md"), "w", encoding='utf8') as md_file:
         md_file.write(changelog_md)
+
+def generate_attackcon_page():
+    """Responsible for compiling ATT&CKcon json into attackcon markdown file
+       for rendering on the HTML
+    """
+    # load ATT&CKcon data
+    with open(os.path.join(config.data_directory, "attackcon.json"), "r") as f:
+        attackcon = json.load(f)
+
+    attackcon = sorted(attackcon, key=lambda a: datetime.strptime(a["date"], "%B %Y"), reverse=True)
+
+    attackcon_content = config.attackcon_md + json.dumps(attackcon)
+    # write markdown to file
+    with open(os.path.join(config.resources_markdown_path, "attackcon.md"), "w", encoding='utf8') as md_file:
+        md_file.write(attackcon_content)
+    
