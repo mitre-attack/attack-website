@@ -1,6 +1,7 @@
 {% extends "general/base.html" %}
 {% set active_page = "attackcon" -%}
 {% set title = "MITRE ATT&CKcon | MITRE ATT&CK&trade;" -%}
+{% set conventions = page.data | from_json %}
 
 {% block content %}
 {{ super () }}
@@ -13,692 +14,111 @@
             <li class="breadcrumb-item">ATT&CKcon</li>
     </ol>
 </div>
-<div class="container pt-3 text-center">
-        <img src="/theme/images/attckcon-banner.jpg" width="100%">
-</div>
-<div class="container pt-3">
-        Thank you for all the passion and engagement that made ATT&CKcon such a success. Over 250 of you joined us in person at MITRE’s McLean campus for our first ever event that was live streamed to more than 1,000 people at its peak. Our videos have been viewed over 10,000 times already, and there’s a lot of energy around the community to keep improving the ATT&CK framework. Please continue to watch and share these presentations.
-</div>
-<div class="container pt-5 text-center">
-    <h5><a href=https://medium.com/mitre-attack/attackcon-2018-501d62566233 target="_blank">Click here to read our blog post all about ATT&CKcon 2018!</a> <img src="/theme/images/external-site-dark.jpeg" alt="External site" class="external-icon" /></h5>
-</div>
 
-<div class="container pb-3 pt-4 uniform-block">
-    <div class="card-block faq">
-        <div class="clearfix pb-3">
-            <h2>ATT&CKcon 2018 Presentations</h2>
-        
-            Click on the titles below for abstracts and external links to videos and slides.
-            <div class="card w-100">
-                <div class="card-header collapsed" id="2018-1-header" data-toggle="collapse" data-target="#2018-1-body"
-                    aria-expanded="false" aria-controls="2018-1-body">
-                    <h5 class="mb-0">1. Advancing Infosec, Keynote Presentation&nbsp;&nbsp;<small>(John Lambert, Microsoft)</small></h5>
-                </div>
-                <div id="2018-1-body" class="collapse" aria-labelledby="2018-1-header">
-                    <div class="card-body">
-                        In this presentation at MITRE ATT&CKcon, John Lambert, Distinguished Engineer and General
-                        Manager of the Threat Intelligence Center at Microsoft, presents “Advancing InfoSec: Towards an Open, Shareable,
-                        Contributor-Friendly Model of Speeding InfoSec Learning.” The talk details a model where infosec know-how is
-                        more organized, community sourced, vendor neutral, and shareable by all defenders. It includes a call for the
-                        community to publish mappings of ATT&CK techniques used by groups.
+<div class="pt-3 container">
+    <ul class="nav nav-tabs" role="tablist" id="years">
+        {% for con in conventions %}
+        {% set conID = "-".join(con.date.split(' ')) %}
+        {% set active = conID == 'October-2019' %}
+        <li class="nav-item">
+            <a class="nav-link{% if active %} active{% endif %}" id="{{conID}}-tab" data-toggle="tab" href="#{{conID}}-body" role="tab" aria-controls="{{conID}}-body" aria-selected="true">{{con.title}}</a>
+        </li>
+        {% endfor %}
+    </ul>
+    <div class="tab-content attackcons p-4 mb-3">
+        {% for con in conventions %}
+        {% set conID = "-".join(con.date.split(' ')) %}
+        {% set active = conID == 'October-2019' %}
+        <div class="uniform-block tab-pane fade{% if active %} show active{% endif %}" id="{{conID}}-body" role="tabpanel" aria-labelledby="{{conID}}-tab">
+            
+            {% if "banner_img" in con %}
+            <p>
+                <img src="{{ con.banner_img }}" width="100%">
+            </p>
+            {% endif %}
 
-                        <div class="container pt-4 text-center small">Links to 
-                            <a href="https://www.youtube.com/watch?v=yslLIqfOKCU&t=0s&index=2&list=PLkTApXQou_8JrhtrFDfAskvMqk97Yu2S2"
-                                target="_blank">video <img src="/theme/images/external-site-dark.jpeg" alt="External site" class="external-icon" />
-                            </a> and 
-                            <a href="https://www.slideshare.net/attackcon2018/mitre-attckcon-2018-keynote-advancing-infosec-john-lambert-microsoft"
-                                target="_blank">slides <img src="/theme/images/external-site-dark.jpeg" alt="External site" class="external-icon" />.
-                            </a>
-                        </div>  
-                    </div>                   
-                </div>
-            </div>
-        
-            <div class="card w-100 mt-1">
-                <div class="card-header collapsed" id="2018-2-header" data-toggle="collapse" data-target="#2018-2-body"
-                    aria-expanded="false" aria-controls="2018-2-body">
-                    <h5 class="mb-0">2. How Did We Get Here?&nbsp;&nbsp;<small>(Blake Strom and Richard Struse, MITRE)</small></h5>
-                </div>
-                <div id="2018-2-body" class="collapse" aria-labelledby="2018-2-header">
-                    <div class="card-body">
-                        Richard Struse, MITRE’s Principal Strategist for Cyber Threat Intelligence, interviews Blake
-                        Strom, MITRE’s principal ATT&CK engineer, on how MITRE ATT&CK was developed, its current state, and future
-                        direction.
+            {% if "description" in con %}
+            <p>{{con.description}}</p>
+            {% endif %}
+            {% if "blogpost" in con %}
+            <p><a target="_blank" href="{{con.blogpost}}">Click here to read our blog post about {{con.title}}! <img src="/theme/images/external-site-dark.jpeg" alt="External site" class="external-icon"></a></p>
+            {% endif %}
 
-                        <div class="container pt-4 text-center small">Link to 
-                            <a href="https://www.youtube.com/watch?v=u8Fnwb-1kMg&t=0s&index=3&list=PLkTApXQou_8JrhtrFDfAskvMqk97Yu2S2" 
-                                target="_blank"> video <img src="/theme/images/external-site-dark.jpeg" alt="External site" class="external-icon" />
-                            </a> 
-                            (no slides).
-                        </div>
+            <div class="presentations card-block">
+                <h2>Presentations</h2>
+                {% for presentation in con.presentations %}
+                {% set isPanel = "moderator" in presentation %}
+                <div class="card w-100 mt-1">
+                    <div class="card-header collapsed" id="{{conID}}-{{loop.index}}-header" data-toggle="collapse" data-target="#{{conID}}-{{loop.index}}-body" aria-expanded="false" aria-controls="{{conID}}-{{loop.index}}-body">
+                        <h5 class="mb-0">{{loop.index}}. {{presentation.title}}
+                            <small>
+                                {% if not isPanel %}
+                                ({% for presenterGroup in presentation.presenters %}{% if loop.index > 1 %}; {% endif %}{{ " and ".join(presenterGroup.names)}}{% if "organization" in presenterGroup %}, {{presenterGroup.organization}}{% endif %}{% endfor %})
+                                {% else %}
+                                (Moderated by {{presentation.moderator.name}}, {{presentation.moderator.organization}})
+                                {% endif %}
+                            </small>
+                        </h5>
                     </div>
-                </div>
-            </div>
+                    <div id="{{conID}}-{{loop.index}}-body" class="collapse" aria-labelledby="{{conID}}-{{loop.index}}-header">
+                        <div class="card-body">
+                            {% if not isPanel %}
+                            <p class="card-text">{{presentation.description}}</p>
+                            {% else %}
+                            <p class="card-text">Panelists:</p>
+                            <ul class="card-text">
+                                {% for panelist in presentation.panelists %}
+                                <li>
+                                    {{panelist}}
+                                </li>
+                                {% endfor %}
+                            </ul>
+                            <p class="card-text">{{presentation.moderator.name}} moderates a panel that discusses:</p>
+                            <ul class="card-text">
+                                {% for topic in presentation.topics %}
+                                <li>
+                                    {{topic}}
+                                </li>
+                                {% endfor %}
+                            </ul>
+                            {% endif %}
 
-            <div class="card w-100 mt-1">
-                <div class="card-header collapsed" id="2018-3-header" data-toggle="collapse" data-target="#2018-3-body"
-                        aria-expanded="false" aria-controls="2018-3-body">
-                        <h5 class="mb-0">3. Operationalizing ATT&CK&nbsp;&nbsp;<small>(Bryson Bort, SCYTHE)</small></h5>
-                </div>
-                <div id="2018-3-body" class="collapse" aria-labelledby="2018-3-header">
-                    <div class="card-body">
-                        How do you turn a theoretical framework into something useful? ATT&CK provides a common
-                        language while allowing for the development of sophisticated defenses.
-    
-                        <div class="container pt-4 text-center small">Links to 
-                            <a href="https://www.youtube.com/watch?v=ggmdNvJC3sQ&index=4&t=0s&list=PLkTApXQou_8JrhtrFDfAskvMqk97Yu2S2"
-                                target="_blank">video <img src="/theme/images/external-site-dark.jpeg" alt="External site" class="external-icon" />
-                            </a> and 
-                            <a href="https://www.slideshare.net/attackcon2018/mitre-attckcon-2018-operationalizing-attck-bryson-bort-scythe"
-                                target="_blank">slides <img src="/theme/images/external-site-dark.jpeg" alt="External site" class="external-icon" />.
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
+                            {% if "video" in presentation %}
+                            <a class="card-link" target="_blank" href="{{presentation.video}}">video <img src="/theme/images/external-site-dark.jpeg" alt="External site" class="external-icon"></a> 
+                            {% else %}
+                            <span class="card-link">(no video)</span>
+                            {% endif %}
 
-            <div class="card w-100 mt-1">
-                <div class="card-header collapsed" id="2018-4-header" data-toggle="collapse" data-target="#2018-4-body"
-                    aria-expanded="false" aria-controls="2018-4-body">
-                    <h5 class="mb-0">4. Summiting the Pyramid of Pain: Operationalizing ATT&CK&nbsp;&nbsp;<small>(Emma MacMullan and Justin Sherenco, General Electric)</small></h5>
-                </div>
-                <div id="2018-4-body" class="collapse" aria-labelledby="2018-4-header">
-                    <div class="card-body">
-                        Operationalizing the ATT&CK framework has enabled GE to deploy custom detection to evolving
-                        threat actor behaviors. By leveraging an in-house developed tool called TIAMAT (Tactical Intelligence Adversary
-                        Mapping and Analysis Tool) the ATT&CK framework is incorporated into an end-to-end operational process from
-                        intelligence collection to customized detection deployment. The designing of this new operational process is
-                        examined, and a use case presented of how examining a historical incident led to a new method of deploying
-                        detection based on ATT&CK and the detection of previously undiscovered activity. There is also a demo that walks
-                        the audience through the end-to-end process and explains TIAMATs capabilities.
-            
-                        <div class="container pt-4 text-center small">Links to 
-                            <a href="https://www.youtube.com/watch?v=YhsN5pBDrGY&index=5&t=0s&list=PLkTApXQou_8JrhtrFDfAskvMqk97Yu2S2"
-                                target="_blank"> video <img src="/theme/images/external-site-dark.jpeg" alt="External site" class="external-icon" />
-                            </a> and 
-                            <a href="https://www.slideshare.net/attackcon2018/mitre-attckcon-2018-summiting-the-pyramid-of-pain-operationalizing-attck-emma-macmullan-and-justin-sherenco-general-electric"
-                                target="_blank"> slides <img src="/theme/images/external-site-dark.jpeg" alt="External site" class="external-icon" />.
-                            </a>
-                        </div>
+                            {% if "slides" in presentation %}
+                            <a class="card-link" target="_blank" href="{{presentation.slides}}">slides <img src="/theme/images/external-site-dark.jpeg" alt="External site" class="external-icon"></a> 
+                            {% else %}
+                            <span class="card-link">(no slides)</span>
+                            {% endif %}
+                        </div>                   
                     </div>
                 </div>
-            </div>
 
-            <div class="card w-100 mt-1">
-                <div class="card-header collapsed" id="2018-5-header" data-toggle="collapse" data-target="#2018-5-body"
-                    aria-expanded="false" aria-controls="2018-5-body">
-                    <h5 class="mb-0">5. ATT&CK: All the Things&nbsp;&nbsp;<small>(Neelsen Cyrus and David Thompson, USAA)</small></h5>
-                </div>
-                <div id="2018-5-body" class="collapse" aria-labelledby="2018-5-header">
-                    <div class="card-body">
-                        USAA has utilized the ATT&CK framework as a unique means to map their current detection
-                        infrastructure and assess their ability to defend against the most relevant threats to their network. In this
-                        presentation they share some lessons learned during their journey with ATT&CK leading to identified best
-                        practices for workflow integration through team composition and custom tool development.
-                    
-                        <div class="container pt-4 text-center small">Links to 
-                            <a href="https://www.youtube.com/watch?v=wryPQd2s_V8&index=6&t=0s&list=PLkTApXQou_8JrhtrFDfAskvMqk97Yu2S2"
-                                target="_blank">video <img src="/theme/images/external-site-dark.jpeg" alt="External site" class="external-icon" />
-                            </a> and 
-                            <a href="https://www.slideshare.net/attackcon2018/mitre-attckcon-2018-attck-all-the-things-neelsen-cyrus-and-david-thompson-usaa"
-                                target="_blank">slides <img src="/theme/images/external-site-dark.jpeg" alt="External site" class="external-icon" />.
-                            </a>
-                        </div>
+                {% endfor %}
+            </div>
+            {% if "sponsors_img" in con %}
+            <div>
+                <h2>Sponsors</h2>
+                <img src="{{ con.sponsors_img }}" width="100%">
+            </div>
+            {% elif "sponsors_img_list" in con %}
+            <div>
+                <h2>Sponsors</h2>
+                <div class="sponsors-block">
+                    {% for sponsor_img in con.sponsors_img_list %}
+                    <div class="img-container">
+                        <img src="{{sponsor_img}}">
                     </div>
+                    {% endfor %}
                 </div>
             </div>
-
-            <div class="card w-100 mt-1">
-                <div class="card-header collapsed" id="2018-6-header" data-toggle="collapse" data-target="#2018-6-body"
-                    aria-expanded="false" aria-controls="2018-6-body">
-                    <h5 class="mb-0">6. Agile Continuous Improvement Using ATT&CK&nbsp;&nbsp;<small>(Matthew Stiak, Delta Dental and Jason Sinchak, Level Nine Group)</small></h5>
-                </div>
-                <div id="2018-6-body" class="collapse" aria-labelledby="2018-6-header">
-                    <div class="card-body">
-                        Organizations implementing SOC/IR with limited resources confront two issues: prioritization
-                        and measurement. Any successful SOC/IR implementation must have a robust way to prioritize content development
-                        and technology investment, and measurements that reflect the effectiveness of the investments to drive the next
-                        round of prioritization. Organizations can maximize their return on investment by using MITRE ATT&CK to focus
-                        resources on repeatable behaviors and provide a simple structure to reporting how well the organization can
-                        detect, block, or respond to those behaviors. During this talk security testing and operations experts Matt
-                        Stiak and Jason Sinchak share their thoughts on how to operationalize a continuous improvement and measurement
-                        framework based on MITRE ATT&CK, as well as some early results from their implementation of that framework.
-            
-                        <div class="container pt-4 text-center small">Links to 
-                            <a href="https://www.youtube.com/watch?v=Bgg6kZBzyhc&index=7&t=0s&list=PLkTApXQou_8JrhtrFDfAskvMqk97Yu2S2"
-                                target="_blank"> video <img src="/theme/images/external-site-dark.jpeg" alt="External site" class="external-icon" />
-                            </a> and 
-                            <a href="https://www.slideshare.net/attackcon2018/mitre-attckcon-2018-agile-continuous-improvement-using-attck-matthew-stiak-delta-dental-and-jason-sinchak-level-nine-group"
-                                target="_blank"> slides <img src="/theme/images/external-site-dark.jpeg" alt="External site" class="external-icon" />.
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="card w-100 mt-1">
-                <div class="card-header collapsed" id="2018-7-header" data-toggle="collapse" data-target="#2018-7-body"
-                    aria-expanded="false" aria-controls="2018-7-body">
-                    <h5 class="mb-0">7. Vendor Panel Discussion&nbsp;&nbsp;<small>(Ed Amoroso, Moderator)</small></h5>
-                </div>
-                <div id="2018-7-body" class="collapse" aria-labelledby="2018-7-header">
-                    <div class="card-body">
-                        Panelists:
-                        <ul>
-                            <li>Devon Kerr, Endgame</li>
-                            <li>Jen Miller-Osborn, Unit 42 at Palo Alto Networks</li>
-                            <li>Ross Rustici, Cybereason</li>
-                            <li>Carl Wright, ATTACKIQ</li>
-                        </ul>
-                        Ed Amoroso moderates a panel that discusses:
-                        <ul>
-                            <li>The role of a threat taxonomy in the design of a commercial solution</li>
-                            <li>How commercial providers keep up with a changing threat landscape</li>
-                            <li>Stories around the most intriguing threat scenarios or methods seen</li>
-                            <li>Requirements from commercial clients regarding threat frameworks</li>
-                        </ul>
-            
-                        <div class="container pt-4 text-center small">Link to 
-                            <a href="https://www.youtube.com/watch?v=hQIYdCocjbw&list=PLkTApXQou_8JrhtrFDfAskvMqk97Yu2S2&index=8&t=0s"
-                                target="_blank">video <img src="/theme/images/external-site-dark.jpeg" alt="External site" class="external-icon" />
-                            </a> 
-                            (no slides).
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="card w-100 mt-1">
-                <div class="card-header collapsed" id="2018-8-header" data-toggle="collapse" data-target="#2018-8-body"
-                    aria-expanded="false" aria-controls="2018-8-body">
-                    <h5 class="mb-0">8. VCAF: Expanding the ATT&CK Framework to cover VERIS Threat Action Varieties&nbsp;&nbsp;<small>(Alex Pinto, Verizon)</small></h5>
-                </div>
-                <div id="2018-8-body" class="collapse" aria-labelledby="2018-8-header">
-                    <div class="card-body">
-                        The Vocabulary for Event Recording and Incident Sharing (VERIS) is a set of metrics designed to
-                        provide a common language for describing security incidents in a structured and repeatable manner. VERIS has
-                        been the base analysis framework for supporting the Verizon Data Breach Investigations Report (DBIR) since its
-                        inception. However, as organizations work to interpret the richness of information present on the DBIR to a more
-                        tactical level, the Threat Action Varieties available on VERIS fail to capture the detail present on the
-                        incidents recorded. This talk presents the Verizon Common Attack Framework (VCAF), an effort from the Security
-                        Data Science team and the DBIR team in Verizon to expand and map the ATT&CK framework in alignment with the DBIR
-                        Threat Action Varieties to provide this much-sought level of granularity in recording and analyzing recorded
-                        breaches. Additionally, this talk describes possible outcomes when this data is available and organized as such.
-                        Examples include applying DBIR-inspired attack vector analytics upon ATT&CK layer information, effectively
-                        identifying optimal control choke points on the attack graphs according to specific industries covered by the
-                        DBIR.
-            
-                        <div class="container pt-4 text-center small">Links to 
-                            <a href="https://www.youtube.com/watch?v=-NtYYqUGEco&list=PLkTApXQou_8JrhtrFDfAskvMqk97Yu2S2&index=9&t=0s"
-                                target="_blank"> video <img src="/theme/images/external-site-dark.jpeg" alt="External site" class="external-icon" />
-                            </a> and 
-                            <a href="https://www.slideshare.net/attackcon2018/mitre-attckcon-2018-vcaf-expanding-the-attck-framework-to-cover-veris-threat-action-varieties-alex-pinto-verizon"
-                                target="_blank"> slides <img src="/theme/images/external-site-dark.jpeg" alt="External site" class="external-icon" />.
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card w-100 mt-1">
-                <div class="card-header collapsed" id="2018-9-header" data-toggle="collapse" data-target="#2018-9-body"
-                    aria-expanded="false" aria-controls="2018-9-body">
-                    <h5 class="mb-0">9. Playing Devil’s Advocate to Security Initiatives with ATT&CK&nbsp;&nbsp;<small>(David Middlehurst, Trustwave)</small></h5>
-                </div>
-                <div id="2018-9-body" class="collapse" aria-labelledby="2018-9-header">
-                    <div class="card-body">
-                        This talk presents a case study which demonstrates that we should consider the knowledge and
-                        wisdom contained within ATT&CK in all organizational security initiatives to make sure by fixing one thing we
-                        have not just created an opportunity. The presentation shows how to leverage the analysis and classification of
-                        APT tactics and procedures (TTP) to guide research into new and novel techniques, specifically focusing on
-                        exfiltration and command and control. DNS over HTTPS (DoH) aims to increase user privacy and security by
-                        preventing eavesdropping and manipulation of DNS data by man-in-the-middle attacks. Major web browsers such as
-                        Firefox are considering its implementation by default. But what could this possibly mean for exfiltration and
-                        command and control? This session provides an end-to-end demo that shows DoH being implemented to provide full
-                        command and control in a popular attack simulation framework and discusses associated mitigations.
-            
-                        <div class="container pt-4 text-center small">Links to 
-                            <a href="https://www.youtube.com/watch?v=4sNaScEg32s&list=PLkTApXQou_8JrhtrFDfAskvMqk97Yu2S2&index=10&t=0s"
-                                target="_blank">video <img src="/theme/images/external-site-dark.jpeg" alt="External site" class="external-icon" />
-                            </a> and 
-                            <a href="https://www.slideshare.net/attackcon2018/mitre-attckcon-2018-playing-devils-advocate-to-security-initiatives-with-attck-david-middlehurst-trustwave"
-                                target="_blank">slides <img src="/theme/images/external-site-dark.jpeg" alt="External site" class="external-icon" />.
-                            </a>           
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="card w-100 mt-1">
-                <div class="card-header collapsed" id="2018-10-header" data-toggle="collapse" data-target="#2018-10-body"
-                    aria-expanded="false" aria-controls="2018-10-body">
-                    <h5 class="mb-0">10. From Red VS Blue to Red Loves Blue&nbsp;&nbsp;<small>(Olaf Hartong and Vincent Van Mieghem, Deloitte)</small></h5>
-                </div>
-                <div id="2018-10-body" class="collapse" aria-labelledby="2018-10-header">
-                    <div class="card-body">
-                        This session discusses Deloitte’s purple teaming approach which is using ATT&CK as a guiding
-                        principle to help both teams improve. This session shows how this works in a customer scenario, how to scope
-                        that scenario, how to plan the scenario and choose the various TTPs to be covered to how we assist the customers
-                        blue team in understanding the TTPs and helping them design detective capabilities for them. When the Blue Team
-                        is able to connect the dots from offensive activities in the network and what they see in their logs, rewalls,
-                        SIEMs, etc. they have the ability to fully understand what adversaries do and what the TTP’s of attackers
-                        actually look like if they are active in their network. It’s much easier to find the needle in the haystack if
-                        you know there is a needle to find to begin with. Purple teaming is providing this pointy needle, used to
-                        accelerate the Blue Team.
-            
-                        <div class="container pt-4 text-center small">Links to 
-                            <a href="https://www.youtube.com/watch?v=7OK3fOZ7NXM&list=PLkTApXQou_8JrhtrFDfAskvMqk97Yu2S2&index=11&t=0s"
-                                target="_blank"> video <img src="/theme/images/external-site-dark.jpeg" alt="External site" class="external-icon" />
-                            </a> and 
-                            <a href="https://www.slideshare.net/attackcon2018/mitre-attckcon-2018-from-red-vs-blue-to-red-blue-olaf-hartong-and-vincent-van-mieghem-deloitte"
-                                target="_blank"> slides <img src="/theme/images/external-site-dark.jpeg" alt="External site" class="external-icon" />.
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="card w-100 mt-1">
-                <div class="card-header collapsed" id="2018-11-header" data-toggle="collapse" data-target="#2018-11-body"
-                    aria-expanded="false" aria-controls="2018-11-body">
-                    <h5 class="mb-0">11. Helping Your Non-Security Executives Understand ATT&CK in 10 Minutes or Less&nbsp;&nbsp;<small>(Elly Searle, CrowdStrike)</small></h5>
-                </div>
-                <div id="2018-11-body" class="collapse" aria-labelledby="2018-11-header">
-                    <div class="card-body">
-                        ATT&CK is an incredibly valuable framework for describing and analyzing what’s happening in
-                        your environment. Sometimes security professionals not only need a way to understand, but also need a way to
-                        clearly articulate to non-security leadership to gain support and investment in needed resourcing. Using UX
-                        design methods, CrowdStrike came up with a mental model and more conversational terms to help anyone quickly
-                        parse the big picture.
-            
-                        <div class="container pt-4 text-center small">Links to 
-                            <a href="https://www.youtube.com/watch?v=eZsMHSE2PDc&list=PLkTApXQou_8JrhtrFDfAskvMqk97Yu2S2&index=12&t=0s"
-                                target="_blank">video <img src="/theme/images/external-site-dark.jpeg" alt="External site" class="external-icon" />
-                            </a> and 
-                            <a href="https://www.slideshare.net/attackcon2018/mitre-attckcon-2018-helping-your-nonsecurity-executives-understand-attck-in-10-minutes-or-less-elly-searle-crowdstrike"
-                                target="_blank">slides <img src="/theme/images/external-site-dark.jpeg" alt="External site" class="external-icon" />.
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="card w-100 mt-1">
-                <div class="card-header collapsed" id="2018-12-header" data-toggle="collapse" data-target="#2018-12-body"
-                    aria-expanded="false" aria-controls="2018-12-body">
-                    <h5 class="mb-0">12. ATT&CK as a Teacher&nbsp;&nbsp;<small>(Travis Smith, Tripwire)</small></h5>
-                </div>
-                <div id="2018-12-body" class="collapse" aria-labelledby="2018-12-header">
-                    <div class="card-body">
-                        ATT&CK is valuable for those of us who are heads down in security day in and day out. But what
-                        about using ATT&CK to each college interns about security? This presentation details how Tripwire used ATT&CK to
-                        build- out a new training regimen for summer interns. By going through and finding quick wins, Tripwire’s
-                        interns were actively engaged in learning about security. The detailed break downs of ATT&CK were greatly
-                        beneficial in helping teach security concepts to those who were not yet familiar with them. This session shows
-                        the program details and how you might be able to adapt it to your requirements.
-            
-                        <div class="container pt-4 text-center small"> Links to 
-                            <a href="https://www.youtube.com/watch?v=4s3pZirFCPk&list=PLkTApXQou_8JrhtrFDfAskvMqk97Yu2S2&index=13&t=0s"
-                                target="_blank"> video <img src="/theme/images/external-site-dark.jpeg" alt="External site" class="external-icon" />
-                            </a> and 
-                            <a href="https://www.slideshare.net/attackcon2018/mitre-attckcon-2018-attck-as-a-teacher-travis-smith-tripwire"
-                                target="_blank"> slides <img src="/theme/images/external-site-dark.jpeg" alt="External site" class="external-icon" />.
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card w-100 mt-1">
-                <div class="card-header collapsed" id="2018-13-header" data-toggle="collapse" data-target="#2018-13-body"
-                    aria-expanded="false" aria-controls="2018-13-body">
-                    <h5 class="mb-0">13. Detection Philosophy, Evolution & ATT&CK&nbsp;&nbsp;<small>(Fred Stankowski & Travis McWaters, Pepsico)</small></h5>
-                </div>
-                <div id="2018-13-body" class="collapse" aria-labelledby="2018-13-header">
-                    <div class="card-body">
-                        This lightning talk is a brief discussion around how PepsiCo is managing their ‘detection
-                        catalog’ and how it maps and is enhanced by the MITRE ATT&CK framework.
-            
-                        <div class="container pt-4 text-center small">Links to 
-                            <a href="https://www.youtube.com/watch?v=bFFi3Vqrp2o&list=PLkTApXQou_8JrhtrFDfAskvMqk97Yu2S2&index=14&t=0s"
-                                target="_blank">video <img src="/theme/images/external-site-dark.jpeg" alt="External site" class="external-icon" />
-                            </a> and 
-                            <a href="https://www.slideshare.net/attackcon2018/mitre-attckcon-2018-detection-philosophy-evolution-attck-fred-stankowski-travis-mcwaters"
-                                target="_blank">slides <img src="/theme/images/external-site-dark.jpeg" alt="External site" class="external-icon" />.
-                            </a>   
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="card w-100 mt-1">
-                <div class="card-header collapsed" id="2018-14-header" data-toggle="collapse" data-target="#2018-14-body"
-                    aria-expanded="false" aria-controls="2018-14-body">
-                    <h5 class="mb-0">14. Decision Analysis Applications in Threat Analysis Frameworks&nbsp;&nbsp;<small>(Emily Shawgo, PNC)</small></h5>
-                </div>
-                <div id="2018-14-body" class="collapse" aria-labelledby="2018-14-header">
-                    <div class="card-body">
-                        In the modern age, all organizations face threats from various types of cyber attacks. Although
-                        great strides have been made to consider human factors in cybersecurity and to become more proactive in threat
-                        analysis, security is still generally a reactive, technical field. The research presented in this talk seeks to
-                        develop a framework which adapts the existing MITRE ATT&CK framework to look at attacks in a less linear, more
-                        human-centered framework that focuses on the capabilities and decisions of the threat actor. The framework
-                        approaches threat analysis from a binary assessment of success vs. failure in order to see the entire attack and
-                        consider the potential for a number of methods and attempts made in a single attack. A detailed methodology and
-                        sample charts are included for a reference and a starting point in developing one’s own personalized charts, and
-                        recommendations are made for ways to integrate this methodology into the risk management process.
-            
-                        <div class="container pt-4 text-center small">Links to 
-                            <a href="https://www.youtube.com/watch?v=3JMVP6rkY8Y&list=PLkTApXQou_8JrhtrFDfAskvMqk97Yu2S2&index=15&t=0s"
-                                target="_blank"> video <img src="/theme/images/external-site-dark.jpeg" alt="External site" class="external-icon" />
-                            </a> and 
-                            <a href="https://www.slideshare.net/attackcon2018/mitre-attckcon-2018-decision-analysis-applications-in-threat-analysis-frameworks-emily-shawgo-pnc"
-                                target="_blank"> slides <img src="/theme/images/external-site-dark.jpeg" alt="External site" class="external-icon" />.
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="card w-100 mt-1">
-                <div class="card-header collapsed" id="2018-15-header" data-toggle="collapse" data-target="#2018-15-body"
-                    aria-expanded="false" aria-controls="2018-15-body">
-                    <h5 class="mb-0">15. Building an Atomic Testing Program&nbsp;&nbsp;<small>(Brian Beyer, Red Canary)</small></h5>
-                </div>
-                <div id="2018-15-body" class="collapse" aria-labelledby="2018-15-header">
-                    <div class="card-body">
-                        Red Canary’s applied research team built the Atomic Red Team project based on a simple idea:
-                        encourage security teams to test their systems. Leveraging MITRE ATT&CK, the series of small tests can be
-                        combined into chains to help teams gain insight into gaps in their security program at all levels. This talk
-                        describes how to use Atomic Red Team and how MITRE ATT&CK is leveraged to write the tests.
-            
-                        <div class="container pt-4 text-center small">Links to 
-                            <a href="https://www.youtube.com/watch?v=MZZzYaNUfjE&list=PLkTApXQou_8JrhtrFDfAskvMqk97Yu2S2&index=16&t=0s"
-                                target="_blank">video <img src="/theme/images/external-site-dark.jpeg" alt="External site" class="external-icon" />
-                            </a> and 
-                            <a href="https://www.slideshare.net/attackcon2018/mitre-attckcon-2018-building-an-atomic-testing-program-brian-beyer-red-canary"
-                                target="_blank">slides <img src="/theme/images/external-site-dark.jpeg" alt="External site" class="external-icon" />.
-                            </a>           
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="card w-100 mt-1">
-                <div class="card-header collapsed" id="2018-16-header" data-toggle="collapse" data-target="#2018-16-body"
-                    aria-expanded="false" aria-controls="2018-16-body">
-                    <h5 class="mb-0">16. 5 Ways to Screw Up Your Security Program with ATT&CK&nbsp;&nbsp;<small>(Kyle Rainey, Red Canary)</small></h5>
-                </div>
-                <div id="2018-16-body" class="collapse" aria-labelledby="2018-16-header">
-                    <div class="card-body">
-                        Over the past year there has been a significant uptick in adoption of MITRE ATT&CK. Adoption of
-                        a common language and taxonomy for adversarial tactics and techniques comes with a few unspoken traps. This talk
-                        is to bring awareness to the pitfalls of implementing and adopting any variation of MITRE ATT&CK and how you can
-                        avoid falling for them.
-            
-                        <div class="container pt-4 text-center small">Link to 
-                            <a href="https://www.youtube.com/watch?v=MBVxaE9oaMQ&list=PLkTApXQou_8JrhtrFDfAskvMqk97Yu2S2&index=17&t=0s"
-                                target="_blank"> video <img src="/theme/images/external-site-dark.jpeg" alt="External site" class="external-icon" />
-                            </a> 
-                            (no slides).
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="card w-100 mt-1">
-                <div class="card-header collapsed" id="2018-17-header" data-toggle="collapse" data-target="#2018-17-body"
-                    aria-expanded="false" aria-controls="2018-17-body">
-                    <h5 class="mb-0">17. ATT&CK + OSQuery = Love&nbsp;&nbsp;<small>(Scott Lundgren, Carbon Black)</small></h5>
-                </div>
-                <div id="2018-17-body" class="collapse" aria-labelledby="2018-17-header">
-                    <div class="card-body">
-                        MITRE ATT&CK is cool and it's open, with a heavy emphasis on how attackers behave on the
-                        endpoint. OSQuery is cool and it's open, with a heavy emphasis on endpoint visibility. This talk focuses on an
-                        open-source extension to OSQuery that provides a free, repeatable mechanism to identify and detect ATT&CK
-                        techniques.
-            
-                        <div class="container pt-4 text-center small">Links to 
-                            <a href="https://www.youtube.com/watch?v=scI1AvZUBCo&list=PLkTApXQou_8JrhtrFDfAskvMqk97Yu2S2&index=18&t=0s"
-                                target="_blank">video <img src="/theme/images/external-site-dark.jpeg" alt="External site" class="external-icon" />
-                            </a> and 
-                            <a href="https://www.slideshare.net/attackcon2018/mitre-attckcon-2018-attck-osquery-love-scott-lundgren-carbon-black"
-                                target="_blank">slides <img src="/theme/images/external-site-dark.jpeg" alt="External site" class="external-icon" />.
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="card w-100 mt-1">
-                <div class="card-header collapsed" id="2018-18-header" data-toggle="collapse" data-target="#2018-18-body"
-                    aria-expanded="false" aria-controls="2018-18-body">
-                    <h5 class="mb-0">18. An ATT&CK Review of 200 Hybrid-Analysis Submissions&nbsp;&nbsp;<small>(James Lerud, Verodin)</small></h5>
-                </div>
-                <div id="2018-18-body" class="collapse" aria-labelledby="2018-18-header">
-                    <div class="card-body">
-                        How can you consistently categorize Techniques a given piece of malware uses? The answer to
-                        this question could be provided by sandbox vendors. CrowdStrike has embraced ATT&CK by including Technique
-                        detection in their public Hybrid-Analysis reports. This talk reviews the submission results of 100 malicious and
-                        100 benign executables.
-            
-                        <div class="container pt-4 text-center small">Links to 
-                            <a href="https://www.youtube.com/watch?v=GDIPEYdTmCE&list=PLkTApXQou_8JrhtrFDfAskvMqk97Yu2S2&index=19&t=0s"
-                                target="_blank"> video <img src="/theme/images/external-site-dark.jpeg" alt="External site" class="external-icon" />
-                            </a> and 
-                            <a href="https://www.slideshare.net/attackcon2018/mitre-attckcon-2018-an-attck-review-of-200-hybridanalysis-submissions-james-lerud-verodin"
-                                target="_blank"> slides <img src="/theme/images/external-site-dark.jpeg" alt="External site" class="external-icon" />.
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="card w-100 mt-1">
-                <div class="card-header collapsed" id="2018-19-header" data-toggle="collapse" data-target="#2018-19-body"
-                    aria-expanded="false" aria-controls="2018-19-body">
-                    <h5 class="mb-0">19. From Technique to Detection&nbsp;&nbsp;<small>(Paul Ewing and Ross Wolf, Endgame)</small></h5>
-                </div>
-                <div id="2018-19-body" class="collapse" aria-labelledby="2018-19-header">
-                    <div class="card-body">
-                        This session is a practical guide for a rapid prototyping of ATT&CK-based analytics – from
-                        technique to detection.
-            
-                        <div class="container pt-4 text-center small">Links to 
-                            <a href="https://www.youtube.com/watch?v=a3hIIzJrH14&list=PLkTApXQou_8JrhtrFDfAskvMqk97Yu2S2&index=20&t=0s"
-                                target="_blank">video <img src="/theme/images/external-site-dark.jpeg" alt="External site" class="external-icon" />
-                            </a> and 
-                            <a href="https://www.slideshare.net/attackcon2018/mitre-attckcon-2018-from-technique-to-detection-paul-ewing-and-ross-wolf-endgame"
-                                target="_blank">slides <img src="/theme/images/external-site-dark.jpeg" alt="External site" class="external-icon" />.
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="card w-100 mt-1">
-                <div class="card-header collapsed" id="2018-20-header" data-toggle="collapse" data-target="#2018-20-body"
-                    aria-expanded="false" aria-controls="2018-20-body">
-                    <h5 class="mb-0">20. Hunters ATT&CKing with the Data&nbsp;&nbsp;<small>(Roberto Rodriguez, SpecterOps and Jose Luis Rodriguez, Student)</small></h5>
-                </div>
-                <div id="2018-20-body" class="collapse" aria-labelledby="2018-20-header">
-                    <div class="card-body">
-                        With the development of the MITRE ATT&CK framework and its categorization of adversary activity
-                        during the attack cycle, understanding what to hunt for has become easier and more efficient than ever. However,
-                        organizations are still struggling to understand how they can prioritize the development of hunt hypothesis,
-                        assess their current security posture, and develop the right analytics with the help of ATT&CK. Even though
-                        there are several ways to utilize ATT&CK to accomplish those goals, there are only a few that are focusing
-                        primarily on the data that is currently being collected to drive the success of a hunt program. This
-                        presentation shows how organizations can benefit from mapping their current visibility from a data perspective
-                        to the ATT&CK framework. It focuses on how to identify, document, standardize and model current available data
-                        to enhance a hunt program. It presents an updated ThreatHunter-Playbook, a Kibana ATT&CK dashboard, a new
-                        project named Open Source Security Events Metadata known as OSSEM and expands on the “data sources” section
-                        already provided by ATT&CK on most of the documented adversarial techniques.
-            
-                        <div class="container pt-4 text-center small">Link to 
-                            <a href="https://www.youtube.com/watch?v=QCDBjFJ_C3g&list=PLkTApXQou_8JrhtrFDfAskvMqk97Yu2S2&index=21&t=0s"
-                                target="_blank"> video <img src="/theme/images/external-site-dark.jpeg" alt="External site" class="external-icon" />
-                            </a> and 
-                            <a href="https://www.slideshare.net/attackcon2018/mitre-attckcon-2018-hunters-attcking-with-the-data-robert-rodriguez-specterops-and-jose-luis-rodriguez-student"
-                                target="_blank"> slides <img src="/theme/images/external-site-dark.jpeg" alt="External site" class="external-icon" />.
-                            </a>                      
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="card w-100 mt-1">
-                <div class="card-header collapsed" id="2018-21-header" data-toggle="collapse" data-target="#2018-21-body"
-                    aria-expanded="false" aria-controls="2018-21-body">
-                    <h5 class="mb-0">21. Analyzing Targeted Intrusions Through the Lens of the ATT&CK Framework&nbsp;&nbsp;<small>(Karl Scheuerman, CrowdStrike)</small></h5>
-                </div>
-                <div id="2018-21-body" class="collapse" aria-labelledby="2018-21-header">
-                    <div class="card-body">
-                        The security community is quickly adopting the MITRE ATT&CK matrix as a framework for
-                        understanding and analyzing targeted intrusions. However, one of its potential limitations is a lack of detailed
-                        historical intrusion data for developing accurate and thorough ATT&CK-based threat modeling. Crowdstrike’s
-                        Falcon OverWatch threat hunting team analyzes adversary behavior on a regular basis. The amount of OverWatch's
-                        malicious intrusion data is significant given the valuable telemetry delivered by Falcon's endpoint technology.
-                        As a result, CrowdStrike has amassed a rich data library of malicious activity that can be applied to the ATT&CK
-                        model. The OverWatch Strategic Counter-Adversary Research (SCAR) team has now evaluated all OverWatch intrusion
-                        data since January 1, 2018 through the lens of the ATT&CK framework. This presentation presents these findings
-                        and highlights cases of unique adversary TTP use. The results of this analysis will provide a baseline from
-                        which CrowdStrike can better identify changes in threat actor TTP trends moving forward. In addition, the
-                        presentation discusses limitations in this type of research.
-            
-                        <div class="container pt-4 text-center small">Link to 
-                            <a href="https://www.youtube.com/watch?v=Rg64nPqqs8s&list=PLkTApXQou_8JrhtrFDfAskvMqk97Yu2S2&index=22&t=0s"
-                                target="_blank">video <img src="/theme/images/external-site-dark.jpeg" alt="External site" class="external-icon" />
-                            </a> 
-                            (no slides).           
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="card w-100 mt-1">
-                <div class="card-header collapsed" id="2018-22-header" data-toggle="collapse" data-target="#2018-22-body"
-                    aria-expanded="false" aria-controls="2018-22-body">
-                    <h5 class="mb-0">22. End User Panel Discussion&nbsp;&nbsp;<small>(Moderated by Katie Nickels, MITRE)</small></h5>
-                </div>
-                <div id="2018-22-body" class="collapse" aria-labelledby="2018-22-header">
-                    <div class="card-body">
-                        Panelists:
-                        <ul>
-                            <li>Jon Bagg, Booz Allen Hamilton</li>
-                            <li>Daniel Bernholz, JPMorgan Chase</li>
-                            <li>Dave Westgard, Target Corporation</li>
-                        </ul>
-                        Katie Nickels moderates a panel of ATT&CK end users answering questions like:
-                        <ul>
-                            <li>What are the best practices and lessons learned for organizations who are just getting started with ATT&CK?
-                            </li>
-                            <li>What has been the most difficult part of implementing ATT&CK? What changes could be made to ATT&CK to make
-                                it easier for others in the future?</li>
-                            <li>Where would you like to see ATT&CK go in the future that would help make it more useful for your team?</li>
-                            <li>What else haven’t we talked about that you think is important for someone who wants to use ATT&CK to know?
-                            </li>
-                        </ul>
-                    
-                        <div class="container pt-4 text-center small">Link to
-                            <a href="https://www.youtube.com/watch?v=wJoMKYfM7OQ&list=PLkTApXQou_8JrhtrFDfAskvMqk97Yu2S2&index=23&t=0s"
-                                target="_blank"> video <img src="/theme/images/external-site-dark.jpeg" alt="External site"
-                                    class="external-icon" />
-                            </a>
-                            (no slides).
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="card w-100 mt-1">
-                <div class="card-header collapsed" id="2018-23-header" data-toggle="collapse" data-target="#2018-23-body"
-                    aria-expanded="false" aria-controls="2018-23-body">
-                    <h5 class="mb-0">23. Sofacy 2018 and the Adversary Playbook&nbsp;&nbsp;<small>(Robert Falcone, Palo Alto Networks)</small></h5>
-                </div>
-                <div id="2018-23-body" class="collapse" aria-labelledby="2018-23-header">
-                    <div class="card-body">
-                        Unit 42 researches threat activity and publishes detailed reports on attack campaigns launched
-                        by these adversaries. One of these adversaries, known as Sofacy, has been carrying out attack campaigns on high
-                        profile targets for many years and has continued into 2018. To understand how to defend against these threats,
-                        an analyst has to read our reports, process them and mentally map them to their defenses. In most cases we
-                        expect readers just "block" all of the indicators we include in the report and assume they are covered. Last
-                        year we started using ATT&CK to codify the techniques we observed, linking those techniques to indicator
-                        patterns and encoding them into STIX 2 objects, with the goal of creating something that a defender can use to
-                        answer the question: "How am I defending against this adversary?" We call these documents, "Adversary Playbooks"
-                        as they contain our best approximation of how the adversary launches their attacks. This talk describes the
-                        concept of Adversary Playbooks, as well as provides an overview of the attack campaigns Unit 42 has attributed
-                        to the Sofacy group in 2018. It uses the discussed attacks to show how these playbooks are constructed and
-                        explain some of the challenges of incorporating ATT&CK and STIX 2 together for this purpose.
-            
-                        <div class="container pt-4 text-center small">Links to 
-                            <a href="https://www.youtube.com/watch?v=4CBES3xv3Zg&list=PLkTApXQou_8JrhtrFDfAskvMqk97Yu2S2&index=24&t=0s"
-                                target="_blank">video <img src="/theme/images/external-site-dark.jpeg" alt="External site" class="external-icon" />
-                            </a> and 
-                            <a href="https://www.slideshare.net/attackcon2018/mitre-attckcon-2018-sofacy-2018-and-the-adversary-playbook-robert-falcone-palo-alto-networks"
-                                target="_blank">slides <img src="/theme/images/external-site-dark.jpeg" alt="External site" class="external-icon" />.
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="card w-100 mt-1">
-                <div class="card-header collapsed" id="2018-24-header" data-toggle="collapse" data-target="#2018-24-body"
-                    aria-expanded="false" aria-controls="2018-24-body">
-                    <h5 class="mb-0">24. From Automation to Analytics: Simulating the Adversary to Create Better Detections&nbsp;&nbsp;<small>(David Herrald and Ryan Kovar, Splunk)</small></h5>
-                </div>
-                <div id="2018-24-body" class="collapse" aria-labelledby="2018-24-header">
-                    <div class="card-body">
-                        Security teams have more detection tools at their disposal than ever before, yet most are still
-                        struggling to find even the most basic malicious activity occurring in their environments. Building effective
-                        detection analytics requires realistic data and the ability to iterate quickly in a rapid analytic development
-                        cycle. This talk introduces a full lifecycle attack simulation and analytics development environment featuring
-                        the MITRE ATT&CK framework and the Atomic Red Team project using Splunk and Splunk Phantom mapped to an
-                        imaginary APT group, Taedonggang. It focuses on how security teams can use such a system to rapidly develop and
-                        share new detection analytics. Links to all components referenced in the talk are provided, including a
-                        cloud-based dataset that can act as a playground for users who want to see the results of the activity.
-            
-                        <div class="container pt-4 text-center small"> Links to 
-                            <a href="https://www.youtube.com/watch?v=ZRixr6QshEs&list=PLkTApXQou_8JrhtrFDfAskvMqk97Yu2S2&index=25&t=0s"
-                                target="_blank"> video <img src="/theme/images/external-site-dark.jpeg" alt="External site" class="external-icon" />
-                            </a> and <a href="https://www.slideshare.net/attackcon2018/mitre-attckcon-2018-from-automation-to-analytics-simulating-the-adversary-to-create-better-detections-david-herrald-and-ryan-kovar-splunk"
-                                target="_blank"> slides <img src="/theme/images/external-site-dark.jpeg" alt="External site" class="external-icon" />.
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="card w-100 mt-1">
-                <div class="card-header collapsed" id="2018-25-header" data-toggle="collapse" data-target="#2018-25-body"
-                    aria-expanded="false" aria-controls="2018-25-body">
-                    <h5 class="mb-0">25. The Use of Game Theory with MITRE ATT&CK&nbsp;&nbsp;<small>(Matt Summers and Nick Dunn, NCC Group)</small></h5>
-                </div>
-                <div id="2018-25-body" class="collapse" aria-labelledby="2018-25-header">
-                    <div class="card-body">
-                        This presentation shows how the use of game theory with the ATT&CK framework can produce better
-                        attack and defense strategies.
-            
-                        <div class="container pt-4 text-center small"> Links to 
-                            <a href="https://www.youtube.com/watch?v=UcZBAY18UXo&list=PLkTApXQou_8JrhtrFDfAskvMqk97Yu2S2&index=26&t=0s"
-                                target="_blank">video <img src="/theme/images/external-site-dark.jpeg" alt="External site" class="external-icon" />
-                            </a> and 
-                            <a href="https://www.slideshare.net/attackcon2018/mitre-attckcon-2018-the-use-of-game-theory-with-mitre-attck-matt-summers-and-nick-dunn-ncc-group"
-                                target="_blank">slides <img src="/theme/images/external-site-dark.jpeg" alt="External site" class="external-icon" />.
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            {% endif %}
         </div>
-    </div>
-</div>
-
-<div class="container pb-4 uniform-block">
-    <div class="container-fluid text-center">
-        <h2 class="text-center">Thank you to the following ATT&CKcon sponsors:</h2>
-        <img src="/theme/images/ATTACKcon-sponsors-final.jpg" width="85%">
+        {% endfor %}
     </div>
 </div>
 

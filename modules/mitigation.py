@@ -72,6 +72,14 @@ def generate_mitigation_md(mitigation, domain, side_menu_data, \
         data['side_menu_mobile_view_data'] = side_menu_mobile_data
         data['name'] = mitigation['name']
 
+        dates = util.get_created_and_modified_dates(mitigation)
+        
+        if dates.get('created'):
+            data['created'] = dates['created']
+
+        if dates.get('modified'):
+            data['modified'] = dates['modified']
+
         # Get initial reference list
         reference_list = []
         # Decleared as an object to be able to pass by reference

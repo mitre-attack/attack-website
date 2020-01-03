@@ -11,6 +11,9 @@ from . import util
 
 # Settings dictionary to build website
 settings_dict = {
+    "content_version": "6.2",
+    "website_version": "1.1",
+    "changelog_location": "/resources/changelog.html",
     "banner_enabled": "false",
     "banner_message": "<a href='https://www.mitre.org/attackcon-streamed-live' target='_blank'> Register to stream ATT&CKcon 2.0 October 29-30</a>",
     "domains": ["pre-attack", "enterprise-attack", "mobile-attack"],
@@ -332,6 +335,20 @@ contributing_md = ("Title: Contributing_to_MITRE_ATTACK\n"
                    "RedirectLink: /resources/contribute\n"
                    "save_as: docs/Contributing_to_MITRE_ATTACK.pdf/index.html\n")
 
+# Training Redirection dictionary
+training_redict_dict = [
+    {
+        "title" : "Training Redirect",
+        "redirect_link" : "/resources/training",
+        "path" : "training"
+    },
+    {
+        "title" : "CTI Training Redirect",
+        "redirect_link" : "/resources/training/cti",
+        "path" : "training/cti"
+    }
+]
+
 # Redirect md string template
 redirect_md = Template("Title: ${title}\n"
                        "Template: general/redirect-index\n"
@@ -489,7 +506,6 @@ previous_md = ("Title: Previous Versions\n"
                "data: ")
 previous_markdown_path = "content/pages/resources"
 
-
 # Constants used by resources.py
 # ----------------------------------------------------------------------------
 
@@ -501,6 +517,47 @@ resources_md = ("Title: General Information\n"
                 "Template: resources/resources\n"
                 "save_as: resources/index.html\n"
                 "data: ")
+
+# string template for faq.md
+faq_md = ("Title: Frequently Asked Questions\n"
+          "Template: resources/faq\n"
+          "save_as: resources/faq/index.html\n"
+          "data: ")
+
+# template for changelog.md
+changelog_md = ("Title: Changelog\n"
+                "Template: resources/changelog\n"
+                "save_as: resources/changelog.html\n\n")
+
+# string template for attackcon.md
+attackcon_md = ("Title: ATT&CKcon\n"
+                "Template: resources/attackcon\n"
+                "save_as: resources/attackcon/index.html\n"
+                "data: ")
+training_md = ("Title: ATT&CK Training\n"
+               "Template: resources/training\n"
+               "save_as: resources/training/index.html\n"
+               "data: ")
+
+training_cti_md = ("Title: ATT&CK For CTI Training\n"
+                   "Template: resources/training-cti\n"
+                   "save_as: resources/training/cti/index.html\n"
+                   "data: ")
+
+# side navigation for training
+training_navigation = {
+    "name" : "Training",
+    "id" : "training",
+    "path" : "/resources/training/",
+    "children" : [    
+        {
+            "name" : "CTI Training",
+            "id" : "cti",
+            "path" : "/resources/training/cti/",
+            "children" : []
+        }
+    ]
+}
 
 # Constants used by technique.py
 # ----------------------------------------------------------------------------
