@@ -35,7 +35,7 @@
 ### Improvements
 - Improved maintainability of ATT&CKcon page and added ATT&CKcon 2.0 content. See issue [#19](https://github.com/mitre-attack/attack-website/issues/19). 
 - Improved maintainability of FAQ page, and added FAQ entries for sub-techniques and the relationships of ATT&CK and other models. See issues [#30](https://github.com/mitre-attack/attack-website/issues/30), [#41](https://github.com/mitre-attack/attack-website/issues/41).
-- Added website and content version number to the footer. See issue [#10](https://github.com/mitre-attack/attack-website/issues/10)
+- Added website and content version number to the footer. See issue [#10](https://github.com/mitre-attack/attack-website/issues/10).
 - Added changelog page to website reachable by version number link in the footer.
 
 # 5 December 2019
