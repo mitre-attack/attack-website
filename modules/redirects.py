@@ -20,6 +20,9 @@ def generate():
 
     # Generate contribution redirections
     generate_contribute_redirect()
+
+    # Generate training redirection
+    generate_training_redirects()
     
 def generate_markdown_files(domain):
     """Given a domain, changes all the old links to new redirected links"""
@@ -74,6 +77,15 @@ def generate_image_redirects():
         with open(os.path.join(config.redirects_markdown_path, data['title'] + ".md"), "w", encoding='utf8') as md_file:
             md_file.write(subs)
 
+def generate_training_redirects():
+    """Responsible for generating training redirect markdowns"""
+
+    for training in config.training_redict_dict:
+        subs = config.redirect_md.substitute(training)
+
+        with open(os.path.join(config.redirects_markdown_path, training['title'] + ".md"), "w", encoding='utf8') as md_file:
+            md_file.write(subs)
+       
 def generate_contribute_redirect():
     """Responsible for generating contribute redirects markdown"""
 

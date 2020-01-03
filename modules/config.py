@@ -335,6 +335,20 @@ contributing_md = ("Title: Contributing_to_MITRE_ATTACK\n"
                    "RedirectLink: /resources/contribute\n"
                    "save_as: docs/Contributing_to_MITRE_ATTACK.pdf/index.html\n")
 
+# Training Redirection dictionary
+training_redict_dict = [
+    {
+        "title" : "Training Redirect",
+        "redirect_link" : "/resources/training",
+        "path" : "training"
+    },
+    {
+        "title" : "CTI Training Redirect",
+        "redirect_link" : "/resources/training/cti",
+        "path" : "training/cti"
+    }
+]
+
 # Redirect md string template
 redirect_md = Template("Title: ${title}\n"
                        "Template: general/redirect-index\n"
@@ -520,6 +534,30 @@ attackcon_md = ("Title: ATT&CKcon\n"
                 "Template: resources/attackcon\n"
                 "save_as: resources/attackcon/index.html\n"
                 "data: ")
+training_md = ("Title: ATT&CK Training\n"
+               "Template: resources/training\n"
+               "save_as: resources/training/index.html\n"
+               "data: ")
+
+training_cti_md = ("Title: ATT&CK For CTI Training\n"
+                   "Template: resources/training-cti\n"
+                   "save_as: resources/training/cti/index.html\n"
+                   "data: ")
+
+# side navigation for training
+training_navigation = {
+    "name" : "Training",
+    "id" : "training",
+    "path" : "/resources/training/",
+    "children" : [    
+        {
+            "name" : "CTI Training",
+            "id" : "cti",
+            "path" : "/resources/training/cti/",
+            "children" : []
+        }
+    ]
+}
 
 # Constants used by technique.py
 # ----------------------------------------------------------------------------

@@ -9,6 +9,7 @@ def generate():
     generate_changelog_page()
     generate_resources_page()
     generate_attackcon_page()
+    generate_training_pages()
 
 def generate_resources_page():
     """Responsible for compiling resources json into resources markdown files
@@ -78,3 +79,26 @@ def generate_attackcon_page():
     with open(os.path.join(config.resources_markdown_path, "attackcon.md"), "w", encoding='utf8') as md_file:
         md_file.write(attackcon_content)
     
+def generate_training_pages():
+    """ Responsible for generating the markdown pages of the training pages """
+
+    data = {}
+    
+    # Side navigation for training
+    data['menu'] = config.training_navigation
+
+    # Training Overview
+    training_md = config.training_md + json.dumps(data)
+
+    # write markdown to file
+    with open(os.path.join(config.resources_markdown_path, "training.md"), "w", encoding='utf8') as md_file:
+        md_file.write(training_md)
+
+    # CTI training
+    training_cti_md = config.training_cti_md + json.dumps(data)
+
+    # write markdown to file
+    with open(os.path.join(config.resources_markdown_path, "training_cti.md"), "w", encoding='utf8') as md_file:
+        md_file.write(training_cti_md)
+
+
