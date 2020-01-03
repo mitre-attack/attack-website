@@ -3,6 +3,7 @@ import colorama
 import json
 import os
 import requests
+import subprocess
 import time
 from modules import generate
 from modules import config
@@ -143,14 +144,18 @@ def update(args):
     if args.build:
         if 'prev_versions' in args.build:
     	    generate.previous_versions_gen()
-    
+
     # Pelican update
     if args.build:
+        # Run pelicanconf with subdirectory if added
+        if args.subdirectory:
+            print(subprocess.check_output(f"python3 pelicanconf.py {args.subdirectory}", shell=True))
+
         generate.pelican_content()
         # Remove unwanted files created by pelican
         generate.remove_unwanted_output()
 
-    # Change directory root name
+    # Change output directory links with subdirectory
     if args.subdirectory:
         config.set_subdirectory(args.subdirectory)
         generate.subdirectory_gen()

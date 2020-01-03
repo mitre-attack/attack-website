@@ -49,7 +49,7 @@ def deploy():
     
     # write robots.txt to disallow crawlers
     with open(os.path.join(config.web_directory, "robots.txt"), "w", encoding='utf8') as robots:
-        robots.write("User-agent: *\nDisallow: /previous/")
+        robots.write(f"User-agent: *\nDisallow: /{config.subdirectory}/previous/")
 
 def build_markdown():
     # import archives data
