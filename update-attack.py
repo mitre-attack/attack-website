@@ -135,6 +135,10 @@ def update(args):
         if 'redirects' in args.build:
             generate.redirects_md_gen()
 
+    # Set website path with subdirectory
+    if args.subdirectory:
+        config.set_subdirectory(args.subdirectory)
+        
     # Generate Index
     if args.build:
         if 'search' in args.build:
@@ -147,17 +151,12 @@ def update(args):
 
     # Pelican update
     if args.build:
-        # Run pelicanconf with subdirectory if added
-        if args.subdirectory:
-            print(subprocess.check_output(f"python3 pelicanconf.py {args.subdirectory}", shell=True))
-
         generate.pelican_content()
         # Remove unwanted files created by pelican
         generate.remove_unwanted_output()
 
     # Change output directory links with subdirectory
     if args.subdirectory:
-        config.set_subdirectory(args.subdirectory)
         generate.subdirectory_gen()
     
     if args.build:
@@ -181,6 +180,20 @@ def update(args):
 
     if not args.override_exit_status:
         handle_exit(exit_codes)
+
+def validate_subdirectory_string(subdirectory_str):
+    """ Validate subdirectory string """
+    
+    if not subdirectory_str.isascii():
+        raise argparse.ArgumentTypeError("%s contains non ascii characters" % subdirectory_str)
+
+    # Remove leading and trailing /
+    if subdirectory_str.startswith("/"):
+        subdirectory_str = subdirectory_str[1:]
+    if subdirectory_str.endswith("/"):
+        subdirectory_str = subdirectory_str[:-1]
+    
+    return subdirectory_str
 
 def get_parsed_args():
     """Create argument parser and parse arguments"""
@@ -219,7 +232,9 @@ def get_parsed_args():
     
     parser.add_argument('--proxy', help="set proxy")
 
-    parser.add_argument('--subdirectory', help="set subdirectory")
+    parser.add_argument('--subdirectory', 
+                        help="set subdirectory",
+                        type=validate_subdirectory_string)
 
     parser.add_argument("--print-tests", 
                         dest="print_tests", 

@@ -5,8 +5,6 @@ import json
 from datetime import datetime
 from . import config
 
-prev_versions_deploy_folder = os.path.join(config.web_directory, "previous")
-
 # Error handler for windows by:
 # https://stackoverflow.com/questions/2656322/shutil-rmtree-fails-on-windows-with-access-is-denied
 def onerror(func, path, exc_info):
@@ -29,6 +27,10 @@ def onerror(func, path, exc_info):
         raise
 
 def deploy():
+    """ Deploy previous versions to website directory """
+    
+    prev_versions_deploy_folder = os.path.join(config.web_directory, "previous")
+
     # delete previous copy of attack-archives
     if os.path.exists(config.archives_directory):
         shutil.rmtree(config.archives_directory, onerror=onerror) 

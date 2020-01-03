@@ -104,8 +104,12 @@ def redirects_md_gen():
 
 def pelican_content():
     util.progress_bar("Pelican Content")
+
     # Run pelican with limited output, -q is for quiet
-    returned_out = subprocess.check_output("pelican content -q", shell=True)
+    if config.subdirectory:
+        returned_out = subprocess.check_output(f"pelican content -q -o {config.web_directory}", shell=True)
+    else:
+        returned_out = subprocess.check_output("pelican content -q", shell=True)
     util.progress_bar("Pelican Content", float(str(returned_out).split(" ")[13]))
 
 def generate_search_index():

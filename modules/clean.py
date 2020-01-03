@@ -42,7 +42,6 @@ def clean_website_build():
     if os.path.isfile(previous_path):
         os.remove(previous_path)
 
-    # Remove output directory
-    output_path = "output"
-    if os.path.isdir(output_path):
-        shutil.rmtree(output_path)
+    # Remove website directory
+    if os.path.isdir(config.web_directory):
+        shutil.rmtree(config.web_directory)

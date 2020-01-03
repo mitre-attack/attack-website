@@ -584,6 +584,7 @@ def set_subdirectory(subdirectory_str):
 
     global subdirectory
     global web_directory
+
     subdirectory = subdirectory_str
 
     # Add subdirectory to web directory

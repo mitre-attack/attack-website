@@ -179,11 +179,11 @@ def generate_index():
             dict(field_name="contributors", boost=5), dict(field_name="examples", boost=10), "body", "detection"],
             documents=documents)
 
-    # Verify if output directory exists
-    if not os.path.isdir("output"):
-        os.mkdir("output")
+    # Verify if website directory exists
+    if not os.path.isdir(config.web_directory):
+        os.mkdir(config.web_directory)
 
-    with open("output/index.json", "w", encoding='utf8') as f:
+    with open(os.path.join(config.web_directory, "index.json"), "w", encoding='utf8') as f:
         f.write(json.dumps(idx.serialize()))
 
 
