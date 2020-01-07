@@ -14,8 +14,8 @@ settings_dict = {
     "content_version": "6.2",
     "website_version": "1.1",
     "changelog_location": "/resources/changelog.html",
-    "banner_enabled": "false",
-    "banner_message": "<a href='https://www.mitre.org/attackcon-streamed-live' target='_blank'> Register to stream ATT&CKcon 2.0 October 29-30</a>",
+    "banner_enabled": "true",
+    "banner_message": "<strong><a href='https://collaborate.mitre.org/attackics' target='_blank'>JUST RELEASED: ATT&CK for Industrial Control Systems</a></strong>",
     "domains": ["pre-attack", "enterprise-attack", "mobile-attack"],
     "source_names": [
         "mitre-pre-attack", 
@@ -64,6 +64,7 @@ index_matrix = {
 matrices = [
     {
         "name": "PRE-ATT&CK",
+        "type": "local",
         "path": "pre",
         "platforms": [],
         "matrix": "pre-attack",
@@ -72,6 +73,7 @@ matrices = [
     },
     {
         "name": "Enterprise",
+        "type": "local",
         "path": "enterprise",
         "matrix": "enterprise-attack",
         "platforms": ["Windows","macOS","Linux",
@@ -81,6 +83,7 @@ matrices = [
         "subtypes": [
             {
                 "name": "Windows",
+                "type": "local",
                 "matrix": "enterprise-attack",
                 "path": "enterprise/windows",
                 "platforms": ["Windows"],
@@ -89,6 +92,7 @@ matrices = [
             },
             {
                 "name" : "macOS",
+                "type": "local",
                 "matrix": "enterprise-attack",
                 "path": "enterprise/macos",
                 "platforms": ["macOS"],
@@ -97,6 +101,7 @@ matrices = [
             },
             {
                 "name" : "Linux",
+                "type": "local",
                 "matrix": "enterprise-attack",
                 "platforms": ["Linux"],
                 "path": "enterprise/linux",
@@ -105,6 +110,7 @@ matrices = [
             },
             {
                 "name": "Cloud",
+                "type": "local",
                 "matrix": "enterprise-attack",
                 "path": "enterprise/cloud",
                 "platforms": ["AWS","GCP","Azure","Azure AD","Office 365","SaaS"],
@@ -112,6 +118,7 @@ matrices = [
                 "subtypes": [
                     {
                         "name" : "AWS",
+                        "type": "local",
                         "matrix": "enterprise-attack",
                         "path": "enterprise/cloud/aws",
                         "platforms": ["AWS"],
@@ -120,6 +127,7 @@ matrices = [
                     },
                     {
                         "name" : "GCP",
+                        "type": "local",
                         "matrix": "enterprise-attack",
                         "path": "enterprise/cloud/gcp",
                         "platforms": ["GCP"],
@@ -128,6 +136,7 @@ matrices = [
                     },
                     {
                         "name": "Azure",
+                        "type": "local",
                         "matrix": "enterprise-attack",
                         "path": "enterprise/cloud/azure",
                         "platforms": ["Azure"],
@@ -136,6 +145,7 @@ matrices = [
                     },
                     { 
                         "name" : "Office 365",
+                        "type": "local",
                         "matrix": "enterprise-attack",
                         "path": "enterprise/cloud/office365",
                         "platforms": ["Office 365"],
@@ -144,6 +154,7 @@ matrices = [
                     },
                     {
                         "name" : "Azure AD",
+                        "type": "local",
                         "matrix": "enterprise-attack",
                         "path": "enterprise/cloud/azuread",
                         "platforms": ["Azure AD"],
@@ -152,6 +163,7 @@ matrices = [
                     },
                     {
                         "name" : "SaaS",
+                        "type": "local",
                         "matrix": "enterprise-attack",
                         "path": "enterprise/cloud/saas",
                         "platforms": ["SaaS"],
@@ -164,6 +176,7 @@ matrices = [
     },
     {
         "name": "Mobile",
+        "type": "local",
         "matrix": "mobile-attack",
         "path": "mobile",
         "platforms": ["Android", "iOS"],
@@ -172,6 +185,7 @@ matrices = [
         "subtypes": [
             {
                 "name": "Android",
+                "type": "local",
                 "matrix": "mobile-attack",
                 "path": "mobile/android",
                 "platforms": ["Android"],
@@ -181,6 +195,7 @@ matrices = [
             },
             {
                 "name" : "iOS",
+                "type": "local",
                 "matrix": "mobile-attack",
                 "path": "mobile/ios",
                 "platforms": ["iOS"],
@@ -189,6 +204,12 @@ matrices = [
                 "subtypes": []
             },
         ]
+    }, 
+    {
+        "name": "ICS",
+        "type": "external",
+        "path": "https://collaborate.mitre.org/attackics",
+        "subtypes": []
     }
 ]
 
@@ -437,6 +458,10 @@ redirects_paths = {
     'mobile-attack': "mobile/index.php/", 
     'pre-attack': "pre-attack/index.php/"
 }
+
+other_redirects = [
+    {'from': 'ics', 'to': 'https://collaborate.mitre.org/attackics'}
+]
 
 # Constants used by software.py
 # ----------------------------------------------------------------------------
