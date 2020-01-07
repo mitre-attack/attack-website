@@ -642,14 +642,22 @@ def get_side_menu_matrices(children):
 
 
     def children_helper(matrix, path_prefix):
-
         children = matrix["subtypes"]
-        return {
-            "name": matrix["name"],
-            "id": matrix["name"].split("-")[0].split(" ")[0].lower(),
-            "path": path_prefix + matrix["path"] + "/", # parents don't have links
-            "children": list(map(lambda child: children_helper(child, path_prefix), children))
-        }
+        if matrix["type"] == "local":
+            return {
+                "name": matrix["name"],
+                "id": matrix["name"].split("-")[0].split(" ")[0].lower(),
+                "path": path_prefix + matrix["path"] + "/", # parents don't have links
+                "children": list(map(lambda child: children_helper(child, path_prefix), children))
+            }
+        elif matrix["type"] == "external":
+            return {
+                "name": matrix["name"],
+                "external": True,
+                "id": matrix["name"].split("-")[0].split(" ")[0].lower(),
+                "path": matrix["path"],  # external links don't get prefixes
+                "children": list(map(lambda child: children_helper(child, path_prefix), children))
+            }
 
     return {
         "name": "matrices",

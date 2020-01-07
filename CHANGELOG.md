@@ -26,6 +26,11 @@
 <!--          addition of notable features. When PATCH is 0 it can      -->
 <!--          be omitted                                                -->
 
+# 7 January 2019
+## ATT&CK Website version 1.1.1
+### Improvements
+- Added links to [ATT&CK for ICS](https://collaborate.mitre.org/attackics/index.php/Main_Page).
+
 # 3 January 2019
 ## ATT&CK Website version 1.1
 ### New Features

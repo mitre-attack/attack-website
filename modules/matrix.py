@@ -32,6 +32,7 @@ def generate():
     side_menu_data = util.get_side_menu_matrices(config.matrices)
 
     for matrix in config.matrices:
+        if matrix["type"] == "external": continue # link to externally hosted matrix, don't create a page for it
         generate_matrix_md(matrix, old_ms, None, None, side_menu_data)
 
 def generate_matrix_md(matrix, old_ms, techniques=None, old_techniques=None, side_menu_data=None):

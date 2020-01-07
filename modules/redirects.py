@@ -23,6 +23,8 @@ def generate():
 
     # Generate training redirection
     generate_training_redirects()
+    # Generate redirects not associated with any domain
+    generate_misc_redirects()
     
 def generate_markdown_files(domain):
     """Given a domain, changes all the old links to new redirected links"""
@@ -128,6 +130,19 @@ def generate_other_redirects(domain):
         subs = config.redirect_md.substitute(data)
 
         # Write redirect page for a single object
+        with open(os.path.join(config.redirects_markdown_path, data['title'] + ".md"), "w", encoding='utf8') as md_file:
+            md_file.write(subs)
+
+def generate_misc_redirects():
+    """generate redirects not associated with any domain"""
+    for redirect in config.other_redirects:
+        data = {}
+        data["title"] = "-".join(redirect["from"].split("/"))
+        data["redirect_link"] = redirect["to"]
+        data['path'] =redirect['from']
+
+        subs = config.redirect_md.substitute(data)
+
         with open(os.path.join(config.redirects_markdown_path, data['title'] + ".md"), "w", encoding='utf8') as md_file:
             md_file.write(subs)
 
