@@ -33,6 +33,9 @@ def generate_domain_markdown(domain):
     # Get technique list of current domain
     technique_list = stixhelpers.get_techniques(config.ms[domain])
 
+    # Filter sub-techniques from technique list
+    technique_list_no_sub = util.filter_out_subtechniques(technique_list)
+
     # Write out the markdown file for overview of domain
     data = {
         'domain': domain.split("-")[0],
@@ -55,7 +58,7 @@ def generate_domain_markdown(domain):
 
     # Create the markdown for the enterprise groups in the STIX
     for tactic in tactic_list:
-        generate_tactic_md(tactic, domain, tactic_list, technique_list, side_menu_data)
+        generate_tactic_md(tactic, domain, tactic_list, technique_list_no_sub, side_menu_data)
 
 def generate_tactic_md(tactic, domain, tactic_list, techniques, side_menu_data):
     """Generate markdown for given tactic"""

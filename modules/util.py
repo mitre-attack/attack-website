@@ -315,6 +315,15 @@ def get_technique_table_data(tactic, techniques_list):
                     row['subtechniques'].append(sub_data)
 
             technique_table.append(row)
+    
+    # Sort by technique name
+    technique_table = sorted(technique_table, key=lambda k: k['technique_name'].lower())
+
+    # Sort sub-techniques by name
+    for technique in technique_table:
+        if technique['subtechniques']:
+            # Sort by technique name
+            technique['subtechniques'] = sorted(technique['subtechniques'], key=lambda k: k['name'].lower())
 
     return technique_table
 
