@@ -29,8 +29,9 @@
 # 14 January 2020
 ## ATT&CK Website version 1.1.2
 ### Improvements
-- Update ATT&CK™ to ATT&CK®. See issue [#55](https://github.com/mitre-attack/attack-website/issues/55).
-- Updating copyrights to 2020. See issue [#58](https://github.com/mitre-attack/attack-website/issues/58).
+- Updated trademark language. See issue [#54](https://github.com/mitre-attack/attack-website/issues/54).
+- Updated ATT&CK™ to ATT&CK®. See issue [#55](https://github.com/mitre-attack/attack-website/issues/55).
+- Updated copyrights to 2020. See issue [#58](https://github.com/mitre-attack/attack-website/issues/58).
 
 # 7 January 2019
 ## ATT&CK Website version 1.1.1
