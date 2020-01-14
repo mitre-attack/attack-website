@@ -576,16 +576,24 @@ other_column_space = int(float(column_space)*1.10)
 # Declare file location of web pages
 web_directory = "output"
 
+# Parent web directory name
+# leave parent directory name to first level for link tests
+parent_web_directory = "output"
+
 # Declare as empty string
 subdirectory = ""
 
 def set_subdirectory(subdirectory_str):
-    """ Method to set globally the subdirectory """
+    """ Method to globally set the subdirectory """
 
     global subdirectory
     global web_directory
 
     subdirectory = subdirectory_str
+
+    # Verify if website directory exists
+    if not os.path.isdir(web_directory):
+        os.mkdir(web_directory)
 
     # Add subdirectory to web directory
     web_directory = os.path.join(web_directory, subdirectory)

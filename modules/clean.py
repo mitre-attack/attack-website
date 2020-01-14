@@ -3,7 +3,7 @@ import os
 from . import config
 
 def clean_website_build():
-    """Clean content directory and remove output directory"""
+    """Clean content directory and remove web directory"""
 
     content_path = "content"
     content_pages_path = os.path.join(content_path, "pages")

@@ -67,7 +67,7 @@ headers = {
 def remove_extra_from_path(filepath):
     """Given a path, remove unwanted path from a website link"""
 
-    return filepath.split(config.web_directory)[1]
+    return filepath.split(config.parent_web_directory)[1]
 
 def get_correct_link(path):
     """Given a path, return the correct path by adding
@@ -292,7 +292,7 @@ def check_unlinked_pages(filenames):
                 filename = filename.replace("\\", "/")
 
             # Ignore 404 html page
-            if filename.startswith("/404.html"):
+            if filename.endswith("/404.html"):
                 continue
 
             # e.g: contacts.html -> contacts/index.html

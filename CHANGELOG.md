@@ -26,6 +26,11 @@
 <!--          addition of notable features. When PATCH is 0 it can      -->
 <!--          be omitted                                                -->
 
+# 14 January 2019
+## ATT&CK Website version 1.2
+### New Features
+- Added support for subdirectory hosting. See issue [#15](https://github.com/mitre-attack/attack-website/issues/15).
+
 # 5 December 2019
 ## ATT&CK Website version 1.0.4
 ### Fixes
