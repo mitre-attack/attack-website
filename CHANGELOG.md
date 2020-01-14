@@ -26,6 +26,11 @@
 <!--          addition of notable features. When PATCH is 0 it can      -->
 <!--          be omitted                                                -->
 
+# 14 January 2020
+## ATT&CK Website version 1.1.2
+### Improvements
+- Update ATT&CK™ to ATT&CK®. See issue [#55](https://github.com/mitre-attack/attack-website/issues/55).
+
 # 7 January 2019
 ## ATT&CK Website version 1.1.1
 ### Improvements
