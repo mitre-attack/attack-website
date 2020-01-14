@@ -306,7 +306,10 @@ def get_technique_table_data(tactic, techniques_list):
                 for subtechnique in subtechniques:
                     sub_data = {}
                     sub_data['name'] = subtechnique['object']['name']
-                    sub_data['id'] = get_attack_id(subtechnique['object']).split(".")[1]
+                    sub_attack_id = get_attack_id(subtechnique['object'])
+                    if not "." in sub_attack_id:
+                        raise Exception(f"{attack_id} subtechnique's attackID '{sub_attack_id}' is malformed")
+                    sub_data['id'] = sub_attack_id.split(".")[1]
                     sub_data['descr'] = remove_citations(subtechnique['object']['description'], subtechnique['object']['external_references'])
                     sub_data['descr'] = filter_urls(sub_data['descr'])
                     row['subtechniques'].append(sub_data)
