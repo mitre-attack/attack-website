@@ -155,7 +155,7 @@ def update(args):
         # Remove unwanted files created by pelican
         generate.remove_unwanted_output()
 
-    # Change output directory links with subdirectory
+    # Replace output directory links with subdirectory
     if args.subdirectory:
         generate.subdirectory_gen()
     
