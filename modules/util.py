@@ -323,7 +323,7 @@ def get_technique_table_data(tactic, techniques_list):
     for technique in technique_table:
         if technique['subtechniques']:
             # Sort by technique name
-            technique['subtechniques'] = sorted(technique['subtechniques'], key=lambda k: k['name'].lower())
+            technique['subtechniques'] = sorted(technique['subtechniques'], key=lambda k: k['id'].lower())
 
     return technique_table
 
