@@ -36,7 +36,7 @@ def generate_faq_page():
        for rendering on the HMTL
     """
     # load faq data from json
-    with open(os.path.join(config.data_directory, "faq.json"), "r") as f:
+    with open(os.path.join(config.data_directory, "faq.json"), "r", encoding='utf8') as f:
         faqdata = json.load(f)
     # add unique IDs
     for i,section in enumerate(faqdata["sections"]):
@@ -55,7 +55,7 @@ def generate_changelog_page():
     """
     
     # Read local changelog
-    with open("CHANGELOG.md", "r") as f:
+    with open("CHANGELOG.md", "r", encoding='utf8') as f:
         changelog = f.read()
     
     # Append changelog to mardown file
@@ -69,7 +69,7 @@ def generate_attackcon_page():
        for rendering on the HTML
     """
     # load ATT&CKcon data
-    with open(os.path.join(config.data_directory, "attackcon.json"), "r") as f:
+    with open(os.path.join(config.data_directory, "attackcon.json"), "r", encoding='utf8') as f:
         attackcon = json.load(f)
 
     attackcon = sorted(attackcon, key=lambda a: datetime.strptime(a["date"], "%B %Y"), reverse=True)
