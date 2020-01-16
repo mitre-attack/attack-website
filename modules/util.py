@@ -725,7 +725,7 @@ def progress_bar(name, time = None):
     sys.stdout.flush()
 
 def filter_techniques_by_platform(tech_list, platforms):
-    """Given a technique lsit and a platforms list, filter out techniques
+    """Given a technique list and a platforms list, filter out techniques
        that are not part of the platforms"""
 
     if not platforms:
