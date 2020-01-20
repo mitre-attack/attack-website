@@ -26,6 +26,11 @@
 <!--          addition of notable features. When PATCH is 0 it can      -->
 <!--          be omitted                                                -->
 
+# Changes staged on develop
+## ATT&CK Website version 1.2
+### Improvements
+- Refactored side navigation into tree-items on techniques, tactics, and mitigations pages. See issue [#53](https://github.com/mitre-attack/attack-website/issues/53).
+
 # 7 January 2019
 ## ATT&CK Website version 1.1.1
 ### Improvements
