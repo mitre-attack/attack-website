@@ -375,6 +375,9 @@ def get_side_nav_domains_data(side_nav_title, elements_list):
     }  
 
 def get_side_nav_domains_mobile_view_data(side_nav_title, elements_list, amount_per_row):
+    """ Given a title, an elements list and the amount of elements per row,
+        get the data for the side navigation on a mobile view.
+    """
 
     def get_element_data(element):
         """ Given an element, return the formatted JSON """
