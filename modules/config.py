@@ -687,6 +687,7 @@ def init_shared_data():
 
     global source_names 
     global domains
+    global domain_aliases
     global tools_used_by_groups
     global malware_used_by_groups
     global techniques_used_by_tools
@@ -710,6 +711,7 @@ def init_shared_data():
     global ms
 
     domains = settings_dict["domains"]
+    domain_aliases = settings_dict["domain_aliases"]
     source_names = settings_dict["source_names"]
 
     # Global memory store of all domains
