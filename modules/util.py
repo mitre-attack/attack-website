@@ -332,6 +332,47 @@ def remove_citations(descr, citations):
 
     return descr
 
+def get_side_nav_domains_data(side_nav_title, elements_list):
+    """Responsible for generating the links that are located on the
+       left side of pages for desktop clients
+    """
+
+    def get_element_data(element):
+        return {
+            "name": element['name'],
+            "id": element['name'],
+            "path": "/{}/{}/".format(side_nav_title, attack_id),
+            "children": []
+        }
+
+    elements_data = []
+
+    for domain in config.domains:
+        # Get alias for domain
+        domain_alias = get_domain_alias(domain.split("-")[0])
+
+        domain_data = {
+            "name": domain_alias,
+            "id": domain_alias,
+            "path": "/{}/{}/".format(side_nav_title, domain.split("-")[0]),
+            "children": []
+        }
+
+        for element in elements_list[domain]:
+            attack_id = get_attack_id(element)
+            if attack_id:
+                domain_data['children'].append(get_element_data(element))
+        
+        elements_data.append(domain_data)
+
+    # return side menu
+    return {
+        "name": side_nav_title,
+        "id": side_nav_title,
+        "path": None, # root level doesn't get a path
+        "children": elements_data
+    }  
+
 def get_side_menu_data(side_nav_title, path_prefix, elements_list, domain=None):
     """Responsible for generating the links that are located on the
        left side of pages for desktop clients
