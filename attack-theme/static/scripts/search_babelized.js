@@ -240,19 +240,6 @@ function () {
       var title = result.title;
       var path = result.path;
 
-      //https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/String/endsWith
-      if (!String.prototype.endsWith) {
-        String.prototype.endsWith = function(searchString, position) {
-            var subjectString = this.toString();
-            if (typeof position !== 'number' || !isFinite(position) || Math.floor(position) !== position || position > subjectString.length) {
-              position = subjectString.length;
-            }
-            position -= searchString.length;
-            var lastIndex = subjectString.indexOf(searchString, position);
-            return lastIndex !== -1 && lastIndex === position;
-        };
-      }
-
       if (path.endsWith("/index.html")) {
         path = path.slice(0, -11);
       } // create preview html
@@ -432,6 +419,7 @@ function () {
         var resultHTML = results.map(function (result) {
           return self.result_to_html(result);
         });
+        resultHTML = resultHTML.join("");
         this.render_container.append(resultHTML);
         if (this.index.nextPageRef) load_more_results.show();else load_more_results.hide();
       } else {
@@ -547,4 +535,24 @@ search_input.on("input", function (e) {
 load_more_results_button.on("click", function () {
   if (search_service) search_service.nextPage();
   load_more_results_button.blur(); //onfocus
-});
+}); //internet explorer compatability patches
+
+if (!String.prototype.includes) {
+  String.prototype.includes = function (search, start) {
+    if (typeof start !== 'number') {
+      start = 0;
+    }
+
+    if (start + search.length > this.length) {
+      return false;
+    } else {
+      return this.indexOf(search, start) !== -1;
+    }
+  };
+}
+
+if (typeof String.prototype.endsWith !== 'function') {
+  String.prototype.endsWith = function (suffix) {
+    return this.indexOf(suffix, this.length - suffix.length) !== -1;
+  };
+}

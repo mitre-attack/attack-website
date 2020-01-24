@@ -327,6 +327,7 @@ class SearchService {
             search_body.show();
             let self = this;
             let resultHTML = results.map(function(result) { return self.result_to_html(result) });
+            resultHTML = resultHTML.join("");
             this.render_container.append(resultHTML);
             if (this.index.nextPageRef) load_more_results.show();
             else                        load_more_results.hide();
@@ -427,3 +428,24 @@ load_more_results_button.on("click", function() {
     if (search_service) search_service.nextPage();
     load_more_results_button.blur(); //onfocus
 });
+
+//internet explorer compatability patches
+if (!String.prototype.includes) {
+    String.prototype.includes = function(search, start) {
+        if (typeof start !== 'number') {
+            start = 0;
+        }
+
+        if (start + search.length > this.length) {
+            return false;
+        } else {
+            return this.indexOf(search, start) !== -1;
+        }
+    };
+}
+
+if (typeof String.prototype.endsWith !== 'function') {
+    String.prototype.endsWith = function(suffix) {
+        return this.indexOf(suffix, this.length - suffix.length) !== -1;
+    };
+}
