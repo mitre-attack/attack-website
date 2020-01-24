@@ -26,6 +26,11 @@
 <!--          addition of notable features. When PATCH is 0 it can      -->
 <!--          be omitted                                                -->
 
+# 24 January 2019
+## ATT&CK Website version 1.1.2
+### Improvements
+- Added talks and links to videos to the [General Information](https://attack.mitre.org/resources/) page.
+
 # 7 January 2019
 ## ATT&CK Website version 1.1.1
 ### Improvements
