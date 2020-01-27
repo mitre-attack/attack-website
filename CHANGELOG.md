@@ -1,19 +1,24 @@
 <!--    CHANGELOG FORMAT                                                -->
+
+<!--    Completed Entry template:                                       -->
 <!--                                                                    -->
 <!--    # Date in DD MMM YYYY format                                    -->
-<!--                                                                    -->
-<!--    (if website code changed)                                       -->
 <!--    ## ATT&CK Website version ##.##.##                              -->
 <!--    ### New Features                                                -->
 <!--    ### Improvements                                                -->
 <!--    ### Fixes                                                       -->
+<!--    ## [ATT&CK Content version ##.##](link to release on mitre/cti) --> 
+<!--    See the release notes [here](link to release notes).           // if major change -->
+<!--    ### Fixes                                                      // else            -->
+
+
+<!--    Entries for pull request template:                              -->
 <!--                                                                    -->
-<!--    (if ATT&CK STIX content version changed)                        -->
-<!--    ## ATT&CK Content version ##.## (link to release on mitre/cti)  -->
-<!--    (if major release)                                              -->
-<!--    See the release notes [here](link to release notes).            -->
-<!--    (otherwise)                                                     -->
+<!--    # Changes staged on develop                                     -->
+<!--    ### New Features                                                -->
+<!--    ### Improvements                                                -->
 <!--    ### Fixes                                                       -->
+
 
 <!--    VERSION NUMBERING (WEBSITE)                                     -->
 <!--                                                                    -->
@@ -25,6 +30,10 @@
 <!--    PATCH updates are when a bugfix is made without the             -->
 <!--          addition of notable features. When PATCH is 0 it can      -->
 <!--          be omitted                                                -->
+
+# Changes staged on develop
+### Improvements
+- Major overhaul of site search UI. See issue [#4](https://github.com/mitre-attack/attack-website/issues/4).
 
 # 5 December 2019
 ## ATT&CK Website version 1.0.4
