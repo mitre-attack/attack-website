@@ -7,6 +7,8 @@
 {% set CHANGELOG_LOCATION = "/resources/changelog.html" -%}
 {% set active_page = active_page|default('index') -%}
 {% set title = title|default('MITRE ATT&CK&trade;') -%}
+{% import 'macros/navigation_menu.html' as navigation_menu %}
+
 <!DOCTYPE html>
 <html lang='en'>
 
@@ -31,68 +33,7 @@
 <!--stopindex-->
 <header>
     {% block nav %}    
-        <nav class='navbar navbar-expand-lg navbar-dark fixed-top'>
-            <a class='navbar-brand' href='/'><img src="/theme/images/mitre_attack.png" height="50px"/></a>
-            <button class='navbar-toggler' type='button' data-toggle='collapse' data-target='#navbarCollapse'
-                    aria-controls='navbarCollapse' aria-expanded='false' aria-label='Toggle navigation'>
-                <span class='navbar-toggler-icon' onclick="search('')"></span>
-            </button>
-            <div class='collapse navbar-collapse' id='navbarCollapse'>
-                <ul class='nav nav-tabs ml-auto'>
-                    {% for href, id, caption in NAVIGATION_MENU %}
-                        {% if "Tactics" == caption or "Techniques" == caption or "Mitigations" == caption %}
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="{{ href|e }}" id="navbarDropdown" role="button"
-                                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <b>{{ caption|e }}</b>
-                                </a>
-                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                    {% for domain, endpoint in DOMAINS %}
-                                        {% if "Tactics" == caption or "Techniques" == caption or ("Mitigations" == caption and "PRE-ATT&CK" != domain) %}
-                                            <a class="dropdown-item" href="{{href}}{{ endpoint }}">{{ domain }}</a>
-                                        {% endif %}
-                                    {% endfor %}
-                                </div>
-                            </li>
-                        {% elif "Resources" == caption %}
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="{{ href|e }}" id="navbarDropdown" role="button"
-                                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <b>{{ caption|e }}</b>
-                                </a>
-                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="/resources/">General Information</a>
-                                    <a class="dropdown-item" href="/resources/getting-started/">Getting Started</a>
-                                    <a class="dropdown-item" href="/resources/training/">Training</a>
-                                    <a class="dropdown-item" href="/resources/attackcon/">ATT&CKcon</a>
-                                    <a class="dropdown-item" href="/resources/working-with-attack/">Working with ATT&CK</a>
-                                    <a class="dropdown-item" href="/resources/faq/">FAQ</a>
-                                    <a class="dropdown-item" href="/resources/updates/">Updates</a>
-                                    <a class="dropdown-item" href="/resources/previous-versions/">Previous Versions</a>
-                                    <a class="dropdown-item" href="/resources/related-projects/">Related Projects</a>
-                                </div>
-                            </li>
-                        {% elif "Blog" == caption %}
-                            <li class="nav-item"><a href="{{ href|e }}" target="_blank" {% if id==active_page %} class="nav-link active"
-                            {% else %} class="nav-link" {% endif %}><b>{{ caption|e }}</b>&nbsp;<img src="/theme/images/external-site.svg"
-                                                                                                               alt="External site" class="external-icon" /></a></li>
-                        {% else %}
-                            <li class="nav-item"><a href="{{ href|e }}" {% if id==active_page %} class="nav-link active" {%
-                                    else %} class="nav-link" {% endif %}><b>{{ caption|e }}</b></a></li>
-                        {% endif %}
-                    {% endfor %}
-                </ul>
-                <ul class='navbar-nav flex-row d-md-flex float-right'>
-                    <li>
-                        <form class='form-inline pl-2'>
-                            <input class='form-control' type='text' placeholder='Search site' aria-label='Search' id="search"
-                                   autocomplete="off">
-                        </form>
-                        <div class="search-results"></div>
-                    </li>
-                </ul>
-            </div>
-        </nav>
+        {{navigation_menu(NAVIGATION_MENU)}}
         </header>
         <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the previous-versions feature -->
         <!-- !previous versions banner! -->

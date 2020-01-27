@@ -213,13 +213,6 @@ matrices = [
     }
 ]
 
-# argument defaults and options for the CLI
-build_choices = ['resources', 'contribute', 'groups', 'search', 'matrices', 'mitigations', 'redirects', 'software', 'tactics', 'techniques', "prev_versions"]
-build_defaults = build_choices
-
-test_choices = ['size', 'links', 'external_links', 'citations']
-test_defaults = list(filter(lambda t: t != "external_links", test_choices))
-
 # parsed arguments 
 args = []
 
