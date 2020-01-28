@@ -26,6 +26,10 @@
 <!--          addition of notable features. When PATCH is 0 it can      -->
 <!--          be omitted                                                -->
 
+# Changes staged on develop
+### Fixes
+- Sticky footer should be less temperamental when the page resizes. See issue [#51](https://github.com/mitre-attack/attack-website/issues/51).
+
 # 7 January 2019
 ## ATT&CK Website version 1.1.1
 ### Improvements
