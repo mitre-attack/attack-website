@@ -7,6 +7,8 @@ import time
 from string import Template
 
 import modules
+from modules import site_config
+from modules import clean
 
 # argument defaults and options for the CLI
 module_choices = ['resources', 'contribute', 'groups', 'search', 'matrices', 'mitigations', 'redirects', 'software', 'tactics', 'techniques', "prev_versions"]
@@ -242,43 +244,8 @@ def get_parsed_args():
     
     return args
 
-# def generate_base_template():
-#     """Generate base template with settings stored in config.py"""
-
-#     # String template for base template	
-#     base_template = Template("{% set BANNER_ENABLED = \"${banner_enabled}\" %}\n"
-#                              "{% set BANNER_MESSAGE = \"${banner_message}\" %}\n"
-#                              "{% set NAVIGATION_MENU = ${navigation} -%}\n"
-#                              "{% set DOMAINS = ${domains} -%}\n"
-#                              "{% set CONTENT_VERSION = \"${content_version}\" -%}\n"
-#                              "{% set WEBSITE_VERSION = \"${website_version}\" -%}\n"
-#                              "{% set CHANGELOG_LOCATION = \"${changelog_location}\" -%}\n"
-#                              "{% set active_page = active_page|"
-#                              "default('index') -%}\n")
-    
-#     base_template_path = "./attack-theme/templates/general/base.html"
-
-#     with open(base_template_path, 'r') as f:
-#         base_dict = {}
-
-#         base_html = f.read()
-#         base_html = base_html.split("{% set active_page = active_page|"
-#                                             "default('index') -%}\n")[-1] 
-#         base_dict['banner_enabled'] = config.settings_dict['banner_enabled']
-#         base_dict['banner_message'] = config.settings_dict['banner_message'].\
-#                                                             replace("\"", "'")
-#         base_dict['navigation'] = config.settings_dict['navigation_menu']
-#         base_dict['domains'] = config.settings_dict['domain_aliases']
-#         base_dict['content_version'] = config.settings_dict['content_version']
-#         base_dict['website_version'] = config.settings_dict['website_version']
-#         base_dict['changelog_location'] = config.settings_dict['changelog_location']
-#         jinja_settings = base_template.substitute(base_dict)
-  
-#     with open(base_template_path, 'w+') as f:
-#         f.write(jinja_settings + base_html)
-
 def remove_false_results_from_menu(results):
-    """ Given a list of results, remove element from menu if the result was False """
+    """ Given a list of results, remove elements from menu if their result was False """
 
     def remove_from_menu_list(element, result):
         if element['name'] == result[1]:
@@ -320,15 +287,21 @@ if __name__ == "__main__":
     if args.modules:
         remove_from_build(args.modules)
 
-    print(modules.menu_ptr)
-
     # Run Modules
     results = []
     [results.append(ptr['run_module']()) for ptr in modules.run_ptr]
 
     remove_false_results_from_menu(results)
-    print(modules.menu_ptr)
 
+    with open(os.path.join(site_config.template_folder, "base.bak"), "r", encoding='utf8') as base_template_f:
+        base_template = base_template_f.read()
+        base_template = Template(base_template)
+        subs = base_template.substitute(site_config.base_page_data)
+
+    with open(os.path.join(site_config.template_folder, "base.html"), "w", encoding='utf8') as base_template_f:
+        base_template_f.write(subs)
+
+    # clean.clean_website_build()
 
     # # Generate base template for ATT&CK pages
     # generate_base_template()

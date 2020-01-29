@@ -9,36 +9,6 @@ from . import util
 
 # Python module for all constants and global variables
 
-# Settings dictionary to build website
-settings_dict = {
-    "content_version": "6.2",
-    "website_version": "1.1.1",
-    "changelog_location": "/resources/changelog.html",
-    "banner_enabled": "true",
-    "banner_message": "<strong><a href='https://collaborate.mitre.org/attackics' target='_blank'>JUST RELEASED: ATT&CK for Industrial Control Systems</a></strong>",
-    "domains": ["pre-attack", "enterprise-attack", "mobile-attack"],
-    "source_names": [
-        "mitre-pre-attack", 
-        "mitre-attack", 
-        "mitre-mobile-attack"
-    ],
-    "domain_aliases": [
-        ["PRE-ATT&CK", "pre"], 
-        ["Enterprise", "enterprise"], 
-        ["Mobile", "mobile"]
-    ],
-    "navigation_menu": [
-        ["/matrices/", "matrices", "Matrices"],
-        ["/tactics/", "tactics", "Tactics"],
-        ["/techniques/", "techniques", "Techniques"],
-        ["/mitigations/", "mitigations", "Mitigations"],
-        ["/groups/", "groups", "Groups"],
-        ["/software/", "software", "Software"],
-        ["/resources/", "resources", "Resources"],
-        ["https://medium.com/mitre-attack/", "blog", "Blog"],
-        ["/resources/contribute", "contribute", "Contribute"]
-    ]
-}
 platform_to_path = {
     "Windows": "enterprise/windows",
     "macOS": "enterprise/macos",
@@ -215,17 +185,6 @@ matrices = [
 
 # parsed arguments 
 args = []
-
-# directory for data used in site builds
-data_directory = "data"
-# directory for STIX data
-stix_directory = data_directory + "/stix"
-# STIX bundles for each domain
-attack_path = {
-    'enterprise-attack': stix_directory + "/enterprise-attack.json",
-    'mobile-attack': stix_directory + "/mobile-attack.json",
-    'pre-attack': stix_directory + "/pre-attack.json"
-}
 
 # Constants used for generated layers
 # ----------------------------------------------------------------------------
@@ -601,57 +560,7 @@ technique_overview_md = ("Title: Overview \n"
                          "RedirectLink: /techniques/enterprise/ \n"
                          "save_as: techniques/index.html \n")
 
-# Constants used in multiple files
-# ----------------------------------------------------------------------------
 
-# Not found constant
-NOT_FOUND = -1
-
-# Template for HTML references inside of sentences
-reference_marker_template = ("<span onclick=scrollToRef('scite-{}') "
-                             "id=\"scite-ref-{}-a\" class=\"scite"
-                            "-citeref-number\" "
-                             "data-reference=\"{}\"><sup><a href=\"{}\" "
-                             "target=\"_blank\" data-hasqtip=\"{}\" "
-                             "aria-describedby=\"qtip-{}\">[{}]</a></sup></span>")
-reference_marker_template_no_url = ("<span onclick=scrollToRef('scite-{}') "
-                                    "id=\"scite-ref-{}-a\" "
-                                    "class=\"scite-citeref-number\" "
-                                    "data-reference=\"{}\">"
-                                    "<sup>[{}]</sup></span>")
-
-tech_table_desc_link = ("<sup><a href=\"{}\" target=\"_blank\" "
-                        "data-hasqtip=\"{}\" "
-                        "aria-describedby=\"qtip-{}\">[{}]</a></sup>")
-tech_table_desc_link_no_url = "<sup>[{}]</sup>"
-
-# Exit codes:
-SUCCESS = 0
-FAILURE = 1
-WARNING = 2
-BROKEN_CITATION = -8
-BROKEN_LINKS = -9
-BROKEN_EXTERNAL_LINKS = -10
-SIZE_ERROR = -11
-UNLINKED_PAGES = -12
-RELATIVE_LINKS_FOUND = -13
-
-# Used to reset text color
-RESET = '\033[0m'  # mode 0  = reset
-
-# Window sizes
-# Space for tests report
-# Get windows width size and divide it by the three columns
-window_size = shutil.get_terminal_size((80, 20))[0]
-column_space = int(window_size/3) - 1
-status_space = int(float(column_space)*0.80)
-other_column_space = int(float(column_space)*1.10)
-
-
-# Declare file location of web pages
-web_directory = "output"
-
-test_report_directory = "reports"
 # Constants used by citationschecker.py
 # ----------------------------------------------------------------------------
 citations_report_filename = "broken-citations-report.txt"
@@ -661,14 +570,7 @@ citations_report_filename = "broken-citations-report.txt"
 links_report_filename = "broken-links-report.txt"
 unlinked_report_filename = "unlinked-pages-report.txt"
 relative_links_report_filename = "relative-links-report.txt"
-
-# Testing output statuses
-PASSED_STATUS = colorama.Fore.GREEN + "PASSED" + RESET + \
-                                         " " * (status_space - len("PASSED"))
-FAILED_STATUS = colorama.Fore.RED + "FAILED" + RESET + \
-                                        " " * (status_space - len("FAILED"))
-WARNING_STATUS = colorama.Fore.YELLOW + "WARNING" + RESET + \
-                                        " " * (status_space - len("WARNING"))   
+  
 
 def run_function(ptr):
     """Given a pointer to a function, run function and return output"""

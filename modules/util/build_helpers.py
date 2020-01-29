@@ -10,7 +10,8 @@ import math
 import uuid
 import sys
 import bleach
-from . import config
+from modules import site_config
+from . import util_config
 
 def timestamp():
     """This method is here to return a timestamp"""
@@ -46,7 +47,7 @@ def find_index_id(ext_ref):
     count = 0
     flag = True
     while count < len(ext_ref) and flag:
-        if ext_ref[count].get("external_id") and ext_ref[count]["source_name"] in config.source_names:
+        if ext_ref[count].get("external_id") and ext_ref[count]["source_name"] in util_config.source_names:
             flag = False
         else:
             count = count + 1
@@ -60,7 +61,7 @@ def get_attack_id(object):
     if object.get('external_references'):
         index = find_index_id(object['external_references'])
 
-        if index != config.NOT_FOUND:
+        if index != util_config.NOT_FOUND:
             return object['external_references'][index]['external_id']
 
     return None
@@ -128,7 +129,7 @@ def find_reference_number(reference_list, next_reference_number, source_name):
                 reference['number'] = next_reference_number['value']
                 next_reference_number['value'] += 1
             return reference['number']
-    return config.NOT_FOUND
+    return util_config.NOT_FOUND
 
 def find_reference_html(reference_list, next_reference_number, source_name):
     """ Given a reference list and a source name, find source name and 
@@ -142,9 +143,9 @@ def find_reference_html(reference_list, next_reference_number, source_name):
                 next_reference_number['value'] += 1
 
             if not reference.get("url"):
-                reference_html = config.reference_marker_template_no_url.format(reference['number'],reference['number'],reference['sname'],reference['number'])
+                reference_html = util_config.reference_marker_template_no_url.format(reference['number'],reference['number'],reference['sname'],reference['number'])
             else:
-                reference_html = config.reference_marker_template.format(reference['number'],reference['number'],reference['sname'],reference['url'],reference['number'] - 1, reference['number'] - 1, reference['number'])
+                reference_html = util_config.reference_marker_template.format(reference['number'],reference['number'],reference['sname'],reference['url'],reference['number'] - 1, reference['number'] - 1, reference['number'])
             
             return reference_html
     return ""
@@ -166,7 +167,6 @@ def add_external_references_not_in_descr(description, reference_list, next_refer
 def get_citations_from_descr(description):
     """Given a description, find all of the citations"""
 
-    citation_temp = "(Citation: {})"
     p = re.compile('\(Citation: (.*?)\)')
     return p.findall(description)
 
@@ -455,7 +455,7 @@ def find_num_of_ref_in_list(reference_list, ref_sname):
     for reference in reference_list:
         if reference['sname'] == ref_sname:
             return reference['number']
-    return config.NOT_FOUND
+    return util_config.NOT_FOUND
 
 def find_in_reference_list(reference_list, source_name):
     """Check if it is already in reference list"""
@@ -480,7 +480,7 @@ def get_index_of_ref(reference_list, ref_sname):
         if reference['sname'] == ref_sname:
             return index
         index += 1
-    return config.NOT_FOUND
+    return util_config.NOT_FOUND
 
 def get_navigator_layers(name, attack_id, obj_type, version, techniques_used):
     """Given a list of techniques used, return the navigator json objects
@@ -571,13 +571,13 @@ def print_test_output(status, test, message):
     """Standard printing for all tests"""
 
     if status.startswith("RUNNING"):
-        sys.stdout.write(f"\r{status: <{config.status_space}} "
-                         f"{test: <{config.other_column_space}} "
-                         f"{message: <{config.other_column_space}}")
+        sys.stdout.write(f"\r{status: <{util_config.status_space}} "
+                         f"{test: <{util_config.other_column_space}} "
+                         f"{message: <{util_config.other_column_space}}")
     else:
-        sys.stdout.write(f"\r{status: <{config.status_space}} "
-                         f"{test: <{config.other_column_space}} "
-                         f"{message: <{config.other_column_space}}\n")
+        sys.stdout.write(f"\r{status: <{util_config.status_space}} "
+                         f"{test: <{util_config.other_column_space}} "
+                         f"{message: <{util_config.other_column_space}}\n")
 
     sys.stdout.flush()
 
@@ -617,7 +617,8 @@ def progress_bar(name, time = None):
 
 def filter_techniques_by_platform(tech_list, platforms):
     """Given a technique lsit and a platforms list, filter out techniques
-       that are not part of the platforms"""
+       that are not part of the platforms
+    """
 
     if not platforms:
         return tech_list
@@ -637,8 +638,9 @@ def filter_techniques_by_platform(tech_list, platforms):
     return filtered_list
 
 def get_side_menu_matrices(children):
-    """Given a matrix structure defined in config.py, return stripped structure
-       with only names"""
+    """Given a matrix structure, return stripped structure
+       with only names
+    """
 
 
     def children_helper(matrix, path_prefix):

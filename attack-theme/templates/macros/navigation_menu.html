@@ -9,22 +9,8 @@
             <ul class='nav nav-tabs ml-auto'>
                 {% for element in menu %}
                     {% if element.children %}
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="{{ element.url }}" id="navbarDropdown" role="button"
-                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <b>{{ element.name }}</b>
-                            </a>
-                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                {% for child in element.children %}
-                                    {% if child.external_link %}
-                                        {{external_link(child)}}
-                                    {% else %}
-                                        <a class="dropdown-item" href="{{child.url}}">{{ child.name }}</a>
-                                    {% endif %}
-                                {% endfor %}
-                            </div>
-                        </li>
-                    {% endif %}
+                        {{has_child(element)}}
+                    {% elif element.external_link %}
                         {{external_link(element)}}
                     {% else %}
                         <li class="nav-item"><a href="{{ element.url }}" {% if id==active_page %} class="nav-link active" {%
@@ -52,4 +38,24 @@
         <b>{{ element.name }}</b>&nbsp;
         <img src="/theme/images/external-site.svg" alt="External site" class="external-icon" /></a>
     </li>
-{% endmarcro %}
+{% endmacro %}
+
+{% macro has_child(element) %}
+    <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="{{ element.url }}" id="navbarDropdown" role="button"
+        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <b>{{ element.name }}</b>
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            {% for child in element.children %}
+                {% if child.children %}
+                    {{has_child(child)}}
+                {% elif child.external_link %}
+                    {{external_link(child)}}
+                {% else %}
+                    <a class="dropdown-item" href="{{child.url}}">{{ child.name }}</a>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </li>
+{% endmacro %}
