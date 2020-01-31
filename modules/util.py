@@ -745,6 +745,9 @@ def filter_techniques_by_platform(tech_list, platforms):
 
     return filtered_list
 
+def filter_deprecated_revoked(sdos):
+    return list(filter(lambda t: not ( ("x_mitre_deprecated" in t and t["x_mitre_deprecated"]) or ("revoked" in t and t["revoked"]) ) ,sdos))
+
 def filter_out_subtechniques(techniques):
     return list(filter(lambda t: not ("x_mitre_is_subtechnique" in t and t["x_mitre_is_subtechnique"]), techniques))
 

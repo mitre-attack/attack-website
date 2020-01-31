@@ -284,7 +284,8 @@ def get_software_table_data(group, reference_list, next_reference_number):
     # through dictionaries
     data = []
     for item in software_list:
-        software_list[item]['techniques'] = sorted(software_list[item]['techniques'], key=lambda k: k['name'].lower())
+        if "techniques" in software_list[item]:
+            software_list[item]['techniques'] = sorted(software_list[item]['techniques'], key=lambda k: k['name'].lower())
         data.append(software_list[item])
     data = sorted(data, key=lambda k: k['name'].lower())
 
