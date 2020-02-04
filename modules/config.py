@@ -226,12 +226,6 @@ group_md = Template("Title: ${name}\n"
                     "save_as: groups/${attack_id}/index.html\n"
                     "data: ")
 
-# HTML reference hyperlink inside of software table description
-software_table_desc_link = ("<sup><a href=\"{}\" target=\"_blank\" "
-                            "data-hasqtip=\"{}\" "
-                            "aria-describedby=\"qtip-{}\">[{}]</a></sup>")
-software_table_desc_link_no_url = "<sup>[{}]</sup>"
-
 # Constants used by matrix.py
 # ----------------------------------------------------------------------------
 
