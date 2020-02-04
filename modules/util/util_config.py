@@ -28,24 +28,6 @@ reference_marker_template_no_url = ("<span onclick=scrollToRef('scite-{}') "
                                     "data-reference=\"{}\">"
                                     "<sup>[{}]</sup></span>")
 
-# directory for data used in site builds
-data_directory = "data"
-# directory for STIX data
-stix_directory = data_directory + "/stix"
-# STIX bundles for each domain
-attack_path = {
-    'enterprise-attack': stix_directory + "/enterprise-attack.json",
-    'mobile-attack': stix_directory + "/mobile-attack.json",
-    'pre-attack': stix_directory + "/pre-attack.json"
-}
-
-# Source names for ATT&CK
-source_names = [
-    "mitre-pre-attack", 
-    "mitre-attack", 
-    "mitre-mobile-attack"
-]
-
 # Used to reset text color
 RESET = '\033[0m'  # mode 0  = reset
 

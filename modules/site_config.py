@@ -7,6 +7,13 @@ from modules import util
 # Domains for stix objects
 domains = ["pre-attack", "enterprise-attack", "mobile-attack"]
 
+# Source names for ATT&CK
+source_names = [
+    "mitre-pre-attack", 
+    "mitre-attack", 
+    "mitre-mobile-attack"
+]
+
 # Base page data for website header and footer
 base_page_data = {
     "BANNER_ENABLED": True,
