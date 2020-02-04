@@ -2,7 +2,7 @@ import json
 import stix2
 import stix2.utils
 from modules import site_config
-from . import build_helpers
+from . import buildhelpers
 
 def get_mitigation_list(src):
     """Reads the STIX and returns a list of all mitigations in the STIX"""
@@ -100,7 +100,7 @@ def get_examples(tech_stix_id, src):
                 stix2.Filter('id', '=', r.source_ref), 
                 stix2.Filter('revoked', '=', False)
             ])[0]
-            attack_id = build_helpers.get_attack_id(example)
+            attack_id = buildhelpers.get_attack_id(example)
             examples.append({'name': example.name, 
                              'id': attack_id, 
                              'description': r.description, 
@@ -124,7 +124,7 @@ def get_technique_id_domain_map(ms):
             stix2.Filter('revoked', '=', False)
         ])
         for val in curr_list:
-            technique_id = build_helpers.get_attack_id(val)
+            technique_id = buildhelpers.get_attack_id(val)
             if technique_id:
                 tech_list[technique_id] = domain
     

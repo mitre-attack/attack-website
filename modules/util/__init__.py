@@ -1,3 +1,4 @@
+from . import relationshipgetters
 from . import relationshiphelpers
-from . import build_helpers
+from . import buildhelpers
 from . import stixhelpers
