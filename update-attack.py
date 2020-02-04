@@ -292,12 +292,12 @@ if __name__ == "__main__":
 
     remove_false_results_from_menu(results)
 
-    with open(os.path.join(site_config.template_folder, "base.bak"), "r", encoding='utf8') as base_template_f:
+    with open(os.path.join(site_config.template_dir, "base.bak"), "r", encoding='utf8') as base_template_f:
         base_template = base_template_f.read()
         base_template = Template(base_template)
         subs = base_template.substitute(site_config.base_page_data)
 
-    with open(os.path.join(site_config.template_folder, "base.html"), "w", encoding='utf8') as base_template_f:
+    with open(os.path.join(site_config.template_dir, "base.html"), "w", encoding='utf8') as base_template_f:
         base_template_f.write(subs)
 
     # # Generate base template for ATT&CK pages

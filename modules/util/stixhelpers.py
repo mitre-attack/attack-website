@@ -1,8 +1,8 @@
 import json
 import stix2
 import stix2.utils
-from . import config
-from . import util
+from modules import site_config
+from . import build_helpers
 
 def get_mitigation_list(src):
     """Reads the STIX and returns a list of all mitigations in the STIX"""
@@ -100,7 +100,7 @@ def get_examples(tech_stix_id, src):
                 stix2.Filter('id', '=', r.source_ref), 
                 stix2.Filter('revoked', '=', False)
             ])[0]
-            attack_id = util.get_attack_id(example)
+            attack_id = build_helpers.get_attack_id(example)
             examples.append({'name': example.name, 
                              'id': attack_id, 
                              'description': r.description, 
@@ -118,13 +118,13 @@ def get_technique_id_domain_map(ms):
     
     tech_list = {}
 
-    for domain in config.domains:
+    for domain in site_config.domains:
         curr_list = ms[domain].query([
             stix2.Filter('type', '=', 'attack-pattern'),
             stix2.Filter('revoked', '=', False)
         ])
         for val in curr_list:
-            technique_id = util.get_attack_id(val)
+            technique_id = build_helpers.get_attack_id(val)
             if technique_id:
                 tech_list[technique_id] = domain
     
@@ -137,7 +137,7 @@ def grab_resources(ms):
 
     #Generates the list of techniques
     tech_list = []
-    for domain in config.domains:
+    for domain in site_config.domains:
         curr_list = ms[domain].query([
             stix2.Filter('type', '=', 'attack-pattern'),
             stix2.Filter('revoked', '=', False)
@@ -149,7 +149,7 @@ def grab_resources(ms):
 
     #Generates list of software
     software_list = []
-    for domain in config.domains:
+    for domain in site_config.domains:
         curr_list = ms[domain].query([
             stix2.Filter('type', '=', 'malware'),
             stix2.Filter('revoked', '=', False)
@@ -170,7 +170,7 @@ def grab_resources(ms):
 
     #Generates list of groups
     group_list = []
-    for domain in config.domains:
+    for domain in site_config.domains:
         curr_list = ms[domain].query([
             stix2.Filter('type', '=', 'intrusion-set'),
             stix2.Filter('revoked', '=', False)
@@ -183,7 +183,7 @@ def grab_resources(ms):
 
     #Generates a list of CoA
     coa_list = []
-    for domain in config.domains:
+    for domain in site_config.domains:
         curr_list = ms[domain].query([
             stix2.Filter("type", "=", "course-of-action"),
             stix2.Filter('revoked', '=', False)
@@ -196,7 +196,7 @@ def grab_resources(ms):
 
     #Generates a list of CoA
     coa_list = []
-    for domain in config.domains:
+    for domain in site_config.domains:
         curr_list = ms[domain].query([
             stix2.Filter("type", "=", "course-of-action"),
             stix2.Filter('revoked', '=', False)
@@ -209,7 +209,7 @@ def grab_resources(ms):
 
     #Generates list of relationships
     rel_list = []
-    for domain in config.domains:
+    for domain in site_config.domains:
         curr_list = ms[domain].query([
             stix2.Filter('type', '=', 'relationship'),
         ])
@@ -230,9 +230,9 @@ def get_stix_memory_stores():
 
     src = {}
 
-    for domain in config.domains:
+    for domain in site_config.domains:
         src[domain] = stix2.MemoryStore()
-        src[domain].load_from_file(config.attack_path[domain])
+        src[domain].load_from_file(site_config.attack_path[domain])
 
     return src
 
@@ -240,9 +240,9 @@ def get_old_stix_memory_stores():
 
     src = {}
 
-    for domain in config.domains:
+    for domain in site_config.domains:
         src[domain] = stix2.MemoryStore()
-        src[domain].load_from_file(config.last_attack_path[domain])
+        src[domain].load_from_file(site_config.last_attack_path[domain])
 
     return src
 
@@ -255,7 +255,7 @@ def get_contributors(ms):
         'Elly Searle, CrowdStrike — contributed to tactic definitions'
     ]
 
-    for domain in config.domains:
+    for domain in site_config.domains:
         obj_types = ['attack-pattern', 'malware', 'tool', 'intrusion-set']
         src = ms[domain]
         obj_list = []

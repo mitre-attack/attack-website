@@ -11,7 +11,20 @@ import uuid
 import sys
 import bleach
 from modules import site_config
+from . import relationshiphelpers as rsh
 from . import util_config
+
+malware_used_by_groups = {}
+
+# Relationship getters
+
+def get_malware_used_by_groups():
+    """ malware used by groups getter """
+
+    if malware_used_by_groups:
+        return malware_used_by_groups
+    else:
+        return rsh.malware_used_by_groups(site_config.srcs)
 
 def timestamp():
     """This method is here to return a timestamp"""
