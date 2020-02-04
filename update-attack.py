@@ -8,7 +8,6 @@ from string import Template
 
 import modules
 from modules import site_config
-from modules import clean
 
 # argument defaults and options for the CLI
 module_choices = ['resources', 'contribute', 'groups', 'search', 'matrices', 'mitigations', 'redirects', 'software', 'tactics', 'techniques', "prev_versions"]
@@ -300,8 +299,6 @@ if __name__ == "__main__":
 
     with open(os.path.join(site_config.template_folder, "base.html"), "w", encoding='utf8') as base_template_f:
         base_template_f.write(subs)
-
-    # clean.clean_website_build()
 
     # # Generate base template for ATT&CK pages
     # generate_base_template()
