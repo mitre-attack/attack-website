@@ -72,3 +72,5 @@ for domain in domains:
 
 # Source list of domains
 srcs = list(map(lambda url: util.relationshiphelpers.load(url), stix_array))
+
+no_stix_link_replacement = ""

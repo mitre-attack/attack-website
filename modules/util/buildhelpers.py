@@ -69,7 +69,7 @@ def get_attack_id(object):
 def filter_urls(descr):
     """Filters out URLs to return path and not domain"""
 
-    if not config.args.no_stix_link_replacement:
+    if not site_config.no_stix_link_replacement:
         if "https://attack.mitre.org/groups/" in descr:
             descr = descr.replace(
                 "https://attack.mitre.org/groups/", "/groups/")

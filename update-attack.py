@@ -8,6 +8,7 @@ from string import Template
 
 import modules
 from modules import site_config
+from modules import generate
 
 # argument defaults and options for the CLI
 module_choices = ['resources', 'contribute', 'groups', 'search', 'matrices', 'mitigations', 'redirects', 'software', 'tactics', 'techniques', "prev_versions"]
@@ -86,59 +87,9 @@ test_defaults = list(filter(lambda t: t != "external_links", test_choices))
 #     if args.clean:
 #         generate.clean_website()    
 
-#     # Grab shared resources and stix data
-#     if args.build:
-#         get_stix_data(args)
-#         generate.grab_resources()
-    
 #     # Generate index markdown
 #     if args.build:
 #         generate.index_md_gen()
-
-#     # Generate group markdowns
-#     if args.build:
-#         if 'groups' in args.build:
-#             generate.group_md_gen()
-
-#     # Software markdown generation
-#     if args.build:
-#         if 'software' in args.build:
-#             generate.software_md_gen()
-
-#     # Generate technique markdowns
-#     if args.build:
-#         if 'techniques' in args.build:
-#             generate.technique_md_gen()
-
-#     # Generate matrix markdowns
-#     if args.build:
-#         if 'matrices' in args.build:
-#             generate.matrix_md_gen()
-
-#     # Generate tactic markdowns
-#     if args.build:
-#         if 'tactics' in args.build:
-#             generate.tactic_md_gen()
-
-#     # Generate mitigation markdowns
-#     if args.build:
-#         if 'mitigations' in args.build:
-#             generate.mitigation_md_gen()
-
-#     # Generate contribute markdowns
-#     if args.build:
-#         if 'contribute' in args.build:
-#             generate.contribute_md_gen()
-    
-#     # Generate resources markdowns
-#     if args.build:
-#         if 'resources' in args.build:
-#             generate.resources_md_gen()
-        
-#     # Generate redirects markdowns
-#     if args.build:
-#         if 'redirects' in args.build:
-#             generate.redirects_md_gen()
 
 #     # Generate Index
 #     if args.build:
@@ -286,6 +237,9 @@ if __name__ == "__main__":
     if args.modules:
         remove_from_build(args.modules)
 
+    # Set site configuration variables
+    site_config.no_stix_link_replacement = args.no_stix_link_replacement
+
     # Run Modules
     results = []
     [results.append(ptr['run_module']()) for ptr in modules.run_ptr]
@@ -299,6 +253,9 @@ if __name__ == "__main__":
 
     with open(os.path.join(site_config.template_dir, "base.html"), "w", encoding='utf8') as base_template_f:
         base_template_f.write(subs)
+
+    # Run pelican
+    modules.generate.pelican_content()
 
     # # Generate base template for ATT&CK pages
     # generate_base_template()
