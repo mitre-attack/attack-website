@@ -1,4 +1,7 @@
+import time
 from . import groups 
+from . import groups_config
+from modules import util
 
 def get_menu():
     return {
@@ -10,4 +13,5 @@ def get_menu():
     }
 
 def run_module():
-    return (groups.generate_groups(), "Groups")
+
+    return (groups.generate_groups(), groups_config.module_name)

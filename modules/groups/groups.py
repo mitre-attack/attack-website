@@ -8,18 +8,7 @@ def generate_groups():
     """
 
     # First call to lazy loading
-    test_start = time.time()
     util.relationshipgetters.get_malware_used_by_groups()
-    test_end = time.time()
-    test_time = test_end - test_start
-    print(test_time)
-
-    # Second call to lazy loading
-    test_start = time.time()
-    util.relationshipgetters.get_malware_used_by_groups()
-    test_end = time.time()
-    test_time = test_end - test_start
-    print(test_time)
 
     return True
    

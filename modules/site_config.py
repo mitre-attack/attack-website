@@ -7,6 +7,9 @@ from modules import util
 # Domains for stix objects
 domains = ["pre-attack", "enterprise-attack", "mobile-attack"]
 
+# Args for modules to use if needed
+args = []
+
 # Source names for ATT&CK
 source_names = [
     "mitre-pre-attack", 

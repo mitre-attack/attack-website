@@ -8,6 +8,7 @@ from string import Template
 
 import modules
 from modules import site_config
+from modules import util
 
 # argument defaults and options for the CLI
 module_choices = ['resources', 'contribute', 'groups', 'search', 'matrices', 'mitigations', 'redirects', 'software', 'tactics', 'techniques', "prev_versions"]
@@ -79,8 +80,7 @@ test_defaults = list(filter(lambda t: t != "external_links", test_choices))
 
 #     exit_codes = []
 
-#     # Start time of update
-#     update_start = time.time()
+
 
 #     # Clean output/content directory if flag is set
 #     if args.clean:
@@ -94,61 +94,6 @@ test_defaults = list(filter(lambda t: t != "external_links", test_choices))
 #     # Generate index markdown
 #     if args.build:
 #         generate.index_md_gen()
-
-#     # Generate group markdowns
-#     if args.build:
-#         if 'groups' in args.build:
-#             generate.group_md_gen()
-
-#     # Software markdown generation
-#     if args.build:
-#         if 'software' in args.build:
-#             generate.software_md_gen()
-
-#     # Generate technique markdowns
-#     if args.build:
-#         if 'techniques' in args.build:
-#             generate.technique_md_gen()
-
-#     # Generate matrix markdowns
-#     if args.build:
-#         if 'matrices' in args.build:
-#             generate.matrix_md_gen()
-
-#     # Generate tactic markdowns
-#     if args.build:
-#         if 'tactics' in args.build:
-#             generate.tactic_md_gen()
-
-#     # Generate mitigation markdowns
-#     if args.build:
-#         if 'mitigations' in args.build:
-#             generate.mitigation_md_gen()
-
-#     # Generate contribute markdowns
-#     if args.build:
-#         if 'contribute' in args.build:
-#             generate.contribute_md_gen()
-    
-#     # Generate resources markdowns
-#     if args.build:
-#         if 'resources' in args.build:
-#             generate.resources_md_gen()
-        
-#     # Generate redirects markdowns
-#     if args.build:
-#         if 'redirects' in args.build:
-#             generate.redirects_md_gen()
-
-#     # Generate Index
-#     if args.build:
-#         if 'search' in args.build:
-#     	    generate.generate_search_index()
-
-#     # Deploy previous version
-#     if args.build:
-#         if 'prev_versions' in args.build:
-#     	    generate.previous_versions_gen()
     
 #     # Pelican update
 #     if args.build:
@@ -172,21 +117,18 @@ test_defaults = list(filter(lambda t: t != "external_links", test_choices))
 #         util.progress_bar("TOTAL Build Time", build_time)
 #         util.progress_bar("TOTAL Test Time", test_time)
     
-#     update_end = time.time()
-#     util.progress_bar("TOTAL Update Time", update_end - update_start)
-
-#     if not args.override_exit_status:
-#         handle_exit(exit_codes)
+    # if not args.override_exit_status:
+    #     handle_exit(exit_codes)
 
 def get_parsed_args():
     """Create argument parser and parse arguments"""
 
     parser = argparse.ArgumentParser(description=("Build the ATT&CK website.\n"
                                      "To run a complete build, run this script with the -c and -b flags. "))
-    # parser.add_argument('--clean', '-c', action='store_true',
-    #                     help='Clean files from previous builds')
-    # parser.add_argument('--refresh', '-r', action='store_true',
-    #                     help='Pull down the current STIX data from the MITRE/CTI GitHub respository')
+    parser.add_argument('--clean', '-c', action='store_true',
+                        help='Clean files from previous builds')
+    parser.add_argument('--refresh', '-r', action='store_true',
+                        help='Pull down the current STIX data from the MITRE/CTI GitHub respository')
     parser.add_argument('--no-stix-link-replacement', action='store_true',
                         help="If this flag is absent, links to attack.mitre.org/[page] in the STIX data will be replaced with /[page]. Add this flag to preserve links to attack.mitre.org.")
     
@@ -198,7 +140,6 @@ def get_parsed_args():
                               "Run specific modules by selecting from the "
                               "list and leaving one space in "
                               "between them. For example: '-m techniques tactics'."))                          
-    
     # parser.add_argument('--test', '-t', nargs='*',
     #                     choices=test_choices,
     #                     dest="tests",
@@ -213,7 +154,7 @@ def get_parsed_args():
     #                           "external_links (dead external hyperlinks); "
     #                           "citations (unparsed citation text).")
     
-    # parser.add_argument('--proxy', help="set proxy")
+    parser.add_argument('--proxy', help="set proxy")
 
     parser.add_argument("--print-tests", 
                         dest="print_tests", 
@@ -283,15 +224,32 @@ if __name__ == "__main__":
     # Get args
     args = get_parsed_args()
 
+    # Set global argument list for modules
+    site_config.args = args
+
+    # If modules flags are called only run modules selected by user
     if args.modules:
         remove_from_build(args.modules)
 
     # Run Modules
     results = []
-    [results.append(ptr['run_module']()) for ptr in modules.run_ptr]
 
+    # Start time of update
+    update_start = time.time()
+
+    # Run modules
+    for ptr in modules.run_ptr:
+        util.buildhelpers.print_start(ptr['name'])
+        start_time = time.time()
+        results.append(ptr['run_module']())
+        end_time = time.time()
+        util.buildhelpers.print_end(ptr['name'], start_time, end_time)
+
+    # Remove false results from menu
     remove_false_results_from_menu(results)
 
+
+    # Will be part of generate base html module
     with open(os.path.join(site_config.template_dir, "base.bak"), "r", encoding='utf8') as base_template_f:
         base_template = base_template_f.read()
         base_template = Template(base_template)
@@ -299,6 +257,10 @@ if __name__ == "__main__":
 
     with open(os.path.join(site_config.template_dir, "base.html"), "w", encoding='utf8') as base_template_f:
         base_template_f.write(subs)
+
+    # Print end of module
+    update_end = time.time()
+    util.buildhelpers.print_end("TOTAL Update Time", update_start, update_end)
 
     # # Generate base template for ATT&CK pages
     # generate_base_template()
