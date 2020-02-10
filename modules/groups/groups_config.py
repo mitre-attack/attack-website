@@ -1,3 +1,2 @@
-value_for_groups = "Only for groups!"
-
 module_name = "Groups"
+priority = 6

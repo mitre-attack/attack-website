@@ -2,7 +2,6 @@ import argparse
 import colorama
 import json
 import os
-import requests
 import time
 from string import Template
 
@@ -11,52 +10,12 @@ from modules import site_config
 from modules import util
 
 # argument defaults and options for the CLI
-module_choices = ['resources', 'contribute', 'groups', 'search', 'matrices', 'mitigations', 'redirects', 'software', 'tactics', 'techniques', "prev_versions"]
+module_choices = ['clean', 'stix_data', 'resources', 'contribute', 'groups', 'search', 'matrices', 'mitigations', 'redirects', 'software', 'tactics', 'techniques', "prev_versions"]
 module_defaults = module_choices
 
 test_choices = ['size', 'links', 'external_links', 'citations']
 test_defaults = list(filter(lambda t: t != "external_links", test_choices))
 
-# def get_stix_data(args):
-#     """Set up proxy if any and get STIX data"""
-
-#     # Set proxy
-#     proxy  = ""
-#     if args.proxy is not None:
-#         proxy = args.proxy
-#     proxyDict = { 
-#         "http"  : proxy,
-#         "https" : proxy
-#     }
-
-#     use_local_stix = True
-#     for domain in config.settings_dict['domains']:
-#         if not (os.path.isfile('{0}/{1}.json'.format(config.stix_directory, domain))):
-#             use_local_stix = False
-
-#     if (not os.path.isdir(config.stix_directory)):
-#         os.mkdir(config.stix_directory)
-#     try:
-#         util.progress_bar("Downloading STIX Data")
-#         start_time = time.time()
-
-#         for domain in config.settings_dict['domains']:
-#             r = requests.get(f"https://raw.githubusercontent.com/mitre/cti/master/{domain}/{domain}.json", 
-#             verify=False, proxies=proxyDict)
-            
-#             with open(os.path.join(config.stix_directory, domain + "_old.json"), 'w+') as f:
-#                 f.write(json.dumps(r.json()))
-                
-#                 if (args.refresh or not os.path.isdir(config.stix_directory) or not use_local_stix):
-#                     with open(os.path.join(config.stix_directory, domain + ".json"), 'w+') as f:
-#                         f.write(json.dumps(r.json()))
-
-#         end_time = time.time()
-#         util.progress_bar("Downloading STIX Data", end_time - start_time)
-#     except:
-#         end_time = time.time()
-#         util.progress_bar("Downloading STIX Data", end_time - start_time)
-#         print("Unable to reach stix repository. Are you behind a (--proxy)?")
 
 # def handle_exit(exit_codes):
 #     """Given a exit codes list, exit with 1 on failure and 0 on success
@@ -79,17 +38,6 @@ test_defaults = list(filter(lambda t: t != "external_links", test_choices))
 #     """Run all modules"""
 
 #     exit_codes = []
-
-
-
-#     # Clean output/content directory if flag is set
-#     if args.clean:
-#         generate.clean_website()    
-
-#     # Grab shared resources and stix data
-#     if args.build:
-#         get_stix_data(args)
-#         generate.grab_resources()
     
 #     # Generate index markdown
 #     if args.build:
@@ -125,8 +73,6 @@ def get_parsed_args():
 
     parser = argparse.ArgumentParser(description=("Build the ATT&CK website.\n"
                                      "To run a complete build, run this script with the -c and -b flags. "))
-    parser.add_argument('--clean', '-c', action='store_true',
-                        help='Clean files from previous builds')
     parser.add_argument('--refresh', '-r', action='store_true',
                         help='Pull down the current STIX data from the MITRE/CTI GitHub respository')
     parser.add_argument('--no-stix-link-replacement', action='store_true',
@@ -139,7 +85,7 @@ def get_parsed_args():
                               "it will run all modules from the modules directory. "
                               "Run specific modules by selecting from the "
                               "list and leaving one space in "
-                              "between them. For example: '-m techniques tactics'."))                          
+                              "between them. For example: '-m clean techniques tactics'."))                          
     # parser.add_argument('--test', '-t', nargs='*',
     #                     choices=test_choices,
     #                     dest="tests",
@@ -168,19 +114,12 @@ def get_parsed_args():
 
     args = parser.parse_args()
 
-    # if (not args.clean) and (not args.refresh) and (args.build is None) and (args.tests is None):
-    #     parser.print_help()
-    #     exit(0)
-
-    # # If the build flag was called without params, set to all
-    # if not args.build and isinstance(args.build, list):
-    #     args.build = config.build_defaults
+    # Set global argument list for modules
+    site_config.args = args
 
     # # If the tests flag was called without params, set to all
     # if (not args.tests and isinstance(args.tests, list)) or (args.build and args.build == config.build_defaults and not args.tests):
     #     args.tests = config.test_defaults
-
-    # config.args = args
     
     return args
 
@@ -224,20 +163,20 @@ if __name__ == "__main__":
     # Get args
     args = get_parsed_args()
 
-    # Set global argument list for modules
-    site_config.args = args
-
     # If modules flags are called only run modules selected by user
     if args.modules:
         remove_from_build(args.modules)
 
-    # Run Modules
+    # Used to store running modules results
     results = []
 
     # Start time of update
     update_start = time.time()
 
-    # Run modules
+    # Init colorama for output
+    colorama.init()
+
+    # Get running modules and priorities
     for ptr in modules.run_ptr:
         util.buildhelpers.print_start(ptr['name'])
         start_time = time.time()
@@ -247,7 +186,6 @@ if __name__ == "__main__":
 
     # Remove false results from menu
     remove_false_results_from_menu(results)
-
 
     # Will be part of generate base html module
     with open(os.path.join(site_config.template_dir, "base.bak"), "r", encoding='utf8') as base_template_f:
@@ -264,10 +202,4 @@ if __name__ == "__main__":
 
     # # Generate base template for ATT&CK pages
     # generate_base_template()
-
-    # # Init colorama for output
-    # colorama.init()
-    
-    # # Update ATT&CK
-    # update(args)
     

@@ -23,14 +23,6 @@ from modules import util
 from modules import index
 from modules import archives
 
-
-def grab_resources():
-    util.progress_bar("Initializing Data")
-    start_time = time.time()
-    config.init_shared_data()
-    end_time = time.time()
-    util.progress_bar("Initializing Data", end_time - start_time)
-
 def index_md_gen():
     util.progress_bar("Index Page")
     start_time = time.time()
