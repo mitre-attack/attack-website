@@ -27,8 +27,8 @@
 <!--          be omitted                                                -->
 
 # Changes staged on develop
-## Improvements
-- Added Docker support, enabling users to run two commands to build the ATT&CK website image, run the ATT&CK website container, and view the website on a user-designated localhost port. See issue [#17](https://github.com/mitre-attack/attack-website/issues/17). 
+## New Features
+- Added Docker support, enabling users to easily build and host a docker container of the ATT&CK Website. See issue [#17](https://github.com/mitre-attack/attack-website/issues/17). 
 
 # 7 January 2019
 ## ATT&CK Website version 1.1.1
