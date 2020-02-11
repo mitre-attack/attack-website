@@ -1,3 +1,4 @@
+import modules
 from . import website_build_config
 from modules import util
 # from modules import matrices as matrixhelpers
@@ -20,6 +21,9 @@ def generate_website():
 
 def generate_base_html():
     """ Responsible for generating the header and footer of website pages """
+
+    # Update navigation menu in the case that some module did not generate markdowns
+    website_build_config.base_page_data['NAVIGATION_MENU'] = modules.menu_ptr
 
     with open(os.path.join(website_build_config.template_dir, "base.bak"), "r", encoding='utf8') as base_template_f:
         base_template = base_template_f.read()

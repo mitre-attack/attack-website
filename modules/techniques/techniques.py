@@ -23,19 +23,33 @@ def generate_techniques():
     #Write the technique index.html page
     with open(os.path.join(techniques_config.techniques_markdown_path, "overview.md"), "w", encoding='utf8') as md_file:
         md_file.write(techniques_config.technique_overview_md)
+    
+    # To verify if a technique was generated
+    technique_generated = False
 
     for domain in site_config.domains:
-        generate_domain_markdown(domain)
+        check_if_generated = generate_domain_markdown(domain)
+        if not technique_generated:
+            if check_if_generated:
+                technique_generated = True
 
-    return True
+    if not technique_generated:
+        util.buildhelpers.remove_module_from_menu(techniques_config.module_name)   
 
 def generate_domain_markdown(domain):
     """Generate technique index markdown for each domain and generates 
        shared data for techniques
     """
 
+    has_technique = False
+
     #Reads the STIX and creates a list of the ATT&CK Techniques
     full_techniques = util.stixhelpers.get_techniques(util.relationshipgetters.get_ms()[domain])
+
+    # Check if there is at least one technique
+    if full_techniques:
+        has_technique = True
+
     tactic_list = util.stixhelpers.get_tactic_list(util.relationshipgetters.get_ms()[domain])
 
     data = {}
@@ -59,11 +73,12 @@ def generate_domain_markdown(domain):
         md_file.write(subs)
 
     # Create the markdown for the enterprise groups in the STIX
-
     for technique in full_techniques:
         if 'revoked' not in technique or technique['revoked'] is False:
             generate_technique_md(technique, domain, side_menu_data, tactic_list)
-            
+
+    return has_technique
+
 def generate_technique_md(technique, domain, side_menu_data, tactic_list):
     """Generetes markdown data for given technique"""
 

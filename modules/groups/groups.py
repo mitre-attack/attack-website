@@ -15,4 +15,4 @@ def generate_groups():
     group_generated = True
 
     if not group_generated:
-        util.buildhelpers.remove_module_from_menu(groups_config.module_name)   
+        util.buildhelpers.remove_module_from_menu(groups_config.module_name)
