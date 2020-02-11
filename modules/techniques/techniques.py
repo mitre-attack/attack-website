@@ -16,7 +16,6 @@ def generate_techniques():
         False if nothing was generated
     """
 
-    start = time.time()
     # Verify if directory exists
     if not os.path.isdir(techniques_config.techniques_markdown_path):
         os.mkdir(techniques_config.techniques_markdown_path)
@@ -27,9 +26,6 @@ def generate_techniques():
 
     for domain in site_config.domains:
         generate_domain_markdown(domain)
-    end = time.time()
-
-    print(end-start)
 
     return True
 

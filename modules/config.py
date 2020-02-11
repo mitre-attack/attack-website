@@ -22,13 +22,6 @@ platform_to_path = {
     "Android": "mobile/android",
     "iOS": "mobile/ios"
 }
-# config for the matrix shown on the index page
-index_matrix = {
-    "name": "ATT&CK Matrix for Enterprise",
-    "descr": "", # if specified, adds a subtitle to the index page matrix
-    "matrix": "enterprise-attack",
-    "platforms": ["Windows", "macOS", "Linux"]
-}
 
 # The tree of matricies on /matrices/
 matrices = [
@@ -232,9 +225,6 @@ group_md = Template("Title: ${name}\n"
 # Matrix markdown path
 matrix_markdown_path = "content/pages/matrices/"
 
-# ATT&CK index markdown path
-attack_index_path = "content/pages/index.md"
-
 # Matrix overview string
 matrix_overview_md = ("Title: Matrix Overview \n"
                       "Template: general/redirect-index \n"
@@ -252,12 +242,6 @@ platform_md = Template("Title: Matrix-${domain}-${platform}\n"
                        "Template: matrices/matrix\n"
                        "save_as: matrices/${domain}/${platform_path}/index.html\n"
                        "data: ")
-
-# ATT&CK overview
-attack_index_md = ("Title: ATT&CK Overview \n"
-                   "Template: general/attack-index \n"
-                   "save_as: index.html\n"
-                   "data: ")
 
 # Constants used by mitigation.py
 # ----------------------------------------------------------------------------
@@ -523,12 +507,26 @@ training_navigation = {
     ]
 }
 
-# Constants used by citationschecker.py
+# Constants used by technique.py
 # ----------------------------------------------------------------------------
-citations_report_filename = "broken-citations-report.txt"
 
-# Constants used by linkchecker.py
-# ----------------------------------------------------------------------------
-links_report_filename = "broken-links-report.txt"
-unlinked_report_filename = "unlinked-pages-report.txt"
-relative_links_report_filename = "relative-links-report.txt"
+# Markdown path for techniques
+techniques_markdown_path = "content/pages/techniques/"	
+
+# String template for all techniques
+technique_md = Template("Title: ${name}-${tactics}-${domain}\n"
+                        "Template: techniques/technique\n"
+                        "save_as: techniques/${attack_id}/index.html\n"
+                        "data: ")
+
+# String template for domains	
+technique_domain_md = Template("Title: Techniques\n"
+                               "Template: techniques/techniques-domain-index\n"
+                               "save_as: techniques/${domain}/index.html\n"
+                               "data: ")
+
+# Overview md template
+technique_overview_md = ("Title: Overview \n"
+                         "Template: general/redirect-index \n"
+                         "RedirectLink: /techniques/enterprise/ \n"
+                         "save_as: techniques/index.html \n")

@@ -1,6 +1,5 @@
 from . import groups_config
 from modules import util
-import time
 
 def generate_groups():
     """ Generate groups, return True if groups was generated,
@@ -8,18 +7,12 @@ def generate_groups():
     """
 
     # First call to lazy loading
-    test_start = time.time()
     util.relationshipgetters.get_malware_used_by_groups()
-    test_end = time.time()
-    test_time = test_end - test_start
-    print(test_time)
 
-    # Second call to lazy loading
-    test_start = time.time()
-    util.relationshipgetters.get_malware_used_by_groups()
-    test_end = time.time()
-    test_time = test_end - test_start
-    print(test_time)
+    # Call function to generate groups
+    # Return True if a group was generated, False if not
 
-    return True
-   
+    group_generated = True
+
+    if not group_generated:
+        util.buildhelpers.remove_module_from_menu(groups_config.module_name)   

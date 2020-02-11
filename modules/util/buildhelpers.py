@@ -10,6 +10,7 @@ import math
 import uuid
 import sys
 import bleach
+import modules
 from modules import site_config
 from . import util_config
 
@@ -69,7 +70,7 @@ def get_attack_id(object):
 def filter_urls(descr):
     """Filters out URLs to return path and not domain"""
 
-    if not site_config.no_stix_link_replacement:
+    if not site_config.args.no_stix_link_replacement:
         if "https://attack.mitre.org/groups/" in descr:
             descr = descr.replace(
                 "https://attack.mitre.org/groups/", "/groups/")
@@ -569,8 +570,11 @@ def get_navigator_technique(attack_id, description):
 
 def print_test_output(status, test, message):
     """Standard printing for all tests"""
-
-    if status.startswith("RUNNING"):
+    if status.startswith("-"):
+        sys.stdout.write(f"\r{(status*(util_config.status_space-1)): <{util_config.status_space}} "
+                         f"{(test*(util_config.other_column_space-1)): <{util_config.other_column_space}} "
+                         f"{(message*(util_config.other_column_space-1)): <{util_config.other_column_space}}\n")
+    elif status.startswith("RUNNING"):
         sys.stdout.write(f"\r{status: <{util_config.status_space}} "
                          f"{test: <{util_config.other_column_space}} "
                          f"{message: <{util_config.other_column_space}}")
@@ -599,7 +603,7 @@ def add_platform_path(platforms):
 
     return platforms
 
-def progress_bar(name, time = None):
+def print_start(name):
     """Given a name and a time, display current progress"""
 
     number_of_hyphens = 40
@@ -607,11 +611,20 @@ def progress_bar(name, time = None):
 
     hyphens = '-' * number_of_hyphens
 
-    if time:
-        # spaces here because we need to overwrite the word "running"
-        sys.stdout.write(f"\r{name: <{name_space}} : {hyphens} {time:.2f}s      \n")
-    else:
-        sys.stdout.write(f"\r{name: <{name_space}} : {hyphens} Running...")
+    sys.stdout.write(f"\r{name: <{name_space}} : {hyphens} Running...")
+
+    sys.stdout.flush()
+
+def print_end(name, start_time, end_time):
+    """Given a name and a time, display current progress"""
+
+    number_of_hyphens = 40
+    name_space = 22
+
+    hyphens = '-' * number_of_hyphens
+
+    # spaces here because we need to overwrite the word "running"
+    sys.stdout.write(f"\r{name: <{name_space}} : {hyphens} {end_time-start_time:.2f}s      \n")
 
     sys.stdout.flush()
 
@@ -641,7 +654,6 @@ def get_side_menu_matrices(children):
     """Given a matrix structure, return stripped structure
        with only names
     """
-
 
     def children_helper(matrix, path_prefix):
         children = matrix["subtypes"]
@@ -681,3 +693,13 @@ def get_subtype_data(matrix, inside, name):
         get_subtype_data(subtype, subinside, matrix['name'])
 
     inside['subtypes'].append(subinside)
+
+def remove_module_from_menu(module_to_be_removed):
+    """ Given a list of results, remove elements from menu if their result was False """
+
+    def remove_from_menu_list(module):
+        if module['name'] == module_to_be_removed:
+            modules.menu_ptr.remove(module)
+
+    for module in modules.menu_ptr:
+        remove_from_menu_list(module)

@@ -1,11 +1,15 @@
-from . import techniques 
+from . import techniques
+from . import techniques_config
+
+def get_priority():
+    return techniques_config.priority
 
 def get_menu():
     return {
         "name": "Techniques", 
         "url": "/techniques", 
         "external_link": False,
-        "priority": 3,
+        "priority": techniques_config.priority,
         "children": [
             {
                 "name": "PRE-ATT&CK", 
@@ -29,4 +33,4 @@ def get_menu():
     }
 
 def run_module():
-    return (techniques.generate_techniques(), "Techniques")
+    return (techniques.generate_techniques(), techniques_config.module_name)

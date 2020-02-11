@@ -1,7 +1,7 @@
 from string import Template
 
-# Constants used by techniques.py
-# ----------------------------------------------------------------------------
+module_name = "Techniques"
+priority = 4
 
 # Markdown path for techniques
 techniques_markdown_path = "content/pages/techniques/"	

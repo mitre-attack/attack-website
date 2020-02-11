@@ -2,7 +2,8 @@ import os
 import re
 import requests
 import json
-from . import config
+from modules import site_config
+from . import tests_config
 
 # STATIC PROPERTIES
 # the directory in this repo to save previous versions
@@ -67,7 +68,7 @@ headers = {
 def remove_extra_from_path(filepath):
     """Given a path, remove unwanted path from a website link"""
 
-    return filepath.split(config.web_directory)[1]
+    return filepath.split(site_config.web_directory)[1]
 
 def get_correct_link(path):
     """Given a path, return the correct path by adding
@@ -126,7 +127,7 @@ def internal_link_test(link):
     # Get correct link path
     path = get_correct_link(link)
 
-    path = config.web_directory + path
+    path = site_config.web_directory + path
 
     # e.g: contacts.html -> contacts/index.html
     to_index_path = path
@@ -359,7 +360,7 @@ def check_links(external_links = False):
 
     internal_problem = False
     
-    for directory, _, files in os.walk(config.web_directory):
+    for directory, _, files in os.walk(site_config.web_directory):
         for filename in filter(lambda f: f.endswith(".html"), files):
                    
             filepath = os.path.join(directory, filename)
@@ -393,10 +394,10 @@ def check_links(external_links = False):
 
     # Write unlinked pages report
     if unlinked_pages:
-        if not (os.path.isdir(config.test_report_directory)):
-            os.mkdir(config.test_report_directory)
+        if not (os.path.isdir(tests_config.test_report_directory)):
+            os.mkdir(tests_config.test_report_directory)
 
-        with open(os.path.join(config.test_report_directory, config.unlinked_report_filename), 'w') as f:
+        with open(os.path.join(tests_config.test_report_directory, tests_config.unlinked_report_filename), 'w') as f:
             f.write("Unlinked pages report:\n")
             f.write("Pages listed were not linked from another page\n\n")
             for page in unlinked_pages:
@@ -404,10 +405,10 @@ def check_links(external_links = False):
 
     # Write broken links report
     if broken_pages:
-        if not (os.path.isdir(config.test_report_directory)):
-            os.mkdir(config.test_report_directory)
+        if not (os.path.isdir(tests_config.test_report_directory)):
+            os.mkdir(tests_config.test_report_directory)
 
-        with open(os.path.join(config.test_report_directory, config.links_report_filename), 'w') as f:
+        with open(os.path.join(tests_config.test_report_directory, tests_config.links_report_filename), 'w') as f:
             f.write("Broken links report:\n\n")
             for page in broken_pages:
                 f.write(page["path"] + "\n")
@@ -416,10 +417,10 @@ def check_links(external_links = False):
 
     # Write relative links report
     if relative_links:
-        if not (os.path.isdir(config.test_report_directory)):
-            os.mkdir(config.test_report_directory)
+        if not (os.path.isdir(tests_config.test_report_directory)):
+            os.mkdir(tests_config.test_report_directory)
 
-        with open(os.path.join(config.test_report_directory, config.relative_links_report_filename), 'w') as f:
+        with open(os.path.join(tests_config.test_report_directory, tests_config.relative_links_report_filename), 'w') as f:
             f.write("Relative links report:\n\n")
             for page in relative_links:
                 f.write(page["path"] + "\n")
@@ -434,15 +435,15 @@ def check_links(external_links = False):
     
     # Add exit codes depending on problems found
     if broken_count and internal_problem:
-        exit_codes.append(config.BROKEN_LINKS)
+        exit_codes.append(tests_config.BROKEN_LINKS)
     elif broken_count:
-        exit_codes.append(config.BROKEN_EXTERNAL_LINKS)
+        exit_codes.append(tests_config.BROKEN_EXTERNAL_LINKS)
     if unlinked_pages:
-        exit_codes.append(config.UNLINKED_PAGES)
+        exit_codes.append(tests_config.UNLINKED_PAGES)
     if relative_links:
-        exit_codes.append(config.RELATIVE_LINKS_FOUND)
+        exit_codes.append(tests_config.RELATIVE_LINKS_FOUND)
 
     if not exit_codes:
-        exit_codes.append(config.SUCCESS)
+        exit_codes.append(tests_config.SUCCESS)
 
     return exit_codes, links, len(unlinked_pages), len(relative_links)

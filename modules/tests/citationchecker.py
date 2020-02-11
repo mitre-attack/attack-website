@@ -1,6 +1,6 @@
 import re
 import os
-from . import config
+from . import tests_config
 
 potential_issues_list = ['[(]Citation: [^)]+[)]']
 
@@ -38,17 +38,17 @@ def citations_check():
                 broken_pages.append({"path": filepath, "problems": problems})
     
     if broken_pages:
-        if not (os.path.isdir(config.test_report_directory)):
-            os.mkdir(config.test_report_directory)
-        with open(os.path.join(config.test_report_directory, config.citations_report_filename), 'w') as f:
+        if not (os.path.isdir(tests_config.test_report_directory)):
+            os.mkdir(tests_config.test_report_directory)
+        with open(os.path.join(tests_config.test_report_directory, tests_config.citations_report_filename), 'w') as f:
             f.write("Broken Citations Report:\n\n")
             for page in broken_pages:
                 f.write(page["path"] + "\n")
                 for problem in page["problems"]:
                     f.write("\t- " + problem + "\n")
-        exit_code = config.BROKEN_CITATION
+        exit_code = tests_config.BROKEN_CITATION
     else:
-        exit_code = config.SUCCESS
+        exit_code = tests_config.SUCCESS
 
     # Return exit code and file information
     files_info = (okay_files, len(broken_pages))
