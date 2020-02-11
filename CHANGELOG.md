@@ -31,6 +31,7 @@
 - Added Docker support, enabling users to easily build and host a docker container of the ATT&CK Website. See issue [#17](https://github.com/mitre-attack/attack-website/issues/17). 
 ### Improvements
 - Added talks and links to videos to the [General Information](https://attack.mitre.org/resources/) page.
+- Refactored side navigation into tree-items on techniques, tactics, and mitigations pages. See issue [#53](https://github.com/mitre-attack/attack-website/issues/53).
 
 # 7 January 2019
 ## ATT&CK Website version 1.1.1

@@ -19,31 +19,37 @@ def generate():
     # Create the mitigation index markdown
     with open(os.path.join(config.mitigation_markdown_path, "overview.md"), "w", encoding='utf8') as md_file:
         md_file.write(config.mitigation_overview_md)
+
+    mitigations = {}
+
+    for domain in config.domains:
+        #Reads the STIX and creates a list of the ATT&CK mitigations
+        mitigations[domain] = stixhelpers.get_mitigation_list(config.ms[domain])
+
+    # Amount of characters per category
+    group_by = 3
+
+    side_nav_data = util.get_side_nav_domains_data("mitigations", mitigations)
+    side_nav_mobile_data = util.get_side_nav_domains_mobile_view_data("mitigations", mitigations, group_by)
     
     for domain in config.domains:
-        generate_markdown_files(domain)
+        generate_markdown_files(domain, mitigations[domain], side_nav_data, side_nav_mobile_data)
 
-def generate_markdown_files(domain):
+def generate_markdown_files(domain, mitigations, side_nav_data, side_nav_mobile_data):
     """Responsible for generating shared data between all mitigation pages
        and begins mitigation markdown generation
     """
 
     data = {}
 
-    mitigation_list = stixhelpers.get_mitigation_list(config.ms[domain])
-
-    if mitigation_list:
-        # Amount of characters per category
-        group_by = 3
+    if mitigations:
 
         data['domain'] = domain.split("-")[0]
-        data['mitigation_list_len'] = str(len(mitigation_list))
-        side_menu_data = util.get_side_menu_data("mitigations", "/mitigations/", mitigation_list, data['domain'])
-        data['side_menu_data'] = side_menu_data
-        side_menu_mobile_data = util.get_side_menu_mobile_view_data("mitigations", "/mitigations/", mitigation_list, group_by, data['domain'])
-        data['side_menu_mobile_view_data'] = side_menu_mobile_data
+        data['mitigation_list_len'] = str(len(mitigations))
+        data['side_menu_data'] = side_nav_data
+        data['side_menu_mobile_view_data'] = side_nav_mobile_data
                         
-        data['mitigation_table'] = get_mitigation_table_data(mitigation_list)
+        data['mitigation_table'] = get_mitigation_table_data(mitigations)
 
         subs = config.mitigation_domain_md.substitute(data)
         subs = subs + json.dumps(data)
@@ -52,9 +58,8 @@ def generate_markdown_files(domain):
             md_file.write(subs)
 
         # Generates the markdown files to be used for page generation
-        for mitigation in mitigation_list:
-            generate_mitigation_md(mitigation, domain, side_menu_data, \
-                                                        side_menu_mobile_data)
+        for mitigation in mitigations:
+            generate_mitigation_md(mitigation, domain, side_nav_data, side_nav_mobile_data)
 
 def generate_mitigation_md(mitigation, domain, side_menu_data, \
                                                        side_menu_mobile_data):
