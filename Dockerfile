@@ -1,7 +1,13 @@
 FROM ubuntu:19.10
 COPY . /home/attackuser/attack-website
-LABEL maintainer="Jeff Li"
-LABEL description="Dockerfile for the ATT&CK Website Image"
+# label metadata
+LABEL name="attack-website"
+LABEL description="Dockerfile for the ATT&CK Website"
+LABEL usage="https://github.com/mitre-attack/attack-website/blob/master/README.md#install-and-build"
+LABEL url="https://attack.mitre.org/"
+LABEL vcs-url="https://github.com/mitre-attack/attack-website"
+LABEL vendor="MITRE ATT&CK"
+LABEL maintainer="attack@mitre.org"
 
 ENV DEBIAN_FRONTEND noninteractive
 
