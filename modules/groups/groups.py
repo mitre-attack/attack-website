@@ -12,7 +12,7 @@ def generate_groups():
     # Call function to generate groups
     # Return True if a group was generated, False if not
 
-    group_generated = False
+    group_generated = True
 
     if not group_generated:
         util.buildhelpers.remove_module_from_menu(groups_config.module_name)   
