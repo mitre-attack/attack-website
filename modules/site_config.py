@@ -17,23 +17,8 @@ source_names = [
     "mitre-mobile-attack"
 ]
 
-# Base page data for website header and footer
-base_page_data = {
-    "BANNER_ENABLED": True,
-    "BANNER_MESSAGE": "<strong><a href='https://collaborate.mitre.org/attackics' target='_blank'>JUST RELEASED: ATT&CK for Industrial Control Systems</a></strong>",
-    "CONTENT_VERSION": "6.2",
-    "WEBSITE_VERSION": "1.1.1",
-    "CHANGELOG_LOCATION": "/resources/changelog.html",
-    "NAVIGATION_MENU": modules.menu_ptr
-}
-
-# Template directory
-template_dir = os.path.join("attack-theme", "templates", "general/")
-
 # Declare file location of web pages
 web_directory = "output"
-# Directory for test reports
-test_report_directory = "reports"
 
 # directory for data used in site builds
 data_directory = "data"

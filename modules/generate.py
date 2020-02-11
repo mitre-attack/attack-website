@@ -23,13 +23,6 @@ from modules import util
 from modules import index
 from modules import archives
 
-def index_md_gen():
-    util.progress_bar("Index Page")
-    start_time = time.time()
-    index.generate()
-    end_time = time.time()
-    util.progress_bar("Index Page", end_time - start_time)
-
 def group_md_gen():
     util.progress_bar("Group Pages")
     start_time = time.time()
@@ -119,35 +112,3 @@ def clean_website():
     clean.clean_website_build()
     end_time = time.time()
     util.progress_bar("Clean Build", end_time - start_time)
-
-def remove_unwanted_output():
-    """Remove unwanted files from the output directory"""
-
-    # Files to be deleted:
-    # archives.html, authors.html, categories.html, tags.html, 
-    # author\blake-strom.html, category\cyber-threat-intelligence.html
-    output_path = "output"
-
-    archives_path = os.path.join(output_path, "archives.html")
-    if os.path.exists(archives_path):
-        os.remove(archives_path)
-    
-    authors_path = os.path.join(output_path, "authors.html")
-    if os.path.exists(authors_path):
-        os.remove(authors_path)
-
-    categories_path = os.path.join(output_path, "categories.html")
-    if os.path.exists(categories_path):
-        os.remove(categories_path)
-    
-    tags_path = os.path.join(output_path, "tags.html")
-    if os.path.exists(tags_path):
-        os.remove(tags_path)
-    
-    author_path = os.path.join(output_path, "author")
-    if os.path.exists(author_path):
-        shutil.rmtree(author_path)
-    
-    category_path = os.path.join(output_path, "category")
-    if os.path.exists(category_path):
-        shutil.rmtree(category_path)

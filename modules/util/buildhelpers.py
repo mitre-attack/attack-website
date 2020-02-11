@@ -10,6 +10,7 @@ import math
 import uuid
 import sys
 import bleach
+import modules
 from modules import site_config
 from . import util_config
 
@@ -569,8 +570,11 @@ def get_navigator_technique(attack_id, description):
 
 def print_test_output(status, test, message):
     """Standard printing for all tests"""
-
-    if status.startswith("RUNNING"):
+    if status.startswith("-"):
+        sys.stdout.write(f"\r{(status*(util_config.status_space-1)): <{util_config.status_space}} "
+                         f"{(test*(util_config.other_column_space-1)): <{util_config.other_column_space}} "
+                         f"{(message*(util_config.other_column_space-1)): <{util_config.other_column_space}}\n")
+    elif status.startswith("RUNNING"):
         sys.stdout.write(f"\r{status: <{util_config.status_space}} "
                          f"{test: <{util_config.other_column_space}} "
                          f"{message: <{util_config.other_column_space}}")
@@ -651,7 +655,6 @@ def get_side_menu_matrices(children):
        with only names
     """
 
-
     def children_helper(matrix, path_prefix):
         children = matrix["subtypes"]
         if matrix["type"] == "local":
@@ -690,3 +693,13 @@ def get_subtype_data(matrix, inside, name):
         get_subtype_data(subtype, subinside, matrix['name'])
 
     inside['subtypes'].append(subinside)
+
+def remove_module_from_menu(module_to_be_removed):
+    """ Given a list of results, remove elements from menu if their result was False """
+
+    def remove_from_menu_list(module):
+        if module['name'] == module_to_be_removed:
+            modules.menu_ptr.remove(module)
+
+    for module in modules.menu_ptr:
+        remove_from_menu_list(module)

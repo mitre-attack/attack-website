@@ -1,5 +1,5 @@
 import os
-from . import config
+from . import tests_config
 
 def check_output_size():
     """Check output folder size"""
@@ -15,11 +15,11 @@ def check_output_size():
 
     # If it's bigger than 1 GiB in base 2, return error
     if size_in_megabytes > 1000:
-        exit_code = config.SIZE_ERROR
+        exit_code = tests_config.SIZE_ERROR
     # Return warning if it surpassed 80% of 1GB
     elif size_in_megabytes > 800:
-        exit_code = config.WARNING
+        exit_code = tests_config.WARNING
     else:
-        exit_code = config.SUCCESS
+        exit_code = tests_config.SUCCESS
     
     return exit_code, size_in_megabytes
