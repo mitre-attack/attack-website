@@ -1,4 +1,4 @@
-Title: PRE-ATT&CK
+Title: PRE-ATT&CK Introduction
 Template: general/intro-overview
 Date: 2018
 Category: Cyber Threat Intelligence

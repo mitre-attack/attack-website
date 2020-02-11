@@ -134,11 +134,6 @@ def update(args):
         if 'redirects' in args.build:
             generate.redirects_md_gen()
 
-    # Generate Index
-    if args.build:
-        if 'search' in args.build:
-    	    generate.generate_search_index()
-
     # Deploy previous version
     if args.build:
         if 'prev_versions' in args.build:
@@ -149,6 +144,13 @@ def update(args):
         generate.pelican_content()
         # Remove unwanted files created by pelican
         generate.remove_unwanted_output()
+
+    # Generate search index
+    # note: this should come basically last in the build process
+    # because it parses the content of the output directory to build the index
+    if args.build:
+        if 'search' in args.build:
+    	    generate.generate_search_index()
     
     if args.build:
         build_end = time.time()
