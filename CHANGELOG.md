@@ -26,10 +26,9 @@
 <!--          addition of notable features. When PATCH is 0 it can      -->
 <!--          be omitted                                                -->
 
-# 16 January 2020
-## ATT&CK Website version 1.2
+# Changes staged on develop
 ### New Features
-- Added support for configurable navigator links. See issue [#18](https://github.com/mitre-attack/attack-website/issues/18).
+- Allows user to specify URL for attached Navigator instance in config. See issue [#18](https://github.com/mitre-attack/attack-website/issues/18).
 
 # 7 January 2019
 ## ATT&CK Website version 1.1.1
