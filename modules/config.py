@@ -243,30 +243,6 @@ platform_md = Template("Title: Matrix-${domain}-${platform}\n"
                        "save_as: matrices/${domain}/${platform_path}/index.html\n"
                        "data: ")
 
-# Constants used by mitigation.py
-# ----------------------------------------------------------------------------
-
-# Markdown path for mitigations
-mitigation_markdown_path = "content/pages/mitigations/"
-
-# Mitigation overview string
-mitigation_overview_md = ("Title: Mitigation Overview \n"
-                          "Template: general/redirect-index \n"
-                          "RedirectLink: /mitigations/enterprise/ \n"
-                          "save_as: mitigations/index.html \n")
-
-# String template for domains	
-mitigation_domain_md = Template("Title: Mitigations\n"
-                                "Template: mitigations/mitigations-domain-index\n"
-                                "save_as: mitigations/${domain}/index.html\n"
-                                "data: ")
-
-# String template for all mitigations
-mitigation_md = Template("Title: ${name}-${domain}\n"
-                         "Template: mitigations/mitigation\n"
-                         "save_as: mitigations/${attack_id}/index.html\n"
-                         "data: ")
-
 # Constants used by redirects.py
 # ----------------------------------------------------------------------------
 
@@ -417,31 +393,6 @@ software_md = Template("Title: ${name}\n"
                        "Template: software/software\n"
                        "save_as: software/${attack_id}/index.html\n"
                        "data: ")
-
-# Constants used by tactic.py
-# ----------------------------------------------------------------------------
-
-# Markdown path for tactics
-tactics_markdown_path = "content/pages/tactics/"
-
-# String template for domains	
-tactic_domain_md = Template("Title: Tactics\n"
-                            "Template: tactics/tactics-domain-index\n"
-                            "save_as: tactics/${domain}/index.html\n"
-                            "data: ")
-
-# String template for tactics	
-tactic_md = Template("Title: ${name}-${domain}\n"
-                     "Template: tactics/tactic\n"
-                     "save_as: tactics/${attack_id}/index.html\n"
-                     "data: ")
-
-# Tactics overview md template
-tactic_overview_md = ("Title: Tactics overview \n"
-                      "Template: general/redirect-index \n"
-                      "RedirectLink: /tactics/enterprise/ \n"
-                      "save_as: tactics/index.html \n")
-
 
 # Constants used by archives.py
 # ----------------------------------------------------------------------------
