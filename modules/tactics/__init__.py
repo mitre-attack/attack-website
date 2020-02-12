@@ -7,25 +7,25 @@ def get_priority():
 def get_menu():
     return {
         "name": "Tactics", 
-        "url": "/tactics", 
+        "url": "/tactics/", 
         "external_link": False,
         "priority": tactics_config.priority,
         "children": [
             {
                 "name": "PRE-ATT&CK", 
-                "url": "/tactics/pre", 
+                "url": "/tactics/pre/", 
                 "external_link": False,
                 "children": []
             },
             {
                 "name": "Enterprise", 
-                "url": "/tactics/enterprise", 
+                "url": "/tactics/enterprise/", 
                 "external_link": False,
                 "children": []
             },
             {
                 "name": "Mobile", 
-                "url": "/tactics/mobile", 
+                "url": "/tactics/mobile/", 
                 "external_link": False,
                 "children": []
             }

@@ -7,19 +7,19 @@ def get_priority():
 def get_menu():
     return {
         "name": "Mitigations", 
-        "url": "/mitigations", 
+        "url": "/mitigations/", 
         "external_link": False,
         "priority": mitigations_config.priority,
         "children": [
             {
                 "name": "Enterprise", 
-                "url": "/mitigations/enterprise", 
+                "url": "/mitigations/enterprise/", 
                 "external_link": False,
                 "children": []
             },
             {
                 "name": "Mobile", 
-                "url": "/mitigations/mobile", 
+                "url": "/mitigations/mobile/", 
                 "external_link": False,
                 "children": []
             }

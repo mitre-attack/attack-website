@@ -7,25 +7,25 @@ def get_priority():
 def get_menu():
     return {
         "name": "Techniques", 
-        "url": "/techniques", 
+        "url": "/techniques/", 
         "external_link": False,
         "priority": techniques_config.priority,
         "children": [
             {
                 "name": "PRE-ATT&CK", 
-                "url": "/techniques/pre", 
+                "url": "/techniques/pre/", 
                 "external_link": False,
                 "children": []
             },
             {
                 "name": "Enterprise", 
-                "url": "/techniques/enterprise", 
+                "url": "/techniques/enterprise/", 
                 "external_link": False,
                 "children": []
             },
             {
                 "name": "Mobile", 
-                "url": "/techniques/mobile", 
+                "url": "/techniques/mobile/", 
                 "external_link": False,
                 "children": []
             }
