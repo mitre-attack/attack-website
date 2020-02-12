@@ -44,13 +44,13 @@
 - Sticky footer should be less temperamental when the page resizes. See issue [#51](https://github.com/mitre-attack/attack-website/issues/51).
 
 
-# 7 January 2019
+# 7 January 2020
 ## ATT&CK Website version 1.1.1
 ### Improvements
 - Added links to [ATT&CK for ICS](https://collaborate.mitre.org/attackics/index.php/Main_Page).
 
 
-# 3 January 2019
+# 3 January 2020
 ## ATT&CK Website version 1.1
 ### New Features
 - Added created and last modified dates to object pages. See issue [#38](https://github.com/mitre-attack/attack-website/issues/38).
