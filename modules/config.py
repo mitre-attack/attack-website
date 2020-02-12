@@ -234,6 +234,10 @@ attack_path = {
     'pre-attack': stix_directory + "/pre-attack.json"
 }
 
+# Link to instance of the ATT&CK Navigator; change for to a custom location
+navigator_link_enterprise = "https://mitre-attack.github.io/attack-navigator"
+navigator_link_mobile = "https://mitre-attack.github.io/attack-navigator/mobile"
+
 # Constants used for generated layers
 # ----------------------------------------------------------------------------
 # usage: 
