@@ -32,10 +32,10 @@
 <!--          be omitted                                                -->
 
 # Changes staged on develop
-
 ### New Features
 - Added Docker support, enabling users to easily build and host a docker container of the ATT&CK Website. See issue [#17](https://github.com/mitre-attack/attack-website/issues/17). 
 - Added configuration options to specify url of attached [ATT&CK Navigator](https://github.com/mitre-attack/attack-navigator) instance. See issue [#18](https://github.com/mitre-attack/attack-website/issues/18).
+- Added the ability to configure site to be hosted from a subdirectory. See issue [#15](https://github.com/mitre-attack/attack-website/issues/15).
 ### Improvements
 - Added talks and links to videos to the [General Information](https://attack.mitre.org/resources/) page.
 - Refactored side navigation into tree-items on techniques, tactics, and mitigations pages. See issue [#53](https://github.com/mitre-attack/attack-website/issues/53).
