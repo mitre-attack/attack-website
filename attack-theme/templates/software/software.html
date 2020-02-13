@@ -1,6 +1,6 @@
 {% extends "general/two-column.html" %} 
 {% set parsed = page.data | from_json %}
-{% set title = parsed.name + " | MITRE ATT&CK&trade;" -%} 
+{% set title = parsed.name + ", Software " + parsed.attack_id + " | MITRE ATT&CK&trade;" -%} 
 {% set active_page = "software" -%}
 {% import 'macros/navigator.html' as navigator %}
 {% import 'macros/references.html' as references %}
@@ -11,14 +11,14 @@
 {%  endblock %}
 
 {% block innerleft %}
-<!--stopindex-->
+<!--stop-indexing-for-search-->
     <div class="group-nav-desktop-view">
         {{ navigation.sidenav(parsed.side_menu_data, output_file) }}
     </div>
     <div class="group-nav-mobile-view">
         {{ navigation.sidenav(parsed.side_menu_mobile_view_data, output_file) }} 
     </div>
-<!--startindex-->
+<!--start-indexing-for-search-->
 {% endblock %}
 
 {% block innerright %}
@@ -65,6 +65,12 @@
                                     {% endif %}
                                     {% if parsed.version %}
                                         <div class="card-data"><span class="h5 card-title">Version</span>: {{parsed.version}}</div>
+                                    {% endif %}
+                                    {% if parsed.created %}
+                                        <div class="card-data"><span class="h5 card-title">Created:&nbsp;</span>{{parsed.created}}</div>
+                                    {% endif %}
+                                    {% if parsed.modified %}
+                                        <div class="card-data"><span class="h5 card-title">Last Modified:&nbsp;</span>{{parsed.modified}}</div>
                                     {% endif %}
                                 </div>
                             </div>

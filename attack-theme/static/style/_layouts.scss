@@ -1,9 +1,21 @@
 /*General styling*/
+html { height: 100%; }
 body {
     height: 100%;
     background: color(body);
     color: on-color(body); 
     @include font("Roboto-Regular");
+    display: flex;
+    flex-direction: column;
+}
+//footer IE compatability
+@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+     body {
+         height: auto; //fix footer bug
+     }
+}
+.maincontent { //grow the page content to fill space before footer
+    flex-grow: 1;
 }
 
 h1,
@@ -120,6 +132,9 @@ a {
     background: color(body);
     border-color: on-color-deemphasis(body);
     color: on-color(body);
+    &:hover {
+        color: on-color-emphasis(body);
+    }
 }
 
 // placeholder for base style of all navy colored buttons
@@ -138,6 +153,24 @@ a {
         @extend %button-style;
         background-color: scale-color(color(secondary), $lightness: 5%); 
         background-image: none;
+    }
+}
+
+// Style for changelog markdown section
+.markdown-body {
+
+    h1:not(:first-child) {
+        padding-top: 2rem;
+    }
+    h1 {
+        padding-bottom: rem(0.5);
+        font-size: rem(1.5);
+    }
+    h2 {
+        font-size: rem(1.0);
+    }
+    h3 {
+        font-size: rem(0.8);
     }
 }
 
@@ -260,51 +293,6 @@ a {
     &:hover,
     &:active {
         color: on-color(primary);
-    }
-}
-/******/
-
-/*Search styling*/
-.search-results {
-    visibility: hidden;
-    position: absolute;
-    overflow-y: auto;
-    width: to-rem(220);
-    max-height: to-rem(400);
-    z-index: 99999;
-    padding-left: rem(0.2) !important;
-    padding-right: rem(0.2) !important;
-    background-color: color(body); 
-    border: to-rem(1) solid on-color(search-results-border); 
-    right: to-rem(14);
-    font-size: 80%;
-
-    a {
-        text-decoration: none;
-        color: on-color-deemphasis(body); 
-        margin-bottom: to-rem(3);
-        display: block;
-
-        &:hover {
-            color: on-color-emphasis(body); 
-        }
-    }
-
-    // header of sub-sections in search results
-    .search-header {
-        margin-top: to-rem(10);
-        display: block;
-        color: color(primary);
-    }
-
-    .search-divider {
-        margin-top: to-rem(5);
-        margin-bottom: to-rem(5);
-    }
-
-    // bold text
-    .search-highlight {
-        color: color(primary);
     }
 }
 /******/
@@ -588,12 +576,6 @@ pre {
         flex-grow: 1;
         @include font("Roboto-Regular");
     }
-
-    .card:nth-child(5) {
-        a img {
-            margin-bottom: to-rem(15);
-        }
-    }
 }
 /******/
 
@@ -769,5 +751,33 @@ pre {
     font-size: 5%;
     color: on-color(body); 
     margin-top: to-rem(7);
+}
+/******/
+/* attackcon page */
+.attackcons {
+    border: 1px solid border-color(body);
+    border-top-width: 0px;
+    .sponsors-block {
+        background: #efefef;
+        text-align: center;
+        display: flex;
+        justify-content: space-evenly;
+        flex-wrap: wrap;
+        .img-container {
+            margin: 10px;
+            img { 
+                width: 80%;
+                margin: auto;
+            }
+        }
+    }
+}
+/******/
+
+/* training pages */
+.training {
+    .exercise {
+        background: color-alternate(body);
+    }
 }
 /******/

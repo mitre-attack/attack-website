@@ -84,7 +84,7 @@ def get_correct_link(path):
         path = "/" + path
 
     # Check if path is directory
-    extensions = [".html", ".css", ".htm", ".gif", ".jpg", ".png", ".js", ".json", ".ico", ".jpeg", ".svg", ".pdf", ".xlsx", ".docx"]
+    extensions = [".html", ".css", ".htm", ".gif", ".jpg", ".png", ".js", ".json", ".ico", ".jpeg", ".svg", ".pdf", ".xlsx", ".docx", ".rtf"]
     isDirectory = True
     for extension in extensions:
         if (path.endswith(extension)): isDirectory = False

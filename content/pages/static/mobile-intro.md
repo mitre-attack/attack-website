@@ -1,4 +1,4 @@
-Title: ATT&CK for Mobile
+Title: ATT&CK for Mobile Introduction
 Template: general/intro-overview
 Date: 2018
 Category: Cyber Threat Intelligence

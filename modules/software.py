@@ -64,6 +64,14 @@ def generate_software_md(software,side_menu_data,side_menu_mobile_view_data):
         data['side_menu_data'] = side_menu_data
         data['side_menu_mobile_view_data'] = side_menu_mobile_view_data
 
+        dates = util.get_created_and_modified_dates(software)
+        
+        if dates.get('created'):
+            data['created'] = dates['created']
+
+        if dates.get('modified'):
+            data['modified'] = dates['modified']
+
         # Get name
         if software.get("name"): 
             data['name'] = software["name"]
@@ -122,7 +130,9 @@ def generate_software_md(software,side_menu_data,side_menu_mobile_view_data):
                 layer_json.write(subs)
             data["layers"].append({
                 "domain": layer["domain"],
-                "filename": "-".join([data["attack_id"], layer["domain"], "layer"]) + ".json"
+                "filename": "-".join([data["attack_id"], layer["domain"], "layer"]) + ".json",
+                "navigator_link_enterprise" : config.navigator_link_enterprise,
+                "navigator_link_mobile" : config.navigator_link_mobile
             })
         
         # Get aliases descriptions

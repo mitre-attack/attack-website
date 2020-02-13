@@ -12,8 +12,11 @@ from . import util
 
 # Settings dictionary to build website
 settings_dict = {
-    "banner_enabled": "false",
-    "banner_message": "<a href='https://www.mitre.org/attackcon-streamed-live' target='_blank'> Register to stream ATT&CKcon 2.0 October 29-30</a>",
+    "content_version": "6.2",
+    "website_version": "1.1.1",
+    "changelog_location": "/resources/changelog.html",
+    "banner_enabled": "true",
+    "banner_message": "<strong><a href='https://collaborate.mitre.org/attackics' target='_blank'>JUST RELEASED: ATT&CK for Industrial Control Systems</a></strong>",
     "domains": ["pre-attack", "enterprise-attack", "mobile-attack"],
     "source_names": [
         "mitre-pre-attack", 
@@ -62,6 +65,7 @@ index_matrix = {
 matrices = [
     {
         "name": "PRE-ATT&CK",
+        "type": "local",
         "path": "pre",
         "platforms": [],
         "matrix": "pre-attack",
@@ -70,6 +74,7 @@ matrices = [
     },
     {
         "name": "Enterprise",
+        "type": "local",
         "path": "enterprise",
         "matrix": "enterprise-attack",
         "platforms": ["Windows","macOS","Linux",
@@ -79,6 +84,7 @@ matrices = [
         "subtypes": [
             {
                 "name": "Windows",
+                "type": "local",
                 "matrix": "enterprise-attack",
                 "path": "enterprise/windows",
                 "platforms": ["Windows"],
@@ -87,6 +93,7 @@ matrices = [
             },
             {
                 "name" : "macOS",
+                "type": "local",
                 "matrix": "enterprise-attack",
                 "path": "enterprise/macos",
                 "platforms": ["macOS"],
@@ -95,6 +102,7 @@ matrices = [
             },
             {
                 "name" : "Linux",
+                "type": "local",
                 "matrix": "enterprise-attack",
                 "platforms": ["Linux"],
                 "path": "enterprise/linux",
@@ -103,6 +111,7 @@ matrices = [
             },
             {
                 "name": "Cloud",
+                "type": "local",
                 "matrix": "enterprise-attack",
                 "path": "enterprise/cloud",
                 "platforms": ["AWS","GCP","Azure","Azure AD","Office 365","SaaS"],
@@ -110,6 +119,7 @@ matrices = [
                 "subtypes": [
                     {
                         "name" : "AWS",
+                        "type": "local",
                         "matrix": "enterprise-attack",
                         "path": "enterprise/cloud/aws",
                         "platforms": ["AWS"],
@@ -118,6 +128,7 @@ matrices = [
                     },
                     {
                         "name" : "GCP",
+                        "type": "local",
                         "matrix": "enterprise-attack",
                         "path": "enterprise/cloud/gcp",
                         "platforms": ["GCP"],
@@ -126,6 +137,7 @@ matrices = [
                     },
                     {
                         "name": "Azure",
+                        "type": "local",
                         "matrix": "enterprise-attack",
                         "path": "enterprise/cloud/azure",
                         "platforms": ["Azure"],
@@ -134,6 +146,7 @@ matrices = [
                     },
                     { 
                         "name" : "Office 365",
+                        "type": "local",
                         "matrix": "enterprise-attack",
                         "path": "enterprise/cloud/office365",
                         "platforms": ["Office 365"],
@@ -142,6 +155,7 @@ matrices = [
                     },
                     {
                         "name" : "Azure AD",
+                        "type": "local",
                         "matrix": "enterprise-attack",
                         "path": "enterprise/cloud/azuread",
                         "platforms": ["Azure AD"],
@@ -150,6 +164,7 @@ matrices = [
                     },
                     {
                         "name" : "SaaS",
+                        "type": "local",
                         "matrix": "enterprise-attack",
                         "path": "enterprise/cloud/saas",
                         "platforms": ["SaaS"],
@@ -162,6 +177,7 @@ matrices = [
     },
     {
         "name": "Mobile",
+        "type": "local",
         "matrix": "mobile-attack",
         "path": "mobile",
         "platforms": ["Android", "iOS"],
@@ -170,6 +186,7 @@ matrices = [
         "subtypes": [
             {
                 "name": "Android",
+                "type": "local",
                 "matrix": "mobile-attack",
                 "path": "mobile/android",
                 "platforms": ["Android"],
@@ -179,6 +196,7 @@ matrices = [
             },
             {
                 "name" : "iOS",
+                "type": "local",
                 "matrix": "mobile-attack",
                 "path": "mobile/ios",
                 "platforms": ["iOS"],
@@ -187,6 +205,12 @@ matrices = [
                 "subtypes": []
             },
         ]
+    }, 
+    {
+        "name": "ICS",
+        "type": "external",
+        "path": "https://collaborate.mitre.org/attackics",
+        "subtypes": []
     }
 ]
 
@@ -210,6 +234,10 @@ attack_path = {
     'mobile-attack': stix_directory + "/mobile-attack.json",
     'pre-attack': stix_directory + "/pre-attack.json"
 }
+
+# Link to instance of the ATT&CK Navigator; change for to a custom location
+navigator_link_enterprise = "https://mitre-attack.github.io/attack-navigator"
+navigator_link_mobile = "https://mitre-attack.github.io/attack-navigator/mobile"
 
 # Constants used for generated layers
 # ----------------------------------------------------------------------------
@@ -333,6 +361,20 @@ contributing_md = ("Title: Contributing_to_MITRE_ATTACK\n"
                    "RedirectLink: /resources/contribute\n"
                    "save_as: docs/Contributing_to_MITRE_ATTACK.pdf/index.html\n")
 
+# Training Redirection dictionary
+training_redict_dict = [
+    {
+        "title" : "Training Redirect",
+        "redirect_link" : "/resources/training",
+        "path" : "training"
+    },
+    {
+        "title" : "CTI Training Redirect",
+        "redirect_link" : "/resources/training/cti",
+        "path" : "training/cti"
+    }
+]
+
 # Redirect md string template
 redirect_md = Template("Title: ${title}\n"
                        "Template: general/redirect-index\n"
@@ -436,6 +478,10 @@ redirects_paths = {
     'pre-attack': "pre-attack/index.php/"
 }
 
+other_redirects = [
+    {'from': 'ics', 'to': 'https://collaborate.mitre.org/attackics'}
+]
+
 # Constants used by software.py
 # ----------------------------------------------------------------------------
 
@@ -490,7 +536,6 @@ previous_md = ("Title: Previous Versions\n"
                "data: ")
 previous_markdown_path = "content/pages/resources"
 
-
 # Constants used by resources.py
 # ----------------------------------------------------------------------------
 
@@ -502,6 +547,47 @@ resources_md = ("Title: General Information\n"
                 "Template: resources/resources\n"
                 "save_as: resources/index.html\n"
                 "data: ")
+
+# string template for faq.md
+faq_md = ("Title: Frequently Asked Questions\n"
+          "Template: resources/faq\n"
+          "save_as: resources/faq/index.html\n"
+          "data: ")
+
+# template for changelog.md
+changelog_md = ("Title: Changelog\n"
+                "Template: resources/changelog\n"
+                "save_as: resources/changelog.html\n\n")
+
+# string template for attackcon.md
+attackcon_md = ("Title: ATT&CKcon\n"
+                "Template: resources/attackcon\n"
+                "save_as: resources/attackcon/index.html\n"
+                "data: ")
+training_md = ("Title: ATT&CK Training\n"
+               "Template: resources/training\n"
+               "save_as: resources/training/index.html\n"
+               "data: ")
+
+training_cti_md = ("Title: ATT&CK For CTI Training\n"
+                   "Template: resources/training-cti\n"
+                   "save_as: resources/training/cti/index.html\n"
+                   "data: ")
+
+# side navigation for training
+training_navigation = {
+    "name" : "Training",
+    "id" : "training",
+    "path" : "/resources/training/",
+    "children" : [    
+        {
+            "name" : "CTI Training",
+            "id" : "cti",
+            "path" : "/resources/training/cti/",
+            "children" : []
+        }
+    ]
+}
 
 # Constants used by technique.py
 # ----------------------------------------------------------------------------
@@ -627,6 +713,7 @@ def init_shared_data():
 
     global source_names 
     global domains
+    global domain_aliases
     global tools_used_by_groups
     global malware_used_by_groups
     global techniques_used_by_tools
@@ -650,6 +737,7 @@ def init_shared_data():
     global ms
 
     domains = settings_dict["domains"]
+    domain_aliases = settings_dict["domain_aliases"]
     source_names = settings_dict["source_names"]
 
     # Global memory store of all domains

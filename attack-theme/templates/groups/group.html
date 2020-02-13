@@ -2,9 +2,9 @@
 {% set parsed = page.data | from_json %}
 {% if parsed.aliases_list %}
    {% set alias_string = parsed.aliases_list|join(", ") %} 
-   {% set title = parsed.name + ", " + alias_string + " | MITRE ATT&CK&trade;" -%} 
+   {% set title = parsed.name + ", " + alias_string + ", Group " + parsed.attack_id + " | MITRE ATT&CK&trade;" -%} 
 {% else %}
-   {% set title = parsed.name + " | MITRE ATT&CK&trade;" -%} 
+   {% set title = parsed.name + ", Group " + parsed.attack_id + " | MITRE ATT&CK&trade;" -%} 
 {% endif %}
 {% set active_page = "groups" -%}
 {% import 'macros/navigator.html' as navigator %}
@@ -16,14 +16,14 @@
 {%  endblock %}
 
 {% block innerleft %}
-<!--stopindex-->
+<!--stop-indexing-for-search-->
     <div class="group-nav-desktop-view">
         {{ navigation.sidenav(parsed.side_menu_data, output_file) }} 
     </div>
     <div class="group-nav-mobile-view">
         {{ navigation.sidenav(parsed.side_menu_mobile_view_data, output_file) }} 
     </div>
-<!--startindex-->
+<!--start-indexing-for-search-->
 {% endblock %}
 
 {% block innerright %}
@@ -67,6 +67,12 @@
                                 {{parsed.contributors}}
                                 {% if parsed.version %}
                                     <div class="card-data"><span class="h5 card-title">Version</span>: {{parsed.version}}</div>
+                                {% endif %}
+                                {% if parsed.created %}
+                                    <div class="card-data"><span class="h5 card-title">Created:&nbsp;</span>{{parsed.created}}</div>
+                                {% endif %}
+                                {% if parsed.modified %}
+                                    <div class="card-data"><span class="h5 card-title">Last Modified:&nbsp;</span>{{parsed.modified}}</div>
                                 {% endif %}
                             </div>
                         </div>
