@@ -593,7 +593,7 @@ def set_subdirectory(subdirectory_str):
 
     # Verify if website directory exists
     if not os.path.isdir(web_directory):
-        os.mkdir(web_directory)
+        os.makedirs(web_directory)
 
     # Add subdirectory to web directory
     web_directory = os.path.join(web_directory, subdirectory)

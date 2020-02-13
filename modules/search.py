@@ -181,7 +181,7 @@ def generate_index():
 
     # Verify if website directory exists
     if not os.path.isdir(config.web_directory):
-        os.mkdir(config.web_directory)
+        os.makedirs(config.web_directory)
 
     with open(os.path.join(config.web_directory, "index.json"), "w", encoding='utf8') as f:
         f.write(json.dumps(idx.serialize()))

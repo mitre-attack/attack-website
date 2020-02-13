@@ -233,7 +233,7 @@ def get_parsed_args():
     parser.add_argument('--proxy', help="set proxy")
 
     parser.add_argument('--subdirectory', 
-                        help="set subdirectory",
+                        help="If you intend to host the site from a sub-directory, specify the directory using this flag.",
                         type=validate_subdirectory_string)
 
     parser.add_argument("--print-tests", 
