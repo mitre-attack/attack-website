@@ -28,24 +28,6 @@ def onerror(func, path, exc_info):
     except:
         raise
 
-# Error handler for windows by:
-# https://stackoverflow.com/questions/2656322/shutil-rmtree-fails-on-windows-with-access-is-denied
-def onerror(func, path, exc_info):
-    """
-    Error handler for ``shutil.rmtree``.
-    If the error is due to an access error (read only file)
-    it attempts to add write permission and then retries.
-    If the error is for another reason it re-raises the error.
-    Usage : ``shutil.rmtree(path, onerror=onerror)``
-    """
-    try: 
-        if not os.access(path, os.W_OK):
-            # Is the error an access error ?
-            os.chmod(path, stat.S_IWUSR)
-            func(path)
-    except:
-        raise
-
 def deploy():
     """ Deploy previous versions to website directory """
     
