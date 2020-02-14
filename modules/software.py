@@ -5,6 +5,7 @@ import re
 import time
 import markdown
 from . import config
+from . import site_config
 from . import stixhelpers
 from . import util
 
@@ -121,7 +122,7 @@ def generate_software_md(software,side_menu_data,side_menu_mobile_view_data):
         data["layers"] = []
         for layer in layers:
             with open(os.path.join(config.software_markdown_path, "-".join([data['attack_id'], "techniques", layer["domain"]]) + ".md"), "w", encoding='utf8') as layer_json:
-                subs = config.layer_md.substitute({
+                subs = site_config.layer_md.substitute({
                     "attack_id": data["attack_id"],
                     "path": "software/" + data["attack_id"],
                     "domain": layer["domain"]
@@ -289,5 +290,5 @@ def get_techniques_used_by_software_data(software, reference_list, next_referenc
     technique_data = sorted(technique_data, key=lambda k: k['name'].lower())
 
     # Sort by domain name
-    technique_data = sorted(technique_data, key=lambda k: [config.custom_alphabet.index(c) for c in k['domain'].lower()])
+    technique_data = sorted(technique_data, key=lambda k: [site_config.custom_alphabet.index(c) for c in k['domain'].lower()])
     return technique_data

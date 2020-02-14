@@ -4,6 +4,7 @@ import urllib3
 import re
 import markdown
 from . import config
+from . import site_config
 from . import stixhelpers
 from . import util
 
@@ -176,6 +177,6 @@ def get_techniques_addressed_data(mitigation, reference_list, next_reference_num
     
         
     techniques_data = sorted(techniques_data, key=lambda k: k['name'].lower())
-    techniques_data = sorted(techniques_data, key=lambda k: [config.custom_alphabet.index(c) for c in k['domain'].lower()])
+    techniques_data = sorted(techniques_data, key=lambda k: [site_config.custom_alphabet.index(c) for c in k['domain'].lower()])
 
     return techniques_data

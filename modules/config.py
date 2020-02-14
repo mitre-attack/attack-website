@@ -179,16 +179,6 @@ matrices = [
 # parsed arguments 
 args = []
 
-# Constants used for generated layers
-# ----------------------------------------------------------------------------
-# usage: 
-#     domain: "enterprise" or "mobile"
-#     path: the path to the object, e.g "software/S1001" or "groups/G2021"
-layer_md = Template("Title: ${domain} Techniques\n"
-                    "Template: general/json\n"
-                    "save_as: ${path}/${attack_id}-${domain}-layer.json\n"
-                    "json: ")
-
 # Constants used by contribute.py
 # ----------------------------------------------------------------------------
 
@@ -200,24 +190,6 @@ contribute_index_md = ("Title: Contribute\n"
                        "Template: resources/contribute\n"
                        "save_as: resources/contribute/index.html\n"
                        "data: ")
-
-# Constants used by group.py
-# ----------------------------------------------------------------------------
-
-# Markdown path for groups
-group_markdown_path = "content/pages/groups/"
-
-# String template for group index page	
-group_index_md = ("Title: Group overview\n"
-                  "Template: groups/groups-index\n"
-                  "save_as: groups/index.html\n"
-                  "data: ")
-
-# String template for group page
-group_md = Template("Title: ${name}\n"
-                    "Template: groups/group\n"
-                    "save_as: groups/${attack_id}/index.html\n"
-                    "data: ")
 
 # Constants used by matrix.py
 # ----------------------------------------------------------------------------

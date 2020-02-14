@@ -3,6 +3,7 @@ import modules
 import os
 import shutil
 from modules import util
+from string import Template
 
 # Domains for stix objects
 domains = ["pre-attack", "enterprise-attack", "mobile-attack"]
@@ -60,3 +61,13 @@ for domain in domains:
 
 # Source list of domains
 srcs = list(map(lambda url: util.relationshiphelpers.load(url), stix_array))
+
+# Constants used for generated layers
+# ----------------------------------------------------------------------------
+# usage: 
+#     domain: "enterprise" or "mobile"
+#     path: the path to the object, e.g "software/S1001" or "groups/G2021"
+layer_md = Template("Title: ${domain} Techniques\n"
+                    "Template: general/json\n"
+                    "save_as: ${path}/${attack_id}-${domain}-layer.json\n"
+                    "json: ")
