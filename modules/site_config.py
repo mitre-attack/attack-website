@@ -60,3 +60,18 @@ for domain in domains:
 
 # Source list of domains
 srcs = list(map(lambda url: util.relationshiphelpers.load(url), stix_array))
+
+# Python module for all constants and global variables
+platform_to_path = {
+    "Windows": "enterprise/windows",
+    "macOS": "enterprise/macos",
+    "Linux": "enterprise/linux",
+    "AWS": "enterprise/cloud/aws",
+    "GCP": "enterprise/cloud/gcp",
+    "Azure": "enterprise/cloud/azure",
+    "Azure AD": "enterprise/cloud/azuread",
+    "Office 365": "enterprise/cloud/office365",
+    "SaaS": "enterprise/cloud/saas",
+    "Android": "mobile/android",
+    "iOS": "mobile/ios"
+}
