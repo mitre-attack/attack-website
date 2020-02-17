@@ -31,7 +31,7 @@
 <!--          addition of notable features. When PATCH is 0 it can      -->
 <!--          be omitted                                                -->
 
-# 17 January 2020
+# 17 February 2020
 ## ATT&CK Website version 1.2
 ### New Features
 - Added Docker support, enabling users to easily build and host a docker container of the ATT&CK Website. See issue [#17](https://github.com/mitre-attack/attack-website/issues/17). 
