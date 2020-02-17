@@ -13,7 +13,7 @@ from . import util
 # Settings dictionary to build website
 settings_dict = {
     "content_version": "6.2",
-    "website_version": "1.1.1",
+    "website_version": "1.2",
     "changelog_location": "/resources/changelog.html",
     "banner_enabled": "true",
     "banner_message": "<strong><a href='https://collaborate.mitre.org/attackics' target='_blank'>JUST RELEASED: ATT&CK for Industrial Control Systems</a></strong>",

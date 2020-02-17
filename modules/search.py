@@ -29,18 +29,19 @@ def generate_index():
         
     json.dump(index, open(os.path.join(config.web_directory, "index.json"), mode="w",  encoding="utf8"), indent=2)
 
-    # update search base url to subdirectory
-    search_file_path = os.path.join(config.web_directory, "theme", "scripts", "search_babelized.js")
-    
-    if os.path.exists(search_file_path):
-        search_contents = ""
+    if (config.subdirectory):
+        # update search base url to subdirectory
+        search_file_path = os.path.join(config.web_directory, "theme", "scripts", "search_babelized.js")
+        
+        if os.path.exists(search_file_path):
+            search_contents = ""
 
-        with open(search_file_path, mode="r", encoding='utf8') as search_file:
-            search_contents = search_file.read()
-            search_contents = re.sub('site_base_url ?= ? ""', f'site_base_url = "/{config.subdirectory}/"', search_contents)
+            with open(search_file_path, mode="r", encoding='utf8') as search_file:
+                search_contents = search_file.read()
+                search_contents = re.sub('site_base_url ?= ? ""', f'site_base_url = "/{config.subdirectory}/"', search_contents)
 
-        with open(search_file_path, mode="w", encoding='utf8') as search_file:
-            search_file.write(search_contents)
+            with open(search_file_path, mode="w", encoding='utf8') as search_file:
+                search_file.write(search_contents)
 
     
 skiplines = ["breadcrumb-item", "nav-link"]
