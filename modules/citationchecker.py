@@ -12,7 +12,7 @@ def citations_check():
 
     okay_files = 0
 
-    for directory, _, files in os.walk('output'):
+    for directory, _, files in os.walk(config.web_directory):
         # skip previous instances of the code to speed this up
         if 'previous' in directory: 
             continue
@@ -33,8 +33,8 @@ def citations_check():
             if not problems:
                 okay_files += 1
             else:
-                if "output" in filepath:
-                    filepath = filepath.split("output")[1]
+                if config.web_directory in filepath:
+                    filepath = filepath.split(config.web_directory)[1]
                 broken_pages.append({"path": filepath, "problems": problems})
     
     if broken_pages:

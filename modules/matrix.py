@@ -56,7 +56,9 @@ def generate_matrix_md(matrix, old_ms, techniques=None, old_techniques=None, sid
     data['timestamp'] = get_timestamp(matrix['matrix'], filtered_techniques, filtered_old_techniques)
     data['matrix'] = get_matrix_data(filtered_techniques) 
     data['platforms'] = [ {"name": platform, "path": config.platform_to_path[platform] } for platform in matrix['platforms'] ]
-    
+    data['navigator_link_enterprise'] = config.navigator_link_enterprise
+    data['navigator_link_mobile'] = config.navigator_link_mobile
+
     data['domain'] = matrix['matrix'].split("-")[0]
     data['descr'] = matrix['descr']
     data['path'] = matrix['path']

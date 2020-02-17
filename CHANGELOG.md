@@ -1,19 +1,24 @@
 <!--    CHANGELOG FORMAT                                                -->
+
+<!--    Completed Entry template:                                       -->
 <!--                                                                    -->
 <!--    # Date in DD MMM YYYY format                                    -->
-<!--                                                                    -->
-<!--    (if website code changed)                                       -->
 <!--    ## ATT&CK Website version ##.##.##                              -->
 <!--    ### New Features                                                -->
 <!--    ### Improvements                                                -->
 <!--    ### Fixes                                                       -->
+<!--    ## [ATT&CK Content version ##.##](link to release on mitre/cti) --> 
+<!--    See the release notes [here](link to release notes).           // if major change -->
+<!--    ### Fixes                                                      // else            -->
+
+
+<!--    Entries for pull request template:                              -->
 <!--                                                                    -->
-<!--    (if ATT&CK STIX content version changed)                        -->
-<!--    ## ATT&CK Content version ##.## (link to release on mitre/cti)  -->
-<!--    (if major release)                                              -->
-<!--    See the release notes [here](link to release notes).            -->
-<!--    (otherwise)                                                     -->
+<!--    # Changes staged on develop                                     -->
+<!--    ### New Features                                                -->
+<!--    ### Improvements                                                -->
 <!--    ### Fixes                                                       -->
+
 
 <!--    VERSION NUMBERING (WEBSITE)                                     -->
 <!--                                                                    -->
@@ -26,22 +31,37 @@
 <!--          addition of notable features. When PATCH is 0 it can      -->
 <!--          be omitted                                                -->
 
-# 7 January 2019
+# 17 January 2020
+## ATT&CK Website version 1.2
+### New Features
+- Added Docker support, enabling users to easily build and host a docker container of the ATT&CK Website. See issue [#17](https://github.com/mitre-attack/attack-website/issues/17). 
+- Added configuration options to specify url of attached [ATT&CK Navigator](https://github.com/mitre-attack/attack-navigator) instance. See issue [#18](https://github.com/mitre-attack/attack-website/issues/18).
+- Added the ability to configure site to be hosted from a subdirectory. See issue [#15](https://github.com/mitre-attack/attack-website/issues/15).
+### Improvements
+- Added talks and links to videos to the [General Information](https://attack.mitre.org/resources/) page.
+- Updated navigation drawer on technique, tactic, and mitigation pages to make domains more accessible. See issue [#53](https://github.com/mitre-attack/attack-website/issues/53).
+- Major overhaul of site search UI. See issue [#4](https://github.com/mitre-attack/attack-website/issues/4).
+### Fixes
+- Sticky footer should be less temperamental when the page resizes. See issue [#51](https://github.com/mitre-attack/attack-website/issues/51).
+
+
+# 7 January 2020
 ## ATT&CK Website version 1.1.1
 ### Improvements
 - Added links to [ATT&CK for ICS](https://collaborate.mitre.org/attackics/index.php/Main_Page).
 
-# 3 January 2019
+
+# 3 January 2020
 ## ATT&CK Website version 1.1
 ### New Features
 - Added created and last modified dates to object pages. See issue [#38](https://github.com/mitre-attack/attack-website/issues/38).
 - Added ATT&CK training to website. See issue [#22](https://github.com/mitre-attack/attack-website/issues/22).
-
 ### Improvements
 - Improved maintainability of ATT&CKcon page and added ATT&CKcon 2.0 content. See issue [#19](https://github.com/mitre-attack/attack-website/issues/19). 
 - Improved maintainability of FAQ page, and added FAQ entries for sub-techniques and the relationships of ATT&CK and other models. See issues [#30](https://github.com/mitre-attack/attack-website/issues/30), [#41](https://github.com/mitre-attack/attack-website/issues/41).
 - Added website and content version number to the footer. See issue [#10](https://github.com/mitre-attack/attack-website/issues/10).
 - Added changelog page to website reachable by version number link in the footer.
+
 
 # 5 December 2019
 ## ATT&CK Website version 1.0.4

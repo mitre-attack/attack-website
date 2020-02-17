@@ -1,6 +1,7 @@
 import colorama
 import json
 import multiprocessing
+import os
 import shutil
 from string import Template
 from . import relationshiphelpers as rsh
@@ -12,7 +13,7 @@ from . import util
 # Settings dictionary to build website
 settings_dict = {
     "content_version": "6.2",
-    "website_version": "1.1.1",
+    "website_version": "1.2",
     "changelog_location": "/resources/changelog.html",
     "banner_enabled": "true",
     "banner_message": "<strong><a href='https://collaborate.mitre.org/attackics' target='_blank'>JUST RELEASED: ATT&CK for Industrial Control Systems</a></strong>",
@@ -233,6 +234,10 @@ attack_path = {
     'mobile-attack': stix_directory + "/mobile-attack.json",
     'pre-attack': stix_directory + "/pre-attack.json"
 }
+
+# Link to instance of the ATT&CK Navigator; change for to a custom location
+navigator_link_enterprise = "https://mitre-attack.github.io/attack-navigator"
+navigator_link_mobile = "https://mitre-attack.github.io/attack-navigator/mobile"
 
 # Constants used for generated layers
 # ----------------------------------------------------------------------------
@@ -654,9 +659,30 @@ column_space = int(window_size/3) - 1
 status_space = int(float(column_space)*0.80)
 other_column_space = int(float(column_space)*1.10)
 
-
 # Declare file location of web pages
 web_directory = "output"
+
+# Parent web directory name
+# leave parent directory name to first level for link tests
+parent_web_directory = "output"
+
+# Declare as empty string
+subdirectory = ""
+
+def set_subdirectory(subdirectory_str):
+    """ Method to globally set the subdirectory """
+
+    global subdirectory
+    global web_directory
+
+    subdirectory = subdirectory_str
+
+    # Verify if website directory exists
+    if not os.path.isdir(web_directory):
+        os.makedirs(web_directory)
+
+    # Add subdirectory to web directory
+    web_directory = os.path.join(web_directory, subdirectory)
 
 test_report_directory = "reports"
 # Constants used by citationschecker.py
@@ -687,6 +713,7 @@ def init_shared_data():
 
     global source_names 
     global domains
+    global domain_aliases
     global tools_used_by_groups
     global malware_used_by_groups
     global techniques_used_by_tools
@@ -710,6 +737,7 @@ def init_shared_data():
     global ms
 
     domains = settings_dict["domains"]
+    domain_aliases = settings_dict["domain_aliases"]
     source_names = settings_dict["source_names"]
 
     # Global memory store of all domains

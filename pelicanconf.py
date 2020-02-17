@@ -3,6 +3,7 @@
 from __future__ import unicode_literals
 import json
 import uuid
+import sys
 
 # import plugins
 PLUGIN_PATHS = ['plugins']
@@ -46,7 +47,6 @@ def clean_path(path):
 def flatten_tree(root):
     ret = []
     if root["path"]: ret.append(root["path"])
-    currNode = root
     for child in root["children"]:
         ret = ret + flatten_tree(child)
     return ret
