@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang='en'>
 
@@ -20,18 +21,17 @@
         <!-- Bootstrap CSS -->
         <link rel='stylesheet' href='/theme/style/bootstrap.min.css' />
         <link rel='stylesheet' href='/theme/style/bootstrap-glyphicon.min.css' />
-        <link rel="stylesheet" type="text/css" href="/theme/style.min.css?af71dcc0">
+        <link rel="stylesheet" type="text/css" href="/theme/style.min.css?876c68d0">
 </head>
 
 <body>
-<!--stopindex-->
 <header>
     
         <nav class='navbar navbar-expand-lg navbar-dark fixed-top'>
             <a class='navbar-brand' href='/'><img src="/theme/images/mitre_attack.png" height="50px"/></a>
             <button class='navbar-toggler' type='button' data-toggle='collapse' data-target='#navbarCollapse'
                     aria-controls='navbarCollapse' aria-expanded='false' aria-label='Toggle navigation'>
-                <span class='navbar-toggler-icon' onclick="search('')"></span>
+                <span class='navbar-toggler-icon'></span>
             </button>
             <div class='collapse navbar-collapse' id='navbarCollapse'>
                 <ul class='nav nav-tabs ml-auto'>
@@ -90,14 +90,8 @@
                             <li class="nav-item"><a href="https://medium.com/mitre-attack/" target="_blank"  class="nav-link" ><b>Blog</b>&nbsp;<img src="/theme/images/external-site.svg"
                                                                                                                alt="External site" class="external-icon" /></a></li>
                             <li class="nav-item"><a href="/resources/contribute"  class="nav-link" ><b>Contribute</b></a></li>
-                </ul>
-                <ul class='navbar-nav flex-row d-md-flex float-right'>
-                    <li>
-                        <form class='form-inline pl-2'>
-                            <input class='form-control' type='text' placeholder='Search site' aria-label='Search' id="search"
-                                   autocomplete="off">
-                        </form>
-                        <div class="search-results"></div>
+                    <li class="nav-item">
+                        <button id="search-button" class="btn search-button">Search <div class="search-icon"></div></button>
                     </li>
                 </ul>
             </div>
@@ -108,13 +102,14 @@
             <div class="container-fluid under-development">
                 <strong><a href='https://collaborate.mitre.org/attackics' target='_blank'>JUST RELEASED: ATT&CK for Industrial Control Systems</a></strong>
             </div>
-        <!--startindex-->
-<div id='content'>    <div class='container-fluid'>
-        <div class='row'>
+<div id='content' class="maincontent">
+    <!--start-indexing-for-search-->
+    <div class='container-fluid h-100'>
+        <div class='row h-100'>
  
              
             <div class="nav flex-column col-xl-2 col-lg-3 col-md-3  sidebar nav pt-5 pb-3 pl-3 border-right" id="v-tab" role="tablist" aria-orientation="vertical">
-<!--stopindex-->
+<!--stop-indexing-for-search-->
     <span class="heading" id="v-home-tab" aria-selected="false">MATRICES</span>
 
 
@@ -292,12 +287,11 @@
 </div>
 
   
-<!--startindex-->
+<!--start-indexing-for-search-->
             </div>
              
             <div class="tab-content col-xl-10 col-lg-9 col-md-9 pt-4" id="v-tabContent">
                 <div class="tab-pane fade show active" id="v-attckmatrix" role="tabpanel" aria-labelledby="v-attckmatrix-tab">
-<!--stopindex-->
     <div class="row">
         <div class="col-md-9">
             <ol class="breadcrumb">
@@ -306,11 +300,13 @@
                     <li class="breadcrumb-item">macOS</li>
             </ol>
         </div>
-        <div class="col">
-            <span class="h3 mt-3 float-right">
-                <a href="https://mitre-attack.github.io/attack-navigator" class="btn btn-navy" target="_blank">Launch the ATT&amp;CK&trade; Navigator <img src="/theme/images/external-link.svg" width="10"></a>
-            </span>
-        </div>
+        <!-- only show navigator link if it's defined in the config -->
+ 
+            <div class="col">
+                <span class="h3 mt-3 float-right">
+                    <a href="https://mitre-attack.github.io/attack-navigator" class="btn btn-navy" target="_blank">Launch the ATT&amp;CK&trade; Navigator <img src="/theme/images/external-link.svg" width="10"></a>
+                </span>
+            </div>
     </div>
     <div class="tab-pane fade show active" id="v-attckmatrix" role="tabpanel" aria-labelledby="v-attckmatrix-tab">
         <div class="container-fluid">
@@ -1230,13 +1226,36 @@
                 </div>
             </div>
         </div>
-<!--startindex-->
                 </div>
             </div>
         </div>  
     </div>
+    <!--stop-indexing-for-search-->
+    <div class="overlay search" id="search-overlay" style="display: none;">
+    <div class="overlay-inner">
+        <!-- text input for searching -->
+        <div class="search-header">
+            <div class="search-input">
+                <input type="text" id="search-input" placeholder="search">
+            </div>
+            <div class="search-icons">
+                <div class="search-parsing-icon spinner-border" style="display: none" id="search-parsing-icon"></div>
+                <div class="close-search-icon" id="close-search-icon">&times;</div>
+            </div>
+        </div>
+        <!-- results and controls for loading more results -->
+        <div id="search-body" class="search-body">
+            <div class="results" id="search-results">
+                <!-- content will be appended here on search -->
+            </div>
+            <div id="load-more-results" class="load-more-results">
+                <button class="btn btn-default" id="load-more-results-button">load more results</button>
+            </div>
+        </div>
+    </div>
 </div>
-<!--stopindex-->
+
+</div>
 <footer class="footer p-3">
     <div class="container-fluid">
         <div class="row">
@@ -1265,7 +1284,7 @@
                     </div>
                     <div class="col text-left">
                         <small>
-                            <a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" title="ATT&amp;CK content version 6.2&#013;Website version 1.1.1">ATT&CK v6.2</a>
+                            <a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" title="ATT&amp;CK content version 6.2&#013;Website version 1.2">ATT&CK v6.2</a>
                         </small>
                     </div>
                 </div>
@@ -1295,15 +1314,12 @@
     <script src="/theme/scripts/jquery-3.2.1.min.js"></script>
     <script src="/theme/scripts/popper.min.js"></script>
     <script src="/theme/scripts/bootstrap.min.js"></script>
-    <script src="/theme/scripts/site.js"></script>
-    <script src="/theme/scripts/lunr-2.3.3.js"></script>
-    <script src="/theme/scripts/search.js"></script>
-    <script src="/theme/scripts/index.js"></script>
     <script src="/theme/scripts/bootstrap.bundle.min.js"></script>
+    <script src="/theme/scripts/site.js"></script>
+    <script src="/theme/scripts/flexsearch.es5.js"></script> 
+    <script src="/theme/scripts/search_babelized.js"></script>
 
     <!--SCRIPTS-->
     <script src="/theme/scripts/navigation.js"></script>
 </body>
-
 </html>
-<!--startindex-->
