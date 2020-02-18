@@ -49,14 +49,20 @@ def generate_matrices():
 
     side_menu_data = util.buildhelpers.get_side_menu_matrices(matrices_config.matrices)
 
+    matrix_generated = False
+
     for matrix in matrices_config.matrices:
         if matrix["type"] == "external": continue # link to externally hosted matrix, don't create a page for it
-        generate_matrix_md(matrix, old_ms, None, None, side_menu_data)
+        matrix_generated = generate_matrix_md(matrix, old_ms, None, None, side_menu_data)
 
+    if not matrix_generated:
+        util.buildhelpers.remove_module_from_menu(matrices_config.module_name)
 
 def generate_matrix_md(matrix, old_ms, techniques=None, old_techniques=None, side_menu_data=None):
     """Given a matrix, generates the matrix markdown"""
     
+    has_techniques = False
+
     data = {}
     data['menu'] = side_menu_data
     data['domain'] = matrix['matrix'].split("-")[0]
@@ -69,36 +75,42 @@ def generate_matrix_md(matrix, old_ms, techniques=None, old_techniques=None, sid
         techniques = stixhelpers.get_techniques(ms[matrix['matrix']])
         old_techniques = stixhelpers.get_techniques(old_ms[matrix['matrix']])
 
-    # Filter techniques
-    filtered_techniques = util.buildhelpers.filter_techniques_by_platform(techniques, matrix['platforms'])
-    filtered_old_techniques = util.buildhelpers.filter_techniques_by_platform(old_techniques, matrix['platforms'])
+    if techniques:
+        has_techniques = True
     
-    data['name'] = matrix['name']
-    data['timestamp'] = get_timestamp(matrix['matrix'], filtered_techniques, filtered_old_techniques)
-    data['matrix'] = get_matrix_data(filtered_techniques) 
-    data['platforms'] = [ {"name": platform, "path": site_config.platform_to_path[platform] } for platform in matrix['platforms'] ]
+    if has_techniques:
+        # Filter techniques
+        filtered_techniques = util.buildhelpers.filter_techniques_by_platform(techniques, matrix['platforms'])
+        filtered_old_techniques = util.buildhelpers.filter_techniques_by_platform(old_techniques, matrix['platforms'])
+        
+        data['name'] = matrix['name']
+        data['timestamp'] = get_timestamp(matrix['matrix'], filtered_techniques, filtered_old_techniques)
+        data['matrix'] = get_matrix_data(filtered_techniques) 
+        data['platforms'] = [ {"name": platform, "path": site_config.platform_to_path[platform] } for platform in matrix['platforms'] ]
+        
+        data['domain'] = matrix['matrix'].split("-")[0]
+        data['descr'] = matrix['descr']
+        data['path'] = matrix['path']
     
-    data['domain'] = matrix['matrix'].split("-")[0]
-    data['descr'] = matrix['descr']
-    data['path'] = matrix['path']
- 
-    data['tactics'] = []
-    data['max_len'] = []
+        data['tactics'] = []
+        data['max_len'] = []
 
-    matrices = stixhelpers.get_matrices(ms[matrix['matrix']])
-    for curr_matrix in matrices:
-        tactics = stixhelpers.get_tactic_list(ms[matrix['matrix']], matrix_id=curr_matrix['id'])
-        data['tactics'].append(get_tactics_data(tactics))
-        data['max_len'].append(get_max_length(data['matrix'], tactics))
-    
-    subs = matrices_config.matrix_md.substitute(data)
-    subs = subs + json.dumps(data)
+        matrices = stixhelpers.get_matrices(ms[matrix['matrix']])
+        for curr_matrix in matrices:
+            tactics = stixhelpers.get_tactic_list(ms[matrix['matrix']], matrix_id=curr_matrix['id'])
+            data['tactics'].append(get_tactics_data(tactics))
+            data['max_len'].append(get_max_length(data['matrix'], tactics))
+        
+        subs = matrices_config.matrix_md.substitute(data)
+        subs = subs + json.dumps(data)
 
-    with open(os.path.join(matrices_config.matrix_markdown_path, data['domain'] + "-" + matrix['name'] + ".md"), "w", encoding='utf8') as md_file:
-        md_file.write(subs)
+        with open(os.path.join(matrices_config.matrix_markdown_path, data['domain'] + "-" + matrix['name'] + ".md"), "w", encoding='utf8') as md_file:
+            md_file.write(subs)
 
-    for subtype in matrix['subtypes']:
-        generate_matrix_md(subtype, old_ms, techniques, old_techniques, side_menu_data)
+        for subtype in matrix['subtypes']:
+            generate_matrix_md(subtype, old_ms, techniques, old_techniques, side_menu_data)
+     
+    return has_techniques
 
 def get_tactics_data(tactics):
     """Given a tactics list, returns a tactics dictionary with the name and
