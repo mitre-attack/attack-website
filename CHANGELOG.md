@@ -31,6 +31,11 @@
 <!--          addition of notable features. When PATCH is 0 it can      -->
 <!--          be omitted                                                -->
 
+# Changes staged on develop
+## ATT&CK Website version 1.2.1
+### Fixes
+- Fixed PRE-ATT&CK side-navigation toggle on tactics and techniques. See issue [#81](https://github.com/mitre-attack/attack-website/issues/81).
+
 # 17 February 2020
 ## ATT&CK Website version 1.2
 ### New Features
