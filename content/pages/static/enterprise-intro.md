@@ -10,9 +10,7 @@ ATT&CK™ for Enterprise is an adversary model and framework for describing the 
 
 ATT&CK for Enterprise incorporates information on cyber adversaries gathered through MITRE research, as well as from other disciplines such as penetration testing and red teaming to establish a collection of knowledge characterizing the activities adversaries use against enterprise networks. While there is significant research on initial exploitation and use of perimeter defenses, there is a gap in central knowledge of adversary process after initial access has been gained. ATT&CK for Enterprise focuses on TTPs adversaries use to make decisions, expand access, and execute their objectives. It aims to describe an adversary's steps at a high enough level to be applied widely across platforms, but still maintain enough details to be technically useful.
 
-<center>
-![Enterprise Tactics](/theme/images/enterprise-pre-lifecycle.png)
-</center>
+<img alt="enterprise tactics" class="w-100" src="/theme/images/enterprise-pre-lifecycle.png">
 
 The 11 tactic categories within ATT&CK for Enterprise were derived from the later stages (exploit, control, maintain, and execute) of a seven-stage Cyber Attack Lifecycle<sup>[[1]](https://www.mitre.org/capabilities/cybersecurity/threat-based-defense){:target="_blank"}</sup> (first articulated by Lockheed Martin as the Cyber Kill Chain®<sup>[[2]](https://www.lockheedmartin.com/content/dam/lockheed-martin/rms/documents/cyber/LM-White-Paper-Intel-Driven-Defense.pdf){:target="_blank"}</sup>). This provides a deeper level of granularity in describing what can occur during an intrusion.
 
