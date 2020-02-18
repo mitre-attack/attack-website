@@ -354,7 +354,7 @@ def get_side_nav_domains_data(side_nav_title, elements_list):
 
             domain_data = {
                 "name": domain_alias,
-                "id": domain_alias,
+                "id": domain.split("-")[0],
                 "path": "/{}/{}/".format(side_nav_title, domain.split("-")[0]),
                 "children": []
             }
