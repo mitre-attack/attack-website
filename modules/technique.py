@@ -349,7 +349,7 @@ def get_technique_side_nav_data(techniques, tactics):
 
         domain_data = {
             "name": domain_alias,
-            "id": domain_alias,
+            "id": domain.split("-")[0],
             "path": "/techniques/{}/".format(domain.split("-")[0]), # root level doesn't get a path
             "children": []
         }
