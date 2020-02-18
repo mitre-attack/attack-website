@@ -37,35 +37,46 @@ def generate_groups():
         os.mkdir(groups_config.group_markdown_path)
 
     #Generates the markdown files to be used for page generation
-    generate_markdown_files()
+    group_generated = generate_markdown_files()
+
+    if not group_generated:
+        util.buildhelpers.remove_module_from_menu(groups_config.module_name)
 
 def generate_markdown_files():
     """Responsible for generating group index page and getting shared data for
        all groups
     """
 
-    data = {}
+    has_group = False
 
-    # Amount of characters per category
-    group_by = 2
+    if util.relationshipgetters.group_list:
+        has_group = True
 
-    side_menu_data = util.buildhelpers.get_side_menu_data("Groups", "/groups/", util.relationshipgetters.group_list)
-    data['side_menu_data'] = side_menu_data
+    if has_group:
+        data = {}
 
-    side_menu_mobile_view_data = util.buildhelpers.get_side_menu_mobile_view_data("groups", "/groups/", util.relationshipgetters.group_list, group_by)
-    data['side_menu_mobile_view_data'] = side_menu_mobile_view_data
+        # Amount of characters per category
+        group_by = 2
 
-    data['groups_table'] = get_groups_table_data()
-    data['groups_list_len'] = str(len(util.relationshipgetters.group_list))
+        side_menu_data = util.buildhelpers.get_side_menu_data("Groups", "/groups/", util.relationshipgetters.group_list)
+        data['side_menu_data'] = side_menu_data
+
+        side_menu_mobile_view_data = util.buildhelpers.get_side_menu_mobile_view_data("groups", "/groups/", util.relationshipgetters.group_list, group_by)
+        data['side_menu_mobile_view_data'] = side_menu_mobile_view_data
+
+        data['groups_table'] = get_groups_table_data()
+        data['groups_list_len'] = str(len(util.relationshipgetters.group_list))
+        
+        subs = groups_config.group_index_md + json.dumps(data)
+
+        with open(os.path.join(groups_config.group_markdown_path, "overview.md"), "w", encoding='utf8') as md_file:
+            md_file.write(subs)
+
+        #Create the markdown for the enterprise groups in the STIX
+        for group in util.relationshipgetters.group_list:
+            generate_group_md(group, side_menu_data, side_menu_mobile_view_data)
     
-    subs = groups_config.group_index_md + json.dumps(data)
-
-    with open(os.path.join(groups_config.group_markdown_path, "overview.md"), "w", encoding='utf8') as md_file:
-        md_file.write(subs)
-
-    #Create the markdown for the enterprise groups in the STIX
-    for group in util.relationshipgetters.group_list:
-        generate_group_md(group, side_menu_data, side_menu_mobile_view_data)
+    return has_group
 
 def generate_group_md(group, side_menu_data, side_menu_mobile_view_data):
     """Responsible for generating markdown of all groups"""
