@@ -31,6 +31,10 @@
 <!--          addition of notable features. When PATCH is 0 it can      -->
 <!--          be omitted                                                -->
 
+# Changes staged on Develop
+### Improvements
+- Updated the _roadmap_ and _matrix poster_ documents on the [General Information](https://attack.mitre.org/resources/) page.
+
 # 17 February 2020
 ## ATT&CK Website version 1.2
 ### New Features
