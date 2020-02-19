@@ -6,34 +6,51 @@ import urllib3
 import re
 import markdown
 import stix2
-from . import config
-from . import stixhelpers
-from . import util
+import time
+from . import techniques_config
+from modules import site_config
+from modules import util
 
-def generate():
-    """Responsible for verifying techniques directory and generating
-       techniques index markdown
+def generate_techniques():
+    """ Generate techniques, return True if technique was generated,
+        False if nothing was generated
     """
 
     # Verify if directory exists
-    if not os.path.isdir(config.techniques_markdown_path):
-        os.mkdir(config.techniques_markdown_path)
+    if not os.path.isdir(techniques_config.techniques_markdown_path):
+        os.mkdir(techniques_config.techniques_markdown_path)
 
     #Write the technique index.html page
-    with open(os.path.join(config.techniques_markdown_path, "overview.md"), "w", encoding='utf8') as md_file:
-        md_file.write(config.technique_overview_md)
+    with open(os.path.join(techniques_config.techniques_markdown_path, "overview.md"), "w", encoding='utf8') as md_file:
+        md_file.write(techniques_config.technique_overview_md)
+    
+    # To verify if a technique was generated
+    technique_generated = False
 
-    for domain in config.domains:
-        generate_domain_markdown(domain)
+    for domain in site_config.domains:
+        check_if_generated = generate_domain_markdown(domain)
+        if not technique_generated:
+            if check_if_generated:
+                technique_generated = True
+
+    if not technique_generated:
+        util.buildhelpers.remove_module_from_menu(techniques_config.module_name)   
 
 def generate_domain_markdown(domain):
     """Generate technique index markdown for each domain and generates 
        shared data for techniques
     """
 
+    has_technique = False
+
     #Reads the STIX and creates a list of the ATT&CK Techniques
-    full_techniques = stixhelpers.get_techniques(config.ms[domain])
-    tactic_list = stixhelpers.get_tactic_list(config.ms[domain])
+    full_techniques = util.stixhelpers.get_techniques(util.relationshipgetters.get_ms()[domain])
+
+    # Check if there is at least one technique
+    if full_techniques:
+        has_technique = True
+
+    tactic_list = util.stixhelpers.get_tactic_list(util.relationshipgetters.get_ms()[domain])
 
     data = {}
     
@@ -42,29 +59,30 @@ def generate_domain_markdown(domain):
     data['domain'] = domain.split("-")[0]
 
     # Get technique table data and number of techniques
-    data['technique_table'] = util.get_technique_table_data(None, full_techniques)
+    data['technique_table'] = util.buildhelpers.get_technique_table_data(None, full_techniques)
     data['technique_list_len'] = str(len(full_techniques))
     side_menu_data = get_technique_side_menu_data(domain, technique_list, tactic_list)
 
     # Get tactic-techniques table
     data['menu'] = side_menu_data
 
-    subs = config.technique_domain_md.substitute(data)
+    subs = techniques_config.technique_domain_md.substitute(data)
     subs = subs + json.dumps(data)
 
-    with open(os.path.join(config.techniques_markdown_path, data['domain'] + "-techniques.md"), "w", encoding='utf8') as md_file:
+    with open(os.path.join(techniques_config.techniques_markdown_path, data['domain'] + "-techniques.md"), "w", encoding='utf8') as md_file:
         md_file.write(subs)
 
     # Create the markdown for the enterprise groups in the STIX
-
     for technique in full_techniques:
         if 'revoked' not in technique or technique['revoked'] is False:
             generate_technique_md(technique, domain, side_menu_data, tactic_list)
 
+    return has_technique
+
 def generate_technique_md(technique, domain, side_menu_data, tactic_list):
     """Generetes markdown data for given technique"""
 
-    attack_id = util.get_attack_id(technique)
+    attack_id = util.buildhelpers.get_attack_id(technique)
 
     # Only add technique if the attack id was found
     if attack_id:
@@ -103,9 +121,9 @@ def generate_technique_md(technique, domain, side_menu_data, tactic_list):
         # Decleared as an object to be able to pass by reference
         next_reference_number = {}
         next_reference_number['value'] = 1
-        reference_list = util.update_reference_list(reference_list, technique)
+        reference_list = util.buildhelpers.update_reference_list(reference_list, technique)
 
-        dates = util.get_created_and_modified_dates(technique)
+        dates = util.buildhelpers.get_created_and_modified_dates(technique)
         
         if dates.get('created'):
             technique_dict['created'] = dates['created']
@@ -115,11 +133,11 @@ def generate_technique_md(technique, domain, side_menu_data, tactic_list):
 
         # Get technique description
         if technique.get("description"):
-            citations_from_descr = util.get_citations_from_descr(technique['description'])
+            citations_from_descr = util.buildhelpers.get_citations_from_descr(technique['description'])
 
-            technique_dict['descr'] = util.replace_html_chars(markdown.markdown(technique['description']))
-            technique_dict['descr'] = util.filter_urls(technique_dict['descr'])
-            technique_dict['descr'] = util.get_descr_reference_sect(citations_from_descr, reference_list, next_reference_number, technique_dict['descr'])
+            technique_dict['descr'] = util.buildhelpers.replace_html_chars(markdown.markdown(technique['description']))
+            technique_dict['descr'] = util.buildhelpers.filter_urls(technique_dict['descr'])
+            technique_dict['descr'] = util.buildhelpers.get_descr_reference_sect(citations_from_descr, reference_list, next_reference_number, technique_dict['descr'])
             
             if 'x_mitre_deprecated' in technique:
                 technique_dict['deprecated'] = True
@@ -204,7 +222,7 @@ def generate_technique_md(technique, domain, side_menu_data, tactic_list):
 
         # Get explanation of detecatable by common defenses
         if technique.get('x_mitre_detectable_by_common_defenses_explanation'):
-            technique_dict['detectable_exp'] = util.replace_html_chars(technique['x_mitre_detectable_by_common_defenses_explanation'])
+            technique_dict['detectable_exp'] = util.buildhelpers.replace_html_chars(technique['x_mitre_detectable_by_common_defenses_explanation'])
 
         # Get diffulty for adversaries
         if technique.get('x_mitre_difficulty_for_adversary'):
@@ -212,17 +230,17 @@ def generate_technique_md(technique, domain, side_menu_data, tactic_list):
 
         # Get explanation of difficulty for adversaries
         if technique.get('x_mitre_difficulty_for_adversary_explanation'):
-            technique_dict['diff_for_adv_exp'] = util.replace_html_chars(technique['x_mitre_difficulty_for_adversary_explanation'])            
+            technique_dict['diff_for_adv_exp'] = util.buildhelpers.replace_html_chars(technique['x_mitre_difficulty_for_adversary_explanation'])            
         
         # Add reference for bottom part of technique page
         if reference_list:
-            technique_dict['bottom_ref'] = util.sort_reference_list(reference_list)
+            technique_dict['bottom_ref'] = util.buildhelpers.sort_reference_list(reference_list)
 
-        subs = config.technique_md.substitute(technique_dict)
+        subs = techniques_config.technique_md.substitute(technique_dict)
         subs = subs + json.dumps(technique_dict)
 
         #Write out the markdown file
-        with open(os.path.join(config.techniques_markdown_path, technique_dict['attack_id'] +".md"), "w", encoding='utf8') as md_file:
+        with open(os.path.join(techniques_config.techniques_markdown_path, technique_dict['attack_id'] +".md"), "w", encoding='utf8') as md_file:
             md_file.write(subs)
 
 def get_related_techniques_data(technique, tactic_list):
@@ -233,10 +251,10 @@ def get_related_techniques_data(technique, tactic_list):
     
     technique_data = []
 
-    if config.related_techniques.get(technique['id']):
-        for rel_tech in config.related_techniques[technique['id']]:
+    if util.relationshipgetters.get_technique_related_to_technique().get(technique['id']):
+        for rel_tech in util.relationshipgetters.get_technique_related_to_technique()[technique['id']]:
 
-            attack_id = util.get_attack_id(rel_tech['object'])
+            attack_id = util.buildhelpers.get_attack_id(rel_tech['object'])
 
             if attack_id:
                 row = {}
@@ -244,7 +262,7 @@ def get_related_techniques_data(technique, tactic_list):
 
                 tactic = [x for x in tactic_list if x['x_mitre_shortname'] == rel_tech['object']['kill_chain_phases'][0]['phase_name']][0]
                 if tactic:
-                    row['tactic_id'] = util.get_attack_id(tactic)
+                    row['tactic_id'] = util.buildhelpers.get_attack_id(tactic)
                 row['tactic_name'] = rel_tech['object']['kill_chain_phases'][0]['phase_name'].title().replace('-', ' ')
                 
                 row['technique_name'] = rel_tech['object']['name']
@@ -263,14 +281,14 @@ def get_mitigations_table_data(technique, reference_list, next_reference_number)
     mitigation_data = []
 
     # Check if technique has mitigations
-    if config.technique_mitigated.get(technique['id']):
+    if util.relationshipgetters.get_technique_mitigated_by_mitigation().get(technique['id']):
         # Iterate through technique mitigations
-        for mitigation in config.technique_mitigated[technique['id']]:
+        for mitigation in util.relationshipgetters.get_technique_mitigated_by_mitigation()[technique['id']]:
 
             # Do not add deprecated mitigation to table
             if 'x_mitre_deprecated' not in mitigation['object']:
 
-                attack_id = util.get_attack_id(mitigation['object'])
+                attack_id = util.buildhelpers.get_attack_id(mitigation['object'])
 
                 # Only add if mitigation attack id is found 
                 if attack_id:
@@ -280,7 +298,7 @@ def get_mitigations_table_data(technique, reference_list, next_reference_number)
                     row['name'] = mitigation['object']['name']
                     if mitigation['relationship'].get('description'):
                         # Get filtered description
-                        row['descr'] = util.get_filtered_description(reference_list, next_reference_number, mitigation)
+                        row['descr'] = util.buildhelpers.get_filtered_description(reference_list, next_reference_number, mitigation)
              
                     mitigation_data.append(row)
     
@@ -296,9 +314,9 @@ def get_examples_table_data(technique, reference_list, next_reference_number):
 
     # Creating map to avoid repeating the code 3 times
     examples_map = [
-        { 'example_type': config.tools_using_technique }, 
-        { 'example_type': config.malware_using_technique },
-        { 'example_type': config.groups_using_technique }
+        { 'example_type': util.relationshipgetters.get_tools_using_technique() }, 
+        { 'example_type': util.relationshipgetters.get_malware_using_technique() },
+        { 'example_type': util.relationshipgetters.get_groups_using_technique() }
     ]
 
     example_data = []
@@ -308,7 +326,7 @@ def get_examples_table_data(technique, reference_list, next_reference_number):
         if examples['example_type'].get(technique.get('id')):
             for example in examples['example_type'][technique['id']]:
 
-                attack_id = util.get_attack_id(example['object'])
+                attack_id = util.buildhelpers.get_attack_id(example['object'])
 
                 # Only add example data if the attack id is found    
                 if attack_id:
@@ -325,7 +343,7 @@ def get_examples_table_data(technique, reference_list, next_reference_number):
 
                     if example['relationship'].get('description'):
                         # Get filtered description
-                        row['descr'] = util.get_filtered_description(reference_list, next_reference_number, example)
+                        row['descr'] = util.buildhelpers.get_filtered_description(reference_list, next_reference_number, example)
 
                     example_data.append(row)
         
@@ -345,8 +363,8 @@ def get_technique_side_menu_data(domain, technique_list, tactic_list):
         tactic_row = {}
         
         tactic_row['name'] = tactic['name']
-        tactic_row['id'] = util.get_attack_id(tactic)
-        tactic_row['path'] = "/tactics/{}".format(util.get_attack_id(tactic))
+        tactic_row['id'] = util.buildhelpers.get_attack_id(tactic)
+        tactic_row['path'] = "/tactics/{}".format(util.buildhelpers.get_attack_id(tactic))
         
         tactic_row['children'] = []
         for technique in technique_list[tactic['x_mitre_shortname']]:
@@ -377,7 +395,7 @@ def get_techniques_list(techniques):
     for technique in techniques:
         if 'revoked' not in technique or technique['revoked'] == False:
 
-            attack_id = util.get_attack_id(technique)
+            attack_id = util.buildhelpers.get_attack_id(technique)
 
             if attack_id:
 
@@ -396,7 +414,7 @@ def get_techniques_list(techniques):
                             
                         technique_list[elem['phase_name']].append(technique_dict)
 
-    for key, value in technique_list.items():
+    for key, __ in technique_list.items():
         technique_list[key] = sorted(technique_list[key], key=lambda k: k['name'].lower())
     
     return technique_list
@@ -408,10 +426,11 @@ def get_detection_string(detection, reference_list, next_reference_number):
        modified detection string
     """
 
-    citations_from_descr = util.get_citations_from_descr(detection)
+    citations_from_descr = util.buildhelpers.get_citations_from_descr(detection)
 
-    filtered_detection = util.replace_html_chars(markdown.markdown(detection))
-    filtered_detection = util.filter_urls(filtered_detection)
-    filtered_detection = util.get_descr_reference_sect(citations_from_descr, reference_list, next_reference_number, filtered_detection)
+    filtered_detection = util.buildhelpers.replace_html_chars(markdown.markdown(detection))
+    filtered_detection = util.buildhelpers.filter_urls(filtered_detection)
+    filtered_detection = util.buildhelpers.get_descr_reference_sect(citations_from_descr, reference_list, next_reference_number, filtered_detection)
     
     return filtered_detection
+   

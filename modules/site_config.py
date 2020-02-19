@@ -73,3 +73,4 @@ layer_md = Template("Title: ${domain} Techniques\n"
                     "Template: general/json\n"
                     "save_as: ${path}/${attack_id}-${domain}-layer.json\n"
                     "json: ")
+no_stix_link_replacement = ""

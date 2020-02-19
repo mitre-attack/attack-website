@@ -3,26 +3,34 @@ import os
 import urllib3
 import re
 import markdown
-from . import config
-from . import site_config
-from . import stixhelpers
-from . import util
+from modules import site_config
+from modules import util
+from . import mitigations_config
 
-def generate():
+def generate_mitigations():
     """Responsible for verifying mitigation directory and generating index
        mitigation markdown
     """
 
     # Verify if directory exists
-    if not os.path.isdir(config.mitigation_markdown_path):
-        os.mkdir(config.mitigation_markdown_path)
+    if not os.path.isdir(mitigations_config.mitigation_markdown_path):
+        os.mkdir(mitigations_config.mitigation_markdown_path)
 
     # Create the mitigation index markdown
-    with open(os.path.join(config.mitigation_markdown_path, "overview.md"), "w", encoding='utf8') as md_file:
-        md_file.write(config.mitigation_overview_md)
-    
-    for domain in config.domains:
-        generate_markdown_files(domain)
+    with open(os.path.join(mitigations_config.mitigation_markdown_path, "overview.md"), "w", encoding='utf8') as md_file:
+        md_file.write(mitigations_config.mitigation_overview_md)
+
+    # To verify if a technique was generated
+    mitigation_generated = False
+
+    for domain in site_config.domains:
+        check_if_generated = generate_markdown_files(domain)
+        if not mitigation_generated:
+            if check_if_generated:
+                mitigation_generated = True
+
+    if not mitigation_generated:
+        util.buildhelpers.remove_module_from_menu(mitigations_config.module_name)   
 
 def generate_markdown_files(domain):
     """Responsible for generating shared data between all mitigation pages
@@ -31,7 +39,14 @@ def generate_markdown_files(domain):
 
     data = {}
 
-    mitigation_list = stixhelpers.get_mitigation_list(config.ms[domain])
+    has_mitigation = False
+
+    ms = util.relationshipgetters.get_ms()
+
+    mitigation_list = util.stixhelpers.get_mitigation_list(ms[domain])
+
+    if mitigation_list:
+        has_mitigation = True
 
     if mitigation_list:
         # Amount of characters per category
@@ -39,29 +54,30 @@ def generate_markdown_files(domain):
 
         data['domain'] = domain.split("-")[0]
         data['mitigation_list_len'] = str(len(mitigation_list))
-        side_menu_data = util.get_side_menu_data("mitigations", "/mitigations/", mitigation_list, data['domain'])
+        side_menu_data = util.buildhelpers.get_side_menu_data("mitigations", "/mitigations/", mitigation_list, data['domain'])
         data['side_menu_data'] = side_menu_data
-        side_menu_mobile_data = util.get_side_menu_mobile_view_data("mitigations", "/mitigations/", mitigation_list, group_by, data['domain'])
+        side_menu_mobile_data = util.buildhelpers.get_side_menu_mobile_view_data("mitigations", "/mitigations/", mitigation_list, group_by, data['domain'])
         data['side_menu_mobile_view_data'] = side_menu_mobile_data
                         
         data['mitigation_table'] = get_mitigation_table_data(mitigation_list)
 
-        subs = config.mitigation_domain_md.substitute(data)
+        subs = mitigations_config.mitigation_domain_md.substitute(data)
         subs = subs + json.dumps(data)
 
-        with open(os.path.join(config.mitigation_markdown_path, data['domain'] + "-mitigations.md"), "w", encoding='utf8') as md_file:
+        with open(os.path.join(mitigations_config.mitigation_markdown_path, data['domain'] + "-mitigations.md"), "w", encoding='utf8') as md_file:
             md_file.write(subs)
 
         # Generates the markdown files to be used for page generation
         for mitigation in mitigation_list:
-            generate_mitigation_md(mitigation, domain, side_menu_data, \
-                                                        side_menu_mobile_data)
+            generate_mitigation_md(mitigation, domain, side_menu_data, side_menu_mobile_data)
+    
+    return has_mitigation
 
 def generate_mitigation_md(mitigation, domain, side_menu_data, \
                                                        side_menu_mobile_data):
     """Generates the markdown for the given mitigation"""
 
-    attack_id = util.get_attack_id(mitigation)
+    attack_id = util.buildhelpers.get_attack_id(mitigation)
 
     if attack_id:
         data = {}
@@ -73,7 +89,7 @@ def generate_mitigation_md(mitigation, domain, side_menu_data, \
         data['side_menu_mobile_view_data'] = side_menu_mobile_data
         data['name'] = mitigation['name']
 
-        dates = util.get_created_and_modified_dates(mitigation)
+        dates = util.buildhelpers.get_created_and_modified_dates(mitigation)
         
         if dates.get('created'):
             data['created'] = dates['created']
@@ -86,10 +102,10 @@ def generate_mitigation_md(mitigation, domain, side_menu_data, \
         # Decleared as an object to be able to pass by reference
         next_reference_number = {}
         next_reference_number['value'] = 1
-        reference_list = util.update_reference_list(reference_list, mitigation)
+        reference_list = util.buildhelpers.update_reference_list(reference_list, mitigation)
 
         if mitigation.get('description'):
-            citations_from_descr = util.get_citations_from_descr(mitigation['description'])
+            citations_from_descr = util.buildhelpers.get_citations_from_descr(mitigation['description'])
 
             data['descr'] = markdown.markdown(mitigation['description'])\
                                         .replace("\n", "<br>")\
@@ -98,8 +114,8 @@ def generate_mitigation_md(mitigation, domain, side_menu_data, \
                                         .replace("”","\"")\
                                         .replace("“","\"")
 
-            data['descr'] = util.filter_urls(data['descr'])
-            data['descr'] = util.get_descr_reference_sect(citations_from_descr, reference_list, next_reference_number, data['descr'])
+            data['descr'] = util.buildhelpers.filter_urls(data['descr'])
+            data['descr'] = util.buildhelpers.get_descr_reference_sect(citations_from_descr, reference_list, next_reference_number, data['descr'])
 
         if mitigation.get('x_mitre_deprecated'):
             data['deprecated'] = True
@@ -109,12 +125,12 @@ def generate_mitigation_md(mitigation, domain, side_menu_data, \
         data['techniques_addressed_data'] = get_techniques_addressed_data(mitigation, reference_list, next_reference_number)
     
         if reference_list:
-            data['bottom_ref'] = util.sort_reference_list(reference_list)
+            data['bottom_ref'] = util.buildhelpers.sort_reference_list(reference_list)
 
-        subs = config.mitigation_md.substitute(data)
+        subs = mitigations_config.mitigation_md.substitute(data)
         subs = subs + json.dumps(data)
 
-        with open(os.path.join(config.mitigation_markdown_path, data['attack_id'] + ".md"), "w", encoding='utf8') as md_file:
+        with open(os.path.join(mitigations_config.mitigation_markdown_path, data['attack_id'] + ".md"), "w", encoding='utf8') as md_file:
             md_file.write(subs)
 
 def get_mitigation_table_data(mitigation_list):
@@ -126,7 +142,7 @@ def get_mitigation_table_data(mitigation_list):
     
     # Fill mitigation data
     for mitigation in mitigation_list:
-        attack_id = util.get_attack_id(mitigation)
+        attack_id = util.buildhelpers.get_attack_id(mitigation)
 
         if attack_id:
             row = {}
@@ -141,7 +157,7 @@ def get_mitigation_table_data(mitigation_list):
                 descr = markdown.markdown(descr.split("\n")[2])
             else:
                 descr = markdown.markdown(descr.split("\n")[0])
-            row['descr'] = util.filter_urls(descr)
+            row['descr'] = util.buildhelpers.filter_urls(descr)
 
             if mitigation.get('x_mitre_deprecated'):
                 row['deprecated'] = True
@@ -156,8 +172,10 @@ def get_techniques_addressed_data(mitigation, reference_list, next_reference_num
     """
     
     techniques_data = []
-    for technique in config.mitigates_techniques.get(mitigation['id']):
-        t_id = util.get_attack_id(technique['object'])
+    mitigates_techniques = util.relationshipgetters.get_mitigation_mitigates_techniques()
+
+    for technique in mitigates_techniques.get(mitigation['id']):
+        t_id = util.buildhelpers.get_attack_id(technique['object'])
 
         if t_id:
             row = {}
@@ -173,9 +191,8 @@ def get_techniques_addressed_data(mitigation, reference_list, next_reference_num
 
             if technique['relationship'].get('description'):
                 # Get filtered description
-                row['descr'] = util.get_filtered_description(reference_list, next_reference_number, technique)             
-    
-        
+                row['descr'] = util.buildhelpers.get_filtered_description(reference_list, next_reference_number, technique)             
+      
     techniques_data = sorted(techniques_data, key=lambda k: k['name'].lower())
     techniques_data = sorted(techniques_data, key=lambda k: [site_config.custom_alphabet.index(c) for c in k['domain'].lower()])
 

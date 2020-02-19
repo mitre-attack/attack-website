@@ -20,74 +20,6 @@ contribute_index_md = ("Title: Contribute\n"
                        "save_as: resources/contribute/index.html\n"
                        "data: ")
 
-<<<<<<< HEAD
-# Constants used by matrix.py
-# ----------------------------------------------------------------------------
-
-# Matrix markdown path
-matrix_markdown_path = "content/pages/matrices/"
-
-# Matrix overview string
-matrix_overview_md = ("Title: Matrix Overview \n"
-                      "Template: general/redirect-index \n"
-                      "RedirectLink: /matrices/enterprise/ \n"
-                      "save_as: matrices/index.html")
-
-# String template for main domain matrices
-matrix_md = Template("Title: Matrix-${domain}\n"
-                     "Template: matrices/matrix\n"
-                     "save_as: matrices/${path}/index.html\n"
-                     "data: ")
-
-# String template for platform matrices
-platform_md = Template("Title: Matrix-${domain}-${platform}\n"
-                       "Template: matrices/matrix\n"
-                       "save_as: matrices/${domain}/${platform_path}/index.html\n"
-                       "data: ")
-=======
-# Constants used by group.py
-# ----------------------------------------------------------------------------
-
-# Markdown path for groups
-group_markdown_path = "content/pages/groups/"
-
-# String template for group index page	
-group_index_md = ("Title: Group overview\n"
-                  "Template: groups/groups-index\n"
-                  "save_as: groups/index.html\n"
-                  "data: ")
-
-# String template for group page
-group_md = Template("Title: ${name}\n"
-                    "Template: groups/group\n"
-                    "save_as: groups/${attack_id}/index.html\n"
-                    "data: ")
->>>>>>> feature/#69-modularize-matrices
-
-# Constants used by mitigation.py
-# ----------------------------------------------------------------------------
-
-# Markdown path for mitigations
-mitigation_markdown_path = "content/pages/mitigations/"
-
-# Mitigation overview string
-mitigation_overview_md = ("Title: Mitigation Overview \n"
-                          "Template: general/redirect-index \n"
-                          "RedirectLink: /mitigations/enterprise/ \n"
-                          "save_as: mitigations/index.html \n")
-
-# String template for domains	
-mitigation_domain_md = Template("Title: Mitigations\n"
-                                "Template: mitigations/mitigations-domain-index\n"
-                                "save_as: mitigations/${domain}/index.html\n"
-                                "data: ")
-
-# String template for all mitigations
-mitigation_md = Template("Title: ${name}-${domain}\n"
-                         "Template: mitigations/mitigation\n"
-                         "save_as: mitigations/${attack_id}/index.html\n"
-                         "data: ")
-
 # Constants used by redirects.py
 # ----------------------------------------------------------------------------
 
@@ -221,31 +153,6 @@ other_redirects = [
     {'from': 'ics', 'to': 'https://collaborate.mitre.org/attackics'}
 ]
 
-# Constants used by tactic.py
-# ----------------------------------------------------------------------------
-
-# Markdown path for tactics
-tactics_markdown_path = "content/pages/tactics/"
-
-# String template for domains	
-tactic_domain_md = Template("Title: Tactics\n"
-                            "Template: tactics/tactics-domain-index\n"
-                            "save_as: tactics/${domain}/index.html\n"
-                            "data: ")
-
-# String template for tactics	
-tactic_md = Template("Title: ${name}-${domain}\n"
-                     "Template: tactics/tactic\n"
-                     "save_as: tactics/${attack_id}/index.html\n"
-                     "data: ")
-
-# Tactics overview md template
-tactic_overview_md = ("Title: Tactics overview \n"
-                      "Template: general/redirect-index \n"
-                      "RedirectLink: /tactics/enterprise/ \n"
-                      "save_as: tactics/index.html \n")
-
-
 # Constants used by archives.py
 # ----------------------------------------------------------------------------
 
@@ -309,27 +216,3 @@ training_navigation = {
         }
     ]
 }
-
-# Constants used by technique.py
-# ----------------------------------------------------------------------------
-
-# Markdown path for techniques
-techniques_markdown_path = "content/pages/techniques/"	
-
-# String template for all techniques
-technique_md = Template("Title: ${name}-${tactics}-${domain}\n"
-                        "Template: techniques/technique\n"
-                        "save_as: techniques/${attack_id}/index.html\n"
-                        "data: ")
-
-# String template for domains	
-technique_domain_md = Template("Title: Techniques\n"
-                               "Template: techniques/techniques-domain-index\n"
-                               "save_as: techniques/${domain}/index.html\n"
-                               "data: ")
-
-# Overview md template
-technique_overview_md = ("Title: Overview \n"
-                         "Template: general/redirect-index \n"
-                         "RedirectLink: /techniques/enterprise/ \n"
-                         "save_as: techniques/index.html \n")

@@ -4,24 +4,25 @@ import time
 import subprocess
 import os
 import shutil
-from modules import clean
-from modules import config
-from modules import contribute
-from modules import group
-from modules import matrix
-from modules import mitigation
-from modules import redirects
-from modules import resources
-from modules import search
-from modules import software
-from modules import stixhelpers
-from modules import tactic
-from modules import technique
-from string import Template
-from modules import tests
+# from modules import clean
+# from modules import config
+# from modules import contribute
+# from modules import group
+# from modules import matrix
+# from modules import mitigation
+# from modules import redirects
+# from modules import resources
+# from modules import search
+# from modules import software
+# from modules import stixhelpers
+# from modules import tactic
+# from modules import technique
+# from string import Template
+# from modules import tests
+# from modules import util
+# from modules import index
+# from modules import archives
 from modules import util
-from modules import index
-from modules import archives
 
 def group_md_gen():
     util.progress_bar("Group Pages")
@@ -87,24 +88,24 @@ def redirects_md_gen():
     util.progress_bar("Redirection Pages", end_time - start_time)
 
 def pelican_content():
-    util.progress_bar("Pelican Content")
+    util.buildhelpers.progress_bar("Pelican Content")
     # Run pelican with limited output, -q is for quiet
     returned_out = subprocess.check_output("pelican content -q", shell=True)
-    util.progress_bar("Pelican Content", float(str(returned_out).split(" ")[13]))
+    util.buildhelpers.progress_bar("Pelican Content", float(str(returned_out).split(" ")[13]))
 
-def generate_search_index():
-    util.progress_bar("Search Index")
-    start_time = time.time()
-    search.generate_index()
-    end_time = time.time()
-    util.progress_bar("Search Index", end_time - start_time)
+# def generate_search_index():
+#     util.progress_bar("Search Index")
+#     start_time = time.time()
+#     search.generate_index()
+#     end_time = time.time()
+#     util.progress_bar("Search Index", end_time - start_time)
 
-def previous_versions_gen():
-    util.progress_bar("Previous Versions")
-    start_time = time.time()
-    archives.deploy()
-    end_time = time.time()
-    util.progress_bar("Previous Versions", end_time - start_time)
+# def previous_versions_gen():
+#     util.progress_bar("Previous Versions")
+#     start_time = time.time()
+#     archives.deploy()
+#     end_time = time.time()
+#     util.progress_bar("Previous Versions", end_time - start_time)
 
 def clean_website():
     util.progress_bar("Clean Build")
