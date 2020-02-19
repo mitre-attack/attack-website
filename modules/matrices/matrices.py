@@ -4,80 +4,93 @@ import requests
 import collections
 import sys
 import urllib3
-import stix2
 import datetime
-from . import config
-from . import stixhelpers
-from . import  util
+from modules import util
+from modules import site_config
+from . import matrices_config    
 
 # suppress InsecureRequestWarning: Unverified HTTPS request is being made
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
-def generate():
+def generate_matrices():
     """Responsible for verifying matrix directory and generating index
-       matrix markdown
+       matrix markdown. 
     """
 
     # Verify if directory exists
-    if not os.path.isdir(config.matrix_markdown_path):
-        os.mkdir(config.matrix_markdown_path)
+    if not os.path.isdir(matrices_config.matrix_markdown_path):
+        os.mkdir(matrices_config.matrix_markdown_path)
     
     # Write the matrix index.html page
-    with open(os.path.join(config.matrix_markdown_path, "overview.md"), "w", encoding='utf8') as md_file:
-        md_file.write(config.matrix_overview_md)
+    with open(os.path.join(matrices_config.matrix_markdown_path, "overview.md"), "w", encoding='utf8') as md_file:
+        md_file.write(matrices_config.matrix_overview_md)
     
-    # Read old json attack STIX 
-    old_ms = stixhelpers.get_old_stix_memory_stores()
+    old_ms = util.stixhelpers.get_old_stix_memory_stores()    
 
-    side_menu_data = util.get_side_menu_matrices(config.matrices)
+    side_menu_data = util.buildhelpers.get_side_menu_matrices(matrices_config.matrices)
 
-    for matrix in config.matrices:
+    matrix_generated = False
+
+    for matrix in matrices_config.matrices:
         if matrix["type"] == "external": continue # link to externally hosted matrix, don't create a page for it
-        generate_matrix_md(matrix, old_ms, None, None, side_menu_data)
+        matrix_generated = generate_matrix_md(matrix, old_ms, None, None, side_menu_data)
+
+    if not matrix_generated:
+        util.buildhelpers.remove_module_from_menu(matrices_config.module_name)
 
 def generate_matrix_md(matrix, old_ms, techniques=None, old_techniques=None, side_menu_data=None):
     """Given a matrix, generates the matrix markdown"""
     
+    has_techniques = False
+
     data = {}
     data['menu'] = side_menu_data
     data['domain'] = matrix['matrix'].split("-")[0]
 
+    ms = util.relationshipgetters.get_ms()
+
     # Optimization to only load on first matrix level
     # Path needs to be equal to the domain
     if matrix['path'] ==  data['domain']:
-        techniques = stixhelpers.get_techniques(config.ms[matrix['matrix']])
-        old_techniques = stixhelpers.get_techniques(old_ms[matrix['matrix']])
+        techniques = util.stixhelpers.get_techniques(ms[matrix['matrix']])
+        old_techniques = util.stixhelpers.get_techniques(old_ms[matrix['matrix']])
 
-    # Filter techniques
-    filtered_techniques = util.filter_techniques_by_platform(techniques, matrix['platforms'])
-    filtered_old_techniques = util.filter_techniques_by_platform(old_techniques, matrix['platforms'])
+    if techniques:
+        has_techniques = True
     
-    data['name'] = matrix['name']
-    data['timestamp'] = get_timestamp(matrix['matrix'], filtered_techniques, filtered_old_techniques)
-    data['matrix'] = get_matrix_data(filtered_techniques) 
-    data['platforms'] = [ {"name": platform, "path": config.platform_to_path[platform] } for platform in matrix['platforms'] ]
+    if has_techniques:
+        # Filter techniques
+        filtered_techniques = util.buildhelpers.filter_techniques_by_platform(techniques, matrix['platforms'])
+        filtered_old_techniques = util.buildhelpers.filter_techniques_by_platform(old_techniques, matrix['platforms'])
+        
+        data['name'] = matrix['name']
+        data['timestamp'] = get_timestamp(matrix['matrix'], filtered_techniques, filtered_old_techniques)
+        data['matrix'] = get_matrix_data(filtered_techniques) 
+        data['platforms'] = [ {"name": platform, "path": matrices_config.platform_to_path[platform] } for platform in matrix['platforms'] ]
+        
+        data['domain'] = matrix['matrix'].split("-")[0]
+        data['descr'] = matrix['descr']
+        data['path'] = matrix['path']
     
-    data['domain'] = matrix['matrix'].split("-")[0]
-    data['descr'] = matrix['descr']
-    data['path'] = matrix['path']
- 
-    data['tactics'] = []
-    data['max_len'] = []
+        data['tactics'] = []
+        data['max_len'] = []
 
-    matrices = stixhelpers.get_matrices(config.ms[matrix['matrix']])
-    for curr_matrix in matrices:
-        tactics = stixhelpers.get_tactic_list(config.ms[matrix['matrix']], matrix_id=curr_matrix['id'])
-        data['tactics'].append(get_tactics_data(tactics))
-        data['max_len'].append(get_max_length(data['matrix'], tactics))
-    
-    subs = config.matrix_md.substitute(data)
-    subs = subs + json.dumps(data)
+        matrices = util.stixhelpers.get_matrices(ms[matrix['matrix']])
+        for curr_matrix in matrices:
+            tactics = util.stixhelpers.get_tactic_list(ms[matrix['matrix']], matrix_id=curr_matrix['id'])
+            data['tactics'].append(get_tactics_data(tactics))
+            data['max_len'].append(get_max_length(data['matrix'], tactics))
+        
+        subs = matrices_config.matrix_md.substitute(data)
+        subs = subs + json.dumps(data)
 
-    with open(os.path.join(config.matrix_markdown_path, data['domain'] + "-" + matrix['name'] + ".md"), "w", encoding='utf8') as md_file:
-        md_file.write(subs)
+        with open(os.path.join(matrices_config.matrix_markdown_path, data['domain'] + "-" + matrix['name'] + ".md"), "w", encoding='utf8') as md_file:
+            md_file.write(subs)
 
-    for subtype in matrix['subtypes']:
-        generate_matrix_md(subtype, old_ms, techniques, old_techniques, side_menu_data)
+        for subtype in matrix['subtypes']:
+            generate_matrix_md(subtype, old_ms, techniques, old_techniques, side_menu_data)
+     
+    return has_techniques
 
 def get_tactics_data(tactics):
     """Given a tactics list, returns a tactics dictionary with the name and
@@ -86,7 +99,7 @@ def get_tactics_data(tactics):
 
     tactics_data = {}
     for tactic in tactics:
-        attack_id = util.get_attack_id(tactic)
+        attack_id = util.buildhelpers.get_attack_id(tactic)
 
         if attack_id:
             tactic_dict = {}
@@ -122,7 +135,7 @@ def get_recent_date(date_string1, date_string2):
 def get_default_date(proposed_default_date, domain, platform=None):
     """Given a proposed date, returns the target date"""
 
-    with open(os.path.join(config.stix_directory, 'old_dates.json'), 'r') as file:
+    with open(os.path.join(site_config.stix_directory, 'old_dates.json'), 'r') as file:
         core = file.read()
     addressible = json.loads(core)
     if domain == 'enterprise-attack':
@@ -135,7 +148,7 @@ def get_default_date(proposed_default_date, domain, platform=None):
         date = addressible[domain]
         target_date = get_recent_date(proposed_default_date, date)
         addressible[domain] = target_date
-    with open(os.path.join(config.stix_directory, 'old_dates.json'),'w') as file:
+    with open(os.path.join(site_config.stix_directory, 'old_dates.json'),'w') as file:
         file.write(json.dumps(addressible))
 
     return target_date
@@ -173,7 +186,7 @@ def get_matrix_data(techniques):
     for technique in techniques:
         if ('revoked' not in technique or technique['revoked'] is False) and ('x_mitre_deprecated' not in technique or technique['x_mitre_deprecated'] is False):
             # Get attack id
-            attack_id = util.get_attack_id(technique)
+            attack_id = util.buildhelpers.get_attack_id(technique)
             
             if attack_id:
                 row = {}
