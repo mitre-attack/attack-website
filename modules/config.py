@@ -189,18 +189,6 @@ layer_md = Template("Title: ${domain} Techniques\n"
                     "save_as: ${path}/${attack_id}-${domain}-layer.json\n"
                     "json: ")
 
-# Constants used by contribute.py
-# ----------------------------------------------------------------------------
-
-# Markdown path for contribute
-contribute_markdown_path = "content/pages/resources"
-
-# String template for contribution index page	
-contribute_index_md = ("Title: Contribute\n"
-                       "Template: resources/contribute\n"
-                       "save_as: resources/contribute/index.html\n"
-                       "data: ")
-
 # Constants used by group.py
 # ----------------------------------------------------------------------------
 

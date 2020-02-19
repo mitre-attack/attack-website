@@ -1,13 +1,18 @@
 import math
 import json
 import os
-from . import config
-from . import stixhelpers
+from . import contribute_config
+from modules import util
 
-def generate():
+def generate_contribute():
     """Generate contribute page markdown"""
     
-    contributors = stixhelpers.get_contributors(config.ms)
+    ms = util.relationshipgetters.get_ms()
+    contributors = util.stixhelpers.get_contributors(ms)
+
+    if not contributors:
+        util.buildhelpers.remove_module_from_menu(contribute_config.module_name)
+        return  
 
     data = {}
 
@@ -28,8 +33,8 @@ def generate():
     data['contributors'].append(contributors_first_col)
     data['contributors'].append(contributors_second_col)
 
-    subs = config.contribute_index_md + json.dumps(data)
+    subs = contribute_config.contribute_index_md + json.dumps(data)
 
     #Open markdown file for the contribute page
-    with open(os.path.join(config.contribute_markdown_path, "contribute.md"), "w", encoding='utf8') as md_file:
+    with open(os.path.join(contribute_config.contribute_markdown_path, "contribute.md"), "w", encoding='utf8') as md_file:
         md_file.write(subs)
