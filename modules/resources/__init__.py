@@ -19,7 +19,7 @@ def get_menu():
             },
             {
                 "name": "Getting Started",
-                "url": "/resources/getting-started",
+                "url": "/resources/getting-started/",
                 "external_link": False,
                 "children": []            
             },
@@ -31,7 +31,7 @@ def get_menu():
             },
             {
                 "name": "ATT&CKcon",
-                "url": "/resources/attackcon",
+                "url": "/resources/attackcon/",
                 "external_link": False,
                 "children": []
             },
