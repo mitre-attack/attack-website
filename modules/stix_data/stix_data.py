@@ -1,7 +1,11 @@
 import json
 import requests
 import os
+import urllib3
 from modules import site_config
+
+# suppress InsecureRequestWarning: Unverified HTTPS request is being made
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 def get_stix_data():
     """Set up proxy if any and get STIX data"""

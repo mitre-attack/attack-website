@@ -10,7 +10,7 @@ from modules import site_config
 from modules import util
 
 # argument defaults and options for the CLI
-module_choices = ['clean', 'stix_data', 'resources', 'contribute', 'groups', 'search', 'matrices', 'mitigations', 'redirects', 'software', 'tactics', 'techniques', "prev_versions", "website_build", "tests"]
+module_choices = ['clean', 'stix_data', 'resources', 'blog', 'contribute', 'groups', 'search', 'matrices', 'mitigations', 'redirects', 'software', 'tactics', 'techniques', "website_build", "tests"]
 test_choices = ['size', 'links', 'external_links', 'citations']
 
 def get_parsed_args():
@@ -83,9 +83,13 @@ def remove_from_build(arg_modules):
     def remove_from_menu():
         """ Remove modules from menu if they are not in modules list from argument """
 
+        copy_of_menu = [] 
+
         for module in modules.menu_ptr:
-            if module["name"].lower() not in arg_modules:
-                modules.menu_ptr.remove(module)
+            if module["name"].lower() in arg_modules:
+                copy_of_menu.append(module)
+        
+        modules.menu_ptr = copy_of_menu
     
     remove_from_running_pool()
     remove_from_menu()

@@ -1,7 +1,6 @@
 import modules
 from . import website_build_config
 from modules import util
-# from modules import matrices as matrixhelpers
 from string import Template
 import json
 import os
@@ -47,24 +46,24 @@ def generate_index_page():
     data['matrix_name'] = matrix['name']
     data['matrix_descr'] = matrix['descr']
 
-    # data['matrix'] = matrixhelpers.get_matrix_data(filtered_techniques) 
-    # data['platforms'] = matrix['platforms']
-    # data['domain'] = matrix['matrix'].split("-")[0]
+    data['matrix'] = util.buildhelpers.get_matrix_data(filtered_techniques) 
+    data['platforms'] = matrix['platforms']
+    data['domain'] = matrix['matrix'].split("-")[0]
 
-    # data['tactics'] = []
-    # data['max_len'] = []
+    data['tactics'] = []
+    data['max_len'] = []
 
-    # matrices = util.stixhelpers.get_matrices(ms[matrix['matrix']])
-    # for curr_matrix in matrices:
-    #     tactics = util.stixhelpers.get_tactic_list(ms[matrix['matrix']], matrix_id=curr_matrix['id'])
-    #     data['tactics'].append(matrixhelpers.get_tactics_data(tactics))
-    #     data['max_len'].append(matrixhelpers.get_max_length(data['matrix'], tactics))
+    matrices = util.stixhelpers.get_matrices(ms[matrix['matrix']])
+    for curr_matrix in matrices:
+        tactics = util.stixhelpers.get_tactic_list(ms[matrix['matrix']], matrix_id=curr_matrix['id'])
+        data['tactics'].append(util.buildhelpers.get_tactics_data(tactics))
+        data['max_len'].append(util.buildhelpers.get_max_length(data['matrix'], tactics))
 
-    # # Fill ATT&CK enterprise matrix of index pages
-    # subs = website_build_config.attack_index_md + json.dumps(data)
+    # Fill ATT&CK enterprise matrix of index pages
+    subs = website_build_config.attack_index_md + json.dumps(data)
 
-    # with open(website_build_config.attack_index_path, "w", encoding='utf8') as md_file:
-    #     md_file.write(subs)
+    with open(website_build_config.attack_index_path, "w", encoding='utf8') as md_file:
+        md_file.write(subs)
 
 def pelican_content():
     # Run pelican with limited output, -q is for quiet

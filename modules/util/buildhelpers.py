@@ -703,3 +703,52 @@ def remove_module_from_menu(module_to_be_removed):
 
     for module in modules.menu_ptr:
         remove_from_menu_list(module)
+
+def get_matrix_data(techniques):
+    """Given a technique list, returns the a dictionary of techniques data
+       under different 'phase_name', also known as tactics.
+    """
+    matrix = {}
+    for technique in techniques:
+        if ('revoked' not in technique or technique['revoked'] is False) and ('x_mitre_deprecated' not in technique or technique['x_mitre_deprecated'] is False):
+            # Get attack id
+            attack_id = get_attack_id(technique)
+            
+            if attack_id:
+                row = {}
+                row['attack_id'] = attack_id
+                row['name'] = technique['name']
+                        
+                if technique.get('kill_chain_phases'):
+                    for elem in technique['kill_chain_phases']:
+                        if elem['phase_name'] not in matrix:
+                            matrix[elem['phase_name']] = []
+                        matrix[elem['phase_name']].append(row)
+    return matrix
+
+def get_max_length(matrix, tactics):
+    """Given a matrix and a tactics list, returns the maximum column size"""
+
+    max_len = 0
+    for tactic in tactics:
+        if matrix.get(tactic['x_mitre_shortname']):
+            if len(matrix[tactic['x_mitre_shortname']]) > max_len:
+                max_len = len(matrix[tactic['x_mitre_shortname']])
+    return max_len
+
+def get_tactics_data(tactics):
+    """Given a tactics list, returns a tactics dictionary with the name and
+       id of each tactic
+    """
+
+    tactics_data = {}
+    for tactic in tactics:
+        attack_id = get_attack_id(tactic)
+
+        if attack_id:
+            tactic_dict = {}
+            tactic_dict['name'] = tactic['name']
+            tactic_dict['id'] = attack_id
+            tactics_data[tactic['x_mitre_shortname']] = tactic_dict
+    
+    return tactics_data
