@@ -59,6 +59,8 @@ for domain in domains:
     # Append domain to stix
     stix_array.append(attack_path[domain])
 
+custom_alphabet += rest_of_alphabet
+
 # Source list of domains
 srcs = list(map(lambda url: util.relationshiphelpers.load(url), stix_array))
 
