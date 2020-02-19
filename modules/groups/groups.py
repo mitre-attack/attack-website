@@ -35,7 +35,9 @@ def generate_markdown_files():
 
     has_group = False
 
-    if util.relationshipgetters.group_list:
+    group_list = util.relationshipgetters.get_group_list()
+
+    if group_list:
         has_group = True
 
     if has_group:
@@ -44,14 +46,14 @@ def generate_markdown_files():
         # Amount of characters per category
         group_by = 2
 
-        side_menu_data = util.buildhelpers.get_side_menu_data("Groups", "/groups/", util.relationshipgetters.group_list)
+        side_menu_data = util.buildhelpers.get_side_menu_data("Groups", "/groups/", group_list)
         data['side_menu_data'] = side_menu_data
 
-        side_menu_mobile_view_data = util.buildhelpers.get_side_menu_mobile_view_data("groups", "/groups/", util.relationshipgetters.group_list, group_by)
+        side_menu_mobile_view_data = util.buildhelpers.get_side_menu_mobile_view_data("groups", "/groups/", group_list, group_by)
         data['side_menu_mobile_view_data'] = side_menu_mobile_view_data
 
-        data['groups_table'] = get_groups_table_data()
-        data['groups_list_len'] = str(len(util.relationshipgetters.group_list))
+        data['groups_table'] = get_groups_table_data(group_list)
+        data['groups_list_len'] = str(len(group_list))
         
         subs = groups_config.group_index_md + json.dumps(data)
 
@@ -59,7 +61,7 @@ def generate_markdown_files():
             md_file.write(subs)
 
         #Create the markdown for the enterprise groups in the STIX
-        for group in util.relationshipgetters.group_list:
+        for group in group_list:
             generate_group_md(group, side_menu_data, side_menu_mobile_view_data)
     
     return has_group
@@ -157,13 +159,13 @@ def generate_group_md(group, side_menu_data, side_menu_mobile_view_data):
         with open(os.path.join(groups_config.group_markdown_path, data['attack_id'] + ".md"), "w", encoding='utf8') as md_file:
             md_file.write(subs)
 
-def get_groups_table_data():
+def get_groups_table_data(group_list):
     """Responsible for generating group table data for the group index page"""
 
     groups_table_data = []
 
     #Now the table on the right, which is made up of group data
-    for group in util.relationshipgetters.group_list:
+    for group in group_list:
 
         attack_id = util.buildhelpers.get_attack_id(group)
 
@@ -208,8 +210,10 @@ def get_techniques_used_by_group_data(group, reference_list, next_reference_numb
     
     technique_list = {}
 
-    if util.relationshipgetters.techniques_used_by_groups.get(group.get('id')):
-        for technique in util.relationshipgetters.techniques_used_by_groups[group['id']]:
+    techniques_used_by_groups = util.relationshipgetters.get_techniques_used_by_groups()
+
+    if techniques_used_by_groups.get(group.get('id')):
+        for technique in techniques_used_by_groups[group['id']]:
 
             technique_stix_id = technique['object']['id']
 
@@ -221,7 +225,9 @@ def get_techniques_used_by_group_data(group, reference_list, next_reference_numb
                 if attack_id:
                     technique_list[technique_stix_id] = {}
 
-                    domain = util.relationshipgetters.technique_to_domain[attack_id].split('-')[0]
+                    technique_to_domain = util.relationshipgetters.get_technique_to_domain()
+
+                    domain = technique_to_domain[attack_id].split('-')[0]
     
                     technique_list[technique_stix_id]['domain'] = domain
 
@@ -253,12 +259,12 @@ def get_software_table_data(group, reference_list, next_reference_number):
     # Creating map for tools/malware used by groups 
     # and techniques used by malware/tools
     tools_and_malware = [{
-        'software': util.relationshipgetters.tools_used_by_groups, 
-        'techniques': util.relationshipgetters.techniques_used_by_tools
+        'software': util.relationshipgetters.get_tools_used_by_groups(), 
+        'techniques': util.relationshipgetters.get_techniques_used_by_tools()
     }, 
     {
-        'software': util.relationshipgetters.malware_used_by_groups,
-        'techniques': util.relationshipgetters.techniques_used_by_malware
+        'software': util.relationshipgetters.get_malware_used_by_groups(),
+        'techniques': util.relationshipgetters.get_techniques_used_by_malware()
     }]
 
     # Get malware or tools used by group
