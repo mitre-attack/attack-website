@@ -7,7 +7,7 @@ def get_priority():
 def get_menu():
     return {
         "name": "Matrices", 
-        "url": "/matrices", 
+        "url": "/matrices/", 
         "external_link": False,
         "priority": matrices_config.priority,
         "children": []

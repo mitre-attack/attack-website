@@ -4,30 +4,10 @@ import requests
 import collections
 import sys
 import urllib3
-# import stix2
 import datetime
-# from . import config
 from modules import util
-from modules.util import stixhelpers
 from modules import site_config
-from . import matrices_config
-
-# def generate_matrices():
-#     """ Generate matrices, return True if matrices was generated,
-#         False if nothing was generated
-#     """
-
-    # First call to lazy loading
-    # util.relationshipgetters.get_malware_used_by_matrices()
-
-    # Call function to generate matrices
-    # Return True if a group was generated, False if not
-
-    # group_generated = True
-
-    # if not group_generated:
-        # util.buildhelpers.remove_module_from_menu(matrices_config.module_name)   
-    
+from . import matrices_config    
 
 # suppress InsecureRequestWarning: Unverified HTTPS request is being made
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
@@ -45,7 +25,7 @@ def generate_matrices():
     with open(os.path.join(matrices_config.matrix_markdown_path, "overview.md"), "w", encoding='utf8') as md_file:
         md_file.write(matrices_config.matrix_overview_md)
     
-    old_ms = stixhelpers.get_old_stix_memory_stores()    
+    old_ms = util.stixhelpers.get_old_stix_memory_stores()    
 
     side_menu_data = util.buildhelpers.get_side_menu_matrices(matrices_config.matrices)
 
@@ -72,8 +52,8 @@ def generate_matrix_md(matrix, old_ms, techniques=None, old_techniques=None, sid
     # Optimization to only load on first matrix level
     # Path needs to be equal to the domain
     if matrix['path'] ==  data['domain']:
-        techniques = stixhelpers.get_techniques(ms[matrix['matrix']])
-        old_techniques = stixhelpers.get_techniques(old_ms[matrix['matrix']])
+        techniques = util.stixhelpers.get_techniques(ms[matrix['matrix']])
+        old_techniques = util.stixhelpers.get_techniques(old_ms[matrix['matrix']])
 
     if techniques:
         has_techniques = True
@@ -95,9 +75,9 @@ def generate_matrix_md(matrix, old_ms, techniques=None, old_techniques=None, sid
         data['tactics'] = []
         data['max_len'] = []
 
-        matrices = stixhelpers.get_matrices(ms[matrix['matrix']])
+        matrices = util.stixhelpers.get_matrices(ms[matrix['matrix']])
         for curr_matrix in matrices:
-            tactics = stixhelpers.get_tactic_list(ms[matrix['matrix']], matrix_id=curr_matrix['id'])
+            tactics = util.stixhelpers.get_tactic_list(ms[matrix['matrix']], matrix_id=curr_matrix['id'])
             data['tactics'].append(get_tactics_data(tactics))
             data['max_len'].append(get_max_length(data['matrix'], tactics))
         
