@@ -33,21 +33,23 @@ def generate_markdown_files():
     has_software = False
 
     # Amount of characters per category
-    group_by = 2        
+    group_by = 2
 
-    if util.relationshipgetters.software_list:
+    software_list = util.relationshipgetters.get_software_list()        
+
+    if software_list:
         has_software = True
     
     if has_software:
-        data['software_list_len'] = str(len(util.relationshipgetters.software_list))
+        data['software_list_len'] = str(len(software_list))
 
-        side_menu_data = util.buildhelpers.get_side_menu_data("software", "/software/", util.relationshipgetters.software_list)
+        side_menu_data = util.buildhelpers.get_side_menu_data("software", "/software/", software_list)
         data['side_menu_data'] = side_menu_data
 
-        side_menu_mobile_view_data = util.buildhelpers.get_side_menu_mobile_view_data("software", "/software/", util.relationshipgetters.software_list, group_by)
+        side_menu_mobile_view_data = util.buildhelpers.get_side_menu_mobile_view_data("software", "/software/", software_list, group_by)
         data['side_menu_mobile_view_data'] = side_menu_mobile_view_data
 
-        data['software_table'] = get_software_table_data()
+        data['software_table'] = get_software_table_data(software_list)
         
         subs = software_config.software_index_md + json.dumps(data)
 
@@ -55,7 +57,7 @@ def generate_markdown_files():
             md_file.write(subs)
 
         # Create the markdown for the enterprise groups in the stix
-        for software in util.relationshipgetters.software_list:
+        for software in software_list:
             generate_software_md(software, side_menu_data, side_menu_mobile_view_data)
     
     return has_software
@@ -171,14 +173,14 @@ def generate_software_md(software,side_menu_data,side_menu_mobile_view_data):
         with open(os.path.join(software_config.software_markdown_path, data['attack_id'] + ".md"), "w", encoding='utf8') as md_file:
             md_file.write(subs)
 
-def get_software_table_data():
+def get_software_table_data(software_list):
     """Responsible for generating software table data for the software 
        index page
     """
 
     software_table_data = []
 
-    for software in util.relationshipgetters.software_list:
+    for software in software_list:
 
         if software.get("name"):
             row = {}
@@ -217,9 +219,9 @@ def get_groups_using_software(software, reference_list, next_reference_number):
     """
 
     if software.get('type').lower() == "malware":
-        groups_using_software = util.relationshipgetters.groups_using_malware.get(software['id'])
+        groups_using_software = util.relationshipgetters.get_groups_using_malware().get(software['id'])
     else:
-        groups_using_software = util.relationshipgetters.groups_using_tool.get(software['id'])    
+        groups_using_software = util.relationshipgetters.get_groups_using_tool().get(software['id'])    
     
     groups = []
 
@@ -262,9 +264,9 @@ def get_techniques_used_by_software_data(software, reference_list, next_referenc
     """
 
     if software.get('type').lower() == "malware":
-        techniques_used_by_software = util.relationshipgetters.techniques_used_by_malware.get(software['id'])
+        techniques_used_by_software = util.relationshipgetters.get_techniques_used_by_malware().get(software['id'])
     else:
-        techniques_used_by_software = util.relationshipgetters.techniques_used_by_tools.get(software['id'])
+        techniques_used_by_software = util.relationshipgetters.get_techniques_used_by_tools().get(software['id'])
 
     if techniques_used_by_software:
         technique_list = {}
@@ -281,7 +283,7 @@ def get_techniques_used_by_software_data(software, reference_list, next_referenc
                 if attack_id:
                     technique_list[technique_stix_id] = {}
 
-                    domain = util.relationshipgetters.technique_to_domain[attack_id]
+                    domain = util.relationshipgetters.get_technique_to_domain()[attack_id]
     
                     technique_list[technique_stix_id]['domain'] = domain.split('-')[0]
 
