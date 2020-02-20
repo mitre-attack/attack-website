@@ -13,7 +13,7 @@ from . import util
 # Settings dictionary to build website
 settings_dict = {
     "content_version": "6.2",
-    "website_version": "1.2.1",
+    "website_version": "1.2.2",
     "changelog_location": "/resources/changelog.html",
     "banner_enabled": "true",
     "banner_message": "<strong><a href='https://collaborate.mitre.org/attackics' target='_blank'>JUST RELEASED: ATT&CK for Industrial Control Systems</a></strong>",
@@ -479,7 +479,10 @@ redirects_paths = {
 }
 
 other_redirects = [
-    {'from': 'ics', 'to': 'https://collaborate.mitre.org/attackics'}
+    {'from': 'ics', 'to': 'https://collaborate.mitre.org/attackics'},
+    {'from': 'docs/MITRE_ATTACK_Enterprise_Poster_2018.pdf', 'to': '/docs/attack_matrix_poster_2018.pdf'},
+    {'from': 'docs/ATTACK_Framework_Board_4x3.pdf', 'to': '/docs/attack_matrix_poster_2020.pdf'},
+    {'from': 'docs/attack_roadmap.pdf', 'to': '/docs/attack_roadmap_2020.pdf'}
 ]
 
 # Constants used by software.py
