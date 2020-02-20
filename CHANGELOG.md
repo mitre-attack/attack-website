@@ -31,7 +31,7 @@
 <!--          addition of notable features. When PATCH is 0 it can      -->
 <!--          be omitted                                                -->
 
-# Changes staged on Develop
+# 20 February 2020
 ## ATT&CK Website version 1.2.2
 ### Fixes
 - Added redirects to for matrix poster and roadmap. See issue [#85](https://github.com/mitre-attack/attack-website/issues/85)
