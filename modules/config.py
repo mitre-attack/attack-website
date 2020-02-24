@@ -479,7 +479,10 @@ redirects_paths = {
 }
 
 other_redirects = [
-    {'from': 'ics', 'to': 'https://collaborate.mitre.org/attackics'}
+    {'from': 'ics', 'to': 'https://collaborate.mitre.org/attackics'},
+    {'from': 'docs/MITRE_ATTACK_Enterprise_Poster_2018.pdf', 'to': '/docs/attack_matrix_poster_2018.pdf'},
+    {'from': 'docs/ATTACK_Framework_Board_4x3.pdf', 'to': '/docs/attack_matrix_poster_2020.pdf'},
+    {'from': 'docs/attack_roadmap.pdf', 'to': '/docs/attack_roadmap_2020.pdf'}
 ]
 
 # Constants used by software.py
