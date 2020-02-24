@@ -11,12 +11,12 @@ def generate_resources():
     generate_getting_started()
     generate_training_pages()
     generate_attackcon_page()
-    generate_working_with_attack()
     generate_faq_page()
     generate_updates()
     generate_previous_versions()
     generate_related_projects()
     generate_changelog_page()
+    generate_static_pages()
 
 def generate_general_information():
     """Responsible for compiling resources json into resources markdown files
@@ -82,19 +82,6 @@ def generate_attackcon_page():
     with open(os.path.join(resources_config.resources_markdown_path, "attackcon.md"), "w", encoding='utf8') as md_file:
         md_file.write(attackcon_content)
 
-def generate_working_with_attack():
-    """ Generates working with ATT&CK markdown file """
-
-    # load working with ATT&CK data
-    with open(os.path.join(site_config.data_directory, "working-with-attack.json"), "r", encoding='utf8') as f:
-        working_with_attack = json.load(f)
-
-    working_with_attack_content = resources_config.working_with_attack_md + working_with_attack['working-with-attack']
-
-    # write markdown to file
-    with open(os.path.join(resources_config.resources_markdown_path, "working_with_attack.md"), "w", encoding='utf8') as md_file:
-        md_file.write(working_with_attack_content)    
-
 def generate_faq_page():
     """Responsible for compiling faq json into faq markdown file
        for rendering on the HMTL
@@ -145,4 +132,17 @@ def generate_changelog_page():
     with open(os.path.join(resources_config.resources_markdown_path, "changelog.md"), "w", encoding='utf8') as md_file:
         md_file.write(changelog_md)
 
+def generate_static_pages():
+    """ Reads markdown files from the static pages directory and copies them into 
+        the markdown directory
+    """
 
+    static_pages_dir = os.path.join('modules', resources_config.module_name, 'static_pages')
+
+    for static_page in os.listdir(static_pages_dir):
+
+        with open(os.path.join(static_pages_dir, static_page), "r", encoding='utf8') as md:
+            content = md.read()
+
+            with open(os.path.join(resources_config.resources_markdown_path, static_page), "w", encoding='utf8') as md_file:
+                md_file.write(content)

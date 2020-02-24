@@ -17,11 +17,6 @@ getting_started_md = ("Title: Getting Started\n"
                       "Template: resources/getting-started\n"
                       "save_as: resources/getting-started/index.html\n")
 
-# Working with attack md
-working_with_attack_md = ("Title: Interfaces for Working with ATT&CK\n"
-                          "Template: general/intro-overview\n"
-                          "save_as: resources/working-with-attack/index.html\n\n")
-
 # FAQ md
 faq_md = ("Title: Frequently Asked Questions\n"
           "Template: resources/faq\n"
@@ -69,6 +64,11 @@ training_navigation = {
     ]
 }
 
+# Contact 
+contact_md = ("Title: Contact\n"
+              "Template: resources/contact\n"
+              "save_as: contact/index.html\n")
+        
 prev_versions_deploy_folder = os.path.join("output", "previous")
 
 archives_repo = "https://github.com/mitre-attack/attack-archives.git"
