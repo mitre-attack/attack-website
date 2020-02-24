@@ -1,11 +1,32 @@
 from git import Repo
 import os
 import shutil
+import stat
 import json
+import stat
 from datetime import datetime
 from . import config
 
-prev_versions_deploy_folder = os.path.join("output", "previous")
+# Error handler for windows by:
+# https://stackoverflow.com/questions/2656322/shutil-rmtree-fails-on-windows-with-access-is-denied
+def onerror(func, path, exc_info):
+    """
+    Error handler for ``shutil.rmtree``.
+
+    If the error is due to an access error (read only file)
+    it attempts to add write permission and then retries.
+
+    If the error is for another reason it re-raises the error.
+
+    Usage : ``shutil.rmtree(path, onerror=onerror)``
+    """
+    try:
+        if not os.access(path, os.W_OK):
+            # Is the error an access error ?
+            os.chmod(path, stat.S_IWUSR)
+            func(path)
+    except:
+        raise
 
 # Error handler for windows by:
 # https://stackoverflow.com/questions/2656322/shutil-rmtree-fails-on-windows-with-access-is-denied
@@ -26,6 +47,10 @@ def onerror(func, path, exc_info):
         raise
 
 def deploy():
+    """ Deploy previous versions to website directory """
+    
+    prev_versions_deploy_folder = os.path.join(config.web_directory, "previous")
+
     # delete previous copy of attack-archives
     if os.path.exists(config.archives_directory):
         shutil.rmtree(config.archives_directory, onerror=onerror) 
@@ -45,8 +70,8 @@ def deploy():
             shutil.copytree(os.path.join(config.archives_directory, version), os.path.join(prev_versions_deploy_folder, version))
     
     # write robots.txt to disallow crawlers
-    with open(os.path.join("output", "robots.txt"), "w", encoding='utf8') as robots:
-        robots.write("User-agent: *\nDisallow: /previous/")
+    with open(os.path.join(config.web_directory, "robots.txt"), "w", encoding='utf8') as robots:
+        robots.write(f"User-agent: *\nDisallow: /{config.subdirectory}/previous/")
 
 def build_markdown():
     # import archives data

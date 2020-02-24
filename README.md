@@ -18,6 +18,7 @@ _See [CONTRIBUTING.md](/CONTRIBUTING.md) for more information on making contribu
 - [python](https://www.python.org/) 3.6 or greater
 
 ## Install and Build
+
 ### Install requirements
 
 1. Create a virtual environment: 
@@ -34,6 +35,14 @@ _See [CONTRIBUTING.md](/CONTRIBUTING.md) for more information on making contribu
 2. Serve the html to `localhost:8000`: 
     1. `cd output`
     2. `python3 -m pelican.server`
+
+### Installing, building, and serving the site via Docker 
+
+1. Build the docker image:
+    - `docker build -t <your_preferred_image_name> .`
+2. Run a docker container:
+    - `docker run --name <your_preferred_container_name -d -p <your_preferred_port>:80 <image_name_from_build_command>`
+3. View the site on your preferred localhost port
 
 ## Implementation Overview
 

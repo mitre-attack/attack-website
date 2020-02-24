@@ -3,9 +3,9 @@
 
 {% set parsed = page.data | from_json %}
 {% if parsed.domain == "mobile" %}
-   {% set title = parsed.name + " - Mobile | MITRE ATT&CK&reg;" -%}
+    {% set title = parsed.name + ", Mitigation " + parsed.attack_id + " - Mobile | MITRE ATT&CK&trade;" -%}
 {% else %} 
-   {% set title = parsed.name + " - Enterprise | MITRE ATT&CK&reg;" -%}
+    {% set title = parsed.name + ", Mitigation " + parsed.attack_id + " - Enterprise | MITRE ATT&CK&trade;" -%}
 {% endif %}
 
 {% block heading %}
@@ -13,23 +13,14 @@
 {%  endblock %}
 
 {% block innerleft %}
-<!--stopindex-->
-    {% if parsed.domain == "enterprise" %}
-        <button class="btn btn-default dropdown-toggle heading-dropdown mb-3" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">ENTERPRISE</button>
-    {% else %}
-        <button class="btn btn-default dropdown-toggle heading-dropdown mb-3" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">MOBILE</button>
-    {% endif %}
-    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-        <a class="dropdown-item" href="/mitigations/enterprise">ENTERPRISE</a>
-        <a class="dropdown-item" href="/mitigations/mobile">MOBILE</a>
-    </div>
-    <div class="group-nav-desktop-view">
+<!--stop-indexing-for-search-->
+<div class="group-nav-desktop-view">
         {{ navigation.sidenav(parsed.side_menu_data, output_file) }}
     </div>
     <div class="group-nav-mobile-view">
         {{ navigation.sidenav(parsed.side_menu_mobile_view_data, output_file) }} 
     </div>
-<!--startindex-->
+<!--start-indexing-for-search-->
 {% endblock %}
 
 {% block innerright %}

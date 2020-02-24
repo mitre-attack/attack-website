@@ -3,10 +3,11 @@
 {% set NAVIGATION_MENU = [['/matrices/', 'matrices', 'Matrices'], ['/tactics/', 'tactics', 'Tactics'], ['/techniques/', 'techniques', 'Techniques'], ['/mitigations/', 'mitigations', 'Mitigations'], ['/groups/', 'groups', 'Groups'], ['/software/', 'software', 'Software'], ['/resources/', 'resources', 'Resources'], ['https://medium.com/mitre-attack/', 'blog', 'Blog'], ['/resources/contribute', 'contribute', 'Contribute']] -%}
 {% set DOMAINS = [['PRE-ATT&CK', 'pre'], ['Enterprise', 'enterprise'], ['Mobile', 'mobile']] -%}
 {% set CONTENT_VERSION = "6.2" -%}
-{% set WEBSITE_VERSION = "1.1.2" -%}
+{% set WEBSITE_VERSION = "1.2.3" -%}
 {% set CHANGELOG_LOCATION = "/resources/changelog.html" -%}
 {% set active_page = active_page|default('index') -%}
 {% set title = title|default('MITRE ATT&CK&reg;') -%}
+{% import 'macros/search.html' as search %}
 <!DOCTYPE html>
 <html lang='en'>
 
@@ -28,14 +29,13 @@
 </head>
 
 <body>
-<!--stopindex-->
 <header>
     {% block nav %}    
         <nav class='navbar navbar-expand-lg navbar-dark fixed-top'>
             <a class='navbar-brand' href='/'><img src="/theme/images/mitre_attack_logo.png" class="attack-logo"></a>
             <button class='navbar-toggler' type='button' data-toggle='collapse' data-target='#navbarCollapse'
                     aria-controls='navbarCollapse' aria-expanded='false' aria-label='Toggle navigation'>
-                <span class='navbar-toggler-icon' onclick="search('')"></span>
+                <span class='navbar-toggler-icon'></span>
             </button>
             <div class='collapse navbar-collapse' id='navbarCollapse'>
                 <ul class='nav nav-tabs ml-auto'>
@@ -81,14 +81,8 @@
                                     else %} class="nav-link" {% endif %}><b>{{ caption|e }}</b></a></li>
                         {% endif %}
                     {% endfor %}
-                </ul>
-                <ul class='navbar-nav flex-row d-md-flex float-right'>
-                    <li>
-                        <form class='form-inline pl-2'>
-                            <input class='form-control' type='text' placeholder='Search site' aria-label='Search' id="search"
-                                   autocomplete="off">
-                        </form>
-                        <div class="search-results"></div>
+                    <li class="nav-item">
+                        <button id="search-button" class="btn search-button">Search <div class="search-icon"></div></button>
                     </li>
                 </ul>
             </div>
@@ -101,11 +95,13 @@
                 {{ BANNER_MESSAGE }}
             </div>
         {% endif %}
-        <!--startindex-->
     {% endblock %}
-<div id='content'>{% block content %} {% block left %} {% endblock %} {% block right %} {% endblock %} {% endblock
-        %}</div>
-<!--stopindex-->
+<div id='content' class="maincontent">
+    <!--start-indexing-for-search-->
+    {% block content %} {% block left %} {% endblock %} {% block right %} {% endblock %} {% endblock %}
+    <!--stop-indexing-for-search-->
+    {{ search.searchgui() }}
+</div>
 <footer class="footer p-3">
     <div class="container-fluid">
         <div class="row">
@@ -165,13 +161,10 @@
     <script src="/theme/scripts/jquery-3.2.1.min.js"></script>
     <script src="/theme/scripts/popper.min.js"></script>
     <script src="/theme/scripts/bootstrap.min.js"></script>
-    <script src="/theme/scripts/site.js"></script>
-    <script src="/theme/scripts/lunr-2.3.3.js"></script>
-    <script src="/theme/scripts/search.js"></script>
-    <script src="/theme/scripts/index.js"></script>
     <script src="/theme/scripts/bootstrap.bundle.min.js"></script>
+    <script src="/theme/scripts/site.js"></script>
+    <script src="/theme/scripts/flexsearch.es5.js"></script> 
+    <script src="/theme/scripts/search_babelized.js"></script>
 {% endblock %}
 </body>
-
 </html>
-<!--startindex-->
