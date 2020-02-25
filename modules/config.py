@@ -14,26 +14,6 @@ args = []
 # Markdown path for redirects
 redirects_markdown_path = "content/pages/wiki/"
 
-# Contributing to ATT&CK md template
-contributing_md = ("Title: Contributing_to_MITRE_ATTACK\n"
-                   "Template: general/redirect-index\n"
-                   "RedirectLink: /resources/contribute\n"
-                   "save_as: docs/Contributing_to_MITRE_ATTACK.pdf/index.html\n")
-
-# Training Redirection dictionary
-training_redict_dict = [
-    {
-        "title" : "Training Redirect",
-        "redirect_link" : "/resources/training",
-        "path" : "training"
-    },
-    {
-        "title" : "CTI Training Redirect",
-        "redirect_link" : "/resources/training/cti",
-        "path" : "training/cti"
-    }
-]
-
 # Redirect md string template
 redirect_md = Template("Title: ${title}\n"
                        "Template: general/redirect-index\n"

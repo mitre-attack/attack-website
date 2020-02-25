@@ -1,5 +1,5 @@
 import os
-from . import config
+from . import site_config
 from . import stixhelpers
 from . import util
 
@@ -12,7 +12,7 @@ def generate():
     if not os.path.isdir(config.redirects_markdown_path):
         os.mkdir(config.redirects_markdown_path)
 
-    for domain in config.domains:
+    for domain in site_config.domains:
         generate_markdown_files(domain)
     
     # Generate image redirections
