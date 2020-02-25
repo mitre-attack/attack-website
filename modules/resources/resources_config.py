@@ -6,27 +6,20 @@ priority = 8
 # markdown path for resources
 resources_markdown_path = "content/pages/resources/"
 
+# markdown path for updates
+updates_markdown_path = "content/pages/updates/"
+
 # General information md
 general_information_md = ("Title: General Information\n"
                           "Template: resources/resources\n"
                           "save_as: resources/index.html\n"
                           "data: ")
 
-# Getting started md
-getting_started_md = ("Title: Getting Started\n"
-                      "Template: resources/getting-started\n"
-                      "save_as: resources/getting-started/index.html\n")
-
 # FAQ md
 faq_md = ("Title: Frequently Asked Questions\n"
           "Template: resources/faq\n"
           "save_as: resources/faq/index.html\n"
           "data: ")
-
-# Updates md
-updates_md = ("Title: Updates\n"
-              "Template: resources/updates-index\n"
-              "save_as: resources/updates/index.html")
 
 # CHANGELOG md
 changelog_md = ("Title: Changelog\n"
@@ -63,11 +56,6 @@ training_navigation = {
         }
     ]
 }
-
-# Contact 
-contact_md = ("Title: Contact\n"
-              "Template: resources/contact\n"
-              "save_as: contact/index.html\n")
         
 prev_versions_deploy_folder = os.path.join("output", "previous")
 
@@ -78,8 +66,3 @@ previous_md = ("Title: Previous Versions\n"
                "save_as: resources/previous-versions/index.html\n"
                "data: ")
 previous_markdown_path = "content/pages/resources"
-
-# Related projects md
-related_projects_md = ("Title: Related Projects\n"
-                       "Template: resources/related-projects\n"
-                       "save_as: resources/related-projects/index.html")

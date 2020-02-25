@@ -7,14 +7,20 @@ from datetime import datetime
 
 def generate_resources():
     """Responsible for generating the resources pages"""
+
+    # Verify if resources directory exists
+    if not os.path.isdir(resources_config.resources_markdown_path):
+        os.mkdir(resources_config.resources_markdown_path)
+
+    # Verify if resources directory exists
+    if not os.path.isdir(resources_config.updates_markdown_path):
+        os.mkdir(resources_config.updates_markdown_path)
+
     generate_general_information()
-    generate_getting_started()
     generate_training_pages()
     generate_attackcon_page()
     generate_faq_page()
-    generate_updates()
-    generate_previous_versions()
-    generate_related_projects()
+    # generate_previous_versions()
     generate_changelog_page()
     generate_static_pages()
 
@@ -37,13 +43,6 @@ def generate_general_information():
     # write markdown to file
     with open(os.path.join(resources_config.resources_markdown_path, "general_information.md"), "w", encoding='utf8') as md_file:
         md_file.write(resources_content)
-
-def generate_getting_started():
-    """ Generates getting started markdown file """
-
-    # write markdown to file
-    with open(os.path.join(resources_config.resources_markdown_path, "getting_started.md"), "w", encoding='utf8') as md_file:
-        md_file.write(resources_config.getting_started_md)
 
 def generate_training_pages():
     """ Responsible for generating the markdown pages of the training pages """
@@ -100,22 +99,8 @@ def generate_faq_page():
     with open(os.path.join(resources_config.resources_markdown_path, "faq.md"), "w", encoding='utf8') as md_file:
         md_file.write(faq_content)
 
-def generate_updates():
-    """ Generates updates markdown file """
-
-    # write markdown to file
-    with open(os.path.join(resources_config.resources_markdown_path, "updates.md"), "w", encoding='utf8') as md_file:
-        md_file.write(resources_config.updates_md) 
-
 def generate_previous_versions():
     archives.deploy()
-
-def generate_related_projects():
-    """ Generates related projects markdown file """
-
-    # write markdown to file
-    with open(os.path.join(resources_config.resources_markdown_path, "related_projects.md"), "w", encoding='utf8') as md_file:
-        md_file.write(resources_config.related_projects_md)  
 
 def generate_changelog_page():
     """Responsible for compiling original changelog markdown into changelog markdown file
@@ -144,5 +129,9 @@ def generate_static_pages():
         with open(os.path.join(static_pages_dir, static_page), "r", encoding='utf8') as md:
             content = md.read()
 
-            with open(os.path.join(resources_config.resources_markdown_path, static_page), "w", encoding='utf8') as md_file:
-                md_file.write(content)
+            if static_page.startswith("updates-"):
+                with open(os.path.join(resources_config.updates_markdown_path, static_page), "w", encoding='utf8') as md_file:
+                    md_file.write(content)
+            else:
+                with open(os.path.join(resources_config.resources_markdown_path, static_page), "w", encoding='utf8') as md_file:
+                    md_file.write(content)
