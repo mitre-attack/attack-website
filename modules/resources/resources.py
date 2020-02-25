@@ -20,7 +20,7 @@ def generate_resources():
     generate_training_pages()
     generate_attackcon_page()
     generate_faq_page()
-    # generate_previous_versions()
+    generate_previous_versions()
     generate_changelog_page()
     generate_static_pages()
 

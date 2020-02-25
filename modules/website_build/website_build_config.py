@@ -1,7 +1,7 @@
 import os
 import modules
 
-module_name = "Website build"
+module_name = "website_build"
 priority = 15
 
 # Template directory
@@ -33,3 +33,5 @@ attack_index_md = ("Title: ATT&CK Overview \n"
 
 # ATT&CK index markdown path
 attack_index_path = "content/pages/index.md"
+
+website_build_markdown_path = "content/pages/"

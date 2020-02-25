@@ -15,6 +15,7 @@ def generate_website():
 
     generate_base_html()
     generate_index_page()
+    generate_static_pages()
     pelican_content()
     remove_unwanted_output()
 
@@ -100,3 +101,22 @@ def remove_unwanted_output():
     category_path = os.path.join(output_path, "category")
     if os.path.exists(category_path):
         shutil.rmtree(category_path)
+
+def generate_static_pages():
+    """ Reads markdown files from the static pages directory and copies them into 
+        the markdown directory
+    """
+
+    # Verify if content/pages directory exists
+    if not os.path.isdir(website_build_config.website_build_markdown_path):
+        os.mkdir(website_build_config.website_build_markdown_path)
+
+    static_pages_dir = os.path.join('modules', website_build_config.module_name, 'static_pages')
+
+    for static_page in os.listdir(static_pages_dir):
+
+        with open(os.path.join(static_pages_dir, static_page), "r", encoding='utf8') as md:
+            content = md.read()
+            
+            with open(os.path.join(website_build_config.website_build_markdown_path, static_page), "w", encoding='utf8') as md_file:
+                md_file.write(content)
