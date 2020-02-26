@@ -3,6 +3,7 @@ import os
 from . import resources_config
 from . import archives
 from modules import site_config
+from modules import util
 from datetime import datetime
 
 def generate_resources():
@@ -23,6 +24,8 @@ def generate_resources():
     generate_previous_versions()
     generate_changelog_page()
     generate_static_pages()
+    # Generate redirections
+    util.buildhelpers.generate_redirections(resources_config.resources_redirection_location)
 
 def generate_general_information():
     """Responsible for compiling resources json into resources markdown files

@@ -17,3 +17,5 @@ software_md = Template("Title: ${name}\n"
                        "Template: software/software\n"
                        "save_as: software/${attack_id}/index.html\n"
                        "data: ")
+
+software_redirection_location = "modules/software/software_redirections.json"

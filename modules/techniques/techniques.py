@@ -19,6 +19,9 @@ def generate_techniques():
     # Verify if directory exists
     if not os.path.isdir(techniques_config.techniques_markdown_path):
         os.mkdir(techniques_config.techniques_markdown_path)
+    
+    # Generate redirections
+    util.buildhelpers.generate_redirections(techniques_config.techniques_redirection_location)
 
     #Write the technique index.html page
     with open(os.path.join(techniques_config.techniques_markdown_path, "overview.md"), "w", encoding='utf8') as md_file:
@@ -433,4 +436,3 @@ def get_detection_string(detection, reference_list, next_reference_number):
     filtered_detection = util.buildhelpers.get_descr_reference_sect(citations_from_descr, reference_list, next_reference_number, filtered_detection)
     
     return filtered_detection
-   

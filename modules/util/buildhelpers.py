@@ -7,6 +7,7 @@ import collections
 import stix2
 import string
 import math
+import os
 import uuid
 import sys
 import bleach
@@ -752,3 +753,27 @@ def get_tactics_data(tactics):
             tactics_data[tactic['x_mitre_shortname']] = tactic_dict
     
     return tactics_data
+
+def generate_redirections(redirections_filename):
+    """ Given redirections filename, open and create markdown file
+        for redirections
+    """
+
+    with open(redirections_filename, "r", encoding="utf8") as json_redirections:
+        redirects = json.load(json_redirections)
+    
+    if redirects:
+
+        # Verify if redirection directory exists
+        if not os.path.isdir(site_config.redirects_markdown_path):
+            os.mkdir(site_config.redirects_markdown_path)
+
+        for obj in redirects:
+
+            if not obj["from"].endswith("/index.html"):
+                obj["from"] += "/index.html"
+
+            subs = site_config.redirect_md.substitute(obj)
+
+            with open(os.path.join(site_config.redirects_markdown_path, obj['title'] + ".md"), "w", encoding='utf8') as md_file:
+                md_file.write(subs)

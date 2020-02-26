@@ -18,6 +18,9 @@ def generate_tactics():
     # Verify if directory exists
     if not os.path.isdir(tactics_config.tactics_markdown_path):
         os.mkdir(tactics_config.tactics_markdown_path)
+
+    # Generate redirections
+    util.buildhelpers.generate_redirections(tactics_config.tactics_redirection_location)
     
     # To verify if a technique was generated
     tactic_generated = False

@@ -39,6 +39,15 @@ last_attack_path = {
     'pre-attack': stix_directory + "/pre-attack_old.json"
 }
 
+# Markdown path for redirects
+redirects_markdown_path = "content/pages/redirects/"
+
+# Redirect md string template
+redirect_md = Template("Title: ${title}\n"
+                       "Template: general/redirect-index\n"
+                       "RedirectLink: ${to}\n"
+                       "save_as: ${from}")
+
 stix_array = []
 
 # Custom_alphabet used to sort list of dictionaries by domain name 

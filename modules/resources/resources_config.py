@@ -9,6 +9,9 @@ resources_markdown_path = "content/pages/resources/"
 # markdown path for updates
 updates_markdown_path = "content/pages/updates/"
 
+# Resources redirection json location
+resources_redirection_location = "modules/resources/resources_redirections.json"
+
 # General information md
 general_information_md = ("Title: General Information\n"
                           "Template: resources/resources\n"

@@ -6,6 +6,9 @@ from modules import util
 
 def generate_contribute():
     """Generate contribute page markdown"""
+
+    # Generate redirections
+    util.buildhelpers.generate_redirections(contribute_config.contribute_redirection_location)
     
     ms = util.relationshipgetters.get_ms()
     contributors = util.stixhelpers.get_contributors(ms)

@@ -16,6 +16,9 @@ def generate_software():
     # Verify if directory exists
     if not os.path.isdir(software_config.software_markdown_path):
         os.mkdir(software_config.software_markdown_path)
+    
+    # Generate redirections
+    util.buildhelpers.generate_redirections(software_config.software_redirection_location)
         
     # Generates the markdown files to be used for page generation and verifies if a software was generated
     software_generated = generate_markdown_files()
