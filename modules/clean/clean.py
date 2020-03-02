@@ -20,13 +20,12 @@ def clean_website_build():
         
     # Clean content/pages directory
     for filename in os.listdir(content_pages_path):
-        if filename != "static":
-            # Generate full file path
-            full_file_path = os.path.join(content_pages_path, filename)
-            if os.path.isdir(full_file_path):
-                shutil.rmtree(full_file_path)
-            else:
-                os.remove(full_file_path)
+        # Get full file path
+        full_file_path = os.path.join(content_pages_path, filename)
+        if os.path.isdir(full_file_path):
+            shutil.rmtree(full_file_path)
+        else:
+            os.remove(full_file_path)
 
     # Remove output directory
     output_path = "output"

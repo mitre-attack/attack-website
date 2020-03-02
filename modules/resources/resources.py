@@ -24,8 +24,6 @@ def generate_resources():
     generate_previous_versions()
     generate_changelog_page()
     generate_static_pages()
-    # Generate redirections
-    util.buildhelpers.generate_redirections(resources_config.resources_redirection_location)
 
 def generate_general_information():
     """Responsible for compiling resources json into resources markdown files

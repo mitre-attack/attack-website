@@ -10,7 +10,7 @@ from modules import site_config
 from modules import util
 
 # argument defaults and options for the CLI
-module_choices = ['clean', 'stix_data', 'resources', 'blog', 'contribute', 'groups', 'search', 'matrices', 'mitigations', 'redirects', 'software', 'tactics', 'techniques', "website_build", "tests"]
+module_choices = ['clean', 'stix_data', 'resources', 'attack_redirections', 'blog', 'contribute', 'groups', 'search', 'matrices', 'mitigations', 'redirects', 'software', 'tactics', 'techniques', "website_build", "tests"]
 test_choices = ['size', 'links', 'external_links', 'citations']
 
 def get_parsed_args():

@@ -1,5 +1,6 @@
 from . import resources 
 from . import resources_config
+import json
 
 def get_priority():
     return resources_config.priority

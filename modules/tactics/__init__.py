@@ -1,5 +1,6 @@
 from . import tactics
 from . import tactics_config
+import json
 
 def get_priority():
     return tactics_config.priority
@@ -31,6 +32,11 @@ def get_menu():
             }
         ]
     }
+
+def get_redirections():
+    with open(tactics_config.tactics_redirection_location , "r", encoding="utf8") as json_redirections:
+        return json.load(json_redirections)
+    return []
 
 def run_module():
     return (tactics.generate_tactics(), tactics_config.module_name)
