@@ -16,7 +16,7 @@ def generate_resources_page():
        for rendering on the HMTL
     """
     # load papers and presentations list
-    with open(os.path.join(config.data_directory, "resources.json"), "r") as f:
+    with open(os.path.join(config.data_directory, "resources.json"), "r", encoding='utf8') as f:
         resources = json.load(f)
     
     # get papers and presentations in sorted date order

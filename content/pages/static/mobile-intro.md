@@ -6,7 +6,7 @@ Authors: Blake Strom
 url: /resources/mobile-introduction
 save_as: resources/mobile-introduction/index.html
 
-ATT&CK™ is a model and framework for describing the actions an adversary may take while operating within an enterprise network. This overview covers ATT&CK for Mobile, a profile of ATT&CK for the mobile environment.
+ATT&CK® is a model and framework for describing the actions an adversary may take while operating within an enterprise network. This overview covers ATT&CK for Mobile, a profile of ATT&CK for the mobile environment.
 
 NIST published [Draft NISTIR 8144, Assessing Threats to Mobile Devices & Infrastructure: The Mobile Threat Catalogue](http://csrc.nist.gov/publications/drafts/nistir-8144/nistir8144_draft.pdf){:target="_blank"} and the accompanying [Mobile Threat Catalogue website](https://pages.nist.gov/mobile-threat-catalogue/){:target="_blank"}, a detailed list of threats against mobile devices and other elements of the mobile ecosystem, intended to support development of mobile security capabilities, solutions, and best practices to protect enterprises as they deploy mobile devices.
 

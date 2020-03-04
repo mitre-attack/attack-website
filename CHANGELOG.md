@@ -31,33 +31,17 @@
 <!--          addition of notable features. When PATCH is 0 it can      -->
 <!--          be omitted                                                -->
 
-# 20 February 2020
-## ATT&CK Website version 1.2.2
-### Fixes
-- Added redirects to for matrix poster and roadmap. See issue [#85](https://github.com/mitre-attack/attack-website/issues/85)
-
-# 18 February 2020
-## ATT&CK Website version 1.2.1
+# Changes staged on develop
+## ATT&CK Website version 1.2.3
 ### Improvements
-- Updated the _roadmap_ and _matrix poster_ documents on the [General Information](https://attack.mitre.org/resources/) page.
-### Fixes
-- Fixed PRE-ATT&CK side-navigation toggle on tactics and techniques. See issue [#81](https://github.com/mitre-attack/attack-website/issues/81).
+- Updated trademark language. See issue [#54](https://github.com/mitre-attack/attack-website/issues/54).
+- Updated ATT&CK™ to ATT&CK®. See issue [#55](https://github.com/mitre-attack/attack-website/issues/55).
+- Update wordmarks to have ® instead of ™. See issue [#56](https://github.com/mitre-attack/attack-website/issues/56).
+- Updated "How Should I reference the name ATT&CK" in FAQ. See issue [#57](https://github.com/mitre-attack/attack-website/issues/57).
+- Updated copyrights to 2020. See issue [#58](https://github.com/mitre-attack/attack-website/issues/58).
+- Updated README. See issue [#59](https://github.com/mitre-attack/attack-website/issues/59).
 
-# 17 February 2020
-## ATT&CK Website version 1.2
-### New Features
-- Added Docker support, enabling users to easily build and host a docker container of the ATT&CK Website. See issue [#17](https://github.com/mitre-attack/attack-website/issues/17). 
-- Added configuration options to specify url of attached [ATT&CK Navigator](https://github.com/mitre-attack/attack-navigator) instance. See issue [#18](https://github.com/mitre-attack/attack-website/issues/18).
-- Added the ability to configure site to be hosted from a subdirectory. See issue [#15](https://github.com/mitre-attack/attack-website/issues/15).
-### Improvements
-- Added talks and links to videos to the [General Information](https://attack.mitre.org/resources/) page.
-- Updated navigation drawer on technique, tactic, and mitigation pages to make domains more accessible. See issue [#53](https://github.com/mitre-attack/attack-website/issues/53).
-- Major overhaul of site search UI. See issue [#4](https://github.com/mitre-attack/attack-website/issues/4).
-### Fixes
-- Sticky footer should be less temperamental when the page resizes. See issue [#51](https://github.com/mitre-attack/attack-website/issues/51).
-
-
-# 7 January 2020
+# 7 January 2019
 ## ATT&CK Website version 1.1.1
 ### Improvements
 - Added links to [ATT&CK for ICS](https://collaborate.mitre.org/attackics/index.php/Main_Page).
