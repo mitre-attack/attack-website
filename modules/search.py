@@ -16,7 +16,7 @@ def generate_index():
             if not skipindex:
                 # if title == "":
                 #     print(thepath, "has generic title")
-                #     title = "MITRE ATT&CK&trade;"
+                #     title = "MITRE ATT&CK&reg;"
 
                 index.append({
                     "id": len(index),
@@ -68,7 +68,7 @@ def clean(filepath):
         if "<!--stop-indexing-for-search-->" in line: 
             indexing = False
         if "<title>" in line:
-            # e.g [Credential Access - Enterprise | MITRE ATT&CK&trade;] becomes [Credential Access - Enterprise]
+            # e.g [Credential Access - Enterprise | MITRE ATT&CK&reg;] becomes [Credential Access - Enterprise]
             match = re.search(r"<title>(.*)\|.*</title>", line)
             if match: title = match.group(1).strip()
         if 'http-equiv="refresh"' in line: skipindex = True

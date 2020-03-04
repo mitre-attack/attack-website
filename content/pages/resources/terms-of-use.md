@@ -8,7 +8,7 @@ save_as: resources/terms-of-use/index.html
 
 #### LICENSE
  
- The MITRE Corporation (MITRE) hereby grants you a non-exclusive, royalty-free license to use ATT&CK&reg; for research, development, and commercial purposes. Any copy you make for such purposes is authorized provided that you reproduce MITRE's copyright designation and this license in any such copy.
+ The MITRE Corporation (MITRE) hereby grants you a non-exclusive, royalty-free license to use ATT&CK<sup>&reg;</sup> for research, development, and commercial purposes. Any copy you make for such purposes is authorized provided that you reproduce MITRE's copyright designation and this license in any such copy.
 
 "&copy; 2020 The MITRE Corporation. This work is reproduced and distributed with the permission of The MITRE Corporation."
     
