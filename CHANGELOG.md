@@ -31,7 +31,7 @@
 <!--          addition of notable features. When PATCH is 0 it can      -->
 <!--          be omitted                                                -->
 
-# Changes staged on develop
+# 4 March 2020
 ## ATT&CK Website version 1.2.3
 ### Improvements
 - Updated trademark language. See issue [#54](https://github.com/mitre-attack/attack-website/issues/54).
