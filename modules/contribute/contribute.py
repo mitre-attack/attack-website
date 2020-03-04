@@ -7,6 +7,9 @@ from modules import util
 def generate_contribute():
     """Generate contribute page markdown"""
 
+    # Move templates to templates directory
+    util.buildhelpers.move_templates(contribute_config.module_name, contribute_config.contribute_templates_path)
+
     # Generate redirections
     util.buildhelpers.generate_redirections(contribute_config.contribute_redirection_location)
     

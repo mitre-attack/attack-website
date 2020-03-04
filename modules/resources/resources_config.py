@@ -15,6 +15,9 @@ general_information_md = ("Title: General Information\n"
                           "save_as: resources/index.html\n"
                           "data: ")
 
+# Path for templates
+resources_templates_path = "modules/resources/templates/"
+
 # FAQ md
 faq_md = ("Title: Frequently Asked Questions\n"
           "Template: resources/faq\n"

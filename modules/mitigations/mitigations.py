@@ -12,6 +12,9 @@ def generate_mitigations():
        mitigation markdown
     """
 
+    # Move templates to templates directory
+    util.buildhelpers.move_templates(mitigations_config.module_name, mitigations_config.mititgations_templates_path)
+
     # Verify if directory exists
     if not os.path.isdir(mitigations_config.mitigation_markdown_path):
         os.mkdir(mitigations_config.mitigation_markdown_path)

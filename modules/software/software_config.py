@@ -6,6 +6,9 @@ priority = 7
 # Markdown path for software
 software_markdown_path = "content/pages/software/"
 
+# Path for templates
+software_templates_path = "modules/software/templates/"
+
 # String template for software index page
 software_index_md = ("Title: Software overview\n"
                      "Template: software/software-index\n"

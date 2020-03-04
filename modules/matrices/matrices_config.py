@@ -6,6 +6,9 @@ priority = 2
 # Matrix markdown path
 matrix_markdown_path = "content/pages/matrices/"
 
+# Path for templates
+matrices_templates_path = "modules/matrices/templates/"
+
 # Matrix overview string
 matrix_overview_md = ("Title: Matrix Overview \n"
                       "Template: general/redirect-index \n"

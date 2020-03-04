@@ -15,6 +15,9 @@ def generate_tactics():
        index markdown
     """
 
+    # Move templates to templates directory
+    util.buildhelpers.move_templates(tactics_config.module_name, tactics_config.tactics_templates_path)
+
     # Verify if directory exists
     if not os.path.isdir(tactics_config.tactics_markdown_path):
         os.mkdir(tactics_config.tactics_markdown_path)

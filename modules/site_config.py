@@ -21,6 +21,9 @@ source_names = [
 # Declare file location of web pages
 web_directory = "output"
 
+# Location of html templates
+templates_directory = "attack-theme/templates/"
+
 # directory for data used in site builds
 data_directory = "data"
 # directory for STIX data

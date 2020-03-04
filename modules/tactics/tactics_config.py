@@ -6,6 +6,9 @@ priority = 3
 # Markdown path for tactics
 tactics_markdown_path = "content/pages/tactics/"
 
+# Path for templates
+tactics_templates_path = "modules/tactics/templates/"
+
 # String template for domains	
 tactic_domain_md = Template("Title: Tactics\n"
                             "Template: tactics/tactics-domain-index\n"

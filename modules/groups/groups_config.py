@@ -17,3 +17,6 @@ group_md = Template("Title: ${name}\n"
                     "Template: groups/group\n"
                     "save_as: groups/${attack_id}/index.html\n"
                     "data: ")
+
+# Path for templates
+groups_templates_path = "modules/groups/templates/"

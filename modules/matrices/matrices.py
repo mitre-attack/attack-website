@@ -10,6 +10,9 @@ def generate_matrices():
        matrix markdown. 
     """
 
+    # Move templates to templates directory
+    util.buildhelpers.move_templates(matrices_config.module_name, matrices_config.matrices_templates_path)
+
     # Verify if directory exists
     if not os.path.isdir(matrices_config.matrix_markdown_path):
         os.mkdir(matrices_config.matrix_markdown_path)

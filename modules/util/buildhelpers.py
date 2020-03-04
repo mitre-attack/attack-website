@@ -4,6 +4,7 @@ import markdown
 import json
 import re
 import collections
+import shutil
 import stix2
 import string
 import math
@@ -777,3 +778,19 @@ def generate_redirections(redirections_filename):
 
             with open(os.path.join(site_config.redirects_markdown_path, obj['title'] + ".md"), "w", encoding='utf8') as md_file:
                 md_file.write(subs)
+
+def move_templates(module_name, module_template_path):
+    """ Move module spefic templates into the website's main template directory holder """
+
+    if os.path.isdir(module_template_path):
+
+        # New template directory for module 
+        new_template_dir = os.path.join(site_config.templates_directory, module_name.lower()) 
+
+        # Create directory in main template directory if does not exist for module
+        if not os.path.exists(new_template_dir):
+            os.mkdir(new_template_dir)
+
+        for template in os.listdir(module_template_path):
+            # Copy template to new directory
+            shutil.copyfile(os.path.join(module_template_path,template), os.path.join(new_template_dir, template))

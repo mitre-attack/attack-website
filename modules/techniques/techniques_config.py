@@ -6,6 +6,9 @@ priority = 4
 # Markdown path for techniques
 techniques_markdown_path = "content/pages/techniques/"	
 
+# Path for templates
+techniques_templates_path = "modules/techniques/templates/"
+
 # String template for all techniques
 technique_md = Template("Title: ${name}-${tactics}-${domain}\n"
                         "Template: techniques/technique\n"

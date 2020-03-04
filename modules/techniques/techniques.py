@@ -16,6 +16,9 @@ def generate_techniques():
         False if nothing was generated
     """
 
+    # Move templates to templates directory
+    util.buildhelpers.move_templates(techniques_config.module_name, techniques_config.techniques_templates_path)
+
     # Verify if directory exists
     if not os.path.isdir(techniques_config.techniques_markdown_path):
         os.mkdir(techniques_config.techniques_markdown_path)

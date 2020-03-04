@@ -13,6 +13,9 @@ def generate_software():
        index markdown
     """
 
+    # Move templates to templates directory
+    util.buildhelpers.move_templates(software_config.module_name, software_config.software_templates_path)
+
     # Verify if directory exists
     if not os.path.isdir(software_config.software_markdown_path):
         os.mkdir(software_config.software_markdown_path)

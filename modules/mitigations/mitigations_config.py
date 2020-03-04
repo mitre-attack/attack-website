@@ -6,6 +6,9 @@ priority = 5
 # Markdown path for mitigations
 mitigation_markdown_path = "content/pages/mitigations/"
 
+# Path for templates
+mititgations_templates_path = "modules/mitigations/templates/"
+
 # Mitigation overview string
 mitigation_overview_md = ("Title: Mitigation Overview \n"
                           "Template: general/redirect-index \n"

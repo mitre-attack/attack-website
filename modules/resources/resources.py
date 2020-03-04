@@ -17,6 +17,9 @@ def generate_resources():
     if not os.path.isdir(resources_config.updates_markdown_path):
         os.mkdir(resources_config.updates_markdown_path)
 
+    # Move templates to templates directory
+    util.buildhelpers.move_templates(resources_config.module_name, resources_config.resources_templates_path)
+
     generate_general_information()
     generate_training_pages()
     generate_attackcon_page()

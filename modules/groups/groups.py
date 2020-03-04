@@ -16,7 +16,8 @@ def generate_groups():
        group markdown generation
     """
 
-    util.relationshipgetters.get_malware_used_by_groups()
+    # Move templates to templates directory
+    util.buildhelpers.move_templates(groups_config.module_name, groups_config.groups_templates_path)
 
     # Verify if directory exists
     if not os.path.isdir(groups_config.group_markdown_path):
