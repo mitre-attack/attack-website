@@ -31,6 +31,16 @@
 <!--          addition of notable features. When PATCH is 0 it can      -->
 <!--          be omitted                                                -->
 
+# 4 March 2020
+## ATT&CK Website version 1.2.3
+### Improvements
+- Updated trademark language. See issue [#54](https://github.com/mitre-attack/attack-website/issues/54).
+- Updated ATT&CK™ to ATT&CK®. See issue [#55](https://github.com/mitre-attack/attack-website/issues/55).
+- Update wordmarks to have ® instead of ™. See issue [#56](https://github.com/mitre-attack/attack-website/issues/56).
+- Updated "How Should I reference the name ATT&CK" in FAQ. See issue [#57](https://github.com/mitre-attack/attack-website/issues/57).
+- Updated copyrights to 2020. See issue [#58](https://github.com/mitre-attack/attack-website/issues/58).
+- Updated README. See issue [#59](https://github.com/mitre-attack/attack-website/issues/59).
+
 # 20 February 2020
 ## ATT&CK Website version 1.2.2
 ### Fixes
