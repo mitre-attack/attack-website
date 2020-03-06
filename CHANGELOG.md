@@ -31,7 +31,8 @@
 <!--          addition of notable features. When PATCH is 0 it can      -->
 <!--          be omitted                                                -->
 
-# Changes staged on develop
+# 6 March 2020
+## ATT&CK Website version 1.2.4
 ### Fixes
 - Minor revision to the ATT&CK logo.
 
