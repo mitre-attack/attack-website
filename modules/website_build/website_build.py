@@ -1,5 +1,6 @@
 import modules
 from . import website_build_config
+from . import subdirectory
 from modules import util
 from string import Template
 import json
@@ -18,6 +19,7 @@ def generate_website():
     generate_static_pages()
     pelican_content()
     remove_unwanted_output()
+    generate_subdirectory()
 
 def generate_base_html():
     """ Responsible for generating the header and footer of website pages """
@@ -68,8 +70,11 @@ def generate_index_page():
 
 def pelican_content():
     # Run pelican with limited output, -q is for quiet
-    subprocess.check_output("pelican content -q", shell=True)
-
+    if site_config.subdirectory:
+        subprocess.check_output(f"pelican content -q -o {site_config.web_directory}", shell=True)
+    else:
+        subprocess.check_output("pelican content -q", shell=True)
+    
 def remove_unwanted_output():
     """Remove unwanted files from the output directory"""
 
@@ -120,3 +125,9 @@ def generate_static_pages():
             
             with open(os.path.join(website_build_config.website_build_markdown_path, static_page), "w", encoding='utf8') as md_file:
                 md_file.write(content)
+
+def generate_subdirectory():
+    """ Build website to subdirectory """
+    
+    if site_config.args.subdirectory:
+        subdirectory.replace()
