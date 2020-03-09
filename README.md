@@ -30,14 +30,20 @@ _See [CONTRIBUTING.md](/CONTRIBUTING.md) for more information on making contribu
 
 ### Build and serve the local site
 
-1. Update ATT&CK markdown from the STIX content, and generate the output html from the markdown: `python3 update-attack.py -c -b`. _Note: `update-attack.py`, has many optional command line arguments which affect the behavior of the build. Run `python3 update-attack.py -h` for a list of arguments and an explanation of their functionality._
+1. Update ATT&CK markdown from the STIX content, and generate the output html from the markdown: `python3 update-attack.py`. _Note: `update-attack.py`, has many optional command line arguments which affect the behavior of the build. Run `python3 update-attack.py -h` for a list of arguments and an explanation of their functionality._
 2. Serve the html to `localhost:8000`: 
     1. `cd output`
     2. `python3 -m pelican.server`
 
 ## Implementation Overview
 
-The ATT&CK site uses a combination of Python, Pelican and Jinja to convert the STIX content into a set of static HTML files. When `update-attack.py` is run, it generates a set of markdown files in `content` containing the parsed STIX content. Pelican then reads these markdown files and uses them to with the Jinja templates in `attack-theme/templates` to build the site HTML in the output directory. 
+The ATT&CK site uses a combination of Python, Pelican and Jinja to convert the STIX content into a set of static HTML files. When `update-attack.py` is run, it generates a set of markdown files in `content` containing the parsed STIX content. Pelican then reads these markdown files and uses them with the Jinja templates in `attack-theme/templates` to build the site HTML in the output directory. 
+
+### Modules
+
+The website is built from different modules. These modules can be found inside the `modules` directory. If the `update-attack.py` script is ran without any arguments, it will automatically look for modules inside the `modules` directory and build them.  Modules are divided in two classes, active and supportive modules. Active modules appends a link to the website's main menu and typically generates markdown files. For example, the `techniques` module is reponsible for generating all Technique related markdown pages. Supportive modules are those who do not appear on the website menu but are critical to the general website build. An example of a supportive module is the `util` module which has methods and API calls to interface with the STIX bundles. Every module has a given priority number. This number is used to determine the order on which the modules are ran. The build script will run the modules in an ascending priority order (lowest priority number will run first). Take a look at the `__init__.py` of a module to understand the structure of a module.
+
+Modules that are not present on the `modules` directory will not get built and will not appear on the website's main navigation menu. You can also select specific modules to be ran without removing modules from the directory by running the `update-attack.py` script with the `-m` flag followed by the names of the modules. For example, run `python3 update-attack.py -m clean techniques website_build` to run a fresh build, generate the techniques markdown files, and generate the HTML files.
 
 ### ATT&CK Archives
 
