@@ -28,8 +28,20 @@ def generate_tactics():
     # To verify if a technique was generated
     tactic_generated = False
 
+    techniques = {}
+    tactics = {}
+
+    ms = util.relationshipgetters.get_ms()
+
     for domain in site_config.domains:
-        check_if_generated = generate_domain_markdown(domain)
+        #Reads the STIX and creates a list of the ATT&CK Techniques
+        techniques[domain] = util.stixhelpers.get_techniques(ms[domain])
+        tactics[domain] = util.stixhelpers.get_tactic_list(ms[domain])
+    
+    side_nav_data = util.builhelpers.get_side_nav_domains_data("tactics", tactics)
+
+    for domain in site_config.domains:
+        check_if_generated = generate_domain_markdown(domain, techniques[domain], tactics[domain], side_nav_data)
         if not tactic_generated:
             if check_if_generated:
                 tactic_generated = True
@@ -37,19 +49,14 @@ def generate_tactics():
     if not tactic_generated:
         util.buildhelpers.remove_module_from_menu(tactics_config.module_name)  
 
-def generate_domain_markdown(domain):
+def generate_domain_markdown(domain, techniques, tactics, side_nav_data):
     """Generate tactic index markdown for each domain and generates 
        shared data for tactics
     """
 
     has_tactic = False
 
-    ms = util.relationshipgetters.get_ms()
- 
-    # Reads the json attack STIX and creates a list of the ATTACK Techniques
-    tactic_list = util.stixhelpers.get_tactic_list(ms[domain])
-
-    if tactic_list:
+    if tactics[domain]:
         has_tactic = True
 
     # Get technique list of current domain
@@ -58,12 +65,11 @@ def generate_domain_markdown(domain):
     # Write out the markdown file for overview of domain
     data = {
         'domain': domain.split("-")[0],
-        'tactics_list_len': str(len(tactic_list))
+        'tactics_list_len': str(len(tactics))
     }
 
-    side_menu_data = util.buildhelpers.get_side_menu_data("tactics", "/tactics/", tactic_list, domain.split("-")[0])
-    data['side_menu_data'] = side_menu_data
-    data['tactics_table'] = get_domain_table_data(tactic_list)
+    data['side_menu_data'] = side_nav_data
+    data['tactics_table'] = get_domain_table_data(tactics)
 
     subs = tactics_config.tactic_domain_md.substitute(data)
     subs = subs + json.dumps(data)
@@ -76,8 +82,8 @@ def generate_domain_markdown(domain):
         i_md_file.write(tactics_config.tactic_overview_md)
 
     # Create the markdown for the enterprise groups in the STIX
-    for tactic in tactic_list:
-        generate_tactic_md(tactic, domain, tactic_list, technique_list, side_menu_data)
+    for tactic in tactics:
+        generate_tactic_md(tactic, domain, tactics, technique_list, side_nav_data)
     
     return has_tactic
 
