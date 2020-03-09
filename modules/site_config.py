@@ -28,6 +28,28 @@ source_names = [
 # Declare file location of web pages
 web_directory = "output"
 
+# Parent web directory name
+# leave parent directory name to first level for link tests
+parent_web_directory = "output"
+
+# Declare as empty string
+subdirectory = ""
+
+def set_subdirectory(subdirectory_str):
+    """ Method to globally set the subdirectory """
+
+    global subdirectory
+    global web_directory
+
+    subdirectory = subdirectory_str
+
+    # Verify if website directory exists
+    if not os.path.isdir(web_directory):
+        os.makedirs(web_directory)
+
+    # Add subdirectory to web directory
+    web_directory = os.path.join(web_directory, subdirectory)
+
 # Location of html templates
 templates_directory = "attack-theme/templates/"
 
