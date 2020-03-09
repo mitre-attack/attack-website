@@ -350,7 +350,7 @@ def get_side_nav_domains_data(side_nav_title, elements_list):
 
     elements_data = []
 
-    for domain in config.domains:
+    for domain in site_config.domains:
         if elements_list[domain]:
             # Get alias for domain
             domain_alias = get_domain_alias(domain.split("-")[0])
@@ -440,7 +440,7 @@ def get_side_nav_domains_mobile_view_data(side_nav_title, elements_list, amount_
 
     elements_data = []
 
-    for domain in config.domains:
+    for domain in site_config.domains:
 
         if elements_list[domain]:
 

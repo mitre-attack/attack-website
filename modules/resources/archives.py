@@ -44,6 +44,9 @@ def deploy():
         if os.path.isdir(os.path.join(resources_config.archives_directory, version)) and not version.endswith(".git"):
             shutil.copytree(os.path.join(resources_config.archives_directory, version), os.path.join(resources_config.prev_versions_deploy_folder, version))
     
+    if not os.path.isdir(site_config.web_directory):
+        os.mkdir(site_config.web_directory)
+        
     # write robots.txt to disallow crawlers
     with open(os.path.join(site_config.web_directory, "robots.txt"), "w", encoding='utf8') as robots:
         robots.write("User-agent: *\nDisallow: /previous/")

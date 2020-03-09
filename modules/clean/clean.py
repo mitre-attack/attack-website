@@ -8,22 +8,17 @@ def clean_website_build():
 
     # Clean content directory
     for filename in os.listdir(clean_config.content_path):
-        if filename != "docs" and filename != "pages":
+        if filename != "docs":
             # Generate full file path
             full_file_path = os.path.join(clean_config.content_path, filename)
             if os.path.isdir(full_file_path):
                 shutil.rmtree(full_file_path)
             else:
                 os.remove(full_file_path)
-        
-    # Clean content/pages directory
-    for filename in os.listdir(clean_config.content_pages_path):
-        # Get full file path
-        full_file_path = os.path.join(clean_config.content_pages_path, filename)
-        if os.path.isdir(full_file_path):
-            shutil.rmtree(full_file_path)
-        else:
-            os.remove(full_file_path)
+    
+    # Make empty content/pages dir
+    if not os.path.isdir(clean_config.content_pages_path):
+        os.mkdir(clean_config.content_pages_path)
     
     # Delete module templates from template directory
     for filename in os.listdir(site_config.templates_directory):

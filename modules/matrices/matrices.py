@@ -84,7 +84,7 @@ def generate_matrix_md(ms, matrix, old_ms, techniques=None, old_techniques=None,
             md_file.write(subs)
 
         for subtype in matrix['subtypes']:
-            generate_matrix_md(subtype, old_ms, techniques, old_techniques, side_menu_data)
+            generate_matrix_md(ms, subtype, old_ms, techniques, old_techniques, side_menu_data)
      
     return has_techniques
 

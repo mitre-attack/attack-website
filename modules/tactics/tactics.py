@@ -38,7 +38,7 @@ def generate_tactics():
         techniques[domain] = util.stixhelpers.get_techniques(ms[domain])
         tactics[domain] = util.stixhelpers.get_tactic_list(ms[domain])
     
-    side_nav_data = util.builhelpers.get_side_nav_domains_data("tactics", tactics)
+    side_nav_data = util.buildhelpers.get_side_nav_domains_data("tactics", tactics)
 
     for domain in site_config.domains:
         check_if_generated = generate_domain_markdown(domain, techniques[domain], tactics[domain], side_nav_data)
@@ -56,11 +56,8 @@ def generate_domain_markdown(domain, techniques, tactics, side_nav_data):
 
     has_tactic = False
 
-    if tactics[domain]:
+    if tactics:
         has_tactic = True
-
-    # Get technique list of current domain
-    technique_list = util.stixhelpers.get_techniques(ms[domain])
 
     # Write out the markdown file for overview of domain
     data = {
@@ -83,7 +80,7 @@ def generate_domain_markdown(domain, techniques, tactics, side_nav_data):
 
     # Create the markdown for the enterprise groups in the STIX
     for tactic in tactics:
-        generate_tactic_md(tactic, domain, tactics, technique_list, side_nav_data)
+        generate_tactic_md(tactic, domain, tactics, techniques, side_nav_data)
     
     return has_tactic
 

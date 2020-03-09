@@ -30,7 +30,7 @@ def generate_mitigations():
 
     ms = util.relationshipgetters.get_ms()
 
-    for domain in config.domains:
+    for domain in site_config.domains:
         #Reads the STIX and creates a list of the ATT&CK mitigations
         mitigations[domain] = util.stixhelpers.get_mitigation_list(ms[domain])
 

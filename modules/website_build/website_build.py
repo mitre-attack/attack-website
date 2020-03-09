@@ -2,6 +2,7 @@ import modules
 from . import website_build_config
 from . import subdirectory
 from modules import util
+from modules import site_config
 from string import Template
 import json
 import os
@@ -128,6 +129,6 @@ def generate_static_pages():
 
 def generate_subdirectory():
     """ Build website to subdirectory """
-    
+
     if site_config.args.subdirectory:
         subdirectory.replace()

@@ -403,7 +403,7 @@ def check_links(external_links = False):
         if not (os.path.isdir(tests_config.test_report_directory)):
             os.mkdir(tests_config.test_report_directory)
 
-        with open(os.path.join(tests_config.test_report_directory, site_config.unlinked_report_filename), 'w') as f:
+        with open(os.path.join(tests_config.test_report_directory, tests_config.unlinked_report_filename), 'w') as f:
             f.write("Unlinked pages report:\n")
             f.write("Pages listed were not linked from another page\n\n")
             for page in unlinked_pages:
@@ -414,7 +414,7 @@ def check_links(external_links = False):
         if not (os.path.isdir(tests_config.test_report_directory)):
             os.mkdir(tests_config.test_report_directory)
 
-        with open(os.path.join(tests_config.test_report_directory, site_config.links_report_filename), 'w') as f:
+        with open(os.path.join(tests_config.test_report_directory, tests_config.links_report_filename), 'w') as f:
             f.write("Broken links report:\n\n")
             for page in broken_pages:
                 f.write(page["path"] + "\n")
@@ -426,7 +426,7 @@ def check_links(external_links = False):
         if not (os.path.isdir(tests_config.test_report_directory)):
             os.mkdir(tests_config.test_report_directory)
 
-        with open(os.path.join(tests_config.test_report_directory, site_config.relative_links_report_filename), 'w') as f:
+        with open(os.path.join(tests_config.test_report_directory, tests_config.relative_links_report_filename), 'w') as f:
             f.write("Relative links report:\n\n")
             for page in relative_links:
                 f.write(page["path"] + "\n")

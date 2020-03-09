@@ -1,13 +1,6 @@
-import collections
-import json
-import markdown
 import os
-import tqdm
 import re
 from modules import site_config
-from . import stixhelpers
-from . import relationshiphelpers
-from . import util
 
 allowed_in_link = "".join(list(map(lambda s: s.strip(), [
     "   -   ", 
