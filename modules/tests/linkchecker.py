@@ -68,7 +68,7 @@ headers = {
 def remove_extra_from_path(filepath):
     """Given a path, remove unwanted path from a website link"""
 
-    return filepath.split(site_config.web_directory)[1]
+    return filepath.split(site_config.parent_web_directory)[1]
 
 def get_correct_link(path):
     """Given a path, return the correct path by adding
@@ -120,6 +120,13 @@ def check_if_link_in_use(filepath, link):
             if new_file_name != link:
                 in_use_links[link] = True
 
+def remove_subdirectory_from_web_directory():
+
+    if site_config.subdirectory:
+        return site_config.web_directory.split(site_config.subdirectory)[0]
+    else:
+        return site_config.web_directory
+
 def internal_link_test(link):
     """Given a link, make sure that that it exists on the file system
     """
@@ -127,7 +134,7 @@ def internal_link_test(link):
     # Get correct link path
     path = get_correct_link(link)
 
-    path = site_config.web_directory + path
+    path = remove_subdirectory_from_web_directory() + path
 
     # e.g: contacts.html -> contacts/index.html
     to_index_path = path
@@ -236,7 +243,6 @@ def internal_link_checker(filepath, html_str):
 
         links = re.findall(
             f"{prefix}\s?=\s?[\"']([{allowed_in_link}]+)[\"']", html_str)
-
         # check if link has a dest
         for link in links:
 
@@ -287,7 +293,7 @@ def check_unlinked_pages(filenames):
                 filename = filename.replace("\\", "/")
 
             # Ignore 404 html page
-            if filename.startswith("/404.html"):
+            if filename.endswith("/404.html"):
                 continue
 
             # e.g: contacts.html -> contacts/index.html
@@ -397,7 +403,7 @@ def check_links(external_links = False):
         if not (os.path.isdir(tests_config.test_report_directory)):
             os.mkdir(tests_config.test_report_directory)
 
-        with open(os.path.join(tests_config.test_report_directory, tests_config.unlinked_report_filename), 'w') as f:
+        with open(os.path.join(tests_config.test_report_directory, site_config.unlinked_report_filename), 'w') as f:
             f.write("Unlinked pages report:\n")
             f.write("Pages listed were not linked from another page\n\n")
             for page in unlinked_pages:
@@ -408,7 +414,7 @@ def check_links(external_links = False):
         if not (os.path.isdir(tests_config.test_report_directory)):
             os.mkdir(tests_config.test_report_directory)
 
-        with open(os.path.join(tests_config.test_report_directory, tests_config.links_report_filename), 'w') as f:
+        with open(os.path.join(tests_config.test_report_directory, site_config.links_report_filename), 'w') as f:
             f.write("Broken links report:\n\n")
             for page in broken_pages:
                 f.write(page["path"] + "\n")
@@ -420,7 +426,7 @@ def check_links(external_links = False):
         if not (os.path.isdir(tests_config.test_report_directory)):
             os.mkdir(tests_config.test_report_directory)
 
-        with open(os.path.join(tests_config.test_report_directory, tests_config.relative_links_report_filename), 'w') as f:
+        with open(os.path.join(tests_config.test_report_directory, site_config.relative_links_report_filename), 'w') as f:
             f.write("Relative links report:\n\n")
             for page in relative_links:
                 f.write(page["path"] + "\n")
