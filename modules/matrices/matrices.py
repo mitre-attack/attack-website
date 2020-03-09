@@ -27,14 +27,16 @@ def generate_matrices():
 
     matrix_generated = False
 
+    ms = util.relationshipgetters.get_ms()
+
     for matrix in matrices_config.matrices:
         if matrix["type"] == "external": continue # link to externally hosted matrix, don't create a page for it
-        matrix_generated = generate_matrix_md(matrix, old_ms, None, None, side_menu_data)
+        matrix_generated = generate_matrix_md(ms, matrix, old_ms, None, None, side_menu_data)
 
     if not matrix_generated:
         util.buildhelpers.remove_module_from_menu(matrices_config.module_name)
 
-def generate_matrix_md(matrix, old_ms, techniques=None, old_techniques=None, side_menu_data=None):
+def generate_matrix_md(ms, matrix, old_ms, techniques=None, old_techniques=None, side_menu_data=None):
     """Given a matrix, generates the matrix markdown"""
     
     has_techniques = False
@@ -42,8 +44,6 @@ def generate_matrix_md(matrix, old_ms, techniques=None, old_techniques=None, sid
     data = {}
     data['menu'] = side_menu_data
     data['domain'] = matrix['matrix'].split("-")[0]
-
-    ms = util.relationshipgetters.get_ms()
 
     # Optimization to only load on first matrix level
     # Path needs to be equal to the domain
