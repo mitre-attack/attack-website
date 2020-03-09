@@ -26,8 +26,22 @@ def generate_mitigations():
     # To verify if a technique was generated
     mitigation_generated = False
 
+    mitigations = {}
+
+    ms = util.relationshipgetters.get_ms()
+
+    for domain in config.domains:
+        #Reads the STIX and creates a list of the ATT&CK mitigations
+        mitigations[domain] = util.stixhelpers.get_mitigation_list(ms[domain])
+
+    # Amount of characters per category
+    group_by = 3
+
+    side_nav_data = util.buildhelpers.get_side_nav_domains_data("mitigations", mitigations)
+    side_nav_mobile_data = util.buildhelpers.get_side_nav_domains_mobile_view_data("mitigations", mitigations, group_by)
+
     for domain in site_config.domains:
-        check_if_generated = generate_markdown_files(domain)
+        check_if_generated = generate_markdown_files(domain, mitigations[domain], side_nav_data, side_nav_mobile_data)
         if not mitigation_generated:
             if check_if_generated:
                 mitigation_generated = True
@@ -35,34 +49,25 @@ def generate_mitigations():
     if not mitigation_generated:
         util.buildhelpers.remove_module_from_menu(mitigations_config.module_name)   
 
-def generate_markdown_files(domain):
+def generate_markdown_files(domain, mitigations, side_nav_data, side_nav_mobile_data):
     """Responsible for generating shared data between all mitigation pages
        and begins mitigation markdown generation
     """
 
     data = {}
 
-    has_mitigation = False
+    has_mitigation = False 
 
-    ms = util.relationshipgetters.get_ms()
+    if mitigations:
 
-    mitigation_list = util.stixhelpers.get_mitigation_list(ms[domain])
-
-    if mitigation_list:
         has_mitigation = True
 
-    if mitigation_list:
-        # Amount of characters per category
-        group_by = 3
-
         data['domain'] = domain.split("-")[0]
-        data['mitigation_list_len'] = str(len(mitigation_list))
-        side_menu_data = util.buildhelpers.get_side_menu_data("mitigations", "/mitigations/", mitigation_list, data['domain'])
-        data['side_menu_data'] = side_menu_data
-        side_menu_mobile_data = util.buildhelpers.get_side_menu_mobile_view_data("mitigations", "/mitigations/", mitigation_list, group_by, data['domain'])
-        data['side_menu_mobile_view_data'] = side_menu_mobile_data
+        data['mitigation_list_len'] = str(len(mitigations))
+        data['side_menu_data'] = side_nav_data
+        data['side_menu_mobile_view_data'] = side_nav_mobile_data
                         
-        data['mitigation_table'] = get_mitigation_table_data(mitigation_list)
+        data['mitigation_table'] = get_mitigation_table_data(mitigations)
 
         subs = mitigations_config.mitigation_domain_md.substitute(data)
         subs = subs + json.dumps(data)
@@ -71,13 +76,12 @@ def generate_markdown_files(domain):
             md_file.write(subs)
 
         # Generates the markdown files to be used for page generation
-        for mitigation in mitigation_list:
-            generate_mitigation_md(mitigation, domain, side_menu_data, side_menu_mobile_data)
+        for mitigation in mitigations:
+            generate_mitigation_md(mitigation, domain, side_nav_data, side_nav_mobile_data)
     
     return has_mitigation
 
-def generate_mitigation_md(mitigation, domain, side_menu_data, \
-                                                       side_menu_mobile_data):
+def generate_mitigation_md(mitigation, domain, side_menu_data, side_menu_mobile_data):
     """Generates the markdown for the given mitigation"""
 
     attack_id = util.buildhelpers.get_attack_id(mitigation)
