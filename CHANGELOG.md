@@ -31,6 +31,13 @@
 <!--          addition of notable features. When PATCH is 0 it can      -->
 <!--          be omitted                                                -->
 
+# 9 March 2020
+## [ATT&CK Content version 6.3](https://github.com/mitre/cti/releases/tag/ATT%26CK-v6.3)
+### Fixes
+- Fixed typo in M1026.
+- Updated copyright statement marking-definition to match that on [attack.mitre.org](https://attack.mitre.org).
+- Fixed invalid bundle IDs on marking-definition objects.
+
 # 6 March 2020
 ## ATT&CK Website version 1.2.4
 ### Fixes

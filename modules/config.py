@@ -12,7 +12,7 @@ from . import util
 
 # Settings dictionary to build website
 settings_dict = {
-    "content_version": "6.2",
+    "content_version": "6.3",
     "website_version": "1.2.4",
     "changelog_location": "/resources/changelog.html",
     "banner_enabled": "true",
