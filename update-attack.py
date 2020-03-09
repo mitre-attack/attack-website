@@ -4,7 +4,6 @@ import json
 import os
 import time
 from string import Template
-
 import modules
 from modules import site_config
 from modules import util
@@ -24,6 +23,8 @@ def validate_subdirectory_string(subdirectory_str):
         subdirectory_str = subdirectory_str[1:]
     if subdirectory_str.endswith("/"):
         subdirectory_str = subdirectory_str[:-1]
+    
+    site_config.set_subdirectory(subdirectory_str)
     
     return subdirectory_str
     
