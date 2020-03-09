@@ -4,6 +4,7 @@ import shutil
 import json
 import stat
 from datetime import datetime
+from modules import site_config
 from . import resources_config
 
 # Error handler for windows by:
@@ -44,7 +45,7 @@ def deploy():
             shutil.copytree(os.path.join(resources_config.archives_directory, version), os.path.join(resources_config.prev_versions_deploy_folder, version))
     
     # write robots.txt to disallow crawlers
-    with open(os.path.join("output", "robots.txt"), "w", encoding='utf8') as robots:
+    with open(os.path.join(site_config.web_directory, "robots.txt"), "w", encoding='utf8') as robots:
         robots.write("User-agent: *\nDisallow: /previous/")
 
 def build_markdown():
@@ -56,5 +57,3 @@ def build_markdown():
     subs = resources_config.previous_md + json.dumps(archives_data)
     with open(os.path.join(resources_config.previous_markdown_path, "previous.md"), "w", encoding='utf8') as md_file:
         md_file.write(subs)
-        
-
