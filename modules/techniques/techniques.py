@@ -33,8 +33,20 @@ def generate_techniques():
     # To verify if a technique was generated
     technique_generated = False
 
+    techniques = {}
+    tactics = {}
+
+    ms = util.relationshipgetters.get_ms()
+
     for domain in site_config.domains:
-        check_if_generated = generate_domain_markdown(domain)
+        #Reads the STIX and creates a list of the ATT&CK Techniques
+        techniques[domain] = util.stixhelpers.get_techniques(ms[domain])
+        tactics[domain] = util.stixhelpers.get_tactic_list(ms[domain])
+
+    side_nav_data = get_technique_side_nav_data(techniques, tactics)
+
+    for domain in site_config.domains:
+        check_if_generated = generate_domain_markdown(domain, techniques, tactics, side_nav_data)
         if not technique_generated:
             if check_if_generated:
                 technique_generated = True
@@ -42,35 +54,27 @@ def generate_techniques():
     if not technique_generated:
         util.buildhelpers.remove_module_from_menu(techniques_config.module_name)   
 
-def generate_domain_markdown(domain):
+def generate_domain_markdown(domain, techniques, tactics, side_nav_data):
     """Generate technique index markdown for each domain and generates 
        shared data for techniques
     """
 
     has_technique = False
 
-    #Reads the STIX and creates a list of the ATT&CK Techniques
-    full_techniques = util.stixhelpers.get_techniques(util.relationshipgetters.get_ms()[domain])
-
     # Check if there is at least one technique
-    if full_techniques:
+    if techniques[domain]:
         has_technique = True
 
-    tactic_list = util.stixhelpers.get_tactic_list(util.relationshipgetters.get_ms()[domain])
-
     data = {}
-    
-    technique_list = get_techniques_list(full_techniques)
 
     data['domain'] = domain.split("-")[0]
 
     # Get technique table data and number of techniques
-    data['technique_table'] = util.buildhelpers.get_technique_table_data(None, full_techniques)
-    data['technique_list_len'] = str(len(full_techniques))
-    side_menu_data = get_technique_side_menu_data(domain, technique_list, tactic_list)
+    data['technique_table'] = util.buildhelpers.get_technique_table_data(None, techniques[domain])
+    data['technique_list_len'] = str(len(techniques[domain]))
 
     # Get tactic-techniques table
-    data['menu'] = side_menu_data
+    data['menu'] = side_nav_data
 
     subs = techniques_config.technique_domain_md.substitute(data)
     subs = subs + json.dumps(data)
@@ -79,9 +83,9 @@ def generate_domain_markdown(domain):
         md_file.write(subs)
 
     # Create the markdown for the enterprise groups in the STIX
-    for technique in full_techniques:
+    for technique in techniques[domain]:
         if 'revoked' not in technique or technique['revoked'] is False:
-            generate_technique_md(technique, domain, side_menu_data, tactic_list)
+            generate_technique_md(technique, domain, side_nav_data, tactics[domain])
 
     return has_technique
 
@@ -357,40 +361,55 @@ def get_examples_table_data(technique, reference_list, next_reference_number):
         example_data = sorted(example_data, key=lambda k: k['name'].lower())
     return example_data
 
-def get_technique_side_menu_data(domain, technique_list, tactic_list):
+def get_technique_side_nav_data(techniques, tactics):
     """Responsible for generating the links that are located on the
        left side of individual technique domain pages
     """
+    
+    side_nav_data = []
 
-    # Get tactics techniques side menu data to fill out with jinja
-    tactics_techniques_menu_data = []
+    for domain in site_config.domains:
 
-    for tactic in tactic_list:
-        tactic_row = {}
+        # Get alias for domain
+        domain_alias = util.buildhelpers.get_domain_alias(domain.split("-")[0])
+
+        domain_data = {
+            "name": domain_alias,
+            "id": domain.split("-")[0],
+            "path": "/techniques/{}/".format(domain.split("-")[0]), # root level doesn't get a path
+            "children": []
+        }
+
+        technique_list = get_techniques_list(techniques[domain])
+
+        # Get tactics > techniques data
+        for tactic in tactics[domain]:
+            tactic_row = {}
+            
+            tactic_row['name'] = tactic['name']
+            tactic_row['id'] = util.buildhelpers.get_attack_id(tactic)
+            tactic_row['path'] = "/tactics/{}".format(util.buildhelpers.get_attack_id(tactic))
+            
+            tactic_row['children'] = []
+            for technique in technique_list[tactic['x_mitre_shortname']]:
+                technique_row = {}
+                # Get technique id and name for each technique
+                technique_row['name'] = technique['name']
+                technique_row['id'] = technique['id']
+                technique_row['path'] = "/techniques/{}/".format(technique['id'])
+                technique_row['children'] = []
+                # Add technique data to tactic
+                tactic_row['children'].append(technique_row)
+            
+            domain_data['children'].append(tactic_row)
         
-        tactic_row['name'] = tactic['name']
-        tactic_row['id'] = util.buildhelpers.get_attack_id(tactic)
-        tactic_row['path'] = "/tactics/{}".format(util.buildhelpers.get_attack_id(tactic))
-        
-        tactic_row['children'] = []
-        for technique in technique_list[tactic['x_mitre_shortname']]:
-            technique_row = {}
-            # Get technique id and name for each technique
-            technique_row['name'] = technique['name']
-            technique_row['id'] = technique['id']
-            technique_row['path'] = "/techniques/{}/".format(technique['id'])
-            technique_row['children'] = []
-            # Add technique data to tactic
-            tactic_row['children'].append(technique_row)
-        
-        # Add tactic to table
-        tactics_techniques_menu_data.append(tactic_row)
+        side_nav_data.append(domain_data)
      
     return {
         "name": "techniques",
         "id": "techniques",
-        "path": "/techniques/{}/".format(domain.split("-")[0]), # root level doesn't get a path
-        "children": tactics_techniques_menu_data
+        "path": None, # root level doesn't get a path
+        "children": side_nav_data
     }
 
 def get_techniques_list(techniques):
