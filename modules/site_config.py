@@ -8,6 +8,13 @@ from string import Template
 # Domains for stix objects
 domains = ["pre-attack", "enterprise-attack", "mobile-attack"]
 
+# Domain aliases
+domain_aliases = [
+    ["PRE-ATT&CK", "pre"], 
+    ["Enterprise", "enterprise"], 
+    ["Mobile", "mobile"] 
+]
+
 # Args for modules to use if needed
 args = []
 

@@ -13,6 +13,20 @@ from modules import util
 module_choices = ['clean', 'stix_data', 'resources', 'attack_redirections', 'blog', 'contribute', 'groups', 'search', 'matrices', 'mitigations', 'redirects', 'software', 'tactics', 'techniques', "website_build", "tests"]
 test_choices = ['size', 'links', 'external_links', 'citations']
 
+def validate_subdirectory_string(subdirectory_str):
+    """ Validate subdirectory string """
+    
+    if not subdirectory_str.isascii():
+        raise argparse.ArgumentTypeError("%s contains non ascii characters" % subdirectory_str)
+
+    # Remove leading and trailing /
+    if subdirectory_str.startswith("/"):
+        subdirectory_str = subdirectory_str[1:]
+    if subdirectory_str.endswith("/"):
+        subdirectory_str = subdirectory_str[:-1]
+    
+    return subdirectory_str
+    
 def get_parsed_args():
     """Create argument parser and parse arguments"""
 
@@ -46,6 +60,10 @@ def get_parsed_args():
                               "citations (unparsed citation text).")
     
     parser.add_argument('--proxy', help="set proxy")
+
+    parser.add_argument('--subdirectory', 
+                        help="If you intend to host the site from a sub-directory, specify the directory using this flag.",
+                        type=validate_subdirectory_string)
 
     parser.add_argument("--print-tests", 
                         dest="print_tests", 

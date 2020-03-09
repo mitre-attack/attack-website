@@ -468,6 +468,17 @@ def find_in_reference_list(reference_list, source_name):
             return True
     return False
 
+def get_domain_alias(domain):
+    """ Given a domain name, return its alias.
+        If not found return the same domain
+    """
+
+    for domain_pair in site_config.domain_aliases:
+        if domain_pair[1] == domain:
+            return domain_pair[0]
+    
+    return domain
+
 def replace_html_chars(to_be_replaced):
     return to_be_replaced.replace("\n", "")\
                          .replace("{", "{{")\
