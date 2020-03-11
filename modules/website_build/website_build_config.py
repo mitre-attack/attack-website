@@ -11,8 +11,8 @@ template_dir = os.path.join("attack-theme", "templates", "general/")
 base_page_data = {
     "BANNER_ENABLED": True,
     "BANNER_MESSAGE": "<strong><a href='https://collaborate.mitre.org/attackics' target='_blank'>JUST RELEASED: ATT&CK for Industrial Control Systems</a></strong>",
-    "CONTENT_VERSION": "6.2",
-    "WEBSITE_VERSION": "1.1.1",
+    "CONTENT_VERSION": "6.3",
+    "WEBSITE_VERSION": "1.2.4",
     "CHANGELOG_LOCATION": "/resources/changelog.html",
     "NAVIGATION_MENU": modules.menu_ptr
 }
