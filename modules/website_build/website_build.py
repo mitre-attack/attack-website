@@ -82,29 +82,28 @@ def remove_unwanted_output():
     # Files to be deleted:
     # archives.html, authors.html, categories.html, tags.html, 
     # author\blake-strom.html, category\cyber-threat-intelligence.html
-    output_path = "output"
 
-    archives_path = os.path.join(output_path, "archives.html")
+    archives_path = os.path.join(site_config.web_directory, "archives.html")
     if os.path.exists(archives_path):
         os.remove(archives_path)
     
-    authors_path = os.path.join(output_path, "authors.html")
+    authors_path = os.path.join(site_config.web_directory, "authors.html")
     if os.path.exists(authors_path):
         os.remove(authors_path)
 
-    categories_path = os.path.join(output_path, "categories.html")
+    categories_path = os.path.join(site_config.web_directory, "categories.html")
     if os.path.exists(categories_path):
         os.remove(categories_path)
     
-    tags_path = os.path.join(output_path, "tags.html")
+    tags_path = os.path.join(site_config.web_directory, "tags.html")
     if os.path.exists(tags_path):
         os.remove(tags_path)
     
-    author_path = os.path.join(output_path, "author")
+    author_path = os.path.join(site_config.web_directory, "author")
     if os.path.exists(author_path):
         shutil.rmtree(author_path)
     
-    category_path = os.path.join(output_path, "category")
+    category_path = os.path.join(site_config.web_directory, "category")
     if os.path.exists(category_path):
         shutil.rmtree(category_path)
 

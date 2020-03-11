@@ -1,4 +1,5 @@
 import os
+import uuid
 from modules import site_config
 from modules import util
 from . import attack_redirections_config
@@ -31,8 +32,6 @@ def generate_markdown_files(domain):
             new_attack_id, old_attack_id = get_new_and_old_ids(obj)
 
             if new_attack_id:
-                generate_obj_redirect(attack_redirections_config.general_redirects_dict[key], new_attack_id, old_attack_id, domain)
-
                 if obj.get('revoked'):
 
                     revoked_by_obj = util.stixhelpers.get_revoked_by(obj['id'], ms[domain])
@@ -45,6 +44,8 @@ def generate_markdown_files(domain):
 
                             if old_attack_id != new_attack_id:
                                 generate_obj_redirect(attack_redirections_config.general_redirects_dict[key], revoked_attack_id, new_attack_id, domain)
+                else:
+                    generate_obj_redirect(attack_redirections_config.general_redirects_dict[key], new_attack_id, old_attack_id, domain)
 
     if domain == "mobile-attack":
         for key in attack_redirections_config.mobile_redirect_dict:
@@ -70,7 +71,7 @@ def generate_tactic_redirects(ms, domain):
 
         if attack_id:
 
-            data['title'] = tactic["name"].replace(' ', '_') + "-" + domain
+            data['title'] = tactic["name"].replace(' ', '_') + "-" + domain + str(uuid.uuid1())
             data['to'] = "/tactics/" + attack_id
             data['from'] = attack_redirections_config.redirects_paths[domain] + tactic['name'].replace(' ', '_')
 
@@ -83,10 +84,9 @@ def generate_obj_redirect(redirect_link, new_attack_id, old_attack_id, domain):
     """Responsible for generating redirects markdown for given data"""
 
     data = {}
-
-    data['title'] = old_attack_id
+    data['title'] = old_attack_id + str(uuid.uuid1())
     data['to'] =  "/" + redirect_link['new'] + "/" + new_attack_id
-    data['from'] = attack_redirections_config.redirects_paths[domain] + redirect_link['old'] + "/" + old_attack_id 
+    data['from'] = attack_redirections_config.redirects_paths[domain] + redirect_link['old'] + "/" + old_attack_id + "/index.html"
 
     subs = site_config.redirect_md.substitute(data)
 
@@ -94,7 +94,7 @@ def generate_obj_redirect(redirect_link, new_attack_id, old_attack_id, domain):
         md_file.write(subs)
 
     if new_attack_id != old_attack_id:
-        data['from'] = redirect_link['new'] + "/" + old_attack_id
+        data['from'] = redirect_link['new'] + "/" + old_attack_id + "/index.html"
 
         subs = site_config.redirect_md.substitute(data)
 
