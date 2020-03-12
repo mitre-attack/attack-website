@@ -31,22 +31,24 @@
 
 <body>
 <!--stopindex-->
-<header>
-    {% block nav %}    
-        {{navigation_menu.navigation_menu(NAVIGATION_MENU, output_file)}}
-        </header>
-        <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the previous-versions feature -->
-        <!-- !previous versions banner! -->
-        {% if BANNER_ENABLED == "true" %}
-            <div class="container-fluid under-development">
-                {{ BANNER_MESSAGE }}
-            </div>
-        {% endif %}
-        <!--startindex-->
-    {% endblock %}
-<div id='content'>{% block content %} {% block left %} {% endblock %} {% block right %} {% endblock %} {% endblock
-        %}</div>
-<!--stopindex-->
+    <header>
+        {% block nav %}    
+            {{navigation_menu.navigation_menu(NAVIGATION_MENU, output_file)}}
+    </header>
+    <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the previous-versions feature -->
+    <!-- !previous versions banner! -->
+    {% if BANNER_ENABLED == "true" %}
+        <div class="container-fluid under-development">
+            {{ BANNER_MESSAGE }}
+        </div>
+    {% endif %}
+{% endblock %}
+<div id='content' class="maincontent">
+    <!--start-indexing-for-search-->
+    {% block content %} {% block left %} {% endblock %} {% block right %} {% endblock %} {% endblock %}
+    <!--stop-indexing-for-search-->
+    {{ search.searchgui() }}
+</div>
 <footer class="footer p-3">
     <div class="container-fluid">
         <div class="row">
