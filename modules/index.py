@@ -24,6 +24,8 @@ def generate():
     data['tactics'] = []
     data['max_len'] = []
 
+    data['logo_landingpage'] = config.settings_dict['logo_landingpage']
+
     matrices = stixhelpers.get_matrices(config.ms[matrix['matrix']])
     for curr_matrix in matrices:
         tactics = stixhelpers.get_tactic_list(config.ms[matrix['matrix']], matrix_id=curr_matrix['id'])
