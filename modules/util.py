@@ -458,6 +458,11 @@ def is_sub_tid(sub_tid):
     pattern = re.compile("^T[0-9][0-9][0-9][0-9].[0-9][0-9][0-9]$")
     return pattern.match(sub_tid)
 
+def redirection_subtechnique(sub_tid):
+    """ Convert subtechnique id to redirection format """
+
+    return get_parent_technique_id(sub_tid) + "/" + get_sub_technique_id(sub_tid)
+
 def get_parent_technique_id(sub_tid):
     """Given a sub-technique id, return parent"""
 
