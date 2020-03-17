@@ -492,4 +492,4 @@ def get_subtechniques(technique):
             sub_data['path'] = "/techniques/{}/{}/".format(attack_id, sub_number)
             subtechs.append(sub_data)
     
-    return subtechs
+    return sorted(subtechs, key=lambda k: k['id'])
