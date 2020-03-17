@@ -63,7 +63,9 @@ You can generate the website using custom content by replacing the STIX bundles 
 - `pre-attack.json` is the bundle for the pre-attack domain.
 - the `*_old.json` bundles are updated automatically when the site is built, and are used for generating Matrix timestamps. `old_dates.json` is used for fallback timestamps for the matrices. You typically won't need to replace these files.
 
-Users wishing to make changes to the ATT&CK website visual theme should take a look at our scss source files in `attack-theme/static/style`. Changes to the colors defined in `_colors.scss` should automatically propagate across the site. Users wishing to make changes to the layout of pages should modify the templates found in `attack-theme/templates`. Major  additions or changes will typically require modification of the python modules in `modules/` in addition to the templates.
+Users wishing to make changes to the ATT&CK website visual theme should take a look at our scss source files in `attack-theme/static/style`. Changes to the colors defined in `_colors.scss` should automatically propagate across the site. Users wishing to make changes to the layout of pages should modify the templates found in `attack-theme/templates`. Major additions or changes will typically require modification of the python modules in `modules/` in addition to the templates.
+
+The logos used in the header, footer, and on the landing page of the website can be easily changed. Simply find their keys in the `settings_dict` of `modules/config.py`, and update their values to point to the new images.
 
 ## Related MITRE Work
 #### CTI
