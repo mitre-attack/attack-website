@@ -293,6 +293,7 @@ def get_technique_table_data(tactic, techniques_list):
                 row['descr'] = markdown.markdown(row['descr'].split("\n")[0])
 
             row['descr'] = filter_urls(row['descr'])
+            row['descr'] = remove_html_paragraph(row['descr'])
 
             if tactic is None and tech.get('x_mitre_deprecated'):
                 row['deprecated'] = True
@@ -306,12 +307,27 @@ def get_technique_table_data(tactic, techniques_list):
                 for subtechnique in subtechniques:
                     sub_data = {}
                     sub_data['name'] = subtechnique['object']['name']
-                    sub_data['id'] = get_attack_id(subtechnique['object']).split(".")[1]
+                    sub_attack_id = get_attack_id(subtechnique['object'])
+                    if not "." in sub_attack_id:
+                        raise Exception(f"{attack_id} subtechnique's attackID '{sub_attack_id}' is malformed")
+                    sub_data['id'] = sub_attack_id.split(".")[1]
                     sub_data['descr'] = remove_citations(subtechnique['object']['description'], subtechnique['object']['external_references'])
+                    sub_data['descr'] = replace_html_chars(sub_data['descr'])
+                    sub_data['descr'] = markdown.markdown(sub_data['descr'])
                     sub_data['descr'] = filter_urls(sub_data['descr'])
+                    sub_data['descr'] = remove_html_paragraph(sub_data['descr'])
                     row['subtechniques'].append(sub_data)
 
             technique_table.append(row)
+    
+    # Sort by technique name
+    technique_table = sorted(technique_table, key=lambda k: k['technique_name'].lower())
+
+    # Sort sub-techniques by name
+    for technique in technique_table:
+        if technique['subtechniques']:
+            # Sort by technique name
+            technique['subtechniques'] = sorted(technique['subtechniques'], key=lambda k: k['id'].lower())
 
     return technique_table
 
@@ -445,6 +461,11 @@ def is_sub_tid(sub_tid):
 
     pattern = re.compile("^T[0-9][0-9][0-9][0-9].[0-9][0-9][0-9]$")
     return pattern.match(sub_tid)
+
+def redirection_subtechnique(sub_tid):
+    """ Convert subtechnique id to redirection format """
+
+    return get_parent_technique_id(sub_tid) + "/" + get_sub_technique_id(sub_tid)
 
 def get_parent_technique_id(sub_tid):
     """Given a sub-technique id, return parent"""
@@ -713,7 +734,7 @@ def progress_bar(name, time = None):
     sys.stdout.flush()
 
 def filter_techniques_by_platform(tech_list, platforms):
-    """Given a technique lsit and a platforms list, filter out techniques
+    """Given a technique list and a platforms list, filter out techniques
        that are not part of the platforms"""
 
     if not platforms:
@@ -732,6 +753,9 @@ def filter_techniques_by_platform(tech_list, platforms):
                     break
 
     return filtered_list
+
+def filter_deprecated_revoked(sdos):
+    return list(filter(lambda t: not ( ("x_mitre_deprecated" in t and t["x_mitre_deprecated"]) or ("revoked" in t and t["revoked"]) ) ,sdos))
 
 def filter_out_subtechniques(techniques):
     return list(filter(lambda t: not ("x_mitre_is_subtechnique" in t and t["x_mitre_is_subtechnique"]), techniques))

@@ -61,6 +61,8 @@ def get_sub_matrices(matrix):
     techniques = stixhelpers.get_techniques(domain_ms)
     platform_techniques = util.filter_techniques_by_platform(techniques, matrix['platforms'])
     platform_techniques = util.filter_out_subtechniques(platform_techniques)
+    # remove revoked
+    platform_techniques = util.filter_deprecated_revoked(platform_techniques)
     # get relevant tactics
     all_tactics = stixhelpers.get_all_of_type(domain_ms, "x-mitre-tactic")
     tactic_id_to_shortname = { tactic["id"]: tactic["x_mitre_shortname"] for tactic in all_tactics }
@@ -74,15 +76,22 @@ def get_sub_matrices(matrix):
     
     def transform_technique(technique):
         """transform a technique object into the format required by the matrix macro"""
+
         obj = {
             "id": technique["id"],
             "name": technique["name"],
-            "url": technique["external_references"][0]["url"].split("attack.mitre.org")[1]
+            "url": technique["external_references"][0]["url"].split("attack.mitre.org")[1],
+            "x_mitre_platforms": technique.get("x_mitre_platforms")
         }
 
         if technique["id"] in config.subtechniques_of:
             subtechniques = config.subtechniques_of[technique["id"]]
             obj["subtechniques"] = list(map(lambda st: transform_technique(st["object"]), subtechniques))
+            # Filter subtechniques by platform
+            obj["subtechniques"] = util.filter_techniques_by_platform(obj["subtechniques"], matrix['platforms'])
+            # remove deprecated and revoked
+            obj["subtechniques"] = util.filter_deprecated_revoked(obj["subtechniques"])
+
             nonlocal has_subtechniques
             has_subtechniques = True
         return obj

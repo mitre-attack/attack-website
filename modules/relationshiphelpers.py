@@ -74,6 +74,8 @@ def get_related(srcs, src_type, rel_type, target_type, reverse=False):
     for stix_id in id_to_related:
         value = []
         for related in id_to_related[stix_id]:
+            if not related["id"] in id_to_target:
+                continue # targetting a revoked object
             value.append({
                 "object": json.loads(id_to_target[related["id"]].serialize()),
                 "relationship": json.loads(related["relationship"].serialize())
