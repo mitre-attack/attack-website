@@ -13,10 +13,10 @@ function open_example() {
     setMatrixCellState(example_cell["tactic"], example_cell["technique"], "open")
 }
 function tour_technique_clicked() {
-    if (tour.getCurrentStep() == 1 || tour.getCurrentStep() == 4) tour.next(); //user was following prompt, triggering next step
+    if (tour.getCurrentStepIndex() == 1 || tour.getCurrentStepIndex() == 4) tour.next(); //user was following prompt, triggering next step
 }
 function tour_layout_clicked() {
-    if (tour.getCurrentStep() == 3) tour.next();
+    if (tour.getCurrentStepIndex() == 3) tour.next();
 }
 
 let tour = new Tour({
@@ -25,7 +25,7 @@ let tour = new Tour({
             container: "#tour-matrix-container",
             element: "#layouts-content",
             placement: "top",
-            backdrop: true,
+            backdrop: false,
             title: "The sub-techniques matrix",
             content: "The ATT&CK matrix has been redesigned to support sub-techniques. Sub-techniques are hidden by default.",
             onShow: function() {
@@ -36,7 +36,7 @@ let tour = new Tour({
             container: "#tour-matrix-container",
             element: "#tour-side-technique",
             placement: "right",
-            backdrop: true,
+            backdrop: false,
             title: "Showing sub-techniques",
             content: "Techniques which have sub-techniques are denoted by a gray sidebar. Not all techniques have sub-techniques. Click the gray sidebar to show the sub-techniques of the technique.",
             onShow: function() {
@@ -48,7 +48,7 @@ let tour = new Tour({
             container: "#tour-matrix-container",
             element: "#tour-side-subtechniques",
             placement: "top",
-            backdrop: true,
+            backdrop: false,
             title: "Showing sub-techniques",
             content: "The sub-techniques of the technique are displayed in a subcolumn to the right.",
             onShow: function() {
@@ -67,7 +67,7 @@ let tour = new Tour({
             container: "#tour-matrix-container",
             element: "#tour-flat-technique",
             placement: "left",
-            backdrop: true,
+            backdrop: false,
             title: "Showing sub-techniques",
             content: "Techniques which have sub-techniques are denoted by a gray sidebar. Click the gray sidebar to show the sub-techniques of the technique.",
             onShow: function() {
@@ -79,7 +79,7 @@ let tour = new Tour({
             container: "#tour-matrix-container",
             element: "#tour-flat-subtechniques",
             placement: "left",
-            backdrop: true,
+            backdrop: false,
             title: "Showing sub-techniques",
             content: "The sub-techniques of the technique are displayed below the technique.",
             onShow: function() {
@@ -94,12 +94,15 @@ let tour = new Tour({
             }
         }
     ],
-    storage: false //no resuming tour if the page is reloaded.
+    container: "#tour-matrix-container",
+    storage: false, //no resuming tour if the page is reloaded.
+    framework: 'bootstrap4',   // set Tourist to use BS4 compatibility
+    showProgressBar: false,
+    showProgressText: false,
 })
 
 
 function start_tour() {
-    tour.init()
     if (tour.ended()) tour.restart();
     else tour.start(true);
 }

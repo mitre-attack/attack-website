@@ -23,10 +23,24 @@ def generate():
     with open(os.path.join(config.techniques_markdown_path, "overview.md"), "w", encoding='utf8') as md_file:
         md_file.write(config.technique_overview_md)
 
-    for domain in config.domains:
-        generate_domain_markdown(domain)
+    techniques = {}
+    techniques_no_sub = {}
+    tactics = {}
 
-def generate_domain_markdown(domain):
+    for domain in config.domains:
+        #Reads the STIX and creates a list of the ATT&CK Techniques
+        techniques[domain] = stixhelpers.get_techniques(config.ms[domain])
+        techniques_no_sub[domain] = util.filter_out_subtechniques(techniques[domain])
+
+        tactics[domain] = stixhelpers.get_tactic_list(config.ms[domain])
+
+
+    side_nav_data = get_technique_side_nav_data(techniques_no_sub, tactics)
+
+    for domain in config.domains:
+        generate_domain_markdown(domain, techniques, tactics, side_nav_data)
+
+def generate_domain_markdown(domain, techniques, tactics, side_nav_data):
     """Generate technique index markdown for each domain and generates 
        shared data for techniques
     """
@@ -47,10 +61,9 @@ def generate_domain_markdown(domain):
     # Get technique table data and number of techniques
     data['technique_table'] = util.get_technique_table_data(None, technique_list_no_sub)
     data['technique_list_len'] = str(len(technique_list_no_sub))
-    side_menu_data = get_technique_side_menu_data(domain, technique_list, tactic_list)
 
     # Get tactic-techniques table
-    data['menu'] = side_menu_data
+    data['menu'] = side_nav_data
 
     subs = config.technique_domain_md.substitute(data)
     subs = subs + json.dumps(data)
@@ -62,9 +75,9 @@ def generate_domain_markdown(domain):
 
     for technique in technique_list_no_sub:
         if 'revoked' not in technique or technique['revoked'] is False:
-            generate_technique_md(technique, domain, side_menu_data, tactic_list)
+            generate_technique_md(technique, domain, side_nav_data, tactics[domain])
 
-def generate_technique_md(technique, domain, side_menu_data, tactic_list):
+def generate_technique_md(technique, domain, side_nav_data, tactic_list):
     """Generetes markdown data for given technique"""
 
     attack_id = util.get_attack_id(technique)
@@ -76,7 +89,8 @@ def generate_technique_md(technique, domain, side_menu_data, tactic_list):
 
         technique_dict['attack_id'] = attack_id
         technique_dict['domain'] = domain.split("-")[0]
-        technique_dict['menu'] = side_menu_data
+        technique_dict['menu'] = side_nav_data
+        technique_dict['name'] = technique.get('name')
 
         # Get subtechniques
         technique_dict['subtechniques'] = get_subtechniques(technique)
@@ -102,7 +116,7 @@ def generate_technique_md(technique, domain, side_menu_data, tactic_list):
                 sub_tech_dict = {}
 
                 sub_tech_dict['domain'] = domain.split("-")[0]
-                sub_tech_dict['menu'] = side_menu_data
+                sub_tech_dict['menu'] = side_nav_data
                 sub_tech_dict['parent_id'] = technique_dict['attack_id']
                 sub_tech_dict['parent_name'] = technique.get('name')
                 sub_tech_dict['subtechniques'] = technique_dict['subtechniques']
@@ -154,15 +168,20 @@ def generate_data_for_md(technique_dict, technique, tactic_list, is_sub_techniqu
                     }
                     technique_dict['mtcs'].append(mtcs_dict)
 
-        # Get technique external references    
-        ext_ref = technique["external_references"]
-
         # Get initial reference list
         reference_list = []
         # Decleared as an object to be able to pass by reference
         next_reference_number = {}
         next_reference_number['value'] = 1
         reference_list = util.update_reference_list(reference_list, technique)
+
+        dates = util.get_created_and_modified_dates(technique)
+        
+        if dates.get('created'):
+            technique_dict['created'] = dates['created']
+
+        if dates.get('modified'):
+            technique_dict['modified'] = dates['modified']
 
         # Get technique description
         if technique.get("description"):
@@ -379,52 +398,68 @@ def get_examples_table_data(technique, reference_list, next_reference_number):
         example_data = sorted(example_data, key=lambda k: k['name'].lower())
     return example_data
 
-def get_technique_side_menu_data(domain, technique_list, tactic_list):
+def get_technique_side_nav_data(techniques, tactics):
     """Responsible for generating the links that are located on the
        left side of individual technique domain pages
     """
+    
+    side_nav_data = []
 
-    # Get tactics techniques side menu data to fill out with jinja
-    tactics_techniques_menu_data = []
+    for domain in config.domains:
 
-    for tactic in tactic_list:
-        tactic_row = {}
-        
-        tactic_row['name'] = tactic['name']
-        tactic_row['id'] = util.get_attack_id(tactic)
-        tactic_row['path'] = "/tactics/{}".format(util.get_attack_id(tactic))
-        
-        tactic_row['children'] = []
-        for technique in technique_list[tactic['x_mitre_shortname']]:
-            technique_row = {}
-            # Get technique id and name for each technique
-            technique_row['name'] = technique['name']
-            technique_row['id'] = technique['id']
-            technique_row['path'] = "/techniques/{}/".format(technique['id'])
-            technique_row['children'] = []
-            # Add subtechniques as children if they are found:
-            if technique["stix_id"] in config.subtechniques_of:
-                subtechniques = config.subtechniques_of[technique["stix_id"]]
-                for subtechnique in subtechniques:
-                    child = {}
-                    child['name'] = subtechnique['object']['name']
-                    child['id'] = util.get_attack_id(subtechnique['object'])
-                    sub_number = child["id"].split(".")[1]
-                    child['path'] = "/techniques/{}/{}/".format(technique['id'], sub_number)
-                    child['children'] = []
-                    technique_row['children'].append(child)
+         # Get alias for domain
+        domain_alias = util.get_domain_alias(domain.split("-")[0])
 
-            # Add technique data to tactic
-            tactic_row['children'].append(technique_row)
-        
-        # Add tactic to table
-        tactics_techniques_menu_data.append(tactic_row)
-     
+        domain_data = {
+            "name": domain_alias,
+            "id": domain.split("-")[0],
+            "path": "/techniques/{}/".format(domain.split("-")[0]), # root level doesn't get a path
+            "children": []
+        }
+
+        technique_list = get_techniques_list(techniques[domain])
+
+        for tactic in tactics[domain]:
+            tactic_row = {}
+            
+            tactic_row['name'] = tactic['name']
+            tactic_row['id'] = util.get_attack_id(tactic)
+            tactic_row['path'] = "/tactics/{}".format(util.get_attack_id(tactic))
+            
+            tactic_row['children'] = []
+
+            
+            for technique in technique_list[tactic['x_mitre_shortname']]:
+                technique_row = {}
+                # Get technique id and name for each technique
+                technique_row['name'] = technique['name']
+                technique_row['id'] = technique['id']
+                technique_row['path'] = "/techniques/{}/".format(technique['id'])
+                technique_row['children'] = []
+                # Add subtechniques as children if they are found:
+                if technique["stix_id"] in config.subtechniques_of:
+                    subtechniques = config.subtechniques_of[technique["stix_id"]]
+                    for subtechnique in subtechniques:
+                        child = {}
+                        child['name'] = subtechnique['object']['name']
+                        child['id'] = util.get_attack_id(subtechnique['object'])
+                        sub_number = child["id"].split(".")[1]
+                        child['path'] = "/techniques/{}/{}/".format(technique['id'], sub_number)
+                        child['children'] = []
+                        technique_row['children'].append(child)
+
+                # Add technique data to tactic
+                tactic_row['children'].append(technique_row)
+            # Add tactic to domain
+            domain_data['children'].append(tactic_row)
+        # add domain to the table
+        side_nav_data.append(domain_data)
+
     return {
         "name": "techniques",
         "id": "techniques",
-        "path": "/techniques/{}/".format(domain.split("-")[0]), # root level doesn't get a path
-        "children": tactics_techniques_menu_data
+        "path": None, # root level doesn't get a path
+        "children": side_nav_data
     }
 
 def get_techniques_list(techniques):
