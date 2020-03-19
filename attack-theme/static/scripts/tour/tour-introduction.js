@@ -1,3 +1,6 @@
+//is the user doing a tour of the entire site, or just this module?
+isSiteTour = window.location.href.includes("?tour=true");
+
 let tour = new Tour({
     steps: [
         {
@@ -23,4 +26,8 @@ let tour = new Tour({
 function start_tour() {
     if (tour.ended()) tour.restart();
     else tour.start(true);
+}
+
+if (isSiteTour) {
+    start_tour();
 }
