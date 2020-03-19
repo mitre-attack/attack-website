@@ -20,6 +20,11 @@ def generate():
 
     # Generate contribution redirections
     generate_contribute_redirect()
+
+    # Generate training redirection
+    generate_training_redirects()
+    # Generate redirects not associated with any domain
+    generate_misc_redirects()
     
 def generate_markdown_files(domain):
     """Given a domain, changes all the old links to new redirected links"""
@@ -74,6 +79,15 @@ def generate_image_redirects():
         with open(os.path.join(config.redirects_markdown_path, data['title'] + ".md"), "w", encoding='utf8') as md_file:
             md_file.write(subs)
 
+def generate_training_redirects():
+    """Responsible for generating training redirect markdowns"""
+
+    for training in config.training_redict_dict:
+        subs = config.redirect_md.substitute(training)
+
+        with open(os.path.join(config.redirects_markdown_path, training['title'] + ".md"), "w", encoding='utf8') as md_file:
+            md_file.write(subs)
+       
 def generate_contribute_redirect():
     """Responsible for generating contribute redirects markdown"""
 
@@ -116,6 +130,19 @@ def generate_other_redirects(domain):
         subs = config.redirect_md.substitute(data)
 
         # Write redirect page for a single object
+        with open(os.path.join(config.redirects_markdown_path, data['title'] + ".md"), "w", encoding='utf8') as md_file:
+            md_file.write(subs)
+
+def generate_misc_redirects():
+    """generate redirects not associated with any domain"""
+    for redirect in config.other_redirects:
+        data = {}
+        data["title"] = "-".join(redirect["from"].split("/"))
+        data["redirect_link"] = redirect["to"]
+        data['path'] =redirect['from']
+
+        subs = config.redirect_md.substitute(data)
+
         with open(os.path.join(config.redirects_markdown_path, data['title'] + ".md"), "w", encoding='utf8') as md_file:
             md_file.write(subs)
 

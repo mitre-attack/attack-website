@@ -64,6 +64,14 @@ def generate_software_md(software,side_menu_data,side_menu_mobile_view_data):
         data['side_menu_data'] = side_menu_data
         data['side_menu_mobile_view_data'] = side_menu_mobile_view_data
 
+        dates = util.get_created_and_modified_dates(software)
+        
+        if dates.get('created'):
+            data['created'] = dates['created']
+
+        if dates.get('modified'):
+            data['modified'] = dates['modified']
+
         # Get name
         if software.get("name"): 
             data['name'] = software["name"]

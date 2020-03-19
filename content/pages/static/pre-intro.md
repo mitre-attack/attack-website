@@ -1,4 +1,4 @@
-Title: PRE-ATT&CK
+Title: PRE-ATT&CK Introduction
 Template: general/intro-overview
 Date: 2018
 Category: Cyber Threat Intelligence
@@ -11,12 +11,10 @@ Most companies secure their enterprise to ward off cyber adversaries by using pe
 
 Adversary pre-compromise activities are largely executed outside the enterprise’s field of view, making them more difficult to detect. Cyber adversaries case their victims using the wealth of information available on the internet and take advantage of an enterprise’s third-party relationships to gain access to a target’s infrastructure. Defenders must expand their ability to monitor and understand adversary actions outside the boundaries of their enterprise.
 
-<center>
-![PRE Tactics](/theme/images/enterprise-pre-lifecycle.png)
-</center>
+<img alt="PRE tactics" class="w-100" src="/theme/images/enterprise-pre-lifecycle.png">
 
 #### Purpose
-Building on [ATT&CK™](/resources/enterprise-introduction), PRE-ATT&CK provides the ability to prevent an attack before the adversary has a chance to get in. The 15 tactic categories for PRE-ATT&CK were derived from the first two stages (recon and weaponize) of a seven-stage Cyber Attack Lifecycle<sup>[[2]](https://www.mitre.org/capabilities/cybersecurity/threat-based-defense){:target="_blank"}</sup> (first articulated by Lockheed Martin as the Cyber Kill Chain®<sup>[[3]](http://www.lockheedmartin.com/content/dam/lockheed/data/corporate/documents/LM-White-Paper-Intel-Driven-Defense.pdf){:target="_blank"}</sup> ). This framework captures the tactics, techniques, and procedures adversaries use to select a target, obtain information, and launch a campaign. The framework lists the ways that adversaries perform each tactic and provides the ability to track and organize adversary statistics and patterns. Ultimately, this arms defenders with a broader understanding of adversary actions that they can use to determine technical or policy-based mitigations and evaluate the quality and utility of cyber threat intelligence data sources.
+Building on [ATT&CK<sup>&reg;</sup>](/resources/enterprise-introduction), PRE-ATT&CK provides the ability to prevent an attack before the adversary has a chance to get in. The 15 tactic categories for PRE-ATT&CK were derived from the first two stages (recon and weaponize) of a seven-stage Cyber Attack Lifecycle<sup>[[2]](https://www.mitre.org/capabilities/cybersecurity/threat-based-defense){:target="_blank"}</sup> (first articulated by Lockheed Martin as the Cyber Kill Chain<sup>&reg;</sup><sup>[[3]](http://www.lockheedmartin.com/content/dam/lockheed/data/corporate/documents/LM-White-Paper-Intel-Driven-Defense.pdf){:target="_blank"}</sup> ). This framework captures the tactics, techniques, and procedures adversaries use to select a target, obtain information, and launch a campaign. The framework lists the ways that adversaries perform each tactic and provides the ability to track and organize adversary statistics and patterns. Ultimately, this arms defenders with a broader understanding of adversary actions that they can use to determine technical or policy-based mitigations and evaluate the quality and utility of cyber threat intelligence data sources.
 
 <br>
 PRE-ATT&CK provides defenders with the ability to answer questions such as:

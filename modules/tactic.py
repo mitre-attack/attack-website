@@ -19,32 +19,37 @@ def generate():
     if not os.path.isdir(config.tactics_markdown_path):
         os.mkdir(config.tactics_markdown_path)
 
-    for domain in config.domains:
-        generate_domain_markdown(domain)
+    techniques = {}
+    techniques_no_sub = {}
+    tactics = {}
 
-def generate_domain_markdown(domain):
+    for domain in config.domains:
+        #Reads the STIX and creates a list of the ATT&CK Techniques
+        techniques[domain] = stixhelpers.get_techniques(config.ms[domain])
+        techniques_no_sub[domain] = util.filter_out_subtechniques(techniques[domain])
+
+        tactics[domain] = stixhelpers.get_tactic_list(config.ms[domain])
+
+    side_nav_data = util.get_side_nav_domains_data("tactics", tactics)
+
+    for domain in config.domains:
+        generate_domain_markdown(domain, techniques_no_sub, tactics, side_nav_data)
+
+def generate_domain_markdown(domain, techniques_no_sub, tactics, side_nav_data):
     """Generate tactic index markdown for each domain and generates 
        shared data for tactics
     """
- 
-    # Reads the json attack STIX and creates a list of the ATTACK Techniques
-    tactic_list = stixhelpers.get_tactic_list(config.ms[domain])
-
-    # Get technique list of current domain
-    technique_list = stixhelpers.get_techniques(config.ms[domain])
 
     # Filter sub-techniques from technique list
-    technique_list_no_sub = util.filter_out_subtechniques(technique_list)
 
     # Write out the markdown file for overview of domain
     data = {
         'domain': domain.split("-")[0],
-        'tactics_list_len': str(len(tactic_list))
+        'tactics_list_len': str(len(tactics))
     }
 
-    side_menu_data = util.get_side_menu_data("tactics", "/tactics/", tactic_list, domain.split("-")[0])
-    data['side_menu_data'] = side_menu_data
-    data['tactics_table'] = get_domain_table_data(tactic_list)
+    data['side_menu_data'] = side_nav_data
+    data['tactics_table'] = get_domain_table_data(tactics[domain])
 
     subs = config.tactic_domain_md.substitute(data)
     subs = subs + json.dumps(data)
@@ -57,10 +62,10 @@ def generate_domain_markdown(domain):
         i_md_file.write(config.tactic_overview_md)
 
     # Create the markdown for the enterprise groups in the STIX
-    for tactic in tactic_list:
-        generate_tactic_md(tactic, domain, tactic_list, technique_list_no_sub, side_menu_data)
+    for tactic in tactics[domain]:
+        generate_tactic_md(tactic, domain, tactics[domain], techniques_no_sub[domain], side_nav_data)
 
-def generate_tactic_md(tactic, domain, tactic_list, techniques, side_menu_data):
+def generate_tactic_md(tactic, domain, tactic_list, techniques, side_nav_data):
     """Generate markdown for given tactic"""
 
     attack_id = util.get_attack_id(tactic)
@@ -76,8 +81,16 @@ def generate_tactic_md(tactic, domain, tactic_list, techniques, side_menu_data):
         data['name'] = tactic['name']
         data['name_lower'] = tactic['name'].lower()
         data['descr'] = markdown.markdown(tactic['description'])
-        data['side_menu_data'] = side_menu_data
+        data['side_menu_data'] = side_nav_data
         data['domain'] = domain.split("-")[0]
+
+        dates = util.get_created_and_modified_dates(tactic)
+        
+        if dates.get('created'):
+            data['created'] = dates['created']
+
+        if dates.get('modified'):
+            data['modified'] = dates['modified']
 
         # Get techniques that are in the given tactic
         techniques_list = get_techniques_of_tactic(tactic, techniques)
