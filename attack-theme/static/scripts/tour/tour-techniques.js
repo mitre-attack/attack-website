@@ -9,18 +9,11 @@ let tourSteps = [
         content: "The techniques page has been redesigned to support sub-techniques.",
     },
     {
-        element: "#subtechniques-card-header",
-        placement: "top",
-        backdrop: false,
-        title: "Showing sub-techniques of a technique",
-        content: "Techniques which have sub-techniques will have an expandable panel containing the sub-techniques. Click the panel to show sub-techniques",
-    },
-    {
         element: "#subtechniques-card-body",
         placement: "right",
         backdrop: false,
         title: "Showing sub-techniques of a technique",
-        content: "The sub-techniques of the technique are displayed within the panel.",
+        content: "The sub-techniques of the technique are displayed within this panel. If the panel is omitted, then the technique has no sub-techniques.",
         onShow: function() {
             $("#subtechniques-card-body").collapse("show");
         },
