@@ -35,7 +35,7 @@
 ## [ATT&CK Content version 6.3](https://github.com/mitre/cti/releases/tag/ATT%26CK-v6.3)
 ### Fixes
 - Fixed typo in M1026.
-- Updated copyright statement marking-definition to match that on [attack.mitre.org](https://attack.mitre.org).
+- Updated copyright statement marking-definition to match that on [https://attack.mitre.org](https://attack.mitre.org).
 - Fixed invalid bundle IDs on marking-definition objects.
 
 # 6 March 2020

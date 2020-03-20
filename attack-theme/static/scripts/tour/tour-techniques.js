@@ -20,11 +20,11 @@ let tourSteps = [
         placement: "right",
         backdrop: false,
         title: "Showing sub-techniques of a technique",
-        content: "The sub-techniques of the technique are displayed within the panel. Sub-technique IDs are prefixed with the ID of their parent technique.",
+        content: "The sub-techniques of the technique are displayed within the panel.",
         onShow: function() {
             $("#subtechniques-card-body").collapse("show");
         },
-        next: isSiteTour? 3 : -1, //if it's a site tour, there is a next page.
+        // next: isSiteTour? 3 : -1, //if it's a site tour, there is a next page.
     },
 ]
 

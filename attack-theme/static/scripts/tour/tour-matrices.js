@@ -82,7 +82,7 @@ tourSteps = [
         onShow: function() {
             showMatrix("flat");
             open_example();
-        },
+        }
     }
 ]
 

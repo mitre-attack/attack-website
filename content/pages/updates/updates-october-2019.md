@@ -232,7 +232,7 @@ Minor Technique changes:
 * [HISTCONTROL](/techniques/T1148)
 * [Hardware Additions](/techniques/T1200)
 * [Hidden Users](/techniques/T1147)
-* [Indicator Removal on Host](/techniques/T1070)
+* Indicator Removal on Host
 * [Inhibit System Recovery](/techniques/T1490)
 * [Input Capture](/techniques/T1056)
 * [Input Prompt](/techniques/T1141)
