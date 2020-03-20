@@ -22,7 +22,11 @@
                 </p>
                 <ul>
                     {% for version in parsed.versions %}
-                    <li><a href="/previous/{{version.path}}">{{version.date_start}} - {{version.date_end}}</a> (<a href="/resources/updates/{{version.changelog}}">Updates</a>)</li>
+                        {% if version.retired %}
+                            <li>{{version.date_start}} - {{version.date_end}} (Retired. Download this version's <a href="{{version.cti_url}}">source code</a> or browse the <a href="{{version.gh_pages_url}}">commit</a> on Github).</li>
+                        {% else %}
+                            <li><a href="/previous/{{version.path}}">{{version.date_start}} - {{version.date_end}}</a> (<a href="/resources/updates/{{version.changelog}}">Updates</a>)</li>
+                        {% endif %}                    
                     {% endfor %}
                 </ul>
             </div>
