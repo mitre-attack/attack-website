@@ -20,7 +20,7 @@ let tourSteps = [
         placement: "right",
         backdrop: false,
         title: "Sibling sub-techniques",
-        content: "You can see \"sibling\" sub-techniques (sub-techniques under the same parent) within this parent. The current sub-technique is highlighted.",
+        content: "You can see other sub-techniques under the same parent within this panel. The current sub-technique is highlighted.",
         onShow: function() {
             $("#subtechniques-card-body").collapse("show");
         },
