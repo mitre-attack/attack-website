@@ -1,17 +1,13 @@
 //is the user doing a tour of the entire site, or just this module?
 isSiteTour = window.location.href.includes("?tour=true");
 
-//tour technique is scheduled task under privilege escalation
-let example_cell = {
-    "tactic": "x-mitre-tactic--5e29b093-294e-49e9-a803-dab3d73b77dd",
-    "technique": "attack-pattern--35dd844a-b219-4e2b-a6bb-efa9a75995a9"
-}
 function close_example() {
-    setMatrixCellState(example_cell["tactic"], example_cell["technique"], "closed")
+    setMatrixCellState(null, null, "closed", tour)
 }
 function open_example() {
-    setMatrixCellState(example_cell["tactic"], example_cell["technique"], "open")
+    setMatrixCellState(null, null, "open", tour)
 }
+
 function tour_technique_clicked() {
     if (tour.getCurrentStepIndex() == 1 || tour.getCurrentStepIndex() == 4) tour.next(); //user was following prompt, triggering next step
 }

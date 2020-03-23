@@ -43,7 +43,7 @@ def generate_platform_matrices(matrix, side_menu_data=None):
     data['domain'] = matrix['matrix'].split("-")[0]
     data['name'] = matrix['name']
 
-    data['matrices'], data["has_subtechniques"] = get_sub_matrices(matrix)
+    data['matrices'], data["has_subtechniques"], data["tour_technique"] = get_sub_matrices(matrix)
     # data['timestamp'] = get_timestamp(matrix['matrix'], filtered_techniques, filtered_old_techniques)
     data['platforms'] = [ {"name": platform, "path": config.platform_to_path[platform] } for platform in matrix['platforms'] ]
     data['navigator_link_enterprise'] = config.navigator_link_enterprise
@@ -76,13 +76,18 @@ def get_sub_matrices(matrix):
     tactic_id_to_shortname = { tactic["id"]: tactic["x_mitre_shortname"] for tactic in all_tactics }
     
     has_subtechniques = False #track whether the current matrix has subtechniques
+    tour_technique = { #technique used as an example in the sub-technique tour / usage explainer
+        "technique": None,
+        "tactic": None,
+        "subtechnique_count": 0
+    }
 
     # helper functions
     def phase_names(technique):
         """get kill chain phase names from the given technique"""
         return [ phase["phase_name"] for phase in technique["kill_chain_phases"] ]
     
-    def transform_technique(technique):
+    def transform_technique(technique, tactic_id):
         """transform a technique object into the format required by the matrix macro"""
 
         obj = {
@@ -94,7 +99,7 @@ def get_sub_matrices(matrix):
 
         if technique["id"] in config.subtechniques_of:
             subtechniques = config.subtechniques_of[technique["id"]]
-            obj["subtechniques"] = list(map(lambda st: transform_technique(st["object"]), subtechniques))
+            obj["subtechniques"] = list(map(lambda st: transform_technique(st["object"], tactic_id), subtechniques))
             # Filter subtechniques by platform
             obj["subtechniques"] = util.filter_techniques_by_platform(obj["subtechniques"], matrix['platforms'])
             # remove deprecated and revoked
@@ -102,6 +107,13 @@ def get_sub_matrices(matrix):
 
             nonlocal has_subtechniques
             has_subtechniques = True
+            nonlocal tour_technique
+            if tour_technique["subtechnique_count"] < 4 and tour_technique["subtechnique_count"]  < len(subtechniques):
+                # use this for the tour
+                tour_technique["technique"] = technique["id"]
+                tour_technique["tactic"] = tactic_id
+                tour_technique["subtechnique_count"] = len(subtechniques)
+
         return obj
 
     def techniques_in_tactic(tactic_id):
@@ -112,7 +124,7 @@ def get_sub_matrices(matrix):
         # filter platform techniques to those inside of this tactic
         techniques = list(filter(lambda technique: tactic_id_to_shortname[tactic_id] in phase_names(technique), platform_techniques))
         # transform into format required by matrix macro
-        return list(map(lambda t: transform_technique(t), techniques))
+        return list(map(lambda t: transform_technique(t, tactic_id), techniques))
     
     def transform_tactic(tactic_id):
         """transform a tactic object into the format required by the matrix macro"""
@@ -137,4 +149,4 @@ def get_sub_matrices(matrix):
             "tactics": tactics,
         })
         
-    return data, has_subtechniques
+    return data, has_subtechniques, tour_technique

@@ -19,7 +19,7 @@
 
 -->
 
-{% macro matrices(matrices, has_subtechniques, isIndex) %}
+{% macro matrices(matrices, has_subtechniques, tour_technique, isIndex) %}
 <div id="tour-matrix-container">
     {% if has_subtechniques %}
     <div class="matrix-controls">
@@ -57,7 +57,7 @@
                         <h3>{{matrix.name}}</h3>
                     {% endif %}
                     <div class="overflow-x-auto pb-3">
-                        {{ matrix_side(matrix.tactics) }}
+                        {{ matrix_side(matrix.tactics, tour_technique) }}
                     </div>
                 </div>
             {% endfor %}
@@ -69,7 +69,7 @@
                         <h3>{{matrix.name}}</h3>
                     {% endif %}
                     <div class="overflow-x-auto pb-3">
-                        {{ matrix_flat(matrix.tactics) }}
+                        {{ matrix_flat(matrix.tactics, tour_technique) }}
                     </div>
                 </div>
             {% endfor %}
@@ -82,7 +82,7 @@
                     <h3>{{matrix.name}}</h3>
                 {% endif %}
                 <div class="overflow-x-auto pb-3">
-                    {{ matrix_side(matrix.tactics) }}
+                    {{ matrix_side(matrix.tactics, tour_technique) }}
                 </div>
             </div>
         {% endfor %}
@@ -91,7 +91,7 @@
 {% endmacro %}
 
 
-{% macro matrix_flat(tactics) %}
+{% macro matrix_flat(tactics, tour) %}
 <table class="matrix flat">
     <thead>
         <tr>
@@ -116,17 +116,17 @@
                             {{ technique_cell(technique, False) }}
                         {% else %}
                             <!-- tour technique is scheduled task under privilege escalation -->
-                            {% set tour_technique = technique.id == 'attack-pattern--35dd844a-b219-4e2b-a6bb-efa9a75995a9' and tactic.id == 'x-mitre-tactic--5e29b093-294e-49e9-a803-dab3d73b77dd' and not isIndex %}
+                            {% set tour_technique = technique.id == tour.technique and tactic.id == tour.tactic and not isIndex %}
                             <table class="supertechnique"{% if tour_technique %} id="tour-flat-technique" {% endif %}>
                                 <tr>
-                                    <td class="sidebar technique sidebar--{{tactic.id}}--{{technique.id}}" onclick="matrix_toggle_technique('{{tactic.id}}', '{{technique.id}}');{% if tour_technique %} tour_technique_clicked();{% endif %}">
+                                    <td class="sidebar technique sidebar--{{tactic.id}}--{{technique.id}}{% if tour_technique %} sidebar--tour{% endif %}" onclick="matrix_toggle_technique('{{tactic.id}}', '{{technique.id}}');{% if tour_technique %} tour_technique_clicked();{% endif %}">
                                         <div class="handle"> = </div>
                                     </td>
                                     <td class="technique">
                                         {{ technique_cell(technique, True) }}
                                     </td>
                                 </tr>
-                                <tr class="subtechniques-row hidden subtechniques-container subtechniques--{{tactic.id}}--{{technique.id}}">
+                                <tr class="subtechniques-row hidden subtechniques-container subtechniques--{{tactic.id}}--{{technique.id}}{% if tour_technique %} subtechniques--tour{% endif %}">
                                     <td class="sidebar subtechniques">
                                         <svg width="12px" height="12px">
                                             <path d="M0 0H12V12Z"/>
@@ -150,7 +150,7 @@
 </table>
 {% endmacro %}
 
-{% macro matrix_side(tactics) %}
+{% macro matrix_side(tactics, tour) %}
 <table class="matrix side">
     <thead>
         <tr>
@@ -173,7 +173,8 @@
                     <table class="techniques-table">
                         {% for technique in tactic.techniques %}
                         <!-- tour technique is scheduled task under privilege escalation -->
-                        {% set tour_technique = technique.id == 'attack-pattern--35dd844a-b219-4e2b-a6bb-efa9a75995a9' and tactic.id == 'x-mitre-tactic--5e29b093-294e-49e9-a803-dab3d73b77dd' and not isIndex %}
+                        {% set tour_technique = technique.id == tour.technique and tactic.id == tour.tactic and not isIndex %}
+
                             <tr class="technique-row" {% if tour_technique %} id="tour-side-technique" {% endif %}>
                                 <td>
                                     {% if technique.subtechniques | length == 0 %}
@@ -189,7 +190,7 @@
                                     {% endif %}
                                 </td>
                                 {% if technique.subtechniques | length > 0 %}
-                                <td class="sidebar sidebar--{{tactic.id}}--{{technique.id}}" onclick="matrix_toggle_technique('{{tactic.id}}', '{{technique.id}}');{% if tour_technique %} tour_technique_clicked();{% endif %}">
+                                <td class="sidebar sidebar--{{tactic.id}}--{{technique.id}}{% if tour_technique %} sidebar--tour{% endif %}" onclick="matrix_toggle_technique('{{tactic.id}}', '{{technique.id}}');{% if tour_technique %} tour_technique_clicked();{% endif %}">
                                     <div class="angle top">
                                         <svg width="12px" height="12px">
                                             <path d="M0 12H12V0Z"/>
@@ -204,7 +205,7 @@
                                 </td>
                                 {% endif %}
                                 <td class="subtechniques-td"{% if tour_technique %} id="tour-side-subtechniques" {% endif %}>
-                                    <div class="subtechniques hidden subtechniques-container subtechniques--{{tactic.id}}--{{technique.id}}">
+                                    <div class="subtechniques hidden subtechniques-container subtechniques--{{tactic.id}}--{{technique.id}}{% if tour_technique %} subtechniques--tour{% endif %}">
                                         {% for subtechnique in technique.subtechniques %}
                                         <div class="subtechnique">
                                             {{ technique_cell(subtechnique, False) }}
