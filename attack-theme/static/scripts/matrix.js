@@ -6,13 +6,14 @@ function matrix_toggle_technique(tactic_id, technique_id) {
 
 // set the state of the given technique
 // state must be "open" or "closed"
-function setMatrixCellState(tactic_id, technique_id, state) {
+// if tour is true, affects the sub-technique tour technique, ignoring the technique and tactic params
+function setMatrixCellState(tactic_id, technique_id, state, tour=false) {
     if (state == "open") {
-        var joined = tactic_id + "--" + technique_id;
+        var joined = tour? 'tour' : tactic_id + "--" + technique_id;
         $(".subtechniques--" + joined).removeClass("hidden");
         $(".sidebar--" + joined).addClass("expanded");
     } else if (state == "closed") {
-        var joined = tactic_id + "--" + technique_id;
+        var joined = tour? 'tour' : tactic_id + "--" + technique_id;
         $(".subtechniques--" + joined).addClass("hidden");
         $(".sidebar--" + joined).removeClass("expanded");
     }
