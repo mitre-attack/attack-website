@@ -332,7 +332,8 @@ def get_technique_table_data(tactic, techniques_list):
                         raise Exception(f"{attack_id} subtechnique's attackID '{sub_attack_id}' is malformed")
                     sub_data['id'] = sub_attack_id.split(".")[1]
                     sub_data['descr'] = remove_citations(subtechnique['object']['description'], subtechnique['object']['external_references'])
-                    sub_data['descr'] = replace_html_chars(sub_data['descr'])
+                    # Replace html characters from first paragraph
+                    sub_data['descr'] = replace_html_chars(sub_data['descr'].split("\n")[0])
                     sub_data['descr'] = markdown.markdown(sub_data['descr'])
                     sub_data['descr'] = filter_urls(sub_data['descr'])
                     sub_data['descr'] = remove_html_paragraph(sub_data['descr'])

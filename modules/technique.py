@@ -47,14 +47,10 @@ def generate_domain_markdown(domain, techniques, tactics, side_nav_data):
 
     #Reads the STIX and creates a list of the ATT&CK Techniques
     full_techniques = stixhelpers.get_techniques(config.ms[domain])
-    tactic_list = stixhelpers.get_tactic_list(config.ms[domain])
 
     technique_list_no_sub = util.filter_out_subtechniques(full_techniques)
 
     data = {}
-    
-    # Format technique list for side nagivation menu
-    technique_list = get_techniques_list(technique_list_no_sub)
 
     data['domain'] = domain.split("-")[0]
 
