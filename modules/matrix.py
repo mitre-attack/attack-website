@@ -108,11 +108,11 @@ def get_sub_matrices(matrix):
             nonlocal has_subtechniques
             has_subtechniques = True
             nonlocal tour_technique
-            if tour_technique["subtechnique_count"] < 4 and tour_technique["subtechnique_count"]  < len(subtechniques):
+            if tour_technique["subtechnique_count"] < 4 and tour_technique["subtechnique_count"]  < len(obj["subtechniques"]):
                 # use this for the tour
                 tour_technique["technique"] = technique["id"]
                 tour_technique["tactic"] = tactic_id
-                tour_technique["subtechnique_count"] = len(subtechniques)
+                tour_technique["subtechnique_count"] = len(obj["subtechniques"])
 
         return obj
 
