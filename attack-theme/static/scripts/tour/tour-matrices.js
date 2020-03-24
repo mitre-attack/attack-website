@@ -31,7 +31,7 @@ tourSteps = [
         placement: "right",
         backdrop: false,
         title: "Showing sub-techniques",
-        content: "Techniques which have sub-techniques are denoted by a gray sidebar. Not all techniques have sub-techniques. Click the gray sidebar to show the sub-techniques of the technique.",
+        content: "Techniques that have sub-techniques are denoted by a gray sidebar. Not all techniques have sub-techniques. Click the gray sidebar to show the sub-techniques of the technique.",
         onShow: function() {
             showMatrix("side");
             close_example();
@@ -54,7 +54,7 @@ tourSteps = [
         element: "#layout-options",
         placement: "top",
         title: "Using the flat matrix layout",
-        content: "There are multiple ways subtechniques can be represented in the matrix. Click the 'layouts' dropdown and select 'flat layout' to see the alternate layout."
+        content: "There are multiple ways sub-techniques can be represented in the matrix. Click the 'layouts' dropdown and select 'flat layout' to see the alternate layout."
     },
     {
         container: "#tour-matrix-container",

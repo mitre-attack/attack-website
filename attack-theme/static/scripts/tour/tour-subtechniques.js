@@ -13,7 +13,7 @@ let tourSteps = [
         placement: "bottom",
         backdrop: false,
         title: "Sub-technique names",
-        content: "Sub-technique names re prefixed with the name of their parent technique.",
+        content: "Sub-technique names are prefixed with the name of their parent technique.",
     },
     {
         element: "#subtechniques-card-body",
