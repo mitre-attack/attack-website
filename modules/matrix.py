@@ -141,7 +141,7 @@ def get_sub_matrices(matrix):
     for sub_matrix in sub_matrices:
         # find last modified date
         matrix_dates = util.get_created_and_modified_dates(sub_matrix)
-        matrix_timestamp = matrix_dates["modified"] if "modified" in matrix else matrix_dates["created"]
+        matrix_timestamp = matrix_dates["modified"] if "modified" in matrix_dates else matrix_dates["created"]
         # get tactics for the matrix
         tactics = list(map(lambda tid: transform_tactic(tid), sub_matrix["tactic_refs"]))
         # filter out empty tactics
