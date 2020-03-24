@@ -34,7 +34,7 @@
                     <a class="dropdown-item layout-button flat" href="#" onclick="show_flat_matrix(); {% if not isIndex %} tour_layout_clicked() {% endif %} ">
                             flat layout
                         </a>
-                    </div>
+                </div>
                 </div>
             </div>
             <div class="btn-group mr-2" role="group">
@@ -49,41 +49,50 @@
             {% endif %}
         </div>
     </div>
-    <div class="matrix-container" id="layouts-content">
+    <div id="layouts-content">
         <div class="matrix-type side">
             {% for matrix in matrices %}
-                <div class="p-3">
+                <div class="matrix-container p-3">
                     {% if matrices | length > 1%}
-                        <h3>{{matrix.name}}</h3>
+                        <h3 class="text-center matrix-title">{{matrix.name}}</h3>
                     {% endif %}
-                    <div class="overflow-x-auto pb-3">
+                <div class="overflow-x-auto pb-3">
                         {{ matrix_side(matrix.tactics, tour_technique) }}
                     </div>
+                    {% if not isIndex %}
+                    <div class="timestamp deemphasis text-center pt-3">Last modified: {{matrix.timestamp}}</div>
+                    {% endif %}
                 </div>
             {% endfor %}
         </div>
         <div class="matrix-type flat d-none">
             {% for matrix in matrices %}
-                <div class="p-3">
+                <div class="matrix-container p-3">
                     {% if matrices | length > 1%}
-                        <h3>{{matrix.name}}</h3>
+                        <h3 class="text-center matrix-title">{{matrix.name}}</h3>
                     {% endif %}
                     <div class="overflow-x-auto pb-3">
                         {{ matrix_flat(matrix.tactics, tour_technique) }}
                     </div>
+                    {% if not isIndex %}
+                    <div class="timestamp deemphasis text-center pt-3">Last modified: {{matrix.timestamp}}</div>
+                    {% endif %}
                 </div>
             {% endfor %}
         </div>
     </div>
     {% else %}
         {% for matrix in matrices %}
-            <div class="p-3">
+            <div class="matrix-container p-3">
                 {% if matrices | length > 1%}
-                    <h3>{{matrix.name}}</h3>
+                    <h3 class="text-center matrix-title">{{matrix.name}}</h3>
                 {% endif %}
                 <div class="overflow-x-auto pb-3">
                     {{ matrix_side(matrix.tactics, tour_technique) }}
                 </div>
+                {% if not isIndex %}
+                <div class="timestamp deemphasis text-center pt-3">Last modified: {{matrix.timestamp}}</div>
+                {% endif %}
             </div>
         {% endfor %}
     {% endif %}
