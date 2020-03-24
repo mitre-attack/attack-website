@@ -139,12 +139,16 @@ def get_sub_matrices(matrix):
     data = []
     sub_matrices = stixhelpers.get_matrices(domain_ms)
     for sub_matrix in sub_matrices:
+        # find last modified date
+        matrix_dates = util.get_created_and_modified_dates(sub_matrix)
+        matrix_timestamp = matrix_dates["modified"] if "modified" in matrix else matrix_dates["created"]
         # get tactics for the matrix
         tactics = list(map(lambda tid: transform_tactic(tid), sub_matrix["tactic_refs"]))
         # filter out empty tactics
         tactics = list(filter(lambda t: len(t["techniques"]) > 0, tactics))
         data.append({
             "name": sub_matrix["name"],
+            "timestamp": matrix_timestamp,
             "description": sub_matrix["description"],
             "tactics": tactics,
         })
