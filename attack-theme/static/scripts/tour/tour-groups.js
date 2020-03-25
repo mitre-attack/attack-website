@@ -13,14 +13,14 @@ let tourSteps = [
         placement: "left",
         backdrop: false,
         title: "Technique tables",
-        content: "In cases where a relationship exists with a technique exists in the table but not its sub-techniques, the row format is unchanged.",
+        content: "In cases where a technique in the table but not its sub-techniques, the row format is unchanged.",
     },
     {
         element: "#uses-T1059",
         placement: "left",
         backdrop: false,
         title: "Technique tables",
-        content: "In cases where both the parent and its sub-techniques exists in the table, the sub-techniques are shown nested beneath their parent in the ID column.",
+        content: "In cases where both the technique and its sub-techniques exists in the table, the sub-techniques are shown nested beneath their parent in the ID column.",
     },
     {
         element: "#uses-T1071-001",
