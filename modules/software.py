@@ -98,32 +98,29 @@ def generate_software_md(software,side_menu_data,side_menu_mobile_view_data):
         # Get techniques used by software
         data['technique_table_data'] = get_techniques_used_by_software_data(software, reference_list, next_reference_number)
 
-        # # Get enterprise and mobile layers for navigator
-        # enterprise_layer, mobile_layer = util.get_navigator_layers(data['name'], data['technique_table_data'])
+        # Get navigator layers for this sofftware
+        layers = util.get_navigator_layers(
+            data['name'], 
+            data["attack_id"],
+            "software",
+            data["version"] if "version" in data else None,
+            data['technique_table_data'], 
+        )
 
-        # Get navigator layers for this group
-        # layers = util.get_navigator_layers(
-        #     data['name'], 
-        #     data["attack_id"],
-        #     "software",
-        #     data["version"] if "version" in data else None,
-        #     data['technique_table_data'], 
-        # )
-
-        # data["layers"] = []
-        # for layer in layers:
-        #     with open(os.path.join(config.software_markdown_path, "-".join([data['attack_id'], "techniques", layer["domain"]]) + ".md"), "w", encoding='utf8') as layer_json:
-        #         subs = config.layer_md.substitute({
-        #             "attack_id": data["attack_id"],
-        #             "path": "software/" + data["attack_id"],
-        #             "domain": layer["domain"]
-        #         })
-        #         subs = subs + layer["layer"]
-        #         layer_json.write(subs)
-        #     data["layers"].append({
-        #         "domain": layer["domain"],
-        #         "filename": "-".join([data["attack_id"], layer["domain"], "layer"]) + ".json"
-        #     })
+        data["layers"] = []
+        for layer in layers:
+            with open(os.path.join(config.software_markdown_path, "-".join([data['attack_id'], "techniques", layer["domain"]]) + ".md"), "w", encoding='utf8') as layer_json:
+                subs = config.layer_md.substitute({
+                    "attack_id": data["attack_id"],
+                    "path": "software/" + data["attack_id"],
+                    "domain": layer["domain"]
+                })
+                subs = subs + layer["layer"]
+                layer_json.write(subs)
+            data["layers"].append({
+                "domain": layer["domain"],
+                "filename": "-".join([data["attack_id"], layer["domain"], "layer"]) + ".json"
+            })
         
         # Get aliases descriptions
         data['alias_descriptions'] = util.get_alias_data(software.get("x_mitre_aliases")[1:], ext_ref, reference_list, next_reference_number)

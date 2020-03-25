@@ -215,7 +215,7 @@ attack_path = {
 # usage: 
 #     domain: "enterprise" or "mobile"
 #     path: the path to the object, e.g "software/S1001" or "groups/G2021"
-layer_md = Template("Title: ${domain} Techniques\n"
+layer_md = Template("Title: ${domain} ${attack_id} Techniques\n"
                     "Template: general/json\n"
                     "save_as: ${path}/${attack_id}-${domain}-layer.json\n"
                     "json: ")

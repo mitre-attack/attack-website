@@ -666,9 +666,8 @@ def get_navigator_layers(name, attack_id, obj_type, version, techniques_used):
             else:
                 navigator_technique = get_navigator_technique(technique['id'], technique["descr"], score, False)
         else:
-            score = 0
             if technique.get('subtechniques'):
-                navigator_technique = get_navigator_technique(technique['id'], None, score, True)
+                navigator_technique = get_navigator_technique(technique['id'], None, None, True)
         
         if navigator_technique:
             if technique['domain'].startswith("enterprise"):
@@ -680,7 +679,7 @@ def get_navigator_layers(name, attack_id, obj_type, version, techniques_used):
         if technique.get('subtechniques'):
             for subtechnique in technique['subtechniques']:
                 score = 1
-                navigator_technique = get_navigator_technique(subtechnique['id'], subtechnique["descr"], score, True)
+                navigator_technique = get_navigator_technique(technique['id']+"."+subtechnique['id'], subtechnique["descr"], score, True)
 
                 if technique['domain'].startswith("enterprise"):
                     enterprise_layer['techniques'].append(navigator_technique)
@@ -700,11 +699,12 @@ def get_navigator_layers(name, attack_id, obj_type, version, techniques_used):
         })
     return layers
 
-def get_navigator_technique(attack_id, description, score = 0, showSub = False):
+def get_navigator_technique(attack_id, description, score, showSub = False):
     """Given an attack id, return it as a dict for the navigator layer"""
 
     navigator_technique = {}
-    navigator_technique['score'] = 1
+    if score:
+        navigator_technique['score'] = score
     navigator_technique['techniqueID'] = attack_id
     navigator_technique['showSubtechniques'] = showSub
     if description: navigator_technique['comment'] = bleach.clean(description, tags=[], strip=True) #remove html tags
