@@ -211,23 +211,28 @@ def generate_data_for_md(technique_dict, technique, tactic_list, is_sub_techniqu
 
         # Get platforms that technique uses
         if technique.get('x_mitre_platforms'):
+            technique['x_mitre_platforms'].sort()
             technique_dict['platforms'] = ", ".join(technique['x_mitre_platforms'])
 
         # Get system requirements
         if technique.get('x_mitre_system_requirements'):
+            technique['x_mitre_system_requirements'].sort()
             technique_dict['sysreqs'] = ", ".join(technique['x_mitre_system_requirements'])
             technique_dict['sysreqs'] = re.sub("\.?\\n+", "; ", technique_dict['sysreqs'])
 
         # Get permissions required
         if technique.get('x_mitre_permissions_required'):
+            technique['x_mitre_permissions_required'].sort()
             technique_dict['perms'] = ", ".join(technique['x_mitre_permissions_required'])
 
         # Get effective permissions
         if technique.get('x_mitre_effective_permissions'):
+            technique['x_mitre_effective_permissions'].sort()
             technique_dict['eff_perms'] = ", ".join(technique['x_mitre_effective_permissions'])
 
         # Get data sources
         if technique.get('x_mitre_data_sources'):
+            technique['x_mitre_data_sources'].sort()
             technique_dict['data_sources'] = ", ".join(technique['x_mitre_data_sources'])
 
         # Get if technique supports remote
@@ -246,18 +251,22 @@ def generate_data_for_md(technique_dict, technique, tactic_list, is_sub_techniqu
 
         # Get list of impacts
         if technique.get('x_mitre_impact_type'):
+            technique['x_mitre_impact_type'].sort()
             technique_dict['impact_type'] = ", ".join(technique['x_mitre_impact_type'])
 
         # Get list of defenses bypassed
         if technique.get('x_mitre_defense_bypassed'):
+            technique['x_mitre_defense_bypassed'].sort()
             technique_dict['def_bypass'] = ", ".join(technique['x_mitre_defense_bypassed'])
 
         # Get list of contributors        
         if technique.get('x_mitre_contributors'):
+            technique['x_mitre_contributors'].sort()
             technique_dict['contributors'] = "; ".join(technique['x_mitre_contributors'])
 
         # Get list of tactic types
         if technique.get('x_mitre_tactic_type'):
+            technique['x_mitre_tactic_type'].sort()
             technique_dict['tactic_type'] = ", ".join(technique['x_mitre_tactic_type'])
 
         # Get detection data
