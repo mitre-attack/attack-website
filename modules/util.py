@@ -18,6 +18,26 @@ def timestamp():
     timestamp = datetime.datetime.now().strftime("%H:%M:%S")
     return timestamp
 
+def get_created_and_modified_dates(obj):
+    """ Given an object, return the modified and created dates """
+    
+    dates = {}
+
+    if obj.get('created'):
+        dates['created'] = format_date(obj['created'])
+    if obj.get('modified'):
+        dates['modified'] = format_date(obj['modified'])
+
+    return dates
+
+def format_date(date):
+    """ Given a date string, format to %d %B %Y """
+
+    if isinstance(date, str):
+        date = datetime.datetime.strptime(date, "%Y-%m-%dT%H:%M:%S.%fZ")
+
+    return ("{} {} {}").format(date.strftime("%d"), date.strftime("%B"), date.strftime("%Y"))
+
 def find_index_id(ext_ref):
     """This method will search for the index of the external_id in the
        external reference list
@@ -312,7 +332,8 @@ def get_technique_table_data(tactic, techniques_list):
                         raise Exception(f"{attack_id} subtechnique's attackID '{sub_attack_id}' is malformed")
                     sub_data['id'] = sub_attack_id.split(".")[1]
                     sub_data['descr'] = remove_citations(subtechnique['object']['description'], subtechnique['object']['external_references'])
-                    sub_data['descr'] = replace_html_chars(sub_data['descr'])
+                    # Replace html characters from first paragraph
+                    sub_data['descr'] = replace_html_chars(sub_data['descr'].split("\n")[0])
                     sub_data['descr'] = markdown.markdown(sub_data['descr'])
                     sub_data['descr'] = filter_urls(sub_data['descr'])
                     sub_data['descr'] = remove_html_paragraph(sub_data['descr'])
@@ -340,6 +361,158 @@ def remove_citations(descr, citations):
         descr = descr.replace("(Citation: " + citation['source_name'] + ")","")
 
     return descr
+
+def get_side_nav_domains_data(side_nav_title, elements_list):
+    """Responsible for generating the links that are located on the
+       left side of pages for desktop clients
+    """
+
+    def get_element_data(element):
+        return {
+            "name": element['name'],
+            "id": element['name'],
+            "path": "/{}/{}/".format(side_nav_title, attack_id),
+            "children": []
+        }
+
+    elements_data = []
+
+    for domain in config.domains:
+        if elements_list[domain]:
+            # Get alias for domain
+            domain_alias = get_domain_alias(domain.split("-")[0])
+
+            domain_data = {
+                "name": domain_alias,
+                "id": domain.split("-")[0],
+                "path": "/{}/{}/".format(side_nav_title, domain.split("-")[0]),
+                "children": []
+            }
+
+            for element in elements_list[domain]:
+                attack_id = get_attack_id(element)
+                if attack_id:
+                    domain_data['children'].append(get_element_data(element))
+            
+            elements_data.append(domain_data)
+
+    # return side menu
+    return {
+        "name": side_nav_title,
+        "id": side_nav_title,
+        "path": None, # root level doesn't get a path
+        "children": elements_data
+    }  
+
+def get_side_nav_domains_mobile_view_data(side_nav_title, elements_list, amount_per_row):
+    """ Given a title, an elements list and the amount of elements per row,
+        get the data for the side navigation on a mobile view.
+    """
+
+    def get_element_data(element):
+        """ Given an element, return the formatted JSON """
+        
+        return {
+            "name": element['name'],
+            "id": uuid.uuid4().hex,
+            "path": "/{}/{}/".format(side_nav_title, attack_id),
+            "children": []
+        }
+    
+    def check_children(category_list, domain_list):
+        """ Given a category list, check if there is no children and update list.
+            Ignore if is digits or other.
+        """
+
+        for cat in category_list:
+            if not cat['children']:
+                if cat['name'].startswith("1"):
+                    continue
+                elif cat['name'].startswith("Other"):
+                    continue
+                else:
+                    # Add empty child
+                    child = {
+                        "name" : "No {}".format(side_nav_title),
+                        'id' : "empty",
+                        "path" : None,
+                        "children" : []
+                    }
+                    cat['children'].append(child)
+            domain_data['children'].append(cat)
+        
+        return domain_data
+    
+    def get_category_list():
+        """ Get an empty category list """
+
+        caterogories_content = []
+        for cat in categories:
+            pane = {
+                "name" : cat,
+                "id" : uuid.uuid4().hex,
+                "path" : None,
+                "children" : []
+            }
+            caterogories_content.append(pane)
+        
+        return caterogories_content
+
+    categories_map = {char: math.ceil((i+1)/amount_per_row) for i,char in enumerate(string.ascii_uppercase)}
+    categories = list(map(lambda cat: cat[0] + "-" + cat[-1], \
+                      [string.ascii_uppercase[i:i+amount_per_row] \
+                          for i in range(0, len(string.ascii_uppercase), \
+                              amount_per_row)]))
+    categories = ["1-9"] + categories + ["Other"]
+
+    elements_data = []
+
+    for domain in config.domains:
+
+        if elements_list[domain]:
+
+            caterogy_list = get_category_list()
+
+            # Get alias for domain
+            domain_alias = get_domain_alias(domain.split("-")[0])
+
+            domain_data = {
+                "name": domain_alias,
+                "id": domain_alias,
+                "path": "/{}/{}/".format(side_nav_title, domain.split("-")[0]),
+                "children": []
+            }
+
+            for element in elements_list[domain]:
+                attack_id = get_attack_id(element)
+                if attack_id:
+                        
+                    child = get_element_data(element)
+
+                    # Get first character and find in map
+                    element_char = element['name'][0]
+
+                    if element_char.isdigit():
+                        element_cat_index = 0
+                    elif element_char.isalpha():
+                        element_cat_index = categories_map[element_char.upper()]
+                    else:
+                        element_cat_index = len(categories) - 1
+
+                    # Add child to pane
+                    caterogy_list[element_cat_index]['children'].append(child)
+            
+            domain_data = check_children(caterogy_list, domain_data)
+            
+            elements_data.append(domain_data)
+
+    # return side menu
+    return {
+        "name": side_nav_title,
+        "id": side_nav_title,
+        "path": None, # root level doesn't get a path
+        "children": elements_data
+    }
 
 def get_side_menu_data(side_nav_title, path_prefix, elements_list, domain=None):
     """Responsible for generating the links that are located on the
@@ -583,6 +756,17 @@ def find_in_reference_list(reference_list, source_name):
             return True
     return False
 
+def get_domain_alias(domain):
+    """ Given a domain name, return its alias.
+        If not found return the same domain
+    """
+
+    for domain_pair in config.domain_aliases:
+        if domain_pair[1] == domain:
+            return domain_pair[0]
+    
+    return domain
+
 def replace_html_chars(to_be_replaced):
     return to_be_replaced.replace("\n", "")\
                          .replace("{", "{{")\
@@ -791,14 +975,22 @@ def get_side_menu_matrices(children):
 
 
     def children_helper(matrix, path_prefix):
-
         children = matrix["subtypes"]
-        return {
-            "name": matrix["name"],
-            "id": matrix["name"].split("-")[0].split(" ")[0].lower(),
-            "path": path_prefix + matrix["path"] + "/", # parents don't have links
-            "children": list(map(lambda child: children_helper(child, path_prefix), children))
-        }
+        if matrix["type"] == "local":
+            return {
+                "name": matrix["name"],
+                "id": matrix["name"].split("-")[0].split(" ")[0].lower(),
+                "path": path_prefix + matrix["path"] + "/", # parents don't have links
+                "children": list(map(lambda child: children_helper(child, path_prefix), children))
+            }
+        elif matrix["type"] == "external":
+            return {
+                "name": matrix["name"],
+                "external": True,
+                "id": matrix["name"].split("-")[0].split(" ")[0].lower(),
+                "path": matrix["path"],  # external links don't get prefixes
+                "children": list(map(lambda child: children_helper(child, path_prefix), children))
+            }
 
     return {
         "name": "matrices",

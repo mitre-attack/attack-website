@@ -13,12 +13,14 @@ let tour = new Tour({
             }
         }
     ],
-    storage: false //no resuming tour if the page is reloaded.
+    storage: false, //no resuming tour if the page is reloaded.
+    framework: 'bootstrap4',   // set Tourist to use BS4 compatibility
+    showProgressBar: false,
+    showProgressText: false
 })
 
 
 function start_tour() {
-    tour.init()
     if (tour.ended()) tour.restart();
     else tour.start(true);
 }

@@ -31,7 +31,7 @@
                         <a class="dropdown-item layout-button side active" href="#" onclick="show_side_matrix()">
                             side layout
                         </a>
-                        <a class="dropdown-item layout-button flat" href="#" onclick="show_flat_matrix(); tour_layout_clicked()">
+                    <a class="dropdown-item layout-button flat" href="#" onclick="show_flat_matrix(); {% if not isIndex %} tour_layout_clicked() {% endif %} ">
                             flat layout
                         </a>
                     </div>
@@ -116,7 +116,7 @@
                             {{ technique_cell(technique, False) }}
                         {% else %}
                             <!-- tour technique is scheduled task under privilege escalation -->
-                            {% set tour_technique = technique.id == 'attack-pattern--35dd844a-b219-4e2b-a6bb-efa9a75995a9' and tactic.id == 'x-mitre-tactic--5e29b093-294e-49e9-a803-dab3d73b77dd' %}
+                            {% set tour_technique = technique.id == 'attack-pattern--35dd844a-b219-4e2b-a6bb-efa9a75995a9' and tactic.id == 'x-mitre-tactic--5e29b093-294e-49e9-a803-dab3d73b77dd' and not isIndex %}
                             <table class="supertechnique"{% if tour_technique %} id="tour-flat-technique" {% endif %}>
                                 <tr>
                                     <td class="sidebar technique sidebar--{{tactic.id}}--{{technique.id}}" onclick="matrix_toggle_technique('{{tactic.id}}', '{{technique.id}}');{% if tour_technique %} tour_technique_clicked();{% endif %}">
@@ -173,9 +173,9 @@
                     <table class="techniques-table">
                         {% for technique in tactic.techniques %}
                         <!-- tour technique is scheduled task under privilege escalation -->
-                        {% set tour_technique = technique.id == 'attack-pattern--35dd844a-b219-4e2b-a6bb-efa9a75995a9' and tactic.id == 'x-mitre-tactic--5e29b093-294e-49e9-a803-dab3d73b77dd' %}
-                            <tr class="technique-row"{% if tour_technique %} id="tour-side-technique" {% endif %}>
-                                <td>
+                        {% set tour_technique = technique.id == 'attack-pattern--35dd844a-b219-4e2b-a6bb-efa9a75995a9' and tactic.id == 'x-mitre-tactic--5e29b093-294e-49e9-a803-dab3d73b77dd' and not isIndex %}
+                            <tr class="technique-row">
+                                <td {% if tour_technique %} id="tour-side-technique" {% endif %}>
                                     {% if technique.subtechniques | length == 0 %}
                                         {{ technique_cell(technique, False) }}
                                     {% else %}

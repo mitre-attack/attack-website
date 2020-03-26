@@ -1,6 +1,7 @@
 import colorama
 import json
 import multiprocessing
+import os
 import shutil
 from string import Template
 from . import relationshiphelpers as rsh
@@ -11,8 +12,11 @@ from . import util
 
 # Settings dictionary to build website
 settings_dict = {
-    "banner_enabled": "false",
-    "banner_message": "<a href='https://www.mitre.org/attackcon-streamed-live' target='_blank'> Register to stream ATT&CKcon 2.0 October 29-30</a>",
+    "content_version": "6.3",
+    "website_version": "1.2.4",
+    "changelog_location": "/resources/changelog.html",
+    "banner_enabled": "true",
+    "banner_message": "<strong><a href='https://collaborate.mitre.org/attackics' target='_blank'>JUST RELEASED: ATT&CK for Industrial Control Systems</a></strong>",
     "domains": ["pre-attack", "enterprise-attack", "mobile-attack"],
     "source_names": [
         "mitre-pre-attack", 
@@ -61,98 +65,110 @@ index_matrix = {
 matrices = [
     {
         "name": "PRE-ATT&CK",
+        "type": "local",
         "path": "pre",
         "platforms": [],
         "matrix": "pre-attack",
-        "descr": "Below are the tactics and techniques representing the MITRE PRE-ATT&CK Matrix&trade;.",
+        "descr": "Below are the tactics and techniques representing the MITRE PRE-ATT&CK Matrix.",
         "subtypes": [],
     },
     {
         "name": "Enterprise",
+        "type": "local",
         "path": "enterprise",
         "matrix": "enterprise-attack",
         "platforms": ["Windows","macOS","Linux",
                       "AWS","GCP","Azure","Azure AD",
                       "Office 365","SaaS"],
-        "descr": "Below are the tactics and technique representing the MITRE ATT&CK Matrix&trade; for Enterprise. ",
+        "descr": "Below are the tactics and technique representing the MITRE ATT&CK<sup>&reg;</sup> Matrix for Enterprise. ",
         "subtypes": [
             {
                 "name": "Windows",
+                "type": "local",
                 "matrix": "enterprise-attack",
                 "path": "enterprise/windows",
                 "platforms": ["Windows"],
-                "descr": "Below are the tactics and technique representing the MITRE ATT&CK Matrix&trade; for Enterprise. ",
+                "descr": "Below are the tactics and technique representing the MITRE ATT&CK<sup>&reg;</sup> Matrix; for Enterprise. ",
                 "subtypes": []
             },
             {
                 "name" : "macOS",
+                "type": "local",
                 "matrix": "enterprise-attack",
                 "path": "enterprise/macos",
                 "platforms": ["macOS"],
-                "descr": "Below are the tactics and technique representing the MITRE ATT&CK Matrix&trade; for Enterprise. ",
+                "descr": "Below are the tactics and technique representing the MITRE ATT&CK<sup>&reg;</sup> Matrix for Enterprise. ",
                 "subtypes": []
             },
             {
                 "name" : "Linux",
+                "type": "local",
                 "matrix": "enterprise-attack",
                 "platforms": ["Linux"],
                 "path": "enterprise/linux",
-                "descr": "Below are the tactics and technique representing the MITRE ATT&CK Matrix&trade; for Enterprise. ", 
+                "descr": "Below are the tactics and technique representing the MITRE ATT&CK<sup>&reg;</sup> Matrix for Enterprise. ", 
                 "subtypes": []
             },
             {
                 "name": "Cloud",
+                "type": "local",
                 "matrix": "enterprise-attack",
                 "path": "enterprise/cloud",
                 "platforms": ["AWS","GCP","Azure","Azure AD","Office 365","SaaS"],
-                "descr": "Below are the tactics and technique representing the MITRE ATT&CK Matrix&trade; for Enterprise covering cloud-based techniques. ",
+                "descr": "Below are the tactics and technique representing the MITRE ATT&CK<sup>&reg;</sup> Matrix for Enterprise covering cloud-based techniques. ",
                 "subtypes": [
                     {
                         "name" : "AWS",
+                        "type": "local",
                         "matrix": "enterprise-attack",
                         "path": "enterprise/cloud/aws",
                         "platforms": ["AWS"],
-                        "descr": "Below are the tactics and technique representing the MITRE ATT&CK Matrix&trade; for Enterprise covering cloud-based techniques. ",
+                        "descr": "Below are the tactics and technique representing the MITRE ATT&CK<sup>&reg;</sup> Matrix for Enterprise covering cloud-based techniques. ",
                         "subtypes": []
                     },
                     {
                         "name" : "GCP",
+                        "type": "local",
                         "matrix": "enterprise-attack",
                         "path": "enterprise/cloud/gcp",
                         "platforms": ["GCP"],
-                        "descr": "Below are the tactics and technique representing the MITRE ATT&CK Matrix&trade; for Enterprise covering cloud-based techniques. ",
+                        "descr": "Below are the tactics and technique representing the MITRE ATT&CK<sup>&reg;</sup> Matrix for Enterprise covering cloud-based techniques. ",
                         "subtypes": []
                     },
                     {
                         "name": "Azure",
+                        "type": "local",
                         "matrix": "enterprise-attack",
                         "path": "enterprise/cloud/azure",
                         "platforms": ["Azure"],
-                        "descr": "Below are the tactics and technique representing the MITRE ATT&CK Matrix&trade; for Enterprise covering cloud-based techniques. ",
+                        "descr": "Below are the tactics and technique representing the MITRE ATT&CK<sup>&reg;</sup> Matrix for Enterprise covering cloud-based techniques. ",
                         "subtypes": []
                     },
                     { 
                         "name" : "Office 365",
+                        "type": "local",
                         "matrix": "enterprise-attack",
                         "path": "enterprise/cloud/office365",
                         "platforms": ["Office 365"],
-                        "descr": "Below are the tactics and technique representing the MITRE ATT&CK Matrix&trade; for Enterprise covering cloud-based techniques. ",
+                        "descr": "Below are the tactics and technique representing the MITRE ATT&CK<sup>&reg;</sup> Matrix for Enterprise covering cloud-based techniques. ",
                         "subtypes": []
                     },
                     {
                         "name" : "Azure AD",
+                        "type": "local",
                         "matrix": "enterprise-attack",
                         "path": "enterprise/cloud/azuread",
                         "platforms": ["Azure AD"],
-                        "descr": "Below are the tactics and technique representing the MITRE ATT&CK Matrix&trade; for Enterprise covering cloud-based techniques. ",
+                        "descr": "Below are the tactics and technique representing the MITRE ATT&CK<sup>&reg;</sup> Matrix for Enterprise covering cloud-based techniques. ",
                         "subtypes": []
                     },
                     {
                         "name" : "SaaS",
+                        "type": "local",
                         "matrix": "enterprise-attack",
                         "path": "enterprise/cloud/saas",
                         "platforms": ["SaaS"],
-                        "descr": "Below are the tactics and technique representing the MITRE ATT&CK Matrix&trade; for Enterprise covering cloud-based techniques. ",
+                        "descr": "Below are the tactics and technique representing the MITRE ATT&CK<sup>&reg;</sup> Matrix for Enterprise covering cloud-based techniques. ",
                         "subtypes": []
                     }
                 ]
@@ -161,31 +177,40 @@ matrices = [
     },
     {
         "name": "Mobile",
+        "type": "local",
         "matrix": "mobile-attack",
         "path": "mobile",
         "platforms": ["Android", "iOS"],
-        "descr": "Below are the tactics and techniques representing the two MITRE ATT&CK Matrices&trade; for Mobile. "
+        "descr": "Below are the tactics and techniques representing the two MITRE ATT&CK<sup>&reg;</sup> Matrices for Mobile. "
                  "The Matrices cover techniques involving device access and network-based effects that can be used by adversaries without device access. ",
         "subtypes": [
             {
                 "name": "Android",
+                "type": "local",
                 "matrix": "mobile-attack",
                 "path": "mobile/android",
                 "platforms": ["Android"],
-                "descr": "Below are the tactics and techniques representing the two MITRE ATT&CK Matrices&trade; for Mobile. "
+                "descr": "Below are the tactics and techniques representing the two MITRE ATT&CK<sup>&reg;</sup> Matrices for Mobile. "
                          "The Matrices cover techniques involving device access and network-based effects that can be used by adversaries without device access. ",
                 "subtypes": []
             },
             {
                 "name" : "iOS",
+                "type": "local",
                 "matrix": "mobile-attack",
                 "path": "mobile/ios",
                 "platforms": ["iOS"],
-                "descr": "Below are the tactics and techniques representing the two MITRE ATT&CK Matrices&trade; for Mobile. "
+                "descr": "Below are the tactics and techniques representing the two MITRE ATT&CK<sup>&reg;</sup> Matrices for Mobile. "
                          "The Matrices cover techniques involving device access and network-based effects that can be used by adversaries without device access. ",
                 "subtypes": []
             },
         ]
+    }, 
+    {
+        "name": "ICS",
+        "type": "external",
+        "path": "https://collaborate.mitre.org/attackics",
+        "subtypes": []
     }
 ]
 
@@ -209,6 +234,10 @@ attack_path = {
     'mobile-attack': stix_directory + "/mobile-attack.json",
     'pre-attack': stix_directory + "/pre-attack.json"
 }
+
+# Link to instance of the ATT&CK Navigator; change for to a custom location
+navigator_link_enterprise = "https://mitre-attack.github.io/attack-navigator"
+navigator_link_mobile = "https://mitre-attack.github.io/attack-navigator/mobile"
 
 # Constants used for generated layers
 # ----------------------------------------------------------------------------
@@ -332,6 +361,20 @@ contributing_md = ("Title: Contributing_to_MITRE_ATTACK\n"
                    "RedirectLink: /resources/contribute\n"
                    "save_as: docs/Contributing_to_MITRE_ATTACK.pdf/index.html\n")
 
+# Training Redirection dictionary
+training_redict_dict = [
+    {
+        "title" : "Training Redirect",
+        "redirect_link" : "/resources/training",
+        "path" : "training"
+    },
+    {
+        "title" : "CTI Training Redirect",
+        "redirect_link" : "/resources/training/cti",
+        "path" : "training/cti"
+    }
+]
+
 # Redirect md string template
 redirect_md = Template("Title: ${title}\n"
                        "Template: general/redirect-index\n"
@@ -435,6 +478,13 @@ redirects_paths = {
     'pre-attack': "pre-attack/index.php/"
 }
 
+other_redirects = [
+    {'from': 'ics', 'to': 'https://collaborate.mitre.org/attackics'},
+    {'from': 'docs/MITRE_ATTACK_Enterprise_Poster_2018.pdf', 'to': '/docs/attack_matrix_poster_2018.pdf'},
+    {'from': 'docs/ATTACK_Framework_Board_4x3.pdf', 'to': '/docs/attack_matrix_poster_2020.pdf'},
+    {'from': 'docs/attack_roadmap.pdf', 'to': '/docs/attack_roadmap_2020.pdf'}
+]
+
 # Constants used by software.py
 # ----------------------------------------------------------------------------
 
@@ -489,7 +539,6 @@ previous_md = ("Title: Previous Versions\n"
                "data: ")
 previous_markdown_path = "content/pages/resources"
 
-
 # Constants used by resources.py
 # ----------------------------------------------------------------------------
 
@@ -501,6 +550,47 @@ resources_md = ("Title: General Information\n"
                 "Template: resources/resources\n"
                 "save_as: resources/index.html\n"
                 "data: ")
+
+# string template for faq.md
+faq_md = ("Title: Frequently Asked Questions\n"
+          "Template: resources/faq\n"
+          "save_as: resources/faq/index.html\n"
+          "data: ")
+
+# template for changelog.md
+changelog_md = ("Title: Changelog\n"
+                "Template: resources/changelog\n"
+                "save_as: resources/changelog.html\n\n")
+
+# string template for attackcon.md
+attackcon_md = ("Title: ATT&CKcon\n"
+                "Template: resources/attackcon\n"
+                "save_as: resources/attackcon/index.html\n"
+                "data: ")
+training_md = ("Title: ATT&CK Training\n"
+               "Template: resources/training\n"
+               "save_as: resources/training/index.html\n"
+               "data: ")
+
+training_cti_md = ("Title: ATT&CK For CTI Training\n"
+                   "Template: resources/training-cti\n"
+                   "save_as: resources/training/cti/index.html\n"
+                   "data: ")
+
+# side navigation for training
+training_navigation = {
+    "name" : "Training",
+    "id" : "training",
+    "path" : "/resources/training/",
+    "children" : [    
+        {
+            "name" : "CTI Training",
+            "id" : "cti",
+            "path" : "/resources/training/cti/",
+            "children" : []
+        }
+    ]
+}
 
 # Constants used by technique.py
 # ----------------------------------------------------------------------------
@@ -578,9 +668,30 @@ column_space = int(window_size/3) - 1
 status_space = int(float(column_space)*0.80)
 other_column_space = int(float(column_space)*1.10)
 
-
 # Declare file location of web pages
 web_directory = "output"
+
+# Parent web directory name
+# leave parent directory name to first level for link tests
+parent_web_directory = "output"
+
+# Declare as empty string
+subdirectory = ""
+
+def set_subdirectory(subdirectory_str):
+    """ Method to globally set the subdirectory """
+
+    global subdirectory
+    global web_directory
+
+    subdirectory = subdirectory_str
+
+    # Verify if website directory exists
+    if not os.path.isdir(web_directory):
+        os.makedirs(web_directory)
+
+    # Add subdirectory to web directory
+    web_directory = os.path.join(web_directory, subdirectory)
 
 test_report_directory = "reports"
 # Constants used by citationschecker.py
@@ -611,6 +722,7 @@ def init_shared_data():
 
     global source_names 
     global domains
+    global domain_aliases
     global tools_used_by_groups
     global malware_used_by_groups
     global techniques_used_by_tools
@@ -636,6 +748,7 @@ def init_shared_data():
     global ms
 
     domains = settings_dict["domains"]
+    domain_aliases = settings_dict["domain_aliases"]
     source_names = settings_dict["source_names"]
 
     # Global memory store of all domains

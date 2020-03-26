@@ -5,27 +5,26 @@
 {% import 'macros/matrix.html' as matrix_macros %}
 
 {% if parsed.domain == "pre" %}
-    {% set title = "Matrix - PRE-ATT&CK | MITRE ATT&CK&trade;" -%}
+    {% set title = "Matrix - PRE-ATT&CK | MITRE ATT&CK&reg;" -%}
 {% elif parsed.domain == "mobile" %}
-    {% set title = "Matrix - Mobile | MITRE ATT&CK&trade;" -%}
+    {% set title = "Matrix - Mobile | MITRE ATT&CK&reg;" -%}
 {% else %}
     {% if parsed.platform %}
-        {% set title = "Matrix - Enterprise - " + parsed.platform + " | MITRE ATT&CK&trade;" -%}
+        {% set title = "Matrix - Enterprise - " + parsed.platform + " | MITRE ATT&CK&reg;" -%}
     {% else %}
-        {% set title = "Matrix - Enterprise | MITRE ATT&CK&trade;" -%}
+        {% set title = "Matrix - Enterprise | MITRE ATT&CK&reg;" -%}
     {% endif %}
 {% endif %} 
 
 {% set active_page = "matrices" -%}
 
 {% block innerleft %}
-<!--stopindex-->
+<!--stop-indexing-for-search-->
     {{ navigation.sidenav(parsed.menu, output_file) }}  
-<!--startindex-->
+<!--start-indexing-for-search-->
 {% endblock %}
 
 {% block innerright %}
-<!--stopindex-->
     <div class="row">
         <div class="col-md-9">
             <ol class="breadcrumb">
@@ -39,11 +38,14 @@
                 {% endif %}
             </ol>
         </div>
-        <div class="col">
-            <span class="h3 mt-3 float-right">
-                <a href="https://mitre-attack.github.io/attack-navigator{{'/mobile' if parsed.domain == 'mobile'}}" class="btn btn-navy" target="_blank">Launch the ATT&amp;CK&trade; Navigator <img src="/theme/images/external-link.svg" width="10"></a>
-            </span>
-        </div>
+        <!-- only show navigator link if it's defined in the config -->
+        {% if (parsed.navigator_link_enterprise and parsed.domain == 'enterprise') or (parsed.navigator_link_mobile and parsed.domain == 'mobile') %} 
+            <div class="col">
+                <span class="h3 mt-3 float-right">
+                    <a href="{{ parsed.navigator_link_mobile if parsed.domain == 'mobile' else parsed.navigator_link_enterprise }}" class="btn btn-navy" target="_blank">Launch the ATT&amp;CK<sup>&reg;</sup> Navigator <img src="/theme/images/external-link.svg" width="10"></a>
+                </span>
+            </div>
+        {% endif %}
     </div>
     <div class="tab-pane fade show active" id="v-attckmatrix" role="tabpanel" aria-labelledby="v-attckmatrix-tab">
         <div class="container-fluid">
@@ -64,7 +66,6 @@
             </div>
         </div>
     </div>
-<!--startindex-->
 {% endblock %}
 
 {% block scripts %}
@@ -72,6 +73,6 @@
     <script src="/theme/scripts/matrix.js"></script>
     {{ super() }}
     <script src="/theme/scripts/navigation.js"></script>
-    <script src="/theme/scripts/bootstrap-tour.min.js"></script>
+    <script src="/theme/scripts/bootstrap-tourist.js"></script>
     <script src="/theme/scripts/tour/tour-matrices.js"></script>
 {% endblock %} 

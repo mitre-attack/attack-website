@@ -32,6 +32,7 @@ def generate():
     side_menu_data = util.get_side_menu_matrices(config.matrices)
 
     for matrix in config.matrices:
+        if matrix["type"] == "external": continue # link to externally hosted matrix, don't create a page for it
         generate_platform_matrices(matrix, side_menu_data)
 
 def generate_platform_matrices(matrix, side_menu_data=None):
@@ -41,8 +42,15 @@ def generate_platform_matrices(matrix, side_menu_data=None):
     data['menu'] = side_menu_data
     data['domain'] = matrix['matrix'].split("-")[0]
     data['name'] = matrix['name']
-    data['platforms'] = [ {"name": platform, "path": config.platform_to_path[platform] } for platform in matrix['platforms'] ] 
+
     data['matrices'], data["has_subtechniques"] = get_sub_matrices(matrix)
+    # data['timestamp'] = get_timestamp(matrix['matrix'], filtered_techniques, filtered_old_techniques)
+    data['platforms'] = [ {"name": platform, "path": config.platform_to_path[platform] } for platform in matrix['platforms'] ]
+    data['navigator_link_enterprise'] = config.navigator_link_enterprise
+    data['navigator_link_mobile'] = config.navigator_link_mobile
+
+    data['domain'] = matrix['matrix'].split("-")[0]
+    data['descr'] = matrix['descr']
     data['path'] = matrix['path']
     
     subs = config.matrix_md.substitute(data)

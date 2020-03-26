@@ -3,6 +3,7 @@ import colorama
 import json
 import os
 import requests
+import subprocess
 import time
 from modules import generate
 from modules import config
@@ -134,21 +135,31 @@ def update(args):
         if 'redirects' in args.build:
             generate.redirects_md_gen()
 
-    # Generate Index
-    if args.build:
-        if 'search' in args.build:
-    	    generate.generate_search_index()
+    # Set website path with subdirectory
+    if args.subdirectory:
+        config.set_subdirectory(args.subdirectory)
 
     # Deploy previous version
     if args.build:
         if 'prev_versions' in args.build:
     	    generate.previous_versions_gen()
-    
+
     # Pelican update
     if args.build:
         generate.pelican_content()
         # Remove unwanted files created by pelican
         generate.remove_unwanted_output()
+
+    # Replace output directory links with subdirectory
+    if args.subdirectory:
+        generate.subdirectory_gen()
+
+    # Generate search index
+    # note: this should come basically last in the build process
+    # because it parses the content of the output directory to build the index
+    if args.build:
+        if 'search' in args.build:
+    	    generate.generate_search_index()
     
     if args.build:
         build_end = time.time()
@@ -171,6 +182,20 @@ def update(args):
 
     if not args.override_exit_status:
         handle_exit(exit_codes)
+
+def validate_subdirectory_string(subdirectory_str):
+    """ Validate subdirectory string """
+    
+    if not subdirectory_str.isascii():
+        raise argparse.ArgumentTypeError("%s contains non ascii characters" % subdirectory_str)
+
+    # Remove leading and trailing /
+    if subdirectory_str.startswith("/"):
+        subdirectory_str = subdirectory_str[1:]
+    if subdirectory_str.endswith("/"):
+        subdirectory_str = subdirectory_str[:-1]
+    
+    return subdirectory_str
 
 def get_parsed_args():
     """Create argument parser and parse arguments"""
@@ -209,6 +234,10 @@ def get_parsed_args():
     
     parser.add_argument('--proxy', help="set proxy")
 
+    parser.add_argument('--subdirectory', 
+                        help="If you intend to host the site from a sub-directory, specify the directory using this flag.",
+                        type=validate_subdirectory_string)
+
     parser.add_argument("--print-tests", 
                         dest="print_tests", 
                         action="store_true",
@@ -221,7 +250,7 @@ def get_parsed_args():
 
     args = parser.parse_args()
 
-    if (not args.clean) and (not args.refresh) and (args.build is None) and (args.tests is None):
+    if (not args.clean) and (not args.refresh) and (args.build is None) and (args.tests is None) and (not args.subdirectory):
         parser.print_help()
         exit(0)
 
@@ -245,6 +274,9 @@ def generate_base_template():
                              "{% set BANNER_MESSAGE = \"${banner_message}\" %}\n"
                              "{% set NAVIGATION_MENU = ${navigation} -%}\n"
                              "{% set DOMAINS = ${domains} -%}\n"
+                             "{% set CONTENT_VERSION = \"${content_version}\" -%}\n"
+                             "{% set WEBSITE_VERSION = \"${website_version}\" -%}\n"
+                             "{% set CHANGELOG_LOCATION = \"${changelog_location}\" -%}\n"
                              "{% set active_page = active_page|"
                              "default('index') -%}\n")
     
@@ -261,6 +293,9 @@ def generate_base_template():
                                                             replace("\"", "'")
         base_dict['navigation'] = config.settings_dict['navigation_menu']
         base_dict['domains'] = config.settings_dict['domain_aliases']
+        base_dict['content_version'] = config.settings_dict['content_version']
+        base_dict['website_version'] = config.settings_dict['website_version']
+        base_dict['changelog_location'] = config.settings_dict['changelog_location']
         jinja_settings = base_template.substitute(base_dict)
   
     with open(base_template_path, 'w+') as f:

@@ -64,6 +64,14 @@ def generate_group_md(group, side_menu_data, side_menu_mobile_view_data):
         # External references
         ext_ref = group["external_references"]
 
+        dates = util.get_created_and_modified_dates(group)
+        
+        if dates.get('created'):
+            data['created'] = dates['created']
+
+        if dates.get('modified'):
+            data['modified'] = dates['modified']
+
         if group.get("name"):
             data['name'] = group['name']
         

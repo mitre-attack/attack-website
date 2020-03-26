@@ -67,7 +67,7 @@ headers = {
 def remove_extra_from_path(filepath):
     """Given a path, remove unwanted path from a website link"""
 
-    return filepath.split(config.web_directory)[1]
+    return filepath.split(config.parent_web_directory)[1]
 
 def get_correct_link(path):
     """Given a path, return the correct path by adding
@@ -84,7 +84,7 @@ def get_correct_link(path):
         path = "/" + path
 
     # Check if path is directory
-    extensions = [".html", ".css", ".htm", ".gif", ".jpg", ".png", ".js", ".json", ".ico", ".jpeg", ".svg", ".pdf", ".xlsx", ".docx"]
+    extensions = [".html", ".css", ".htm", ".gif", ".jpg", ".png", ".js", ".json", ".ico", ".jpeg", ".svg", ".pdf", ".xlsx", ".docx", ".rtf"]
     isDirectory = True
     for extension in extensions:
         if (path.endswith(extension)): isDirectory = False
@@ -119,6 +119,13 @@ def check_if_link_in_use(filepath, link):
             if new_file_name != link:
                 in_use_links[link] = True
 
+def remove_subdirectory_from_web_directory():
+
+    if config.subdirectory:
+        return config.web_directory.split(config.subdirectory)[0]
+    else:
+        return config.web_directory
+
 def internal_link_test(link):
     """Given a link, make sure that that it exists on the file system
     """
@@ -126,7 +133,7 @@ def internal_link_test(link):
     # Get correct link path
     path = get_correct_link(link)
 
-    path = config.web_directory + path
+    path = remove_subdirectory_from_web_directory() + path
 
     # e.g: contacts.html -> contacts/index.html
     to_index_path = path
@@ -235,7 +242,6 @@ def internal_link_checker(filepath, html_str):
 
         links = re.findall(
             f"{prefix}\s?=\s?[\"']([{allowed_in_link}]+)[\"']", html_str)
-
         # check if link has a dest
         for link in links:
 
@@ -286,7 +292,7 @@ def check_unlinked_pages(filenames):
                 filename = filename.replace("\\", "/")
 
             # Ignore 404 html page
-            if filename.startswith("/404.html"):
+            if filename.endswith("/404.html"):
                 continue
 
             # e.g: contacts.html -> contacts/index.html

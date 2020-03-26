@@ -1,8 +1,8 @@
-# MITRE ATT&CK<sup>&trade;</sup> Website
+# MITRE ATT&CK&reg; Website
 
 ### See the live site at [attack.mitre.org](https://attack.mitre.org)!
 
-This repository contains the source code used to generate the MITRE ATT&CK<sup>&trade;</sup> website as seen at `attack.mitre.org`. The source code is flexible to allow users to generate the site with custom content.
+This repository contains the source code used to generate the MITRE ATT&CK&reg; website as seen at `attack.mitre.org`. The source code is flexible to allow users to generate the site with custom content.
 
 ## Usage
 The [Install and Run](#Install-and-Build) section below explains how to set up a local version of the site. You can also visit the live site at [attack.mitre.org](https://attack.mitre.org). See [Building the site with custom content](#Building-the-site-with-custom-content) for information about building the site with custom content.
@@ -18,6 +18,7 @@ _See [CONTRIBUTING.md](/CONTRIBUTING.md) for more information on making contribu
 - [python](https://www.python.org/) 3.6 or greater
 
 ## Install and Build
+
 ### Install requirements
 
 1. Create a virtual environment: 
@@ -34,6 +35,14 @@ _See [CONTRIBUTING.md](/CONTRIBUTING.md) for more information on making contribu
 2. Serve the html to `localhost:8000`: 
     1. `cd output`
     2. `python3 -m pelican.server`
+
+### Installing, building, and serving the site via Docker 
+
+1. Build the docker image:
+    - `docker build -t <your_preferred_image_name> .`
+2. Run a docker container:
+    - `docker run --name <your_preferred_container_name -d -p <your_preferred_port>:80 <image_name_from_build_command>`
+3. View the site on your preferred localhost port
 
 ## Implementation Overview
 
@@ -75,7 +84,7 @@ STIX is designed to improve many different capabilities, such as collaborative t
 https://oasis-open.github.io/cti-documentation/
 
 ## Notice
-Copyright 2015-2019 The MITRE Corporation
+Copyright 2015-2020 The MITRE Corporation
 
 Approved for Public Release; Distribution Unlimited. Case Number 19-3504.
 
@@ -91,6 +100,6 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 
-This project makes use of ATT&CK<sup>&trade;</sup>
+This project makes use of ATT&CK&reg;
 
 [ATT&CK Terms of Use](https://attack.mitre.org/resources/terms-of-use/)
