@@ -100,29 +100,29 @@ def generate_group_md(group, side_menu_data, side_menu_mobile_view_data):
         # Get technique data for techniques used table
         data['technique_table_data'] = get_techniques_used_by_group_data(group, reference_list, next_reference_number)
 
-        # # Get navigator layers for this group
-        # layers = util.get_navigator_layers(
-        #     data['name'], 
-        #     data["attack_id"],
-        #     "group",
-        #     data["version"] if "version" in data else None,
-        #     data['technique_table_data'], 
-        # )
+        # Get navigator layers for this group
+        layers = util.get_navigator_layers(
+            data['name'], 
+            data["attack_id"],
+            "group",
+            data["version"] if "version" in data else None,
+            data['technique_table_data'], 
+        )
 
-        # data["layers"] = []
-        # for layer in layers:
-        #     with open(os.path.join(config.group_markdown_path, "-".join([data['attack_id'], "techniques", layer["domain"]]) + ".md"), "w", encoding='utf8') as layer_json:
-        #         subs = config.layer_md.substitute({
-        #             "attack_id": data["attack_id"],
-        #             "path": "groups/" + data["attack_id"],
-        #             "domain": layer["domain"]
-        #         })
-        #         subs = subs + layer["layer"]
-        #         layer_json.write(subs)
-        #     data["layers"].append({
-        #         "domain": layer["domain"],
-        #         "filename": "-".join([data["attack_id"], layer["domain"], "layer"]) + ".json"
-        #     })
+        data["layers"] = []
+        for layer in layers:
+            with open(os.path.join(config.group_markdown_path, "-".join([data['attack_id'], "techniques", layer["domain"]]) + ".md"), "w", encoding='utf8') as layer_json:
+                subs = config.layer_md.substitute({
+                    "attack_id": data["attack_id"],
+                    "path": "groups/" + data["attack_id"],
+                    "domain": layer["domain"]
+                })
+                subs = subs + layer["layer"]
+                layer_json.write(subs)
+            data["layers"].append({
+                "domain": layer["domain"],
+                "filename": "-".join([data["attack_id"], layer["domain"], "layer"]) + ".json"
+            })
 
         # Grab software data for Software table
         data['software_data'], data['add_software_ref'] = get_software_table_data(group, reference_list, next_reference_number)
