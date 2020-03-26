@@ -6,12 +6,14 @@
 {% else %}
     {% set title = "" -%}
 {% endif %}
+{% set title_prefix = parsed.parent_name + ": " if parsed.is_subtechnique else "" %}
+{% set title_type = "Sub-technique" if parsed.is_subtechnique else "Technique" %}
 {% if parsed.domain == "pre" %}
-    {% set title = parsed.name + ", Technique " + parsed.attack_id + " - PRE-ATT&CK | MITRE ATT&CK&reg;" -%}
+    {% set title = title_prefix + parsed.name + ", " + title_type + " " + parsed.attack_id + " - PRE-ATT&CK | MITRE ATT&CK&reg;" -%}
 {% elif parsed.domain == "mobile" %}
-    {% set title = parsed.name + ", Technique " + parsed.attack_id + " - Mobile | MITRE ATT&CK&reg;" -%}
+    {% set title = title_prefix + parsed.name + ", " + title_type + " " + parsed.attack_id + " - Mobile | MITRE ATT&CK&reg;" -%}
 {% else %} 
-    {% set title = parsed.name + ", Technique " + parsed.attack_id + " - Enterprise | MITRE ATT&CK&reg;" -%}
+    {% set title = title_prefix + parsed.name + ", " + title_type + " " + parsed.attack_id + " - Enterprise | MITRE ATT&CK&reg;" -%}
 {% endif %} 
 
 {% set active_page = "techniques" -%}
