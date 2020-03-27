@@ -49,14 +49,15 @@ def generate_domain_markdown(domain, techniques, tactics, side_nav_data):
     full_techniques = stixhelpers.get_techniques(config.ms[domain])
 
     technique_list_no_sub = util.filter_out_subtechniques(full_techniques)
+    techhnique_list_no_sub_no_deprecated = util.filter_deprecated_revoked(technique_list_no_sub)
 
     data = {}
 
     data['domain'] = domain.split("-")[0]
 
     # Get technique table data and number of techniques
-    data['technique_table'] = util.get_technique_table_data(None, technique_list_no_sub)
-    data['technique_list_len'] = str(len(technique_list_no_sub))
+    data['technique_table'] = util.get_technique_table_data(None, techhnique_list_no_sub_no_deprecated)
+    data['technique_list_len'] = str(len(techhnique_list_no_sub_no_deprecated))
 
     # Get tactic-techniques table
     data['menu'] = side_nav_data
@@ -178,17 +179,25 @@ def generate_data_for_md(technique_dict, technique, tactic_list, is_sub_techniqu
 
         if dates.get('modified'):
             technique_dict['modified'] = dates['modified']
+        
+        
+        if technique.get('x_mitre_deprecated'):
+            technique_dict['deprecated'] = True
+        else:
+            technique_dict['deprecated'] = False
 
-        # Get technique description
+        # Get technique description with citations
         if technique.get("description"):
-            citations_from_descr = util.get_citations_from_descr(technique['description'])
 
+            if technique_dict['deprecated']:
+                technique_dict['descr'] = util.replace_html_chars(markdown.markdown(technique['description'].split("\n")[0]))
+                technique_dict['descr'] = util.filter_urls(technique_dict['descr'])
+                return technique_dict
+
+            citations_from_descr = util.get_citations_from_descr(technique['description'])
             technique_dict['descr'] = util.replace_html_chars(markdown.markdown(technique['description']))
             technique_dict['descr'] = util.filter_urls(technique_dict['descr'])
             technique_dict['descr'] = util.get_descr_reference_sect(citations_from_descr, reference_list, next_reference_number, technique_dict['descr'])
-            
-            if 'x_mitre_deprecated' in technique:
-                technique_dict['deprecated'] = True
         
         # Get mitigation table
         technique_dict['mitigation_table'] = get_mitigations_table_data(technique, reference_list, next_reference_number)
@@ -473,7 +482,7 @@ def get_techniques_list(techniques):
     technique_list = {}
     
     for technique in techniques:
-        if 'revoked' not in technique or technique['revoked'] == False:
+        if not technique.get('revoked') and not technique.get('x_mitre_deprecated'):
 
             attack_id = util.get_attack_id(technique)
 
@@ -483,6 +492,9 @@ def get_techniques_list(techniques):
                 technique_dict['id'] = attack_id
                 technique_dict['stix_id'] = technique['id']
                 technique_dict['name'] = technique['name']
+                if technique['name'] == "DNSCalc":
+                    print(technique)
+                    exit()
                 technique_dict['description'] = technique['description']
 
                 if technique.get('kill_chain_phases'):
@@ -494,7 +506,7 @@ def get_techniques_list(techniques):
                             
                         technique_list[elem['phase_name']].append(technique_dict)
 
-    for key, value in technique_list.items():
+    for key, _ in technique_list.items():
         technique_list[key] = sorted(technique_list[key], key=lambda k: k['name'].lower())
     
     return technique_list

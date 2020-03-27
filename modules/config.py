@@ -599,13 +599,13 @@ training_navigation = {
 techniques_markdown_path = "content/pages/techniques/"	
 
 # String template for all techniques
-technique_md = Template("Title: ${name}-${tactics}-${domain}\n"
+technique_md = Template("Title: ${name}-${domain}\n"
                         "Template: techniques/technique\n"
                         "save_as: techniques/${attack_id}/index.html\n"
                         "data: ")
 
 # String template for all techniques
-sub_technique_md = Template("Title: ${name}-${tactics}-${domain}\n"
+sub_technique_md = Template("Title: ${name}-${domain}\n"
                             "Template: techniques/technique\n"
                             "save_as: techniques/${parent_id}/${sub_number}/index.html\n"
                             "data: ")
