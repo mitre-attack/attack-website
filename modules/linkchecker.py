@@ -285,7 +285,6 @@ def check_if_file_is_deprecated(filename):
         lines = f.readlines()
         for line in lines:
             if '<meta name="robots" content="noindex, nofollow">' in line:
-                print("Found it here")
                 return True
     return False
 
