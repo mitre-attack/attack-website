@@ -256,7 +256,9 @@ def get_techniques_used_by_software_data(software, reference_list, next_referenc
     if techniques_used_by_software:
 
         for technique in techniques_used_by_software:
-            technique_list = util.technique_used_helper(technique_list, technique, reference_list, next_reference_number)
+            # Do not add if technique is deprecated
+            if not technique['object'].get('x_mitre_deprecated'):
+                technique_list = util.technique_used_helper(technique_list, technique, reference_list, next_reference_number)
             
     technique_data = []
     for item in technique_list:

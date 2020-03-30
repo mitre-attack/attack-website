@@ -275,6 +275,20 @@ def internal_link_checker(filepath, html_str):
 
     return problems, relative_links, internal_link_error
 
+
+def check_if_file_is_deprecated(filename):
+    """ Given a filename, verify if it is deprecated 
+        Return True if it is deprecated, False if not
+    """
+  
+    with open(filename, "r", encoding="utf8") as f:
+        lines = f.readlines()
+        for line in lines:
+            if '<meta name="robots" content="noindex, nofollow">' in line:
+                print("Found it here")
+                return True
+    return False
+
 def check_unlinked_pages(filenames):
     """Given a list of filenames, check if they where linked from
        another page. Add the files that are not linked to a list a return 
@@ -284,6 +298,10 @@ def check_unlinked_pages(filenames):
     unlinked_pages = []
     for filename in filenames:
         if not "previous" in filename:
+
+            # Check if it is deprecated
+            if check_if_file_is_deprecated(filename):
+               continue 
 
             # Remove unused filepath from filename
             filename = remove_extra_from_path(filename)

@@ -132,9 +132,10 @@ def get_techniques_of_tactic(tactic, techniques):
     techniques_list = []
 
     for technique in techniques:
-        for phase in technique['kill_chain_phases']:
-            if phase['phase_name'] == tactic['x_mitre_shortname']:
-                techniques_list.append(technique)
+        if not technique.get('x_mitre_deprecated'):
+            for phase in technique['kill_chain_phases']:
+                if phase['phase_name'] == tactic['x_mitre_shortname']:
+                    techniques_list.append(technique)
 
     techniques_list = sorted(techniques_list, key=lambda k: k['name'].lower())
     return techniques_list
