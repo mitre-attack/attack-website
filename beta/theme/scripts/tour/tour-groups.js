@@ -56,7 +56,7 @@ let tour = new Tour({
     showProgressBar: !isSiteTour,
     showProgressText: !isSiteTour,
     onEnd: function() {
-        if (lastStepReached) window.location.href = "/";
+        if (lastStepReached) window.location.href = "/beta/";
     }
 })
 
