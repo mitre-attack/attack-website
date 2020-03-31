@@ -84,7 +84,7 @@ tourSteps = [
 
 if (isSiteTour) tourSteps.push({
     onShow: function() { //go to the next tour module
-        window.location.href = "/techniques/T1053/?tour=true"
+        window.location.href = "/beta/techniques/T1053/?tour=true"
     }
 })
 

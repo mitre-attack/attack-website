@@ -43,7 +43,7 @@ if (isSiteTour) tourSteps.push({
         lastStepReached = true;
     },
     onNext: function() {
-        window.location.href = "/";
+        window.location.href = "/beta/";
     }
 })
 

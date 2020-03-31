@@ -12,7 +12,7 @@ let tour = new Tour({
         },
         {
             onShow: function() { //go to the next tour module
-                window.location.href = "/matrices/enterprise/?tour=true"
+                window.location.href = "/beta/matrices/enterprise/?tour=true"
             }
         }
     ],
