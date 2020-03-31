@@ -109,21 +109,15 @@ a {
 }
 
 // left column in the home page
-.home-left-col {
-    min-width: 50%;
-
-    .button-container {
-        text-align: center;
-        padding-left: 15px;
-        padding-right: 15px;
-
-        a:last-child {
-            margin-top: 0px;
-    
-            @media screen and (max-width: 47.9875rem), screen and (min-width: 992px) and (max-width: 1199.98px) {
-                margin-top: 5px;
-            }
-        }
+.quick-links {
+    width: 100%;
+    text-align: center;
+    table-layout: fixed;
+    td {
+        padding: to-rem(5) 0;
+    }
+    tr+tr {
+        border-top: 1px solid border-color(body);
     }
 }
 
@@ -147,6 +141,7 @@ a {
 .btn-navy {
     @extend %button-style;
     background-color: color(secondary);
+    color: on-color(secondary);
 
     &:hover {
         // Extending placeholder 'button-style' is necessary to keep on-color white. Else, the on-color will change to the <a> tag on-color when hovering the button.
@@ -191,11 +186,15 @@ a {
         p:last-child {
             margin-bottom: 0;
         }
-    },
+    }
     th {
         padding: rem(0.3);
         vertical-align: top;
         font-size: rem(0.6);
+    }
+
+    .active {
+        color: color(primary);
     }
 }
 
@@ -208,6 +207,79 @@ a {
     }
 }
 
+// table for techniques
+.table-techniques {
+
+    thead tr {
+        background: #f2f2f2;
+        border-bottom: 2px solid #dee2e6;
+    }
+    table {
+        border-collapse: collapse;
+    }
+    td {
+        vertical-align: top;
+        padding: 10px;
+        border: 1px solid #dfdfdf;
+    }
+    tr:last-child {
+        border-bottom: 1px solid #dfdfdf;;
+    }
+    .sub.technique {
+        border-left: none;
+    }
+    .technique td:first-child {
+        border-bottom: none;
+    }
+    .sub.technique td:first-child {
+        width: 5ex;
+        border-top: none; border-bottom: none;
+    }
+    .sub.technique td:not(:nth-child(4)) {
+        color: #4f7cac;
+    }
+    .technique:not(.sub) td:not(:nth-child(3)) {
+        color: #4f7cac;
+    }
+}
+
+// Styling for techniques used table
+.techniques-used {
+
+    thead tr {
+        background: #f2f2f2;
+        border-bottom: 2px solid #dee2e6;
+    }
+    table {
+        border-collapse: collapse;
+    }
+    td {
+        vertical-align: top;
+        padding: 10px;
+        border: 1px solid #dfdfdf;
+    }
+    tr:last-child {
+        border-bottom: 1px solid #dfdfdf;;
+    }
+    .sub.technique {
+        border-left: none;
+    }
+    .technique td:first-child {
+        border-bottom: none;
+    }
+    .technique td:nth-child(2) {
+        border-bottom: none;
+    }
+    .sub.technique:not(.noparent) td:nth-child(2) {
+        width: 5ex;
+        border-top: none;
+        border-bottom: none; 
+    }
+    .sub.technique:not(.noparent) td:first-child {
+        width: 5ex;
+        border-top: none; border-bottom: none;
+    }
+}
 // .table td.border {
 //     border-color: on-color-deemphasis(body);
 // }
@@ -298,22 +370,15 @@ a {
 /******/
 
 /*BANNER*/
-%banner-base {
+.banner-message {
+    padding: to-rem(5) 0;
     text-align: center;
     background-color: color-alternate(body, 2);
 }
 
 // basic banner
 .version-banner {
-  @extend %banner-base;
-}
-
-// banner with icon
-.under-development {
-    font-size: 120%;
-    display: inline-block;
-    width: 100%;
-    @extend %banner-base;
+  @extend .banner-message;
 }
 /******/
 
@@ -360,6 +425,47 @@ pre {
     border-bottom-color: border-color(body);
 }
 
+.card-body {
+    // Remove extra whitespace from tables inside of cards
+    // Source: https://github.com/philipnewcomer/bootstrap4-card-tables/blob/master/src/bootstrap4-card-tables.scss
+    > .table {
+        border-right: 0;
+		border-left: 0;
+		margin-bottom: 0;
+
+		&:last-child {
+			border-bottom: 0;
+		}
+
+		&:not(.table-sm) th,
+        &:not(.table-sm) td {
+			padding: 0.75rem 1.25rem;
+		}
+
+		td:first-child,
+		th:first-child {
+			border-left: 0;
+		}
+
+		td:last-child,
+		th:last-child {
+			border-right: 0;
+		}
+
+		tr:first-child td,
+		tr:first-child th {
+			border-top: 0;
+		}
+
+		tr:last-child td {
+			border-bottom: 0;
+		}
+	}
+
+	.card-header + .table {
+		border-top: 0;
+	}
+}
 // remove botton margin from last item in the card
 .card-data:last-of-type {
     margin-bottom: 0;
@@ -762,6 +868,7 @@ pre {
     margin-top: to-rem(7);
 }
 /******/
+
 /* attackcon page */
 .attackcons {
     border: 1px solid border-color(body);

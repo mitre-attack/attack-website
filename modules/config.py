@@ -12,11 +12,11 @@ from . import util
 
 # Settings dictionary to build website
 settings_dict = {
-    "content_version": "6.3",
-    "website_version": "1.2.4",
+    "content_version": "7.0-beta",
+    "website_version": "2.0",
     "changelog_location": "/resources/changelog.html",
     "banner_enabled": "true",
-    "banner_message": "<strong><a href='https://collaborate.mitre.org/attackics' target='_blank'>JUST RELEASED: ATT&CK for Industrial Control Systems</a></strong>",
+    "banner_message": "You are currently viewing the sub-techniques beta. <a href='/beta/?tour=true'>Take a tour</a>, read the <a href=''>blog post</a> or <a href='/beta/resources/updates/updates-march-2020'> release notes</a>, or see the <a href='/'>non-beta version of the site</a>.",
     "domains": ["pre-attack", "enterprise-attack", "mobile-attack"],
     "source_names": [
         "mitre-pre-attack", 
@@ -58,7 +58,7 @@ index_matrix = {
     "name": "ATT&CK Matrix for Enterprise",
     "descr": "", # if specified, adds a subtitle to the index page matrix
     "matrix": "enterprise-attack",
-    "platforms": ["Windows", "macOS", "Linux"]
+    "platforms": ["Windows","macOS","Linux", "AWS","GCP","Azure","Azure AD", "Office 365", "SaaS"]
 }
 
 # The tree of matricies on /matrices/
@@ -236,15 +236,15 @@ attack_path = {
 }
 
 # Link to instance of the ATT&CK Navigator; change for to a custom location
-navigator_link_enterprise = "https://mitre-attack.github.io/attack-navigator"
-navigator_link_mobile = "https://mitre-attack.github.io/attack-navigator/mobile"
+navigator_link_enterprise = "https://mitre-attack.github.io/attack-navigator/beta/enterprise"
+navigator_link_mobile = "https://mitre-attack.github.io/attack-navigator/beta/mobile"
 
 # Constants used for generated layers
 # ----------------------------------------------------------------------------
 # usage: 
 #     domain: "enterprise" or "mobile"
 #     path: the path to the object, e.g "software/S1001" or "groups/G2021"
-layer_md = Template("Title: ${domain} Techniques\n"
+layer_md = Template("Title: ${domain} ${attack_id} Techniques\n"
                     "Template: general/json\n"
                     "save_as: ${path}/${attack_id}-${domain}-layer.json\n"
                     "json: ")
@@ -599,10 +599,16 @@ training_navigation = {
 techniques_markdown_path = "content/pages/techniques/"	
 
 # String template for all techniques
-technique_md = Template("Title: ${name}-${tactics}-${domain}\n"
+technique_md = Template("Title: ${name}-${domain}\n"
                         "Template: techniques/technique\n"
                         "save_as: techniques/${attack_id}/index.html\n"
                         "data: ")
+
+# String template for all techniques
+sub_technique_md = Template("Title: ${name}-${domain}\n"
+                            "Template: techniques/technique\n"
+                            "save_as: techniques/${parent_id}/${sub_number}/index.html\n"
+                            "data: ")
 
 # String template for domains	
 technique_domain_md = Template("Title: Techniques\n"
@@ -737,6 +743,8 @@ def init_shared_data():
     global tools_using_technique
     global malware_using_technique
     global groups_using_technique
+    global subtechniques_of
+    global parent_technique_of
     global ms
 
     domains = settings_dict["domains"]
@@ -797,7 +805,9 @@ def init_shared_data():
         rsh.technique_related_to_technique(srcs),
         rsh.tools_using_technique(srcs),
         rsh.malware_using_technique(srcs),
-        rsh.groups_using_technique(srcs)
+        rsh.groups_using_technique(srcs),
+        rsh.subtechniques_of(srcs),
+        rsh.parent_technique_of(srcs)
     ]
 
     number_of_workers = multiprocessing.cpu_count()
@@ -835,3 +845,7 @@ def init_shared_data():
 
     # Group using technique
     groups_using_technique = data[12]
+
+    # subtechniques
+    subtechniques_of = data[13]
+    parent_technique_of = data[14]

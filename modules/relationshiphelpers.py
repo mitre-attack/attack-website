@@ -74,6 +74,8 @@ def get_related(srcs, src_type, rel_type, target_type, reverse=False):
     for stix_id in id_to_related:
         value = []
         for related in id_to_related[stix_id]:
+            if not related["id"] in id_to_target:
+                continue # targetting a revoked object
             value.append({
                 "object": json.loads(id_to_target[related["id"]].serialize()),
                 "relationship": json.loads(related["relationship"].serialize())
@@ -172,6 +174,21 @@ def technique_related_to_technique(srcs):
        enterprise, mobile and pre
     """
     return get_related(srcs, "attack-pattern", "related-to", "attack-pattern")
+
+# technique:subtechnique
+def subtechniques_of(srcs):
+    """ return technique_id => {subtechnique, relationship} for each subtechnique
+        of the technique. srcs should be an array of memorystores for enterprise,
+        mobile and pre
+    """
+    return get_related(srcs, "attack-pattern", "subtechnique-of", "attack-pattern", reverse=True)
+
+def parent_technique_of(srcs):
+    """ return subtechnique_id => {technique, relationship} describing the parent technique
+        of the subtechnique. srcs should be an array of memorystores for enterprise,
+        mobile and pre
+    """
+    return get_related(srcs, "attack-pattern", "subtechnique-of", "attack-pattern")
 
 def load(url):
     """Load stix data from file"""
