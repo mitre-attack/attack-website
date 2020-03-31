@@ -233,7 +233,7 @@ New Techniques:
 * Process Injection: [Ptrace System Calls](/beta/techniques/T1055/008) - Broken out from pre-defined behavior within Process Injection
 * Process Injection: [Thread Execution Hijacking](/beta/techniques/T1055/003) - Broken out from pre-defined behavior within Process Injection
 * Process Injection: [Thread Local Storage](/beta/techniques/T1055/005) - Broken out from pre-defined behavior within Process Injection
-* Process Injection: [VDSO Hijacking](/beta/techniques/T1055/014) - Existing technique that became a sub-technique
+* Process Injection: [VDSO Hijacking](/beta/techniques/T1055/014) - Broken out from pre-defined behavior within Process Injection
 * [Protocol Tunneling](/beta/techniques/T1572) - Created to define behavior broken out from the prior Standard Application and Standard Cryptographic Protocol techniques
 * Proxy: [Domain Fronting](/beta/techniques/T1090/004) - Existing technique that became a sub-technique
 * Proxy: [External Proxy](/beta/techniques/T1090/002) - Broken out from pre-defined behavior within Connection Proxy

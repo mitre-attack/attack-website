@@ -16,7 +16,7 @@ settings_dict = {
     "website_version": "2.0",
     "changelog_location": "/resources/changelog.html",
     "banner_enabled": "true",
-    "banner_message": "You are currently viewing the sub-techniques beta. <a href='/beta/?tour=true'>Take a tour</a>, read the <a href=''>blog post</a> or <a href='/beta/resources/updates/updates-march-2020'> release notes</a>, or see the <a href='/'>non-beta version of the site</a>.",
+    "banner_message": "You are currently viewing the sub-techniques beta. <a href='/beta/?tour=true'>Take a tour</a>, read the <a href='https://medium.com/mitre-attack/attack-subs-what-you-need-to-know-99bce414ae0b'>blog post</a> or <a href='/beta/resources/updates/updates-march-2020'> release notes</a>, or see the <a href='/'>non-beta version of the site</a>.",
     "domains": ["pre-attack", "enterprise-attack", "mobile-attack"],
     "source_names": [
         "mitre-pre-attack", 
