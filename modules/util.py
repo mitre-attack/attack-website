@@ -289,6 +289,18 @@ def get_alias_data(alias_list, ext_refs, reference_list, next_reference_number):
         
     return alias_data
 
+def get_subtechnique_count(technique_list_no_sub):
+    """Given a technique list, return the number of subtechniques"""
+
+    subtech_count = 0
+    for technique in technique_list_no_sub:
+
+        if technique["id"] in config.subtechniques_of:
+            subtechniques = config.subtechniques_of[technique["id"]]
+            subtech_count += len(subtechniques)
+    
+    return subtech_count
+
 def get_technique_table_data(tactic, techniques_list):
     """Generate techniques table for tactics pages and techniques
        domain pages
