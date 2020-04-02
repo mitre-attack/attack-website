@@ -31,6 +31,43 @@
 <!--          addition of notable features. When PATCH is 0 it can      -->
 <!--          be omitted                                                -->
 
+# Sub-techniques Beta
+## ATT&CK Website version 2.1
+### Fixes
+- added internet explorer for sub-techniques matrix. Improved behavior of sub-techniques matrix in Edge browser.
+
+## ATT&CK Website version 2.0
+### New Features
+- Added sub-techniques.
+    - Added pages for sub-techniques. Sub-technique pages are found under their parent technique, e.g /techniques/T####/###. Sub-technique names and IDs are prefixed with that of their parent technique. Otherwise they are largely formatted like techniques. See issue [#23](https://github.com/mitre-attack/attack-website/issues/23).
+    - Added sub-technique listing card to techniques with sub-techniques. See issue [#24](https://github.com/mitre-attack/attack-website/issues/24).
+    - Updated techniques used/mitigated lists to differentiate sub-techniques and techniques. See issue [#25](https://github.com/mitre-attack/attack-website/issues/25).
+    - Added sub-techniques to side-navigation and technique/tactic lists. See issue [#26](https://github.com/mitre-attack/attack-website/issues/26).
+    - Updated FAQ with sub-technique information. See issue [#41](https://github.com/mitre-attack/attack-website/issues/41).
+    - Updated ATT&CK Matrix layout to support sub-techniques.
+        - Two layouts of the matrix are available:
+            - the "side" layout (default), where sub-techniques appear in an adjacent sub-column of the tactic.
+            - the "flat" layout, where sub-techniques appear nested beneath their parent similar to an indented list.
+        The control to toggle between them appears only when sub-techniques are present in the matrix. 
+        - Sub-techniques can be hidden and shown under their parent by clicking the gray sidebar. 
+        - Show-all / hide-all buttons were added to show/hide all sub-techniques. See issue [#43](https://github.com/mitre-attack/attack-website/issues/43).
+        - Added "help" button to matrices which plays the matrix portion of the sub-technique tour. See issue [#28](https://github.com/mitre-attack/attack-website/issues/28).
+    - Added sub-technique support for technique usage ATT&CK Navigator layers on group and software pages. See issue [#29](https://github.com/mitre-attack/attack-website/issues/29).
+- Added the "take a tour" feature. The tour feature guides the user through the sub-technique changes. Click "take a tour" on the homepage or follow [this link](https://attack.mitre.org/beta/?tour=true) to start the tour automatically. See issue [#28](https://github.com/mitre-attack/attack-website/issues/28).
+
+### Improvements
+- Improvements to deprecated techniques. See issue [#116](https://github.com/mitre-attack/attack-website/issues/116).
+    - Page content except for the deprecation warning now omitted to discourage continued use
+    - Now hidden from search (both ours and search engines')
+    - No longer found in technique lists, etc
+- ATT&CK Archives now allows for archived versions to be "retired." Retired versions are removed from the /previous/ directory and replaced with links to the raw data and HTML. See issue [#102](https://github.com/mitre-attack/attack-website/issues/102).
+- Lists within data cards, e.g the platforms of a technique, are now in alphabetical order. See issue [#84](https://github.com/mitre-attack/attack-website/issues/84).
+- Matrix timestamps are now calculated from the modified date on the x-mitre-matrix STIX object. Additionally, said timestamps are now formatted the same as modified dates on other pages of the website. See issue [#27](https://github.com/mitre-attack/attack-website/issues/27).
+- Revisions to the layout of the matrix pages to improve readability when multiple matrices occur within a domain.
+
+## [ATT&CK Content version 7.0-beta](https://github.com/mitre/cti/releases/tag/ATT%26CK-v7.0-beta)
+See release notes [here](https://attack.mitre.org/beta/resources/updates/updates-march-2020/index.html).
+
 # 9 March 2020
 ## [ATT&CK Content version 6.3](https://github.com/mitre/cti/releases/tag/ATT%26CK-v6.3)
 ### Fixes

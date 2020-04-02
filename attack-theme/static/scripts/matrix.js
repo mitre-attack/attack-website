@@ -7,7 +7,7 @@ function matrix_toggle_technique(tactic_id, technique_id) {
 // set the state of the given technique
 // state must be "open" or "closed"
 // if tour is true, affects the sub-technique tour technique, ignoring the technique and tactic params
-function setMatrixCellState(tactic_id, technique_id, state, tour=false) {
+function setMatrixCellState(tactic_id, technique_id, state) {
     if (state == "open") {
         var joined = tour? 'tour' : tactic_id + "--" + technique_id;
         $(".subtechniques--" + joined).removeClass("hidden");
