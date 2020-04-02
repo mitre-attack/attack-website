@@ -32,6 +32,10 @@
 <!--          be omitted                                                -->
 
 # Sub-techniques Beta
+## ATT&CK Website version 2.1
+### Fixes
+- added internet explorer for sub-techniques matrix. Improved behavior of sub-techniques matrix in Edge browser.
+
 ## ATT&CK Website version 2.0
 ### New Features
 - Added sub-techniques.
