@@ -13,6 +13,37 @@
         margin-bottom: 1rem;
         padding-bottom: 0.5rem;
     }
+    .scroll-indicator-group {
+        white-space: nowrap;
+        display: flex;
+        .matrix-scroll-box {
+            flex-grow: 1;
+            display: inline-block;
+        }
+        .scroll-indicator {
+            width: 0px;
+            display: inline-block;
+            position: relative;
+            .cover {
+                width: 50px;
+                height: 100%;
+                position: absolute;
+                pointer-events: none; // doesn't prevent usage of things under the cover
+            }
+            &.right {
+                .cover { right: 0; }
+                &.show .cover {
+                    background: linear-gradient(to right, transparent, color(body));
+                }
+            }
+            &.left {
+                .cover { left: 0; }
+                &.show .cover {
+                    background: linear-gradient(to left, transparent, color(body));
+                }
+            }
+        }
+    }
 }
 
 
@@ -20,6 +51,7 @@
 $sizeunit: 14px;
 
 .matrix {
+    white-space: normal;
     line-height: $sizeunit;
     &.side {
         // thead {

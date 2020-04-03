@@ -55,18 +55,18 @@ function show_flat_matrix() {
 
 function computeScrollMarkers() {
     console.log("computing scroll markers")
+    console.log($(this).find(".matrix").width())
     let beginning = $(this).scrollLeft() == 0; //is the scroll at the left side?
-    let end = Math.floor($(this).scrollLeft() + $(this).width()) == Math.floor($(this).children().first().width()); //is the scroll at the right side?
-    if (!beginning) $(this).addClass("overflow-left");
-    else            $(this).removeClass("overflow-left");
-    if (!end)       $(this).addClass("overflow-right");
-    else            $(this).removeClass("overflow-right");
+    let end = Math.floor($(this).scrollLeft() + $(this).width()) == Math.floor($(this).find(".matrix").width()); //is the scroll at the right side?
+    let leftIndicator = $(this).parent().find(".scroll-indicator.left")
+    let rightIndicator = $(this).parent().find(".scroll-indicator.right")
+    if (!beginning) leftIndicator.addClass("show");
+    else            leftIndicator.removeClass("show");
+    if (!end)       rightIndicator.addClass("show");
+    else            rightIndicator.removeClass("show");
 }
 
 $(".matrix-scroll-box").scroll(computeScrollMarkers); //respond to scrolling in matrix scroll boxes
-
-function initScrollMarkers() {
-    $(".matrix-scroll-box").each(computeScrollMarkers); //initial state for scroll markers
-}
-initScrollMarkers();
+function initScrollMarkers() { $(".matrix-scroll-box").each(computeScrollMarkers); } 
+initScrollMarkers(); //initial state for scroll markers
 $(window).resize(initScrollMarkers); //respond to page resize
