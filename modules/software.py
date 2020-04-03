@@ -127,7 +127,9 @@ def generate_software_md(software,side_menu_data,side_menu_mobile_view_data):
                 layer_json.write(subs)
             data["layers"].append({
                 "domain": layer["domain"],
-                "filename": "-".join([data["attack_id"], layer["domain"], "layer"]) + ".json"
+                "filename": "-".join([data["attack_id"], layer["domain"], "layer"]) + ".json",
+                "navigator_link_enterprise" : config.navigator_link_enterprise,
+                "navigator_link_mobile" : config.navigator_link_mobile
             })
         
         # Get aliases descriptions
