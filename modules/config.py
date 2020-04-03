@@ -318,13 +318,6 @@ attack_index_md = ("Title: ATT&CK Overview \n"
                    "save_as: index.html\n"
                    "data: ")
 
-# Old stix content
-last_attack_path = {
-    'enterprise-attack': stix_directory + "/enterprise-attack_old.json",
-    'mobile-attack': stix_directory + "/mobile-attack_old.json",
-    'pre-attack': stix_directory + "/pre-attack_old.json"
-}
-
 # Constants used by mitigation.py
 # ----------------------------------------------------------------------------
 
