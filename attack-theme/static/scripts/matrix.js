@@ -52,3 +52,21 @@ function show_flat_matrix() {
     $(".matrix-type.flat").removeClass("d-none");
     $(".matrix-type.side").addClass("d-none");
 }
+
+function computeScrollMarkers() {
+    console.log("computing scroll markers")
+    let beginning = $(this).scrollLeft() == 0; //is the scroll at the left side?
+    let end = Math.floor($(this).scrollLeft() + $(this).width()) == Math.floor($(this).children().first().width()); //is the scroll at the right side?
+    if (!beginning) $(this).addClass("overflow-left");
+    else            $(this).removeClass("overflow-left");
+    if (!end)       $(this).addClass("overflow-right");
+    else            $(this).removeClass("overflow-right");
+}
+
+$(".matrix-scroll-box").scroll(computeScrollMarkers); //respond to scrolling in matrix scroll boxes
+
+function initScrollMarkers() {
+    $(".matrix-scroll-box").each(computeScrollMarkers); //initial state for scroll markers
+}
+initScrollMarkers();
+$(window).resize(initScrollMarkers); //respond to page resize
