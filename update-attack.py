@@ -35,15 +35,11 @@ def get_stix_data(args):
         start_time = time.time()
 
         for domain in config.settings_dict['domains']:
-            r = requests.get(f"https://raw.githubusercontent.com/mitre/cti/master/{domain}/{domain}.json", 
-            verify=False, proxies=proxyDict)
-            
-            with open(os.path.join(config.stix_directory, domain + "_old.json"), 'w+') as f:
-                f.write(json.dumps(r.json()))
-                
-                if (args.refresh or not os.path.isdir(config.stix_directory) or not use_local_stix):
-                    with open(os.path.join(config.stix_directory, domain + ".json"), 'w+') as f:
-                        f.write(json.dumps(r.json()))
+            if (args.refresh or not os.path.isdir(config.stix_directory) or not use_local_stix):
+                r = requests.get(f"https://raw.githubusercontent.com/mitre/cti/master/{domain}/{domain}.json", verify=False, proxies=proxyDict)        
+        
+                with open(os.path.join(config.stix_directory, domain + ".json"), 'w+') as f:
+                    f.write(json.dumps(r.json()))
 
         end_time = time.time()
         util.progress_bar("Downloading STIX Data", end_time - start_time)
