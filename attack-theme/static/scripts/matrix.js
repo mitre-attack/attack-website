@@ -55,7 +55,10 @@ function show_flat_matrix() {
 
 function computeScrollMarkers() {
     let beginning = $(this).scrollLeft() == 0; //is the scroll at the left side?
-    let end = Math.floor($(this).scrollLeft() + $(this).width()) == Math.floor($(this).find(".matrix").width()); //is the scroll at the right side?
+    //is the scroll at the right side? 
+    let scrollPosition = ($(this).scrollLeft() + $(this).width()); //the right side of the scroll viewport
+    let scrollEnd = $(this).find(".matrix").width(); // the right side of the scrollABLE area
+    let end = Math.abs(scrollPosition - scrollEnd) < 2; //are they roughly the same?
     let leftIndicator = $(this).parent().find(".scroll-indicator.left")
     let rightIndicator = $(this).parent().find(".scroll-indicator.right")
     if (!beginning) leftIndicator.addClass("show");
