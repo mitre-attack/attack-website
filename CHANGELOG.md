@@ -34,7 +34,8 @@
 # Sub-techniques Beta
 ## ATT&CK Website version 2.1
 ### Fixes
-- added internet explorer for sub-techniques matrix. Improved behavior of sub-techniques matrix in Edge browser.
+- added internet explorer for sub-techniques matrix. Improved behavior of sub-techniques matrix in Edge browser. See issue [#114](https://github.com/mitre-attack/attack-website/issues/114).
+- added horizontal scroll indicators to matrices so that it's easier to tell when there's more to the left or right. See issue [#93](https://github.com/mitre-attack/attack-website/issues/93).
 
 ## ATT&CK Website version 2.0
 ### New Features
