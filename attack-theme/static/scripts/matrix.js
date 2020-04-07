@@ -52,3 +52,22 @@ function show_flat_matrix() {
     $(".matrix-type.flat").removeClass("d-none");
     $(".matrix-type.side").addClass("d-none");
 }
+
+function computeScrollMarkers() {
+    let beginning = $(this).scrollLeft() == 0; //is the scroll at the left side?
+    //is the scroll at the right side? 
+    let scrollPosition = ($(this).scrollLeft() + $(this).width()); //the right side of the scroll viewport
+    let scrollEnd = $(this).find(".matrix").width(); // the right side of the scrollABLE area
+    let end = Math.abs(scrollPosition - scrollEnd) < 5; //are they roughly the same?
+    let leftIndicator = $(this).parent().find(".scroll-indicator.left")
+    let rightIndicator = $(this).parent().find(".scroll-indicator.right")
+    if (!beginning) leftIndicator.addClass("show");
+    else            leftIndicator.removeClass("show");
+    if (!end)       rightIndicator.addClass("show");
+    else            rightIndicator.removeClass("show");
+}
+
+$(".matrix-scroll-box").scroll(computeScrollMarkers); //respond to scrolling in matrix scroll boxes
+function initScrollMarkers() { $(".matrix-scroll-box").each(computeScrollMarkers); } 
+initScrollMarkers(); //initial state for scroll markers
+$(window).resize(initScrollMarkers); //respond to page resize
