@@ -1,5 +1,6 @@
 //is the user doing a tour of the entire site, or just this module?
 isSiteTour = window.location.href.includes("?tour=true");
+console.log(base_url)
 
 let tour = new Tour({
     steps: [
@@ -12,7 +13,7 @@ let tour = new Tour({
         },
         {
             onShow: function() { //go to the next tour module
-                window.location.href = "/matrices/enterprise/?tour=true"
+                window.location.href = base_url + "matrices/enterprise/?tour=true"
             }
         }
     ],
