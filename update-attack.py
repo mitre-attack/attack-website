@@ -81,7 +81,11 @@ def update(args):
     if args.build:
         get_stix_data(args)
         generate.grab_resources()
-    
+
+    # Set website path with subdirectory
+    if args.subdirectory:
+        config.set_subdirectory(args.subdirectory)
+
     # Generate index markdown
     if args.build:
         generate.index_md_gen()
@@ -130,10 +134,6 @@ def update(args):
     if args.build:
         if 'redirects' in args.build:
             generate.redirects_md_gen()
-
-    # Set website path with subdirectory
-    if args.subdirectory:
-        config.set_subdirectory(args.subdirectory)
 
     # Deploy previous version
     if args.build:
