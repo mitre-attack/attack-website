@@ -1,1 +1,0 @@
-let base_url = "//output/beta";

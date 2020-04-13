@@ -29,15 +29,15 @@ def javascript_settings():
     javascript_settings_file = os.path.join(config.javascript_path, "settings.js")
 
     with open(javascript_settings_file, "w", encoding='utf8') as js_f:
-
-        web_dir = config.web_directory
+        # Get subdirectory path, will be empty if it was not declared
+        web_dir = config.subdirectory
         if not web_dir.startswith("/"):
             web_dir = "/" + web_dir
         
         web_dir = web_dir.replace("\\", "/")
 
         if not web_dir.endswith("/"):
-            web_dir = "/" + web_dir
+            web_dir = web_dir + "/"
 
         js_data = config.js_settings.substitute({"web_directory": web_dir})
         js_f.write(js_data)
