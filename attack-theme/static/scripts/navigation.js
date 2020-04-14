@@ -69,6 +69,16 @@ $(document).ready(function () {
         localStorage.setItem("new_active_id", $(this).attr('id'));
     });
 
+    // If this method is called, then the user has clicked on a link in the subtechniques dropdown table.
+    // Sets update to true and creates a new_active_id from the active_id so that the original domain-tactic_id-tech_id path is retained.
+    // This ensures that the sidenav opens the correct tactic (given the context) for the subtechnique that was clicked.
+    $(".subtechnique-table-item").click(function () {
+        let new_active_id = active_id;
+        new_active_id[new_active_id.length -1] = $(this).attr('data-subtechnique_id');
+        localStorage.setItem("need_update", true);
+        localStorage.setItem("new_active_id", new_active_id.join("-"));
+    });
+
     // Remove notransition class when expand button is clicked
     $(".expand-button.notransition").click(function () {
         $(this).removeClass("notransition");
