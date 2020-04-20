@@ -39,5 +39,5 @@ def javascript_settings():
         if not web_dir.endswith("/"):
             web_dir = web_dir + "/"
 
-        js_data = config.js_settings.substitute({"web_directory": web_dir})
+        js_data = config.js_dir_settings.substitute({"web_directory": web_dir})
         js_f.write(js_data)

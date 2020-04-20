@@ -670,7 +670,8 @@ parent_web_directory = "output"
 
 javascript_path = "attack-theme/static/scripts/"
 
-js_settings = Template("let base_url = \"${web_directory}\";")
+js_dir_settings = Template("let base_url = \"${web_directory}\";\n")
+js_tour_settings = Template("let tour_steps = ${tour_steps};\n")
 
 # Declare as empty string
 subdirectory = ""

@@ -2,7 +2,14 @@
 isSiteTour = window.location.href.includes("?tour=true");
 
 let tour = new Tour({
-    steps: [
+    storage: false, //no resuming tour if the page is reloaded.
+    framework: 'bootstrap4',   // set Tourist to use BS4 compatibility
+    showProgressBar: false,
+    showProgressText: false
+})
+
+if (typeof tour_steps['matrix'] != 'undefined'){
+    tour['_options']['steps'] = [
         {
             container: "#tour-start-container",
             element: "#tour-start",
@@ -12,16 +19,22 @@ let tour = new Tour({
         },
         {
             onShow: function() { //go to the next tour module
-                window.location.href = base_url + "matrices/enterprise/?tour=true"
+                window.location.href = base_url + tour_steps['matrix'] + "/?tour=true"
             }
         }
-    ],
-    storage: false, //no resuming tour if the page is reloaded.
-    framework: 'bootstrap4',   // set Tourist to use BS4 compatibility
-    showProgressBar: false,
-    showProgressText: false
-})
-
+    ]
+}
+else{
+    tour['_options']['steps'] = [
+        {
+            container: "#tour-start-container",
+            element: "#tour-start",
+            placement: "bottom",
+            title: "Welcome to the ATT&CK sub-techniques tour!",
+            content: "This guided tour only works when sub-techniques are available. To enable this feature, add sub-techniques to the bundle.",
+        }
+    ]
+}
 
 function start_tour() {
     if (tour.ended()) tour.restart();

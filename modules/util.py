@@ -981,6 +981,9 @@ def filter_deprecated_revoked(sdos):
 def filter_out_subtechniques(techniques):
     return list(filter(lambda t: not ("x_mitre_is_subtechnique" in t and t["x_mitre_is_subtechnique"]), techniques))
 
+def filter_out_techniques_without_subtechniques(techniques):
+    return list(filter(lambda t: ("x_mitre_is_subtechnique" in t and t["x_mitre_is_subtechnique"]), techniques))
+
 def get_side_menu_matrices(children):
     """Given a matrix structure defined in config.py, return stripped structure
        with only names"""
