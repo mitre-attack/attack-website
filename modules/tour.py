@@ -66,12 +66,39 @@ def get_tour_steps(matrix):
         return steps
     
     # Find technique with sub-techniques
-    steps['technique'] = get_technique_with_subtechniques()
-    steps['subtechnique'] = get_subtechnique_of_technique(steps['technique'])
+    technique = get_technique_with_subtechniques(techs_no_subtechs)
 
+    # Get technique ID and store that as the step
+    steps['technique'] = "techniques/{}".format(util.get_attack_id(technique))
+    steps['subtechnique'] = steps['technique'] + "/{}".format(get_subtech_n_of_technique(technique))
     return steps
 
-def get_technique_with_subtechniques():
-    """ Get technique with subtechniques """
-def get_subtechnique_of_technique(technique):
-    """ Get subtechnique """
+def get_technique_with_subtechniques(techs_no_subtechs):
+    """ Find first technique with at least 4 sub-techniques and return technique
+        Return technique with the most sub-techniques if not the case 
+    """
+
+    counter = 0
+    chosen_tech = {}
+    for tech in techs_no_subtechs:
+        if tech["id"] in config.subtechniques_of:
+
+            # Grab sub-technique count from technique
+            subtech_count =  len(config.subtechniques_of[tech["id"]])
+            # Check if sub-technique count is bigger than counter
+            if counter < subtech_count:
+                # Quick return if found
+                if subtech_count > 3: return tech
+                # Set counter and new techique
+                counter = subtech_count
+                chosen_tech = tech
+    
+    return chosen_tech
+
+def get_subtech_n_of_technique(technique):
+    """ Return ID number of first sub-technique of given technique """
+
+    for subtech in config.subtechniques_of[technique['id']]:
+        id = util.get_attack_id(subtech['object'])
+        return id.split(".")[1]
+         
