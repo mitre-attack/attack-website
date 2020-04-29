@@ -64,6 +64,12 @@
 ## [ATT&CK Content version 7.0-beta](https://github.com/mitre/cti/releases/tag/ATT%26CK-v7.0-beta)
 See release notes [here](https://attack.mitre.org/beta/resources/updates/updates-march-2020/index.html).
 
+# 29 March 2020
+## ATT&CK Website version 1.2.5
+### Improvements
+- Added tooltips to all matrices to show technique ID of techniques and subtechniques when hovering over them. See issue [#120](https://github.com/mitre-attack/attack-website/issues/120).
+
+
 # 9 March 2020
 ## [ATT&CK Content version 6.3](https://github.com/mitre/cti/releases/tag/ATT%26CK-v6.3)
 ### Fixes
