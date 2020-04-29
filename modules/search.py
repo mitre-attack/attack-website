@@ -72,6 +72,7 @@ def clean(filepath):
             match = re.search(r"<title>(.*)\|.*</title>", line)
             if match: title = match.group(1).strip()
         if 'http-equiv="refresh"' in line: skipindex = True
+        if '<meta name="robots" content="noindex, nofollow">' in line: skipindex = True
 
     out = bleach.clean(content, tags=[], strip=True) #remove tags
     out = re.sub(r"[\n ]+", " ", out) # remove extra newlines, smush to 1 line

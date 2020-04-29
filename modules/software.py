@@ -106,10 +106,7 @@ def generate_software_md(software,side_menu_data,side_menu_mobile_view_data):
         # Get techniques used by software
         data['technique_table_data'] = get_techniques_used_by_software_data(software, reference_list, next_reference_number)
 
-        # # Get enterprise and mobile layers for navigator
-        # enterprise_layer, mobile_layer = util.get_navigator_layers(data['name'], data['technique_table_data'])
-
-        # Get navigator layers for this group
+        # Get navigator layers for this sofftware
         layers = util.get_navigator_layers(
             data['name'], 
             data["attack_id"],
@@ -130,9 +127,7 @@ def generate_software_md(software,side_menu_data,side_menu_mobile_view_data):
                 layer_json.write(subs)
             data["layers"].append({
                 "domain": layer["domain"],
-                "filename": "-".join([data["attack_id"], layer["domain"], "layer"]) + ".json",
-                "navigator_link_enterprise" : config.navigator_link_enterprise,
-                "navigator_link_mobile" : config.navigator_link_mobile
+                "filename": "-".join([data["attack_id"], layer["domain"], "layer"]) + ".json"
             })
         
         # Get aliases descriptions
@@ -257,33 +252,14 @@ def get_techniques_used_by_software_data(software, reference_list, next_referenc
     else:
         techniques_used_by_software = config.techniques_used_by_tools.get(software['id'])
 
+    technique_list = {}
     if techniques_used_by_software:
-        technique_list = {}
 
         for technique in techniques_used_by_software:
-
-            technique_stix_id = technique['object']['id']
-
-            # Check if technique not already in technique_list dict
-            if technique_stix_id not in technique_list:
-
-                attack_id = util.get_attack_id(technique['object'])
-                
-                if attack_id:
-                    technique_list[technique_stix_id] = {}
-
-                    domain = config.technique_to_domain[attack_id]
-    
-                    technique_list[technique_stix_id]['domain'] = domain.split('-')[0]
-
-                    technique_list[technique_stix_id]['id'] = attack_id
-                    technique_list[technique_stix_id]['name'] = technique['object']['name']
-
-                    if technique['relationship'].get('description'):
-
-                        # Get filtered description
-                        technique_list[technique_stix_id]['descr'] = util.get_filtered_description(reference_list, next_reference_number, technique)
-
+            # Do not add if technique is deprecated
+            if not technique['object'].get('x_mitre_deprecated'):
+                technique_list = util.technique_used_helper(technique_list, technique, reference_list, next_reference_number)
+            
     technique_data = []
     for item in technique_list:
         technique_data.append(technique_list[item])

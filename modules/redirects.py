@@ -152,6 +152,14 @@ def generate_obj_redirect(redirect_link, new_attack_id, old_attack_id, domain):
     data = {}
 
     data['title'] = old_attack_id
+
+    # Check if new id or old id are subtechniques and change to redirection format
+    if(util.is_sub_tid(new_attack_id)):
+        new_attack_id = util.redirection_subtechnique(new_attack_id)
+    
+    if(util.is_sub_tid(old_attack_id)):
+        old_attack_id = util.redirection_subtechnique(old_attack_id)
+
     data['redirect_link'] =  "/" + redirect_link['new'] + "/" + new_attack_id
     data['path'] = config.redirects_paths[domain] + redirect_link['old'] + "/" + old_attack_id 
 

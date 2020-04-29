@@ -313,12 +313,42 @@ def get_technique_table_data(tactic, techniques_list):
                 row['descr'] = markdown.markdown(row['descr'].split("\n")[0])
 
             row['descr'] = filter_urls(row['descr'])
+            row['descr'] = remove_html_paragraph(row['descr'])
 
             if tactic is None and tech.get('x_mitre_deprecated'):
                 row['deprecated'] = True
 
             row['technique_name'] = tech['name']
+
+            # Get sub-techniques if available
+            row['subtechniques'] = []
+            if tech["id"] in config.subtechniques_of:
+                subtechniques = config.subtechniques_of[tech["id"]]
+                for subtechnique in subtechniques:
+                    sub_data = {}
+                    sub_data['name'] = subtechnique['object']['name']
+                    sub_attack_id = get_attack_id(subtechnique['object'])
+                    if not "." in sub_attack_id:
+                        raise Exception(f"{attack_id} subtechnique's attackID '{sub_attack_id}' is malformed")
+                    sub_data['id'] = sub_attack_id.split(".")[1]
+                    sub_data['descr'] = remove_citations(subtechnique['object']['description'], subtechnique['object']['external_references'])
+                    # Replace html characters from first paragraph
+                    sub_data['descr'] = replace_html_chars(sub_data['descr'].split("\n")[0])
+                    sub_data['descr'] = markdown.markdown(sub_data['descr'])
+                    sub_data['descr'] = filter_urls(sub_data['descr'])
+                    sub_data['descr'] = remove_html_paragraph(sub_data['descr'])
+                    row['subtechniques'].append(sub_data)
+
             technique_table.append(row)
+    
+    # Sort by technique name
+    technique_table = sorted(technique_table, key=lambda k: k['technique_name'].lower())
+
+    # Sort sub-techniques by name
+    for technique in technique_table:
+        if technique['subtechniques']:
+            # Sort by technique name
+            technique['subtechniques'] = sorted(technique['subtechniques'], key=lambda k: k['id'].lower())
 
     return technique_table
 
@@ -599,6 +629,115 @@ def is_tid(tid):
     pattern = re.compile("^T[0-9][0-9][0-9][0-9]$")
     return pattern.match(tid)
 
+def is_sub_tid(sub_tid):
+    """Check if input has a sub-technique id pattern"""
+
+    pattern = re.compile("^T[0-9][0-9][0-9][0-9].[0-9][0-9][0-9]$")
+    return pattern.match(sub_tid)
+
+def redirection_subtechnique(sub_tid):
+    """ Convert subtechnique id to redirection format """
+
+    return get_parent_technique_id(sub_tid) + "/" + get_sub_technique_id(sub_tid)
+
+def get_parent_technique_id(sub_tid):
+    """Given a sub-technique id, return parent"""
+
+    return sub_tid.split(".")[0]
+
+def get_sub_technique_id(sub_tid):
+    """Given a sub-technique id, remove parent ID and return"""
+
+    return sub_tid.split(".")[1]
+
+def get_technique_name(tid):
+    """ Given a technique id, return the technique name """
+
+    for technique in config.technique_list:
+        attack_id = get_attack_id(technique)
+        if attack_id == tid:
+            return technique['name']
+    
+    return config.NOT_FOUND
+
+def technique_used_helper(technique_list, technique, reference_list, next_reference_number):
+    """ Add technique to technique list and make distinction between techniques
+        subtechniques
+    """
+
+    attack_id = get_attack_id(technique['object'])
+    
+    if attack_id:
+        # Check if technique not already in technique_list dict
+        if attack_id not in technique_list:
+
+            # Check if attack id is a sub-technique
+            if is_sub_tid(attack_id):
+                parent_id = get_parent_technique_id(attack_id)
+
+                # If parent technique not already in list, add to list and add current sub-technique
+                if parent_id not in technique_list:
+                    technique_list[parent_id] = {}
+                    technique_list[parent_id] = parent_technique_used_helper(parent_id)
+
+                technique_list[parent_id]['subtechniques'].append(get_technique_data_helper(attack_id, technique, reference_list, next_reference_number))
+            
+            # Attack id is regular technique
+            else:
+                # Add technique to list
+                technique_list[attack_id] = {}
+                technique_list[attack_id] = get_technique_data_helper(attack_id, technique, reference_list, next_reference_number)
+
+        # Check if parent ID was added by sub-technique
+        # parent ID will not have description
+        elif 'descr' not in technique_list[attack_id]:
+            # Check if it has external references
+            if technique['relationship'].get('description'):
+                # Get filtered description
+                technique_list[attack_id]['descr'] = get_filtered_description(reference_list, next_reference_number, technique)
+    
+    return technique_list
+
+
+def get_technique_data_helper(attack_id, technique, reference_list, next_reference_number):
+    """ Given an attack id, technique object and reference information, 
+        return dictionary with technique data
+    """
+
+    technique_data = {}
+
+    technique_data['domain'] = config.technique_to_domain[attack_id].split('-')[0]
+
+    if is_sub_tid(attack_id):
+        technique_data['id'] = get_sub_technique_id(attack_id)
+    else:
+        technique_data['id'] = attack_id
+    
+    technique_data['name'] = technique['object']['name']
+
+    # Check if it has external references
+    if technique['relationship'].get('description'):
+        # Get filtered description
+        technique_data['descr'] = get_filtered_description(reference_list, next_reference_number, technique)
+    
+    technique_data['subtechniques'] = []
+    
+    return technique_data
+
+def parent_technique_used_helper(parent_id):
+    """ Given a parent technique id, add available information for 
+        parent
+    """
+
+    parent_data = {}
+
+    parent_data['domain'] = config.technique_to_domain[parent_id].split('-')[0]
+    parent_data['id'] = parent_id
+    parent_data['name'] = get_technique_name(parent_id)
+    parent_data['subtechniques'] = []
+
+    return parent_data
+
 def find_num_of_ref_in_list(reference_list, ref_sname):
     """Given a reference list and a reference, search for reference
        in list. Return number if found, else return NOT_FOUND
@@ -664,7 +803,7 @@ def get_navigator_layers(name, attack_id, obj_type, version, techniques_used):
     enterprise_layer['description'] = enterprise_layer_description
     enterprise_layer['name'] = layer_name
     enterprise_layer['domain'] = "mitre-enterprise"
-    enterprise_layer['version'] = "2.2"
+    enterprise_layer['version'] = "3.0"
     enterprise_layer['techniques'] = []
     enterprise_layer["gradient"] = { # white for nonused, blue for used
 		"colors": [
@@ -684,7 +823,7 @@ def get_navigator_layers(name, attack_id, obj_type, version, techniques_used):
     mobile_layer['description'] = mobile_layer_description
     mobile_layer['name'] = layer_name
     mobile_layer['domain'] = "mitre-mobile"
-    mobile_layer['version'] = "2.2"
+    mobile_layer['version'] = "3.0"
     mobile_layer['techniques'] = []
     mobile_layer["gradient"] = { # white for nonused, blue for used
 		"colors": [
@@ -701,12 +840,35 @@ def get_navigator_layers(name, attack_id, obj_type, version, techniques_used):
 
     # Append techniques to enterprise and mobile layers
     for technique in techniques_used:
-        navigator_technique = get_navigator_technique(technique['id'], technique["descr"])
+        navigator_technique = {}
 
-        if technique['domain'].startswith("enterprise"):
-            enterprise_layer['techniques'].append(navigator_technique)
-        elif technique['domain'].startswith("mobile"):
-            mobile_layer['techniques'].append(navigator_technique)
+        # Add parent technique
+        if technique.get('descr'):
+            score = 1
+            if technique.get('subtechniques'):
+                navigator_technique = get_navigator_technique(technique['id'], technique["descr"], score, True)
+            else:
+                navigator_technique = get_navigator_technique(technique['id'], technique["descr"], score, False)
+        else:
+            if technique.get('subtechniques'):
+                navigator_technique = get_navigator_technique(technique['id'], None, None, True)
+        
+        if navigator_technique:
+            if technique['domain'].startswith("enterprise"):
+                enterprise_layer['techniques'].append(navigator_technique)
+            elif technique['domain'].startswith("mobile"):
+                mobile_layer['techniques'].append(navigator_technique) 
+        
+        # Add subtechniques
+        if technique.get('subtechniques'):
+            for subtechnique in technique['subtechniques']:
+                score = 1
+                navigator_technique = get_navigator_technique(technique['id']+"."+subtechnique['id'], subtechnique["descr"], score, True)
+
+                if technique['domain'].startswith("enterprise"):
+                    enterprise_layer['techniques'].append(navigator_technique)
+                elif technique['domain'].startswith("mobile"):
+                    mobile_layer['techniques'].append(navigator_technique)        
 
     layers = []
     if enterprise_layer["techniques"]:
@@ -721,12 +883,14 @@ def get_navigator_layers(name, attack_id, obj_type, version, techniques_used):
         })
     return layers
 
-def get_navigator_technique(attack_id, description):
+def get_navigator_technique(attack_id, description, score, showSub = False):
     """Given an attack id, return it as a dict for the navigator layer"""
 
     navigator_technique = {}
-    navigator_technique['score'] = 1
+    if score:
+        navigator_technique['score'] = score
     navigator_technique['techniqueID'] = attack_id
+    navigator_technique['showSubtechniques'] = showSub
     if description: navigator_technique['comment'] = bleach.clean(description, tags=[], strip=True) #remove html tags
     return navigator_technique
 
@@ -779,7 +943,7 @@ def progress_bar(name, time = None):
     sys.stdout.flush()
 
 def filter_techniques_by_platform(tech_list, platforms):
-    """Given a technique lsit and a platforms list, filter out techniques
+    """Given a technique list and a platforms list, filter out techniques
        that are not part of the platforms"""
 
     if not platforms:
@@ -798,6 +962,12 @@ def filter_techniques_by_platform(tech_list, platforms):
                     break
 
     return filtered_list
+
+def filter_deprecated_revoked(sdos):
+    return list(filter(lambda t: not ( ("x_mitre_deprecated" in t and t["x_mitre_deprecated"]) or ("revoked" in t and t["revoked"]) ) ,sdos))
+
+def filter_out_subtechniques(techniques):
+    return list(filter(lambda t: not ("x_mitre_is_subtechnique" in t and t["x_mitre_is_subtechnique"]), techniques))
 
 def get_side_menu_matrices(children):
     """Given a matrix structure defined in config.py, return stripped structure
