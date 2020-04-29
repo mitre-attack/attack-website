@@ -16,7 +16,7 @@ settings_dict = {
     "website_version": "2.0",
     "changelog_location": "/resources/changelog.html",
     "banner_enabled": "true",
-    "banner_message": "You are currently viewing the sub-techniques beta. <a href='/beta/?tour=true'>Take a tour</a>, read the <a href='https://medium.com/mitre-attack/attack-subs-what-you-need-to-know-99bce414ae0b'>blog post</a> or <a href='/beta/resources/updates/updates-march-2020'> release notes</a>, or see the <a href='/'>non-beta version of the site</a>.",
+    "banner_message": "You are currently viewing the sub-techniques beta. <a href='/?tour=true'>Take a tour</a>, read the <a href='https://medium.com/mitre-attack/attack-subs-what-you-need-to-know-99bce414ae0b'>blog post</a> or <a href='/resources/updates/updates-march-2020'> release notes</a>, or see the <a href='/'>non-beta version of the site</a>.",
     "domains": ["pre-attack", "enterprise-attack", "mobile-attack"],
     "source_names": [
         "mitre-pre-attack", 
@@ -317,13 +317,6 @@ attack_index_md = ("Title: ATT&CK Overview \n"
                    "Template: general/attack-index \n"
                    "save_as: index.html\n"
                    "data: ")
-
-# Old stix content
-last_attack_path = {
-    'enterprise-attack': stix_directory + "/enterprise-attack_old.json",
-    'mobile-attack': stix_directory + "/mobile-attack_old.json",
-    'pre-attack': stix_directory + "/pre-attack_old.json"
-}
 
 # Constants used by mitigation.py
 # ----------------------------------------------------------------------------
@@ -674,6 +667,10 @@ web_directory = "output"
 # Parent web directory name
 # leave parent directory name to first level for link tests
 parent_web_directory = "output"
+
+javascript_path = "attack-theme/static/scripts/"
+
+js_settings = Template("let base_url = \"${web_directory}\";")
 
 # Declare as empty string
 subdirectory = ""

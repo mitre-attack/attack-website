@@ -51,7 +51,7 @@ let tourSteps = [
 
 if (isSiteTour) tourSteps.push({
     onShow: function() { //go to the next tour module
-        window.location.href = "/groups/G0080/?tour=true"
+        window.location.href = base_url + "groups/G0080/?tour=true"
     }
 })
 
@@ -72,6 +72,5 @@ function start_tour() {
 }
 
 if (isSiteTour) {
-    console.log("continuing tour")
     start_tour();
 }

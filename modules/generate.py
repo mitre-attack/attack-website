@@ -30,11 +30,12 @@ def grab_resources():
     start_time = time.time()
     config.init_shared_data()
     end_time = time.time()
-    util.progress_bar("Initializing Data", end_time - start_time)
+    util.progress_bar("Initializing Data", end_time - start_time)    
 
 def index_md_gen():
     util.progress_bar("Index Page")
     start_time = time.time()
+    index.javascript_settings()
     index.generate()
     end_time = time.time()
     util.progress_bar("Index Page", end_time - start_time)

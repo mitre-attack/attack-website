@@ -58,6 +58,7 @@ def generate_domain_markdown(domain, techniques, tactics, side_nav_data):
     # Get technique table data and number of techniques
     data['technique_table'] = util.get_technique_table_data(None, techhnique_list_no_sub_no_deprecated)
     data['technique_list_len'] = str(len(techhnique_list_no_sub_no_deprecated))
+    data['subtechniques_len'] = util.get_subtechnique_count(techhnique_list_no_sub_no_deprecated)
 
     # Get tactic-techniques table
     data['menu'] = side_nav_data
