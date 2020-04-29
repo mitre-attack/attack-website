@@ -94,7 +94,8 @@ def get_sub_matrices(matrix):
             "id": technique["id"],
             "name": technique["name"],
             "url": technique["external_references"][0]["url"].split("attack.mitre.org")[1],
-            "x_mitre_platforms": technique.get("x_mitre_platforms")
+            "x_mitre_platforms": technique.get("x_mitre_platforms"),
+            "tech_id": technique["external_references"][0]["external_id"]
         }
 
         if technique["id"] in config.subtechniques_of:
