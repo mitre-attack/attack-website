@@ -74,7 +74,7 @@ $(document).ready(function () {
     // This ensures that the sidenav opens the correct tactic (given the context) for the subtechnique that was clicked.
     $(".subtechnique-table-item").click(function () {
         let new_active_id = active_id;
-        new_active_id[new_active_id.length -1] = $(this).attr('data-subtechnique_id');
+        new_active_id.push($(this).attr('data-subtechnique_id'));
         localStorage.setItem("need_update", true);
         localStorage.setItem("new_active_id", new_active_id.join("-"));
     });
