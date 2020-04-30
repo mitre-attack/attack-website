@@ -16,6 +16,8 @@ def generate():
     data['matrix_descr'] = matrix['descr']
     # layout
     data["matrices"], data["has_subtechniques"], data["tour_technique"] = matrixhelpers.get_sub_matrices(matrix)
+    # logo
+    data['logo_landingpage'] = config.settings_dict['logo_landingpage']
 
     # substitute into template
     subs = config.attack_index_md + json.dumps(data)

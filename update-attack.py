@@ -273,8 +273,11 @@ def generate_base_template():
                              "{% set CONTENT_VERSION = \"${content_version}\" -%}\n"
                              "{% set WEBSITE_VERSION = \"${website_version}\" -%}\n"
                              "{% set CHANGELOG_LOCATION = \"${changelog_location}\" -%}\n"
+                             "{% set LOGO_HEADER = \"${logo_header}\" -%}\n"
+                             "{% set LOGO_FOOTER = \"${logo_footer}\" -%}\n"
                              "{% set active_page = active_page|"
-                             "default('index') -%}\n")
+                             "default('index') -%}\n"
+                             )
     
     base_template_path = "./attack-theme/templates/general/base.html"
 
@@ -292,6 +295,8 @@ def generate_base_template():
         base_dict['content_version'] = config.settings_dict['content_version']
         base_dict['website_version'] = config.settings_dict['website_version']
         base_dict['changelog_location'] = config.settings_dict['changelog_location']
+        base_dict['logo_header'] = config.settings_dict['logo_header']
+        base_dict['logo_footer'] = config.settings_dict['logo_footer']
         jinja_settings = base_template.substitute(base_dict)
   
     with open(base_template_path, 'w+') as f:
