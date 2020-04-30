@@ -60,7 +60,7 @@
 - Lists within data cards, e.g the platforms of a technique, are now in alphabetical order. See issue [#84](https://github.com/mitre-attack/attack-website/issues/84).
 - Matrix timestamps are now calculated from the modified date on the x-mitre-matrix STIX object. Additionally, said timestamps are now formatted the same as modified dates on other pages of the website. See issue [#27](https://github.com/mitre-attack/attack-website/issues/27).
 - Revisions to the layout of the matrix pages to improve readability when multiple matrices occur within a domain.
-- Added tooltips to all matrices to show technique ID of techniques and subtechniques when hovering over them. See issue [#120](https://github.com/mitre-attack/attack-website/issues/120).
+- Added tooltips to all matrices to show tactic IDs, technique IDs, and subtechnique IDs when hovering over tactic names, technique names, and subtechnique names. See issue [#120](https://github.com/mitre-attack/attack-website/issues/120).
 
 ## [ATT&CK Content version 7.0-beta](https://github.com/mitre/cti/releases/tag/ATT%26CK-v7.0-beta)
 See release notes [here](https://attack.mitre.org/beta/resources/updates/updates-march-2020/index.html).
