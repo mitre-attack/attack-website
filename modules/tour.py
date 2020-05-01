@@ -71,6 +71,9 @@ def get_tour_steps(matrix):
     # Get technique ID and store that as the step
     steps['technique'] = "techniques/{}".format(util.get_attack_id(technique))
     steps['subtechnique'] = steps['technique'] + "/{}".format(get_subtech_n_of_technique(technique))
+
+    group = get_group_with_subtechniques()
+
     return steps
 
 def get_technique_with_subtechniques(techs_no_subtechs):
@@ -101,4 +104,91 @@ def get_subtech_n_of_technique(technique):
     for subtech in config.subtechniques_of[technique['id']]:
         id = util.get_attack_id(subtech['object'])
         return id.split(".")[1]
-         
+
+def get_group_with_subtechniques():
+    
+    for group in config.group_list:
+
+        technique_list = {}
+
+        if config.techniques_used_by_groups.get(group.get('id')):
+            for technique in config.techniques_used_by_groups[group['id']]:
+                if not technique['object'].get('x_mitre_deprecated'):
+                    if(techniques_used(technique_list, technique)):
+                        get_groups_tour(technique_list)
+        
+
+def techniques_used(technique_list, technique):
+    """ Add technique to technique list and make distinction between techniques
+        subtechniques
+    """
+
+    attack_id = util.get_attack_id(technique['object'])
+    has_subtechniques = False
+
+    if attack_id:
+        # Check if technique not already in technique_list dict
+        if attack_id not in technique_list:
+
+            # Check if attack id is a sub-technique
+            if util.is_sub_tid(attack_id):
+                has_subtechniques = True
+
+                parent_id = util.get_parent_technique_id(attack_id)
+
+                # If parent technique not already in list, add to list and add current sub-technique
+                if parent_id not in technique_list:
+                    technique_list[parent_id] = {}
+                    technique_list[parent_id]['subtechniques'] = []
+
+                technique_list[parent_id]['subtechniques'].append(attack_id)
+            
+            # Attack id is regular technique
+            else:
+                # Add technique to list
+                technique_list[attack_id] = {}
+                technique_list[attack_id]['subtechniques'] = []
+
+        # Check if parent ID was added by sub-technique
+        # parent ID will not have description
+        elif 'descr' not in technique_list[attack_id]:
+            # Check if it has external references
+            if technique['relationship'].get('description'):
+                # Get filtered description
+                technique_list[attack_id]['descr'] = True
+    
+    return has_subtechniques
+
+def get_groups_tour(technique_list):
+
+    groups = {}
+
+    groups['step1']
+    groups['step2']
+    groups['step3']
+
+
+    for technique in technique_list:
+
+        # Step 1
+        if not technique_list[technique]['subtechniques']:
+            if not groups.get('step1'):
+                groups['step1'] = technique
+        # Step 2 and 3
+        else:
+            # If Technique has relationship with group and subtechniques as well (Step 2)
+            if technique_list[technique].get('descr'):
+                # Check if it has two or more sub-techniques if not it is fine if its the first one found
+                if groups.get('step2') and len(technique_list['technique']['subtechniques']) > 1:
+                    groups['step2'] = technique
+
+            # Parent technique does not have relationship with group (Step 3)
+            else:
+                # Check if it has two or more sub-techniques if not it is fine if its the first one found
+                if groups.get('step3') and len(technique_list['technique']['subtechniques']) > 1:
+                    groups['step3'] = technique
+
+
+        print(technique)
+        print(technique.get('subtechniques'))
+        exit()
