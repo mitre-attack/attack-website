@@ -36,6 +36,8 @@
 ### Fixes
 - added internet explorer for sub-techniques matrix. Improved behavior of sub-techniques matrix in Edge browser. See issue [#114](https://github.com/mitre-attack/attack-website/issues/114).
 - added horizontal scroll indicators to matrices so that it's easier to tell when there's more to the left or right. See issue [#93](https://github.com/mitre-attack/attack-website/issues/93).
+- Added tooltips to all matrices to show tactic IDs, technique IDs, and subtechnique IDs when hovering over tactic names, technique names, and subtechnique names. See issue [#120](https://github.com/mitre-attack/attack-website/issues/120).
+- The site is now easier to rebrand; color themes and logos can now be changed with simple modifications to the site code. See issue[#80](https://github.com/mitre-attack/attack-website/issues/80)
 
 ## ATT&CK Website version 2.0
 ### New Features
@@ -65,7 +67,6 @@
 - Lists within data cards, e.g the platforms of a technique, are now in alphabetical order. See issue [#84](https://github.com/mitre-attack/attack-website/issues/84).
 - Matrix timestamps are now calculated from the modified date on the x-mitre-matrix STIX object. Additionally, said timestamps are now formatted the same as modified dates on other pages of the website. See issue [#27](https://github.com/mitre-attack/attack-website/issues/27).
 - Revisions to the layout of the matrix pages to improve readability when multiple matrices occur within a domain.
-- The site is now easier to rebrand; color themes and logos can now be changed with simple modifications to the site code. See issue[#80](https://github.com/mitre-attack/attack-website/issues/80)
 
 ## [ATT&CK Content version 7.0-beta](https://github.com/mitre/cti/tree/4d3f22d81af2424f3885b4390793ee8eb256d10d)
 See release notes [here](https://attack.mitre.org/beta/resources/updates/updates-march-2020/index.html).
