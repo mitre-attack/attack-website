@@ -72,7 +72,7 @@ def get_tour_steps(matrix):
     steps['technique'] = "techniques/{}".format(util.get_attack_id(technique))
     steps['subtechnique'] = steps['technique'] + "/{}".format(get_subtech_n_of_technique(technique))
 
-    group = get_group_with_subtechniques()
+    steps['group'] = get_group_with_subtechniques()
 
     return steps
 
@@ -115,8 +115,12 @@ def get_group_with_subtechniques():
             for technique in config.techniques_used_by_groups[group['id']]:
                 if not technique['object'].get('x_mitre_deprecated'):
                     if(techniques_used(technique_list, technique)):
-                        get_groups_tour(technique_list)
-        
+                        groups_tour = get_groups_tour(technique_list)
+
+                        group_id = util.get_attack_id(group)
+                        if len(groups_tour) == 3:
+                            groups_tour['group_id'] = "groups/" + group_id
+                            return groups_tour
 
 def techniques_used(technique_list, technique):
     """ Add technique to technique list and make distinction between techniques
@@ -163,11 +167,6 @@ def get_groups_tour(technique_list):
 
     groups = {}
 
-    groups['step1']
-    groups['step2']
-    groups['step3']
-
-
     for technique in technique_list:
 
         # Step 1
@@ -179,16 +178,16 @@ def get_groups_tour(technique_list):
             # If Technique has relationship with group and subtechniques as well (Step 2)
             if technique_list[technique].get('descr'):
                 # Check if it has two or more sub-techniques if not it is fine if its the first one found
-                if groups.get('step2') and len(technique_list['technique']['subtechniques']) > 1:
+                if groups.get('step2') and len(technique_list[technique]['subtechniques']) > 1:
                     groups['step2'] = technique
-
+                elif not groups.get('step2'):
+                    groups['step2'] = technique
             # Parent technique does not have relationship with group (Step 3)
             else:
                 # Check if it has two or more sub-techniques if not it is fine if its the first one found
-                if groups.get('step3') and len(technique_list['technique']['subtechniques']) > 1:
-                    groups['step3'] = technique
+                if groups.get('step3') and len(technique_list[technique]['subtechniques']) > 1:
+                    groups['step3'] = technique_list[technique]['subtechniques'][0].replace(".", "-")
+                elif not groups.get('step3'):
+                    groups['step3'] = technique_list[technique]['subtechniques'][0].replace(".", "-")
 
-
-        print(technique)
-        print(technique.get('subtechniques'))
-        exit()
+    return groups
