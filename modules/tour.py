@@ -107,6 +107,8 @@ def get_subtech_n_of_technique(technique):
 
 def get_group_with_subtechniques():
     
+    groups_tour_list = []
+
     for group in config.group_list:
 
         technique_list = {}
@@ -114,13 +116,47 @@ def get_group_with_subtechniques():
         if config.techniques_used_by_groups.get(group.get('id')):
             for technique in config.techniques_used_by_groups[group['id']]:
                 if not technique['object'].get('x_mitre_deprecated'):
+                    # Get techniques used list and only update if it has subtechniques
                     if(techniques_used(technique_list, technique)):
+                        # Get list of potential tours
                         groups_tour = get_groups_tour(technique_list)
+                        if groups_tour:
+                            groups_tour['group_id'] = "groups/" + util.get_attack_id(group)
+                            groups_tour_list.append(groups_tour)
 
-                        group_id = util.get_attack_id(group)
-                        if len(groups_tour) == 3:
-                            groups_tour['group_id'] = "groups/" + group_id
-                            return groups_tour
+    def find_best_group():
+        """ Find group with step 2 and 3 with 2 or more subtechniques """
+
+        # Ideal: find Step 2 and Step 3 with most subtechniques
+
+        group_w_largest_step_2_3 = {}
+        for group_tour in groups_tour_list:
+            if not group_w_largest_step_2_3:
+                group_w_largest_step_2_3 = group_tour
+            
+            # Verify if group tour has step 2 and step 3
+            elif group_tour.get('step2') and group_tour.get('step3'):
+                # Only update if step 2 and 3 where found
+                if group_w_largest_step_2_3.get('step2') and group_w_largest_step_2_3.get('step3'):
+                    if (group_w_largest_step_2_3['step2'][1] < group_tour['step2'][1]) and (group_w_largest_step_2_3['step3'][1] < group_tour['step3'][1]):
+                        group_w_largest_step_2_3 = groups_tour
+                else:
+                    group_w_largest_step_2_3 = groups_tour
+
+            elif group_tour.get('step2') and not group_w_largest_step_2_3.get('step3'):
+                if not group_w_largest_step_2_3.get('step2'):
+                    group_w_largest_step_2_3 = groups_tour
+                elif group_w_largest_step_2_3['step2'][1] < groups_tour['step2'][1]:
+                    group_w_largest_step_2_3 = group_tour
+                
+            elif group_tour.get('step3') and not group_w_largest_step_2_3.get('step2'):
+                if not group_w_largest_step_2_3.get('step3'):
+                    group_w_largest_step_2_3 = groups_tour
+                elif group_w_largest_step_2_3['step3'][1] < groups_tour['step3'][1]:
+                    group_w_largest_step_2_3 = group_tour
+        
+        return group_w_largest_step_2_3
+
 
 def techniques_used(technique_list, technique):
     """ Add technique to technique list and make distinction between techniques
@@ -179,15 +215,15 @@ def get_groups_tour(technique_list):
             if technique_list[technique].get('descr'):
                 # Check if it has two or more sub-techniques if not it is fine if its the first one found
                 if groups.get('step2') and len(technique_list[technique]['subtechniques']) > 1:
-                    groups['step2'] = technique
+                    groups['step2'] = [technique, len(technique_list[technique]['subtechniques'])]
                 elif not groups.get('step2'):
-                    groups['step2'] = technique
+                    groups['step2'] = [technique, len(technique_list[technique]['subtechniques'])]
             # Parent technique does not have relationship with group (Step 3)
             else:
                 # Check if it has two or more sub-techniques if not it is fine if its the first one found
                 if groups.get('step3') and len(technique_list[technique]['subtechniques']) > 1:
-                    groups['step3'] = technique_list[technique]['subtechniques'][0].replace(".", "-")
+                    groups['step3'] = [technique_list[technique]['subtechniques'][0].replace(".", "-"), len(technique_list[technique]['subtechniques'])]
                 elif not groups.get('step3'):
-                    groups['step3'] = technique_list[technique]['subtechniques'][0].replace(".", "-")
+                    groups['step3'] = [technique_list[technique]['subtechniques'][0].replace(".", "-"), len(technique_list[technique]['subtechniques'])]
 
     return groups
