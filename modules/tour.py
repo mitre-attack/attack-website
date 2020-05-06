@@ -47,6 +47,7 @@ def generate_tour():
         js_f.write(js_data)
     
 def get_tour_steps(matrix):
+    """ Get all the tour steps """
 
     ms = config.ms[matrix['matrix']]
 
@@ -72,7 +73,13 @@ def get_tour_steps(matrix):
     steps['technique'] = "techniques/{}".format(util.get_attack_id(technique))
     steps['subtechnique'] = steps['technique'] + "/{}".format(get_subtech_n_of_technique(technique))
 
+    # Get group steps
     steps['group'] = get_group_with_subtechniques()
+
+    # If group steps is empty try to find software with subtechniques
+    if steps['group']:
+        # TODO: Find software with subtechniques
+        steps['software'] = get_software_with_subtechniques()
 
     return steps
 
@@ -106,7 +113,8 @@ def get_subtech_n_of_technique(technique):
         return id.split(".")[1]
 
 def get_group_with_subtechniques():
-    
+    """ Find group with the subtechniques to add to the tour """
+
     groups_tour_list = []
 
     for group in config.group_list:
@@ -114,23 +122,28 @@ def get_group_with_subtechniques():
         technique_list = {}
 
         if config.techniques_used_by_groups.get(group.get('id')):
+            group_has_subtechniques = False
             for technique in config.techniques_used_by_groups[group['id']]:
                 if not technique['object'].get('x_mitre_deprecated'):
                     # Get techniques used list and only update if it has subtechniques
                     if(techniques_used(technique_list, technique)):
-                        # Get list of potential tours
-                        groups_tour = get_groups_tour(technique_list)
-                        if groups_tour:
-                            groups_tour['group_id'] = "groups/" + util.get_attack_id(group)
-                            groups_tour_list.append(groups_tour)
+                        group_has_subtechniques = True
+            
+            # Get list of potential tours if group has subtechniques
+            if group_has_subtechniques:
+                groups_tour = get_groups_tour(technique_list)
+                if groups_tour:
+                    groups_tour['group_id'] = "groups/" + util.get_attack_id(group)
+                    groups_tour_list.append(groups_tour)
 
     def find_best_group():
         """ Find group with step 2 and 3 with 2 or more subtechniques """
 
         # Ideal: find Step 2 and Step 3 with most subtechniques
-
         group_w_largest_step_2_3 = {}
         for group_tour in groups_tour_list:
+
+            # First group
             if not group_w_largest_step_2_3:
                 group_w_largest_step_2_3 = group_tour
             
@@ -138,24 +151,29 @@ def get_group_with_subtechniques():
             elif group_tour.get('step2') and group_tour.get('step3'):
                 # Only update if step 2 and 3 where found
                 if group_w_largest_step_2_3.get('step2') and group_w_largest_step_2_3.get('step3'):
-                    if (group_w_largest_step_2_3['step2'][1] < group_tour['step2'][1]) and (group_w_largest_step_2_3['step3'][1] < group_tour['step3'][1]):
-                        group_w_largest_step_2_3 = groups_tour
+                    # When new group has same or more subtechniques
+                    if (group_w_largest_step_2_3['step2'][1] <= group_tour['step2'][1]) and (group_w_largest_step_2_3['step3'][1] <= group_tour['step3'][1]):
+                        group_w_largest_step_2_3 = group_tour
                 else:
-                    group_w_largest_step_2_3 = groups_tour
-
+                    group_w_largest_step_2_3 = group_tour
+            # Case when step 2 is available but not step 3
+            # Only update if current group does not have a step 3
             elif group_tour.get('step2') and not group_w_largest_step_2_3.get('step3'):
                 if not group_w_largest_step_2_3.get('step2'):
-                    group_w_largest_step_2_3 = groups_tour
-                elif group_w_largest_step_2_3['step2'][1] < groups_tour['step2'][1]:
                     group_w_largest_step_2_3 = group_tour
-                
+                elif group_w_largest_step_2_3['step2'][1] < group_tour['step2'][1]:
+                    group_w_largest_step_2_3 = group_tour
+            # Case when step 3 is available but not step 1
+            # Only update if current group does not have a step 2               
             elif group_tour.get('step3') and not group_w_largest_step_2_3.get('step2'):
                 if not group_w_largest_step_2_3.get('step3'):
-                    group_w_largest_step_2_3 = groups_tour
-                elif group_w_largest_step_2_3['step3'][1] < groups_tour['step3'][1]:
                     group_w_largest_step_2_3 = group_tour
-        
+                elif group_w_largest_step_2_3['step3'][1] < group_tour['step3'][1]:
+                    group_w_largest_step_2_3 = group_tour
+
         return group_w_largest_step_2_3
+
+    return find_best_group()
 
 
 def techniques_used(technique_list, technique):
@@ -200,6 +218,7 @@ def techniques_used(technique_list, technique):
     return has_subtechniques
 
 def get_groups_tour(technique_list):
+    """ Get steps 1 through 3 if they are available """
 
     groups = {}
 
