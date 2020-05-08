@@ -46,7 +46,7 @@
 - fixed bug where contributors wouldn't appear in search. See issue[#150](https://github.com/mitre-attack/attack-website/issues/150).
 - added horizontal scroll indicators to matrices so that it's easier to tell when there's more to the left or right. See issue [#93](https://github.com/mitre-attack/attack-website/issues/93).
 - fixed sizing of homepage twitter card for better mobile-compatibility. See issue [#92](https://github.com/mitre-attack/attack-website/issues/92).
-- fixed a crash that occured when building the site with mitigations that have no relationships with techniques. See issue [#153](https://github.com/mitre-attack/attack-website/issues/153).
+- fixed a crash that occurred when building the site with mitigations that have no relationships with techniques. See issue [#153](https://github.com/mitre-attack/attack-website/issues/153).
 
 ## ATT&CK Website version 2.0
 ### New Features
