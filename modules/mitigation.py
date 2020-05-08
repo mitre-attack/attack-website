@@ -160,10 +160,11 @@ def get_techniques_addressed_data(mitigation, reference_list, next_reference_num
     """
     
     technique_list = {}
-    for technique in config.mitigates_techniques.get(mitigation['id']):
-        # Do not add if technique is deprecated
-        if not technique['object'].get('x_mitre_deprecated'):
-            technique_list = util.technique_used_helper(technique_list, technique, reference_list, next_reference_number)           
+    if config.mitigates_techniques.get(mitigation['id']): # only if there are techniques for this mitigation
+        for technique in config.mitigates_techniques.get(mitigation['id']):
+            # Do not add if technique is deprecated
+            if not technique['object'].get('x_mitre_deprecated'):
+                technique_list = util.technique_used_helper(technique_list, technique, reference_list, next_reference_number)           
     
     technique_data = []
     for item in technique_list:
