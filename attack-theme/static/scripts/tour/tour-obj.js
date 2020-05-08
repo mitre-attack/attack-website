@@ -10,24 +10,24 @@ let tourSteps = [
     }    
 ]
 
-if (isSiteTour && tour_steps['group']['step1'] != 'undefined') tourSteps.push({
-    element: "#uses-" + tour_steps['group']['step1'],
+if (isSiteTour && tour_steps['obj']['step1'] != 'undefined') tourSteps.push({
+    element: "#uses-" + tour_steps['obj']['step1'],
     placement: "left",
     backdrop: false,
     title: "Technique tables",
     content: "In cases where a technique in the table but not its sub-techniques, the row format is unchanged."
 })
 
-if (isSiteTour && tour_steps['group']['step2'] != 'undefined') tourSteps.push({
-    element: "#uses-" + tour_steps['group']['step2'],
+if (isSiteTour && tour_steps['obj']['step2'] != 'undefined') tourSteps.push({
+    element: "#uses-" + tour_steps['obj']['step2'],
     placement: "left",
     backdrop: false,
     title: "Technique tables",
     content: "In cases where both the technique and its sub-techniques exists in the table, the sub-techniques are shown nested beneath their parent in the ID column."
 })
 
-if (isSiteTour && tour_steps['group']['step3'] != 'undefined') tourSteps.push({
-    element: "#uses-" + tour_steps['group']['step3'],
+if (isSiteTour && tour_steps['obj']['step3'] != 'undefined') tourSteps.push({
+    element: "#uses-" + tour_steps['obj']['step3'],
     placement: "left",
     backdrop: false,
     title: "Technique tables",
