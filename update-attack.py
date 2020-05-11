@@ -156,6 +156,12 @@ def update(args):
     if args.build:
         if 'search' in args.build:
     	    generate.generate_search_index()
+
+    # Generate random page file pool
+    # also parses the content of the output directory, so should also come basically last
+    if args.build:
+        if 'random_page' in args.build:
+            generate.generate_random_page_json()
     
     if args.build:
         build_end = time.time()

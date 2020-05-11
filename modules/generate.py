@@ -13,6 +13,7 @@ from modules import mitigation
 from modules import redirects
 from modules import resources
 from modules import search
+from modules import random_page
 from modules import software
 from modules import stixhelpers
 from modules import subdirectory
@@ -119,6 +120,13 @@ def generate_search_index():
     search.generate_index()
     end_time = time.time()
     util.progress_bar("Search Index", end_time - start_time)
+
+def generate_random_page_json():
+    util.progress_bar("Random Page JSON")
+    start_time = time.time()
+    random_page.generate_json()
+    end_time = time.time()
+    util.progress_bar("Random Page JSON", end_time - start_time)
 
 def previous_versions_gen():
     util.progress_bar("Previous Versions")
