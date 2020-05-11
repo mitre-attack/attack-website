@@ -33,9 +33,21 @@
 
 # Sub-techniques Beta
 ## ATT&CK Website version 2.1
+### New Features
+- Added tooltips to all matrices to show tactic IDs, technique IDs, and subtechnique IDs when hovering over tactic names, technique names, and subtechnique names. See issue [#120](https://github.com/mitre-attack/attack-website/issues/120).
+
+### Improvements
+- The site is now easier to rebrand; color themes and logos can now be changed with simple modifications to the site code. See issue[#80](https://github.com/mitre-attack/attack-website/issues/80)
+- added horizontal scroll indicators to matrices so that it's easier to tell when there's more to the left or right. See issue [#93](https://github.com/mitre-attack/attack-website/issues/93).
+- The website tour is now generated dynamically. It is now flexible to data changes. See issue [#110](https://github.com/mitre-attack/attack-website/issues/110).
+
 ### Fixes
 - added internet explorer for sub-techniques matrix. Improved behavior of sub-techniques matrix in Edge browser. See issue [#114](https://github.com/mitre-attack/attack-website/issues/114).
+- fixed bug where sidenav wouldn't open the correct tactic when opening the sub-technique of a technique. See issue [#78](https://github.com/mitre-attack/attack-website/issues/78).
+- fixed bug where contributors wouldn't appear in search. See issue[#150](https://github.com/mitre-attack/attack-website/issues/150).
 - added horizontal scroll indicators to matrices so that it's easier to tell when there's more to the left or right. See issue [#93](https://github.com/mitre-attack/attack-website/issues/93).
+- fixed sizing of homepage twitter card for better mobile-compatibility. See issue [#92](https://github.com/mitre-attack/attack-website/issues/92).
+- fixed a crash that occurred when building the site with mitigations that have no relationships with techniques. See issue [#153](https://github.com/mitre-attack/attack-website/issues/153).
 
 ## ATT&CK Website version 2.0
 ### New Features
