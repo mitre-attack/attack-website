@@ -10,7 +10,7 @@ The March 2020 update for ATT&CK contains the beta release of sub-techniques for
 separate from the main (and still official) ATT&CK content for a period of approximately 3 months to allow for feedback and for users to
 assess their transition plans to ATT&CK with sub-techniques.
 
-In total, the sub-technique version of ATT&CK for Enterprise contains 167 techniques (reduced from 266) and 260 sub-techniques.
+In total, the sub-technique version of ATT&CK for Enterprise contains 156 techniques (reduced from 266) and 260 sub-techniques.
 
 See [the accompanying blog post](https://medium.com/mitre-attack/attack-subs-what-you-need-to-know-99bce414ae0b) for more details.
 
