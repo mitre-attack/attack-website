@@ -7,30 +7,32 @@ let tourSteps = [
         backdrop: false,
         title: "Technique tables",
         content: "On tactic, software, group, and mitigation pages, tables showing techniques have been revised to support sub-techniques.",
-    },
-    {
-        element: "#uses-T1203",
-        placement: "left",
-        backdrop: false,
-        title: "Technique tables",
-        content: "In cases where a technique in the table but not its sub-techniques, the row format is unchanged.",
-    },
-    {
-        element: "#uses-T1059",
-        placement: "left",
-        backdrop: false,
-        title: "Technique tables",
-        content: "In cases where both the technique and its sub-techniques exists in the table, the sub-techniques are shown nested beneath their parent in the ID column.",
-    },
-    {
-        element: "#uses-T1071-001",
-        placement: "left",
-        backdrop: false,
-        title: "Technique tables",
-        content: "In cases where a sub-technique exists in the table but not the parent technique, the parent technique row is omitted entirely.",
-    },
-    
+    }    
 ]
+
+if (isSiteTour && tour_steps['relationships']['step1'] != 'undefined') tourSteps.push({
+    element: "#uses-" + tour_steps['relationships']['step1'],
+    placement: "left",
+    backdrop: false,
+    title: "Technique tables",
+    content: "In cases where a technique exists in the table but not its sub-techniques, the row format is unchanged."
+})
+
+if (isSiteTour && tour_steps['relationships']['step2'] != 'undefined') tourSteps.push({
+    element: "#uses-" + tour_steps['relationships']['step2'],
+    placement: "left",
+    backdrop: false,
+    title: "Technique tables",
+    content: "In cases where both the technique and its sub-techniques exists in the table, the sub-techniques are shown nested beneath their parent in the ID column."
+})
+
+if (isSiteTour && tour_steps['relationships']['step3'] != 'undefined') tourSteps.push({
+    element: "#uses-" + tour_steps['relationships']['step3'],
+    placement: "left",
+    backdrop: false,
+    title: "Technique tables",
+    content: "In cases where a sub-technique exists in the table but not the parent technique, the parent technique row is omitted entirely."
+})
 
 let lastStepReached = false;
 

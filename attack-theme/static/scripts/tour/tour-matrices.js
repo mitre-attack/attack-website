@@ -82,9 +82,9 @@ tourSteps = [
     }
 ]
 
-if (isSiteTour) tourSteps.push({
+if (isSiteTour && tour_steps['technique'] != 'undefined') tourSteps.push({
     onShow: function() { //go to the next tour module
-        window.location.href = base_url + "techniques/T1053/?tour=true"
+        window.location.href = base_url + tour_steps['technique'] + "/?tour=true"
     }
 })
 

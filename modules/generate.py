@@ -20,6 +20,7 @@ from modules import tactic
 from modules import technique
 from string import Template
 from modules import tests
+from modules import tour
 from modules import util
 from modules import index
 from modules import archives
@@ -39,6 +40,13 @@ def index_md_gen():
     index.generate()
     end_time = time.time()
     util.progress_bar("Index Page", end_time - start_time)
+
+def tour_gen():
+    util.progress_bar("Tour")
+    start_time = time.time()
+    tour.generate_tour()
+    end_time = time.time()
+    util.progress_bar("Tour", end_time - start_time)
 
 def group_md_gen():
     util.progress_bar("Group Pages")

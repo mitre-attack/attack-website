@@ -89,6 +89,7 @@ def update(args):
     # Generate index markdown
     if args.build:
         generate.index_md_gen()
+        generate.tour_gen()
 
     # Generate group markdowns
     if args.build:

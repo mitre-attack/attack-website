@@ -218,7 +218,7 @@ matrices = [
 ]
 
 # argument defaults and options for the CLI
-build_choices = ['resources', 'contribute', 'groups', 'search', 'matrices', 'mitigations', 'redirects', 'software', 'tactics', 'techniques', "prev_versions"]
+build_choices = ['resources', 'contribute', 'groups', 'search', 'matrices', 'mitigations', 'redirects', 'software', 'tactics', 'techniques', "tour", "prev_versions"]
 build_defaults = build_choices
 
 test_choices = ['size', 'links', 'external_links', 'citations']
@@ -673,7 +673,8 @@ parent_web_directory = "output"
 
 javascript_path = "attack-theme/static/scripts/"
 
-js_settings = Template("let base_url = \"${web_directory}\";")
+js_dir_settings = Template("let base_url = \"${web_directory}\";\n")
+js_tour_settings = Template("let tour_steps = ${tour_steps};\n")
 
 # Declare as empty string
 subdirectory = ""
