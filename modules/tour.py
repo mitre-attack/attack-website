@@ -131,7 +131,7 @@ def get_tour_steps(matrix):
     obj =  choose_software_or_group_tour()
     
     if obj:
-        steps['obj'] = obj
+        steps['relationships'] = obj
 
     return steps
 

@@ -31,7 +31,7 @@ else{
             element: "#tour-start",
             placement: "bottom",
             title: "Welcome to the ATT&CK sub-techniques tour!",
-            content: "This guided tour only works when sub-techniques are available. To enable this feature, add sub-techniques to the bundle.",
+            content: "The sub-techniques tour only works when sub-techniques are present on the website. Please check your site config and STIX bundles to make sure sub-techniques are present.",
         }
     ]
 }
