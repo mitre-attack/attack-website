@@ -128,7 +128,10 @@ def get_tour_steps(matrix):
         return []
 
     # Add group or software tour
-    steps['obj'] = choose_software_or_group_tour()
+    obj =  choose_software_or_group_tour()
+    
+    if obj:
+        steps['obj'] = obj
 
     return steps
 
@@ -169,7 +172,9 @@ def get_group_or_software_with_subtechniques(object_type):
         techniques_used_by_type = config.techniques_used_by_groups
     else:
         obj_list = config.software_list
-        techniques_used_by_type = config.techniques_used_by_tools
+        # Combine tools and malware dictionaries in a copy
+        techniques_used_by_type = dict(config.techniques_used_by_tools)
+        techniques_used_by_type.update(config.techniques_used_by_malware)
 
     obj_tour_list = [] 
 
