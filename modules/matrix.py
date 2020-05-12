@@ -25,9 +25,6 @@ def generate():
     # Write the matrix index.html page
     with open(os.path.join(config.matrix_markdown_path, "overview.md"), "w", encoding='utf8') as md_file:
         md_file.write(config.matrix_overview_md)
-    
-    # Read old json attack STIX 
-    old_ms = stixhelpers.get_old_stix_memory_stores()
 
     side_menu_data = util.get_side_menu_matrices(config.matrices)
 
@@ -44,7 +41,6 @@ def generate_platform_matrices(matrix, side_menu_data=None):
     data['name'] = matrix['name']
 
     data['matrices'], data["has_subtechniques"], data["tour_technique"] = get_sub_matrices(matrix)
-    # data['timestamp'] = get_timestamp(matrix['matrix'], filtered_techniques, filtered_old_techniques)
     data['platforms'] = [ {"name": platform, "path": config.platform_to_path[platform] } for platform in matrix['platforms'] ]
     data['navigator_link_enterprise'] = config.navigator_link_enterprise
     data['navigator_link_mobile'] = config.navigator_link_mobile
@@ -94,7 +90,8 @@ def get_sub_matrices(matrix):
             "id": technique["id"],
             "name": technique["name"],
             "url": technique["external_references"][0]["url"].split("attack.mitre.org")[1],
-            "x_mitre_platforms": technique.get("x_mitre_platforms")
+            "x_mitre_platforms": technique.get("x_mitre_platforms"),
+            "external_id": technique["external_references"][0]["external_id"]
         }
 
         if technique["id"] in config.subtechniques_of:
@@ -133,6 +130,7 @@ def get_sub_matrices(matrix):
             "id": tactic_id,
             "name": tactic_obj["name"],
             "url": tactic_obj["external_references"][0]["url"].split("attack.mitre.org")[1],
+            "external_id": tactic_obj["external_references"][0]["external_id"],
             "techniques": techniques_in_tactic(tactic_id),
         }
 

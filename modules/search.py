@@ -27,7 +27,7 @@ def generate_index():
     if not os.path.isdir(config.web_directory):
         os.makedirs(config.web_directory)
         
-    json.dump(index, open(os.path.join(config.web_directory, "index.json"), mode="w",  encoding="utf8"), indent=2)
+    json.dump(index, open(os.path.join(config.web_directory, "index.json"), mode="w",  encoding="utf-8"), indent=2)
 
     if (config.subdirectory):
         # update search base url to subdirectory
@@ -50,9 +50,19 @@ def skipline(line):
         if skip in line: return True
     return False
 
+def clean_line(line):
+    """clean unicode spaces from line"""
+    # Replace unicode spaces
+    line = line.replace(u"\u00a0", " ")
+    line = line.replace(u"\u202f", " ")
+    line = line.replace("&nbsp;", " ")
+    line = line.replace("&nbsp", " ")
+
+    return line
+
 def clean(filepath):
     """clean the file of all HTML tags and unnecessary data"""
-    f = open(filepath, mode="r", encoding="utf8")
+    f = open(filepath, mode="r", encoding="utf-8")
     lines = f.readlines()
     f.close()
 
@@ -61,8 +71,8 @@ def clean(filepath):
     skipindex = False
     indexing = False
     for line in lines:
-        if (not skipline(line)) and indexing: 
-            content += line + "\n"
+        if (not skipline(line)) and indexing:
+            content += clean_line(line) + "\n"
         if "<!--start-indexing-for-search-->" in line: 
             indexing = True
         if "<!--stop-indexing-for-search-->" in line: 

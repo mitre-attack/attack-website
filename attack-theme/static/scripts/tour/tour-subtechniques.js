@@ -49,12 +49,11 @@ let tourSteps = [
     }
 ]
 
-if (isSiteTour) tourSteps.push({
+if (isSiteTour && tour_steps['obj'] != 'undefined') tourSteps.push({
     onShow: function() { //go to the next tour module
-        window.location.href = "/groups/G0080/?tour=true"
+        window.location.href = base_url + tour_steps['relationships']['obj_id'] + "/?tour=true"
     }
 })
-
 
 let tour = new Tour({
     container: "#tab-content",
@@ -72,6 +71,5 @@ function start_tour() {
 }
 
 if (isSiteTour) {
-    console.log("continuing tour")
     start_tour();
 }

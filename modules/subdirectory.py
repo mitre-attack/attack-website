@@ -10,7 +10,9 @@ from . import relationshiphelpers
 from . import util
 
 allowed_in_link = "".join(list(map(lambda s: s.strip(), [
-    "   -   ", 
+    "   -   ",
+    "   _   ",
+    "   &   ", 
     "   ?   ",
     "   \w   ",
     "   \\   ",
@@ -21,13 +23,13 @@ allowed_in_link = "".join(list(map(lambda s: s.strip(), [
     "   '   ",
     "   ()   ",
     "   /    ",
+    "   =    "
 ]))) 
 
 def replace_links(filepath):
     """In the given file, replace the in-site links to reference 
        the correct previous version
     """
-
     # read file contents
     with open(filepath, mode="r", encoding='utf8') as html:
         html_str = html.read()

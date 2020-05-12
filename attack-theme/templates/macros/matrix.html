@@ -1,22 +1,10 @@
 <!--
     create a new matrix supporting subtechniques and cell colors.
-    Params: tactics: Tactic[]
-
-    Tactic object format: {
-        id: uid of tactic
-        name: display name of tactic
-        url: url of the tactic page
-        techniques: Technique[]
-    }
-
-    Technique object format: {
-        id: uid of technique
-        name: technique name
-        url: url of the technique page
-        color: optional, the color with which to style the technique
-        subtechniques: Technique[] or []
-    }
-
+    Params: 
+        matrices: Matrix[] of matrices to display on the page
+        has_subtechniques: boolean, true if the matrix has subtechniques in it
+        tour_technique: the technique to use in the sub-techniques tour
+        isIndex: boolean, true if this matrix is going on the index page
 -->
 
 {% macro matrices(matrices, has_subtechniques, tour_technique, isIndex) %}
@@ -52,49 +40,55 @@
     <div id="layouts-content">
         <div class="matrix-type side">
             {% for matrix in matrices %}
-                <div class="matrix-container p-3">
-                    {% if matrices | length > 1%}
-                        <h3 class="text-center matrix-title">{{matrix.name}}</h3>
-                    {% endif %}
-                <div class="overflow-x-auto pb-3">
-                        {{ matrix_side(matrix.tactics, tour_technique) }}
-                    </div>
-                    {% if not isIndex %}
-                    <div class="timestamp deemphasis text-center pt-3">Last modified: {{matrix.timestamp}}</div>
-                    {% endif %}
-                </div>
+                {{ matrix_box('side', matrix, matrices | length, tour_technique, isIndex) }} 
             {% endfor %}
         </div>
         <div class="matrix-type flat d-none">
             {% for matrix in matrices %}
-                <div class="matrix-container p-3">
-                    {% if matrices | length > 1%}
-                        <h3 class="text-center matrix-title">{{matrix.name}}</h3>
-                    {% endif %}
-                    <div class="overflow-x-auto pb-3">
-                        {{ matrix_flat(matrix.tactics, tour_technique) }}
-                    </div>
-                    {% if not isIndex %}
-                    <div class="timestamp deemphasis text-center pt-3">Last modified: {{matrix.timestamp}}</div>
-                    {% endif %}
-                </div>
+                {{ matrix_box('flat', matrix, matrices | length, tour_technique, isIndex) }}
             {% endfor %}
         </div>
     </div>
     {% else %}
         {% for matrix in matrices %}
-            <div class="matrix-container p-3">
-                {% if matrices | length > 1%}
-                    <h3 class="text-center matrix-title">{{matrix.name}}</h3>
-                {% endif %}
-                <div class="overflow-x-auto pb-3">
-                    {{ matrix_side(matrix.tactics, tour_technique) }}
-                </div>
-                {% if not isIndex %}
-                <div class="timestamp deemphasis text-center pt-3">Last modified: {{matrix.timestamp}}</div>
-                {% endif %}
-            </div>
+            {{ matrix_box('side', matrix, matrices | length, tour_technique, isIndex) }}
         {% endfor %}
+    {% endif %}
+</div>
+{% endmacro %}
+
+<!-- 
+    matrix container helper
+    creates a matrix container with timestamp, overflow markers, and title
+    params:
+        whichmatrix: "flat" or "side"
+        matrix: the matrix object to display
+        num_matrices: number, the number of matrices on this page. Used to determine if title is necessary
+        tour_technique: the technique to use in the matrix tour
+        isIndex: boolean, is this matrix being displayed on the index page?
+-->
+{% macro matrix_box(whichmatrix, matrix, num_matrices, tour_technique, isIndex) %}
+<div class="matrix-container p-3">
+    {% if num_matrices >1 %}
+        <h3 class="text-center matrix-title">{{matrix.name}}</h3>
+    {% endif %}
+    <div class="scroll-indicator-group">
+        <div class="scroll-indicator left">
+            <div class="cover"></div>
+        </div>
+        <div class="overflow-x-auto matrix-scroll-box pb-3">
+            {% if whichmatrix == 'side' %}
+                {{ matrix_side(matrix.tactics, tour_technique) }}
+            {% elif whichmatrix == 'flat' %}
+                {{ matrix_flat(matrix.tactics, tour_technique) }}
+            {% endif %}
+        </div>
+        <div class="scroll-indicator right">
+            <div class="cover"></div>
+        </div>
+    </div>
+    {% if not isIndex %}
+    <div class="timestamp deemphasis text-center pt-3">Last modified: {{matrix.timestamp}}</div>
     {% endif %}
 </div>
 {% endmacro %}
@@ -105,7 +99,7 @@
     <thead>
         <tr>
             {% for tactic in tactics %}
-                <td class="tactic name"><a href="{{tactic.url}}">{{tactic.name}}</a></td>
+                <td class="tactic name"><a href="{{tactic.url}}" data-toggle="tooltip" data-placement="top" title="{{tactic.external_id}}">{{tactic.name}}</a></td>
             {% endfor %}
         </tr>
         <tr>
@@ -164,7 +158,7 @@
     <thead>
         <tr>
             {% for tactic in tactics %}
-                <td class="tactic name"><a href="{{tactic.url}}">{{tactic.name}}</a></td>
+                <td class="tactic name"><a href="{{tactic.url}}" data-toggle="tooltip" data-placement="top" title="{{tactic.external_id}}">{{tactic.name}}</a></td>
             {% endfor %}
         </tr>
         <tr>
@@ -234,7 +228,8 @@
 
 <!-- Helper macro for creating a [sub]technique cell. Param is a Technique (defined above) and boolean noting whether or not it is a subtechnique-->
 {% macro technique_cell(technique, is_supertechnique) %}
+
 <div class="technique-cell {% if is_supertechnique %} supertechniquecell{% endif %}{% if technique.color %} colored{% endif %}" {% if technique.color %} style="background: {{technique.color}}"{% endif %}>
-    <a href="{{technique.url}}">{{technique.name}}{% if technique.subtechniques | length > 0 %}&nbsp;<sub>({{technique.subtechniques | length}})</sub>{% endif %}</a>
+    <a href="{{technique.url}}" data-toggle="tooltip" data-placement="top" title="{{technique.external_id}}">{{technique.name}}{% if technique.subtechniques | length > 0 %}&nbsp;<sub>({{technique.subtechniques | length}})</sub>{% endif %}</a>
 </div>
 {% endmacro %}

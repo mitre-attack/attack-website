@@ -32,6 +32,26 @@
 <!--          be omitted                                                -->
 
 # Sub-techniques Beta
+## ATT&CK Website version 2.1
+### New Features
+- Added tooltips to all matrices to show tactic IDs, technique IDs, and sub-technique IDs when hovering over tactic names, technique names, and sub-technique names. See issue [#120](https://github.com/mitre-attack/attack-website/issues/120).
+
+### Improvements
+- The site is now easier to rebrand; color themes and logos can now be changed with simple modifications to the site code. See issue [#80](https://github.com/mitre-attack/attack-website/issues/80)
+- Added horizontal scroll indicators to matrices so that it's easier to tell when there's more to the left or right. See issue [#93](https://github.com/mitre-attack/attack-website/issues/93).
+- The website tour route is now generated dynamically, allowing the site to adapt the tour to custom STIX content. See issue [#110](https://github.com/mitre-attack/attack-website/issues/110).
+- Added Navigator layers to the changelog of the sub-techniques update. See issue [#126](https://github.com/mitre-attack/attack-website/issues/126).
+
+### Fixes
+- Added internet explorer support for the sub-techniques matrix. Improved behavior of sub-techniques matrix in Edge browser. See issue [#114](https://github.com/mitre-attack/attack-website/issues/114).
+- Fixed bug where sidenav wouldn't open the correct tactic when opening the sub-technique of a technique. See issue [#78](https://github.com/mitre-attack/attack-website/issues/78).
+- Fixed bug where contributors wouldn't appear in search. See issue[#150](https://github.com/mitre-attack/attack-website/issues/150).
+- Added horizontal scroll indicators to matrices so that it's easier to tell when there's more to the left or right. See issue [#93](https://github.com/mitre-attack/attack-website/issues/93).
+- Fixed sizing of homepage twitter card for better mobile device compatibility. See issue [#92](https://github.com/mitre-attack/attack-website/issues/92).
+- Fixed a crash that occurred when building the site with mitigations that have no relationships with techniques. See issue [#153](https://github.com/mitre-attack/attack-website/issues/153).
+- Fixed outdated ATT&CK Navigator link on the contact page. See issue [#143](https://github.com/mitre-attack/attack-website/issues/143).
+- Updated incorrect technique count on March 2020 update. See issue [#141](https://github.com/mitre-attack/attack-website/issues/141).
+
 ## ATT&CK Website version 2.0
 ### New Features
 - Added sub-techniques.
@@ -61,7 +81,7 @@
 - Matrix timestamps are now calculated from the modified date on the x-mitre-matrix STIX object. Additionally, said timestamps are now formatted the same as modified dates on other pages of the website. See issue [#27](https://github.com/mitre-attack/attack-website/issues/27).
 - Revisions to the layout of the matrix pages to improve readability when multiple matrices occur within a domain.
 
-## [ATT&CK Content version 7.0-beta](https://github.com/mitre/cti/releases/tag/ATT%26CK-v7.0-beta)
+## [ATT&CK Content version 7.0-beta](https://github.com/mitre/cti/tree/4d3f22d81af2424f3885b4390793ee8eb256d10d)
 See release notes [here](https://attack.mitre.org/beta/resources/updates/updates-march-2020/index.html).
 
 # 9 March 2020

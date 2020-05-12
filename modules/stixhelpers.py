@@ -223,16 +223,6 @@ def get_stix_memory_stores():
 
     return src
 
-def get_old_stix_memory_stores():
-
-    src = {}
-
-    for domain in config.domains:
-        src[domain] = stix2.MemoryStore()
-        src[domain].load_from_file(config.last_attack_path[domain])
-
-    return src
-
 def get_contributors(ms):
     """Gets all contributors in the STIX content"""
 
