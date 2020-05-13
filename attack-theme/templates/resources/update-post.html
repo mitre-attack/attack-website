@@ -1,0 +1,28 @@
+{% extends "general/two-column.html" %}
+{% set active_article = "resources" -%} 
+{% set title = "Updates - " + article.title + " | MITRE ATT&CK&reg;" -%} 
+{% block innerleft %}
+    <span class="heading" id="v-home-tab" aria-selected="false">Updates</span>
+    {% for curr_article in articles %}
+        {% if curr_article.template == 'resources/update-post' %}
+            {% if article.title == curr_article.title %}
+                <a class="nav-link side active show" id="v-overview-tab"  href={{ "/" + curr_article.save_as }} aria-controls="v-overview" aria-selected="false">{{ curr_article.date|strftime("%B %Y") }}</a>
+            {% else %}    
+                <a class="nav-link side" id="v-overview-tab"  href={{ "/" + curr_article.save_as }} aria-controls="v-overview" aria-selected="false">{{ curr_article.date|strftime("%B %Y") }}</a>            
+            {% endif %}
+        {% endif %}
+    {% endfor %}
+{% endblock %}
+{% block innerright %}
+{{ super () }}
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/">Home</a></li>
+        <li class="breadcrumb-item"><a href="/resources/">Resources</a></li>
+        <li class="breadcrumb-item"><a href="/resources/updates">Updates</a></li>
+        <li class="breadcrumb-item">{{ article.date|strftime("%B %Y") }}</a></li>
+    </ol>
+    <div class="blog-post p-3">
+        <h1 class="blog-post-title mb-4">{{ article.title }}</h1>
+        {{ article.content }}
+    </div>
+{% endblock %} {% block scripts %} {{ super () }} {% endblock %}

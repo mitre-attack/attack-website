@@ -41,7 +41,7 @@ def generate_tactics():
     side_nav_data = util.buildhelpers.get_side_nav_domains_data("tactics", tactics)
 
     for domain in site_config.domains:
-        check_if_generated = generate_domain_markdown(domain, techniques[domain], tactics[domain], side_nav_data)
+        check_if_generated = generate_domain_markdown(domain, techniques[domain], tactics, side_nav_data)
         if not tactic_generated:
             if check_if_generated:
                 tactic_generated = True
@@ -54,37 +54,35 @@ def generate_domain_markdown(domain, techniques, tactics, side_nav_data):
        shared data for tactics
     """
 
-    has_tactic = False
+    if tactics[domain]:
+        # Write out the markdown file for overview of domain
+        data = {
+            'domain': domain.split("-")[0],
+            'tactics_list_len': str(len(tactics[domain]))
+        }
 
-    if tactics:
-        has_tactic = True
+        data['side_menu_data'] = side_nav_data
+        data['tactics_table'] = get_domain_table_data(tactics[domain])
 
-    # Write out the markdown file for overview of domain
-    data = {
-        'domain': domain.split("-")[0],
-        'tactics_list_len': str(len(tactics))
-    }
+        subs = tactics_config.tactic_domain_md.substitute(data)
+        subs = subs + json.dumps(data)
 
-    data['side_menu_data'] = side_nav_data
-    data['tactics_table'] = get_domain_table_data(tactics)
+        with open(os.path.join(tactics_config.tactics_markdown_path, data['domain'] + "-tactics.md"), "w", encoding='utf8') as md_file:
+            md_file.write(subs)
 
-    subs = tactics_config.tactic_domain_md.substitute(data)
-    subs = subs + json.dumps(data)
+        # Write the tactic index.html page
+        with open(os.path.join(tactics_config.tactics_markdown_path, "overview.md"), "w", encoding='utf8') as i_md_file:
+            i_md_file.write(tactics_config.tactic_overview_md)
 
-    with open(os.path.join(tactics_config.tactics_markdown_path, data['domain'] + "-tactics.md"), "w", encoding='utf8') as md_file:
-        md_file.write(subs)
-
-    # Write the tactic index.html page
-    with open(os.path.join(tactics_config.tactics_markdown_path, "overview.md"), "w", encoding='utf8') as i_md_file:
-        i_md_file.write(tactics_config.tactic_overview_md)
-
-    # Create the markdown for the enterprise groups in the STIX
-    for tactic in tactics:
-        generate_tactic_md(tactic, domain, tactics, techniques, side_nav_data)
+        # Create the markdown for the enterprise groups in the STIX
+        for tactic in tactics[domain]:
+            generate_tactic_md(tactic, domain, tactics, techniques, side_nav_data)
+        
+        return True
     
-    return has_tactic
+    return False
 
-def generate_tactic_md(tactic, domain, tactic_list, techniques, side_menu_data):
+def generate_tactic_md(tactic, domain, tactic_list, techniques, side_nav_data):
     """Generate markdown for given tactic"""
 
     attack_id = util.buildhelpers.get_attack_id(tactic)
@@ -100,7 +98,7 @@ def generate_tactic_md(tactic, domain, tactic_list, techniques, side_menu_data):
         data['name'] = tactic['name']
         data['name_lower'] = tactic['name'].lower()
         data['descr'] = markdown.markdown(tactic['description'])
-        data['side_menu_data'] = side_menu_data
+        data['side_menu_data'] = side_nav_data
         data['domain'] = domain.split("-")[0]
 
         dates = util.buildhelpers.get_created_and_modified_dates(tactic)
@@ -151,9 +149,10 @@ def get_techniques_of_tactic(tactic, techniques):
     techniques_list = []
 
     for technique in techniques:
-        for phase in technique['kill_chain_phases']:
-            if phase['phase_name'] == tactic['x_mitre_shortname']:
-                techniques_list.append(technique)
+        if not technique.get('x_mitre_deprecated'):
+            for phase in technique['kill_chain_phases']:
+                if phase['phase_name'] == tactic['x_mitre_shortname']:
+                    techniques_list.append(technique)
 
     techniques_list = sorted(techniques_list, key=lambda k: k['name'].lower())
     return techniques_list

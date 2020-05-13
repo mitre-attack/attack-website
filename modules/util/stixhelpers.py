@@ -194,19 +194,6 @@ def grab_resources(ms):
                 coa_list.append(val)
     coa_list = sorted(coa_list, key=lambda k: k["name"].lower() )
 
-    #Generates a list of CoA
-    coa_list = []
-    for domain in site_config.domains:
-        curr_list = ms[domain].query([
-            stix2.Filter("type", "=", "course-of-action"),
-            stix2.Filter('revoked', '=', False)
-        ])
-        #remove duplicates from different domains
-        for val in curr_list:
-            if next((x for x in coa_list if x.id == val.id), None) is None:
-                coa_list.append(val)
-    coa_list = sorted(coa_list, key=lambda k: k["name"].lower() )
-
     #Generates list of relationships
     rel_list = []
     for domain in site_config.domains:
@@ -233,16 +220,6 @@ def get_stix_memory_stores():
     for domain in site_config.domains:
         src[domain] = stix2.MemoryStore()
         src[domain].load_from_file(site_config.attack_path[domain])
-
-    return src
-
-def get_old_stix_memory_stores():
-
-    src = {}
-
-    for domain in site_config.domains:
-        src[domain] = stix2.MemoryStore()
-        src[domain].load_from_file(site_config.last_attack_path[domain])
 
     return src
 

@@ -21,8 +21,6 @@ def generate_matrices():
     with open(os.path.join(matrices_config.matrix_markdown_path, "overview.md"), "w", encoding='utf8') as md_file:
         md_file.write(matrices_config.matrix_overview_md)
     
-    old_ms = util.stixhelpers.get_old_stix_memory_stores()    
-
     side_menu_data = util.buildhelpers.get_side_menu_matrices(matrices_config.matrices)
 
     matrix_generated = False
@@ -31,118 +29,133 @@ def generate_matrices():
 
     for matrix in matrices_config.matrices:
         if matrix["type"] == "external": continue # link to externally hosted matrix, don't create a page for it
-        matrix_generated = generate_matrix_md(ms, matrix, old_ms, None, None, side_menu_data)
+        matrix_generated = generate_platform_matrices(matrix, side_menu_data)
 
     if not matrix_generated:
         util.buildhelpers.remove_module_from_menu(matrices_config.module_name)
-
-def generate_matrix_md(ms, matrix, old_ms, techniques=None, old_techniques=None, side_menu_data=None):
+    
+def generate_platform_matrices(matrix, side_menu_data=None):
     """Given a matrix, generates the matrix markdown"""
     
-    has_techniques = False
-
     data = {}
     data['menu'] = side_menu_data
     data['domain'] = matrix['matrix'].split("-")[0]
+    data['name'] = matrix['name']
 
-    # Optimization to only load on first matrix level
-    # Path needs to be equal to the domain
-    if matrix['path'] ==  data['domain']:
-        techniques = util.stixhelpers.get_techniques(ms[matrix['matrix']])
-        old_techniques = util.stixhelpers.get_techniques(old_ms[matrix['matrix']])
+    data['matrices'], data["has_subtechniques"], data["tour_technique"] = get_sub_matrices(matrix)
+    data['platforms'] = [ {"name": platform, "path": matrices_config.platform_to_path[platform] } for platform in matrix['platforms'] ]
+    data['navigator_link_enterprise'] = site_config.navigator_link_enterprise
+    data['navigator_link_mobile'] = site_config.navigator_link_mobile
 
-    if techniques:
-        has_techniques = True
+    data['domain'] = matrix['matrix'].split("-")[0]
+    data['descr'] = matrix['descr']
+    data['path'] = matrix['path']
     
-    if has_techniques:
-        # Filter techniques
-        filtered_techniques = util.buildhelpers.filter_techniques_by_platform(techniques, matrix['platforms'])
-        filtered_old_techniques = util.buildhelpers.filter_techniques_by_platform(old_techniques, matrix['platforms'])
-        
-        data['name'] = matrix['name']
-        data['timestamp'] = get_timestamp(matrix['matrix'], filtered_techniques, filtered_old_techniques)
-        data['matrix'] = util.buildhelpers.get_matrix_data(filtered_techniques) 
-        data['platforms'] = [ {"name": platform, "path": matrices_config.platform_to_path[platform] } for platform in matrix['platforms'] ]
-        
-        data['domain'] = matrix['matrix'].split("-")[0]
-        data['descr'] = matrix['descr']
-        data['path'] = matrix['path']
+    subs = matrices_config.matrix_md.substitute(data)
+    subs = subs + json.dumps(data)
+
+    with open(os.path.join(matrices_config.matrix_markdown_path, data['domain'] + "-" + matrix['name'] + ".md"), "w", encoding='utf8') as md_file:
+        md_file.write(subs)
+
+    for subtype in matrix['subtypes']:
+        generate_platform_matrices(subtype, side_menu_data)
+
+def get_sub_matrices(matrix):
+
+    ms = util.relationshipgetters.get_ms()
+
+    # memorystore for the current domain
+    domain_ms = ms[matrix['matrix']]
+    # get relevant techniques
+    techniques = util.stixhelpers.get_techniques(domain_ms)
+    platform_techniques = util.buildhelpers.filter_techniques_by_platform(techniques, matrix['platforms'])
+    platform_techniques = util.buildhelpers.filter_out_subtechniques(platform_techniques)
+    # remove revoked
+    platform_techniques = util.buildhelpers.filter_deprecated_revoked(platform_techniques)
+    # get relevant tactics
+    all_tactics = util.stixhelpers.get_all_of_type(domain_ms, "x-mitre-tactic")
+    tactic_id_to_shortname = { tactic["id"]: tactic["x_mitre_shortname"] for tactic in all_tactics }
     
-        data['tactics'] = []
-        data['max_len'] = []
+    has_subtechniques = False #track whether the current matrix has subtechniques
+    tour_technique = { #technique used as an example in the sub-technique tour / usage explainer
+        "technique": None,
+        "tactic": None,
+        "subtechnique_count": 0
+    }
 
-        matrices = util.stixhelpers.get_matrices(ms[matrix['matrix']])
-        for curr_matrix in matrices:
-            tactics = util.stixhelpers.get_tactic_list(ms[matrix['matrix']], matrix_id=curr_matrix['id'])
-            data['tactics'].append(util.buildhelpers.get_tactics_data(tactics))
-            data['max_len'].append(util.buildhelpers.get_max_length(data['matrix'], tactics))
+    # helper functions
+    def phase_names(technique):
+        """get kill chain phase names from the given technique"""
+        return [ phase["phase_name"] for phase in technique["kill_chain_phases"] ]
+    
+    def transform_technique(technique, tactic_id):
+        """transform a technique object into the format required by the matrix macro"""
+
+        obj = {
+            "id": technique["id"],
+            "name": technique["name"],
+            "url": technique["external_references"][0]["url"].split("attack.mitre.org")[1],
+            "x_mitre_platforms": technique.get("x_mitre_platforms"),
+            "external_id": technique["external_references"][0]["external_id"]
+        }
+
+        subtechniques_of = util.relationshipgetters.get_subtechniques_of()
+
+        if technique["id"] in subtechniques_of:
+            subtechniques = subtechniques_of[technique["id"]]
+            obj["subtechniques"] = list(map(lambda st: transform_technique(st["object"], tactic_id), subtechniques))
+            # Filter subtechniques by platform
+            obj["subtechniques"] = util.buildhelpers.filter_techniques_by_platform(obj["subtechniques"], matrix['platforms'])
+            # remove deprecated and revoked
+            obj["subtechniques"] = util.buildhelpers.filter_deprecated_revoked(obj["subtechniques"])
+
+            nonlocal has_subtechniques
+            has_subtechniques = True
+            nonlocal tour_technique
+            if tour_technique["subtechnique_count"] < 4 and tour_technique["subtechnique_count"]  < len(obj["subtechniques"]):
+                # use this for the tour
+                tour_technique["technique"] = technique["id"]
+                tour_technique["tactic"] = tactic_id
+                tour_technique["subtechnique_count"] = len(obj["subtechniques"])
+
+        return obj
+
+    def techniques_in_tactic(tactic_id):
+        """helper function mapping a tactic_id
+           to a structured tactic object including the (filtered) techniques 
+           in the tactic"""
+                
+        # filter platform techniques to those inside of this tactic
+        techniques = list(filter(lambda technique: tactic_id_to_shortname[tactic_id] in phase_names(technique), platform_techniques))
+        # transform into format required by matrix macro
+        return list(map(lambda t: transform_technique(t, tactic_id), techniques))
+    
+    def transform_tactic(tactic_id):
+        """transform a tactic object into the format required by the matrix macro"""
+        tactic_obj = list(filter(lambda t: t["id"] == tactic_id, all_tactics))[0]
+        return {
+            "id": tactic_id,
+            "name": tactic_obj["name"],
+            "url": tactic_obj["external_references"][0]["url"].split("attack.mitre.org")[1],
+            "external_id": tactic_obj["external_references"][0]["external_id"],
+            "techniques": techniques_in_tactic(tactic_id),
+        }
+
+    data = []
+    sub_matrices = util.stixhelpers.get_matrices(domain_ms)
+    for sub_matrix in sub_matrices:
+        # find last modified date
+        matrix_dates = util.buildhelpers.get_created_and_modified_dates(sub_matrix)
+        matrix_timestamp = matrix_dates["modified"] if "modified" in matrix_dates else matrix_dates["created"]
+        # get tactics for the matrix
+        tactics = list(map(lambda tid: transform_tactic(tid), sub_matrix["tactic_refs"]))
+        # filter out empty tactics
+        tactics = list(filter(lambda t: len(t["techniques"]) > 0, tactics))
+        data.append({
+            "name": sub_matrix["name"],
+            "timestamp": matrix_timestamp,
+            "description": sub_matrix["description"],
+            "tactics": tactics,
+        })
         
-        subs = matrices_config.matrix_md.substitute(data)
-        subs = subs + json.dumps(data)
-
-        with open(os.path.join(matrices_config.matrix_markdown_path, data['domain'] + "-" + matrix['name'] + ".md"), "w", encoding='utf8') as md_file:
-            md_file.write(subs)
-
-        for subtype in matrix['subtypes']:
-            generate_matrix_md(ms, subtype, old_ms, techniques, old_techniques, side_menu_data)
-     
-    return has_techniques
-
-def get_recent_date(date_string1, date_string2):
-    """Given two dates, returns the newest date"""
-
-    date1 = datetime.datetime.strptime(date_string1, "%Y-%m-%d %H:%M:%S.%f")
-    try:
-        date2 = datetime.datetime.strptime(date_string2, "%Y-%m-%d %H:%M:%S.%f")
-    except:
-        print(date_string2)
-        quit()
-    if date1 > date2:
-        return date1.strftime('%Y-%m-%d %H:%M:%S.%f')
-    return date2.strftime('%Y-%m-%d %H:%M:%S.%f')
-
-def get_default_date(proposed_default_date, domain, platform=None):
-    """Given a proposed date, returns the target date"""
-
-    with open(os.path.join(site_config.stix_directory, 'old_dates.json'), 'r') as file:
-        core = file.read()
-    addressible = json.loads(core)
-    if domain == 'enterprise-attack':
-        if platform == None:
-            platform = 'all'
-        date = addressible[domain][platform]
-        target_date = get_recent_date(proposed_default_date, date)
-        addressible[domain][platform] = target_date
-    else:
-        date = addressible[domain]
-        target_date = get_recent_date(proposed_default_date, date)
-        addressible[domain] = target_date
-    with open(os.path.join(site_config.stix_directory, 'old_dates.json'),'w') as file:
-        file.write(json.dumps(addressible))
-
-    return target_date
-
-def get_timestamp(domain, techniques, old_techniques, platform=None):
-    """Given current and old techniques, returns the timestamp of the most
-       recent modified object
-    """
-
-    ql_current = {}
-    for k in techniques:
-        ql_current[k['id']] = k
-    ql_old = {}
-    for k in old_techniques:
-        ql_old[k['id']] = k
-
-    time_now = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f') + "+00:00"
-    raw_changes = [{k:time_now} if k in ql_old.keys() else {k:str(ql_current[k]['created'])} for k in set(ql_old.keys())^set(ql_current.keys())]
-    newest_date = datetime.datetime.min.strftime('%Y-%m-%d %H:%M:%S.%f')
-    if len(newest_date) != 26:
-        newest_date = '000' + newest_date
-
-    for entry in raw_changes:
-        newest_date = get_recent_date(newest_date, str(next(iter(entry.values()))[:-6]))
-
-    newest_date = get_default_date(newest_date, domain, platform)
-
-    return newest_date
+    return data, has_subtechniques, tour_technique

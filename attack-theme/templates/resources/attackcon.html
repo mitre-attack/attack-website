@@ -1,0 +1,128 @@
+{% extends "general/base.html" %}
+{% set active_page = "attackcon" -%}
+{% set title = "MITRE ATT&CKcon | MITRE ATT&CK&reg;" -%}
+{% set conventions = page.data | from_json %}
+
+{% block content %}
+{{ super () }}
+
+<div class="container">
+    <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">Home</a></li>
+            <li class="breadcrumb-item"><a href="/resources">Resources</a></li>
+            <li class="breadcrumb-item">ATT&CKcon</li>
+    </ol>
+</div>
+
+<div class="pt-3 container">
+    <ul class="nav nav-tabs" role="tablist" id="years">
+        {% for con in conventions %}
+        {% set conID = "-".join(con.date.split(' ')) %}
+        {% set active = conID == 'October-2019' %}
+        <li class="nav-item">
+            <a class="nav-link{% if active %} active{% endif %}" id="{{conID}}-tab" data-toggle="tab" href="#{{conID}}-body" role="tab" aria-controls="{{conID}}-body" aria-selected="true">{{con.title}}</a>
+        </li>
+        {% endfor %}
+    </ul>
+    <div class="tab-content attackcons p-4 mb-3">
+        {% for con in conventions %}
+        {% set conID = "-".join(con.date.split(' ')) %}
+        {% set active = conID == 'October-2019' %}
+        <div class="uniform-block tab-pane fade{% if active %} show active{% endif %}" id="{{conID}}-body" role="tabpanel" aria-labelledby="{{conID}}-tab">
+            
+            {% if "banner_img" in con %}
+            <p>
+                <img src="{{ con.banner_img }}" width="100%">
+            </p>
+            {% endif %}
+
+            {% if "description" in con %}
+            <p>{{con.description}}</p>
+            {% endif %}
+            {% if "blogpost" in con %}
+            <p><a target="_blank" href="{{con.blogpost}}">Click here to read our blog post about {{con.title}}! <img src="/theme/images/external-site-dark.jpeg" alt="External site" class="external-icon"></a></p>
+            {% endif %}
+
+            <div class="presentations card-block">
+                <h2>Presentations</h2>
+                {% for presentation in con.presentations %}
+                {% set isPanel = "moderator" in presentation %}
+                <div class="card w-100 mt-1">
+                    <div class="card-header collapsed" id="{{conID}}-{{loop.index}}-header" data-toggle="collapse" data-target="#{{conID}}-{{loop.index}}-body" aria-expanded="false" aria-controls="{{conID}}-{{loop.index}}-body">
+                        <h5 class="mb-0">{{loop.index}}. {{presentation.title}}
+                            <small>
+                                {% if not isPanel %}
+                                ({% for presenterGroup in presentation.presenters %}{% if loop.index > 1 %}; {% endif %}{{ " and ".join(presenterGroup.names)}}{% if "organization" in presenterGroup %}, {{presenterGroup.organization}}{% endif %}{% endfor %})
+                                {% else %}
+                                (Moderated by {{presentation.moderator.name}}, {{presentation.moderator.organization}})
+                                {% endif %}
+                            </small>
+                        </h5>
+                    </div>
+                    <div id="{{conID}}-{{loop.index}}-body" class="collapse" aria-labelledby="{{conID}}-{{loop.index}}-header">
+                        <div class="card-body">
+                            {% if not isPanel %}
+                            <p class="card-text">{{presentation.description}}</p>
+                            {% else %}
+                            <p class="card-text">Panelists:</p>
+                            <ul class="card-text">
+                                {% for panelist in presentation.panelists %}
+                                <li>
+                                    {{panelist}}
+                                </li>
+                                {% endfor %}
+                            </ul>
+                            <p class="card-text">{{presentation.moderator.name}} moderates a panel that discusses:</p>
+                            <ul class="card-text">
+                                {% for topic in presentation.topics %}
+                                <li>
+                                    {{topic}}
+                                </li>
+                                {% endfor %}
+                            </ul>
+                            {% endif %}
+
+                            {% if "video" in presentation %}
+                            <a class="card-link" target="_blank" href="{{presentation.video}}">video <img src="/theme/images/external-site-dark.jpeg" alt="External site" class="external-icon"></a> 
+                            {% else %}
+                            <span class="card-link">(no video)</span>
+                            {% endif %}
+
+                            {% if "slides" in presentation %}
+                            <a class="card-link" target="_blank" href="{{presentation.slides}}">slides <img src="/theme/images/external-site-dark.jpeg" alt="External site" class="external-icon"></a> 
+                            {% else %}
+                            <span class="card-link">(no slides)</span>
+                            {% endif %}
+                        </div>                   
+                    </div>
+                </div>
+
+                {% endfor %}
+            </div>
+            {% if "sponsors_img" in con %}
+            <div>
+                <h2>Sponsors</h2>
+                <img src="{{ con.sponsors_img }}" width="100%">
+            </div>
+            {% elif "sponsors_img_list" in con %}
+            <div>
+                <h2>Sponsors</h2>
+                <div class="sponsors-block">
+                    {% for sponsor_img in con.sponsors_img_list %}
+                    <div class="img-container">
+                        <img src="{{sponsor_img}}">
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+{% endblock %}   

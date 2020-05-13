@@ -10,7 +10,7 @@ techniques_markdown_path = "content/pages/techniques/"
 techniques_templates_path = "modules/techniques/templates/"
 
 # String template for all techniques
-technique_md = Template("Title: ${name}-${tactics}-${domain}\n"
+technique_md = Template("Title: ${name}-${domain}\n"
                         "Template: techniques/technique\n"
                         "save_as: techniques/${attack_id}/index.html\n"
                         "data: ")
@@ -28,3 +28,9 @@ technique_overview_md = ("Title: Overview \n"
                          "save_as: techniques/index.html \n")
 
 techniques_redirection_location = "modules/techniques/techniques_redirections.json"
+
+# String template for all techniques
+sub_technique_md = Template("Title: ${name}-${domain}\n"
+                            "Template: techniques/technique\n"
+                            "save_as: techniques/${parent_id}/${sub_number}/index.html\n"
+                            "data: ")

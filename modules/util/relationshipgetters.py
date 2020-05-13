@@ -15,6 +15,8 @@ technique_related_to_technique = {}
 tools_using_technique = {}
 malware_using_technique = {}
 groups_using_technique = {}
+subtechniques_of = {}
+parent_technique_of = {}
 ms = {}
 resources = {}
 relationships = []
@@ -142,6 +144,24 @@ def get_groups_using_technique():
         groups_using_technique = rsh.groups_using_technique(site_config.srcs)
     
     return groups_using_technique
+
+def get_subtechniques_of():
+    """ subtechniques of techniques getter """
+    global subtechniques_of
+
+    if not subtechniques_of:
+        subtechniques_of = rsh.subtechniques_of(site_config.srcs)
+    
+    return subtechniques_of
+
+def get_parent_technique_of():
+    """ parent of subtechnique getter """
+    global parent_technique_of
+
+    if not parent_technique_of:
+        parent_technique_of = rsh.parent_technique_of(site_config.srcs)
+    
+    return parent_technique_of
 
 def get_ms():
     """ memory share getter """

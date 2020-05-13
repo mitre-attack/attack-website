@@ -56,8 +56,6 @@ def generate_markdown_files(domain, mitigations, side_nav_data, side_nav_mobile_
 
     data = {}
 
-    has_mitigation = False 
-
     if mitigations:
 
         has_mitigation = True
@@ -79,7 +77,10 @@ def generate_markdown_files(domain, mitigations, side_nav_data, side_nav_mobile_
         for mitigation in mitigations:
             generate_mitigation_md(mitigation, domain, side_nav_data, side_nav_mobile_data)
     
-    return has_mitigation
+        return True
+    
+    else:
+        return False
 
 def generate_mitigation_md(mitigation, domain, side_menu_data, side_menu_mobile_data):
     """Generates the markdown for the given mitigation"""
@@ -178,29 +179,22 @@ def get_techniques_addressed_data(mitigation, reference_list, next_reference_num
        the mitigation
     """
     
-    techniques_data = []
+    technique_list = {}
+
     mitigates_techniques = util.relationshipgetters.get_mitigation_mitigates_techniques()
 
-    for technique in mitigates_techniques.get(mitigation['id']):
-        t_id = util.buildhelpers.get_attack_id(technique['object'])
+    if mitigates_techniques.get(mitigation['id']): # only if there are techniques for this mitigation
+        for technique in mitigates_techniques.get(mitigation['id']):
+            # Do not add if technique is deprecated
+            if not technique['object'].get('x_mitre_deprecated'):
+                technique_list = util.buildhelpers.technique_used_helper(technique_list, technique, reference_list, next_reference_number)           
+    
+    technique_data = []
+    for item in technique_list:
+        technique_data.append(technique_list[item])
+    # Sort by technique name
+    technique_data = sorted(technique_data, key=lambda k: k['name'].lower())
 
-        if t_id:
-            row = {}
-            row['tid'] = t_id
-
-            if technique['object']['external_references'][0]['source_name'] == 'mitre-mobile-attack':
-                row['domain'] = "Mobile"
-            else:
-                row['domain'] = "Enterprise"
-
-            row['name'] = technique['object']['name']
-            techniques_data.append(row)
-
-            if technique['relationship'].get('description'):
-                # Get filtered description
-                row['descr'] = util.buildhelpers.get_filtered_description(reference_list, next_reference_number, technique)             
-      
-    techniques_data = sorted(techniques_data, key=lambda k: k['name'].lower())
-    techniques_data = sorted(techniques_data, key=lambda k: [site_config.custom_alphabet.index(c) for c in k['domain'].lower()])
-
-    return techniques_data
+    # Sort by domain name
+    technique_data = sorted(technique_data, key=lambda k: [site_config.custom_alphabet.index(c) for c in k['domain'].lower()])
+    return technique_data

@@ -1,0 +1,235 @@
+<!--
+    create a new matrix supporting subtechniques and cell colors.
+    Params: 
+        matrices: Matrix[] of matrices to display on the page
+        has_subtechniques: boolean, true if the matrix has subtechniques in it
+        tour_technique: the technique to use in the sub-techniques tour
+        isIndex: boolean, true if this matrix is going on the index page
+-->
+
+{% macro matrices(matrices, has_subtechniques, tour_technique, isIndex) %}
+<div id="tour-matrix-container">
+    {% if has_subtechniques %}
+    <div class="matrix-controls">
+        <div class="btn-toolbar" role="toolbar" aria-label="matrix controls">
+            <div class="btn-group mr-2" role="group">
+                <div class="btn-group" role="group">
+                    <button class="btn btn-default dropdown-toggle" id="layout-options" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">layouts</button>
+                    <div class="dropdown-menu" aria-labelledby="layout-options">
+                        <a class="dropdown-item layout-button side active" href="#" onclick="show_side_matrix()">
+                            side layout
+                        </a>
+                    <a class="dropdown-item layout-button flat" href="#" onclick="show_flat_matrix(); {% if not isIndex %} tour_layout_clicked() {% endif %} ">
+                            flat layout
+                        </a>
+                </div>
+                </div>
+            </div>
+            <div class="btn-group mr-2" role="group">
+                <button type="button" class="btn btn-default" onclick="matrix_toggle_all(true)">show sub-techniques</button>
+                <button type="button" class="btn btn-default" onclick="matrix_toggle_all(false)">hide sub-techniques</button>
+            </div>
+            <!-- no help button on index page -->
+            {% if not isIndex %}
+            <div class="btn-group" role="group">
+                <button type="button" class="btn btn-default" onclick="start_tour()">help</button>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    <div id="layouts-content">
+        <div class="matrix-type side">
+            {% for matrix in matrices %}
+                {{ matrix_box('side', matrix, matrices | length, tour_technique, isIndex) }} 
+            {% endfor %}
+        </div>
+        <div class="matrix-type flat d-none">
+            {% for matrix in matrices %}
+                {{ matrix_box('flat', matrix, matrices | length, tour_technique, isIndex) }}
+            {% endfor %}
+        </div>
+    </div>
+    {% else %}
+        {% for matrix in matrices %}
+            {{ matrix_box('side', matrix, matrices | length, tour_technique, isIndex) }}
+        {% endfor %}
+    {% endif %}
+</div>
+{% endmacro %}
+
+<!-- 
+    matrix container helper
+    creates a matrix container with timestamp, overflow markers, and title
+    params:
+        whichmatrix: "flat" or "side"
+        matrix: the matrix object to display
+        num_matrices: number, the number of matrices on this page. Used to determine if title is necessary
+        tour_technique: the technique to use in the matrix tour
+        isIndex: boolean, is this matrix being displayed on the index page?
+-->
+{% macro matrix_box(whichmatrix, matrix, num_matrices, tour_technique, isIndex) %}
+<div class="matrix-container p-3">
+    {% if num_matrices >1 %}
+        <h3 class="text-center matrix-title">{{matrix.name}}</h3>
+    {% endif %}
+    <div class="scroll-indicator-group">
+        <div class="scroll-indicator left">
+            <div class="cover"></div>
+        </div>
+        <div class="overflow-x-auto matrix-scroll-box pb-3">
+            {% if whichmatrix == 'side' %}
+                {{ matrix_side(matrix.tactics, tour_technique) }}
+            {% elif whichmatrix == 'flat' %}
+                {{ matrix_flat(matrix.tactics, tour_technique) }}
+            {% endif %}
+        </div>
+        <div class="scroll-indicator right">
+            <div class="cover"></div>
+        </div>
+    </div>
+    {% if not isIndex %}
+    <div class="timestamp deemphasis text-center pt-3">Last modified: {{matrix.timestamp}}</div>
+    {% endif %}
+</div>
+{% endmacro %}
+
+
+{% macro matrix_flat(tactics, tour) %}
+<table class="matrix flat">
+    <thead>
+        <tr>
+            {% for tactic in tactics %}
+                <td class="tactic name"><a href="{{tactic.url}}" data-toggle="tooltip" data-placement="top" title="{{tactic.external_id}}">{{tactic.name}}</a></td>
+            {% endfor %}
+        </tr>
+        <tr>
+            {% for tactic in tactics %}
+                <td class="tactic count">
+                    {{tactic.techniques | length}}&nbsp;techniques
+                </td>
+            {% endfor %}
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            {% for tactic in tactics %}
+                <td class="tactic">
+                    {% for technique in tactic.techniques %}                        
+                        {% if technique.subtechniques | length == 0 %}
+                            {{ technique_cell(technique, False) }}
+                        {% else %}
+                            <!-- tour technique is scheduled task under privilege escalation -->
+                            {% set tour_technique = technique.id == tour.technique and tactic.id == tour.tactic and not isIndex %}
+                            <table class="supertechnique"{% if tour_technique %} id="tour-flat-technique" {% endif %}>
+                                <tr>
+                                    <td class="sidebar technique sidebar--{{tactic.id}}--{{technique.id}}{% if tour_technique %} sidebar--tour{% endif %}" onclick="matrix_toggle_technique('{{tactic.id}}', '{{technique.id}}');{% if tour_technique %} tour_technique_clicked();{% endif %}">
+                                        <div class="handle"> = </div>
+                                    </td>
+                                    <td class="technique">
+                                        {{ technique_cell(technique, True) }}
+                                    </td>
+                                </tr>
+                                <tr class="subtechniques-row hidden subtechniques-container subtechniques--{{tactic.id}}--{{technique.id}}{% if tour_technique %} subtechniques--tour{% endif %}">
+                                    <td class="sidebar subtechniques">
+                                        <svg width="12px" height="12px">
+                                            <path d="M0 0H12V12Z"/>
+                                        </svg>
+                                    </td>
+                                    <td class="subtechniques"{% if tour_technique %} id="tour-flat-subtechniques" {% endif %}>
+                                        <div class="subtechniques">
+                                            {% for subtechnique in technique.subtechniques %}
+                                                {{ technique_cell(subtechnique, False)}}
+                                            {% endfor %}
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        {% endif %}
+                    {% endfor %}
+                </td>
+            {% endfor %}
+        </tr>
+    </tbody>
+</table>
+{% endmacro %}
+
+{% macro matrix_side(tactics, tour) %}
+<table class="matrix side">
+    <thead>
+        <tr>
+            {% for tactic in tactics %}
+                <td class="tactic name"><a href="{{tactic.url}}" data-toggle="tooltip" data-placement="top" title="{{tactic.external_id}}">{{tactic.name}}</a></td>
+            {% endfor %}
+        </tr>
+        <tr>
+            {% for tactic in tactics %}
+                <td class="tactic count">
+                    {{tactic.techniques | length}}&nbsp;techniques
+                </td>
+            {% endfor %}
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            {% for tactic in tactics %}
+                <td class="tactic">
+                    <table class="techniques-table">
+                        {% for technique in tactic.techniques %}
+                        <!-- tour technique is scheduled task under privilege escalation -->
+                        {% set tour_technique = technique.id == tour.technique and tactic.id == tour.tactic and not isIndex %}
+
+                            <tr class="technique-row" {% if tour_technique %} id="tour-side-technique" {% endif %}>
+                                <td>
+                                    {% if technique.subtechniques | length == 0 %}
+                                        {{ technique_cell(technique, False) }}
+                                    {% else %}
+                                    <table class="supertechnique">
+                                        <tr>
+                                            <td class="technique">
+                                                {{ technique_cell(technique, True) }}
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    {% endif %}
+                                </td>
+                                {% if technique.subtechniques | length > 0 %}
+                                <td class="sidebar sidebar--{{tactic.id}}--{{technique.id}}{% if tour_technique %} sidebar--tour{% endif %}" onclick="matrix_toggle_technique('{{tactic.id}}', '{{technique.id}}');{% if tour_technique %} tour_technique_clicked();{% endif %}">
+                                    <div class="angle top">
+                                        <svg width="12px" height="12px">
+                                            <path d="M0 12H12V0Z"/>
+                                        </svg>
+                                    </div>
+                                    <div class="handle"> = </div>
+                                    <div class="angle bottom">
+                                        <svg width="12px" height="12px">
+                                            <path d="M0 0H12V12Z"/>
+                                        </svg>
+                                    </div>
+                                </td>
+                                {% endif %}
+                                <td class="subtechniques-td"{% if tour_technique %} id="tour-side-subtechniques" {% endif %}>
+                                    <div class="subtechniques hidden subtechniques-container subtechniques--{{tactic.id}}--{{technique.id}}{% if tour_technique %} subtechniques--tour{% endif %}">
+                                        {% for subtechnique in technique.subtechniques %}
+                                        <div class="subtechnique">
+                                            {{ technique_cell(subtechnique, False) }}
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </td>
+            {% endfor %}
+        </tr>
+    </tbody>
+</table>
+{% endmacro %}
+
+<!-- Helper macro for creating a [sub]technique cell. Param is a Technique (defined above) and boolean noting whether or not it is a subtechnique-->
+{% macro technique_cell(technique, is_supertechnique) %}
+
+<div class="technique-cell {% if is_supertechnique %} supertechniquecell{% endif %}{% if technique.color %} colored{% endif %}" {% if technique.color %} style="background: {{technique.color}}"{% endif %}>
+    <a href="{{technique.url}}" data-toggle="tooltip" data-placement="top" title="{{technique.external_id}}">{{technique.name}}{% if technique.subtechniques | length > 0 %}&nbsp;<sub>({{technique.subtechniques | length}})</sub>{% endif %}</a>
+</div>
+{% endmacro %}

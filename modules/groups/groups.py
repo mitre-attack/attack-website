@@ -195,8 +195,7 @@ def get_groups_table_data(group_list):
 
                 # Remove citation
                 for citation in found_citations:
-                    row['descr'] = \
-                      row['descr'].replace(citation_temp.format(citation), "")
+                    row['descr'] = row['descr'].replace(citation_temp.format(citation), "")
 
             if isinstance(group.get("aliases"), collections.Iterable):
                 row['aliases_list'] = group["aliases"][1:]
@@ -217,31 +216,10 @@ def get_techniques_used_by_group_data(group, reference_list, next_reference_numb
 
     if techniques_used_by_groups.get(group.get('id')):
         for technique in techniques_used_by_groups[group['id']]:
+            # Do not add if technique is deprecated
+            if not technique['object'].get('x_mitre_deprecated'):
+                technique_list = util.buildhelpers.technique_used_helper(technique_list, technique, reference_list, next_reference_number)
 
-            technique_stix_id = technique['object']['id']
-
-            # Check if technique not already in technique_list dict
-            if technique_stix_id not in technique_list:
-
-                attack_id = util.buildhelpers.get_attack_id(technique['object'])
-                
-                if attack_id:
-                    technique_list[technique_stix_id] = {}
-
-                    technique_to_domain = util.relationshipgetters.get_technique_to_domain()
-
-                    domain = technique_to_domain[attack_id].split('-')[0]
-    
-                    technique_list[technique_stix_id]['domain'] = domain
-
-                    technique_list[technique_stix_id]['id'] = attack_id
-                    technique_list[technique_stix_id]['name'] = technique['object']['name']
-
-                    # Check if it has external references
-                    if technique['relationship'].get('description'):
-                        # Get filtered description
-                        technique_list[technique_stix_id]['descr'] = util.buildhelpers.get_filtered_description(reference_list, next_reference_number, technique)
-    
     technique_data = []
     for item in technique_list:
         technique_data.append(technique_list[item])
@@ -324,15 +302,23 @@ def get_software_table_data(group, reference_list, next_reference_number):
                                 t_id = util.buildhelpers.get_attack_id(technique['object'])
 
                                 if t_id:
-                                    tech_data['id'] = t_id
-                                    tech_data['name'] =  technique['object']['name']
+                                    if util.buildhelpers.is_sub_tid(t_id):
+                                        tech_data['parent_id'] = util.buildhelpers.get_parent_technique_id(t_id)
+                                        tech_data['id'] = util.buildhelpers.get_sub_technique_id(t_id)
+                                        tech_data['name'] = util.buildhelpers.get_technique_name(tech_data['parent_id'])
+                                        tech_data['sub_name'] = technique['object']['name']
+                                    else:
+                                        tech_data['id'] = t_id
+                                        tech_data['name'] =  technique['object']['name']
+
                                     software_list[software_id]['techniques'].append(tech_data)
 
     # Moving it to an array because jinja does not like to loop
     # through dictionaries
     data = []
     for item in software_list:
-        software_list[item]['techniques'] = sorted(software_list[item]['techniques'], key=lambda k: k['name'].lower())
+        if "techniques" in software_list[item]:
+            software_list[item]['techniques'] = sorted(software_list[item]['techniques'], key=lambda k: k['name'].lower())
         data.append(software_list[item])
     data = sorted(data, key=lambda k: k['name'].lower())
 

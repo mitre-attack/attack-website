@@ -1,0 +1,37 @@
+{% extends "general/two-column.html" %} 
+{% set active_page = "resources" -%}
+{% set title = "Updates | MITRE ATT&CK&reg;" -%}
+{% set found = {'found': True} -%}
+
+{% block innerleft %}
+    <span class="heading" id="v-home-tab" aria-selected="false">Updates</span>
+    {% if articles %}
+        {% for article in articles %}
+            {% if article.template == 'resources/update-post' %}
+                {% if found.found %}
+                    <a class="nav-link side active show" id="v-overview-tab"  href="{{ "/" + article.save_as }}" aria-controls="v-overview" aria-selected="false">{{ article.date|strftime("%B %Y") }}</a>
+                    {% if found.update({'found': False}) -%}{% endif %}
+                {% else %}
+                    <a class="nav-link side" id="v-overview-tab"  href="{{ "/" + article.save_as }}" aria-controls="v-overview" aria-selected="false">{{ article.date|strftime("%B %Y") }}</a>
+                {% endif %}
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+{% endblock %}
+{% block innerright %}
+{{ super () }}
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/">Home</a></li>
+        <li class="breadcrumb-item"><a href="/resources/">Resources</a></li>
+        <li class="breadcrumb-item">Updates</li>
+    </ol>
+    {% if articles %}
+        <div class="blog-post p-3">
+            <h1 class="blog-post-title mb-4">{{ (articles|selectattr('template', 'equalto', 'resources/update-post')|first).title }}</h1>
+            {{ (articles|selectattr('template', 'equalto', 'resources/update-post')|first).content }}
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block scripts %}
+{{ super () }} {% endblock %}
