@@ -43,12 +43,21 @@ def generate_index():
             with open(search_file_path, mode="w", encoding='utf8') as search_file:
                 search_file.write(search_contents)
 
-    
 skiplines = ["breadcrumb-item", "nav-link"]
 def skipline(line):
     for skip in skiplines:
         if skip in line: return True
     return False
+
+def clean_line(line):
+    """clean unicode spaces from line"""
+    # Replace unicode spaces
+    line = line.replace(u"\u00a0", " ")
+    line = line.replace(u"\u202f", " ")
+    line = line.replace("&nbsp;", " ")
+    line = line.replace("&nbsp", " ")
+
+    return line
 
 def clean(filepath):
     """clean the file of all HTML tags and unnecessary data"""
@@ -62,7 +71,7 @@ def clean(filepath):
     indexing = False
     for line in lines:
         if (not skipline(line)) and indexing: 
-            content += line + "\n"
+            content += clean_line(line) + "\n"
         if "<!--start-indexing-for-search-->" in line: 
             indexing = True
         if "<!--stop-indexing-for-search-->" in line: 

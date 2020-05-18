@@ -16,13 +16,13 @@ def generate_website():
         runs pelican content to convert markdown pages into html
     """
 
-    generate_subdirectory()
     generate_javascript_settings()
     generate_base_html()
     generate_index_page()
     generate_static_pages()
     pelican_content()
     remove_unwanted_output()
+    generate_subdirectory()
 
 def generate_javascript_settings():
     """Creates javascript settings file that will be used to other javascript files"""
