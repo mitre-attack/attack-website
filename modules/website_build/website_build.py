@@ -2,6 +2,7 @@ import modules
 from . import website_build_config
 from . import subdirectory
 from modules import util
+from modules import matrices
 from modules import site_config
 from string import Template
 import json
@@ -40,28 +41,32 @@ def generate_index_page():
     """Responsible for creating the landing page"""
     data = {}
 
-    ms = util.relationshipgetters.get_ms()
+    # ms = util.relationshipgetters.get_ms()
 
     # get enterprise matrix data
     matrix = website_build_config.index_matrix
-    techniques = util.stixhelpers.get_techniques(ms[matrix['matrix']])
-    filtered_techniques = util.buildhelpers.filter_techniques_by_platform(techniques, matrix['platforms'])
+    # techniques = util.stixhelpers.get_techniques(ms[matrix['matrix']])
+    # filtered_techniques = util.buildhelpers.filter_techniques_by_platform(techniques, matrix['platforms'])
 
     data['matrix_name'] = matrix['name']
     data['matrix_descr'] = matrix['descr']
 
-    data['matrix'] = util.buildhelpers.get_matrix_data(filtered_techniques) 
-    data['platforms'] = matrix['platforms']
-    data['domain'] = matrix['matrix'].split("-")[0]
+    data["matrices"], data["has_subtechniques"], data["tour_technique"] = matrices.matrices.get_sub_matrices(matrix)
 
-    data['tactics'] = []
-    data['max_len'] = []
+    data['logo_landingpage'] = website_build_config.base_page_data['logo_landingpage']
 
-    matrices = util.stixhelpers.get_matrices(ms[matrix['matrix']])
-    for curr_matrix in matrices:
-        tactics = util.stixhelpers.get_tactic_list(ms[matrix['matrix']], matrix_id=curr_matrix['id'])
-        data['tactics'].append(util.buildhelpers.get_tactics_data(tactics))
-        data['max_len'].append(util.buildhelpers.get_max_length(data['matrix'], tactics))
+
+    # data['platforms'] = matrix['platforms']
+    # data['domain'] = matrix['matrix'].split("-")[0]
+
+    # data['tactics'] = []
+    # data['max_len'] = []
+
+    # matrices = util.stixhelpers.get_matrices(ms[matrix['matrix']])
+    # for curr_matrix in matrices:
+    #     tactics = util.stixhelpers.get_tactic_list(ms[matrix['matrix']], matrix_id=curr_matrix['id'])
+    #     data['tactics'].append(util.buildhelpers.get_tactics_data(tactics))
+    #     data['max_len'].append(util.buildhelpers.get_max_length(data['matrix'], tactics))
 
     # Fill ATT&CK enterprise matrix of index pages
     subs = website_build_config.attack_index_md + json.dumps(data)

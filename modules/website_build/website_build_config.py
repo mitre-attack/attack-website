@@ -14,6 +14,9 @@ base_page_data = {
     "CONTENT_VERSION": "6.3",
     "WEBSITE_VERSION": "1.2.4",
     "CHANGELOG_LOCATION": "/resources/changelog.html",
+    "LOGO_HEADER": "/theme/images/mitre_attack_logo.png",
+    "LOGO_FOOTER": "/theme/images/mitrelogowhiteontrans.gif",
+    "logo_landingpage": "/theme/images/ATT&CK_red.png",
     "NAVIGATION_MENU": modules.menu_ptr
 }
 
