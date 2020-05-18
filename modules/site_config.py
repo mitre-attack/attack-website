@@ -53,6 +53,8 @@ def set_subdirectory(subdirectory_str):
 # Location of html templates
 templates_directory = "attack-theme/templates/"
 
+javascript_path = "attack-theme/static/scripts/"
+
 # directory for data used in site builds
 data_directory = "data"
 # directory for STIX data

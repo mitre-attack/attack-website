@@ -16,12 +16,32 @@ def generate_website():
         runs pelican content to convert markdown pages into html
     """
 
+    generate_subdirectory()
+    generate_javascript_settings()
     generate_base_html()
     generate_index_page()
     generate_static_pages()
     pelican_content()
     remove_unwanted_output()
-    generate_subdirectory()
+
+def generate_javascript_settings():
+    """Creates javascript settings file that will be used to other javascript files"""
+
+    javascript_settings_file = os.path.join(site_config.javascript_path, "settings.js")
+
+    with open(javascript_settings_file, "w", encoding='utf8') as js_f:
+        # Get subdirectory path, will be empty if it was not declared
+        web_dir = site_config.subdirectory
+        if not web_dir.startswith("/"):
+            web_dir = "/" + web_dir
+        
+        web_dir = web_dir.replace("\\", "/")
+
+        if not web_dir.endswith("/"):
+            web_dir = web_dir + "/"
+
+        js_data = website_build_config.js_dir_settings.substitute({"web_directory": web_dir})
+        js_f.write(js_data)
 
 def generate_base_html():
     """ Responsible for generating the header and footer of website pages """
@@ -41,32 +61,12 @@ def generate_index_page():
     """Responsible for creating the landing page"""
     data = {}
 
-    # ms = util.relationshipgetters.get_ms()
-
-    # get enterprise matrix data
+    # get index matrix data
     matrix = website_build_config.index_matrix
-    # techniques = util.stixhelpers.get_techniques(ms[matrix['matrix']])
-    # filtered_techniques = util.buildhelpers.filter_techniques_by_platform(techniques, matrix['platforms'])
-
     data['matrix_name'] = matrix['name']
     data['matrix_descr'] = matrix['descr']
-
     data["matrices"], data["has_subtechniques"], data["tour_technique"] = matrices.matrices.get_sub_matrices(matrix)
-
     data['logo_landingpage'] = website_build_config.base_page_data['logo_landingpage']
-
-
-    # data['platforms'] = matrix['platforms']
-    # data['domain'] = matrix['matrix'].split("-")[0]
-
-    # data['tactics'] = []
-    # data['max_len'] = []
-
-    # matrices = util.stixhelpers.get_matrices(ms[matrix['matrix']])
-    # for curr_matrix in matrices:
-    #     tactics = util.stixhelpers.get_tactic_list(ms[matrix['matrix']], matrix_id=curr_matrix['id'])
-    #     data['tactics'].append(util.buildhelpers.get_tactics_data(tactics))
-    #     data['max_len'].append(util.buildhelpers.get_max_length(data['matrix'], tactics))
 
     # Fill ATT&CK enterprise matrix of index pages
     subs = website_build_config.attack_index_md + json.dumps(data)
