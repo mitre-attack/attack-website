@@ -25,8 +25,6 @@ def generate_matrices():
 
     matrix_generated = False
 
-    ms = util.relationshipgetters.get_ms()
-
     for matrix in matrices_config.matrices:
         if matrix["type"] == "external": continue # link to externally hosted matrix, don't create a page for it
         matrix_generated = generate_platform_matrices(matrix, side_menu_data)
@@ -37,12 +35,14 @@ def generate_matrices():
 def generate_platform_matrices(matrix, side_menu_data=None):
     """Given a matrix, generates the matrix markdown"""
     
+    has_data = False
     data = {}
     data['menu'] = side_menu_data
     data['domain'] = matrix['matrix'].split("-")[0]
     data['name'] = matrix['name']
 
     data['matrices'], data["has_subtechniques"], data["tour_technique"] = get_sub_matrices(matrix)
+    if data['matrices']: has_data = True
     data['platforms'] = [ {"name": platform, "path": matrices_config.platform_to_path[platform] } for platform in matrix['platforms'] ]
     data['navigator_link_enterprise'] = site_config.navigator_link_enterprise
     data['navigator_link_mobile'] = site_config.navigator_link_mobile
@@ -59,6 +59,8 @@ def generate_platform_matrices(matrix, side_menu_data=None):
 
     for subtype in matrix['subtypes']:
         generate_platform_matrices(subtype, side_menu_data)
+
+    return has_data
 
 def get_sub_matrices(matrix):
 
