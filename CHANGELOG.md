@@ -30,6 +30,10 @@
 <!--    PATCH updates are when a bugfix is made without the             -->
 <!--          addition of notable features. When PATCH is 0 it can      -->
 <!--          be omitted                                                -->
+# Modularization
+## ATT&CK Website version 3.0
+### Improvements
+- The tour is generated through an independent module and steps are chosen depending the available modules. See issue [#166](https://github.com/mitre-attack/attack-website/issues/166).
 
 # Sub-techniques Beta
 ## ATT&CK Website version 2.1

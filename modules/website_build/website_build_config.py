@@ -3,7 +3,7 @@ import modules
 from string import Template
 
 module_name = "website_build"
-priority = 15
+priority = 16
 
 # Template directory
 template_dir = os.path.join("attack-theme", "templates", "general/")
@@ -41,4 +41,3 @@ attack_index_path = "content/pages/index.md"
 website_build_markdown_path = "content/pages/"
 
 js_dir_settings = Template("let base_url = \"${web_directory}\";\n")
-js_tour_settings = Template("let tour_steps = ${tour_steps};\n")

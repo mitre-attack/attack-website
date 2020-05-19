@@ -1,7 +1,8 @@
-from . import config
-from . import stixhelpers
-from . import  util
 import os
+from . import tour_config
+from modules import site_config
+from modules import matrices
+from modules import util
 
 def generate_tour():
     """ Responsible for dynamically generating tour steps """
@@ -18,7 +19,13 @@ def generate_tour():
     # 5.3. Group has a relationship with (preferably) 2+ sub-techniques but not the parent technique.
 
     tours = []
-    for matrix in config.matrices:
+
+    # Step 1 find matrix
+    # Check if matrices module is enabled
+    if not "matrices" in site_config.args.modules:
+        return
+
+    for matrix in matrices.matrices_config.matrices:
         if matrix["type"] == "external": continue # link to externally hosted matrix, ignore it
         tours.append(get_tour_steps(matrix))
     
@@ -38,22 +45,28 @@ def generate_tour():
     tour_steps = get_longest_tour()
 
     # Write tour steps to settings.js file
-    javascript_settings_file = os.path.join(config.javascript_path, "settings.js")
+    javascript_settings_file = os.path.join(site_config.javascript_path, "settings.js")
 
-    with open(javascript_settings_file, "a+", encoding='utf8') as js_f:
-        js_data = config.js_tour_settings.substitute({"tour_steps": tour_steps})
+    with open(javascript_settings_file, "w", encoding='utf8') as js_f:
+        js_data = tour_config.js_tour_settings.substitute({"tour_steps": tour_steps})
         js_f.write(js_data)
     
 def get_tour_steps(matrix):
     """ Get all the tour steps """
 
-    ms = config.ms[matrix['matrix']]
+    ms = util.relationshipgetters.get_ms()
+
+    ms = ms[matrix['matrix']]
+
+    # Check if techniques module is enabled
+    if not "techniques" in site_config.args.modules:
+        return {}
 
     # Reads the STIX and creates a list of the techniques
-    techniques = stixhelpers.get_techniques(ms)
+    techniques = util.stixhelpers.get_techniques(ms)
 
-    techs_no_subtechs = util.filter_out_subtechniques(techniques)
-    techs_with_subtechs = util.filter_out_techniques_without_subtechniques(techniques)
+    techs_no_subtechs = util.buildhelpers.filter_out_subtechniques(techniques)
+    techs_with_subtechs = util.buildhelpers.filter_out_techniques_without_subtechniques(techniques)
 
     # steps as array
     steps = {}
@@ -68,14 +81,20 @@ def get_tour_steps(matrix):
     technique = get_technique_with_subtechniques(techs_no_subtechs)
 
     # Get technique ID and store that as the step
-    steps['technique'] = "techniques/{}".format(util.get_attack_id(technique))
+    steps['technique'] = "techniques/{}".format(util.buildhelpers.get_attack_id(technique))
     steps['subtechnique'] = steps['technique'] + "/{}".format(get_subtech_n_of_technique(technique))
 
     # Get group steps
-    group_tour = get_group_or_software_with_subtechniques("groups")
+    group_tour = []
+    # Check if groups module is enabled
+    if "groups" in site_config.args.modules:
+        group_tour = get_group_or_software_with_subtechniques("groups")
 
     # Get software steps
-    software_tour = get_group_or_software_with_subtechniques("software")
+    software_tour = []
+    # Check if software module is enabled
+    if "software" in site_config.args.modules:
+        software_tour = get_group_or_software_with_subtechniques("software")
 
     def choose_software_or_group_tour():
         """ Choose between software or group tour """
@@ -142,11 +161,14 @@ def get_technique_with_subtechniques(techs_no_subtechs):
 
     counter = 0
     chosen_tech = {}
+
+    subtechniques_of = util.relationshipgetters.get_subtechniques_of()
+
     for tech in techs_no_subtechs:
-        if tech["id"] in config.subtechniques_of:
+        if tech["id"] in subtechniques_of:
 
             # Grab sub-technique count from technique
-            subtech_count =  len(config.subtechniques_of[tech["id"]])
+            subtech_count =  len(subtechniques_of[tech["id"]])
             # Check if sub-technique count is bigger than counter
             if counter < subtech_count:
                 # Quick return if found
@@ -160,21 +182,23 @@ def get_technique_with_subtechniques(techs_no_subtechs):
 def get_subtech_n_of_technique(technique):
     """ Return ID number of first sub-technique of given technique """
 
-    for subtech in config.subtechniques_of[technique['id']]:
-        id = util.get_attack_id(subtech['object'])
+    subtechniques_of = util.relationshipgetters.get_subtechniques_of()
+
+    for subtech in subtechniques_of[technique['id']]:
+        id = util.buildhelpers.get_attack_id(subtech['object'])
         return id.split(".")[1]
 
 def get_group_or_software_with_subtechniques(object_type):
     """ Get group or software with subtechniques """
 
     if object_type == "groups":
-        obj_list = config.group_list
-        techniques_used_by_type = config.techniques_used_by_groups
+        obj_list = util.relationshipgetters.get_group_list()
+        techniques_used_by_type = util.relationshipgetters.get_techniques_used_by_groups()
     else:
-        obj_list = config.software_list
+        obj_list = util.relationshipgetters.get_software_list()
         # Combine tools and malware dictionaries in a copy
-        techniques_used_by_type = dict(config.techniques_used_by_tools)
-        techniques_used_by_type.update(config.techniques_used_by_malware)
+        techniques_used_by_type = dict(util.relationshipgetters.get_techniques_used_by_tools())
+        techniques_used_by_type.update(util.relationshipgetters.get_techniques_used_by_malware())
 
     obj_tour_list = [] 
 
@@ -194,7 +218,7 @@ def get_group_or_software_with_subtechniques(object_type):
             if obj_has_subtechniques:
                 obj_tour = get_groups_tour(technique_list)
                 if obj_tour:
-                    obj_tour['obj_id'] = object_type + "/" + util.get_attack_id(obj)
+                    obj_tour['obj_id'] = object_type + "/" + util.buildhelpers.get_attack_id(obj)
                     obj_tour_list.append(obj_tour)
     
     return find_best_group_or_software(obj_tour_list)
@@ -241,7 +265,7 @@ def techniques_used(technique_list, technique):
         subtechniques
     """
 
-    attack_id = util.get_attack_id(technique['object'])
+    attack_id = util.buildhelpers.get_attack_id(technique['object'])
     has_subtechniques = False
 
     if attack_id:
@@ -249,10 +273,10 @@ def techniques_used(technique_list, technique):
         if attack_id not in technique_list:
 
             # Check if attack id is a sub-technique
-            if util.is_sub_tid(attack_id):
+            if util.buildhelpers.is_sub_tid(attack_id):
                 has_subtechniques = True
 
-                parent_id = util.get_parent_technique_id(attack_id)
+                parent_id = util.buildhelpers.get_parent_technique_id(attack_id)
 
                 # If parent technique not already in list, add to list and add current sub-technique
                 if parent_id not in technique_list:
