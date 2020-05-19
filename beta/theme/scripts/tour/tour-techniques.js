@@ -21,9 +21,9 @@ let tourSteps = [
     },
 ]
 
-if (isSiteTour) tourSteps.push({
+if (isSiteTour && tour_steps['subtechnique'] != 'undefined') tourSteps.push({
     onShow: function() { //go to the next tour module
-        window.location.href = "/beta/techniques/T1053/001/?tour=true"
+        window.location.href = base_url + tour_steps['subtechnique'] + "/?tour=true"
     }
 })
 
@@ -43,6 +43,5 @@ function start_tour() {
 }
 
 if (isSiteTour) {
-    console.log("continuing tour")
     start_tour();
 }
