@@ -2,7 +2,7 @@ from modules import util
 import colorama
 
 module_name = "Tests"
-priority = 16
+priority = 20
 
 # Directory for test reports
 test_report_directory = "reports"

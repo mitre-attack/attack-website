@@ -29,6 +29,16 @@ def generate_javascript_settings():
 
     javascript_settings_file = os.path.join(site_config.javascript_path, "settings.js")
 
+    # Check if file already exists
+    # Copy all lines that do not have base_url in it
+    data = ""
+    if os.path.exists(javascript_settings_file):
+        with open(javascript_settings_file, "r", encoding='utf8') as js_f:
+            for line in js_f:
+                if not "base_url" in line:
+                    # Copy line to data buffer
+                    data += line
+
     with open(javascript_settings_file, "w", encoding='utf8') as js_f:
         # Get subdirectory path, will be empty if it was not declared
         web_dir = site_config.subdirectory
@@ -42,6 +52,8 @@ def generate_javascript_settings():
 
         js_data = website_build_config.js_dir_settings.substitute({"web_directory": web_dir})
         js_f.write(js_data)
+        # Add trailing data
+        js_f.write(data)
 
 def generate_base_html():
     """ Responsible for generating the header and footer of website pages """
