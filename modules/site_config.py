@@ -67,7 +67,7 @@ attack_path = {
 }
 
 # Link to instance of the ATT&CK Navigator; change for to a custom location
-navigator_link_enterprise = "https://mitre-attack.github.io/attack-navigator"
+navigator_link_enterprise = "https://mitre-attack.github.io/attack-navigator/enterprise"
 navigator_link_mobile = "https://mitre-attack.github.io/attack-navigator/mobile"
 
 # Old stix content

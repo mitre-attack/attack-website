@@ -35,6 +35,9 @@
 ### Improvements
 - The tour is generated through an independent module and steps are chosen depending the available modules. See issue [#166](https://github.com/mitre-attack/attack-website/issues/166).
 
+### Fixes
+- Fixed navigator links on groups and software pages that were repeating the domain on the URI. See issue [#169](https://github.com/mitre-attack/attack-website/issues/169).
+
 # Sub-techniques Beta
 ## ATT&CK Website version 2.1
 ### New Features
