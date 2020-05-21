@@ -8,16 +8,17 @@ skiplines = ["breadcrumb-item", "nav-link"]
 
 def generate_json():
     json_data = {}
+    all_routes = {"matrices": "Matrix", "tactics": "Tactic", "techniques": "Technique", "mitigations": "Mitigation", "groups": "Group", "software": "Software"}
+    routes = {}
 
-    for root, __, files in os.walk("output"):
-        all_routes = {"matrices": "Matrix", "tactics": "Tactic", "techniques": "Technique", "mitigations": "Mitigation", "groups": "Group", "software": "Software"}
-        routes = {}
-
-        if site_config.args.modules:
+    if site_config.args.modules:
             for module in site_config.args.modules:
                 if module != "website_build" and module != "random_page":
                     routes[module] = all_routes[module]
+    else:
+        routes = all_routes
 
+    for root, __, files in os.walk("output"):
         # only walk specified routes for object pages
         for route, value in routes.items():
             if value in json_data.keys():
@@ -50,7 +51,7 @@ def generate_json():
     
     if not os.path.isdir(site_config.web_directory):
         os.makedirs(site_config.web_directory)
-        
+
     json.dump(json_data, open(os.path.join(site_config.web_directory, "random_page.json"), mode="w",  encoding="utf-8"), indent=4)
 
 def skipline(line):
