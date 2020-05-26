@@ -27,7 +27,7 @@ def generate_json():
                         # Get the path of the html files only
                         thepath = os.path.join(root, thefile)
                         # Sanitize first; not all html files are suitable for this random page feature
-                        cleancontent, skipindex, title = clean(thepath)
+                        skipindex = check_skipindex(thepath)
                         if not skipindex:
                             add_to_json = False
                             # Make sure the page isn't an object index page
@@ -54,47 +54,15 @@ def generate_json():
 
     json.dump(json_data, open(os.path.join(site_config.web_directory, "random_page.json"), mode="w",  encoding="utf-8"), indent=4)
 
-def skipline(line):
-    for skip in skiplines:
-        if skip in line: return True
-    return False
-
-def clean_line(line):
-    """clean unicode spaces from line"""
-    # Replace unicode spaces
-    line = line.replace(u"\u00a0", " ")
-    line = line.replace(u"\u202f", " ")
-    line = line.replace("&nbsp;", " ")
-    line = line.replace("&nbsp", " ")
-
-    return line
-
-def clean(filepath):
+def check_skipindex(filepath):
     """clean the file of all HTML tags and unnecessary data"""
     f = open(filepath, mode="r", encoding="utf8")
     lines = f.readlines()
     f.close()
 
-    content = ""
-    title = ""
     skipindex = False
-    indexing = False
     for line in lines:
-        if (not skipline(line)) and indexing: 
-            content += clean_line(line) + "\n"
-        if "<!--start-indexing-for-search-->" in line: 
-            indexing = True
-        if "<!--stop-indexing-for-search-->" in line: 
-            indexing = False
-        if "<title>" in line:
-            # e.g [Credential Access - Enterprise | MITRE ATT&CK&trade;] becomes [Credential Access - Enterprise]
-            match = re.search(r"<title>(.*)\|.*</title>", line)
-            if match: title = match.group(1).strip()
         if 'http-equiv="refresh"' in line: skipindex = True
+        if '<meta name="robots" content="noindex, nofollow">' in line: skipindex = True
 
-    out = bleach.clean(content, tags=[], strip=True) #remove tags
-    out = re.sub(r"[\n ]+", " ", out) # remove extra newlines, smush to 1 line
-    out = html.unescape(out) # fix &amp and &#nnn unicode escaping
-
-    skipindex = skipindex or out == "" or out == " "
-    return out, skipindex, title
+    return skipindex
