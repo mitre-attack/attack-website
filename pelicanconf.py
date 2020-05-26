@@ -51,8 +51,22 @@ def flatten_tree(root):
         ret = ret + flatten_tree(child)
     return ret
 
+# Clean stix data from unwanted characters
+def clean_stix_data(data):
+    return data.replace("\n", "")\
+               .replace("{", "{{")\
+               .replace("}", "}}")\
+               .replace("”","\"")\
+               .replace("“","\"")
+
+def update_citations(data, citations):
+    print(data)
+    print(citations)
+
 JINJA_FILTERS = {
     'from_json':json.loads,
     'flatten_tree': flatten_tree,
-    'clean_path': clean_path
+    'clean_path': clean_path,
+    'clean_stix_data': clean_stix_data,
+    'update_citations': update_citations
 }

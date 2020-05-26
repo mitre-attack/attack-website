@@ -226,7 +226,7 @@ def update_reference_list(reference_list, obj):
             # Only add if reference has source name and a description
             if ext_ref.get('source_name') and ext_ref.get("description"):
 
-                # Do not add if to reference list if citation is in description 
+                # Do not add to reference list if citation is in description 
                 if "(Citation:" in ext_ref['description']:
                     continue
 

@@ -2,6 +2,7 @@
 {% set parsed = page.data | from_json %}
 {% import 'macros/navigation.html' as navigation %}
 {% import 'macros/deprecated.html' as deprecated %}
+{% import 'macros/clean_output.html' as clean_output %}
 {% if parsed.parent_name %}
     {% set title = parsed.parent_name + ": " -%}
 {% else %}
@@ -127,10 +128,7 @@
 
                                 {% if parsed.descr %}
                                     <div class="description-body">
-                                        {% if parsed.deprecated %}
-                                            <font color="red">****Deprecation Warning****</font>
-                                        {% endif %}
-                                        {{parsed.descr}}
+                                        {{clean_output.stixToHTML(parsed.descr, parsed.citations)}}
                                     </div>
                                 {% endif %}
                             </div>
