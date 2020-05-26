@@ -61,7 +61,7 @@ def generate_base_html():
     # Update navigation menu in the case that some module did not generate markdowns
     website_build_config.base_page_data['NAVIGATION_MENU'] = modules.menu_ptr
 
-    with open(os.path.join(website_build_config.template_dir, "base.bak"), "r", encoding='utf8') as base_template_f:
+    with open(os.path.join(website_build_config.template_dir, "base-template.html"), "r", encoding='utf8') as base_template_f:
         base_template = base_template_f.read()
         base_template = Template(base_template)
         subs = base_template.substitute(website_build_config.base_page_data)
