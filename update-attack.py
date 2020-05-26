@@ -38,27 +38,22 @@ def get_parsed_args():
     parser.add_argument('--no-stix-link-replacement', action='store_true',
                         help="If this flag is absent, links to attack.mitre.org/[page] in the STIX data will be replaced with /[page]. Add this flag to preserve links to attack.mitre.org.")
     
-    parser.add_argument('--modules', '-m', nargs='*',
+    parser.add_argument('--modules', '-m', nargs='+',
                         type=str,
                         choices=module_choices,
-                        help=("Run modules. If no option is specified, "
-                              "it will run all modules from the modules directory. "
-                              "Run specific modules by selecting from the "
+                        help=("Run specific modules by selecting from the "
                               "list and leaving one space in "
-                              "between them. For example: '-m clean techniques tactics'."))                          
-    parser.add_argument('--test', '-t', nargs='*',
+                              "between them. For example: '-m clean techniques tactics'."))                      
+    parser.add_argument('--test', '-t', nargs='+',
                         choices=test_choices,
                         dest="tests",
-                        help="Run tests. If no option is specified, "
-                              "all choices will be selected except external_links. "
-                              "Run specific tests "
-                              "by selecting from the list and leaving "
-                              "one space in between them. For example: '-t output links'. "
-                              "Tests: "
-                              "size (size of output directory against github pages limit); "
-                              "links (dead internal hyperlinks and relative hyperlinks); "
-                              "external_links (dead external hyperlinks); "
-                              "citations (unparsed citation text).")
+                        help="Run specific tests by selecting from the list and leaving "
+                             "one space in between them. For example: '-t output links'. "
+                             "Tests: "
+                             "size (size of output directory against github pages limit); "
+                             "links (dead internal hyperlinks and relative hyperlinks); "
+                             "external_links (dead external hyperlinks); "
+                             "citations (unparsed citation text).")
     
     parser.add_argument('--proxy', help="set proxy")
 
