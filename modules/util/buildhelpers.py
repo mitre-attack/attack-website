@@ -238,10 +238,9 @@ def update_reference_list(reference_list, obj):
                     new_ref['description'] = ext_ref["description"]
                     if ext_ref.get('url'):
                         new_ref['url'] = ext_ref['url']
-                    new_ref['sname'] = ext_ref['source_name']
                     new_ref['number'] = None
 
-                    reference_list.append(new_ref)
+                    reference_list[ext_ref['source_name']] = new_ref
     
     return reference_list
 
@@ -777,9 +776,12 @@ def find_num_of_ref_in_list(reference_list, ref_sname):
 def find_in_reference_list(reference_list, source_name):
     """Check if it is already in reference list"""
 
-    for reference in reference_list:
-        if reference['sname'] == source_name:
-            return True
+    if reference_list.get(source_name):
+        return True
+
+    # for reference in reference_list:
+    #     if reference['sname'] == source_name:
+    #         return True
     return False
 
 def get_domain_alias(domain):

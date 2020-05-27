@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 import json
 import uuid
 import sys
+import re
 
 # import plugins
 PLUGIN_PATHS = ['plugins']
@@ -59,9 +60,33 @@ def clean_stix_data(data):
                .replace("”","\"")\
                .replace("“","\"")
 
+def get_citations(data):
+    """Given a description, find all of the citations"""
+
+    p = re.compile('\(Citation: (.*?)\)')
+    return p.findall(data)
+
 def update_citations(data, citations):
+    
     print(data)
     print(citations)
+    
+    citation_template = "(Citation: {})"
+
+    citation_names = get_citations(data)
+    
+    for citation_name in citation_names:
+
+
+
+        data.replace(citation_template.format())
+
+    # if len(data) < 2:
+    #     return
+    # descr = data[0]
+    # citations = data[1]
+
+    # if "(Citation: " in descr
 
 JINJA_FILTERS = {
     'from_json':json.loads,

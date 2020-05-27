@@ -187,7 +187,7 @@ def generate_data_for_md(technique_dict, technique, tactic_list, is_sub_techniqu
                     technique_dict['mtcs'].append(mtcs_dict)
 
         # Get initial reference list
-        reference_list = []
+        reference_list = {'current_number': 0}
         # Decleared as an object to be able to pass by reference
         # next_reference_number = {}
         # next_reference_number['value'] = 1
