@@ -40,4 +40,4 @@ attack_index_path = "content/pages/index.md"
 
 website_build_markdown_path = "content/pages/"
 
-js_dir_settings = Template("let base_url = \"${web_directory}\";\n")
+js_dir_settings = Template("var base_url = \"${web_directory}\";\n")

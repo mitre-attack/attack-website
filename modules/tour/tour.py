@@ -1,5 +1,6 @@
 import os
 from . import tour_config
+import modules
 from modules import site_config
 from modules import matrices
 from modules import util
@@ -22,7 +23,11 @@ def generate_tour():
 
     # Step 1 find matrix
     # Check if matrices module is enabled
-    if not "matrices" in site_config.args.modules:
+    matrices_found = False
+    for module in modules.run_ptr:
+        if module['name'] == 'matrices':
+            matrices_found = True
+    if not matrices_found:
         return
 
     for matrix in matrices.matrices_config.matrices:
@@ -59,7 +64,11 @@ def get_tour_steps(matrix):
     ms = ms[matrix['matrix']]
 
     # Check if techniques module is enabled
-    if not "techniques" in site_config.args.modules:
+    techniques_found = False
+    for module in modules.run_ptr:
+        if module['name'] == 'techniques':
+            techniques_found = True
+    if not techniques_found:
         return {}
 
     # Reads the STIX and creates a list of the techniques
@@ -87,13 +96,21 @@ def get_tour_steps(matrix):
     # Get group steps
     group_tour = []
     # Check if groups module is enabled
-    if "groups" in site_config.args.modules:
+    groups_found = False
+    for module in modules.run_ptr:
+        if module['name'] == 'groups':
+            groups_found = True
+    if groups_found:
         group_tour = get_group_or_software_with_subtechniques("groups")
 
     # Get software steps
     software_tour = []
     # Check if software module is enabled
-    if "software" in site_config.args.modules:
+    software_found = False
+    for module in modules.run_ptr:
+        if module['name'] == 'software':
+            software_found = True
+    if software_found:
         software_tour = get_group_or_software_with_subtechniques("software")
 
     def choose_software_or_group_tour():
