@@ -60,33 +60,63 @@ def clean_stix_data(data):
                .replace("”","\"")\
                .replace("“","\"")
 
+# Template for HTML references inside of sentences
+reference_marker_template = ("<span onclick=scrollToRef('scite-{}') "
+                             "id=\"scite-ref-{}-a\" class=\"scite"
+                            "-citeref-number\" "
+                             "data-reference=\"{}\"><sup><a href=\"{}\" "
+                             "target=\"_blank\" data-hasqtip=\"{}\" "
+                             "aria-describedby=\"qtip-{}\">[{}]</a></sup></span>")
+reference_marker_template_no_url = ("<span onclick=scrollToRef('scite-{}') "
+                                    "id=\"scite-ref-{}-a\" "
+                                    "class=\"scite-citeref-number\" "
+                                    "data-reference=\"{}\">"
+                                    "<sup>[{}]</sup></span>")
+
 def get_citations(data):
     """Given a description, find all of the citations"""
 
     p = re.compile('\(Citation: (.*?)\)')
     return p.findall(data)
 
+def get_string_to_replace(citations, citation_name):
+
+    global reference_marker_template
+    global reference_marker_template_no_url
+
+    citation = citations.get(citation_name)
+
+    reference_html = ""
+    if citation:
+        ref_number = None
+
+        if citation.get('number'):
+            ref_number = citation['number']
+        else:
+            ref_number = citations['current_number'] + 1
+            citations['current_number'] = ref_number
+            citation['number'] = ref_number
+
+        if not citation.get('url'):
+            reference_html = reference_marker_template_no_url.format(ref_number,ref_number,citation_name,ref_number)
+        else:
+            reference_html = reference_marker_template.format(ref_number,ref_number,citation_name,citation['url'],ref_number - 1, ref_number - 1, ref_number)
+        
+    return reference_html
+
 def update_citations(data, citations):
-    
-    print(data)
-    print(citations)
     
     citation_template = "(Citation: {})"
 
     citation_names = get_citations(data)
     
     for citation_name in citation_names:
+        replace_string = get_string_to_replace(citations, citation_name)
 
-
-
-        data.replace(citation_template.format())
-
-    # if len(data) < 2:
-    #     return
-    # descr = data[0]
-    # citations = data[1]
-
-    # if "(Citation: " in descr
+        if replace_string:
+            data = data.replace(citation_template.format(citation_name), replace_string)
+    
+    return data
 
 JINJA_FILTERS = {
     'from_json':json.loads,
