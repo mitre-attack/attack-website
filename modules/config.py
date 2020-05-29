@@ -531,7 +531,7 @@ tactic_overview_md = ("Title: Tactics overview \n"
 # Constants used by archives.py
 # ----------------------------------------------------------------------------
 
-archives_repo = "https://github.com/mitre-attack/attack-archives.git"
+archives_repo = "https://github.com/mitre-attack/attack-website.git"
 archives_directory = "attack-archives"
 previous_md = ("Title: Previous Versions\n"
                "Template: resources/previous-versions\n"
