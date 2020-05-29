@@ -1,0 +1,74 @@
+{% extends "general/base.html" %} 
+{% set active_page = "resources" -%}
+{% set title = "Versions of ATT&CK | MITRE ATT&CK&reg;" -%} 
+{% set parsed = page.data | from_json %}
+
+{% block content %}
+{{ super () }}
+<div class="container">
+    <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">Home</a></li>
+            <li class="breadcrumb-item"><a href="/resources">Resources</a></li>
+            <li class="breadcrumb-item">Versions of ATT&CK</li>
+    </ol>
+</div>
+<div class="container pb-3 uniform-block">
+    <div class="getting-started">
+        <div class="clearfix pb-3">
+            <div class="clearfix">
+                <h2>Versions of ATT&CK</h2>
+                <p>
+                    We preserve previous versions of the website each time we do a major ATT&CK content update, as well as maintain a permalink to the current version. See below a list of versions of the ATT&CK website and content:
+                </p>
+                <!-- table display -->
+                <table class="table table-bordered table-alternate version-table">
+                    <thead>
+                        <tr>
+                            <th>Version</th>
+                            <th>Start Date</th>
+                            <th>End Date</th>
+                            <th>Data</th>
+                            <th>Updates</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for version in parsed.versions %}
+                        <tr>
+                            <td><a href="/versions/{{version.name}}">ATT&CK {{version.name}}</a></td>
+                            <td>{{version.date_start}}</td>
+                            <td>{{version.date_end}}</td>
+                            <td><a href="{{version.cti_url}}" target="_blank">link</a></td>
+                            <td><a href="/resources/updates/{{version.changelog}}">link</a></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+                <!-- card display -->
+                <!-- <div class="card-deck">
+                    {% for version in parsed.versions %}
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="mb-0">
+                                    <a href="/versions/{{version.name}}">ATT&CK {{version.name}}</a>
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                {{version.date_start}}&ndash;{{version.date_end}}
+                            </div>
+                            <div class="card-body">
+                                <a class="card-link" href="{{version.cti_url}}" target="_blank">data</a>
+                                <a class="card-link" href="/resources/updates/{{version.changelog}}" target="_blank">updates</a>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div> -->
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+    {% block scripts %}
+    {{ super() }}
+{% endblock %}      

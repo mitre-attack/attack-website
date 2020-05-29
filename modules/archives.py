@@ -68,14 +68,12 @@ def deploy():
     for version in versions:
         build_version(version, archives_repo)
 
-    # # copy individual versions from attack-archives to output
-    # for version in os.listdir(config.archives_directory):
-    #     if os.path.isdir(os.path.join(config.archives_directory, version)) and not version.endswith(".git"):
-    #         shutil.copytree(os.path.join(config.archives_directory, version), os.path.join(prev_versions_deploy_folder, version))
+    # build the versions page
+    build_markdown(versions)
     
     # write robots.txt to disallow crawlers
-    # with open(os.path.join(config.web_directory, "robots.txt"), "w", encoding='utf8') as robots:
-    #     robots.write(f"User-agent: *\nDisallow: /{config.subdirectory}/previous/\nDisallow:/{config.subdirectory}/{prev_versions_path}/")
+    with open(os.path.join(config.web_directory, "robots.txt"), "w", encoding='utf8') as robots:
+        robots.write(f"User-agent: *\nDisallow: /{config.subdirectory}/previous/\nDisallow:/{config.subdirectory}/{prev_versions_path}/")
 
 def build_version(version, repo):
     """build a version of the site to /prev_versions_path. version is a version from archives.json, repo is a reference to the attack-website Repo object"""
@@ -145,7 +143,8 @@ def archive(version_data):
             html_str = substitute("href", html_str)
             html_str = substitute_redirection('content="0; url', html_str)
             # update links to previous-versions to point to the main site instead of an archived page
-            html_str = html_str.replace(f"/{version_url_path}/resources/previous-versions/", "/resources/previous-versions/")
+            for previous_page in ["previous-versions", "versions"]: # backwards compatability
+                html_str = html_str.replace(f"/{version_url_path}/resources/{previous_page}/", "/resources/versions/")
             # update links to updates to point to main site instead of archied page
             html_str = html_str.replace(f"/{version_url_path}/resources/updates/", "/resources/updates/")
             
@@ -205,17 +204,14 @@ def build_alias(version, alias):
             with open(redirectFrom, "w") as f:
                 f.write(f'<meta http-equiv="refresh" content="0; url={redirectTo}"/>')
 
-def build_markdown():
-    # import archives data
-    with open(os.path.join(config.archives_directory, "archives.json"), "r") as archives:
-        raw_archives = json.load(archives)
-        archives_data = {"versions": sorted(raw_archives, key=lambda p: datetime.strptime(p["date_end"], "%B %d, %Y"), reverse=True) }
+def build_markdown(versions):
+    """build markdown for the versions list page"""
+
+    archives_data = {"versions": sorted(versions, key=lambda p: datetime.strptime(p["date_end"], "%B %d, %Y"), reverse=True) }
     
     # build previous-versions page markdown
     subs = config.previous_md + json.dumps(archives_data)
     with open(os.path.join(config.previous_markdown_path, "previous.md"), "w", encoding='utf8') as md_file:
         md_file.write(subs)
-    
-    return raw_archives
 
 

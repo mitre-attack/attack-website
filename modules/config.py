@@ -482,7 +482,9 @@ other_redirects = [
     {'from': 'ics', 'to': 'https://collaborate.mitre.org/attackics'},
     {'from': 'docs/MITRE_ATTACK_Enterprise_Poster_2018.pdf', 'to': '/docs/attack_matrix_poster_2018.pdf'},
     {'from': 'docs/ATTACK_Framework_Board_4x3.pdf', 'to': '/docs/attack_matrix_poster_2020.pdf'},
-    {'from': 'docs/attack_roadmap.pdf', 'to': '/docs/attack_roadmap_2020.pdf'}
+    {'from': 'docs/attack_roadmap.pdf', 'to': '/docs/attack_roadmap_2020.pdf'},
+    {'from': 'resources/previous-versions', 'to': '/resources/versions'},
+    {'from': 'versions', 'to': '/resources/versions'}
 ]
 
 # Constants used by software.py
@@ -533,9 +535,9 @@ tactic_overview_md = ("Title: Tactics overview \n"
 
 archives_repo = "https://github.com/mitre-attack/attack-website.git"
 archives_directory = "attack-archives"
-previous_md = ("Title: Previous Versions\n"
-               "Template: resources/previous-versions\n"
-               "save_as: resources/previous-versions/index.html\n"
+previous_md = ("Title: Versions of ATT&CK\n"
+               "Template: resources/versions\n"
+               "save_as: resources/versions/index.html\n"
                "data: ")
 previous_markdown_path = "content/pages/resources"
 
