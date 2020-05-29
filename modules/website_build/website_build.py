@@ -80,6 +80,26 @@ def generate_index_page():
     data["matrices"], data["has_subtechniques"], data["tour_technique"] = matrices.matrices.get_sub_matrices(matrix)
     data['logo_landingpage'] = website_build_config.base_page_data['logo_landingpage']
 
+    # Get list of routes for random page feature
+    all_routes = {
+        "matrices": "Matrix",
+        "tactics": "Tactic",
+        "techniques": "Technique",
+        "mitigations": "Mitigation", 
+        "groups": "Group",
+        "software": "Software"
+    }
+    routes = {}
+
+    if site_config.args.modules:
+        for route in all_routes.keys():
+            if route in site_config.args.modules:
+                routes[route] = all_routes[route]
+    else:
+        routes = all_routes
+    
+    data['random_page_options'] = routes
+
     # Fill ATT&CK enterprise matrix of index pages
     subs = website_build_config.attack_index_md + json.dumps(data)
 
