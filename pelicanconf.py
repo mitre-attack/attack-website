@@ -107,8 +107,6 @@ def get_string_to_replace(citations, citation_name):
 
 def update_citations(data, citations):
 
-    data = markdown.markdown(data)
-    
     citation_template = "(Citation: {})"
 
     citation_names = get_citations(data)
@@ -119,12 +117,42 @@ def update_citations(data, citations):
         if replace_string:
             data = data.replace(citation_template.format(citation_name), replace_string)
     
-    return clean_stix_data(data)
+    return data
+
+def remove_citations(data):
+
+    # Get citations names to remove from string
+    citation_names = get_citations(data)
+
+    for citation_name in citation_names:
+        data = data.replace("(Citation: " + citation_name + ")","")
+
+    return data
+
+def stixToHTML(data, citations, firstParagraphOnly):
+
+    # Replace data from markdown format
+    data = markdown.markdown(data)
+
+    # Get first paragraph from data
+    if firstParagraphOnly:
+        data = data.split('</p>')[0] + '</p>'
+
+    if citations:
+        # Update citations
+        data = update_citations(data, citations)
+    else:
+        # Remove citations
+        data = remove_citations(data)
+
+    data = clean_stix_data(data)
+
+    return data    
+
 
 JINJA_FILTERS = {
     'from_json':json.loads,
     'flatten_tree': flatten_tree,
     'clean_path': clean_path,
-    'clean_stix_data': clean_stix_data,
-    'update_citations': update_citations
+    'stixToHTML': stixToHTML
 }
