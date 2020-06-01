@@ -46,6 +46,10 @@ allowed_in_link = "".join(list(map(lambda s: s.strip(), [
     "   /    ",
 ])))
 
+def nameToPath(name):
+    # translate a version name to a path, e.g v6.3 => v6
+    return name.split(".")[0]
+
 def deploy():
     """ Deploy previous versions to website directory """
     
@@ -82,14 +86,14 @@ def deploy_current_version():
     with open("data/versions.json", "r") as f:
         version = json.load(f)["current"]
 
-    os.mkdir(os.path.join(prev_versions_deploy_folder, version["name"]))
+    os.mkdir(os.path.join(prev_versions_deploy_folder, nameToPath(version["name"])))
     for item in os.listdir("output"):
         # skip previous and versions directories when copying
         if item == "previous" or item == "versions": continue
         print("copying", item)
         # copy the current version into a preserved version
         src = os.path.join("output", item)
-        dest = os.path.join(prev_versions_deploy_folder, version["name"], item)
+        dest = os.path.join(prev_versions_deploy_folder, nameToPath(version["name"]), item)
         # copy depending on file type
         if os.path.isdir(src):
             shutil.copytree(src, dest)
@@ -106,12 +110,12 @@ def deploy_previous_version(version, repo):
     print("archiving", version["name"])
     repo.git.checkout(version["commit"])
     # copy over files
-    shutil.copytree(os.path.join(config.archives_directory), os.path.join(prev_versions_deploy_folder, version["name"]))
+    shutil.copytree(os.path.join(config.archives_directory), os.path.join(prev_versions_deploy_folder, nameToPath(version["name"])))
     # run archival scripts on version
     archive(version)
     # build alias for version
     for alias in version["aliases"]:
-        build_alias(version["name"], alias)
+        build_alias(nameToPath(version["name"]), alias)
 
 def archive(version_data, is_current=False):
     """perform archival operations on a version in /prev_versions_path
@@ -119,7 +123,7 @@ def archive(version_data, is_current=False):
     - replace links on all pages
     - add archived version banner to all pages
     """
-    version = version_data["name"]
+    version = nameToPath(version_data["name"])
 
     version_path = os.path.join(prev_versions_deploy_folder, version) # root of the filesystem containing the version
     version_url_path = os.path.join(prev_versions_path, version) # root of the URL of the version, for prefixing URLs
@@ -192,7 +196,7 @@ def archive(version_data, is_current=False):
                     '<div class="container-fluid version-banner">'\
                    f'<div class="icon-inline baseline mr-1"><img src="/{version_url_path}/theme/images/icon-warning-24px.svg"></div>'\
                    f'{version_marking} '\
-                    '<a href="/resources/versions/">Learn more about our versioning system</a> or see <a href="/">the live version</a>.</div>'
+                    '<a href="/resources/versions/">Learn more about the versioning system</a> or see <a href="/">the live version</a>.</div>'
             ))
 
             # overwrite with updated html
@@ -241,6 +245,10 @@ def build_alias(version, alias):
 
 def build_markdown(versions):
     """build markdown for the versions list page"""
+    # build urls
+    versions["current"]["url"] = nameToPath(versions["current"]["name"])
+    for version in versions["previous"]:
+        version["url"] = nameToPath(version["name"])
 
     archives_data = {"current": versions["current"], "previous": sorted(versions["previous"], key=lambda p: datetime.strptime(p["date_end"], "%B %d, %Y"), reverse=True) }
     

@@ -14,7 +14,7 @@ def citations_check():
 
     for directory, _, files in os.walk(config.web_directory):
         # skip previous instances of the code to speed this up
-        if 'previous' in directory: 
+        if 'previous' in directory or 'versions' in directory: 
             continue
         for filename in files:
             problems = []
