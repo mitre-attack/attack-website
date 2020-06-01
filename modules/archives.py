@@ -62,11 +62,12 @@ def deploy():
             if os.path.isdir(os.path.join(prev_versions_deploy_folder, child)): 
                 shutil.rmtree(prev_versions_deploy_folder)
 
-    with open("data/archives.json", "r") as f:
+    with open("data/versions.json", "r") as f:
         versions = json.load(f)
 
-    for version in versions:
-        build_version(version, archives_repo)
+    # build previous versions
+    for version in versions["previous"]:
+        deploy_previous_version(version, archives_repo)
 
     # build the versions page
     build_markdown(versions)
@@ -75,8 +76,32 @@ def deploy():
     with open(os.path.join(config.web_directory, "robots.txt"), "w", encoding='utf8') as robots:
         robots.write(f"User-agent: *\nDisallow: /{config.subdirectory}/previous/\nDisallow:/{config.subdirectory}/{prev_versions_path}/")
 
-def build_version(version, repo):
-    """build a version of the site to /prev_versions_path. version is a version from archives.json, repo is a reference to the attack-website Repo object"""
+def deploy_current_version():
+    """build a permalink of the current version"""
+
+    with open("data/versions.json", "r") as f:
+        version = json.load(f)["current"]
+
+    os.mkdir(os.path.join(prev_versions_deploy_folder, version["name"]))
+    for item in os.listdir("output"):
+        # skip previous and versions directories when copying
+        if item == "previous" or item == "versions": continue
+        print("copying", item)
+        # copy the current version into a preserved version
+        src = os.path.join("output", item)
+        dest = os.path.join(prev_versions_deploy_folder, version["name"], item)
+        # copy depending on file type
+        if os.path.isdir(src):
+            shutil.copytree(src, dest)
+        else: # is file
+            shutil.copy(src, dest)
+
+    # run archival scripts
+    archive(version, is_current=True)
+
+
+def deploy_previous_version(version, repo):
+    """build a version of the site to /prev_versions_path. version is a version from versions.json, repo is a reference to the attack-website Repo object"""
     # check out the commit for that version
     print("archiving", version["name"])
     repo.git.checkout(version["commit"])
@@ -88,7 +113,7 @@ def build_version(version, repo):
     for alias in version["aliases"]:
         build_alias(version["name"], alias)
 
-def archive(version_data):
+def archive(version_data, is_current=False):
     """perform archival operations on a version in /prev_versions_path
     - remove unnecessary files (.git, CNAME, preserved versions for that version)
     - replace links on all pages
@@ -99,15 +124,22 @@ def archive(version_data):
     version_path = os.path.join(prev_versions_deploy_folder, version) # root of the filesystem containing the version
     version_url_path = os.path.join(prev_versions_path, version) # root of the URL of the version, for prefixing URLs
 
+    def saferemove(path, type):
+        if not os.path.exists(path): return
+        if type == "file":
+            os.remove(path)
+        elif type == "directory":
+            shutil.rmtree(path, onerror=onerror)
+
     # remove .git
-    print("\t- removing .git")
-    shutil.rmtree(os.path.join(version_path, ".git"), onerror=onerror)
+    saferemove(os.path.join(version_path, ".git"), "directory")
     # remove CNAME
-    print("\t- removing CNAME")
-    os.remove(os.path.join(version_path, "CNAME"))
+    saferemove(os.path.join(version_path, "CNAME"), "file")
+    # remove robots
+    saferemove(os.path.join(version_path, "robots.txt"), "file")
 
     # remove previous versions from this previous version
-    for prev_directory in map(lambda d: os.path.join(version_path, d), ["previous", prev_versions_path, os.path.join("resources", "previous-versions")]):
+    for prev_directory in map(lambda d: os.path.join(version_path, d), ["previous", prev_versions_path, os.path.join("resources", "previous-versions"), os.path.join("resources", "versions")]):
         if os.path.exists(prev_directory):
             print(f"\t- removing previous versions from {prev_directory}")
             shutil.rmtree(prev_directory, onerror=onerror)
@@ -152,12 +184,15 @@ def archive(version_data):
             for banner_class in ["banner-message", "under-development"]: # backwards compatability
                 html_str = html_str.replace(banner_class, "d-none") # hide the banner
 
+            if is_current: version_marking = f'Currently viewing <a href="{version_data["cti_url"]}" target="_blank">ATT&CK {version_data["name"]}</a> which is the current version of ATT&CK.'
+            else: version_marking = f'Currently viewing <a href="{version_data["cti_url"]}" target="_blank">ATT&CK {version_data["name"]}</a> which was live between {version_data["date_start"]} and {version_data["date_end"]}.'
+
             # add previous versions banner
             html_str = html_str.replace("<!-- !previous versions banner! -->", (\
                     '<div class="container-fluid version-banner">'\
                    f'<div class="icon-inline baseline mr-1"><img src="/{version_url_path}/theme/images/icon-warning-24px.svg"></div>'\
-                   f'Currently viewing <a href="{version_data["cti_url"]}" target="_blank">ATT&CK {version_data["name"]}</a> which was live between {version_data["date_start"]} and {version_data["date_end"]}. '\
-                    '<a href="/resources/previous-versions/">See other versions</a> or <a href="/">the current version</a>.</div>'
+                   f'{version_marking} '\
+                    '<a href="/resources/versions/">Learn more about our versioning system</a> or see <a href="/">the live version</a>.</div>'
             ))
 
             # overwrite with updated html
@@ -207,7 +242,7 @@ def build_alias(version, alias):
 def build_markdown(versions):
     """build markdown for the versions list page"""
 
-    archives_data = {"versions": sorted(versions, key=lambda p: datetime.strptime(p["date_end"], "%B %d, %Y"), reverse=True) }
+    archives_data = {"current": versions["current"], "previous": sorted(versions["previous"], key=lambda p: datetime.strptime(p["date_end"], "%B %d, %Y"), reverse=True) }
     
     # build previous-versions page markdown
     subs = config.previous_md + json.dumps(archives_data)

@@ -126,6 +126,13 @@ def previous_versions_gen():
     end_time = time.time()
     util.progress_bar("Previous Versions", end_time - start_time)
 
+def deploy_current_version():
+    util.progress_bar("Current version permalink")
+    start_time = time.time()
+    archives.deploy_current_version()
+    end_time = time.time()
+    util.progress_bar("Current version permalink", end_time - start_time)
+
 def subdirectory_gen():
     util.progress_bar("Subdirectory")
     start_time = time.time()
