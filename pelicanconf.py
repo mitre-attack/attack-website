@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*- #
 from __future__ import unicode_literals
 import json
+import markdown
 import uuid
 import sys
 import re
@@ -105,6 +106,8 @@ def get_string_to_replace(citations, citation_name):
     return reference_html
 
 def update_citations(data, citations):
+
+    data = markdown.markdown(data)
     
     citation_template = "(Citation: {})"
 
@@ -116,7 +119,7 @@ def update_citations(data, citations):
         if replace_string:
             data = data.replace(citation_template.format(citation_name), replace_string)
     
-    return data
+    return clean_stix_data(data)
 
 JINJA_FILTERS = {
     'from_json':json.loads,
