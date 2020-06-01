@@ -247,8 +247,10 @@ def build_markdown(versions):
     """build markdown for the versions list page"""
     # build urls
     versions["current"]["url"] = nameToPath(versions["current"]["name"])
+    versions["current"]["changelog_label"] = " ".join(versions["current"]["changelog"].split("-")[1:]).title()
     for version in versions["previous"]:
         version["url"] = nameToPath(version["name"])
+        version["changelog_label"] = " ".join(version["changelog"].split("-")[1:]).title()
 
     archives_data = {"current": versions["current"], "previous": sorted(versions["previous"], key=lambda p: datetime.strptime(p["date_end"], "%B %d, %Y"), reverse=True) }
     
