@@ -261,8 +261,10 @@
                                             <td>
                                                 <a href="/{{example.path}}/{{example.id}}"> {{example.name}} </a>
                                             </td>
-                                            <td> 
-                                                {{example.descr}}
+                                            <td>
+                                                {% if example.descr %}
+                                                    {{clean_output.stixToHTML(example.descr, parsed.citations)}}
+                                                {% endif %}
                                             </td>
                                         </tr>
                                     {% endfor %}
@@ -285,8 +287,10 @@
                                                 <td>
                                                     <a href="/mitigations/{{mit.mid}}"> {{mit.name}} </a>
                                                 </td>
-                                                <td> 
-                                                    {{mit.descr}}
+                                                <td>
+                                                    {% if mit.descr %}
+                                                        {{clean_output.stixToHTML(mit.descr, parsed.citations)}}
+                                                    {% endif %}
                                                 </td>
                                             </tr>
                                         {% endfor %}
@@ -302,7 +306,7 @@
                         {% if parsed.detection %}
                             <h2 class="pt-3" id="detection">Detection</h2>
                             <div>
-                                {{parsed.detection}}
+                                {{clean_output.stixToHTML(parsed.detection, parsed.citations)}}
                             </div>
                         {% endif %}
                         {% if parsed.detectable %}

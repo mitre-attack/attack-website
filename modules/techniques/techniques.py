@@ -33,20 +33,20 @@ def generate_techniques():
     # To verify if a technique was generated
     technique_generated = False
 
-    techniques = {}
+    techniques_no_sub = {}
     tactics = {}
 
     ms = util.relationshipgetters.get_ms()
 
     for domain in site_config.domains:
         #Reads the STIX and creates a list of the ATT&CK Techniques
-        techniques[domain] = util.stixhelpers.get_techniques(ms[domain])
+        techniques_no_sub[domain] = util.buildhelpers.filter_out_subtechniques(util.stixhelpers.get_techniques(ms[domain]))
         tactics[domain] = util.stixhelpers.get_tactic_list(ms[domain])
 
-    side_nav_data = get_technique_side_nav_data(techniques, tactics)
+    side_nav_data = get_technique_side_nav_data(techniques_no_sub, tactics)
 
     for domain in site_config.domains:
-        check_if_generated = generate_domain_markdown(domain, techniques, tactics, side_nav_data)
+        check_if_generated = generate_domain_markdown(domain, techniques_no_sub, tactics, side_nav_data)
         if not technique_generated:
             if check_if_generated:
                 technique_generated = True
@@ -54,16 +54,15 @@ def generate_techniques():
     if not technique_generated:
         util.buildhelpers.remove_module_from_menu(techniques_config.module_name)   
 
-def generate_domain_markdown(domain, techniques, tactics, side_nav_data):
+def generate_domain_markdown(domain, techniques_no_sub, tactics, side_nav_data):
     """Generate technique index markdown for each domain and generates 
        shared data for techniques
     """
 
     # Check if there is at least one technique
-    if techniques[domain]:
+    if techniques_no_sub[domain]:
 
-        technique_list_no_sub = util.buildhelpers.filter_out_subtechniques(techniques[domain])
-        techhnique_list_no_sub_no_deprecated = util.buildhelpers.filter_deprecated_revoked(technique_list_no_sub)
+        techhnique_list_no_sub_no_deprecated = util.buildhelpers.filter_deprecated_revoked(techniques_no_sub[domain])
 
         data = {}
 
@@ -83,9 +82,8 @@ def generate_domain_markdown(domain, techniques, tactics, side_nav_data):
         with open(os.path.join(techniques_config.techniques_markdown_path, data['domain'] + "-techniques.md"), "w", encoding='utf8') as md_file:
             md_file.write(subs)
 
-        # Create the markdown for the enterprise groups in the STIX
-
-        for technique in technique_list_no_sub:
+        # Create the markdown for techniques in the STIX
+        for technique in techniques_no_sub[domain]:
             if 'revoked' not in technique or technique['revoked'] is False:
                 generate_technique_md(technique, domain, side_nav_data, tactics[domain])
         
@@ -188,10 +186,9 @@ def generate_data_for_md(technique_dict, technique, tactic_list, is_sub_techniqu
 
         # Get initial reference list
         reference_list = {'current_number': 0}
-        # Decleared as an object to be able to pass by reference
-        # next_reference_number = {}
-        # next_reference_number['value'] = 1
-        technique_dict['citations'] = util.buildhelpers.update_reference_list(reference_list, technique)
+        
+        # Get initial reference list from technique object
+        reference_list = util.buildhelpers.update_reference_list(reference_list, technique)
 
         dates = util.buildhelpers.get_created_and_modified_dates(technique)
         
@@ -209,22 +206,17 @@ def generate_data_for_md(technique_dict, technique, tactic_list, is_sub_techniqu
         # Get technique description with citations
         if technique.get("description") and not technique_dict['deprecated']:
 
-            # citations_from_descr = util.buildhelpers.get_citations_from_descr(technique['description'])
-
             technique_dict['descr'] = technique['description']
-
-            # technique_dict['descr'] = util.buildhelpers.replace_html_chars(markdown.markdown(technique['description']))
-            # technique_dict['descr'] = util.buildhelpers.filter_urls(technique_dict['descr'])
-            # technique_dict['descr'] = util.buildhelpers.get_descr_reference_sect(citations_from_descr, reference_list, next_reference_number, technique_dict['descr'])
+            technique_dict['descr'] = util.buildhelpers.filter_urls(technique_dict['descr'])
         
             # Get mitigation table
-            # technique_dict['mitigation_table'] = get_mitigations_table_data(technique, reference_list, next_reference_number)
+            technique_dict['mitigation_table'] = get_mitigations_table_data(technique, reference_list)
             
             # Get related techniques
             technique_dict['rel_techniques_table'] = get_related_techniques_data(technique, tactic_list)
 
             # Get examples
-            # technique_dict['examples_table'] = get_examples_table_data(technique, reference_list, next_reference_number)
+            technique_dict['examples_table'] = get_examples_table_data(technique, reference_list)
 
             # Get technique version
             if technique.get("x_mitre_version"):
@@ -297,8 +289,8 @@ def generate_data_for_md(technique_dict, technique, tactic_list, is_sub_techniqu
                 technique_dict['tactic_type'] = ", ".join(technique['x_mitre_tactic_type'])
 
             # Get detection data
-            # if technique.get('x_mitre_detection'):
-            #     technique_dict['detection'] = get_detection_string(technique['x_mitre_detection'], reference_list, next_reference_number)
+            if technique.get('x_mitre_detection'):
+                technique_dict['detection'] = util.buildhelpers.filter_urls(technique['x_mitre_detection'])
 
             # Get if technique is detectable by common defenses
             if technique.get('x_mitre_detectable_by_common_defenses'):
@@ -316,9 +308,7 @@ def generate_data_for_md(technique_dict, technique, tactic_list, is_sub_techniqu
             if technique.get('x_mitre_difficulty_for_adversary_explanation'):
                 technique_dict['diff_for_adv_exp'] = util.buildhelpers.replace_html_chars(technique['x_mitre_difficulty_for_adversary_explanation'])            
             
-            # Add reference for bottom part of technique page
-            # if reference_list:
-                # technique_dict['bottom_ref'] = util.buildhelpers.sort_reference_list(reference_list)
+            technique_dict['citations'] = reference_list
         
         else:
             if technique_dict['deprecated']:
@@ -356,7 +346,7 @@ def get_related_techniques_data(technique, tactic_list):
         technique_data = sorted(technique_data, key=lambda k: k['tactic_name'].lower())
     return technique_data
 
-def get_mitigations_table_data(technique, reference_list, next_reference_number):
+def get_mitigations_table_data(technique, reference_list):
     """Given a technique a reference list, find mitigations that mitigate
        technique and return list with mitigation data. Also modifies the 
        reference list if it finds a reference that is not on the list
@@ -382,7 +372,8 @@ def get_mitigations_table_data(technique, reference_list, next_reference_number)
                     row['name'] = mitigation['object']['name']
                     if mitigation['relationship'].get('description'):
                         # Get filtered description
-                        row['descr'] = util.buildhelpers.get_filtered_description(reference_list, next_reference_number, mitigation)
+                        reference_list = util.buildhelpers.update_reference_list(reference_list, mitigation['relationship'])
+                        row['descr'] = util.buildhelpers.filter_urls(mitigation['relationship']['description'])
              
                     mitigation_data.append(row)
     
@@ -390,7 +381,7 @@ def get_mitigations_table_data(technique, reference_list, next_reference_number)
         mitigation_data = sorted(mitigation_data, key=lambda k: k['name'].lower())
     return mitigation_data
     
-def get_examples_table_data(technique, reference_list, next_reference_number):
+def get_examples_table_data(technique, reference_list):
     """Given a technique object, find examples in malware using technique,
        tools using technique and groups using technique. Return list with
        example data
@@ -427,7 +418,8 @@ def get_examples_table_data(technique, reference_list, next_reference_number):
 
                     if example['relationship'].get('description'):
                         # Get filtered description
-                        row['descr'] = util.buildhelpers.get_filtered_description(reference_list, next_reference_number, example)
+                        reference_list = util.buildhelpers.update_reference_list(reference_list, example['relationship'])
+                        row['descr'] = util.buildhelpers.filter_urls(example['relationship']['description'])
 
                     example_data.append(row)
         
@@ -517,15 +509,11 @@ def get_techniques_list(techniques):
                 technique_dict['id'] = attack_id
                 technique_dict['stix_id'] = technique['id']
                 technique_dict['name'] = technique['name']
-                if technique['name'] == "DNSCalc":
-                    print(technique)
-                    exit()
                 technique_dict['description'] = technique['description']
 
                 if technique.get('kill_chain_phases'):
                     for elem in technique['kill_chain_phases']:
                         # Fill dict
-
                         if elem['phase_name'] not in technique_list:
                             technique_list[elem['phase_name']] = []
                             
@@ -535,21 +523,6 @@ def get_techniques_list(techniques):
         technique_list[key] = sorted(technique_list[key], key=lambda k: k['name'].lower())
     
     return technique_list
-
-
-def get_detection_string(detection, reference_list, next_reference_number):
-    """Given the technique's detection string, replace the citations and
-       add them to the reference_list is they are not found. Return
-       modified detection string
-    """
-
-    citations_from_descr = util.buildhelpers.get_citations_from_descr(detection)
-
-    filtered_detection = util.buildhelpers.replace_html_chars(markdown.markdown(detection))
-    filtered_detection = util.buildhelpers.filter_urls(filtered_detection)
-    filtered_detection = util.buildhelpers.get_descr_reference_sect(citations_from_descr, reference_list, next_reference_number, filtered_detection)
-    
-    return filtered_detection
 
 def get_subtechniques(technique):
     """Given a technique, return the ID and name of the subtechnique"""

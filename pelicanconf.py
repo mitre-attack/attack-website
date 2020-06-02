@@ -137,6 +137,8 @@ def stixToHTML(data, citations, firstParagraphOnly):
     # Get first paragraph from data
     if firstParagraphOnly:
         data = data.split('</p>')[0] + '</p>'
+        if data.startswith("<p>") and data.endswith("</p>"):
+            data = data[3:-4]
 
     if citations:
         # Update citations
@@ -147,8 +149,7 @@ def stixToHTML(data, citations, firstParagraphOnly):
 
     data = clean_stix_data(data)
 
-    return data    
-
+    return data
 
 JINJA_FILTERS = {
     'from_json':json.loads,
