@@ -37,31 +37,9 @@ ARTICLE_PATHS = ['pages/updates']
 # Uncomment following line if you want document-relative URLs when developing
 RELATIVE_URLS = False
 
-# custom jinja filters
-# remove index.html from end of a path, add / if not at beginning
-def clean_path(path): 
-    path = path.split("index.html")[0]
-    if not path.startswith("/"): path = "/" + path
-    if not path.endswith("/"): path += "/"
-    return path
-# get a flattened tree of the "paths" of all children of a tree of objects.
-# used in sidenav
-def flatten_tree(root):
-    ret = []
-    if root["path"]: ret.append(root["path"])
-    for child in root["children"]:
-        ret = ret + flatten_tree(child)
-    return ret
+# Custom Jinja Filters
 
-# Clean stix data from unwanted characters
-def clean_stix_data(data):
-    return data.replace("\n", "")\
-               .replace("{", "{{")\
-               .replace("}", "}}")\
-               .replace("”","\"")\
-               .replace("“","\"")
-
-# Template for HTML references inside of sentences
+# Template for HTML references inside of STIX data
 reference_marker_template = ("<span onclick=scrollToRef('scite-{}') "
                              "id=\"scite-ref-{}-a\" class=\"scite"
                             "-citeref-number\" "
@@ -74,13 +52,44 @@ reference_marker_template_no_url = ("<span onclick=scrollToRef('scite-{}') "
                                     "data-reference=\"{}\">"
                                     "<sup>[{}]</sup></span>")
 
+def clean_path(path):
+    """ remove index.html from end of a path, add / if not at beginning """
+
+    path = path.split("index.html")[0]
+    if not path.startswith("/"): path = "/" + path
+    if not path.endswith("/"): path += "/"
+    return path
+
+def flatten_tree(root):
+    """ get a flattened tree of the "paths" of all children of a tree of objects.
+        used in sidenav
+    """
+    ret = []
+    if root["path"]: ret.append(root["path"])
+    for child in root["children"]:
+        ret = ret + flatten_tree(child)
+    return ret
+
+def clean_stix_data(data):
+    """ Clean stix data from unwanted characters """
+
+    return data.replace("\n", "")\
+               .replace("{", "{{")\
+               .replace("}", "}}")\
+               .replace("”","\"")\
+               .replace("“","\"")
+
 def get_citations(data):
-    """Given a description, find all of the citations"""
+    """ Given a description, find all of the citations """
 
     p = re.compile('\(Citation: (.*?)\)')
     return p.findall(data)
 
-def get_string_to_replace(citations, citation_name):
+def get_html_citation(citations, citation_name):
+    """ Given a citation name and the citation list, replace
+        the html link with the citation name and update the 
+        list with the current number plus one
+    """
 
     global reference_marker_template
     global reference_marker_template_no_url
@@ -106,13 +115,16 @@ def get_string_to_replace(citations, citation_name):
     return reference_html
 
 def update_citations(data, citations):
+    """ Given a data string and the citation list, update
+        citations with the citation names that are held in string
+    """
 
     citation_template = "(Citation: {})"
 
     citation_names = get_citations(data)
     
     for citation_name in citation_names:
-        replace_string = get_string_to_replace(citations, citation_name)
+        replace_string = get_html_citation(citations, citation_name)
 
         if replace_string:
             data = data.replace(citation_template.format(citation_name), replace_string)
@@ -120,6 +132,7 @@ def update_citations(data, citations):
     return data
 
 def remove_citations(data):
+    """ Remove citations from strings """
 
     # Get citations names to remove from string
     citation_names = get_citations(data)
@@ -130,6 +143,12 @@ def remove_citations(data):
     return data
 
 def stixToHTML(data, citations, firstParagraphOnly):
+    """ Clean output of STIX content.
+        params:
+            data (required, string), the STIX description to format
+            citations (optional, object), if not None, add citation markers to the data.
+            firstParagraphOnly (optional, boolean), if true, only return the first paragraph of the data in question.
+    """
 
     # Replace data from markdown format
     data = markdown.markdown(data)
