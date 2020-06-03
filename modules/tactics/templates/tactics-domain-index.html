@@ -1,5 +1,6 @@
 {% extends "general/two-column.html" %}
 {% import 'macros/navigation.html' as navigation %}
+{% import 'macros/clean_output.html' as clean_output %}
 
 {% set parsed = page.data | from_json %}
 {% if parsed.domain == "pre" %}
@@ -69,7 +70,7 @@
                                     <a href="/tactics/{{tactic.tid}}">{{tactic.name}}</a>
                                 </td>
                                 <td>
-                                    {{tactic.description}}
+                                    {{clean_output.stixToHTML(tactic.description, firstParagraphOnly=True)}}
                                 </td>
                                 </tr>
                             {% endfor %}
