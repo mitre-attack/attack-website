@@ -215,7 +215,7 @@ matrices = [
 ]
 
 # argument defaults and options for the CLI
-build_choices = ['resources', 'contribute', 'groups', 'search', 'matrices', 'mitigations', 'redirects', 'software', 'tactics', 'techniques', "prev_versions"]
+build_choices = ['resources', 'contribute', 'groups', 'search', 'matrices', 'mitigations', 'redirects', 'software', 'tactics', 'techniques', "versions"]
 build_defaults = build_choices
 
 test_choices = ['size', 'links', 'external_links', 'citations']
@@ -530,16 +530,16 @@ tactic_overview_md = ("Title: Tactics overview \n"
                       "save_as: tactics/index.html \n")
 
 
-# Constants used by archives.py
+# Constants used by versions.py
 # ----------------------------------------------------------------------------
 
-archives_repo = "https://github.com/mitre-attack/attack-website.git"
-archives_directory = "attack-archives"
-previous_md = ("Title: Versions of ATT&CK\n"
+versions_repo = "https://github.com/mitre-attack/attack-website.git"
+versions_directory = "attack-versions"
+versions_md = ("Title: Versions of ATT&CK\n"
                "Template: resources/versions\n"
                "save_as: resources/versions/index.html\n"
                "data: ")
-previous_markdown_path = "content/pages/resources"
+versions_markdown_path = "content/pages/resources"
 
 # Constants used by resources.py
 # ----------------------------------------------------------------------------

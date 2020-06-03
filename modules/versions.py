@@ -53,12 +53,12 @@ def nameToPath(name):
 def deploy():
     """ Deploy previous versions to website directory """
     
-
-    # delete previous copy of attack-archives
-    if os.path.exists(config.archives_directory):
-        shutil.rmtree(config.archives_directory, onerror=onerror) 
+    #TODO we probably don't need to re-clone the website here, just a git pull should be sufficient
+    # delete previous copy of attack-versions
+    if os.path.exists(config.versions_directory):
+        shutil.rmtree(config.versions_directory, onerror=onerror) 
     # download new version of attack-website for use in versioning
-    archives_repo = Repo.clone_from(config.archives_repo, config.archives_directory, branch="feature/#174-numbered-versions")
+    versions_repo = Repo.clone_from(config.versions_repo, config.versions_directory)
 
     # remove previously deployed previous versions
     if os.path.exists(prev_versions_deploy_folder):
@@ -71,7 +71,7 @@ def deploy():
 
     # build previous versions
     for version in versions["previous"]:
-        deploy_previous_version(version, archives_repo)
+        deploy_previous_version(version, versions_repo)
 
     # build the versions page
     build_markdown(versions)
@@ -108,7 +108,7 @@ def deploy_previous_version(version, repo):
     # check out the commit for that version
     repo.git.checkout(version["commit"])
     # copy over files
-    shutil.copytree(os.path.join(config.archives_directory), os.path.join(prev_versions_deploy_folder, nameToPath(version["name"])))
+    shutil.copytree(os.path.join(config.versions_directory), os.path.join(prev_versions_deploy_folder, nameToPath(version["name"])))
     # run archival scripts on version
     archive(version)
     # build alias for version
@@ -198,12 +198,13 @@ def archive(version_data, is_current=False):
             else: version_marking = f'Currently viewing <a href="{version_data["cti_url"]}" target="_blank">ATT&CK {version_data["name"]}</a> which was live between {version_data["date_start"]} and {version_data["date_end"]}.'
 
             # add versions banner
-            html_str = html_str.replace("<!-- !previous versions banner! -->", (\
-                    '<div class="container-fluid version-banner">'\
-                   f'<div class="icon-inline baseline mr-1"><img src="/{version_url_path}/theme/images/icon-warning-24px.svg"></div>'\
-                   f'{version_marking} '\
-                    '<a href="/resources/versions/">Learn more about the versioning system</a> or <a href="/">see the live site</a>.</div>'
-            ))
+            for banner_tag in ["<!-- !previous versions banner! -->", "<!-- !versions banner! -->"]: # backwards compatability
+                html_str = html_str.replace(banner_tag, (\
+                        '<div class="container-fluid version-banner">'\
+                        f'<div class="icon-inline baseline mr-1"><img src="/{version_url_path}/theme/images/icon-warning-24px.svg"></div>'\
+                        f'{version_marking} '\
+                        '<a href="/resources/versions/">Learn more about the versioning system</a> or <a href="/">see the live site</a>.</div>'
+                ))
 
             # overwrite with updated html
             with open(filepath, mode="w", encoding='utf8') as updated_html:
@@ -257,11 +258,11 @@ def build_markdown(versions):
         version["changelog_label"] = " ".join(version["changelog"].split("-")[1:]).title()
     
     # sort previous versions by date
-    archives_data = {"current": versions["current"], "previous": sorted(versions["previous"], key=lambda p: datetime.strptime(p["date_end"], "%B %d, %Y"), reverse=True) }
+    versions_data = {"current": versions["current"], "previous": sorted(versions["previous"], key=lambda p: datetime.strptime(p["date_end"], "%B %d, %Y"), reverse=True) }
     
     # build previous-versions page markdown
-    subs = config.previous_md + json.dumps(archives_data)
-    with open(os.path.join(config.previous_markdown_path, "previous.md"), "w", encoding='utf8') as md_file:
+    subs = config.versions_md + json.dumps(versions_data)
+    with open(os.path.join(config.versions_markdown_path, "versions.md"), "w", encoding='utf8') as md_file:
         md_file.write(subs)
 
 

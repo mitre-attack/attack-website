@@ -139,9 +139,9 @@ def update(args):
     if args.subdirectory:
         config.set_subdirectory(args.subdirectory)
 
-    # Deploy previous version
+    # Deploy versions
     if args.build:
-        if 'prev_versions' in args.build:
+        if 'versions' in args.build:
     	    generate.previous_versions_gen()
 
     # Pelican update
@@ -159,7 +159,7 @@ def update(args):
     
     # Preserve current version
     if args.build:
-        if 'prev_versions' in args.build:
+        if 'versions' in args.build:
             generate.deploy_current_version()
 
     # Replace output directory links with subdirectory
