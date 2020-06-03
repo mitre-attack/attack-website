@@ -101,23 +101,19 @@ def generate_group_md(group, side_menu_data, side_menu_mobile_view_data):
             data['contributors_list'] = group["x_mitre_contributors"]
 
         # Get initial reference list
-        reference_list = []
-        # Decleared as an object to be able to pass by reference
-        next_reference_number = {}
-        next_reference_number['value'] = 1
+        reference_list = {'current_number': 0}
+
+        # Get initial reference list from group object
         reference_list = util.buildhelpers.update_reference_list(reference_list, group)
 
         if group.get("description"):
-            citations_from_descr = util.buildhelpers.get_citations_from_descr(group['description'])
-            data['descr'] = markdown.markdown(group["description"])
-            data['descr'] = util.buildhelpers.filter_urls(data['descr'])
-            data['descr'] = util.buildhelpers.get_descr_reference_sect(citations_from_descr, reference_list, next_reference_number, data['descr'])
+            data['descr'] = util.buildhelpers.filter_urls(group['description'])
         
         if group.get('x_mitre_deprecated'):
             data['deprecated'] = True
 
         # Get technique data for techniques used table
-        data['technique_table_data'] = get_techniques_used_by_group_data(group, reference_list, next_reference_number)
+        data['technique_table_data'] = get_techniques_used_by_group_data(group, reference_list)
 
         # Get navigator layers for this group
         layers = util.buildhelpers.get_navigator_layers(
@@ -146,11 +142,11 @@ def generate_group_md(group, side_menu_data, side_menu_mobile_view_data):
             })
 
         # Grab software data for Software table
-        data['software_data'], data['add_software_ref'] = get_software_table_data(group, reference_list, next_reference_number)
+        data['software_data'], data['add_software_ref'] = get_software_table_data(group, reference_list)
 
-        data['alias_descriptions'] = util.buildhelpers.get_alias_data(group.get("aliases")[1:], ext_ref, reference_list, next_reference_number)
+        data['alias_descriptions'] = util.buildhelpers.get_alias_data(group.get("aliases")[1:], ext_ref)
 
-        data['bottom_ref'] = util.buildhelpers.sort_reference_list(reference_list)
+        data['citations'] = reference_list
                 
         if isinstance(group.get("aliases"), collections.Iterable):
             data['aliases_list'] = group["aliases"][1:]
@@ -181,21 +177,10 @@ def get_groups_table_data(group_list):
                 row['name'] = group['name']
 
             if group.get("description"):
-                row['descr'] = group["description"]
-                row['descr'] = markdown.markdown(row['descr'])
-                row['descr'] = util.buildhelpers.filter_urls(row['descr'])
-                row['descr'] = util.buildhelpers.remove_html_paragraph(row['descr'])
+                row['descr'] = util.buildhelpers.filter_urls(group["description"])
 
                 if group.get('x_mitre_deprecated'):
                     row['deprecated'] = True
-
-                citation_temp = "(Citation: {})"
-                p = re.compile("\(Citation: (.*?)\)")
-                found_citations = p.findall(row['descr'])
-
-                # Remove citation
-                for citation in found_citations:
-                    row['descr'] = row['descr'].replace(citation_temp.format(citation), "")
 
             if isinstance(group.get("aliases"), collections.Iterable):
                 row['aliases_list'] = group["aliases"][1:]
@@ -204,7 +189,7 @@ def get_groups_table_data(group_list):
     
     return groups_table_data
 
-def get_techniques_used_by_group_data(group, reference_list, next_reference_number):
+def get_techniques_used_by_group_data(group, reference_list):
     """Given a group and its reference list, get the techniques used by the
        group. Check the reference list for citations, if not found
        in list, add it.
@@ -218,7 +203,7 @@ def get_techniques_used_by_group_data(group, reference_list, next_reference_numb
         for technique in techniques_used_by_groups[group['id']]:
             # Do not add if technique is deprecated
             if not technique['object'].get('x_mitre_deprecated'):
-                technique_list = util.buildhelpers.technique_used_helper(technique_list, technique, reference_list, next_reference_number)
+                technique_list = util.buildhelpers.technique_used_helper(technique_list, technique, reference_list)
 
     technique_data = []
     for item in technique_list:
@@ -230,7 +215,7 @@ def get_techniques_used_by_group_data(group, reference_list, next_reference_numb
     technique_data = sorted(technique_data, key=lambda k: [site_config.custom_alphabet.index(c) for c in k['domain'].lower()])
     return technique_data
 
-def get_software_table_data(group, reference_list, next_reference_number):
+def get_software_table_data(group, reference_list):
     """Given a group, get software table data"""
 
     software_list = {}
@@ -271,23 +256,9 @@ def get_software_table_data(group, reference_list, next_reference_number):
                                 reference = True
 
                             # Get filtered description
-                            software_list[software_id]['descr'] = util.buildhelpers.get_filtered_description(reference_list, next_reference_number, software)
-    
-                        elif software['relationship'].get('external_references'):
-                            if reference == False:
-                                reference = True
+                            software_list[software_id]['descr'] = util.buildhelpers.filter_urls(software['relationship']['description'])
                             # Update reference list
                             reference_list = util.buildhelpers.update_reference_list(reference_list, software['relationship'])
-
-                            software_list[software_id]['refs'] = []
-
-                            for ext_ref in software['relationship']['external_references']:
-                                if ext_ref.get('source_name'):
-                                    row = {}
-                                    row['url'] = ext_ref.get('url')
-                                    row['number'] = util.buildhelpers.find_reference_number(reference_list, next_reference_number, ext_ref['source_name'])                                   
-
-                                software_list[software_id]['refs'].append(row) 
 
                         # Check if techniques exists, add techniques used by software
                         if pairing['techniques'].get(software_id):
