@@ -262,7 +262,7 @@ def remove_html_paragraph(description):
         return description[3:-4]
     return description
 
-def get_alias_data(alias_list, ext_refs, reference_list, next_reference_number):
+def get_alias_data(alias_list, ext_refs):
     """This function generates the Alias Description section for the pages"""
 
     if not alias_list:
@@ -283,11 +283,7 @@ def get_alias_data(alias_list, ext_refs, reference_list, next_reference_number):
                 citations_from_descr = get_citations_from_descr(ext['description'])
                 row = {}
                 row['name'] = alias
-                row['descr'] = markdown.markdown(ext['description'])
-                row['descr'] = filter_urls(row['descr'])
-                row['descr'] = get_descr_reference_sect(citations_from_descr, reference_list, next_reference_number, row['descr'])
-                row['descr'] = remove_html_paragraph(row['descr'])
-                
+                row['descr'] = filter_urls(ext['description'])
                 alias_data.append(row)
         
     return alias_data
@@ -668,7 +664,7 @@ def get_technique_name(tid):
     
     return util.config.NOT_FOUND
 
-def technique_used_helper(technique_list, technique, reference_list, next_reference_number):
+def technique_used_helper(technique_list, technique, reference_list):
     """ Add technique to technique list and make distinction between techniques
         subtechniques
     """
@@ -688,13 +684,13 @@ def technique_used_helper(technique_list, technique, reference_list, next_refere
                     technique_list[parent_id] = {}
                     technique_list[parent_id] = parent_technique_used_helper(parent_id)
 
-                technique_list[parent_id]['subtechniques'].append(get_technique_data_helper(attack_id, technique, reference_list, next_reference_number))
+                technique_list[parent_id]['subtechniques'].append(get_technique_data_helper(attack_id, technique, reference_list))
             
             # Attack id is regular technique
             else:
                 # Add technique to list
                 technique_list[attack_id] = {}
-                technique_list[attack_id] = get_technique_data_helper(attack_id, technique, reference_list, next_reference_number)
+                technique_list[attack_id] = get_technique_data_helper(attack_id, technique, reference_list)
 
         # Check if parent ID was added by sub-technique
         # parent ID will not have description
@@ -702,12 +698,12 @@ def technique_used_helper(technique_list, technique, reference_list, next_refere
             # Check if it has external references
             if technique['relationship'].get('description'):
                 # Get filtered description
-                technique_list[attack_id]['descr'] = get_filtered_description(reference_list, next_reference_number, technique)
+                technique_list[attack_id]['descr'] = filter_urls(technique['relationship']['description'])
+                reference_list = update_reference_list(reference_list, technique['relationship'])
     
     return technique_list
 
-
-def get_technique_data_helper(attack_id, technique, reference_list, next_reference_number):
+def get_technique_data_helper(attack_id, technique, reference_list):
     """ Given an attack id, technique object and reference information, 
         return dictionary with technique data
     """
@@ -728,7 +724,8 @@ def get_technique_data_helper(attack_id, technique, reference_list, next_referen
     # Check if it has external references
     if technique['relationship'].get('description'):
         # Get filtered description
-        technique_data['descr'] = get_filtered_description(reference_list, next_reference_number, technique)
+        technique_data['descr'] = filter_urls(technique['relationship']['description'])
+        reference_list = update_reference_list(reference_list, technique['relationship'])
     
     technique_data['subtechniques'] = []
     
