@@ -1,6 +1,7 @@
 {% extends "general/two-column.html" %} 
 {% set parsed = page.data | from_json %}
 {% import 'macros/navigation.html' as navigation %}
+{% import 'macros/versioning.html' as versioning %}
 
 {% if parsed.domain == "pre" %}
     {% set title = "Matrix - PRE-ATT&CK | MITRE ATT&CK&reg;" -%}
@@ -65,7 +66,11 @@
                 <h3>Device Access</h3>
             {% endif %}
             {% if parsed.max_len[0] > 0 %}
-                <span class="fs-s">Last Modified: {{parsed.timestamp}}</span>
+                <div class="fs-s">
+                    <div>Last Modified: {{parsed.timestamp}}</div>
+                    {% set permalink_title = "the matrices" if parsed.tactics | length > 1 else "the matrix" %}
+                    {{ versioning.permalink_button(output_file, permalink_title, False)}}
+                </div>
                 <div class="overflow-x-auto">
                     <table class='table table-matrix'>
                             <thead class='matrix-header'>

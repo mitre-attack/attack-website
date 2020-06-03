@@ -90,7 +90,6 @@ def deploy_current_version():
     for item in os.listdir("output"):
         # skip previous and versions directories when copying
         if item == "previous" or item == "versions": continue
-        print("copying", item)
         # copy the current version into a preserved version
         src = os.path.join("output", item)
         dest = os.path.join(prev_versions_deploy_folder, nameToPath(version["name"]), item)
@@ -107,7 +106,6 @@ def deploy_current_version():
 def deploy_previous_version(version, repo):
     """build a version of the site to /prev_versions_path. version is a version from versions.json, repo is a reference to the attack-website Repo object"""
     # check out the commit for that version
-    print("archiving", version["name"])
     repo.git.checkout(version["commit"])
     # copy over files
     shutil.copytree(os.path.join(config.archives_directory), os.path.join(prev_versions_deploy_folder, nameToPath(version["name"])))
@@ -145,36 +143,36 @@ def archive(version_data, is_current=False):
     # remove previous versions from this previous version
     for prev_directory in map(lambda d: os.path.join(version_path, d), ["previous", prev_versions_path, os.path.join("resources", "previous-versions"), os.path.join("resources", "versions")]):
         if os.path.exists(prev_directory):
-            print(f"\t- removing previous versions from {prev_directory}")
             shutil.rmtree(prev_directory, onerror=onerror)
     
     # remove updates page
     updates_dir = os.path.join(version_path, "resources", "updates")
     if os.path.exists(updates_dir):
-        print(f"\t- removing updates from from {updates_dir}")
         shutil.rmtree(updates_dir, onerror=onerror)
 
     # walk version HTML files
-    print("\t- updating hyperlinks in files")
     for directory, _, files in os.walk(version_path):
         for filename in filter(lambda f: f.endswith(".html"), files):
-            filepath = os.path.join(directory, filename)
             # replace links in the file
+
+            # open the file
+            filepath = os.path.join(directory, filename)
             with open(filepath, mode="r", encoding="utf8") as html:
                 html_str = html.read()
 
+            # helper function to substitute links so that they point to /versions/
             dest_link_format = f"/{version_url_path}\g<1>"
             def substitute(prefix, html_str):
-                fromstr = f"{prefix}=[\"']([{allowed_in_link}]+)[\"']"
+                fromstr = f"{prefix}=[\"'](?!\/versions\/)([{allowed_in_link}]+)[\"']"
                 tostr = f'{prefix}="{dest_link_format}"'
                 return re.sub(fromstr, tostr, html_str)
-
+            # ditto, but for redirections
             def substitute_redirection(prefix, html_str):
                 from_str = f"{prefix}=([{allowed_in_link}]+)[\"']"
                 to_str = f'{prefix}={dest_link_format}"'
                 return re.sub(from_str, to_str, html_str)
             
-            # replace links so that they properly point to where the version is
+            # replace links so that they properly point to where the version is stored
             html_str = substitute("src", html_str)
             html_str = substitute("href", html_str)
             html_str = substitute_redirection('content="0; url', html_str)
@@ -184,19 +182,27 @@ def archive(version_data, is_current=False):
             # update links to updates to point to main site instead of archied page
             html_str = html_str.replace(f"/{version_url_path}/resources/updates/", "/resources/updates/")
             
+            # update versioning button to show the permalink site version, aka "back to main site"
+            html_str = html_str.replace("version-button live", "version-button permalink")
+            # update live version links on the versioning button
+            from_str = f"href=[\"']\/versions\/v\d+([{allowed_in_link}]+[\"']>live version<\/a>)"
+            to_str = f'href="\g<1>'
+            html_str = re.sub(from_str, to_str, html_str)
+
             # remove banner message if it is present
             for banner_class in ["banner-message", "under-development"]: # backwards compatability
                 html_str = html_str.replace(banner_class, "d-none") # hide the banner
 
+            # format banner depending on if this is the current version or a previous version
             if is_current: version_marking = f'Currently viewing <a href="{version_data["cti_url"]}" target="_blank">ATT&CK {version_data["name"]}</a> which is the current version of ATT&CK.'
             else: version_marking = f'Currently viewing <a href="{version_data["cti_url"]}" target="_blank">ATT&CK {version_data["name"]}</a> which was live between {version_data["date_start"]} and {version_data["date_end"]}.'
 
-            # add previous versions banner
+            # add versions banner
             html_str = html_str.replace("<!-- !previous versions banner! -->", (\
                     '<div class="container-fluid version-banner">'\
                    f'<div class="icon-inline baseline mr-1"><img src="/{version_url_path}/theme/images/icon-warning-24px.svg"></div>'\
                    f'{version_marking} '\
-                    '<a href="/resources/versions/">Learn more about the versioning system</a> or see <a href="/">the live version</a>.</div>'
+                    '<a href="/resources/versions/">Learn more about the versioning system</a> or <a href="/">see the live site</a>.</div>'
             ))
 
             # overwrite with updated html
@@ -207,7 +213,6 @@ def archive(version_data, is_current=False):
     for search_file_name in ["search.js", "search_babelized.js"]:
         search_file_path = os.path.join(version_path, "theme", "scripts", search_file_name)
         if os.path.exists(search_file_path):
-            print(f"\t- updating {search_file_path}")
 
             with open(search_file_path, mode="r", encoding='utf8') as search_file:
                 search_contents = search_file.read()
@@ -223,7 +228,6 @@ def build_alias(version, alias):
     alias is the alias to build, e.g "october2018"
     """
     for root, folder, files in os.walk(os.path.join(prev_versions_deploy_folder, version)):
-        # subfolder = root.split(os.path.join(config.web_directory, "previous", version))[1] # actual subfolder of the version currently being walked
         for thefile in files:
             # where the file should go
             newRoot = root.replace(version, alias).replace(prev_versions_path, "previous")
@@ -251,7 +255,8 @@ def build_markdown(versions):
     for version in versions["previous"]:
         version["url"] = nameToPath(version["name"])
         version["changelog_label"] = " ".join(version["changelog"].split("-")[1:]).title()
-
+    
+    # sort previous versions by date
     archives_data = {"current": versions["current"], "previous": sorted(versions["previous"], key=lambda p: datetime.strptime(p["date_end"], "%B %d, %Y"), reverse=True) }
     
     # build previous-versions page markdown
