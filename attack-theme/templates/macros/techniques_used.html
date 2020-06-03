@@ -1,4 +1,6 @@
-{% macro techniques_used(technique_table_data, title) %}
+{% import 'macros/clean_output.html' as clean_output %}
+
+{% macro techniques_used(technique_table_data, title, citations=None) %}
 <h2 class="pt-3" id="techniques">{{title}}</h2>
 <table class="table techniques-used table-bordered mt-2">
     <thead>
@@ -29,7 +31,7 @@
                         <a href="/techniques/{{technique.id}}">{{technique.name}}</a>
                     </td>
                     <td>
-                        {{technique.descr}}
+                        {{clean_output.stixToHTML(technique.descr, citations)}}
                     </td>
                 </tr>
                 {% for subtechnique in technique.subtechniques %}
@@ -43,7 +45,7 @@
                             <a href="/techniques/{{technique.id}}/{{subtechnique.id}}">{{subtechnique.name}}</a>
                         </td>
                         <td>
-                            {{subtechnique.descr}}
+                            {{clean_output.stixToHTML(subtechnique.descr, citations)}}
                         </td>
                     </tr>
                 {% endfor %}
@@ -70,7 +72,7 @@
                                 <a href="/techniques/{{technique.id}}">{{technique.name}}</a>: <a href="/techniques/{{technique.id}}/{{subtechnique.id}}">{{subtechnique.name}}</a>
                             </td>
                             <td>
-                                {{subtechnique.descr}}
+                                {{clean_output.stixToHTML(subtechnique.descr, citations)}}
                             </td>
                         </tr>
                     {% else %}
@@ -84,7 +86,7 @@
                                 <a href="/techniques/{{technique.id}}">{{technique.name}}</a>: <a href="/techniques/{{technique.id}}/{{subtechnique.id}}">{{subtechnique.name}}</a>
                             </td>
                             <td>
-                                {{subtechnique.descr}}
+                                {{clean_output.stixToHTML(subtechnique.descr, citations)}}
                             </td>
                         </tr>                        
                     {% endif %}
