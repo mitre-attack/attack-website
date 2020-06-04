@@ -31,6 +31,19 @@
 <!--          addition of notable features. When PATCH is 0 it can      -->
 <!--          be omitted                                                -->
 
+## ATT&CK Website version 1.2.5
+This update includes a major refactor of the ATT&CK catalog versioning system, previously referred to as "previous versions."
+- Versions have been moved from `/previous/monthYear` to `/versions/v#` which should be more predictable and consistent with the way the versions are referred to elsewhere. Redirects have been created so that users who bookmarked the old URLs will get sent to the new ones. See issue [#174](https://github.com/mitre-attack/attack-website/issues/174).
+- Added a permalink to the current version of the site. See issue [#175](https://github.com/mitre-attack/attack-website/issues/175).
+    - Current version is preserved alongside other versions in `/versions/`.
+    - Object pages on the live website now have a "version permalink" leading to a frozen version of that page.
+    - Permalink and previous versions now have a "live version" link leading to the most recent version of that page.
+- Revised the version list. Find the new version list on the [Versions of ATT&CK page](https://attack.mitre.org/resources/versions), which replaced the "previous versions" page.
+    - Now formatted as an easy to read table.
+    - Added links to the data on [MITRE/CTI](https://github.com/mitre/cti) for each version.
+    - Revised blurb on how versions work to explain our methodology behind the catalog version numbers and versioning system.
+- Updated past release notes to mention the version number for each release.
+
 # 31 March 2020
 The sub-techniques beta is <a href='https://attack.mitre.org/beta/' target='_blank'>now live</a>! Read the <a target='_blank' href='https://medium.com/mitre-attack/attack-subs-what-you-need-to-know-99bce414ae0b'>release blog post</a> for more details. Check out the [beta changelog](https://attack.mitre.org/beta/resources/changelog.html) for the full list of website changes.
 ### Changes
