@@ -1,6 +1,8 @@
+// replaced by versions feature
+site_base_url = ""
 
 $.ajax({
-  url: "/index.json",
+  url: site_base_url + "/index.json",
   dataType: "json",
   success: function (data) {
     idx = lunr.Index.load(data)
