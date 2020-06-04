@@ -253,12 +253,18 @@ def build_markdown(versions):
     # build urls
     versions["current"]["url"] = nameToPath(versions["current"]["name"])
     versions["current"]["changelog_label"] = " ".join(versions["current"]["changelog"].split("-")[1:]).title()
-    for version in versions["previous"]:
-        version["url"] = nameToPath(version["name"])
-        version["changelog_label"] = " ".join(version["changelog"].split("-")[1:]).title()
-    
+
+    for versionGroup in ["previous", "older"]: # apply transforms to both previous and older
+        for version in versions[versionGroup]:
+            version["url"] = nameToPath(version["name"])
+            version["changelog_label"] = " ".join(version["changelog"].split("-")[1:]).title()
+
     # sort previous versions by date
-    versions_data = {"current": versions["current"], "previous": sorted(versions["previous"], key=lambda p: datetime.strptime(p["date_end"], "%B %d, %Y"), reverse=True) }
+    versions_data = {
+        "current": versions["current"], 
+        "previous": sorted(versions["previous"], key=lambda p: datetime.strptime(p["date_end"], "%B %d, %Y"), reverse=True),
+        "older": sorted(versions["older"], key=lambda p: datetime.strptime(p["date_end"], "%B %d, %Y"), reverse=True)
+    }
     
     # build previous-versions page markdown
     subs = config.versions_md + json.dumps(versions_data)
