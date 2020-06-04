@@ -33,6 +33,7 @@
 
 ## ATT&CK Website version 1.2.5
 This update includes a major refactor of the ATT&CK catalog versioning system, previously referred to as "previous versions."
+
 - Versions have been moved from `/previous/monthYear` to `/versions/v#` which should be more predictable and consistent with the way the versions are referred to elsewhere. Redirects have been created so that users who bookmarked the old URLs will get sent to the new ones. See issue [#174](https://github.com/mitre-attack/attack-website/issues/174).
 - Added a permalink to the current version of the site. See issue [#175](https://github.com/mitre-attack/attack-website/issues/175).
     - Current version is preserved alongside other versions in `/versions/`.
