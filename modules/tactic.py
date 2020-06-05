@@ -45,7 +45,7 @@ def generate_domain_markdown(domain, techniques_no_sub, tactics, side_nav_data):
     # Write out the markdown file for overview of domain
     data = {
         'domain': domain.split("-")[0],
-        'tactics_list_len': str(len(tactics))
+        'tactics_list_len': str(len(tactics[domain]))
     }
 
     data['side_menu_data'] = side_nav_data
