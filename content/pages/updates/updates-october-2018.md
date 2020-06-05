@@ -103,7 +103,7 @@ Technique Changes:
 * [Image File Execution Options Injection](/techniques/T1183)
 * [Registry Run Keys / Startup Folder](/techniques/T1060)
 * [NTFS File Attributes](/techniques/T1096)
-* [Indicator Removal on Host](/techniques/T1070)
+* Indicator Removal on Host
 * [Indicator Blocking](/techniques/T1054)
 * [Component Firmware](/techniques/T1109)
 * [Binary Padding](/techniques/T1009)

@@ -1,5 +1,6 @@
 {% extends "general/two-column.html" -%} 
 {% import 'macros/navigation.html' as navigation %}
+{% import 'macros/table_with_subtechniques.html' as technique_table %}
 
 {% set parsed = page.data | from_json %}
 {% if parsed.domain == "pre" %}
@@ -70,30 +71,8 @@
                         </div>
                     </div>
                     <h2 class="pt-3" id ="techniques">Techniques</h2><h6 class="table-object-count">Techniques: {{parsed.techniques_table_len}}</h6>
-                    <table class="table table-bordered table-alternate mt-2">
-                        <thead>
-                            <tr>
-                                <th scope="col">ID</th>
-                                <th scope="col">Name</th>
-                                <th scope="col">Description</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for row in parsed.techniques_table %}
-                                <tr>
-                                    <td>
-                                        <a class="technique-mapping" id="v-{{row.technique_name}}-{{parsed.name_lower}}-tab" href="/techniques/{{row.tid}}"> {{row.tid}} </a>
-                                    </td>
-                                    <td>
-                                        <a class="technique-mapping" id="v-{{row.technique_name}}-{{parsed.name_lower}}-tab" href="/techniques/{{row.tid}}"> {{row.technique_name}} </a>
-                                    </td>
-                                    <td>
-                                        {{row.descr}}
-                                    </td>
-                                </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
+                    {{technique_table.table_with_subtechniques(parsed.techniques_table)}}
+
                 </div>
             </div>
         </div>

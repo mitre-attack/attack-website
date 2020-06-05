@@ -1,6 +1,7 @@
 {% extends "general/two-column.html" %} 
 {% set parsed = page.data | from_json %}
 {% import 'macros/navigation.html' as navigation %}
+{% import 'macros/table_with_subtechniques.html' as technique_table %}
 
 {% if parsed.domain == "pre" %}
     {% set title = "Techniques - PRE-ATT&CK | MITRE ATT&CK&reg;" -%}
@@ -35,49 +36,28 @@
             <div class="jumbotron jumbotron-fluid">
                 <div class="container-fluid">
                     <div class="overflow-x-auto">
-                        <h1>
-                            {% if parsed.domain == "pre" %}
-                                PRE-ATT&CK Techniques
-                            {% elif parsed.domain == "mobile" %}
-                                Mobile Techniques
-                            {% else %} 
-                                Enterprise Techniques
-                            {% endif %}
-                        </h1>
-                        {% if parsed.domain == "pre" %}
-                            <h6 class="table-object-count">PRE-ATT&CK Techniques: {{ parsed.technique_list_len }}</h6>
-                        {% elif parsed.domain == "mobile" %}
-                            <h6 class="table-object-count">Mobile Techniques: {{ parsed.technique_list_len }}</h6>
-                        {% else %} 
-                            <h6 class="table-object-count"> Enterprise Techniques: {{ parsed.technique_list_len }}</h6>
-                        {% endif %}
-                        <table class="table table-bordered table-alternate mt-2">
-                            <thead>
-                                <tr>
-                                    <th scope="col">ID</th>
-                                    <th scope="col">Name</th>
-                                    <th scope="col">Description</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for row in parsed.technique_table %}
-                                    <tr>
-                                        <td>
-                                            <a href="/techniques/{{row.tid}}"> {{row.tid}} </a>
-                                        </td>
-                                        <td>
-                                            <a href="/techniques/{{row.tid}}"> {{row.technique_name}} </a>
-                                        </td>
-                                        <td>
-                                            {% if row.deprecated %}
-                                                <font color="red">****Deprecation Warning****</font>
-                                            {% endif %}
-                                            {{row.descr}}
-                                        </td>
-                                    </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
+                        <div class="row">
+                            <div class="col-md-8">
+                                <h1>
+                                    {% if parsed.domain == "pre" %}
+                                        PRE-ATT&CK Techniques
+                                    {% elif parsed.domain == "mobile" %}
+                                        Mobile Techniques
+                                    {% else %} 
+                                        Enterprise Techniques
+                                    {% endif %}
+                                </h1>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="row table-object-count pr-3">
+                                    <h6>Techniques: {{ parsed.technique_list_len }}</h6>
+                                </div>
+                                <div class="row table-object-count pr-3">
+                                    <h6>Sub-techniques: {{ parsed.subtechniques_len }}</h6>
+                                </div>
+                            </div>
+                        </div>
+                        {{technique_table.table_with_subtechniques(parsed.technique_table)}}
                     </div>
                 </div>
             </div>
