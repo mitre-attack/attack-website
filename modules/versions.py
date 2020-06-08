@@ -87,11 +87,11 @@ def deploy_current_version():
         version = json.load(f)["current"]
 
     os.mkdir(os.path.join(prev_versions_deploy_folder, nameToPath(version["name"])))
-    for item in os.listdir("output"):
+    for item in os.listdir(config.parent_web_directory):
         # skip previous and versions directories when copying
         if item == "previous" or item == "versions": continue
         # copy the current version into a preserved version
-        src = os.path.join("output", item)
+        src = os.path.join(config.parent_web_directory, item)
         dest = os.path.join(prev_versions_deploy_folder, nameToPath(version["name"]), item)
         # copy depending on file type
         if os.path.isdir(src):
@@ -240,7 +240,7 @@ def build_alias(version, alias):
                 redirectTo = root # index.html is implicit
             else:
                 redirectTo = "/".join([root, thefile])  # file is not index.html so it needs to be specified explicitly
-            redirectTo = redirectTo.split("output")[1] # remove output folder from path
+            redirectTo = redirectTo.split(config.parent_web_directory)[1] # remove parent web folder from path
 
             # write the redirect file
             if not os.path.isdir(newRoot):
