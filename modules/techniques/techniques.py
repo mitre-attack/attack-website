@@ -206,8 +206,7 @@ def generate_data_for_md(technique_dict, technique, tactic_list, is_sub_techniqu
         # Get technique description with citations
         if technique.get("description") and not technique_dict['deprecated']:
 
-            technique_dict['descr'] = technique['description']
-            technique_dict['descr'] = util.buildhelpers.filter_urls(technique_dict['descr'])
+            technique_dict['descr'] = util.buildhelpers.filter_urls(technique['description'])
         
             # Get mitigation table
             technique_dict['mitigation_table'] = get_mitigations_table_data(technique, reference_list)
