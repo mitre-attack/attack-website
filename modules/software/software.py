@@ -106,27 +106,20 @@ def generate_software_md(software,side_menu_data,side_menu_mobile_view_data):
         ext_ref = software["external_references"]
         
         # Get initial reference list
-        reference_list = []
-        # Decleared as an object to be able to pass by reference
-        next_reference_number = {}
-        next_reference_number['value'] = 1
+        reference_list = {'current_number': 0}
+
+        # Get initial reference list from software object
         reference_list = util.buildhelpers.update_reference_list(reference_list, software)
                          
         # Get description
         if software.get("description"):
-            citations_from_descr = util.buildhelpers.get_citations_from_descr(software['description'])
-            data['descr'] = markdown.markdown(software["description"])
-            data['descr'] = util.buildhelpers.filter_urls(data['descr'])
-            data['descr'] = util.buildhelpers.get_descr_reference_sect(citations_from_descr, reference_list, next_reference_number, data['descr'])
+            data['descr'] = util.buildhelpers.filter_urls(software['description'])
 
             if 'x_mitre_deprecated' in software:
                 data['deprecated'] = True
 
         # Get techniques used by software
-        data['technique_table_data'] = get_techniques_used_by_software_data(software, reference_list, next_reference_number)
-
-        # # Get enterprise and mobile layers for navigator
-        # enterprise_layer, mobile_layer = util.get_navigator_layers(data['name'], data['technique_table_data'])
+        data['technique_table_data'] = get_techniques_used_by_software_data(software, reference_list)
 
         # Get navigator layers for this group
         layers = util.buildhelpers.get_navigator_layers(
@@ -155,12 +148,10 @@ def generate_software_md(software,side_menu_data,side_menu_mobile_view_data):
             })
         
         # Get aliases descriptions
-        data['alias_descriptions'] = util.buildhelpers.get_alias_data(software.get("x_mitre_aliases")[1:], ext_ref, reference_list, next_reference_number)
+        data['alias_descriptions'] = util.buildhelpers.get_alias_data(software.get("x_mitre_aliases")[1:], ext_ref)
 
         # Get group data of groups that use software
-        data['groups'] = get_groups_using_software(software, reference_list, next_reference_number)
-
-        data['bottom_ref'] = util.buildhelpers.sort_reference_list(reference_list)
+        data['groups'] = get_groups_using_software(software, reference_list)
 
         # Get aliases list
         if isinstance(software.get("x_mitre_aliases"), collections.Iterable):
@@ -173,6 +164,8 @@ def generate_software_md(software,side_menu_data,side_menu_mobile_view_data):
         # Get platform list
         if isinstance(software.get("x_mitre_platforms"), collections.Iterable):
             data['platform_list'] = software["x_mitre_platforms"]
+        
+        data['citations'] = reference_list
 
         subs = software_config.software_md.substitute(data)
         subs = subs + json.dumps(data)
@@ -196,16 +189,7 @@ def get_software_table_data(software_list):
             row['name'] = software["name"]
 
             if software.get("description"):
-                row['descr'] = software["description"]
-                citation_temp = "(Citation: {})"
-                p = re.compile('\(Citation: (.*?)\)')
-                found_citations = p.findall(row['descr'])
-
-                for citation in found_citations:
-                    row['descr'] = row['descr'].replace(citation_temp.format(citation), "")
-
-                row['descr'] = markdown.markdown(row['descr'])
-                row['descr'] = util.buildhelpers.filter_urls(row['descr'])
+                row['descr'] = util.buildhelpers.filter_urls(software["description"])
                 if software.get('x_mitre_deprecated'):
                     row['deprecated'] = True
             
@@ -221,7 +205,7 @@ def get_software_table_data(software_list):
     
     return software_table_data
 
-def get_groups_using_software(software, reference_list, next_reference_number):
+def get_groups_using_software(software, reference_list):
     """Given a software object, return group list with id and name of
        groups
     """
@@ -245,27 +229,14 @@ def get_groups_using_software(software, reference_list, next_reference_number):
 
                 if group['relationship'].get('description'):
                     # Get filtered description
-                    row['descr'] = util.buildhelpers.get_filtered_description(reference_list, next_reference_number, group)
-                elif group['relationship'].get('external_references'):
-
-                    # Update reference list
+                    row['descr'] = util.buildhelpers.filter_urls(group['relationship']['description'])
                     reference_list = util.buildhelpers.update_reference_list(reference_list, group['relationship'])
-
-                    row['refs'] = []
-
-                    for ext_ref in group['relationship']['external_references']:
-                        if ext_ref.get('source_name'):
-                            ref = {}
-                            ref['url'] = ext_ref.get('url')
-                            ref['number'] = util.buildhelpers.find_reference_number(reference_list, next_reference_number, ext_ref['source_name'])                          
-
-                        row['refs'].append(ref) 
     
                 groups.append(row)
             
     return groups
 
-def get_techniques_used_by_software_data(software, reference_list, next_reference_number):
+def get_techniques_used_by_software_data(software, reference_list):
     """Given a software and its reference list, get the techniques used by the
        software. Check the reference list for citations, if not found
        in list, add it.
@@ -282,7 +253,7 @@ def get_techniques_used_by_software_data(software, reference_list, next_referenc
         for technique in techniques_used_by_software:
             # Do not add if technique is deprecated
             if not technique['object'].get('x_mitre_deprecated'):
-                technique_list = util.buildhelpers.technique_used_helper(technique_list, technique, reference_list, next_reference_number)
+                technique_list = util.buildhelpers.technique_used_helper(technique_list, technique, reference_list)
             
     technique_data = []
     for item in technique_list:
