@@ -106,34 +106,23 @@ def generate_mitigation_md(mitigation, domain, side_menu_data, side_menu_mobile_
             data['modified'] = dates['modified']
 
         # Get initial reference list
-        reference_list = []
-        # Decleared as an object to be able to pass by reference
-        next_reference_number = {}
-        next_reference_number['value'] = 1
+        reference_list = {'current_number': 0}
+        
+        # Get initial reference list from mitigation object
         reference_list = util.buildhelpers.update_reference_list(reference_list, mitigation)
 
         if mitigation.get('description'):
-            citations_from_descr = util.buildhelpers.get_citations_from_descr(mitigation['description'])
-
-            data['descr'] = markdown.markdown(mitigation['description'])\
-                                        .replace("\n", "<br>")\
-                                        .replace("{", "{{")\
-                                        .replace("}", "}}")\
-                                        .replace("”","\"")\
-                                        .replace("“","\"")
-
+            data['descr'] = mitigation['description']
             data['descr'] = util.buildhelpers.filter_urls(data['descr'])
-            data['descr'] = util.buildhelpers.get_descr_reference_sect(citations_from_descr, reference_list, next_reference_number, data['descr'])
 
         if mitigation.get('x_mitre_deprecated'):
             data['deprecated'] = True
         if mitigation.get('x_mitre_version'):
             data['version'] = mitigation["x_mitre_version"]
 
-        data['techniques_addressed_data'] = get_techniques_addressed_data(mitigation, reference_list, next_reference_number)
+        data['techniques_addressed_data'] = get_techniques_addressed_data(mitigation, reference_list)
     
-        if reference_list:
-            data['bottom_ref'] = util.buildhelpers.sort_reference_list(reference_list)
+        data['citations'] = reference_list
 
         subs = mitigations_config.mitigation_md.substitute(data)
         subs = subs + json.dumps(data)
@@ -159,13 +148,7 @@ def get_mitigation_table_data(mitigation_list):
 
             row['name'] = mitigation['name']
 
-            descr = re.sub(' \((Citation:.*?)\)', '', mitigation['description'], flags=re.MULTILINE)
-            descr = re.sub('\((Citation:.*?)\)', '', descr, flags=re.MULTILINE)
-            if descr.split("\n")[0] == '### Windows':
-                descr = markdown.markdown(descr.split("\n")[2])
-            else:
-                descr = markdown.markdown(descr.split("\n")[0])
-            row['descr'] = util.buildhelpers.filter_urls(descr)
+            row['descr'] = util.buildhelpers.filter_urls(mitigation['description'])
 
             if mitigation.get('x_mitre_deprecated'):
                 row['deprecated'] = True
@@ -174,7 +157,7 @@ def get_mitigation_table_data(mitigation_list):
                 
     return mitigation_data
     
-def get_techniques_addressed_data(mitigation, reference_list, next_reference_number):
+def get_techniques_addressed_data(mitigation, reference_list):
     """Given a mitigation, returns a list of techniques addressed by 
        the mitigation
     """
@@ -187,7 +170,7 @@ def get_techniques_addressed_data(mitigation, reference_list, next_reference_num
         for technique in mitigates_techniques.get(mitigation['id']):
             # Do not add if technique is deprecated
             if not technique['object'].get('x_mitre_deprecated'):
-                technique_list = util.buildhelpers.technique_used_helper(technique_list, technique, reference_list, next_reference_number)           
+                technique_list = util.buildhelpers.technique_used_helper(technique_list, technique, reference_list)           
     
     technique_data = []
     for item in technique_list:
