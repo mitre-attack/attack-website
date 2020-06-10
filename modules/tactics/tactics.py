@@ -28,20 +28,20 @@ def generate_tactics():
     # To verify if a technique was generated
     tactic_generated = False
 
-    techniques = {}
+    techniques_no_sub = {}
     tactics = {}
 
     ms = util.relationshipgetters.get_ms()
 
     for domain in site_config.domains:
         #Reads the STIX and creates a list of the ATT&CK Techniques
-        techniques[domain] = util.stixhelpers.get_techniques(ms[domain])
+        techniques_no_sub[domain] = util.buildhelpers.filter_out_subtechniques(util.stixhelpers.get_techniques(ms[domain]))
         tactics[domain] = util.stixhelpers.get_tactic_list(ms[domain])
     
     side_nav_data = util.buildhelpers.get_side_nav_domains_data("tactics", tactics)
 
     for domain in site_config.domains:
-        check_if_generated = generate_domain_markdown(domain, techniques[domain], tactics, side_nav_data)
+        check_if_generated = generate_domain_markdown(domain, techniques_no_sub, tactics, side_nav_data)
         if not tactic_generated:
             if check_if_generated:
                 tactic_generated = True
@@ -110,7 +110,7 @@ def generate_tactic_md(tactic, domain, tactic_list, techniques, side_nav_data):
             data['modified'] = dates['modified']
 
         # Get techniques that are in the given tactic
-        techniques_list = get_techniques_of_tactic(tactic, techniques)
+        techniques_list = get_techniques_of_tactic(tactic, techniques[domain])
 
         data['techniques_table'] = util.buildhelpers.get_technique_table_data(tactic, techniques_list)
         data['techniques_table_len'] = str(len(techniques_list))
