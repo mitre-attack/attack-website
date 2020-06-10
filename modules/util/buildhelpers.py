@@ -89,130 +89,6 @@ def filter_urls(descr):
 
     return descr
 
-def format_description_markdown_link(descr):
-    """This method is used to convert a markdown link to an html link"""
-
-    p = re.compile('\[(.*?)\]\((.*?)\)')
-    md_list = p.findall(descr)
-    desc_link_temp = "<a href=\"{}\">{}</a>"
-    md_link_temp ="[{}]({})"
-    #Interate through each regex match set, and replace the markdown
-    # link with the html link
-    for md in md_list:
-        url = md[1]
-        sname = md[0]
-        descr_markdown_link = md_link_temp.format(sname, url)
-        descr = descr.replace(descr_markdown_link, desc_link_temp.format(url,sname))
-
-    descr = filter_urls(descr)
-
-    return descr
-
-def get_descr_reference_sect(citations, reference_list, next_reference_number, description):
-    """This method is responsible for properly formatting the 
-       description citation area on Software, Groups pages
-    """
-
-    citation_temp = "(Citation: {})"
-
-    # Find citations in description
-    for citation in citations:     
-        reference_str = find_reference_html(reference_list, next_reference_number, citation)
-        if reference_str:
-            description = description.replace(citation_temp.format(citation), reference_str)
-
-    return description
-
-def find_reference_number(reference_list, next_reference_number, source_name):
-    """ Given a reference list and a source name, find the number of the source name
-    """
-
-    for reference in reference_list:
-        if reference['sname'] == source_name:
-            if not reference['number']:
-                reference['number'] = next_reference_number['value']
-                next_reference_number['value'] += 1
-            return reference['number']
-    return util_config.NOT_FOUND
-
-def find_reference_html(reference_list, next_reference_number, source_name):
-    """ Given a reference list and a source name, find source name and 
-        create html string
-    """
-
-    for reference in reference_list:
-        if reference['sname'] == source_name:
-            if not reference['number']:
-                reference['number'] = next_reference_number['value']
-                next_reference_number['value'] += 1
-
-            if not reference.get("url"):
-                reference_html = util_config.reference_marker_template_no_url.format(reference['number'],reference['number'],reference['sname'],reference['number'])
-            else:
-                reference_html = util_config.reference_marker_template.format(reference['number'],reference['number'],reference['sname'],reference['url'],reference['number'] - 1, reference['number'] - 1, reference['number'])
-            
-            return reference_html
-    return ""
-
-def add_external_references_not_in_descr(description, reference_list, next_reference_number, obj, citations_from_descr):
-    """Given an object, find external references that are not referenced on the description.
-       If it not referenced, append reference to description
-    """
-
-    if obj.get('external_references'):
-        for ext_ref in obj['external_references']:
-            if not ext_ref.get('source_name') in citations_from_descr:
-                reference_str = find_reference_html(reference_list, next_reference_number, ext_ref.get('source_name'))
-                description += reference_str
-
-    return description                  
-
-
-def get_citations_from_descr(description):
-    """Given a description, find all of the citations"""
-
-    p = re.compile('\(Citation: (.*?)\)')
-    return p.findall(description)
-
-def citations_versus_references(obj, citations_from_descr):
-    """Given an object an a list of citations found in the description,
-       return the difference between the amount of citations and external references
-    """
-
-    citations_len = len(citations_from_descr)
-    ext_references_len = 0
-    if obj.get('external_references'):
-        ext_references_len = len(obj.get('external_references'))
-    return ext_references_len - citations_len
-
-def get_filtered_description(reference_list, next_reference_number, obj):
-    """Given an object, filter the description by changing citations, 
-       eliminating unwanted HTML and add external references not in description
-    """
-
-    # Update reference list
-    reference_list = update_reference_list(reference_list, obj['relationship'])
-
-    # Get citations from description
-    citations_from_descr = get_citations_from_descr(obj['relationship']['description'])
-    
-    # Add in-place citations to relationship description
-    description = filter_urls(obj['relationship']['description'])
-    description = get_descr_reference_sect(citations_from_descr, reference_list, next_reference_number,description) 
-
-    # Check if description had all references
-    # Returns 0 if description has the same amount of 
-    # citations as the object's external references
-    citations_references_diff = citations_versus_references(obj['relationship'], citations_from_descr)
-
-    if citations_references_diff > 0:
-        # Add external references not in description
-        description = add_external_references_not_in_descr(description, reference_list, next_reference_number, obj['relationship'], citations_from_descr)
-
-    description = replace_html_chars(markdown.markdown(description))
-
-    return description
-
 def update_reference_list(reference_list, obj):
     """Given a reference list and an object, update the reference list
        with the external references found in the object
@@ -244,24 +120,6 @@ def update_reference_list(reference_list, obj):
     
     return reference_list
 
-def sort_reference_list(reference_list):
-    """Given a reference_list, sort it by number"""
-
-    used_reference_list = []
-    # Remove unused references from list
-    for reference in reference_list:
-        if reference.get('number'):
-            used_reference_list.append(reference)
-        
-    return sorted(used_reference_list, key=lambda k: k['number'])
-
-def remove_html_paragraph(description):
-    """Given a description, remove <p> tags from the beginning and end"""
-
-    if description.startswith("<p>") and description.endswith("</p>"):
-        return description[3:-4]
-    return description
-
 def get_alias_data(alias_list, ext_refs):
     """This function generates the Alias Description section for the pages"""
 
@@ -280,7 +138,6 @@ def get_alias_data(alias_list, ext_refs):
             ext = found_ext_refs[0]
 
             if ext.get("description"):
-                citations_from_descr = get_citations_from_descr(ext['description'])
                 row = {}
                 row['name'] = alias
                 row['descr'] = filter_urls(ext['description'])
@@ -353,16 +210,6 @@ def get_technique_table_data(tactic, techniques_list):
             technique['subtechniques'] = sorted(technique['subtechniques'], key=lambda k: k['id'].lower())
 
     return technique_table
-
-def remove_citations(descr, citations):
-    """This method is used to replace and citation in markdown format
-       with a link leading to the resource
-    """
-
-    for citation in citations:
-        descr = descr.replace("(Citation: " + citation['source_name'] + ")","")
-
-    return descr
 
 def get_side_nav_domains_data(side_nav_title, elements_list):
     """Responsible for generating the links that are located on the
@@ -747,25 +594,12 @@ def parent_technique_used_helper(parent_id):
 
     return parent_data
 
-def find_num_of_ref_in_list(reference_list, ref_sname):
-    """Given a reference list and a reference, search for reference
-       in list. Return number if found, else return NOT_FOUND
-    """
-
-    for reference in reference_list:
-        if reference['sname'] == ref_sname:
-            return reference['number']
-    return util_config.NOT_FOUND
-
 def find_in_reference_list(reference_list, source_name):
     """Check if it is already in reference list"""
 
     if reference_list.get(source_name):
         return True
 
-    # for reference in reference_list:
-    #     if reference['sname'] == source_name:
-    #         return True
     return False
 
 def get_domain_alias(domain):
@@ -786,16 +620,6 @@ def replace_html_chars(to_be_replaced):
                          .replace("”","\"")\
                          .replace("“","\"")
 
-def get_index_of_ref(reference_list, ref_sname):
-    """Given a reference source name, return reference list index if found"""
-
-    index = 0
-    for reference in reference_list:
-        if reference['sname'] == ref_sname:
-            return index
-        index += 1
-    return util_config.NOT_FOUND
-
 def get_navigator_layers(name, attack_id, obj_type, version, techniques_used):
     """Given a list of techniques used, return the navigator json objects
        for enterprise and mobile"""
@@ -808,7 +632,6 @@ def get_navigator_layers(name, attack_id, obj_type, version, techniques_used):
     if (version): # add version number if it exists
         enterprise_layer_description += f" v{version}"
         mobile_layer_description += f" v{version}"
-
 
     # Enterprise navigator layer
     enterprise_layer = {}
