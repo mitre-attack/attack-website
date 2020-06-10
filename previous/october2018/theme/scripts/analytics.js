@@ -1,4 +1,1 @@
-window.dataLayer = window.dataLayer || [];
-function gtag(){dataLayer.push(arguments);}
-gtag('js', new Date());
-gtag('config', 'UA-62667723-1');
+<meta http-equiv="refresh" content="0; url=/versions/v3/theme/scripts/analytics.js"/>
