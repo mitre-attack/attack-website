@@ -32,7 +32,7 @@
 <!--          be omitted                                                -->
 
 # 10 June 2020
-## ATT&CK Website version 1.2.5
+## ATT&CK Website version 1.3
 This update includes a major refactor of the ATT&CK catalog versioning system, previously referred to as "previous versions."
 
 - Versions have been moved from `/previous/monthYear` to `/versions/v#` which should be more predictable and consistent with the way the versions are referred to elsewhere. Redirects have been created so that users who bookmarked the old URLs will get sent to the new ones. See issue [#174](https://github.com/mitre-attack/attack-website/issues/174).
