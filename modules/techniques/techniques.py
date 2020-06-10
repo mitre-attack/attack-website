@@ -311,8 +311,7 @@ def generate_data_for_md(technique_dict, technique, tactic_list, is_sub_techniqu
         
         else:
             if technique_dict['deprecated']:
-                technique_dict['descr'] = util.buildhelpers.replace_html_chars(markdown.markdown(technique['description'].split("\n")[0]))
-                technique_dict['descr'] = util.buildhelpers.filter_urls(technique_dict['descr'])
+                technique_dict['descr'] = util.buildhelpers.filter_urls(technique['description'])
 
         return technique_dict
 
