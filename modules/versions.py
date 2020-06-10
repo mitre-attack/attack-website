@@ -78,7 +78,7 @@ def deploy():
     
     # write robots.txt to disallow crawlers
     with open(os.path.join(config.web_directory, "robots.txt"), "w", encoding='utf8') as robots:
-        robots.write(f"User-agent: *\nDisallow: /{config.subdirectory}/previous/\nDisallow:/{config.subdirectory}/{prev_versions_path}/")
+        robots.write(f"User-agent: *\nDisallow: {config.subdirectory}/previous/\nDisallow: {config.subdirectory}/{prev_versions_path}/")
 
 def deploy_current_version():
     """build a permalink of the current version"""

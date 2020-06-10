@@ -31,6 +31,7 @@
 <!--          addition of notable features. When PATCH is 0 it can      -->
 <!--          be omitted                                                -->
 
+# 10 June 2020
 ## ATT&CK Website version 1.2.5
 This update includes a major refactor of the ATT&CK catalog versioning system, previously referred to as "previous versions."
 
