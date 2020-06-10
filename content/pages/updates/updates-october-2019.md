@@ -6,6 +6,10 @@ Template: resources/update-post
 url: /resources/updates/updates-october-2019
 save_as: resources/updates/updates-october-2019/index.html
 
+| Version | Start Date | End Date | Data |
+|:--------|:-----------|:---------|:-----|
+| [ATT&CK v6](/versions/v6) | October 24, 2019 | This is the current version of ATT&CK | [v6.3 on MITRE/CTI](https://github.com/mitre/cti/releases/tag/ATT%26CK-v6.3) |
+
 The October 2019 ATT&CK release updates techniques, Groups, and Software for both Enterprise and Mobile. The biggest change is the addition of cloud-focused techniques.
 
 #### ATT&CK for Cloud

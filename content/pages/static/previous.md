@@ -1,4 +1,4 @@
 Title: Previous Redirect
 Template: general/redirect-index
-RedirectLink: /resources/previous-versions/
+RedirectLink: /resources/versions/
 save_as: previous/index.html

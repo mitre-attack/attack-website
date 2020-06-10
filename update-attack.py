@@ -139,9 +139,9 @@ def update(args):
     if args.subdirectory:
         config.set_subdirectory(args.subdirectory)
 
-    # Deploy previous version
+    # Deploy versions
     if args.build:
-        if 'prev_versions' in args.build:
+        if 'versions' in args.build:
     	    generate.previous_versions_gen()
 
     # Pelican update
@@ -150,10 +150,6 @@ def update(args):
         # Remove unwanted files created by pelican
         generate.remove_unwanted_output()
 
-    # Replace output directory links with subdirectory
-    if args.subdirectory:
-        generate.subdirectory_gen()
-
     # Generate search index
     # note: this should come basically last in the build process
     # because it parses the content of the output directory to build the index
@@ -161,6 +157,15 @@ def update(args):
         if 'search' in args.build:
     	    generate.generate_search_index()
     
+    # Preserve current version
+    if args.build:
+        if 'versions' in args.build:
+            generate.deploy_current_version()
+
+    # Replace output directory links with subdirectory
+    if args.subdirectory:
+        generate.subdirectory_gen()
+
     if args.build:
         build_end = time.time()
         build_time = build_end - update_start
