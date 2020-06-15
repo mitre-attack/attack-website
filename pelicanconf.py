@@ -6,6 +6,7 @@ import markdown
 import uuid
 import sys
 import re
+import os
 
 # import plugins
 PLUGIN_PATHS = ['plugins']
@@ -142,6 +143,27 @@ def remove_citations(data):
 
     return data
 
+no_stix_link_replacement = True
+def filter_urls(data):
+    """Filters out URLs to return path and not domain"""
+
+    global no_stix_link_replacement
+    if not no_stix_link_replacement:
+        if "https://attack.mitre.org/groups/" in data:
+            data = data.replace(
+                "https://attack.mitre.org/groups/", "/groups/")
+        if "https://attack.mitre.org/software/" in data:
+            data = data.replace(
+                "https://attack.mitre.org/software/", "/software/")
+        if "https://attack.mitre.org/techniques/" in data:
+            data = data.replace(
+                "https://attack.mitre.org/techniques/", "/techniques/")
+        if "https://attack.mitre.org/technique/" in data:
+            data = data.replace(
+                "https://attack.mitre.org/technique/", "/techniques/")
+    return data
+
+open_stix_replacement_file = False
 def stixToHTML(data, citations, firstParagraphOnly):
     """ Clean output of STIX content.
         params:
@@ -150,8 +172,21 @@ def stixToHTML(data, citations, firstParagraphOnly):
             firstParagraphOnly (optional, boolean), if true, only return the first paragraph of the data in question.
     """
 
+    global open_stix_replacement_file
+    global no_stix_link_replacement
+
+    # Open stix replacement settings file only once to get value
+    if not open_stix_replacement_file:
+        stix_replacement_file = os.path.join("data", "stix_replacement.js")
+        with open(stix_replacement_file, "r", encoding='utf8') as js_f:
+            no_stix_link_replacement = json.load(js_f)["no_stix_replacement"]
+            open_stix_replacement_file = True
+
     # Replace data from markdown format
     data = markdown.markdown(data)
+
+    # Replace url links
+    data = filter_urls(data)
 
     # Get first paragraph from data
     if firstParagraphOnly:

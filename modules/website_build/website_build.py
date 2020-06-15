@@ -17,12 +17,22 @@ def generate_website():
     """
 
     generate_javascript_settings()
+    generate_stix_replacement_setting()
     generate_base_html()
     generate_index_page()
     generate_static_pages()
     pelican_content()
     remove_unwanted_output()
     generate_subdirectory()
+
+def generate_stix_replacement_setting():
+    """Creates stix replacement settings file that will be by pelican conf"""
+    
+    stix_replacement_file = os.path.join(site_config.data_directory, "stix_replacement.js")
+    with open(stix_replacement_file, "w", encoding='utf8') as js_f:
+        stix_replacement_settings = {}
+        stix_replacement_settings['no_stix_replacement'] = site_config.args.no_stix_link_replacement
+        js_f.write(json.dumps(stix_replacement_settings))
 
 def generate_javascript_settings():
     """Creates javascript settings file that will be used to other javascript files"""
