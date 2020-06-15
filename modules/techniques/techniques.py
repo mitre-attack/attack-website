@@ -206,7 +206,7 @@ def generate_data_for_md(technique_dict, technique, tactic_list, is_sub_techniqu
         # Get technique description with citations
         if technique.get("description") and not technique_dict['deprecated']:
 
-            technique_dict['descr'] = util.buildhelpers.filter_urls(technique['description'])
+            technique_dict['descr'] = technique['description']
         
             # Get mitigation table
             technique_dict['mitigation_table'] = get_mitigations_table_data(technique, reference_list)
@@ -289,7 +289,7 @@ def generate_data_for_md(technique_dict, technique, tactic_list, is_sub_techniqu
 
             # Get detection data
             if technique.get('x_mitre_detection'):
-                technique_dict['detection'] = util.buildhelpers.filter_urls(technique['x_mitre_detection'])
+                technique_dict['detection'] = technique['x_mitre_detection']
 
             # Get if technique is detectable by common defenses
             if technique.get('x_mitre_detectable_by_common_defenses'):
@@ -311,7 +311,7 @@ def generate_data_for_md(technique_dict, technique, tactic_list, is_sub_techniqu
         
         else:
             if technique_dict['deprecated']:
-                technique_dict['descr'] = util.buildhelpers.filter_urls(technique['description'])
+                technique_dict['descr'] = technique['description']
 
         return technique_dict
 
@@ -371,7 +371,7 @@ def get_mitigations_table_data(technique, reference_list):
                     if mitigation['relationship'].get('description'):
                         # Get filtered description
                         reference_list = util.buildhelpers.update_reference_list(reference_list, mitigation['relationship'])
-                        row['descr'] = util.buildhelpers.filter_urls(mitigation['relationship']['description'])
+                        row['descr'] = mitigation['relationship']['description']
              
                     mitigation_data.append(row)
     
@@ -417,7 +417,7 @@ def get_examples_table_data(technique, reference_list):
                     if example['relationship'].get('description'):
                         # Get filtered description
                         reference_list = util.buildhelpers.update_reference_list(reference_list, example['relationship'])
-                        row['descr'] = util.buildhelpers.filter_urls(example['relationship']['description'])
+                        row['descr'] = example['relationship']['description']
 
                     example_data.append(row)
         

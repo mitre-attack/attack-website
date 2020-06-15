@@ -70,25 +70,6 @@ def get_attack_id(object):
 
     return None
 
-def filter_urls(descr):
-    """Filters out URLs to return path and not domain"""
-
-    if not site_config.args.no_stix_link_replacement:
-        if "https://attack.mitre.org/groups/" in descr:
-            descr = descr.replace(
-                "https://attack.mitre.org/groups/", "/groups/")
-        if "https://attack.mitre.org/software/" in descr:
-            descr = descr.replace(
-                "https://attack.mitre.org/software/", "/software/")
-        if "https://attack.mitre.org/techniques/" in descr:
-            descr = descr.replace(
-                "https://attack.mitre.org/techniques/", "/techniques/")
-        if "https://attack.mitre.org/technique/" in descr:
-            descr = descr.replace(
-                "https://attack.mitre.org/technique/", "/techniques/")
-
-    return descr
-
 def update_reference_list(reference_list, obj):
     """Given a reference list and an object, update the reference list
        with the external references found in the object
@@ -140,7 +121,7 @@ def get_alias_data(alias_list, ext_refs):
             if ext.get("description"):
                 row = {}
                 row['name'] = alias
-                row['descr'] = filter_urls(ext['description'])
+                row['descr'] = ext['description']
                 alias_data.append(row)
         
     return alias_data
@@ -177,7 +158,7 @@ def get_technique_table_data(tactic, techniques_list):
             row = {}
             row['tid'] = attack_id
 
-            row['descr'] = filter_urls(tech['description'])
+            row['descr'] = tech['description']
 
             if tactic is None and tech.get('x_mitre_deprecated'):
                 row['deprecated'] = True
@@ -195,7 +176,7 @@ def get_technique_table_data(tactic, techniques_list):
                     if not "." in sub_attack_id:
                         raise Exception(f"{attack_id} subtechnique's attackID '{sub_attack_id}' is malformed")
                     sub_data['id'] = sub_attack_id.split(".")[1]
-                    sub_data['descr'] = filter_urls(subtechnique['object']['description'])
+                    sub_data['descr'] = subtechnique['object']['description']
                     row['subtechniques'].append(sub_data)
 
             technique_table.append(row)
@@ -545,7 +526,7 @@ def technique_used_helper(technique_list, technique, reference_list):
             # Check if it has external references
             if technique['relationship'].get('description'):
                 # Get filtered description
-                technique_list[attack_id]['descr'] = filter_urls(technique['relationship']['description'])
+                technique_list[attack_id]['descr'] = technique['relationship']['description']
                 reference_list = update_reference_list(reference_list, technique['relationship'])
     
     return technique_list
@@ -571,7 +552,7 @@ def get_technique_data_helper(attack_id, technique, reference_list):
     # Check if it has external references
     if technique['relationship'].get('description'):
         # Get filtered description
-        technique_data['descr'] = filter_urls(technique['relationship']['description'])
+        technique_data['descr'] = technique['relationship']['description']
         reference_list = update_reference_list(reference_list, technique['relationship'])
     
     technique_data['subtechniques'] = []

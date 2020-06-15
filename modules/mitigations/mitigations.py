@@ -113,7 +113,7 @@ def generate_mitigation_md(mitigation, domain, side_menu_data, side_menu_mobile_
 
         if mitigation.get('description'):
             data['descr'] = mitigation['description']
-            data['descr'] = util.buildhelpers.filter_urls(data['descr'])
+            data['descr'] = data['descr']
 
         if mitigation.get('x_mitre_deprecated'):
             data['deprecated'] = True
@@ -148,7 +148,7 @@ def get_mitigation_table_data(mitigation_list):
 
             row['name'] = mitigation['name']
 
-            row['descr'] = util.buildhelpers.filter_urls(mitigation['description'])
+            row['descr'] = mitigation['description']
 
             if mitigation.get('x_mitre_deprecated'):
                 row['deprecated'] = True

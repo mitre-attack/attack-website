@@ -107,7 +107,7 @@ def generate_group_md(group, side_menu_data, side_menu_mobile_view_data):
         reference_list = util.buildhelpers.update_reference_list(reference_list, group)
 
         if group.get("description"):
-            data['descr'] = util.buildhelpers.filter_urls(group['description'])
+            data['descr'] = group['description']
         
         if group.get('x_mitre_deprecated'):
             data['deprecated'] = True
@@ -177,7 +177,7 @@ def get_groups_table_data(group_list):
                 row['name'] = group['name']
 
             if group.get("description"):
-                row['descr'] = util.buildhelpers.filter_urls(group["description"])
+                row['descr'] = group["description"]
 
                 if group.get('x_mitre_deprecated'):
                     row['deprecated'] = True
@@ -256,7 +256,7 @@ def get_software_table_data(group, reference_list):
                                 reference = True
 
                             # Get filtered description
-                            software_list[software_id]['descr'] = util.buildhelpers.filter_urls(software['relationship']['description'])
+                            software_list[software_id]['descr'] = software['relationship']['description']
                             # Update reference list
                             reference_list = util.buildhelpers.update_reference_list(reference_list, software['relationship'])
 

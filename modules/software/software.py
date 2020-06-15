@@ -113,7 +113,7 @@ def generate_software_md(software,side_menu_data,side_menu_mobile_view_data):
                          
         # Get description
         if software.get("description"):
-            data['descr'] = util.buildhelpers.filter_urls(software['description'])
+            data['descr'] = software['description']
 
             if 'x_mitre_deprecated' in software:
                 data['deprecated'] = True
@@ -189,7 +189,7 @@ def get_software_table_data(software_list):
             row['name'] = software["name"]
 
             if software.get("description"):
-                row['descr'] = util.buildhelpers.filter_urls(software["description"])
+                row['descr'] = software["description"]
                 if software.get('x_mitre_deprecated'):
                     row['deprecated'] = True
             
@@ -229,7 +229,7 @@ def get_groups_using_software(software, reference_list):
 
                 if group['relationship'].get('description'):
                     # Get filtered description
-                    row['descr'] = util.buildhelpers.filter_urls(group['relationship']['description'])
+                    row['descr'] = group['relationship']['description']
                     reference_list = util.buildhelpers.update_reference_list(reference_list, group['relationship'])
     
                 groups.append(row)
