@@ -52,6 +52,7 @@
 - Fixed outdated ATT&CK Navigator link on the contact page. See issue [#143](https://github.com/mitre-attack/attack-website/issues/143).
 - Updated incorrect technique count on March 2020 update. See issue [#141](https://github.com/mitre-attack/attack-website/issues/141).
 - Fixed number of tactics displayed on tactics overview pages. See issue [#183](https://github.com/mitre-attack/attack-website/issues/183).
+- Fixed objects without descriptions not showing up on techniques used tables. See issue [#186](https://github.com/mitre-attack/attack-website/issues/186).
 
 ## ATT&CK Website version 2.0
 ### New Features
