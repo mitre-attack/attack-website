@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 import json
 import uuid
 import sys
+import os
 
 # import plugins
 PLUGIN_PATHS = ['plugins']
@@ -51,8 +52,26 @@ def flatten_tree(root):
         ret = ret + flatten_tree(child)
     return ret
 
+current_version_permalink = None
+def permalink(link):
+    """convert from a link to a permalink of that link, e.g /x/y => /versions/v6/x/y
+       uses data/versions.json's current object to determine what the current version is for the permalink
+    """
+
+    global current_version_permalink
+    # load the current version permalink
+    if not current_version_permalink:
+        with open(os.path.join("data", "versions.json"), "r") as f:
+            current_version_permalink = "/versions/" + json.load(f)["current"]["name"].split(".")[0]
+    # remove index.html from the end
+    link = link.split("index.html")[0] if link.endswith("index.html") else link
+    # strip index.html from path
+    return current_version_permalink + "/" + link
+
+
 JINJA_FILTERS = {
     'from_json':json.loads,
     'flatten_tree': flatten_tree,
-    'clean_path': clean_path
+    'clean_path': clean_path,
+    'permalink': permalink
 }

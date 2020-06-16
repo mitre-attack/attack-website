@@ -46,10 +46,10 @@ def clean_website_build():
     attackcon_path = os.path.join(config.resources_markdown_path, "attackcon.md")
     if os.path.isfile(attackcon_path):
         os.remove(attackcon_path)
-    # Remove previous markdown file
-    previous_path = os.path.join(config.resources_markdown_path, "previous.md")
-    if os.path.isfile(previous_path):
-        os.remove(previous_path)
+    # Remove versions markdown file
+    versions_path = os.path.join(config.resources_markdown_path, "versions.md")
+    if os.path.isfile(versions_path):
+        os.remove(versions_path)
     # remove FAQ markdown file
     faq_path = os.path.join(config.resources_markdown_path, "faq.md")
     if os.path.isfile(faq_path):

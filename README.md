@@ -48,11 +48,6 @@ _See [CONTRIBUTING.md](/CONTRIBUTING.md) for more information on making contribu
 
 The ATT&CK site uses a combination of Python, Pelican and Jinja to convert the STIX content into a set of static HTML files. When `update-attack.py` is run, it generates a set of markdown files in `content` containing the parsed STIX content. Pelican then reads these markdown files and uses them to with the Jinja templates in `attack-theme/templates` to build the site HTML in the output directory. 
 
-### ATT&CK Archives
-
-The previous-versions feature, built to `/resources/previous-versions/` and `/previous/`, is used to display older versions of the ATT&CK site. This feature is reliant on the [attack-archives](https://github.com/mitre-attack/attack-archives/issues) repository, which stores the archived versions and also provides the functionality to preserve the current site
-in the archive. For more information on how the previous-version system works, please see the [attack-archives repository on github](https://github.com/mitre-attack/attack-archives/issues) or the [archives module](/modules/archives.py).
-
 ## Building the site with custom content
 
 The ATT&CK Website is designed support an evolving knowledge base. The content seen on the site is generated from data in STIX2.0 JSON format. The data used on the live site at [attack.mitre.org](https://attack.mitre.org) can be found on our [mitre/cti](https://github.com/mitre/cti) github repo. 
