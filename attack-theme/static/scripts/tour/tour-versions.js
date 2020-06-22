@@ -8,7 +8,7 @@ let tourSteps = [
         orphan: true,
         backdrop: false,
         title: "Versions of ATT&CK",
-        content: "Versions of the ATT&CK website are preserved in this page."
+        content: "Versions of the ATT&CK website are preserved on this page."
     },
     {
         element: "#version-column",
@@ -44,20 +44,6 @@ let tourSteps = [
         }
     }    
 ]
-
-
-// if (isSiteTour) tourSteps.push({
-//     orphan: true,
-//     backdrop: false,
-//     title: "End of tour",
-//     content: "We hope you have enjoyed this tour of the sub-techniques features of the ATT&CK website. If you have any feedback or suggestions, please visit <a href='" + base_url + "contact'>the contact page</a> to get in touch.",
-//     onShow: function() {
-//         lastStepReached = true;
-//     },
-//     onNext: function() {
-//         window.location.href = base_url;
-//     }
-// })
 
 let tour = new Tour({
     steps: tourSteps,
