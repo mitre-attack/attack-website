@@ -31,6 +31,10 @@
 <!--          addition of notable features. When PATCH is 0 it can      -->
 <!--          be omitted                                                -->
 
+## ATT&CK Website version 2.1.1
+### Improvements
+- Improved matrix page header layout with versioning feature. See issue [#190](https://github.com/mitre-attack/attack-website/issues/190).
+
 # Sub-techniques Beta
 ## ATT&CK Website version 2.1
 ### New Features
