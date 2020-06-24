@@ -185,7 +185,7 @@ def archive(version_data, is_current=False):
             # update versioning button to show the permalink site version, aka "back to main site"
             html_str = html_str.replace("version-button live", "version-button permalink")
             # update live version links on the versioning button
-            from_str = f"href=[\"']\/versions\/v\d+([{allowed_in_link}]+[\"']>live version<\/a>)"
+            from_str = f"href=[\"']\/versions\/v\d+([{allowed_in_link}]+[\"']>Live Version<\/a>)"
             to_str = f'href="\g<1>'
             html_str = re.sub(from_str, to_str, html_str)
 

@@ -2,6 +2,7 @@
 {% set parsed = page.data | from_json %}
 {% import 'macros/navigation.html' as navigation %}
 {% import 'macros/matrix.html' as matrix_macros %}
+{% import 'macros/versioning.html' as versioning %}
 
 {% if parsed.domain == "pre" %}
     {% set title = "Matrix - PRE-ATT&CK | MITRE ATT&CK&reg;" -%}
@@ -37,32 +38,51 @@
                 {% endif %}
             </ol>
         </div>
-        <!-- only show navigator link if it's defined in the config -->
-        {% if (parsed.navigator_link_enterprise and parsed.domain == 'enterprise') or (parsed.navigator_link_mobile and parsed.domain == 'mobile') %} 
-            <div class="col">
-                <span class="h3 mt-3 float-right">
-                    <a href="{{ parsed.navigator_link_mobile if parsed.domain == 'mobile' else parsed.navigator_link_enterprise }}" class="btn btn-navy" target="_blank">Launch the ATT&amp;CK<sup>&reg;</sup> Navigator <img src="/theme/images/external-link.svg" width="10"></a>
-                </span>
-            </div>
-        {% endif %}
     </div>
     <div class="tab-pane fade show active" id="v-attckmatrix" role="tabpanel" aria-labelledby="v-attckmatrix-tab">
-        <div class="container-fluid">
+
+        <div class="matrix-container p-3">
             {% set matrix_plural = "Matrices" if (parsed.matrices | length > 1) else "Matrix" %}
+            <div class="row">
+                <div class="col-md-9">
+                    <h1>{{parsed.name}} {{matrix_plural}}</h1>             
 
-            <h1>{{parsed.name}} {{matrix_plural}}</h1>             
-
-            <p>
-                {{parsed.descr}}
-                {% if parsed.platforms | length > 1 %}
-                    The {{matrix_plural}} contains information for the following platforms: {% for platform in parsed.platforms %}{%if loop.index != 1 %}, {% endif %}<a href="/matrices/{{platform.path}}">{{platform.name}}</a>{% endfor %}.
-                {% elif parsed.platforms | length == 1 %}
-                        The {{matrix_plural}} contains information for the {{parsed.platforms[0].name}} platform.
-                {% endif %}
-            </p>
-            <div class="pb-3">
-                {{matrix_macros.matrices(parsed.matrices, parsed.has_subtechniques, parsed.tour_technique, False, output_file)}}
+                    <p>
+                        {{parsed.descr}}
+                        {% if parsed.platforms | length > 1 %}
+                            The {{matrix_plural}} contains information for the following platforms: {% for platform in parsed.platforms %}{%if loop.index != 1 %}, {% endif %}<a href="/matrices/{{platform.path}}">{{platform.name}}</a>{% endfor %}.
+                        {% elif parsed.platforms | length == 1 %}
+                                The {{matrix_plural}} contains information for the {{parsed.platforms[0].name}} platform.
+                        {% endif %}
+                    </p>
+                </div>
+                <div class="matrix-border col-md-3">
+                    <div class="col py-2">
+                        <!-- only show navigator link if it's defined in the config -->
+                        {% if (parsed.navigator_link_enterprise and parsed.domain == 'enterprise') or (parsed.navigator_link_mobile and parsed.domain == 'mobile') %} 
+                            <div class="row p-2">
+                                <a href="{{ parsed.navigator_link_mobile if parsed.domain == 'mobile' else parsed.navigator_link_enterprise }}" target="_blank">View on the ATT&amp;CK<sup>&reg;</sup> Navigator <img src="/theme/images/external-site-dark.jpeg" width="10"></a>
+                            </div>
+                        {% endif %}
+                        <div class="row p-2">
+                            {% if parsed.domain == "pre" %}
+                                <a href="/resources/pre-introduction/">About the PRE-ATT&CK domain</a>
+                            {% elif parsed.domain == "enterprise" %}
+                                <a href="/resources/enterprise-introduction/">About the Enterprise domain</a>
+                            {% elif parsed.domain == "mobile" %}
+                                <a href="/resources/mobile-introduction/">About the Mobile domain</a>
+                            {% endif %}
+                        </div>
+                        <div class="row p-2">
+                            {% set permalink_title = "the matrices" if parsed.matrices | length > 1 else "the matrix" %}
+                            {{ versioning.permalink_button(output_file, permalink_title, False)}}
+                        </div>
+                    </div>
+                </div>
             </div>
+        </div>
+        <div class="pb-3">
+            {{matrix_macros.matrices(parsed.matrices, parsed.has_subtechniques, parsed.tour_technique, False)}}
         </div>
     </div>
 {% endblock %}
