@@ -135,6 +135,8 @@ def archive(version_data, is_current=False):
 
     # remove .git
     saferemove(os.path.join(version_path, ".git"), "directory")
+    # remove beta directory
+    saferemove(os.path.join(version_path, "beta"), "directory")
     # remove CNAME
     saferemove(os.path.join(version_path, "CNAME"), "file")
     # remove robots
