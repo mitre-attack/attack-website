@@ -27,7 +27,6 @@ def generate_index():
     if not os.path.isdir(site_config.web_directory):
         os.makedirs(site_config.web_directory)
         
-    print(os.path.join(site_config.web_directory, "index.json"))
     json.dump(index, open(os.path.join(site_config.web_directory, "index.json"), mode="w",  encoding="utf8"), indent=2)
 
     if (site_config.subdirectory):
