@@ -12,8 +12,8 @@ from . import util
 
 # Settings dictionary to build website
 settings_dict = {
-    "content_version": "7.0-beta",
-    "website_version": "2.1",
+    "content_version": "7.0",
+    "website_version": "2.1.1",
     "changelog_location": "/resources/changelog.html",
     "logo_header": "/theme/images/mitre_attack_logo.png",
     "logo_footer": "/theme/images/mitrelogowhiteontrans.gif",
@@ -239,8 +239,8 @@ attack_path = {
 }
 
 # Link to instance of the ATT&CK Navigator; change for to a custom location
-navigator_link_enterprise = "https://mitre-attack.github.io/attack-navigator/beta/enterprise"
-navigator_link_mobile = "https://mitre-attack.github.io/attack-navigator/beta/mobile"
+navigator_link_enterprise = "https://mitre-attack.github.io/attack-navigator/enterprise"
+navigator_link_mobile = "https://mitre-attack.github.io/attack-navigator/mobile"
 
 # Constants used for generated layers
 # ----------------------------------------------------------------------------
