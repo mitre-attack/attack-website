@@ -6,10 +6,6 @@ from modules import site_config
 from . import tests_config
 
 # STATIC PROPERTIES
-# the directory in this repo to save previous versions
-previous_versions_dir = "previous_versions"
-# the route for previous versions to be saved under.
-previous_route = "previous"
 # I'm doing spaces here for readability with symbol characters. 
 # The strings will get stripped of whitespace.
 # These get compiled into a regex string
@@ -110,7 +106,7 @@ def check_if_link_in_use(filepath, link):
        in use links map
     """
 
-    if not "previous" in link:
+    if not "previous" in link and not "versions" in link:
         if not in_use_links.get(link):
             new_file_name = remove_extra_from_path(filepath)
 
@@ -297,7 +293,7 @@ def check_unlinked_pages(filenames):
 
     unlinked_pages = []
     for filename in filenames:
-        if not "previous" in filename:
+        if not "previous" in filename and not "versions" in filename:
 
             # Check if it is deprecated
             if check_if_file_is_deprecated(filename):
@@ -341,7 +337,7 @@ def check_links_on_page(filepath, check_external_links=False):
     with open(filepath, mode="r", encoding='utf8') as html:
         html_str = html.read()
 
-        if not "previous" in filepath:
+        if not "previous" in filepath and not "versions" in filepath:
             # Add redirects to in-use to avoid false positives
             if html_str.startswith("<meta http-equiv=\"refresh\""):
                 corrected_path = remove_extra_from_path(filepath)
@@ -391,7 +387,7 @@ def check_links(external_links = False):
             filenames.append(filepath)
 
             # Do not check previous dir with external links
-            if external_links and not 'previous' in directory:
+            if external_links and not 'previous' in directory and not 'versions' in directory:
                 report = check_links_on_page(filepath, True)
             else:
                 report = check_links_on_page(filepath)

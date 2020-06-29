@@ -55,8 +55,8 @@ def get_menu():
                 "children": []
             },
             {
-                "name": "Previous Versions",
-                "url": "/resources/previous-versions/",
+                "name": "Versions of ATT&CK",
+                "url": "/resources/versions/",
                 "external_link": False,
                 "children": []
             },

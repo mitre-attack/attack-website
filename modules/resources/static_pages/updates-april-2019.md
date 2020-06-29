@@ -6,10 +6,12 @@ Template: resources/update-post
 url: /resources/updates/updates-april-2019
 save_as: resources/updates/updates-april-2019/index.html
 
-*NOTE: To see the content from this release, [click here](/previous/april2019/).*
+| Version | Start Date | End Date | Data |
+|:--------|:-----------|:---------|:-----|
+| [ATT&CK v4](/versions/v4) | April 30, 2019 | July 30, 2019 | [v4.0 on MITRE/CTI](https://github.com/mitre/cti/releases/tag/ATT%26CK-v4.0) |
 
 ### Previous Versions
-Previous versions of the ATT&CK website are now being saved and displayed [here](/resources/previous-versions) to give a historical reference for prior content releases.
+Previous versions of the ATT&CK website are now being saved and displayed [here](/resources/versions) to give a historical reference for prior content releases.
 
 ### Tactics and Techniques
 

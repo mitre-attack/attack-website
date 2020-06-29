@@ -6,7 +6,9 @@ Template: resources/update-post
 url: /resources/updates/updates-july-2019
 save_as: resources/updates/updates-july-2019/index.html
 
-*NOTE: To see the content from this release, [click here](/previous/july2019/).*
+| Version | Start Date | End Date | Data |
+|:--------|:-----------|:---------|:-----|
+| [ATT&CK v5](/versions/v5) | July 31, 2019 | October 23, 2019 |  [v5.2 on MITRE/CTI](https://github.com/mitre/cti/releases/tag/ATT%26CK-v5.2) |
 
 The July 2019 release focuses on changes to how Mitigations in ATT&CK for Enterprise are represented and updates the Groups and Software entries. It does not contain updates to techniques- a larger technique update is planned for later this year. We're happy to check off another box on our [planned changes this year](https://medium.com/mitre-attack/attacking-2019-c05bccefed2d), which was to modify how we represent mitigations in Enterprise so that the information is organized similar to how mitigations are handled in ATT&CK for Mobile.
  

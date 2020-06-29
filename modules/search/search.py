@@ -6,9 +6,12 @@ from modules import site_config
 
 def generate_index():
     index = []
-    for root, __, files in os.walk("output"):
-        # don't walk previous route
-        if root.startswith(os.path.join(site_config.web_directory, "previous")): continue
+    for root, __, files in os.walk(site_config.web_directory):
+        # don't walk previous routes
+        skip = False
+        for versions_dir in ["previous", "versions"]:
+            if root.startswith(os.path.join(site_config.web_directory, versions_dir)): skip = True
+        if skip: continue
         
         for thefile in filter(lambda fname: fname.endswith(".html"), files):
             thepath = os.path.join(root, thefile)
