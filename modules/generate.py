@@ -23,7 +23,7 @@ from modules import tests
 from modules import tour
 from modules import util
 from modules import index
-from modules import archives
+from modules import versions
 
 
 def grab_resources():
@@ -131,9 +131,16 @@ def generate_search_index():
 def previous_versions_gen():
     util.progress_bar("Previous Versions")
     start_time = time.time()
-    archives.deploy()
+    versions.deploy()
     end_time = time.time()
     util.progress_bar("Previous Versions", end_time - start_time)
+
+def deploy_current_version():
+    util.progress_bar("Version permalink")
+    start_time = time.time()
+    versions.deploy_current_version()
+    end_time = time.time()
+    util.progress_bar("Current version permalink", end_time - start_time)
 
 def subdirectory_gen():
     util.progress_bar("Subdirectory")
