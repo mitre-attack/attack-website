@@ -32,6 +32,15 @@
 <!--          be omitted                                                -->
 
 # Sub-techniques Beta
+## ATT&CK Website version 2.1.1
+### Improvements
+- Improved matrix page header layout with versioning feature. See issue [#190](https://github.com/mitre-attack/attack-website/issues/190).
+- Added versioning feature to [tour](https://attack.mitre.org/?tour=true). See issue [#191](https://github.com/mitre-attack/attack-website/issues/191).
+### Fixes
+- Fixed number of tactics displayed on tactics overview pages. See issue [#183](https://github.com/mitre-attack/attack-website/issues/183).
+- Fixed objects without descriptions not showing up on techniques used tables. See issue [#186](https://github.com/mitre-attack/attack-website/issues/186).
+- Fixed a bug where contributor lists were delimited with commas instead of semicolons on group and software pages. See issue [#196](https://github.com/mitre-attack/attack-website/issues/196).
+
 ## ATT&CK Website version 2.1
 ### New Features
 - Added tooltips to all matrices to show tactic IDs, technique IDs, and sub-technique IDs when hovering over tactic names, technique names, and sub-technique names. See issue [#120](https://github.com/mitre-attack/attack-website/issues/120).
@@ -82,8 +91,34 @@
 - Matrix timestamps are now calculated from the modified date on the x-mitre-matrix STIX object. Additionally, said timestamps are now formatted the same as modified dates on other pages of the website. See issue [#27](https://github.com/mitre-attack/attack-website/issues/27).
 - Revisions to the layout of the matrix pages to improve readability when multiple matrices occur within a domain.
 
+
 ## [ATT&CK Content version 7.0-beta](https://github.com/mitre/cti/tree/4d3f22d81af2424f3885b4390793ee8eb256d10d)
 See release notes [here](https://attack.mitre.org/beta/resources/updates/updates-march-2020/index.html).
+# 10 June 2020
+## ATT&CK Website version 1.3
+This update includes a major refactor of the ATT&CK catalog versioning system, previously referred to as "previous versions."
+
+- Versions have been moved from `/previous/monthYear` to `/versions/v#` which should be more predictable and consistent with the way the versions are referred to elsewhere. Redirects have been created so that users who bookmarked the old URLs will get sent to the new ones. See issue [#174](https://github.com/mitre-attack/attack-website/issues/174).
+- Added a permalink to the current version of the site. See issue [#175](https://github.com/mitre-attack/attack-website/issues/175).
+    - Current version is preserved alongside other versions in `/versions/`.
+    - Object pages on the live website now have a "version permalink" leading to a frozen version of that page.
+    - Permalink and previous versions now have a "live version" link leading to the most recent version of that page.
+- Revised the version list. Find the new version list on the [Versions of ATT&CK page](https://attack.mitre.org/resources/versions), which replaced the "previous versions" page.
+    - Now formatted as an easy to read table.
+    - Added links to the data on [MITRE/CTI](https://github.com/mitre/cti) for each version.
+    - Revised blurb on how versions work to explain our methodology behind the catalog version numbers and versioning system.
+- Updated past release notes to mention the version number for each release.
+
+# 31 March 2020
+The sub-techniques beta is <a href='https://attack.mitre.org/beta/' target='_blank'>now live</a>! Read the <a target='_blank' href='https://medium.com/mitre-attack/attack-subs-what-you-need-to-know-99bce414ae0b'>release blog post</a> for more details. Check out the [beta changelog](https://attack.mitre.org/beta/resources/changelog.html) for the full list of website changes.
+### Changes
+- Added sub-techniques release announcement banner.
+- Added sub-techniques release docs
+
+# 17 June 2020
+## ATT&CK Website version 1.3.1
+### Fixes
+- Fixed navigator links on groups and software pages that were repeating the domain on the URI. See issues [#169](https://github.com/mitre-attack/attack-website/issues/169) and [#192](https://github.com/mitre-attack/attack-website/issues/192).
 
 # 9 March 2020
 ## [ATT&CK Content version 6.3](https://github.com/mitre/cti/releases/tag/ATT%26CK-v6.3)

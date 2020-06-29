@@ -1,0 +1,86 @@
+{% extends "general/base.html" %} 
+{% set active_page = "resources" -%}
+{% set title = "Versions of ATT&CK | MITRE ATT&CK&reg;" -%} 
+{% set parsed = page.data | from_json %}
+
+{% block content %}
+{{ super () }}
+<div class="container">
+    <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">Home</a></li>
+            <li class="breadcrumb-item"><a href="/resources">Resources</a></li>
+            <li class="breadcrumb-item">Versions of ATT&CK</li>
+    </ol>
+</div>
+<div class="container pb-3 uniform-block">
+    <div class="getting-started">
+        <div class="clearfix pb-3">
+            <div class="clearfix">
+                <h2 id="versions-nav">Versions of ATT&CK</h2>
+                <p>
+                    The overall ATT&CK catalog is versioned using a <code>major.minor</code> version schema. 
+                    The bi-annual content releases listed on <a href="/resources/updates/">the updates pages</a> increment the major version number. 
+                    The minor version number increments for our other small releases, which include typo and data corrections but not typically new content.
+                </p>
+                <p>
+                    Below are a list of versions of the ATT&CK website preserved for posterity, including a permalink to the current version of the site:
+                </p>
+                <table class="table table-bordered table-alternate version-table">
+                    <thead>
+                        <tr>
+                            <th id="version-column">Version</th>
+                            <th>Start Date</th>
+                            <th>End Date</th>
+                            <th id="data-column">Data</th>
+                            <th id="release-notes-column">Release Notes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- current version comes first -->
+                        <tr>
+                            <td><a href="/versions/{{parsed.current.url}}">ATT&CK {{parsed.current.url}}</a> (current version)</td>
+                            <td>{{parsed.current.date_start}}</td>
+                            <td>n/a</td>
+                            <td><a href="{{parsed.current.cti_url}}" target="_blank">{{parsed.current.name}} on MITRE/CTI</a></td>
+                            <td><a href="/resources/updates/{{parsed.current.changelog}}">Updates &mdash; {{parsed.current.changelog_label}}</a></td>
+                        </tr>
+                        <!-- versions preserved on the site -->
+                        {% for version in parsed.previous %}
+                        <tr>
+                            <td><a href="/versions/{{version.url}}">ATT&CK {{version.url}}</a></td>
+                            <td>{{version.date_start}}</td>
+                            <td>{{version.date_end}}</td>
+                            <td><a href="{{version.cti_url}}" target="_blank">{{version.name}} on MITRE/CTI</a></td>
+                            <td><a href="/resources/updates/{{version.changelog}}">Updates &mdash; {{ version.changelog_label }}</a></td>
+                        </tr>
+                        {% endfor %}
+                        <!-- older mediawiki versions -->
+                        <tr>
+                            <td colspan=5 class="table-break-row">
+                                Versions from before the migration from MediaWiki are not preserved on this site:
+                            </td>
+                        </tr>
+                        {% for version in parsed.older %}
+                        <tr>
+                            <td>ATT&CK {{version.url}}</td>
+                            <td>{{version.date_start}}</td>
+                            <td>{{version.date_end}}</td>
+                            <td><a href="{{version.cti_url}}" target="_blank">{{version.name}} on MITRE/CTI</a></td>
+                            <td><a href="/resources/updates/{{version.changelog}}">Updates &mdash; {{ version.changelog_label }}</a></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    <!--SCRIPTS-->
+    <script src="/theme/scripts/bootstrap-tourist.js"></script>
+    <script src="/theme/scripts/settings.js"></script>
+    <script src="/theme/scripts/tour/tour-versions.js"></script>
+{% endblock %}      

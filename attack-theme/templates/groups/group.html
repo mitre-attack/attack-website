@@ -7,10 +7,12 @@
    {% set title = parsed.name + ", Group " + parsed.attack_id + " | MITRE ATT&CK&reg;" -%} 
 {% endif %}
 {% set active_page = "groups" -%}
+
 {% import 'macros/navigator.html' as navigator %}
 {% import 'macros/references.html' as references %}
 {% import 'macros/navigation.html' as navigation %}
 {% import 'macros/techniques_used.html' as techniques_used %}
+{% import 'macros/versioning.html' as versioning %}
 
 {% block head %}
     {{ super () }}
@@ -66,7 +68,7 @@
                                     <div class="card-data"><span class="h5 card-title">Associated Groups</span>: {{parsed.aliases_list|join(", ")}}</div>
                                 {% endif %}
                                 {% if parsed.contributors_list %}
-                                    <div class="card-data"><span class="h5 card-title">Contributors</span>: {{parsed.contributors_list|join(", ")}}</div>
+                                    <div class="card-data"><span class="h5 card-title">Contributors</span>: {{parsed.contributors_list|join("; ")}}</div>
                                 {% endif %}
                                 {{parsed.contributors}}
                                 {% if parsed.version %}
@@ -80,6 +82,7 @@
                                 {% endif %}
                             </div>
                         </div>
+                        {{ versioning.permalink_button(output_file, parsed.attack_id)}}
                     </div>
                     </div>
                     {% if parsed.alias_descriptions %}

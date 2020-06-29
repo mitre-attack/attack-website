@@ -34,18 +34,9 @@ if (isSiteTour && tour_steps['relationships']['step3'] != 'undefined') tourSteps
     content: "In cases where a sub-technique exists in the table but not the parent technique, the parent technique row is omitted entirely."
 })
 
-let lastStepReached = false;
-
 if (isSiteTour) tourSteps.push({
-    orphan: true,
-    backdrop: false,
-    title: "End of tour",
-    content: "We hope you have enjoyed this tour of the sub-techniques features of the ATT&CK website. If you have any feedback or suggestions, please visit <a href='" + base_url + "contact'>the contact page</a> to get in touch.",
-    onShow: function() {
-        lastStepReached = true;
-    },
-    onNext: function() {
-        window.location.href = base_url;
+    onShow: function() { //go to the next tour module
+        window.location.href = base_url + "resources/versions/?tour=true"
     }
 })
 
@@ -57,9 +48,6 @@ let tour = new Tour({
     framework: 'bootstrap4',   // set Tourist to use BS4 compatibility
     showProgressBar: !isSiteTour,
     showProgressText: !isSiteTour,
-    onEnd: function() {
-        if (lastStepReached) window.location.href = base_url;
-    }
 })
 
 function start_tour() {
