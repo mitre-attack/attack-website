@@ -10,10 +10,10 @@ template_dir = os.path.join("attack-theme", "templates", "general/")
 
 # Base page data for website header and footer
 base_page_data = {
-    "BANNER_ENABLED": True,
+    "BANNER_ENABLED": False,
     "BANNER_MESSAGE": "<strong><a href='https://collaborate.mitre.org/attackics' target='_blank'>JUST RELEASED: ATT&CK for Industrial Control Systems</a></strong>",
-    "CONTENT_VERSION": "6.3",
-    "WEBSITE_VERSION": "1.2.4",
+    "CONTENT_VERSION": "7.0",
+    "WEBSITE_VERSION": "3.0",
     "CHANGELOG_LOCATION": "/resources/changelog.html",
     "LOGO_HEADER": "/theme/images/mitre_attack_logo.png",
     "LOGO_FOOTER": "/theme/images/mitrelogowhiteontrans.gif",

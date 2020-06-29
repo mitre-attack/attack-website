@@ -45,12 +45,12 @@
 - Fixed subdirectory support for navigator links on groups and software pages. See issue [#170](https://github.com/mitre-attack/attack-website/issues/170).
 - Fixed typo on the Training page. See issue [#180](https://github.com/mitre-attack/attack-website/issues/180).
 
+# Sub-techniques Beta
 ## ATT&CK Website version 2.1.1
 ### Improvements
 - Improved matrix page header layout with versioning feature. See issue [#190](https://github.com/mitre-attack/attack-website/issues/190).
-- Added versioning feature to tour. See issue [#191](https://github.com/mitre-attack/attack-website/issues/191).
+- Added versioning feature to [tour](https://attack.mitre.org/?tour=true). See issue [#191](https://github.com/mitre-attack/attack-website/issues/191).
 
-# Sub-techniques Beta
 ## ATT&CK Website version 2.1
 ### New Features
 - Added tooltips to all matrices to show tactic IDs, technique IDs, and sub-technique IDs when hovering over tactic names, technique names, and sub-technique names. See issue [#120](https://github.com/mitre-attack/attack-website/issues/120).
