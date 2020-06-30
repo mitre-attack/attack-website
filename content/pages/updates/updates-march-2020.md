@@ -6,6 +6,10 @@ Template: resources/update-post
 url: /resources/updates/updates-march-2020
 save_as: resources/updates/updates-march-2020/index.html
 
+| Version | Start Date | End Date | Data |
+|:--------|:-----------|:---------|:-----|
+| [ATT&CK v7-beta](/versions/v7-beta) | March 31, 2020 | July 7, 2020 | [v7.0-beta on MITRE/CTI](https://github.com/mitre/cti/releases/tag/ATT%26CK-v7.0-beta) |
+
 The March 2020 update for ATT&CK contains the beta release of sub-techniques for the Enterprise ATT&CK content. The beta site will be
 separate from the main (and still official) ATT&CK content for a period of approximately 3 months to allow for feedback and for users to
 assess their transition plans to ATT&CK with sub-techniques.

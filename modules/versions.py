@@ -46,9 +46,10 @@ allowed_in_link = "".join(list(map(lambda s: s.strip(), [
     "   /    ",
 ])))
 
-def nameToPath(name):
-    # translate a version name to a path, e.g v6.3 => v6
-    return name.split(".")[0]
+def versionPath(version):
+    # get the path of a given version
+    if "path" in version: return version["path"]
+    else: return version["name"].split(".")[0] # parse path from name if not given explicitly
 
 def deploy():
     """ Deploy previous versions to website directory """
@@ -86,13 +87,13 @@ def deploy_current_version():
     with open("data/versions.json", "r") as f:
         version = json.load(f)["current"]
 
-    os.mkdir(os.path.join(prev_versions_deploy_folder, nameToPath(version["name"])))
+    os.mkdir(os.path.join(prev_versions_deploy_folder, versionPath(version)))
     for item in os.listdir(config.parent_web_directory):
         # skip previous and versions directories when copying
         if item == "previous" or item == "versions": continue
         # copy the current version into a preserved version
         src = os.path.join(config.parent_web_directory, item)
-        dest = os.path.join(prev_versions_deploy_folder, nameToPath(version["name"]), item)
+        dest = os.path.join(prev_versions_deploy_folder, versionPath(version), item)
         # copy depending on file type
         if os.path.isdir(src):
             shutil.copytree(src, dest)
@@ -108,12 +109,12 @@ def deploy_previous_version(version, repo):
     # check out the commit for that version
     repo.git.checkout(version["commit"])
     # copy over files
-    shutil.copytree(os.path.join(config.versions_directory), os.path.join(prev_versions_deploy_folder, nameToPath(version["name"])))
+    shutil.copytree(os.path.join(config.versions_directory), os.path.join(prev_versions_deploy_folder, versionPath(version)))
     # run archival scripts on version
     archive(version)
     # build alias for version
     for alias in version["aliases"]:
-        build_alias(nameToPath(version["name"]), alias)
+        build_alias(versionPath(version), alias)
 
 def archive(version_data, is_current=False):
     """perform archival operations on a version in /prev_versions_path
@@ -121,7 +122,7 @@ def archive(version_data, is_current=False):
     - replace links on all pages
     - add archived version banner to all pages
     """
-    version = nameToPath(version_data["name"])
+    version = versionPath(version_data)
 
     version_path = os.path.join(prev_versions_deploy_folder, version) # root of the filesystem containing the version
     version_url_path = os.path.join(prev_versions_path, version) # root of the URL of the version, for prefixing URLs
@@ -253,12 +254,12 @@ def build_alias(version, alias):
 def build_markdown(versions):
     """build markdown for the versions list page"""
     # build urls
-    versions["current"]["url"] = nameToPath(versions["current"]["name"])
+    versions["current"]["url"] = versionPath(versions["current"])
     versions["current"]["changelog_label"] = " ".join(versions["current"]["changelog"].split("-")[1:]).title()
 
     for versionGroup in ["previous", "older"]: # apply transforms to both previous and older
         for version in versions[versionGroup]:
-            version["url"] = nameToPath(version["name"])
+            version["url"] = versionPath(version)
             version["changelog_label"] = " ".join(version["changelog"].split("-")[1:]).title()
 
     # sort previous versions by date
