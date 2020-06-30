@@ -1,0 +1,2112 @@
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+        <script async src="https://www.googletagmanager.com/gtag/js?id=UA-62667723-1"></script>          
+        <script>        
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'UA-62667723-1'); 
+        </script>
+        <meta name="google-site-verification" content="2oJKLqNN62z6AOCb0A0IXGtbQuj-lev5YPAHFF_cbHQ"/>
+        <meta charset='utf-8'>
+        <meta name='viewport' content='width=device-width, initial-scale=1, shrink-to-fit=no'>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <link rel='shortcut icon' href="/versions/v6/theme/favicon.ico" type='image/x-icon'>
+        <title>Restrict File and Directory Permissions, Mitigation M1022 - Enterprise | MITRE ATT&CK&reg;</title>
+        <!-- Bootstrap CSS -->
+        <link rel='stylesheet' href="/versions/v6/theme/style/bootstrap.min.css" />
+        <link rel='stylesheet' href="/versions/v6/theme/style/bootstrap-glyphicon.min.css" />
+        <link rel="stylesheet" type="text/css" href="/versions/v6/theme/style.min.css?a6820e0c">
+</head>
+
+<body>
+<header>
+    
+        <nav class='navbar navbar-expand-lg navbar-dark fixed-top'>
+            <a class='navbar-brand' href="/versions/v6/"><img src="/versions/v6/theme/images/mitre_attack_logo.png" class="attack-logo"></a>
+            <button class='navbar-toggler' type='button' data-toggle='collapse' data-target='#navbarCollapse'
+                    aria-controls='navbarCollapse' aria-expanded='false' aria-label='Toggle navigation'>
+                <span class='navbar-toggler-icon'></span>
+            </button>
+            <div class='collapse navbar-collapse' id='navbarCollapse'>
+                <ul class='nav nav-tabs ml-auto'>
+                            <li class="nav-item"><a href="/versions/v6/matrices/"  class="nav-link" ><b>Matrices</b></a></li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="/versions/v6/tactics/" id="navbarDropdown" role="button"
+                                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <b>Tactics</b>
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                            <a class="dropdown-item" href="/versions/v6/tactics/pre">PRE-ATT&CK</a>
+                                            <a class="dropdown-item" href="/versions/v6/tactics/enterprise">Enterprise</a>
+                                            <a class="dropdown-item" href="/versions/v6/tactics/mobile">Mobile</a>
+                                </div>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="/versions/v6/techniques/" id="navbarDropdown" role="button"
+                                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <b>Techniques</b>
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                            <a class="dropdown-item" href="/versions/v6/techniques/pre">PRE-ATT&CK</a>
+                                            <a class="dropdown-item" href="/versions/v6/techniques/enterprise">Enterprise</a>
+                                            <a class="dropdown-item" href="/versions/v6/techniques/mobile">Mobile</a>
+                                </div>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="/versions/v6/mitigations/" id="navbarDropdown" role="button"
+                                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <b>Mitigations</b>
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                            <a class="dropdown-item" href="/versions/v6/mitigations/enterprise">Enterprise</a>
+                                            <a class="dropdown-item" href="/versions/v6/mitigations/mobile">Mobile</a>
+                                </div>
+                            </li>
+                            <li class="nav-item"><a href="/versions/v6/groups/"  class="nav-link" ><b>Groups</b></a></li>
+                            <li class="nav-item"><a href="/versions/v6/software/"  class="nav-link" ><b>Software</b></a></li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="/versions/v6/resources/" id="navbarDropdown" role="button"
+                                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <b>Resources</b>
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <a class="dropdown-item" href="/versions/v6/resources/">General Information</a>
+                                    <a class="dropdown-item" href="/versions/v6/resources/getting-started/">Getting Started</a>
+                                    <a class="dropdown-item" href="/versions/v6/resources/training/">Training</a>
+                                    <a class="dropdown-item" href="/versions/v6/resources/attackcon/">ATT&CKcon</a>
+                                    <a class="dropdown-item" href="/versions/v6/resources/working-with-attack/">Working with ATT&CK</a>
+                                    <a class="dropdown-item" href="/versions/v6/resources/faq/">FAQ</a>
+                                    <a class="dropdown-item" href="/resources/updates/">Updates</a>
+                                    <a class="dropdown-item" href="/resources/versions/">Versions of ATT&CK</a>
+                                    <a class="dropdown-item" href="/versions/v6/resources/related-projects/">Related Projects</a>
+                                </div>
+                            </li>
+                            <li class="nav-item"><a href="https://medium.com/mitre-attack/" target="_blank"  class="nav-link" ><b>Blog</b>&nbsp;<img src="/versions/v6/theme/images/external-site.svg"
+                                                                                                               alt="External site" class="external-icon" /></a></li>
+                            <li class="nav-item"><a href="/versions/v6/resources/contribute"  class="nav-link" ><b>Contribute</b></a></li>
+                    <li class="nav-item">
+                        <button id="search-button" class="btn search-button">Search <div class="search-icon"></div></button>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        </header>
+        <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
+        <div class="container-fluid version-banner"><div class="icon-inline baseline mr-1"><img src="/versions/v6/theme/images/icon-warning-24px.svg"></div>Currently viewing <a href="https://github.com/mitre/cti/releases/tag/ATT%26CK-v6.3" target="_blank">ATT&CK v6.3</a> which was live between October 24, 2019 and July 7, 2020. <a href="/resources/versions/">Learn more about the versioning system</a> or <a href="/">see the live site</a>.</div>
+            <div class="container-fluid d-none">
+                <strong>The sub-techniques beta is <a href='https://attack.mitre.org/beta/' target='_blank'>now live</a>! Read the <a target='_blank' href='https://medium.com/mitre-attack/attack-subs-what-you-need-to-know-99bce414ae0b'>release blog post</a> for more info</strong>.
+            </div>
+<div id='content' class="maincontent">
+    <!--start-indexing-for-search-->
+    <div class='container-fluid h-100'>
+        <div class='row h-100'>
+ 
+             
+            <div class="nav flex-column col-xl-2 col-lg-3 col-md-3  sidebar nav pt-5 pb-3 pl-3 border-right" id="v-tab" role="tablist" aria-orientation="vertical">
+<!--stop-indexing-for-search-->
+<div class="group-nav-desktop-view">
+        <span class="heading" id="v-home-tab" aria-selected="false">MITIGATIONS</span>
+
+
+    
+
+<div class="sidenav">
+        <div class="sidenav-head " id="enterprise">
+                <a href="/versions/v6/mitigations/enterprise/">
+                    Enterprise
+                </a>
+            <div class="expand-button collapsed" id="enterprise-header" data-toggle="collapse" data-target="#enterprise-body" aria-expanded="false" aria-controls="#enterprise-body"></div>
+
+        </div>
+        <div class="sidenav-body collapse" id="enterprise-body" aria-labelledby="enterprise-header">
+                    
+
+<div class="sidenav">
+            <div class="sidenav-head" id="enterprise-Account Use Policies">
+                <a href="/versions/v6/mitigations/M1036/">
+                    Account Use Policies
+                </a>
+            </div>
+</div>
+
+                    
+
+<div class="sidenav">
+            <div class="sidenav-head" id="enterprise-Active Directory Configuration">
+                <a href="/versions/v6/mitigations/M1015/">
+                    Active Directory Configuration
+                </a>
+            </div>
+</div>
+
+                    
+
+<div class="sidenav">
+            <div class="sidenav-head" id="enterprise-Antivirus/Antimalware">
+                <a href="/versions/v6/mitigations/M1049/">
+                    Antivirus/Antimalware
+                </a>
+            </div>
+</div>
+
+                    
+
+<div class="sidenav">
+            <div class="sidenav-head" id="enterprise-Application Developer Guidance">
+                <a href="/versions/v6/mitigations/M1013/">
+                    Application Developer Guidance
+                </a>
+            </div>
+</div>
+
+                    
+
+<div class="sidenav">
+            <div class="sidenav-head" id="enterprise-Application Isolation and Sandboxing">
+                <a href="/versions/v6/mitigations/M1048/">
+                    Application Isolation and Sandboxing
+                </a>
+            </div>
+</div>
+
+                    
+
+<div class="sidenav">
+            <div class="sidenav-head" id="enterprise-Audit">
+                <a href="/versions/v6/mitigations/M1047/">
+                    Audit
+                </a>
+            </div>
+</div>
+
+                    
+
+<div class="sidenav">
+            <div class="sidenav-head" id="enterprise-Behavior Prevention on Endpoint">
+                <a href="/versions/v6/mitigations/M1040/">
+                    Behavior Prevention on Endpoint
+                </a>
+            </div>
+</div>
+
+                    
+
+<div class="sidenav">
+            <div class="sidenav-head" id="enterprise-Boot Integrity">
+                <a href="/versions/v6/mitigations/M1046/">
+                    Boot Integrity
+                </a>
+            </div>
+</div>
+
+                    
+
+<div class="sidenav">
+            <div class="sidenav-head" id="enterprise-Code Signing">
+                <a href="/versions/v6/mitigations/M1045/">
+                    Code Signing
+                </a>
+            </div>
+</div>
+
+                    
+
+<div class="sidenav">
+            <div class="sidenav-head" id="enterprise-Credential Access Protection">
+                <a href="/versions/v6/mitigations/M1043/">
+                    Credential Access Protection
+                </a>
+            </div>
+</div>
+
+                    
+
+<div class="sidenav">
+            <div class="sidenav-head" id="enterprise-Data Backup">
+                <a href="/versions/v6/mitigations/M1053/">
+                    Data Backup
+                </a>
+            </div>
+</div>
+
+                    
+
+<div class="sidenav">
+            <div class="sidenav-head" id="enterprise-Disable or Remove Feature or Program">
+                <a href="/versions/v6/mitigations/M1042/">
+                    Disable or Remove Feature or Program
+                </a>
+            </div>
+</div>
+
+                    
+
+<div class="sidenav">
+            <div class="sidenav-head" id="enterprise-Do Not Mitigate">
+                <a href="/versions/v6/mitigations/M1055/">
+                    Do Not Mitigate
+                </a>
+            </div>
+</div>
+
+                    
+
+<div class="sidenav">
+            <div class="sidenav-head" id="enterprise-Encrypt Sensitive Information">
+                <a href="/versions/v6/mitigations/M1041/">
+                    Encrypt Sensitive Information
+                </a>
+            </div>
+</div>
+
+                    
+
+<div class="sidenav">
+            <div class="sidenav-head" id="enterprise-Environment Variable Permissions">
+                <a href="/versions/v6/mitigations/M1039/">
+                    Environment Variable Permissions
+                </a>
+            </div>
+</div>
+
+                    
+
+<div class="sidenav">
+            <div class="sidenav-head" id="enterprise-Execution Prevention">
+                <a href="/versions/v6/mitigations/M1038/">
+                    Execution Prevention
+                </a>
+            </div>
+</div>
+
+                    
+
+<div class="sidenav">
+            <div class="sidenav-head" id="enterprise-Exploit Protection">
+                <a href="/versions/v6/mitigations/M1050/">
+                    Exploit Protection
+                </a>
+            </div>
+</div>
+
+                    
+
+<div class="sidenav">
+            <div class="sidenav-head" id="enterprise-Filter Network Traffic">
+                <a href="/versions/v6/mitigations/M1037/">
+                    Filter Network Traffic
+                </a>
+            </div>
+</div>
+
+                    
+
+<div class="sidenav">
+            <div class="sidenav-head" id="enterprise-Limit Access to Resource Over Network">
+                <a href="/versions/v6/mitigations/M1035/">
+                    Limit Access to Resource Over Network
+                </a>
+            </div>
+</div>
+
+                    
+
+<div class="sidenav">
+            <div class="sidenav-head" id="enterprise-Limit Hardware Installation">
+                <a href="/versions/v6/mitigations/M1034/">
+                    Limit Hardware Installation
+                </a>
+            </div>
+</div>
+
+                    
+
+<div class="sidenav">
+            <div class="sidenav-head" id="enterprise-Limit Software Installation">
+                <a href="/versions/v6/mitigations/M1033/">
+                    Limit Software Installation
+                </a>
+            </div>
+</div>
+
+                    
+
+<div class="sidenav">
+            <div class="sidenav-head" id="enterprise-Multi-factor Authentication">
+                <a href="/versions/v6/mitigations/M1032/">
+                    Multi-factor Authentication
+                </a>
+            </div>
+</div>
+
+                    
+
+<div class="sidenav">
+            <div class="sidenav-head" id="enterprise-Network Intrusion Prevention">
+                <a href="/versions/v6/mitigations/M1031/">
+                    Network Intrusion Prevention
+                </a>
+            </div>
+</div>
+
+                    
+
+<div class="sidenav">
+            <div class="sidenav-head" id="enterprise-Network Segmentation">
+                <a href="/versions/v6/mitigations/M1030/">
+                    Network Segmentation
+                </a>
+            </div>
+</div>
+
+                    
+
+<div class="sidenav">
+            <div class="sidenav-head" id="enterprise-Operating System Configuration">
+                <a href="/versions/v6/mitigations/M1028/">
+                    Operating System Configuration
+                </a>
+            </div>
+</div>
+
+                    
+
+<div class="sidenav">
+            <div class="sidenav-head" id="enterprise-Password Policies">
+                <a href="/versions/v6/mitigations/M1027/">
+                    Password Policies
+                </a>
+            </div>
+</div>
+
+                    
+
+<div class="sidenav">
+            <div class="sidenav-head" id="enterprise-Privileged Account Management">
+                <a href="/versions/v6/mitigations/M1026/">
+                    Privileged Account Management
+                </a>
+            </div>
+</div>
+
+                    
+
+<div class="sidenav">
+            <div class="sidenav-head" id="enterprise-Privileged Process Integrity">
+                <a href="/versions/v6/mitigations/M1025/">
+                    Privileged Process Integrity
+                </a>
+            </div>
+</div>
+
+                    
+
+<div class="sidenav">
+            <div class="sidenav-head" id="enterprise-Remote Data Storage">
+                <a href="/versions/v6/mitigations/M1029/">
+                    Remote Data Storage
+                </a>
+            </div>
+</div>
+
+                    
+
+<div class="sidenav">
+            <div class="sidenav-head active" id="enterprise-Restrict File and Directory Permissions">
+                <a href="/versions/v6/mitigations/M1022/">
+                    Restrict File and Directory Permissions
+                </a>
+            </div>
+</div>
+
+                    
+
+<div class="sidenav">
+            <div class="sidenav-head" id="enterprise-Restrict Library Loading">
+                <a href="/versions/v6/mitigations/M1044/">
+                    Restrict Library Loading
+                </a>
+            </div>
+</div>
+
+                    
+
+<div class="sidenav">
+            <div class="sidenav-head" id="enterprise-Restrict Registry Permissions">
+                <a href="/versions/v6/mitigations/M1024/">
+                    Restrict Registry Permissions
+                </a>
+            </div>
+</div>
+
+                    
+
+<div class="sidenav">
+            <div class="sidenav-head" id="enterprise-Restrict Web-Based Content">
+                <a href="/versions/v6/mitigations/M1021/">
+                    Restrict Web-Based Content
+                </a>
+            </div>
+</div>
+
+                    
+
+<div class="sidenav">
+            <div class="sidenav-head" id="enterprise-Software Configuration">
+                <a href="/versions/v6/mitigations/M1054/">
+                    Software Configuration
+                </a>
+            </div>
+</div>
+
+                    
+
+<div class="sidenav">
+            <div class="sidenav-head" id="enterprise-SSL/TLS Inspection">
+                <a href="/versions/v6/mitigations/M1020/">
+                    SSL/TLS Inspection
+                </a>
+            </div>
+</div>
+
+                    
+
+<div class="sidenav">
+            <div class="sidenav-head" id="enterprise-Threat Intelligence Program">
+                <a href="/versions/v6/mitigations/M1019/">
+                    Threat Intelligence Program
+                </a>
+            </div>
+</div>
+
+                    
+
+<div class="sidenav">
+            <div class="sidenav-head" id="enterprise-Update Software">
+                <a href="/versions/v6/mitigations/M1051/">
+                    Update Software
+                </a>
+            </div>
+</div>
+
+                    
+
+<div class="sidenav">
+            <div class="sidenav-head" id="enterprise-User Account Control">
+                <a href="/versions/v6/mitigations/M1052/">
+                    User Account Control
+                </a>
+            </div>
+</div>
+
+                    
+
+<div class="sidenav">
+            <div class="sidenav-head" id="enterprise-User Account Management">
+                <a href="/versions/v6/mitigations/M1018/">
+                    User Account Management
+                </a>
+            </div>
+</div>
+
+                    
+
+<div class="sidenav">
+            <div class="sidenav-head" id="enterprise-User Training">
+                <a href="/versions/v6/mitigations/M1017/">
+                    User Training
+                </a>
+            </div>
+</div>
+
+                    
+
+<div class="sidenav">
+            <div class="sidenav-head" id="enterprise-Vulnerability Scanning">
+                <a href="/versions/v6/mitigations/M1016/">
+                    Vulnerability Scanning
+                </a>
+            </div>
+</div>
+
+        </div>
+</div>
+
+    
+
+<div class="sidenav">
+        <div class="sidenav-head " id="mobile">
+                <a href="/versions/v6/mitigations/mobile/">
+                    Mobile
+                </a>
+            <div class="expand-button collapsed" id="mobile-header" data-toggle="collapse" data-target="#mobile-body" aria-expanded="false" aria-controls="#mobile-body"></div>
+
+        </div>
+        <div class="sidenav-body collapse" id="mobile-body" aria-labelledby="mobile-header">
+                    
+
+<div class="sidenav">
+            <div class="sidenav-head" id="mobile-Application Developer Guidance">
+                <a href="/versions/v6/mitigations/M1013/">
+                    Application Developer Guidance
+                </a>
+            </div>
+</div>
+
+                    
+
+<div class="sidenav">
+            <div class="sidenav-head" id="mobile-Application Vetting">
+                <a href="/versions/v6/mitigations/M1005/">
+                    Application Vetting
+                </a>
+            </div>
+</div>
+
+                    
+
+<div class="sidenav">
+            <div class="sidenav-head" id="mobile-Attestation">
+                <a href="/versions/v6/mitigations/M1002/">
+                    Attestation
+                </a>
+            </div>
+</div>
+
+                    
+
+<div class="sidenav">
+            <div class="sidenav-head" id="mobile-Caution with Device Administrator Access">
+                <a href="/versions/v6/mitigations/M1007/">
+                    Caution with Device Administrator Access
+                </a>
+            </div>
+</div>
+
+                    
+
+<div class="sidenav">
+            <div class="sidenav-head" id="mobile-Deploy Compromised Device Detection Method">
+                <a href="/versions/v6/mitigations/M1010/">
+                    Deploy Compromised Device Detection Method
+                </a>
+            </div>
+</div>
+
+                    
+
+<div class="sidenav">
+            <div class="sidenav-head" id="mobile-Encrypt Network Traffic">
+                <a href="/versions/v6/mitigations/M1009/">
+                    Encrypt Network Traffic
+                </a>
+            </div>
+</div>
+
+                    
+
+<div class="sidenav">
+            <div class="sidenav-head" id="mobile-Enterprise Policy">
+                <a href="/versions/v6/mitigations/M1012/">
+                    Enterprise Policy
+                </a>
+            </div>
+</div>
+
+                    
+
+<div class="sidenav">
+            <div class="sidenav-head" id="mobile-Interconnection Filtering">
+                <a href="/versions/v6/mitigations/M1014/">
+                    Interconnection Filtering
+                </a>
+            </div>
+</div>
+
+                    
+
+<div class="sidenav">
+            <div class="sidenav-head" id="mobile-Lock Bootloader">
+                <a href="/versions/v6/mitigations/M1003/">
+                    Lock Bootloader
+                </a>
+            </div>
+</div>
+
+                    
+
+<div class="sidenav">
+            <div class="sidenav-head" id="mobile-Security Updates">
+                <a href="/versions/v6/mitigations/M1001/">
+                    Security Updates
+                </a>
+            </div>
+</div>
+
+                    
+
+<div class="sidenav">
+            <div class="sidenav-head" id="mobile-System Partition Integrity">
+                <a href="/versions/v6/mitigations/M1004/">
+                    System Partition Integrity
+                </a>
+            </div>
+</div>
+
+                    
+
+<div class="sidenav">
+            <div class="sidenav-head" id="mobile-Use Recent OS Version">
+                <a href="/versions/v6/mitigations/M1006/">
+                    Use Recent OS Version
+                </a>
+            </div>
+</div>
+
+                    
+
+<div class="sidenav">
+            <div class="sidenav-head" id="mobile-User Guidance">
+                <a href="/versions/v6/mitigations/M1011/">
+                    User Guidance
+                </a>
+            </div>
+</div>
+
+        </div>
+</div>
+
+
+    </div>
+    <div class="group-nav-mobile-view">
+        <span class="heading" id="v-home-tab" aria-selected="false">MITIGATIONS</span>
+
+
+    
+
+<div class="sidenav">
+        <div class="sidenav-head " id="Enterprise">
+                <a href="/versions/v6/mitigations/enterprise/">
+                    Enterprise
+                </a>
+            <div class="expand-button collapsed" id="Enterprise-header" data-toggle="collapse" data-target="#Enterprise-body" aria-expanded="false" aria-controls="#Enterprise-body"></div>
+
+        </div>
+        <div class="sidenav-body collapse" id="Enterprise-body" aria-labelledby="Enterprise-header">
+                    
+
+<div class="sidenav">
+        <div class="sidenav-head " id="Enterprise-5c639f4c2932455384a65c01ddbe2c5a">
+                <span>A-C</span>
+            <div class="expand-button collapsed" id="Enterprise-5c639f4c2932455384a65c01ddbe2c5a-header" data-toggle="collapse" data-target="#Enterprise-5c639f4c2932455384a65c01ddbe2c5a-body" aria-expanded="false" aria-controls="#Enterprise-5c639f4c2932455384a65c01ddbe2c5a-body"></div>
+
+        </div>
+        <div class="sidenav-body collapse" id="Enterprise-5c639f4c2932455384a65c01ddbe2c5a-body" aria-labelledby="Enterprise-5c639f4c2932455384a65c01ddbe2c5a-header">
+                    
+
+<div class="sidenav">
+            <div class="sidenav-head" id="Enterprise-5c639f4c2932455384a65c01ddbe2c5a-9dff24de79e14300b8e2c00b2e616cbb">
+                <a href="/versions/v6/mitigations/M1036/">
+                    Account Use Policies
+                </a>
+            </div>
+</div>
+
+                    
+
+<div class="sidenav">
+            <div class="sidenav-head" id="Enterprise-5c639f4c2932455384a65c01ddbe2c5a-9a10b6d678204fdca12ea20247e7729d">
+                <a href="/versions/v6/mitigations/M1015/">
+                    Active Directory Configuration
+                </a>
+            </div>
+</div>
+
+                    
+
+<div class="sidenav">
+            <div class="sidenav-head" id="Enterprise-5c639f4c2932455384a65c01ddbe2c5a-7ab297184bca435f8c5674e2b7b64b50">
+                <a href="/versions/v6/mitigations/M1049/">
+                    Antivirus/Antimalware
+                </a>
+            </div>
+</div>
+
+                    
+
+<div class="sidenav">
+            <div class="sidenav-head" id="Enterprise-5c639f4c2932455384a65c01ddbe2c5a-947c2a3a998f47cd833b6d68a83bc475">
+                <a href="/versions/v6/mitigations/M1013/">
+                    Application Developer Guidance
+                </a>
+            </div>
+</div>
+
+                    
+
+<div class="sidenav">
+            <div class="sidenav-head" id="Enterprise-5c639f4c2932455384a65c01ddbe2c5a-4fe3823d8d824c598ab6a34d33820704">
+                <a href="/versions/v6/mitigations/M1048/">
+                    Application Isolation and Sandboxing
+                </a>
+            </div>
+</div>
+
+                    
+
+<div class="sidenav">
+            <div class="sidenav-head" id="Enterprise-5c639f4c2932455384a65c01ddbe2c5a-2d62427ccdfd48ffb47a93548b2f0378">
+                <a href="/versions/v6/mitigations/M1047/">
+                    Audit
+                </a>
+            </div>
+</div>
+
+                    
+
+<div class="sidenav">
+            <div class="sidenav-head" id="Enterprise-5c639f4c2932455384a65c01ddbe2c5a-cd9cc176a5fd4230a2d700cf255fc5f3">
+                <a href="/versions/v6/mitigations/M1040/">
+                    Behavior Prevention on Endpoint
+                </a>
+            </div>
+</div>
+
+                    
+
+<div class="sidenav">
+            <div class="sidenav-head" id="Enterprise-5c639f4c2932455384a65c01ddbe2c5a-06dab458e785487f91029a5bea25e991">
+                <a href="/versions/v6/mitigations/M1046/">
+                    Boot Integrity
+                </a>
+            </div>
+</div>
+
+                    
+
+<div class="sidenav">
+            <div class="sidenav-head" id="Enterprise-5c639f4c2932455384a65c01ddbe2c5a-0c66d947ddd849d3a889d5655c988744">
+                <a href="/versions/v6/mitigations/M1045/">
+                    Code Signing
+                </a>
+            </div>
+</div>
+
+                    
+
+<div class="sidenav">
+            <div class="sidenav-head" id="Enterprise-5c639f4c2932455384a65c01ddbe2c5a-a1276145ccb8424c807bc476fb03dd53">
+                <a href="/versions/v6/mitigations/M1043/">
+                    Credential Access Protection
+                </a>
+            </div>
+</div>
+
+        </div>
+</div>
+
+                    
+
+<div class="sidenav">
+        <div class="sidenav-head " id="Enterprise-e688a9aa87c64aa0b65327a07f3821a2">
+                <span>D-F</span>
+            <div class="expand-button collapsed" id="Enterprise-e688a9aa87c64aa0b65327a07f3821a2-header" data-toggle="collapse" data-target="#Enterprise-e688a9aa87c64aa0b65327a07f3821a2-body" aria-expanded="false" aria-controls="#Enterprise-e688a9aa87c64aa0b65327a07f3821a2-body"></div>
+
+        </div>
+        <div class="sidenav-body collapse" id="Enterprise-e688a9aa87c64aa0b65327a07f3821a2-body" aria-labelledby="Enterprise-e688a9aa87c64aa0b65327a07f3821a2-header">
+                    
+
+<div class="sidenav">
+            <div class="sidenav-head" id="Enterprise-e688a9aa87c64aa0b65327a07f3821a2-8c381c8da1f74ab1b96a63c9e01c6e85">
+                <a href="/versions/v6/mitigations/M1053/">
+                    Data Backup
+                </a>
+            </div>
+</div>
+
+                    
+
+<div class="sidenav">
+            <div class="sidenav-head" id="Enterprise-e688a9aa87c64aa0b65327a07f3821a2-31e8ed471d764bf7bcbba11e90ad4b96">
+                <a href="/versions/v6/mitigations/M1042/">
+                    Disable or Remove Feature or Program
+                </a>
+            </div>
+</div>
+
+                    
+
+<div class="sidenav">
+            <div class="sidenav-head" id="Enterprise-e688a9aa87c64aa0b65327a07f3821a2-b08d0ebd98e54ee48656d0a82276b357">
+                <a href="/versions/v6/mitigations/M1055/">
+                    Do Not Mitigate
+                </a>
+            </div>
+</div>
+
+                    
+
+<div class="sidenav">
+            <div class="sidenav-head" id="Enterprise-e688a9aa87c64aa0b65327a07f3821a2-f71bdcab1018445cac12f616b1f7f46e">
+                <a href="/versions/v6/mitigations/M1041/">
+                    Encrypt Sensitive Information
+                </a>
+            </div>
+</div>
+
+                    
+
+<div class="sidenav">
+            <div class="sidenav-head" id="Enterprise-e688a9aa87c64aa0b65327a07f3821a2-89f63df86bb645479e8041465122ff0d">
+                <a href="/versions/v6/mitigations/M1039/">
+                    Environment Variable Permissions
+                </a>
+            </div>
+</div>
+
+                    
+
+<div class="sidenav">
+            <div class="sidenav-head" id="Enterprise-e688a9aa87c64aa0b65327a07f3821a2-fa07902c2c45488d81a4e6c756a7a72b">
+                <a href="/versions/v6/mitigations/M1038/">
+                    Execution Prevention
+                </a>
+            </div>
+</div>
+
+                    
+
+<div class="sidenav">
+            <div class="sidenav-head" id="Enterprise-e688a9aa87c64aa0b65327a07f3821a2-c8184385eaba4971b3e0e3e2bb4c232d">
+                <a href="/versions/v6/mitigations/M1050/">
+                    Exploit Protection
+                </a>
+            </div>
+</div>
+
+                    
+
+<div class="sidenav">
+            <div class="sidenav-head" id="Enterprise-e688a9aa87c64aa0b65327a07f3821a2-ab62ee04a90b4dbdafda2ede448554c5">
+                <a href="/versions/v6/mitigations/M1037/">
+                    Filter Network Traffic
+                </a>
+            </div>
+</div>
+
+        </div>
+</div>
+
+                    
+
+<div class="sidenav">
+        <div class="sidenav-head " id="Enterprise-a573fe722492498fa223b9aae2fe49f2">
+                <span>G-I</span>
+            <div class="expand-button collapsed" id="Enterprise-a573fe722492498fa223b9aae2fe49f2-header" data-toggle="collapse" data-target="#Enterprise-a573fe722492498fa223b9aae2fe49f2-body" aria-expanded="false" aria-controls="#Enterprise-a573fe722492498fa223b9aae2fe49f2-body"></div>
+
+        </div>
+        <div class="sidenav-body collapse" id="Enterprise-a573fe722492498fa223b9aae2fe49f2-body" aria-labelledby="Enterprise-a573fe722492498fa223b9aae2fe49f2-header">
+                    
+
+<div class="sidenav">
+            <span>No mitigations</span>
+</div>
+
+        </div>
+</div>
+
+                    
+
+<div class="sidenav">
+        <div class="sidenav-head " id="Enterprise-d35672c3445f404c9366bad8ead07e8b">
+                <span>J-L</span>
+            <div class="expand-button collapsed" id="Enterprise-d35672c3445f404c9366bad8ead07e8b-header" data-toggle="collapse" data-target="#Enterprise-d35672c3445f404c9366bad8ead07e8b-body" aria-expanded="false" aria-controls="#Enterprise-d35672c3445f404c9366bad8ead07e8b-body"></div>
+
+        </div>
+        <div class="sidenav-body collapse" id="Enterprise-d35672c3445f404c9366bad8ead07e8b-body" aria-labelledby="Enterprise-d35672c3445f404c9366bad8ead07e8b-header">
+                    
+
+<div class="sidenav">
+            <div class="sidenav-head" id="Enterprise-d35672c3445f404c9366bad8ead07e8b-701162481e9840ddbc9bba2550658be4">
+                <a href="/versions/v6/mitigations/M1035/">
+                    Limit Access to Resource Over Network
+                </a>
+            </div>
+</div>
+
+                    
+
+<div class="sidenav">
+            <div class="sidenav-head" id="Enterprise-d35672c3445f404c9366bad8ead07e8b-4c0d255c0e1b491fb626bb3733418397">
+                <a href="/versions/v6/mitigations/M1034/">
+                    Limit Hardware Installation
+                </a>
+            </div>
+</div>
+
+                    
+
+<div class="sidenav">
+            <div class="sidenav-head" id="Enterprise-d35672c3445f404c9366bad8ead07e8b-fa4d0fd4e8b74003ae5e003f361978e1">
+                <a href="/versions/v6/mitigations/M1033/">
+                    Limit Software Installation
+                </a>
+            </div>
+</div>
+
+        </div>
+</div>
+
+                    
+
+<div class="sidenav">
+        <div class="sidenav-head " id="Enterprise-4d3e08602ce84a96bc88c6da5a76988c">
+                <span>M-O</span>
+            <div class="expand-button collapsed" id="Enterprise-4d3e08602ce84a96bc88c6da5a76988c-header" data-toggle="collapse" data-target="#Enterprise-4d3e08602ce84a96bc88c6da5a76988c-body" aria-expanded="false" aria-controls="#Enterprise-4d3e08602ce84a96bc88c6da5a76988c-body"></div>
+
+        </div>
+        <div class="sidenav-body collapse" id="Enterprise-4d3e08602ce84a96bc88c6da5a76988c-body" aria-labelledby="Enterprise-4d3e08602ce84a96bc88c6da5a76988c-header">
+                    
+
+<div class="sidenav">
+            <div class="sidenav-head" id="Enterprise-4d3e08602ce84a96bc88c6da5a76988c-b60cec83387545789964072e9dd46486">
+                <a href="/versions/v6/mitigations/M1032/">
+                    Multi-factor Authentication
+                </a>
+            </div>
+</div>
+
+                    
+
+<div class="sidenav">
+            <div class="sidenav-head" id="Enterprise-4d3e08602ce84a96bc88c6da5a76988c-2f0de6556d0e4558867848a51c2c1395">
+                <a href="/versions/v6/mitigations/M1031/">
+                    Network Intrusion Prevention
+                </a>
+            </div>
+</div>
+
+                    
+
+<div class="sidenav">
+            <div class="sidenav-head" id="Enterprise-4d3e08602ce84a96bc88c6da5a76988c-56e3c5501b6043299a71bd2875e488e9">
+                <a href="/versions/v6/mitigations/M1030/">
+                    Network Segmentation
+                </a>
+            </div>
+</div>
+
+                    
+
+<div class="sidenav">
+            <div class="sidenav-head" id="Enterprise-4d3e08602ce84a96bc88c6da5a76988c-67763f4f27fb44e4abc309eac85f2b0e">
+                <a href="/versions/v6/mitigations/M1028/">
+                    Operating System Configuration
+                </a>
+            </div>
+</div>
+
+        </div>
+</div>
+
+                    
+
+<div class="sidenav">
+        <div class="sidenav-head " id="Enterprise-716141d847d441a6906453db975b735d">
+                <span>P-R</span>
+            <div class="expand-button collapsed" id="Enterprise-716141d847d441a6906453db975b735d-header" data-toggle="collapse" data-target="#Enterprise-716141d847d441a6906453db975b735d-body" aria-expanded="false" aria-controls="#Enterprise-716141d847d441a6906453db975b735d-body"></div>
+
+        </div>
+        <div class="sidenav-body collapse" id="Enterprise-716141d847d441a6906453db975b735d-body" aria-labelledby="Enterprise-716141d847d441a6906453db975b735d-header">
+                    
+
+<div class="sidenav">
+            <div class="sidenav-head" id="Enterprise-716141d847d441a6906453db975b735d-08fe2302f8b54b57957fdfd924d8cac3">
+                <a href="/versions/v6/mitigations/M1027/">
+                    Password Policies
+                </a>
+            </div>
+</div>
+
+                    
+
+<div class="sidenav">
+            <div class="sidenav-head" id="Enterprise-716141d847d441a6906453db975b735d-69e9733bf844488cbfcd45177b31a9a7">
+                <a href="/versions/v6/mitigations/M1026/">
+                    Privileged Account Management
+                </a>
+            </div>
+</div>
+
+                    
+
+<div class="sidenav">
+            <div class="sidenav-head" id="Enterprise-716141d847d441a6906453db975b735d-63d18708b0604aa882a68e4b300c752d">
+                <a href="/versions/v6/mitigations/M1025/">
+                    Privileged Process Integrity
+                </a>
+            </div>
+</div>
+
+                    
+
+<div class="sidenav">
+            <div class="sidenav-head" id="Enterprise-716141d847d441a6906453db975b735d-9a059fee04aa4dd4a1899c02540fdb96">
+                <a href="/versions/v6/mitigations/M1029/">
+                    Remote Data Storage
+                </a>
+            </div>
+</div>
+
+                    
+
+<div class="sidenav">
+            <div class="sidenav-head active" id="Enterprise-716141d847d441a6906453db975b735d-484939c5c1c547d38dea562efaa27f1a">
+                <a href="/versions/v6/mitigations/M1022/">
+                    Restrict File and Directory Permissions
+                </a>
+            </div>
+</div>
+
+                    
+
+<div class="sidenav">
+            <div class="sidenav-head" id="Enterprise-716141d847d441a6906453db975b735d-15740e5c800348e5b34820ea36bc0e94">
+                <a href="/versions/v6/mitigations/M1044/">
+                    Restrict Library Loading
+                </a>
+            </div>
+</div>
+
+                    
+
+<div class="sidenav">
+            <div class="sidenav-head" id="Enterprise-716141d847d441a6906453db975b735d-666b72fb8b014e3cbf7918e9388da1a7">
+                <a href="/versions/v6/mitigations/M1024/">
+                    Restrict Registry Permissions
+                </a>
+            </div>
+</div>
+
+                    
+
+<div class="sidenav">
+            <div class="sidenav-head" id="Enterprise-716141d847d441a6906453db975b735d-85a809ba99694861ae5d90238823c5b1">
+                <a href="/versions/v6/mitigations/M1021/">
+                    Restrict Web-Based Content
+                </a>
+            </div>
+</div>
+
+        </div>
+</div>
+
+                    
+
+<div class="sidenav">
+        <div class="sidenav-head " id="Enterprise-0f4488e72b6c41228e8fcf748f4e495d">
+                <span>S-U</span>
+            <div class="expand-button collapsed" id="Enterprise-0f4488e72b6c41228e8fcf748f4e495d-header" data-toggle="collapse" data-target="#Enterprise-0f4488e72b6c41228e8fcf748f4e495d-body" aria-expanded="false" aria-controls="#Enterprise-0f4488e72b6c41228e8fcf748f4e495d-body"></div>
+
+        </div>
+        <div class="sidenav-body collapse" id="Enterprise-0f4488e72b6c41228e8fcf748f4e495d-body" aria-labelledby="Enterprise-0f4488e72b6c41228e8fcf748f4e495d-header">
+                    
+
+<div class="sidenav">
+            <div class="sidenav-head" id="Enterprise-0f4488e72b6c41228e8fcf748f4e495d-57aac64ab0c14d20a4a851881410c335">
+                <a href="/versions/v6/mitigations/M1054/">
+                    Software Configuration
+                </a>
+            </div>
+</div>
+
+                    
+
+<div class="sidenav">
+            <div class="sidenav-head" id="Enterprise-0f4488e72b6c41228e8fcf748f4e495d-087eb089b9264509a01ce6578eaede6b">
+                <a href="/versions/v6/mitigations/M1020/">
+                    SSL/TLS Inspection
+                </a>
+            </div>
+</div>
+
+                    
+
+<div class="sidenav">
+            <div class="sidenav-head" id="Enterprise-0f4488e72b6c41228e8fcf748f4e495d-9f9004f23b614afea30130f0be13e840">
+                <a href="/versions/v6/mitigations/M1019/">
+                    Threat Intelligence Program
+                </a>
+            </div>
+</div>
+
+                    
+
+<div class="sidenav">
+            <div class="sidenav-head" id="Enterprise-0f4488e72b6c41228e8fcf748f4e495d-d0934e93f9184358ba2c2ada95cc0ef8">
+                <a href="/versions/v6/mitigations/M1051/">
+                    Update Software
+                </a>
+            </div>
+</div>
+
+                    
+
+<div class="sidenav">
+            <div class="sidenav-head" id="Enterprise-0f4488e72b6c41228e8fcf748f4e495d-98048c201e404da29a7063862fc71d08">
+                <a href="/versions/v6/mitigations/M1052/">
+                    User Account Control
+                </a>
+            </div>
+</div>
+
+                    
+
+<div class="sidenav">
+            <div class="sidenav-head" id="Enterprise-0f4488e72b6c41228e8fcf748f4e495d-bbf1b334e62046c59faf93e969a27b00">
+                <a href="/versions/v6/mitigations/M1018/">
+                    User Account Management
+                </a>
+            </div>
+</div>
+
+                    
+
+<div class="sidenav">
+            <div class="sidenav-head" id="Enterprise-0f4488e72b6c41228e8fcf748f4e495d-df1743487086481dac54fb8c00cee03d">
+                <a href="/versions/v6/mitigations/M1017/">
+                    User Training
+                </a>
+            </div>
+</div>
+
+        </div>
+</div>
+
+                    
+
+<div class="sidenav">
+        <div class="sidenav-head " id="Enterprise-ed82296063744418962bc6204a7d631e">
+                <span>V-X</span>
+            <div class="expand-button collapsed" id="Enterprise-ed82296063744418962bc6204a7d631e-header" data-toggle="collapse" data-target="#Enterprise-ed82296063744418962bc6204a7d631e-body" aria-expanded="false" aria-controls="#Enterprise-ed82296063744418962bc6204a7d631e-body"></div>
+
+        </div>
+        <div class="sidenav-body collapse" id="Enterprise-ed82296063744418962bc6204a7d631e-body" aria-labelledby="Enterprise-ed82296063744418962bc6204a7d631e-header">
+                    
+
+<div class="sidenav">
+            <div class="sidenav-head" id="Enterprise-ed82296063744418962bc6204a7d631e-1dadb21e91884377afa243f7b443f0e1">
+                <a href="/versions/v6/mitigations/M1016/">
+                    Vulnerability Scanning
+                </a>
+            </div>
+</div>
+
+        </div>
+</div>
+
+                    
+
+<div class="sidenav">
+        <div class="sidenav-head " id="Enterprise-3e897348f0784387ac94e2f95ea34a03">
+                <span>Y-Z</span>
+            <div class="expand-button collapsed" id="Enterprise-3e897348f0784387ac94e2f95ea34a03-header" data-toggle="collapse" data-target="#Enterprise-3e897348f0784387ac94e2f95ea34a03-body" aria-expanded="false" aria-controls="#Enterprise-3e897348f0784387ac94e2f95ea34a03-body"></div>
+
+        </div>
+        <div class="sidenav-body collapse" id="Enterprise-3e897348f0784387ac94e2f95ea34a03-body" aria-labelledby="Enterprise-3e897348f0784387ac94e2f95ea34a03-header">
+                    
+
+<div class="sidenav">
+            <span>No mitigations</span>
+</div>
+
+        </div>
+</div>
+
+        </div>
+</div>
+
+    
+
+<div class="sidenav">
+        <div class="sidenav-head " id="Mobile">
+                <a href="/versions/v6/mitigations/mobile/">
+                    Mobile
+                </a>
+            <div class="expand-button collapsed" id="Mobile-header" data-toggle="collapse" data-target="#Mobile-body" aria-expanded="false" aria-controls="#Mobile-body"></div>
+
+        </div>
+        <div class="sidenav-body collapse" id="Mobile-body" aria-labelledby="Mobile-header">
+                    
+
+<div class="sidenav">
+        <div class="sidenav-head " id="Mobile-9415f436dae6435086bb5b1ca4c1a33d">
+                <span>A-C</span>
+            <div class="expand-button collapsed" id="Mobile-9415f436dae6435086bb5b1ca4c1a33d-header" data-toggle="collapse" data-target="#Mobile-9415f436dae6435086bb5b1ca4c1a33d-body" aria-expanded="false" aria-controls="#Mobile-9415f436dae6435086bb5b1ca4c1a33d-body"></div>
+
+        </div>
+        <div class="sidenav-body collapse" id="Mobile-9415f436dae6435086bb5b1ca4c1a33d-body" aria-labelledby="Mobile-9415f436dae6435086bb5b1ca4c1a33d-header">
+                    
+
+<div class="sidenav">
+            <div class="sidenav-head" id="Mobile-9415f436dae6435086bb5b1ca4c1a33d-904599c00ec847ef830bc1795d9f9c27">
+                <a href="/versions/v6/mitigations/M1013/">
+                    Application Developer Guidance
+                </a>
+            </div>
+</div>
+
+                    
+
+<div class="sidenav">
+            <div class="sidenav-head" id="Mobile-9415f436dae6435086bb5b1ca4c1a33d-aaa27c9b4fa8460180f55c878c1be69d">
+                <a href="/versions/v6/mitigations/M1005/">
+                    Application Vetting
+                </a>
+            </div>
+</div>
+
+                    
+
+<div class="sidenav">
+            <div class="sidenav-head" id="Mobile-9415f436dae6435086bb5b1ca4c1a33d-1271510a95844563b311ba08447df711">
+                <a href="/versions/v6/mitigations/M1002/">
+                    Attestation
+                </a>
+            </div>
+</div>
+
+                    
+
+<div class="sidenav">
+            <div class="sidenav-head" id="Mobile-9415f436dae6435086bb5b1ca4c1a33d-563066c6059f479382c8ec9e4dc65fe0">
+                <a href="/versions/v6/mitigations/M1007/">
+                    Caution with Device Administrator Access
+                </a>
+            </div>
+</div>
+
+        </div>
+</div>
+
+                    
+
+<div class="sidenav">
+        <div class="sidenav-head " id="Mobile-a7ce8760bebb4d4a9d4b9010e591343f">
+                <span>D-F</span>
+            <div class="expand-button collapsed" id="Mobile-a7ce8760bebb4d4a9d4b9010e591343f-header" data-toggle="collapse" data-target="#Mobile-a7ce8760bebb4d4a9d4b9010e591343f-body" aria-expanded="false" aria-controls="#Mobile-a7ce8760bebb4d4a9d4b9010e591343f-body"></div>
+
+        </div>
+        <div class="sidenav-body collapse" id="Mobile-a7ce8760bebb4d4a9d4b9010e591343f-body" aria-labelledby="Mobile-a7ce8760bebb4d4a9d4b9010e591343f-header">
+                    
+
+<div class="sidenav">
+            <div class="sidenav-head" id="Mobile-a7ce8760bebb4d4a9d4b9010e591343f-d47b6703fa39473f9c56c7b60d85efdc">
+                <a href="/versions/v6/mitigations/M1010/">
+                    Deploy Compromised Device Detection Method
+                </a>
+            </div>
+</div>
+
+                    
+
+<div class="sidenav">
+            <div class="sidenav-head" id="Mobile-a7ce8760bebb4d4a9d4b9010e591343f-a598060587ab48c9a179a1ff41f3a32f">
+                <a href="/versions/v6/mitigations/M1009/">
+                    Encrypt Network Traffic
+                </a>
+            </div>
+</div>
+
+                    
+
+<div class="sidenav">
+            <div class="sidenav-head" id="Mobile-a7ce8760bebb4d4a9d4b9010e591343f-77ba07a3b27b4f17867bfb911efaf7a0">
+                <a href="/versions/v6/mitigations/M1012/">
+                    Enterprise Policy
+                </a>
+            </div>
+</div>
+
+        </div>
+</div>
+
+                    
+
+<div class="sidenav">
+        <div class="sidenav-head " id="Mobile-a20dd8476e8042208752f6ad81576e44">
+                <span>G-I</span>
+            <div class="expand-button collapsed" id="Mobile-a20dd8476e8042208752f6ad81576e44-header" data-toggle="collapse" data-target="#Mobile-a20dd8476e8042208752f6ad81576e44-body" aria-expanded="false" aria-controls="#Mobile-a20dd8476e8042208752f6ad81576e44-body"></div>
+
+        </div>
+        <div class="sidenav-body collapse" id="Mobile-a20dd8476e8042208752f6ad81576e44-body" aria-labelledby="Mobile-a20dd8476e8042208752f6ad81576e44-header">
+                    
+
+<div class="sidenav">
+            <div class="sidenav-head" id="Mobile-a20dd8476e8042208752f6ad81576e44-675defa50dc540adb5258b0a1f377242">
+                <a href="/versions/v6/mitigations/M1014/">
+                    Interconnection Filtering
+                </a>
+            </div>
+</div>
+
+        </div>
+</div>
+
+                    
+
+<div class="sidenav">
+        <div class="sidenav-head " id="Mobile-b254b54007294955bd02ae2aad083b25">
+                <span>J-L</span>
+            <div class="expand-button collapsed" id="Mobile-b254b54007294955bd02ae2aad083b25-header" data-toggle="collapse" data-target="#Mobile-b254b54007294955bd02ae2aad083b25-body" aria-expanded="false" aria-controls="#Mobile-b254b54007294955bd02ae2aad083b25-body"></div>
+
+        </div>
+        <div class="sidenav-body collapse" id="Mobile-b254b54007294955bd02ae2aad083b25-body" aria-labelledby="Mobile-b254b54007294955bd02ae2aad083b25-header">
+                    
+
+<div class="sidenav">
+            <div class="sidenav-head" id="Mobile-b254b54007294955bd02ae2aad083b25-1c0ac444179e4efeab6a63d6c82da044">
+                <a href="/versions/v6/mitigations/M1003/">
+                    Lock Bootloader
+                </a>
+            </div>
+</div>
+
+        </div>
+</div>
+
+                    
+
+<div class="sidenav">
+        <div class="sidenav-head " id="Mobile-b5a5fbf896f8458bbf7337e685008694">
+                <span>M-O</span>
+            <div class="expand-button collapsed" id="Mobile-b5a5fbf896f8458bbf7337e685008694-header" data-toggle="collapse" data-target="#Mobile-b5a5fbf896f8458bbf7337e685008694-body" aria-expanded="false" aria-controls="#Mobile-b5a5fbf896f8458bbf7337e685008694-body"></div>
+
+        </div>
+        <div class="sidenav-body collapse" id="Mobile-b5a5fbf896f8458bbf7337e685008694-body" aria-labelledby="Mobile-b5a5fbf896f8458bbf7337e685008694-header">
+                    
+
+<div class="sidenav">
+            <span>No mitigations</span>
+</div>
+
+        </div>
+</div>
+
+                    
+
+<div class="sidenav">
+        <div class="sidenav-head " id="Mobile-b669868b281e409880449731d4a541be">
+                <span>P-R</span>
+            <div class="expand-button collapsed" id="Mobile-b669868b281e409880449731d4a541be-header" data-toggle="collapse" data-target="#Mobile-b669868b281e409880449731d4a541be-body" aria-expanded="false" aria-controls="#Mobile-b669868b281e409880449731d4a541be-body"></div>
+
+        </div>
+        <div class="sidenav-body collapse" id="Mobile-b669868b281e409880449731d4a541be-body" aria-labelledby="Mobile-b669868b281e409880449731d4a541be-header">
+                    
+
+<div class="sidenav">
+            <span>No mitigations</span>
+</div>
+
+        </div>
+</div>
+
+                    
+
+<div class="sidenav">
+        <div class="sidenav-head " id="Mobile-86716736cdf5402abe6e10cb627bd066">
+                <span>S-U</span>
+            <div class="expand-button collapsed" id="Mobile-86716736cdf5402abe6e10cb627bd066-header" data-toggle="collapse" data-target="#Mobile-86716736cdf5402abe6e10cb627bd066-body" aria-expanded="false" aria-controls="#Mobile-86716736cdf5402abe6e10cb627bd066-body"></div>
+
+        </div>
+        <div class="sidenav-body collapse" id="Mobile-86716736cdf5402abe6e10cb627bd066-body" aria-labelledby="Mobile-86716736cdf5402abe6e10cb627bd066-header">
+                    
+
+<div class="sidenav">
+            <div class="sidenav-head" id="Mobile-86716736cdf5402abe6e10cb627bd066-d9044245aa1b47ffa5a8d83af8c4f469">
+                <a href="/versions/v6/mitigations/M1001/">
+                    Security Updates
+                </a>
+            </div>
+</div>
+
+                    
+
+<div class="sidenav">
+            <div class="sidenav-head" id="Mobile-86716736cdf5402abe6e10cb627bd066-103d5bdff28f46bbaf801f86c9ab5ad7">
+                <a href="/versions/v6/mitigations/M1004/">
+                    System Partition Integrity
+                </a>
+            </div>
+</div>
+
+                    
+
+<div class="sidenav">
+            <div class="sidenav-head" id="Mobile-86716736cdf5402abe6e10cb627bd066-0ee4b0785b79496fb4574499d905672c">
+                <a href="/versions/v6/mitigations/M1006/">
+                    Use Recent OS Version
+                </a>
+            </div>
+</div>
+
+                    
+
+<div class="sidenav">
+            <div class="sidenav-head" id="Mobile-86716736cdf5402abe6e10cb627bd066-fea2f816012f45e988a1e9021d99f14a">
+                <a href="/versions/v6/mitigations/M1011/">
+                    User Guidance
+                </a>
+            </div>
+</div>
+
+        </div>
+</div>
+
+                    
+
+<div class="sidenav">
+        <div class="sidenav-head " id="Mobile-4c27778b8ca54d6393cef605ed87c809">
+                <span>V-X</span>
+            <div class="expand-button collapsed" id="Mobile-4c27778b8ca54d6393cef605ed87c809-header" data-toggle="collapse" data-target="#Mobile-4c27778b8ca54d6393cef605ed87c809-body" aria-expanded="false" aria-controls="#Mobile-4c27778b8ca54d6393cef605ed87c809-body"></div>
+
+        </div>
+        <div class="sidenav-body collapse" id="Mobile-4c27778b8ca54d6393cef605ed87c809-body" aria-labelledby="Mobile-4c27778b8ca54d6393cef605ed87c809-header">
+                    
+
+<div class="sidenav">
+            <span>No mitigations</span>
+</div>
+
+        </div>
+</div>
+
+                    
+
+<div class="sidenav">
+        <div class="sidenav-head " id="Mobile-0a1f579f76304fecaeb7fd0ced161855">
+                <span>Y-Z</span>
+            <div class="expand-button collapsed" id="Mobile-0a1f579f76304fecaeb7fd0ced161855-header" data-toggle="collapse" data-target="#Mobile-0a1f579f76304fecaeb7fd0ced161855-body" aria-expanded="false" aria-controls="#Mobile-0a1f579f76304fecaeb7fd0ced161855-body"></div>
+
+        </div>
+        <div class="sidenav-body collapse" id="Mobile-0a1f579f76304fecaeb7fd0ced161855-body" aria-labelledby="Mobile-0a1f579f76304fecaeb7fd0ced161855-header">
+                    
+
+<div class="sidenav">
+            <span>No mitigations</span>
+</div>
+
+        </div>
+</div>
+
+        </div>
+</div>
+
+ 
+    </div>
+<!--start-indexing-for-search-->
+            </div>
+             
+            <div class="tab-content col-xl-10 col-lg-9 col-md-9 pt-4" id="v-tabContent">
+                <div class="tab-pane fade show active" id="v-attckmatrix" role="tabpanel" aria-labelledby="v-attckmatrix-tab">
+    
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/versions/v6/">Home</a></li>
+        <li class="breadcrumb-item"><a href="/versions/v6/mitigations">Mitigations</a></li>
+        <li class="breadcrumb-item">Restrict File and Directory Permissions</li>
+    </ol>
+    <div class="tab-pane fade show active" id="v-" role="tabpanel" aria-labelledby="v--tab"></div>
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="jumbotron jumbotron-fluid">
+                <div class="container-fluid">
+                    <h1>
+                        Restrict File and Directory Permissions
+                    </h1>
+                    <div class="row">
+                        <div class="col-md-8 description-body">
+                            <p>Restrict access by setting directory and file permissions that are not specific to users or privileged accounts.</p>
+                        </div>
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-body">
+                                    <div class="card-data"><span class="h5 card-title">ID:</span> M1022</div>
+                                    <div class="card-data"><span class="h5 card-title">Version:</span> 1.0</div>
+                                    <div class="card-data"><span class="h5 card-title">Created:&nbsp;</span>06 June 2019</div>
+                                    <div class="card-data"><span class="h5 card-title">Last Modified:&nbsp;</span>06 June 2019</div>
+                            </div>
+                        </div>
+                        <div class="text-center pt-2 version-button permalink">
+    <div class="live">
+        <a data-toggle="tooltip" 
+           data-placement="bottom" 
+           title="permalink to this version of M1022" 
+           href="/versions/v6/mitigations/M1022/">version permalink</a>
+    </div>
+    <div class="permalink">
+        <a data-toggle="tooltip" 
+           data-placement="bottom" 
+           title="go to the live version of M1022" 
+           href="/versions/v6/mitigations/M1022/">live version</a><!--do not change this line without also changing versions.py-->
+    </div>
+</div>
+
+                    </div>
+                </div>
+
+                    <h2 class="pt-3" id ="techniquestable">Techniques Addressed by Mitigation</h2>
+                    <table class="table table-bordered table-alternate">
+                        <thead>
+                            <tr>
+                                <th scope="col">Domain</th>
+                                <th scope="col">ID</th>
+                                <th scope="col">Name</th>
+                                <th scope="col">Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                                <tr>
+                                    <td>
+                                        Enterprise
+                                    </td>
+                                    <td>
+                                        <a href="/versions/v6/techniques/T1156">T1156</a>                     
+                                    </td>
+                                    <td>
+                                        <a href="/versions/v6/techniques/T1156">.bash_profile and .bashrc</a>   
+                                    </td>
+                                    <td>
+                                        <p>Making these files immutable and only changeable by certain administrators will limit the ability for adversaries to easily create user level persistence.</p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Enterprise
+                                    </td>
+                                    <td>
+                                        <a href="/versions/v6/techniques/T1146">T1146</a>                     
+                                    </td>
+                                    <td>
+                                        <a href="/versions/v6/techniques/T1146">Clear Command History</a>   
+                                    </td>
+                                    <td>
+                                        <p>Preventing users from deleting or writing to certain files can stop adversaries from maliciously altering their <code>~/.bash_history</code> files.</p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Enterprise
+                                    </td>
+                                    <td>
+                                        <a href="/versions/v6/techniques/T1196">T1196</a>                     
+                                    </td>
+                                    <td>
+                                        <a href="/versions/v6/techniques/T1196">Control Panel Items</a>   
+                                    </td>
+                                    <td>
+                                        <p>Restrict storage and execution of Control Panel items to protected directories, such as <code>C:\Windows</code>, rather than user directories.</p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Enterprise
+                                    </td>
+                                    <td>
+                                        <a href="/versions/v6/techniques/T1081">T1081</a>                     
+                                    </td>
+                                    <td>
+                                        <a href="/versions/v6/techniques/T1081">Credentials in Files</a>   
+                                    </td>
+                                    <td>
+                                        <p>Restrict file shares to specific directories with access only to necessary users.</p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Enterprise
+                                    </td>
+                                    <td>
+                                        <a href="/versions/v6/techniques/T1530">T1530</a>                     
+                                    </td>
+                                    <td>
+                                        <a href="/versions/v6/techniques/T1530">Data from Cloud Storage Object</a>   
+                                    </td>
+                                    <td>
+                                        <p>Use access control lists on storage systems and objects.</p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Enterprise
+                                    </td>
+                                    <td>
+                                        <a href="/versions/v6/techniques/T1089">T1089</a>                     
+                                    </td>
+                                    <td>
+                                        <a href="/versions/v6/techniques/T1089">Disabling Security Tools</a>   
+                                    </td>
+                                    <td>
+                                        <p>Ensure proper process, Registry, and file permissions are in place to prevent adversaries from disabling or interfering with security services.</p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Enterprise
+                                    </td>
+                                    <td>
+                                        <a href="/versions/v6/techniques/T1073">T1073</a>                     
+                                    </td>
+                                    <td>
+                                        <a href="/versions/v6/techniques/T1073">DLL Side-Loading</a>   
+                                    </td>
+                                    <td>
+                                        <p>Install software in write-protected locations.</p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Enterprise
+                                    </td>
+                                    <td>
+                                        <a href="/versions/v6/techniques/T1157">T1157</a>                     
+                                    </td>
+                                    <td>
+                                        <a href="/versions/v6/techniques/T1157">Dylib Hijacking</a>   
+                                    </td>
+                                    <td>
+                                        <p>Set directory access controls to prevent file writes to the search paths for applications, both in the folders where applications are run from and the standard dylib folders.</p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Enterprise
+                                    </td>
+                                    <td>
+                                        <a href="/versions/v6/techniques/T1054">T1054</a>                     
+                                    </td>
+                                    <td>
+                                        <a href="/versions/v6/techniques/T1054">Indicator Blocking</a>   
+                                    </td>
+                                    <td>
+                                        <p>Ensure event tracers/forwarders, firewall policies, and other associated mechanisms are secured with appropriate permissions and access controls.<span onclick=scrollToRef('scite-2') id="scite-ref-2-a" class="scite-citeref-number" data-reference="Microsoft ETW May 2018"><sup><a href="https://docs.microsoft.com/windows/desktop/etw/event-tracing-portal" target="_blank" data-hasqtip="1" aria-describedby="qtip-1">[2]</a></sup></span></p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Enterprise
+                                    </td>
+                                    <td>
+                                        <a href="/versions/v6/techniques/T1070">T1070</a>                     
+                                    </td>
+                                    <td>
+                                        <a href="/versions/v6/techniques/T1070">Indicator Removal on Host</a>   
+                                    </td>
+                                    <td>
+                                        <p>Protect generated event files that are stored locally with proper permissions and authentication and limit opportunities for adversaries to increase privileges by preventing Privilege Escalation opportunities.</p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Enterprise
+                                    </td>
+                                    <td>
+                                        <a href="/versions/v6/techniques/T1037">T1037</a>                     
+                                    </td>
+                                    <td>
+                                        <a href="/versions/v6/techniques/T1037">Logon Scripts</a>   
+                                    </td>
+                                    <td>
+                                        <p>Restrict write access to logon scripts to specific administrators.</p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Enterprise
+                                    </td>
+                                    <td>
+                                        <a href="/versions/v6/techniques/T1036">T1036</a>                     
+                                    </td>
+                                    <td>
+                                        <a href="/versions/v6/techniques/T1036">Masquerading</a>   
+                                    </td>
+                                    <td>
+                                        <p>Use file system access controls to protect folders such as C:\Windows\System32.</p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Enterprise
+                                    </td>
+                                    <td>
+                                        <a href="/versions/v6/techniques/T1096">T1096</a>                     
+                                    </td>
+                                    <td>
+                                        <a href="/versions/v6/techniques/T1096">NTFS File Attributes</a>   
+                                    </td>
+                                    <td>
+                                        <p>Consider adjusting read and write permissions for NTFS EA, though this should be tested to ensure routine OS operations are not impeded.</p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Enterprise
+                                    </td>
+                                    <td>
+                                        <a href="/versions/v6/techniques/T1034">T1034</a>                     
+                                    </td>
+                                    <td>
+                                        <a href="/versions/v6/techniques/T1034">Path Interception</a>   
+                                    </td>
+                                    <td>
+                                        <p>Require that all executables be placed in write-protected directories.</p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Enterprise
+                                    </td>
+                                    <td>
+                                        <a href="/versions/v6/techniques/T1150">T1150</a>                     
+                                    </td>
+                                    <td>
+                                        <a href="/versions/v6/techniques/T1150">Plist Modification</a>   
+                                    </td>
+                                    <td>
+                                        <p>Prevent plist files from being modified by users by making them read-only.</p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Enterprise
+                                    </td>
+                                    <td>
+                                        <a href="/versions/v6/techniques/T1504">T1504</a>                     
+                                    </td>
+                                    <td>
+                                        <a href="/versions/v6/techniques/T1504">PowerShell Profile</a>   
+                                    </td>
+                                    <td>
+                                        <p>Making PowerShell profiles immutable and only changeable by certain administrators will limit the ability for adversaries to easily create user level persistence.</p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Enterprise
+                                    </td>
+                                    <td>
+                                        <a href="/versions/v6/techniques/T1145">T1145</a>                     
+                                    </td>
+                                    <td>
+                                        <a href="/versions/v6/techniques/T1145">Private Keys</a>   
+                                    </td>
+                                    <td>
+                                        <p>Ensure permissions are properly set on folders containing sensitive private keys to prevent unintended access.</p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Enterprise
+                                    </td>
+                                    <td>
+                                        <a href="/versions/v6/techniques/T1494">T1494</a>                     
+                                    </td>
+                                    <td>
+                                        <a href="/versions/v6/techniques/T1494">Runtime Data Manipulation</a>   
+                                    </td>
+                                    <td>
+                                        <p>Prevent critical business and system processes from being replaced, overwritten, or reconfigured to load potentially malicious code.</p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Enterprise
+                                    </td>
+                                    <td>
+                                        <a href="/versions/v6/techniques/T1035">T1035</a>                     
+                                    </td>
+                                    <td>
+                                        <a href="/versions/v6/techniques/T1035">Service Execution</a>   
+                                    </td>
+                                    <td>
+                                        <p>Also ensure that high permission level service binaries cannot be replaced or modified by users with a lower permission level.</p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Enterprise
+                                    </td>
+                                    <td>
+                                        <a href="/versions/v6/techniques/T1489">T1489</a>                     
+                                    </td>
+                                    <td>
+                                        <a href="/versions/v6/techniques/T1489">Service Stop</a>   
+                                    </td>
+                                    <td>
+                                        <p>Ensure proper process and file permissions are in place to inhibit adversaries from disabling or interfering with critical services.</p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Enterprise
+                                    </td>
+                                    <td>
+                                        <a href="/versions/v6/techniques/T1051">T1051</a>                     
+                                    </td>
+                                    <td>
+                                        <a href="/versions/v6/techniques/T1051">Shared Webroot</a>   
+                                    </td>
+                                    <td>
+                                        <p>Disable execution on directories within the webroot. Ensure proper permissions on directories that are accessible through a Web server.</p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Enterprise
+                                    </td>
+                                    <td>
+                                        <a href="/versions/v6/techniques/T1198">T1198</a>                     
+                                    </td>
+                                    <td>
+                                        <a href="/versions/v6/techniques/T1198">SIP and Trust Provider Hijacking</a>   
+                                    </td>
+                                    <td>
+                                        <p>Restrict storage and execution of SIP DLLs to protected directories, such as C:\Windows, rather than user directories.</p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Enterprise
+                                    </td>
+                                    <td>
+                                        <a href="/versions/v6/techniques/T1184">T1184</a>                     
+                                    </td>
+                                    <td>
+                                        <a href="/versions/v6/techniques/T1184">SSH Hijacking</a>   
+                                    </td>
+                                    <td>
+                                        <p>Ensure proper file permissions are set and harden system to prevent root privilege escalation opportunities.</p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Enterprise
+                                    </td>
+                                    <td>
+                                        <a href="/versions/v6/techniques/T1165">T1165</a>                     
+                                    </td>
+                                    <td>
+                                        <a href="/versions/v6/techniques/T1165">Startup Items</a>   
+                                    </td>
+                                    <td>
+                                        <p>Since StartupItems are deprecated, preventing all users from writing to the <code>/Library/StartupItems</code> directory would prevent any startup items from getting registered.</p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Enterprise
+                                    </td>
+                                    <td>
+                                        <a href="/versions/v6/techniques/T1492">T1492</a>                     
+                                    </td>
+                                    <td>
+                                        <a href="/versions/v6/techniques/T1492">Stored Data Manipulation</a>   
+                                    </td>
+                                    <td>
+                                        <p>Ensure least privilege principles are applied to important information resources to reduce exposure to data manipulation risk.</p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Enterprise
+                                    </td>
+                                    <td>
+                                        <a href="/versions/v6/techniques/T1169">T1169</a>                     
+                                    </td>
+                                    <td>
+                                        <a href="/versions/v6/techniques/T1169">Sudo</a>   
+                                    </td>
+                                    <td>
+                                        <p>The sudoers file should be strictly edited such that passwords are always required and that users can't spawn risky processes as users with higher privilege.</p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Enterprise
+                                    </td>
+                                    <td>
+                                        <a href="/versions/v6/techniques/T1501">T1501</a>                     
+                                    </td>
+                                    <td>
+                                        <a href="/versions/v6/techniques/T1501">Systemd Service</a>   
+                                    </td>
+                                    <td>
+                                        <p>Restrict read/write access to systemd unit files to only select privileged users who have a legitimate need to manage system services.</p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Enterprise
+                                    </td>
+                                    <td>
+                                        <a href="/versions/v6/techniques/T1080">T1080</a>                     
+                                    </td>
+                                    <td>
+                                        <a href="/versions/v6/techniques/T1080">Taint Shared Content</a>   
+                                    </td>
+                                    <td>
+                                        <p>Protect shared folders by minimizing users who have write access.</p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Enterprise
+                                    </td>
+                                    <td>
+                                        <a href="/versions/v6/techniques/T1209">T1209</a>                     
+                                    </td>
+                                    <td>
+                                        <a href="/versions/v6/techniques/T1209">Time Providers</a>   
+                                    </td>
+                                    <td>
+                                        <p>Consider using Group Policy to configure and block additions/modifications to W32Time DLLs.<span onclick=scrollToRef('scite-1') id="scite-ref-1-a" class="scite-citeref-number" data-reference="Microsoft W32Time May 2017"><sup><a href="https://docs.microsoft.com/windows-server/networking/windows-time-service/windows-time-service-tools-and-settings" target="_blank" data-hasqtip="0" aria-describedby="qtip-0">[1]</a></sup></span></p>
+                                    </td>
+                                </tr>
+                        </tbody>
+                    </table>
+
+                    <h2 class="pt-3" id="references">References</h2>
+
+                    <div class="row">
+                        <div class="col">
+                            <ol>
+                                        <li>
+                                            <span  id="scite-1" class="scite-citation">
+                                                <span class="scite-citation-text">
+                                                    <a rel="nofollow" class="external text" name="scite-1" href="https://docs.microsoft.com/windows-server/networking/windows-time-service/windows-time-service-tools-and-settings" target="_blank">
+                                                        Mathers, B. (2017, May 31). Windows Time Service Tools and Settings. Retrieved March 26, 2018.
+                                                    </a>
+                                                </span>
+                                            </span>
+                                        </li>
+                            </ol>
+                        </div>
+                        <div class="col">
+                                <ol start="2.0">
+                                            <li>
+                                                <span  id="scite-2" class="scite-citation">
+                                                    <span class="scite-citation-text">
+                                                        <a rel="nofollow" class="external text" name="scite-2" href="https://docs.microsoft.com/windows/desktop/etw/event-tracing-portal" target="_blank">
+                                                            Microsoft. (2018, May 30). Event Tracing. Retrieved September 6, 2018.
+                                                        </a>
+                                                    </span>
+                                                </span>
+                                            </li>
+ 
+                                </ol> 
+                        </div>             
+                    </div>
+  
+            </div>
+        </div>
+    </div>
+
+                </div>
+            </div>
+        </div>  
+    </div>
+    <!--stop-indexing-for-search-->
+    <div class="overlay search" id="search-overlay" style="display: none;">
+    <div class="overlay-inner">
+        <!-- text input for searching -->
+        <div class="search-header">
+            <div class="search-input">
+                <input type="text" id="search-input" placeholder="search">
+            </div>
+            <div class="search-icons">
+                <div class="search-parsing-icon spinner-border" style="display: none" id="search-parsing-icon"></div>
+                <div class="close-search-icon" id="close-search-icon">&times;</div>
+            </div>
+        </div>
+        <!-- results and controls for loading more results -->
+        <div id="search-body" class="search-body">
+            <div class="results" id="search-results">
+                <!-- content will be appended here on search -->
+            </div>
+            <div id="load-more-results" class="load-more-results">
+                <button class="btn btn-default" id="load-more-results-button">load more results</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+</div>
+<footer class="footer p-3">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-4 col-sm-4 col-md-3">  
+                <div class="footer-center-responsive my-auto">
+                    <a href="https://www.mitre.org" target="_blank" rel="noopener" aria-label="MITRE">
+                        <img src="/versions/v6/theme/images/mitrelogowhiteontrans.gif" class="mitre-logo-wtrans">
+                    </a>
+                </div>
+            </div>
+            <div class="col-2 col-sm-2 footer-responsive-break"></div>
+            <div class="col-6 col-sm-6 text-center">  
+                <p>
+                     © 2015-2020, The MITRE Corporation. MITRE ATT&CK and ATT&CK are registered trademarks of The MITRE Corporation.
+                </p>
+                <div class="row">
+                    <div class="col text-right">
+                        <small>
+                            <a href="/versions/v6/resources/privacy" class="footer-link">Privacy Policy</a>
+                        </small>
+                    </div>
+                    <div class="col text-center">
+                        <small>
+                            <a href="/versions/v6/resources/terms-of-use" class="footer-link">Terms of Use</a>
+                        </small>
+                    </div>
+                    <div class="col text-left">
+                        <small>
+                            <a href="/versions/v6/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" title="ATT&amp;CK content version 6.3&#013;Website version 1.3.1">ATT&CK v6.3</a>
+                        </small>
+                    </div>
+                </div>
+            </div>
+            <div class="w-100 p-2 footer-responsive-break"></div>
+            <div class="col">
+                <div class="footer-float-right-responsive">
+                    <div class="mb-1">
+                        <a href="https://twitter.com/MITREattack" class="btn btn-primary w-100">
+                            <!-- <i class="fa fa-twitter"></i> -->
+                            <img src="/versions/v6/theme/images/twitter.png" class="mr-1 twitter-icon">
+                            <b>@MITREattack</b>
+                        </a>
+                    </div>
+                    <div class="">
+                        <a href="/versions/v6/contact" class="btn btn-primary w-100">
+                            Contact
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+</div>
+        <!--SCRIPTS-->
+    <script src="/versions/v6/theme/scripts/jquery-3.2.1.min.js"></script>
+    <script src="/versions/v6/theme/scripts/popper.min.js"></script>
+    <script src="/versions/v6/theme/scripts/bootstrap.min.js"></script>
+    <script src="/versions/v6/theme/scripts/bootstrap.bundle.min.js"></script>
+    <script src="/versions/v6/theme/scripts/site.js"></script>
+    <script src="/versions/v6/theme/scripts/flexsearch.es5.js"></script> 
+    <script src="/versions/v6/theme/scripts/search_babelized.js"></script>
+
+    <!--SCRIPTS-->
+    <script src="/versions/v6/theme/scripts/navigation.js"></script>
+</body>
+</html>

@@ -1,5 +1,1 @@
-var tables, i;
-tables = document.getElementsByTagName('table');
-for (i=0;i<tables.length;i++) {
-    tables[i].className = 'table table-striped';
-}
+<meta http-equiv="refresh" content="0; url=/versions/v3/theme/scripts/tables.js"/>
