@@ -74,6 +74,10 @@ def deploy():
 
     # build the versions page
     build_markdown(versions)
+
+    # Create directory if it does not exist
+    if not os.path.isdir(site_config.web_directory):
+        os.makedirs(site_config.web_directory)
     
     # write robots.txt to disallow crawlers
     with open(os.path.join(site_config.web_directory, "robots.txt"), "w", encoding='utf8') as robots:
