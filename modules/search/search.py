@@ -2,6 +2,7 @@ import os
 import bleach, re
 import json
 import html
+from modules import resources
 from modules import site_config
 
 def generate_index():
@@ -45,6 +46,8 @@ def generate_index():
 
             with open(search_file_path, mode="w", encoding='utf8') as search_file:
                 search_file.write(search_contents)
+    
+    preserve_current_version()
 
 skiplines = ["breadcrumb-item", "nav-link"]
 def skipline(line):
@@ -91,3 +94,9 @@ def clean(filepath):
 
     skipindex = skipindex or out == "" or out == " "
     return out, skipindex, title
+
+def preserve_current_version():
+    """ Preserve current version """
+    
+    if resources.versions:
+        resources.versions.deploy_current_version()

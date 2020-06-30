@@ -4,7 +4,6 @@ from . import subdirectory
 from modules import util
 from modules import matrices
 from modules import site_config
-from modules import resources
 from string import Template
 import json
 import os
@@ -23,7 +22,6 @@ def generate_website():
     generate_static_pages()
     pelican_content()
     remove_unwanted_output()
-    preserve_current_version()
     generate_subdirectory()
 
 def generate_javascript_settings():
@@ -164,12 +162,6 @@ def generate_static_pages():
             
             with open(os.path.join(website_build_config.website_build_markdown_path, static_page), "w", encoding='utf8') as md_file:
                 md_file.write(content)
-
-def preserve_current_version():
-    """ Preserve current version """
-    
-    if resources.versions:
-        resources.versions.deploy_current_version()
 
 def generate_subdirectory():
     """ Build website to subdirectory """
