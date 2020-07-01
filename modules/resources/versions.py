@@ -89,12 +89,13 @@ def deploy_current_version():
     with open("data/versions.json", "r") as f:
         version = json.load(f)["current"]
 
-    os.mkdir(os.path.join(resources_config.prev_versions_deploy_folder, nameToPath(version["name"])))
-    for item in os.listdir(site_config.parent_web_directory):
+    if not os.path.exists(os.path.join(resources_config.prev_versions_deploy_folder, nameToPath(version["name"]))):
+        os.mkdir(os.path.join(resources_config.prev_versions_deploy_folder, nameToPath(version["name"])))
+    for item in os.listdir(site_config.web_directory):
         # skip previous and versions directories when copying
         if item == "previous" or item == "versions": continue
         # copy the current version into a preserved version
-        src = os.path.join(site_config.parent_web_directory, item)
+        src = os.path.join(site_config.web_directory, item)
         dest = os.path.join(resources_config.prev_versions_deploy_folder, nameToPath(version["name"]), item)
         # copy depending on file type
         if os.path.isdir(src):

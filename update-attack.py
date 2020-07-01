@@ -9,7 +9,7 @@ from modules import site_config
 from modules import util
 
 # argument defaults and options for the CLI
-module_choices = ['clean', 'stix_data', 'resources', 'attack_redirections', 'blog', 'contribute', 'groups', 'search', 'matrices', 'mitigations', 'redirects', 'software', 'tactics', 'techniques', 'tour', 'website_build', 'random_page', 'tests']
+module_choices = ['clean', 'stix_data', 'resources', 'attack_redirections', 'blog', 'contribute', 'groups', 'search', 'matrices', 'mitigations', 'redirects', 'software', 'tactics', 'techniques', 'tour', 'website_build', 'random_page', 'subdirectory', 'tests']
 test_choices = ['size', 'links', 'external_links', 'citations']
 
 def validate_subdirectory_string(subdirectory_str):
