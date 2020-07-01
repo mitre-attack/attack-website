@@ -36,11 +36,13 @@
 - Base template does not get overwritten when site configuration data changes. See issue [#147](https://github.com/mitre-attack/attack-website/issues/147).
 - The tour is generated through an independent module and steps are chosen depending the available modules. See issue [#166](https://github.com/mitre-attack/attack-website/issues/166).
 - Modules and test arguments are now required if flags are presented. See issue [#177](https://github.com/mitre-attack/attack-website/issues/177).
+- The search index is now loaded from cache (when available), resulting in faster search loading for most browsers. See issue [#167](https://github.com/mitre-attack/attack-website/issues/167).
 
 ### Fixes
 - Fixed navigator links on groups and software pages that were repeating the domain on the URI. See issue [#169](https://github.com/mitre-attack/attack-website/issues/169).
 - Fixed subdirectory support for navigator links on groups and software pages. See issue [#170](https://github.com/mitre-attack/attack-website/issues/170).
 - Fixed typo on the Training page. See issue [#180](https://github.com/mitre-attack/attack-website/issues/180).
+- Fixed (for most scenarios) slow loading of the search index when using Firefox. See issues [#167](https://github.com/mitre-attack/attack-website/issues/167) and [#187](https://github.com/mitre-attack/attack-website/issues/187).
 
 # Sub-techniques Beta
 ## ATT&CK Website version 2.1
