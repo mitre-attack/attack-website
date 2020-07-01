@@ -62,7 +62,7 @@ training_navigation = {
 }
 
 prev_versions_path = "versions"
-prev_versions_deploy_folder = os.path.join(site_config.web_directory, prev_versions_path)
+prev_versions_deploy_folder = ""
 
 versions_repo = "https://github.com/mitre-attack/attack-website.git"
 versions_directory = "attack-versions"

@@ -51,6 +51,7 @@ def nameToPath(name):
 
 def deploy():
     """ Deploy previous versions to website directory """
+    resources_config.prev_versions_deploy_folder = os.path.join(site_config.web_directory, resources_config.prev_versions_path)
     
     #TODO we probably don't need to re-clone the website here, just a git pull should be sufficient
     # delete previous copy of attack-versions
@@ -85,6 +86,8 @@ def deploy():
 
 def deploy_current_version():
     """build a permalink of the current version"""
+
+    resources_config.prev_versions_deploy_folder = os.path.join(site_config.web_directory, resources_config.prev_versions_path)
 
     with open("data/versions.json", "r") as f:
         version = json.load(f)["current"]
