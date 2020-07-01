@@ -44,6 +44,7 @@
 - Fixed navigator links on groups and software pages that were repeating the domain on the URI. See issue [#169](https://github.com/mitre-attack/attack-website/issues/169).
 - Fixed subdirectory support for navigator links on groups and software pages. See issue [#170](https://github.com/mitre-attack/attack-website/issues/170).
 - Fixed typo on the Training page. See issue [#180](https://github.com/mitre-attack/attack-website/issues/180).
+- Fixed versioning feature ran under a subdirectory. See issue [#200](https://github.com/mitre-attack/attack-website/issues/200).
 
 # Sub-techniques Beta
 ## ATT&CK Website version 2.1.1
