@@ -51,7 +51,7 @@ let tourSteps = [
 
 if (isSiteTour && tour_steps['obj'] != 'undefined') tourSteps.push({
     onShow: function() { //go to the next tour module
-        window.location.href = base_url + tour_steps['relationships']['obj_id'] + "/?tour=true"
+        window.location.href = base_url + "/" + tour_steps['relationships']['obj_id'] + "/?tour=true"
     }
 })
 

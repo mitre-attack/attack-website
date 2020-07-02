@@ -213,18 +213,31 @@ def archive(version_data, is_current=False):
             with open(filepath, mode="w", encoding='utf8') as updated_html:
                 updated_html.write(html_str)
 
-    # update search page
-    for search_file_name in ["search.js", "search_babelized.js"]:
-        search_file_path = os.path.join(version_path, "theme", "scripts", search_file_name)
-        if os.path.exists(search_file_path):
 
-            with open(search_file_path, mode="r", encoding='utf8') as search_file:
-                search_contents = search_file.read()
+    # update settings js file
+    settings_path = os.path.join(version_path, "theme", "scripts", "settings.js")
+    if os.path.exists(settings_path):
+        with open(settings_path, mode="r", encoding="utf8") as settings_file:
+            settings_contents = settings_file.read()
 
-            search_contents = re.sub('site_base_url ?= ? ""', f'site_base_url = "/{version_url_path}"', search_contents)
+        settings_contents = re.sub('base_url ?= ?"(.*)"', fr'base_url = "/{version_url_path}\1"', settings_contents)
+        settings_contents = re.sub('tour_steps ?= .*;', 'tour_steps = {};', settings_contents)
 
-            with open(search_file_path, mode="w", encoding='utf8') as search_file:
-                search_file.write(search_contents)
+        with open(settings_path, mode="w", encoding='utf8') as settings_file:
+            settings_file.write(settings_contents)
+    else:
+        # update search page for old versions of the site
+        for search_file_name in ["search.js", "search_babelized.js"]:
+            search_file_path = os.path.join(version_path, "theme", "scripts", search_file_name)
+            if os.path.exists(search_file_path):
+
+                with open(search_file_path, mode="r", encoding='utf8') as search_file:
+                    search_contents = search_file.read()
+
+                search_contents = re.sub('site_base_url ?= ?""', f'site_base_url = "/{version_url_path}"', search_contents)
+
+                with open(search_file_path, mode="w", encoding='utf8') as search_file:
+                    search_file.write(search_contents)
 
 def build_alias(version, alias):
     """build redirects from alias to version

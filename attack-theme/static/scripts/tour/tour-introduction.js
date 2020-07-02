@@ -19,7 +19,7 @@ if (typeof tour_steps['matrix'] != 'undefined'){
         },
         {
             onShow: function() { //go to the next tour module
-                window.location.href = base_url + tour_steps['matrix'] + "/?tour=true"
+                window.location.href = base_url + "/" + tour_steps['matrix'] + "/?tour=true"
             }
         }
     ]
@@ -30,8 +30,8 @@ else{
             container: "#tour-start-container",
             element: "#tour-start",
             placement: "bottom",
-            title: "Welcome to the ATT&CK sub-techniques tour!",
-            content: "The sub-techniques tour only works when sub-techniques are present on the website. Please check your site config and STIX bundles to make sure sub-techniques are present.",
+            title: "Tour disabled",
+            content: "The sub-techniques tour is currently unavailable",
         }
     ]
 }
