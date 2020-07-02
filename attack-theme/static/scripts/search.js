@@ -180,7 +180,7 @@ class SearchService {
     result_to_html(result) {
         //create title and path
         let title = result.title;
-        let path = result.path;
+        let path = base_url + result.path;
         if (path.endsWith("/index.html")) {
             path = path.slice(0, -11);
         }

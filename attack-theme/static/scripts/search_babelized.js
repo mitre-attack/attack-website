@@ -276,7 +276,7 @@ function _instanceof(left, right) {
           value: function result_to_html(result) {
             //create title and path
             var title = result.title;
-            var path = result.path;
+            var path = base_url + result.path;
   
             if (path.endsWith("/index.html")) {
               path = path.slice(0, -11);
