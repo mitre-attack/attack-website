@@ -31,7 +31,10 @@
 <!--          addition of notable features. When PATCH is 0 it can      -->
 <!--          be omitted                                                -->
 
-# Sub-techniques Beta
+# 8 July 2020
+## [ATT&CK Content version 7.0](https://github.com/mitre/cti/releases/tag/ATT%26CK-v7.0)
+See release notes [here](https://attack.mitre.org/beta/resources/updates/updates-july-2020/index.html).
+
 ## ATT&CK Website version 2.1.1
 ### Improvements
 - Improved matrix page header layout with versioning feature. See issue [#190](https://github.com/mitre-attack/attack-website/issues/190).
@@ -62,6 +65,7 @@
 - Fixed outdated ATT&CK Navigator link on the contact page. See issue [#143](https://github.com/mitre-attack/attack-website/issues/143).
 - Updated incorrect technique count on March 2020 update. See issue [#141](https://github.com/mitre-attack/attack-website/issues/141).
 
+# March 31, 2020
 ## ATT&CK Website version 2.0
 ### New Features
 - Added sub-techniques.
@@ -92,8 +96,9 @@
 - Revisions to the layout of the matrix pages to improve readability when multiple matrices occur within a domain.
 
 
-## [ATT&CK Content version 7.0-beta](https://github.com/mitre/cti/tree/4d3f22d81af2424f3885b4390793ee8eb256d10d)
+## [ATT&CK Content version 7.0-beta](https://github.com/mitre/cti/releases/tag/ATT%26CK-v7.0-beta)
 See release notes [here](https://attack.mitre.org/beta/resources/updates/updates-march-2020/index.html).
+
 # 10 June 2020
 ## ATT&CK Website version 1.3
 This update includes a major refactor of the ATT&CK catalog versioning system, previously referred to as "previous versions."
