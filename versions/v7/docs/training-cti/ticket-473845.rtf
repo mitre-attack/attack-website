@@ -1,0 +1,65 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1671\cocoasubrtf200
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;\f1\fswiss\fcharset0 ArialMT;\f2\froman\fcharset0 Times-Roman;
+}
+{\colortbl;\red255\green255\blue255;\red108\green108\blue108;\red0\green0\blue0;}
+{\*\expandedcolortbl;;\cssrgb\c49804\c49804\c49804;\cssrgb\c0\c0\c0;}
+\margl1440\margr1440\vieww12940\viewh14040\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 Ticket: 473845\
+Incident: Tangerine Yellow\
+Date: 2/16/2019 10:14:44\
+Description: Pineapple RAT analysis\
+Status: Assigned\
+\
+MD5 = dcf574b977e291e159b3efeddc9e5075\
+SHA1 = bc50bfce0ad9753a6be7448e350a15c1b7f719cc\
+SHA256 = 18548a48f2c30070dc3982bb04ab004a9491aa5c1933ad73a84c0de1d816cd13\
+Filename = winspoo1.exe\
+\
+Analysis notes:\
+\
+C2 protocol is base64 encoded commands over https. The RAT beacons every 30 seconds\
+requesting a command.\
+\
+So far the following commands have been discovered and analyzed:\
+	UPLOAD file (upload a file server->client)\
+	DOWNLOAD file (download a file client->server)\
+	SHELL command (runs a command via cmd.exe)\
+	PSHELL command (runs a command via powershell.exe)\
+	EXEC path (executes a program at the path given via CreateProcess)\
+	SLEEP n (skips n beacons)\
+	\
+\
+\
+Sandbox execution artifacts for winspoo1.exe\
+\
+Network traffic:\
+10.1.1.1:12442 -> 8.8.8.8:53 (query A www.m1tre.org)\
+8.8.8.8:53 -> 10.1.1.1:12442 (response A www.m1tre.org A 129.83.44.12)\
+10.1.1.1:24123 -> 129.83.44.12:443\
+129.83.44.12:443 -> 10.1.1.1:24123\
+10.1.1.1:24123 -> 129.83.44.12:443\
+129.83.44.12:443 -> 10.1.1.1:24123\
+10.1.1.1:24123 -> 129.83.44.12:443\
+129.83.44.12:443 -> 10.1.1.1:24123\
+10.1.1.1:24123 -> 129.83.44.12:443\
+129.83.44.12:443 -> 10.1.1.1:24123\
+10.1.1.1:24123 -> 129.83.44.12:443\
+129.83.44.12:443 -> 10.1.1.1:24123\
+\
+File activity:\
+Copy C:\\winspoo1.exe -> C:\\Windows\\System32\\winspool.exe\
+\
+\
+Registry keys added:\
+HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Run\\winspool REG_SZ "C:\\Windows\\System32\\winspool.exe"\
+\
+\
+\
+\pard\pardeftab720\sl560\partightenfactor0
+
+\f1\fs22 \cf2 \expnd0\expndtw0\kerning0
+\'a92019 The MITRE Corporation. ALL RIGHTS RESERVED\'a0 Approved for public release. Distribution unlimited 18-1528-43. 
+\f2\fs24 \cf3 \
+}
