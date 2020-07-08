@@ -166,12 +166,10 @@ def internal_external_link_checker(filepath, html_str):
     problems = []
     relative_links = []
     
-    print("testing", filepath)
     # find all links
     for prefix in ["href", "src"]:
         # Regular expression includes http: and https:
         if "/versions/" in filepath: # don't check links with data-test-ignore attribute after the href when on previous versions
-            print("testing with data-test-ignore")
             linkregex = f"{prefix}\s?=\s?[\"']([{allowed_in_link_with_external_links}]+)[\"'](?! ?data-test-ignore=\"true\")"
         else:
             linkregex = f"{prefix}\s?=\s?[\"']([{allowed_in_link_with_external_links}]+)[\"']"
