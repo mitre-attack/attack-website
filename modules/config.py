@@ -19,7 +19,7 @@ settings_dict = {
     "logo_footer": "/theme/images/mitrelogowhiteontrans.gif",
     "logo_landingpage": "/theme/images/ATT&CK_red.png",
     "banner_enabled": "true",
-    "banner_message": "You are currently viewing the sub-techniques beta. <a href='/?tour=true'>Take a tour</a>, read the <a href='https://medium.com/mitre-attack/attack-subs-what-you-need-to-know-99bce414ae0b'>blog post</a> or <a href='/resources/updates/updates-march-2020'> release notes</a>, or see the <a href='/'>non-beta version of the site</a>.",
+    "banner_message": "ATT&CK sub-techniques have now been released! <a href='/?tour=true'>Take a tour</a>, read the <a href='https://medium.com/mitre-attack/attack-with-sub-techniques-is-now-just-attack-8fc20997d8de'>blog post</a> or <a href='/resources/updates/updates-july-2020'> release notes</a>, or see the <a href='/versions/v6'>previous version of the site</a>.",
     "domains": ["pre-attack", "enterprise-attack", "mobile-attack"],
     "source_names": [
         "mitre-pre-attack", 
