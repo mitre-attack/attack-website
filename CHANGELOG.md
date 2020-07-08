@@ -33,7 +33,7 @@
 
 # 8 July 2020
 ## [ATT&CK Content version 7.0](https://github.com/mitre/cti/releases/tag/ATT%26CK-v7.0)
-See release notes [here](https://attack.mitre.org/beta/resources/updates/updates-july-2020/index.html).
+See release notes [here](https://attack.mitre.org/resources/updates/updates-july-2020/index.html).
 
 ## ATT&CK Website version 2.1.1
 ### Improvements
