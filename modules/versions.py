@@ -46,9 +46,10 @@ allowed_in_link = "".join(list(map(lambda s: s.strip(), [
     "   /    ",
 ])))
 
-def nameToPath(name):
-    # translate a version name to a path, e.g v6.3 => v6
-    return name.split(".")[0]
+def versionPath(version):
+    # get the path of a given version
+    if "path" in version: return version["path"]
+    else: return version["name"].split(".")[0] # parse path from name if not given explicitly
 
 def deploy():
     """ Deploy previous versions to website directory """
@@ -86,13 +87,13 @@ def deploy_current_version():
     with open("data/versions.json", "r") as f:
         version = json.load(f)["current"]
 
-    os.mkdir(os.path.join(prev_versions_deploy_folder, nameToPath(version["name"])))
+    os.mkdir(os.path.join(prev_versions_deploy_folder, versionPath(version)))
     for item in os.listdir(config.parent_web_directory):
         # skip previous and versions directories when copying
         if item == "previous" or item == "versions": continue
         # copy the current version into a preserved version
         src = os.path.join(config.parent_web_directory, item)
-        dest = os.path.join(prev_versions_deploy_folder, nameToPath(version["name"]), item)
+        dest = os.path.join(prev_versions_deploy_folder, versionPath(version), item)
         # copy depending on file type
         if os.path.isdir(src):
             shutil.copytree(src, dest)
@@ -108,12 +109,12 @@ def deploy_previous_version(version, repo):
     # check out the commit for that version
     repo.git.checkout(version["commit"])
     # copy over files
-    shutil.copytree(os.path.join(config.versions_directory), os.path.join(prev_versions_deploy_folder, nameToPath(version["name"])))
+    shutil.copytree(os.path.join(config.versions_directory), os.path.join(prev_versions_deploy_folder, versionPath(version)))
     # run archival scripts on version
     archive(version)
     # build alias for version
     for alias in version["aliases"]:
-        build_alias(nameToPath(version["name"]), alias)
+        build_alias(versionPath(version), alias)
 
 def archive(version_data, is_current=False):
     """perform archival operations on a version in /prev_versions_path
@@ -121,7 +122,7 @@ def archive(version_data, is_current=False):
     - replace links on all pages
     - add archived version banner to all pages
     """
-    version = nameToPath(version_data["name"])
+    version = versionPath(version_data)
 
     version_path = os.path.join(prev_versions_deploy_folder, version) # root of the filesystem containing the version
     version_url_path = os.path.join(prev_versions_path, version) # root of the URL of the version, for prefixing URLs
@@ -135,6 +136,8 @@ def archive(version_data, is_current=False):
 
     # remove .git
     saferemove(os.path.join(version_path, ".git"), "directory")
+    # remove beta directory
+    saferemove(os.path.join(version_path, "beta"), "directory")
     # remove CNAME
     saferemove(os.path.join(version_path, "CNAME"), "file")
     # remove robots
@@ -185,7 +188,7 @@ def archive(version_data, is_current=False):
             # update versioning button to show the permalink site version, aka "back to main site"
             html_str = html_str.replace("version-button live", "version-button permalink")
             # update live version links on the versioning button
-            from_str = f"href=[\"']\/versions\/v\d+([{allowed_in_link}]+[\"']>live version<\/a>)"
+            from_str = f"href=[\"']\/versions\/v\d+([{allowed_in_link}]+[\"']>Live Version<\/a>)"
             to_str = f'href="\g<1>'
             html_str = re.sub(from_str, to_str, html_str)
 
@@ -210,18 +213,31 @@ def archive(version_data, is_current=False):
             with open(filepath, mode="w", encoding='utf8') as updated_html:
                 updated_html.write(html_str)
 
-    # update search page
-    for search_file_name in ["search.js", "search_babelized.js"]:
-        search_file_path = os.path.join(version_path, "theme", "scripts", search_file_name)
-        if os.path.exists(search_file_path):
 
-            with open(search_file_path, mode="r", encoding='utf8') as search_file:
-                search_contents = search_file.read()
+    # update settings js file
+    settings_path = os.path.join(version_path, "theme", "scripts", "settings.js")
+    if os.path.exists(settings_path):
+        with open(settings_path, mode="r", encoding="utf8") as settings_file:
+            settings_contents = settings_file.read()
 
-            search_contents = re.sub('site_base_url ?= ? ""', f'site_base_url = "/{version_url_path}"', search_contents)
+        settings_contents = re.sub('base_url ?= ?"(.*)"', fr'base_url = "/{version_url_path}\1"', settings_contents)
+        settings_contents = re.sub('tour_steps ?= .*;', 'tour_steps = {};', settings_contents)
 
-            with open(search_file_path, mode="w", encoding='utf8') as search_file:
-                search_file.write(search_contents)
+        with open(settings_path, mode="w", encoding='utf8') as settings_file:
+            settings_file.write(settings_contents)
+    else:
+        # update search page for old versions of the site
+        for search_file_name in ["search.js", "search_babelized.js"]:
+            search_file_path = os.path.join(version_path, "theme", "scripts", search_file_name)
+            if os.path.exists(search_file_path):
+
+                with open(search_file_path, mode="r", encoding='utf8') as search_file:
+                    search_contents = search_file.read()
+
+                search_contents = re.sub('site_base_url ?= ?""', f'site_base_url = "/{version_url_path}"', search_contents)
+
+                with open(search_file_path, mode="w", encoding='utf8') as search_file:
+                    search_file.write(search_contents)
 
 def build_alias(version, alias):
     """build redirects from alias to version
@@ -251,12 +267,12 @@ def build_alias(version, alias):
 def build_markdown(versions):
     """build markdown for the versions list page"""
     # build urls
-    versions["current"]["url"] = nameToPath(versions["current"]["name"])
+    versions["current"]["url"] = versionPath(versions["current"])
     versions["current"]["changelog_label"] = " ".join(versions["current"]["changelog"].split("-")[1:]).title()
 
     for versionGroup in ["previous", "older"]: # apply transforms to both previous and older
         for version in versions[versionGroup]:
-            version["url"] = nameToPath(version["name"])
+            version["url"] = versionPath(version)
             version["changelog_label"] = " ".join(version["changelog"].split("-")[1:]).title()
 
     # sort previous versions by date

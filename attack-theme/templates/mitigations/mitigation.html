@@ -1,5 +1,6 @@
 {% extends "general/two-column.html" %}
 {% import 'macros/navigation.html' as navigation %}
+{% import 'macros/techniques_used.html' as techniques_used %}
 {% import 'macros/versioning.html' as versioning %}
 
 {% set parsed = page.data | from_json %}
@@ -9,8 +10,11 @@
     {% set title = parsed.name + ", Mitigation " + parsed.attack_id + " - Enterprise | MITRE ATT&CK&reg;" -%}
 {% endif %}
 
-{% block heading %}
-   {{ super () }}
+{% block head %}
+    {{ super () }}
+    {% if parsed.deprecated %}
+    <meta name="robots" content="noindex, nofollow">
+    {% endif %}
 {%  endblock %}
 
 {% block innerleft %}
@@ -70,35 +74,7 @@
                 </div>
 
                 {% if parsed.techniques_addressed_data %}
-                    <h2 class="pt-3" id ="techniquestable">Techniques Addressed by Mitigation</h2>
-                    <table class="table table-bordered table-alternate">
-                        <thead>
-                            <tr>
-                                <th scope="col">Domain</th>
-                                <th scope="col">ID</th>
-                                <th scope="col">Name</th>
-                                <th scope="col">Description</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for row in parsed.techniques_addressed_data %}
-                                <tr>
-                                    <td>
-                                        {{row.domain}}
-                                    </td>
-                                    <td>
-                                        <a href="/techniques/{{row.tid}}">{{row.tid}}</a>                     
-                                    </td>
-                                    <td>
-                                        <a href="/techniques/{{row.tid}}">{{row.name}}</a>   
-                                    </td>
-                                    <td>
-                                        {{row.descr}}
-                                    </td>
-                                </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
+                    {{techniques_used.techniques_used(parsed.techniques_addressed_data, "Techniques Addressed by Mitigation")}}
                 {% endif %}
 
                 {% if parsed.bottom_ref %}

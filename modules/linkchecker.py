@@ -169,8 +169,11 @@ def internal_external_link_checker(filepath, html_str):
     # find all links
     for prefix in ["href", "src"]:
         # Regular expression includes http: and https:
-        links = re.findall(
-            f"{prefix}\s?=\s?[\"']([{allowed_in_link_with_external_links}]+)[\"']", html_str)
+        if "/versions/" in filepath: # don't check links with data-test-ignore attribute after the href when on previous versions
+            linkregex = f"{prefix}\s?=\s?[\"']([{allowed_in_link_with_external_links}]+)[\"'](?! ?data-test-ignore=\"true\")"
+        else:
+            linkregex = f"{prefix}\s?=\s?[\"']([{allowed_in_link_with_external_links}]+)[\"']"
+        links = re.findall(linkregex, html_str)
 
         # check if link has a dest
         for link in links:
@@ -235,9 +238,11 @@ def internal_link_checker(filepath, html_str):
 
     # find all links
     for prefix in ["href", "src"]:
-
-        links = re.findall(
-            f"{prefix}\s?=\s?[\"']([{allowed_in_link}]+)[\"']", html_str)
+        if "/versions/" in filepath: # don't check links with data-test-ignore attribute after the href when on previous versions
+            linkregex = f"{prefix}\s?=\s?[\"']([{allowed_in_link}]+)[\"'](?! ?data-test-ignore=\"true\")"
+        else:
+            linkregex = f"{prefix}\s?=\s?[\"']([{allowed_in_link}]+)[\"']"
+        links = re.findall(linkregex, html_str)
         # check if link has a dest
         for link in links:
 
@@ -271,6 +276,19 @@ def internal_link_checker(filepath, html_str):
 
     return problems, relative_links, internal_link_error
 
+
+def check_if_file_is_deprecated(filename):
+    """ Given a filename, verify if it is deprecated 
+        Return True if it is deprecated, False if not
+    """
+  
+    with open(filename, "r", encoding="utf8") as f:
+        lines = f.readlines()
+        for line in lines:
+            if '<meta name="robots" content="noindex, nofollow">' in line:
+                return True
+    return False
+
 def check_unlinked_pages(filenames):
     """Given a list of filenames, check if they where linked from
        another page. Add the files that are not linked to a list a return 
@@ -280,6 +298,10 @@ def check_unlinked_pages(filenames):
     unlinked_pages = []
     for filename in filenames:
         if not "previous" in filename and not "versions" in filename:
+
+            # Check if it is deprecated
+            if check_if_file_is_deprecated(filename):
+               continue 
 
             # Remove unused filepath from filename
             filename = remove_extra_from_path(filename)

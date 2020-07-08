@@ -1,4 +1,7 @@
 {% extends "general/base.html" %}
+
+{% import 'macros/matrix.html' as matrix_macros %}
+
 {% set parsed = page.data | from_json %}
 
 {% block content %}
@@ -7,69 +10,55 @@
         <div class="container home-banner">
             <div class="row pt-5">
                 <div class="col mb-5 home-left-col">  
-                    <p class="text-left">MITRE ATT&CK<sup>&reg;</sup> is a globally-accessible knowledge base of adversary tactics and techniques based on real-world observations. The ATT&CK knowledge base is used as a foundation for the development of specific threat models and methodologies in the private sector, in government, and in the cybersecurity product and service community.</p>
-                    <p class="text-left">With the creation of ATT&CK, MITRE is fulfilling its mission to solve problems for a safer world &mdash; by bringing communities together to develop more effective cybersecurity. ATT&CK is open and available to any person or organization for use at no charge.</p>                    
-                    <span class="pt-5">
-                        <img src="/theme/images/ATT&CK_red.png" class="rounded mx-auto d-block pb-4 attack-logo-bold"></span>
-                        <div class="row">
-                    <div class="mx-auto button-container">
-                        <a class="btn btn-lg btn-navy" href="/resources/getting-started" role="button">Get Started &raquo;</a>
-                        <a class="btn btn-lg btn-navy" href="/resources/contribute" role="button">Contribute &raquo;</a>
-                        <a class="btn btn-lg btn-navy" href="https://medium.com/mitre-attack" role="button" target="_blank" >Check out our Blog <img src="/theme/images/external-site.svg" alt="External site" class="external-icon" /></a>
+                    <p class="text-justify">MITRE ATT&CK<sup>&reg;</sup> is a globally-accessible knowledge base of adversary tactics and techniques based on real-world observations. The ATT&CK knowledge base is used as a foundation for the development of specific threat models and methodologies in the private sector, in government, and in the cybersecurity product and service community.</p>
+                    <p class="text-justify">With the creation of ATT&CK, MITRE is fulfilling its mission to solve problems for a safer world &mdash; by bringing communities together to develop more effective cybersecurity. ATT&CK is open and available to any person or organization for use at no charge.</p>                    
+                    <div class="py-1">
+                        <img src="{{ parsed.logo_landingpage }}" class="rounded mx-auto d-block pb-4 attack-logo-bold">
                     </div>
+                    <table id="tour-start-container" class="quick-links">
+                        <tr>
+                            <td>
+                                <a href="/resources/getting-started" role="button">Getting Started</a>
+                            </td>
+                            <td>
+                                <a href="#" id="tour-start" onclick="start_tour()" role="button">Take a Tour</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <a href="/resources/contribute" role="button">Contribute</a>                            
+                            </td>
+                            <td>
+                                <a href="https://medium.com/mitre-attack" role="button" target="_blank" >Blog <img src="/theme/images/external-site-dark.jpeg" alt="External site" class="external-icon" /></a>
+                            </td>
+                        </tr>
+                    </table>
                 </div>
-            </div>
-            <div class="col">
-                <!-- This is made from the twitter widgets. For a more customizable appearance, I recommend a separate library -->
-                <div class="twitter-card">
-                    <a class="twitter-timeline" href="https://twitter.com/MITREattack?ref_src=twsrc%5Etfw" data-theme="light"
-                        data-height="388">Tweets by MITREattack</a>
-                    <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+                <div class="col">
+                    <div class="twitter-card">
+                        <a class="twitter-timeline" href="https://twitter.com/MITREattack?ref_src=twsrc%5Etfw" data-theme="light" data-height="388">Tweets by MITREattack</a>
+                        <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-    <!--stop-indexing-for-search-->
-    <div class="container-fluid bg-alternate pt-5">
+    <div class="container-fluid bg-alternate pt-5 pb-3">
         <div class="container text-center">
             <h2>{{parsed.matrix_name}}</h2>
             {% if parsed.matrix_descr %}<p class="mb-0">{{parsed.matrix_descr}}</p>{% endif %}
         </div>
-        <div class="ml-5 pr-5 pt-3">
-            <div class="overflow-x-auto">
-                <table class="table table-matrix mb-5"> 
-                    <thead class="matrix-header">
-                        <tr>
-                            {% for tactic in parsed.tactics[0] %}
-                                <th scope="col">
-                                    <a class="matrix-tactics-url" href="/tactics/{{parsed.tactics[0][tactic].id}}/">{{parsed.tactics[0][tactic].name}}</a>
-                                </th>
-                            {% endfor %}
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for column in range(0, parsed.max_len[0]) %}
-                            <tr>
-                                {% for tactic in parsed.tactics[0] %}
-                                {% if column < parsed.matrix[tactic]|length %}
-                                <td class="border">
-                                    <a class="technique-mapping" id="v-{{parsed.matrix[tactic][column]['name']}}-{{parsed.tactics[0][tactic].name|lower}}-tab" href="/techniques/{{parsed.matrix[tactic][column]['attack_id']}}">{{parsed.matrix[tactic][column]['name']}}</a>
-                                </td>
-                                {% else %}
-                                    <td class="bg-alternate no-border"></td>
-                                {% endif %}
-                                {% endfor %}
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
+        <div class="center-controls">
+            {{matrix_macros.matrices(parsed.matrices, parsed.has_subtechniques, parsed.tour_technique, True)}}
         </div>
     </div>
     <!--start-indexing-for-search-->
-
 {% endblock %}
 
 {% block scripts %}
+    <!--SCRIPTS-->
     {{ super() }}
+    <script src="/theme/scripts/matrix.js"></script>
+    <script src="/theme/scripts/bootstrap-tourist.js"></script>
+    <script src="/theme/scripts/tour/tour-introduction.js"></script>
 {% endblock %}

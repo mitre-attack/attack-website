@@ -12,11 +12,14 @@ from . import util
 
 # Settings dictionary to build website
 settings_dict = {
-    "content_version": "6.3",
-    "website_version": "1.3.1",
+    "content_version": "7.0",
+    "website_version": "2.1.1",
     "changelog_location": "/resources/changelog.html",
+    "logo_header": "/theme/images/mitre_attack_logo.png",
+    "logo_footer": "/theme/images/mitrelogowhiteontrans.gif",
+    "logo_landingpage": "/theme/images/ATT&CK_red.png",
     "banner_enabled": "true",
-    "banner_message": "<strong>The sub-techniques beta is <a href='https://attack.mitre.org/beta/' target='_blank'>now live</a>! Read the <a target='_blank' href='https://medium.com/mitre-attack/attack-subs-what-you-need-to-know-99bce414ae0b'>release blog post</a> for more info</strong>.",
+    "banner_message": "ATT&CK sub-techniques have now been released! <a href='/?tour=true'>Take a tour</a>, read the <a href='https://medium.com/mitre-attack/attack-with-sub-techniques-is-now-just-attack-8fc20997d8de'>blog post</a> or <a href='/resources/updates/updates-july-2020'> release notes</a>, or see the <a href='/versions/v6'>previous version of the site</a>.",
     "domains": ["pre-attack", "enterprise-attack", "mobile-attack"],
     "source_names": [
         "mitre-pre-attack", 
@@ -58,7 +61,7 @@ index_matrix = {
     "name": "ATT&CK Matrix for Enterprise",
     "descr": "", # if specified, adds a subtitle to the index page matrix
     "matrix": "enterprise-attack",
-    "platforms": ["Windows", "macOS", "Linux"]
+    "platforms": ["Windows","macOS","Linux", "AWS","GCP","Azure","Azure AD", "Office 365", "SaaS"]
 }
 
 # The tree of matricies on /matrices/
@@ -215,7 +218,7 @@ matrices = [
 ]
 
 # argument defaults and options for the CLI
-build_choices = ['resources', 'contribute', 'groups', 'search', 'matrices', 'mitigations', 'redirects', 'software', 'tactics', 'techniques', "versions"]
+build_choices = ['resources', 'contribute', 'groups', 'search', 'matrices', 'mitigations', 'redirects', 'software', 'tactics', 'techniques', "tour", "versions"]
 build_defaults = build_choices
 
 test_choices = ['size', 'links', 'external_links', 'citations']
@@ -244,7 +247,7 @@ navigator_link_mobile = "https://mitre-attack.github.io/attack-navigator/mobile"
 # usage: 
 #     domain: "enterprise" or "mobile"
 #     path: the path to the object, e.g "software/S1001" or "groups/G2021"
-layer_md = Template("Title: ${domain} Techniques\n"
+layer_md = Template("Title: ${domain} ${attack_id} Techniques\n"
                     "Template: general/json\n"
                     "save_as: ${path}/${attack_id}-${domain}-layer.json\n"
                     "json: ")
@@ -317,13 +320,6 @@ attack_index_md = ("Title: ATT&CK Overview \n"
                    "Template: general/attack-index \n"
                    "save_as: index.html\n"
                    "data: ")
-
-# Old stix content
-last_attack_path = {
-    'enterprise-attack': stix_directory + "/enterprise-attack_old.json",
-    'mobile-attack': stix_directory + "/mobile-attack_old.json",
-    'pre-attack': stix_directory + "/pre-attack_old.json"
-}
 
 # Constants used by mitigation.py
 # ----------------------------------------------------------------------------
@@ -601,10 +597,16 @@ training_navigation = {
 techniques_markdown_path = "content/pages/techniques/"	
 
 # String template for all techniques
-technique_md = Template("Title: ${name}-${tactics}-${domain}\n"
+technique_md = Template("Title: ${name}-${domain}\n"
                         "Template: techniques/technique\n"
                         "save_as: techniques/${attack_id}/index.html\n"
                         "data: ")
+
+# String template for all techniques
+sub_technique_md = Template("Title: ${name}-${domain}\n"
+                            "Template: techniques/technique\n"
+                            "save_as: techniques/${parent_id}/${sub_number}/index.html\n"
+                            "data: ")
 
 # String template for domains	
 technique_domain_md = Template("Title: Techniques\n"
@@ -670,6 +672,11 @@ web_directory = "output"
 # Parent web directory name
 # leave parent directory name to first level for link tests
 parent_web_directory = "output"
+
+javascript_path = "attack-theme/static/scripts/"
+
+js_dir_settings = Template("let base_url = \"${web_directory}\";\n")
+js_tour_settings = Template("let tour_steps = ${tour_steps};\n")
 
 # Declare as empty string
 subdirectory = ""
@@ -739,6 +746,8 @@ def init_shared_data():
     global tools_using_technique
     global malware_using_technique
     global groups_using_technique
+    global subtechniques_of
+    global parent_technique_of
     global ms
 
     domains = settings_dict["domains"]
@@ -799,7 +808,9 @@ def init_shared_data():
         rsh.technique_related_to_technique(srcs),
         rsh.tools_using_technique(srcs),
         rsh.malware_using_technique(srcs),
-        rsh.groups_using_technique(srcs)
+        rsh.groups_using_technique(srcs),
+        rsh.subtechniques_of(srcs),
+        rsh.parent_technique_of(srcs)
     ]
 
     number_of_workers = multiprocessing.cpu_count()
@@ -837,3 +848,7 @@ def init_shared_data():
 
     # Group using technique
     groups_using_technique = data[12]
+
+    # subtechniques
+    subtechniques_of = data[13]
+    parent_technique_of = data[14]

@@ -30,21 +30,21 @@ def generate_index():
     if not os.path.isdir(config.web_directory):
         os.makedirs(config.web_directory)
         
-    json.dump(index, open(os.path.join(config.web_directory, "index.json"), mode="w",  encoding="utf8"), indent=2)
+    json.dump(index, open(os.path.join(config.web_directory, "index.json"), mode="w",  encoding="utf-8"), indent=2)
 
-    if (config.subdirectory):
-        # update search base url to subdirectory
-        search_file_path = os.path.join(config.web_directory, "theme", "scripts", "search_babelized.js")
+    # if (config.subdirectory):
+    #     # update search base url to subdirectory
+    #     search_file_path = os.path.join(config.web_directory, "theme", "scripts", "search_babelized.js")
         
-        if os.path.exists(search_file_path):
-            search_contents = ""
+    #     if os.path.exists(search_file_path):
+    #         search_contents = ""
 
-            with open(search_file_path, mode="r", encoding='utf8') as search_file:
-                search_contents = search_file.read()
-                search_contents = re.sub('site_base_url ?= ? ""', f'site_base_url = "/{config.subdirectory}/"', search_contents)
+    #         with open(search_file_path, mode="r", encoding='utf8') as search_file:
+    #             search_contents = search_file.read()
+    #             search_contents = re.sub('site_base_url ?= ? ""', f'site_base_url = "/{config.subdirectory}/"', search_contents)
 
-            with open(search_file_path, mode="w", encoding='utf8') as search_file:
-                search_file.write(search_contents)
+    #         with open(search_file_path, mode="w", encoding='utf8') as search_file:
+    #             search_file.write(search_contents)
 
     
 skiplines = ["breadcrumb-item", "nav-link"]
@@ -53,9 +53,19 @@ def skipline(line):
         if skip in line: return True
     return False
 
+def clean_line(line):
+    """clean unicode spaces from line"""
+    # Replace unicode spaces
+    line = line.replace(u"\u00a0", " ")
+    line = line.replace(u"\u202f", " ")
+    line = line.replace("&nbsp;", " ")
+    line = line.replace("&nbsp", " ")
+
+    return line
+
 def clean(filepath):
     """clean the file of all HTML tags and unnecessary data"""
-    f = open(filepath, mode="r", encoding="utf8")
+    f = open(filepath, mode="r", encoding="utf-8")
     lines = f.readlines()
     f.close()
 
@@ -64,8 +74,8 @@ def clean(filepath):
     skipindex = False
     indexing = False
     for line in lines:
-        if (not skipline(line)) and indexing: 
-            content += line + "\n"
+        if (not skipline(line)) and indexing:
+            content += clean_line(line) + "\n"
         if "<!--start-indexing-for-search-->" in line: 
             indexing = True
         if "<!--stop-indexing-for-search-->" in line: 
@@ -75,6 +85,7 @@ def clean(filepath):
             match = re.search(r"<title>(.*)\|.*</title>", line)
             if match: title = match.group(1).strip()
         if 'http-equiv="refresh"' in line: skipindex = True
+        if '<meta name="robots" content="noindex, nofollow">' in line: skipindex = True
 
     out = bleach.clean(content, tags=[], strip=True) #remove tags
     out = re.sub(r"[\n ]+", " ", out) # remove extra newlines, smush to 1 line

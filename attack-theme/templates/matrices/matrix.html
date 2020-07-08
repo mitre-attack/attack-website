@@ -1,6 +1,7 @@
 {% extends "general/two-column.html" %} 
 {% set parsed = page.data | from_json %}
 {% import 'macros/navigation.html' as navigation %}
+{% import 'macros/matrix.html' as matrix_macros %}
 {% import 'macros/versioning.html' as versioning %}
 
 {% if parsed.domain == "pre" %}
@@ -37,121 +38,60 @@
                 {% endif %}
             </ol>
         </div>
-        <!-- only show navigator link if it's defined in the config -->
-        {% if (parsed.navigator_link_enterprise and parsed.domain == 'enterprise') or (parsed.navigator_link_mobile and parsed.domain == 'mobile') %} 
-            <div class="col">
-                <span class="h3 mt-3 float-right">
-                    <a href="{{ parsed.navigator_link_mobile if parsed.domain == 'mobile' else parsed.navigator_link_enterprise }}" class="btn btn-navy" target="_blank">Launch the ATT&amp;CK<sup>&reg;</sup> Navigator <img src="/theme/images/external-link.svg" width="10"></a>
-                </span>
-            </div>
-        {% endif %}
     </div>
     <div class="tab-pane fade show active" id="v-attckmatrix" role="tabpanel" aria-labelledby="v-attckmatrix-tab">
-        <div class="container-fluid">
-            {% set matrix_plural = "Matrices" if parsed.domain == "mobile" else "Matrix" %}
 
-            <h1>{{parsed.name}} {{matrix_plural}}</h1>             
+        <div class="matrix-container p-3">
+            {% set matrix_plural = "Matrices" if (parsed.matrices | length > 1) else "Matrix" %}
+            <div class="row">
+                <div class="col-md-9">
+                    <h1>{{parsed.name}} {{matrix_plural}}</h1>             
 
-            <p>
-                {{parsed.descr}}
-                {% if parsed.platforms | length > 1 %}
-                    The {{matrix_plural}} contains information for the following platforms: {% for platform in parsed.platforms %}{%if loop.index != 1 %}, {% endif %}<a href="/matrices/{{platform.path}}">{{platform.name}}</a>{% endfor %}.
-                {% elif parsed.platforms | length == 1 %}
-                        The {{matrix_plural}} contains information for the {{parsed.platforms[0].name}} platform.
-                {% endif %}
-            </p>
-            
-
-            {% if parsed.domain == "mobile" %}
-                <h3>Device Access</h3>
-            {% endif %}
-            {% if parsed.max_len[0] > 0 %}
-                <div class="fs-s">
-                    <div>Last Modified: {{parsed.timestamp}}</div>
-                    {% set permalink_title = "the matrices" if parsed.tactics | length > 1 else "the matrix" %}
-                    {{ versioning.permalink_button(output_file, permalink_title, False)}}
+                    <p>
+                        {{parsed.descr}}
+                        {% if parsed.platforms | length > 1 %}
+                            The {{matrix_plural}} contains information for the following platforms: {% for platform in parsed.platforms %}{%if loop.index != 1 %}, {% endif %}<a href="/matrices/{{platform.path}}">{{platform.name}}</a>{% endfor %}.
+                        {% elif parsed.platforms | length == 1 %}
+                                The {{matrix_plural}} contains information for the {{parsed.platforms[0].name}} platform.
+                        {% endif %}
+                    </p>
                 </div>
-                <div class="overflow-x-auto">
-                    <table class='table table-matrix'>
-                            <thead class='matrix-header'>
-                            <tr>
-                                {% for tactic in parsed.tactics[0] %}
-                                    {% if parsed.matrix[tactic]|length > 0 %}
-                                        <th scope='col' class="border">
-                                            <a class="matrix-tactics-url" href="/tactics/{{parsed.tactics[0][tactic].id}}/">{{parsed.tactics[0][tactic].name}}</a>
-                                        </th>
-                                    {% endif %}
-                                {% endfor %}
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for column in range(0, parsed.max_len[0]) %}
-                                <tr>
-                                    {% for tactic in parsed.tactics[0] %}
-                                        {% if parsed.matrix[tactic]|length > 0 %}
-                                            {% if column < parsed.matrix[tactic]|length %}
-                                                <td class="border">
-                                                    <a class="technique-mapping" id="v-{{parsed.matrix[tactic][column]['name']}}-{{parsed.tactics[0][tactic].name|lower}}-tab" href="/techniques/{{parsed.matrix[tactic][column]['attack_id']}}">{{parsed.matrix[tactic][column]['name']}}</a>
-                                                </td>
-                                            {% else %}
-                                                <td class="no-border"></td>
-                                            {% endif %}
-                                        {% endif %}
-                                    {% endfor %}
-                                </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-            {% else %}
-                <p>
-                    Matrix omitted due to lack of techniques.
-                </p>
-            {% endif %}
-            {% if parsed.domain == "mobile" %}
-                <h3>Network-Based Effects</h3>
-                {% if parsed.max_len[1] > 0 %}
-                    <span class="fs-s">Last Modified: {{parsed.timestamp}}</span>
-                    <div class="overflow-x-auto">
-                        <table class='table table-matrix'>
-                                <thead class='matrix-header'>
-                                <tr>
-                                    {% for tactic in parsed.tactics[1] %}
-                                        {% if parsed.matrix[tactic]|length > 0 %}
-                                            <th scope='col' class="border">
-                                                <a class="matrix-tactics-url" href="/tactics/{{parsed.tactics[1][tactic].id}}/">{{parsed.tactics[1][tactic].name}}</a>
-                                            </th>
-                                        {% endif %}
-                                    {% endfor %}
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for column in range(0, parsed.max_len[1]) %}
-                                    <tr>
-                                    {% for tactic in parsed.tactics[1] %}
-                                        {% if parsed.matrix[tactic]|length > 0 %}
-                                            {% if column < parsed.matrix[tactic]|length %}
-                                                <td class="border">
-                                                    <a class="technique-mapping" id="v-{{parsed.matrix[tactic][column]['name']}}-{{parsed.tactics[1][tactic].name|lower}}-tab" href="/techniques/{{parsed.matrix[tactic][column]['attack_id']}}">{{parsed.matrix[tactic][column]['name']}}</a>
-                                                </td>
-                                            {% else %}
-                                                <td class="no-border"></td>
-                                            {% endif %}
-                                        {% endif %}
-                                    {% endfor %}
-                                    </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
+                <div class="matrix-border col-md-3">
+                    <div class="col py-2">
+                        <!-- only show navigator link if it's defined in the config -->
+                        {% if (parsed.navigator_link_enterprise and parsed.domain == 'enterprise') or (parsed.navigator_link_mobile and parsed.domain == 'mobile') %} 
+                            <div class="row p-2">
+                                <a href="{{ parsed.navigator_link_mobile if parsed.domain == 'mobile' else parsed.navigator_link_enterprise }}" target="_blank">View on the ATT&amp;CK<sup>&reg;</sup> Navigator <img src="/theme/images/external-site-dark.jpeg" width="10"></a>
+                            </div>
+                        {% endif %}
+                        <div class="row p-2">
+                            {% if parsed.domain == "pre" %}
+                                <a href="/resources/pre-introduction/">About the PRE-ATT&CK domain</a>
+                            {% elif parsed.domain == "enterprise" %}
+                                <a href="/resources/enterprise-introduction/">About the Enterprise domain</a>
+                            {% elif parsed.domain == "mobile" %}
+                                <a href="/resources/mobile-introduction/">About the Mobile domain</a>
+                            {% endif %}
+                        </div>
+                        <div class="row p-2">
+                            {% set permalink_title = "the matrices" if parsed.matrices | length > 1 else "the matrix" %}
+                            {{ versioning.permalink_button(output_file, permalink_title, False)}}
+                        </div>
                     </div>
-                {% endif %}
-            {% endif %}
+                </div>
             </div>
         </div>
+        <div class="pb-3">
+            {{matrix_macros.matrices(parsed.matrices, parsed.has_subtechniques, parsed.tour_technique, False)}}
+        </div>
+    </div>
 {% endblock %}
 
 {% block scripts %}
-    {{ super() }}
     <!--SCRIPTS-->
+    {{ super() }}
+    <script src="/theme/scripts/matrix.js"></script>
     <script src="/theme/scripts/navigation.js"></script>
+    <script src="/theme/scripts/bootstrap-tourist.js"></script>
+    <script src="/theme/scripts/tour/tour-matrices.js"></script>
 {% endblock %} 

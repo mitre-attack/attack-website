@@ -62,7 +62,9 @@ def permalink(link):
     # load the current version permalink
     if not current_version_permalink:
         with open(os.path.join("data", "versions.json"), "r") as f:
-            current_version_permalink = "/versions/" + json.load(f)["current"]["name"].split(".")[0]
+            currentVersion = json.load(f)["current"]
+            current_version_permalink = currentVersion["path"] if "path" in currentVersion else currentVersion["name"].split(".")[0]
+            current_version_permalink = "/versions/" + current_version_permalink
     # remove index.html from the end
     link = link.split("index.html")[0] if link.endswith("index.html") else link
     # strip index.html from path

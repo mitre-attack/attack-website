@@ -32,7 +32,6 @@ function _instanceof(left, right) {
     return Constructor;
   }
   
-  var site_base_url = "";
   var page_limit = 5; //number of results per page
   
   var buffer = 200; //2* buffer is roughly the size of the result preview
@@ -277,7 +276,7 @@ function _instanceof(left, right) {
           value: function result_to_html(result) {
             //create title and path
             var title = result.title;
-            var path = result.path;
+            var path = base_url + result.path;
   
             if (path.endsWith("/index.html")) {
               path = path.slice(0, -11);
@@ -524,7 +523,7 @@ function _instanceof(left, right) {
   
       $.ajax({
         //if docs have not yet been loaded
-        url: site_base_url + "/index.json",
+        url: base_url + "/index.json",
         dataType: "json",
         success: function success(data) {
           search_service = new SearchService("search-results", data);

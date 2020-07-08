@@ -29,6 +29,11 @@ def clean_website_build():
             else:
                 os.remove(full_file_path)
     
+    # Remove dynamic javascript file
+    settings_js = os.path.join(config.javascript_path, "settings.js")
+    if os.path.isfile(settings_js):
+        os.remove(settings_js)
+    
     # Remove contribute markdown file
     contribute_path = os.path.join(config.resources_markdown_path, "contribute.md")
     if os.path.isfile(contribute_path):
