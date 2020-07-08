@@ -169,8 +169,11 @@ def internal_external_link_checker(filepath, html_str):
     # find all links
     for prefix in ["href", "src"]:
         # Regular expression includes http: and https:
-        links = re.findall(
-            f"{prefix}\s?=\s?[\"']([{allowed_in_link_with_external_links}]+)[\"']", html_str)
+        if "/versions/" in filepath: # don't check links with data-test-ignore attribute after the href when on previous versions
+            linkregex = f"{prefix}\s?=\s?[\"']([{allowed_in_link_with_external_links}]+)[\"'](?! ?data-test-ignore=\"true\")"
+        else:
+            linkregex = f"{prefix}\s?=\s?[\"']([{allowed_in_link_with_external_links}]+)[\"']"
+        links = re.findall(linkregex, html_str)
 
         # check if link has a dest
         for link in links:
@@ -235,9 +238,11 @@ def internal_link_checker(filepath, html_str):
 
     # find all links
     for prefix in ["href", "src"]:
-
-        links = re.findall(
-            f"{prefix}\s?=\s?[\"']([{allowed_in_link}]+)[\"']", html_str)
+        if "/versions/" in filepath: # don't check links with data-test-ignore attribute after the href when on previous versions
+            linkregex = f"{prefix}\s?=\s?[\"']([{allowed_in_link}]+)[\"'](?! ?data-test-ignore=\"true\")"
+        else:
+            linkregex = f"{prefix}\s?=\s?[\"']([{allowed_in_link}]+)[\"']"
+        links = re.findall(linkregex, html_str)
         # check if link has a dest
         for link in links:
 

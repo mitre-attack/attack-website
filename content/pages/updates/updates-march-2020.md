@@ -6,6 +6,10 @@ Template: resources/update-post
 url: /resources/updates/updates-march-2020
 save_as: resources/updates/updates-march-2020/index.html
 
+| Version | Start Date | End Date | Data |
+|:--------|:-----------|:---------|:-----|
+| [ATT&CK v7-beta](/versions/v7-beta) | March 31, 2020 | July 7, 2020 | [v7.0-beta on MITRE/CTI](https://github.com/mitre/cti/releases/tag/ATT%26CK-v7.0-beta) |
+
 The March 2020 update for ATT&CK contains the beta release of sub-techniques for the Enterprise ATT&CK content. The beta site will be
 separate from the main (and still official) ATT&CK content for a period of approximately 3 months to allow for feedback and for users to
 assess their transition plans to ATT&CK with sub-techniques.
@@ -167,12 +171,12 @@ New Techniques:
 	* [Disable or Modify Tools](/techniques/T1562/001) - Existing technique that became a sub-technique
 	* [HISTCONTROL](/techniques/T1562/003) - Existing technique that became a sub-technique
 	* [Indicator Blocking](/techniques/T1562/006) - Existing technique that became a sub-technique
-* Indicator Removal on Host: [Clear Command History](/techniques/T1551/003) - Existing technique that became a sub-technique
-* Indicator Removal on Host: [Clear Linux or Mac System Logs](/techniques/T1551/002) - Broken out from pre-defined behavior within Indicator Removal on Host
-* Indicator Removal on Host: [Clear Windows Event Logs](/techniques/T1551/001) - Broken out from pre-defined behavior within Indicator Removal on Host
-* Indicator Removal on Host: [File Deletion](/techniques/T1551/004) - Existing technique that became a sub-technique
-* Indicator Removal on Host: [Network Share Connection Removal](/techniques/T1551/005) - Existing technique that became a sub-technique
-* Indicator Removal on Host: [Timestomp](/techniques/T1551/006) - Existing technique that became a sub-technique
+* Indicator Removal on Host: Clear Command History - Existing technique that became a sub-technique
+* Indicator Removal on Host: Clear Linux or Mac System Logs - Broken out from pre-defined behavior within Indicator Removal on Host
+* Indicator Removal on Host: Clear Windows Event Logs - Broken out from pre-defined behavior within Indicator Removal on Host
+* Indicator Removal on Host: File Deletion - Existing technique that became a sub-technique
+* Indicator Removal on Host: Network Share Connection Removal - Existing technique that became a sub-technique
+* Indicator Removal on Host: Timestomp - Existing technique that became a sub-technique
 * Input Capture: [Credential API Hooking](/techniques/T1056/004) - Existing technique that became a sub-technique and was renamed from API Hooking. Scope change to only credential access for API hooking was based on available procedure examples
 * Input Capture: [GUI Input Capture](/techniques/T1056/002) - Broken out from pre-defined behavior within Input Capture
 * Input Capture: [Keylogging](/techniques/T1056/001) - Broken out from pre-defined behavior within Input Capture
@@ -285,8 +289,8 @@ New Techniques:
 * [System Services](/techniques/T1569) - Created to consolidate behaviors related to execution of binaries through system services
 	* [Launchctl](/techniques/T1569/001) - Existing technique that became a sub-technique
 	* [Service Execution](/techniques/T1569/002) - Existing technique that became a sub-technique
-* [Traffic Signaling](/techniques/T1545) - Created to consolidate behaviors around specifically formed network traffic that is used as a trigger to take an action
-	* [Port Knocking](/techniques/T1545/001) - Existing technique that became a sub-technique
+* Traffic Signaling - Created to consolidate behaviors around specifically formed network traffic that is used as a trigger to take an action
+	* Port Knocking - Existing technique that became a sub-technique
 * Trusted Developer Utilities Proxy Execution: [MSBuild](/techniques/T1127/001) - Broken out from pre-defined behavior within Trusted Developer Utilities Proxy Execution
 * [Unsecured Credentials](/techniques/T1552) - Created to consolidate places where unsecured credentials may be kept
 	* [Bash History](/techniques/T1552/003) - Existing technique that became a sub-technique
@@ -357,7 +361,7 @@ Technique changes are largely due to new sub-techniques being added, name change
 * [File and Directory Permissions Modification](/techniques/T1222) - New sub-techniques added
 * [Forced Authentication](/techniques/T1187) - Minor description update
 * [Group Policy Modification](/techniques/T1484) - Minor description update
-* [Indicator Removal on Host](/techniques/T1551) - Minor description update
+* Indicator Removal on Host- Minor description update
 * [Indirect Command Execution](/techniques/T1202) - Minor description update
 * [Ingress Tool Transfer](/techniques/T1105) - Name change from Remote File Copy
 * [Input Capture](/techniques/T1056) - New sub-techniques added
@@ -441,7 +445,7 @@ Technique revocations:
 * Bypass User Account Control (revoked by Abuse Elevation Control Mechanism: [Bypass User Access Control](/techniques/T1548/002))
 * CMSTP (revoked by Signed Binary Proxy Execution: [CMSTP](/techniques/T1218/003))
 * Change Default File Association (revoked by Event Triggered Execution: [Change Default File Association](/techniques/T1546/001))
-* Clear Command History (revoked by Indicator Removal on Host: [Clear Command History](/techniques/T1551/003))
+* Clear Command History (revoked by Indicator Removal on Host: Clear Command History)
 * Cloud Instance Metadata API (revoked by Unsecured Credentials: [Cloud Instance Metadata API](/techniques/T1552/005))
 * Code Signing (revoked by Subvert Trust Controls: [Code Signing](/techniques/T1553/002))
 * Commonly Used Port (revoked by [Non-Standard Port](/techniques/T1571))
@@ -469,7 +473,7 @@ Technique revocations:
 * Elevated Execution with Prompt (revoked by Abuse Elevation Control Mechanism: [Elevated Execution with Prompt](/techniques/T1548/004))
 * Emond (revoked by Event Triggered Execution: [Emond](/techniques/T1546/014))
 * Extra Window Memory Injection (revoked by Process Injection: [Extra Window Memory Injection](/techniques/T1055/011))
-* File Deletion (revoked by Indicator Removal on Host: [File Deletion](/techniques/T1551/004))
+* File Deletion (revoked by Indicator Removal on Host: File Deletion)
 * File System Permissions Weakness (revoked by Hijack Execution Flow: [Services File Permissions Weakness](/techniques/T1574/010))
 * Gatekeeper Bypass (revoked by Subvert Trust Controls: [Gatekeeper Bypass](/techniques/T1553/001))
 * HISTCONTROL (revoked by Impair Defenses: [HISTCONTROL](/techniques/T1562/003))
@@ -500,14 +504,14 @@ Technique revocations:
 * Multilayer Encryption (revoked by [Encrypted Channel](/techniques/T1573))
 * NTFS File Attributes (revoked by Hide Artifacts: [NTFS File Attributes](/techniques/T1564/004))
 * Netsh Helper DLL (revoked by Event Triggered Execution: [Netsh Helper DLL](/techniques/T1546/007))
-* Network Share Connection Removal (revoked by Indicator Removal on Host: [Network Share Connection Removal](/techniques/T1551/005))
+* Network Share Connection Removal (revoked by Indicator Removal on Host: Network Share Connection Removal)
 * New Service (revoked by Create or Modify System Process: [Windows Service](/techniques/T1543/003))
 * Parent PID Spoofing (revoked by Access Token Manipulation: [Parent PID Spoofing](/techniques/T1134/004))
 * Pass the Hash (revoked by Use Alternate Authentication Material: [Pass the Hash](/techniques/T1550/002))
 * Pass the Ticket (revoked by Use Alternate Authentication Material: [Pass the Ticket](/techniques/T1550/003))
 * Password Filter DLL (revoked by Modify Authentication Process: [Password Filter DLL](/techniques/T1556/002))
 * Plist Modification (revoked by Boot or Logon Autostart Execution: [Plist Modification](/techniques/T1547/011))
-* Port Knocking (revoked by Traffic Signaling: [Port Knocking](/techniques/T1545/001))
+* Port Knocking (revoked by Traffic Signaling: Port Knocking)
 * Port Monitors (revoked by Boot or Logon Autostart Execution: [Port Monitors](/techniques/T1547/010))
 * PowerShell (revoked by Command and Scripting Interpreter: [PowerShell](/techniques/T1059/001))
 * PowerShell Profile (revoked by Event Triggered Execution: [PowerShell Profile](/techniques/T1546/013))
@@ -546,7 +550,7 @@ Technique revocations:
 * System Firmware (revoked by Pre-OS Boot: [System Firmware](/techniques/T1542/001))
 * Systemd Service (revoked by Create or Modify System Process: [Systemd Service](/techniques/T1543/002))
 * Time Providers (revoked by Boot or Logon Autostart Execution: [Time Providers](/techniques/T1547/003))
-* Timestomp (revoked by Indicator Removal on Host: [Timestomp](/techniques/T1551/006))
+* Timestomp (revoked by Indicator Removal on Host: Timestomp)
 * Transmitted Data Manipulation (revoked by Data Manipulation: [Transmitted Data Manipulation](/techniques/T1565/002))
 * Trap (revoked by Event Triggered Execution: [Trap](/techniques/T1546/005))
 * Uncommonly Used Port (revoked by [Non-Standard Port](/techniques/T1571))

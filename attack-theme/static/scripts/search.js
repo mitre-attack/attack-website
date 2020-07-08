@@ -1,4 +1,3 @@
-let site_base_url = "";
 let page_limit = 5; //number of results per page
 let buffer = 200; //2* buffer is roughly the size of the result preview
 
@@ -181,7 +180,7 @@ class SearchService {
     result_to_html(result) {
         //create title and path
         let title = result.title;
-        let path = result.path;
+        let path = base_url + result.path;
         if (path.endsWith("/index.html")) {
             path = path.slice(0, -11);
         }
@@ -370,7 +369,7 @@ let search = function(query) {
         search_parsing_icon.show()
         // console.log("initializing search service")
         $.ajax({ //if docs have not yet been loaded
-            url: site_base_url + "/index.json",
+            url: base_url + "/index.json",
             dataType: "json",
             success: function (data) {
                 search_service = new SearchService("search-results", data)
