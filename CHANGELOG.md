@@ -37,7 +37,7 @@
 
 # 8 July 2020
 ## [ATT&CK Content version 7.0](https://github.com/mitre/cti/releases/tag/ATT%26CK-v7.0)
-See release notes [here](https://attack.mitre.org/beta/resources/updates/updates-july-2020/index.html).
+See release notes [here](https://attack.mitre.org/resources/updates/updates-july-2020/index.html).
 
 ## ATT&CK Website version 2.1.1
 ### Improvements
@@ -87,7 +87,7 @@ See release notes [here](https://attack.mitre.org/beta/resources/updates/updates
         - Show-all / hide-all buttons were added to show/hide all sub-techniques. See issue [#43](https://github.com/mitre-attack/attack-website/issues/43).
         - Added "help" button to matrices which plays the matrix portion of the sub-technique tour. See issue [#28](https://github.com/mitre-attack/attack-website/issues/28).
     - Added sub-technique support for technique usage ATT&CK Navigator layers on group and software pages. See issue [#29](https://github.com/mitre-attack/attack-website/issues/29).
-- Added the "take a tour" feature. The tour feature guides the user through the sub-technique changes. Click "take a tour" on the homepage or follow [this link](https://attack.mitre.org/beta/?tour=true) to start the tour automatically. See issue [#28](https://github.com/mitre-attack/attack-website/issues/28).
+- Added the "take a tour" feature. The tour feature guides the user through the sub-technique changes. Click "take a tour" on the homepage or follow [this link](https://attack.mitre.org/?tour=true) to start the tour automatically. See issue [#28](https://github.com/mitre-attack/attack-website/issues/28).
 
 ### Improvements
 - Improvements to deprecated techniques. See issue [#116](https://github.com/mitre-attack/attack-website/issues/116).
@@ -101,7 +101,7 @@ See release notes [here](https://attack.mitre.org/beta/resources/updates/updates
 
 
 ## [ATT&CK Content version 7.0-beta](https://github.com/mitre/cti/releases/tag/ATT%26CK-v7.0-beta)
-See release notes [here](https://attack.mitre.org/beta/resources/updates/updates-march-2020/index.html).
+See release notes [here](https://attack.mitre.org/resources/updates/updates-march-2020/index.html).
 
 # 10 June 2020
 ## ATT&CK Website version 1.3
@@ -119,7 +119,7 @@ This update includes a major refactor of the ATT&CK catalog versioning system, p
 - Updated past release notes to mention the version number for each release.
 
 # 31 March 2020
-The sub-techniques beta is <a href='https://attack.mitre.org/beta/' target='_blank'>now live</a>! Read the <a target='_blank' href='https://medium.com/mitre-attack/attack-subs-what-you-need-to-know-99bce414ae0b'>release blog post</a> for more details. Check out the [beta changelog](https://attack.mitre.org/beta/resources/changelog.html) for the full list of website changes.
+The sub-techniques beta is now live! Read the <a target='_blank' href='https://medium.com/mitre-attack/attack-subs-what-you-need-to-know-99bce414ae0b'>release blog post</a> for more details. 
 ### Changes
 - Added sub-techniques release announcement banner.
 - Added sub-techniques release docs
