@@ -46,7 +46,7 @@ let tourSteps = [
             lastStepReached = true;
         },
         onNext: function() {
-            window.location.href = base_url;
+            window.location.href = base_url == ""? "/" : base_url;
         }
     }    
 ]
@@ -58,7 +58,7 @@ let tour = new Tour({
     showProgressBar: !isSiteTour,
     showProgressText: !isSiteTour,
     onEnd: function() {
-        if (lastStepReached) window.location.href = base_url;
+        if (lastStepReached) window.location.href = base_url == ""? "/" : base_url;
     }
 })
 
