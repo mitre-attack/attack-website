@@ -34,6 +34,7 @@
 ## ATT&CK Website version 2.1.2
 ### Improvements
 - Added links to ATT&CK Navigator layers for the July 2020 release. See issues [attack-website#208](https://github.com/mitre-attack/attack-website/issues/208), and [attack-navigator#194](https://github.com/mitre-attack/attack-navigator/issues/194).
+- Updated contribute page. See issue [#207](https://github.com/mitre-attack/attack-website/issues/207).
 ### Fixes
 - Corrected the end date of v6 in the [preserved version](https://attack.mitre.org/versions/v6/), on the [Versions of ATT&CK page](https://attack.mitre.org/resources/versions/), and [v6 release notes](https://attack.mitre.org/resources/updates/updates-october-2019/index.html). See issue [#204](https://github.com/mitre-attack/attack-website/issues/204).
 - Removed links to the `/beta/` website from the changelog and March 2020 release notes. See issue [#205](https://github.com/mitre-attack/attack-website/issues/205).
