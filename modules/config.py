@@ -12,7 +12,7 @@ from . import util
 
 # Settings dictionary to build website
 settings_dict = {
-    "content_version": "7.0",
+    "content_version": "7.1",
     "website_version": "2.1.2",
     "changelog_location": "/resources/changelog.html",
     "logo_header": "/theme/images/mitre_attack_logo.png",
@@ -83,7 +83,7 @@ matrices = [
         "platforms": ["Windows","macOS","Linux",
                       "AWS","GCP","Azure","Azure AD",
                       "Office 365","SaaS"],
-        "descr": "Below are the tactics and technique representing the MITRE ATT&CK<sup>&reg;</sup> Matrix for Enterprise. ",
+        "descr": "Below are the tactics and techniques representing the MITRE ATT&CK<sup>&reg;</sup> Matrix for Enterprise. ",
         "subtypes": [
             {
                 "name": "Windows",
@@ -91,7 +91,7 @@ matrices = [
                 "matrix": "enterprise-attack",
                 "path": "enterprise/windows",
                 "platforms": ["Windows"],
-                "descr": "Below are the tactics and technique representing the MITRE ATT&CK<sup>&reg;</sup> Matrix; for Enterprise. ",
+                "descr": "Below are the tactics and techniques representing the MITRE ATT&CK<sup>&reg;</sup> Matrix; for Enterprise. ",
                 "subtypes": []
             },
             {
@@ -100,7 +100,7 @@ matrices = [
                 "matrix": "enterprise-attack",
                 "path": "enterprise/macos",
                 "platforms": ["macOS"],
-                "descr": "Below are the tactics and technique representing the MITRE ATT&CK<sup>&reg;</sup> Matrix for Enterprise. ",
+                "descr": "Below are the tactics and techniques representing the MITRE ATT&CK<sup>&reg;</sup> Matrix for Enterprise. ",
                 "subtypes": []
             },
             {
@@ -109,7 +109,7 @@ matrices = [
                 "matrix": "enterprise-attack",
                 "platforms": ["Linux"],
                 "path": "enterprise/linux",
-                "descr": "Below are the tactics and technique representing the MITRE ATT&CK<sup>&reg;</sup> Matrix for Enterprise. ", 
+                "descr": "Below are the tactics and techniques representing the MITRE ATT&CK<sup>&reg;</sup> Matrix for Enterprise. ", 
                 "subtypes": []
             },
             {
@@ -118,7 +118,7 @@ matrices = [
                 "matrix": "enterprise-attack",
                 "path": "enterprise/cloud",
                 "platforms": ["AWS","GCP","Azure","Azure AD","Office 365","SaaS"],
-                "descr": "Below are the tactics and technique representing the MITRE ATT&CK<sup>&reg;</sup> Matrix for Enterprise covering cloud-based techniques. ",
+                "descr": "Below are the tactics and techniques representing the MITRE ATT&CK<sup>&reg;</sup> Matrix for Enterprise covering cloud-based techniques. ",
                 "subtypes": [
                     {
                         "name" : "AWS",
@@ -126,7 +126,7 @@ matrices = [
                         "matrix": "enterprise-attack",
                         "path": "enterprise/cloud/aws",
                         "platforms": ["AWS"],
-                        "descr": "Below are the tactics and technique representing the MITRE ATT&CK<sup>&reg;</sup> Matrix for Enterprise covering cloud-based techniques. ",
+                        "descr": "Below are the tactics and techniques representing the MITRE ATT&CK<sup>&reg;</sup> Matrix for Enterprise covering cloud-based techniques. ",
                         "subtypes": []
                     },
                     {
@@ -135,7 +135,7 @@ matrices = [
                         "matrix": "enterprise-attack",
                         "path": "enterprise/cloud/gcp",
                         "platforms": ["GCP"],
-                        "descr": "Below are the tactics and technique representing the MITRE ATT&CK<sup>&reg;</sup> Matrix for Enterprise covering cloud-based techniques. ",
+                        "descr": "Below are the tactics and techniques representing the MITRE ATT&CK<sup>&reg;</sup> Matrix for Enterprise covering cloud-based techniques. ",
                         "subtypes": []
                     },
                     {
@@ -144,7 +144,7 @@ matrices = [
                         "matrix": "enterprise-attack",
                         "path": "enterprise/cloud/azure",
                         "platforms": ["Azure"],
-                        "descr": "Below are the tactics and technique representing the MITRE ATT&CK<sup>&reg;</sup> Matrix for Enterprise covering cloud-based techniques. ",
+                        "descr": "Below are the tactics and techniques representing the MITRE ATT&CK<sup>&reg;</sup> Matrix for Enterprise covering cloud-based techniques. ",
                         "subtypes": []
                     },
                     { 
@@ -153,7 +153,7 @@ matrices = [
                         "matrix": "enterprise-attack",
                         "path": "enterprise/cloud/office365",
                         "platforms": ["Office 365"],
-                        "descr": "Below are the tactics and technique representing the MITRE ATT&CK<sup>&reg;</sup> Matrix for Enterprise covering cloud-based techniques. ",
+                        "descr": "Below are the tactics and techniques representing the MITRE ATT&CK<sup>&reg;</sup> Matrix for Enterprise covering cloud-based techniques. ",
                         "subtypes": []
                     },
                     {
@@ -162,7 +162,7 @@ matrices = [
                         "matrix": "enterprise-attack",
                         "path": "enterprise/cloud/azuread",
                         "platforms": ["Azure AD"],
-                        "descr": "Below are the tactics and technique representing the MITRE ATT&CK<sup>&reg;</sup> Matrix for Enterprise covering cloud-based techniques. ",
+                        "descr": "Below are the tactics and techniques representing the MITRE ATT&CK<sup>&reg;</sup> Matrix for Enterprise covering cloud-based techniques. ",
                         "subtypes": []
                     },
                     {
@@ -171,7 +171,7 @@ matrices = [
                         "matrix": "enterprise-attack",
                         "path": "enterprise/cloud/saas",
                         "platforms": ["SaaS"],
-                        "descr": "Below are the tactics and technique representing the MITRE ATT&CK<sup>&reg;</sup> Matrix for Enterprise covering cloud-based techniques. ",
+                        "descr": "Below are the tactics and techniques representing the MITRE ATT&CK<sup>&reg;</sup> Matrix for Enterprise covering cloud-based techniques. ",
                         "subtypes": []
                     }
                 ]
