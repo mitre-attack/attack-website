@@ -1,5 +1,5 @@
 <!--    CHANGELOG FORMAT                                                -->
-
+<!--                                                                    -->
 <!--    Completed Entry template:                                       -->
 <!--                                                                    -->
 <!--    # Date in DD MMM YYYY format                                    -->
@@ -7,19 +7,19 @@
 <!--    ### New Features                                                -->
 <!--    ### Improvements                                                -->
 <!--    ### Fixes                                                       -->
-<!--    ## [ATT&CK Content version ##.##](link to release on mitre/cti) --> 
-<!--    See the release notes [here](link to release notes).           // if major change -->
-<!--    ### Fixes                                                      // else            -->
-
-
+<!--    ## [ATT&CK Content version ##.##](link to release on mitre/cti) -->
+<!--    See the release notes [here](link to release notes).       <if major change> -->
+<!--    ### Fixes                                                  <else>            -->
+<!--                                                                    -->
+<!--                                                                    -->
 <!--    Entries for pull request template:                              -->
 <!--                                                                    -->
 <!--    # Changes staged on develop                                     -->
 <!--    ### New Features                                                -->
 <!--    ### Improvements                                                -->
 <!--    ### Fixes                                                       -->
-
-
+<!--                                                                    -->
+<!--                                                                    -->
 <!--    VERSION NUMBERING (WEBSITE)                                     -->
 <!--                                                                    -->
 <!--    website versions are set up in a major.minor.patch format:      -->
@@ -31,6 +31,25 @@
 <!--          addition of notable features. When PATCH is 0 it can      -->
 <!--          be omitted                                                -->
 # Changes staged on develop
+## [ATT&CK Content version 7.1](https://github.com/mitre/cti/releases/tag/ATT%26CK-v7.1)
+This minor release includes the following bugfixes:
+
+- Removed Azure platform from Brute Force: [Password Cracking](https://attack.mitre.org/techniques/T1110/002/).
+- Added Linux and macOS platforms to [Deobfuscate/Decode Files or Information](https://attack.mitre.org/techniques/T1140/) and Impair Defenses: [Indicator Blocking](https://attack.mitre.org/techniques/T1562/006/).
+- Updated contributor information on [Masquerading](https://attack.mitre.org/techniques/T1036/) and Event Triggered Execution: [Component Object Model Hijacking](https://attack.mitre.org/techniques/T1546/015/).
+- Fixed broken citations on [Multi Factor Authentication](https://attack.mitre.org/mitigations/M1032/), [Enterprise Policy](https://attack.mitre.org/mitigations/M1012/), [Encrypt Sensitive Information](https://attack.mitre.org/mitigations/M1041/), [Audit](https://attack.mitre.org/mitigations/M1047/), [Access Notifications](https://attack.mitre.org/techniques/T1517/) and [Data from Cloud Storage Object](https://attack.mitre.org/techniques/T1530/).
+- Fixes for various STIX objects (mostly relationships) which were included in the wrong domain bundle. These changes do not affect what's displayed on the ATT&CK Website, but rather corrects where the data is found in the source STIX bundles. See issue [MITRE/CTI#74](https://github.com/mitre/cti/issues/74).
+    
+    | Change | About |
+    |:-------|:------------|
+    | Removed the relationship [Dark Caracal](https://attack.mitre.org/groups/G0070/) ⟹ [Pallas](https://attack.mitre.org/software/S0399/) from enterprise-attack | Relationship moved to mobile |
+    | Removed the relationship [Bouncing Golf](https://attack.mitre.org/groups/G0097/) ⟹ [GolfSpy](https://attack.mitre.org/software/S0421/) from enterprise-attack | Relationship moved to mobile |
+    | Removed the group [Bouncing Golf](https://attack.mitre.org/groups/G0097/) from enterprise-attack | Group should be mobile only (was previously in both domain bundles) |
+    | Added the relationship [Dark Caracal](https://attack.mitre.org/groups/G0070/) ⟹ [FinFisher](https://attack.mitre.org/software/S0182/) to mobile-attack | Relationship was only present in enterprise, but since both objects are in both domains the relationship should be duplicated across bundles. |
+    | Added the relationship [Dark Caracal](https://attack.mitre.org/groups/G0070/) ⟹ [Pallas](https://attack.mitre.org/software/S0399/) to mobile-attack | Relationship moved from enterprise |
+    | Added the relationship [Bouncing Golf](https://attack.mitre.org/groups/G0097/) ⟹ [GolfSpy](https://attack.mitre.org/software/S0421/) to mobile-attack | Relationship moved from enterprise |
+    
+
 ## ATT&CK Website version 2.1.2
 ### Improvements
 - Added links to ATT&CK Navigator layers for the July 2020 release. See issues [attack-website#208](https://github.com/mitre-attack/attack-website/issues/208), and [attack-navigator#194](https://github.com/mitre-attack/attack-navigator/issues/194).
@@ -40,6 +59,8 @@
 - Removed links to the `/beta/` website from the changelog and March 2020 release notes. See issue [#205](https://github.com/mitre-attack/attack-website/issues/205).
 - Updated the broken citation tests to catch malformed citations where `Citation:` is not followed by a space. See issue [#209](https://github.com/mitre-attack/attack-website/issues/209).
 - Fixed bug where the "Versions of ATT&CK" segment of the tour would loop instead of sending the user back to the site index. See issue [#203](https://github.com/mitre-attack/attack-website/issues/203).
+- Fixed the preserved v6 and v3 versions of the site so that the search interface doesn't send the user to the current site when they click on links. See issue [#215](https://github.com/mitre-attack/attack-website/issues/215).
+- Fixed a typo on the enterprise matrices.
 
 # 8 July 2020
 ## [ATT&CK Content version 7.0](https://github.com/mitre/cti/releases/tag/ATT%26CK-v7.0)
