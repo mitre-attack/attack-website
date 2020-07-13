@@ -29,6 +29,9 @@ save_as: resources/updates/updates-july-2020/index.html
         <p>In this same release we have deprecated white/blacklist language in ATT&amp;CK. Techniques and mitigations previously containing this language have either been reworded or the language has been replaced with allow/denylist. In line with industry terminology changes, application whitelisting and process whitelisting have both been replaced with application control.</p>
         <h3>Techniques</h3>
         <p><strong>Enterprise</strong></p>
+        <p>
+            View enterprise technique updates in the ATT&CK Navigator <a href="https://mitre-attack.github.io/attack-navigator/enterprise/#layerURL=https%3A%2F%2Fraw.githubusercontent.com%2Fmitre-attack%2Fattack-navigator%2Fmaster%2Flayers%2Fdata%2Fupdate_layers%2FJuly_2020%2FJuly_2020_enterprise_attack.json" target="_blank">here</a>.
+        </p>
         <p>New Techniques:</p>
         <ul>
         <li><a href="/techniques/T1548">Abuse Elevation Control Mechanism</a> - Created to consolidate similar behaviors that take advantage of elevation control<ul>
@@ -657,6 +660,9 @@ save_as: resources/updates/updates-july-2020/index.html
         <li><a href="/techniques/T1325">Fast Flux DNS</a></li>
         </ul>
         <p><strong>Mobile</strong></p>
+        <p>
+            View mobile technique updates in the ATT&CK Navigator <a href="https://mitre-attack.github.io/attack-navigator/mobile/#layerURL=https%3A%2F%2Fraw.githubusercontent.com%2Fmitre-attack%2Fattack-navigator%2Fmaster%2Flayers%2Fdata%2Fupdate_layers%2FJuly_2020%2FJuly_2020_mobile_attack.json" target="_blank">here</a>.
+        </p>
         <p>New Techniques:</p>
         <ul>
         <li><a href="/techniques/T1540">Code Injection</a></li>
@@ -1354,6 +1360,9 @@ save_as: resources/updates/updates-july-2020/index.html
         </ul>
         <h3>Techniques</h3>
         <p><strong>Enterprise</strong></p>
+        <p>
+            View enterprise technique updates in the ATT&CK Navigator <a href="https://mitre-attack.github.io/attack-navigator/enterprise/#layerURL=https%3A%2F%2Fraw.githubusercontent.com%2Fmitre-attack%2Fattack-navigator%2Fmaster%2Flayers%2Fdata%2Fupdate_layers%2FJuly_2020%2FJuly_2020_enterprise_attack_beta.json" target="_blank">here</a>.
+        </p>
         <p>New Techniques:</p>
         <ul>
         <li>Account Manipulation: <a href="/techniques/T1098/004">SSH Authorized Keys</a> - Created as distinct behavior within Account Manipulation</li>
@@ -1569,6 +1578,9 @@ save_as: resources/updates/updates-july-2020/index.html
         <p>Technique deprecations:
         No changes</p>
         <p><strong>Mobile</strong></p>
+        <p>
+            View mobile technique updates in the ATT&CK Navigator <a href="https://mitre-attack.github.io/attack-navigator/mobile/#layerURL=https%3A%2F%2Fraw.githubusercontent.com%2Fmitre-attack%2Fattack-navigator%2Fmaster%2Flayers%2Fdata%2Fupdate_layers%2FJuly_2020%2FJuly_2020_mobile_attack_beta.json" target="_blank">here</a>.
+        </p>
         <p>New Techniques:</p>
         <ul>
         <li><a href="/techniques/T1577">Compromise Application Executable</a></li>

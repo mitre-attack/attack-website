@@ -22,7 +22,7 @@ See [the accompanying blog post](https://medium.com/mitre-attack/attack-subs-wha
 
 **Enterprise**
 
-View enterprise technique updates in the ATT&CK Navigator [here](https://mitre-attack.github.io/attack-navigator/beta/enterprise/#layerURL=https%3A%2F%2Fraw.githubusercontent.com%2Fmitre-attack%2Fattack-navigator%2Ffeature%2Fsubtechniques-3.1%2Flayers%2Fdata%2Fupdate_layers%2FMarch_2020_Updates_Enterprise.json).
+View enterprise technique updates in the ATT&CK Navigator [here](https://mitre-attack.github.io/attack-navigator/enterprise/#layerURL=https%3A%2F%2Fraw.githubusercontent.com%2Fmitre-attack%2Fattack-navigator%2Ffeature%2Fsubtechniques-3.1%2Flayers%2Fdata%2Fupdate_layers%2FMarch_2020_Updates_Enterprise.json).
 
 New Techniques:
 
@@ -598,7 +598,7 @@ Technique deprecations:
 
 **Mobile**
 
-View mobile technique updates in the ATT&CK Navigator [here](https://mitre-attack.github.io/attack-navigator/beta/mobile/#layerURL=https%3A%2F%2Fraw.githubusercontent.com%2Fmitre-attack%2Fattack-navigator%2Ffeature%2Fsubtechniques-3.1%2Flayers%2Fdata%2Fupdate_layers%2FMarch_2020_Updates_Mobile.json).
+View mobile technique updates in the ATT&CK Navigator [here](https://mitre-attack.github.io/attack-navigator/mobile/#layerURL=https%3A%2F%2Fraw.githubusercontent.com%2Fmitre-attack%2Fattack-navigator%2Ffeature%2Fsubtechniques-3.1%2Flayers%2Fdata%2Fupdate_layers%2FMarch_2020_Updates_Mobile.json).
 
 New Techniques:
 
