@@ -49,7 +49,7 @@ function search(str) {
 
   for (var i = 0; i < upperBound; i++) {
     var tokens = data[i]["ref"].split("|||");
-    var url = tokens[0];
+    var url = site_base_url + tokens[0];
     var title = tokens[1];
 
     if (title.toLowerCase().includes(str.toLowerCase())) {
