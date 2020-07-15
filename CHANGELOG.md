@@ -30,6 +30,16 @@
 <!--    PATCH updates are when a bugfix is made without the             -->
 <!--          addition of notable features. When PATCH is 0 it can      -->
 <!--          be omitted                                                -->
+
+# 15 July 2020
+## [ATT&CK Content version 7.2](https://github.com/mitre/cti/releases/tag/ATT%26CK-v7.2)
+This minor release includes the following bugfixes:
+
+- Removed Windows platform from Modify Authentication Process: [Pluggable Authentication Modules](https://attack.mitre.org/techniques/T1556/003/).
+- Updated contributors for Account Manipulation: [Additional Azure Service Principal Credentials](https://attack.mitre.org/techniques/T1098/001/).
+- Added missing `x_mitre_is_subtechnique` field to several techniques.
+- Updated T1064 in the sub-technique crosswalks.
+
 # 13 July 2020
 ## [ATT&CK Content version 7.1](https://github.com/mitre/cti/releases/tag/ATT%26CK-v7.1)
 This minor release includes the following bugfixes:
