@@ -41,3 +41,5 @@ attack_index_path = "content/pages/index.md"
 website_build_markdown_path = "content/pages/"
 
 js_dir_settings = Template("var base_url = \"${web_directory}\";\n")
+js_build_uuid = Template("var build_uuid = \"${build_uuid}\";\n")
+

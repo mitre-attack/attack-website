@@ -26,8 +26,12 @@ FlexSearch.registerMatcher({
     "ATTACK": "ATT&CK"
 })
 
+var isChromium = window.chrome;
+var isEdgeChromium = isChromium && navigator.userAgent.indexOf("Edg") != -1;
+var isGoogleChrome = isChromium && !isEdgeChromium ? true : false;
+
 class IndexHelper {
-    constructor(documents) {
+    constructor(documents, exported) {
         this.indexes = {
             "title": new FlexSearch({
                 encode: "simple",     //phonetic normalizations
@@ -52,11 +56,22 @@ class IndexHelper {
                 }
             })
         }
+
         // console.log("adding pages to index");
-        this.indexes.title.add(documents);
-        this.indexes.content.add(documents);
-        // console.log("done adding pages to index");
-        
+        if (documents && !exported) {
+            this.indexes.title.add(documents);
+            this.indexes.content.add(documents);
+
+            localStorage.setItem("saved_uuid", build_uuid);
+            localforage.setItem("index_helper_title", this.indexes.title.export());
+            localforage.setItem("index_helper_content", this.indexes.content.export());
+        } else if (!documents && exported) {
+            this.indexes.title.import(exported.title);
+            this.indexes.content.import(exported.content);
+        } else {
+            console.error("invalid argument: constructor must be called with either documents or exported");
+        }
+
         this.setQuery("");
     }
     setQuery(query) {
@@ -130,10 +145,9 @@ class IndexHelper {
 }
 
 class SearchService {
-    constructor(tag, documents) {
+    constructor(tag, documents, exported) {
         // init indexes
-        this.index = new IndexHelper(documents);
-
+        this.index = new IndexHelper(documents, exported);
         this.current_query = {
             clean: "",
             words: [
@@ -369,15 +383,31 @@ let search = function(query) {
     if (search_service == null) {
         search_parsing_icon.show()
         // console.log("initializing search service")
-        $.ajax({ //if docs have not yet been loaded
-            url: site_base_url + "/index.json",
-            dataType: "json",
-            success: function (data) {
-                search_service = new SearchService("search-results", data)
-                search_service.query(query);
-                search_parsing_icon.hide();
-            }
-        });
+
+        let saved_uuid = localStorage.getItem("saved_uuid");
+
+        if (!isGoogleChrome && 'indexedDB' in window && saved_uuid && saved_uuid == build_uuid) {
+            // console.log("getting cached flexsearch objects");
+            localforage.getItem("index_helper_title").then((saved_title) => {
+                localforage.getItem("index_helper_content").then((saved_content) => {
+                    exported = {title: saved_title, content: saved_content};
+                    search_service = new SearchService("search-results", null, exported);
+                    search_service.query(query);
+                    search_parsing_icon.hide();
+                });
+            });
+        } else {
+            // console.log("making new flexsearch objects");
+            $.ajax({ //if docs have not yet been loaded
+                url: site_base_url + "/index.json",
+                dataType: "json",
+                success: function (data) {
+                    search_service = new SearchService("search-results", data, null);
+                    search_service.query(query);
+                    search_parsing_icon.hide();     
+                }
+            });
+        }
     } else {
         search_service.query(query);
     }

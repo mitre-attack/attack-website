@@ -8,6 +8,7 @@ import json
 import os
 import shutil
 import subprocess
+import uuid
 
 def generate_website():
     """ Function that generates base template for HTML pages, 
@@ -33,7 +34,7 @@ def generate_javascript_settings():
     if os.path.exists(javascript_settings_file):
         with open(javascript_settings_file, "r", encoding='utf8') as js_f:
             for line in js_f:
-                if not "base_url" in line:
+                if not "base_url" in line and not "build_uuid" in line:
                     # Copy line to data buffer
                     data += line
 
@@ -49,7 +50,14 @@ def generate_javascript_settings():
             web_dir = web_dir + "/"
 
         js_data = website_build_config.js_dir_settings.substitute({"web_directory": web_dir})
+
+        build_uuid = str(uuid.uuid4())
+        js_build_uuid = website_build_config.js_build_uuid.substitute({"build_uuid": build_uuid})
+
+        js_data += js_build_uuid
+
         js_f.write(js_data)
+
         # Add trailing data
         js_f.write(data)
 
