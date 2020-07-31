@@ -96,6 +96,9 @@ def get_correct_link(path):
     # e.g style.min.css?f8be4c06
     if re.search("\.css\?[\w\d]+", path):
         path = path.split("?")[0] # remove suffix
+    # ditto for js
+    if re.search("\.js\?[\w\d]+", path):
+        path = path.split("?")[0] # remove suffix
     
     return path
 
