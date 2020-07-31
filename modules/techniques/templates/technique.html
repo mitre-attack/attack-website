@@ -9,6 +9,8 @@
 {% endif %}
 {% set title_prefix = parsed.parent_name + ": " if parsed.is_subtechnique else "" %}
 {% set title_type = "Sub-technique" if parsed.is_subtechnique else "Technique" %}
+{% import 'macros/versioning.html' as versioning %}
+
 {% if parsed.domain == "pre" %}
     {% set title = title_prefix + parsed.name + ", " + title_type + " " + parsed.attack_id + " - PRE-ATT&CK | MITRE ATT&CK&reg;" -%}
 {% elif parsed.domain == "mobile" %}
@@ -222,6 +224,7 @@
                                         {% endif %}
                                     </div>
                                 </div>
+                                {{ versioning.permalink_button(output_file, parsed.attack_id)}}
                             </div>
                         </div>
                         {% if parsed.rel_techniques_table %}

@@ -1,2 +1,2 @@
 module_name = "Search"
-priority = 16
+priority = 17

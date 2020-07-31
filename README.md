@@ -54,11 +54,6 @@ The website is built from different modules. These modules can be found inside t
 
 Modules that are not present on the `modules` directory will not get built and will not appear on the website's main navigation menu. You can also select specific modules to be ran without removing modules from the directory by running the `update-attack.py` script with the `-m` flag followed by the names of the modules. For example, run `python3 update-attack.py -m clean techniques website_build` to run a fresh build, generate the techniques markdown files, and generate the HTML files.
 
-### ATT&CK Archives
-
-The previous-versions feature, built to `/resources/previous-versions/` and `/previous/`, is used to display older versions of the ATT&CK site. This feature is reliant on the [attack-archives](https://github.com/mitre-attack/attack-archives/issues) repository, which stores the archived versions and also provides the functionality to preserve the current site
-in the archive. For more information on how the previous-version system works, please see the [attack-archives repository on github](https://github.com/mitre-attack/attack-archives/issues) or the [archives module](/modules/archives.py).
-
 ## Building the site with custom content
 
 The ATT&CK Website is designed support an evolving knowledge base. The content seen on the site is generated from data in STIX2.0 JSON format. The data used on the live site at [attack.mitre.org](https://attack.mitre.org) can be found on our [mitre/cti](https://github.com/mitre/cti) github repo. 

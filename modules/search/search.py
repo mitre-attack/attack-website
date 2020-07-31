@@ -2,13 +2,17 @@ import os
 import bleach, re
 import json
 import html
+from modules import resources
 from modules import site_config
 
 def generate_index():
     index = []
-    for root, __, files in os.walk("output"):
-        # don't walk previous route
-        if root.startswith(os.path.join(site_config.web_directory, "previous")): continue
+    for root, __, files in os.walk(site_config.web_directory):
+        # don't walk previous routes
+        skip = False
+        for versions_dir in ["previous", "versions"]:
+            if root.startswith(os.path.join(site_config.web_directory, versions_dir)): skip = True
+        if skip: continue
         
         for thefile in filter(lambda fname: fname.endswith(".html"), files):
             thepath = os.path.join(root, thefile)
@@ -42,6 +46,8 @@ def generate_index():
 
             with open(search_file_path, mode="w", encoding='utf8') as search_file:
                 search_file.write(search_contents)
+    
+    preserve_current_version()
 
 skiplines = ["breadcrumb-item", "nav-link"]
 def skipline(line):
@@ -88,3 +94,9 @@ def clean(filepath):
 
     skipindex = skipindex or out == "" or out == " "
     return out, skipindex, title
+
+def preserve_current_version():
+    """ Preserve current version """
+    
+    if resources.versions:
+        resources.versions.deploy_current_version()

@@ -2,6 +2,12 @@ import os
 import re
 from modules import site_config
 
+def generate_subdirectory():
+    """ Build website to subdirectory """
+
+    if site_config.args.subdirectory:
+        replace()   
+
 allowed_in_link = "".join(list(map(lambda s: s.strip(), [
     "   -   ", 
     "   ?   ",

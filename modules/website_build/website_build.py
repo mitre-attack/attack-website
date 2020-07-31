@@ -1,6 +1,5 @@
 import modules
 from . import website_build_config
-from . import subdirectory
 from modules import util
 from modules import matrices
 from modules import site_config
@@ -23,7 +22,6 @@ def generate_website():
     generate_static_pages()
     pelican_content()
     remove_unwanted_output()
-    generate_subdirectory()
 
 def generate_javascript_settings():
     """Creates javascript settings file that will be used to other javascript files"""
@@ -169,10 +167,4 @@ def generate_static_pages():
             content = md.read()
             
             with open(os.path.join(website_build_config.website_build_markdown_path, static_page), "w", encoding='utf8') as md_file:
-                md_file.write(content)
-
-def generate_subdirectory():
-    """ Build website to subdirectory """
-
-    if site_config.args.subdirectory:
-        subdirectory.replace()
+                md_file.write(content) 

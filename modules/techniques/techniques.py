@@ -33,20 +33,20 @@ def generate_techniques():
     # To verify if a technique was generated
     technique_generated = False
 
-    techniques = {}
+    techniques_no_sub = {}
     tactics = {}
 
     ms = util.relationshipgetters.get_ms()
 
     for domain in site_config.domains:
         #Reads the STIX and creates a list of the ATT&CK Techniques
-        techniques[domain] = util.stixhelpers.get_techniques(ms[domain])
+        techniques_no_sub[domain] = util.buildhelpers.filter_out_subtechniques(util.stixhelpers.get_techniques(ms[domain]))
         tactics[domain] = util.stixhelpers.get_tactic_list(ms[domain])
 
-    side_nav_data = get_technique_side_nav_data(techniques, tactics)
+    side_nav_data = get_technique_side_nav_data(techniques_no_sub, tactics)
 
     for domain in site_config.domains:
-        check_if_generated = generate_domain_markdown(domain, techniques, tactics, side_nav_data)
+        check_if_generated = generate_domain_markdown(domain, techniques_no_sub, tactics, side_nav_data)
         if not technique_generated:
             if check_if_generated:
                 technique_generated = True
@@ -54,24 +54,23 @@ def generate_techniques():
     if not technique_generated:
         util.buildhelpers.remove_module_from_menu(techniques_config.module_name)   
 
-def generate_domain_markdown(domain, techniques, tactics, side_nav_data):
+def generate_domain_markdown(domain, techniques_no_sub, tactics, side_nav_data):
     """Generate technique index markdown for each domain and generates 
        shared data for techniques
     """
 
     # Check if there is at least one technique
-    if techniques[domain]:
+    if techniques_no_sub[domain]:
 
-        technique_list_no_sub = util.buildhelpers.filter_out_subtechniques(techniques[domain])
-        techhnique_list_no_sub_no_deprecated = util.buildhelpers.filter_deprecated_revoked(technique_list_no_sub)
+        techhnique_list_no_sub_no_deprecated = util.buildhelpers.filter_deprecated_revoked(techniques_no_sub[domain])
 
         data = {}
 
         data['domain'] = domain.split("-")[0]
 
         # Get technique table data and number of techniques
-        data['technique_table'] = util.buildhelpers.get_technique_table_data(None, techniques[domain])
-        data['technique_list_len'] = str(len(techniques[domain]))
+        data['technique_table'] = util.buildhelpers.get_technique_table_data(None, techhnique_list_no_sub_no_deprecated)
+        data['technique_list_len'] = str(len(techniques_no_sub[domain]))
         data['subtechniques_len'] = util.buildhelpers.get_subtechnique_count(techhnique_list_no_sub_no_deprecated)
 
         # Get tactic-techniques table
@@ -85,7 +84,7 @@ def generate_domain_markdown(domain, techniques, tactics, side_nav_data):
 
         # Create the markdown for the enterprise groups in the STIX
 
-        for technique in technique_list_no_sub:
+        for technique in techniques_no_sub[domain]:
             if 'revoked' not in technique or technique['revoked'] is False:
                 generate_technique_md(technique, domain, side_nav_data, tactics[domain])
         

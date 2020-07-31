@@ -1,4 +1,5 @@
 import os
+from modules import site_config
 
 module_name = "Resources"
 priority = 8
@@ -59,13 +60,14 @@ training_navigation = {
         }
     ]
 }
-        
-prev_versions_deploy_folder = os.path.join("output", "previous")
 
-archives_repo = "https://github.com/mitre-attack/attack-archives.git"
-archives_directory = "attack-archives"
-previous_md = ("Title: Previous Versions\n"
-               "Template: resources/previous-versions\n"
-               "save_as: resources/previous-versions/index.html\n"
+prev_versions_path = "versions"
+prev_versions_deploy_folder = ""
+
+versions_repo = "https://github.com/mitre-attack/attack-website.git"
+versions_directory = "attack-versions"
+versions_md = ("Title: Versions of ATT&CK\n"
+               "Template: resources/versions\n"
+               "save_as: resources/versions/index.html\n"
                "data: ")
-previous_markdown_path = "content/pages/resources"
+versions_markdown_path = "content/pages/resources"

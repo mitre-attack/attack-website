@@ -1,7 +1,7 @@
 import json
 import os
 from . import resources_config
-from . import archives
+from . import versions
 from modules import site_config
 from modules import util
 from datetime import datetime
@@ -24,7 +24,7 @@ def generate_resources():
     generate_training_pages()
     generate_attackcon_page()
     generate_faq_page()
-    generate_previous_versions()
+    generate_versions()
     generate_changelog_page()
     generate_static_pages()
 
@@ -103,8 +103,8 @@ def generate_faq_page():
     with open(os.path.join(resources_config.resources_markdown_path, "faq.md"), "w", encoding='utf8') as md_file:
         md_file.write(faq_content)
 
-def generate_previous_versions():
-    archives.deploy()
+def generate_versions():
+    versions.deploy()
 
 def generate_changelog_page():
     """Responsible for compiling original changelog markdown into changelog markdown file
