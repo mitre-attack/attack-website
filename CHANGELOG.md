@@ -38,6 +38,7 @@
 - The tour is generated through an independent module and steps are chosen depending the available modules. See issue [#166](https://github.com/mitre-attack/attack-website/issues/166).
 - Modules and test arguments are now required if flags are presented. See issue [#177](https://github.com/mitre-attack/attack-website/issues/177).
 - Updated website dependencies. See issue [#181](https://github.com/mitre-attack/attack-website/issues/181).
+- Removed the PRE-ATT&CK domain, including its matrix, techniques/tactics listings, and references to the domain. See issue [#222](https://github.com/mitre-attack/attack-website/issues/222).
 
 ### Fixes
 - Fixed bug where bootstrap dropdown menu buttons require two clicks to open the first time they are opened. See issue [#152](https://github.com/mitre-attack/attack-website/issues/152).
