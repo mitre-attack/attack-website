@@ -6,11 +6,10 @@ from modules import util
 from string import Template
 
 # Domains for stix objects
-domains = ["pre-attack", "enterprise-attack", "mobile-attack"]
+domains = ["enterprise-attack", "mobile-attack"]
 
 # Domain aliases
 domain_aliases = [
-    ["PRE-ATT&CK", "pre"], 
     ["Enterprise", "enterprise"], 
     ["Mobile", "mobile"] 
 ]
@@ -20,7 +19,6 @@ args = []
 
 # Source names for ATT&CK
 source_names = [
-    "mitre-pre-attack", 
     "mitre-attack", 
     "mitre-mobile-attack"
 ]
@@ -63,7 +61,6 @@ stix_directory = data_directory + "/stix"
 attack_path = {
     'enterprise-attack': stix_directory + "/enterprise-attack.json",
     'mobile-attack': stix_directory + "/mobile-attack.json",
-    'pre-attack': stix_directory + "/pre-attack.json"
 }
 
 # Link to instance of the ATT&CK Navigator; change for to a custom location
@@ -74,7 +71,6 @@ navigator_link_mobile = "https://mitre-attack.github.io/attack-navigator/mobile"
 last_attack_path = {
     'enterprise-attack': stix_directory + "/enterprise-attack_old.json",
     'mobile-attack': stix_directory + "/mobile-attack_old.json",
-    'pre-attack': stix_directory + "/pre-attack_old.json"
 }
 
 # Markdown path for redirects

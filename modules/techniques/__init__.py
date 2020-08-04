@@ -13,12 +13,6 @@ def get_menu():
         "priority": techniques_config.priority,
         "children": [
             {
-                "name": "PRE-ATT&CK", 
-                "url": "/techniques/pre/", 
-                "external_link": False,
-                "children": []
-            },
-            {
                 "name": "Enterprise", 
                 "url": "/techniques/enterprise/", 
                 "external_link": False,

@@ -23,6 +23,5 @@ mobile_redirect_dict = {
 # File paths dictionary
 redirects_paths = {
     'enterprise-attack': "wiki/", 
-    'mobile-attack': "mobile/index.php/", 
-    'pre-attack': "pre-attack/index.php/"
+    'mobile-attack': "mobile/index.php/"
 }

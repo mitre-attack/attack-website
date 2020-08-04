@@ -30,15 +30,6 @@ platform_md = Template("Title: Matrix-${domain}-${platform}\n"
 # The tree of matricies on /matrices/
 matrices = [
     {
-        "name": "PRE-ATT&CK",
-        "type": "local",
-        "path": "pre",
-        "platforms": [],
-        "matrix": "pre-attack",
-        "descr": "Below are the tactics and techniques representing the MITRE PRE-ATT&CK Matrix&trade;.",
-        "subtypes": [],
-    },
-    {
         "name": "Enterprise",
         "type": "local",
         "path": "enterprise",

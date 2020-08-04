@@ -13,12 +13,6 @@ def get_menu():
         "priority": tactics_config.priority,
         "children": [
             {
-                "name": "PRE-ATT&CK", 
-                "url": "/tactics/pre/", 
-                "external_link": False,
-                "children": []
-            },
-            {
                 "name": "Enterprise", 
                 "url": "/tactics/enterprise/", 
                 "external_link": False,

@@ -2,9 +2,7 @@
 {% import 'macros/navigation.html' as navigation %}
 
 {% set parsed = page.data | from_json %}
-{% if parsed.domain == "pre" %}
-    {% set title = "Tactics - PRE-ATT&CK | MITRE ATT&CK&reg;" -%}
-{% elif parsed.domain == "mobile" %}
+{% if parsed.domain == "mobile" %}
     {% set title = "Tactics - Mobile | MITRE ATT&CK&reg;" -%}
 {% else %} 
     {% set title = "Tactics - Enterprise | MITRE ATT&CK&reg;" -%}
@@ -21,9 +19,7 @@
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="/">Home</a></li>
         <li class="breadcrumb-item"><a href="/tactics/{{parsed.domain}}/">Tactics</a></li>
-        {% if parsed.domain == "pre" %}
-            <li class="breadcrumb-item">PRE-ATT&CK</li>
-        {% elif parsed.domain == "mobile" %}
+        {% if parsed.domain == "mobile" %}
             <li class="breadcrumb-item">Mobile</li>
         {% else %}
             <li class="breadcrumb-item">Enterprise</li>
@@ -36,17 +32,13 @@
                 <div class="container-fluid">
                     <div class="overflow-x-auto">
                         <h1>
-                            {% if parsed.domain == "pre" %}
-                                PRE-ATT&CK Tactics
-                            {% elif parsed.domain == "mobile" %}
+                            {% if parsed.domain == "mobile" %}
                                 Mobile Tactics
                             {% else %} 
                                 Enterprise Tactics
                             {% endif %}
                         </h1>
-                        {% if parsed.domain == "pre" %}
-                            <h6 class="table-object-count">PRE-ATT&CK Tactics: {{ parsed.tactics_list_len }}</h6>
-                        {% elif parsed.domain == "mobile" %}
+                        {% if parsed.domain == "mobile" %}
                             <h6 class="table-object-count">Mobile Tactics: {{ parsed.tactics_list_len }}</h6>
                         {% else %} 
                             <h6 class="table-object-count">Enterprise Tactics: {{ parsed.tactics_list_len }}</h6>
