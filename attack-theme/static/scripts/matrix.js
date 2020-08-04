@@ -1,3 +1,5 @@
+load_saved_layout();
+
 function matrix_toggle_technique(tactic_id, technique_id) {
     var joined = tactic_id + "--" + technique_id;
     $(".subtechniques--" + joined).toggleClass("hidden");
@@ -43,6 +45,9 @@ function show_side_matrix() {
 
     $(".matrix-type.side").removeClass("d-none");
     $(".matrix-type.flat").addClass("d-none");
+
+    document.getElementById("layout-options").setAttribute("data-selected_layout", "side");
+    save_layout();
 }
 
 function show_flat_matrix() {
@@ -51,6 +56,9 @@ function show_flat_matrix() {
 
     $(".matrix-type.flat").removeClass("d-none");
     $(".matrix-type.side").addClass("d-none");
+
+    document.getElementById("layout-options").setAttribute("data-selected_layout", "flat");
+    save_layout();
 }
 
 function computeScrollMarkers() {
@@ -65,6 +73,18 @@ function computeScrollMarkers() {
     else            leftIndicator.removeClass("show");
     if (!end)       rightIndicator.addClass("show");
     else            rightIndicator.removeClass("show");
+}
+
+function load_saved_layout() {
+    let saved_layout = localStorage.getItem("saved_layout");
+    if (saved_layout == "flat") {
+        show_flat_matrix();
+    }
+}
+
+function save_layout() {
+    let saved_layout = document.getElementById("layout-options").getAttribute("data-selected_layout");
+    localStorage.setItem("saved_layout", saved_layout);
 }
 
 $(".matrix-scroll-box").scroll(computeScrollMarkers); //respond to scrolling in matrix scroll boxes
