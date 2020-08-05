@@ -13,7 +13,7 @@ from . import util
 # Settings dictionary to build website
 settings_dict = {
     "content_version": "7.2",
-    "website_version": "2.1.2",
+    "website_version": "2.1.3",
     "changelog_location": "/resources/changelog.html",
     "logo_header": "/theme/images/mitre_attack_logo.png",
     "logo_footer": "/theme/images/mitrelogowhiteontrans.gif",

@@ -31,6 +31,11 @@
 <!--          addition of notable features. When PATCH is 0 it can      -->
 <!--          be omitted                                                -->
 
+# Changes staged on develop
+## ATT&CK Website version 2.1.3
+### Improvements
+- Added note on the [CTI training page](https://attack.mitre.org/resources/training/cti/) to indicate that ATT&CK v6 should be used instead of ATT&CK v7. See issue [#221](https://github.com/mitre-attack/attack-website/issues/221).
+
 # 15 July 2020
 ## [ATT&CK Content version 7.2](https://github.com/mitre/cti/releases/tag/ATT%26CK-v7.2)
 This minor release includes the following bugfixes:
