@@ -26,7 +26,7 @@ index_matrix = {
     "name": "ATT&CK Matrix for Enterprise",
     "descr": "", # if specified, adds a subtitle to the index page matrix
     "matrix": "enterprise-attack",
-    "platforms": ["Windows", "macOS", "Linux"]
+    "platforms": ["Windows", "macOS", "Linux", "AWS", "GCP", "Azure", "Azure AD", "Office 365", "SaaS", "Network"]
 }
 
 # ATT&CK overview
