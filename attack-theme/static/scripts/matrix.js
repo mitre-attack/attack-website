@@ -1,7 +1,5 @@
-var path = window.location.pathname.toLowerCase();
-
-if (path.indexOf("pre") < 0 && path.indexOf("mobile") < 0) {
-    load_saved_layout();   
+if (document.getElementById("layout-options")) {
+    load_saved_layout();
 }
 
 function matrix_toggle_technique(tactic_id, technique_id) {
