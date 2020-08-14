@@ -126,7 +126,7 @@ def generate_static_pages():
         the markdown directory
     """
 
-    static_pages_dir = os.path.join('modules', resources_config.module_name, 'static_pages')
+    static_pages_dir = os.path.join('modules', 'resources', 'static_pages')
 
     for static_page in os.listdir(static_pages_dir):
 
