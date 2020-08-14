@@ -17,37 +17,37 @@ def generate_json():
                     routes[module] = all_routes[module]
     else:
         routes = all_routes
-
+    
     for root, __, files in os.walk("output"):
         # only walk specified routes for object pages
         for route, value in routes.items():
-            if value in json_data.keys():
-                if root.startswith(os.path.join(site_config.web_directory, route)):
-                    for thefile in filter(lambda fname: fname.endswith(".html"), files):
-                        # Get the path of the html files only
-                        thepath = os.path.join(root, thefile)
-                        # Sanitize first; not all html files are suitable for this random page feature
-                        skipindex = check_skipindex(thepath)
-                        if not skipindex:
-                            add_to_json = False
-                            # Make sure the page isn't an object index page
-                            if route == "matrices":
-                                add_to_json = True
-                            elif route == "tactics" and re.search(r"TA[0-9]{4}", thepath):
-                                add_to_json = True
-                            elif route == "techniques" and re.search(r"T[0-9]{4}", thepath):
-                                add_to_json = True
-                            elif route == "mitigations" and re.search(r"M[0-9]{4}", thepath):
-                                add_to_json = True
-                            elif route == "groups" and re.search(r"G[0-9]{4}", thepath):
-                                add_to_json = True
-                            elif route == "software" and re.search(r"S[0-9]{4}", thepath):
-                                add_to_json = True
-
-                            if add_to_json:
-                                json_data[value].append(thepath[6:])
-            else:
+            if value not in json_data.keys():
                 json_data[value] = []
+
+            if root.startswith(os.path.join(site_config.web_directory, route)):
+                for thefile in filter(lambda fname: fname.endswith(".html"), files):
+                    # Get the path of the html files only
+                    thepath = os.path.join(root, thefile)
+                    # Sanitize first; not all html files are suitable for this random page feature
+                    skipindex = check_skipindex(thepath)
+                    if not skipindex:
+                        add_to_json = False
+                        # Make sure the page isn't an object index page
+                        if route == "matrices":
+                            add_to_json = True
+                        elif route == "tactics" and re.search(r"TA[0-9]{4}", thepath):
+                            add_to_json = True
+                        elif route == "techniques" and re.search(r"T[0-9]{4}", thepath):
+                            add_to_json = True
+                        elif route == "mitigations" and re.search(r"M[0-9]{4}", thepath):
+                            add_to_json = True
+                        elif route == "groups" and re.search(r"G[0-9]{4}", thepath):
+                            add_to_json = True
+                        elif route == "software" and re.search(r"S[0-9]{4}", thepath):
+                            add_to_json = True
+
+                        if add_to_json:
+                            json_data[value].append(thepath[6:])
     
     if not os.path.isdir(site_config.web_directory):
         os.makedirs(site_config.web_directory)
