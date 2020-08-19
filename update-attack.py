@@ -37,7 +37,6 @@ def get_parsed_args():
                         help='Pull down the current STIX data from the MITRE/CTI GitHub respository')
     parser.add_argument('--no-stix-link-replacement', action='store_true',
                         help="If this flag is absent, links to attack.mitre.org/[page] in the STIX data will be replaced with /[page]. Add this flag to preserve links to attack.mitre.org.")
-    
     parser.add_argument('--modules', '-m', nargs='+',
                         type=str,
                         choices=module_choices,
@@ -54,18 +53,14 @@ def get_parsed_args():
                              "links (dead internal hyperlinks and relative hyperlinks); "
                              "external_links (dead external hyperlinks); "
                              "citations (unparsed citation text).")
-    
     parser.add_argument('--proxy', help="set proxy")
-
     parser.add_argument('--subdirectory', 
                         help="If you intend to host the site from a sub-directory, specify the directory using this flag.",
                         type=validate_subdirectory_string)
-
     parser.add_argument("--print-tests", 
                         dest="print_tests", 
                         action="store_true",
                         help="Force test output to print to stdout even if the results are very long.")
-
     parser.add_argument("--no-test-exitstatus", 
                         dest="override_exit_status", 
                         action='store_true', 
@@ -104,9 +99,21 @@ def remove_from_build(arg_modules):
                 copy_of_menu.append(module)
         
         modules.menu_ptr = copy_of_menu
-    
+
+    def remove_pelican_settings():
+        """ Remove pelican settings from module if it is not in modules list from argument """
+
+        copy_of_settings = []
+
+        for module in modules.pelican_settings:
+            if module["name"].lower() in arg_modules:
+                copy_of_settings.append(module)
+        
+        modules.pelican_settings = copy_of_settings
+
     remove_from_running_pool()
     remove_from_menu()
+    remove_pelican_settings()
 
 if __name__ == "__main__":
     """Beginning of ATT&CK update module"""

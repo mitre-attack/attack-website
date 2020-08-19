@@ -143,7 +143,7 @@ def stixToHTML(data, citations, firstParagraphOnly):
 
     # Open stix replacement settings file only once to get value
     if not open_stix_replacement_file:
-        stix_replacement_file = os.path.join("data", "stix_replacement.js")
+        stix_replacement_file = os.path.join("data", "stix_replacement.json")
         with open(stix_replacement_file, "r", encoding='utf8') as js_f:
             no_stix_link_replacement = json.load(js_f)["no_stix_replacement"]
             open_stix_replacement_file = True

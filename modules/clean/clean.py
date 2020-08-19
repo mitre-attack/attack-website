@@ -40,6 +40,6 @@ def clean_website_build():
         os.remove(settings_js)
 
     # Remove stix replacement settings file
-    stix_replacement_settings = os.path.join(site_config.data_directory, "stix_replacement.js")
+    stix_replacement_settings = os.path.join(site_config.data_directory, "stix_replacement.json")
     if os.path.isfile(stix_replacement_settings):
         os.remove(stix_replacement_settings)
