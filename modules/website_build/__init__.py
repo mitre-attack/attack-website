@@ -7,7 +7,3 @@ def get_priority():
     
 def run_module():
     return (website_build.generate_website(), website_build_config.module_name)
-
-def send_to_pelican():
-    print(site_config.args)
-    return {'no-stix-link-replacement': site_config.args.no_stix_link_replacement}

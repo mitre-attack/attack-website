@@ -3,6 +3,7 @@ import json
 import markdown
 import re
 import os
+from modules import site_config
 
 # Template for HTML references inside of STIX data
 reference_marker_template = ("<span onclick=scrollToRef('scite-{}') "
@@ -16,6 +17,13 @@ reference_marker_template_no_url = ("<span onclick=scrollToRef('scite-{}') "
                                     "class=\"scite-citeref-number\" "
                                     "data-reference=\"{}\">"
                                     "<sup>[{}]</sup></span>")
+
+# Pelican settings global variable
+pelican_settings = {}
+
+pelican_settings_f = os.path.join(site_config.data_directory, "pelican_settings.json")
+with open(pelican_settings_f, "r", encoding='utf8') as json_f:
+    pelican_settings = json.load(json_f)
 
 # Custom Jinja Filters
 
@@ -109,12 +117,10 @@ def remove_citations(data):
 
     return data
 
-no_stix_link_replacement = True
 def filter_urls(data):
     """Filters out URLs to return path and not domain"""
 
-    global no_stix_link_replacement
-    if not no_stix_link_replacement:
+    if not pelican_settings["no_stix_link_replacement"]:
         if "https://attack.mitre.org/groups/" in data:
             data = data.replace(
                 "https://attack.mitre.org/groups/", "/groups/")
@@ -129,7 +135,6 @@ def filter_urls(data):
                 "https://attack.mitre.org/technique/", "/techniques/")
     return data
 
-open_stix_replacement_file = False
 def stixToHTML(data, citations, firstParagraphOnly):
     """ Clean output of STIX content.
         params:
@@ -137,16 +142,6 @@ def stixToHTML(data, citations, firstParagraphOnly):
             citations (optional, object), if not None, add citation markers to the data.
             firstParagraphOnly (optional, boolean), if true, only return the first paragraph of the data in question.
     """
-
-    global open_stix_replacement_file
-    global no_stix_link_replacement
-
-    # Open stix replacement settings file only once to get value
-    if not open_stix_replacement_file:
-        stix_replacement_file = os.path.join("data", "stix_replacement.json")
-        with open(stix_replacement_file, "r", encoding='utf8') as js_f:
-            no_stix_link_replacement = json.load(js_f)["no_stix_replacement"]
-            open_stix_replacement_file = True
 
     # Replace data from markdown format
     data = markdown.markdown(data)

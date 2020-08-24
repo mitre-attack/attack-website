@@ -100,20 +100,8 @@ def remove_from_build(arg_modules):
         
         modules.menu_ptr = copy_of_menu
 
-    def remove_pelican_settings():
-        """ Remove pelican settings from module if it is not in modules list from argument """
-
-        copy_of_settings = []
-
-        for module in modules.pelican_settings:
-            if module["name"].lower() in arg_modules:
-                copy_of_settings.append(module)
-        
-        modules.pelican_settings = copy_of_settings
-
     remove_from_running_pool()
     remove_from_menu()
-    remove_pelican_settings()
 
 if __name__ == "__main__":
     """Beginning of ATT&CK update module"""
@@ -124,6 +112,9 @@ if __name__ == "__main__":
     # If modules flags are called only run modules selected by user
     if args.modules:
         remove_from_build(args.modules)
+    
+    # Arguments used for pelican
+    site_config.send_to_pelican("no_stix_link_replacement", args.no_stix_link_replacement)
 
     # Start time of update
     update_start = time.time()

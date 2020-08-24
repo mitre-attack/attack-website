@@ -18,6 +18,13 @@ domain_aliases = [
 # Args for modules to use if needed
 args = []
 
+# Staged for pelican settings
+staged_pelican = {}
+
+def send_to_pelican(key, value):
+    """ Method to stage key value pairs for pelican use """
+    staged_pelican[key] = value
+
 # Source names for ATT&CK
 source_names = [
     "mitre-pre-attack", 
@@ -120,4 +127,3 @@ layer_md = Template("Title: ${domain} Techniques\n"
                     "Template: general/json\n"
                     "save_as: ${path}/${attack_id}-${domain}-layer.json\n"
                     "json: ")
-no_stix_link_replacement = ""
