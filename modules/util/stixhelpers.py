@@ -1,5 +1,5 @@
 import json
-import stix2
+import stix2.v20 as stix2
 import stix2.utils
 from modules import site_config
 from . import buildhelpers
@@ -91,7 +91,7 @@ def get_examples(tech_stix_id, src):
     examples = []
     ext_refs = []
     for r in src.relationships(tech_stix_id, 'uses', target_only=True):
-        if stix2.utils.get_type_from_id(r.source_ref) in ['intrusion-set', 'tool', 'malware']:
+        if stix2utils.get_type_from_id(r.source_ref) in ['intrusion-set', 'tool', 'malware']:
             curr_refs = None
             attack_id = None
             if 'external_references' in r:

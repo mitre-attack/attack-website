@@ -1,4 +1,4 @@
-from stix2 import MemoryStore, Filter
+from stix2.v20 import MemoryStore, Filter
 import json
 from itertools import chain
 

@@ -5,7 +5,6 @@ import json
 import re
 import collections
 import shutil
-import stix2
 import string
 import math
 import os
