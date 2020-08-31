@@ -41,12 +41,12 @@ let tourSteps = [
         orphan: true,
         backdrop: false,
         title: "End of tour",
-        content: "We hope you have enjoyed this tour of the sub-techniques features of the ATT&CK website. If you have any feedback or suggestions, please visit <a href='" + base_url + "contact'>the contact page</a> to get in touch.",
+        content: "We hope you have enjoyed this tour of the sub-techniques features of the ATT&CK website. If you have any feedback or suggestions, please visit <a href='" + base_url + "/contact'>the contact page</a> to get in touch.",
         onShow: function() {
             lastStepReached = true;
         },
         onNext: function() {
-            window.location.href = base_url;
+            window.location.href = base_url == ""? "/" : base_url;
         }
     }    
 ]
@@ -58,7 +58,7 @@ let tour = new Tour({
     showProgressBar: !isSiteTour,
     showProgressText: !isSiteTour,
     onEnd: function() {
-        if (lastStepReached) window.location.href = base_url;
+        if (lastStepReached) window.location.href = base_url == ""? "/" : base_url;
     }
 })
 
