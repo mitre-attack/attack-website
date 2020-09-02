@@ -1,6 +1,5 @@
 import json
 import stix2
-import stix2.utils
 from modules import site_config
 from . import buildhelpers
 

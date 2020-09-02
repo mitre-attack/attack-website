@@ -5,8 +5,6 @@ import collections
 import urllib3
 import re
 import markdown
-import stix2
-import time
 from . import techniques_config
 from modules import site_config
 from modules import util

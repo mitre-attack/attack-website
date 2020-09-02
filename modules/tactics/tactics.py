@@ -5,7 +5,6 @@ import collections
 import urllib3
 import re
 import markdown
-import stix2
 from modules import site_config
 from modules import util
 from . import tactics_config
