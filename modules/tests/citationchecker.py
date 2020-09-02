@@ -3,7 +3,7 @@ import os
 from . import tests_config
 from modules import site_config
 
-potential_issues_list = ['[(]Citation: [^)]+[)]']
+potential_issues_list = ['\(Citation: ?[^)]+\)?']
 
 def citations_check():
     """Check for broken citations: (Citation: *) in HTML pages"""

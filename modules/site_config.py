@@ -70,13 +70,6 @@ attack_path = {
 navigator_link_enterprise = "https://mitre-attack.github.io/attack-navigator/enterprise"
 navigator_link_mobile = "https://mitre-attack.github.io/attack-navigator/mobile"
 
-# Old stix content
-last_attack_path = {
-    'enterprise-attack': stix_directory + "/enterprise-attack_old.json",
-    'mobile-attack': stix_directory + "/mobile-attack_old.json",
-    'pre-attack': stix_directory + "/pre-attack_old.json"
-}
-
 # Markdown path for redirects
 redirects_markdown_path = "content/pages/redirects/"
 

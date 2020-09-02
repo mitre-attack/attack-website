@@ -159,8 +159,9 @@ def get_mitigation_table_data(mitigation_list):
 
             row['name'] = mitigation['name']
 
-            descr = re.sub(' \((Citation:.*?)\)', '', mitigation['description'], flags=re.MULTILINE)
-            descr = re.sub('\((Citation:.*?)\)', '', descr, flags=re.MULTILINE)
+            descr = re.sub(' \((Citation: .*?)\)', '', mitigation['description'], flags=re.MULTILINE)
+            descr = re.sub('\((Citation: .*?)\)', '', descr, flags=re.MULTILINE)
+
             if descr.split("\n")[0] == '### Windows':
                 descr = markdown.markdown(descr.split("\n")[2])
             else:

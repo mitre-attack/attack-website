@@ -1,5 +1,4 @@
 <!--    CHANGELOG FORMAT                                                -->
-
 <!--    Completed Entry template:                                       -->
 <!--                                                                    -->
 <!--    # Date in DD MMM YYYY format                                    -->
@@ -10,16 +9,12 @@
 <!--    ## [ATT&CK Content version ##.##](link to release on mitre/cti) --> 
 <!--    See the release notes [here](link to release notes).           // if major change -->
 <!--    ### Fixes                                                      // else            -->
-
-
 <!--    Entries for pull request template:                              -->
 <!--                                                                    -->
 <!--    # Changes staged on develop                                     -->
 <!--    ### New Features                                                -->
 <!--    ### Improvements                                                -->
 <!--    ### Fixes                                                       -->
-
-
 <!--    VERSION NUMBERING (WEBSITE)                                     -->
 <!--                                                                    -->
 <!--    website versions are set up in a major.minor.patch format:      -->
@@ -30,6 +25,7 @@
 <!--    PATCH updates are when a bugfix is made without the             -->
 <!--          addition of notable features. When PATCH is 0 it can      -->
 <!--          be omitted                                                -->
+
 # Modularization
 ## ATT&CK Website version 3.0
 ### Improvements
@@ -41,30 +37,82 @@
 - Updated website dependencies. See issue [#181](https://github.com/mitre-attack/attack-website/issues/181).
 - Matrix layouts on the home page and matrices page now persist across pages and sessions. See issue [#165](https://github.com/mitre-attack/attack-website/issues/165).
 - Added [Network matrix](https://attack.mitre.org/matrices/network). See issue [#230](https://github.com/mitre-attack/attack-website/issues/230).
-
 ### Fixes
 - Fixed bug where bootstrap dropdown menu buttons require two clicks to open the first time they are opened. See issue [#152](https://github.com/mitre-attack/attack-website/issues/152).
-- Fixed navigator links on groups and software pages that were repeating the domain on the URI. See issue [#169](https://github.com/mitre-attack/attack-website/issues/169).
 - Fixed subdirectory support for navigator links on groups and software pages. See issue [#170](https://github.com/mitre-attack/attack-website/issues/170).
 - Fixed typo on the Training page. See issue [#180](https://github.com/mitre-attack/attack-website/issues/180).
 - Fixed (for most scenarios) slow loading of the search index when using Firefox. See issues [#167](https://github.com/mitre-attack/attack-website/issues/167) and [#187](https://github.com/mitre-attack/attack-website/issues/187).
 - Fixed versioning feature ran under a subdirectory. See issue [#200](https://github.com/mitre-attack/attack-website/issues/200).
 
-# Sub-techniques Beta
+# 6 August 2020
+## ATT&CK Website version 2.1.3
+### Improvements
+- Added note on the [CTI training page](https://attack.mitre.org/resources/training/cti/) to indicate that ATT&CK v6 should be used instead of ATT&CK v7. See issue [#221](https://github.com/mitre-attack/attack-website/issues/221).
+
+# 15 July 2020
+## [ATT&CK Content version 7.2](https://github.com/mitre/cti/releases/tag/ATT%26CK-v7.2)
+This minor release includes the following bugfixes:
+
+- Removed Windows platform from Modify Authentication Process: [Pluggable Authentication Modules](https://attack.mitre.org/techniques/T1556/003/).
+- Updated contributors for Account Manipulation: [Additional Azure Service Principal Credentials](https://attack.mitre.org/techniques/T1098/001/).
+- Added missing `x_mitre_is_subtechnique` field to several techniques.
+- Updated T1064 in the sub-technique crosswalks.
+
+# 13 July 2020
+## [ATT&CK Content version 7.1](https://github.com/mitre/cti/releases/tag/ATT%26CK-v7.1)
+This minor release includes the following bugfixes:
+
+- Removed Azure platform from Brute Force: [Password Cracking](https://attack.mitre.org/techniques/T1110/002/).
+- Added Linux and macOS platforms to [Deobfuscate/Decode Files or Information](https://attack.mitre.org/techniques/T1140/) and Impair Defenses: [Indicator Blocking](https://attack.mitre.org/techniques/T1562/006/).
+- Updated contributor information on [Masquerading](https://attack.mitre.org/techniques/T1036/) and Event Triggered Execution: [Component Object Model Hijacking](https://attack.mitre.org/techniques/T1546/015/).
+- Fixed broken citations on [Multi Factor Authentication](https://attack.mitre.org/mitigations/M1032/), [Enterprise Policy](https://attack.mitre.org/mitigations/M1012/), [Encrypt Sensitive Information](https://attack.mitre.org/mitigations/M1041/), [Audit](https://attack.mitre.org/mitigations/M1047/), [Access Notifications](https://attack.mitre.org/techniques/T1517/) and [Data from Cloud Storage Object](https://attack.mitre.org/techniques/T1530/).
+- Fixes for various STIX objects (mostly relationships) which were included in the wrong domain bundle. These changes do not affect what's displayed on the ATT&CK Website, but rather corrects where the data is found in the source STIX bundles. See issue [MITRE/CTI#74](https://github.com/mitre/cti/issues/74).
+
+| Change | About |
+    |:-------|:------------|
+    | Removed the relationship [Dark Caracal](https://attack.mitre.org/groups/G0070/) ⟹ [Pallas](https://attack.mitre.org/software/S0399/) from enterprise-attack | Relationship moved to mobile |
+    | Removed the relationship [Bouncing Golf](https://attack.mitre.org/groups/G0097/) ⟹ [GolfSpy](https://attack.mitre.org/software/S0421/) from enterprise-attack | Relationship moved to mobile |
+    | Removed the group [Bouncing Golf](https://attack.mitre.org/groups/G0097/) from enterprise-attack | Group should be mobile only (was previously in both domain bundles) |
+    | Added the relationship [Dark Caracal](https://attack.mitre.org/groups/G0070/) ⟹ [FinFisher](https://attack.mitre.org/software/S0182/) to mobile-attack | Relationship was only present in enterprise, but since both objects are in both domains the relationship should be duplicated across bundles. |
+    | Added the relationship [Dark Caracal](https://attack.mitre.org/groups/G0070/) ⟹ [Pallas](https://attack.mitre.org/software/S0399/) to mobile-attack | Relationship moved from enterprise |
+    | Added the relationship [Bouncing Golf](https://attack.mitre.org/groups/G0097/) ⟹ [GolfSpy](https://attack.mitre.org/software/S0421/) to mobile-attack | Relationship moved from enterprise |
+
+
+## ATT&CK Website version 2.1.2
+### Improvements
+- Added links to ATT&CK Navigator layers for the July 2020 release. See issues [attack-website#208](https://github.com/mitre-attack/attack-website/issues/208), and [attack-navigator#194](https://github.com/mitre-attack/attack-navigator/issues/194).
+- Updated contribute page. See issue [#207](https://github.com/mitre-attack/attack-website/issues/207).
+### Fixes
+- Corrected the end date of v6 in the [preserved version](https://attack.mitre.org/versions/v6/), on the [Versions of ATT&CK page](https://attack.mitre.org/resources/versions/), and [v6 release notes](https://attack.mitre.org/resources/updates/updates-october-2019/index.html). See issue [#204](https://github.com/mitre-attack/attack-website/issues/204).
+- Removed links to the `/beta/` website from the changelog and March 2020 release notes. See issue [#205](https://github.com/mitre-attack/attack-website/issues/205).
+- Updated the broken citation tests to catch malformed citations where `Citation:` is not followed by a space. See issue [#209](https://github.com/mitre-attack/attack-website/issues/209).
+- Fixed bug where the "Versions of ATT&CK" segment of the tour would loop instead of sending the user back to the site index. See issue [#203](https://github.com/mitre-attack/attack-website/issues/203).
+- Fixed the preserved v6 and v3 versions of the site so that the search interface doesn't send the user to the current site when they click on links. See issue [#215](https://github.com/mitre-attack/attack-website/issues/215).
+- Fixed a typo on the enterprise matrices.
+
+# 8 July 2020
+## [ATT&CK Content version 7.0](https://github.com/mitre/cti/releases/tag/ATT%26CK-v7.0)
+See release notes [here](https://attack.mitre.org/resources/updates/updates-july-2020/index.html).
+
 ## ATT&CK Website version 2.1.1
 ### Improvements
 - Improved matrix page header layout with versioning feature. See issue [#190](https://github.com/mitre-attack/attack-website/issues/190).
 - Added versioning feature to [tour](https://attack.mitre.org/?tour=true). See issue [#191](https://github.com/mitre-attack/attack-website/issues/191).
+### Fixes
+- Fixed number of tactics displayed on tactics overview pages. See issue [#183](https://github.com/mitre-attack/attack-website/issues/183).
+- Fixed objects without descriptions not showing up on techniques used tables. See issue [#186](https://github.com/mitre-attack/attack-website/issues/186).
+- Fixed a bug where contributor lists were delimited with commas instead of semicolons on group and software pages. See issue [#196](https://github.com/mitre-attack/attack-website/issues/196).
 
 ## ATT&CK Website version 2.1
 ### New Features
 - Added tooltips to all matrices to show tactic IDs, technique IDs, and sub-technique IDs when hovering over tactic names, technique names, and sub-technique names. See issue [#120](https://github.com/mitre-attack/attack-website/issues/120).
 
 ### Improvements
-- The site is now easier to rebrand; color themes and logos can now be changed with simple modifications to the site code. See issue [#80](https://github.com/mitre-attack/attack-website/issues/80)
+- The site is now easier to rebrand; color themes and logos can now be changed with simple modifications to the site code. See issue [#80](https://github.com/mitre-attack/attack-website/issues/80).
 - Added horizontal scroll indicators to matrices so that it's easier to tell when there's more to the left or right. See issue [#93](https://github.com/mitre-attack/attack-website/issues/93).
 - The website tour route is now generated dynamically, allowing the site to adapt the tour to custom STIX content. See issue [#110](https://github.com/mitre-attack/attack-website/issues/110).
 - Added Navigator layers to the changelog of the sub-techniques update. See issue [#126](https://github.com/mitre-attack/attack-website/issues/126).
+- Updated [contribute page](/resources/contribute). See issue [#162](https://github.com/mitre-attack/attack-website/issues/162).
 
 ### Fixes
 - Added internet explorer support for the sub-techniques matrix. Improved behavior of sub-techniques matrix in Edge browser. See issue [#114](https://github.com/mitre-attack/attack-website/issues/114).
@@ -75,8 +123,8 @@
 - Fixed a crash that occurred when building the site with mitigations that have no relationships with techniques. See issue [#153](https://github.com/mitre-attack/attack-website/issues/153).
 - Fixed outdated ATT&CK Navigator link on the contact page. See issue [#143](https://github.com/mitre-attack/attack-website/issues/143).
 - Updated incorrect technique count on March 2020 update. See issue [#141](https://github.com/mitre-attack/attack-website/issues/141).
-- Fixed number of tactics displayed on tactics overview pages. See issue [#183](https://github.com/mitre-attack/attack-website/issues/183).
 
+# March 31, 2020
 ## ATT&CK Website version 2.0
 ### New Features
 - Added sub-techniques.
@@ -94,7 +142,7 @@
         - Show-all / hide-all buttons were added to show/hide all sub-techniques. See issue [#43](https://github.com/mitre-attack/attack-website/issues/43).
         - Added "help" button to matrices which plays the matrix portion of the sub-technique tour. See issue [#28](https://github.com/mitre-attack/attack-website/issues/28).
     - Added sub-technique support for technique usage ATT&CK Navigator layers on group and software pages. See issue [#29](https://github.com/mitre-attack/attack-website/issues/29).
-- Added the "take a tour" feature. The tour feature guides the user through the sub-technique changes. Click "take a tour" on the homepage or follow [this link](https://attack.mitre.org/beta/?tour=true) to start the tour automatically. See issue [#28](https://github.com/mitre-attack/attack-website/issues/28).
+- Added the "take a tour" feature. The tour feature guides the user through the sub-technique changes. Click "take a tour" on the homepage or follow [this link](https://attack.mitre.org/?tour=true) to start the tour automatically. See issue [#28](https://github.com/mitre-attack/attack-website/issues/28).
 
 ### Improvements
 - Improvements to deprecated techniques. See issue [#116](https://github.com/mitre-attack/attack-website/issues/116).
@@ -106,8 +154,14 @@
 - Matrix timestamps are now calculated from the modified date on the x-mitre-matrix STIX object. Additionally, said timestamps are now formatted the same as modified dates on other pages of the website. See issue [#27](https://github.com/mitre-attack/attack-website/issues/27).
 - Revisions to the layout of the matrix pages to improve readability when multiple matrices occur within a domain.
 
-## [ATT&CK Content version 7.0-beta](https://github.com/mitre/cti/tree/4d3f22d81af2424f3885b4390793ee8eb256d10d)
-See release notes [here](https://attack.mitre.org/beta/resources/updates/updates-march-2020/index.html).
+## [ATT&CK Content version 7.0-beta](https://github.com/mitre/cti/releases/tag/ATT%26CK-v7.0-beta)
+See release notes [here](https://attack.mitre.org/resources/updates/updates-march-2020/index.html).
+
+# 17 June 2020
+## ATT&CK Website version 1.3.1
+### Fixes
+- Fixed navigator links on groups and software pages that were repeating the domain on the URI. See issues [#169](https://github.com/mitre-attack/attack-website/issues/169) and [#192](https://github.com/mitre-attack/attack-website/issues/192).
+
 # 10 June 2020
 ## ATT&CK Website version 1.3
 This update includes a major refactor of the ATT&CK catalog versioning system, previously referred to as "previous versions."
@@ -124,7 +178,7 @@ This update includes a major refactor of the ATT&CK catalog versioning system, p
 - Updated past release notes to mention the version number for each release.
 
 # 31 March 2020
-The sub-techniques beta is <a href='https://attack.mitre.org/beta/' target='_blank'>now live</a>! Read the <a target='_blank' href='https://medium.com/mitre-attack/attack-subs-what-you-need-to-know-99bce414ae0b'>release blog post</a> for more details. Check out the [beta changelog](https://attack.mitre.org/beta/resources/changelog.html) for the full list of website changes.
+The sub-techniques beta is now live! Read the <a target='_blank' href='https://medium.com/mitre-attack/attack-subs-what-you-need-to-know-99bce414ae0b'>release blog post</a> for more details.
 ### Changes
 - Added sub-techniques release announcement banner.
 - Added sub-techniques release docs
