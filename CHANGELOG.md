@@ -37,6 +37,8 @@
 - Updated website dependencies. See issue [#181](https://github.com/mitre-attack/attack-website/issues/181).
 - Matrix layouts on the home page and matrices page now persist across pages and sessions. See issue [#165](https://github.com/mitre-attack/attack-website/issues/165).
 - Added [Network matrix](https://attack.mitre.org/matrices/network). See issue [#230](https://github.com/mitre-attack/attack-website/issues/230).
+- Removed PRE-ATT&CK domain to support migration into the new (TODO: list and link to tactics) tactics in Enterprise-ATT&CK. See issue [#222](https://github.com/mitre-attack/attack-website/issues/222).
+
 ### Fixes
 - Fixed bug where bootstrap dropdown menu buttons require two clicks to open the first time they are opened. See issue [#152](https://github.com/mitre-attack/attack-website/issues/152).
 - Fixed subdirectory support for navigator links on groups and software pages. See issue [#170](https://github.com/mitre-attack/attack-website/issues/170).

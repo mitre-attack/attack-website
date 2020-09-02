@@ -12,7 +12,7 @@ def query_all(srcs, filters):
 def get_related(srcs, src_type, rel_type, target_type, reverse=False):
     """build relationship mappings
        params:
-         srcs: memorystores for enterprise, mobile and pre-attack, in an array
+         srcs: memorystores for enterprise and mobile in an array
          src_type: source type for the relationships, e.g "attack-pattern"
          rel_type: relationship type for the relationships, e.g "uses"
          target_type: target type for the relationship, e.g "intrusion-set"
