@@ -20,7 +20,9 @@ def generate_website():
     generate_base_html()
     generate_index_page()
     generate_static_pages()
+    store_pelican_settings()
     pelican_content()
+    remove_pelican_settings()
     remove_unwanted_output()
 
 def generate_javascript_settings():
@@ -112,12 +114,26 @@ def generate_index_page():
     with open(website_build_config.attack_index_path, "w", encoding='utf8') as md_file:
         md_file.write(subs)
 
+def store_pelican_settings():
+    """ Store pelican settings """
+
+    pelican_settings_f = os.path.join(site_config.data_directory, "pelican_settings.json")
+    with open(pelican_settings_f, "w", encoding='utf8') as json_f:
+        json_f.write(json.dumps(site_config.staged_pelican))
+
 def pelican_content():
     # Run pelican with limited output, -q is for quiet
     if site_config.subdirectory:
         subprocess.check_output(f"pelican content -q -o {site_config.web_directory}", shell=True)
     else:
         subprocess.check_output("pelican content -q", shell=True)
+
+def remove_pelican_settings():
+    """ Remove pelican settings """
+
+    pelican_settings_f = os.path.join(site_config.data_directory, "pelican_settings.json")
+    if os.path.isfile(pelican_settings_f):
+        os.remove(pelican_settings_f)
     
 def remove_unwanted_output():
     """Remove unwanted files from the output directory"""

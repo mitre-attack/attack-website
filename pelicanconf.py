@@ -1,10 +1,12 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*- #
 from __future__ import unicode_literals
-import json
-import uuid
+
+# Need to update path with current directory in order to
+# read file with custom jinja filters 
 import sys
-import os
+sys.path.append('.')
+import custom_jinja_filters
 
 # import plugins
 PLUGIN_PATHS = ['plugins']
@@ -36,42 +38,10 @@ ARTICLE_PATHS = ['pages/updates']
 # Uncomment following line if you want document-relative URLs when developing
 RELATIVE_URLS = False
 
-# custom jinja filters
-# remove index.html from end of a path, add / if not at beginning
-def clean_path(path): 
-    path = path.split("index.html")[0]
-    if not path.startswith("/"): path = "/" + path
-    if not path.endswith("/"): path += "/"
-    return path
-# get a flattened tree of the "paths" of all children of a tree of objects.
-# used in sidenav
-def flatten_tree(root):
-    ret = []
-    if root["path"]: ret.append(root["path"])
-    for child in root["children"]:
-        ret = ret + flatten_tree(child)
-    return ret
-
-current_version_permalink = None
-def permalink(link):
-    """convert from a link to a permalink of that link, e.g /x/y => /versions/v6/x/y
-       uses data/versions.json's current object to determine what the current version is for the permalink
-    """
-
-    global current_version_permalink
-    # load the current version permalink
-    if not current_version_permalink:
-        with open(os.path.join("data", "versions.json"), "r") as f:
-            current_version_permalink = "/versions/" + json.load(f)["current"]["name"].split(".")[0]
-    # remove index.html from the end
-    link = link.split("index.html")[0] if link.endswith("index.html") else link
-    # strip index.html from path
-    return current_version_permalink + "/" + link
-
-
 JINJA_FILTERS = {
-    'from_json':json.loads,
-    'flatten_tree': flatten_tree,
-    'clean_path': clean_path,
-    'permalink': permalink
+    'from_json': custom_jinja_filters.json.loads,
+    'flatten_tree': custom_jinja_filters.flatten_tree,
+    'clean_path': custom_jinja_filters.clean_path,
+    'stixToHTML': custom_jinja_filters.stixToHTML,
+    'permalink': custom_jinja_filters.permalink
 }

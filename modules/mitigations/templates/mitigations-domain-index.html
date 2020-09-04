@@ -1,5 +1,6 @@
 {% extends "general/two-column.html" %} 
 {% import 'macros/navigation.html' as navigation %}
+{% import 'macros/clean_output.html' as clean_output %}
 
 {% set parsed = page.data | from_json %}
 {% if parsed.domain == "mobile" %}
@@ -67,7 +68,7 @@
                                         {% if row.deprecated %}
                                             <font color="red">****Deprecation Warning****</font>
                                         {% endif %}
-                                        {{row.descr}}
+                                        {{clean_output.stixToHTML(row.descr, firstParagraphOnly=True)}}
                                     </td>
                                 </tr>
                             {% endfor %}

@@ -96,7 +96,7 @@ def generate_tactic_md(tactic, domain, tactic_list, techniques, side_nav_data):
         data['attack_id'] = attack_id
         data['name'] = tactic['name']
         data['name_lower'] = tactic['name'].lower()
-        data['descr'] = markdown.markdown(tactic['description'])
+        data['descr'] = tactic['description']
         data['side_menu_data'] = side_nav_data
         data['domain'] = domain.split("-")[0]
 
@@ -135,7 +135,7 @@ def get_domain_table_data(tactic_list):
             tactic_dict = {}
             tactic_dict['name'] = tactic['name']
             tactic_dict['tid'] = attack_id          
-            tactic_dict['description'] = tactic['description'].split("\n")[0]
+            tactic_dict['description'] = tactic['description']
             tactic_table.append(tactic_dict)
     
     return tactic_table

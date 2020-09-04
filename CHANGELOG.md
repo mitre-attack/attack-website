@@ -31,6 +31,7 @@
 ### Improvements
 - Added a link on the home page that takes the user to a random page within a specified category. See issue [#98](https://github.com/mitre-attack/attack-website/issues/98).
 - Base template does not get overwritten when site configuration data changes. See issue [#147](https://github.com/mitre-attack/attack-website/issues/147).
+- STIX cleaning code is now moved into macro. References are now sorted in order of appearance. See issue [#161](https://github.com/mitre-attack/attack-website/issues/161).
 - The tour is generated through an independent module and steps are chosen depending the available modules. See issue [#166](https://github.com/mitre-attack/attack-website/issues/166).
 - Modules and test arguments are now required if flags are presented. See issue [#177](https://github.com/mitre-attack/attack-website/issues/177).
 - The search index is now loaded from cache (when available), resulting in faster search loading for most browsers. See issue [#167](https://github.com/mitre-attack/attack-website/issues/167).

@@ -69,149 +69,6 @@ def get_attack_id(object):
 
     return None
 
-def filter_urls(descr):
-    """Filters out URLs to return path and not domain"""
-
-    if not site_config.args.no_stix_link_replacement:
-        if "https://attack.mitre.org/groups/" in descr:
-            descr = descr.replace(
-                "https://attack.mitre.org/groups/", "/groups/")
-        if "https://attack.mitre.org/software/" in descr:
-            descr = descr.replace(
-                "https://attack.mitre.org/software/", "/software/")
-        if "https://attack.mitre.org/techniques/" in descr:
-            descr = descr.replace(
-                "https://attack.mitre.org/techniques/", "/techniques/")
-        if "https://attack.mitre.org/technique/" in descr:
-            descr = descr.replace(
-                "https://attack.mitre.org/technique/", "/techniques/")
-
-    return descr
-
-def format_description_markdown_link(descr):
-    """This method is used to convert a markdown link to an html link"""
-
-    p = re.compile('\[(.*?)\]\((.*?)\)')
-    md_list = p.findall(descr)
-    desc_link_temp = "<a href=\"{}\">{}</a>"
-    md_link_temp ="[{}]({})"
-    #Interate through each regex match set, and replace the markdown
-    # link with the html link
-    for md in md_list:
-        url = md[1]
-        sname = md[0]
-        descr_markdown_link = md_link_temp.format(sname, url)
-        descr = descr.replace(descr_markdown_link, desc_link_temp.format(url,sname))
-
-    descr = filter_urls(descr)
-
-    return descr
-
-def get_descr_reference_sect(citations, reference_list, next_reference_number, description):
-    """This method is responsible for properly formatting the 
-       description citation area on Software, Groups pages
-    """
-
-    citation_temp = "(Citation: {})"
-
-    # Find citations in description
-    for citation in citations:     
-        reference_str = find_reference_html(reference_list, next_reference_number, citation)
-        if reference_str:
-            description = description.replace(citation_temp.format(citation), reference_str)
-
-    return description
-
-def find_reference_number(reference_list, next_reference_number, source_name):
-    """ Given a reference list and a source name, find the number of the source name
-    """
-
-    for reference in reference_list:
-        if reference['sname'] == source_name:
-            if not reference['number']:
-                reference['number'] = next_reference_number['value']
-                next_reference_number['value'] += 1
-            return reference['number']
-    return util_config.NOT_FOUND
-
-def find_reference_html(reference_list, next_reference_number, source_name):
-    """ Given a reference list and a source name, find source name and 
-        create html string
-    """
-
-    for reference in reference_list:
-        if reference['sname'] == source_name:
-            if not reference['number']:
-                reference['number'] = next_reference_number['value']
-                next_reference_number['value'] += 1
-
-            if not reference.get("url"):
-                reference_html = util_config.reference_marker_template_no_url.format(reference['number'],reference['number'],reference['sname'],reference['number'])
-            else:
-                reference_html = util_config.reference_marker_template.format(reference['number'],reference['number'],reference['sname'],reference['url'],reference['number'] - 1, reference['number'] - 1, reference['number'])
-            
-            return reference_html
-    return ""
-
-def add_external_references_not_in_descr(description, reference_list, next_reference_number, obj, citations_from_descr):
-    """Given an object, find external references that are not referenced on the description.
-       If it not referenced, append reference to description
-    """
-
-    if obj.get('external_references'):
-        for ext_ref in obj['external_references']:
-            if not ext_ref.get('source_name') in citations_from_descr:
-                reference_str = find_reference_html(reference_list, next_reference_number, ext_ref.get('source_name'))
-                description += reference_str
-
-    return description                  
-
-
-def get_citations_from_descr(description):
-    """Given a description, find all of the citations"""
-
-    p = re.compile('\(Citation: (.*?)\)')
-    return p.findall(description)
-
-def citations_versus_references(obj, citations_from_descr):
-    """Given an object an a list of citations found in the description,
-       return the difference between the amount of citations and external references
-    """
-
-    citations_len = len(citations_from_descr)
-    ext_references_len = 0
-    if obj.get('external_references'):
-        ext_references_len = len(obj.get('external_references'))
-    return ext_references_len - citations_len
-
-def get_filtered_description(reference_list, next_reference_number, obj):
-    """Given an object, filter the description by changing citations, 
-       eliminating unwanted HTML and add external references not in description
-    """
-
-    # Update reference list
-    reference_list = update_reference_list(reference_list, obj['relationship'])
-
-    # Get citations from description
-    citations_from_descr = get_citations_from_descr(obj['relationship']['description'])
-    
-    # Add in-place citations to relationship description
-    description = filter_urls(obj['relationship']['description'])
-    description = get_descr_reference_sect(citations_from_descr, reference_list, next_reference_number,description) 
-
-    # Check if description had all references
-    # Returns 0 if description has the same amount of 
-    # citations as the object's external references
-    citations_references_diff = citations_versus_references(obj['relationship'], citations_from_descr)
-
-    if citations_references_diff > 0:
-        # Add external references not in description
-        description = add_external_references_not_in_descr(description, reference_list, next_reference_number, obj['relationship'], citations_from_descr)
-
-    description = replace_html_chars(markdown.markdown(description))
-
-    return description
-
 def update_reference_list(reference_list, obj):
     """Given a reference list and an object, update the reference list
        with the external references found in the object
@@ -225,7 +82,7 @@ def update_reference_list(reference_list, obj):
             # Only add if reference has source name and a description
             if ext_ref.get('source_name') and ext_ref.get("description"):
 
-                # Do not add if to reference list if citation is in description 
+                # Do not add to reference list if citation is in description 
                 if "(Citation:" in ext_ref['description']:
                     continue
 
@@ -237,32 +94,13 @@ def update_reference_list(reference_list, obj):
                     new_ref['description'] = ext_ref["description"]
                     if ext_ref.get('url'):
                         new_ref['url'] = ext_ref['url']
-                    new_ref['sname'] = ext_ref['source_name']
                     new_ref['number'] = None
 
-                    reference_list.append(new_ref)
+                    reference_list[ext_ref['source_name']] = new_ref
     
     return reference_list
 
-def sort_reference_list(reference_list):
-    """Given a reference_list, sort it by number"""
-
-    used_reference_list = []
-    # Remove unused references from list
-    for reference in reference_list:
-        if reference.get('number'):
-            used_reference_list.append(reference)
-        
-    return sorted(used_reference_list, key=lambda k: k['number'])
-
-def remove_html_paragraph(description):
-    """Given a description, remove <p> tags from the beginning and end"""
-
-    if description.startswith("<p>") and description.endswith("</p>"):
-        return description[3:-4]
-    return description
-
-def get_alias_data(alias_list, ext_refs, reference_list, next_reference_number):
+def get_alias_data(alias_list, ext_refs):
     """This function generates the Alias Description section for the pages"""
 
     if not alias_list:
@@ -280,14 +118,9 @@ def get_alias_data(alias_list, ext_refs, reference_list, next_reference_number):
             ext = found_ext_refs[0]
 
             if ext.get("description"):
-                citations_from_descr = get_citations_from_descr(ext['description'])
                 row = {}
                 row['name'] = alias
-                row['descr'] = markdown.markdown(ext['description'])
-                row['descr'] = filter_urls(row['descr'])
-                row['descr'] = get_descr_reference_sect(citations_from_descr, reference_list, next_reference_number, row['descr'])
-                row['descr'] = remove_html_paragraph(row['descr'])
-                
+                row['descr'] = ext['description']
                 alias_data.append(row)
         
     return alias_data
@@ -324,15 +157,7 @@ def get_technique_table_data(tactic, techniques_list):
             row = {}
             row['tid'] = attack_id
 
-            row['descr'] = remove_citations(tech['description'], tech['external_references'])
-
-            if row['descr'].split("\n")[0] == '### Windows':
-                row['descr'] = markdown.markdown(row['descr'].split("\n")[2])
-            else:
-                row['descr'] = markdown.markdown(row['descr'].split("\n")[0])
-
-            row['descr'] = filter_urls(row['descr'])
-            row['descr'] = remove_html_paragraph(row['descr'])
+            row['descr'] = tech['description']
 
             if tactic is None and tech.get('x_mitre_deprecated'):
                 row['deprecated'] = True
@@ -350,12 +175,7 @@ def get_technique_table_data(tactic, techniques_list):
                     if not "." in sub_attack_id:
                         raise Exception(f"{attack_id} subtechnique's attackID '{sub_attack_id}' is malformed")
                     sub_data['id'] = sub_attack_id.split(".")[1]
-                    sub_data['descr'] = remove_citations(subtechnique['object']['description'], subtechnique['object']['external_references'])
-                    # Replace html characters from first paragraph
-                    sub_data['descr'] = replace_html_chars(sub_data['descr'].split("\n")[0])
-                    sub_data['descr'] = markdown.markdown(sub_data['descr'])
-                    sub_data['descr'] = filter_urls(sub_data['descr'])
-                    sub_data['descr'] = remove_html_paragraph(sub_data['descr'])
+                    sub_data['descr'] = subtechnique['object']['description']
                     row['subtechniques'].append(sub_data)
 
             technique_table.append(row)
@@ -370,16 +190,6 @@ def get_technique_table_data(tactic, techniques_list):
             technique['subtechniques'] = sorted(technique['subtechniques'], key=lambda k: k['id'].lower())
 
     return technique_table
-
-def remove_citations(descr, citations):
-    """This method is used to replace and citation in markdown format
-       with a link leading to the resource
-    """
-
-    for citation in citations:
-        descr = descr.replace("(Citation: " + citation['source_name'] + ")","")
-
-    return descr
 
 def get_side_nav_domains_data(side_nav_title, elements_list):
     """Responsible for generating the links that are located on the
@@ -681,7 +491,7 @@ def get_technique_name(tid):
     
     return util.config.NOT_FOUND
 
-def technique_used_helper(technique_list, technique, reference_list, next_reference_number):
+def technique_used_helper(technique_list, technique, reference_list):
     """ Add technique to technique list and make distinction between techniques
         subtechniques
     """
@@ -701,13 +511,13 @@ def technique_used_helper(technique_list, technique, reference_list, next_refere
                     technique_list[parent_id] = {}
                     technique_list[parent_id] = parent_technique_used_helper(parent_id)
 
-                technique_list[parent_id]['subtechniques'].append(get_technique_data_helper(attack_id, technique, reference_list, next_reference_number))
+                technique_list[parent_id]['subtechniques'].append(get_technique_data_helper(attack_id, technique, reference_list))
             
             # Attack id is regular technique
             else:
                 # Add technique to list
                 technique_list[attack_id] = {}
-                technique_list[attack_id] = get_technique_data_helper(attack_id, technique, reference_list, next_reference_number)
+                technique_list[attack_id] = get_technique_data_helper(attack_id, technique, reference_list)
 
         # Check if parent ID was added by sub-technique
         # parent ID will not have description
@@ -715,12 +525,12 @@ def technique_used_helper(technique_list, technique, reference_list, next_refere
             # Check if it has external references
             if technique['relationship'].get('description'):
                 # Get filtered description
-                technique_list[attack_id]['descr'] = get_filtered_description(reference_list, next_reference_number, technique)
+                technique_list[attack_id]['descr'] = technique['relationship']['description']
+                reference_list = update_reference_list(reference_list, technique['relationship'])
     
     return technique_list
 
-
-def get_technique_data_helper(attack_id, technique, reference_list, next_reference_number):
+def get_technique_data_helper(attack_id, technique, reference_list):
     """ Given an attack id, technique object and reference information, 
         return dictionary with technique data
     """
@@ -741,7 +551,8 @@ def get_technique_data_helper(attack_id, technique, reference_list, next_referen
     # Check if it has external references
     if technique['relationship'].get('description'):
         # Get filtered description
-        technique_data['descr'] = get_filtered_description(reference_list, next_reference_number, technique)
+        technique_data['descr'] = technique['relationship']['description']
+        reference_list = update_reference_list(reference_list, technique['relationship'])
     
     technique_data['subtechniques'] = []
     
@@ -763,22 +574,12 @@ def parent_technique_used_helper(parent_id):
 
     return parent_data
 
-def find_num_of_ref_in_list(reference_list, ref_sname):
-    """Given a reference list and a reference, search for reference
-       in list. Return number if found, else return NOT_FOUND
-    """
-
-    for reference in reference_list:
-        if reference['sname'] == ref_sname:
-            return reference['number']
-    return util_config.NOT_FOUND
-
 def find_in_reference_list(reference_list, source_name):
     """Check if it is already in reference list"""
 
-    for reference in reference_list:
-        if reference['sname'] == source_name:
-            return True
+    if reference_list.get(source_name):
+        return True
+
     return False
 
 def get_domain_alias(domain):
@@ -799,16 +600,6 @@ def replace_html_chars(to_be_replaced):
                          .replace("”","\"")\
                          .replace("“","\"")
 
-def get_index_of_ref(reference_list, ref_sname):
-    """Given a reference source name, return reference list index if found"""
-
-    index = 0
-    for reference in reference_list:
-        if reference['sname'] == ref_sname:
-            return index
-        index += 1
-    return util_config.NOT_FOUND
-
 def get_navigator_layers(name, attack_id, obj_type, version, techniques_used):
     """Given a list of techniques used, return the navigator json objects
        for enterprise and mobile"""
@@ -821,7 +612,6 @@ def get_navigator_layers(name, attack_id, obj_type, version, techniques_used):
     if (version): # add version number if it exists
         enterprise_layer_description += f" v{version}"
         mobile_layer_description += f" v{version}"
-
 
     # Enterprise navigator layer
     enterprise_layer = {}

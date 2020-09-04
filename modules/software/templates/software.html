@@ -7,6 +7,8 @@
 {% import 'macros/navigation.html' as navigation %}
 {% import 'macros/techniques_used.html' as techniques_used %}
 {% import 'macros/versioning.html' as versioning %}
+{% import 'macros/clean_output.html' as clean_output %}
+{% import 'macros/citations.html' as citations %}
 
 {% block head %}
     {{ super () }}
@@ -47,7 +49,7 @@
                                 {% if parsed.deprecated %}
                                 <font color="red">****Deprecation Warning****</font>
                                 {% endif %}
-                                {{parsed.descr}}
+                                {{clean_output.stixToHTML(parsed.descr, parsed.citations)}}
                             </div>
                         {% endif %}
                         <div class="col-md-4">
@@ -99,7 +101,7 @@
                                             {{alias.name}}
                                         </td>
                                         <td>
-                                            {{alias.descr}}
+                                            {{clean_output.stixToHTML(alias.descr, parsed.citations)}}
                                         </td>
                                     </tr>
                                 {% endfor %} 
@@ -109,7 +111,7 @@
                     
                     {% if parsed.technique_table_data %}
                         {{navigator.layer_links(parsed.attack_id, "software", parsed.layers)}}
-                        {{techniques_used.techniques_used(parsed.technique_table_data, "Techniques Used")}}
+                        {{techniques_used.techniques_used(parsed.technique_table_data, "Techniques Used", parsed.citations)}}
                     {% endif %}
                 
                     {% if parsed.groups %}
@@ -132,8 +134,7 @@
                                             <a href="/groups/{{group.id}}">{{group.name}}</a>
                                         </td>
                                         <td>
-                                            {{group.descr}}
-                                            {{references.references(group.refs)}}
+                                            {{clean_output.stixToHTML(group.descr, parsed.citations)}}
                                         </td>
                                     </tr>
                                 {% endfor %}
@@ -141,64 +142,7 @@
                         </table>
                     {% endif %}
                     
-                    {% if parsed.bottom_ref %}
-                        <h2 class="pt-3" id="references">References</h2>
-                        {% if parsed.bottom_ref|length % 2 == 0 %}
-                            {% set half = parsed.bottom_ref|length//2 %}
-                        {% else %}
-                            {% set half = (parsed.bottom_ref|length//2) + 1 %}
-                        {% endif %}
-                        <div class="row">
-                            <div class="col">
-                                <ol>
-                                    {% for j in range(0, half) %}
-                                        {% if parsed.bottom_ref[j].url %}
-                                            <li>
-                                                <span  id="scite-{{parsed.bottom_ref[j].number}}" class="scite-citation">
-                                                    <span class="scite-citation-text">
-                                                        <a rel="nofollow" class="external text" name="scite-{{parsed.bottom_ref[j].number}}" href="{{parsed.bottom_ref[j].url}}" target="_blank">
-                                                        {{parsed.bottom_ref[j].description}}
-                                                        </a>
-                                                    </span>
-                                                </span>
-                                            </li>
-                                        {% else %}
-                                            <li>
-                                                <span  id="scite-{{parsed.bottom_ref[j].number}}" class="scite-citation">
-                                                    <span class="scite-citation-text">{{parsed.bottom_ref[j].description}}</span>
-                                                </span>
-                                            </li>
-                                        {% endif %}
-                                    {% endfor %}
-                                </ol>
-                            </div>
-                            <div class="col">
-                                {% if parsed.bottom_ref|length > 1 %}
-                                    <ol start="{{half+1}}.0">
-                                        {% for j in range(half, parsed.bottom_ref|length) %}
-                                            {% if parsed.bottom_ref[j].url %}
-                                                <li>
-                                                    <span  id="scite-{{parsed.bottom_ref[j].number}}" class="scite-citation">
-                                                        <span class="scite-citation-text">
-                                                            <a rel="nofollow" class="external text" name="scite-{{parsed.bottom_ref[j].number}}" href="{{parsed.bottom_ref[j].url}}" target="_blank">
-                                                                {{parsed.bottom_ref[j].description}}
-                                                            </a>
-                                                        </span>
-                                                    </span>
-                                                </li>
-                                            {% else %}
-                                                <li>
-                                                    <span  id="scite-{{parsed.bottom_ref[j].number}}" class="scite-citation">
-                                                        <span class="scite-citation-text">{{parsed.bottom_ref[j].description}}</span>
-                                                    </span>
-                                                </li>
-                                            {% endif %}
-                                        {% endfor %} 
-                                    </ol> 
-                                {% endif %}
-                            </div>             
-                        </div>
-                    {% endif %}  
+                    {{ citations.reference_section(parsed.citations) }}
                 </div>
             </div>
         </div>

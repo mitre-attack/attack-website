@@ -37,7 +37,6 @@ def get_parsed_args():
                         help='Pull down the current STIX data from the MITRE/CTI GitHub respository')
     parser.add_argument('--no-stix-link-replacement', action='store_true',
                         help="If this flag is absent, links to attack.mitre.org/[page] in the STIX data will be replaced with /[page]. Add this flag to preserve links to attack.mitre.org.")
-    
     parser.add_argument('--modules', '-m', nargs='+',
                         type=str,
                         choices=module_choices,
@@ -54,18 +53,14 @@ def get_parsed_args():
                              "links (dead internal hyperlinks and relative hyperlinks); "
                              "external_links (dead external hyperlinks); "
                              "citations (unparsed citation text).")
-    
     parser.add_argument('--proxy', help="set proxy")
-
     parser.add_argument('--subdirectory', 
                         help="If you intend to host the site from a sub-directory, specify the directory using this flag.",
                         type=validate_subdirectory_string)
-
     parser.add_argument("--print-tests", 
                         dest="print_tests", 
                         action="store_true",
                         help="Force test output to print to stdout even if the results are very long.")
-
     parser.add_argument("--no-test-exitstatus", 
                         dest="override_exit_status", 
                         action='store_true', 
@@ -104,7 +99,7 @@ def remove_from_build(arg_modules):
                 copy_of_menu.append(module)
         
         modules.menu_ptr = copy_of_menu
-    
+
     remove_from_running_pool()
     remove_from_menu()
 
@@ -117,6 +112,9 @@ if __name__ == "__main__":
     # If modules flags are called only run modules selected by user
     if args.modules:
         remove_from_build(args.modules)
+    
+    # Arguments used for pelican
+    site_config.send_to_pelican("no_stix_link_replacement", args.no_stix_link_replacement)
 
     # Start time of update
     update_start = time.time()
