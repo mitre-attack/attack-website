@@ -50,9 +50,49 @@ The ATT&CK site uses a combination of Python, Pelican and Jinja to convert the S
 
 ### Modules
 
-The website is built from different modules. These modules can be found inside the `modules` directory. If the `update-attack.py` script is ran without any arguments, it will automatically look for modules inside the `modules` directory and build them.  Modules are divided in two classes, active and supportive modules. Active modules appends a link to the website's main menu and typically generates markdown files. For example, the `techniques` module is reponsible for generating all Technique related markdown pages. Supportive modules are those who do not appear on the website menu but are critical to the general website build. An example of a supportive module is the `util` module which has methods and API calls to interface with the STIX bundles. Every module has a given priority number. This number is used to determine the order on which the modules are ran. The build script will run the modules in an ascending priority order (lowest priority number will run first). Take a look at the `__init__.py` of a module to understand the structure of a module.
+The website is built from different modules. These modules can be found inside the `modules` directory. If the `update-attack.py` script is ran without any arguments, it will automatically look for modules inside the `modules` directory and build them.  Modules are divided in two classes, active and supportive modules. Active modules appends a link to the website's main menu and typically generates markdown files. For example, the `techniques` module is reponsible for generating all Technique related markdown pages. Supportive modules are those who do not appear on the website menu but are critical to the general website build. An example of a supportive module is the `util` module which has methods and API calls to interface with the STIX bundles.
 
 Modules that are not present on the `modules` directory will not get built and will not appear on the website's main navigation menu. You can also select specific modules to be ran without removing modules from the directory by running the `update-attack.py` script with the `-m` flag followed by the names of the modules. For example, run `python3 update-attack.py -m clean techniques website_build` to run a fresh build, generate the techniques markdown files, and generate the HTML files.
+
+### Building your own module
+
+To build your own module, create a folder inside of the `modules` directory with the name of the module. Typically a module will have three files: `__init__py`, `your_module-s_name.py`, `your_module-s_name_config.py`. The `__init__.py` file contains methods that are used to determine the run priority or if they will appear on websites's main menu. For example, if it is an active module that will appear on the website's menu, be sure to include `get_menu()`, `get_priority()`, and `run_module()` in the `__init__.py` file (see following code snippet for an example). The module can be added to the website's menu as a single link to the main module page and/or can include links to subpages in a hoverable dropdown menu. 
+
+```python
+from . import your_module-s_name
+from . import your_module-s_name_config
+
+def get_priority():
+    return your_module-s_name_config.priority
+
+def get_menu():
+    return {
+        "name": "Your module's name", 
+        "url": "/your_module-s_name/", 
+        "external_link": False,
+        "priority": your_module-s_name_config.priority,
+        "children": [
+            {
+                "name": "Module sub-menu page",
+                "url": "/your_module-s_name/subpage",
+                "external_link": False,
+                "children": []
+            },
+            ...
+            {
+                "name": "Module sub-menu external page",
+                "url": "https://attack.mitre.org",
+                "external_link": True,
+                "children": []            
+            }
+        ]
+    }
+
+def run_module():
+    return (your_module-s_name.generate_your_module-s_name(), your_module-s_name_config.module_name)
+```
+
+Every module has a given priority number. This number is used to determine the order on which the modules are ran. The build script will run the modules in an ascending priority order (lowest priority number will run first). The priority inside of the `get_menu()` will determine the website's main menu order from left to right; module with the lowest priority number will be on the left.
 
 ## Building the site with custom content
 
