@@ -2,6 +2,7 @@ import os
 import bleach, re
 import json
 import html
+import modules
 from modules import resources
 from modules import site_config
 
@@ -98,5 +99,6 @@ def clean(filepath):
 def preserve_current_version():
     """ Preserve current version """
     
-    if resources.versions:
+    # Check for intermodule dependency
+    if [key['name'] for key in modules.run_ptr if key['name'] == 'resources']:
         resources.versions.deploy_current_version()
