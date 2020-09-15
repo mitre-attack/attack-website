@@ -56,7 +56,7 @@ Modules that are not present on the `modules` directory will not get built and w
 
 ### Building your own module
 
-To build your own module, create a folder inside of the `modules` directory with the name of the module. Typically a module will have three files: `__init__py`, `your_module-s_name.py`, `your_module-s_name_config.py`. The `__init__.py` file contains methods that are used to determine the run priority or if they will appear on websites's main menu. For example, if it is an active module that will appear on the website's menu, be sure to include `get_menu()`, `get_priority()`, and `run_module()` in the `__init__.py` file (see following code snippet for an example). The module can be added to the website's menu as a single link to the main module page and/or can include links to subpages in a hoverable dropdown menu. 
+To build your own module, create a folder inside of the `modules` directory with the name of the module. Typically a module will have three files: `__init__py`, `your_module-s_name.py`, `your_module-s_name_config.py`. The `__init__.py` file contains methods that are used to determine the run priority or if they will appear on websites's main menu. For example, if it is an active module that will appear on the website's menu, be sure to include `get_menu()`, `get_priority()`, and `run_module()` in the `__init__.py` file (see the following code snippet for an example). The module can be added to the website's menu as a single link to the main module page and/or can include links to subpages in a hoverable dropdown menu. 
 
 ```python
 from . import your_module-s_name
