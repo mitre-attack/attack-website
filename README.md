@@ -56,7 +56,7 @@ Modules that are not present on the `modules` directory will not get built and w
 
 ### Building your own module
 
-To build your own module, create a folder inside of the `modules` directory with the name of the module. Typically a module will have three files: `__init__py`, `your_module-s_name.py`, `your_module-s_name_config.py`. The `__init__.py` file contains methods that are used to determine the run priority or if they will appear on websites's main menu. For example, if it is an active module that will appear on the website's menu, be sure to include `get_menu()`, `get_priority()`, and `run_module()` in the `__init__.py` file (see the following code snippet for an example). The module can be added to the website's menu as a single link to the main module page and/or can include links to subpages in a hoverable dropdown menu. 
+To build your own module, create a folder inside of the `modules` directory with the name of the module. Typically, a module will have three files: `__init__py`, `your_module-s_name.py`, `your_module-s_name_config.py`. The `__init__.py` file contains methods that are used to determine the run priority or if they will appear on website’s main menu. For example, if it is an active module that will appear on the website's menu, be sure to include `get_menu()`, `get_priority()`, and `run_module()` in the `__init__.py` file (see the following code snippet for an example). The module can be added to the website's menu as a single link to the main module page and/or can include links to subpages in a hoverable dropdown menu. 
 
 ```python
 from . import your_module-s_name
@@ -93,6 +93,10 @@ def run_module():
 ```
 
 Every module has a given priority number. This number is used to determine the order on which the modules are ran. The build script will run the modules in an ascending priority order (lowest priority number will run first). The priority inside of the `get_menu()` will determine the website's main menu order from left to right; module with the lowest priority number will be on the left.
+
+`your_module-s_name_config.py` typically contains variables or string templates that are shared throughout the module. `your_module-s_name.py` contains the methods that generate markdown files or are used to help other modules. Jinja templates that are only used by the module should be stored in the module under a folder named `templates`, and then moved to the general templates folder. This will help reduce the clutter of unused templates.
+
+Additionally, redirections made by the module should also be stored inside of the module. Take a look at the available modules for reference (the techniques module is a good one). 
 
 ## Building the site with custom content
 
