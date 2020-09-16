@@ -41,6 +41,10 @@ def generate_contribute():
 
     subs = contribute_config.contribute_index_md + json.dumps(data)
 
-    #Open markdown file for the contribute page
+    # Create directory if it does not exist
+    if not os.path.isdir(contribute_config.contribute_markdown_path):
+        os.mkdir(contribute_config.contribute_markdown_path)
+
+    # Open markdown file for the contribute page
     with open(os.path.join(contribute_config.contribute_markdown_path, "contribute.md"), "w", encoding='utf8') as md_file:
         md_file.write(subs)
