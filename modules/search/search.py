@@ -2,8 +2,11 @@ import os
 import bleach, re
 import json
 import html
+import importlib
 import modules
-from modules import resources
+# Check if resources module exist
+if importlib.util.find_spec('modules.resources'):
+    from modules import resources
 from modules import site_config
 
 def generate_index():
