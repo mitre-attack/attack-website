@@ -94,7 +94,11 @@ def run_module():
 
 Every module has a given priority number. This number is used to determine the order on which the modules are ran. The build script will run the modules in an ascending priority order (lowest priority number will run first). The priority inside of the `get_menu()` will determine the website's main menu order from left to right; module with the lowest priority number will be on the left.
 
-`your_module-s_name_config.py` typically contains variables or string templates that are shared throughout the module. `your_module-s_name.py` contains the methods that generate markdown files or are used to help other modules. Jinja templates that are only used by the module should be stored in the module under a folder named `templates`, and then moved to the general templates folder. This will help reduce the clutter of unused templates.
+`your_module-s_name_config.py` typically contains variables or string templates that are shared throughout the module
+. `your_module-s_name.py` contains the methods that generate markdown files or are used to help other modules.
+
+Jinja templates that are only used by the module should be stored in the module under a folder named `templates
+`, and then moved to the general templates folder. This will help reduce the clutter of unused templates.
 
 Additionally, redirections made by the module should also be stored inside of the module. Take a look at the available modules for reference (the techniques module is a good one). 
 
