@@ -29,8 +29,10 @@ add_versioning_feature = False
 
 def check_versions_module():
     """ Add resources information used by other modules """
+    
+    global add_versioning_feature
 
-    if [key['name'] for key in modules.run_ptr if key['name'] == 'resources']:
+    if [key['name'] for key in modules.run_ptr if key['name'] == 'versions']:
         add_versioning_feature = True
 
 # Source names for ATT&CK

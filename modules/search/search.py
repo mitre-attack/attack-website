@@ -104,4 +104,4 @@ def preserve_current_version():
     
     # Check for intermodule dependency
     if [key['name'] for key in modules.run_ptr if key['name'] == 'versions']:
-        versions.deploy_current_version()
+        versions.versions.deploy_current_version()
