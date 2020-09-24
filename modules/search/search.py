@@ -5,8 +5,8 @@ import html
 import importlib
 import modules
 # Check if resources module exist
-if importlib.util.find_spec('modules.resources'):
-    from modules import resources
+if importlib.util.find_spec('modules.versions'):
+    from modules import versions
 from modules import site_config
 
 def generate_index():
@@ -103,5 +103,5 @@ def preserve_current_version():
     """ Preserve current version """
     
     # Check for intermodule dependency
-    if [key['name'] for key in modules.run_ptr if key['name'] == 'resources']:
-        resources.versions.deploy_current_version()
+    if [key['name'] for key in modules.run_ptr if key['name'] == 'versions']:
+        versions.deploy_current_version()

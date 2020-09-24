@@ -12,9 +12,9 @@ def generate_json():
     routes = {}
 
     if site_config.args.modules:
-            for module in site_config.args.modules:
-                if module != "website_build" and module != "random_page":
-                    routes[module] = all_routes[module]
+        for module in site_config.args.modules:
+            if all_routes.get(module):
+                routes[module] = all_routes[module]
     else:
         routes = all_routes
     

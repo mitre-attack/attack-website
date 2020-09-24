@@ -10,7 +10,7 @@ from modules import util
 
 # argument defaults and options for the CLI
 module_choices = ['clean', 'stix_data', 'groups', 'search', 'matrices', 'mitigations', 'software', 'tactics', 'techniques', 'tour', 'website_build', 'random_page', 'subdirectory', 'tests']
-extras = ['resources', 'contribute', 'blog', 'attack_redirections']
+extras = ['resources', 'versions', 'contribute', 'blog', 'attack_redirections']
 test_choices = ['size', 'links', 'external_links', 'citations']
 
 def validate_subdirectory_string(subdirectory_str):
@@ -67,6 +67,8 @@ def get_parsed_args():
                              "links (dead internal hyperlinks and relative hyperlinks); "
                              "external_links (dead external hyperlinks); "
                              "citations (unparsed citation text).")
+    parser.add_argument('--attack-brand', action='store_true',
+                        help="Add attack.mitre.org branding.")
     parser.add_argument('--proxy', help="set proxy")
     parser.add_argument('--subdirectory', 
                         help="If you intend to host the site from a sub-directory, specify the directory using this flag.",
@@ -103,7 +105,7 @@ def remove_from_build(arg_modules, arg_extras):
     def remove_from_running_pool():
         """ Remove modules from running pool if they are not in modules list from argument """
 
-        copy_of_modules = [] 
+        copy_of_modules = []
 
         for module in modules.run_ptr:
             if module["name"].lower() in arg_modules:
@@ -114,7 +116,7 @@ def remove_from_build(arg_modules, arg_extras):
     def remove_from_menu():
         """ Remove modules from menu if they are not in modules list from argument """
 
-        copy_of_menu = [] 
+        copy_of_menu = []
 
         for module in modules.menu_ptr:
             if module["name"].lower() in arg_modules:
@@ -137,6 +139,9 @@ if __name__ == "__main__":
 
     # Remove modules from build
     remove_from_build(args.modules, args.extras)
+
+    # Check if versions module is added to the build
+    site_config.check_versions_module()
 
     # Arguments used for pelican
     site_config.send_to_pelican("no_stix_link_replacement", args.no_stix_link_replacement)

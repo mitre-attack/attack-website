@@ -847,12 +847,24 @@ def get_subtype_data(matrix, inside, name):
 def remove_module_from_menu(module_to_be_removed):
     """ Given a list of results, remove elements from menu if their result was False """
 
-    def remove_from_menu_list(module):
+    for module in modules.menu_ptr:
         if module['name'] == module_to_be_removed:
             modules.menu_ptr.remove(module)
+            return
+
+def remove_element_from_sub_menu(selected_module, element):
+    """ Given a sub menu item and a module, removes element from sub menu """
+
+    def remove_from_sub_menu_list(module):
+        if module.get('children'):
+            for child in module['children']:
+                if child['name'] == element:
+                    module['children'].remove(child)
+                    return
 
     for module in modules.menu_ptr:
-        remove_from_menu_list(module)
+        if module['name'] == selected_module:
+            remove_from_sub_menu_list(module)
 
 def get_matrix_data(techniques):
     """Given a technique list, returns the a dictionary of techniques data

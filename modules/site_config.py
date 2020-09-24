@@ -24,6 +24,15 @@ def send_to_pelican(key, value):
     """ Method to stage key value pairs for pelican use """
     staged_pelican[key] = value
 
+# Only add versioning feature if resources module is loaded
+add_versioning_feature = False
+
+def check_versions_module():
+    """ Add resources information used by other modules """
+
+    if [key['name'] for key in modules.run_ptr if key['name'] == 'resources']:
+        add_versioning_feature = True
+
 # Source names for ATT&CK
 source_names = [
     "mitre-attack", 

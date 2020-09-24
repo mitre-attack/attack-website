@@ -1,5 +1,5 @@
 module_name = "attack_redirections"
-priority = 8.1
+priority = 8.2
 
 # Resources redirection json location
 attack_redirections_location = "modules/attack_redirections/attack_redirections.json"

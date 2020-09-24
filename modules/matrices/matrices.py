@@ -50,6 +50,8 @@ def generate_platform_matrices(matrix, side_menu_data=None):
     data['domain'] = matrix['matrix'].split("-")[0]
     data['descr'] = matrix['descr']
     data['path'] = matrix['path']
+
+    data['versioning_feature'] = site_config.add_versioning_feature
     
     subs = matrices_config.matrix_md.substitute(data)
     subs = subs + json.dumps(data)

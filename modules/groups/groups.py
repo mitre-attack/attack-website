@@ -150,6 +150,8 @@ def generate_group_md(group, side_menu_data, side_menu_mobile_view_data):
                 
         if isinstance(group.get("aliases"), collections.Iterable):
             data['aliases_list'] = group["aliases"][1:]
+        
+        data['versioning_feature'] = site_config.add_versioning_feature
 
         subs = groups_config.group_md.substitute(data)
         subs = subs + json.dumps(data)
