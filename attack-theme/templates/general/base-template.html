@@ -10,6 +10,7 @@
 {% set LOGO_HEADER = "${LOGO_HEADER}" -%}
 {% set LOGO_FOOTER = "${LOGO_FOOTER}" -%}
 {% set NAVIGATION_MENU = ${NAVIGATION_MENU} -%}
+{% set ATTACK_BRANDING = ${ATTACK_BRANDING} -%}
 {% set active_page = active_page|default('index') -%}
 {% set title = title|default('MITRE ATT&CK&reg;') -%}
 {% import 'macros/search.html' as search %}
@@ -43,12 +44,13 @@
     </header>
     <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
     <!-- !versions banner! -->
-    {% if BANNER_ENABLED == "true" %}
-        <div class="container-fluid under-development">
+    {% if BANNER_ENABLED %}
+        <div class="container-fluid banner-message">
             {{ BANNER_MESSAGE }}
         </div>
     {% endif %}
 {% endblock %}
+
 <div id='content' class="maincontent">
     <!--start-indexing-for-search-->
     {% block content %} {% block left %} {% endblock %} {% block right %} {% endblock %} {% endblock %}
@@ -91,18 +93,26 @@
             <div class="w-100 p-2 footer-responsive-break"></div>
             <div class="col">
                 <div class="footer-float-right-responsive">
-                    <div class="mb-1">
-                        <a href="https://twitter.com/MITREattack" class="btn btn-primary w-100">
-                            <!-- <i class="fa fa-twitter"></i> -->
-                            <img src="/theme/images/twitter.png" class="mr-1 twitter-icon">
-                            <b>@MITREattack</b>
-                        </a>
-                    </div>
-                    <div class="">
-                        <a href="/contact" class="btn btn-primary w-100">
-                            Contact
-                        </a>
-                    </div>
+                    {% if ATTACK_BRANDING %}
+                        <div class="mb-1">
+                            <a href="https://twitter.com/MITREattack" class="btn btn-primary w-100">
+                                <!-- <i class="fa fa-twitter"></i> -->
+                                <img src="/theme/images/twitter.png" class="mr-1 twitter-icon">
+                                <b>@MITREattack</b>
+                            </a>
+                        </div>
+                        <div class="">
+                            <a href="/contact" class="btn btn-primary w-100">
+                                Contact
+                            </a>
+                        </div>
+                    {% else %}
+                        <div class="">
+                            <a href="attack.mitre.org" class="btn btn-primary w-100">
+                                attack.mitre.org
+                            </a>
+                        </div>
+                    {% endif %}
                 </div>
             </div>
         </div>

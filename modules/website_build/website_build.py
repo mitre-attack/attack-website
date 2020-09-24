@@ -68,6 +68,11 @@ def generate_base_html():
 
     # Update navigation menu in the case that some module did not generate markdowns
     website_build_config.base_page_data['NAVIGATION_MENU'] = modules.menu_ptr
+    website_build_config.base_page_data['ATTACK_BRANDING'] = site_config.args.attack_brand
+    
+    if site_config.args.attack_brand:
+        if website_build_config.base_page_data['BANNER_MESSAGE'].startswith("This is a custom instance"):
+            website_build_config.base_page_data['BANNER_ENABLED'] = False
 
     with open(os.path.join(website_build_config.template_dir, "base-template.html"), "r", encoding='utf8') as base_template_f:
         base_template = base_template_f.read()
@@ -87,6 +92,7 @@ def generate_index_page():
     data['matrix_descr'] = matrix['descr']
     data["matrices"], data["has_subtechniques"], data["tour_technique"] = matrices.matrices.get_sub_matrices(matrix)
     data['logo_landingpage'] = website_build_config.base_page_data['logo_landingpage']
+    data['attack_branding'] = site_config.args.attack_brand
 
     # Get list of routes for random page feature
     all_routes = {
