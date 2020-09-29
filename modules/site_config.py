@@ -71,6 +71,9 @@ templates_directory = "attack-theme/templates/"
 
 javascript_path = "attack-theme/static/scripts/"
 
+# Static style pelican files directory
+static_style_dir = os.path.join("attack-theme", "static", "style/")
+
 # directory for data used in site builds
 data_directory = "data"
 # directory for STIX data

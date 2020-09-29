@@ -21,7 +21,9 @@ def generate_website():
     generate_index_page()
     generate_static_pages()
     store_pelican_settings()
+    override_colors()
     pelican_content()
+    reset_override_colors()
     remove_pelican_settings()
     remove_unwanted_output()
 
@@ -126,6 +128,49 @@ def store_pelican_settings():
     pelican_settings_f = os.path.join(site_config.data_directory, "pelican_settings.json")
     with open(pelican_settings_f, "w", encoding='utf8') as json_f:
         json_f.write(json.dumps(site_config.staged_pelican))
+
+def override_colors():
+    """ Override colors scss file if attack brand flag is enabled """
+    if site_config.args.attack_brand:
+        colors_scss_f = os.path.join(site_config.static_style_dir, "_colors.scss")
+
+        temp_file = ""
+        with open(colors_scss_f, "r", encoding='utf8') as colors_f:
+            lines = colors_f.readlines()
+
+            end_search = True
+            for line in lines:
+                if end_search and line.startswith("//$primary_override"):
+                    temp_file += line[2:]
+                elif end_search and line.startswith("//end"):
+                    end_search = False
+                else:
+                    temp_file += line
+
+        with open(colors_scss_f, "w", encoding='utf8') as colors_f:
+            colors_f.write(temp_file)
+
+def reset_override_colors():
+    """ Reset override colors scss file if attack brand flag is enabled """
+
+    if site_config.args.attack_brand:
+        colors_scss_f = os.path.join(site_config.static_style_dir, "_colors.scss")
+
+        temp_file = ""
+        with open(colors_scss_f, "r", encoding='utf8') as colors_f:
+            lines = colors_f.readlines()
+
+            end_search = True
+            for line in lines:
+                if end_search and line.startswith("$primary_override"):
+                    temp_file += "//" + line
+                elif end_search and line.startswith("//end"):
+                    end_search = False
+                else:
+                    temp_file += line
+
+        with open(colors_scss_f, "w", encoding='utf8') as colors_f:
+            colors_f.write(temp_file)
 
 def pelican_content():
     # Run pelican with limited output, -q is for quiet
