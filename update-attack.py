@@ -320,6 +320,7 @@ if __name__ == "__main__":
 
     # Generate base template for ATT&CK pages
     generate_base_template()
+    #Init colorama for output
 
     # Init colorama for output
     colorama.init()
