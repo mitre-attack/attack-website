@@ -1,4 +1,4 @@
-# MITRE ATT&CK&reg; Website
+# MITRE ATT&CK&reg; An Amazing Website
 
 ### See the live site at [attack.mitre.org](https://attack.mitre.org)!
 
