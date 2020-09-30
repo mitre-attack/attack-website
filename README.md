@@ -11,11 +11,11 @@ Use our [Github Issue Tracker](https://github.com/mitre-attack/attack-website/is
 
 If you find errors or typos in the site content, please let us know by sending an email to attack@mitre.org with the subject **Website Content Error**, and make sure to include both a description of the error and the URL at which it can be found. 
 
-_See [CONTRIBUTING.md](/CONTRIBUTING.md) for more information on making contributions to the ATT&CK website._
+_See [CONTRIBUTING](/CONTRIBUTING.md) for more information on making contributions to the ATT&CK website._
 
 ## Requirements
 
-- [python](https://www.python.org/) 3.6 or greater
+- [Python](https://www.python.org/) 3.6 or greater
 
 ## Install and Build
 
@@ -31,7 +31,8 @@ _See [CONTRIBUTING.md](/CONTRIBUTING.md) for more information on making contribu
 
 ### Build and serve the local site
 
-1. Update ATT&CK markdown from the STIX content, and generate the output html from the markdown: `python3 update-attack.py -c -b`. _Note: `update-attack.py`, has many optional command line arguments which affect the behavior of the build. Run `python3 update-attack.py -h` for a list of arguments and an explanation of their functionality._
+1. Update ATT&CK markdown from the STIX content, and generate the output html from the markdown: `python3 update-attack.py -c -b`.
+_Note: `update-attack.py`, has many optional command line arguments which affect the behavior of the build. Run `python3 update-attack.py -h` for a list of arguments and an explanation of their functionality._
 2. Serve the html to `localhost:8000`: 
     1. `cd output`
     2. `python3 -m pelican.server`
