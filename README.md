@@ -31,7 +31,7 @@ _See [CONTRIBUTING.md](/CONTRIBUTING.md) for more information on making contribu
 
 ### Build and serve the local site
 
-1. Update ATT&CK markdown from the STIX content, and generate the output html from the markdown: `python3 update-attack.py -c -b`. _Note: `update-attack.py`, has many optional command line arguments which affect the behavior of the build. Run `python3 update-attack.py -h` for a list of arguments and an explanation of their functionality._
+1. Update ATT&CK markdown from the STIX content, and generate the output html from the markdown: `python3 update-attack.py -c -b`. _Note: `update-attack.py`, has many optional command line arguments which affect the behaviour of the build. Run `python3 update-attack.py -h` for a list of arguments and an explanation of their functionality._
 2. Serve the html to `localhost:8000`: 
     1. `cd output`
     2. `python3 -m pelican.server`
