@@ -19,7 +19,7 @@ _See [CONTRIBUTING.md](/CONTRIBUTING.md) for more information on making contribu
 
 ## Install and Build
 
-### Install requirements
+### How to Install?
 
 1. Create a virtual environment: 
     - macOS and Linux: `python3 -m venv env`
