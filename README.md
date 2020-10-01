@@ -36,7 +36,7 @@ _See [CONTRIBUTING.md](/CONTRIBUTING.md) for more information on making contribu
     1. `cd output`
     2. `python3 -m pelican.server`
 
-### Installing, building, and serving the site via Docker 
+### Installing, building and serving the site via Docker 
 
 1. Build the docker image:
     - `docker build -t <your_preferred_image_name> .`
