@@ -40,6 +40,15 @@ matrices = [
         "descr": "Below are the tactics and techniques representing the MITRE ATT&CK<sup>&reg;</sup> Matrix for Enterprise.",
         "subtypes": [
             {
+                "name": "PRE",
+                "type": "local",
+                "matrix": "enterprise-attack",
+                "path": "enterprise/pre",
+                "platforms": ["PRE"],
+                "descr": "Below are the tactics and techniques representing the MITRE ATT&CK<sup>&reg;</sup> Matrix for Enterprise covering preparatory techniques.",
+                "subtypes": []
+            },
+            {
                 "name": "Windows",
                 "type": "local",
                 "matrix": "enterprise-attack",
@@ -64,15 +73,6 @@ matrices = [
                 "platforms": ["Linux"],
                 "path": "enterprise/linux",
                 "descr": "Below are the tactics and techniques representing the MITRE ATT&CK<sup>&reg;</sup> Matrix for Enterprise. ", 
-                "subtypes": []
-            },
-            {
-                "name": "PRE",
-                "type": "local",
-                "matrix": "enterprise-attack",
-                "path": "enterprise/pre",
-                "platforms": ["PRE"],
-                "descr": "Below are the tactics and techniques representing the MITRE ATT&CK<sup>&reg;</sup> Matrix for Enterprise covering preparatory techniques.",
                 "subtypes": []
             },
             {
@@ -190,10 +190,10 @@ matrices = [
 ]
 
 platform_to_path = {
+    "PRE": "enterprise/pre",
     "Windows": "enterprise/windows",
     "macOS": "enterprise/macos",
     "Linux": "enterprise/linux",
-    "PRE": "enterprise/pre",
     "AWS": "enterprise/cloud/aws",
     "GCP": "enterprise/cloud/gcp",
     "Azure": "enterprise/cloud/azure",
