@@ -19,6 +19,9 @@ general_information_md = ("Title: General Information\n"
 # Path for templates
 resources_templates_path = "modules/resources/templates/"
 
+# Path for docs
+docs_path = "modules/resources/docs/"
+
 # FAQ md
 faq_md = ("Title: Frequently Asked Questions\n"
           "Template: resources/faq\n"

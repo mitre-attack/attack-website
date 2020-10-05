@@ -939,8 +939,17 @@ def generate_redirections(redirections_filename):
             with open(os.path.join(site_config.redirects_markdown_path, obj['title'] + ".md"), "w", encoding='utf8') as md_file:
                 md_file.write(subs)
 
+def create_content_pages_dir():
+    """ Create content pages directory if it does not exist """
+
+    if not os.path.exists(site_config.content_dir):
+        os.mkdir(site_config.content_dir)
+    # Check that docs directory exist
+    if not os.path.exists(site_config.pages_dir):
+        os.mkdir(site_config.pages_dir)
+
 def move_templates(module_name, module_template_path):
-    """ Move module spefic templates into the website's main template directory holder """
+    """ Move module specific templates into the website's main template directory holder """
 
     if os.path.isdir(module_template_path):
 
@@ -954,3 +963,20 @@ def move_templates(module_name, module_template_path):
         for template in os.listdir(module_template_path):
             # Copy template to new directory
             shutil.copyfile(os.path.join(module_template_path,template), os.path.join(new_template_dir, template))
+
+def move_docs(module_docs_path):
+    """ Move module specific docs into the website's content directory for pelican """
+
+    if os.path.isdir(module_docs_path):
+        # Check that content directory exist
+        if not os.path.exists(site_config.content_dir):
+            os.mkdir(site_config.content_dir)
+        # Check that docs directory exist
+        if not os.path.exists(site_config.docs_dir):
+            os.mkdir(site_config.docs_dir)
+        
+        for doc in os.listdir(module_docs_path):
+            if os.path.isdir(os.path.join(module_docs_path, doc)):
+                shutil.copytree(os.path.join(module_docs_path,doc), os.path.join(site_config.docs_dir, doc))
+            else:
+                shutil.copyfile(os.path.join(module_docs_path,doc), os.path.join(site_config.docs_dir, doc))

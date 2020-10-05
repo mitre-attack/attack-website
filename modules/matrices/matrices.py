@@ -10,6 +10,9 @@ def generate_matrices():
        matrix markdown. 
     """
 
+    # Create content pages directory if does not already exist
+    util.buildhelpers.create_content_pages_dir()
+    
     # Move templates to templates directory
     util.buildhelpers.move_templates(matrices_config.module_name, matrices_config.matrices_templates_path)
 

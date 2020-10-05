@@ -44,7 +44,7 @@ def get_parsed_args():
     parser.add_argument('--modules', '-m', nargs='+',
                         type=str,
                         choices=module_choices,
-                        help=("Optional: Run specific modules by selecting from the "
+                        help=("Run specific modules by selecting from the "
                               "list and leaving one space in "
                               "between them. For example: '-m clean techniques tactics'."
                               "Will run all the modules if flag is not called, or selected "
@@ -52,7 +52,7 @@ def get_parsed_args():
     parser.add_argument('--extras', '-e', nargs='*',
                         type=str,
                         choices=extras,
-                        help=("Optional: Run extra modules that do not pertain to the ATT&CK dataset. "
+                        help=("Run extra modules that do not pertain to the ATT&CK dataset. "
                               "Select from the list and leaving one space in "
                               "between them. For example: '-m resources blog'.\n"
                               "These modules will only run if the user adds this flag. "
@@ -60,7 +60,7 @@ def get_parsed_args():
     parser.add_argument('--test', '-t', nargs='+',
                         choices=test_choices,
                         dest="tests",
-                        help="Optional: Run specific tests by selecting from the list and leaving "
+                        help="Run specific tests by selecting from the list and leaving "
                              "one space in between them. For example: '-t output links'. "
                              "Tests: "
                              "size (size of output directory against github pages limit); "
@@ -68,7 +68,7 @@ def get_parsed_args():
                              "external_links (dead external hyperlinks); "
                              "citations (unparsed citation text).")
     parser.add_argument('--attack-brand', action='store_true',
-                        help="Add attack.mitre.org branding.")
+                        help="Applies ATT&CK brand colors. See also the --extras flag.")
     parser.add_argument('--proxy', help="set proxy")
     parser.add_argument('--subdirectory', 
                         help="If you intend to host the site from a sub-directory, specify the directory using this flag.",

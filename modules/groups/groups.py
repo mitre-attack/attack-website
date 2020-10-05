@@ -16,8 +16,14 @@ def generate_groups():
        group markdown generation
     """
 
+    # Create content pages directory if does not already exist
+    util.buildhelpers.create_content_pages_dir()
+    
     # Move templates to templates directory
     util.buildhelpers.move_templates(groups_config.module_name, groups_config.groups_templates_path)
+
+    # Create content pages directory if does not already exist
+    util.buildhelpers.create_content_pages_dir()
 
     # Verify if directory exists
     if not os.path.isdir(groups_config.group_markdown_path):

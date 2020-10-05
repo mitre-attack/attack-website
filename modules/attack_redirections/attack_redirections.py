@@ -9,6 +9,9 @@ def generate_attack_redirections():
        markdown generation process
     """
 
+    # Create content pages directory if does not already exist
+    util.buildhelpers.create_content_pages_dir()
+
     # Verify if directory exists
     if not os.path.isdir(site_config.redirects_markdown_path):
         os.mkdir(site_config.redirects_markdown_path)

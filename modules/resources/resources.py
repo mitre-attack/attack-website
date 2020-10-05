@@ -9,6 +9,9 @@ from datetime import datetime
 def generate_resources():
     """Responsible for generating the resources pages"""
 
+    # Create content pages directory if does not already exist
+    util.buildhelpers.create_content_pages_dir()
+
     # Verify if resources directory exists
     if not os.path.isdir(resources_config.resources_markdown_path):
         os.mkdir(resources_config.resources_markdown_path)
@@ -19,7 +22,7 @@ def generate_resources():
 
     # Move templates to templates directory
     util.buildhelpers.move_templates(resources_config.module_name, resources_config.resources_templates_path)
-
+    util.buildhelpers.move_docs(resources_config.docs_path)
     generate_general_information()
     generate_training_pages()
     generate_attackcon_page()

@@ -88,6 +88,15 @@ attack_path = {
 navigator_link_enterprise = "https://mitre-attack.github.io/attack-navigator/enterprise"
 navigator_link_mobile = "https://mitre-attack.github.io/attack-navigator/mobile"
 
+# Content directory
+content_dir = "content/"
+
+# Pelican pages directory
+pages_dir = "content/pages"
+
+# Pelican docs directory
+docs_dir = "content/docs/"
+
 # Markdown path for redirects
 redirects_markdown_path = "content/pages/redirects/"
 

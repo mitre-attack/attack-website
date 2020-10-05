@@ -14,6 +14,9 @@ def generate_tactics():
        index markdown
     """
 
+    # Create content pages directory if does not already exist
+    util.buildhelpers.create_content_pages_dir()
+    
     # Move templates to templates directory
     util.buildhelpers.move_templates(tactics_config.module_name, tactics_config.tactics_templates_path)
 

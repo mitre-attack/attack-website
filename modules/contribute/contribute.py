@@ -7,6 +7,9 @@ from modules import util
 def generate_contribute():
     """Generate contribute page markdown"""
 
+    # Create content pages directory if does not already exist
+    util.buildhelpers.create_content_pages_dir()
+
     # Move templates to templates directory
     util.buildhelpers.move_templates(contribute_config.module_name, contribute_config.contribute_templates_path)
 

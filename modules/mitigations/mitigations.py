@@ -12,6 +12,9 @@ def generate_mitigations():
        mitigation markdown
     """
 
+    # Create content pages directory if does not already exist
+    util.buildhelpers.create_content_pages_dir()
+
     # Move templates to templates directory
     util.buildhelpers.move_templates(mitigations_config.module_name, mitigations_config.mititgations_templates_path)
 
