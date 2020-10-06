@@ -16,6 +16,9 @@ def generate_website():
         runs pelican content to convert markdown pages into html
     """
 
+    # Create content pages directory if does not already exist
+    util.buildhelpers.create_content_pages_dir()
+
     generate_javascript_settings()
     generate_base_html()
     generate_index_page()
