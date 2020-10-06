@@ -4,9 +4,6 @@ from modules import site_config
 module_name = "Resources"
 priority = 8
 
-# markdown path for resources
-resources_markdown_path = "content/pages/resources/"
-
 # markdown path for updates
 updates_markdown_path = "content/pages/updates/"
 
@@ -21,17 +18,6 @@ resources_templates_path = "modules/resources/templates/"
 
 # Path for docs
 docs_path = "modules/resources/docs/"
-
-# FAQ md
-faq_md = ("Title: Frequently Asked Questions\n"
-          "Template: resources/faq\n"
-          "save_as: resources/faq/index.html\n"
-          "data: ")
-
-# CHANGELOG md
-changelog_md = ("Title: Changelog\n"
-                "Template: resources/changelog\n"
-                "save_as: resources/changelog.html\n\n")
 
 # ATT&CKcon md
 attackcon_md = ("Title: ATT&CKcon\n"

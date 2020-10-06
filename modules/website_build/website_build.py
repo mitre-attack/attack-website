@@ -19,10 +19,17 @@ def generate_website():
     # Create content pages directory if does not already exist
     util.buildhelpers.create_content_pages_dir()
 
+    # Verify if resources directory exists
+    if not os.path.isdir(site_config.resources_markdown_path):
+        os.mkdir(site_config.resources_markdown_path)
+
+    util.buildhelpers.move_templates(website_build_config.module_name, website_build_config.website_build_templates_path)
     generate_javascript_settings()
     generate_base_html()
     generate_index_page()
     generate_static_pages()
+    generate_faq_page()
+    generate_changelog_page()
     store_pelican_settings()
     override_colors()
     pelican_content()
@@ -178,6 +185,39 @@ def reset_override_colors():
 
         with open(colors_scss_f, "w", encoding='utf8') as colors_f:
             colors_f.write(temp_file)
+
+def generate_faq_page():
+    """Responsible for compiling faq json into faq markdown file
+       for rendering on the HMTL
+    """
+    # load faq data from json
+    with open(os.path.join(site_config.data_directory, "faq.json"), "r", encoding='utf8') as f:
+        faqdata = json.load(f)
+    # add unique IDs
+    for i,section in enumerate(faqdata["sections"]):
+        for j,item in enumerate(section["questions"]):
+            item["id"] = f"faq-{i}-{j}"
+    
+    # get markdown
+    faq_content = website_build_config.faq_md + json.dumps(faqdata)
+    # write markdown to file
+    with open(os.path.join(site_config.resources_markdown_path, "faq.md"), "w", encoding='utf8') as md_file:
+        md_file.write(faq_content)
+
+def generate_changelog_page():
+    """Responsible for compiling original changelog markdown into changelog markdown file
+       for rendering on the HTML
+    """
+    
+    # Read local changelog
+    with open("CHANGELOG.md", "r", encoding='utf8') as f:
+        changelog = f.read()
+    
+    # Append changelog to mardown file
+    changelog_md = website_build_config.changelog_md + changelog
+
+    with open(os.path.join(site_config.resources_markdown_path, "changelog.md"), "w", encoding='utf8') as md_file:
+        md_file.write(changelog_md)
 
 def pelican_content():
     # Run pelican with limited output, -q is for quiet

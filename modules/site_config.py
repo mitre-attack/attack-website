@@ -100,6 +100,9 @@ docs_dir = "content/docs/"
 # Markdown path for redirects
 redirects_markdown_path = "content/pages/redirects/"
 
+# markdown path for resources
+resources_markdown_path = "content/pages/resources/"
+
 # Redirect md string template
 redirect_md = Template("Title: ${title}\n"
                        "Template: general/redirect-index\n"

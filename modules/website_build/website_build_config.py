@@ -43,3 +43,16 @@ website_build_markdown_path = "content/pages/"
 js_dir_settings = Template("var base_url = \"${web_directory}\";\n")
 js_build_uuid = Template("var build_uuid = \"${build_uuid}\";\n")
 
+# Path for templates
+website_build_templates_path = "modules/website_build/templates/"
+
+# FAQ md
+faq_md = ("Title: Frequently Asked Questions\n"
+          "Template: website_build/faq\n"
+          "save_as: resources/faq/index.html\n"
+          "data: ")
+
+# CHANGELOG md
+changelog_md = ("Title: Changelog\n"
+                "Template: website_build/changelog\n"
+                "save_as: resources/changelog.html\n\n")
