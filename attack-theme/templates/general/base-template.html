@@ -10,6 +10,8 @@
 {% set LOGO_HEADER = "${LOGO_HEADER}" -%}
 {% set LOGO_FOOTER = "${LOGO_FOOTER}" -%}
 {% set NAVIGATION_MENU = ${NAVIGATION_MENU} -%}
+{% set ATTACK_BRANDING = ${ATTACK_BRANDING} -%}
+{% set RESOURCES = ${RESOURCES} -%}
 {% set active_page = active_page|default('index') -%}
 {% set title = title|default('MITRE ATT&CK&reg;') -%}
 {% import 'macros/search.html' as search %}
@@ -43,12 +45,13 @@
     </header>
     <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
     <!-- !versions banner! -->
-    {% if BANNER_ENABLED == "true" %}
-        <div class="container-fluid under-development">
+    {% if BANNER_ENABLED %}
+        <div class="container-fluid banner-message">
             {{ BANNER_MESSAGE }}
         </div>
     {% endif %}
 {% endblock %}
+
 <div id='content' class="maincontent">
     <!--start-indexing-for-search-->
     {% block content %} {% block left %} {% endblock %} {% block right %} {% endblock %} {% endblock %}
@@ -71,39 +74,55 @@
                      © 2015-2020, The MITRE Corporation. MITRE ATT&CK and ATT&CK are registered trademarks of The MITRE Corporation.
                 </p>
                 <div class="row">
+                {% if RESOURCES %}                    
                     <div class="col text-right">
                         <small>
                             <a href="/resources/privacy" class="footer-link">Privacy Policy</a>
                         </small>
                     </div>
+                {% endif %}
                     <div class="col text-center">
                         <small>
                             <a href="/resources/terms-of-use" class="footer-link">Terms of Use</a>
                         </small>
                     </div>
-                    <div class="col text-left">
+                    <div class="col {% if RESOURCES %} text-left {% else %} text-center {% endif %}">
                         <small>
                             <a href="{{CHANGELOG_LOCATION}}" class="footer-link" data-toggle="tooltip" data-placement="top" title="ATT&amp;CK content version {{CONTENT_VERSION}}&#013;Website version {{WEBSITE_VERSION}}">ATT&CK v{{CONTENT_VERSION}}</a>
                         </small>
                     </div>
+
                 </div>
             </div>
             <div class="w-100 p-2 footer-responsive-break"></div>
-            <div class="col">
-                <div class="footer-float-right-responsive">
-                    <div class="mb-1">
-                        <a href="https://twitter.com/MITREattack" class="btn btn-primary w-100">
-                            <!-- <i class="fa fa-twitter"></i> -->
-                            <img src="/theme/images/twitter.png" class="mr-1 twitter-icon">
-                            <b>@MITREattack</b>
-                        </a>
-                    </div>
-                    <div class="">
-                        <a href="/contact" class="btn btn-primary w-100">
-                            Contact
-                        </a>
+            {% if ATTACK_BRANDING %}
+                <div class="col">
+                    <div class="footer-float-right-responsive-brand">
+                        <div class="mb-1">
+                            <a href="https://twitter.com/MITREattack" class="btn btn-primary w-100">
+                                <!-- <i class="fa fa-twitter"></i> -->
+                                <img src="/theme/images/twitter.png" class="mr-1 twitter-icon">
+                                <b>@MITREattack</b>
+                            </a>
+                        </div>
+                        <div class="">
+                            <a href="/contact" class="btn btn-primary w-100">
+                                Contact
+                            </a>
+                        </div>
                     </div>
                 </div>
+                {% else %}
+                    <div class="col footer-float-right-responsive-centered">
+                        <div>
+                            <div>
+                                <a href="https://attack.mitre.org" class="btn btn-primary w-100">
+                                    attack.mitre.org
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
             </div>
         </div>
     </div>

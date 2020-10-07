@@ -12,6 +12,9 @@ def generate_mitigations():
        mitigation markdown
     """
 
+    # Create content pages directory if does not already exist
+    util.buildhelpers.create_content_pages_dir()
+
     # Move templates to templates directory
     util.buildhelpers.move_templates(mitigations_config.module_name, mitigations_config.mititgations_templates_path)
 
@@ -57,8 +60,6 @@ def generate_markdown_files(domain, mitigations, side_nav_data, side_nav_mobile_
     data = {}
 
     if mitigations:
-
-        has_mitigation = True
 
         data['domain'] = domain.split("-")[0]
         data['mitigation_list_len'] = str(len(mitigations))
@@ -123,6 +124,8 @@ def generate_mitigation_md(mitigation, domain, side_menu_data, side_menu_mobile_
         data['techniques_addressed_data'] = get_techniques_addressed_data(mitigation, reference_list)
     
         data['citations'] = reference_list
+
+        data['versioning_feature'] = site_config.add_versioning_feature
 
         subs = mitigations_config.mitigation_md.substitute(data)
         subs = subs + json.dumps(data)

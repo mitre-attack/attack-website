@@ -10,8 +10,8 @@ template_dir = os.path.join("attack-theme", "templates", "general/")
 
 # Base page data for website header and footer
 base_page_data = {
-    "BANNER_ENABLED": False,
-    "BANNER_MESSAGE": "<strong><a href='https://collaborate.mitre.org/attackics' target='_blank'>JUST RELEASED: ATT&CK for Industrial Control Systems</a></strong>",
+    "BANNER_ENABLED": True,
+    "BANNER_MESSAGE": "This is a custom instance of the MITRE ATT&CK Website. The official instance can be found at <a href='https://attack.mitre.org'>attack.mitre.org</a>.",
     "CONTENT_VERSION": "7.0",
     "WEBSITE_VERSION": "3.0",
     "CHANGELOG_LOCATION": "/resources/changelog.html",
@@ -43,3 +43,16 @@ website_build_markdown_path = "content/pages/"
 js_dir_settings = Template("var base_url = \"${web_directory}\";\n")
 js_build_uuid = Template("var build_uuid = \"${build_uuid}\";\n")
 
+# Path for templates
+website_build_templates_path = "modules/website_build/templates/"
+
+# FAQ md
+faq_md = ("Title: Frequently Asked Questions\n"
+          "Template: website_build/faq\n"
+          "save_as: resources/faq/index.html\n"
+          "data: ")
+
+# CHANGELOG md
+changelog_md = ("Title: Changelog\n"
+                "Template: website_build/changelog\n"
+                "save_as: resources/changelog.html\n\n")

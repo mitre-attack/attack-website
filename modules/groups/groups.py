@@ -16,8 +16,14 @@ def generate_groups():
        group markdown generation
     """
 
+    # Create content pages directory if does not already exist
+    util.buildhelpers.create_content_pages_dir()
+    
     # Move templates to templates directory
     util.buildhelpers.move_templates(groups_config.module_name, groups_config.groups_templates_path)
+
+    # Create content pages directory if does not already exist
+    util.buildhelpers.create_content_pages_dir()
 
     # Verify if directory exists
     if not os.path.isdir(groups_config.group_markdown_path):
@@ -150,6 +156,8 @@ def generate_group_md(group, side_menu_data, side_menu_mobile_view_data):
                 
         if isinstance(group.get("aliases"), collections.Iterable):
             data['aliases_list'] = group["aliases"][1:]
+        
+        data['versioning_feature'] = site_config.add_versioning_feature
 
         subs = groups_config.group_md.substitute(data)
         subs = subs + json.dumps(data)

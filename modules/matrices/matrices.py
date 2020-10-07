@@ -10,6 +10,9 @@ def generate_matrices():
        matrix markdown. 
     """
 
+    # Create content pages directory if does not already exist
+    util.buildhelpers.create_content_pages_dir()
+    
     # Move templates to templates directory
     util.buildhelpers.move_templates(matrices_config.module_name, matrices_config.matrices_templates_path)
 
@@ -50,6 +53,8 @@ def generate_platform_matrices(matrix, side_menu_data=None):
     data['domain'] = matrix['matrix'].split("-")[0]
     data['descr'] = matrix['descr']
     data['path'] = matrix['path']
+
+    data['versioning_feature'] = site_config.add_versioning_feature
     
     subs = matrices_config.matrix_md.substitute(data)
     subs = subs + json.dumps(data)

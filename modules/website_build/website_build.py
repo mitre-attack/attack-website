@@ -16,12 +16,24 @@ def generate_website():
         runs pelican content to convert markdown pages into html
     """
 
+    # Create content pages directory if does not already exist
+    util.buildhelpers.create_content_pages_dir()
+
+    # Verify if resources directory exists
+    if not os.path.isdir(site_config.resources_markdown_path):
+        os.mkdir(site_config.resources_markdown_path)
+
+    util.buildhelpers.move_templates(website_build_config.module_name, website_build_config.website_build_templates_path)
     generate_javascript_settings()
     generate_base_html()
     generate_index_page()
     generate_static_pages()
+    generate_faq_page()
+    generate_changelog_page()
     store_pelican_settings()
+    override_colors()
     pelican_content()
+    reset_override_colors()
     remove_pelican_settings()
     remove_unwanted_output()
 
@@ -68,6 +80,12 @@ def generate_base_html():
 
     # Update navigation menu in the case that some module did not generate markdowns
     website_build_config.base_page_data['NAVIGATION_MENU'] = modules.menu_ptr
+    website_build_config.base_page_data['ATTACK_BRANDING'] = site_config.args.attack_brand
+    website_build_config.base_page_data['RESOURCES'] = [key['name'] for key in modules.run_ptr if key['name'] == 'resources']
+
+    if site_config.args.attack_brand:
+        if website_build_config.base_page_data['BANNER_MESSAGE'].startswith("This is a custom instance"):
+            website_build_config.base_page_data['BANNER_ENABLED'] = False
 
     with open(os.path.join(website_build_config.template_dir, "base-template.html"), "r", encoding='utf8') as base_template_f:
         base_template = base_template_f.read()
@@ -87,6 +105,8 @@ def generate_index_page():
     data['matrix_descr'] = matrix['descr']
     data["matrices"], data["has_subtechniques"], data["tour_technique"] = matrices.matrices.get_sub_matrices(matrix)
     data['logo_landingpage'] = website_build_config.base_page_data['logo_landingpage']
+    data['attack_branding'] = site_config.args.attack_brand
+    data['resources'] = [key['name'] for key in modules.run_ptr if key['name'] == 'resources']
 
     # Get list of routes for random page feature
     all_routes = {
@@ -120,6 +140,84 @@ def store_pelican_settings():
     pelican_settings_f = os.path.join(site_config.data_directory, "pelican_settings.json")
     with open(pelican_settings_f, "w", encoding='utf8') as json_f:
         json_f.write(json.dumps(site_config.staged_pelican))
+
+def override_colors():
+    """ Override colors scss file if attack brand flag is enabled """
+    if site_config.args.attack_brand:
+        colors_scss_f = os.path.join(site_config.static_style_dir, "_colors.scss")
+
+        temp_file = ""
+        with open(colors_scss_f, "r", encoding='utf8') as colors_f:
+            lines = colors_f.readlines()
+
+            end_search = True
+            for line in lines:
+                if end_search and line.startswith("//$use_attack_them"):
+                    temp_file += line[2:]
+                elif end_search and line.startswith("// end search"):
+                    end_search = False
+                    temp_file += line
+                else:
+                    temp_file += line
+
+        with open(colors_scss_f, "w", encoding='utf8') as colors_f:
+            colors_f.write(temp_file)
+
+def reset_override_colors():
+    """ Reset override colors scss file if attack brand flag is enabled """
+
+    if site_config.args.attack_brand:
+        colors_scss_f = os.path.join(site_config.static_style_dir, "_colors.scss")
+
+        temp_file = ""
+        with open(colors_scss_f, "r", encoding='utf8') as colors_f:
+            lines = colors_f.readlines()
+
+            end_search = True
+            for line in lines:
+                if end_search and line.startswith("$use_attack_them"):
+                    temp_file += "//" + line
+                elif end_search and line.startswith("// end search"):
+                    end_search = False
+                    temp_file += line
+                else:
+                    temp_file += line
+
+        with open(colors_scss_f, "w", encoding='utf8') as colors_f:
+            colors_f.write(temp_file)
+
+def generate_faq_page():
+    """Responsible for compiling faq json into faq markdown file
+       for rendering on the HMTL
+    """
+    # load faq data from json
+    with open(os.path.join(site_config.data_directory, "faq.json"), "r", encoding='utf8') as f:
+        faqdata = json.load(f)
+    # add unique IDs
+    for i,section in enumerate(faqdata["sections"]):
+        for j,item in enumerate(section["questions"]):
+            item["id"] = f"faq-{i}-{j}"
+    
+    # get markdown
+    faq_content = website_build_config.faq_md + json.dumps(faqdata)
+    # write markdown to file
+    with open(os.path.join(site_config.resources_markdown_path, "faq.md"), "w", encoding='utf8') as md_file:
+        md_file.write(faq_content)
+
+def generate_changelog_page():
+    """Responsible for compiling original changelog markdown into changelog markdown file
+       for rendering on the HTML
+    """
+    
+    # Read local changelog
+    with open("CHANGELOG.md", "r", encoding='utf8') as f:
+        changelog = f.read()
+    
+    # Append changelog to mardown file
+    changelog_md = website_build_config.changelog_md + changelog
+
+    with open(os.path.join(site_config.resources_markdown_path, "changelog.md"), "w", encoding='utf8') as md_file:
+        md_file.write(changelog_md)
 
 def pelican_content():
     # Run pelican with limited output, -q is for quiet

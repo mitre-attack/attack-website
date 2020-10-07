@@ -13,6 +13,9 @@ def generate_software():
        index markdown
     """
 
+    # Create content pages directory if does not already exist
+    util.buildhelpers.create_content_pages_dir()
+
     # Move templates to templates directory
     util.buildhelpers.move_templates(software_config.module_name, software_config.software_templates_path)
 
@@ -166,6 +169,7 @@ def generate_software_md(software,side_menu_data,side_menu_mobile_view_data):
             data['platform_list'] = software["x_mitre_platforms"]
         
         data['citations'] = reference_list
+        data['versioning_feature'] = site_config.add_versioning_feature
 
         subs = software_config.software_md.substitute(data)
         subs = subs + json.dumps(data)

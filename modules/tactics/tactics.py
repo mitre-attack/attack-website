@@ -14,6 +14,9 @@ def generate_tactics():
        index markdown
     """
 
+    # Create content pages directory if does not already exist
+    util.buildhelpers.create_content_pages_dir()
+    
     # Move templates to templates directory
     util.buildhelpers.move_templates(tactics_config.module_name, tactics_config.tactics_templates_path)
 
@@ -113,6 +116,8 @@ def generate_tactic_md(tactic, domain, tactic_list, techniques, side_nav_data):
 
         data['techniques_table'] = util.buildhelpers.get_technique_table_data(tactic, techniques_list)
         data['techniques_table_len'] = str(len(techniques_list))
+
+        data['versioning_feature'] = site_config.add_versioning_feature
 
         subs = tactics_config.tactic_md.substitute(data)
         subs = subs + json.dumps(data)

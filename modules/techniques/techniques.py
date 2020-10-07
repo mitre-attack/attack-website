@@ -14,6 +14,9 @@ def generate_techniques():
         False if nothing was generated
     """
 
+    # Create content pages directory if does not already exist
+    util.buildhelpers.create_content_pages_dir()
+    
     # Move templates to templates directory
     util.buildhelpers.move_templates(techniques_config.module_name, techniques_config.techniques_templates_path)
 
@@ -306,6 +309,8 @@ def generate_data_for_md(technique_dict, technique, tactic_list, is_sub_techniqu
                 technique_dict['diff_for_adv_exp'] = util.buildhelpers.replace_html_chars(technique['x_mitre_difficulty_for_adversary_explanation'])            
             
             technique_dict['citations'] = reference_list
+
+            technique_dict['versioning_feature'] = site_config.add_versioning_feature
         
         else:
             if technique_dict['deprecated']:

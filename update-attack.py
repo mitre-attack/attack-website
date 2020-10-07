@@ -9,7 +9,8 @@ from modules import site_config
 from modules import util
 
 # argument defaults and options for the CLI
-module_choices = ['clean', 'stix_data', 'resources', 'attack_redirections', 'blog', 'contribute', 'groups', 'search', 'matrices', 'mitigations', 'redirects', 'software', 'tactics', 'techniques', 'tour', 'website_build', 'random_page', 'subdirectory', 'tests']
+module_choices = ['clean', 'stix_data', 'groups', 'search', 'matrices', 'mitigations', 'software', 'tactics', 'techniques', 'tour', 'website_build', 'random_page', 'subdirectory', 'tests']
+extras = ['resources', 'versions', 'contribute', 'blog', 'attack_redirections']
 test_choices = ['size', 'links', 'external_links', 'citations']
 
 def validate_subdirectory_string(subdirectory_str):
@@ -32,7 +33,10 @@ def get_parsed_args():
     """Create argument parser and parse arguments"""
 
     parser = argparse.ArgumentParser(description=("Build the ATT&CK website.\n"
-                                     "To run a complete build, run this script with the -c and -b flags. "))
+                                    "All flags are optional. If you run the build without flags, "
+                                    "the modules that pertain to the ATT&CK dataset will be ran. "
+                                    "If you would like to run extra modules, opt-in these modules with the"
+                                    "--extras flag."))
     parser.add_argument('--refresh', '-r', action='store_true',
                         help='Pull down the current STIX data from the MITRE/CTI GitHub respository')
     parser.add_argument('--no-stix-link-replacement', action='store_true',
@@ -42,7 +46,17 @@ def get_parsed_args():
                         choices=module_choices,
                         help=("Run specific modules by selecting from the "
                               "list and leaving one space in "
-                              "between them. For example: '-m clean techniques tactics'."))                      
+                              "between them. For example: '-m clean techniques tactics'."
+                              "Will run all the modules if flag is not called, or selected "
+                              "without arguments."))
+    parser.add_argument('--extras', '-e', nargs='*',
+                        type=str,
+                        choices=extras,
+                        help=("Run extra modules that do not pertain to the ATT&CK dataset. "
+                              "Select from the list and leaving one space in "
+                              "between them. For example: '-m resources blog'.\n"
+                              "These modules will only run if the user adds this flag. "
+                              "Calling this flag without arguments will select all the extra modules."))                       
     parser.add_argument('--test', '-t', nargs='+',
                         choices=test_choices,
                         dest="tests",
@@ -53,6 +67,8 @@ def get_parsed_args():
                              "links (dead internal hyperlinks and relative hyperlinks); "
                              "external_links (dead external hyperlinks); "
                              "citations (unparsed citation text).")
+    parser.add_argument('--attack-brand', action='store_true',
+                        help="Applies ATT&CK brand colors. See also the --extras flag.")
     parser.add_argument('--proxy', help="set proxy")
     parser.add_argument('--subdirectory', 
                         help="If you intend to host the site from a sub-directory, specify the directory using this flag.",
@@ -68,12 +84,20 @@ def get_parsed_args():
 
     args = parser.parse_args()
 
+    # If modules is empty, means all modules will be ran 
+    if not args.modules:
+        args.modules = module_choices
+
+    # If the extras flag was called without params, set to all
+    if not args.extras and isinstance(args.extras, list):
+        args.extras = extras
+
     # Set global argument list for modules
     site_config.args = args
     
     return args
 
-def remove_from_build(arg_modules):
+def remove_from_build(arg_modules, arg_extras):
     """ Given a list of modules from command line, remove modules that appear in module
         directory that are not in list.
     """
@@ -81,7 +105,7 @@ def remove_from_build(arg_modules):
     def remove_from_running_pool():
         """ Remove modules from running pool if they are not in modules list from argument """
 
-        copy_of_modules = [] 
+        copy_of_modules = []
 
         for module in modules.run_ptr:
             if module["name"].lower() in arg_modules:
@@ -92,13 +116,17 @@ def remove_from_build(arg_modules):
     def remove_from_menu():
         """ Remove modules from menu if they are not in modules list from argument """
 
-        copy_of_menu = [] 
+        copy_of_menu = []
 
         for module in modules.menu_ptr:
             if module["name"].lower() in arg_modules:
                 copy_of_menu.append(module)
         
         modules.menu_ptr = copy_of_menu
+    
+    # Only add extra modules if argument flag was used
+    if arg_extras:
+        arg_modules = arg_modules + arg_extras
 
     remove_from_running_pool()
     remove_from_menu()
@@ -109,10 +137,12 @@ if __name__ == "__main__":
     # Get args
     args = get_parsed_args()
 
-    # If modules flags are called only run modules selected by user
-    if args.modules:
-        remove_from_build(args.modules)
-    
+    # Remove modules from build
+    remove_from_build(args.modules, args.extras)
+
+    # Check if versions module is added to the build
+    site_config.check_versions_module()
+
     # Arguments used for pelican
     site_config.send_to_pelican("no_stix_link_replacement", args.no_stix_link_replacement)
 

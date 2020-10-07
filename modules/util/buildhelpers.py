@@ -847,12 +847,24 @@ def get_subtype_data(matrix, inside, name):
 def remove_module_from_menu(module_to_be_removed):
     """ Given a list of results, remove elements from menu if their result was False """
 
-    def remove_from_menu_list(module):
+    for module in modules.menu_ptr:
         if module['name'] == module_to_be_removed:
             modules.menu_ptr.remove(module)
+            return
+
+def remove_element_from_sub_menu(selected_module, element):
+    """ Given a sub menu item and a module, removes element from sub menu """
+
+    def remove_from_sub_menu_list(module):
+        if module.get('children'):
+            for child in module['children']:
+                if child['name'] == element:
+                    module['children'].remove(child)
+                    return
 
     for module in modules.menu_ptr:
-        remove_from_menu_list(module)
+        if module['name'] == selected_module:
+            remove_from_sub_menu_list(module)
 
 def get_matrix_data(techniques):
     """Given a technique list, returns the a dictionary of techniques data
@@ -927,8 +939,17 @@ def generate_redirections(redirections_filename):
             with open(os.path.join(site_config.redirects_markdown_path, obj['title'] + ".md"), "w", encoding='utf8') as md_file:
                 md_file.write(subs)
 
+def create_content_pages_dir():
+    """ Create content pages directory if it does not exist """
+
+    if not os.path.exists(site_config.content_dir):
+        os.mkdir(site_config.content_dir)
+    # Check that docs directory exist
+    if not os.path.exists(site_config.pages_dir):
+        os.mkdir(site_config.pages_dir)
+
 def move_templates(module_name, module_template_path):
-    """ Move module spefic templates into the website's main template directory holder """
+    """ Move module specific templates into the website's main template directory holder """
 
     if os.path.isdir(module_template_path):
 
@@ -942,3 +963,20 @@ def move_templates(module_name, module_template_path):
         for template in os.listdir(module_template_path):
             # Copy template to new directory
             shutil.copyfile(os.path.join(module_template_path,template), os.path.join(new_template_dir, template))
+
+def move_docs(module_docs_path):
+    """ Move module specific docs into the website's content directory for pelican """
+
+    if os.path.isdir(module_docs_path):
+        # Check that content directory exist
+        if not os.path.exists(site_config.content_dir):
+            os.mkdir(site_config.content_dir)
+        # Check that docs directory exist
+        if not os.path.exists(site_config.docs_dir):
+            os.mkdir(site_config.docs_dir)
+        
+        for doc in os.listdir(module_docs_path):
+            if os.path.isdir(os.path.join(module_docs_path, doc)):
+                shutil.copytree(os.path.join(module_docs_path,doc), os.path.join(site_config.docs_dir, doc))
+            else:
+                shutil.copyfile(os.path.join(module_docs_path,doc), os.path.join(site_config.docs_dir, doc))

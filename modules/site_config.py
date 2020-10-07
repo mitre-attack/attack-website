@@ -24,6 +24,17 @@ def send_to_pelican(key, value):
     """ Method to stage key value pairs for pelican use """
     staged_pelican[key] = value
 
+# Only add versioning feature if resources module is loaded
+add_versioning_feature = False
+
+def check_versions_module():
+    """ Add resources information used by other modules """
+    
+    global add_versioning_feature
+
+    if [key['name'] for key in modules.run_ptr if key['name'] == 'versions']:
+        add_versioning_feature = True
+
 # Source names for ATT&CK
 source_names = [
     "mitre-attack", 
@@ -60,6 +71,9 @@ templates_directory = "attack-theme/templates/"
 
 javascript_path = "attack-theme/static/scripts/"
 
+# Static style pelican files directory
+static_style_dir = os.path.join("attack-theme", "static", "style/")
+
 # directory for data used in site builds
 data_directory = "data"
 # directory for STIX data
@@ -74,8 +88,20 @@ attack_path = {
 navigator_link_enterprise = "https://mitre-attack.github.io/attack-navigator/enterprise"
 navigator_link_mobile = "https://mitre-attack.github.io/attack-navigator/mobile"
 
+# Content directory
+content_dir = "content/"
+
+# Pelican pages directory
+pages_dir = "content/pages"
+
+# Pelican docs directory
+docs_dir = "content/docs/"
+
 # Markdown path for redirects
 redirects_markdown_path = "content/pages/redirects/"
+
+# markdown path for resources
+resources_markdown_path = "content/pages/resources/"
 
 # Redirect md string template
 redirect_md = Template("Title: ${title}\n"

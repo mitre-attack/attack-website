@@ -6,7 +6,7 @@ import json
 import stat
 from datetime import datetime
 import re
-from . import resources_config
+from . import versions_config
 from modules import site_config
 
 # Error handler for windows by:
@@ -51,20 +51,20 @@ def nameToPath(name):
 
 def deploy():
     """ Deploy previous versions to website directory """
-    resources_config.prev_versions_deploy_folder = os.path.join(site_config.web_directory, resources_config.prev_versions_path)
+    versions_config.prev_versions_deploy_folder = os.path.join(site_config.web_directory, versions_config.prev_versions_path)
     
     #TODO we probably don't need to re-clone the website here, just a git pull should be sufficient
     # delete previous copy of attack-versions
-    if os.path.exists(resources_config.versions_directory):
-        shutil.rmtree(resources_config.versions_directory, onerror=onerror) 
+    if os.path.exists(versions_config.versions_directory):
+        shutil.rmtree(versions_config.versions_directory, onerror=onerror) 
     # download new version of attack-website for use in versioning
-    versions_repo = Repo.clone_from(resources_config.versions_repo, resources_config.versions_directory)
+    versions_repo = Repo.clone_from(versions_config.versions_repo, versions_config.versions_directory)
 
     # remove previously deployed previous versions
-    if os.path.exists(resources_config.prev_versions_deploy_folder):
-        for child in os.listdir(resources_config.prev_versions_deploy_folder):
-            if os.path.isdir(os.path.join(resources_config.prev_versions_deploy_folder, child)): 
-                shutil.rmtree(resources_config.prev_versions_deploy_folder)
+    if os.path.exists(versions_config.prev_versions_deploy_folder):
+        for child in os.listdir(versions_config.prev_versions_deploy_folder):
+            if os.path.isdir(os.path.join(versions_config.prev_versions_deploy_folder, child)): 
+                shutil.rmtree(versions_config.prev_versions_deploy_folder)
 
     with open("data/versions.json", "r") as f:
         versions = json.load(f)
@@ -82,24 +82,24 @@ def deploy():
     
     # write robots.txt to disallow crawlers
     with open(os.path.join(site_config.web_directory, "robots.txt"), "w", encoding='utf8') as robots:
-        robots.write(f"User-agent: *\nDisallow: {site_config.subdirectory}/previous/\nDisallow: {site_config.subdirectory}/{resources_config.prev_versions_path}/")
+        robots.write(f"User-agent: *\nDisallow: {site_config.subdirectory}/previous/\nDisallow: {site_config.subdirectory}/{versions_config.prev_versions_path}/")
 
 def deploy_current_version():
     """build a permalink of the current version"""
 
-    resources_config.prev_versions_deploy_folder = os.path.join(site_config.web_directory, resources_config.prev_versions_path)
+    versions_config.prev_versions_deploy_folder = os.path.join(site_config.web_directory, versions_config.prev_versions_path)
 
     with open("data/versions.json", "r") as f:
         version = json.load(f)["current"]
 
-    if not os.path.exists(os.path.join(resources_config.prev_versions_deploy_folder, nameToPath(version["name"]))):
-        os.mkdir(os.path.join(resources_config.prev_versions_deploy_folder, nameToPath(version["name"])))
+    if not os.path.exists(os.path.join(versions_config.prev_versions_deploy_folder, nameToPath(version["name"]))):
+        os.mkdir(os.path.join(versions_config.prev_versions_deploy_folder, nameToPath(version["name"])))
     for item in os.listdir(site_config.web_directory):
         # skip previous and versions directories when copying
         if item == "previous" or item == "versions": continue
         # copy the current version into a preserved version
         src = os.path.join(site_config.web_directory, item)
-        dest = os.path.join(resources_config.prev_versions_deploy_folder, nameToPath(version["name"]), item)
+        dest = os.path.join(versions_config.prev_versions_deploy_folder, nameToPath(version["name"]), item)
         # copy depending on file type
         if os.path.isdir(src):
             shutil.copytree(src, dest)
@@ -115,7 +115,7 @@ def deploy_previous_version(version, repo):
     # check out the commit for that version
     repo.git.checkout(version["commit"])
     # copy over files
-    shutil.copytree(os.path.join(resources_config.versions_directory), os.path.join(resources_config.prev_versions_deploy_folder, nameToPath(version["name"])))
+    shutil.copytree(os.path.join(versions_config.versions_directory), os.path.join(versions_config.prev_versions_deploy_folder, nameToPath(version["name"])))
     # run archival scripts on version
     archive(version)
     # build alias for version
@@ -130,8 +130,8 @@ def archive(version_data, is_current=False):
     """
     version = nameToPath(version_data["name"])
 
-    version_path = os.path.join(resources_config.prev_versions_deploy_folder, version) # root of the filesystem containing the version
-    version_url_path = os.path.join(resources_config.prev_versions_path, version) # root of the URL of the version, for prefixing URLs
+    version_path = os.path.join(versions_config.prev_versions_deploy_folder, version) # root of the filesystem containing the version
+    version_url_path = os.path.join(versions_config.prev_versions_path, version) # root of the URL of the version, for prefixing URLs
 
     def saferemove(path, type):
         if not os.path.exists(path): return
@@ -150,7 +150,7 @@ def archive(version_data, is_current=False):
     saferemove(os.path.join(version_path, "robots.txt"), "file")
 
     # remove previous versions from this previous version
-    for prev_directory in map(lambda d: os.path.join(version_path, d), ["previous", resources_config.prev_versions_path, os.path.join("resources", "previous-versions"), os.path.join("resources", "versions")]):
+    for prev_directory in map(lambda d: os.path.join(version_path, d), ["previous", versions_config.prev_versions_path, os.path.join("resources", "previous-versions"), os.path.join("resources", "versions")]):
         if os.path.exists(prev_directory):
             shutil.rmtree(prev_directory, onerror=onerror)
     
@@ -237,10 +237,10 @@ def build_alias(version, alias):
     version is the path of the version, e.g "v5"
     alias is the alias to build, e.g "october2018"
     """
-    for root, folder, files in os.walk(os.path.join(resources_config.prev_versions_deploy_folder, version)):
+    for root, folder, files in os.walk(os.path.join(versions_config.prev_versions_deploy_folder, version)):
         for thefile in files:
             # where the file should go
-            newRoot = root.replace(version, alias).replace(resources_config.prev_versions_path, "previous")
+            newRoot = root.replace(version, alias).replace(versions_config.prev_versions_path, "previous")
             # file to build
             redirectFrom = os.path.join(newRoot, thefile)
             
@@ -276,8 +276,8 @@ def build_markdown(versions):
     }
     
     # build previous-versions page markdown
-    subs = resources_config.versions_md + json.dumps(versions_data)
-    with open(os.path.join(resources_config.versions_markdown_path, "versions.md"), "w", encoding='utf8') as md_file:
+    subs = versions_config.versions_md + json.dumps(versions_data)
+    with open(os.path.join(versions_config.versions_markdown_path, "versions.md"), "w", encoding='utf8') as md_file:
         md_file.write(subs)
 
 
