@@ -30,6 +30,10 @@
 <!--    PATCH updates are when a bugfix is made without the             -->
 <!--          addition of notable features. When PATCH is 0 it can      -->
 <!--          be omitted                                                -->
+# 8 August 2020
+## ATT&CK Website version 2.1.4
+### Improvements
+- Updated roadmap and matrix poster on the [resources](https://attack.mitre.org/resources/) page. See issue [#255](https://github.com/mitre-attack/attack-website/issues/255).
 
 # 6 August 2020
 ## ATT&CK Website version 2.1.3
