@@ -1,12 +1,39 @@
-# How to customize
+# How to customize the ATT&CK Website
+
+## Building the site with custom content
+
+The MITRE ATT&CK Website® is designed support an evolving knowledge base. The content seen on the site is generated from data in STIX2.0 JSON format. The data used on the live site at [attack.mitre.org](https://attack.mitre.org) can be found on our [mitre/cti](https://github.com/mitre/cti) github repo. 
+
+You can generate the website using custom content by replacing the STIX bundles in `/data/stix/`:
+- `enterprise-attack.json` is the bundle for the enterprise domain.
+- `mobile-attack.json` is the bundle for the mobile domain.
+
+## Configuration
+
+### Changing the theme (colors)
+
+Users wishing to make changes to the ATT&CK website visual theme should take a look at our scss source files in `attack-theme/static/style`. Changes to the colors defined in `_colors.scss` should automatically propagate across the site. 
+
+### Changing logos
+
+The logos used in the header, footer, and on the landing page of the website can be easily changed. Simply find their keys in the `settings_dict` of ``modules/website_build/website_build_config.py`, and update their values to point to the new images.
+
+### Attaching a custom Navigator instance
+
+Links to the [ATT&CK Navigator](https://github.com/mitre-attack/attack-navigator) can be customized to point to a custom instance of that application. Simply change the `navigator_link` field in `modules/site_config.py` to point to your hosted instance, and all URLs pointing to the Navigator on the site should update automatically.
+
+### Changing the banner
+
+The banner message can be modified or hidden by modifying the `BANNER_ENABLED` and
+`BANNER_MESSAGE` properties within `modules/website_build/website_build_config.py`.
 
 ## Implementation Overview
 
-The MITRE ATT&CK&reg; Website uses a combination of Python, Pelican and Jinja to convert the STIX content into a set of static HTML files. When `update-attack.py` is run, it generates a set of markdown files in `content` containing the parsed STIX content. Pelican then reads these markdown files and uses them with the Jinja templates in `attack-theme/templates` to build the site HTML in the output directory. 
+The ATT&CK Website uses a combination of Python, Pelican and Jinja to convert the STIX content into a set of static HTML files. When `update-attack.py` is run, it generates a set of markdown files in `content` containing the parsed STIX content. Pelican then reads these markdown files and uses them with the Jinja templates in `attack-theme/templates` to build the site HTML in the output directory. 
 
-### Modules
+## Adding New Features
 
-The website is built from different modules. These modules can be found inside the `modules` directory. If the `update-attack.py` script is ran without any arguments, it will automatically look for modules inside the `modules` directory and build them.  Modules are divided in two classes, active and supportive modules. Active modules append a link to the website's main menu and typically generates markdown files. For example, the `techniques` module is responsible for generating all Technique related markdown pages. Supportive modules are those who do not appear on the website menu but are critical to the general website build. An example of a supportive module is the `util` module which has methods and API calls to interface with the STIX bundles.
+The website is built from modules. These modules can be found inside the `modules` directory. If the `update-attack.py` script is ran without any arguments, it will automatically look for modules inside the `modules` directory and build them.  Modules are divided in two classes, active and supportive modules. Active modules append a link to the website's main menu and typically generates markdown files. For example, the `techniques` module is responsible for generating all Technique related markdown pages. Supportive modules are those who do not appear on the website menu but are critical to the general website build. An example of a supportive module is the `util` module which has methods and API calls to interface with the STIX bundles.
 
 Modules that are not present on the `modules` directory will not get built and will not appear on the website's main navigation menu. You can also select specific modules to be ran without removing modules from the directory by running the `update-attack.py` script with the `-m` flag followed by the names of the modules. For example, run `python3 update-attack.py -m clean techniques website_build` to run a fresh build, generate the techniques markdown files, and generate the HTML files. Supportive modules need not to be called by arguments flags unless they are optional supportive modules such as the `tests` module.
 
@@ -58,15 +85,3 @@ Jinja templates that are only used by the module should be stored in the module 
 
 Additionally, redirections made by the module should also be stored inside of the module. Take a look at the available modules for reference (the techniques module is a good one).
 
-## Building the site with custom content
-
-The ATT&CK Website is designed support an evolving knowledge base. The content seen on the site is generated from data in STIX2.0 JSON format. The data used on the live site at [attack.mitre.org](https://attack.mitre.org) can be found on our [mitre/cti](https://github.com/mitre/cti) github repo. 
-
-You can generate the website using custom content by replacing the STIX bundles in `/data/stix/`:
-- `enterprise-attack.json` is the bundle for the enterprise domain.
-- `mobile-attack.json` is the bundle for the mobile domain.
-- the `*_old.json` bundles are updated automatically when the site is built, and are used for generating Matrix timestamps. `old_dates.json` is used for fallback timestamps for the matrices. You typically won't need to replace these files.
-
-Users wishing to make changes to the ATT&CK website visual theme should take a look at our scss source files in `attack-theme/static/style`. Changes to the colors defined in `_colors.scss` should automatically propagate across the site. Users wishing to make changes to the layout of pages should modify the templates found in `attack-theme/templates`. Major additions or changes will typically require modification of the python modules in `modules/` in addition to the templates.
-
-The logos used in the header, footer, and on the landing page of the website can be easily changed. Simply find their keys in the `settings_dict` of `modules/config.py`, and update their values to point to the new images.
