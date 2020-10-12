@@ -125,7 +125,7 @@ def generate_mitigation_md(mitigation, domain, side_menu_data, side_menu_mobile_
     
         data['citations'] = reference_list
 
-        data['versioning_feature'] = site_config.add_versioning_feature
+        data['versioning_feature'] = site_config.check_versions_module()
 
         subs = mitigations_config.mitigation_md.substitute(data)
         subs = subs + json.dumps(data)

@@ -310,7 +310,7 @@ def generate_data_for_md(technique_dict, technique, tactic_list, is_sub_techniqu
             
             technique_dict['citations'] = reference_list
 
-            technique_dict['versioning_feature'] = site_config.add_versioning_feature
+            technique_dict['versioning_feature'] = site_config.check_versions_module()
         
         else:
             if technique_dict['deprecated']:

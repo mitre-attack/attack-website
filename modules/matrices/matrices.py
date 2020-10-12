@@ -54,7 +54,8 @@ def generate_platform_matrices(matrix, side_menu_data=None):
     data['descr'] = matrix['descr']
     data['path'] = matrix['path']
 
-    data['versioning_feature'] = site_config.add_versioning_feature
+    data['versioning_feature'] = site_config.check_versions_module()
+    data['resources'] = site_config.check_resources_module()
     
     subs = matrices_config.matrix_md.substitute(data)
     subs = subs + json.dumps(data)
