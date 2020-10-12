@@ -1,12 +1,20 @@
 import colorama
+import json
 import modules
 import os
 import shutil
 from modules import util
 from string import Template
 
+attack_version = ""
+
+# Read versions file for ATT&CK version
+with open("data/versions.json", "r",encoding="utf8") as f:
+    attack_version = json.load(f)["current"]["name"]
+
 # ATT&CK version
-attack_version = "8.0"
+if attack_version.startswith("v"):
+    attack_version = attack_version[1:]
 
 # Domains for stix objects
 domains = ["enterprise-attack", "mobile-attack"]
