@@ -1,9 +1,20 @@
 import colorama
+import json
 import modules
 import os
 import shutil
 from modules import util
 from string import Template
+
+attack_version = ""
+
+# Read versions file for ATT&CK version
+with open("data/versions.json", "r",encoding="utf8") as f:
+    attack_version = json.load(f)["current"]["name"]
+
+# ATT&CK version
+if attack_version.startswith("v"):
+    attack_version = attack_version[1:]
 
 # Domains for stix objects
 domains = ["enterprise-attack", "mobile-attack"]
@@ -88,8 +99,7 @@ attack_path = {
 }
 
 # Link to instance of the ATT&CK Navigator; change for to a custom location
-navigator_link_enterprise = "https://mitre-attack.github.io/attack-navigator/enterprise"
-navigator_link_mobile = "https://mitre-attack.github.io/attack-navigator/mobile"
+navigator_link = "https://mitre-attack.github.io/attack-navigator/"
 
 # Content directory
 content_dir = "content/"
