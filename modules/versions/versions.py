@@ -8,6 +8,23 @@ from datetime import datetime
 import re
 from . import versions_config
 from modules import site_config
+from modules import util
+
+def generate_versions():
+    """Responsible for generating the versions pages"""
+    
+    # Move templates to templates directory
+    util.buildhelpers.move_templates(versions_config.module_name, versions_config.versions_templates_path)
+    
+    # Verify if resources directory exists
+    if not os.path.isdir(site_config.resources_markdown_path):
+        os.mkdir(site_config.resources_markdown_path)
+
+    # Verify if resources directory exists
+    if not os.path.isdir(versions_config.versions_markdown_path):
+        os.mkdir(versions_config.versions_markdown_path)
+    
+    deploy()
 
 # Error handler for windows by:
 # https://stackoverflow.com/questions/2656322/shutil-rmtree-fails-on-windows-with-access-is-denied
@@ -52,7 +69,7 @@ def nameToPath(name):
 def deploy():
     """ Deploy previous versions to website directory """
     versions_config.prev_versions_deploy_folder = os.path.join(site_config.web_directory, versions_config.prev_versions_path)
-    
+
     #TODO we probably don't need to re-clone the website here, just a git pull should be sufficient
     # delete previous copy of attack-versions
     if os.path.exists(versions_config.versions_directory):

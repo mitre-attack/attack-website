@@ -49,14 +49,3 @@ training_navigation = {
         }
     ]
 }
-
-prev_versions_path = "versions"
-prev_versions_deploy_folder = ""
-
-versions_repo = "https://github.com/mitre-attack/attack-website.git"
-versions_directory = "attack-versions"
-versions_md = ("Title: Versions of ATT&CK\n"
-               "Template: resources/versions\n"
-               "save_as: resources/versions/index.html\n"
-               "data: ")
-versions_markdown_path = "content/pages/resources"

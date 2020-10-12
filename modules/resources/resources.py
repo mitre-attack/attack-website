@@ -26,7 +26,7 @@ def generate_resources():
     generate_general_information()
     generate_training_pages()
     generate_attackcon_page()
-    check_versions_module()
+    check_menu_versions_module()
     generate_static_pages()
 
 def generate_general_information():
@@ -86,8 +86,10 @@ def generate_attackcon_page():
     with open(os.path.join(site_config.resources_markdown_path, "attackcon.md"), "w", encoding='utf8') as md_file:
         md_file.write(attackcon_content)
 
-def check_versions_module():
-    """ Verify if versions module is in the running pool """
+def check_menu_versions_module():
+    """ Verify if versions module is in the running pool, if not 
+        remove from submenu 
+    """
 
     if not [key['name'] for key in modules.run_ptr if key['name'] == 'versions']:
         util.buildhelpers.remove_element_from_sub_menu(resources_config.module_name, "Versions of ATT&CK")

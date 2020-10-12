@@ -5,4 +5,4 @@ def get_priority():
     return versions_config.priority
 
 def run_module():
-    return (versions.deploy(), versions_config.module_name)
+    return (versions.generate_versions(), versions_config.module_name)
