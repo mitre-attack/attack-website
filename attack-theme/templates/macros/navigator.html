@@ -13,13 +13,13 @@
                     <h6 class="dropdown-header">{{layer.domain | capitalize}} Layer</h6>
                     <a class="dropdown-item" href="/{{page_type}}/{{attack_id}}/{{layer.filename}}" download target="_blank">download</a>
                     <!-- only show view on navigator link if layer link is defined -->
-                    {% if (layer.navigator_link_enterprise and layer.domain == 'enterprise') or (layer.navigator_link_mobile and layer.domain == 'mobile') %}
+                    {% if layer.navigator_link %}
                         <a class="dropdown-item" href="#" id="view-layer-on-navigator-{{layer.domain}}" target="_blank">view <img width="10" src="/theme/images/external-site-dark.jpeg"></a>
                         <script src="/theme/scripts/settings.js"></script>
                         <script>
                             if (window.location.protocol == "https:") { //view on navigator only works when this site is hosted on HTTPS
                                 layerURL = window.location.protocol + "//" + window.location.host + base_url + "{{page_type}}/{{attack_id}}/{{layer.filename}}";
-                                document.getElementById("view-layer-on-navigator-{{layer.domain}}").href = "{{ layer.navigator_link_mobile if layer.domain == 'mobile' else layer.navigator_link_enterprise }}/#layerURL=" + encodeURIComponent(layerURL);
+                                document.getElementById("view-layer-on-navigator-{{layer.domain}}").href = "{{layer.navigator_link}}/#layerURL=" + encodeURIComponent(layerURL);
                             } else { //hide button
                                 document.getElementById("view-layer-on-navigator-{{layer.domain}}").classList.add("d-none");
                             }

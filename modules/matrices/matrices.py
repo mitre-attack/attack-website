@@ -47,8 +47,7 @@ def generate_platform_matrices(matrix, side_menu_data=None):
     data['matrices'], data["has_subtechniques"], data["tour_technique"] = get_sub_matrices(matrix)
     if data['matrices']: has_data = True
     data['platforms'] = [ {"name": platform, "path": matrices_config.platform_to_path[platform] } for platform in matrix['platforms'] ]
-    data['navigator_link_enterprise'] = site_config.navigator_link_enterprise
-    data['navigator_link_mobile'] = site_config.navigator_link_mobile
+    data['navigator_link'] = site_config.navigator_link
 
     data['domain'] = matrix['matrix'].split("-")[0]
     data['descr'] = matrix['descr']

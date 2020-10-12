@@ -143,8 +143,7 @@ def generate_group_md(group, side_menu_data, side_menu_mobile_view_data):
             data["layers"].append({
                 "domain": layer["domain"],
                 "filename": "-".join([data["attack_id"], layer["domain"], "layer"]) + ".json",
-                "navigator_link_enterprise" : site_config.navigator_link_enterprise,
-                "navigator_link_mobile" : site_config.navigator_link_mobile
+                "navigator_link" : site_config.navigator_link
             })
 
         # Grab software data for Software table

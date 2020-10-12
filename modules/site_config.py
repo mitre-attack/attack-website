@@ -5,6 +5,9 @@ import shutil
 from modules import util
 from string import Template
 
+# ATT&CK version
+attack_version = "8.0"
+
 # Domains for stix objects
 domains = ["enterprise-attack", "mobile-attack"]
 
@@ -85,8 +88,7 @@ attack_path = {
 }
 
 # Link to instance of the ATT&CK Navigator; change for to a custom location
-navigator_link_enterprise = "https://mitre-attack.github.io/attack-navigator/enterprise"
-navigator_link_mobile = "https://mitre-attack.github.io/attack-navigator/mobile"
+navigator_link = "https://mitre-attack.github.io/attack-navigator/"
 
 # Content directory
 content_dir = "content/"

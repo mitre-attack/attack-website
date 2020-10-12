@@ -604,6 +604,9 @@ def get_navigator_layers(name, attack_id, obj_type, version, techniques_used):
     """Given a list of techniques used, return the navigator json objects
        for enterprise and mobile"""
 
+    # Remove minor version from ATT&CK version if any
+    major_attack_version = site_config.attack_version.split(".")[0]
+
     layer_name = f"{name} ({attack_id})"
 
     enterprise_layer_description = f"Enterprise techniques used by {name}, ATT&CK {obj_type} {attack_id}"
@@ -617,8 +620,12 @@ def get_navigator_layers(name, attack_id, obj_type, version, techniques_used):
     enterprise_layer = {}
     enterprise_layer['description'] = enterprise_layer_description
     enterprise_layer['name'] = layer_name
-    enterprise_layer['domain'] = "mitre-enterprise"
-    enterprise_layer['version'] = "3.0"
+    enterprise_layer['domain'] = "enterprise-attack"
+    enterprise_layer['versions'] = {
+        "layer": "4.0",
+        "attack": major_attack_version,
+        "navigator": "4.0"
+    }
     enterprise_layer['techniques'] = []
     enterprise_layer["gradient"] = { # white for nonused, blue for used
 		"colors": [
@@ -637,8 +644,12 @@ def get_navigator_layers(name, attack_id, obj_type, version, techniques_used):
     mobile_layer = {}
     mobile_layer['description'] = mobile_layer_description
     mobile_layer['name'] = layer_name
-    mobile_layer['domain'] = "mitre-mobile"
-    mobile_layer['version'] = "3.0"
+    mobile_layer['domain'] = "mobile-attack"
+    mobile_layer['versions'] = {
+        "layer": "4.0",
+        "attack": major_attack_version,
+        "navigator": "4.0"
+    }
     mobile_layer['techniques'] = []
     mobile_layer["gradient"] = { # white for nonused, blue for used
 		"colors": [
