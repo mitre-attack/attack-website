@@ -44,6 +44,10 @@ def generate_techniques():
         techniques_no_sub[domain] = util.buildhelpers.filter_out_subtechniques(util.stixhelpers.get_techniques(ms[domain]))
         tactics[domain] = util.stixhelpers.get_tactic_list(ms[domain])
 
+    for deprecated_domain in site_config.deprecated_domain:
+        techniques_no_sub[deprecated_domain] = util.buildhelpers.filter_out_subtechniques(util.stixhelpers.get_techniques(ms[deprecated_domain]))
+        tactics[deprecated_domain] = util.stixhelpers.get_tactic_list(ms[deprecated_domain])
+
     side_nav_data = get_technique_side_nav_data(techniques_no_sub, tactics)
 
     for domain in site_config.domains:
@@ -51,17 +55,20 @@ def generate_techniques():
         if not technique_generated:
             if check_if_generated:
                 technique_generated = True
+    
+    for deprecated_domain in site_config.deprecated_domain:
+        generate_domain_markdown(deprecated_domain, techniques_no_sub, tactics, side_nav_data, deprecated=True)
 
     if not technique_generated:
         util.buildhelpers.remove_module_from_menu(techniques_config.module_name)   
 
-def generate_domain_markdown(domain, techniques_no_sub, tactics, side_nav_data):
+def generate_domain_markdown(domain, techniques_no_sub, tactics, side_nav_data, deprecated=None):
     """Generate technique index markdown for each domain and generates 
        shared data for techniques
     """
 
     # Check if there is at least one technique
-    if techniques_no_sub[domain]:
+    if techniques_no_sub[domain] and not deprecated:
 
         techhnique_list_no_sub_no_deprecated = util.buildhelpers.filter_deprecated_revoked(techniques_no_sub[domain])
 
@@ -88,6 +95,12 @@ def generate_domain_markdown(domain, techniques_no_sub, tactics, side_nav_data):
             if 'revoked' not in technique or technique['revoked'] is False:
                 generate_technique_md(technique, domain, side_nav_data, tactics[domain])
         
+        return True
+
+    # Add deprecated techniques to preserve pages
+    elif techniques_no_sub[domain] and deprecated:
+        for technique in techniques_no_sub[domain]:
+            generate_technique_md(technique, domain, side_nav_data, tactics[domain])
         return True
     
     return False

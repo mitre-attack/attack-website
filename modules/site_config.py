@@ -19,6 +19,12 @@ if attack_version.startswith("v"):
 # Domains for stix objects
 domains = ["enterprise-attack", "mobile-attack"]
 
+# Deprecated domains
+deprecated_domain = ["pre-attack"]
+
+# Bundle names
+bundles = ["pre-attack", "enterprise-attack", "mobile-attack"]
+
 # Domain aliases
 domain_aliases = [
     ["Enterprise", "enterprise"], 
@@ -52,7 +58,8 @@ def check_resources_module():
 # Source names for ATT&CK
 source_names = [
     "mitre-attack", 
-    "mitre-mobile-attack"
+    "mitre-mobile-attack",
+    "mitre-pre-attack"
 ]
 
 # Declare file location of web pages
@@ -94,6 +101,7 @@ data_directory = "data"
 stix_directory = data_directory + "/stix"
 # STIX bundles for each domain
 attack_path = {
+    'pre-attack': stix_directory + "/pre-attack.json",
     'enterprise-attack': stix_directory + "/enterprise-attack.json",
     'mobile-attack': stix_directory + "/mobile-attack.json",
 }

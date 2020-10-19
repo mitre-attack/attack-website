@@ -216,7 +216,7 @@ def get_stix_memory_stores():
 
     src = {}
 
-    for domain in site_config.domains:
+    for domain in site_config.bundles:
         src[domain] = stix2.MemoryStore()
         src[domain].load_from_file(site_config.attack_path[domain])
 

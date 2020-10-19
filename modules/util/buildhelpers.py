@@ -489,7 +489,7 @@ def get_technique_name(tid):
         if attack_id == tid:
             return technique['name']
     
-    return util.config.NOT_FOUND
+    return util_config.NOT_FOUND
 
 def technique_used_helper(technique_list, technique, reference_list):
     """ Add technique to technique list and make distinction between techniques
