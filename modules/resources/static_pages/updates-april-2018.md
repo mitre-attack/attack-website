@@ -172,7 +172,7 @@ NTFS Extended Attributes -> [NTFS File Attributes](/techniques/T1096)
 This release deprecates the Launch and Compromise tactics and most of the techniques that belong to them. In the future, these TTPs will be covered by techniques in the [Initial Access](/tactics/TA0001) and [Execution](/tactics/TA0002) tactics on ATT&CK.
 
 * 2 tactics deprecated: Launch and Compromise
-* Disseminate removable media has been moved from Launch to [Stage Capabilities](/tactics/TA0026/)
-* A new technique, Spearphishing for Information, has been added to [Technical Information Gathering](/tactics/TA0015/)
+* Disseminate removable media has been moved from Launch to Stage Capabilities
+* A new technique, Spearphishing for Information, has been added to Technical Information Gathering
 * 23 techniques have been deprecated in this release
 * PRE-ATT&CK now comprises 15 tactics and 151 techniques

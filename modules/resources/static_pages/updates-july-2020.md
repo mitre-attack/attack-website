@@ -656,8 +656,8 @@ save_as: resources/updates/updates-july-2020/index.html
         No changes</p>
         <p>Technique deprecations:</p>
         <ul>
-        <li><a href="/techniques/T1324">DNSCalc</a></li>
-        <li><a href="/techniques/T1325">Fast Flux DNS</a></li>
+        <li>DNSCalc</li>
+        <li>Fast Flux DNS</li>
         </ul>
         <p><strong>Mobile</strong></p>
         <p>

@@ -87,7 +87,7 @@ Miscellaneous minor changes:
 
 Technique deprecations:
 
-* [Domain Generation Algorithms (DGA)](/techniques/T1323) - Moved under Enterprise with a new definition
+* Domain Generation Algorithms (DGA)- Moved under Enterprise with a new definition
 
 **Mobile**
 
