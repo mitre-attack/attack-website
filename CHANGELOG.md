@@ -50,6 +50,11 @@
 - Fixed (for most scenarios) slow loading of the search index when using Firefox. See issues [#167](https://github.com/mitre-attack/attack-website/issues/167) and [#187](https://github.com/mitre-attack/attack-website/issues/187).
 - Fixed versioning feature ran under a subdirectory. See issue [#200](https://github.com/mitre-attack/attack-website/issues/200).
 
+# 8 August 2020
+## ATT&CK Website version 2.1.4
+### Improvements
+- Updated roadmap and matrix poster on the [resources](https://attack.mitre.org/resources/) page. See issue [#255](https://github.com/mitre-attack/attack-website/issues/255).
+
 # 6 August 2020
 ## ATT&CK Website version 2.1.3
 ### Improvements
