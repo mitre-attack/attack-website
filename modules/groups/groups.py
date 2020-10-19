@@ -143,8 +143,7 @@ def generate_group_md(group, side_menu_data, side_menu_mobile_view_data):
             data["layers"].append({
                 "domain": layer["domain"],
                 "filename": "-".join([data["attack_id"], layer["domain"], "layer"]) + ".json",
-                "navigator_link_enterprise" : site_config.navigator_link_enterprise,
-                "navigator_link_mobile" : site_config.navigator_link_mobile
+                "navigator_link" : site_config.navigator_link
             })
 
         # Grab software data for Software table
@@ -157,7 +156,7 @@ def generate_group_md(group, side_menu_data, side_menu_mobile_view_data):
         if isinstance(group.get("aliases"), collections.Iterable):
             data['aliases_list'] = group["aliases"][1:]
         
-        data['versioning_feature'] = site_config.add_versioning_feature
+        data['versioning_feature'] = site_config.check_versions_module()
 
         subs = groups_config.group_md.substitute(data)
         subs = subs + json.dumps(data)

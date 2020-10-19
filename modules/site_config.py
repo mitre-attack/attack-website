@@ -1,9 +1,20 @@
 import colorama
+import json
 import modules
 import os
 import shutil
 from modules import util
 from string import Template
+
+attack_version = ""
+
+# Read versions file for ATT&CK version
+with open("data/versions.json", "r",encoding="utf8") as f:
+    attack_version = json.load(f)["current"]["name"]
+
+# ATT&CK version
+if attack_version.startswith("v"):
+    attack_version = attack_version[1:]
 
 # Domains for stix objects
 domains = ["enterprise-attack", "mobile-attack"]
@@ -24,16 +35,19 @@ def send_to_pelican(key, value):
     """ Method to stage key value pairs for pelican use """
     staged_pelican[key] = value
 
-# Only add versioning feature if resources module is loaded
-add_versioning_feature = False
-
 def check_versions_module():
-    """ Add resources information used by other modules """
+    """ Return if versions module is loaded """
     
-    global add_versioning_feature
-
     if [key['name'] for key in modules.run_ptr if key['name'] == 'versions']:
-        add_versioning_feature = True
+        return True
+    return False
+
+def check_resources_module():
+    """ Return if resources module is loaded """
+    
+    if [key['name'] for key in modules.run_ptr if key['name'] == 'resources']:
+        return True
+    return False
 
 # Source names for ATT&CK
 source_names = [
@@ -85,8 +99,7 @@ attack_path = {
 }
 
 # Link to instance of the ATT&CK Navigator; change for to a custom location
-navigator_link_enterprise = "https://mitre-attack.github.io/attack-navigator/enterprise"
-navigator_link_mobile = "https://mitre-attack.github.io/attack-navigator/mobile"
+navigator_link = "https://mitre-attack.github.io/attack-navigator/"
 
 # Content directory
 content_dir = "content/"
@@ -107,7 +120,7 @@ resources_markdown_path = "content/pages/resources/"
 redirect_md = Template("Title: ${title}\n"
                        "Template: general/redirect-index\n"
                        "RedirectLink: ${to}\n"
-                       "save_as: ${from}")
+                       "save_as: ${from}/index.html")
 
 stix_array = []
 

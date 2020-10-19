@@ -87,9 +87,18 @@ def generate_obj_redirect(redirect_link, new_attack_id, old_attack_id, domain):
     """Responsible for generating redirects markdown for given data"""
 
     data = {}
+
     data['title'] = old_attack_id + str(uuid.uuid1())
+
+    # Check if new id or old id are subtechniques and change to redirection format
+    if(util.buildhelpers.is_sub_tid(new_attack_id)):
+        new_attack_id = util.buildhelpers.redirection_subtechnique(new_attack_id)
+    
+    if(util.buildhelpers.is_sub_tid(old_attack_id)):
+        old_attack_id = util.buildhelpers.redirection_subtechnique(old_attack_id)
+
     data['to'] =  "/" + redirect_link['new'] + "/" + new_attack_id
-    data['from'] = attack_redirections_config.redirects_paths[domain] + redirect_link['old'] + "/" + old_attack_id + "/index.html"
+    data['from'] = attack_redirections_config.redirects_paths[domain] + redirect_link['old'] + "/" + old_attack_id 
 
     subs = site_config.redirect_md.substitute(data)
 
@@ -97,13 +106,12 @@ def generate_obj_redirect(redirect_link, new_attack_id, old_attack_id, domain):
         md_file.write(subs)
 
     if new_attack_id != old_attack_id:
-        data['from'] = redirect_link['new'] + "/" + old_attack_id + "/index.html"
+        data['from'] = redirect_link['new'] + "/" + old_attack_id
 
         subs = site_config.redirect_md.substitute(data)
 
         with open(os.path.join(site_config.redirects_markdown_path, redirect_link["new"] + data['title'] + ".md"), "w", encoding='utf8') as md_file:
             md_file.write(subs)
-
 
 def get_new_and_old_ids(obj):
     """Given an object, return current or new ATT&CK id and old ATT&CK

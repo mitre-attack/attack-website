@@ -140,9 +140,6 @@ if __name__ == "__main__":
     # Remove modules from build
     remove_from_build(args.modules, args.extras)
 
-    # Check if versions module is added to the build
-    site_config.check_versions_module()
-
     # Arguments used for pelican
     site_config.send_to_pelican("no_stix_link_replacement", args.no_stix_link_replacement)
 
