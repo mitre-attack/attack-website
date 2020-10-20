@@ -3,6 +3,7 @@
 {% import 'macros/table_with_subtechniques.html' as technique_table %}
 {% import 'macros/versioning.html' as versioning %}
 {% import 'macros/clean_output.html' as clean_output %}
+{% import 'macros/deprecated.html' as deprecated %}
 
 {% set parsed = page.data | from_json %}
 {% if parsed.domain == "mobile" %}
@@ -12,8 +13,11 @@
 {% endif %} 
 {% set active_page = "tactics" -%}
 
-{% block heading %}
-   {{ super () }}
+{% block head %}
+    {{ super () }}
+    {% if parsed.deprecated %}
+    <meta name="robots" content="noindex, nofollow">
+    {% endif %}
 {%  endblock %}
 
 {% block innerleft %}
@@ -30,15 +34,15 @@
         <li class="breadcrumb-item"><a href="/">Home</a></li>
         {% if parsed.domain == 'enterprise' %}
             <li class="breadcrumb-item"><a href="/tactics/enterprise">Tactics</a></li>
-        {% elif parsed.domain == 'pre' %}
-            <li class="breadcrumb-item"><a href="/tactics/pre">Tactics</a></li>
-        {% else %}
+        {% elif parsed.domain == 'mobile' %}
             <li class="breadcrumb-item"><a href="/tactics/mobile">Tactics</a></li>
+        {% else %}
+            <li class="breadcrumb-item"><a href="/tactics/">Tactics</a></li>
         {% endif %}
         {% if parsed.domain == 'enterprise' %}
-            <li class="breadcrumb-item"><a href="/tactics/{{parsed.domain}}">Enterprise</a></li>
-        {% else %}
-            <li class="breadcrumb-item"><a href="/tactics/{{parsed.domain}}">Mobile</a></li>
+            <li class="breadcrumb-item"><a href="/tactics/enterprise">Enterprise</a></li>
+        {% elif parsed.domain == 'mobile'%}
+            <li class="breadcrumb-item"><a href="/tactics/mobile">Mobile</a></li>
         {% endif %}
         <li class="breadcrumb-item">{{parsed.name}}</li>
     </ol>
@@ -50,30 +54,38 @@
                     <h1>
                         {{parsed.name}}
                     </h1>
-                    <div class="row">
-                        <div class="col-md-8 description-body">
-                            {{clean_output.stixToHTML(parsed.descr)}}
-                        </div>
-                        <div class="col-md-4">
-                            <div class="card">
-                                <div class="card-body">
-                                    <div class="card-data"><span class="h5 card-title">ID:</span> {{parsed.attack_id}}</div>    
-                                    {% if parsed.created %}
-                                        <div class="card-data"><span class="h5 card-title">Created:&nbsp;</span>{{parsed.created}}</div>
-                                    {% endif %}
-                                    {% if parsed.modified %}
-                                        <div class="card-data"><span class="h5 card-title">Last Modified:&nbsp;</span>{{parsed.modified}}</div>
-                                    {% endif %}              
-                                </div>
-                            </div>
-                            {% if parsed.versioning_feature %}
-                                {{ versioning.permalink_button(output_file, parsed.attack_id)}}
-                            {% endif %}
-                        </div>
-                    </div>
-                    <h2 class="pt-3" id ="techniques">Techniques</h2><h6 class="table-object-count">Techniques: {{parsed.techniques_table_len}}</h6>
-                    {{technique_table.table_with_subtechniques(parsed.techniques_table)}}
 
+                    {% if parsed.deprecated %}
+                        {% if parsed.descr %}
+                            {{deprecated.deprecated(clean_output.stixToHTML(parsed.descr, firstParagraphOnly=True))}}
+                        {% else %}
+                            {{deprecated.deprecated("This tactic has been deprecated.")}}
+                        {% endif %}
+                    {% else %}
+                        <div class="row">
+                            <div class="col-md-8 description-body">
+                                {{clean_output.stixToHTML(parsed.descr)}}
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="card-data"><span class="h5 card-title">ID:</span> {{parsed.attack_id}}</div>    
+                                        {% if parsed.created %}
+                                            <div class="card-data"><span class="h5 card-title">Created:&nbsp;</span>{{parsed.created}}</div>
+                                        {% endif %}
+                                        {% if parsed.modified %}
+                                            <div class="card-data"><span class="h5 card-title">Last Modified:&nbsp;</span>{{parsed.modified}}</div>
+                                        {% endif %}              
+                                    </div>
+                                </div>
+                                {% if parsed.versioning_feature %}
+                                    {{ versioning.permalink_button(output_file, parsed.attack_id)}}
+                                {% endif %}
+                            </div>
+                        </div>
+                        <h2 class="pt-3" id ="techniques">Techniques</h2><h6 class="table-object-count">Techniques: {{parsed.techniques_table_len}}</h6>
+                        {{technique_table.table_with_subtechniques(parsed.techniques_table)}}
+                    {% endif %}
                 </div>
             </div>
         </div>

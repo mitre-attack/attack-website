@@ -327,7 +327,7 @@ def generate_data_for_md(technique_dict, technique, tactic_list, is_sub_techniqu
         
         else:
             if technique_dict['deprecated']:
-                technique_dict['descr'] = technique['description']
+                technique_dict['descr'] = technique.get('description')
 
         return technique_dict
 
