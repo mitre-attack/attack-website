@@ -6,7 +6,7 @@
 <!--    ### New Features                                                -->
 <!--    ### Improvements                                                -->
 <!--    ### Fixes                                                       -->
-<!--    ## [ATT&CK Content version ##.##](link to release on mitre/cti) --> 
+<!--    ## [ATT&CK Content version ##.##](link to release on mitre/cti) -->
 <!--    See the release notes [here](link to release notes).           // if major change -->
 <!--    ### Fixes                                                      // else            -->
 <!--    Entries for pull request template:                              -->
