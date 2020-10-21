@@ -20,7 +20,7 @@ if attack_version.startswith("v"):
 domains = ["enterprise-attack", "mobile-attack"]
 
 # Deprecated domains
-deprecated_domain = ["pre-attack"]
+deprecated_domains = ["pre-attack"]
 
 # Bundle names
 bundles = ["pre-attack", "enterprise-attack", "mobile-attack"]

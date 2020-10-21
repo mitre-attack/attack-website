@@ -33,5 +33,12 @@ def get_stix_data():
             
                 with open(os.path.join(site_config.stix_directory, domain + ".json"), 'w+') as f:
                     f.write(json.dumps(r.json()))
+
+        for domain in site_config.deprecated_domains:
+            if (site_config.args.refresh or not os.path.isdir(site_config.stix_directory) or not use_local_stix):
+                r = requests.get(f"https://raw.githubusercontent.com/mitre/cti/master/{domain}/{domain}.json", verify=False, proxies=proxyDict)
+            
+                with open(os.path.join(site_config.stix_directory, domain + ".json"), 'w+') as f:
+                    f.write(json.dumps(r.json()))
     except:
         print("Unable to reach stix repository. Are you behind a (--proxy)?")

@@ -40,7 +40,7 @@ def generate_tactics():
         techniques_no_sub[domain] = util.buildhelpers.filter_out_subtechniques(util.stixhelpers.get_techniques(ms[domain]))
         tactics[domain] = util.stixhelpers.get_tactic_list(ms[domain])
 
-    for deprecated_domain in site_config.deprecated_domain:
+    for deprecated_domain in site_config.deprecated_domains:
         techniques_no_sub[deprecated_domain] = util.buildhelpers.filter_out_subtechniques(util.stixhelpers.get_techniques(ms[deprecated_domain]))
         tactics[deprecated_domain] = util.stixhelpers.get_tactic_list(ms[deprecated_domain])
 
@@ -52,7 +52,7 @@ def generate_tactics():
             if check_if_generated:
                 tactic_generated = True
 
-    for deprecated_domain in site_config.deprecated_domain:
+    for deprecated_domain in site_config.deprecated_domains:
         generate_domain_markdown(deprecated_domain, techniques_no_sub, tactics, side_nav_data, deprecated=True)
 
     if not tactic_generated:
