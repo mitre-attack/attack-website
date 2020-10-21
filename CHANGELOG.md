@@ -27,6 +27,9 @@
 <!--          be omitted                                                -->
 
 # Changes staged on develop
+## [ATT&CK Content version 8.0](https://github.com/mitre/cti/releases/tag/ATT%26CK-v8.0)
+See release notes [here](https://attack.mitre.org/resources/updates/updates-october-2020/index.html).
+
 ## ATT&CK Website version 3.0
 ### Improvements
 - Added a link on the home page that takes the user to a random page within a specified category. See issue [#98](https://github.com/mitre-attack/attack-website/issues/98).
