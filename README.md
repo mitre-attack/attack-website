@@ -5,7 +5,7 @@
 This repository contains the source code used to generate the MITRE ATT&CK&reg; website as seen at `attack.mitre.org`. The source code is flexible to allow users to generate the site with custom content.
 
 ## Usage
-The [Install and Run](#Install-and-Build) section below explains how to set up a local version of the site. You can also visit the live site at [attack.mitre.org](https://attack.mitre.org). See [Building the site with custom content](#Building-the-site-with-custom-content) for information about building the site with custom content.
+The [Install and Run](#Install-and-Build) section below explains how to set up a local version of the site. You can also visit the live site at [attack.mitre.org](https://attack.mitre.org). If you want to extend the style, content or functionality of this site, please see our [Customizing the ATT&CK Website](/CUSTOMIZING.md) document for tips and tricks.
 
 Use our [Github Issue Tracker](https://github.com/mitre-attack/attack-website/issues) to let us know of any bugs or other issues you encounter. We also encourage pull requests if you've extended the site in a cool way and want to share back to the community!
 
@@ -31,7 +31,7 @@ _See [CONTRIBUTING.md](/CONTRIBUTING.md) for more information on making contribu
 
 ### Build and serve the local site
 
-1. Update ATT&CK markdown from the STIX content, and generate the output html from the markdown: `python3 update-attack.py -c -b`. _Note: `update-attack.py`, has many optional command line arguments which affect the behavior of the build. Run `python3 update-attack.py -h` for a list of arguments and an explanation of their functionality._
+1. Update ATT&CK markdown from the STIX content, and generate the output html from the markdown: `python3 update-attack.py`. _Note: `update-attack.py`, has many optional command line arguments which affect the behavior of the build. Run `python3 update-attack.py -h` for a list of arguments and an explanation of their functionality._
 2. Serve the html to `localhost:8000`: 
     1. `cd output`
     2. `python3 -m pelican.server`
@@ -43,24 +43,6 @@ _See [CONTRIBUTING.md](/CONTRIBUTING.md) for more information on making contribu
 2. Run a docker container:
     - `docker run --name <your_preferred_container_name -d -p <your_preferred_port>:80 <image_name_from_build_command>`
 3. View the site on your preferred localhost port
-
-## Implementation Overview
-
-The ATT&CK site uses a combination of Python, Pelican and Jinja to convert the STIX content into a set of static HTML files. When `update-attack.py` is run, it generates a set of markdown files in `content` containing the parsed STIX content. Pelican then reads these markdown files and uses them to with the Jinja templates in `attack-theme/templates` to build the site HTML in the output directory. 
-
-## Building the site with custom content
-
-The ATT&CK Website is designed support an evolving knowledge base. The content seen on the site is generated from data in STIX2.0 JSON format. The data used on the live site at [attack.mitre.org](https://attack.mitre.org) can be found on our [mitre/cti](https://github.com/mitre/cti) github repo. 
-
-You can generate the website using custom content by replacing the STIX bundles in `/data/stix/`:
-- `enterprise-attack.json` is the bundle for the enterprise domain.
-- `mobile-attack.json` is the bundle for the mobile domain.
-- `pre-attack.json` is the bundle for the pre-attack domain.
-- the `*_old.json` bundles are updated automatically when the site is built, and are used for generating Matrix timestamps. `old_dates.json` is used for fallback timestamps for the matrices. You typically won't need to replace these files.
-
-Users wishing to make changes to the ATT&CK website visual theme should take a look at our scss source files in `attack-theme/static/style`. Changes to the colors defined in `_colors.scss` should automatically propagate across the site. Users wishing to make changes to the layout of pages should modify the templates found in `attack-theme/templates`. Major additions or changes will typically require modification of the python modules in `modules/` in addition to the templates.
-
-The logos used in the header, footer, and on the landing page of the website can be easily changed. Simply find their keys in the `settings_dict` of `modules/config.py`, and update their values to point to the new images.
 
 ## Related MITRE Work
 #### CTI

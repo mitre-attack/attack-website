@@ -1,0 +1,95 @@
+{% extends "general/two-column.html" %}
+{% import 'macros/navigation.html' as navigation %}
+{% import 'macros/techniques_used.html' as techniques_used %}
+{% import 'macros/versioning.html' as versioning %}
+{% import 'macros/clean_output.html' as clean_output %}
+{% import 'macros/citations.html' as citations %}
+
+{% set parsed = page.data | from_json %}
+{% if parsed.domain == "mobile" %}
+    {% set title = parsed.name + ", Mitigation " + parsed.attack_id + " - Mobile | MITRE ATT&CK&reg;" -%}
+{% else %} 
+    {% set title = parsed.name + ", Mitigation " + parsed.attack_id + " - Enterprise | MITRE ATT&CK&reg;" -%}
+{% endif %}
+
+{% block head %}
+    {{ super () }}
+    {% if parsed.deprecated %}
+    <meta name="robots" content="noindex, nofollow">
+    {% endif %}
+{%  endblock %}
+
+{% block innerleft %}
+<!--stop-indexing-for-search-->
+<div class="group-nav-desktop-view">
+        {{ navigation.sidenav(parsed.side_menu_data, output_file) }}
+    </div>
+    <div class="group-nav-mobile-view">
+        {{ navigation.sidenav(parsed.side_menu_mobile_view_data, output_file) }} 
+    </div>
+<!--start-indexing-for-search-->
+{% endblock %}
+
+{% block innerright %}
+    {{ super () }}
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/">Home</a></li>
+        <li class="breadcrumb-item"><a href="/mitigations">Mitigations</a></li>
+        <li class="breadcrumb-item">{{parsed.name}}</li>
+    </ol>
+    <div class="tab-pane fade show active" id="v-{{pages.title}}" role="tabpanel" aria-labelledby="v-{{pages.title}}-tab"></div>
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="jumbotron jumbotron-fluid">
+                <div class="container-fluid">
+                    <h1>
+                        {{parsed.name}}
+                    </h1>
+                    <div class="row">
+                    {% if parsed.descr %}
+                        <div class="col-md-8 description-body">
+                            {% if parsed.deprecated %}
+                            <font color="red">****Deprecation Warning****</font>
+                            {% endif %}
+                            {{clean_output.stixToHTML(parsed.descr, parsed.citations)}}
+                        </div>
+                    {% endif %}
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-body">
+                                {% if parsed.attack_id %}
+                                    <div class="card-data"><span class="h5 card-title">ID:</span> {{parsed.attack_id}}</div>
+                                {% endif %}
+                                {% if parsed.version %}
+                                    <div class="card-data"><span class="h5 card-title">Version:</span> {{parsed.version}}</div>
+                                {% endif %}
+                                {% if parsed.created %}
+                                    <div class="card-data"><span class="h5 card-title">Created:&nbsp;</span>{{parsed.created}}</div>
+                                {% endif %}
+                                {% if parsed.modified %}
+                                    <div class="card-data"><span class="h5 card-title">Last Modified:&nbsp;</span>{{parsed.modified}}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% if parsed.versioning_feature %}
+                            {{ versioning.permalink_button(output_file, parsed.attack_id)}}
+                        {% endif %}
+                    </div>
+                </div>
+
+                {% if parsed.techniques_addressed_data %}
+                    {{techniques_used.techniques_used(parsed.techniques_addressed_data, "Techniques Addressed by Mitigation", parsed.citations)}}
+                {% endif %}
+
+                {{ citations.reference_section(parsed.citations) }}
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    <!--SCRIPTS-->
+    <script src="/theme/scripts/navigation.js"></script>
+{% endblock %} 

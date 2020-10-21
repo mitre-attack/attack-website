@@ -1,0 +1,80 @@
+{% extends "general/two-column.html" %}
+{% set title = "Software | MITRE ATT&CK&reg;" %}
+{% set parsed = page.data | from_json %}
+{% set active_page = "software" -%}
+{% import 'macros/navigation.html' as navigation %}
+{% import 'macros/clean_output.html' as clean_output %}
+
+{% block innerleft %}
+<!--stop-indexing-for-search-->
+    <div class="group-nav-desktop-view">
+        {{ navigation.sidenav(parsed.side_menu_data, output_file) }}
+    </div>
+    <div class="group-nav-mobile-view">
+        {{ navigation.sidenav(parsed.side_menu_mobile_view_data, output_file) }} 
+    </div>
+<!--start-indexing-for-search-->
+{% endblock %}
+
+{% block innerright %}
+    {{ super () }}
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/">Home</a></li>
+        <li class="breadcrumb-item">Software</li>
+    </ol>
+    <div class="tab-pane fade show active" id="v-{{pages.title}}" role="tabpanel" aria-labelledby="v-{{pages.title}}-tab"></div>
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="jumbotron jumbotron-fluid">
+                <div class="container-fluid">
+                    <div class="overflow-x-auto">
+                        <h1>
+                            Software
+                        </h1>
+                        <p>Software is a generic term for custom or commercial code, operating system utilities, open-source software, or other tools used to conduct behavior modeled in ATT&CK. Some instances of software have multiple names associated with the same instance due to various organizations tracking the same set of software by different names. The team makes a best effort to track overlaps between names based on publicly reported associations, which are designated as “Associated Software” on each page (formerly labeled “Aliases”), because we believe these overlaps are useful for analyst awareness.</p>
+                        <p>Software entries include publicly reported technique use or capability to use a technique and may be mapped to Groups who have been reported to use that Software. The information provided does not represent all possible technique use by a piece of Software, but rather a subset that is available solely through open source reporting.</p>
+                        <ul>
+                            <li class="mb-4">Tool - Commercial, open-source, built-in, or publicly available software that could be used by a defender, pen tester, red teamer, or an adversary. This category includes both software that generally is not found on an enterprise system as well as software generally available as part of an operating system that is already present in an environment. Examples include PsExec, Metasploit, Mimikatz, as well as Windows utilities such as Net, netstat, Tasklist, etc.</li>
+                            <li class="mb-4">Malware - Commercial, custom closed source, or open source software intended to be used for malicious purposes by adversaries. Examples include PlugX, CHOPSTICK, etc.</li>
+                        </ul>
+
+                        <h6 class="table-object-count">Software: {{ parsed.software_list_len }}</h6>
+                        <table class="table table-bordered table-alternate mt-2">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Associated Software</th>
+                                    <th scope="col">Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for row in parsed.software_table %}
+                                    <tr>
+                                        <td>
+                                            <a href="/software/{{row.id|upper}}"> {{row.name}} </a>
+                                        </td>
+                                        <td>
+                                            {{row.aliases_list|join(", ")}}
+                                        </td>
+                                        <td>
+                                            {% if row.deprecated %}
+                                                <font color="red">****Deprecation Warning****</font>
+                                            {% endif %}
+                                            {{clean_output.stixToHTML(row.descr)}}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    <!--SCRIPTS-->
+    <script src="/theme/scripts/navigation.js"></script>
+{% endblock %}
