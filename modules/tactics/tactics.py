@@ -63,7 +63,7 @@ def generate_domain_markdown(domain, techniques, tactics, side_nav_data, depreca
        shared data for tactics
     """
 
-    if tactics[domain] and not deprecated:
+    if tactics[domain]:
         # Write out the markdown file for overview of domain
         data = {
             'domain': domain.split("-")[0],
@@ -72,6 +72,9 @@ def generate_domain_markdown(domain, techniques, tactics, side_nav_data, depreca
 
         data['side_menu_data'] = side_nav_data
         data['tactics_table'] = get_domain_table_data(tactics[domain])
+
+        if deprecated:
+            data['deprecated'] = deprecated
 
         subs = tactics_config.tactic_domain_md.substitute(data)
         subs = subs + json.dumps(data)
@@ -87,12 +90,6 @@ def generate_domain_markdown(domain, techniques, tactics, side_nav_data, depreca
         for tactic in tactics[domain]:
             generate_tactic_md(tactic, domain, tactics, techniques, side_nav_data)
         
-        return True
-
-    # Add deprecated techniques to preserve pages
-    elif tactics[domain] and deprecated:
-        for tactic in tactics[domain]:
-            generate_tactic_md(tactic, domain, tactics, techniques, side_nav_data)
         return True
 
     return False

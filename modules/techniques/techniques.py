@@ -68,7 +68,7 @@ def generate_domain_markdown(domain, techniques_no_sub, tactics, side_nav_data, 
     """
 
     # Check if there is at least one technique
-    if techniques_no_sub[domain] and not deprecated:
+    if techniques_no_sub[domain]:
 
         techhnique_list_no_sub_no_deprecated = util.buildhelpers.filter_deprecated_revoked(techniques_no_sub[domain])
 
@@ -84,6 +84,9 @@ def generate_domain_markdown(domain, techniques_no_sub, tactics, side_nav_data, 
         # Get tactic-techniques table
         data['menu'] = side_nav_data
 
+        if deprecated:
+            data['deprecated'] = deprecated
+
         subs = techniques_config.technique_domain_md.substitute(data)
         subs = subs + json.dumps(data)
 
@@ -95,12 +98,6 @@ def generate_domain_markdown(domain, techniques_no_sub, tactics, side_nav_data, 
             if 'revoked' not in technique or technique['revoked'] is False:
                 generate_technique_md(technique, domain, side_nav_data, tactics[domain])
         
-        return True
-
-    # Add deprecated techniques to preserve pages
-    elif techniques_no_sub[domain] and deprecated:
-        for technique in techniques_no_sub[domain]:
-            generate_technique_md(technique, domain, side_nav_data, tactics[domain])
         return True
     
     return False

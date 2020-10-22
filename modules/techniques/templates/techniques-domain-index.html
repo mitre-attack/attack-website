@@ -2,11 +2,14 @@
 {% set parsed = page.data | from_json %}
 {% import 'macros/navigation.html' as navigation %}
 {% import 'macros/table_with_subtechniques.html' as technique_table %}
+{% import 'macros/deprecated.html' as deprecated %}
 
 {% if parsed.domain == "mobile" %}
     {% set title = "Techniques - Mobile | MITRE ATT&CK&reg;" -%}
-{% else %} 
+{% elif parsed.domain == "enterprise" %} 
     {% set title = "Techniques - Enterprise | MITRE ATT&CK&reg;" -%}
+{% else %}
+    {% set title = "Tactics | MITRE ATT&CK&reg;" -%}
 {% endif %}
 {% block innerleft %}
 <!--stop-indexing-for-search-->
@@ -22,7 +25,7 @@
         <li class="breadcrumb-item"><a href="/techniques/{{parsed.domain}}/">Techniques</a></li>
         {% if parsed.domain == "mobile" %}
             <li class="breadcrumb-item">Mobile</li>
-        {% else %}
+        {% elif parsed.domain == "enterprise" %} 
             <li class="breadcrumb-item">Enterprise</li>
         {% endif %}
     </ol>
@@ -31,31 +34,36 @@
         <div class="col-xl-12">
             <div class="jumbotron jumbotron-fluid">
                 <div class="container-fluid">
-                    <div class="overflow-x-auto">
-                        <div class="row">
-                            <div class="col-md-8">
-                                <h1>
-                                    {% if parsed.domain == "mobile" %}
-                                        Mobile Techniques
-                                    {% else %} 
-                                        Enterprise Techniques
-                                    {% endif %}
-                                </h1>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="row table-object-count pr-3">
-                                    <h6>Techniques: {{ parsed.technique_list_len }}</h6>
+                    {% if parsed.deprecated %}
+                        {{deprecated.deprecated("Techniques under this domain have been deprecated.")}}
+                    {% else %}
+                        <div class="overflow-x-auto">
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <h1>
+                                        {% if parsed.domain == "mobile" %}
+                                            Mobile Techniques
+                                        {% elif parsed.domain == "enterprise" %} 
+                                            Enterprise Techniques
+                                        {% endif %}
+                                    </h1>
                                 </div>
-                                <div class="row table-object-count pr-3">
-                                    <h6>Sub-techniques: {{ parsed.subtechniques_len }}</h6>
+                                <div class="col-md-4">
+                                    <div class="row table-object-count pr-3">
+                                        <h6>Techniques: {{ parsed.technique_list_len }}</h6>
+                                    </div>
+                                    <div class="row table-object-count pr-3">
+                                        <h6>Sub-techniques: {{ parsed.subtechniques_len }}</h6>
+                                    </div>
                                 </div>
                             </div>
+                            {{technique_table.table_with_subtechniques(parsed.technique_table)}}
                         </div>
-                        {{technique_table.table_with_subtechniques(parsed.technique_table)}}
-                    </div>
+                    {% endif %}
                 </div>
             </div>
         </div>
+    </div>
     </div>
 {% endblock %}
 
