@@ -32,6 +32,9 @@ def generate_matrices():
         if matrix["type"] == "external": continue # link to externally hosted matrix, don't create a page for it
         matrix_generated = generate_platform_matrices(matrix, side_menu_data)
 
+    for deprecated_matrix in matrices_config.deprecated_matrices:
+        generate_deprecated_matrix(deprecated_matrix, side_menu_data)
+
     if not matrix_generated:
         util.buildhelpers.remove_module_from_menu(matrices_config.module_name)
     
@@ -49,7 +52,6 @@ def generate_platform_matrices(matrix, side_menu_data=None):
     data['platforms'] = [ {"name": platform, "path": matrices_config.platform_to_path[platform] } for platform in matrix['platforms'] ]
     data['navigator_link'] = site_config.navigator_link
 
-    data['domain'] = matrix['matrix'].split("-")[0]
     data['descr'] = matrix['descr']
     data['path'] = matrix['path']
 
@@ -66,6 +68,33 @@ def generate_platform_matrices(matrix, side_menu_data=None):
         generate_platform_matrices(subtype, side_menu_data)
 
     return has_data
+
+def generate_deprecated_matrix(matrix, side_menu_data=None):
+    """ Generate deprecated matrix md file """
+
+    data = {}
+    data['menu'] = side_menu_data
+    data['name'] = matrix['name']
+    data['domain'] = matrix['matrix'].split("-")[0]
+    data['path'] = matrix['path']
+    data['deprecated'] = True
+
+    ms = util.relationshipgetters.get_ms()
+
+    # memorystore for the current domain
+    domain_ms = ms[matrix['matrix']]
+
+    sub_matrices = util.stixhelpers.get_matrices(domain_ms)
+    data['descr'] = ""
+    for sub in sub_matrices:
+        if sub.get('description'):
+            data['descr'] += sub["description"]
+
+    subs = matrices_config.matrix_md.substitute(data)
+    subs = subs + json.dumps(data)
+
+    with open(os.path.join(matrices_config.matrix_markdown_path, data['domain'] + "-" + matrix['name'] + ".md"), "w", encoding='utf8') as md_file:
+        md_file.write(subs)
 
 def get_sub_matrices(matrix):
 

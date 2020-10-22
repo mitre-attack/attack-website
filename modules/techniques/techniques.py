@@ -44,6 +44,10 @@ def generate_techniques():
         techniques_no_sub[domain] = util.buildhelpers.filter_out_subtechniques(util.stixhelpers.get_techniques(ms[domain]))
         tactics[domain] = util.stixhelpers.get_tactic_list(ms[domain])
 
+    for deprecated_domain in site_config.deprecated_domains:
+        techniques_no_sub[deprecated_domain] = util.buildhelpers.filter_out_subtechniques(util.stixhelpers.get_techniques(ms[deprecated_domain]))
+        tactics[deprecated_domain] = util.stixhelpers.get_tactic_list(ms[deprecated_domain])
+
     side_nav_data = get_technique_side_nav_data(techniques_no_sub, tactics)
 
     for domain in site_config.domains:
@@ -51,11 +55,14 @@ def generate_techniques():
         if not technique_generated:
             if check_if_generated:
                 technique_generated = True
+    
+    for deprecated_domain in site_config.deprecated_domains:
+        generate_domain_markdown(deprecated_domain, techniques_no_sub, tactics, side_nav_data, deprecated=True)
 
     if not technique_generated:
         util.buildhelpers.remove_module_from_menu(techniques_config.module_name)   
 
-def generate_domain_markdown(domain, techniques_no_sub, tactics, side_nav_data):
+def generate_domain_markdown(domain, techniques_no_sub, tactics, side_nav_data, deprecated=None):
     """Generate technique index markdown for each domain and generates 
        shared data for techniques
     """
@@ -76,6 +83,9 @@ def generate_domain_markdown(domain, techniques_no_sub, tactics, side_nav_data):
 
         # Get tactic-techniques table
         data['menu'] = side_nav_data
+
+        if deprecated:
+            data['deprecated'] = deprecated
 
         subs = techniques_config.technique_domain_md.substitute(data)
         subs = subs + json.dumps(data)
@@ -314,7 +324,7 @@ def generate_data_for_md(technique_dict, technique, tactic_list, is_sub_techniqu
         
         else:
             if technique_dict['deprecated']:
-                technique_dict['descr'] = technique['description']
+                technique_dict['descr'] = technique.get('description')
 
         return technique_dict
 

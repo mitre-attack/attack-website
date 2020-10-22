@@ -189,6 +189,14 @@ matrices = [
     }
 ]
 
+deprecated_matrices = [
+    {
+        "name" : "PRE-ATT&CK",
+        "matrix": "pre-attack",
+        "path" : "pre",
+    }
+]
+
 platform_to_path = {
     "PRE": "enterprise/pre",
     "Windows": "enterprise/windows",
