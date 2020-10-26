@@ -145,7 +145,7 @@ matrices = [
                 "matrix": "enterprise-attack",
                 "path": "enterprise/network",
                 "platforms": ["Network"],
-                "descr": "Below are the tactics and techniques representing the MITRE ATT&CK<sup>&reg;</sup> Matrix for Enterprise covering techniques against network-based systems. ",
+                "descr": "Below are the tactics and techniques representing the MITRE ATT&CK<sup>&reg;</sup> Matrix for Enterprise covering techniques against network infrastructure devices. ",
                 "subtypes": []
             }
         ]
