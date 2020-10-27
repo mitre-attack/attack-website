@@ -1,0 +1,98 @@
+{% extends "general/two-column.html" %}
+{% import 'macros/navigation.html' as navigation %}
+{% import 'macros/clean_output.html' as clean_output %}
+{% import 'macros/deprecated.html' as deprecated %}
+
+{% set parsed = page.data | from_json %}
+{% if parsed.domain == "mobile" %}
+    {% set title = "Tactics - Mobile | MITRE ATT&CK&reg;" -%}
+{% elif parsed.domain == "enterprise" %} 
+    {% set title = "Tactics - Enterprise | MITRE ATT&CK&reg;" -%}
+{% else %}
+    {% set title = "Tactics | MITRE ATT&CK&reg;" -%}
+{% endif %}
+
+{% block head %}
+    {{ super () }}
+    {% if parsed.deprecated %}
+    <meta name="robots" content="noindex, nofollow">
+    {% endif %}
+{%  endblock %}
+
+{% block innerleft %}
+<!--stop-indexing-for-search-->
+    <div class="group-nav-desktop-view">
+        {{ navigation.sidenav(parsed.side_menu_data, output_file) }}
+    </div>
+<!--start-indexing-for-search-->
+{% endblock %}
+
+{% block innerright %}
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/">Home</a></li>
+        <li class="breadcrumb-item"><a href="/tactics/{{parsed.domain}}/">Tactics</a></li>
+        {% if parsed.domain == "mobile" %}
+            <li class="breadcrumb-item">Mobile</li>
+        {% elif parsed.domain == "enterprise" %} 
+            <li class="breadcrumb-item">Enterprise</li>
+        {% endif %}
+    </ol>
+    <div class="tab-pane fade show active" id="v-{{pages.title}}" role="tabpanel" aria-labelledby="v-{{pages.title}}-tab"></div>
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="jumbotron jumbotron-fluid">
+                <div class="container-fluid">
+                    <div class="overflow-x-auto">
+                        <h1>
+                            {% if parsed.domain == "mobile" %}
+                                Mobile Tactics
+                            {% elif parsed.domain == "enterprise" %} 
+                                Enterprise tactics
+                            {% endif %}
+                        </h1>
+                        {% if parsed.deprecated %}
+                            {{deprecated.deprecated("Tactics under this domain have been deprecated.")}}
+                        {% else %}
+                            {% if parsed.domain == "mobile" %}
+                                <h6 class="table-object-count">Mobile Tactics: {{ parsed.tactics_list_len }}</h6>
+                            {% else %} 
+                                <h6 class="table-object-count">Enterprise Tactics: {{ parsed.tactics_list_len }}</h6>
+                            {% endif %}
+                            <table class="table table-bordered table-alternate mt-2">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">ID</th>
+                                        <th scope="col">Name</th>
+                                        <th scope="col">Description</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                {% for tactic in parsed.tactics_table %}
+                                    <tr>
+                                    <td>
+                                        <a href="/tactics/{{tactic.tid}}">{{tactic.tid}}</a>
+                                    </td>
+                                    <td>
+                                        <a href="/tactics/{{tactic.tid}}">{{tactic.name}}</a>
+                                    </td>
+                                    <td>
+                                        {{clean_output.stixToHTML(tactic.description, firstParagraphOnly=True)}}
+                                    </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    <!--SCRIPTS-->
+    <script src="/theme/scripts/navigation.js"></script>
+{% endblock %}

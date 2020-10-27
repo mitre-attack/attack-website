@@ -1,0 +1,39 @@
+{% extends "general/base.html" %} 
+{% set active_page = "resources" -%}
+{% set title = "Previous Versions | MITRE ATT&CK&reg;" -%} 
+{% set parsed = page.data | from_json %}
+
+{% block content %}
+{{ super () }}
+<div class="container">
+    <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">Home</a></li>
+            <li class="breadcrumb-item"><a href="/resources">Resources</a></li>
+            <li class="breadcrumb-item">Previous Versions</li>
+    </ol>
+</div>
+<div class="container pb-3 uniform-block">
+    <div class="getting-started">
+        <div class="clearfix pb-3">
+            <div class="clearfix">
+                <h2>Previous Versions</h2>
+                <p>
+                    We preserve previous versions of the website each time we do a major ATT&CK content update. Click below to see a previous version of the site or the updates that occurred with that particular major release.
+                </p>
+                <ul>
+                    {% for version in parsed.versions %}
+                        {% if version.retired %}
+                            <li>{{version.date_start}} - {{version.date_end}}. This version has been removed from the site. You can still download this version's <a href="{{version.cti_url}}">source data</a> or browse the <a href="{{version.gh_pages_url}}">raw HTML</a>.</li>
+                        {% else %}
+                            <li><a href="/previous/{{version.path}}">{{version.date_start}} - {{version.date_end}}</a> (<a href="/resources/updates/{{version.changelog}}">Updates</a>)</li>
+                        {% endif %}                    
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+    {% block scripts %}
+    {{ super() }}
+{% endblock %}      

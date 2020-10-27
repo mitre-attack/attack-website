@@ -1,0 +1,60 @@
+{% macro navigation_menu(menu, logo_header, output_file) -%}
+    <nav class='navbar navbar-expand-lg navbar-dark fixed-top'>
+        <a class='navbar-brand' href='/'><img src="{{ logo_header }}" class="attack-logo"></a>
+        <button class='navbar-toggler' type='button' data-toggle='collapse' data-target='#navbarCollapse'
+                aria-controls='navbarCollapse' aria-expanded='false' aria-label='Toggle navigation'>
+                <span class='navbar-toggler-icon'></span>
+        </button>
+        <div class='collapse navbar-collapse' id='navbarCollapse'>
+            <ul class='nav nav-tabs ml-auto'>
+                {% for element in menu %}
+                    {% if element.children %}
+                        <li class="nav-item dropdown">
+                            {{has_child(element, loop.last)}}
+                        </li>
+                    {% elif element.external_link %}
+                        <li class="nav-item">
+                            {{external_link(element)}}
+                        </li>
+                    {% elif element.search_bar %}
+                        <li class="nav-item">
+                            <button id="search-button" class="btn search-button">Search <div class="search-icon"></div></button>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a href="{{ element.url }}" {% if output_file | clean_path == element.url %} class="nav-link active" {%
+                                else %} class="nav-link" {% endif %}><b>{{ element.name }}</b></a>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+        </div>
+    </nav>
+{% endmacro %}
+
+{% macro external_link(element) %}
+    <a href="{{element.url}}" target="_blank" class="nav-link">
+        <b>{{ element.name }}</b>&nbsp;
+        <img src="/theme/images/external-site.svg" alt="External site" class="external-icon" />
+    </a>
+{% endmacro %}
+
+{% macro has_child(element, last=False) %}
+    
+    <a class="nav-link dropdown-toggle" href="{{ element.url }}" id="navbarDropdown" role="button"
+    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <b>{{ element.name }}</b>
+    </a>
+    <div class="dropdown-menu {% if last %} dropdown-menu-right {% endif %}" aria-labelledby="navbarDropdown">
+        {% for child in element.children %}
+            {% if child.children %}
+                {{has_child(child)}}
+            {% elif child.external_link %}
+                {{external_link(child)}}
+            {% else %}
+                <a class="dropdown-item" href="{{child.url}}">{{ child.name }}</a>
+            {% endif %}
+        {% endfor %}
+    </div>
+
+{% endmacro %}

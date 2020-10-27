@@ -23,7 +23,7 @@ let tourSteps = [
 
 if (isSiteTour && tour_steps['subtechnique'] != 'undefined') tourSteps.push({
     onShow: function() { //go to the next tour module
-        window.location.href = base_url + "/" + tour_steps['subtechnique'] + "/?tour=true"
+        window.location.href = base_url + tour_steps['subtechnique'] + "/?tour=true"
     }
 })
 

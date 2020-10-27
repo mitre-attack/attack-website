@@ -1,3 +1,5 @@
+{% import 'macros/clean_output.html' as clean_output %}
+
 {% macro table_with_subtechniques(technique_table) -%}
     <table class="table-techniques">
         <thead>
@@ -20,7 +22,7 @@
                         {% if row.deprecated %}
                             <font color="red">****Deprecation Warning****</font>
                         {% endif %}
-                        {{row.descr}}
+                        {{clean_output.stixToHTML(row.descr, firstParagraphOnly=True)}}
                     </td>
                 </tr>
                 {% for subtechnique in row.subtechniques %}
@@ -33,7 +35,7 @@
                             <a href="/techniques/{{row.tid}}/{{subtechnique.id}}"> {{subtechnique.name}} </a>
                         </td>
                         <td>
-                            {{subtechnique.descr}}
+                            {{clean_output.stixToHTML(subtechnique.descr, firstParagraphOnly=True)}}
                         </td>
                     </tr>   
                 {% endfor %}

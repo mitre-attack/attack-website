@@ -1,0 +1,130 @@
+{% extends "general/two-column.html" %} 
+{% set parsed = page.data | from_json %}
+{% import 'macros/navigation.html' as navigation %}
+{% import 'macros/matrix.html' as matrix_macros %}
+{% import 'macros/versioning.html' as versioning %}
+{% import 'macros/deprecated.html' as deprecated %}
+{% import 'macros/clean_output.html' as clean_output %}
+
+{% if parsed.domain == "mobile" %}
+    {% set title = "Matrix - Mobile | MITRE ATT&CK&reg;" -%}
+{% elif parsed.domain == "enterprise" %}
+    {% if parsed.platform %}
+        {% set title = "Matrix - Enterprise - " + parsed.platform + " | MITRE ATT&CK&reg;" -%}
+    {% else %}
+        {% set title = "Matrix - Enterprise | MITRE ATT&CK&reg;" -%}
+    {% endif %}
+{% else %}
+    {% set title = "Matrix | MITRE ATT&CK&reg;" -%}
+{% endif %}
+
+{% set active_page = "matrices" -%}
+
+{% block head %}
+    {{ super () }}
+    {% if parsed.deprecated %}
+    <meta name="robots" content="noindex, nofollow">
+    {% endif %}
+{%  endblock %}
+
+{% block innerleft %}
+<!--stop-indexing-for-search-->
+    {{ navigation.sidenav(parsed.menu, output_file) }}  
+<!--start-indexing-for-search-->
+{% endblock %}
+
+{% block innerright %}
+    <div class="row">
+        <div class="col-md-9">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Home</a></li>
+                {% if parsed.domain == 'enterprise' %}
+                    <li class="breadcrumb-item"><a href="/matrices/enterprise">Matrices</a></li>
+                {% elif parsed.domain == 'mobile' %}
+                    <li class="breadcrumb-item"><a href="/matrices/mobile">Matrices</a></li>
+                {% else %}
+                    <li class="breadcrumb-item"><a href="/matrices/">Matrices</a></li>
+                {% endif %}
+                {% if parsed.platform %}
+                    <li class="breadcrumb-item"><a href="/matrices/enterprise/">Enterprise</a></li>
+                    <li class="breadcrumb-item">{{parsed.platform}}</li>
+                {% else %}
+                    <li class="breadcrumb-item">{{parsed.name}}</li>
+                {% endif %}
+            </ol>
+        </div>
+    </div>
+    <div class="tab-pane fade show active" id="v-attckmatrix" role="tabpanel" aria-labelledby="v-attckmatrix-tab">
+
+        <div class="matrix-container p-3">
+            {% if parsed.deprecated %}
+                <div class="row">
+                    <div class="col">
+                        <h1>{{parsed.name}}</h1>  
+                        {% if parsed.descr %}
+                            {{deprecated.deprecated(clean_output.stixToHTML(parsed.descr, firstParagraphOnly=True))}}
+                        {% else %}
+                            {{deprecated.deprecated("This technique has been deprecated.")}}
+                        {% endif %}
+                    </div>
+                </div>
+            {% else %}
+                {% set matrix_plural = "Matrices" if (parsed.matrices | length > 1) else "Matrix" %}
+                <div class="row">
+                    <div class="col-md-9">
+                        <h1>{{parsed.name}} {{matrix_plural}}</h1>             
+
+                        <p>
+                            {{parsed.descr}}
+                            {% if parsed.platforms | length > 1 %}
+                                The {{matrix_plural}} contains information for the following platforms: {% for platform in parsed.platforms %}{%if loop.index != 1 %}, {% endif %}<a href="/matrices/{{platform.path}}">{{platform.name}}</a>{% endfor %}.
+                            {% elif parsed.platforms | length == 1 %}
+                                    The {{matrix_plural}} contains information for the {{parsed.platforms[0].name}} platform.
+                            {% endif %}
+                        </p>
+                    </div>
+                    <div class="matrix-border col-md-3">
+                        <div class="col py-2">
+                            <!-- only show navigator link if it's defined in the config -->
+                            {% if parsed.navigator_link %} 
+                                <div class="row p-2">
+                                    <a href="{{ parsed.navigator_link }}" target="_blank">View on the ATT&amp;CK<sup>&reg;</sup> Navigator <img src="/theme/images/external-site-dark.jpeg" width="10"></a>
+                                </div>
+                            {% endif %}
+                            {% if parsed.resources %}
+                                <div class="row p-2">
+                                    {% if parsed.domain == "enterprise" %}
+                                        <a href="/resources/enterprise-introduction/">About the Enterprise domain</a>
+                                    {% elif parsed.domain == "mobile" %}
+                                        <a href="/resources/mobile-introduction/">About the Mobile domain</a>
+                                    {% endif %}
+                                </div>
+                            {% endif %}
+                            {% if parsed.versioning_feature %}
+                                <div class="row p-2">
+                                        {% set permalink_title = "the matrices" if parsed.matrices | length > 1 else "the matrix" %}
+                                        {{ versioning.permalink_button(output_file, permalink_title, False)}}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+        {% if not parsed.deprecated %}
+            <div class="pb-3">
+                {{matrix_macros.matrices(parsed.matrices, parsed.has_subtechniques, parsed.tour_technique, False)}}
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <!--SCRIPTS-->
+    {{ super() }}
+    <script src="/theme/scripts/matrix.js"></script>
+    <script src="/theme/scripts/navigation.js"></script>
+    <script src="/theme/scripts/bootstrap-tourist.js"></script>
+    <script src="/theme/scripts/settings.js"></script>
+    <script src="/theme/scripts/tour/tour-matrices.js"></script>
+{% endblock %} 

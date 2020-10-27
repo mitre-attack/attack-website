@@ -36,7 +36,7 @@ if (isSiteTour && tour_steps['relationships']['step3'] != 'undefined') tourSteps
 
 if (isSiteTour) tourSteps.push({
     onShow: function() { //go to the next tour module
-        window.location.href = base_url + "/" + "resources/versions/?tour=true"
+        window.location.href = base_url + "resources/versions/?tour=true"
     }
 })
 

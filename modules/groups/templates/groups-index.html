@@ -1,0 +1,77 @@
+{% extends "general/two-column.html" %} 
+{% set title = "Groups | MITRE ATT&CK&reg;" %}
+{% set parsed = page.data | from_json %}
+{% set active_page = "groups" -%}
+{% import 'macros/navigation.html' as navigation %}
+{% import 'macros/clean_output.html' as clean_output %}
+
+{% block innerleft %}
+<!--stop-indexing-for-search-->
+<div class="group-nav-desktop-view">
+        {{ navigation.sidenav(parsed.side_menu_data, output_file) }} 
+    </div>
+    <div class="group-nav-mobile-view">
+        {{ navigation.sidenav(parsed.side_menu_mobile_view_data, output_file) }} 
+    </div>
+<!--start-indexing-for-search-->
+{% endblock %}
+
+{% block innerright %}
+    {{ super () }}
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/">Home</a></li>
+        <li class="breadcrumb-item">Groups</li>
+    </ol>
+    <div class="tab-pane fade show active" id="v-{{pages.title}}" role="tabpanel" aria-labelledby="v-{{pages.title}}-tab"></div>
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="jumbotron jumbotron-fluid">
+                <div class="container-fluid">
+                    <div class="overflow-x-auto">
+                        <h1>
+                            Groups
+                        </h1>
+                        <p>Groups are sets of related intrusion activity that are tracked by a common name in the security community. Analysts track clusters of activities using various analytic methodologies and terms such as threat groups, activity groups, threat actors, intrusion sets, and campaigns. Some groups have multiple names associated with similar activities due to various organizations tracking similar activities by different names. Organizations' group definitions may partially overlap with groups designated by other organizations and may disagree on specific activity.</p>
+                        <p>For the purposes of the Group pages, the MITRE ATT&CK team uses the term Group to refer to any of the above designations for a cluster of adversary activity. The team makes a best effort to track overlaps between names based on publicly reported associations, which are designated as “Associated Groups” on each page (formerly labeled “Aliases”), because we believe these overlaps are useful for analyst awareness. We do not represent these names as exact overlaps and encourage analysts to do additional research.</p>
+                        <p>Groups are mapped to publicly reported technique use and original references are included. The information provided does not represent all possible technique use by Groups, but rather a subset that is available solely through open source reporting. Groups are also mapped to reported Software used, and technique use for that Software is tracked separately on each Software page.</p>
+                        <h6 class="table-object-count">Groups: {{ parsed.groups_list_len }}</h6>
+                        <table class="table table-bordered table-alternate mt-2">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Associated Groups</th>
+                                    <th scope="col">Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for row in parsed.groups_table %}
+                                    <tr>
+                                        <td>
+                                            <a href="/groups/{{row.id|upper}}"> {{row.name}} </a>
+                                        </td>
+                                        <td>
+                                            {{row.aliases_list|join(", ")}}
+                                        </td>
+                                        <td>
+                                            {% if row.deprecated %}
+                                                <font color="red">****Deprecation Warning****</font>
+                                            {% endif %}
+                                            {{clean_output.stixToHTML(row.descr)}}                                            
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    <!--SCRIPTS-->
+    <script src="/theme/scripts/navigation.js"></script>
+{% endblock %}

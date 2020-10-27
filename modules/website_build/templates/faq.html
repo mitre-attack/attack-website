@@ -1,0 +1,42 @@
+{% extends "general/base.html" %} 
+{% set active_page = "resources" -%}
+{% set title = "FAQ | MITRE ATT&CK&reg;" -%} 
+{% set parsed = page.data | from_json %}
+
+{% block content %}
+{{ super () }}
+<div class="container">
+    <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">Home</a></li>
+            <li class="breadcrumb-item"><a href="/resources">Resources</a></li>
+            <li class="breadcrumb-item">FAQ</li>
+    </ol>
+</div>
+<div class="container pb-3 uniform-block">
+    <h1 class="text-center">Frequently Asked Questions</h1>
+    <div class="card-block faq">
+        {% for section in parsed.sections %}
+        <div class="clearfix pb-3">
+            <h2>{{section.name}}</h2>
+            <div>
+                {% for qa in section.questions %}
+                <div class="card w-100{%if loop.index > 1%} mt-1{% endif %}">
+                    <div class="card-header collapsed" id="{{qa.id}}-header" data-toggle="collapse" data-target="#{{qa.id}}-body" aria-expanded="false" aria-controls="{{qa.id}}-body">
+                        <h5 class="mb-0">{{qa.question}}</h5>
+                    </div>
+                    <div id="{{qa.id}}-body" class="collapse" aria-labelledby="-header">
+                        <div class="card-body">
+                            {{qa.answer}}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
+{% block scripts %}
+{{ super() }}
+{% endblock %}      
