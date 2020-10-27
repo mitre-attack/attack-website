@@ -6,7 +6,7 @@
 <!--    ### New Features                                                -->
 <!--    ### Improvements                                                -->
 <!--    ### Fixes                                                       -->
-<!--    ## [ATT&CK Content version ##.##](link to release on mitre/cti) --> 
+<!--    ## [ATT&CK Content version ##.##](link to release on mitre/cti) -->
 <!--    See the release notes [here](link to release notes).           // if major change -->
 <!--    ### Fixes                                                      // else            -->
 <!--    Entries for pull request template:                              -->
@@ -26,7 +26,10 @@
 <!--          addition of notable features. When PATCH is 0 it can      -->
 <!--          be omitted                                                -->
 
-# Changes staged on develop
+# 27 October 2020
+## [ATT&CK Content version 8.0](https://github.com/mitre/cti/releases/tag/ATT%26CK-v8.0)
+See release notes [here](https://attack.mitre.org/resources/updates/updates-october-2020/index.html).
+
 ## ATT&CK Website version 3.0
 ### Improvements
 - Added a link on the home page that takes the user to a random page within a specified category. See issue [#98](https://github.com/mitre-attack/attack-website/issues/98).
