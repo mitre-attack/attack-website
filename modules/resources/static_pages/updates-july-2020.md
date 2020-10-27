@@ -8,7 +8,7 @@ save_as: resources/updates/updates-july-2020/index.html
 
 | Version | Start Date | End Date | Data |
 |:--------|:-----------|:---------|:-----|
-| [ATT&CK v7](/versions/v7) | July 8, 2020 | October 27, 2020 | [v7.0 on MITRE/CTI](https://github.com/mitre/cti/releases/tag/ATT%26CK-v7.0) |
+| [ATT&CK v7](/versions/v7) | July 8, 2020 | October 26, 2020 | [v7.0 on MITRE/CTI](https://github.com/mitre/cti/releases/tag/ATT%26CK-v7.0) |
 
 <ul class="nav nav-tabs" role="tablist">
     <li class="nav-item">

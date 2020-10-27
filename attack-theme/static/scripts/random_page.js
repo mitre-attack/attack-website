@@ -3,7 +3,7 @@ let all_pages = [];
 
 $(document).ready(function () {
     $.ajax({ //if docs have not yet been loaded
-        url: base_url + "/random_page.json",
+        url: base_url + "random_page.json",
         dataType: "json",
         success: function (data) {
             json_data = data;
