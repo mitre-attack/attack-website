@@ -1,2 +1,3 @@
-let base_url = "";
-let tour_steps = {'matrix': 'matrices/enterprise', 'technique': 'techniques/T1548', 'subtechnique': 'techniques/T1548/001', 'relationships': {'step3': ['T1566-001', 2], 'step1': 'T1057', 'step2': ['T1059', 3], 'obj_id': 'groups/G0021'}};
+var base_url = "/";
+var build_uuid = "70e41b9c-5e22-43e1-85cc-b1276f818577";
+var tour_steps = {'matrix': 'matrices/enterprise', 'technique': 'techniques/T1548', 'subtechnique': 'techniques/T1548/001', 'relationships': {'step1': 'T1016', 'step3': ['T1003-003', 3], 'step2': ['T1110', 2], 'obj_id': 'software/S0488'}};
