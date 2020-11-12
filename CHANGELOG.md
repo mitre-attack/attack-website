@@ -25,6 +25,15 @@
 <!--    PATCH updates are when a bugfix is made without the             -->
 <!--          addition of notable features. When PATCH is 0 it can      -->
 <!--          be omitted                                                -->
+# 12 November 2020
+## [ATT&CK Content version 8.1](https://github.com/mitre/cti/releases/tag/ATT%26CK-v8.1)
+### Fixes
+- Fixed typo "stressor" to "stresser"
+- Fixed type and version for `S0154`
+- Fixed contributors for `T1598`, `T1598.001`, `T1598.002`, `T1598.003`, and `S0514`
+
+### Additions
+- new reporting and procedure examples for `G0102`
 
 # 27 October 2020
 ## [ATT&CK Content version 8.0](https://github.com/mitre/cti/releases/tag/ATT%26CK-v8.0)

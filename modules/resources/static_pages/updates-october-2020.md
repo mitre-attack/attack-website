@@ -8,7 +8,7 @@ save_as: resources/updates/updates-october-2020/index.html
 
 | Version | Start Date | End Date | Data |
 |:--------|:-----------|:---------|:-----|
-| [ATT&CK v8](/versions/v8) | October 27, 2020 | This is the current version of ATT&CK | [v8.0 on MITRE/CTI](https://github.com/mitre/cti/releases/tag/ATT%26CK-v8.0) |
+| [ATT&CK v8](/versions/v8) | October 27, 2020 | This is the current version of ATT&CK | [v8.1 on MITRE/CTI](https://github.com/mitre/cti/releases/tag/ATT%26CK-v8.1) |
 
 The October 2020 (v8) ATT&CK release updates Techniques, Groups, and Software for both Enterprise and Mobile. The biggest changes are the deprecation of the PRE-ATT&CK domain, the addition of two new Tactics to replace [PRE-ATT&CK](/versions/v7/matrices/pre/), and the addition of the Network platform to Enterprise ATT&CK. 
 
@@ -140,7 +140,18 @@ We will continue to build out additional Network techniques and sub-techniques a
 
 **Enterprise**
 
-We also added 1 additional new technique and 7 sub-techniques to Enterprise in this ATT&CK release beyond the scope of the above updates. All Enterprise technique changes, including this new technique and these new sub-techniques, are documented below.
+We also added 1 additional new technique and 7 sub-techniques to Enterprise in this ATT&CK release beyond the scope of the above updates: 
+
+* Boot or Logon Autostart Execution: [Print Processors](/techniques/T1547/012)
+* [Cloud Infrastructure Discovery](/techniques/T1580)
+* Hide Artifacts: [VBA Stomping](/techniques/T1564/007)
+* Impair Defenses: [Disable Cloud Logs](/techniques/T1562/008)
+* Man-in-the-Middle: [ARP Cache Poisoning](/techniques/T1557/002)
+* Scheduled Task/Job: [Systemd Timers](/techniques/T1053/006)
+* Signed Binary Proxy Execution: [Verclsid](/techniques/T1218/012)
+* Steal or Forge Kerberos Tickets: [AS-REP Roasting](/techniques/T1558/004)
+
+All Enterprise technique changes are documented below.
 
 New Techniques:
 
