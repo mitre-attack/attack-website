@@ -1,0 +1,102 @@
+{% extends "general/base.html" %}
+{% set active_page = "resources" -%}
+{% set title = page.title + " | MITRE ATT&CK&reg;" -%}
+{% set parsed = page.data | from_json %}
+{% import 'macros/filetree.html' as filetree %}
+
+{% block content %}
+{{ super () }}
+<div class="container">
+    <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">Home</a></li>
+            <li class="breadcrumb-item"><a href="/resources">Resources</a></li>
+            <li class="breadcrumb-item">Working With ATT&CK</li>
+    </ol>
+</div>
+<div class="container pb-3 uniform-block decorative-panels">
+    <div class="working-with-attack">
+        <h2>Accessing ATT&CK Data</h2>
+        <!-- STIX data panel -->
+        <div class="decorative-panel container">
+            <div class="decorative-panel-header row align-items-center">
+                <div class="col py-4">
+                    <h3>ATT&CK in STIX</h3>
+                    <p>
+                        Structured Threat Information Expression (STIX&trade;) is a language and serialization 
+                        format used to exchange cyber threat intelligence (CTI). The ATT&CK dataset is represented in STIX 2.0, 
+                        and all other representations (including this website) are built from the STIX data.
+                    </p>
+                    <button class="btn btn-default" id="stix-button" data-toggle="collapse" data-target="#stix-body" aria-expanded="false" aria-controls="stix-body">Learn more</button>
+                </div>
+                <div class="col text-right">
+                    <img class="w-100" src="/theme/images/mitre-cti.png">
+                </div>
+            </div>
+            <div class="decorative-panel-body collapse"  id="stix-body" aria-labelledby="stix-button">
+                ATT&CK in STIX further information
+            </div>
+        </div>
+
+        <!-- Excel data panel -->
+        <div class="decorative-panel container">
+            <div class="decorative-panel-header row align-items-center">
+                <div class="col">
+                    <img class="w-100" src="/theme/images/attack-in-excel.png">
+                </div>
+                <div class="col py-4">
+                    <h3>ATT&CK in Excel</h3>
+                    <p>
+                        Excel spreadsheets representing the ATT&CK dataset. These spreadsheets are built from the STIX dataset 
+                        and provide a more human-accessible view into the knowledge base while also supporting 
+                        rudimentary querying/filtering capabilities.
+                    </p>
+                    <button class="btn btn-default" id="excel-button" data-toggle="collapse" data-target="#excel-body" aria-expanded="false" aria-controls="excel-body">Learn more</button>
+                </div>
+            </div>
+            <div class="decorative-panel-body collapse row align-items-center" id="excel-body" aria-labelledby="excel-button">
+                <div class="col file-list">
+                    {{filetree.filetree(parsed.excel_files)}}
+                </div>
+                <div class="col">
+                    More information about
+                </div>
+            </div>
+        </div>
+        <h2>Tools for working with ATT&CK</h2>
+        <!-- Navigator -->
+        <div class="decorative-panel container">
+            <div class="decorative-panel-header row align-items-center">
+                <div class="col py-4">
+                    <h3>ATT&CK Navigator</h3>
+                    <p>
+                        The ATT&CK Navigator is a web-based tool for annotating and exploring ATT&CK matrices. It can be used to
+                        visualize defensive coverage, red/blue team planning, the frequency of detected techniques, and more.
+                    </p>
+                    <h4><a href="https://github.com/mitre-attack/attack-navigator/">Visit the repository</a></h4>
+                    <h4><a href="https://mitre-attack.github.io/attack-navigator/">Open the application</a></h4>
+                </div>
+                <div class="col text-right">
+                    <img class="w-100" src="/theme/images/nav-example.png">
+                </div>
+            </div>
+        </div>
+        <!-- Scripts -->
+        <div class="decorative-panel container">
+            <div class="decorative-panel-header row align-items-center">
+                <div class="col">
+                    <img class="w-100" src="/theme/images/attack-scripts.png">
+                </div>
+                <div class="col py-4">
+                    <h3>ATT&CK Scripts</h3>
+                    <p>
+                        ATT&CK provides a variety of Python scripts for the accessing, querying, and processing the ATT&CK dataset. 
+                        These scripts can be useful utilities or serve as examples for how to work with ATT&CK programmatically.
+                    </p>
+                    <h4><a href="https://github.com/mitre-attack/attack-scripts/">Visit the repository</a></h4>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}
