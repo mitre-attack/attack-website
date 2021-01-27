@@ -622,9 +622,9 @@ def get_navigator_layers(name, attack_id, obj_type, version, techniques_used):
     enterprise_layer['name'] = layer_name
     enterprise_layer['domain'] = "enterprise-attack"
     enterprise_layer['versions'] = {
-        "layer": "4.0",
+        "layer": "4.1",
         "attack": major_attack_version,
-        "navigator": "4.0"
+        "navigator": "4.1"
     }
     enterprise_layer['techniques'] = []
     enterprise_layer["gradient"] = { # white for nonused, blue for used
@@ -646,9 +646,9 @@ def get_navigator_layers(name, attack_id, obj_type, version, techniques_used):
     mobile_layer['name'] = layer_name
     mobile_layer['domain'] = "mobile-attack"
     mobile_layer['versions'] = {
-        "layer": "4.0",
+        "layer": "4.1",
         "attack": major_attack_version,
-        "navigator": "4.0"
+        "navigator": "4.1"
     }
     mobile_layer['techniques'] = []
     mobile_layer["gradient"] = { # white for nonused, blue for used
