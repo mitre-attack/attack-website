@@ -672,9 +672,9 @@ def get_navigator_layers(name, attack_id, obj_type, version, techniques_used):
         if technique.get('descr'):
             score = 1
             if technique.get('subtechniques'):
-                navigator_technique = get_navigator_technique(technique['id'], technique["descr"], score, True)
+                navigator_technique = get_navigator_technique(technique['id'], technique["descr"] if "descr" in technique else "", score, True)
             else:
-                navigator_technique = get_navigator_technique(technique['id'], technique["descr"], score, False)
+                navigator_technique = get_navigator_technique(technique['id'], technique["descr"] if "descr" in technique else "", score, False)
         else:
             if technique.get('subtechniques'):
                 navigator_technique = get_navigator_technique(technique['id'], None, None, True)
@@ -689,7 +689,7 @@ def get_navigator_layers(name, attack_id, obj_type, version, techniques_used):
         if technique.get('subtechniques'):
             for subtechnique in technique['subtechniques']:
                 score = 1
-                navigator_technique = get_navigator_technique(technique['id']+"."+subtechnique['id'], subtechnique["descr"], score, True)
+                navigator_technique = get_navigator_technique(technique['id']+"."+subtechnique['id'], subtechnique["descr"] if "descr" in subtechnique else "", score, True)
 
                 if technique['domain'].startswith("enterprise"):
                     enterprise_layer['techniques'].append(navigator_technique)
