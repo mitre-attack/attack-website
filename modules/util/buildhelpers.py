@@ -942,9 +942,6 @@ def generate_redirections(redirections_filename):
 
         for obj in redirects:
 
-            if not obj["from"].endswith("/index.html"):
-                obj["from"] += "/index.html"
-
             subs = site_config.redirect_md.substitute(obj)
 
             with open(os.path.join(site_config.redirects_markdown_path, obj['title'] + ".md"), "w", encoding='utf8') as md_file:

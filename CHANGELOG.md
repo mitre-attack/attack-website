@@ -25,6 +25,18 @@
 <!--    PATCH updates are when a bugfix is made without the             -->
 <!--          addition of notable features. When PATCH is 0 it can      -->
 <!--          be omitted                                                -->
+# Changes staged on Develop
+## [ATT&CK Convent version 9.0]() (TODO add release data link)
+
+## ATT&CK website version 3.2
+### Improvements
+- Replaced GCP, AWS and Azure platforms with Infrastructure-as-a-Service (IaaS). See issue [#276](https://github.com/mitre-attack/attack-website/issues/276).
+- Added Google Workspace platform to Cloud platform list.
+- Added Containers platform to enterprise platform list.
+
+### Fixes
+- Fixed a bug with automatic redirection generation which was causing some redirects to build in the wrong directory.
+
 # 27 January 2020
 ## [ATT&CK Content version 8.2](https://github.com/mitre/cti/releases/tag/ATT%26CK-v8.2)
 ATT&CK version 8.2 contains new reporting for the activity related to the SolarWinds supply chain injection.
