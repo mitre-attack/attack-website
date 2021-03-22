@@ -34,7 +34,7 @@ matrices = [
         "type": "local",
         "path": "enterprise",
         "matrix": "enterprise-attack",
-        "platforms": ["Windows", "macOS", "Linux", "PRE", "Azure AD", "Office 365", "SaaS", "IaaS", "Network", "Containers"],
+        "platforms": ["Windows", "macOS", "Linux", "PRE", "Azure AD", "Office 365", "Google Workspace", "SaaS", "IaaS", "Network", "Containers"],
         "descr": "Below are the tactics and techniques representing the MITRE ATT&CK<sup>&reg;</sup> Matrix for Enterprise.",
         "subtypes": [
             {
@@ -78,7 +78,7 @@ matrices = [
                 "type": "local",
                 "matrix": "enterprise-attack",
                 "path": "enterprise/cloud",
-                "platforms": ["IaaS","Azure AD","Office 365","SaaS"],
+                "platforms": ["Azure AD", "Office 365", "Google Workspace", "SaaS", "IaaS"],
                 "descr": "Below are the tactics and techniques representing the MITRE ATT&CK<sup>&reg;</sup> Matrix for Enterprise covering cloud-based techniques.",
                 "subtypes": [
                     { 
