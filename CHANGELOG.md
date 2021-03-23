@@ -25,6 +25,12 @@
 <!--    PATCH updates are when a bugfix is made without the             -->
 <!--          addition of notable features. When PATCH is 0 it can      -->
 <!--          be omitted                                                -->
+
+# 23 March 2021
+## ATT&CK website version 3.1.1
+### Improvements 
+- Updated ATT&CKcon page with ATT&CKcon Power Hour.
+
 # 27 January 2021
 ## [ATT&CK Content version 8.2](https://github.com/mitre/cti/releases/tag/ATT%26CK-v8.2)
 ATT&CK version 8.2 contains new reporting for the activity related to the SolarWinds supply chain injection.
