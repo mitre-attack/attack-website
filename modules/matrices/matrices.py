@@ -24,13 +24,15 @@ def generate_matrices():
     with open(os.path.join(matrices_config.matrix_markdown_path, "overview.md"), "w", encoding='utf8') as md_file:
         md_file.write(matrices_config.matrix_overview_md)
     
+    notes = util.relationshipgetters.get_objects_using_notes()
+
     side_menu_data = util.buildhelpers.get_side_menu_matrices(matrices_config.matrices)
 
     matrix_generated = False
 
     for matrix in matrices_config.matrices:
         if matrix["type"] == "external": continue # link to externally hosted matrix, don't create a page for it
-        matrix_generated = generate_platform_matrices(matrix, side_menu_data)
+        matrix_generated = generate_platform_matrices(matrix, notes, side_menu_data)
 
     for deprecated_matrix in matrices_config.deprecated_matrices:
         generate_deprecated_matrix(deprecated_matrix, side_menu_data)
@@ -38,7 +40,7 @@ def generate_matrices():
     if not matrix_generated:
         util.buildhelpers.remove_module_from_menu(matrices_config.module_name)
     
-def generate_platform_matrices(matrix, side_menu_data=None):
+def generate_platform_matrices(matrix, notes, side_menu_data=None):
     """Given a matrix, generates the matrix markdown"""
     
     has_data = False
@@ -48,7 +50,13 @@ def generate_platform_matrices(matrix, side_menu_data=None):
     data['name'] = matrix['name']
 
     data['matrices'], data["has_subtechniques"], data["tour_technique"] = get_sub_matrices(matrix)
-    if data['matrices']: has_data = True
+    if data['matrices']: 
+        has_data = True
+        matrix_ids = get_matrix_ids(data['matrices'])
+        data['notes'] = []
+        for matrix_id in matrix_ids:
+            data['notes'].append(notes.get(matrix_id))
+
     data['platforms'] = [ {"name": platform, "path": matrices_config.platform_to_path[platform] } for platform in matrix['platforms'] ]
     data['navigator_link'] = site_config.navigator_link
 
@@ -65,7 +73,7 @@ def generate_platform_matrices(matrix, side_menu_data=None):
         md_file.write(subs)
 
     for subtype in matrix['subtypes']:
-        generate_platform_matrices(subtype, side_menu_data)
+        generate_platform_matrices(subtype, notes, side_menu_data)
 
     return has_data
 
@@ -95,6 +103,16 @@ def generate_deprecated_matrix(matrix, side_menu_data=None):
 
     with open(os.path.join(matrices_config.matrix_markdown_path, data['domain'] + "-" + matrix['name'] + ".md"), "w", encoding='utf8') as md_file:
         md_file.write(subs)
+
+def get_matrix_ids(matrices):
+    """Get matrix ids from matrix list"""
+    matrix_ids = []
+
+    for matrix in matrices:
+        if not matrix['id'] in matrix_ids:
+            matrix_ids.append(matrix['id'])
+    
+    return matrix_ids
 
 def get_sub_matrices(matrix):
 
@@ -189,6 +207,7 @@ def get_sub_matrices(matrix):
         tactics = list(filter(lambda t: len(t["techniques"]) > 0, tactics))
         data.append({
             "name": sub_matrix["name"],
+            "id": sub_matrix["id"],
             "timestamp": matrix_timestamp,
             "description": sub_matrix["description"],
             "tactics": tactics,

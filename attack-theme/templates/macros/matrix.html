@@ -6,7 +6,9 @@
         tour_technique: the technique to use in the sub-techniques tour
         isIndex: boolean, true if this matrix is going on the index page
 -->
-{% macro matrices(matrices, has_subtechniques, tour_technique, isIndex) %}
+{% import 'macros/notes.html' as notes_macro %}
+
+{% macro matrices(matrices, has_subtechniques, tour_technique, isIndex, notes) %}
 <div id="tour-matrix-container">
     {% if has_subtechniques %}
     <div class="matrix-controls">
@@ -39,18 +41,18 @@
     <div id="layouts-content">
         <div class="matrix-type side">
             {% for matrix in matrices %}
-                {{ matrix_box('side', matrix, matrices | length, tour_technique, isIndex) }} 
+                {{ matrix_box('side', matrix, matrices | length, tour_technique, isIndex, notes, loop.index) }} 
             {% endfor %}
         </div>
         <div class="matrix-type flat d-none">
             {% for matrix in matrices %}
-                {{ matrix_box('flat', matrix, matrices | length, tour_technique, isIndex) }}
+                {{ matrix_box('flat', matrix, matrices | length, tour_technique, isIndex, notes, loop.index) }}
             {% endfor %}
         </div>
     </div>
     {% else %}
         {% for matrix in matrices %}
-            {{ matrix_box('side', matrix, matrices | length, tour_technique, isIndex) }}
+            {{ matrix_box('side', matrix, matrices | length, tour_technique, isIndex, notes, loop.index) }}
         {% endfor %}
     {% endif %}
 </div>
@@ -66,10 +68,13 @@
         tour_technique: the technique to use in the matrix tour
         isIndex: boolean, is this matrix being displayed on the index page?
 -->
-{% macro matrix_box(whichmatrix, matrix, num_matrices, tour_technique, isIndex) %}
+{% macro matrix_box(whichmatrix, matrix, num_matrices, tour_technique, isIndex, notes, loop_index) %}
 <div class="matrix-container p-3">
     {% if num_matrices >1 %}
         <h3 class="text-center matrix-title">{{matrix.name}}</h3>
+        {% if notes[loop_index-1] %}
+            {{ notes_macro.notes_section(notes[loop_index-1], loop_index) }}
+        {% endif %}
     {% endif %}
     <div class="scroll-indicator-group">
         <div class="scroll-indicator left">

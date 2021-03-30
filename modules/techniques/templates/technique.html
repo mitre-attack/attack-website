@@ -4,6 +4,7 @@
 {% import 'macros/deprecated.html' as deprecated %}
 {% import 'macros/clean_output.html' as clean_output %}
 {% import 'macros/citations.html' as citations %}
+{% import 'macros/notes.html' as notes %}
 {% if parsed.parent_name %}
     {% set title = parsed.parent_name + ": " -%}
 {% else %}
@@ -106,7 +107,7 @@
                                                                     <td>
                                                                         <a href="{{subtechnique.path}}" class="subtechnique-table-item" data-subtechnique_id="{{subtechnique.id}}"> {{subtechnique.id}} </a>
                                                                     </td>
-                                                                    <td> 
+                                                                    <td>
                                                                         <a href="{{subtechnique.path}}" class="subtechnique-table-item" data-subtechnique_id="{{subtechnique.id}}"> {{subtechnique.name}} </a>
                                                                     </td>
                                                                 {% else %}
@@ -131,6 +132,9 @@
                                     <div class="description-body">
                                         {{clean_output.stixToHTML(parsed.descr, parsed.citations)}}
                                     </div>
+                                {% endif %}
+                                {% if parsed.notes %}
+                                    {{ notes.notes_section(parsed.notes) }}
                                 {% endif %}
                             </div>
                             <div class="col-md-4">

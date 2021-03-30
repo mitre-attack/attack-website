@@ -52,6 +52,8 @@ def generate_markdown_files():
     if has_software:
         data['software_list_len'] = str(len(software_list))
 
+        notes = util.relationshipgetters.get_objects_using_notes()
+
         side_menu_data = util.buildhelpers.get_side_menu_data("software", "/software/", software_list)
         data['side_menu_data'] = side_menu_data
 
@@ -67,11 +69,11 @@ def generate_markdown_files():
 
         # Create the markdown for the enterprise groups in the stix
         for software in software_list:
-            generate_software_md(software, side_menu_data, side_menu_mobile_view_data)
+            generate_software_md(software, side_menu_data, side_menu_mobile_view_data, notes)
     
     return has_software
     
-def generate_software_md(software,side_menu_data,side_menu_mobile_view_data):
+def generate_software_md(software,side_menu_data,side_menu_mobile_view_data, notes):
     """Responsible for generating given software markdown"""
 
     attack_id = util.buildhelpers.get_attack_id(software)
@@ -85,6 +87,7 @@ def generate_software_md(software,side_menu_data,side_menu_mobile_view_data):
 
         data['side_menu_data'] = side_menu_data
         data['side_menu_mobile_view_data'] = side_menu_mobile_view_data
+        data['notes'] = notes.get(software['id'])
 
         dates = util.buildhelpers.get_created_and_modified_dates(software)
         

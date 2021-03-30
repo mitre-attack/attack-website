@@ -9,6 +9,7 @@
 {% import 'macros/versioning.html' as versioning %}
 {% import 'macros/clean_output.html' as clean_output %}
 {% import 'macros/citations.html' as citations %}
+{% import 'macros/notes.html' as notes %}
 
 {% block head %}
     {{ super () }}
@@ -44,14 +45,19 @@
                         {{parsed.name}}
                     </h1>
                     <div class="row">
-                        {% if parsed.descr %}
-                            <div class="col-md-8 description-body">
-                                {% if parsed.deprecated %}
-                                <font color="red">****Deprecation Warning****</font>
-                                {% endif %}
-                                {{clean_output.stixToHTML(parsed.descr, parsed.citations)}}
-                            </div>
-                        {% endif %}
+                        <div class="col-md-8">
+                            {% if parsed.descr %}
+                                <div class="description-body">
+                                    {% if parsed.deprecated %}
+                                    <font color="red">****Deprecation Warning****</font>
+                                    {% endif %}
+                                    {{clean_output.stixToHTML(parsed.descr, parsed.citations)}}
+                                </div>
+                            {% endif %}
+                            {% if parsed.notes %}
+                                {{ notes.notes_section(parsed.notes) }}
+                            {% endif %}
+                        </div>
                         <div class="col-md-4">
                             <div class="card">
                                 <div class="card-body">

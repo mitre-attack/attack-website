@@ -39,6 +39,8 @@ def generate_techniques():
 
     ms = util.relationshipgetters.get_ms()
 
+    notes = util.relationshipgetters.get_objects_using_notes()
+
     for domain in site_config.domains:
         #Reads the STIX and creates a list of the ATT&CK Techniques
         techniques_no_sub[domain] = util.buildhelpers.filter_out_subtechniques(util.stixhelpers.get_techniques(ms[domain]))
@@ -51,18 +53,18 @@ def generate_techniques():
     side_nav_data = get_technique_side_nav_data(techniques_no_sub, tactics)
 
     for domain in site_config.domains:
-        check_if_generated = generate_domain_markdown(domain, techniques_no_sub, tactics, side_nav_data)
+        check_if_generated = generate_domain_markdown(domain, techniques_no_sub, tactics, side_nav_data, notes)
         if not technique_generated:
             if check_if_generated:
                 technique_generated = True
     
     for deprecated_domain in site_config.deprecated_domains:
-        generate_domain_markdown(deprecated_domain, techniques_no_sub, tactics, side_nav_data, deprecated=True)
+        generate_domain_markdown(deprecated_domain, techniques_no_sub, tactics, side_nav_data, notes, deprecated=True)
 
     if not technique_generated:
         util.buildhelpers.remove_module_from_menu(techniques_config.module_name)   
 
-def generate_domain_markdown(domain, techniques_no_sub, tactics, side_nav_data, deprecated=None):
+def generate_domain_markdown(domain, techniques_no_sub, tactics, side_nav_data, notes, deprecated=None):
     """Generate technique index markdown for each domain and generates 
        shared data for techniques
     """
@@ -96,13 +98,13 @@ def generate_domain_markdown(domain, techniques_no_sub, tactics, side_nav_data, 
         # Create the markdown for techniques in the STIX
         for technique in techniques_no_sub[domain]:
             if 'revoked' not in technique or technique['revoked'] is False:
-                generate_technique_md(technique, domain, side_nav_data, tactics[domain])
+                generate_technique_md(technique, domain, side_nav_data, tactics[domain], notes)
         
         return True
     
     return False
 
-def generate_technique_md(technique, domain, side_nav_data, tactic_list):
+def generate_technique_md(technique, domain, side_nav_data, tactic_list, notes):
     """Generetes markdown data for given technique"""
 
     attack_id = util.buildhelpers.get_attack_id(technique)
@@ -118,6 +120,7 @@ def generate_technique_md(technique, domain, side_nav_data, tactic_list):
         technique_dict['domain'] = domain.split("-")[0]
         technique_dict['menu'] = side_nav_data
         technique_dict['name'] = technique.get('name')
+        technique_dict['notes'] = notes.get(technique['id'])
 
         # Get subtechniques
         technique_dict['subtechniques'] = get_subtechniques(technique)

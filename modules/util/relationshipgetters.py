@@ -17,6 +17,7 @@ malware_using_technique = {}
 groups_using_technique = {}
 subtechniques_of = {}
 parent_technique_of = {}
+objects_using_notes = {}
 ms = {}
 resources = {}
 relationships = []
@@ -162,6 +163,15 @@ def get_parent_technique_of():
         parent_technique_of = rsh.parent_technique_of(site_config.srcs)
     
     return parent_technique_of
+
+def get_objects_using_notes():
+    """ get objects using notes """
+    global objects_using_notes
+
+    if not objects_using_notes:
+        objects_using_notes = rsh.get_objects_using_notes(site_config.srcs)
+
+    return objects_using_notes
 
 def get_ms():
     """ memory share getter """
