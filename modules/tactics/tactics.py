@@ -39,23 +39,17 @@ def generate_tactics():
 
     for domain in site_config.domains:
         #Reads the STIX and creates a list of the ATT&CK Techniques
-        techniques_no_sub[domain] = util.buildhelpers.filter_out_subtechniques(util.stixhelpers.get_techniques(ms[domain]))
-        tactics[domain] = util.stixhelpers.get_tactic_list(ms[domain])
-
-    for deprecated_domain in site_config.deprecated_domains:
-        techniques_no_sub[deprecated_domain] = util.buildhelpers.filter_out_subtechniques(util.stixhelpers.get_techniques(ms[deprecated_domain]))
-        tactics[deprecated_domain] = util.stixhelpers.get_tactic_list(ms[deprecated_domain])
+        techniques_no_sub[domain['name']] = util.buildhelpers.filter_out_subtechniques(util.stixhelpers.get_techniques(ms[domain['name']]))
+        tactics[domain['name']] = util.stixhelpers.get_tactic_list(ms[domain['name']])
 
     side_nav_data = util.buildhelpers.get_side_nav_domains_data("tactics", tactics)
 
     for domain in site_config.domains:
-        check_if_generated = generate_domain_markdown(domain, techniques_no_sub, tactics, side_nav_data, notes)
+        deprecated = True if domain['deprecated'] else False
+        check_if_generated = generate_domain_markdown(domain['name'], techniques_no_sub, tactics, side_nav_data, notes, deprecated)
         if not tactic_generated:
             if check_if_generated:
                 tactic_generated = True
-
-    for deprecated_domain in site_config.deprecated_domains:
-        generate_domain_markdown(deprecated_domain, techniques_no_sub, tactics, side_nav_data, notes, deprecated=True)
 
     if not tactic_generated:
         util.buildhelpers.remove_module_from_menu(tactics_config.module_name)  

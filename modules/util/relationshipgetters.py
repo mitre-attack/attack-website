@@ -19,6 +19,7 @@ subtechniques_of = {}
 parent_technique_of = {}
 objects_using_notes = {}
 ms = {}
+srcs = []
 resources = {}
 relationships = []
 group_list = []
@@ -34,7 +35,7 @@ def get_malware_used_by_groups():
     global malware_used_by_groups
 
     if not malware_used_by_groups:
-        malware_used_by_groups = rsh.malware_used_by_groups(site_config.srcs)
+        malware_used_by_groups = rsh.malware_used_by_groups(get_srcs())
 
     return malware_used_by_groups
 
@@ -43,7 +44,7 @@ def get_tools_used_by_groups():
     global tools_used_by_groups
 
     if not tools_used_by_groups:
-        tools_used_by_groups = rsh.tools_used_by_groups(site_config.srcs)
+        tools_used_by_groups = rsh.tools_used_by_groups(get_srcs())
     
     return tools_used_by_groups
 
@@ -52,7 +53,7 @@ def get_techniques_used_by_malware():
     global techniques_used_by_malware
     
     if not techniques_used_by_malware:
-        techniques_used_by_malware = rsh.techniques_used_by_malware(site_config.srcs)
+        techniques_used_by_malware = rsh.techniques_used_by_malware(get_srcs())
     
     return techniques_used_by_malware
 
@@ -61,7 +62,7 @@ def get_techniques_used_by_tools():
     global techniques_used_by_tools
 
     if not techniques_used_by_tools:
-        techniques_used_by_tools = rsh.techniques_used_by_tools(site_config.srcs)
+        techniques_used_by_tools = rsh.techniques_used_by_tools(get_srcs())
     
     return techniques_used_by_tools
 
@@ -70,7 +71,7 @@ def get_techniques_used_by_groups():
     global techniques_used_by_groups
 
     if not techniques_used_by_groups:
-        techniques_used_by_groups = rsh.techniques_used_by_groups(site_config.srcs)
+        techniques_used_by_groups = rsh.techniques_used_by_groups(get_srcs())
 
     return techniques_used_by_groups
 
@@ -79,7 +80,7 @@ def get_groups_using_tool():
     global groups_using_tool
 
     if not groups_using_tool:
-        groups_using_tool = rsh.groups_using_tool(site_config.srcs)
+        groups_using_tool = rsh.groups_using_tool(get_srcs())
 
     return groups_using_tool
 
@@ -88,7 +89,7 @@ def get_groups_using_malware():
     global groups_using_malware
 
     if not groups_using_malware:
-        groups_using_malware = rsh.groups_using_malware(site_config.srcs)
+        groups_using_malware = rsh.groups_using_malware(get_srcs())
     
     return groups_using_malware
         
@@ -97,7 +98,7 @@ def get_mitigation_mitigates_techniques():
     global mitigation_mitigates_techniques
 
     if not mitigation_mitigates_techniques:
-        mitigation_mitigates_techniques = rsh.mitigation_mitigates_techniques(site_config.srcs)
+        mitigation_mitigates_techniques = rsh.mitigation_mitigates_techniques(get_srcs())
 
     return mitigation_mitigates_techniques
 
@@ -106,7 +107,7 @@ def get_technique_mitigated_by_mitigation():
     global technique_mitigated_by_mitigation
 
     if not technique_mitigated_by_mitigation:
-        technique_mitigated_by_mitigation = rsh.technique_mitigated_by_mitigation(site_config.srcs)
+        technique_mitigated_by_mitigation = rsh.technique_mitigated_by_mitigation(get_srcs())
 
     return technique_mitigated_by_mitigation
 
@@ -115,7 +116,7 @@ def get_technique_related_to_technique():
     global technique_related_to_technique
 
     if not technique_related_to_technique:
-        technique_related_to_technique = rsh.technique_related_to_technique(site_config.srcs)
+        technique_related_to_technique = rsh.technique_related_to_technique(get_srcs())
 
     return technique_related_to_technique
 
@@ -124,7 +125,7 @@ def get_tools_using_technique():
     global tools_using_technique
 
     if not tools_using_technique:
-        tools_using_technique = rsh.tools_using_technique(site_config.srcs)
+        tools_using_technique = rsh.tools_using_technique(get_srcs())
     
     return tools_using_technique
 
@@ -133,7 +134,7 @@ def get_malware_using_technique():
     global malware_using_technique
 
     if not malware_using_technique:
-        malware_using_technique = rsh.malware_using_technique(site_config.srcs)
+        malware_using_technique = rsh.malware_using_technique(get_srcs())
     
     return malware_using_technique
 
@@ -142,7 +143,7 @@ def get_groups_using_technique():
     global groups_using_technique
 
     if not groups_using_technique:
-        groups_using_technique = rsh.groups_using_technique(site_config.srcs)
+        groups_using_technique = rsh.groups_using_technique(get_srcs())
     
     return groups_using_technique
 
@@ -151,7 +152,7 @@ def get_subtechniques_of():
     global subtechniques_of
 
     if not subtechniques_of:
-        subtechniques_of = rsh.subtechniques_of(site_config.srcs)
+        subtechniques_of = rsh.subtechniques_of(get_srcs())
     
     return subtechniques_of
 
@@ -160,7 +161,7 @@ def get_parent_technique_of():
     global parent_technique_of
 
     if not parent_technique_of:
-        parent_technique_of = rsh.parent_technique_of(site_config.srcs)
+        parent_technique_of = rsh.parent_technique_of(get_srcs())
     
     return parent_technique_of
 
@@ -169,18 +170,31 @@ def get_objects_using_notes():
     global objects_using_notes
 
     if not objects_using_notes:
-        objects_using_notes = rsh.get_objects_using_notes(site_config.srcs)
+        objects_using_notes = rsh.get_objects_using_notes(get_srcs())
 
     return objects_using_notes
 
 def get_ms():
-    """ memory share getter """
+    """ memory shares getter """
     global ms
+    global srcs
 
     if not ms:
-        ms = stixhelpers.get_stix_memory_stores() 
+        # Update both of them if one was not already declared
+        ms, srcs = stixhelpers.get_stix_memory_stores() 
     
     return ms
+
+def get_srcs():
+    """ memory shares without domain getter """
+    global ms
+    global srcs
+
+    if not srcs:
+        # Update both of them if one was not already declared
+        ms, srcs = stixhelpers.get_stix_memory_stores() 
+    
+    return srcs
 
 def get_resources():
     """ resources getter """

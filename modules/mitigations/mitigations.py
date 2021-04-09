@@ -34,8 +34,9 @@ def generate_mitigations():
     ms = util.relationshipgetters.get_ms()
 
     for domain in site_config.domains:
+        if domain['deprecated']: continue
         #Reads the STIX and creates a list of the ATT&CK mitigations
-        mitigations[domain] = util.stixhelpers.get_mitigation_list(ms[domain])
+        mitigations[domain['name']] = util.stixhelpers.get_mitigation_list(ms[domain['name']])
 
     # Amount of characters per category
     group_by = 3
@@ -45,7 +46,8 @@ def generate_mitigations():
     side_nav_mobile_data = util.buildhelpers.get_side_nav_domains_mobile_view_data("mitigations", mitigations, group_by)
 
     for domain in site_config.domains:
-        check_if_generated = generate_markdown_files(domain, mitigations[domain], side_nav_data, side_nav_mobile_data, notes)
+        if domain['deprecated']: continue
+        check_if_generated = generate_markdown_files(domain['name'], mitigations[domain['name']], side_nav_data, side_nav_mobile_data, notes)
         if not mitigation_generated:
             if check_if_generated:
                 mitigation_generated = True

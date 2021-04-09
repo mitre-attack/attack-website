@@ -43,24 +43,18 @@ def generate_techniques():
 
     for domain in site_config.domains:
         #Reads the STIX and creates a list of the ATT&CK Techniques
-        techniques_no_sub[domain] = util.buildhelpers.filter_out_subtechniques(util.stixhelpers.get_techniques(ms[domain]))
-        tactics[domain] = util.stixhelpers.get_tactic_list(ms[domain])
-
-    for deprecated_domain in site_config.deprecated_domains:
-        techniques_no_sub[deprecated_domain] = util.buildhelpers.filter_out_subtechniques(util.stixhelpers.get_techniques(ms[deprecated_domain]))
-        tactics[deprecated_domain] = util.stixhelpers.get_tactic_list(ms[deprecated_domain])
+        techniques_no_sub[domain['name']] = util.buildhelpers.filter_out_subtechniques(util.stixhelpers.get_techniques(ms[domain['name']]))
+        tactics[domain['name']] = util.stixhelpers.get_tactic_list(ms[domain['name']])
 
     side_nav_data = get_technique_side_nav_data(techniques_no_sub, tactics)
 
     for domain in site_config.domains:
-        check_if_generated = generate_domain_markdown(domain, techniques_no_sub, tactics, side_nav_data, notes)
+        deprecated = True if domain['deprecated'] else False
+        check_if_generated = generate_domain_markdown(domain['name'], techniques_no_sub, tactics, side_nav_data, notes, deprecated)
         if not technique_generated:
             if check_if_generated:
                 technique_generated = True
     
-    for deprecated_domain in site_config.deprecated_domains:
-        generate_domain_markdown(deprecated_domain, techniques_no_sub, tactics, side_nav_data, notes, deprecated=True)
-
     if not technique_generated:
         util.buildhelpers.remove_module_from_menu(techniques_config.module_name)   
 
@@ -451,20 +445,18 @@ def get_technique_side_nav_data(techniques, tactics):
     subtechniques_of = util.relationshipgetters.get_subtechniques_of()
 
     for domain in site_config.domains:
-
-        # Get alias for domain
-        domain_alias = util.buildhelpers.get_domain_alias(domain.split("-")[0])
+        if domain['deprecated']: continue
 
         domain_data = {
-            "name": domain_alias,
-            "id": domain.split("-")[0],
-            "path": "/techniques/{}/".format(domain.split("-")[0]), # root level doesn't get a path
+            "name": domain['alias'],
+            "id": domain['name'].split("-")[0],
+            "path": "/techniques/{}/".format(domain['name'].split("-")[0]), # root level doesn't get a path
             "children": []
         }
 
-        technique_list = get_techniques_list(techniques[domain])
+        technique_list = get_techniques_list(techniques[domain['name']])
 
-        for tactic in tactics[domain]:
+        for tactic in tactics[domain['name']]:
             tactic_row = {}
             
             tactic_row['name'] = tactic['name']

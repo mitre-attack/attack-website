@@ -17,18 +17,25 @@ if attack_version.startswith("v"):
     attack_version = attack_version[1:]
 
 # Domains for stix objects
-domains = ["enterprise-attack", "mobile-attack"]
-
-# Deprecated domains
-deprecated_domains = ["pre-attack"]
-
-# Bundle names
-bundles = ["pre-attack", "enterprise-attack", "mobile-attack"]
-
-# Domain aliases
-domain_aliases = [
-    ["Enterprise", "enterprise"], 
-    ["Mobile", "mobile"] 
+domains = [
+    {
+        "name" : "enterprise-attack",
+        "location" : "https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json",
+        "alias" : "Enterprise",
+        "deprecated" : False
+    },
+    {
+        "name" : "mobile-attack",
+        "location" : "https://raw.githubusercontent.com/mitre/cti/master/mobile-attack/mobile-attack.json",
+        "alias" : "Mobile",
+        "deprecated" : False
+    },
+    {
+        "name" : "pre-attack",
+        "location" : "https://raw.githubusercontent.com/mitre/cti/master/pre-attack/pre-attack.json",
+        "alias": "PRE-ATT&CK",
+        "deprecated" : True
+    }
 ]
 
 # Args for modules to use if needed
@@ -97,14 +104,6 @@ static_style_dir = os.path.join("attack-theme", "static", "style/")
 
 # directory for data used in site builds
 data_directory = "data"
-# directory for STIX data
-stix_directory = data_directory + "/stix"
-# STIX bundles for each domain
-attack_path = {
-    'pre-attack': stix_directory + "/pre-attack.json",
-    'enterprise-attack': stix_directory + "/enterprise-attack.json",
-    'mobile-attack': stix_directory + "/mobile-attack.json",
-}
 
 # Link to instance of the ATT&CK Navigator; change for to a custom location
 navigator_link = "https://mitre-attack.github.io/attack-navigator/"
@@ -130,30 +129,26 @@ redirect_md = Template("Title: ${title}\n"
                        "RedirectLink: ${to}\n"
                        "save_as: ${from}/index.html")
 
-stix_array = []
-
 # Custom_alphabet used to sort list of dictionaries by domain name 
 # depending on domain ordering
 custom_alphabet = ""
 rest_of_alphabet = ""
 
 for domain in domains:
-    # Remove whatever comes after the -
-    short_domain = domain.split('-')[0]
+    if not domain['deprecated']:
+        # Remove whatever comes after the -
+        if '-' in domain['name']:
+            short_domain = domain['name'].split('-')[0]
+        else:
+            short_domain = domain['name']
 
-    # Get first character of domain
-    custom_alphabet += short_domain.lower()[:1]
+        # Get first character of domain
+        custom_alphabet += short_domain.lower()[:1]
 
-    # Add rest of characters, doesn't matter if it is repeated
-    rest_of_alphabet += short_domain.lower()[1:]
-
-    # Append domain to stix
-    stix_array.append(attack_path[domain])
+        # Add rest of characters, doesn't matter if it is repeated
+        rest_of_alphabet += short_domain.lower()[1:]
 
 custom_alphabet += rest_of_alphabet
-
-# Source list of domains
-srcs = list(map(lambda url: util.relationshiphelpers.load(url), stix_array))
 
 # Constants used for generated layers
 # ----------------------------------------------------------------------------

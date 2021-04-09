@@ -207,18 +207,17 @@ def get_side_nav_domains_data(side_nav_title, elements_list):
     elements_data = []
 
     for domain in site_config.domains:
-        if elements_list[domain]:
-            # Get alias for domain
-            domain_alias = get_domain_alias(domain.split("-")[0])
+        if domain['deprecated']: continue
+        if elements_list[domain['name']]:
 
             domain_data = {
-                "name": domain_alias,
-                "id": domain.split("-")[0],
-                "path": "/{}/{}/".format(side_nav_title, domain.split("-")[0]),
+                "name": domain['alias'],
+                "id": domain['name'].split("-")[0],
+                "path": "/{}/{}/".format(side_nav_title, domain['name'].split("-")[0]),
                 "children": []
             }
 
-            for element in elements_list[domain]:
+            for element in elements_list[domain['name']]:
                 attack_id = get_attack_id(element)
                 if attack_id:
                     domain_data['children'].append(get_element_data(element))
@@ -297,22 +296,19 @@ def get_side_nav_domains_mobile_view_data(side_nav_title, elements_list, amount_
     elements_data = []
 
     for domain in site_config.domains:
-
-        if elements_list[domain]:
+        if domain['deprecated']: continue
+        if elements_list[domain['name']]:
 
             caterogy_list = get_category_list()
 
-            # Get alias for domain
-            domain_alias = get_domain_alias(domain.split("-")[0])
-
             domain_data = {
-                "name": domain_alias,
-                "id": domain_alias,
-                "path": "/{}/{}/".format(side_nav_title, domain.split("-")[0]),
+                "name": domain['alias'],
+                "id": domain['alias'],
+                "path": "/{}/{}/".format(side_nav_title, domain['name'].split("-")[0]),
                 "children": []
             }
 
-            for element in elements_list[domain]:
+            for element in elements_list[domain['name']]:
                 attack_id = get_attack_id(element)
                 if attack_id:
                         
@@ -581,17 +577,6 @@ def find_in_reference_list(reference_list, source_name):
         return True
 
     return False
-
-def get_domain_alias(domain):
-    """ Given a domain name, return its alias.
-        If not found return the same domain
-    """
-
-    for domain_pair in site_config.domain_aliases:
-        if domain_pair[1] == domain:
-            return domain_pair[0]
-    
-    return domain
 
 def replace_html_chars(to_be_replaced):
     return to_be_replaced.replace("\n", "")\
