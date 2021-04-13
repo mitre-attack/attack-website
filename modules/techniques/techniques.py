@@ -147,14 +147,15 @@ def generate_technique_md(technique, domain, side_nav_data, tactic_list, notes):
 
                 sub_tech_dict = generate_data_for_md(sub_tech_dict, subtechnique['object'], tactic_list, True)
 
-                subs = techniques_config.sub_technique_md.substitute(sub_tech_dict)
-                path = sub_tech_dict['parent_id'] + "-" + sub_tech_dict['sub_number']
+                if sub_tech_dict.get('sub_number'):
+                    subs = techniques_config.sub_technique_md.substitute(sub_tech_dict)
+                    path = sub_tech_dict['parent_id'] + "-" + sub_tech_dict['sub_number']
 
-                subs = subs + json.dumps(sub_tech_dict)
+                    subs = subs + json.dumps(sub_tech_dict)
 
-                #Write out the technique markdown file
-                with open(os.path.join(techniques_config.techniques_markdown_path, path + ".md"), "w", encoding='utf8') as md_file:
-                    md_file.write(subs)
+                    #Write out the technique markdown file
+                    with open(os.path.join(techniques_config.techniques_markdown_path, path + ".md"), "w", encoding='utf8') as md_file:
+                        md_file.write(subs)
         
 
 def generate_data_for_md(technique_dict, technique, tactic_list, is_sub_technique = False):
@@ -166,7 +167,8 @@ def generate_data_for_md(technique_dict, technique, tactic_list, is_sub_techniqu
 
     if is_sub_technique:
         technique_dict['attack_id'] = util.buildhelpers.get_attack_id(technique)
-        technique_dict['sub_number'] = technique_dict['attack_id'].split(".")[1]
+        if technique_dict['attack_id']:
+            technique_dict['sub_number'] = technique_dict['attack_id'].split(".")[1]
         technique_dict['is_subtechnique'] = True
 
     if technique_dict['attack_id']:
@@ -323,7 +325,7 @@ def generate_data_for_md(technique_dict, technique, tactic_list, is_sub_techniqu
             if technique_dict['deprecated']:
                 technique_dict['descr'] = technique.get('description')
 
-        return technique_dict
+    return technique_dict
 
 def get_related_techniques_data(technique, tactic_list):
     """Given a technique and a tactic list, return data of related techniques.
@@ -478,12 +480,13 @@ def get_technique_side_nav_data(techniques, tactics):
                     subtechniques = subtechniques_of[technique["stix_id"]]
                     for subtechnique in subtechniques:
                         child = {}
-                        child['name'] = subtechnique['object']['name']
                         child['id'] = util.buildhelpers.get_attack_id(subtechnique['object'])
-                        sub_number = child["id"].split(".")[1]
-                        child['path'] = "/techniques/{}/{}/".format(technique['id'], sub_number)
-                        child['children'] = []
-                        technique_row['children'].append(child)
+                        if child['id']:
+                            child['name'] = subtechnique['object']['name']
+                            sub_number = child["id"].split(".")[1]
+                            child['path'] = "/techniques/{}/{}/".format(technique['id'], sub_number)
+                            child['children'] = []
+                            technique_row['children'].append(child)
 
                 # Add technique data to tactic
                 tactic_row['children'].append(technique_row)
@@ -542,12 +545,13 @@ def get_subtechniques(technique):
         subtechniques = subtechniques_of[technique["id"]]
         for subtechnique in subtechniques:
             sub_data = {}
-            sub_data['stix_id'] = technique['id']
-            sub_data['name'] = subtechnique['object']['name']
             sub_data['id'] = util.buildhelpers.get_attack_id(subtechnique['object'])
-            sub_number = sub_data["id"].split(".")[1]
-            attack_id = util.buildhelpers.get_attack_id(technique)
-            sub_data['path'] = "/techniques/{}/{}/".format(attack_id, sub_number)
-            subtechs.append(sub_data)
+            if sub_data['id']:
+                sub_data['stix_id'] = technique['id']
+                sub_data['name'] = subtechnique['object']['name']
+                sub_number = sub_data["id"].split(".")[1]
+                attack_id = util.buildhelpers.get_attack_id(technique)
+                sub_data['path'] = "/techniques/{}/{}/".format(attack_id, sub_number)
+                subtechs.append(sub_data)
     
     return sorted(subtechs, key=lambda k: k['id'])

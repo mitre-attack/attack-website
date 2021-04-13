@@ -153,7 +153,8 @@ def generate_software_md(software,side_menu_data,side_menu_mobile_view_data, not
             })
         
         # Get aliases descriptions
-        data['alias_descriptions'] = util.buildhelpers.get_alias_data(software.get("x_mitre_aliases")[1:], ext_ref)
+        if software.get("x_mitre_aliases"):
+            data['alias_descriptions'] = util.buildhelpers.get_alias_data(software['x_mitre_aliases'][1:], ext_ref)
 
         # Get group data of groups that use software
         data['groups'] = get_groups_using_software(software, reference_list)

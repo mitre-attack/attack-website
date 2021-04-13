@@ -145,32 +145,41 @@ def get_sub_matrices(matrix):
     def transform_technique(technique, tactic_id):
         """transform a technique object into the format required by the matrix macro"""
 
-        obj = {
-            "id": technique["id"],
-            "name": technique["name"],
-            "url": technique["external_references"][0]["url"].split("attack.mitre.org")[1],
-            "x_mitre_platforms": technique.get("x_mitre_platforms"),
-            "external_id": technique["external_references"][0]["external_id"]
-        }
+        attack_id = util.buildhelpers.get_attack_id(technique)
+        
+        obj = {}
 
-        subtechniques_of = util.relationshipgetters.get_subtechniques_of()
+        if attack_id:
+            obj['id'] = technique["id"]
+            obj['name'] = technique["name"]
+            obj['external_id'] = attack_id
 
-        if technique["id"] in subtechniques_of:
-            subtechniques = subtechniques_of[technique["id"]]
-            obj["subtechniques"] = list(map(lambda st: transform_technique(st["object"], tactic_id), subtechniques))
-            # Filter subtechniques by platform
-            obj["subtechniques"] = util.buildhelpers.filter_techniques_by_platform(obj["subtechniques"], matrix['platforms'])
-            # remove deprecated and revoked
-            obj["subtechniques"] = util.buildhelpers.filter_deprecated_revoked(obj["subtechniques"])
+            url = technique['external_references'][0].get('url')
+            if isinstance(url, str) and url.startswith("attack.mitre.org"):
+                url = url.split("attack.mitre.org")[1]
+            obj['url'] = url
+            obj['x_mitre_platforms'] = technique.get('x_mitre_platforms')
 
-            nonlocal has_subtechniques
-            has_subtechniques = True
-            nonlocal tour_technique
-            if tour_technique["subtechnique_count"] < 4 and tour_technique["subtechnique_count"]  < len(obj["subtechniques"]):
-                # use this for the tour
-                tour_technique["technique"] = technique["id"]
-                tour_technique["tactic"] = tactic_id
-                tour_technique["subtechnique_count"] = len(obj["subtechniques"])
+            subtechniques_of = util.relationshipgetters.get_subtechniques_of()
+
+            if technique["id"] in subtechniques_of:
+                subtechniques = subtechniques_of[technique["id"]]
+                obj["subtechniques"] = list(map(lambda st: transform_technique(st["object"], tactic_id), subtechniques))
+                # Filter out empty subtechniques
+                obj["subtechniques"] = list(filter(lambda st: len(st) > 0, obj["subtechniques"]))
+                # Filter subtechniques by platform
+                obj["subtechniques"] = util.buildhelpers.filter_techniques_by_platform(obj["subtechniques"], matrix['platforms'])
+                # remove deprecated and revoked
+                obj["subtechniques"] = util.buildhelpers.filter_deprecated_revoked(obj["subtechniques"])
+
+                nonlocal has_subtechniques
+                has_subtechniques = True
+                nonlocal tour_technique
+                if tour_technique["subtechnique_count"] < 4 and tour_technique["subtechnique_count"]  < len(obj["subtechniques"]):
+                    # use this for the tour
+                    tour_technique["technique"] = technique["id"]
+                    tour_technique["tactic"] = tactic_id
+                    tour_technique["subtechnique_count"] = len(obj["subtechniques"])
 
         return obj
 
@@ -187,13 +196,25 @@ def get_sub_matrices(matrix):
     def transform_tactic(tactic_id):
         """transform a tactic object into the format required by the matrix macro"""
         tactic_obj = list(filter(lambda t: t["id"] == tactic_id, all_tactics))[0]
-        return {
-            "id": tactic_id,
-            "name": tactic_obj["name"],
-            "url": tactic_obj["external_references"][0]["url"].split("attack.mitre.org")[1],
-            "external_id": tactic_obj["external_references"][0]["external_id"],
-            "techniques": techniques_in_tactic(tactic_id),
+
+        attack_id = util.buildhelpers.get_attack_id(tactic_obj)
+        
+        obj = {
+            'techniques': []
         }
+
+        if attack_id:
+            obj['id'] = tactic_id
+            obj['name'] = tactic_obj["name"]
+            obj['external_id'] = attack_id
+
+            url = tactic_obj['external_references'][0].get('url')
+            if isinstance(url, str) and url.startswith("attack.mitre.org"):
+                url = url.split("attack.mitre.org")[1]
+            obj['url'] = url
+            obj['techniques'] = techniques_in_tactic(tactic_id)
+        
+        return obj
 
     data = []
     sub_matrices = util.stixhelpers.get_matrices(domain_ms)

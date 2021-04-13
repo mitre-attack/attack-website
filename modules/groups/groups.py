@@ -151,7 +151,8 @@ def generate_group_md(group, side_menu_data, side_menu_mobile_view_data, notes):
         # Grab software data for Software table
         data['software_data'], data['add_software_ref'] = get_software_table_data(group, reference_list)
 
-        data['alias_descriptions'] = util.buildhelpers.get_alias_data(group.get("aliases")[1:], ext_ref)
+        if group.get('aliases'):
+            data['alias_descriptions'] = util.buildhelpers.get_alias_data(group['aliases'][1:], ext_ref)
 
         data['citations'] = reference_list
                 

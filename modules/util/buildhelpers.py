@@ -172,11 +172,12 @@ def get_technique_table_data(tactic, techniques_list):
                     sub_data = {}
                     sub_data['name'] = subtechnique['object']['name']
                     sub_attack_id = get_attack_id(subtechnique['object'])
-                    if not "." in sub_attack_id:
-                        raise Exception(f"{attack_id} subtechnique's attackID '{sub_attack_id}' is malformed")
-                    sub_data['id'] = sub_attack_id.split(".")[1]
-                    sub_data['descr'] = subtechnique['object']['description']
-                    row['subtechniques'].append(sub_data)
+                    if sub_attack_id:
+                        if not "." in sub_attack_id:
+                            raise Exception(f"{attack_id} subtechnique's attackID '{sub_attack_id}' is malformed")
+                        sub_data['id'] = sub_attack_id.split(".")[1]
+                        sub_data['descr'] = subtechnique['object']['description']
+                        row['subtechniques'].append(sub_data)
 
             technique_table.append(row)
     
