@@ -4,6 +4,7 @@
 {% import 'macros/versioning.html' as versioning %}
 {% import 'macros/clean_output.html' as clean_output %}
 {% import 'macros/deprecated.html' as deprecated %}
+{% import 'macros/notes.html' as notes %}
 
 {% set parsed = page.data | from_json %}
 {% if parsed.domain == "mobile" %}
@@ -63,8 +64,13 @@
                         {% endif %}
                     {% else %}
                         <div class="row">
-                            <div class="col-md-8 description-body">
-                                {{clean_output.stixToHTML(parsed.descr)}}
+                            <div class="col-md-8">
+                                <div class="description-body">
+                                    {{clean_output.stixToHTML(parsed.descr)}}
+                                </div>
+                                {% if parsed.notes %}
+                                    {{ notes.notes_section(parsed.notes) }}
+                                {% endif %}
                             </div>
                             <div class="col-md-4">
                                 <div class="card">
