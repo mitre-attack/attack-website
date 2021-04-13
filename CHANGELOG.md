@@ -26,6 +26,12 @@
 <!--          addition of notable features. When PATCH is 0 it can      -->
 <!--          be omitted                                                -->
 
+# 13 April 2021
+# ATT&CK website version 3.2.0
+### Improvements
+- STIX2.1 support.
+- STIX notes support for object pages.
+
 # 23 March 2021
 ## ATT&CK website version 3.1.1
 ### Improvements 
