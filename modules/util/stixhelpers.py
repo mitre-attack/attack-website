@@ -255,7 +255,7 @@ def get_stix_memory_stores():
                 ms[domain['name']] = stix2.MemoryStore()
                 ms[domain['name']].load_from_file(domain['location'])
             else:
-                raise f"{domain['location']} stix location does not exist"
+                exit(f"\n{domain['location']} local file does not exist. If you intended a URL, please include http:// or https://")
         
         if not domain['deprecated']:
             srcs.append(ms[domain['name']])
