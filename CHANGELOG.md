@@ -26,11 +26,12 @@
 <!--          addition of notable features. When PATCH is 0 it can      -->
 <!--          be omitted                                                -->
 
-# 13 April 2021
+# Changes staged on Develop
 # ATT&CK website version 3.2.0
 ### Improvements
 - STIX2.1 support.
 - STIX notes support for object pages.
+- Improved configuration allowing user to pull data from any HTTP endpoint instead of relying on data stored in the repository. Configuration of data endpoints can be found in `modules/site_config.py`. See issue [#139](https://github.com/mitre-attack/attack-website/issues/139).
 
 # 23 March 2021
 ## ATT&CK website version 3.1.1
