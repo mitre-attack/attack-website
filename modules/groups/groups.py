@@ -53,6 +53,7 @@ def generate_markdown_files():
         # Amount of characters per category
         group_by = 2
 
+        notes = util.relationshipgetters.get_objects_using_notes()
         side_menu_data = util.buildhelpers.get_side_menu_data("Groups", "/groups/", group_list)
         data['side_menu_data'] = side_menu_data
 
@@ -69,11 +70,11 @@ def generate_markdown_files():
 
         #Create the markdown for the enterprise groups in the STIX
         for group in group_list:
-            generate_group_md(group, side_menu_data, side_menu_mobile_view_data)
+            generate_group_md(group, side_menu_data, side_menu_mobile_view_data, notes)
     
     return has_group
 
-def generate_group_md(group, side_menu_data, side_menu_mobile_view_data):
+def generate_group_md(group, side_menu_data, side_menu_mobile_view_data, notes):
     """Responsible for generating markdown of all groups"""
 
     attack_id = util.buildhelpers.get_attack_id(group)
@@ -85,6 +86,7 @@ def generate_group_md(group, side_menu_data, side_menu_mobile_view_data):
 
         data['side_menu_data'] = side_menu_data
         data['side_menu_mobile_view_data'] = side_menu_mobile_view_data
+        data['notes'] = notes.get(group['id'])
 
         # External references
         ext_ref = group["external_references"]
@@ -149,7 +151,8 @@ def generate_group_md(group, side_menu_data, side_menu_mobile_view_data):
         # Grab software data for Software table
         data['software_data'], data['add_software_ref'] = get_software_table_data(group, reference_list)
 
-        data['alias_descriptions'] = util.buildhelpers.get_alias_data(group.get("aliases")[1:], ext_ref)
+        if group.get('aliases'):
+            data['alias_descriptions'] = util.buildhelpers.get_alias_data(group['aliases'][1:], ext_ref)
 
         data['citations'] = reference_list
                 

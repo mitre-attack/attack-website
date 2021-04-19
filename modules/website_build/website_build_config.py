@@ -14,7 +14,7 @@ base_page_data = {
     "BANNER_ENABLED": True,
     "BANNER_MESSAGE": "This is a custom instance of the MITRE ATT&CK Website. The official website can be found at <a href='https://attack.mitre.org'>attack.mitre.org</a>.",
     "CONTENT_VERSION": site_config.attack_version,
-    "WEBSITE_VERSION": "3.0",
+    "WEBSITE_VERSION": "3.1.1",
     "CHANGELOG_LOCATION": "/resources/changelog.html",
     "LOGO_HEADER": "/theme/images/mitre_attack_logo.png",
     "LOGO_FOOTER": "/theme/images/mitrelogowhiteontrans.gif",

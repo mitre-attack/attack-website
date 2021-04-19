@@ -5,6 +5,7 @@
 {% import 'macros/versioning.html' as versioning %}
 {% import 'macros/deprecated.html' as deprecated %}
 {% import 'macros/clean_output.html' as clean_output %}
+{% import 'macros/notes.html' as notes %}
 
 {% if parsed.domain == "mobile" %}
     {% set title = "Matrix - Mobile | MITRE ATT&CK&reg;" -%}
@@ -64,7 +65,7 @@
                         {% if parsed.descr %}
                             {{deprecated.deprecated(clean_output.stixToHTML(parsed.descr, firstParagraphOnly=True))}}
                         {% else %}
-                            {{deprecated.deprecated("This technique has been deprecated.")}}
+                            {{deprecated.deprecated("This matrix has been deprecated.")}}
                         {% endif %}
                     </div>
                 </div>
@@ -80,6 +81,11 @@
                                 The {{matrix_plural}} contains information for the following platforms: {% for platform in parsed.platforms %}{%if loop.index != 1 %}, {% endif %}<a href="/matrices/{{platform.path}}">{{platform.name}}</a>{% endfor %}.
                             {% elif parsed.platforms | length == 1 %}
                                     The {{matrix_plural}} contains information for the {{parsed.platforms[0].name}} platform.
+                            {% endif %}
+                            {% if parsed.matrices | length == 1 %}
+                                {% if parsed.notes[0] %}
+                                    {{ notes.notes_section(parsed.notes[0]) }}
+                                {% endif %}
                             {% endif %}
                         </p>
                     </div>
@@ -113,7 +119,7 @@
         </div>
         {% if not parsed.deprecated %}
             <div class="pb-3">
-                {{matrix_macros.matrices(parsed.matrices, parsed.has_subtechniques, parsed.tour_technique, False)}}
+                {{matrix_macros.matrices(parsed.matrices, parsed.has_subtechniques, parsed.tour_technique, False, parsed.notes)}}
             </div>
         {% endif %}
     </div>

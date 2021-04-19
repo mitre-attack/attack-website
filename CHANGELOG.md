@@ -25,6 +25,53 @@
 <!--    PATCH updates are when a bugfix is made without the             -->
 <!--          addition of notable features. When PATCH is 0 it can      -->
 <!--          be omitted                                                -->
+
+# Changes staged on Develop
+# ATT&CK website version 3.2.0
+### Improvements
+- STIX2.1 support.
+- STIX notes support for object pages.
+- Improved configuration allowing user to pull data from any HTTP endpoint instead of relying on data stored in the repository. Configuration of data endpoints can be found in `modules/site_config.py`. See issue [#139](https://github.com/mitre-attack/attack-website/issues/139).
+
+# 23 March 2021
+## ATT&CK website version 3.1.1
+### Improvements 
+- Updated ATT&CKcon page with ATT&CKcon Power Hour.
+
+# 27 January 2020
+## [ATT&CK Content version 8.2](https://github.com/mitre/cti/releases/tag/ATT%26CK-v8.2)
+ATT&CK version 8.2 contains new reporting for the activity related to the SolarWinds supply chain injection.
+### New Techniques:
+
+* Domain Policy Modification: [Domain Trust Modification](https://attack.mitre.org/techniques/T1484/002)
+* Domain Policy Modification: [Group Policy Modification](https://attack.mitre.org/techniques/T1484/001)
+* [Forge Web Credentials](https://attack.mitre.org/techniques/T1606)
+	* [SAML Tokens](https://attack.mitre.org/techniques/T1606/002)
+	* [Web Cookies](https://attack.mitre.org/techniques/T1606/001)
+
+### Technique changes:
+
+* Account Manipulation: [Additional Cloud Credentials](https://attack.mitre.org/techniques/T1098/001)
+* [Domain Policy Modification](https://attack.mitre.org/techniques/T1484)
+
+### New Software:
+
+* [AdFind](https://attack.mitre.org/software/S0552)
+* [BloodHound](https://attack.mitre.org/software/S0521)
+* [Raindrop](https://attack.mitre.org/software/S0565)
+* [Sunburst](https://attack.mitre.org/software/S0559)
+* [Sunspot](https://attack.mitre.org/software/S0562)
+* [Teardrop](https://attack.mitre.org/software/S0560)
+
+### New Groups:
+
+* [UNC2452](https://attack.mitre.org/groups/G0118)
+
+## ATT&CK website version 3.1
+### Improvements
+- Updated Navigator layers to version 4.1 so that users are no longer warned that they are out of date.
+- Updated introductory video on [getting started](https://attack.mitre.org/resources/getting-started/) page.
+
 # 12 November 2020
 ## [ATT&CK Content version 8.1](https://github.com/mitre/cti/releases/tag/ATT%26CK-v8.1)
 ### Fixes
@@ -135,7 +182,7 @@ See release notes [here](https://attack.mitre.org/resources/updates/updates-july
 - Added horizontal scroll indicators to matrices so that it's easier to tell when there's more to the left or right. See issue [#93](https://github.com/mitre-attack/attack-website/issues/93).
 - The website tour route is now generated dynamically, allowing the site to adapt the tour to custom STIX content. See issue [#110](https://github.com/mitre-attack/attack-website/issues/110).
 - Added Navigator layers to the changelog of the sub-techniques update. See issue [#126](https://github.com/mitre-attack/attack-website/issues/126).
-- Updated [contribute page](/resources/contribute). See issue [#162](https://github.com/mitre-attack/attack-website/issues/162).
+- Updated [contribute page](https://attack.mitre.org/resources/contribute). See issue [#162](https://github.com/mitre-attack/attack-website/issues/162).
 
 ### Fixes
 - Added internet explorer support for the sub-techniques matrix. Improved behavior of sub-techniques matrix in Edge browser. See issue [#114](https://github.com/mitre-attack/attack-website/issues/114).

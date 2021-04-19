@@ -4,6 +4,7 @@
 {% import 'macros/versioning.html' as versioning %}
 {% import 'macros/clean_output.html' as clean_output %}
 {% import 'macros/citations.html' as citations %}
+{% import 'macros/notes.html' as notes %}
 
 {% set parsed = page.data | from_json %}
 {% if parsed.domain == "mobile" %}
@@ -46,42 +47,48 @@
                         {{parsed.name}}
                     </h1>
                     <div class="row">
-                    {% if parsed.descr %}
-                        <div class="col-md-8 description-body">
-                            {% if parsed.deprecated %}
-                            <font color="red">****Deprecation Warning****</font>
+                        <div class="col-md-8">
+                            {% if parsed.descr %}
+                                <div class="description-body">
+                                    {% if parsed.deprecated %}
+                                    <font color="red">****Deprecation Warning****</font>
+                                    {% endif %}
+                                    {{clean_output.stixToHTML(parsed.descr, parsed.citations)}}
+                                </div>
                             {% endif %}
-                            {{clean_output.stixToHTML(parsed.descr, parsed.citations)}}
+                            {% if parsed.notes %}
+                                {{ notes.notes_section(parsed.notes) }}
+                            {% endif %}
                         </div>
-                    {% endif %}
-                    <div class="col-md-4">
-                        <div class="card">
-                            <div class="card-body">
-                                {% if parsed.attack_id %}
-                                    <div class="card-data"><span class="h5 card-title">ID:</span> {{parsed.attack_id}}</div>
-                                {% endif %}
-                                {% if parsed.version %}
-                                    <div class="card-data"><span class="h5 card-title">Version:</span> {{parsed.version}}</div>
-                                {% endif %}
-                                {% if parsed.created %}
-                                    <div class="card-data"><span class="h5 card-title">Created:&nbsp;</span>{{parsed.created}}</div>
-                                {% endif %}
-                                {% if parsed.modified %}
-                                    <div class="card-data"><span class="h5 card-title">Last Modified:&nbsp;</span>{{parsed.modified}}</div>
-                                {% endif %}
+                        <div class="col-md-4">
+                            <div class="card">
+                                <div class="card-body">
+                                    {% if parsed.attack_id %}
+                                        <div class="card-data"><span class="h5 card-title">ID:</span> {{parsed.attack_id}}</div>
+                                    {% endif %}
+                                    {% if parsed.version %}
+                                        <div class="card-data"><span class="h5 card-title">Version:</span> {{parsed.version}}</div>
+                                    {% endif %}
+                                    {% if parsed.created %}
+                                        <div class="card-data"><span class="h5 card-title">Created:&nbsp;</span>{{parsed.created}}</div>
+                                    {% endif %}
+                                    {% if parsed.modified %}
+                                        <div class="card-data"><span class="h5 card-title">Last Modified:&nbsp;</span>{{parsed.modified}}</div>
+                                    {% endif %}
+                                </div>
                             </div>
+                            {% if parsed.versioning_feature %}
+                                {{ versioning.permalink_button(output_file, parsed.attack_id)}}
+                            {% endif %}
                         </div>
-                        {% if parsed.versioning_feature %}
-                            {{ versioning.permalink_button(output_file, parsed.attack_id)}}
-                        {% endif %}
                     </div>
+
+                    {% if parsed.techniques_addressed_data %}
+                        {{techniques_used.techniques_used(parsed.techniques_addressed_data, "Techniques Addressed by Mitigation", parsed.citations)}}
+                    {% endif %}
+
+                    {{ citations.reference_section(parsed.citations) }}
                 </div>
-
-                {% if parsed.techniques_addressed_data %}
-                    {{techniques_used.techniques_used(parsed.techniques_addressed_data, "Techniques Addressed by Mitigation", parsed.citations)}}
-                {% endif %}
-
-                {{ citations.reference_section(parsed.citations) }}
             </div>
         </div>
     </div>

@@ -172,11 +172,12 @@ def get_technique_table_data(tactic, techniques_list):
                     sub_data = {}
                     sub_data['name'] = subtechnique['object']['name']
                     sub_attack_id = get_attack_id(subtechnique['object'])
-                    if not "." in sub_attack_id:
-                        raise Exception(f"{attack_id} subtechnique's attackID '{sub_attack_id}' is malformed")
-                    sub_data['id'] = sub_attack_id.split(".")[1]
-                    sub_data['descr'] = subtechnique['object']['description']
-                    row['subtechniques'].append(sub_data)
+                    if sub_attack_id:
+                        if not "." in sub_attack_id:
+                            raise Exception(f"{attack_id} subtechnique's attackID '{sub_attack_id}' is malformed")
+                        sub_data['id'] = sub_attack_id.split(".")[1]
+                        sub_data['descr'] = subtechnique['object']['description']
+                        row['subtechniques'].append(sub_data)
 
             technique_table.append(row)
     
@@ -207,18 +208,17 @@ def get_side_nav_domains_data(side_nav_title, elements_list):
     elements_data = []
 
     for domain in site_config.domains:
-        if elements_list[domain]:
-            # Get alias for domain
-            domain_alias = get_domain_alias(domain.split("-")[0])
+        if domain['deprecated']: continue
+        if elements_list[domain['name']]:
 
             domain_data = {
-                "name": domain_alias,
-                "id": domain.split("-")[0],
-                "path": "/{}/{}/".format(side_nav_title, domain.split("-")[0]),
+                "name": domain['alias'],
+                "id": domain['name'].split("-")[0],
+                "path": "/{}/{}/".format(side_nav_title, domain['name'].split("-")[0]),
                 "children": []
             }
 
-            for element in elements_list[domain]:
+            for element in elements_list[domain['name']]:
                 attack_id = get_attack_id(element)
                 if attack_id:
                     domain_data['children'].append(get_element_data(element))
@@ -297,22 +297,19 @@ def get_side_nav_domains_mobile_view_data(side_nav_title, elements_list, amount_
     elements_data = []
 
     for domain in site_config.domains:
-
-        if elements_list[domain]:
+        if domain['deprecated']: continue
+        if elements_list[domain['name']]:
 
             caterogy_list = get_category_list()
 
-            # Get alias for domain
-            domain_alias = get_domain_alias(domain.split("-")[0])
-
             domain_data = {
-                "name": domain_alias,
-                "id": domain_alias,
-                "path": "/{}/{}/".format(side_nav_title, domain.split("-")[0]),
+                "name": domain['alias'],
+                "id": domain['alias'],
+                "path": "/{}/{}/".format(side_nav_title, domain['name'].split("-")[0]),
                 "children": []
             }
 
-            for element in elements_list[domain]:
+            for element in elements_list[domain['name']]:
                 attack_id = get_attack_id(element)
                 if attack_id:
                         
@@ -582,17 +579,6 @@ def find_in_reference_list(reference_list, source_name):
 
     return False
 
-def get_domain_alias(domain):
-    """ Given a domain name, return its alias.
-        If not found return the same domain
-    """
-
-    for domain_pair in site_config.domain_aliases:
-        if domain_pair[1] == domain:
-            return domain_pair[0]
-    
-    return domain
-
 def replace_html_chars(to_be_replaced):
     return to_be_replaced.replace("\n", "")\
                          .replace("{", "{{")\
@@ -622,9 +608,9 @@ def get_navigator_layers(name, attack_id, obj_type, version, techniques_used):
     enterprise_layer['name'] = layer_name
     enterprise_layer['domain'] = "enterprise-attack"
     enterprise_layer['versions'] = {
-        "layer": "4.0",
+        "layer": "4.1",
         "attack": major_attack_version,
-        "navigator": "4.0"
+        "navigator": "4.1"
     }
     enterprise_layer['techniques'] = []
     enterprise_layer["gradient"] = { # white for nonused, blue for used
@@ -646,9 +632,9 @@ def get_navigator_layers(name, attack_id, obj_type, version, techniques_used):
     mobile_layer['name'] = layer_name
     mobile_layer['domain'] = "mobile-attack"
     mobile_layer['versions'] = {
-        "layer": "4.0",
+        "layer": "4.1",
         "attack": major_attack_version,
-        "navigator": "4.0"
+        "navigator": "4.1"
     }
     mobile_layer['techniques'] = []
     mobile_layer["gradient"] = { # white for nonused, blue for used
@@ -672,9 +658,9 @@ def get_navigator_layers(name, attack_id, obj_type, version, techniques_used):
         if technique.get('descr'):
             score = 1
             if technique.get('subtechniques'):
-                navigator_technique = get_navigator_technique(technique['id'], technique["descr"], score, True)
+                navigator_technique = get_navigator_technique(technique['id'], technique["descr"] if "descr" in technique else "", score, True)
             else:
-                navigator_technique = get_navigator_technique(technique['id'], technique["descr"], score, False)
+                navigator_technique = get_navigator_technique(technique['id'], technique["descr"] if "descr" in technique else "", score, False)
         else:
             if technique.get('subtechniques'):
                 navigator_technique = get_navigator_technique(technique['id'], None, None, True)
@@ -689,7 +675,7 @@ def get_navigator_layers(name, attack_id, obj_type, version, techniques_used):
         if technique.get('subtechniques'):
             for subtechnique in technique['subtechniques']:
                 score = 1
-                navigator_technique = get_navigator_technique(technique['id']+"."+subtechnique['id'], subtechnique["descr"], score, True)
+                navigator_technique = get_navigator_technique(technique['id']+"."+subtechnique['id'], subtechnique["descr"] if "descr" in subtechnique else "", score, True)
 
                 if technique['domain'].startswith("enterprise"):
                     enterprise_layer['techniques'].append(navigator_technique)
