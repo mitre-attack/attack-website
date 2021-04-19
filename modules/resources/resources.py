@@ -120,7 +120,11 @@ def generate_working_with_attack():
     """ Responsible for generating working with ATT&CK and creating excel files
     """
 
-    excel_dirs = [f"enterprise-attack-{site_config.full_attack_version}", f"mobile-attack-{site_config.full_attack_version}"]
+    excel_dirs = [
+        f"enterprise-attack-{site_config.full_attack_version}", 
+        f"mobile-attack-{site_config.full_attack_version}",
+        f"ics-attack-{site_config.full_attack_version}"
+    ]
     files_types = ["matrices", "mitigations", "relationships", "software", "tactics", "techniques"]
 
     # Verify if directories exists
