@@ -5,6 +5,7 @@ import modules
 from modules import site_config
 from modules import util
 from datetime import datetime
+import mitreattack.attackToExcel.attackToExcel as attackToExcel
 
 def generate_resources():
     """Responsible for generating the resources pages"""
@@ -23,6 +24,7 @@ def generate_resources():
     # Move templates to templates directory
     util.buildhelpers.move_templates(resources_config.module_name, resources_config.resources_templates_path)
     util.buildhelpers.move_docs(resources_config.docs_path)
+    generate_working_with_attack()
     generate_general_information()
     generate_training_pages()
     generate_attackcon_page()
@@ -113,3 +115,45 @@ def generate_static_pages():
             else:
                 with open(os.path.join(site_config.resources_markdown_path, static_page), "w", encoding='utf8') as md_file:
                     md_file.write(content)
+
+def generate_working_with_attack():
+    """ Responsible for generating working with ATT&CK and creating excel files
+    """
+
+    excel_dirs = [f"enterprise-attack-{site_config.full_attack_version}", f"mobile-attack-{site_config.full_attack_version}"]
+    files_types = ["matrices", "mitigations", "relationships", "software", "tactics", "techniques"]
+
+    # Verify if directories exists
+    if not os.path.isdir(site_config.web_directory):
+        os.makedirs(site_config.web_directory)
+    
+    resources_dir = os.path.join(site_config.web_directory, 'resources')
+    if not os.path.isdir(resources_dir):
+        os.makedirs(resources_dir)
+    
+    working_with_attack = os.path.join(resources_dir, 'working-with-attack')
+    if not os.path.isdir(resources_dir):
+        os.makedirs(working_with_attack)
+
+    attackToExcel.export("enterprise-attack", site_config.full_attack_version, working_with_attack)
+    attackToExcel.export("mobile-attack", site_config.full_attack_version, working_with_attack)
+
+    files_json = {'excel_files': []}
+    for excel_dir in excel_dirs:
+        excel_json = {
+            'label' : f"{excel_dir}.xlsx",
+            'url': f"{excel_dir}/{excel_dir}.xlsx",
+            'children' : []
+        }
+        for file_type in files_types:
+            child_json = {
+                'label' : f"{excel_dir}-{file_type}.xlsx",
+                'url': f"{excel_dir}/{excel_dir}-{file_type}.xlsx"
+            }
+            excel_json['children'].append(child_json)
+        files_json['excel_files'].append(excel_json)
+
+    working_with_attack_content = resources_config.working_with_attack_md + json.dumps(files_json)
+    # write markdown to file
+    with open(os.path.join(site_config.resources_markdown_path, "working_with_attack.md"), "w", encoding='utf8') as md_file:
+        md_file.write(working_with_attack_content)
