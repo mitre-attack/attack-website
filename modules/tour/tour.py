@@ -240,7 +240,6 @@ def get_group_or_software_with_subtechniques(object_type):
             if obj_has_subtechniques:
                 obj_tour = get_groups_tour(technique_list)
                 attack_id = util.buildhelpers.get_attack_id(obj)
-                print(f"HERE {attack_id}")
                 if obj_tour and attack_id:
                     obj_tour['obj_id'] = object_type + "/" + attack_id
                     obj_tour_list.append(obj_tour)
