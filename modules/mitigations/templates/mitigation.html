@@ -5,6 +5,7 @@
 {% import 'macros/clean_output.html' as clean_output %}
 {% import 'macros/citations.html' as citations %}
 {% import 'macros/notes.html' as notes %}
+{% import 'macros/navigator.html' as navigator %}
 
 {% set parsed = page.data | from_json %}
 {% if parsed.domain == "mobile" %}
@@ -84,6 +85,7 @@
                     </div>
 
                     {% if parsed.techniques_addressed_data %}
+                        {{navigator.layer_links(parsed.attack_id, "mitigations", parsed.layers)}}
                         {{techniques_used.techniques_used(parsed.techniques_addressed_data, "Techniques Addressed by Mitigation", parsed.citations)}}
                     {% endif %}
 

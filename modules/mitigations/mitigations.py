@@ -126,7 +126,32 @@ def generate_mitigation_md(mitigation, domain, side_menu_data, side_menu_mobile_
             data['version'] = mitigation["x_mitre_version"]
 
         data['techniques_addressed_data'] = get_techniques_addressed_data(mitigation, reference_list)
-    
+
+        # Get navigator layers for this group
+        layers = util.buildhelpers.get_navigator_layers(
+            data['name'], 
+            data["attack_id"],
+            "mitigation",
+            data["version"] if "version" in data else None,
+            data['techniques_addressed_data']
+        )
+
+        data["layers"] = []
+        for layer in layers:
+            with open(os.path.join(mitigations_config.mitigation_markdown_path, "-".join([data['attack_id'], "techniques", layer["domain"]]) + ".md"), "w", encoding='utf8') as layer_json:
+                subs = site_config.layer_md.substitute({
+                    "attack_id": data["attack_id"],
+                    "path": "mitigations/" + data["attack_id"],
+                    "domain": layer["domain"]
+                })
+                subs = subs + layer["layer"]
+                layer_json.write(subs)
+            data["layers"].append({
+                "domain": layer["domain"],
+                "filename": "-".join([data["attack_id"], layer["domain"], "layer"]) + ".json",
+                "navigator_link" : site_config.navigator_link
+            })
+
         data['citations'] = reference_list
 
         data['versioning_feature'] = site_config.check_versions_module()
