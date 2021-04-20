@@ -261,7 +261,7 @@ def generate_data_for_md(technique_dict, technique, tactic_list, is_sub_techniqu
             # Get data sources
             if technique.get('x_mitre_data_sources'):
                 technique['x_mitre_data_sources'].sort()
-                technique_dict['data_sources'] = ", ".join(technique['x_mitre_data_sources'])
+                technique_dict['data_sources'] = util.buildhelpers.data_sources_link(technique['x_mitre_data_sources'])
 
             # Get if technique supports remote
             if technique.get('x_mitre_remote_support'):
