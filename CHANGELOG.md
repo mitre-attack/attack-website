@@ -32,7 +32,7 @@
 - STIX2.1 support.
 - STIX notes support for object pages.
 - Improved configuration allowing user to pull data from any HTTP endpoint instead of relying on data stored in the repository. Configuration of data endpoints can be found in `modules/site_config.py`. See issue [#139](https://github.com/mitre-attack/attack-website/issues/139).
-- Improved and updated `Working with ATT&CK` page. Includes generation of ATT&CK in Excel spreadsheets.
+- Improved and updated `Working with ATT&CK` page. Includes generation of ATT&CK in Excel spreadsheets. See issue [#142](https://github.com/mitre-attack/attack-website/issues/142).
 
 # 23 March 2021
 ## ATT&CK website version 3.1.1
