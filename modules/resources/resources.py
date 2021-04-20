@@ -141,6 +141,7 @@ def generate_working_with_attack():
 
     attackToExcel.export("enterprise-attack", site_config.full_attack_version, working_with_attack)
     attackToExcel.export("mobile-attack", site_config.full_attack_version, working_with_attack)
+    attackToExcel.export("ics-attack", site_config.full_attack_version, working_with_attack)
 
     files_json = {'excel_files': []}
     for excel_dir in excel_dirs:
