@@ -131,29 +131,25 @@ def generate_working_with_attack():
     if not os.path.isdir(site_config.web_directory):
         os.makedirs(site_config.web_directory)
     
-    resources_dir = os.path.join(site_config.web_directory, 'resources')
-    if not os.path.isdir(resources_dir):
-        os.makedirs(resources_dir)
-    
-    working_with_attack = os.path.join(resources_dir, 'working-with-attack')
-    if not os.path.isdir(resources_dir):
-        os.makedirs(working_with_attack)
+    docs_dir = os.path.join(site_config.web_directory, 'docs')
+    if not os.path.isdir(docs_dir):
+        os.makedirs(docs_dir)
 
-    attackToExcel.export("enterprise-attack", site_config.full_attack_version, working_with_attack)
-    attackToExcel.export("mobile-attack", site_config.full_attack_version, working_with_attack)
-    attackToExcel.export("ics-attack", site_config.full_attack_version, working_with_attack)
+    attackToExcel.export("enterprise-attack", site_config.full_attack_version, docs_dir)
+    attackToExcel.export("mobile-attack", site_config.full_attack_version, docs_dir)
+    attackToExcel.export("ics-attack", site_config.full_attack_version, docs_dir)
 
     files_json = {'excel_files': []}
     for excel_dir in excel_dirs:
         excel_json = {
             'label' : f"{excel_dir}.xlsx",
-            'url': f"{excel_dir}/{excel_dir}.xlsx",
+            'url': f"/docs/{excel_dir}/{excel_dir}.xlsx",
             'children' : []
         }
         for file_type in files_types:
             child_json = {
                 'label' : f"{excel_dir}-{file_type}.xlsx",
-                'url': f"{excel_dir}/{excel_dir}-{file_type}.xlsx"
+                'url': f"/docs/{excel_dir}/{excel_dir}-{file_type}.xlsx"
             }
             excel_json['children'].append(child_json)
         files_json['excel_files'].append(excel_json)
