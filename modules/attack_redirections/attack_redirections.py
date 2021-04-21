@@ -20,7 +20,8 @@ def generate_attack_redirections():
     util.buildhelpers.generate_redirections(attack_redirections_config.attack_redirections_location)
 
     for domain in site_config.domains:
-        generate_markdown_files(domain)
+        if domain['deprecated']: continue
+        generate_markdown_files(domain['name'])
     
 def generate_markdown_files(domain):
     """Given a domain, changes all the old links to new redirected links"""

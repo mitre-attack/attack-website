@@ -91,7 +91,9 @@ def get_tour_steps(matrix):
 
     # Get technique ID and store that as the step
     steps['technique'] = "techniques/{}".format(util.buildhelpers.get_attack_id(technique))
-    steps['subtechnique'] = steps['technique'] + "/{}".format(get_subtech_n_of_technique(technique))
+    subtechnique_attack_id = get_subtech_n_of_technique(technique)
+    if subtechnique_attack_id:
+        steps['subtechnique'] = steps['technique'] + "/{}".format(subtechnique_attack_id)
 
     # Get group steps
     group_tour = []
@@ -202,8 +204,11 @@ def get_subtech_n_of_technique(technique):
     subtechniques_of = util.relationshipgetters.get_subtechniques_of()
 
     for subtech in subtechniques_of[technique['id']]:
-        id = util.buildhelpers.get_attack_id(subtech['object'])
-        return id.split(".")[1]
+        attack_id = util.buildhelpers.get_attack_id(subtech['object'])
+        if attack_id:
+            return attack_id.split(".")[1]
+    
+    return None
 
 def get_group_or_software_with_subtechniques(object_type):
     """ Get group or software with subtechniques """
@@ -234,8 +239,9 @@ def get_group_or_software_with_subtechniques(object_type):
             # Get list of potential tours if group has subtechniques
             if obj_has_subtechniques:
                 obj_tour = get_groups_tour(technique_list)
-                if obj_tour:
-                    obj_tour['obj_id'] = object_type + "/" + util.buildhelpers.get_attack_id(obj)
+                attack_id = util.buildhelpers.get_attack_id(obj)
+                if obj_tour and attack_id:
+                    obj_tour['obj_id'] = object_type + "/" + attack_id
                     obj_tour_list.append(obj_tour)
     
     return find_best_group_or_software(obj_tour_list)
