@@ -32,6 +32,7 @@
 - STIX2.1 support.
 - STIX notes support for object pages.
 - Improved configuration allowing user to pull data from any HTTP endpoint instead of relying on data stored in the repository. Configuration of data endpoints can be found in `modules/site_config.py`. See issue [#139](https://github.com/mitre-attack/attack-website/issues/139).
+- Added ATT&CK IDs to Mitigations and Procedure Examples on technique pages, and software and group home pages. See issues [#235](https://github.com/mitre-attack/attack-website/issues/235)[#236](https://github.com/mitre-attack/attack-website/issues/236).
 
 # 23 March 2021
 ## ATT&CK website version 3.1.1
