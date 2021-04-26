@@ -14,6 +14,7 @@ with open("data/versions.json", "r",encoding="utf8") as f:
 
 # ATT&CK version
 if attack_version.startswith("v"):
+    full_attack_version = attack_version
     attack_version = attack_version[1:]
 
 # Domains for stix objects

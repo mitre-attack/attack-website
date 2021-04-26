@@ -35,6 +35,12 @@ training_cti_md = ("Title: ATT&CK For CTI Training\n"
                    "save_as: resources/training/cti/index.html\n"
                    "data: ")
 
+# Excel files / working with ATT&CK
+working_with_attack_md = ("Title: Working with ATT&CK\n"
+                          "Template: resources/working-with-attack\n"
+                          "save_as: resources/working-with-attack/index.html\n"
+                          "data: ")
+
 # side navigation for training
 training_navigation = {
     "name" : "Training",
