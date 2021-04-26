@@ -32,6 +32,7 @@
 - STIX2.1 support.
 - STIX notes support for object pages.
 - Improved configuration allowing user to pull data from any HTTP endpoint instead of relying on data stored in the repository. Configuration of data endpoints can be found in `modules/site_config.py`. See issue [#139](https://github.com/mitre-attack/attack-website/issues/139).
+- Added tooltips describing fields in the cards. Added to fields on technique pages: Tactics, Platforms, System Requirements, Permissions Required, Effective Permissions, Data Sources, Supports Remote, Defense Bypassed, Impact Type, CAPEC ID, and MTC ID. Added to field on group pages: Associated Groups. Added to fields on sofware pages: Associated Software, Type, and Platforms. See issue [#148](https://github.com/mitre-attack/attack-website/issues/148).
 - Added navigator support for mitigations and updated navigator layer support to 4.2. See issue [#234](https://github.com/mitre-attack/attack-website/issues/234).
 - Added ATT&CK IDs to Mitigations and Procedure Examples on technique pages, and software and group home pages. See issues [#235](https://github.com/mitre-attack/attack-website/issues/235)[#236](https://github.com/mitre-attack/attack-website/issues/236).
 
