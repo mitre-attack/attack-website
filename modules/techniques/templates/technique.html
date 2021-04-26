@@ -141,87 +141,199 @@
                                 <div class="card">
                                     <div class="card-body">
                                         {% if parsed.attack_id %}
-                                            <div class="card-data" id="card-id"><span class="h5 card-title">ID:&nbsp;</span>{{parsed.attack_id}}</div>
+                                            <div class="row card-data" id="card-id">
+                                                <div class="col-md-1 px-0 text-center"></div>
+                                                <div class="col-md-11 pl-0">
+                                                    <span class="h5 card-title">ID:&nbsp;</span>{{parsed.attack_id}}
+                                                </div>
+                                            </div>
                                         {% endif %}
                                         <!--stop-indexing-for-search-->
-                                        {% if not parsed.is_subtechnique %}
-                                            <div class="card-data"><span class="h5 card-title">Sub-techniques:&nbsp;</span>
-                                                {% if parsed.subtechniques %}
-                                                    {% for subtechnique in parsed.subtechniques %}
-                                                        <a href="/techniques/{{parsed.attack_id}}/{{subtechnique.id.split(".")[1]}}">{{subtechnique.id}}</a>{% if not loop.last %},{% endif %}
-                                                    {% endfor %}
+                                        <div class="row card-data">
+                                            <div class="col-md-1 px-0 text-center"></div>
+                                            <div class="col-md-11 pl-0">
+                                                {% if not parsed.is_subtechnique %}
+                                                    <span class="h5 card-title">Sub-techniques:&nbsp;</span>
+                                                    {% if parsed.subtechniques %}
+                                                        {% for subtechnique in parsed.subtechniques %}
+                                                            <a href="/techniques/{{parsed.attack_id}}/{{subtechnique.id.split(".")[1]}}">{{subtechnique.id}}</a>{% if not loop.last %},{% endif %}
+                                                        {% endfor %}
+                                                    {% else %}
+                                                        No sub-techniques
+                                                    {% endif %}
                                                 {% else %}
-                                                    No sub-techniques
+                                                    <span class="h5 card-title">Sub-technique of:&nbsp;</span>
+                                                    <a href="/techniques/{{parsed.parent_id}}">{{parsed.parent_id}}</a>
                                                 {% endif %}
                                             </div>
-                                        {% else %}
-                                            <div class="card-data" id="card-id"><span class="h5 card-title">Sub-technique of:&nbsp;</span>
-                                                <a href="/techniques/{{parsed.parent_id}}">{{parsed.parent_id}}</a>
-                                            </div>
-                                        {% endif %}
+                                        </div>
                                         <!--start-indexing-for-search-->
                                         {% if parsed.tactic_type %}
-                                            <div class="card-data"><span class="h5 card-title">Tactic Type:&nbsp;</span>{{parsed.tactic_type}}</div>
+                                            <div class="row card-data">
+                                                <div class="col-md-1 px-0 text-center"></div>
+                                                <div class="col-md-11 pl-0">
+                                                    <span class="h5 card-title">Tactic Type:&nbsp;</span>{{parsed.tactic_type}}
+                                                </div>
+                                            </div>
                                         {% endif %}
                                         {% if parsed.tactics %}
-                                            <div class="card-data" id="card-tactics"><span class="h5 card-title">{{"Tactic" if parsed.tactics | length < 2 else "Tactics"}}:</span>
-                                                {% for tactic in parsed.tactics %}
-                                                    {{tactic}}{% if not loop.last %},{% endif %}
-                                                {% endfor %}
+                                            <div id="card-tactics" class="row card-data">
+                                                <div class="col-md-1 px-0 text-center">
+                                                    <span data-toggle="tooltip" data-placement="left" title="" data-test-ignore="true" data-original-title="The tactic objectives that the (sub-)technique can be used to accomplish">&#9432;</span>
+                                                </div>
+                                                <div class="col-md-11 pl-0">
+                                                    <span class="h5 card-title">{{"Tactic" if parsed.tactics | length < 2 else "Tactics"}}:</span>
+                                                    {% for tactic in parsed.tactics %}
+                                                        {{tactic}}{% if not loop.last %},{% endif %}
+                                                    {% endfor %}
+                                                </div>
                                             </div>
                                         {% endif %}
                                         {% if parsed.platforms %}
-                                            <div class="card-data" id="card-platforms"><span class="h5 card-title">{{ "Platform" if parsed.platforms | length < 2 else "Platforms" }}:&nbsp;</span>{{parsed.platforms}}</div>
+                                            <div class="row card-data">
+                                                <div class="col-md-1 px-0 text-center">
+                                                    <span data-toggle="tooltip" data-placement="left" title="" data-test-ignore="true" data-original-title="The system an adversary is operating within; could be an operating system or application">&#9432;</span>
+                                                </div>
+                                                <div class="col-md-11 pl-0">
+                                                    <span class="h5 card-title">{{ "Platform" if parsed.platforms | length < 2 else "Platforms" }}:&nbsp;</span>{{parsed.platforms}}
+                                                </div>
+                                            </div>
                                         {% endif %}
                                         {% if parsed.sysreqs %}
-                                            <div class="card-data"><span class="h5 card-title">System Requirements:&nbsp;</span>{{parsed.sysreqs}}</div>
+                                            <div class="row card-data">
+                                                <div class="col-md-1 px-0 text-center">
+                                                    <span data-toggle="tooltip" data-placement="left" title="" data-test-ignore="true" data-original-title="Additional information on requirements the adversary needs to meet or about the state of the system (software, patch level, etc.) that may be required for the (sub-)technique to work">&#9432;</span>
+                                                </div>
+                                                <div class="col-md-11 pl-0">
+                                                    <span class="h5 card-title">System Requirements:&nbsp;</span>{{parsed.sysreqs}}
+                                                </div>
+                                            </div>
                                         {% endif %}
                                         {% if parsed.perms %}
-                                            <div class="card-data"><span class="h5 card-title">Permissions Required:&nbsp;</span>{{parsed.perms}}</div>
+                                            <div class="row card-data">
+                                                <div class="col-md-1 px-0 text-center">
+                                                    <span data-toggle="tooltip" data-placement="left" title="" data-test-ignore="true" data-original-title="The lowest level of permissions the adversary is required to be operating within to perform the (sub-)technique on a system">&#9432;</span>
+                                                </div>
+                                                <div class="col-md-11 pl-0">
+                                                    <span class="h5 card-title">Permissions Required:&nbsp;</span>{{parsed.perms}}
+                                                </div>
+                                            </div>
                                         {% endif %}
                                         {% if parsed.eff_perms%}
-                                            <div class="card-data"><span class="h5 card-title">Effective Permissions:&nbsp;</span>{{parsed.eff_perms}}</div>
+                                            <div class="row card-data">
+                                                <div class="col-md-1 px-0 text-center">
+                                                    <span data-toggle="tooltip" data-placement="left" title="" data-test-ignore="true" data-original-title="The level of permissions the adversary will attain by performing the (sub-)technique">&#9432;</span>
+                                                </div>
+                                                <div class="col-md-11 pl-0">
+                                                    <span class="h5 card-title">Effective Permissions:&nbsp;</span>{{parsed.eff_perms}}
+                                                </div>
+                                            </div>
                                         {% endif %}
                                         {% if parsed.data_sources %}
-                                            <div class="card-data"><span class="h5 card-title">Data Sources:&nbsp;</span>{{parsed.data_sources}}</div>
+                                            <div class="row card-data">
+                                                <div class="col-md-1 px-0 text-center">
+                                                    <span data-toggle="tooltip" data-placement="left" title="" data-test-ignore="true" data-original-title="Source of information collected by a sensor or logging system that may be used to collect information relevant to identifying the action being performed, sequence of actions, or the results of those actions by an adversary">&#9432;</span>
+                                                </div>
+                                                <div class="col-md-11 pl-0">
+                                                    <span class="h5 card-title">Data Sources:&nbsp;</span>{{parsed.data_sources}}
+                                                </div>
+                                            </div>
                                         {% endif %}
                                         {% if parsed.supports_remote %}
-                                            <div class="card-data"><span class="h5 card-title">Supports Remote:&nbsp;</span>{{parsed.supports_remote}}</div>
+                                            <div class="row card-data">
+                                                <div class="col-md-1 px-0 text-center">
+                                                    <span data-toggle="tooltip" data-placement="left" title="" data-test-ignore="true" data-original-title="If the (sub-)technique can be used to execute something on a remote system">&#9432;</span>
+                                                </div>
+                                                <div class="col-md-11 pl-0">
+                                                    <span class="h5 card-title">Supports Remote:&nbsp;</span>{{parsed.supports_remote}}
+                                                </div>
+                                            </div>
                                         {% endif %}
                                         {% if parsed.network_reqs %}
-                                            <div class="card-data"><span class="h5 card-title">Requires Network:&nbsp;</span>{{parsed.network_reqs}}</div>
+                                            <div class="row card-data">
+                                                <div class="col-md-1 px-0 text-center"></div>
+                                                <div class="col-md-11 pl-0">
+                                                    <span class="h5 card-title">Requires Network:&nbsp;</span>{{parsed.network_reqs}}
+                                                </div>
+                                            </div>
                                         {% endif %}
                                         {% if parsed.def_bypass %}
-                                            <div class="card-data"><span class="h5 card-title">Defense Bypassed:&nbsp;</span>{{parsed.def_bypass}}</div>
+                                            <div class="row card-data">
+                                                <div class="col-md-1 px-0 text-center">
+                                                    <span data-toggle="tooltip" data-placement="left" title="" data-test-ignore="true" data-original-title="If the (sub-)technique can be used to bypass or evade a particular defensive tool, methodology, or process">&#9432;</span>
+                                                </div>
+                                                <div class="col-md-11 pl-0">
+                                                    <span class="h5 card-title">Defense Bypassed:&nbsp;</span>{{parsed.def_bypass}}
+                                                </div>
+                                            </div>
                                         {% endif %}
                                         {% if parsed.impact_type %}
-                                            <div class="card-data"><span class="h5 card-title">Impact Type:&nbsp;</span>{{parsed.impact_type}}</div>
+                                            <div class="row card-data">
+                                                <div class="col-md-1 px-0 text-center">
+                                                    <span data-toggle="tooltip" data-placement="left" title="" data-test-ignore="true" data-original-title="Denotes if the (sub-)technique can be used for integrity or availability attacks">&#9432;</span>
+                                                </div>
+                                                <div class="col-md-11 pl-0">
+                                                    <span class="h5 card-title">Impact Type:&nbsp;</span>{{parsed.impact_type}}
+                                                </div>
+                                            </div>
                                         {% endif %}
                                         {% if parsed.capecs %}
-                                            <div class="card-data"><span class="h5 card-title">CAPEC ID:</span>
-                                                {% for capec in parsed.capecs %}
-                                                    <a href="{{capec.url}}" target="_blank">{{capec.id}}{% if not loop.last %},{% endif %}</a> 
-                                                {% endfor %}
+                                            <div class="row card-data">
+                                                <div class="col-md-1 px-0 text-center">
+                                                    <span data-toggle="tooltip" data-placement="left" title="" data-test-ignore="true" data-original-title="CAPEC IDs associated with the (sub-)technique">&#9432;</span>
+                                                </div>
+                                                <div class="col-md-11 pl-0">
+                                                    <span class="h5 card-title">CAPEC ID:</span>
+                                                    {% for capec in parsed.capecs %}
+                                                        <a href="{{capec.url}}" target="_blank">{{capec.id}}{% if not loop.last %},{% endif %}</a> 
+                                                    {% endfor %}
+                                                </div>
                                             </div>
                                         {% endif %}
                                         {% if parsed.mtcs %}
-                                            <div class="card-data"><span class="h5 card-title">MTC ID:</span>
-                                                {% for mtc in parsed.mtcs %}
-                                                    <a href="{{mtc.url}}" target="_blank">{{mtc.id}}{% if not loop.last %},{% endif %}</a> 
-                                                {% endfor %}
+                                            <div class="row card-data">
+                                                <div class="col-md-1 px-0 text-center">
+                                                    <span data-toggle="tooltip" data-placement="left" title="" data-test-ignore="true" data-original-title="NIST Mobile Threat Catalogue IDs associated with the technique">&#9432;</span>
+                                                </div>
+                                                <div class="col-md-11 pl-0">
+                                                    <span class="h5 card-title">MTC ID:</span>
+                                                    {% for mtc in parsed.mtcs %}
+                                                        <a href="{{mtc.url}}" target="_blank">{{mtc.id}}{% if not loop.last %},{% endif %}</a> 
+                                                    {% endfor %}
+                                                </div>
                                             </div>
                                         {% endif %}
                                         {% if parsed.contributors %}
-                                            <div class="card-data"><span class="h5 card-title">Contributors:&nbsp;</span>{{parsed.contributors}}</div>
+                                            <div class="row card-data">
+                                                <div class="col-md-1 px-0 text-center"></div>
+                                                <div class="col-md-11 pl-0">
+                                                    <span class="h5 card-title">Contributors:&nbsp;</span>{{parsed.contributors}}
+                                                </div>
+                                            </div>
                                         {% endif %}
                                         {% if parsed.version %}
-                                            <div class="card-data"><span class="h5 card-title">Version:&nbsp;</span>{{parsed.version}}</div>
+                                            <div class="row card-data">
+                                                <div class="col-md-1 px-0 text-center"></div>
+                                                <div class="col-md-11 pl-0">
+                                                    <span class="h5 card-title">Version:&nbsp;</span>{{parsed.version}}
+                                                </div>
+                                            </div>
                                         {% endif %}
                                         {% if parsed.created %}
-                                            <div class="card-data"><span class="h5 card-title">Created:&nbsp;</span>{{parsed.created}}</div>
+                                            <div class="row card-data">
+                                                <div class="col-md-1 px-0 text-center"></div>
+                                                <div class="col-md-11 pl-0">
+                                                    <span class="h5 card-title">Created:&nbsp;</span>{{parsed.created}}
+                                                </div>
+                                            </div>
                                         {% endif %}
                                         {% if parsed.modified %}
-                                            <div class="card-data"><span class="h5 card-title">Last Modified:&nbsp;</span>{{parsed.modified}}</div>
+                                            <div class="row card-data">
+                                                <div class="col-md-1 px-0 text-center"></div>
+                                                <div class="col-md-11 pl-0">
+                                                    <span class="h5 card-title">Last Modified:&nbsp;</span>{{parsed.modified}}
+                                                </div>
+                                            </div>
                                         {% endif %}
                                     </div>
                                 </div>
