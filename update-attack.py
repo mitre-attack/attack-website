@@ -9,7 +9,7 @@ from modules import site_config
 from modules import util
 
 # argument defaults and options for the CLI
-module_choices = ['clean', 'stix_data', 'groups', 'search', 'matrices', 'mitigations', 'software', 'tactics', 'techniques', 'tour', 'website_build', 'random_page', 'subdirectory', 'tests']
+module_choices = ['clean', 'groups', 'search', 'matrices', 'mitigations', 'software', 'tactics', 'techniques', 'tour', 'website_build', 'random_page', 'subdirectory', 'tests']
 extras = ['resources', 'versions', 'contribute', 'blog', 'attack_redirections']
 test_choices = ['size', 'links', 'external_links', 'citations']
 
@@ -37,8 +37,6 @@ def get_parsed_args():
                                     "the modules that pertain to the ATT&CK dataset will be ran. "
                                     "If you would like to run extra modules, opt-in these modules with the"
                                     "--extras flag."))
-    parser.add_argument('--refresh', '-r', action='store_true',
-                        help='Pull down the current STIX data from the MITRE/CTI GitHub respository')
     parser.add_argument('--no-stix-link-replacement', action='store_true',
                         help="If this flag is absent, links to attack.mitre.org/[page] in the STIX data will be replaced with /[page]. Add this flag to preserve links to attack.mitre.org.")
     parser.add_argument('--modules', '-m', nargs='+',

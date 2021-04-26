@@ -4,6 +4,7 @@
 {% import 'macros/deprecated.html' as deprecated %}
 {% import 'macros/clean_output.html' as clean_output %}
 {% import 'macros/citations.html' as citations %}
+{% import 'macros/notes.html' as notes %}
 {% if parsed.parent_name %}
     {% set title = parsed.parent_name + ": " -%}
 {% else %}
@@ -106,7 +107,7 @@
                                                                     <td>
                                                                         <a href="{{subtechnique.path}}" class="subtechnique-table-item" data-subtechnique_id="{{subtechnique.id}}"> {{subtechnique.id}} </a>
                                                                     </td>
-                                                                    <td> 
+                                                                    <td>
                                                                         <a href="{{subtechnique.path}}" class="subtechnique-table-item" data-subtechnique_id="{{subtechnique.id}}"> {{subtechnique.name}} </a>
                                                                     </td>
                                                                 {% else %}
@@ -131,6 +132,9 @@
                                     <div class="description-body">
                                         {{clean_output.stixToHTML(parsed.descr, parsed.citations)}}
                                     </div>
+                                {% endif %}
+                                {% if parsed.notes %}
+                                    {{ notes.notes_section(parsed.notes) }}
                                 {% endif %}
                             </div>
                             <div class="col-md-4">
@@ -253,7 +257,8 @@
                             <h2 class="pt-3" id ="examples">Procedure Examples</h2>
                             <table class="table table-bordered table-alternate mt-2">
                                 <thead>
-                                    <tr> 
+                                    <tr>
+                                        <th scope="col">ID</th>
                                         <th scope="col">Name</th>
                                         <th scope="col">Description</th>
                                     </tr>
@@ -261,6 +266,9 @@
                                 <tbody>
                                     {% for example in parsed.examples_table %}
                                         <tr>
+                                            <td>
+                                                <a href="/{{example.path}}/{{example.id}}"> {{example.id}} </a>
+                                            </td>
                                             <td>
                                                 <a href="/{{example.path}}/{{example.id}}"> {{example.name}} </a>
                                             </td>
@@ -280,6 +288,7 @@
                                 <table class="table table-bordered table-alternate mt-2">
                                     <thead>
                                         <tr> 
+                                            <th scope="col">ID</th>
                                             <th scope="col">Mitigation</th>
                                             <th scope="col">Description</th>
                                         </tr>
@@ -287,6 +296,9 @@
                                     <tbody>
                                         {% for mit in parsed.mitigation_table %}
                                             <tr>
+                                                <td>
+                                                    <a href="/mitigations/{{mit.mid}}"> {{mit.mid}} </a>
+                                                </td>
                                                 <td>
                                                     <a href="/mitigations/{{mit.mid}}"> {{mit.name}} </a>
                                                 </td>

@@ -34,17 +34,20 @@ def generate_mitigations():
     ms = util.relationshipgetters.get_ms()
 
     for domain in site_config.domains:
+        if domain['deprecated']: continue
         #Reads the STIX and creates a list of the ATT&CK mitigations
-        mitigations[domain] = util.stixhelpers.get_mitigation_list(ms[domain])
+        mitigations[domain['name']] = util.stixhelpers.get_mitigation_list(ms[domain['name']])
 
     # Amount of characters per category
     group_by = 3
 
+    notes = util.relationshipgetters.get_objects_using_notes()
     side_nav_data = util.buildhelpers.get_side_nav_domains_data("mitigations", mitigations)
     side_nav_mobile_data = util.buildhelpers.get_side_nav_domains_mobile_view_data("mitigations", mitigations, group_by)
 
     for domain in site_config.domains:
-        check_if_generated = generate_markdown_files(domain, mitigations[domain], side_nav_data, side_nav_mobile_data)
+        if domain['deprecated']: continue
+        check_if_generated = generate_markdown_files(domain['name'], mitigations[domain['name']], side_nav_data, side_nav_mobile_data, notes)
         if not mitigation_generated:
             if check_if_generated:
                 mitigation_generated = True
@@ -52,7 +55,7 @@ def generate_mitigations():
     if not mitigation_generated:
         util.buildhelpers.remove_module_from_menu(mitigations_config.module_name)   
 
-def generate_markdown_files(domain, mitigations, side_nav_data, side_nav_mobile_data):
+def generate_markdown_files(domain, mitigations, side_nav_data, side_nav_mobile_data, notes):
     """Responsible for generating shared data between all mitigation pages
        and begins mitigation markdown generation
     """
@@ -76,14 +79,14 @@ def generate_markdown_files(domain, mitigations, side_nav_data, side_nav_mobile_
 
         # Generates the markdown files to be used for page generation
         for mitigation in mitigations:
-            generate_mitigation_md(mitigation, domain, side_nav_data, side_nav_mobile_data)
+            generate_mitigation_md(mitigation, domain, side_nav_data, side_nav_mobile_data, notes)
     
         return True
     
     else:
         return False
 
-def generate_mitigation_md(mitigation, domain, side_menu_data, side_menu_mobile_data):
+def generate_mitigation_md(mitigation, domain, side_menu_data, side_menu_mobile_data, notes):
     """Generates the markdown for the given mitigation"""
 
     attack_id = util.buildhelpers.get_attack_id(mitigation)
@@ -97,6 +100,7 @@ def generate_mitigation_md(mitigation, domain, side_menu_data, side_menu_mobile_
         data['side_menu_data'] = side_menu_data
         data['side_menu_mobile_view_data'] = side_menu_mobile_data
         data['name'] = mitigation['name']
+        data['notes'] = notes.get(mitigation['id'])
 
         dates = util.buildhelpers.get_created_and_modified_dates(mitigation)
         
@@ -122,7 +126,32 @@ def generate_mitigation_md(mitigation, domain, side_menu_data, side_menu_mobile_
             data['version'] = mitigation["x_mitre_version"]
 
         data['techniques_addressed_data'] = get_techniques_addressed_data(mitigation, reference_list)
-    
+
+        # Get navigator layers for this group
+        layers = util.buildhelpers.get_navigator_layers(
+            data['name'], 
+            data["attack_id"],
+            "mitigation",
+            data["version"] if "version" in data else None,
+            data['techniques_addressed_data']
+        )
+
+        data["layers"] = []
+        for layer in layers:
+            with open(os.path.join(mitigations_config.mitigation_markdown_path, "-".join([data['attack_id'], "techniques", layer["domain"]]) + ".md"), "w", encoding='utf8') as layer_json:
+                subs = site_config.layer_md.substitute({
+                    "attack_id": data["attack_id"],
+                    "path": "mitigations/" + data["attack_id"],
+                    "domain": layer["domain"]
+                })
+                subs = subs + layer["layer"]
+                layer_json.write(subs)
+            data["layers"].append({
+                "domain": layer["domain"],
+                "filename": "-".join([data["attack_id"], layer["domain"], "layer"]) + ".json",
+                "navigator_link" : site_config.navigator_link
+            })
+
         data['citations'] = reference_list
 
         data['versioning_feature'] = site_config.check_versions_module()

@@ -1,0 +1,35 @@
+{% import 'macros/clean_output.html' as clean_output %}
+
+{% macro notes_section(notes, loop=0) -%}
+    {% if notes %}
+        <div class="card-block pb-2">
+            <div class="card">
+                <div class="card-header collapsed" id="notes-card-header" data-toggle="collapse" data-target="#notes-card-body-{{loop}}" aria-expanded="false" aria-controls="notes-card-body-{{loop}}">
+                    <h5 class="mb-0" id="notes">Notes</h5>
+                </div>
+                <div id="notes-card-body-{{loop}}" class="card-body p-0 collapse" aria-labelledby="notes-card-header">
+                    <table class="table table-bordered">
+                        <tbody>                                          
+                            {% for note in notes %}
+                                <tr>
+                                    {% if note['abstract'] %}
+                                        <td>
+                                            {{clean_output.stixToHTML(note['abstract'])}}
+                                        </td>
+                                        <td>
+                                            {{clean_output.stixToHTML(note['content'])}}
+                                        </td>
+                                    {% else %}
+                                        <td colspan="2">
+                                            {{clean_output.stixToHTML(note['content'])}}
+                                        </td>
+                                    {% endif %}
+                                </tr>
+                            {% endfor %}                           
+                        </tbody>                           
+                    </table>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+{% endmacro %}

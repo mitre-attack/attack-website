@@ -1,5 +1,8 @@
 import json
+import os
+import requests
 import stix2
+import urllib3
 from modules import site_config
 from . import buildhelpers
 
@@ -118,14 +121,15 @@ def get_technique_id_domain_map(ms):
     tech_list = {}
 
     for domain in site_config.domains:
-        curr_list = ms[domain].query([
+        if domain['deprecated']: continue
+        curr_list = ms[domain['name']].query([
             stix2.Filter('type', '=', 'attack-pattern'),
             stix2.Filter('revoked', '=', False)
         ])
         for val in curr_list:
             technique_id = buildhelpers.get_attack_id(val)
             if technique_id:
-                tech_list[technique_id] = domain
+                tech_list[technique_id] = domain['name']
     
     return tech_list
 
@@ -137,7 +141,8 @@ def grab_resources(ms):
     #Generates the list of techniques
     tech_list = []
     for domain in site_config.domains:
-        curr_list = ms[domain].query([
+        if domain['deprecated']: continue
+        curr_list = ms[domain['name']].query([
             stix2.Filter('type', '=', 'attack-pattern'),
             stix2.Filter('revoked', '=', False)
         ])
@@ -149,7 +154,8 @@ def grab_resources(ms):
     #Generates list of software
     software_list = []
     for domain in site_config.domains:
-        curr_list = ms[domain].query([
+        if domain['deprecated']: continue
+        curr_list = ms[domain['name']].query([
             stix2.Filter('type', '=', 'malware'),
             stix2.Filter('revoked', '=', False)
         ])
@@ -157,7 +163,7 @@ def grab_resources(ms):
         for val in curr_list:
             if next((x for x in software_list if x.id == val.id), None) is None:
                 software_list.append(val)
-        curr_list = ms[domain].query([
+        curr_list = ms[domain['name']].query([
             stix2.Filter('type', '=', 'tool'),
             stix2.Filter('revoked', '=', False)
         ])
@@ -170,7 +176,8 @@ def grab_resources(ms):
     #Generates list of groups
     group_list = []
     for domain in site_config.domains:
-        curr_list = ms[domain].query([
+        if domain['deprecated']: continue
+        curr_list = ms[domain['name']].query([
             stix2.Filter('type', '=', 'intrusion-set'),
             stix2.Filter('revoked', '=', False)
         ])
@@ -183,7 +190,8 @@ def grab_resources(ms):
     #Generates a list of CoA
     coa_list = []
     for domain in site_config.domains:
-        curr_list = ms[domain].query([
+        if domain['deprecated']: continue
+        curr_list = ms[domain['name']].query([
             stix2.Filter("type", "=", "course-of-action"),
             stix2.Filter('revoked', '=', False)
         ])
@@ -196,7 +204,8 @@ def grab_resources(ms):
     #Generates list of relationships
     rel_list = []
     for domain in site_config.domains:
-        curr_list = ms[domain].query([
+        if domain['deprecated']: continue
+        curr_list = ms[domain['name']].query([
             stix2.Filter('type', '=', 'relationship'),
         ])
         rel_list = rel_list + curr_list
@@ -214,13 +223,44 @@ def get_stix_memory_stores():
        that contains the memory stores for each domain.
     """
 
-    src = {}
+    # suppress InsecureRequestWarning: Unverified HTTPS request is being made
+    urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
-    for domain in site_config.bundles:
-        src[domain] = stix2.MemoryStore()
-        src[domain].load_from_file(site_config.attack_path[domain])
+    ms = {}
+    srcs = []
 
-    return src
+    # Set proxy
+    proxy  = ""
+    if site_config.args.proxy:
+        proxy = site_config.args.proxy
+    proxyDict = { 
+        "http"  : proxy,
+        "https" : proxy
+    }
+
+    for domain in site_config.domains:
+
+        # Download json from http or https
+        if domain['location'].startswith("http"):
+            stix_json = requests.get(domain['location'], verify=False, proxies=proxyDict)
+            if stix_json.status_code == 200:
+                stix_json = stix_json.json()
+                ms[domain['name']] = stix2.MemoryStore(stix_data=stix_json['objects'])
+            elif stix_json.status_code == 404:
+                exit(f"\n{domain['location']} stix bundle was not found")
+            else:
+                exit(f"\n{domain['location']} stix bundle download was unsuccessful")
+        else:
+            if os.path.exists(domain['location']):
+                ms[domain['name']] = stix2.MemoryStore()
+                ms[domain['name']].load_from_file(domain['location'])
+            else:
+                exit(f"\n{domain['location']} local file does not exist. If you intended a URL, please include http:// or https://")
+        
+        if not domain['deprecated']:
+            srcs.append(ms[domain['name']])
+
+    return ms, srcs
 
 def get_contributors(ms):
     """Gets all contributors in the STIX content"""
@@ -232,8 +272,9 @@ def get_contributors(ms):
     ]
 
     for domain in site_config.domains:
+        if domain['deprecated']: continue
         obj_types = ['attack-pattern', 'malware', 'tool', 'intrusion-set']
-        src = ms[domain]
+        src = ms[domain['name']]
         obj_list = []
         for curr_type in obj_types:
             obj_list += src.query([

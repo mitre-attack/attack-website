@@ -35,30 +35,26 @@ def generate_tactics():
 
     ms = util.relationshipgetters.get_ms()
 
+    notes = util.relationshipgetters.get_objects_using_notes()
+
     for domain in site_config.domains:
         #Reads the STIX and creates a list of the ATT&CK Techniques
-        techniques_no_sub[domain] = util.buildhelpers.filter_out_subtechniques(util.stixhelpers.get_techniques(ms[domain]))
-        tactics[domain] = util.stixhelpers.get_tactic_list(ms[domain])
-
-    for deprecated_domain in site_config.deprecated_domains:
-        techniques_no_sub[deprecated_domain] = util.buildhelpers.filter_out_subtechniques(util.stixhelpers.get_techniques(ms[deprecated_domain]))
-        tactics[deprecated_domain] = util.stixhelpers.get_tactic_list(ms[deprecated_domain])
+        techniques_no_sub[domain['name']] = util.buildhelpers.filter_out_subtechniques(util.stixhelpers.get_techniques(ms[domain['name']]))
+        tactics[domain['name']] = util.stixhelpers.get_tactic_list(ms[domain['name']])
 
     side_nav_data = util.buildhelpers.get_side_nav_domains_data("tactics", tactics)
 
     for domain in site_config.domains:
-        check_if_generated = generate_domain_markdown(domain, techniques_no_sub, tactics, side_nav_data)
+        deprecated = True if domain['deprecated'] else False
+        check_if_generated = generate_domain_markdown(domain['name'], techniques_no_sub, tactics, side_nav_data, notes, deprecated)
         if not tactic_generated:
             if check_if_generated:
                 tactic_generated = True
 
-    for deprecated_domain in site_config.deprecated_domains:
-        generate_domain_markdown(deprecated_domain, techniques_no_sub, tactics, side_nav_data, deprecated=True)
-
     if not tactic_generated:
         util.buildhelpers.remove_module_from_menu(tactics_config.module_name)  
 
-def generate_domain_markdown(domain, techniques, tactics, side_nav_data, deprecated=None):
+def generate_domain_markdown(domain, techniques, tactics, side_nav_data, notes, deprecated=None):
     """Generate tactic index markdown for each domain and generates 
        shared data for tactics
     """
@@ -88,13 +84,13 @@ def generate_domain_markdown(domain, techniques, tactics, side_nav_data, depreca
 
         # Create the markdown for the enterprise groups in the STIX
         for tactic in tactics[domain]:
-            generate_tactic_md(tactic, domain, tactics, techniques, side_nav_data)
+            generate_tactic_md(tactic, domain, tactics, techniques, side_nav_data, notes)
         
         return True
 
     return False
 
-def generate_tactic_md(tactic, domain, tactic_list, techniques, side_nav_data):
+def generate_tactic_md(tactic, domain, tactic_list, techniques, side_nav_data, notes):
     """Generate markdown for given tactic"""
 
     attack_id = util.buildhelpers.get_attack_id(tactic)
@@ -111,6 +107,7 @@ def generate_tactic_md(tactic, domain, tactic_list, techniques, side_nav_data):
         data['name_lower'] = tactic['name'].lower()
         data['side_menu_data'] = side_nav_data
         data['domain'] = domain.split("-")[0]
+        data['notes'] = notes.get(tactic['id'])
 
         if tactic.get('x_mitre_deprecated'):
             data['deprecated'] = True
