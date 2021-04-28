@@ -29,12 +29,15 @@
 # Changes staged on Develop
 # ATT&CK website version 3.2.0
 ### Improvements
-- STIX2.1 support.
-- STIX notes support for object pages.
+- Add support for STIX 2.1.
+    - `note` SDOs will now be rendered on object pages when present in the STIX data.
 - Improved configuration allowing user to pull data from any HTTP endpoint instead of relying on data stored in the repository. Configuration of data endpoints can be found in `modules/site_config.py`. See issue [#139](https://github.com/mitre-attack/attack-website/issues/139).
-- Added tooltips describing fields in the cards. Added to fields on technique pages: Tactics, Platforms, System Requirements, Permissions Required, Effective Permissions, Data Sources, Supports Remote, Defense Bypassed, Impact Type, CAPEC ID, and MTC ID. Added to field on group pages: Associated Groups. Added to fields on software pages: Associated Software, Type, and Platforms. See issue [#148](https://github.com/mitre-attack/attack-website/issues/148).
-- Added navigator support for mitigations and updated navigator layer support to 4.2. See issue [#234](https://github.com/mitre-attack/attack-website/issues/234).
-- Added ATT&CK IDs to Mitigations and Procedure Examples on technique pages, and software and group home pages. See issues [#235](https://github.com/mitre-attack/attack-website/issues/235)[#236](https://github.com/mitre-attack/attack-website/issues/236).
+- Added tooltips describing fields to the card on object pages. See issue [#148](https://github.com/mitre-attack/attack-website/issues/148).
+    - Added to fields on technique pages: Tactics, Platforms, System Requirements, Permissions Required, Effective Permissions, Data Sources, Supports Remote, Defense Bypassed, Impact Type, CAPEC ID, and MTC ID. 
+    - Added to field on group pages: Associated Groups. 
+    - Added to fields on software pages: Associated Software, Type, and Platforms. 
+- Added generation of Navigator layers for mitigations, and updated navigator layer version to 4.2. See issue [#234](https://github.com/mitre-attack/attack-website/issues/234).
+- Added ATT&CK IDs to Mitigations and Procedure Examples on technique pages, and software and group home pages. See issues [#235](https://github.com/mitre-attack/attack-website/issues/235) and [#236](https://github.com/mitre-attack/attack-website/issues/236).
 - Improved the [Working with ATT&CK](https://attack.mitre.org/resources/working-with-attack/) page with additional information about ATT&CK data and the tools with which it can be manipulated. The new page also includes generated Excel spreadsheets representing the ATT&CK knowledge base (see also [mitreattack-python](https://github.com/mitre-attack/mitreattack-python)'s attackToExcel converter). See issue [#142](https://github.com/mitre-attack/attack-website/issues/142).
 - Data sources in technique cards are now hyperlinks to the [attack-datasources GitHub repository](https://github.com/mitre-attack/attack-datasources).
 
