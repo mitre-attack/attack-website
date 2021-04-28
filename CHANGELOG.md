@@ -37,7 +37,7 @@
 - Added ATT&CK IDs to Mitigations and Procedure Examples on technique pages, and software and group home pages. See issues [#235](https://github.com/mitre-attack/attack-website/issues/235)[#236](https://github.com/mitre-attack/attack-website/issues/236).
 - Improved the [Working with ATT&CK](https://attack.mitre.org/resources/working-with-attack/) page with additional information about ATT&CK data and the tools with which it can be manipulated. The new page also includes generated Excel spreadsheets representing the ATT&CK knowledge base (see also [mitreattack-python](https://github.com/mitre-attack/mitreattack-python)'s attackToExcel converter). See issue [#142](https://github.com/mitre-attack/attack-website/issues/142).
 - Data sources in technique cards are now hyperlinks to the [attack-datasources GitHub repository](https://github.com/mitre-attack/attack-datasources).
-- Depracated Enterprise/Mobile about pages and removed links pointing to those pages.
+- Deprecated Enterprise/Mobile about pages and removed links pointing to those pages.
 
 # 23 March 2021
 ## ATT&CK website version 3.1.1
