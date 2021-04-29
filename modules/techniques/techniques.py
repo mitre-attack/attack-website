@@ -601,7 +601,6 @@ def data_sources_link(data_sources):
         
         updated_data_sources = []
 
-
         for data_source in data_sources:
             data_source_str = data_source
             if ":" in data_source:
@@ -618,5 +617,4 @@ def data_sources_link(data_sources):
         
         return updated_data_sources
     
-    data_sources.append("Command: Command Execution")
     return ", ".join(replace_link(data_sources))
