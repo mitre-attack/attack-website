@@ -15,6 +15,7 @@
 {% import 'macros/versioning.html' as versioning %}
 {% import 'macros/clean_output.html' as clean_output %}
 {% import 'macros/citations.html' as citations %}
+{% import 'macros/notes.html' as notes %}
 
 {% block head %}
     {{ super () }}
@@ -50,44 +51,90 @@
                     <h1>
                         {{parsed.name}}
                     </h1>
-                    {% if parsed.descr %}
                     <div class="row">
-                        <div class="col-md-8 description-body">
-                        {% if parsed.deprecated %}
-                            <font color="red">****Deprecation Warning****</font>
-                        {% endif %}
-                        {{clean_output.stixToHTML(parsed.descr, parsed.citations)}}
-                    </div>
-                    {% endif %}
-                    
-                    <div class="col-md-4">
-                        <div class="card">
-                            <div class="card-body">
-                                {% if parsed.attack_id %}
-                                    <div class="card-data"><span class="h5 card-title">ID</span>: {{parsed.attack_id}}</div>
-                                {% endif %}
-                                {% if parsed.aliases_list %}
-                                    <div class="card-data"><span class="h5 card-title">Associated Groups</span>: {{parsed.aliases_list|join(", ")}}</div>
-                                {% endif %}
-                                {% if parsed.contributors_list %}
-                                    <div class="card-data"><span class="h5 card-title">Contributors</span>: {{parsed.contributors_list|join("; ")}}</div>
-                                {% endif %}
-                                {{parsed.contributors}}
-                                {% if parsed.version %}
-                                    <div class="card-data"><span class="h5 card-title">Version</span>: {{parsed.version}}</div>
-                                {% endif %}
-                                {% if parsed.created %}
-                                    <div class="card-data"><span class="h5 card-title">Created:&nbsp;</span>{{parsed.created}}</div>
-                                {% endif %}
-                                {% if parsed.modified %}
-                                    <div class="card-data"><span class="h5 card-title">Last Modified:&nbsp;</span>{{parsed.modified}}</div>
-                                {% endif %}
-                            </div>
+                        <div class="col-md-8">
+                            {% if parsed.descr %}
+                                <div class="description-body">
+                                    {% if parsed.deprecated %}
+                                        <font color="red">****Deprecation Warning****</font>
+                                    {% endif %}
+                                    {{clean_output.stixToHTML(parsed.descr, parsed.citations)}}
+                                </div>
+                            {% endif %}
+                            {% if parsed.notes %}
+                                {{ notes.notes_section(parsed.notes) }}
+                            {% endif %}
                         </div>
-                        {% if parsed.versioning_feature %}
-                            {{ versioning.permalink_button(output_file, parsed.attack_id)}}
-                        {% endif %}
-                    </div>
+                        <div class="col-md-4">
+                            <div class="card">
+                                <div class="card-body">
+                                    {% set has_alias_list = parsed.aliases_list %}
+                                    {% if parsed.attack_id %}
+                                        <div id="card-id" class="row card-data">
+                                            {% if has_alias_list %}
+                                                <div class="col-md-1 px-0 text-center"></div>
+                                            {% endif %}
+                                            <div class="{% if has_alias_list %}col-md-11 pl-0{% else %}col-md-12{% endif %}">
+                                                <span class="h5 card-title">ID:&nbsp;</span>{{parsed.attack_id}}
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                    {% if parsed.aliases_list %}
+                                        <div class="row card-data">
+                                            <div class="col-md-1 px-0 text-center">
+                                                <span data-toggle="tooltip" data-placement="left" title="" data-test-ignore="true" data-original-title="Names that have overlapping reference to a group entry and may refer to the same or similar group in threat intelligence reporting">&#9432;</span>
+                                            </div>
+                                            <div class="col-md-11 pl-0">
+                                                <span class="h5 card-title">Associated Groups</span>: {{parsed.aliases_list|join(", ")}}
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                    {% if parsed.contributors_list %}
+                                        <div class="row card-data">
+                                            {% if has_alias_list %}
+                                                <div class="col-md-1 px-0 text-center"></div>
+                                            {% endif %}                                            
+                                            <div class="{% if has_alias_list %}col-md-11 pl-0{% else %}col-md-12{% endif %}">
+                                                <span class="h5 card-title">Contributors</span>: {{parsed.contributors_list|join("; ")}}
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                    {% if parsed.version %}
+                                        <div class="row card-data">
+                                            {% if has_alias_list %}
+                                                <div class="col-md-1 px-0 text-center"></div>
+                                            {% endif %} 
+                                            <div class="{% if has_alias_list %}col-md-11 pl-0{% else %}col-md-12{% endif %}">
+                                                <span class="h5 card-title">Version</span>: {{parsed.version}}
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                    {% if parsed.created %}
+                                        <div class="row card-data">
+                                            {% if has_alias_list %}
+                                                <div class="col-md-1 px-0 text-center"></div>
+                                            {% endif %} 
+                                            <div class="{% if has_alias_list %}col-md-11 pl-0{% else %}col-md-12{% endif %}">
+                                                <span class="h5 card-title">Created:&nbsp;</span>{{parsed.created}}
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                    {% if parsed.modified %}
+                                        <div class="row card-data">
+                                            {% if has_alias_list %}
+                                                <div class="col-md-1 px-0 text-center"></div>
+                                            {% endif %} 
+                                            <div class="{% if has_alias_list %}col-md-11 pl-0{% else %}col-md-12{% endif %}">
+                                                <span class="h5 card-title">Last Modified:&nbsp;</span>{{parsed.modified}}
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            {% if parsed.versioning_feature %}
+                                {{ versioning.permalink_button(output_file, parsed.attack_id)}}
+                            {% endif %}
+                        </div>
                     </div>
                     {% if parsed.alias_descriptions %}
                         <h2 class="pt-3" id ="aliasDescription">Associated Group Descriptions</h2>

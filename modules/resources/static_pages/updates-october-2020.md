@@ -8,7 +8,7 @@ save_as: resources/updates/updates-october-2020/index.html
 
 | Version | Start Date | End Date | Data |
 |:--------|:-----------|:---------|:-----|
-| [ATT&CK v8](/versions/v8) | October 27, 2020 | This is the current version of ATT&CK | [v8.2 on MITRE/CTI](https://github.com/mitre/cti/releases/tag/ATT%26CK-v8.2) |
+| [ATT&CK v8](/versions/v8) | October 27, 2020 | April 28, 2021 | [v8.2 on MITRE/CTI](https://github.com/mitre/cti/releases/tag/ATT%26CK-v8.2) |
 
 The October 2020 (v8) ATT&CK release updates Techniques, Groups, and Software for both Enterprise and Mobile. The biggest changes are the deprecation of the PRE-ATT&CK domain, the addition of two new Tactics to replace [PRE-ATT&CK](/versions/v7/matrices/pre/), and the addition of the Network platform to Enterprise ATT&CK. 
 

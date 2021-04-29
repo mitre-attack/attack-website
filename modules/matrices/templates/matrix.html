@@ -5,6 +5,7 @@
 {% import 'macros/versioning.html' as versioning %}
 {% import 'macros/deprecated.html' as deprecated %}
 {% import 'macros/clean_output.html' as clean_output %}
+{% import 'macros/notes.html' as notes %}
 
 {% if parsed.domain == "mobile" %}
     {% set title = "Matrix - Mobile | MITRE ATT&CK&reg;" -%}
@@ -64,7 +65,7 @@
                         {% if parsed.descr %}
                             {{deprecated.deprecated(clean_output.stixToHTML(parsed.descr, firstParagraphOnly=True))}}
                         {% else %}
-                            {{deprecated.deprecated("This technique has been deprecated.")}}
+                            {{deprecated.deprecated("This matrix has been deprecated.")}}
                         {% endif %}
                     </div>
                 </div>
@@ -81,6 +82,11 @@
                             {% elif parsed.platforms | length == 1 %}
                                     The {{matrix_plural}} contains information for the {{parsed.platforms[0].name}} platform.
                             {% endif %}
+                            {% if parsed.matrices | length == 1 %}
+                                {% if parsed.notes[0] %}
+                                    {{ notes.notes_section(parsed.notes[0]) }}
+                                {% endif %}
+                            {% endif %}
                         </p>
                     </div>
                     <div class="matrix-border col-md-3">
@@ -89,15 +95,6 @@
                             {% if parsed.navigator_link %} 
                                 <div class="row p-2">
                                     <a href="{{ parsed.navigator_link }}" target="_blank">View on the ATT&amp;CK<sup>&reg;</sup> Navigator <img src="/theme/images/external-site-dark.jpeg" width="10"></a>
-                                </div>
-                            {% endif %}
-                            {% if parsed.resources %}
-                                <div class="row p-2">
-                                    {% if parsed.domain == "enterprise" %}
-                                        <a href="/resources/enterprise-introduction/">About the Enterprise domain</a>
-                                    {% elif parsed.domain == "mobile" %}
-                                        <a href="/resources/mobile-introduction/">About the Mobile domain</a>
-                                    {% endif %}
                                 </div>
                             {% endif %}
                             {% if parsed.versioning_feature %}
@@ -113,7 +110,7 @@
         </div>
         {% if not parsed.deprecated %}
             <div class="pb-3">
-                {{matrix_macros.matrices(parsed.matrices, parsed.has_subtechniques, parsed.tour_technique, False)}}
+                {{matrix_macros.matrices(parsed.matrices, parsed.has_subtechniques, parsed.tour_technique, False, parsed.notes)}}
             </div>
         {% endif %}
     </div>

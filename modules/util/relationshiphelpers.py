@@ -190,6 +190,30 @@ def parent_technique_of(srcs):
     """
     return get_related(srcs, "attack-pattern", "subtechnique-of", "attack-pattern")
 
+def get_objects_using_notes(srcs):
+    """Build note object mapping
+        params:
+         srcs: memorystores array
+    """
+
+    notes = query_all(srcs, [
+        Filter('type', '=', 'note'),
+        Filter('revoked', '=', False)
+    ])
+
+    # stix_id => [ ids of objects with relationships with stix_id ]
+    id_to_notes = {}
+
+    for note in notes:
+        if note.get('object_refs'):
+            for obj in note['object_refs']:
+                if obj in id_to_notes:
+                    id_to_notes[obj].append(json.loads(note.serialize()))
+                else:
+                    id_to_notes[obj] = [json.loads(note.serialize())]
+
+    return id_to_notes
+
 def load(url):
     """Load stix data from file"""
     src = MemoryStore()

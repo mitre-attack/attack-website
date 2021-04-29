@@ -34,9 +34,7 @@ matrices = [
         "type": "local",
         "path": "enterprise",
         "matrix": "enterprise-attack",
-        "platforms": ["Windows","macOS","Linux", "PRE",
-                      "AWS","GCP","Azure","Azure AD",
-                      "Office 365","SaaS", "Network"],
+        "platforms": ["Windows", "macOS", "Linux", "PRE", "Azure AD", "Office 365", "Google Workspace", "SaaS", "IaaS", "Network", "Containers"],
         "descr": "Below are the tactics and techniques representing the MITRE ATT&CK<sup>&reg;</sup> Matrix for Enterprise.",
         "subtypes": [
             {
@@ -80,36 +78,9 @@ matrices = [
                 "type": "local",
                 "matrix": "enterprise-attack",
                 "path": "enterprise/cloud",
-                "platforms": ["AWS","GCP","Azure","Azure AD","Office 365","SaaS"],
+                "platforms": ["Azure AD", "Office 365", "Google Workspace", "SaaS", "IaaS"],
                 "descr": "Below are the tactics and techniques representing the MITRE ATT&CK<sup>&reg;</sup> Matrix for Enterprise covering cloud-based techniques.",
                 "subtypes": [
-                    {
-                        "name" : "AWS",
-                        "type": "local",
-                        "matrix": "enterprise-attack",
-                        "path": "enterprise/cloud/aws",
-                        "platforms": ["AWS"],
-                        "descr": "Below are the tactics and techniques representing the MITRE ATT&CK<sup>&reg;</sup> Matrix for Enterprise covering cloud-based techniques. ",
-                        "subtypes": []
-                    },
-                    {
-                        "name" : "GCP",
-                        "type": "local",
-                        "matrix": "enterprise-attack",
-                        "path": "enterprise/cloud/gcp",
-                        "platforms": ["GCP"],
-                        "descr": "Below are the tactics and techniques representing the MITRE ATT&CK<sup>&reg;</sup> Matrix for Enterprise covering cloud-based techniques. ",
-                        "subtypes": []
-                    },
-                    {
-                        "name": "Azure",
-                        "type": "local",
-                        "matrix": "enterprise-attack",
-                        "path": "enterprise/cloud/azure",
-                        "platforms": ["Azure"],
-                        "descr": "Below are the tactics and techniques representing the MITRE ATT&CK<sup>&reg;</sup> Matrix for Enterprise covering cloud-based techniques. ",
-                        "subtypes": []
-                    },
                     { 
                         "name" : "Office 365",
                         "type": "local",
@@ -129,11 +100,29 @@ matrices = [
                         "subtypes": []
                     },
                     {
+                        "name" : "Google Workspace",
+                        "type": "local",
+                        "matrix": "enterprise-attack",
+                        "path": "enterprise/cloud/googleworkspace",
+                        "platforms": ["Google Workspace"],
+                        "descr": "Below are the tactics and techniques representing the MITRE ATT&CK<sup>&reg;</sup> Matrix for Enterprise covering cloud-based techniques. ",
+                        "subtypes": []
+                    },
+                    {
                         "name" : "SaaS",
                         "type": "local",
                         "matrix": "enterprise-attack",
                         "path": "enterprise/cloud/saas",
                         "platforms": ["SaaS"],
+                        "descr": "Below are the tactics and techniques representing the MITRE ATT&CK<sup>&reg;</sup> Matrix for Enterprise covering cloud-based techniques. ",
+                        "subtypes": []
+                    },
+                    {
+                        "name" : "IaaS",
+                        "type": "local",
+                        "matrix": "enterprise-attack",
+                        "path": "enterprise/cloud/iaas",
+                        "platforms": ["IaaS"],
                         "descr": "Below are the tactics and techniques representing the MITRE ATT&CK<sup>&reg;</sup> Matrix for Enterprise covering cloud-based techniques. ",
                         "subtypes": []
                     }
@@ -147,7 +136,16 @@ matrices = [
                 "platforms": ["Network"],
                 "descr": "Below are the tactics and techniques representing the MITRE ATT&CK<sup>&reg;</sup> Matrix for Enterprise covering techniques against network infrastructure devices. ",
                 "subtypes": []
-            }
+            },
+            {
+                "name" : "Containers",
+                "type": "local",
+                "matrix": "enterprise-attack",
+                "path": "enterprise/containers",
+                "platforms": ["Containers"],
+                "descr": "Below are the tactics and techniques representing the MITRE ATT&CK<sup>&reg;</sup> Matrix for Enterprise covering techniques against container technologies. ",
+                "subtypes": []
+            },
         ]
     },
     {
@@ -202,13 +200,13 @@ platform_to_path = {
     "Windows": "enterprise/windows",
     "macOS": "enterprise/macos",
     "Linux": "enterprise/linux",
-    "AWS": "enterprise/cloud/aws",
-    "GCP": "enterprise/cloud/gcp",
-    "Azure": "enterprise/cloud/azure",
     "Azure AD": "enterprise/cloud/azuread",
     "Office 365": "enterprise/cloud/office365",
+    "Google Workspace": "enterprise/cloud/googleworkspace",
     "SaaS": "enterprise/cloud/saas",
+    "IaaS": "enterprise/cloud/iaas",
     "Network": "enterprise/network",
+    "Containers": "enterprise/containers",
     "Android": "mobile/android",
     "iOS": "mobile/ios"
 }

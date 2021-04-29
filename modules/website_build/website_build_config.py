@@ -14,7 +14,7 @@ base_page_data = {
     "BANNER_ENABLED": True,
     "BANNER_MESSAGE": "This is a custom instance of the MITRE ATT&CK Website. The official website can be found at <a href='https://attack.mitre.org'>attack.mitre.org</a>.",
     "CONTENT_VERSION": site_config.attack_version,
-    "WEBSITE_VERSION": "3.1.1",
+    "WEBSITE_VERSION": "3.2.0",
     "CHANGELOG_LOCATION": "/resources/changelog.html",
     "LOGO_HEADER": "/theme/images/mitre_attack_logo.png",
     "LOGO_FOOTER": "/theme/images/mitrelogowhiteontrans.gif",
@@ -27,7 +27,7 @@ index_matrix = {
     "name": "ATT&CK Matrix for Enterprise",
     "descr": "", # if specified, adds a subtitle to the index page matrix
     "matrix": "enterprise-attack",
-    "platforms": ["PRE", "Windows", "macOS", "Linux", "AWS", "GCP", "Azure", "Azure AD", "Office 365", "SaaS", "Network"]
+    "platforms": ["PRE", "Windows", "macOS", "Linux", "Azure AD", "Office 365", "Google Workspace", "SaaS", "IaaS", "Network", "Containers"]
 }
 
 # ATT&CK overview
