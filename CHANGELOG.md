@@ -25,10 +25,15 @@
 <!--    PATCH updates are when a bugfix is made without the             -->
 <!--          addition of notable features. When PATCH is 0 it can      -->
 <!--          be omitted                                                -->
+# 29 April 2021
+## [ATT&CK Content version 9.0](https://github.com/mitre/cti/releases/tag/ATT%26CK-v9.0)
+See release notes [here](https://attack.mitre.org/resources/updates/updates-april-2021/index.html).
 
-# Changes staged on Develop
-# ATT&CK website version 3.2.0
+## ATT&CK website version 3.2.0
 ### Improvements
+- Replaced GCP, AWS and Azure platforms with Infrastructure-as-a-Service (IaaS). See issue [#276](https://github.com/mitre-attack/attack-website/issues/276).
+- Added Google Workspace platform to Cloud platform list.
+- Added Containers platform to enterprise platform list.
 - Add support for STIX 2.1.
     - `note` SDOs will now be rendered on object pages when present in the STIX data.
 - Improved configuration allowing user to pull data from any HTTP endpoint instead of relying on data stored in the repository. Configuration of data endpoints can be found in `modules/site_config.py`. See issue [#139](https://github.com/mitre-attack/attack-website/issues/139).
@@ -41,6 +46,8 @@
 - Improved the [Working with ATT&CK](https://attack.mitre.org/resources/working-with-attack/) page with additional information about ATT&CK data and the tools with which it can be manipulated. The new page also includes generated Excel spreadsheets representing the ATT&CK knowledge base (see also [mitreattack-python](https://github.com/mitre-attack/mitreattack-python)'s attackToExcel converter). See issue [#142](https://github.com/mitre-attack/attack-website/issues/142).
 - Data sources in technique cards are now hyperlinks to the [attack-datasources GitHub repository](https://github.com/mitre-attack/attack-datasources).
 
+### Fixes
+- Fixed a bug with automatic redirection generation which was causing some redirects to build in the wrong directory.
 # 23 March 2021
 ## ATT&CK website version 3.1.1
 ### Improvements 
