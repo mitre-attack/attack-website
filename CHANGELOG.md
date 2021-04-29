@@ -29,6 +29,10 @@
 ## [ATT&CK Content version 9.0](https://github.com/mitre/cti/releases/tag/ATT%26CK-v9.0)
 See release notes [here](https://attack.mitre.org/resources/updates/updates-april-2021/index.html).
 
+## ATT&CK website version 3.2.1
+### Fixes
+- Removing duplicate "Command: Command Execution" data source from (sub-)techniques.
+
 ## ATT&CK website version 3.2.0
 ### Improvements
 - Replaced GCP, AWS and Azure platforms with Infrastructure-as-a-Service (IaaS). See issue [#276](https://github.com/mitre-attack/attack-website/issues/276).
