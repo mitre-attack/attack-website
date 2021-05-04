@@ -32,6 +32,7 @@ See release notes [here](https://attack.mitre.org/resources/updates/updates-apri
 ## ATT&CK website version 3.2.2
 ### Fixes
 - Adding missing groups excel link from ATT&CK in Excel.
+- Fixing CTI training ticket number 4473845 -> 473845. See issue [#296](https://github.com/mitre-attack/attack-website/issues/296).
 
 ## ATT&CK website version 3.2.1
 ### Fixes
