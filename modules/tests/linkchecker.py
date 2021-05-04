@@ -199,7 +199,7 @@ def internal_external_link_checker(filepath, html_str):
                 # If problem detected, add to problem list
                 if links_list[link]:
                     if link not in problems:
-                        problems.append(link)
+                        problems.append(f"[other] {link}")
             elif link.startswith("http"):
                 # Consider status 404 and unreachable as broken.
                 # Unreachable will be triggered by the except clause
@@ -207,17 +207,17 @@ def internal_external_link_checker(filepath, html_str):
                     r = requests.head(
                         link, headers=headers, 
                         verify=False, timeout=5)
-                    if r.status_code == 404:
+                    if r.status_code != 200:
                         links_list[link] = True
-                        problems.append(link)
+                        problems.append(f"[{r.status_code}] {link}")
                     else:
                         links_list[link] = False
-                except:
+                except Exception as e:
                     links_list[link] = True
-                    problems.append(link)
+                    problems.append(f"[external link {type(ex).__name__}] {link}")
             else:
                 if internal_link_test(link):
-                    problems.append(link)
+                    problems.append(f"[internal page missing] {link}")
                     links_list[link] = True
 
                     if not internal_link_error:
