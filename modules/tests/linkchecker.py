@@ -212,7 +212,7 @@ def internal_external_link_checker(filepath, html_str):
                         problems.append(f"[{r.status_code}] {link}")
                     else:
                         links_list[link] = False
-                except Exception as e:
+                except Exception as ex:
                     links_list[link] = True
                     problems.append(f"[external link {type(ex).__name__}] {link}")
             else:
