@@ -29,6 +29,11 @@
 ## [ATT&CK Content version 9.0](https://github.com/mitre/cti/releases/tag/ATT%26CK-v9.0)
 See release notes [here](https://attack.mitre.org/resources/updates/updates-april-2021/index.html).
 
+## ATT&CK website version 3.2.2
+### Fixes
+- Added missing groups excel link from ATT&CK in Excel.
+- Fixed CTI training ticket number 4473845 -> 473845. See issue [#296](https://github.com/mitre-attack/attack-website/issues/296).
+
 ## ATT&CK website version 3.2.1
 ### Fixes
 - Removing duplicate "Command: Command Execution" data source from (sub-)techniques.
