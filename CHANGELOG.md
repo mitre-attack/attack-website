@@ -25,6 +25,14 @@
 <!--    PATCH updates are when a bugfix is made without the             -->
 <!--          addition of notable features. When PATCH is 0 it can      -->
 <!--          be omitted                                                -->
+# 20 May 2021
+## ATT&CK website version 3.2.2
+### Improvements
+- Improved testing of external links to report all instances of non-200 responses (instead of just 404 responses) and provide better reporting on the results of the test.
+### Fixes
+- Added missing groups excel in the ATT&CK in Excel section of [Working with ATT&CK](https://attack.mitre.org/resources/working-with-attack/).
+- Fixed CTI training ticket number 4473845 -> 473845. See issue [#296](https://github.com/mitre-attack/attack-website/issues/296).
+
 # 29 April 2021
 ## [ATT&CK Content version 9.0](https://github.com/mitre/cti/releases/tag/ATT%26CK-v9.0)
 See release notes [here](https://attack.mitre.org/resources/updates/updates-april-2021/index.html).
