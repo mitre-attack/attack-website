@@ -28,6 +28,8 @@
 # Changes staged on develop
 
 ## ATT&CK website version 3.2.2
+### Improvements
+- Improved testing of external links to report all instances of non-200 responses (instead of just 404 responses) and provide better reporting on the results of the test.
 ### Fixes
 - Added missing groups excel in the ATT&CK in Excel section of [Working with ATT&CK](https://attack.mitre.org/resources/working-with-attack/).
 - Fixed CTI training ticket number 4473845 -> 473845. See issue [#296](https://github.com/mitre-attack/attack-website/issues/296).
