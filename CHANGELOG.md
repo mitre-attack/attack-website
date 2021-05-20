@@ -25,8 +25,7 @@
 <!--    PATCH updates are when a bugfix is made without the             -->
 <!--          addition of notable features. When PATCH is 0 it can      -->
 <!--          be omitted                                                -->
-# Changes staged on develop
-
+# 20 May 2021
 ## ATT&CK website version 3.2.2
 ### Improvements
 - Improved testing of external links to report all instances of non-200 responses (instead of just 404 responses) and provide better reporting on the results of the test.
