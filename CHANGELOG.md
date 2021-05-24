@@ -25,6 +25,10 @@
 <!--    PATCH updates are when a bugfix is made without the             -->
 <!--          addition of notable features. When PATCH is 0 it can      -->
 <!--          be omitted                                                -->
+## ATT&CK website version 3.2.3
+### Improvements
+- Added support to deprecated relationships. Deprecated relationships will not appear on the website UI but can be added to STIX bundles. See issue [##302](https://github.com/mitre-attack/attack-website/issues/302).
+
 # 20 May 2021
 ## ATT&CK website version 3.2.2
 ### Improvements
