@@ -21,13 +21,13 @@ if attack_version.startswith("v"):
 domains = [
     {
         "name" : "enterprise-attack",
-        "location" : "https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json",
+        "location" : "enterprise-attack-9.0.json",
         "alias" : "Enterprise",
         "deprecated" : False
     },
     {
         "name" : "mobile-attack",
-        "location" : "https://raw.githubusercontent.com/mitre/cti/master/mobile-attack/mobile-attack.json",
+        "location" : "mobile-attack-9.0.json",
         "alias" : "Mobile",
         "deprecated" : False
     },

@@ -133,6 +133,48 @@ def get_technique_id_domain_map(ms):
     
     return tech_list
 
+def add_replace_or_ignore(obj_list, obj_in_question):
+    """ Add if object does not already exist
+        Replace if a newer version of the object is found
+        Ignore if object already exists but object in question is outdated or deprecated
+    """
+
+    def get_conflictive_object():
+        """ Return object if already in list if there is a conflict with the STIX ID or ATT&CK ID """
+        for obj in obj_list:
+            if obj.id == obj_in_question.id or buildhelpers.get_attack_id(obj) == buildhelpers.get_attack_id(obj_in_question):
+                return obj
+        return []
+
+    object_in_conflict = get_conflictive_object()
+
+    # Object does not exist: Add
+    # Verify if object does not appear with STIX ID or ATT&CK ID
+    if not object_in_conflict:
+        obj_list.append(obj_in_question)
+        return obj_list
+
+    # Object already exists: Replace
+    # If object in conflict is deprecated and new object is not, select new
+    if object_in_conflict.get('x_mitre_deprecated') and not obj_in_question.get('x_mitre_deprecated'):
+        # Replace object in conflict with object in question
+        obj_list = [obj_in_question if x == object_in_conflict else x for x in obj_list]
+        return obj_list
+
+    # If both objects are deprecated, select the most recently modified
+    if object_in_conflict.get('x_mitre_deprecated') and obj_in_question.get('x_mitre_deprecated'):
+
+        conflict_modified = object_in_conflict.get('modified')
+        in_question_modified = obj_in_question.get('modified')
+
+        if in_question_modified > conflict_modified:
+            # Replace object in conflict with object in question
+            obj_list = [obj_in_question if x == object_in_conflict else x for x in obj_list]
+        return obj_list
+    
+    # Object will not be replaced: Ignore
+    return obj_list
+
 def grab_resources(ms):
     """Returns a dict that contains lists for the software, group,
        technique and mitigation objects.
@@ -148,7 +190,7 @@ def grab_resources(ms):
         ])
         for val in curr_list:
             if next((x for x in tech_list if x.id == val.id), None) is None:
-                tech_list.append(val)   
+                tech_list.append(val)
     tech_list = sorted(tech_list, key=lambda k: k['name'].lower())
 
     #Generates list of software
@@ -161,16 +203,16 @@ def grab_resources(ms):
         ])
         # Remove duplicates from different domains
         for val in curr_list:
-            if next((x for x in software_list if x.id == val.id), None) is None:
-                software_list.append(val)
+            software_list = add_replace_or_ignore(software_list, val)
         curr_list = ms[domain['name']].query([
             stix2.Filter('type', '=', 'tool'),
             stix2.Filter('revoked', '=', False)
         ])
         # Remove duplicates from different domains
         for val in curr_list:
-            if next((x for x in software_list if x.id == val.id), None) is None:
-                software_list.append(val)   
+            software_list = add_replace_or_ignore(software_list, val)
+    
+    # tech_list = remove_duplicate_attack_ids(techn_list) 
     software_list = sorted(software_list, key=lambda k: k["name"].lower() )
 
     #Generates list of groups
