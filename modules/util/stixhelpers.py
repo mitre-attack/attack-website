@@ -135,44 +135,46 @@ def get_technique_id_domain_map(ms):
 
 def add_replace_or_ignore(obj_list, obj_in_question):
     """ Add if object does not already exist
-        Replace if a newer version of the object is found
-        Ignore if object already exists but object in question is outdated or deprecated
+        Replace object if exist depending on deprecation status or modified date
+        Ignore if object already exists but object in question is outdated
     """
 
-    def get_conflictive_object():
-        """ Return object if already in list if there is a conflict with the STIX ID or ATT&CK ID """
+    def get_object_in_conflict():
+        """ Return object if already in list. If there is a conflict with the STIX ID or ATT&CK ID """
         for obj in obj_list:
             if obj.id == obj_in_question.id or buildhelpers.get_attack_id(obj) == buildhelpers.get_attack_id(obj_in_question):
                 return obj
         return []
 
-    object_in_conflict = get_conflictive_object()
+    # Get object in conflict
+    obj_in_conflict = get_object_in_conflict()
 
-    # Object does not exist: Add
+    # Add: Object does not exist
+
     # Verify if object does not appear with STIX ID or ATT&CK ID
-    if not object_in_conflict:
+    if not obj_in_conflict:
         obj_list.append(obj_in_question)
-        return obj_list
 
-    # Object already exists: Replace
+    # Replace: Object already exists
+
+    # Ignore if object in question is deprecated and object in conflict is not
+    elif not obj_in_conflict.get('x_mitre_deprecated') and obj_in_question.get('x_mitre_deprecated'):
+        pass
+
     # If object in conflict is deprecated and new object is not, select new
-    if object_in_conflict.get('x_mitre_deprecated') and not obj_in_question.get('x_mitre_deprecated'):
+    elif obj_in_conflict.get('x_mitre_deprecated') and not obj_in_question.get('x_mitre_deprecated'):
         # Replace object in conflict with object in question
-        obj_list = [obj_in_question if x == object_in_conflict else x for x in obj_list]
-        return obj_list
+        obj_list = [obj_in_question if x == obj_in_conflict else x for x in obj_list]
 
-    # If both objects are deprecated, select the most recently modified
-    if object_in_conflict.get('x_mitre_deprecated') and obj_in_question.get('x_mitre_deprecated'):
-
-        conflict_modified = object_in_conflict.get('modified')
+    # Replace if modified date is newer
+    else:
+        conflict_modified = obj_in_conflict.get('modified')
         in_question_modified = obj_in_question.get('modified')
 
         if in_question_modified > conflict_modified:
             # Replace object in conflict with object in question
-            obj_list = [obj_in_question if x == object_in_conflict else x for x in obj_list]
-        return obj_list
+            obj_list = [obj_in_question if x == obj_in_conflict else x for x in obj_list]
     
-    # Object will not be replaced: Ignore
     return obj_list
 
 def grab_resources(ms):
@@ -189,8 +191,7 @@ def grab_resources(ms):
             stix2.Filter('revoked', '=', False)
         ])
         for val in curr_list:
-            if next((x for x in tech_list if x.id == val.id), None) is None:
-                tech_list.append(val)
+            tech_list = add_replace_or_ignore(tech_list, val)
     tech_list = sorted(tech_list, key=lambda k: k['name'].lower())
 
     #Generates list of software
@@ -212,7 +213,6 @@ def grab_resources(ms):
         for val in curr_list:
             software_list = add_replace_or_ignore(software_list, val)
     
-    # tech_list = remove_duplicate_attack_ids(techn_list) 
     software_list = sorted(software_list, key=lambda k: k["name"].lower() )
 
     #Generates list of groups
@@ -225,8 +225,7 @@ def grab_resources(ms):
         ])
         # Remove duplicates from different domains
         for val in curr_list:
-            if next((x for x in group_list if x.id == val.id), None) is None:
-                group_list.append(val)
+            group_list = add_replace_or_ignore(group_list, val)
     group_list = sorted(group_list, key=lambda k: k["name"].lower())
 
     #Generates a list of CoA
@@ -239,8 +238,7 @@ def grab_resources(ms):
         ])
         #remove duplicates from different domains
         for val in curr_list:
-            if next((x for x in coa_list if x.id == val.id), None) is None:
-                coa_list.append(val)
+            coa_list = add_replace_or_ignore(coa_list, val)
     coa_list = sorted(coa_list, key=lambda k: k["name"].lower() )
 
     #Generates list of relationships
