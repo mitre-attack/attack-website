@@ -25,6 +25,10 @@
 <!--    PATCH updates are when a bugfix is made without the             -->
 <!--          addition of notable features. When PATCH is 0 it can      -->
 <!--          be omitted                                                -->
+## ATT&CK website version 3.2.3
+### Improvements
+- Added support for more than one object with the same STIX or ATT&CK ID on STIX bundles. Website will display the most recently modified object depending on the deprecation status. See issue [#304](https://github.com/mitre-attack/attack-website/issues/304).
+
 # 20 May 2021
 ## ATT&CK website version 3.2.2
 ### Improvements
