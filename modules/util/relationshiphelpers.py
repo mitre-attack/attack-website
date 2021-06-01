@@ -30,6 +30,8 @@ def get_related(srcs, src_type, rel_type, target_type, reverse=False):
 
     # build the dict
     for relationship in relationships:
+
+        if relationship.get('x_mitre_deprecated'): continue
         if (src_type in relationship.source_ref and target_type in relationship.target_ref):
             if (relationship.source_ref in id_to_related and not reverse) or (relationship.target_ref in id_to_related and reverse):
                 if not reverse: 
