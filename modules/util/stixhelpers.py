@@ -49,12 +49,23 @@ def get_tactic_list(src, matrix_id=None):
     
     return tactics
 
-def get_all_of_type(src, obj_type):
+def get_all_of_type(src, types):
     """Reads the STIX and returns a list of all of a particular
-       type of object in the STIX
+       type of object in the STIX, removes duplicate STIX and ATT&CK IDs 
     """
 
-    return src.query([stix2.Filter('type', '=', obj_type)])
+    def grab_filtered_list_by_type(stix_type):
+        return src.query([stix2.Filter('type', '=', stix_type)])
+
+    stix_objs = {}
+    attack_id_objs = {}
+
+    for stix_type in types:
+        result = grab_filtered_list_by_type(stix_type)
+        for obj in result:
+            add_replace_or_ignore(stix_objs, attack_id_objs, obj)
+
+    return [attack_id_objs[key] for key in attack_id_objs]
 
 def get_techniques(src):
     """Reads the STIX and returns a list of all techniques in the STIX"""
@@ -144,7 +155,7 @@ def add_replace_or_ignore(stix_objs, attack_id_objs, obj_in_question):
 
     def has_STIX_ATTACK_ID_conflict(attack_id):
         # Check if STIX ID has been seen before, if it has, return ATT&CK ID of conflict ATT&CK if ATT&CK IDs are different
-        conflict = stix_objs.get(obj_in_question.id)
+        conflict = stix_objs.get(obj_in_question.get('id'))
         if conflict:
             conflict_attack_id = buildhelpers.get_attack_id(conflict)
             if conflict_attack_id != attack_id and attack_id_objs.get(conflict_attack_id):
@@ -162,7 +173,7 @@ def add_replace_or_ignore(stix_objs, attack_id_objs, obj_in_question):
         else:
             attack_id_objs[attack_id] = obj_in_question
 
-        stix_objs[obj_in_question.id] = obj_in_question
+        stix_objs[obj_in_question.get('id')] = obj_in_question
 
     # Get ATT&CK ID
     attack_id = buildhelpers.get_attack_id(obj_in_question)
@@ -176,7 +187,7 @@ def add_replace_or_ignore(stix_objs, attack_id_objs, obj_in_question):
 
     # Check if object in conflict exists
     # STIX ID
-    stix_id_obj_in_conflict = stix_objs.get(obj_in_question.id)
+    stix_id_obj_in_conflict = stix_objs.get(obj_in_question.get('id'))
 
     # Get ATT&CK ID conflicts
     if conflict_attack_id:
@@ -189,7 +200,7 @@ def add_replace_or_ignore(stix_objs, attack_id_objs, obj_in_question):
 
     if not stix_id_obj_in_conflict:
         # Add if object does not exist in STIX ID map
-        stix_objs[obj_in_question.id] = obj_in_question
+        stix_objs[obj_in_question.get('id')] = obj_in_question
 
     if not attack_id_obj_in_conflict:
         # Add if object does not exist in ATT&CK ID map

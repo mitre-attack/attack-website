@@ -127,7 +127,7 @@ def get_sub_matrices(matrix):
     # remove revoked
     platform_techniques = util.buildhelpers.filter_deprecated_revoked(platform_techniques)
     # get relevant tactics
-    all_tactics = util.stixhelpers.get_all_of_type(domain_ms, "x-mitre-tactic")
+    all_tactics = util.stixhelpers.get_all_of_type(domain_ms, ["x-mitre-tactic"])
     tactic_id_to_shortname = { tactic["id"]: tactic["x_mitre_shortname"] for tactic in all_tactics }
     
     has_subtechniques = False #track whether the current matrix has subtechniques
