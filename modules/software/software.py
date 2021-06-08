@@ -48,11 +48,6 @@ def generate_markdown_files():
 
     software_list_no_deprecated_revoked = util.buildhelpers.filter_deprecated_revoked(software_list)
 
-    with open("softwarelist.txt", "w") as softwarelist:
-        software_list_no_deprecated_revoked_dump = sorted(software_list_no_deprecated_revoked, key=lambda k: k['name'].lower())
-        for software in software_list_no_deprecated_revoked_dump:
-            softwarelist.write(software['name']+"\n")
-            
     if software_list_no_deprecated_revoked:
         has_software = True
     
