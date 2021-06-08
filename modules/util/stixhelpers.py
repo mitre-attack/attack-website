@@ -20,32 +20,40 @@ def get_mitigation_list(src):
     
     return sorted(mitigations, key=lambda k: k['name'].lower())
 
-def get_matrices(src):
+def get_matrices(src, domain):
     """Reads the STIX and returns a list of all matrices in the STIX"""
 
     matrices = src.query([
         stix2.Filter('type', '=', 'x-mitre-matrix'),
     ])
 
+    # Filter out by domain
+    matrices = [x for x in matrices if not hasattr(x, 'x_mitre_domains') or domain in x.get('x_mitre_domains')]
+
     return matrices
 
-def get_tactic_list(src, matrix_id=None):
+def get_tactic_list(src, domain, matrix_id=None):
     """Reads the STIX and returns a list of all tactics in the STIX"""
 
     tactics = []
-    matrix = src.query([
+    matrices = src.query([
         stix2.Filter('type', '=', 'x-mitre-matrix'),
     ])
 
+    matrices = sorted(matrices, key=lambda k: len(k['tactic_refs']), reverse=True)
+
     if matrix_id:
-        for curr_matrix in matrix:
+        for curr_matrix in matrices:
             if curr_matrix['id'] == matrix_id:
                 for tactic_id in curr_matrix['tactic_refs']:
                     tactics.append(src.query([stix2.Filter('id', '=', tactic_id)])[0])    
     else:
-        for i in range(len(matrix)):
-            for tactic_id in matrix[i]['tactic_refs']:
-                tactics.append(src.query([stix2.Filter('id', '=', tactic_id)])[0])    
+        for matrix in matrices:
+            for tactic_id in matrix['tactic_refs']:
+                tactics.append(src.query([stix2.Filter('id', '=', tactic_id)])[0])
+    
+    # Filter out by domain
+    tactics = [x for x in tactics if not hasattr(x, 'x_mitre_domains') or domain in x.get('x_mitre_domains')]
     
     return tactics
 
@@ -67,13 +75,17 @@ def get_all_of_type(src, types):
 
     return [attack_id_objs[key] for key in attack_id_objs]
 
-def get_techniques(src):
-    """Reads the STIX and returns a list of all techniques in the STIX"""
+def get_techniques(src, domain):
+    """Reads the STIX and returns a list of all techniques in the STIX
+       by given domain
+    """
 
     tech_list = src.query([
         stix2.Filter('type', '=', 'attack-pattern'),
         stix2.Filter('revoked', '=', False)
     ])
+    # Filter out by domain
+    tech_list = [x for x in tech_list if not hasattr(x, 'x_mitre_domains') or domain in x.get('x_mitre_domains')]
 
     tech_list = sorted(tech_list, key=lambda k: k['name'].lower())
     return tech_list
@@ -141,8 +153,14 @@ def get_technique_id_domain_map(ms):
         for val in curr_list:
             technique_id = buildhelpers.get_attack_id(val)
             if technique_id:
-                tech_list[technique_id] = domain['name']
-    
+                if val.get('x_mitre_domains'):
+                    if domain['name'] in val['x_mitre_domains']:
+                        if tech_list.get(technique_id) and domain['name'] not in tech_list[technique_id]:
+                            tech_list[technique_id].append(domain['name'])
+                        else:
+                            tech_list[technique_id] = domain['name']
+                else:
+                    tech_list[technique_id] = domain['name']
     return tech_list
 
 def add_replace_or_ignore(stix_objs, attack_id_objs, obj_in_question):

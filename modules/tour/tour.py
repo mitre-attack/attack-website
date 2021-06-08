@@ -72,7 +72,7 @@ def get_tour_steps(matrix):
         return {}
 
     # Reads the STIX and creates a list of the techniques
-    techniques = util.stixhelpers.get_techniques(ms)
+    techniques = util.stixhelpers.get_techniques(ms, matrix['matrix'])
 
     techs_no_subtechs = util.buildhelpers.filter_out_subtechniques(techniques)
     techs_with_subtechs = util.buildhelpers.filter_out_techniques_without_subtechniques(techniques)
