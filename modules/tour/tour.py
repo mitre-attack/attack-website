@@ -72,7 +72,7 @@ def get_tour_steps(matrix):
         return {}
 
     # Reads the STIX and creates a list of the techniques
-    techniques = util.stixhelpers.get_techniques(ms)
+    techniques = util.stixhelpers.get_techniques(ms, matrix['matrix'])
 
     techs_no_subtechs = util.buildhelpers.filter_out_subtechniques(techniques)
     techs_with_subtechs = util.buildhelpers.filter_out_techniques_without_subtechniques(techniques)
@@ -88,6 +88,10 @@ def get_tour_steps(matrix):
     
     # Find technique with sub-techniques
     technique = get_technique_with_subtechniques(techs_no_subtechs)
+
+    if not technique:
+        # Did not find technique with sub-technique
+        return steps
 
     # Get technique ID and store that as the step
     steps['technique'] = "techniques/{}".format(util.buildhelpers.get_attack_id(technique))
@@ -178,6 +182,7 @@ def get_technique_with_subtechniques(techs_no_subtechs):
         Return technique with the most sub-techniques if not the case 
     """
 
+    subtech_count_min = 4
     counter = 0
     chosen_tech = {}
 
@@ -191,7 +196,7 @@ def get_technique_with_subtechniques(techs_no_subtechs):
             # Check if sub-technique count is bigger than counter
             if counter < subtech_count:
                 # Quick return if found
-                if subtech_count > 3: return tech
+                if subtech_count >= subtech_count_min: return tech
                 # Set counter and new techique
                 counter = subtech_count
                 chosen_tech = tech

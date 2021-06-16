@@ -39,8 +39,8 @@ def generate_tactics():
 
     for domain in site_config.domains:
         #Reads the STIX and creates a list of the ATT&CK Techniques
-        techniques_no_sub[domain['name']] = util.buildhelpers.filter_out_subtechniques(util.stixhelpers.get_techniques(ms[domain['name']]))
-        tactics[domain['name']] = util.stixhelpers.get_tactic_list(ms[domain['name']])
+        techniques_no_sub[domain['name']] = util.buildhelpers.filter_out_subtechniques(util.stixhelpers.get_techniques(ms[domain['name']], domain['name']))
+        tactics[domain['name']] = util.stixhelpers.get_tactic_list(ms[domain['name']], domain['name'])
 
     side_nav_data = util.buildhelpers.get_side_nav_domains_data("tactics", tactics)
 

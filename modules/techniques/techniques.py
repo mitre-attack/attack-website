@@ -43,8 +43,8 @@ def generate_techniques():
 
     for domain in site_config.domains:
         #Reads the STIX and creates a list of the ATT&CK Techniques
-        techniques_no_sub[domain['name']] = util.buildhelpers.filter_out_subtechniques(util.stixhelpers.get_techniques(ms[domain['name']]))
-        tactics[domain['name']] = util.stixhelpers.get_tactic_list(ms[domain['name']])
+        techniques_no_sub[domain['name']] = util.buildhelpers.filter_out_subtechniques(util.stixhelpers.get_techniques(ms[domain['name']], domain['name']))
+        tactics[domain['name']] = util.stixhelpers.get_tactic_list(ms[domain['name']], domain['name'])
 
     side_nav_data = get_technique_side_nav_data(techniques_no_sub, tactics)
 
@@ -487,6 +487,10 @@ def get_technique_side_nav_data(techniques, tactics):
                             child['path'] = "/techniques/{}/{}/".format(technique['id'], sub_number)
                             child['children'] = []
                             technique_row['children'].append(child)
+
+                    # Sort subtechniques by ATT&CK ID
+                    if technique_row['children']:
+                        technique_row['children'] = sorted(technique_row['children'], key=lambda k: k['id'])
 
                 # Add technique data to tactic
                 tactic_row['children'].append(technique_row)
