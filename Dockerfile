@@ -27,7 +27,7 @@ RUN apt-get update --fix-missing \
 
   WORKDIR /home/attackuser/attack-website
 
-  RUN python3 update-attack.py -c -b
+  RUN python3 update-attack.py
 
   WORKDIR /home/attackuser/attack-website/output
 
