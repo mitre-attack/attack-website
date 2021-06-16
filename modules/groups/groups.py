@@ -44,7 +44,9 @@ def generate_markdown_files():
 
     group_list = util.relationshipgetters.get_group_list()
 
-    if group_list:
+    group_list_no_deprecated_revoked = util.buildhelpers.filter_deprecated_revoked(group_list)
+
+    if group_list_no_deprecated_revoked:
         has_group = True
 
     if has_group:
@@ -54,14 +56,14 @@ def generate_markdown_files():
         group_by = 2
 
         notes = util.relationshipgetters.get_objects_using_notes()
-        side_menu_data = util.buildhelpers.get_side_menu_data("Groups", "/groups/", group_list)
+        side_menu_data = util.buildhelpers.get_side_menu_data("Groups", "/groups/", group_list_no_deprecated_revoked)
         data['side_menu_data'] = side_menu_data
 
-        side_menu_mobile_view_data = util.buildhelpers.get_side_menu_mobile_view_data("groups", "/groups/", group_list, group_by)
+        side_menu_mobile_view_data = util.buildhelpers.get_side_menu_mobile_view_data("groups", "/groups/", group_list_no_deprecated_revoked, group_by)
         data['side_menu_mobile_view_data'] = side_menu_mobile_view_data
 
-        data['groups_table'] = get_groups_table_data(group_list)
-        data['groups_list_len'] = str(len(group_list))
+        data['groups_table'] = get_groups_table_data(group_list_no_deprecated_revoked)
+        data['groups_list_len'] = str(len(group_list_no_deprecated_revoked))
         
         subs = groups_config.group_index_md + json.dumps(data)
 

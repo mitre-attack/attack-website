@@ -44,23 +44,25 @@ def generate_markdown_files():
     # Amount of characters per category
     group_by = 2
 
-    software_list = util.relationshipgetters.get_software_list()        
+    software_list = util.relationshipgetters.get_software_list()
 
-    if software_list:
+    software_list_no_deprecated_revoked = util.buildhelpers.filter_deprecated_revoked(software_list)
+
+    if software_list_no_deprecated_revoked:
         has_software = True
     
     if has_software:
-        data['software_list_len'] = str(len(software_list))
+        data['software_list_len'] = str(len(software_list_no_deprecated_revoked))
 
         notes = util.relationshipgetters.get_objects_using_notes()
 
-        side_menu_data = util.buildhelpers.get_side_menu_data("software", "/software/", software_list)
+        side_menu_data = util.buildhelpers.get_side_menu_data("software", "/software/", software_list_no_deprecated_revoked)
         data['side_menu_data'] = side_menu_data
 
-        side_menu_mobile_view_data = util.buildhelpers.get_side_menu_mobile_view_data("software", "/software/", software_list, group_by)
+        side_menu_mobile_view_data = util.buildhelpers.get_side_menu_mobile_view_data("software", "/software/", software_list_no_deprecated_revoked, group_by)
         data['side_menu_mobile_view_data'] = side_menu_mobile_view_data
 
-        data['software_table'] = get_software_table_data(software_list)
+        data['software_table'] = get_software_table_data(software_list_no_deprecated_revoked)
         
         subs = software_config.software_index_md + json.dumps(data)
 

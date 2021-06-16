@@ -25,6 +25,16 @@
 <!--    PATCH updates are when a bugfix is made without the             -->
 <!--          addition of notable features. When PATCH is 0 it can      -->
 <!--          be omitted                                                -->
+# 16 June 2021
+## ATT&CK website version 3.2.3
+### Improvements
+- Added support for deprecated relationships, software and groups. Deprecated relationships, software and groups will not appear on the website UI but can be added to STIX bundles. See issue [#302](https://github.com/mitre-attack/attack-website/issues/302) and [#305](https://github.com/mitre-attack/attack-website/issues/305).
+- Added support for input data with more than one object with the same STIX or ATT&CK ID which can occur if there are multiple versions of the object present in the data. Website will display the most recently modified object depending on the deprecation status. See issue [#304](https://github.com/mitre-attack/attack-website/issues/304).
+- Sorted sub-techniques by ATT&CK ID on Techniques Used tables. See issue [#314](https://github.com/mitre-attack/attack-website/issues/314).
+### Fixes
+- Fixed Dockerfile which would not run on the current website version. See issue [#313](https://github.com/mitre-attack/attack-website/issues/313).
+- Fixed some issues where objects would appear in the wrong domain under specific circumstances. See issue [#310](https://github.com/mitre-attack/attack-website/issues/310).
+
 # 20 May 2021
 ## ATT&CK website version 3.2.2
 ### Improvements

@@ -30,8 +30,8 @@ def generate_markdown_files(domain):
 
     ms = util.relationshipgetters.get_ms()
 
-    for key in attack_redirections_config.general_redirects_dict:
-        objs = util.stixhelpers.get_all_of_type(ms[domain], key)
+    for types in attack_redirections_config.general_redirects_types_dict:
+        objs = util.stixhelpers.get_all_of_type(ms[domain], types)
         for obj in objs:
             new_attack_id, old_attack_id = get_new_and_old_ids(obj)
 
@@ -44,21 +44,21 @@ def generate_markdown_files(domain):
                         revoked_attack_id = util.buildhelpers.get_attack_id(revoked_by_obj)
 
                         if revoked_attack_id:
-                            generate_obj_redirect(attack_redirections_config.general_redirects_dict[key], revoked_attack_id, old_attack_id, domain)
+                            generate_obj_redirect(attack_redirections_config.general_redirects_dict[types[0]], revoked_attack_id, old_attack_id, domain)
 
                             if old_attack_id != new_attack_id:
-                                generate_obj_redirect(attack_redirections_config.general_redirects_dict[key], revoked_attack_id, new_attack_id, domain)
+                                generate_obj_redirect(attack_redirections_config.general_redirects_dict[types[0]], revoked_attack_id, new_attack_id, domain)
                 else:
-                    generate_obj_redirect(attack_redirections_config.general_redirects_dict[key], new_attack_id, old_attack_id, domain)
+                    generate_obj_redirect(attack_redirections_config.general_redirects_dict[types[0]], new_attack_id, old_attack_id, domain)
 
     if domain == "mobile-attack":
-        for key in attack_redirections_config.mobile_redirect_dict:
-            objs = util.stixhelpers.get_all_of_type(ms[domain], key)
+        for types in attack_redirections_config.mobile_redirect_types_dict:
+            objs = util.stixhelpers.get_all_of_type(ms[domain], types)
             for obj in objs:
                 new_attack_id, old_attack_id = get_new_and_old_ids(obj)
 
                 if new_attack_id:
-                    generate_obj_redirect(attack_redirections_config.mobile_redirect_dict[key], new_attack_id, old_attack_id, domain)
+                    generate_obj_redirect(attack_redirections_config.mobile_redirect_dict[types[0]], new_attack_id, old_attack_id, domain)
 
     generate_tactic_redirects(ms, domain)
 
@@ -66,7 +66,7 @@ def generate_markdown_files(domain):
 def generate_tactic_redirects(ms, domain):
     """Responsible for generating tactic redirects markdown"""
 
-    tactics = util.stixhelpers.get_all_of_type(ms[domain], 'x-mitre-tactic')
+    tactics = util.stixhelpers.get_all_of_type(ms[domain], ['x-mitre-tactic'])
 
     data = {}
     for tactic in tactics:

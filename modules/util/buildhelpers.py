@@ -509,6 +509,8 @@ def technique_used_helper(technique_list, technique, reference_list):
                     technique_list[parent_id] = parent_technique_used_helper(parent_id)
 
                 technique_list[parent_id]['subtechniques'].append(get_technique_data_helper(attack_id, technique, reference_list))
+                # Sort subtechniques by name
+                technique_list[parent_id]['subtechniques'] = sorted(technique_list[parent_id]['subtechniques'], key=lambda k: k['id'])
             
             # Attack id is regular technique
             else:

@@ -92,7 +92,7 @@ def generate_deprecated_matrix(matrix, side_menu_data=None):
     # memorystore for the current domain
     domain_ms = ms[matrix['matrix']]
 
-    sub_matrices = util.stixhelpers.get_matrices(domain_ms)
+    sub_matrices = util.stixhelpers.get_matrices(domain_ms, matrix['matrix'])
     data['descr'] = ""
     for sub in sub_matrices:
         if sub.get('description'):
@@ -121,13 +121,13 @@ def get_sub_matrices(matrix):
     # memorystore for the current domain
     domain_ms = ms[matrix['matrix']]
     # get relevant techniques
-    techniques = util.stixhelpers.get_techniques(domain_ms)
+    techniques = util.stixhelpers.get_techniques(domain_ms, matrix['matrix'])
     platform_techniques = util.buildhelpers.filter_techniques_by_platform(techniques, matrix['platforms'])
     platform_techniques = util.buildhelpers.filter_out_subtechniques(platform_techniques)
     # remove revoked
     platform_techniques = util.buildhelpers.filter_deprecated_revoked(platform_techniques)
     # get relevant tactics
-    all_tactics = util.stixhelpers.get_all_of_type(domain_ms, "x-mitre-tactic")
+    all_tactics = util.stixhelpers.get_all_of_type(domain_ms, ["x-mitre-tactic"])
     tactic_id_to_shortname = { tactic["id"]: tactic["x_mitre_shortname"] for tactic in all_tactics }
     
     has_subtechniques = False #track whether the current matrix has subtechniques
@@ -217,7 +217,7 @@ def get_sub_matrices(matrix):
         return obj
 
     data = []
-    sub_matrices = util.stixhelpers.get_matrices(domain_ms)
+    sub_matrices = util.stixhelpers.get_matrices(domain_ms, matrix['matrix'])
     for sub_matrix in sub_matrices:
         # find last modified date
         matrix_dates = util.buildhelpers.get_created_and_modified_dates(sub_matrix)
