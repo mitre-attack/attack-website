@@ -30,6 +30,7 @@
 - Added support for deprecated relationships, software and groups. Deprecated relationships, software and groups will not appear on the website UI but can be added to STIX bundles. See issue [#302](https://github.com/mitre-attack/attack-website/issues/302) and [#305](https://github.com/mitre-attack/attack-website/issues/305).
 - Added support for input data with more than one object with the same STIX or ATT&CK ID which can occur if there are multiple versions of the object present in the data. Website will display the most recently modified object depending on the deprecation status. See issue [#304](https://github.com/mitre-attack/attack-website/issues/304).
 - Added domain checks for tactics, software, and mitigations objects. See issue [#310](https://github.com/mitre-attack/attack-website/issues/310).
+- Sorted sub-techniques by ATT&CK ID on Techniques Used tables. See issue [#314](https://github.com/mitre-attack/attack-website/issues/314).
 
 # 20 May 2021
 ## ATT&CK website version 3.2.2
