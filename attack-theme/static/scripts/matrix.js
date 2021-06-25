@@ -48,7 +48,9 @@ function show_side_matrix() {
     $(".matrix-type.side").removeClass("d-none");
     $(".matrix-type.flat").addClass("d-none");
 
-    document.getElementById("layout-options").setAttribute("data-selected_layout", "side");
+    layoutOptions = document.getElementById("layout-options");
+    layoutOptions.setAttribute("data-selected_layout", "side");
+    layoutOptions.innerHTML = "layout: side";
     save_layout();
 }
 
@@ -59,7 +61,9 @@ function show_flat_matrix() {
     $(".matrix-type.flat").removeClass("d-none");
     $(".matrix-type.side").addClass("d-none");
 
-    document.getElementById("layout-options").setAttribute("data-selected_layout", "flat");
+    layoutOptions = document.getElementById("layout-options");
+    layoutOptions.setAttribute("data-selected_layout", "flat");
+    layoutOptions.innerHTML = "layout: flat";
     save_layout();
 }
 

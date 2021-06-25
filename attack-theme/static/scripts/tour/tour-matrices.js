@@ -54,7 +54,7 @@ tourSteps = [
         element: "#layout-options",
         placement: "top",
         title: "Using the flat matrix layout",
-        content: "There are multiple ways sub-techniques can be represented in the matrix. Click the 'layouts' dropdown and select 'flat layout' to see the alternate layout."
+        content: "There are multiple ways sub-techniques can be represented in the matrix. Click the 'layout' dropdown and select 'flat' to see the alternate layout."
     },
     {
         container: "#tour-matrix-container",
