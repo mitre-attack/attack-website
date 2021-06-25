@@ -1,8 +1,8 @@
-module_name = "attack_redirections"
+module_name = "redirections"
 priority = 8.2
 
 # Resources redirection json location
-attack_redirections_location = "modules/attack_redirections/attack_redirections.json"
+redirections_location = "modules/redirections/redirections.json"
 
 # General redirects
 general_redirects_dict = {

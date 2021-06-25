@@ -2,9 +2,9 @@ import os
 import uuid
 from modules import site_config
 from modules import util
-from . import attack_redirections_config
+from . import redirections_config
 
-def generate_attack_redirections():
+def generate_redirections():
     """Responsible for verifying redirects directory and starting off
        markdown generation process
     """
@@ -17,7 +17,7 @@ def generate_attack_redirections():
         os.mkdir(site_config.redirects_markdown_path)
 
     # Generate redirections
-    util.buildhelpers.generate_redirections(attack_redirections_config.attack_redirections_location)
+    util.buildhelpers.generate_redirections(redirections_config.redirections_location)
 
     for domain in site_config.domains:
         if domain['deprecated']: continue
@@ -30,7 +30,7 @@ def generate_markdown_files(domain):
 
     ms = util.relationshipgetters.get_ms()
 
-    for types in attack_redirections_config.general_redirects_types_dict:
+    for types in redirections_config.general_redirects_types_dict:
         objs = util.stixhelpers.get_all_of_type(ms[domain], types)
         for obj in objs:
             new_attack_id, old_attack_id = get_new_and_old_ids(obj)
@@ -44,21 +44,21 @@ def generate_markdown_files(domain):
                         revoked_attack_id = util.buildhelpers.get_attack_id(revoked_by_obj)
 
                         if revoked_attack_id:
-                            generate_obj_redirect(attack_redirections_config.general_redirects_dict[types[0]], revoked_attack_id, old_attack_id, domain)
+                            generate_obj_redirect(redirections_config.general_redirects_dict[types[0]], revoked_attack_id, old_attack_id, domain)
 
                             if old_attack_id != new_attack_id:
-                                generate_obj_redirect(attack_redirections_config.general_redirects_dict[types[0]], revoked_attack_id, new_attack_id, domain)
+                                generate_obj_redirect(redirections_config.general_redirects_dict[types[0]], revoked_attack_id, new_attack_id, domain)
                 else:
-                    generate_obj_redirect(attack_redirections_config.general_redirects_dict[types[0]], new_attack_id, old_attack_id, domain)
+                    generate_obj_redirect(redirections_config.general_redirects_dict[types[0]], new_attack_id, old_attack_id, domain)
 
     if domain == "mobile-attack":
-        for types in attack_redirections_config.mobile_redirect_types_dict:
+        for types in redirections_config.mobile_redirect_types_dict:
             objs = util.stixhelpers.get_all_of_type(ms[domain], types)
             for obj in objs:
                 new_attack_id, old_attack_id = get_new_and_old_ids(obj)
 
                 if new_attack_id:
-                    generate_obj_redirect(attack_redirections_config.mobile_redirect_dict[types[0]], new_attack_id, old_attack_id, domain)
+                    generate_obj_redirect(redirections_config.mobile_redirect_dict[types[0]], new_attack_id, old_attack_id, domain)
 
     generate_tactic_redirects(ms, domain)
 
@@ -77,7 +77,7 @@ def generate_tactic_redirects(ms, domain):
 
             data['title'] = tactic["name"].replace(' ', '_') + "-" + domain + str(uuid.uuid1())
             data['to'] = "/tactics/" + attack_id
-            data['from'] = attack_redirections_config.redirects_paths[domain] + tactic['name'].replace(' ', '_')
+            data['from'] = redirections_config.redirects_paths[domain] + tactic['name'].replace(' ', '_')
 
         subs = site_config.redirect_md.substitute(data)
 
@@ -99,7 +99,7 @@ def generate_obj_redirect(redirect_link, new_attack_id, old_attack_id, domain):
         old_attack_id = util.buildhelpers.redirection_subtechnique(old_attack_id)
 
     data['to'] =  "/" + redirect_link['new'] + "/" + new_attack_id
-    data['from'] = attack_redirections_config.redirects_paths[domain] + redirect_link['old'] + "/" + old_attack_id 
+    data['from'] = redirections_config.redirects_paths[domain] + redirect_link['old'] + "/" + old_attack_id 
 
     subs = site_config.redirect_md.substitute(data)
 
