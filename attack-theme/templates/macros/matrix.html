@@ -120,7 +120,7 @@
                 <td class="tactic">
                     {% for technique in tactic.techniques %}                        
                         {% if technique.subtechniques | length == 0 %}
-                            {{ technique_cell(technique, False) }}
+                            {{ technique_cell(technique, False, tactic) }}
                         {% else %}
                             <!-- tour technique is scheduled task under privilege escalation -->
                             {% set tour_technique = technique.id == tour.technique and tactic.id == tour.tactic and not isIndex %}
@@ -130,7 +130,7 @@
                                         <div class="handle"> = </div>
                                     </td>
                                     <td class="technique">
-                                        {{ technique_cell(technique, True) }}
+                                        {{ technique_cell(technique, True, tactic) }}
                                     </td>
                                 </tr>
                                 <tr class="subtechniques-row hidden subtechniques-container subtechniques--{{tactic.id}}--{{technique.id}}{% if tour_technique %} subtechniques--tour{% endif %}">
@@ -142,7 +142,7 @@
                                     <td class="subtechniques"{% if tour_technique %} id="tour-flat-subtechniques" {% endif %}>
                                         <div class="subtechniques">
                                             {% for subtechnique in technique.subtechniques %}
-                                                {{ technique_cell(subtechnique, False)}}
+                                                {{ technique_cell(subtechnique, False, tactic)}}
                                             {% endfor %}
                                         </div>
                                     </td>
@@ -185,12 +185,12 @@
                             <tr class="technique-row" {% if tour_technique %} id="tour-side-technique" {% endif %}>
                                 <td>
                                     {% if technique.subtechniques | length == 0 %}
-                                        {{ technique_cell(technique, False) }}
+                                        {{ technique_cell(technique, False, tactic) }}
                                     {% else %}
                                     <table class="supertechnique">
                                         <tr>
                                             <td class="technique">
-                                                {{ technique_cell(technique, True) }}
+                                                {{ technique_cell(technique, True, tactic) }}
                                             </td>
                                         </tr>
                                     </table>
@@ -215,7 +215,7 @@
                                     <div class="subtechniques hidden subtechniques-container subtechniques--{{tactic.id}}--{{technique.id}}{% if tour_technique %} subtechniques--tour{% endif %}">
                                         {% for subtechnique in technique.subtechniques %}
                                         <div class="subtechnique">
-                                            {{ technique_cell(subtechnique, False) }}
+                                            {{ technique_cell(subtechnique, False, tactic) }}
                                         </div>
                                         {% endfor %}
                                     </div>
@@ -231,9 +231,9 @@
 {% endmacro %}
 
 <!-- Helper macro for creating a [sub]technique cell. Param is a Technique (defined above) and boolean noting whether or not it is a subtechnique-->
-{% macro technique_cell(technique, is_supertechnique) %}
+{% macro technique_cell(technique, is_supertechnique, tactic) %}
 
-<div class="technique-cell {% if is_supertechnique %} supertechniquecell{% endif %}{% if technique.color %} colored{% endif %}" {% if technique.color %} style="background: {{technique.color}}"{% endif %}>
-    <a href="{{technique.url}}" data-toggle="tooltip" data-placement="top" title="{{technique.external_id}}">{{technique.name}}{% if technique.subtechniques | length > 0 %}&nbsp;<sub>({{technique.subtechniques | length}})</sub>{% endif %}</a>
+<div class="technique-cell {% if is_supertechnique %} supertechniquecell{% endif %}{% if technique.color %} colored{% endif %}" {% if technique.color %} style="background: {{technique.color}}"{% endif %} id="technique-cell--{{tactic.id}}--{{technique.id}}">
+    <a href="{{technique.url}}" data-toggle="tooltip" data-placement="top" data-animation="false" data-container="#technique-cell--{{tactic.id}}--{{technique.id}}" title="{{technique.external_id}}">{{technique.name}}{% if technique.subtechniques | length > 0 %}&nbsp;<sub>({{technique.subtechniques | length}})</sub>{% endif %}</a>
 </div>
 {% endmacro %}
