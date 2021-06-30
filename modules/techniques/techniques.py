@@ -235,7 +235,13 @@ def generate_data_for_md(technique_dict, technique, tactic_list, is_sub_techniqu
             if technique.get('kill_chain_phases'):
                 technique_dict['tactics'] = []
                 for elem in technique['kill_chain_phases']:
-                    technique_dict['tactics'].append(elem['phase_name'].title().replace('-', ' '))
+                    # Get tactic from tactic_list
+                    tactic = [x for x in tactic_list if x['x_mitre_shortname'] == elem['phase_name']][0]
+                    tactic_info = {
+                        "name" : tactic['name'],
+                        "id" : util.buildhelpers.get_attack_id(tactic)
+                    }
+                    technique_dict['tactics'].append(tactic_info)
 
             # Get platforms that technique uses
             if technique.get('x_mitre_platforms'):
