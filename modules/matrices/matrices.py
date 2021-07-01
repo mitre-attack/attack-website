@@ -154,10 +154,7 @@ def get_sub_matrices(matrix):
             obj['name'] = technique["name"]
             obj['external_id'] = attack_id
 
-            url = technique['external_references'][0].get('url')
-            if isinstance(url, str) and url.startswith("attack.mitre.org"):
-                url = url.split("attack.mitre.org")[1]
-            obj['url'] = url
+            obj['url'] = "/techniques/" + attack_id.replace(".", "/") # sub-technique URL replacement
             obj['x_mitre_platforms'] = technique.get('x_mitre_platforms')
 
             subtechniques_of = util.relationshipgetters.get_subtechniques_of()
@@ -208,10 +205,7 @@ def get_sub_matrices(matrix):
             obj['name'] = tactic_obj["name"]
             obj['external_id'] = attack_id
 
-            url = tactic_obj['external_references'][0].get('url')
-            if isinstance(url, str) and url.startswith("attack.mitre.org"):
-                url = url.split("attack.mitre.org")[1]
-            obj['url'] = url
+            obj['url'] = "/tactics/" + attack_id
             obj['techniques'] = techniques_in_tactic(tactic_id)
         
         return obj
