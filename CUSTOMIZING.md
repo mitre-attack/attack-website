@@ -2,9 +2,9 @@
 
 ## Building the site with custom content
 
-The MITRE ATT&CK Website® is designed support an evolving knowledge base. The content seen on the site is generated from data in STIX2.0 JSON format. The data used on the live site at [attack.mitre.org](https://attack.mitre.org) can be found on our [mitre/cti](https://github.com/mitre/cti) github repo. 
+The MITRE ATT&CK Website® is designed support an evolving knowledge base The content seen on the site is generated from data in STIX JSON format. Both STIX 2.0 and STIX 2.1 data is supported. The data used to generate the live site at [attack.mitre.org](https://attack.mitre.org) can be found on our [mitre/cti](https://github.com/mitre/cti) github repo. 
 
-You can generate the website using custom content by replacing the STIX bundle locations in `modules/site_config.py`, `domains`. A domain location can be a URL (please include http:// or https://), or a local file on disk.
+You can generate the website using custom content by replacing the STIX bundle locations in `modules/site_config.py`, `domains`. A domain location can be a URL (please include http:// or https://), or a local file on disk. 
 
 Matrices are defined in `modules/matrices/matrices_config.py`, you will need to update the structures declared in this file to modify the matrices.
 
