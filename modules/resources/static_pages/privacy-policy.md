@@ -30,7 +30,7 @@ Information that User subscribers may provide, such as company name, location, o
 
 ATT&CK-related mailing lists that are sponsored by MITRE are configured to prevent attackers from identifying the subscribers to such mailing lists. 
 
-Any User personal information provided to MITRE for inclusion on subscription mailing lists for ATT&CK evaluations will be governed under the MITRE Engenuity&reg; privacy policy, [mitre-engenuity.org/privacy](mitre-engenuity.org/privacy). 
+Any User personal information provided to MITRE for inclusion on subscription mailing lists for ATT&CK evaluations will be governed under the MITRE Engenuity&reg; privacy policy, [https://mitre-engenuity.org/privacy](https://mitre-engenuity.org/privacy). 
 
 Users may contact MITRE electronically, via the [Contact Us](https://www.mitre.org/contact-us) page. MITRE may share the information that you provide to us via e-mail within the corporation to respond to your queries, but we do not provide information to anyone outside of the corporation unless required by law to do so. 
 
