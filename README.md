@@ -45,8 +45,10 @@ _See [CONTRIBUTING.md](/CONTRIBUTING.md) for more information on making contribu
 3. View the site on your preferred localhost port
 
 ## Related MITRE Work
-#### CTI
-[Cyber Threat Intelligence repository](https://github.com/mitre/cti) of the ATT&CK catalog expressed in STIX 2.0 JSON.
+#### ATT&CK STIX Data
+Data representing the ATT&CK Catalog can be found on the following repositories:
+- [Cyber Threat Intelligence repository](https://github.com/mitre/cti) contains the ATT&CK and [CAPEC](https://capec.mitre.org/) datasets expressed in STIX 2.0 JSON.
+- [attack-stix-data](https://github.com/mitre-attack/attack-stix-data) contains the ATT&CK dataset expressed in STIX 2.1 Collections.
 
 #### ATT&CK Navigator
 The ATT&CK Navigator is an open-source tool providing basic navigation and annotation of ATT&CK matrices, something that people are already doing today in tools like Excel. It is designed to be simple and generic - you can use the Navigator to visualize your defensive coverage, your red/blue team planning, the frequency of detected techniques, and more. 
