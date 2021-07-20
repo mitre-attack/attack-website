@@ -5,6 +5,8 @@ import stix2
 import urllib3
 from modules import site_config
 from . import buildhelpers
+from . import relationshiphelpers as rsh
+from . import relationshipgetters
 import time
 
 def get_mitigation_list(src):
@@ -31,6 +33,24 @@ def get_matrices(src, domain):
     matrices = [x for x in matrices if not hasattr(x, 'x_mitre_domains') or domain in x.get('x_mitre_domains')]
 
     return matrices
+
+def get_datasources(srcs):
+    """Reads the STIX and returns a list of data sources in the STIX"""
+
+    datasources = rsh.query_all(srcs, [
+        stix2.Filter('type', '=', 'x-mitre-data-source')]
+    )
+
+    return datasources
+
+def get_datacomponents(srcs):
+    """Reads the STIX and returns a list of data components in the STIX"""
+
+    datacomponents = rsh.query_all(srcs, [
+        stix2.Filter('type', '=', 'x-mitre-data-component')]
+    )
+
+    return datacomponents
 
 def get_tactic_list(src, domain, matrix_id=None):
     """Reads the STIX and returns a list of all tactics in the STIX"""
@@ -162,6 +182,20 @@ def get_technique_id_domain_map(ms):
                 else:
                     tech_list[technique_id] = domain['name']
     return tech_list
+
+def datacomponent_of():
+    """
+        Builds map from data source STIX ID to data components STIX objects
+    """
+
+    datacomponents = relationshipgetters.get_datacomponent_list()
+    datacomponent_of = {}
+    for datacomponent in datacomponents:
+        if datacomponent_of.get(datacomponent['x_mitre_data_source_ref']):
+            datacomponent_of[datacomponent['x_mitre_data_source_ref']] = []
+        datacomponent_of[datacomponent['x_mitre_data_source_ref']].append(datacomponent)
+
+    return datacomponent_of
 
 def add_replace_or_ignore(stix_objs, attack_id_objs, obj_in_question):
     """ Add if object does not already exist
@@ -301,7 +335,7 @@ def grab_resources(ms):
         "relationships": rel_list, 
         "groups": group_list, 
         "software": software_list, 
-        "techniques": tech_list, 
+        "techniques": tech_list,
         "mitigations": coa_list
     }
     return resources
