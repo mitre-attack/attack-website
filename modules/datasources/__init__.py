@@ -7,12 +7,13 @@ def get_priority():
 
 def get_menu():
     return {
-        "name": datasources_config.module_name, 
-        "url": "/datasources", 
+        "display_name":  datasources_config.module_name,
+        "name": datasources_config.module_name_no_spaces, 
+        "url": "/datasources",
         "external_link": False,
         "priority": datasources_config.priority,
         "children": []
     }
 
 def run_module():
-    return (datasources.generate_datasources(), datasources_config.module_name)
+    return (datasources.generate_datasources(), datasources_config.module_name_no_spaces)

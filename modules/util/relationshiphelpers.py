@@ -113,6 +113,14 @@ def groups_using_malware(srcs):
     """
     return get_related(srcs, "intrusion-set", "uses", "malware", reverse=True)
 
+# technique:data component
+def techniques_detected_by_datacomponent(srcs):
+    """returns datacomponent_id => {technique, relationship} for each technique detected
+       by data component. srcs should be an array of memorystores for enterprise, 
+       mobile and pre
+    """
+    return get_related(srcs, "x-mitre-data-component", "detects", "attack-pattern")
+
 # technique:group
 def techniques_used_by_groups(srcs):
     """returns group_id => {technique, relationship} for each technique used

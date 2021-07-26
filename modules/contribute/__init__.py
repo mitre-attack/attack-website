@@ -7,6 +7,7 @@ def get_priority():
 
 def get_menu():
     return {
+        "display_name": "Contribute",
         "name": "Contribute", 
         "url": "/resources/contribute/", 
         "external_link": False,

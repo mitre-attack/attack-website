@@ -191,7 +191,7 @@ def datacomponent_of():
     datacomponents = relationshipgetters.get_datacomponent_list()
     datacomponent_of = {}
     for datacomponent in datacomponents:
-        if datacomponent_of.get(datacomponent['x_mitre_data_source_ref']):
+        if not datacomponent_of.get(datacomponent['x_mitre_data_source_ref']):
             datacomponent_of[datacomponent['x_mitre_data_source_ref']] = []
         datacomponent_of[datacomponent['x_mitre_data_source_ref']].append(datacomponent)
 

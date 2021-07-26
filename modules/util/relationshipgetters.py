@@ -7,6 +7,7 @@ tools_used_by_groups = {}
 techniques_used_by_malware = {}
 techniques_used_by_tools = {}
 techniques_used_by_groups = {}
+techniques_detected_by_datacomponent = {}
 groups_using_tool = {}
 groups_using_malware = {}
 mitigation_mitigates_techniques = {}
@@ -79,6 +80,16 @@ def get_techniques_used_by_groups():
 
     return techniques_used_by_groups
 
+
+def get_techniques_detected_by_datacomponent():
+    global techniques_detected_by_datacomponent
+    
+    if not techniques_detected_by_datacomponent:
+        techniques_detected_by_datacomponent = rsh.techniques_detected_by_datacomponent(get_srcs())
+
+    return techniques_detected_by_datacomponent
+
+    
 def get_groups_using_tool():
     """ groups using tool getter """
     global groups_using_tool

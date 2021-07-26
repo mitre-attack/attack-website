@@ -9,7 +9,7 @@ from modules import site_config
 from modules import util
 
 # argument defaults and options for the CLI
-module_choices = ['clean', 'groups', 'search', 'matrices', 'mitigations', 'software', 'tactics', 'techniques', 'tour', 'website_build', 'random_page', 'redirections', 'subdirectory', 'tests']
+module_choices = ['clean', 'datasources', 'groups', 'search', 'matrices', 'mitigations', 'software', 'tactics', 'techniques', 'tour', 'website_build', 'random_page', 'redirections', 'subdirectory', 'tests']
 extras = ['resources', 'versions', 'contribute', 'blog']
 test_choices = ['size', 'links', 'external_links', 'citations']
 

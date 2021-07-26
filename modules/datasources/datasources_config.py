@@ -1,6 +1,8 @@
 from string import Template
 
 module_name = "Data Sources"
+module_name_no_spaces = "datasources"
+
 priority = 4.1
 
 # Markdown path for groups

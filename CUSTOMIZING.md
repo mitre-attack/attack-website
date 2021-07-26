@@ -50,20 +50,21 @@ def get_priority():
 
 def get_menu():
     return {
+        "display_name": "Name that will be displayed in the navigation menu"
         "name": "Your module's name", 
         "url": "/your_module-s_name/", 
         "external_link": False,
         "priority": your_module-s_name_config.priority,
         "children": [
             {
-                "name": "Module sub-menu page",
+                "display_name": "Module sub-menu page",
                 "url": "/your_module-s_name/subpage",
                 "external_link": False,
                 "children": []
             },
             ...
             {
-                "name": "Module sub-menu external page",
+                "display_name": "Module sub-menu external page",
                 "url": "https://attack.mitre.org",
                 "external_link": True,
                 "children": []            

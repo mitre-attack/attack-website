@@ -853,11 +853,10 @@ def remove_module_from_menu(module_to_be_removed):
 
 def remove_element_from_sub_menu(selected_module, element):
     """ Given a sub menu item and a module, removes element from sub menu """
-
     def remove_from_sub_menu_list(module):
         if module.get('children'):
             for child in module['children']:
-                if child['name'] == element:
+                if child.get('display_name') == element:
                     module['children'].remove(child)
                     return
 
