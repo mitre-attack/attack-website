@@ -42,6 +42,7 @@ JINJA_FILTERS = {
     'from_json': custom_jinja_filters.json.loads,
     'flatten_tree': custom_jinja_filters.flatten_tree,
     'clean_path': custom_jinja_filters.clean_path,
+    'remove_whitespace': custom_jinja_filters.remove_whitespace,
     'stixToHTML': custom_jinja_filters.stixToHTML,
     'permalink': custom_jinja_filters.permalink
 }
