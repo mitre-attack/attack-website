@@ -1,6 +1,13 @@
 // position body according to header size
 function positionBody() {
-    $("body").css("padding-top", $(".navbar").outerHeight());
+    let headerHeight = $(".navbar").outerHeight();
+    let viewportHeight = $(".attack-website-wrapper").outerHeight();
+    let sidebarHeight = viewportHeight - headerHeight + "px"
+    console.log("positioning body", headerHeight, viewportHeight, sidebarHeight)
+    $(".sidebar").css({
+        "top": headerHeight + "px",
+        "max-height": viewportHeight - headerHeight + "px"
+    });
 }
 
 // when the document loads, position the body

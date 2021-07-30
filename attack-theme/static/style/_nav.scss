@@ -12,7 +12,8 @@
 /*Top NAVIGATION*/          // top navigation bar across the web site
 .navbar {
     background-color: color(primary);
-
+    z-index: 1;
+    
     // ATT&CK brand in the top navigation bar
     .navbar-brand {
         font-size: rem(1.7);
@@ -193,43 +194,49 @@
     /******/
 }
 /******/
-.sidenav {
-    width: 100%;
-    word-break: break-word; 
-    font-size: rem(0.8);
-    .sidenav-head {
-        display: flex;
-        flex-direction: row;
-        a, .expand-button { //any direct child
-            cursor: pointer;
-            &:hover {
-                background: color-alternate(body);
+
+.sidebar {
+    // max-height: 60vh;
+    overflow-y: auto;
+    z-index: 0; //behind the header
+    .sidenav {
+        width: 100%;
+        word-break: break-word; 
+        font-size: rem(0.8);
+        .sidenav-head {
+            display: flex;
+            flex-direction: row;
+            a, .expand-button { //any direct child
+                cursor: pointer;
+                &:hover {
+                    background: color-alternate(body);
+                }
             }
-        }
-        a, span {
-            padding: rem(0); 
-            display: inline-block;
-            flex-grow: 1;
-            height: 100%;
-            &:hover {
-                text-decoration: none; //disable underline
+            a, span {
+                padding: rem(0); 
+                display: inline-block;
+                flex-grow: 1;
+                height: 100%;
+                &:hover {
+                    text-decoration: none; //disable underline
+                }
+            }        
+            .expand-button {
+                padding: 5px;
+                border-left: 1px solid color-alternate(body);
+                display: inline-block;
+                @include collapsible("after");
             }
-        }        
-        .expand-button {
-            padding: 5px;
-            border-left: 1px solid color-alternate(body);
-            display: inline-block;
-            @include collapsible("after");
+            
+            &.active { //current page
+                &, &>a { color: color(primary) !important; }
+                // background-color: color-alternate(body); 
+                // border-right: to-rem(3) solid color(primary);
+            }
+            
         }
-        
-        &.active { //current page
-            &, &>a { color: color(primary) !important; }
-            // background-color: color-alternate(body); 
-            // border-right: to-rem(3) solid color(primary);
+        .sidenav { //nested
+            padding-left: to-rem(12);
         }
-        
-    }
-    .sidenav { //nested
-        padding-left: to-rem(12);
     }
 }
