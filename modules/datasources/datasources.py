@@ -155,15 +155,16 @@ def get_datasources_side_nav_data(datasources):
             if datacomponent_of.get(datasource['id']):
                 for datacomponent in datacomponent_of[datasource['id']]:
 
-                    datacomponent_data = {
-                        "name": datacomponent['name'],
-                        "id": datacomponent['name'],
-                        "path": "/datasources/{}/#{}".format(attack_id, datacomponent['name']),
-                        "children": []
-                    }
+                    if not datacomponent.get('x_mitre_deprecated') and not datacomponent.get('revoked'):
+                        datacomponent_data = {
+                            "name": datacomponent['name'],
+                            "id": datacomponent['name'],
+                            "path": "/datasources/{}/#{}".format(attack_id, datacomponent['name']),
+                            "children": []
+                        }
 
-                    # Add data component data to data source
-                    datasource_data['children'].append(datacomponent_data)
+                        # Add data component data to data source
+                        datasource_data['children'].append(datacomponent_data)
 
         # add data source and children to the side navigation
         side_nav_data.append(datasource_data)
@@ -217,38 +218,39 @@ def get_datacomponents_data(datasource, reference_list):
     if datacomponent_of.get(datasource['id']):
         for datacomponent in datacomponent_of[datasource['id']]:
 
-            reference = False
+            if not datacomponent.get('x_mitre_deprecated') and not datacomponent.get('revoked'):
+                reference = False
 
-            datacomponent_data = {}
-            datacomponent_data['name'] = datacomponent['name']
-            datacomponent_data['descr'] = datacomponent['description']
-            # Update reference list
-            reference_list = util.buildhelpers.update_reference_list(reference_list, datacomponent)
+                datacomponent_data = {}
+                datacomponent_data['name'] = datacomponent['name']
+                datacomponent_data['descr'] = datacomponent['description']
+                # Update reference list
+                reference_list = util.buildhelpers.update_reference_list(reference_list, datacomponent)
 
-            # get data components to techniques mapping
-            techniques_detected_by_datacomponent = rsg.get_techniques_detected_by_datacomponent().get(datacomponent['id'])
-            if techniques_detected_by_datacomponent:
-                datacomponent_data['techniques'] = []
+                # get data components to techniques mapping
+                techniques_detected_by_datacomponent = rsg.get_techniques_detected_by_datacomponent().get(datacomponent['id'])
+                if techniques_detected_by_datacomponent:
+                    datacomponent_data['techniques'] = []
 
-                technique_list = {}
-                for technique_rel in techniques_detected_by_datacomponent:
+                    technique_list = {}
+                    for technique_rel in techniques_detected_by_datacomponent:
 
-                    # Do not add if technique is deprecated
-                    if not technique_rel['object'].get('x_mitre_deprecated'):
-                        technique_list = util.buildhelpers.technique_used_helper(technique_list, technique_rel, reference_list)
-                        
-                        technique_data = []
-                        for item in technique_list:
-                            if technique_list[item].get('descr'):
-                                if reference == False:
-                                    reference = True
-                            technique_data.append(technique_list[item])
-                        # Sort by technique name
-                        technique_data = sorted(technique_data, key=lambda k: k['name'].lower())
+                        # Do not add if technique is deprecated
+                        if not technique_rel['object'].get('x_mitre_deprecated'):
+                            technique_list = util.buildhelpers.technique_used_helper(technique_list, technique_rel, reference_list)
+                            
+                            technique_data = []
+                            for item in technique_list:
+                                if technique_list[item].get('descr'):
+                                    if reference == False:
+                                        reference = True
+                                technique_data.append(technique_list[item])
+                            # Sort by technique name
+                            technique_data = sorted(technique_data, key=lambda k: k['name'].lower())
 
-                        datacomponent_data['techniques'] = technique_data
-                        datacomponent_data['add_datacomponent_ref'] = reference
+                            datacomponent_data['techniques'] = technique_data
+                            datacomponent_data['add_datacomponent_ref'] = reference
 
-            datacomponents_data.append(datacomponent_data)
+                datacomponents_data.append(datacomponent_data)
 
     return datacomponents_data
