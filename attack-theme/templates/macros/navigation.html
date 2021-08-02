@@ -18,16 +18,19 @@ Notes:
     unlike grand+ children.
 -->
 {% macro sidenav(root, output_file) %}
-<span class="heading" id="v-home-tab" aria-selected="false">{{root.name | upper}}</span>
-
-{# "overview" link as first item in list if root.path exists #}
-{% if root.path %}
-    {{sidenav_helper("0", {"name": "Overview", "id": "0", "path": root.path, "children": []}, output_file)}}
-{% endif %}
-
-{% for child in root.children %}
-    {{sidenav_helper(child.id, child, output_file)}}
-{% endfor %}
+<div class="sidenav-wrapper">
+    <div class="heading" id="v-home-tab" aria-selected="false">{{root.name | upper}}</div>
+    <div class="sidenav-list">
+        {# "overview" link as first item in list if root.path exists #}
+        {% if root.path %}
+            {{sidenav_helper("0", {"name": "Overview", "id": "0", "path": root.path, "children": []}, output_file)}}
+        {% endif %}
+        
+        {% for child in root.children %}
+            {{sidenav_helper(child.id, child, output_file)}}
+        {% endfor %}
+    </div>
+</div>
 {% endmacro %}
 
 <!-- recusive helper for sidenav -->

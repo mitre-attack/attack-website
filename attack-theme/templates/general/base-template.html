@@ -39,95 +39,113 @@
 </head>
 
 <body>
-<!--stopindex-->
-    <header>
-        {% block nav %}    
-            {{navigation_menu.navigation_menu(NAVIGATION_MENU, LOGO_HEADER, output_file)}}
-    </header>
-    <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
-    <!-- !versions banner! -->
-    {% if BANNER_ENABLED %}
-        <div class="container-fluid banner-message">
-            {{ BANNER_MESSAGE }}
-        </div>
-    {% endif %}
-{% endblock %}
 
-<div id='content' class="maincontent">
-    <!--start-indexing-for-search-->
-    {% block content %} {% block left %} {% endblock %} {% block right %} {% endblock %} {% endblock %}
-    <!--stop-indexing-for-search-->
-    {{ search.searchgui() }}
-</div>
-<footer class="footer p-3">
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-4 col-sm-4 col-md-3">  
-                <div class="footer-center-responsive my-auto">
-                    <a href="https://www.mitre.org" target="_blank" rel="noopener" aria-label="MITRE">
-                        <img src="{{ LOGO_FOOTER }}" class="mitre-logo-wtrans">
-                    </a>
-                </div>
-            </div>
-            <div class="col-2 col-sm-2 footer-responsive-break"></div>
-            <div class="col-6 col-sm-6 text-center">  
-                <p>
-                     © 2015-2021, The MITRE Corporation. MITRE ATT&CK and ATT&CK are registered trademarks of The MITRE Corporation.
-                </p>
-                <div class="row">
-                {% if RESOURCES %}                    
-                    <div class="col text-right">
-                        <small>
-                            <a href="/resources/privacy" class="footer-link">Privacy Policy</a>
-                        </small>
+    <div class="container-fluid attack-website-wrapper d-flex flex-column h-100">
+        <div class="row sticky-top flex-grow-0 flex-shrink-1">
+            <!-- header elements -->
+            <header class="col px-0">
+                {% block nav %}    
+                    {{navigation_menu.navigation_menu(NAVIGATION_MENU, LOGO_HEADER, output_file)}}
+            </header>
+            {% endblock %}
+        </div>
+        <div class="row flex-grow-0 flex-shrink-1">
+            <!-- banner elements -->
+            <div class="col px-0">
+                <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
+                <!-- !versions banner! -->
+                {% if BANNER_ENABLED %}
+                    <div class="container-fluid banner-message">
+                        {{ BANNER_MESSAGE }}
                     </div>
                 {% endif %}
-                    <div class="col text-center">
-                        <small>
-                            <a href="/resources/terms-of-use" class="footer-link">Terms of Use</a>
-                        </small>
-                    </div>
-                    <div class="col {% if RESOURCES %} text-left {% else %} text-center {% endif %}">
-                        <small>
-                            <a href="{{CHANGELOG_LOCATION}}" class="footer-link" data-toggle="tooltip" data-placement="top" title="ATT&amp;CK content version {{CONTENT_VERSION}}&#013;Website version {{WEBSITE_VERSION}}">ATT&CK v{{CONTENT_VERSION}}</a>
-                        </small>
-                    </div>
-
-                </div>
             </div>
-            <div class="w-100 p-2 footer-responsive-break"></div>
-            {% if ATTACK_BRANDING %}
-                <div class="col">
-                    <div class="footer-float-right-responsive-brand">
-                        <div class="mb-1">
-                            <a href="https://twitter.com/MITREattack" class="btn btn-primary w-100">
-                                <!-- <i class="fa fa-twitter"></i> -->
-                                <img src="/theme/images/twitter.png" class="mr-1 twitter-icon">
-                                <b>@MITREattack</b>
-                            </a>
-                        </div>
-                        <div class="">
-                            <a href="/contact" class="btn btn-primary w-100">
-                                Contact
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                {% else %}
-                    <div class="col footer-float-right-responsive-centered">
-                        <div>
-                            <div>
-                                <a href="https://attack.mitre.org" class="btn btn-primary w-100">
-                                    attack.mitre.org
+        </div>
+        <div class="row flex-grow-1 flex-shrink-0">
+            <!-- main content elements -->
+            <!--start-indexing-for-search-->
+            {% block content %} {% block left %} {% endblock %} {% block right %} {% endblock %} {% endblock %}
+            <!--stop-indexing-for-search-->
+            <!-- search overlay for entire page -- not displayed inline -->
+            {{ search.searchgui() }}
+        </div>
+        <div class="row flex-grow-0 flex-shrink-1">
+            <!-- footer elements -->
+            <footer class="col footer p-3">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-4 col-sm-4 col-md-3">  
+                            <div class="footer-center-responsive my-auto">
+                                <a href="https://www.mitre.org" target="_blank" rel="noopener" aria-label="MITRE">
+                                    <img src="{{ LOGO_FOOTER }}" class="mitre-logo-wtrans">
                                 </a>
                             </div>
                         </div>
+                        <div class="col-2 col-sm-2 footer-responsive-break"></div>
+                        <div class="col-6 col-sm-6 text-center">  
+                            <p>
+                                 © 2015-2021, The MITRE Corporation. MITRE ATT&CK and ATT&CK are registered trademarks of The MITRE Corporation.
+                            </p>
+                            <div class="row">
+                            {% if RESOURCES %}                    
+                                <div class="col text-right">
+                                    <small>
+                                        <a href="/resources/privacy" class="footer-link">Privacy Policy</a>
+                                    </small>
+                                </div>
+                            {% endif %}
+                                <div class="col text-center">
+                                    <small>
+                                        <a href="/resources/terms-of-use" class="footer-link">Terms of Use</a>
+                                    </small>
+                                </div>
+                                <div class="col {% if RESOURCES %} text-left {% else %} text-center {% endif %}">
+                                    <small>
+                                        <a href="{{CHANGELOG_LOCATION}}" class="footer-link" data-toggle="tooltip" data-placement="top" title="ATT&amp;CK content version {{CONTENT_VERSION}}&#013;Website version {{WEBSITE_VERSION}}">ATT&CK v{{CONTENT_VERSION}}</a>
+                                    </small>
+                                </div>
+            
+                            </div>
+                        </div>
+                        <div class="w-100 p-2 footer-responsive-break"></div>
+                        {% if ATTACK_BRANDING %}
+                            <div class="col">
+                                <div class="footer-float-right-responsive-brand">
+                                    <div class="mb-1">
+                                        <a href="https://twitter.com/MITREattack" class="btn btn-primary w-100">
+                                            <!-- <i class="fa fa-twitter"></i> -->
+                                            <img src="/theme/images/twitter.png" class="mr-1 twitter-icon">
+                                            <b>@MITREattack</b>
+                                        </a>
+                                    </div>
+                                    <div class="">
+                                        <a href="/contact" class="btn btn-primary w-100">
+                                            Contact
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            {% else %}
+                                <div class="col footer-float-right-responsive-centered">
+                                    <div>
+                                        <div>
+                                            <a href="https://attack.mitre.org" class="btn btn-primary w-100">
+                                                attack.mitre.org
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        </div>
                     </div>
-                {% endif %}
-            </div>
+                </div>
+            </footer>
         </div>
     </div>
-</footer>
+
+
+<!--stopindex-->
+
 </div>
 {% block scripts %}
     <!--SCRIPTS-->
