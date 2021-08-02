@@ -25,6 +25,14 @@
 <!--    PATCH updates are when a bugfix is made without the             -->
 <!--          addition of notable features. When PATCH is 0 it can      -->
 <!--          be omitted                                                -->
+# Changes staged on develop
+## ATT&CK website version 3.4.0
+### Improvements
+- Improved side navigation elements:
+    - Side-navs now scroll independently of the main page contents, making it easier to work with long pages.
+    - The side-nav title (e.g "mitigations") will now stay in the view when scrolled.
+    - The side-nav will now scroll to the active page link when initialized.
+
 # 1 July 2021
 ## ATT&CK website version 3.3.1
 ### Improvements
