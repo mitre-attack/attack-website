@@ -13,12 +13,13 @@ groups_using_malware = {}
 mitigation_mitigates_techniques = {}
 technique_mitigated_by_mitigation = {}
 technique_related_to_technique = {}
-datacomponent_detects_techniques = {}
+datacomponents_detecting_technique = {}
 tools_using_technique = {}
 malware_using_technique = {}
 groups_using_technique = {}
 subtechniques_of = {}
 datacomponent_of = {}
+datasource_of = {}
 parent_technique_of = {}
 objects_using_notes = {}
 ms = {}
@@ -88,6 +89,14 @@ def get_techniques_detected_by_datacomponent():
         techniques_detected_by_datacomponent = rsh.techniques_detected_by_datacomponent(get_srcs())
 
     return techniques_detected_by_datacomponent
+
+def get_datacomponents_detecting_technique():
+    global datacomponents_detecting_technique
+    
+    if not datacomponents_detecting_technique:
+        datacomponents_detecting_technique = rsh.datacomponents_detecting_technique(get_srcs())
+
+    return datacomponents_detecting_technique
 
     
 def get_groups_using_tool():
@@ -179,6 +188,16 @@ def get_datacomponent_of():
         datacomponent_of = stixhelpers.datacomponent_of()
     
     return datacomponent_of
+
+
+def get_datasource_of():
+    """ data source of data component getter """
+    global datasource_of
+
+    if not datasource_of:
+        datasource_of = stixhelpers.datasource_of()
+    
+    return datasource_of
 
 def get_parent_technique_of():
     """ parent of subtechnique getter """

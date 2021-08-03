@@ -197,6 +197,37 @@ def datacomponent_of():
 
     return datacomponent_of
 
+def get_datasource_from_list(datasource_stix_id):
+    """
+        Return data source object with given data source stix id
+    """
+
+    datasources = relationshipgetters.get_datasource_list()
+
+    for datasource in datasources:
+        if datasource['id'] == datasource_stix_id:
+            return datasource
+    
+    return None
+
+def datasource_of():
+    """
+        Builds map from data component STIX ID to data source STIX object
+    """
+
+    datacomponents = relationshipgetters.get_datacomponent_list()
+
+    datasource_of = {}
+    for datacomponent in datacomponents:
+        if not datasource_of.get(datacomponent['id']):
+
+            datasource = get_datasource_from_list(datacomponent['x_mitre_data_source_ref'])
+
+            if datasource:
+                datasource_of[datacomponent['id']] = datasource
+
+    return datasource_of
+
 def add_replace_or_ignore(stix_objs, attack_id_objs, obj_in_question):
     """ Add if object does not already exist
         Replace object if exist depending on deprecation status or modified date

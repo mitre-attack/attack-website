@@ -267,7 +267,7 @@ def generate_data_for_md(technique_dict, technique, tactic_list, is_sub_techniqu
             # Get data sources
             if technique.get('x_mitre_data_sources'):
                 technique['x_mitre_data_sources'].sort()
-                technique_dict['data_sources'] = data_sources_link(technique['x_mitre_data_sources'])
+                technique_dict['data_sources'], technique_dict['data_sources_ref'] = get_datasources_and_components_of_technique(technique, reference_list)
 
             # Get if technique supports remote
             if technique.get('x_mitre_remote_support'):
@@ -566,65 +566,41 @@ def get_subtechniques(technique):
     
     return sorted(subtechs, key=lambda k: k['id'])
 
-new_data_source_mapping = {
-    "Active Directory":"https://github.com/mitre-attack/attack-datasources/blob/main/contribution/active_directory.yml",
-    "Application Log":"https://github.com/mitre-attack/attack-datasources/blob/main/contribution/application_log.yml",
-    "Cloud Service":"https://github.com/mitre-attack/attack-datasources/blob/main/contribution/cloud_service.yml",
-    "Cloud Storage":"https://github.com/mitre-attack/attack-datasources/blob/main/contribution/cloud_storage.yml",
-    "Cluster":"https://github.com/mitre-attack/attack-datasources/blob/main/contribution/cluster.yml",
-    "Command":"https://github.com/mitre-attack/attack-datasources/blob/main/contribution/command.yml",
-    "Container":"https://github.com/mitre-attack/attack-datasources/blob/main/contribution/container.yml",
-    "Drive":"https://github.com/mitre-attack/attack-datasources/blob/main/contribution/drive.yml",
-    "Driver":"https://github.com/mitre-attack/attack-datasources/blob/main/contribution/driver.yml",
-    "File":"https://github.com/mitre-attack/attack-datasources/blob/main/contribution/file.yml",
-    "Firewall":"https://github.com/mitre-attack/attack-datasources/blob/main/contribution/firewall.yml",
-    "Firmware":"https://github.com/mitre-attack/attack-datasources/blob/main/contribution/firmware.yml",
-    "Group":"https://github.com/mitre-attack/attack-datasources/blob/main/contribution/group.yml",
-    "Image":"https://github.com/mitre-attack/attack-datasources/blob/main/contribution/image.yml",
-    "Instance":"https://github.com/mitre-attack/attack-datasources/blob/main/contribution/instance.yml",
-    "Kernel":"https://github.com/mitre-attack/attack-datasources/blob/main/contribution/kernel.yml",
-    "Logon Session":"https://github.com/mitre-attack/attack-datasources/blob/main/contribution/logon_session.yml",
-    "Module":"https://github.com/mitre-attack/attack-datasources/blob/main/contribution/module.yml",
-    "Named Pipe":"https://github.com/mitre-attack/attack-datasources/blob/main/contribution/named_pipe.yml",
-    "Network Share":"https://github.com/mitre-attack/attack-datasources/blob/main/contribution/network_share.yml",
-    "Network Traffic":"https://github.com/mitre-attack/attack-datasources/blob/main/contribution/network_traffic.yml",
-    "Pod":"https://github.com/mitre-attack/attack-datasources/blob/main/contribution/pod.yml",
-    "Process":"https://github.com/mitre-attack/attack-datasources/blob/main/contribution/process.yml",
-    "Scheduled Job":"https://github.com/mitre-attack/attack-datasources/blob/main/contribution/scheduled_job.yml",
-    "Script":"https://github.com/mitre-attack/attack-datasources/blob/main/contribution/script.yml",
-    "Sensor Health":"https://github.com/mitre-attack/attack-datasources/blob/main/contribution/sensor_health.yml",
-    "Service":"https://github.com/mitre-attack/attack-datasources/blob/main/contribution/service.yml",
-    "Snapshot":"https://github.com/mitre-attack/attack-datasources/blob/main/contribution/snapshot.yml",
-    "User Account":"https://github.com/mitre-attack/attack-datasources/blob/main/contribution/user_account.yml",
-    "Volume":"https://github.com/mitre-attack/attack-datasources/blob/main/contribution/volume.yml",
-    "Web Credential":"https://github.com/mitre-attack/attack-datasources/blob/main/contribution/web_credential.yml",
-    "Windows Registry":"https://github.com/mitre-attack/attack-datasources/blob/main/contribution/windows_registry.yml",
-    "WMI":"https://github.com/mitre-attack/attack-datasources/blob/main/contribution/wmi_object.yml"
-}
 
-def data_sources_link(data_sources):
-    """ Data source mapping for April release """
+def get_datasources_and_components_of_technique(technique, reference_list):
+    """ Given a technique object, find data sources and components 
+        detecting the technique. Returns list
+    """
 
-    link = "<a target='_blank' href='{}'>{}</a>"
+    datasource_and_components = []
 
-    def replace_link(data_sources):
-        
-        updated_data_sources = []
+    datacomponents_of_technique = util.relationshipgetters.get_datacomponents_detecting_technique().get(technique['id'])
+    datasource_of = util.relationshipgetters.get_datasource_of()
 
-        for data_source in data_sources:
-            data_source_str = data_source
-            if ":" in data_source:
-                data_source_name = data_source.split(":")[0].strip()
-                data_source_component = data_source.split(":")[1].strip()
+    reference = False
 
-                if new_data_source_mapping.get(data_source_name):
-                    data_source_str = f"{link.format(new_data_source_mapping.get(data_source_name), data_source_name)}: {data_source_component}"         
-            else:
-                if new_data_source_mapping.get(data_source):
-                    data_source_str = f"{link.format(new_data_source_mapping.get(data_source), data_source)}" 
+    if datacomponents_of_technique:
+        for datacomponent in datacomponents_of_technique:
+            
+            datasource = datasource_of.get(datacomponent['object']['id'])
+            datasource_attack_id = util.buildhelpers.get_attack_id(datasource)
+            if datasource_attack_id:
+                datacomponent_data = {}
+                datacomponent_data['attack_id'] = datasource_attack_id
+                datacomponent_data['datacomponent_name'] = datacomponent['object']['name']
+                datacomponent_data['datasource_name'] = datasource['name']
+                # To be able to sort by name
+                datacomponent_data['full_name'] = datasource['name'] + datacomponent['object']['name']
 
-            updated_data_sources.append(data_source_str)
-        
-        return updated_data_sources
-    
-    return ", ".join(replace_link(data_sources))
+                if datacomponent['relationship'].get('description'):
+                    reference_list = util.buildhelpers.update_reference_list(reference_list, datacomponent['relationship'])
+                    datacomponent_data['descr'] = datacomponent['relationship']['description']
+                    if not reference:
+                        reference = True
+
+                datasource_and_components.append(datacomponent_data)
+
+    if datasource_and_components:
+        datasource_and_components = sorted(datasource_and_components, key=lambda k: k['full_name'].lower())
+
+    return datasource_and_components, reference
