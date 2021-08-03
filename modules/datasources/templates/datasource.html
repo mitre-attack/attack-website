@@ -113,35 +113,27 @@
             
                     {% if parsed.datacomponents_list %}
                         <h2 class="pt-3" id="datacomponents">Data Components</h2>
-                        <div class="row expand-panel">
+                        <div class="row">
                             {% for datacomponent in parsed.datacomponents_list %}
                                 <div class="col-md-12">
-                                    <div class="card-block">
-                                        <div class="card {% if loop.index == 1 %}first-card{% elif not loop.last %}middle-card{% else %}last-card{% endif %}">
-                                            <a class="anchor" id="{{datacomponent.name}}"></a>
-                                            <div class="card-header collapsed" id="{{datacomponent.name | remove_whitespace}}-header" data-toggle="collapse" data-target="#{{datacomponent.name | remove_whitespace}}-body" aria-expanded="false" aria-controls="{{datacomponent.name | remove_whitespace}}-body">
-                                                <h5 class="mb-0">{{datacomponent.name}}</h5>
-                                            </div>
-                                            <div id="{{datacomponent.name | remove_whitespace}}-body" class="card-body p-0 collapse" aria-labelledby="{{datacomponent.name | remove_whitespace}}-header">
-                                                {% if datacomponent.descr %}
-                                                    <div class="description-body in-table">
-                                                        {% if parsed.deprecated %}
-                                                            <font color="red">****Deprecation Warning****</font>
-                                                        {% endif %}
-                                                        {{clean_output.stixToHTML(datacomponent.descr, parsed.citations)}}
-                                                    </div>
-                                                {% endif %}
-                                                {% if datacomponent.techniques %}
-                                                    {% if datacomponent.add_datacomponent_ref %}
-                                                        {{techniques_used.techniques_used(datacomponent.techniques, "", true, "Detects", parsed.citations)}}
-                                                    {% else %}
-                                                        {{techniques_used.techniques_used(datacomponent.techniques, "", true, "")}}
-                                                    {% endif %}
-                                                {% endif %}
-                                            </div>
-                                        </div>
+                                <a class="anchor" id="{{datacomponent.name}}"></a>
+                                <h4 class="pt-3">{{datacomponent.name}}</h4>
+                                {% if datacomponent.descr %}
+                                    <div class="description-body">
+                                        {% if parsed.deprecated %}
+                                            <font color="red">****Deprecation Warning****</font>
+                                        {% endif %}
+                                        {{clean_output.stixToHTML(datacomponent.descr, parsed.citations)}}
                                     </div>
-                                </div>
+                                {% endif %}
+                                {% if datacomponent.techniques %}
+                                    {% if datacomponent.add_datacomponent_ref %}
+                                        {{techniques_used.techniques_used(datacomponent.techniques, "", true, "Detects", parsed.citations)}}
+                                    {% else %}
+                                        {{techniques_used.techniques_used(datacomponent.techniques, "", true, "")}}
+                                    {% endif %}
+                                {% endif %}
+                            </div>
                             {% endfor %}
                         </div>
                     {% endif %}
