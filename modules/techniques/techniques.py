@@ -264,10 +264,8 @@ def generate_data_for_md(technique_dict, technique, tactic_list, is_sub_techniqu
                 technique['x_mitre_effective_permissions'].sort()
                 technique_dict['eff_perms'] = ", ".join(technique['x_mitre_effective_permissions'])
 
-            # Get data sources
-            if technique.get('x_mitre_data_sources'):
-                technique['x_mitre_data_sources'].sort()
-                technique_dict['data_sources'], technique_dict['data_sources_ref'] = get_datasources_and_components_of_technique(technique, reference_list)
+            # Get data sources and components
+            technique_dict['datacomponents'], technique_dict['datacomponents_ref'] = get_datasources_and_components_of_technique(technique, reference_list)
 
             # Get if technique supports remote
             if technique.get('x_mitre_remote_support'):
