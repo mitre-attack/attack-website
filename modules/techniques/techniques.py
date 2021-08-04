@@ -265,7 +265,7 @@ def generate_data_for_md(technique_dict, technique, tactic_list, is_sub_techniqu
                 technique_dict['eff_perms'] = ", ".join(technique['x_mitre_effective_permissions'])
 
             # Get data sources and components
-            technique_dict['datacomponents'], technique_dict['datacomponents_ref'] = get_datasources_and_components_of_technique(technique, reference_list)
+            technique_dict['datasources'], technique_dict['datasources_ref'] = get_datasources_and_components_of_technique(technique, reference_list)
 
             # Get if technique supports remote
             if technique.get('x_mitre_remote_support'):
@@ -567,7 +567,14 @@ def get_subtechniques(technique):
 
 def get_datasources_and_components_of_technique(technique, reference_list):
     """ Given a technique object, find data sources and components 
-        detecting the technique. Returns list
+        detecting the technique. Returns list with the following structure
+
+        For each data source:
+        Data Source ATT&CK ID
+        Data Source name
+        Data components
+              Data component name
+              Data component descr
     """
 
     datasource_and_components = []
@@ -578,27 +585,38 @@ def get_datasources_and_components_of_technique(technique, reference_list):
     reference = False
 
     if datacomponents_of_technique:
+        datasources_data = {}
         for datacomponent in datacomponents_of_technique:
             
             datasource = datasource_of.get(datacomponent['object']['id'])
             datasource_attack_id = util.buildhelpers.get_attack_id(datasource)
             if datasource_attack_id:
+
+                if not datasources_data.get(datasource_attack_id):
+                    datasources_data[datasource_attack_id] = {}
+                    datasources_data[datasource_attack_id]['attack_id'] = datasource_attack_id
+                    datasources_data[datasource_attack_id]['name'] = datasource['name']
+                    datasources_data[datasource_attack_id]['datacomponents'] = []
+
                 datacomponent_data = {}
-                datacomponent_data['attack_id'] = datasource_attack_id
-                datacomponent_data['datacomponent_name'] = datacomponent['object']['name']
-                datacomponent_data['datasource_name'] = datasource['name']
-                # To be able to sort by name
-                datacomponent_data['full_name'] = datasource['name'] + datacomponent['object']['name']
+                datacomponent_data['name'] = datacomponent['object']['name']
 
                 if datacomponent['relationship'].get('description'):
                     reference_list = util.buildhelpers.update_reference_list(reference_list, datacomponent['relationship'])
                     datacomponent_data['descr'] = datacomponent['relationship']['description']
                     if not reference:
                         reference = True
+                
+                datasources_data[datasource_attack_id]['datacomponents'].append(datacomponent_data)
 
-                datasource_and_components.append(datacomponent_data)
+        for datasource_key in datasources_data:
+            # Sort data components
+            datasources_data[datasource_key]['datacomponents'] = sorted(datasources_data[datasource_key]['datacomponents'], key=lambda k: k['name'].lower())
+            # Add
+            datasource_and_components.append(datasources_data[datasource_key])
 
     if datasource_and_components:
-        datasource_and_components = sorted(datasource_and_components, key=lambda k: k['full_name'].lower())
+        # Sort by data source name
+        datasource_and_components = sorted(datasource_and_components, key=lambda k: k['name'].lower())
 
     return datasource_and_components, reference

@@ -4,6 +4,8 @@
 {% import 'macros/deprecated.html' as deprecated %}
 {% import 'macros/clean_output.html' as clean_output %}
 {% import 'macros/citations.html' as citations %}
+{% import 'macros/datasource_table.html' as datasource_table %}
+
 {% import 'macros/notes.html' as notes %}
 {% if parsed.parent_name %}
     {% set title = parsed.parent_name + ": " -%}
@@ -422,37 +424,8 @@
                         {% endif %}
                         {% if parsed.detection %}
                             <h2 class="pt-3" id="detection">Detection</h2>
-                            {% if parsed.datacomponents %}
-                                <table class="table table-bordered table-alternate mt-2">
-                                    <thead>
-                                        <tr>
-                                            <th scope="col">ID</th>
-                                            <th scope="col">Name</th>
-                                            {% if datacomponents_ref %}
-                                            <th scope="col">Detects</th>
-                                            {% endif %}
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {% for datacomponent in parsed.datacomponents %}
-                                            <tr>
-                                                <td>
-                                                    <a href="/datasources/{{datacomponent.attack_id}}"> {{datacomponent.attack_id}} </a>
-                                                </td>
-                                                <td>
-                                                    <a href="/datasources/{{datacomponent.attack_id}}">{{datacomponent.datasource_name}}</a>: <a href="/datasources/{{datacomponent.attack_id}}/#{{datacomponent.datacomponent_name}}">{{datacomponent.datacomponent_name}}</a>
-                                                </td>
-                                                {% if datacomponents_ref %}
-                                                <td>
-                                                    {% if datacomponent.descr %}
-                                                        {{clean_output.stixToHTML(datacomponent.descr, parsed.citations)}}
-                                                    {% endif %}
-                                                </td>
-                                                {% endif %}
-                                            </tr>
-                                        {% endfor %}
-                                    </tbody>
-                                </table>
+                            {% if parsed.datasources %}
+                                {{datasource_table.datasource_table(parsed.datasources, datasources_ref)}}
                             {% endif %}
                             <div>
                                 {{clean_output.stixToHTML(parsed.detection, parsed.citations)}}
