@@ -112,6 +112,14 @@ def generate_datasource_md(datasource, side_menu_data, side_menu_mobile_view_dat
         if datasource.get("description"):
             data['descr'] = datasource['description']
 
+        if datasource.get("x_mitre_platforms"):
+            datasource['x_mitre_platforms'].sort()
+            data['platforms'] = ", ".join(datasource['x_mitre_platforms'])
+        
+        if datasource.get("x_mitre_collection_layers"):
+            datasource['x_mitre_collection_layers'].sort()
+            data['collection_layers'] = ", ".join(datasource['x_mitre_collection_layers'])
+
         # Get data components of data source and the technique relationships
         data['datacomponents_list'] = get_datacomponents_data(datasource, reference_list)
 
