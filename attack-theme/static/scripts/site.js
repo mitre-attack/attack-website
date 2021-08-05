@@ -3,7 +3,7 @@ function positionBody() {
     let headerHeight = $(".navbar").outerHeight();
     let viewportHeight = $(".attack-website-wrapper").outerHeight();
     let sidebarHeight = viewportHeight - headerHeight + "px";
-    $(".sidebar").css({
+    $(".sidebar.nav").css({
         "top": headerHeight + "px",
         "max-height": viewportHeight - headerHeight + "px"
     });
