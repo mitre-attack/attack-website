@@ -140,25 +140,44 @@
                         <h2 class="pt-3" id="datacomponents">Data Components</h2>
                         <div class="row">
                             {% for datacomponent in parsed.datacomponents_list %}
-                                <div class="col-md-12">
-                                <a class="anchor" id="{{datacomponent.name}}"></a>
-                                <h4 class="pt-3">{{datacomponent.name}}</h4>
-                                {% if datacomponent.descr %}
-                                    <div class="description-body">
-                                        {% if parsed.deprecated %}
-                                            <font color="red">****Deprecation Warning****</font>
+                                <div class="col-md-12 section-view">
+                                    <a class="anchor" id="{{datacomponent.name}}"></a>
+
+                                    <div class="section-desktop-view anchor-section">
+                                        <h4 class="pt-3">{{parsed.name}}: {{datacomponent.name}}</h4>
+                                        {% if datacomponent.descr %}
+                                            <div class="description-body">
+                                                {% if parsed.deprecated %}
+                                                    <font color="red">****Deprecation Warning****</font>
+                                                {% endif %}
+                                                {{clean_output.stixToHTML(datacomponent.descr, parsed.citations)}}
+                                            </div>
                                         {% endif %}
-                                        {{clean_output.stixToHTML(datacomponent.descr, parsed.citations)}}
                                     </div>
-                                {% endif %}
-                                {% if datacomponent.techniques %}
-                                    {% if datacomponent.add_datacomponent_ref %}
-                                        {{techniques_used.techniques_used(datacomponent.techniques, "", true, "Detects", parsed.citations)}}
-                                    {% else %}
-                                        {{techniques_used.techniques_used(datacomponent.techniques, "", true, "")}}
+
+                                    <div class="section-mobile-view anchor-section">
+                                        <h4 class="pt-3">{{parsed.name}}: {{datacomponent.name}}</h4>
+                                    </div>
+                                    <div class="section-mobile-view">
+                                        {% if datacomponent.descr %}
+                                            <div class="description-body">
+                                                {% if parsed.deprecated %}
+                                                    <font color="red">****Deprecation Warning****</font>
+                                                {% endif %}
+                                                {{clean_output.stixToHTML(datacomponent.descr, parsed.citations)}}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+
+                                    {% if datacomponent.techniques %}
+                                        {% if datacomponent.add_datacomponent_ref %}
+                                            {{techniques_used.techniques_used(datacomponent.techniques, "", true, "Detects", parsed.citations)}}
+                                        {% else %}
+                                            {{techniques_used.techniques_used(datacomponent.techniques, "", true, "")}}
+                                        {% endif %}
                                     {% endif %}
-                                {% endif %}
-                            </div>
+
+                                </div>
                             {% endfor %}
                         </div>
                     {% endif %}
