@@ -115,7 +115,8 @@ def generate_index_page():
         "techniques": "Technique",
         "mitigations": "Mitigation", 
         "groups": "Group",
-        "software": "Software"
+        "software": "Software",
+        "datasources" : "Data Source"
     }
     routes = {}
 

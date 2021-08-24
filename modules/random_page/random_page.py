@@ -8,7 +8,7 @@ skiplines = ["breadcrumb-item", "nav-link"]
 
 def generate_json():
     json_data = {}
-    all_routes = {"matrices": "Matrix", "tactics": "Tactic", "techniques": "Technique", "mitigations": "Mitigation", "groups": "Group", "software": "Software"}
+    all_routes = {"matrices": "Matrix", "tactics": "Tactic", "techniques": "Technique", "mitigations": "Mitigation", "groups": "Group", "software": "Software", "datasources": "Data Source"}
     routes = {}
 
     if site_config.args.modules:
@@ -38,6 +38,8 @@ def generate_json():
                         elif route == "tactics" and re.search(r"TA[0-9]{4}", thepath):
                             add_to_json = True
                         elif route == "techniques" and re.search(r"T[0-9]{4}", thepath):
+                            add_to_json = True
+                        elif route == "datasources" and re.search(r"DS[0-9]{4}", thepath):
                             add_to_json = True
                         elif route == "mitigations" and re.search(r"M[0-9]{4}", thepath):
                             add_to_json = True
