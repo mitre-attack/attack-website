@@ -471,6 +471,8 @@ def get_technique_side_nav_data(techniques, tactics):
             
             tactic_row['children'] = []
             
+            # Skip tactic if it does not have techniques
+            if not technique_list.get(tactic['x_mitre_shortname']): continue
             for technique in technique_list[tactic['x_mitre_shortname']]:
                 technique_row = {}
                 # Get technique id and name for each technique
