@@ -28,10 +28,17 @@
 # Changes staged on develop
 ## ATT&CK website version 3.4.0
 ### Improvements
+- Added data source object. See issue [#321](https://github.com/mitre-attack/attack-website/issues/321).
+    - Added data sources pages that may be found under /datasources/DS####
+    - Updated technique pages by moving data source mappings to detection section
 - Improved side navigation elements:
     - Side-navs now scroll independently of the main page contents, making it easier to work with long pages.
     - The side-nav title (e.g "mitigations") will now stay in the view when scrolled.
     - The side-nav will now scroll to the active page link when initialized.
+### Fixes
+- Fixed dockerfile to not fail due to test warning. See issue [#326](https://github.com/mitre-attack/attack-website/issues/326).
+- Fixed build from crashing when a technique does not have a defined platform. See issue [#329](https://github.com/mitre-attack/attack-website/issues/329).
+- Fixed build from crashing when a tactic does not have defined techniques. See issue [#73](https://github.com/mitre-attack/attack-website/issues/73).
 
 # 1 July 2021
 ## ATT&CK website version 3.3.1
