@@ -783,10 +783,11 @@ def filter_techniques_by_platform(tech_list, platforms):
         # Do not try to find if it's already on the filtered list
         if not ids_for_duplicates.get(obj['id']):
             for platform in platforms:
-                if platform in obj["x_mitre_platforms"]:
-                    ids_for_duplicates[obj['id']] = True
-                    filtered_list.append(obj)
-                    break
+                if obj.get("x_mitre_platforms"):
+                    if platform in obj["x_mitre_platforms"]:
+                        ids_for_duplicates[obj['id']] = True
+                        filtered_list.append(obj)
+                        break
 
     return filtered_list
 
