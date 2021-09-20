@@ -174,9 +174,15 @@ def get_datasources_side_nav_data(datasources):
                         # Add data component data to data source
                         datasource_data['children'].append(datacomponent_data)
 
+                    # Sort subtechniques by ATT&CK ID
+                    if datasource_data['children']:
+                        datasource_data['children'] = sorted(datasource_data['children'], key=lambda k: k['name'].lower())
+
         # add data source and children to the side navigation
         side_nav_data.append(datasource_data)
 
+    side_nav_data = sorted(side_nav_data, key=lambda k: k['name'].lower())
+    
     return {
         "name": "Data Sources",
         "id": "datasources",
@@ -210,6 +216,9 @@ def get_datasources_table_data(datasource_list):
             
             datasources_table_data.append(row)
     
+    # Sort by data source name
+    datasources_table_data = sorted(datasources_table_data, key=lambda k: k['name'].lower())
+
     return datasources_table_data
 
 def get_datacomponents_data(datasource, reference_list):
@@ -260,5 +269,8 @@ def get_datacomponents_data(datasource, reference_list):
                             datacomponent_data['add_datacomponent_ref'] = reference
 
                 datacomponents_data.append(datacomponent_data)
+    
+    # Sort output by data component name
+    datacomponents_data = sorted(datacomponents_data, key=lambda k: k['name'].lower())
 
     return datacomponents_data
