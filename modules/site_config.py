@@ -21,7 +21,7 @@ if attack_version.startswith("v"):
 domains = [
     {
         "name" : "enterprise-attack",
-        "location" : "/Users/idavila/Documents/ATTACK-Infrastructure/attack-stix-store/enterprise-attack-9.0-with-mock-data-sources.json",
+        "location" : "https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json",
         "alias" : "Enterprise",
         "deprecated" : False
     },
