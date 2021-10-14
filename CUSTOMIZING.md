@@ -51,7 +51,7 @@ def get_priority():
 def get_menu():
     return {
         "display_name": "Name that will be displayed in the navigation menu"
-        "name": "Your module's name", 
+        "module_name": "Your module's name", 
         "url": "/your_module-s_name/", 
         "external_link": False,
         "priority": your_module-s_name_config.priority,

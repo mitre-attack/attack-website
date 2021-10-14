@@ -7,7 +7,7 @@ def get_priority():
 def get_menu():
     return {
         "display_name": mitigations_config.module_name, 
-        "name": mitigations_config.module_name,
+        "module_name": mitigations_config.module_name,
         "url": "/mitigations/", 
         "external_link": False,
         "priority": mitigations_config.priority,

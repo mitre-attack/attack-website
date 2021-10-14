@@ -93,7 +93,7 @@ def check_menu_versions_module():
         remove from submenu 
     """
 
-    if not [key['name'] for key in modules.run_ptr if key['name'] == 'versions']:
+    if not [key['module_name'] for key in modules.run_ptr if key['module_name'] == 'versions']:
         util.buildhelpers.remove_element_from_sub_menu(resources_config.module_name, "Versions of ATT&CK")
 
 

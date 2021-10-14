@@ -106,7 +106,7 @@ def remove_from_build(arg_modules, arg_extras):
         copy_of_modules = []
 
         for module in modules.run_ptr:
-            if module["name"].lower() in arg_modules:
+            if module["module_name"].lower() in arg_modules:
                 copy_of_modules.append(module)
         
         modules.run_ptr = copy_of_modules
@@ -117,7 +117,7 @@ def remove_from_build(arg_modules, arg_extras):
         copy_of_menu = []
 
         for module in modules.menu_ptr:
-            if module["name"].lower() in arg_modules:
+            if module["module_name"].lower() in arg_modules:
                 copy_of_menu.append(module)
         
         modules.menu_ptr = copy_of_menu
@@ -149,11 +149,11 @@ if __name__ == "__main__":
 
     # Get running modules and priorities
     for ptr in modules.run_ptr:
-        util.buildhelpers.print_start(ptr['name'])
+        util.buildhelpers.print_start(ptr['module_name'])
         start_time = time.time()
         ptr['run_module']()
         end_time = time.time()
-        util.buildhelpers.print_end(ptr['name'], start_time, end_time)
+        util.buildhelpers.print_end(ptr['module_name'], start_time, end_time)
 
     # Print end of module
     update_end = time.time()

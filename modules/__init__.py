@@ -37,9 +37,9 @@ for module in os.listdir('modules'):
         if hasattr(imported_module, "get_menu"):
             menu_ptr.append(imported_module.get_menu())
         if hasattr(imported_module, "run_module") and hasattr(imported_module, "get_priority"):
-            run_ptr.append({"run_module":imported_module.run_module, "name": module, "priority": imported_module.get_priority()})
+            run_ptr.append({"run_module":imported_module.run_module, "module_name": module, "priority": imported_module.get_priority()})
         if hasattr(imported_module, "send_to_pelican"):
-            pelican_settings.append({"name": imported_module.send_to_pelican()})
+            pelican_settings.append({"module_name": imported_module.send_to_pelican()})
         if hasattr(imported_module, "get_redirections"):
             redirections_list = imported_module.get_redirections()
             # Check list for conflicts

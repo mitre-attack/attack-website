@@ -8,7 +8,7 @@ def get_priority():
 def get_menu():
     return {
         "display_name": resources_config.module_name, 
-        "name": resources_config.module_name,
+        "module_name": resources_config.module_name,
         "url": "/resources/", 
         "external_link": False,
         "priority": resources_config.priority,

@@ -7,7 +7,7 @@ def get_priority():
 def get_menu():
     return {
         "display_name": search_config.module_name,
-        "name": search_config.module_name,
+        "module_name": search_config.module_name,
         "url": None, 
         "external_link": False,
         "search_bar": True,

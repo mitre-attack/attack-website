@@ -8,7 +8,7 @@ def get_priority():
 def get_menu():
     return {
         "display_name": techniques_config.module_name, 
-        "name": techniques_config.module_name,
+        "module_name": techniques_config.module_name,
         "url": "/techniques/", 
         "external_link": False,
         "priority": techniques_config.priority,

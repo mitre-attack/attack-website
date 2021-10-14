@@ -28,7 +28,7 @@
 # Changes staged on develop
 ## ATT&CK website version 3.4.0
 ### Improvements
-- Added data source object. See issue [#321](https://github.com/mitre-attack/attack-website/issues/321).
+- Added support for data sources and data components. See issue [#321](https://github.com/mitre-attack/attack-website/issues/321).
     - Added data sources pages that may be found under /datasources/DS####
     - Updated technique pages by moving data source mappings to detection section
 - Improved side navigation elements:

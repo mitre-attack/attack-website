@@ -134,13 +134,15 @@ def groups_using_malware(srcs):
 def techniques_detected_by_datacomponent(srcs):
     """returns datacomponent_id => {technique, relationship} for each technique detected
        by data component. srcs should be an array of memorystores for enterprise, 
-       mobile and pre
+       mobile and pre. The mobile and pre memorystores should not contain 
+       data components nor data sources.
     """
     return get_related(srcs, "x-mitre-data-component", "detects", "attack-pattern")
 def datacomponents_detecting_technique(srcs):
     """returns technique => {data component, relationship} for each data component decting
-        a technique. srcs should be an array of memorystores for enterprise, 
-       mobile and pre
+       a technique. srcs should be an array of memorystores for enterprise, 
+       mobile and pre. The mobile and pre memorystores should not contain 
+       data components nor data sources.
     """
     return get_related(srcs, "x-mitre-data-component", "detects", "attack-pattern", reverse=True)
 

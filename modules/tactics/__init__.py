@@ -8,7 +8,7 @@ def get_priority():
 def get_menu():
     return {
         "display_name": tactics_config.module_name, 
-        "name": tactics_config.module_name,
+        "module_name": tactics_config.module_name,
         "url": "/tactics/", 
         "external_link": False,
         "priority": tactics_config.priority,

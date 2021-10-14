@@ -8,7 +8,7 @@ def get_priority():
 def get_menu():
     return {
         "display_name":  datasources_config.module_name,
-        "name": datasources_config.module_name_no_spaces, 
+        "module_name": datasources_config.module_name_no_spaces, 
         "url": "/datasources",
         "external_link": False,
         "priority": datasources_config.priority,
