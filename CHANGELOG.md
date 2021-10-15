@@ -35,6 +35,8 @@
     - Side-navs now scroll independently of the main page contents, making it easier to work with long pages.
     - The side-nav title (e.g "mitigations") will now stay in the view when scrolled.
     - The side-nav will now scroll to the active page link when initialized.
+- Added definitions to technique, tactic, mitigation list pages.
+- Improved supports remote definition for techniques.
 ### Fixes
 - Fixed dockerfile to not fail due to test warning. See issue [#326](https://github.com/mitre-attack/attack-website/issues/326).
 - Fixed build from crashing when a technique does not have a defined platform. See issue [#329](https://github.com/mitre-attack/attack-website/issues/329).
