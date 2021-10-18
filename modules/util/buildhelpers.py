@@ -504,6 +504,7 @@ def technique_used_helper(technique_list, technique, reference_list):
                 parent_id = get_parent_technique_id(attack_id)
 
                 # If parent technique not already in list, add to list and add current sub-technique
+                # Parent technique will be marked as not used until it is seen
                 if parent_id not in technique_list:
                     technique_list[parent_id] = {}
                     technique_list[parent_id] = parent_technique_used_helper(parent_id)
@@ -519,9 +520,12 @@ def technique_used_helper(technique_list, technique, reference_list):
                 technique_list[attack_id] = get_technique_data_helper(attack_id, technique, reference_list)
 
         # Check if parent ID was added by sub-technique
-        # parent ID will not have description
-        elif 'descr' not in technique_list[attack_id]:
-            # Check if it has external references
+        # parent technique will be marked as not used
+        elif technique_list[attack_id]['technique_used'] == False:
+            # Include as a technique used
+            technique_list[attack_id]['technique_used'] = True
+
+            # Check if it has a description and add references
             if technique['relationship'].get('description'):
                 # Get filtered description
                 technique_list[attack_id]['descr'] = technique['relationship']['description']
@@ -531,12 +535,14 @@ def technique_used_helper(technique_list, technique, reference_list):
 
 def get_technique_data_helper(attack_id, technique, reference_list):
     """ Given an attack id, technique object and reference information, 
-        return dictionary with technique data
+        return dictionary with technique data, include as part of technique used
     """
 
     technique_data = {}
 
     technique_to_domain = relationshipgetters.get_technique_to_domain()
+
+    technique_data['technique_used'] = True
 
     technique_data['domain'] = technique_to_domain[attack_id].split('-')[0]
 
@@ -569,6 +575,7 @@ def parent_technique_used_helper(parent_id):
     parent_data['domain'] = technique_to_domain[parent_id].split('-')[0]
     parent_data['id'] = parent_id
     parent_data['name'] = get_technique_name(parent_id)
+    parent_data['technique_used'] = False
     parent_data['subtechniques'] = []
 
     return parent_data
