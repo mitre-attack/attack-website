@@ -25,6 +25,15 @@
 <!--    PATCH updates are when a bugfix is made without the             -->
 <!--          addition of notable features. When PATCH is 0 it can      -->
 <!--          be omitted                                                -->
+# Staged in develop
+## ATT&CK website version 3.4.1
+### Improvements
+- Minor UI readability improvement to toolbar that displays ATT&CK content and website version.
+- Added random query string to site.js to prevent that file from being cached between releases.
+### Fixes
+- ATT&CK in Excel only creates hyperlinks to documents that were created by attackToExcel.py.
+- Fixed an issue where deprecated and revoked sub-techniques could appear on matrices.
+
 # 21 October 2021
 
 ## [ATT&CK content version 10.0](https://github.com/mitre/cti/releases/tag/ATT%26CK-v10.0)
