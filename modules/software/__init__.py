@@ -7,7 +7,8 @@ def get_priority():
 
 def get_menu():
     return {
-        "name": "Software", 
+        "display_name": software_config.module_name, 
+        "module_name": software_config.module_name,
         "url": "/software/", 
         "external_link": False,
         "priority": software_config.priority,

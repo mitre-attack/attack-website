@@ -7,7 +7,8 @@ def get_priority():
 
 def get_menu():
     return {
-        "name": "Contribute", 
+        "display_name": "Contribute",
+        "module_name": "Contribute", 
         "url": "/resources/contribute/", 
         "external_link": False,
         "priority": contribute_config.priority,

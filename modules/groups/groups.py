@@ -3,7 +3,6 @@ import json
 import collections
 import re
 import markdown
-# from . import config
 from .. import site_config
 from . import groups_config
 from modules import util

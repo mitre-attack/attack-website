@@ -5,7 +5,8 @@ def get_priority():
 
 def get_menu():
     return {
-        "name": "Blog", 
+        "display_name": blog_config.module_name,
+        "module_name": blog_config.module_name,
         "url": "https://medium.com/mitre-attack/", 
         "external_link": True,
         "priority": blog_config.priority,

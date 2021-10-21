@@ -39,7 +39,7 @@ def get_related(srcs, src_type, rel_type, target_type, reverse=False):
                         "relationship": relationship,
                         "id": relationship.target_ref
                     })
-                else: 
+                else:
                     id_to_related[relationship.target_ref].append({
                         "relationship": relationship, 
                         "id": relationship.source_ref
@@ -57,20 +57,31 @@ def get_related(srcs, src_type, rel_type, target_type, reverse=False):
                     }]
     # all objects of target type
     if not reverse:
-        targets = query_all(srcs, [
-            Filter('type', '=', target_type),
-            Filter('revoked', '=', False)
-        ])
+        if target_type.startswith('x-mitre'):
+            targets = query_all(srcs, [
+                Filter('type', '=', target_type)
+            ])
+        else:
+            targets = query_all(srcs, [
+                Filter('type', '=', target_type),
+                Filter('revoked', '=', False)
+            ])
     else:
-        targets = query_all(srcs, [
-            Filter('type', '=', src_type),
-            Filter('revoked', '=', False)
-        ])
+        if src_type.startswith('x-mitre'):
+            targets = query_all(srcs, [
+                Filter('type', '=', src_type)
+            ])
+        else:
+            targets = query_all(srcs, [
+                Filter('type', '=', src_type),
+                Filter('revoked', '=', False)
+            ])
 
     id_to_target = {}
     # build the dict
     for target in targets:
-        id_to_target[target.id] = target
+        if target.get('id'):
+            id_to_target[target['id']] = target
 
     output = {}
     for stix_id in id_to_related:
@@ -78,13 +89,19 @@ def get_related(srcs, src_type, rel_type, target_type, reverse=False):
         for related in id_to_related[stix_id]:
             if not related["id"] in id_to_target:
                 continue # targetting a revoked object
-            value.append({
-                "object": json.loads(id_to_target[related["id"]].serialize()),
-                "relationship": json.loads(related["relationship"].serialize())
-            })
+
+            if related["id"].startswith('x-mitre'):
+                value.append({
+                    "object": id_to_target[related["id"]],
+                    "relationship": json.loads(related["relationship"].serialize())
+                })
+            else:
+                value.append({
+                    "object": json.loads(id_to_target[related["id"]].serialize()),
+                    "relationship": json.loads(related["relationship"].serialize())
+                })
         output[stix_id] = value
     return output
-
 
 # tool:group
 def tools_used_by_groups(srcs):
@@ -112,6 +129,22 @@ def groups_using_malware(srcs):
        mobile and pre
     """
     return get_related(srcs, "intrusion-set", "uses", "malware", reverse=True)
+
+# technique:data component
+def techniques_detected_by_datacomponent(srcs):
+    """returns datacomponent_id => {technique, relationship} for each technique detected
+       by data component. srcs should be an array of memorystores for enterprise, 
+       mobile and pre. The mobile and pre memorystores should not contain 
+       data components nor data sources.
+    """
+    return get_related(srcs, "x-mitre-data-component", "detects", "attack-pattern")
+def datacomponents_detecting_technique(srcs):
+    """returns technique => {data component, relationship} for each data component decting
+       a technique. srcs should be an array of memorystores for enterprise, 
+       mobile and pre. The mobile and pre memorystores should not contain 
+       data components nor data sources.
+    """
+    return get_related(srcs, "x-mitre-data-component", "detects", "attack-pattern", reverse=True)
 
 # technique:group
 def techniques_used_by_groups(srcs):

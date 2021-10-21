@@ -7,61 +7,62 @@ def get_priority():
 
 def get_menu():
     return {
-        "name": "Resources", 
+        "display_name": resources_config.module_name, 
+        "module_name": resources_config.module_name,
         "url": "/resources/", 
         "external_link": False,
         "priority": resources_config.priority,
         "children": [
             {
-                "name": "General Information",
+                "display_name": "General Information",
                 "url": "/resources/",
                 "external_link": False,
                 "children": []
             },
             {
-                "name": "Getting Started",
+                "display_name": "Getting Started",
                 "url": "/resources/getting-started/",
                 "external_link": False,
                 "children": []            
             },
             {
-                "name": "Training",
+                "display_name": "Training",
                 "url": "/resources/training/",
                 "external_link": False,
                 "children": []
             },
             {
-                "name": "ATT&CKcon",
+                "display_name": "ATT&CKcon",
                 "url": "/resources/attackcon/",
                 "external_link": False,
                 "children": []
             },
             {
-                "name": "Working with ATT&CK",
+                "display_name": "Working with ATT&CK",
                 "url": "/resources/working-with-attack/",
                 "external_link": False,
                 "children": []
             },
             {
-                "name": "FAQ",
+                "display_name": "FAQ",
                 "url": "/resources/faq/",
                 "external_link": False,
                 "children": []
             },
             {
-                "name": "Updates",
+                "display_name": "Updates",
                 "url": "/resources/updates/",
                 "external_link": False,
                 "children": []
             },
             {
-                "name": "Versions of ATT&CK",
+                "display_name": "Versions of ATT&CK",
                 "url": "/resources/versions/",
                 "external_link": False,
                 "children": []
             },
             {
-                "name": "Related Projects",
+                "display_name": "Related Projects",
                 "url": "/resources/related-projects/",
                 "external_link": False,
                 "children": []

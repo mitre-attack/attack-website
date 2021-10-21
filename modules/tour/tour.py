@@ -25,7 +25,7 @@ def generate_tour():
     # Check if matrices module is enabled
     matrices_found = False
     for module in modules.run_ptr:
-        if module['name'] == 'matrices':
+        if module['module_name'] == 'matrices':
             matrices_found = True
     if not matrices_found:
         return
@@ -66,7 +66,7 @@ def get_tour_steps(matrix):
     # Check if techniques module is enabled
     techniques_found = False
     for module in modules.run_ptr:
-        if module['name'] == 'techniques':
+        if module['module_name'] == 'techniques':
             techniques_found = True
     if not techniques_found:
         return {}
@@ -104,7 +104,7 @@ def get_tour_steps(matrix):
     # Check if groups module is enabled
     groups_found = False
     for module in modules.run_ptr:
-        if module['name'] == 'groups':
+        if module['module_name'] == 'groups':
             groups_found = True
     if groups_found:
         group_tour = get_group_or_software_with_subtechniques("groups")
@@ -114,7 +114,7 @@ def get_tour_steps(matrix):
     # Check if software module is enabled
     software_found = False
     for module in modules.run_ptr:
-        if module['name'] == 'software':
+        if module['module_name'] == 'software':
             software_found = True
     if software_found:
         software_tour = get_group_or_software_with_subtechniques("software")

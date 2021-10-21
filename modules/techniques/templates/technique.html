@@ -4,6 +4,8 @@
 {% import 'macros/deprecated.html' as deprecated %}
 {% import 'macros/clean_output.html' as clean_output %}
 {% import 'macros/citations.html' as citations %}
+{% import 'macros/datasource_table.html' as datasource_table %}
+
 {% import 'macros/notes.html' as notes %}
 {% if parsed.parent_name %}
     {% set title = parsed.parent_name + ": " -%}
@@ -229,20 +231,10 @@
                                                 </div>
                                             </div>
                                         {% endif %}
-                                        {% if parsed.data_sources %}
-                                            <div class="row card-data">
-                                                <div class="col-md-1 px-0 text-center">
-                                                    <span data-toggle="tooltip" data-placement="left" title="" data-test-ignore="true" data-original-title="Source of information collected by a sensor or logging system that may be used to collect information relevant to identifying the action being performed, sequence of actions, or the results of those actions by an adversary">&#9432;</span>
-                                                </div>
-                                                <div class="col-md-11 pl-0">
-                                                    <span class="h5 card-title">Data Sources:&nbsp;</span>{{parsed.data_sources}}
-                                                </div>
-                                            </div>
-                                        {% endif %}
                                         {% if parsed.supports_remote %}
                                             <div class="row card-data">
                                                 <div class="col-md-1 px-0 text-center">
-                                                    <span data-toggle="tooltip" data-placement="left" title="" data-test-ignore="true" data-original-title="If the (sub-)technique can be used to execute something on a remote system">&#9432;</span>
+                                                    <span data-toggle="tooltip" data-placement="left" title="" data-test-ignore="true" data-original-title="If the (sub-)technique can invoke an instance of itself remotely without relying on external tools/techniques">&#9432;</span>
                                                 </div>
                                                 <div class="col-md-11 pl-0">
                                                     <span class="h5 card-title">Supports Remote:&nbsp;</span>{{parsed.supports_remote}}
@@ -432,6 +424,9 @@
                         {% endif %}
                         {% if parsed.detection %}
                             <h2 class="pt-3" id="detection">Detection</h2>
+                            {% if parsed.datasources %}
+                                {{datasource_table.datasource_table(parsed.datasources, datasources_ref)}}
+                            {% endif %}
                             <div>
                                 {{clean_output.stixToHTML(parsed.detection, parsed.citations)}}
                             </div>
