@@ -763,7 +763,7 @@ No changes
 * Atul Nair, Qualys
 * Austin Clark
 * Ayan Saha, Keysight
-* Christoffer StrÃ¶mblad
+* Christoffer Strömblad
 * Christopher Glyer, Mandiant, @cglyer
 * Cody Thomas, SpecterOps
 * CTID
@@ -794,10 +794,10 @@ No changes
 * Jonhnathan Ribeiro, 3CORESec, @_w0rk3r
 * Jorell Magtibay, National Australia Bank Limited
 * Jorge Orchilles, SCYTHE
-* Jose Luis SÃ¡nchez Martinez
+* Jose Luis Sánchez Martinez
 * Josh Liburdi, @jshlbrd
-* JoÃ£o Paulo de A. Filho, @Hug1nN__
-* JÃ¶rg Abraham, EclecticIQ
+* João Paulo de A. Filho, @Hug1nN__
+* Jörg Abraham, EclecticIQ
 * Karim Hasanen, @_karimhasanen
 * Kiyohito Yamamoto, RedLark, NTT Communications
 * Kyaw Pyiyt Htet, @KyawPyiytHtet
