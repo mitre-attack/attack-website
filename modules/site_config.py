@@ -52,14 +52,14 @@ def send_to_pelican(key, value):
 def check_versions_module():
     """ Return if versions module is loaded """
     
-    if [key['name'] for key in modules.run_ptr if key['name'] == 'versions']:
+    if [key['module_name'] for key in modules.run_ptr if key['module_name'] == 'versions']:
         return True
     return False
 
 def check_resources_module():
     """ Return if resources module is loaded """
     
-    if [key['name'] for key in modules.run_ptr if key['name'] == 'resources']:
+    if [key['module_name'] for key in modules.run_ptr if key['module_name'] == 'resources']:
         return True
     return False
 

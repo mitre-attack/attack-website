@@ -7,7 +7,8 @@ def get_priority():
 
 def get_menu():
     return {
-        "name": "Groups", 
+        "display_name": groups_config.module_name, 
+        "module_name": groups_config.module_name,
         "url": "/groups", 
         "external_link": False,
         "priority": groups_config.priority,

@@ -18,16 +18,19 @@ Notes:
     unlike grand+ children.
 -->
 {% macro sidenav(root, output_file) %}
-<span class="heading" id="v-home-tab" aria-selected="false">{{root.name | upper}}</span>
-
-{# "overview" link as first item in list if root.path exists #}
-{% if root.path %}
-    {{sidenav_helper("0", {"name": "Overview", "id": "0", "path": root.path, "children": []}, output_file)}}
-{% endif %}
-
-{% for child in root.children %}
-    {{sidenav_helper(child.id, child, output_file)}}
-{% endfor %}
+<div class="sidenav-wrapper">
+    <div class="heading" id="v-home-tab" aria-selected="false">{{root.name | upper}}</div>
+    <div class="sidenav-list">
+        {# "overview" link as first item in list if root.path exists #}
+        {% if root.path %}
+            {{sidenav_helper("0", {"name": "Overview", "id": "0", "path": root.path, "children": []}, output_file)}}
+        {% endif %}
+        
+        {% for child in root.children %}
+            {{sidenav_helper(child.id, child, output_file)}}
+        {% endfor %}
+    </div>
+</div>
 {% endmacro %}
 
 <!-- recusive helper for sidenav -->
@@ -38,7 +41,7 @@ Notes:
     {% if root.children | length == 0 %}
         {% if root.path %}
             <div class="sidenav-head{% if output_file | clean_path == root.path %} active{% endif %}" id="{{root_id}}-{{root.id}}">
-                <a href="{{root.path}}"{% if "external" in root and root.external %} target="_blank"{% endif %}>
+                <a href="{{root.path | escape_spaces}}"{% if "external" in root and root.external %} target="_blank"{% endif %}>
                     {{root.name}}
                     {% if "external" in root and root.external %}
                         <img src="/theme/images/external-site-dark.jpeg" width="15">
@@ -51,7 +54,7 @@ Notes:
     {% else %}
         <div class="sidenav-head {% if output_file | clean_path == root.path %} active{% endif %}" id="{% if root.id != root_id %}{{root_id}}-{% endif %}{{root.id}}">
             {% if root.path %}
-                <a href="{{root.path}}"{% if "external" in root and root.external %} target="_blank"{% endif %}>
+                <a href="{{root.path | escape_spaces}}"{% if "external" in root and root.external %} target="_blank"{% endif %}>
                     {{root.name}}
                     {% if "external" in root and root.external %}
                         <img src="/theme/images/external-site-dark.jpeg" width="15">

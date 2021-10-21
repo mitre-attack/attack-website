@@ -81,7 +81,7 @@ def generate_base_html():
     # Update navigation menu in the case that some module did not generate markdowns
     website_build_config.base_page_data['NAVIGATION_MENU'] = modules.menu_ptr
     website_build_config.base_page_data['ATTACK_BRANDING'] = site_config.args.attack_brand
-    website_build_config.base_page_data['RESOURCES'] = [key['name'] for key in modules.run_ptr if key['name'] == 'resources']
+    website_build_config.base_page_data['RESOURCES'] = [key['module_name'] for key in modules.run_ptr if key['module_name'] == 'resources']
 
     if site_config.args.attack_brand:
         if website_build_config.base_page_data['BANNER_MESSAGE'].startswith("This is a custom instance"):
@@ -106,7 +106,7 @@ def generate_index_page():
     data["matrices"], data["has_subtechniques"], data["tour_technique"] = matrices.matrices.get_sub_matrices(matrix)
     data['logo_landingpage'] = website_build_config.base_page_data['logo_landingpage']
     data['attack_branding'] = site_config.args.attack_brand
-    data['resources'] = [key['name'] for key in modules.run_ptr if key['name'] == 'resources']
+    data['resources'] = [key['module_name'] for key in modules.run_ptr if key['module_name'] == 'resources']
 
     # Get list of routes for random page feature
     all_routes = {
@@ -115,7 +115,8 @@ def generate_index_page():
         "techniques": "Technique",
         "mitigations": "Mitigation", 
         "groups": "Group",
-        "software": "Software"
+        "software": "Software",
+        "datasources" : "Data Source"
     }
     routes = {}
 

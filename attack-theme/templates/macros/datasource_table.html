@@ -1,0 +1,51 @@
+{% import 'macros/clean_output.html' as clean_output %}
+
+{% macro datasource_table(datasources, descriptions, citations=None) %}
+<table class="table datasources-table table-bordered">
+    <thead>
+        <tr>
+            <th class="p-2" scope="col">ID</th>
+            <th class="p-2 nowrap" scope="col">Data Source</th>
+            <th class="p-2 nowrap" scope="col">Data Component</th>
+            {% if descriptions %}
+            <th class="p-2" scope="col">Detects</th>
+            {% endif %}
+        </tr>
+    </thead>
+    <tbody>
+        {% for datasource in datasources %}
+            <tr class="datasource" id="uses-{{datasource.attack_id}}">
+                <td>
+                    <a href="/datasources/{{datasource.attack_id}}">{{datasource.attack_id}}</a>
+                </td>
+                <td class="nowrap">
+                    <a href="/datasources/{{datasource.attack_id}}">{{datasource.name}}</a>
+                </td>
+                <!-- Add first data component here -->
+                <td> 
+                    <a href="/datasources/{{datasource.attack_id}}/#{{datasource.datacomponents[0].name | escape_spaces}}">{{datasource.datacomponents[0].name}}</a>
+                </td>
+                {% if description %}
+                    <td></td>
+                {% endif %}
+            </tr>
+            {% for datacomponent in datasource.datacomponents %}
+                {% if loop.index != 1 %}
+                    <tr class="datacomponent datasource" id="uses-{{datasource.attack_id}}-{{datacomponent.name}}">
+                        <td></td>
+                        <td></td>
+                        <td>
+                            <a href="/datasources/{{datasource.attack_id}}/#{{datacomponent.name | escape_spaces}}">{{datacomponent.name}}</a>
+                        </td>
+                        {% if description %}
+                        <td>
+                            {{clean_output.stixToHTML(datacomponent.descr, citations)}}
+                        </td>
+                        {% endif %}
+                    </tr>
+                {% endif %}
+            {% endfor %}
+        {% endfor %}
+    </tbody>
+</table>
+{% endmacro %}

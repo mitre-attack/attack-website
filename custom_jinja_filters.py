@@ -27,6 +27,12 @@ with open(pelican_settings_f, "r", encoding='utf8') as json_f:
 
 # Custom Jinja Filters
 
+def remove_whitespace(word):
+    return ''.join(word.split(" "))
+
+def escape_spaces(word):
+    return '%20'.join(word.split(" "))
+    
 def clean_path(path):
     """ remove index.html from end of a path, add / if not at beginning """
 

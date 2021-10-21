@@ -7,19 +7,20 @@ def get_priority():
 
 def get_menu():
     return {
-        "name": "Techniques", 
+        "display_name": techniques_config.module_name, 
+        "module_name": techniques_config.module_name,
         "url": "/techniques/", 
         "external_link": False,
         "priority": techniques_config.priority,
         "children": [
             {
-                "name": "Enterprise", 
+                "display_name": "Enterprise", 
                 "url": "/techniques/enterprise/", 
                 "external_link": False,
                 "children": []
             },
             {
-                "name": "Mobile", 
+                "display_name": "Mobile", 
                 "url": "/techniques/mobile/", 
                 "external_link": False,
                 "children": []

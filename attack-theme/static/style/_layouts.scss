@@ -14,8 +14,13 @@ body {
          height: auto; //fix footer bug
      }
 }
-.maincontent { //grow the page content to fill space before footer
-    flex-grow: 1;
+// .maincontent { //grow the page content to fill space before footer
+//     flex-grow: 1;
+// }
+
+.attack-website-wrapper {
+    max-height: 100vh;
+    overflow-y: auto;
 }
 
 h1,
@@ -258,11 +263,6 @@ a {
 
 // Styling for techniques used table
 .techniques-used {
-
-    thead tr {
-        background: #f2f2f2;
-        border-bottom: 2px solid #dee2e6;
-    }
     table {
         border-collapse: collapse;
     }
@@ -293,9 +293,58 @@ a {
         border-top: none; border-bottom: none;
     }
 }
+
+.techniques-used.background {
+    thead tr {
+        background: #f2f2f2;
+        border-bottom: 2px solid #dee2e6;
+    }
+}
+
 // .table td.border {
 //     border-color: on-color-deemphasis(body);
 // }
+
+// Styling for datasources table
+.datasources-table {
+    table {
+        border-collapse: collapse;
+    }
+    thead tr {
+        background: #f2f2f2;
+        border-bottom: 2px solid #dee2e6;
+    }
+    td {
+        vertical-align: top;
+        padding: 10px;
+        border: 1px solid #dfdfdf;
+    }
+    tr:last-child {
+        border-bottom: 1px solid #dfdfdf;;
+    }
+    .datacomponent.datasource {
+        border-left: none;
+    }
+    .datasource td:first-child {
+        border-bottom: none;
+    }
+    .datasource td:nth-child(2) {
+        border-bottom: none;
+    }
+    .datacomponent.datasource:not(.noparent) td:nth-child(2) {
+        width: 5ex;
+        border-top: none;
+        border-bottom: none; 
+    }
+    .datacomponent.datasource:not(.noparent) td:first-child {
+        width: 5ex;
+        border-top: none; border-bottom: none;
+    }
+
+    .nowrap {
+        white-space:nowrap;
+    }
+}
 
 .table-bordered, .blog-post table, .changelog table {
     &, & td, & th {
@@ -364,7 +413,14 @@ a {
     }
 }
 
+
+
 // number of table rows in TACTICS, TECHNIQUES, MITIGATIONS, GROUPS, and SOFTWARE
+.div-count {
+    margin-top: auto; 
+    margin-bottom: 0
+}
+
 .table-object-count {
     display: flex;
     justify-content: flex-end;
@@ -849,6 +905,22 @@ pre {
 .description-body {
     line-height: rem(1.5);
 }
+
+.description-body.in-table {
+    padding: 0.75rem 1.25rem;
+
+    p {
+        margin-bottom: 0;
+    }
+}
+
+.description-body.card-description {
+    padding: 0.3rem 0 0 0;
+
+    p {
+        margin-bottom: 0;
+    }
+}
 /******/
 
 /*External link icon*/
@@ -871,6 +943,65 @@ pre {
     display: block;
     height: 24px;
 }
+
+/******/
+
+/* anchor tag to bypass navbar */
+.anchor {
+    display: block;
+    position: relative;
+    top: to-rem(-66);
+    visibility: hidden;
+}
+
+.section-view {
+    .anchor-section {
+        position: -webkit-sticky;
+        position: sticky;
+        top: 4.125rem;
+        background: color(body);
+        z-index: 100;
+        margin-bottom: 0;
+    }
+
+    p {
+        margin-bottom: 0;
+        padding-bottom: 0.5rem;
+    }
+
+    // don't show in mobile view
+    .section-mobile-view {
+        display: none;
+    }
+
+    // show in desktop view
+    .section-desktop-view {
+        display: block;
+    }
+
+    // collapsed view for phones and small tablets
+    @media screen and (max-width: 47.9875rem) {
+        // show collapsed side navigation (mobile view)
+        .section-mobile-view {
+            display: block;
+        }
+
+        // don't show side navigation in desktop view
+        .section-desktop-view {
+            display: none;
+        }
+    }
+
+    .section-shadow {
+        border-bottom: 1px solid #dfdfdf !important;
+    }
+
+    table {
+        margin-top: -1px;
+    }
+}
+
+/******/
 
 /******/
 
@@ -960,3 +1091,44 @@ pre {
         }
     }
 }
+
+/*Card Blocks*/
+// container of groups of cards
+.expand-panel {
+    .card-block {
+        // style of card headers in collapsable cards in Getting Started and FAQ
+        .card-header {
+    
+            h5 {
+                @include font("Roboto-Regular");
+            }
+            @include collapsible("after");
+    
+            &:not(:last-child) { 
+                border-bottom: none; 
+            }
+        }
+    
+        // style of card titles in Related Projects
+        .card-title {
+            display: inline-block;
+            flex-grow: 1;
+            @include font("Roboto-Regular");
+        }
+
+        .first-card {
+            border-bottom: none;
+            border-radius: .25rem .25rem 0 0;
+        }
+
+        .last-card {
+            border-radius: 0 0 .25rem .25rem;
+        }
+
+        .middle-card {
+            border-bottom: none;
+            border-radius: 0;
+        }
+    }
+}
+/******/

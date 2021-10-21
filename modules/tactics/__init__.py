@@ -7,19 +7,20 @@ def get_priority():
 
 def get_menu():
     return {
-        "name": "Tactics", 
+        "display_name": tactics_config.module_name, 
+        "module_name": tactics_config.module_name,
         "url": "/tactics/", 
         "external_link": False,
         "priority": tactics_config.priority,
         "children": [
             {
-                "name": "Enterprise", 
+                "display_name": "Enterprise", 
                 "url": "/tactics/enterprise/", 
                 "external_link": False,
                 "children": []
             },
             {
-                "name": "Mobile", 
+                "display_name": "Mobile", 
                 "url": "/tactics/mobile/", 
                 "external_link": False,
                 "children": []

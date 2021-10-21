@@ -21,7 +21,7 @@
 
 {% block innerleft %}
 <!--stop-indexing-for-search-->
-    <div class="group-nav-desktop-view">
+    <div class="side-nav-desktop-view h-100">
         {{ navigation.sidenav(parsed.side_menu_data, output_file) }}
     </div>
 <!--start-indexing-for-search-->
@@ -43,47 +43,56 @@
             <div class="jumbotron jumbotron-fluid">
                 <div class="container-fluid">
                     <div class="overflow-x-auto">
-                        <h1>
-                            {% if parsed.domain == "mobile" %}
-                                Mobile Tactics
-                            {% elif parsed.domain == "enterprise" %} 
-                                Enterprise tactics
+                        <div class="row">
+                            <div class="col-md-10">
+                                <h1>
+                                    {% if parsed.domain == "mobile" %}
+                                        Mobile Tactics
+                                    {% elif parsed.domain == "enterprise" %} 
+                                        Enterprise tactics
+                                    {% endif %}
+                                </h1>
+                                <p>
+                                    Tactics represent the &quot;why&quot; of an ATT&CK technique or sub-technique. It is the adversary's tactical goal: the reason for performing an action. For example, an adversary may want to achieve credential access.
+                                </p>
+                            </div>
+                            {% if parsed.deprecated %}
+                                {{deprecated.deprecated("Tactics under this domain have been deprecated.")}}
+                            {% else %}
+                                <div class="col-md-2 div-count">
+                                    {% if parsed.domain == "mobile" %}
+                                        <h6 class="table-object-count">Mobile Tactics: {{ parsed.tactics_list_len }}</h6>
+                                    {% else %} 
+                                        <h6 class="table-object-count">Enterprise Tactics: {{ parsed.tactics_list_len }}</h6>
+                                    {% endif %}
+                                </div>
+                            </div>
+                                <table class="table table-bordered table-alternate mt-2">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">ID</th>
+                                            <th scope="col">Name</th>
+                                            <th scope="col">Description</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for tactic in parsed.tactics_table %}
+                                        <tr>
+                                        <td>
+                                            <a href="/tactics/{{tactic.tid}}">{{tactic.tid}}</a>
+                                        </td>
+                                        <td>
+                                            <a href="/tactics/{{tactic.tid}}">{{tactic.name}}</a>
+                                        </td>
+                                        <td>
+                                            {{clean_output.stixToHTML(tactic.description, firstParagraphOnly=True)}}
+                                        </td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
                             {% endif %}
-                        </h1>
-                        {% if parsed.deprecated %}
-                            {{deprecated.deprecated("Tactics under this domain have been deprecated.")}}
-                        {% else %}
-                            {% if parsed.domain == "mobile" %}
-                                <h6 class="table-object-count">Mobile Tactics: {{ parsed.tactics_list_len }}</h6>
-                            {% else %} 
-                                <h6 class="table-object-count">Enterprise Tactics: {{ parsed.tactics_list_len }}</h6>
-                            {% endif %}
-                            <table class="table table-bordered table-alternate mt-2">
-                                <thead>
-                                    <tr>
-                                        <th scope="col">ID</th>
-                                        <th scope="col">Name</th>
-                                        <th scope="col">Description</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                {% for tactic in parsed.tactics_table %}
-                                    <tr>
-                                    <td>
-                                        <a href="/tactics/{{tactic.tid}}">{{tactic.tid}}</a>
-                                    </td>
-                                    <td>
-                                        <a href="/tactics/{{tactic.tid}}">{{tactic.name}}</a>
-                                    </td>
-                                    <td>
-                                        {{clean_output.stixToHTML(tactic.description, firstParagraphOnly=True)}}
-                                    </td>
-                                    </tr>
-                                {% endfor %}
-                                </tbody>
-                            </table>
-
-                        {% endif %}
+                        </div>
                     </div>
                 </div>
             </div>
