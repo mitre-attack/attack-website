@@ -125,7 +125,7 @@ def generate_working_with_attack():
         f"mobile-attack-{site_config.full_attack_version}",
         f"ics-attack-{site_config.full_attack_version}"
     ]
-    files_types = ["matrices", "mitigations", "relationships", "software", "groups", "tactics", "techniques"]
+    files_types = ["matrices", "mitigations", "relationships", "software", "groups", "tactics", "techniques", "datasources"]
 
     # Verify if directories exists
     if not os.path.isdir(site_config.web_directory):

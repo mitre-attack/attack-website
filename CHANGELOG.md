@@ -25,7 +25,11 @@
 <!--    PATCH updates are when a bugfix is made without the             -->
 <!--          addition of notable features. When PATCH is 0 it can      -->
 <!--          be omitted                                                -->
-# Changes staged on develop
+# 21 October 2021
+
+## [ATT&CK content version 10.0](https://github.com/mitre/cti/releases/tag/ATT%26CK-v10.0)
+See the release notes [here](https://attack.mitre.org/resources/updates/updates-october-2021/).
+
 ## ATT&CK website version 3.4.0
 ### Improvements
 - Added support for data sources and data components. See issue [#321](https://github.com/mitre-attack/attack-website/issues/321).
