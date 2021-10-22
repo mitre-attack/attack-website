@@ -30,8 +30,8 @@
 ### Improvements
 - Minor UI readability improvement to toolbar that displays ATT&CK content and website version.
 - Added random query string to site.js to prevent that file from being cached between releases.
-### Fixes
 - ATT&CK in Excel only creates hyperlinks to documents that were created by attackToExcel.py.
+### Fixes
 - Fixed an issue where deprecated and revoked sub-techniques could appear on matrices.
 
 # 21 October 2021
