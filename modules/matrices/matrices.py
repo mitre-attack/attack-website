@@ -156,6 +156,8 @@ def get_sub_matrices(matrix):
 
             obj['url'] = "/techniques/" + attack_id.replace(".", "/") # sub-technique URL replacement
             obj['x_mitre_platforms'] = technique.get('x_mitre_platforms')
+            obj['x_mitre_deprecated'] = technique.get('x_mitre_deprecated')
+            obj['revoked'] = technique.get('revoked')
 
             subtechniques_of = util.relationshipgetters.get_subtechniques_of()
 
