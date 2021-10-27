@@ -25,7 +25,7 @@
 <!--    PATCH updates are when a bugfix is made without the             -->
 <!--          addition of notable features. When PATCH is 0 it can      -->
 <!--          be omitted                                                -->
-# Staged in develop
+# 27 October 2021
 ## ATT&CK website version 3.4.1
 ### Improvements
 - Minor UI readability improvement to toolbar that displays ATT&CK content and website version.
