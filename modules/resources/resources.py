@@ -151,7 +151,8 @@ def generate_working_with_attack():
                 'label' : f"{excel_dir}-{file_type}.xlsx",
                 'url': f"/docs/{excel_dir}/{excel_dir}-{file_type}.xlsx"
             }
-            excel_json['children'].append(child_json)
+            if os.path.exists(site_config.web_directory + child_json['url']):
+                excel_json['children'].append(child_json)
         files_json['excel_files'].append(excel_json)
 
     working_with_attack_content = resources_config.working_with_attack_md + json.dumps(files_json)
