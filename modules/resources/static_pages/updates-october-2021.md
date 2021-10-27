@@ -10,7 +10,7 @@ save_as: resources/updates/updates-october-2021/index.html
 |:--------|:-----------|:---------|:-----|
 | [ATT&CK v10](/versions/v10) | October 21, 2021 | This is the current version of ATT&CK | [v10.0 on MITRE/CTI](https://github.com/mitre/cti/releases/tag/ATT%26CK-v10.0) |
 
-The October 2021 (v10) ATT&CK release updates Techniques, Groups, and Software for Enterprise, Mobile, and ICS. The biggest change is the addition of a new set of [Data Source](/datasources/) and Data Component objects in Enterprise ATT&CK, complimenting the ATT&CK Data Source name changes released in ATT&CK v9. An [accompanying blog post](https://medium.com/mitre-attack/introducing-attack-v10-7743870b37e3) describes these changes as well as improvements across ATT&CK's various domains and platforms.
+The October 2021 (v10) ATT&CK release updates Techniques, Groups, and Software for Enterprise, Mobile, and ICS. The biggest change is the addition of a new set of [Data Source](/datasources/) and Data Component objects in Enterprise ATT&CK, complementing the ATT&CK Data Source name changes released in ATT&CK v9. An [accompanying blog post](https://medium.com/mitre-attack/introducing-attack-v10-7743870b37e3) describes these changes as well as improvements across ATT&CK's various domains and platforms.
 
 In this release we have renamed [T1185](/techniques/T1185/) and [T1557](/techniques/T1557/) to be more inclusive, and deprecated [T1053.004](https://attack.mitre.org/versions/v9/techniques/T1053/004/) to better reflect adversary behavior.
 
