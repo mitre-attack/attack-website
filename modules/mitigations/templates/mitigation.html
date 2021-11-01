@@ -1,4 +1,5 @@
 {% extends "general/two-column.html" %}
+{% import 'macros/deprecated.html' as deprecated %}
 {% import 'macros/navigation.html' as navigation %}
 {% import 'macros/techniques_used.html' as techniques_used %}
 {% import 'macros/versioning.html' as versioning %}
@@ -47,49 +48,55 @@
                     <h1>
                         {{parsed.name}}
                     </h1>
-                    <div class="row">
-                        <div class="col-md-8">
-                            {% if parsed.descr %}
-                                <div class="description-body">
-                                    {% if parsed.deprecated %}
-                                    <font color="red">****Deprecation Warning****</font>
-                                    {% endif %}
-                                    {{clean_output.stixToHTML(parsed.descr, parsed.citations)}}
-                                </div>
-                            {% endif %}
-                            {% if parsed.notes %}
-                                {{ notes.notes_section(parsed.notes) }}
-                            {% endif %}
-                        </div>
-                        <div class="col-md-4">
-                            <div class="card">
-                                <div class="card-body">
-                                    {% if parsed.attack_id %}
-                                        <div class="card-data"><span class="h5 card-title">ID:</span> {{parsed.attack_id}}</div>
-                                    {% endif %}
-                                    {% if parsed.version %}
-                                        <div class="card-data"><span class="h5 card-title">Version:</span> {{parsed.version}}</div>
-                                    {% endif %}
-                                    {% if parsed.created %}
-                                        <div class="card-data"><span class="h5 card-title">Created:&nbsp;</span>{{parsed.created}}</div>
-                                    {% endif %}
-                                    {% if parsed.modified %}
-                                        <div class="card-data"><span class="h5 card-title">Last Modified:&nbsp;</span>{{parsed.modified}}</div>
-                                    {% endif %}
-                                </div>
+
+                    {% if parsed.deprecated %}
+                        {% if parsed.descr %}
+                            {{deprecated.deprecated(clean_output.stixToHTML(parsed.descr, firstParagraphOnly=True))}}
+                        {% else %}
+                            {{deprecated.deprecated("This mitigation has been deprecated.")}}
+                        {% endif %}
+                    {% else %}
+                        <div class="row">
+                            <div class="col-md-8">
+                                {% if parsed.descr %}
+                                    <div class="description-body">
+                                        {{clean_output.stixToHTML(parsed.descr, parsed.citations)}}
+                                    </div>
+                                {% endif %}
+                                {% if parsed.notes %}
+                                    {{ notes.notes_section(parsed.notes) }}
+                                {% endif %}
                             </div>
-                            {% if parsed.versioning_feature %}
-                                {{ versioning.permalink_button(output_file, parsed.attack_id)}}
-                            {% endif %}
+                            <div class="col-md-4">
+                                <div class="card">
+                                    <div class="card-body">
+                                        {% if parsed.attack_id %}
+                                            <div class="card-data"><span class="h5 card-title">ID:</span> {{parsed.attack_id}}</div>
+                                        {% endif %}
+                                        {% if parsed.version %}
+                                            <div class="card-data"><span class="h5 card-title">Version:</span> {{parsed.version}}</div>
+                                        {% endif %}
+                                        {% if parsed.created %}
+                                            <div class="card-data"><span class="h5 card-title">Created:&nbsp;</span>{{parsed.created}}</div>
+                                        {% endif %}
+                                        {% if parsed.modified %}
+                                            <div class="card-data"><span class="h5 card-title">Last Modified:&nbsp;</span>{{parsed.modified}}</div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                {% if parsed.versioning_feature %}
+                                    {{ versioning.permalink_button(output_file, parsed.attack_id)}}
+                                {% endif %}
+                            </div>
                         </div>
-                    </div>
 
-                    {% if parsed.techniques_addressed_data %}
-                        {{navigator.layer_links(parsed.attack_id, "mitigations", parsed.layers)}}
-                        {{techniques_used.techniques_used(parsed.techniques_addressed_data, "Techniques Addressed by Mitigation", true, "Use", parsed.citations)}}
+                        {% if parsed.techniques_addressed_data %}
+                            {{navigator.layer_links(parsed.attack_id, "mitigations", parsed.layers)}}
+                            {{techniques_used.techniques_used(parsed.techniques_addressed_data, "Techniques Addressed by Mitigation", true, "Use", parsed.citations)}}
+                        {% endif %}
+
+                        {{ citations.reference_section(parsed.citations) }}
                     {% endif %}
-
-                    {{ citations.reference_section(parsed.citations) }}
                 </div>
             </div>
         </div>
