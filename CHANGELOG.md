@@ -25,6 +25,18 @@
 <!--    PATCH updates are when a bugfix is made without the             -->
 <!--          addition of notable features. When PATCH is 0 it can      -->
 <!--          be omitted                                                -->
+# Staged in develop
+## [ATT&CK content version 10.1](https://github.com/mitre/cti/releases/tag/ATT%26CK-v10.1)
+This minor release includes the following bugfixes:
+
+- Will be updated
+
+## ATT&CK website version 3.4.2
+### Improvements
+- Added deprecation card to deprecated mitigations, groups, and software as already observed in deprecated techniques.
+### Fixes
+- Fixed an issue where release notes were incorrectly linking data source pages.
+
 # 27 October 2021
 ## ATT&CK website version 3.4.1
 ### Improvements
