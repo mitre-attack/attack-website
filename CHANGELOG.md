@@ -25,11 +25,113 @@
 <!--    PATCH updates are when a bugfix is made without the             -->
 <!--          addition of notable features. When PATCH is 0 it can      -->
 <!--          be omitted                                                -->
-# Staged in develop
+# 10 November 2021
 ## [ATT&CK content version 10.1](https://github.com/mitre/cti/releases/tag/ATT%26CK-v10.1)
 This minor release includes the following bugfixes:
 
-- Will be updated
+### Techniques
+
+**Enterprise**
+
+Technique changes:
+
+* Create or Modify System Process: [Launch Agent](/techniques/T1543/001)
+
+
+Minor Technique changes:
+
+* [Create or Modify System Process](/techniques/T1543)
+* [Reflective Code Loading](/techniques/T1620)
+
+
+**Mobile**
+
+Minor Technique changes:
+
+* [Install Insecure or Malicious Configuration](/techniques/T1478)
+
+
+### Software
+
+**Enterprise**
+
+Minor Software changes:
+
+* [BS2005](/software/S0014)
+* [Kobalos](/software/S0641)
+* [MarkiRAT](/software/S0652)
+
+
+Software deprecations:
+
+* [TRITON](/software/S0609)
+
+
+**Mobile**
+
+Minor Software changes:
+
+* [Monokle](/software/S0407)
+
+
+### Groups
+
+**Enterprise**
+
+Minor Group changes:
+
+* [Ferocious Kitten](/groups/G0137)
+* [Ke3chang](/groups/G0004)
+* [Orangeworm](/groups/G0071)
+* [Patchwork](/groups/G0040)
+* [Transparent Tribe](/groups/G0134)
+* [Winnti Group](/groups/G0044)
+
+
+### Data Sources and/or Components
+
+**Enterprise**
+
+Minor Data Source and/or Component changes:
+
+* [Active Directory](/datasources/DS0026)
+* [Cloud Service](/datasources/DS0025)
+* [Cloud Storage](/datasources/DS0010)
+* [Cluster](/datasources/DS0031)
+* [Command](/datasources/DS0017)
+* [Container](/datasources/DS0032)
+* [Drive](/datasources/DS0016)
+* [Driver](/datasources/DS0027)
+* [File](/datasources/DS0022)
+* [Firewall](/datasources/DS0018)
+* [Firmware](/datasources/DS0001)
+* [Group](/datasources/DS0036)
+* [Image](/datasources/DS0007)
+* [Kernel](/datasources/DS0008)
+* [Logon Session](/datasources/DS0028)
+* [Module](/datasources/DS0011)
+* [Named Pipe](/datasources/DS0023)
+* [Network Share](/datasources/DS0033)
+* [Network Traffic](/datasources/DS0029)
+* [Pod](/datasources/DS0014)
+* [Process](/datasources/DS0009)
+* [Scheduled Job](/datasources/DS0003)
+* [Script](/datasources/DS0012)
+* [Sensor Health](/datasources/DS0013)
+* [Service](/datasources/DS0019)
+* [Snapshot](/datasources/DS0020)
+* [User Account](/datasources/DS0002)
+* [Volume](/datasources/DS0034)
+* [WMI](/datasources/DS0005)
+
+
+### Contributors to this release
+
+* Center for Threat-Informed Defense (CTID)
+* Hiroki Nagahama, NEC Corporation
+* Lior Ribak, SentinelOne
+* Manikantan Srinivasan, NEC Corporation India
+* Pooja Natarajan, NEC Corporation India
 
 ## ATT&CK website version 3.4.2
 ### Improvements
