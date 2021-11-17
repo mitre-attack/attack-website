@@ -30,6 +30,8 @@
 ### Fixes
 - Fixed footer on tactic list pages. See issue [#339](https://github.com/mitre-attack/attack-website/issues/339).
 - Fixed table scrolling on technique and tactic list pages.
+- Fixed deprecation marker on tactic list pages for deprecated domains.
+
 # 10 November 2021
 ## [ATT&CK content version 10.1](https://github.com/mitre/cti/releases/tag/ATT%26CK-v10.1)
 This minor release includes the following bugfixes:
