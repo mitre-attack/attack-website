@@ -25,6 +25,11 @@
 <!--    PATCH updates are when a bugfix is made without the             -->
 <!--          addition of notable features. When PATCH is 0 it can      -->
 <!--          be omitted                                                -->
+# Changes staged on develop
+## ATT&CK Website version 3.4.3
+### Fixes
+- Fixed footer on tactic list pages. See issue [#339](https://github.com/mitre-attack/attack-website/issues/339).
+- Fixed table scrolling on technique and tactic list pages.
 # 10 November 2021
 ## [ATT&CK content version 10.1](https://github.com/mitre/cti/releases/tag/ATT%26CK-v10.1)
 This minor release includes the following bugfixes:
