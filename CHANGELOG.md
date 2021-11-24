@@ -25,7 +25,7 @@
 <!--    PATCH updates are when a bugfix is made without the             -->
 <!--          addition of notable features. When PATCH is 0 it can      -->
 <!--          be omitted                                                -->
-# 24 November 2022
+# 24 November 2021
 ## ATT&CK Website version 3.4.3
 ### Fixes
 - Fixed footer on tactic list pages. See issue [#339](https://github.com/mitre-attack/attack-website/issues/339).
