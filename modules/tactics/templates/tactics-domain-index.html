@@ -42,7 +42,10 @@
         <div class="col-xl-12">
             <div class="jumbotron jumbotron-fluid">
                 <div class="container-fluid">
-                    <div class="overflow-x-auto">
+                    {% if parsed.deprecated %}
+                        {{deprecated.deprecated("Tactics under this domain have been deprecated.")}}
+                    {% else %}
+                    <div class="container overflow-x-auto">
                         <div class="row">
                             <div class="col-md-10">
                                 <h1>
@@ -56,17 +59,16 @@
                                     Tactics represent the &quot;why&quot; of an ATT&CK technique or sub-technique. It is the adversary's tactical goal: the reason for performing an action. For example, an adversary may want to achieve credential access.
                                 </p>
                             </div>
-                            {% if parsed.deprecated %}
-                                {{deprecated.deprecated("Tactics under this domain have been deprecated.")}}
-                            {% else %}
-                                <div class="col-md-2 div-count">
-                                    {% if parsed.domain == "mobile" %}
-                                        <h6 class="table-object-count">Mobile Tactics: {{ parsed.tactics_list_len }}</h6>
-                                    {% else %} 
-                                        <h6 class="table-object-count">Enterprise Tactics: {{ parsed.tactics_list_len }}</h6>
-                                    {% endif %}
-                                </div>
+                            <div class="col-md-2 div-count">
+                                {% if parsed.domain == "mobile" %}
+                                    <h6 class="table-object-count">Mobile Tactics: {{ parsed.tactics_list_len }}</h6>
+                                {% else %} 
+                                    <h6 class="table-object-count">Enterprise Tactics: {{ parsed.tactics_list_len }}</h6>
+                                {% endif %}
                             </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
                                 <table class="table table-bordered table-alternate mt-2">
                                     <thead>
                                         <tr>
@@ -91,9 +93,10 @@
                                     {% endfor %}
                                     </tbody>
                                 </table>
-                            {% endif %}
+                            </div>
                         </div>
                     </div>
+                    {% endif %}
                 </div>
             </div>
         </div>
