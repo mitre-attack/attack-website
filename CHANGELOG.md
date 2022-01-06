@@ -26,7 +26,7 @@
 <!--          addition of notable features. When PATCH is 0 it can      -->
 <!--          be omitted                                                -->
 # 7 January 2021
-## ATT&CK Website version 3.4.4
+## ATT&CK Website version 3.5.0
 ### Improvements
 - Updated ATT&CK Navigator and layer versions. See issue [#343](https://github.com/mitre-attack/attack-website/issues/343).
 
