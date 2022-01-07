@@ -617,9 +617,9 @@ def get_navigator_layers(name, attack_id, obj_type, version, techniques_used):
     enterprise_layer['name'] = layer_name
     enterprise_layer['domain'] = "enterprise-attack"
     enterprise_layer['versions'] = {
-        "layer": "4.2",
+        "layer": "4.3",
         "attack": major_attack_version,
-        "navigator": "4.3"
+        "navigator": "4.5"
     }
     enterprise_layer['techniques'] = []
     enterprise_layer["gradient"] = { # white for nonused, blue for used
