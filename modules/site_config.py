@@ -32,6 +32,12 @@ domains = [
         "deprecated" : False
     },
     {
+        "name" : "ics-attack",
+        "location" : "https://raw.githubusercontent.com/mitre/cti/master/ics-attack/ics-attack.json",
+        "alias" : "ICS",
+        "deprecated" : False
+    },
+    {
         "name" : "pre-attack",
         "location" : "https://raw.githubusercontent.com/mitre/cti/master/pre-attack/pre-attack.json",
         "alias": "PRE-ATT&CK",
@@ -67,6 +73,7 @@ def check_resources_module():
 source_names = [
     "mitre-attack", 
     "mitre-mobile-attack",
+    "mitre-ics-attack",
     "mitre-pre-attack"
 ]
 

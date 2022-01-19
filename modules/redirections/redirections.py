@@ -20,7 +20,7 @@ def generate_redirections():
     util.buildhelpers.generate_redirections(redirections_config.redirections_location)
 
     for domain in site_config.domains:
-        if domain['deprecated']: continue
+        if domain['deprecated'] or (redirections_config.redirects_paths.get(domain['name']) == None): continue
         generate_markdown_files(domain['name'])
     
 def generate_markdown_files(domain):

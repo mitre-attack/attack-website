@@ -226,6 +226,7 @@ def get_groups_using_software(software, reference_list):
     
     groups = []
 
+    used_groups = {}
     if groups_using_software:
         # Get name, id of group
         for group in groups_using_software:

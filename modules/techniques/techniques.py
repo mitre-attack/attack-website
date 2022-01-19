@@ -516,7 +516,7 @@ def get_techniques_list(techniques):
     """This method is used to generate a list of techniques"""
 
     technique_list = {}
-    
+
     for technique in techniques:
         if not technique.get('revoked') and not technique.get('x_mitre_deprecated'):
 

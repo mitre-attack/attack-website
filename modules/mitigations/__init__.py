@@ -23,6 +23,12 @@ def get_menu():
                 "url": "/mitigations/mobile/", 
                 "external_link": False,
                 "children": []
+            },
+            {
+                "display_name": "ICS", 
+                "url": "/mitigations/ics/", 
+                "external_link": False,
+                "children": []
             }
         ]
     }

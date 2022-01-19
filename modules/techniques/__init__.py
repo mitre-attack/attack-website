@@ -24,6 +24,12 @@ def get_menu():
                 "url": "/techniques/mobile/", 
                 "external_link": False,
                 "children": []
+            },
+            {
+                "display_name": "ICS", 
+                "url": "/techniques/ics/", 
+                "external_link": False,
+                "children": []
             }
         ]
     }
