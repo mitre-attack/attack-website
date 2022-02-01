@@ -28,7 +28,7 @@
 # Changes staged on develop
 ## 
 ### Fixes
-- Fixed brackets inside of description from being duplicated. See issue [#353](https://github.com/mitre-attack/attack-website/issues/343).
+- Fixed brackets inside of descriptions from being duplicated. See issue [#353](https://github.com/mitre-attack/attack-website/issues/343).
 
 # 7 January 2021
 ## ATT&CK Website version 3.5.0
