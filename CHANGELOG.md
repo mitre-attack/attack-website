@@ -25,6 +25,11 @@
 <!--    PATCH updates are when a bugfix is made without the             -->
 <!--          addition of notable features. When PATCH is 0 it can      -->
 <!--          be omitted                                                -->
+# Changes staged on develop
+## 
+### Fixes
+- Fixed brackets inside of description from being duplicated. See issue [#353](https://github.com/mitre-attack/attack-website/issues/343).
+
 # 7 January 2021
 ## ATT&CK Website version 3.5.0
 ### Improvements
