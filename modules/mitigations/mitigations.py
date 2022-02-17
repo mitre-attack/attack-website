@@ -125,6 +125,10 @@ def generate_mitigation_md(mitigation, domain, side_menu_data, side_menu_mobile_
         if mitigation.get('x_mitre_version'):
             data['version'] = mitigation["x_mitre_version"]
 
+        if mitigation.get('labels'):
+            mitigation['labels'].sort()
+            data['security_controls'] =  ", ".join(mitigation['labels'])
+
         data['techniques_addressed_data'] = get_techniques_addressed_data(mitigation, reference_list)
 
         # Get navigator layers for this group
