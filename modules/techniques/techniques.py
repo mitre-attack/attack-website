@@ -374,10 +374,8 @@ def get_mitigations_table_data(technique, reference_list):
         for mitigation in util.relationshipgetters.get_technique_mitigated_by_mitigation()[technique['id']]:
 
             # Do not add deprecated mitigation to table
-            if 'x_mitre_deprecated' not in mitigation['object']:
-
+            if not mitigation['object'].get('x_mitre_deprecated'):
                 attack_id = util.buildhelpers.get_attack_id(mitigation['object'])
-
                 # Only add if mitigation attack id is found 
                 if attack_id:
 

@@ -25,6 +25,11 @@
 <!--    PATCH updates are when a bugfix is made without the             -->
 <!--          addition of notable features. When PATCH is 0 it can      -->
 <!--          be omitted                                                -->
+#
+## Staged on develop
+### Fixes
+- Fixed non-deprecated relationships between mitigations and techniques from showing up on technique pages. See issue [#358](https://github.com/mitre-attack/attack-website/issues/358).
+
 # 7 January 2021
 ## ATT&CK Website version 3.5.0
 ### Improvements
