@@ -123,7 +123,7 @@ def generate_software_md(software,side_menu_data,side_menu_mobile_view_data, not
         if software.get("description"):
             data['descr'] = software['description']
 
-            if 'x_mitre_deprecated' in software:
+            if software.get('x_mitre_deprecated'):
                 data['deprecated'] = True
 
         # Get techniques used by software
