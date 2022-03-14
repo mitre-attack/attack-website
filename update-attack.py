@@ -33,7 +33,6 @@ test_choices = ["size", "links", "external_links", "citations"]
 
 def validate_subdirectory_string(subdirectory_str):
     """Validate subdirectory string"""
-
     if not subdirectory_str.isascii():
         raise argparse.ArgumentTypeError("%s contains non ascii characters" % subdirectory_str)
 
@@ -50,7 +49,6 @@ def validate_subdirectory_string(subdirectory_str):
 
 def get_parsed_args():
     """Create argument parser and parse arguments"""
-
     parser = argparse.ArgumentParser(
         description=(
             "Build the ATT&CK website.\n"
@@ -151,10 +149,8 @@ def remove_from_build(arg_modules, arg_extras):
     """Given a list of modules from command line, remove modules that appear in module
     directory that are not in list.
     """
-
     def remove_from_running_pool():
         """Remove modules from running pool if they are not in modules list from argument"""
-
         copy_of_modules = []
 
         for module in modules.run_ptr:
@@ -165,7 +161,6 @@ def remove_from_build(arg_modules, arg_extras):
 
     def remove_from_menu():
         """Remove modules from menu if they are not in modules list from argument"""
-
         copy_of_menu = []
 
         for module in modules.menu_ptr:
@@ -184,7 +179,6 @@ def remove_from_build(arg_modules, arg_extras):
 
 if __name__ == "__main__":
     """Beginning of ATT&CK update module"""
-
     # Get args
     args = get_parsed_args()
 
