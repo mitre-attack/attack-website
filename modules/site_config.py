@@ -30,12 +30,16 @@ stix_location_enterprise = os.getenv(
 stix_location_mobile = os.getenv(
     "STIX_LOCATION_MOBILE", "https://raw.githubusercontent.com/mitre/cti/master/mobile-attack/mobile-attack.json"
 )
+stix_location_ics = os.getenv(
+    "STIX_LOCATION_ICS", "https://raw.githubusercontent.com/mitre/cti/master/ics-attack/ics-attack.json"
+)
 stix_location_pre = os.getenv(
     "STIX_LOCATION_PRE", "https://raw.githubusercontent.com/mitre/cti/master/pre-attack/pre-attack.json"
 )
 domains = [
     {"name": "enterprise-attack", "location": stix_location_enterprise, "alias": "Enterprise", "deprecated": False},
     {"name": "mobile-attack", "location": stix_location_mobile, "alias": "Mobile", "deprecated": False},
+    {"name": "ics-attack", "location": stix_location_ics, "alias": "ICS", "deprecated": False},
     {"name": "pre-attack", "location": stix_location_pre, "alias": "PRE-ATT&CK", "deprecated": True},
 ]
 

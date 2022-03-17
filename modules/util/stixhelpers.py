@@ -41,7 +41,15 @@ def get_datasources(srcs):
         stix2.Filter('type', '=', 'x-mitre-data-source')]
     )
 
-    return datasources
+    resultUsedIds = []
+    results = []
+    # Filter out duplicates
+    for datasource in datasources:
+        if not datasource['id'] in resultUsedIds:
+            results.append(datasource)
+            resultUsedIds.append(datasource['id'])
+
+    return results
 
 def get_datacomponents(srcs):
     """Reads the STIX and returns a list of data components in the STIX"""
@@ -50,7 +58,15 @@ def get_datacomponents(srcs):
         stix2.Filter('type', '=', 'x-mitre-data-component')]
     )
 
-    return datacomponents
+    resultUsedIds = []
+    results = []
+    # Filter out duplicates
+    for datacomponent in datacomponents:
+        if not datacomponent['id'] in resultUsedIds:
+            results.append(datacomponent)
+            resultUsedIds.append(datacomponent['id'])
+
+    return results
 
 def get_tactic_list(src, domain, matrix_id=None):
     """Reads the STIX and returns a list of all tactics in the STIX"""

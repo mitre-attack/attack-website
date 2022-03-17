@@ -20,7 +20,11 @@
     <tbody>
         {% for technique in technique_table_data %}
             {% if technique.technique_used %}
+                {% if domain %}
+                <tr class="technique {{technique.domain}}" id="{{technique.domain}}">
+                {% else %}
                 <tr class="technique" id="uses-{{technique.id}}">
+                {% endif %}
                     {% if domain %}
                     <td>
                         {% if technique.domain == "enterprise" %}
@@ -29,7 +33,7 @@
                             Mobile
                         {% elif technique.domain == "ics" %}
                             ICS
-                        {% endif %} 
+                        {% endif %}
                     </td>
                     {% endif %}
                     <td colspan="2">
@@ -45,7 +49,11 @@
                     {% endif %}
                 </tr>
                 {% for subtechnique in technique.subtechniques %}
+                    {% if domain %}
+                    <tr class="sub technique {{technique.domain}}" id="{{technique.domain}}">
+                    {% else %}
                     <tr class="sub technique" id="uses-{{technique.id}}-{{subtechnique.id}}">
+                    {% endif %}
                         {% if domain %}
                         <td></td>
                         {% endif %}
@@ -66,7 +74,11 @@
             {% else %}
                 {% for subtechnique in technique.subtechniques %}
                     {% if loop.first %}
+                        {% if domain %}
+                        <tr class="sub technique noparent {{technique.domain}}" id="{{technique.domain}}">
+                        {% else %}
                         <tr class="sub technique noparent" id="uses-{{technique.id}}-{{subtechnique.id}}">
+                        {% endif %}
                             {% if domain %}
                             <td>
                                 {% if technique.domain == "enterprise" %}
@@ -94,7 +106,11 @@
                             {% endif %}
                         </tr>
                     {% else %}
+                        {% if domain %}
+                        <tr class="sub technique {{technique.domain}}" id="{{technique.domain}}">
+                        {% else %}
                         <tr class="sub technique" id="uses-{{technique.id}}-{{subtechnique.id}}">
+                        {% endif %}
                             {% if domain %}
                             <td></td>
                             {% endif %}
