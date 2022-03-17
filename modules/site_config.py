@@ -30,17 +30,17 @@ STIX_LOCATION_ENTERPRISE = os.getenv(
 STIX_LOCATION_MOBILE = os.getenv(
     "STIX_LOCATION_MOBILE", "https://raw.githubusercontent.com/mitre/cti/master/mobile-attack/mobile-attack.json"
 )
-stix_location_ics = os.getenv(
+STIX_LOCATION_ICS = os.getenv(
     "STIX_LOCATION_ICS", "https://raw.githubusercontent.com/mitre/cti/master/ics-attack/ics-attack.json"
 )
-stix_location_pre = os.getenv(
+STIX_LOCATION_PRE = os.getenv(
     "STIX_LOCATION_PRE", "https://raw.githubusercontent.com/mitre/cti/master/pre-attack/pre-attack.json"
 )
 domains = [
-    {"name": "enterprise-attack", "location": stix_location_enterprise, "alias": "Enterprise", "deprecated": False},
-    {"name": "mobile-attack", "location": stix_location_mobile, "alias": "Mobile", "deprecated": False},
-    {"name": "ics-attack", "location": stix_location_ics, "alias": "ICS", "deprecated": False},
-    {"name": "pre-attack", "location": stix_location_pre, "alias": "PRE-ATT&CK", "deprecated": True},
+    {"name": "enterprise-attack", "location": STIX_LOCATION_ENTERPRISE, "alias": "Enterprise", "deprecated": False},
+    {"name": "mobile-attack", "location": STIX_LOCATION_MOBILE, "alias": "Mobile", "deprecated": False},
+    {"name": "ics-attack", "location": STIX_LOCATION_ICS, "alias": "ICS", "deprecated": False},
+    {"name": "pre-attack", "location": STIX_LOCATION_PRE, "alias": "PRE-ATT&CK", "deprecated": True},
 ]
 
 # banner for the website
@@ -77,7 +77,7 @@ def check_resources_module():
 
 
 # Source names for ATT&CK
-source_names = ["mitre-attack", "mitre-mobile-attack", "mitre-pre-attack"]
+source_names = ["mitre-attack", "mitre-mobile-attack", "mitre-ics-attack", "mitre-pre-attack"]
 
 # Declare file location of web pages
 web_directory = "output"
