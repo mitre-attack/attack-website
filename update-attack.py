@@ -128,6 +128,7 @@ def get_parsed_args():
         action="store_true",
         help="Forces application to exit with success status codes even if tests fail.",
     )
+    parser.add_argument("--banner", type=str, help="If specified, sets the banner for the site to this string")
 
     args = parser.parse_args()
 
@@ -149,6 +150,7 @@ def remove_from_build(arg_modules, arg_extras):
     """Given a list of modules from command line, remove modules that appear in module
     directory that are not in list.
     """
+
     def remove_from_running_pool():
         """Remove modules from running pool if they are not in modules list from argument"""
         copy_of_modules = []
