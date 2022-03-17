@@ -23,21 +23,28 @@ if attack_version.startswith("v"):
     attack_version = attack_version[1:]
 
 # Domains for stix objects
-stix_location_enterprise = os.getenv(
+STIX_LOCATION_ENTERPRISE = os.getenv(
     "STIX_LOCATION_ENTERPRISE",
     "https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json",
 )
-stix_location_mobile = os.getenv(
+STIX_LOCATION_MOBILE = os.getenv(
     "STIX_LOCATION_MOBILE", "https://raw.githubusercontent.com/mitre/cti/master/mobile-attack/mobile-attack.json"
 )
-stix_location_pre = os.getenv(
+STIX_LOCATION_PRE = os.getenv(
     "STIX_LOCATION_PRE", "https://raw.githubusercontent.com/mitre/cti/master/pre-attack/pre-attack.json"
 )
 domains = [
-    {"name": "enterprise-attack", "location": stix_location_enterprise, "alias": "Enterprise", "deprecated": False},
-    {"name": "mobile-attack", "location": stix_location_mobile, "alias": "Mobile", "deprecated": False},
-    {"name": "pre-attack", "location": stix_location_pre, "alias": "PRE-ATT&CK", "deprecated": True},
+    {"name": "enterprise-attack", "location": STIX_LOCATION_ENTERPRISE, "alias": "Enterprise", "deprecated": False},
+    {"name": "mobile-attack", "location": STIX_LOCATION_MOBILE, "alias": "Mobile", "deprecated": False},
+    {"name": "pre-attack", "location": STIX_LOCATION_PRE, "alias": "PRE-ATT&CK", "deprecated": True},
 ]
+
+# banner for the website
+BANNER_ENABLED = os.getenv("BANNER_ENABLED", True)
+BANNER_MESSAGE = os.getenv(
+    "BANNER_MESSAGE",
+    "This is a custom instance of the MITRE ATT&CK Website. The official website can be found at <a href='https://attack.mitre.org'>attack.mitre.org</a>.",
+)
 
 # Args for modules to use if needed
 args = []
@@ -78,6 +85,7 @@ parent_web_directory = "output"
 # Declare as empty string
 subdirectory = ""
 
+
 def set_subdirectory(subdirectory_str):
     """Method to globally set the subdirectory"""
 
@@ -92,6 +100,7 @@ def set_subdirectory(subdirectory_str):
 
     # Add subdirectory to web directory
     web_directory = os.path.join(web_directory, subdirectory)
+
 
 # Location of html templates
 templates_directory = "attack-theme/templates/"
