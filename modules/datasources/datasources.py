@@ -146,13 +146,34 @@ def get_datasources_side_nav_data(datasources):
 
     # Get data components of data source
     datacomponent_of = rsg.get_datacomponent_of()
+    technique_to_domain = rsg.get_technique_to_domain()
+    techniques_detected_by_datacomponent = rsg.get_techniques_detected_by_datacomponent()
 
+    def get_domains_of_datacomponent(datacomponent):
+        """Retrives domains of given data component"""
+        domains_of_datacomponent = []
+
+        # get data components to techniques mapping to find domains
+        techniques_of_datacomp = techniques_detected_by_datacomponent.get(datacomponent['id'])
+        if techniques_of_datacomp:
+            technique_list = {}
+            for technique_rel in techniques_of_datacomp:
+                attack_id = util.buildhelpers.get_attack_id(technique_rel['object'])
+                if attack_id:
+                    domain = technique_to_domain[attack_id].split('-')[0]
+                    if not domain in domains_of_datacomponent:
+                        domains_of_datacomponent.append(domain)
+    
+        return domains_of_datacomponent
+
+    # Loop through data sources
     for datasource in datasources:
 
         attack_id = util.buildhelpers.get_attack_id(datasource)
 
         if attack_id:
 
+            domains_of_datasource = []
             datasource_data = {
                 "name": datasource['name'],
                 "id": attack_id,
@@ -164,10 +185,17 @@ def get_datasources_side_nav_data(datasources):
                 for datacomponent in datacomponent_of[datasource['id']]:
 
                     if not datacomponent.get('x_mitre_deprecated') and not datacomponent.get('revoked'):
+                        domains_of_datacomponent = get_domains_of_datacomponent(datacomponent)
+                        # Add missing domains to data source
+                        for domain in domains_of_datacomponent:
+                            if not domain in domains_of_datasource:
+                                domains_of_datasource.append(domain)
+
                         datacomponent_data = {
                             "name": datacomponent['name'],
                             "id": datacomponent['name'],
                             "path": "/datasources/{}/#{}".format(attack_id, datacomponent['name']),
+                            "domains": domains_of_datacomponent,
                             "children": []
                         }
 
@@ -178,6 +206,7 @@ def get_datasources_side_nav_data(datasources):
                     if datasource_data['children']:
                         datasource_data['children'] = sorted(datasource_data['children'], key=lambda k: k['name'].lower())
 
+        datasource_data["domains"] = domains_of_datasource
         # add data source and children to the side navigation
         side_nav_data.append(datasource_data)
 
