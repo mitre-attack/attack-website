@@ -260,6 +260,8 @@ def get_datacomponents_data(datasource, reference_list):
 
     # Get data components of data source
     datacomponent_of = rsg.get_datacomponent_of()
+    technique_to_domain = rsg.get_technique_to_domain()
+    techniques_detected_by_datacomponent = rsg.get_techniques_detected_by_datacomponent()
 
     if datacomponent_of.get(datasource['id']):
         for datacomponent in datacomponent_of[datasource['id']]:
@@ -270,20 +272,28 @@ def get_datacomponents_data(datasource, reference_list):
                 datacomponent_data = {}
                 datacomponent_data['name'] = datacomponent['name']
                 datacomponent_data['descr'] = datacomponent['description']
+                domains_of_datacomponent = []
                 # Update reference list
                 reference_list = util.buildhelpers.update_reference_list(reference_list, datacomponent)
 
                 # get data components to techniques mapping
-                techniques_detected_by_datacomponent = rsg.get_techniques_detected_by_datacomponent().get(datacomponent['id'])
-                if techniques_detected_by_datacomponent:
+                techniques_of_datacomp = techniques_detected_by_datacomponent.get(datacomponent['id'])
+                if techniques_of_datacomp:
                     datacomponent_data['techniques'] = []
 
                     technique_list = {}
-                    for technique_rel in techniques_detected_by_datacomponent:
+                    for technique_rel in techniques_of_datacomp:
 
                         # Do not add if technique is deprecated
                         if not technique_rel['object'].get('x_mitre_deprecated'):
                             technique_list = util.buildhelpers.technique_used_helper(technique_list, technique_rel, reference_list)
+
+                            # Get domain of technique
+                            attack_id = util.buildhelpers.get_attack_id(technique_rel['object'])
+                            if attack_id:
+                                domain = technique_to_domain[attack_id].split('-')[0]
+                                if not domain in domains_of_datacomponent:
+                                    domains_of_datacomponent.append(domain)
                             
                             technique_data = []
                             for item in technique_list:
@@ -296,7 +306,8 @@ def get_datacomponents_data(datasource, reference_list):
 
                             datacomponent_data['techniques'] = technique_data
                             datacomponent_data['add_datacomponent_ref'] = reference
-
+                
+                datacomponent_data['domains'] = domains_of_datacomponent
                 datacomponents_data.append(datacomponent_data)
     
     # Sort output by data component name
