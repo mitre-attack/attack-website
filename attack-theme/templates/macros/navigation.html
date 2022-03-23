@@ -9,6 +9,7 @@ params:
           }
     output_file: the current path the navigation is being built to,
                  use jinja's builtin `output_file` for this argument.
+    filter: boolean to activate navigation filtering based on domains
 
 Notes:
     the root level node has special behavior. If it has a path,
@@ -17,9 +18,10 @@ Notes:
     and the immediate children are not grouped under an expansion panel,
     unlike grand+ children.
 -->
-{% macro sidenav(root, output_file) %}
+{% macro sidenav(root, output_file, filter=False) %}
 <div class="sidenav-wrapper">
     <div class="heading" id="v-home-tab" aria-selected="false">{{root.name | upper}}</div>
+    {% if filter %}
     <div class="checkbox-div" id="v-home-tab" aria-selected="false">
         <div class="custom-control custom-switch">
             <input type="checkbox" class="custom-control-input" id="enterpriseSwitch" onchange="filterTables(enterpriseSwitch, icsSwitch)">
@@ -30,6 +32,7 @@ Notes:
             <label class="custom-control-label" for="icsSwitch">ICS</label>
         </div>
     </div>
+    {% endif %}
     <div class="sidenav-list">
         {# "overview" link as first item in list if root.path exists #}
         {% if root.path %}
