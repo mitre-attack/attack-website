@@ -340,29 +340,6 @@
                                 {% endif %}
                             </div>
                         </div>
-                        {% if parsed.rel_techniques_table %}
-                            <h2 class="pt-3" id ="techniques">Similar Techniques by Tactic</h2>
-                            <table class="table table-bordered table-alternate mt-2">
-                                <thead>
-                                    <tr>
-                                        <th scope="col">Tactic</th>
-                                        <th scope="col">Technique</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% for row in parsed.rel_techniques_table %}
-                                        <tr>
-                                            <td>
-                                                <a href="/tactics/{{row.tactic_id}}"> {{row.tactic_name}} </a>
-                                            </td>
-                                            <td> 
-                                                <a href="/techniques/{{row.technique_id}}"> {{row.technique_name}} </a>
-                                            </td>
-                                        </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>                 
-                        {% endif %}
                         {% if parsed.examples_table %}
                             <h2 class="pt-3" id ="examples">Procedure Examples</h2>
                             <table class="table table-bordered table-alternate mt-2">
@@ -431,7 +408,7 @@
                         {% if parsed.detection %}
                             <h2 class="pt-3" id="detection">Detection</h2>
                             {% if parsed.datasources %}
-                                {{datasource_table.datasource_table(parsed.datasources, datasources_ref)}}
+                                {{datasource_table.datasource_table(parsed.datasources, parsed.show_descriptions, parsed.citations)}}
                             {% endif %}
                             <div>
                                 {{clean_output.stixToHTML(parsed.detection, parsed.citations)}}

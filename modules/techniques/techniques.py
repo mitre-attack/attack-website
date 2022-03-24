@@ -220,9 +220,6 @@ def generate_data_for_md(technique_dict, technique, tactic_list, is_sub_techniqu
         
             # Get mitigation table
             technique_dict['mitigation_table'] = get_mitigations_table_data(technique, reference_list)
-            
-            # Get related techniques
-            technique_dict['rel_techniques_table'] = get_related_techniques_data(technique, tactic_list)
 
             # Get examples
             technique_dict['examples_table'] = get_examples_table_data(technique, reference_list)
@@ -265,7 +262,7 @@ def generate_data_for_md(technique_dict, technique, tactic_list, is_sub_techniqu
                 technique_dict['eff_perms'] = ", ".join(technique['x_mitre_effective_permissions'])
 
             # Get data sources and components
-            technique_dict['datasources'], technique_dict['datasources_ref'] = get_datasources_and_components_of_technique(technique, reference_list)
+            technique_dict['datasources'], technique_dict['show_descriptions'] = get_datasources_and_components_of_technique(technique, reference_list)
 
             # Get if technique supports remote
             if technique.get('x_mitre_remote_support'):
@@ -330,35 +327,6 @@ def generate_data_for_md(technique_dict, technique, tactic_list, is_sub_techniqu
                 technique_dict['descr'] = technique.get('description')
 
     return technique_dict
-
-def get_related_techniques_data(technique, tactic_list):
-    """Given a technique and a tactic list, return data of related techniques.
-       Data includes technique id/name and tactic name/id for each related
-       technique
-    """
-    
-    technique_data = []
-
-    if util.relationshipgetters.get_technique_related_to_technique().get(technique['id']):
-        for rel_tech in util.relationshipgetters.get_technique_related_to_technique()[technique['id']]:
-
-            attack_id = util.buildhelpers.get_attack_id(rel_tech['object'])
-
-            if attack_id:
-                row = {}
-                row['technique_id'] = attack_id
-
-                tactic = [x for x in tactic_list if x['x_mitre_shortname'] == rel_tech['object']['kill_chain_phases'][0]['phase_name']][0]
-                if tactic:
-                    row['tactic_id'] = util.buildhelpers.get_attack_id(tactic)
-                row['tactic_name'] = rel_tech['object']['kill_chain_phases'][0]['phase_name'].title().replace('-', ' ')
-                
-                row['technique_name'] = rel_tech['object']['name']
-                technique_data.append(row)
-
-    if technique_data:
-        technique_data = sorted(technique_data, key=lambda k: k['tactic_name'].lower())
-    return technique_data
 
 def get_mitigations_table_data(technique, reference_list):
     """Given a technique a reference list, find mitigations that mitigate
@@ -584,7 +552,7 @@ def get_datasources_and_components_of_technique(technique, reference_list):
     datacomponents_of_technique = util.relationshipgetters.get_datacomponents_detecting_technique().get(technique['id'])
     datasource_of = util.relationshipgetters.get_datasource_of()
 
-    reference = False
+    show_descriptions = False
 
     if datacomponents_of_technique:
         datasources_data = {}
@@ -606,8 +574,8 @@ def get_datasources_and_components_of_technique(technique, reference_list):
                 if datacomponent['relationship'].get('description'):
                     reference_list = util.buildhelpers.update_reference_list(reference_list, datacomponent['relationship'])
                     datacomponent_data['descr'] = datacomponent['relationship']['description']
-                    if not reference:
-                        reference = True
+                    if not show_descriptions:
+                        show_descriptions = True
                 
                 datasources_data[datasource_attack_id]['datacomponents'].append(datacomponent_data)
 
@@ -621,4 +589,4 @@ def get_datasources_and_components_of_technique(technique, reference_list):
         # Sort by data source name
         datasource_and_components = sorted(datasource_and_components, key=lambda k: k['name'].lower())
 
-    return datasource_and_components, reference
+    return datasource_and_components, show_descriptions
