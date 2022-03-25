@@ -1,7 +1,10 @@
-import shutil
 import os
+import shutil
+
 from modules import site_config
+
 from . import clean_config
+
 
 def clean_website_build():
     """Clean content directory and remove output directory"""

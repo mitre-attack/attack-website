@@ -1,10 +1,12 @@
-from stix2 import MemoryStore, Filter
 import json
 from itertools import chain
 
+from loguru import logger
+from stix2 import Filter, MemoryStore
+
+
 def query_all(srcs, filters):
     """return the union of a query across multiple memorystores"""
-    
     return list(chain.from_iterable(
         src.query(filters) for src in srcs
     ))

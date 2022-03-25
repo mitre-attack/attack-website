@@ -1,11 +1,12 @@
-from . import citationchecker
-from . import linkchecker
-from . import sizechecker
-from . import tests_config
-from modules import site_config
-from modules import util
-import os 
+import os
 import shutil
+
+from loguru import logger
+
+from modules import site_config, util
+
+from . import citationchecker, linkchecker, sizechecker, tests_config
+
 
 def run_tests():
     """Run tests"""

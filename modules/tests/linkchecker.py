@@ -1,8 +1,14 @@
+import json
 import os
 import re
+from pathlib import Path
+from urllib.parse import urlparse
+
 import requests
-import json
+from loguru import logger
+
 from modules import site_config
+
 from . import tests_config
 
 # STATIC PROPERTIES
@@ -81,25 +87,21 @@ def get_correct_link(path):
         path = "/" + path
 
     # Check if path is directory
-    extensions = [".html", ".css", ".htm", ".gif", ".jpg", ".png", ".js", ".json", ".ico", ".jpeg", ".svg", ".pdf", ".xlsx", ".docx", ".rtf"]
-    isDirectory = True
-    for extension in extensions:
-        if (path.endswith(extension)): isDirectory = False
-    if isDirectory:
-        # is referring to a directory, not a file; webserver would 
-        # serve index.html if you fetch the directory without 
-        # serving a file add index.html to replicate webserver 
-        # functionality
-        if not path.endswith("/"): path += "/"
-        path += "index.html"
-    # check for cache-disabling query string suffix, 
-    # e.g style.min.css?f8be4c06
-    if re.search("\.css\?[\w\d]+", path):
-        path = path.split("?")[0] # remove suffix
-    # ditto for js
-    if re.search("\.js\?[\w\d]+", path):
-        path = path.split("?")[0] # remove suffix
-    
+    sort_of_extension = path.split(".")[-1]
+    if sort_of_extension not in ["html", "css", "htm", "gif", "jpg", "png", "js", "json", "ico", "jpeg", "svg", "pdf", "xlsx", "docx", "rtf"]:
+        if re.search("(css|js)\?[\w\d]+", sort_of_extension):
+            # CSS & JavaScript: check for cache-disabling query string suffix, e.g style.min.css?f8be4c06
+            path = path.split("?")[0] # remove suffix
+        else:
+            # is referring to a directory, not a file; webserver would 
+            # serve index.html if you fetch the directory without 
+            # serving a file add index.html to replicate webserver 
+            # functionality
+            if not path.endswith("/"):
+                # logger.debug(f"does this even happen? even once? {path}")
+                path += "/"
+            path += "index.html"
+
     return path
 
 def check_if_link_in_use(filepath, link):
@@ -234,8 +236,6 @@ def internal_link_checker(filepath, html_str):
 
     # Flag to determine if internal link is broken
     internal_link_error = False
-
-    # 
 
     problems = []
     relative_links = []
@@ -387,7 +387,6 @@ def check_links(external_links = False):
     
     for directory, _, files in os.walk(site_config.web_directory):
         for filename in filter(lambda f: f.endswith(".html"), files):
-                   
             filepath = os.path.join(directory, filename)
 
             filenames.append(filepath)
