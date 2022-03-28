@@ -405,14 +405,16 @@
                                 </p>
                             {% endif %}
                         {% endif %}
-                        {% if parsed.detection %}
+                        {% if parsed.detection or parsed.datasources %}
                             <h2 class="pt-3" id="detection">Detection</h2>
                             {% if parsed.datasources %}
                                 {{datasource_table.datasource_table(parsed.datasources, parsed.show_descriptions, parsed.citations)}}
                             {% endif %}
-                            <div>
-                                {{clean_output.stixToHTML(parsed.detection, parsed.citations)}}
-                            </div>
+                            {% if parsed.detection and not parsed.show_descriptions %}
+                                <div>
+                                    {{clean_output.stixToHTML(parsed.detection, parsed.citations)}}
+                                </div>
+                            {% endif %}
                         {% endif %}
                         {% if parsed.detectable %}
                             <h2 class="pt-3" id="detectable">Detection</h2>
