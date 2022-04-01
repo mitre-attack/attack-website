@@ -54,7 +54,8 @@ addEventListener('DOMContentLoaded', (event) => {
     }
 });
 
-// filter tables on switch click
+// filter all objects with class from switch click
+// switch id must contain the domain for it to work. e.g., 
 // Switch ID2 is optional switch in case all other switched have been disabled
 function filterTables(switchID, switchID2) {
     if (switchID.length > 1)
