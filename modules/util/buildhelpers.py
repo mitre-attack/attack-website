@@ -1,5 +1,6 @@
 import argparse
 import datetime
+from loguru import logger
 import markdown
 import json
 import re
@@ -35,18 +36,14 @@ def get_created_and_modified_dates(obj):
     return dates
 
 def format_date(date):
-    """ Given a date string, format to %d %B %Y """
-
+    """Given a date string, format to %d %B %Y """
     if isinstance(date, str):
         date = datetime.datetime.strptime(date, "%Y-%m-%dT%H:%M:%S.%fZ")
 
     return ("{} {} {}").format(date.strftime("%d"), date.strftime("%B"), date.strftime("%Y"))
 
 def find_index_id(ext_ref):
-    """This method will search for the index of the external_id in the
-       external reference list
-    """
-
+    """This method will search for the index of the external_id in the external reference list"""
     count = 0
     flag = True
     while count < len(ext_ref) and flag:
@@ -489,16 +486,16 @@ def get_technique_name(tid):
     return util_config.NOT_FOUND
 
 def technique_used_helper(technique_list, technique, reference_list):
-    """ Add technique to technique list and make distinction between techniques
-        subtechniques
-    """
-
+    """Add technique to technique list and make distinction between techniques subtechniques."""
     attack_id = get_attack_id(technique['object'])
     
     if attack_id:
         # Check if technique not already in technique_list dict
         if attack_id not in technique_list:
-
+            technique_data = get_technique_data_helper(attack_id, technique, reference_list)
+            if not technique_data:
+                logger.error(f"{attack_id} technique data unavailable, possibly due to domain mismatch")
+                return technique_list
             # Check if attack id is a sub-technique
             if is_sub_tid(attack_id):
                 parent_id = get_parent_technique_id(attack_id)
@@ -509,15 +506,14 @@ def technique_used_helper(technique_list, technique, reference_list):
                     technique_list[parent_id] = {}
                     technique_list[parent_id] = parent_technique_used_helper(parent_id)
 
-                technique_list[parent_id]['subtechniques'].append(get_technique_data_helper(attack_id, technique, reference_list))
+                technique_list[parent_id]['subtechniques'].append(technique_data)
                 # Sort subtechniques by name
                 technique_list[parent_id]['subtechniques'] = sorted(technique_list[parent_id]['subtechniques'], key=lambda k: k['id'])
             
             # Attack id is regular technique
             else:
                 # Add technique to list
-                technique_list[attack_id] = {}
-                technique_list[attack_id] = get_technique_data_helper(attack_id, technique, reference_list)
+                technique_list[attack_id] = technique_data
 
         # Check if parent ID was added by sub-technique
         # parent technique will be marked as not used
@@ -534,16 +530,13 @@ def technique_used_helper(technique_list, technique, reference_list):
     return technique_list
 
 def get_technique_data_helper(attack_id, technique, reference_list):
-    """ Given an attack id, technique object and reference information, 
-        return dictionary with technique data, include as part of technique used
-    """
-
+    """Given an attack id, technique object and reference information, return dictionary with technique data, include as part of technique used."""
     technique_data = {}
-
     technique_to_domain = relationshipgetters.get_technique_to_domain()
-
+    if attack_id not in technique_to_domain:
+        logger.error(f"{attack_id} not in a known domain. check your site_config")
+        return {}
     technique_data['technique_used'] = True
-
     technique_data['domain'] = technique_to_domain[attack_id].split('-')[0]
 
     if is_sub_tid(attack_id):
