@@ -1,5 +1,6 @@
 import json
 import os
+from loguru import logger
 import requests
 import stix2
 import urllib3
@@ -161,11 +162,10 @@ def get_examples(tech_stix_id, src):
 
 def get_technique_id_domain_map(ms):
     """Create map from technique_id to domain"""
-    
     tech_list = {}
-
     for domain in site_config.domains:
-        if domain['deprecated']: continue
+        if domain['deprecated']:
+            continue
         curr_list = ms[domain['name']].query([
             stix2.Filter('type', '=', 'attack-pattern'),
             stix2.Filter('revoked', '=', False)
@@ -184,10 +184,7 @@ def get_technique_id_domain_map(ms):
     return tech_list
 
 def datacomponent_of():
-    """
-        Builds map from data source STIX ID to data components STIX objects
-    """
-
+    """Build a map from data source STIX ID to data components STIX objects."""
     datacomponents = relationshipgetters.get_datacomponent_list()
     datacomponent_of = {}
     for datacomponent in datacomponents:
