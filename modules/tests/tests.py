@@ -108,7 +108,7 @@ def run_tests():
             else:
                 print("Unlinked pages report written to {}".format(
                     os.path.join(tests_config.test_report_directory, tests_config.relative_links_report_filename)))
-   
+
     if not site_config.args.override_exit_status:
         handle_exit(error_list)
 

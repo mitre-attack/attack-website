@@ -223,7 +223,6 @@ def get_techniques_used_by_group_data(group, reference_list):
     group. Check the reference list for citations, if not found
     in list, add it.
     """
-
     technique_list = {}
 
     techniques_used_by_groups = util.relationshipgetters.get_techniques_used_by_groups()
