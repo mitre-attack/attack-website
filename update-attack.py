@@ -128,7 +128,23 @@ def get_parsed_args():
         action="store_true",
         help="Forces application to exit with success status codes even if tests fail.",
     )
-    parser.add_argument("--banner", type=str, help="If specified, sets the banner for the site to this string")
+    parser.add_argument(
+        "--banner",
+        type=str,
+        help=(
+            "If specified, sets the banner for the site to this string. "
+            "If left out and the banner is enabled, the text will come from either "
+            "the modules/site_config.py BANNER_MESSAGE variable or the BANNER_MESSAGE environment variable in that order."
+        ),
+    )
+    parser.add_argument(
+        "--banner-disable",
+        action="store_true",
+        help=(
+            "Explicitly disable the banner when building the website. "
+            "Default behavior without this flag is to have a banner generated on the site."
+        ),
+    )
 
     args = parser.parse_args()
 

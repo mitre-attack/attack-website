@@ -40,11 +40,9 @@ domains = [
 ]
 
 # banner for the website
+default_banner_message = "This is a custom instance of the MITRE ATT&CK Website. The official website can be found at <a href='https://attack.mitre.org'>attack.mitre.org</a>."
 BANNER_ENABLED = os.getenv("BANNER_ENABLED", True)
-BANNER_MESSAGE = os.getenv(
-    "BANNER_MESSAGE",
-    "This is a custom instance of the MITRE ATT&CK Website. The official website can be found at <a href='https://attack.mitre.org'>attack.mitre.org</a>.",
-)
+BANNER_MESSAGE = os.getenv("BANNER_MESSAGE", default_banner_message)
 
 # Args for modules to use if needed
 args = []

@@ -84,10 +84,15 @@ def generate_base_html():
     # Update navigation menu in the case that some module did not generate markdowns
     website_build_config.base_page_data["NAVIGATION_MENU"] = modules.menu_ptr
     website_build_config.base_page_data["ATTACK_BRANDING"] = site_config.args.attack_brand
-    website_build_config.base_page_data["BANNER_ENABLED"] = site_config.BANNER_ENABLED
     website_build_config.base_page_data["RESOURCES"] = [
         key["module_name"] for key in modules.run_ptr if key["module_name"] == "resources"
     ]
+
+    banner_enabled = site_config.BANNER_ENABLED
+    # if banner was disabled as a command line argument
+    if site_config.args.banner_disable:
+        banner_enabled = False
+    website_build_config.base_page_data["BANNER_ENABLED"] = banner_enabled
 
     banner_message = site_config.BANNER_MESSAGE
     # if banner message has been passed in via command line argument
