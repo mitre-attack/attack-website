@@ -1,13 +1,13 @@
 import argparse
-import json
-import os
 import time
-from string import Template
 
 import colorama
+from dotenv import load_dotenv
 
 import modules
 from modules import site_config, util
+
+load_dotenv()
 
 # argument defaults and options for the CLI
 module_choices = [
