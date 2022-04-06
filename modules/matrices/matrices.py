@@ -1,9 +1,11 @@
+import datetime
 import json
 import os
-import datetime
+
 from loguru import logger
-from modules import util
-from modules import site_config
+
+from modules import site_config, util
+
 from . import matrices_config
 
 
