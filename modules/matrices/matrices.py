@@ -145,7 +145,12 @@ def get_sub_matrices(matrix):
     platform_techniques = util.buildhelpers.filter_deprecated_revoked(platform_techniques)
     # get relevant tactics
     all_tactics = util.stixhelpers.get_all_of_type(domain_ms, ["x-mitre-tactic"])
-    tactic_id_to_shortname = {tactic["id"]: tactic["x_mitre_shortname"] for tactic in all_tactics}
+    tactic_id_to_shortname = {}
+    for tactic in all_tactics:
+        if "x_mitre_shortname" in tactic:
+            tactic_id_to_shortname[tactic["id"]] = tactic["x_mitre_shortname"]
+        else:
+            logger.error(f"[{tactic['id']}] Tactic does not have 'x_mitre_shortname' set, ignoring: {tactic['name']}")
 
     has_subtechniques = False  # track whether the current matrix has subtechniques
     tour_technique = {  # technique used as an example in the sub-technique tour / usage explainer
