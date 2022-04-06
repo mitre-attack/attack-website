@@ -1,14 +1,15 @@
-import json
 import os
-from loguru import logger
+
 import requests
 import stix2
 import urllib3
+from loguru import logger
+
 from modules import site_config
-from . import buildhelpers
+
+from . import buildhelpers, relationshipgetters
 from . import relationshiphelpers as rsh
-from . import relationshipgetters
-import time
+
 
 def get_mitigation_list(src):
     """Reads the STIX and returns a list of all mitigations in the STIX"""
@@ -55,7 +56,6 @@ def get_datacomponents(srcs):
 
 def get_tactic_list(src, domain, matrix_id=None):
     """Reads the STIX and returns a list of all tactics in the STIX"""
-
     tactics = []
     matrices = src.query([
         stix2.Filter('type', '=', 'x-mitre-matrix'),
@@ -79,9 +79,7 @@ def get_tactic_list(src, domain, matrix_id=None):
     return tactics
 
 def get_all_of_type(src, types):
-    """Reads the STIX and returns a list of all of a particular
-       type of object in the STIX, removes duplicate STIX and ATT&CK IDs 
-    """
+    """Reads the STIX and returns a list of all of a particular type of object in the STIX, removes duplicate STIX and ATT&CK IDs."""
 
     def grab_filtered_list_by_type(stix_type):
         return src.query([stix2.Filter('type', '=', stix_type)])
@@ -406,7 +404,6 @@ def get_stix_memory_stores():
                 ms[domain['name']].load_from_file(domain['location'])
             else:
                 exit(f"\n{domain['location']} local file does not exist. If you intended a URL, please include http:// or https://")
-        
         if not domain['deprecated']:
             srcs.append(ms[domain['name']])
 
