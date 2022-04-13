@@ -25,20 +25,28 @@
 <!--    PATCH updates are when a bugfix is made without the             -->
 <!--          addition of notable features. When PATCH is 0 it can      -->
 <!--          be omitted                                                -->
-# 7 January 2021
+# 7 January 2022
+
 ## ATT&CK Website version 3.5.0
+
 ### Improvements
+
 - Updated ATT&CK Navigator and layer versions. See issue [#343](https://github.com/mitre-attack/attack-website/issues/343).
 
 # 24 November 2021
+
 ## ATT&CK Website version 3.4.3
+
 ### Fixes
+
 - Fixed footer on tactic list pages. See issue [#339](https://github.com/mitre-attack/attack-website/issues/339).
 - Fixed table scrolling on technique and tactic list pages.
 - Fixed deprecation marker on tactic list pages for deprecated domains.
 
 # 10 November 2021
+
 ## [ATT&CK content version 10.1](https://github.com/mitre/cti/releases/tag/ATT%26CK-v10.1)
+
 This minor release includes the following bugfixes:
 
 ### Techniques
@@ -152,12 +160,17 @@ Minor Data Source and/or Component changes:
 - Fixed an issue where release notes were incorrectly linking data source pages.
 
 # 27 October 2021
+
 ## ATT&CK website version 3.4.1
+
 ### Improvements
+
 - Minor UI readability improvement to toolbar that displays ATT&CK content and website version.
 - Added random query string to site.js to prevent that file from being cached between releases.
 - ATT&CK in Excel only creates hyperlinks to documents that were created by attackToExcel.py.
+
 ### Fixes
+
 - Fixed an issue where deprecated and revoked sub-techniques could appear on matrices.
 
 # 21 October 2021
