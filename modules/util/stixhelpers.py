@@ -1,4 +1,6 @@
+import json
 import os
+from pathlib import Path
 
 import requests
 import stix2
@@ -110,10 +112,7 @@ def get_techniques(src, domain):
     return tech_list
 
 def get_revoked_by(stix_id, src):
-    """Given a stix_id, return an object that revokes it,
-       if no object is found, return None
-    """
-
+    """Given a stix_id, return an object that revokes it, if no object is found, return None."""
     relations = src.relationships(stix_id, 'revoked-by', source_only=True)
     revoked_by = src.query([
         stix2.Filter('id', 'in', [r.target_ref for r in relations]),
@@ -206,10 +205,7 @@ def get_datasource_from_list(datasource_stix_id):
     return None
 
 def datasource_of():
-    """
-        Builds map from data component STIX ID to data source STIX object
-    """
-
+    """Builds map from data component STIX ID to data source STIX object."""
     datacomponents = relationshipgetters.get_datacomponent_list()
 
     datasource_of = {}
@@ -388,22 +384,22 @@ def get_stix_memory_stores():
 
     for domain in site_config.domains:
 
+        stix_filename = None
         # Download json from http or https
         if domain['location'].startswith("http"):
-            stix_json = requests.get(domain['location'], verify=False, proxies=proxyDict)
-            if stix_json.status_code == 200:
-                stix_json = stix_json.json()
-                ms[domain['name']] = stix2.MemoryStore(stix_data=stix_json['objects'])
-            elif stix_json.status_code == 404:
-                exit(f"\n{domain['location']} stix bundle was not found")
-            else:
-                exit(f"\n{domain['location']} stix bundle download was unsuccessful")
+            download_dir = Path(f"{site_config.web_directory}/stix")
+            download_filename = f"{download_dir}/{domain['name']}.json"
+            download_stix_file(url=domain['location'], download_dir=download_dir, filepath=download_filename)
+            stix_filename = download_filename
         else:
-            if os.path.exists(domain['location']):
-                ms[domain['name']] = stix2.MemoryStore()
-                ms[domain['name']].load_from_file(domain['location'])
-            else:
-                exit(f"\n{domain['location']} local file does not exist. If you intended a URL, please include http:// or https://")
+            stix_filename = domain['location']
+
+        if os.path.exists(stix_filename):
+            ms[domain['name']] = stix2.MemoryStore()
+            ms[domain['name']].load_from_file(stix_filename)
+        else:
+            exit(f"\n{stix_filename} file does not exist.")
+
         if not domain['deprecated']:
             srcs.append(ms[domain['name']])
 
@@ -434,3 +430,27 @@ def get_contributors(ms):
     contributors = list(set(contributors))
     
     return sorted(contributors, key=lambda k: k.lower())
+
+def download_stix_file(url, download_dir, filepath):
+    """Download a STIX file to disk."""
+    logger.info(f"Downloading {url} --> {filepath}")
+    download_dir.mkdir(parents=True, exist_ok=True)
+
+    # Set proxy
+    proxy  = ""
+    if site_config.args.proxy:
+        proxy = site_config.args.proxy
+    proxyDict = { 
+        "http"  : proxy,
+        "https" : proxy
+    }
+
+    response = requests.get(url, verify=False, proxies=proxyDict)
+    if response.status_code == 200:
+        stix_json = response.json()
+        with open(filepath, "w") as json_file:
+            json.dump(stix_json, json_file)
+    elif response.status_code == 404:
+        exit(f"\n{url} stix bundle was not found")
+    else:
+        exit(f"\n{url} stix bundle download was unsuccessful")
