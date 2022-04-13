@@ -1,14 +1,14 @@
-import modules
-from . import website_build_config
-from modules import util
-from modules import matrices
-from modules import site_config
-from string import Template
 import json
 import os
 import shutil
 import subprocess
 import uuid
+from string import Template
+
+import modules
+from modules import matrices, site_config, util
+
+from . import website_build_config
 
 
 def generate_website():
@@ -16,7 +16,6 @@ def generate_website():
     generates the index page of the website and
     runs pelican content to convert markdown pages into html
     """
-
     # Create content pages directory if does not already exist
     util.buildhelpers.create_content_pages_dir()
 
@@ -158,7 +157,6 @@ def generate_index_page():
 
 def store_pelican_settings():
     """Store pelican settings"""
-
     pelican_settings_f = os.path.join(site_config.data_directory, "pelican_settings.json")
     with open(pelican_settings_f, "w", encoding="utf8") as json_f:
         json_f.write(json.dumps(site_config.staged_pelican))
@@ -189,7 +187,6 @@ def override_colors():
 
 def reset_override_colors():
     """Reset override colors scss file if attack brand flag is enabled"""
-
     if site_config.args.attack_brand:
         colors_scss_f = os.path.join(site_config.static_style_dir, "_colors.scss")
 
@@ -212,9 +209,7 @@ def reset_override_colors():
 
 
 def generate_faq_page():
-    """Responsible for compiling faq json into faq markdown file
-    for rendering on the HMTL
-    """
+    """Responsible for compiling faq json into faq markdown file for rendering on the HMTL."""
     # load faq data from json
     with open(os.path.join(site_config.data_directory, "faq.json"), "r", encoding="utf8") as f:
         faqdata = json.load(f)
@@ -234,13 +229,12 @@ def generate_changelog_page():
     """Responsible for compiling original changelog markdown into changelog markdown file
     for rendering on the HTML
     """
-
+    current_changelog = None
     # Read local changelog
     with open("CHANGELOG.md", "r", encoding="utf8") as f:
-        changelog = f.read()
+        current_changelog = f.read()
 
-    # Append changelog to mardown file
-    changelog_md = website_build_config.changelog_md + changelog
+    changelog_md = website_build_config.changelog_md + current_changelog
 
     with open(os.path.join(site_config.resources_markdown_path, "changelog.md"), "w", encoding="utf8") as md_file:
         md_file.write(changelog_md)
@@ -256,7 +250,6 @@ def pelican_content():
 
 def remove_pelican_settings():
     """Remove pelican settings"""
-
     pelican_settings_f = os.path.join(site_config.data_directory, "pelican_settings.json")
     if os.path.isfile(pelican_settings_f):
         os.remove(pelican_settings_f)
@@ -264,7 +257,6 @@ def remove_pelican_settings():
 
 def remove_unwanted_output():
     """Remove unwanted files from the output directory"""
-
     # Files to be deleted:
     # archives.html, authors.html, categories.html, tags.html,
     # author\blake-strom.html, category\cyber-threat-intelligence.html
@@ -298,7 +290,6 @@ def generate_static_pages():
     """Reads markdown files from the static pages directory and copies them into
     the markdown directory
     """
-
     # Verify if content/pages directory exists
     if not os.path.isdir(website_build_config.website_build_markdown_path):
         os.mkdir(website_build_config.website_build_markdown_path)
