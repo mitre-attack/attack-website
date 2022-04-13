@@ -1,6 +1,8 @@
 import os
 import re
 
+from loguru import logger
+
 from modules import site_config
 
 from . import tests_config
@@ -38,18 +40,21 @@ def citations_check():
                     filepath = filepath.split(site_config.web_directory)[1]
                 broken_pages.append({"path": filepath, "problems": problems})
 
-    if broken_pages:
-        if not (os.path.isdir(tests_config.test_report_directory)):
-            os.mkdir(tests_config.test_report_directory)
-        with open(os.path.join(tests_config.test_report_directory, tests_config.citations_report_filename), "w") as f:
-            f.write("Broken Citations Report:\n\n")
+    if not (os.path.isdir(site_config.test_report_directory)):
+        os.mkdir(site_config.test_report_directory)
+    # logger.info(f"Writing report: broken citations")
+    with open(os.path.join(site_config.test_report_directory, tests_config.citations_report_filename), "w") as f:
+        f.write("Broken Citations Report:\n\n")
+
+        if broken_pages:
             for page in broken_pages:
                 f.write(page["path"] + "\n")
                 for problem in page["problems"]:
                     f.write("\t- " + problem + "\n")
-        exit_code = tests_config.BROKEN_CITATION
-    else:
-        exit_code = tests_config.SUCCESS
+            exit_code = tests_config.BROKEN_CITATION
+        else:
+            f.write("No broken citations found\n")
+            exit_code = tests_config.SUCCESS
 
     # Return exit code and file information
     files_info = (okay_files, len(broken_pages))

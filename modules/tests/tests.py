@@ -1,5 +1,8 @@
 import os
+import shutil
+from datetime import datetime
 
+import bleach
 from loguru import logger
 
 from modules import site_config, util
@@ -12,7 +15,11 @@ def run_tests():
     error_list = []
     tests = 0
 
-    print("\nRunning tests:")
+    logger.info("Remove old reports")
+    if os.path.isdir(site_config.test_report_directory):
+        shutil.rmtree(site_config.test_report_directory)
+
+    logger.info("Running tests:")
     util.buildhelpers.print_test_output("-", "-", "-")
     util.buildhelpers.print_test_output("STATUS", "TEST", "MESSAGE")
     util.buildhelpers.print_test_output("-", "-", "-")
@@ -50,80 +57,48 @@ def run_tests():
     util.buildhelpers.print_test_output("-", "-", "-")
 
     # Successful tests vs failed tests
-    if (tests - len(error_list)) == 1:
-        if len(error_list) == 1:
-            print("\n{} test passed, {} test failed\n".format(tests - len(error_list), len(error_list)))
-        else:
-            print("\n{} test passed, {} tests failed\n".format(tests - len(error_list), len(error_list)))
-    else:
-        if len(error_list) == 1:
-            print("\n{} tests passed, {} test failed\n".format(tests - len(error_list), len(error_list)))
-        else:
-            print("\n{} tests passed, {} tests failed\n".format(tests - len(error_list), len(error_list)))
+    tests_passed = tests - len(error_list)
+    tests_failed = len(error_list)
+    logger.info(f"{tests_passed} test(s) passed, {tests_failed} test(s) failed")
 
     if error_list:
         if tests_config.BROKEN_CITATION in error_list:
+            report_file = os.path.join(site_config.test_report_directory, tests_config.citations_report_filename)
             # Print report if less than six broken citations
             if broken_citations_count < 6 or site_config.args.print_tests:
-                with open(
-                    os.path.join(tests_config.test_report_directory, tests_config.citations_report_filename),
-                    "r",
-                    encoding="utf-8",
-                ) as citations_report:
+                with open(report_file, "r", encoding="utf-8") as citations_report:
                     print(citations_report.read())
             else:
-                print(
-                    "Broken citations report written to {}".format(
-                        os.path.join(tests_config.test_report_directory, tests_config.citations_report_filename)
-                    )
-                )
+                logger.info(f"Broken citations report written to {report_file}")
 
         if tests_config.BROKEN_LINKS in error_list or tests_config.BROKEN_EXTERNAL_LINKS in error_list:
+            report_file = os.path.join(site_config.test_report_directory, tests_config.links_report_filename)
             if broken_links_count < 6 or site_config.args.print_tests:
                 # Print report if less than six broken citations
-                with open(
-                    os.path.join(tests_config.test_report_directory, tests_config.links_report_filename),
-                    "r",
-                    encoding="utf-8",
-                ) as links_report:
+                with open(report_file, "r", encoding="utf-8") as links_report:
                     print(links_report.read())
             else:
-                print(
-                    "Broken links report written to {}".format(
-                        os.path.join(tests_config.test_report_directory, tests_config.links_report_filename)
-                    )
-                )
+                logger.info(f"Broken links report written to {report_file}")
 
         if tests_config.UNLINKED_PAGES in error_list:
+            report_file = os.path.join(site_config.test_report_directory, tests_config.unlinked_report_filename)
             # Print report if flag is stated
             if unlinked_pages < 6 or site_config.args.print_tests:
-                with open(
-                    os.path.join(tests_config.test_report_directory, tests_config.unlinked_report_filename),
-                    "r",
-                    encoding="utf-8",
-                ) as unlinked_report:
+                with open(report_file, "r", encoding="utf-8") as unlinked_report:
                     print(unlinked_report.read())
             else:
-                print(
-                    "Unlinked pages report written to {}".format(
-                        os.path.join(tests_config.test_report_directory, tests_config.unlinked_report_filename)
-                    )
-                )
+                logger.info(f"Unlinked pages report written to {report_file}")
+
         if tests_config.RELATIVE_LINKS_FOUND in error_list:
+            report_file = os.path.join(site_config.test_report_directory, tests_config.relative_links_report_filename)
             # Print report if flag is stated
             if relative_links < 6 or site_config.args.print_tests:
-                with open(
-                    os.path.join(tests_config.test_report_directory, tests_config.relative_links_report_filename),
-                    "r",
-                    encoding="utf-8",
-                ) as relative_links_report:
+                with open(report_file, "r", encoding="utf-8") as relative_links_report:
                     print(relative_links_report.read())
             else:
-                print(
-                    "Unlinked pages report written to {}".format(
-                        os.path.join(tests_config.test_report_directory, tests_config.relative_links_report_filename)
-                    )
-                )
+                logger.info(f"Relative links report written to {report_file}")
+
+    create_combined_reports_html()
 
     if not site_config.args.override_exit_status:
         handle_exit(error_list)
@@ -227,6 +202,81 @@ def check_size():
     util.buildhelpers.print_test_output(STATUS, TEST, MSG)
 
     return exit_code
+
+
+def create_combined_reports_html():
+    reports = os.listdir(site_config.test_report_directory)
+
+    report_sections = []
+    for report in reports:
+        with open(os.path.join(site_config.test_report_directory, report), "r") as f:
+            report_sections.append("<code><pre>\n" + bleach.clean(f.read()) + "\n</pre></code>")
+
+    report_sections = "\n<hr />\n".join(report_sections)
+    now = datetime.now().strftime("%m/%d/%Y, %H:%M")
+
+    report_html = f"""
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>ATT&CK Test Reports</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet"> 
+    </head>
+    <body>
+        <div class="container">
+            <h1>ATT&CK Test Reports</h1>
+            <p>This page lists the results of the tests run on the ATT&CK STIX data and on the HTML of the built site.</p>
+            <p>This report was generated on <b>{now}</b></p>
+            <hr />
+            {report_sections}
+        </div>
+    </body>
+    <style>
+        .container {{
+            max-width: 55em;
+            margin: 0 auto;
+            font-family: 'Roboto', sans-serif;
+        }}
+        h1 {{
+            text-align: center;
+            display: flex;
+            align-items: center;
+        }}
+        h1:after, h1:before {{
+            flex: 1 0;
+            content: '';
+            border-bottom: 1px solid black;
+        }}
+        h1:after {{
+            margin-left: 15px;
+        }}
+        h1:before {{
+            margin-right: 15px;
+        }}
+        table {{
+            border-collapse: collapse;
+            width: 100%;
+            margin-bottom: 16px;
+        }}
+        th {{
+            background: rgba(0,0,0, 0.08)
+        }}
+        th, td {{
+            padding: 5px 10px;
+            border: 1px solid rgba(0,0,0, 0.12);
+            text-align: left;
+        }}
+    </style>
+    </html>
+    """
+
+    with open(os.path.join(site_config.test_report_directory, tests_config.combined_reports_filename), "w") as f:
+        f.write(report_html)
 
 
 def handle_exit(exit_codes):

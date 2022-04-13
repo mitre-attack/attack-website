@@ -1,13 +1,10 @@
 import json
 import os
-import shutil
 from string import Template
 
-import colorama
 from dotenv import load_dotenv
 
 import modules
-from modules import util
 
 load_dotenv()
 
@@ -166,3 +163,6 @@ layer_md = Template(
     "save_as: ${path}/${attack_id}-${domain}-layer.json\n"
     "json: "
 )
+
+# Directory for test reports
+test_report_directory = "reports"

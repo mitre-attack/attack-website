@@ -4,14 +4,13 @@ import colorama
 module_name = "Tests"
 priority = 21
 
-# Directory for test reports
-test_report_directory = "reports"
-
 # Filenames for test reports
 citations_report_filename = "broken-citations-report.txt"
 links_report_filename = "broken-links-report.txt"
 unlinked_report_filename = "unlinked-pages-report.txt"
 relative_links_report_filename = "relative-links-report.txt"
+
+combined_reports_filename = "tests.html"
 
 # Exit codes:
 SUCCESS = 0

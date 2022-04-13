@@ -1,8 +1,6 @@
-import json
 import os
 import re
 from pathlib import Path
-from urllib.parse import urlparse
 
 import requests
 from loguru import logger
@@ -408,48 +406,49 @@ def check_links(external_links = False):
                 broken_pages.append(report)
 
             if report.get("relative_links"):
-                relative_links_report = {}
-                relative_links_report['path'] = report["path"]
-                relative_links_report['relative_links'] = report["relative_links"]
+                relative_links_report = {
+                    "path": report["path"],
+                    "relative_links": report["relative_links"],
+                }
                 relative_links.append(relative_links_report)
 
     # Get unlinked pages list
     unlinked_pages = check_unlinked_pages(filenames)
 
-    # Write unlinked pages report
-    if unlinked_pages:
-        if not (os.path.isdir(tests_config.test_report_directory)):
-            os.mkdir(tests_config.test_report_directory)
+    if not (os.path.isdir(site_config.test_report_directory)):
+        os.mkdir(site_config.test_report_directory)
 
-        with open(os.path.join(tests_config.test_report_directory, tests_config.unlinked_report_filename), 'w') as f:
-            f.write("Unlinked pages report:\n")
+    # logger.info(f"Writing report: unlinked pages")
+    with open(os.path.join(site_config.test_report_directory, tests_config.unlinked_report_filename), 'w') as f:
+        f.write("Unlinked pages report:\n\n")
+        if unlinked_pages:
             f.write("Pages listed were not linked from another page\n\n")
             for page in unlinked_pages:
                 f.write(page + "\n")
+        else:
+            f.write("No unlinked pages found\n")
 
-    # Write broken links report
-    if broken_pages:
-        if not (os.path.isdir(tests_config.test_report_directory)):
-            os.mkdir(tests_config.test_report_directory)
-
-        with open(os.path.join(tests_config.test_report_directory, tests_config.links_report_filename), 'w') as f:
-            f.write("Broken links report:\n\n")
+    # logger.info(f"Writing report: broken links")
+    with open(os.path.join(site_config.test_report_directory, tests_config.links_report_filename), 'w') as f:
+        f.write("Broken links report:\n\n")
+        if broken_pages:
             for page in broken_pages:
                 f.write(page["path"] + "\n")
                 for problem in page["problems"]:
                     f.write("\t- " + problem + "\n")
+        else:
+            f.write("No broken links found\n")
 
-    # Write relative links report
-    if relative_links:
-        if not (os.path.isdir(tests_config.test_report_directory)):
-            os.mkdir(tests_config.test_report_directory)
-
-        with open(os.path.join(tests_config.test_report_directory, tests_config.relative_links_report_filename), 'w') as f:
-            f.write("Relative links report:\n\n")
+    # logger.info(f"Writing report: relative links")
+    with open(os.path.join(site_config.test_report_directory, tests_config.relative_links_report_filename), 'w') as f:
+        f.write("Relative links report:\n\n")
+        if relative_links:
             for page in relative_links:
                 f.write(page["path"] + "\n")
                 for relative_link in page["relative_links"]:
                     f.write("\t- " + relative_link + "\n")     
+        else:
+            f.write("No relative links found\n")
 
     broken_count = get_amount_of_broken_links() 
 

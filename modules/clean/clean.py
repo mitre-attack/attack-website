@@ -27,6 +27,10 @@ def clean_website_build():
     if os.path.isdir(site_config.web_directory):
         shutil.rmtree(site_config.web_directory)
     
+    # Remove reports directory
+    if os.path.isdir(site_config.test_report_directory):
+        shutil.rmtree(site_config.test_report_directory)
+    
     # Remove dynamic javascript file
     settings_js = os.path.join(site_config.javascript_path, "settings.js")
     if os.path.isfile(settings_js):
