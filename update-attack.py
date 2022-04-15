@@ -28,7 +28,7 @@ module_choices = [
     "tests",
 ]
 extras = ["resources", "versions", "contribute", "blog"]
-test_choices = ["size", "links", "external_links", "citations"]
+test_choices = ["size", "links", "external_links", "citations", "linkbyid"]
 
 
 def validate_subdirectory_string(subdirectory_str):
@@ -105,6 +105,7 @@ def get_parsed_args():
             "links (dead internal hyperlinks and relative hyperlinks); "
             "external_links (dead external hyperlinks); "
             "citations (unparsed citation text)."
+            "linkbyid (detect unparsed LinkByIds)."
         ),
     )
     parser.add_argument(

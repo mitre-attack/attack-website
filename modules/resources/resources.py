@@ -3,7 +3,6 @@ import os
 from datetime import datetime
 
 from mitreattack.attackToExcel import attackToExcel
-from mitreattack.diffStix import changelog_helper
 
 import modules
 from modules import site_config, util

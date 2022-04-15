@@ -228,10 +228,7 @@ def internal_external_link_checker(filepath, html_str):
     return problems, relative_links, internal_link_error
 
 def internal_link_checker(filepath, html_str):
-    """Given an html page as a string, check if there are broken 
-       internal links
-    """
-
+    """Given an html page as a string, check if there are broken internal links"""
     # Flag to determine if internal link is broken
     internal_link_error = False
 
@@ -281,7 +278,6 @@ def check_if_file_is_deprecated(filename):
     """ Given a filename, verify if it is deprecated 
         Return True if it is deprecated, False if not
     """
-  
     with open(filename, "r", encoding="utf8") as f:
         lines = f.readlines()
         for line in lines:

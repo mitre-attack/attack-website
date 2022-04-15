@@ -14,7 +14,6 @@ def citations_check():
     """Check for broken citations: (Citation: *) in HTML pages"""
     # Hold broken pages information
     broken_pages = []
-
     okay_files = 0
 
     for directory, _, files in os.walk(site_config.web_directory):
@@ -40,11 +39,21 @@ def citations_check():
                     filepath = filepath.split(site_config.web_directory)[1]
                 broken_pages.append({"path": filepath, "problems": problems})
 
-    if not (os.path.isdir(site_config.test_report_directory)):
-        os.mkdir(site_config.test_report_directory)
-    # logger.info(f"Writing report: broken citations")
-    with open(os.path.join(site_config.test_report_directory, tests_config.citations_report_filename), "w") as f:
-        f.write("Broken Citations Report:\n\n")
+    exit_code = write_report(
+        report_file=os.path.join(site_config.test_report_directory, tests_config.citations_report_filename),
+        report_title="Broken Citations Report",
+        broken_pages=broken_pages
+    )
+
+    # Return exit code and file information
+    files_info = (okay_files, len(broken_pages))
+    return exit_code, files_info
+
+
+def write_report(report_file, report_title, broken_pages):
+    # logger.info(f"Writing report: {report_title}")
+    with open(report_file, "w") as f:
+        f.write(f"{report_title}:\n\n")
 
         if broken_pages:
             for page in broken_pages:
@@ -56,6 +65,4 @@ def citations_check():
             f.write("No broken citations found\n")
             exit_code = tests_config.SUCCESS
 
-    # Return exit code and file information
-    files_info = (okay_files, len(broken_pages))
-    return exit_code, files_info
+    return exit_code

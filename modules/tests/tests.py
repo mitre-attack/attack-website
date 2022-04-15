@@ -3,11 +3,12 @@ import shutil
 from datetime import datetime
 
 import bleach
+import markdown
 from loguru import logger
 
 from modules import site_config, util
 
-from . import citationchecker, linkchecker, sizechecker, tests_config
+from . import citationchecker, linkchecker, sizechecker, tests_config, linkbyidchecker
 
 
 def run_tests():
@@ -15,22 +16,27 @@ def run_tests():
     error_list = []
     tests = 0
 
-    logger.info("Remove old reports")
+    logger.info("Removing old reports")
     if os.path.isdir(site_config.test_report_directory):
         shutil.rmtree(site_config.test_report_directory)
+        os.mkdir(site_config.test_report_directory)
 
     logger.info("Running tests:")
     util.buildhelpers.print_test_output("-", "-", "-")
     util.buildhelpers.print_test_output("STATUS", "TEST", "MESSAGE")
     util.buildhelpers.print_test_output("-", "-", "-")
 
+    ###################
     # Check output size
+    ###################
     if (site_config.args.tests and "size" in site_config.args.tests) or not site_config.args.tests:
         tests += 1
         if check_size() == tests_config.SIZE_ERROR:
             error_list.append(tests_config.SIZE_ERROR)
 
+    ######################
     # Check internal links
+    ######################
     if (
         site_config.args.tests and ("links" in site_config.args.tests or "external_links" in site_config.args.tests)
     ) or not site_config.args.tests:
@@ -47,12 +53,25 @@ def run_tests():
             if exit_code != tests_config.SUCCESS:
                 error_list.append(exit_code)
 
+    #################
     # Check citations
+    #################
     if (site_config.args.tests and "citations" in site_config.args.tests) or not site_config.args.tests:
         tests += 1
         exit_code, broken_citations_count = check_citations()
         if exit_code == tests_config.BROKEN_CITATION:
             error_list.append(tests_config.BROKEN_CITATION)
+
+    #################
+    # Check LinkByIds
+    #################
+    if (site_config.args.tests and "linkbyid" in site_config.args.tests) or not site_config.args.tests:
+        tests += 1
+        exit_code, broken_linkbyids_count = check_linkbyids()
+        if exit_code == tests_config.BROKEN_LINKBYID:
+            error_list.append(tests_config.BROKEN_LINKBYID)
+
+    create_combined_reports_html()
 
     util.buildhelpers.print_test_output("-", "-", "-")
 
@@ -63,45 +82,52 @@ def run_tests():
 
     if error_list:
         if tests_config.BROKEN_CITATION in error_list:
-            report_file = os.path.join(site_config.test_report_directory, tests_config.citations_report_filename)
-            # Print report if less than six broken citations
-            if broken_citations_count < 6 or site_config.args.print_tests:
-                with open(report_file, "r", encoding="utf-8") as citations_report:
-                    print(citations_report.read())
-            else:
-                logger.info(f"Broken citations report written to {report_file}")
+            display_error_report(
+                report_file=os.path.join(site_config.test_report_directory, tests_config.citations_report_filename),
+                error_count=broken_citations_count,
+                error_type="Broken citations",
+            )
 
         if tests_config.BROKEN_LINKS in error_list or tests_config.BROKEN_EXTERNAL_LINKS in error_list:
-            report_file = os.path.join(site_config.test_report_directory, tests_config.links_report_filename)
-            if broken_links_count < 6 or site_config.args.print_tests:
-                # Print report if less than six broken citations
-                with open(report_file, "r", encoding="utf-8") as links_report:
-                    print(links_report.read())
-            else:
-                logger.info(f"Broken links report written to {report_file}")
+            display_error_report(
+                report_file=os.path.join(site_config.test_report_directory, tests_config.links_report_filename),
+                error_count=broken_links_count,
+                error_type="Broken links",
+            )
 
         if tests_config.UNLINKED_PAGES in error_list:
-            report_file = os.path.join(site_config.test_report_directory, tests_config.unlinked_report_filename)
-            # Print report if flag is stated
-            if unlinked_pages < 6 or site_config.args.print_tests:
-                with open(report_file, "r", encoding="utf-8") as unlinked_report:
-                    print(unlinked_report.read())
-            else:
-                logger.info(f"Unlinked pages report written to {report_file}")
+            display_error_report(
+                report_file=os.path.join(site_config.test_report_directory, tests_config.unlinked_report_filename),
+                error_count=unlinked_pages,
+                error_type="Unlinked pages",
+            )
 
         if tests_config.RELATIVE_LINKS_FOUND in error_list:
-            report_file = os.path.join(site_config.test_report_directory, tests_config.relative_links_report_filename)
-            # Print report if flag is stated
-            if relative_links < 6 or site_config.args.print_tests:
-                with open(report_file, "r", encoding="utf-8") as relative_links_report:
-                    print(relative_links_report.read())
-            else:
-                logger.info(f"Relative links report written to {report_file}")
+            display_error_report(
+                report_file=os.path.join(
+                    site_config.test_report_directory, tests_config.relative_links_report_filename
+                ),
+                error_count=relative_links,
+                error_type="Relative links",
+            )
 
-    create_combined_reports_html()
+        if tests_config.BROKEN_LINKBYID in error_list:
+            display_error_report(
+                report_file=os.path.join(site_config.test_report_directory, tests_config.linkbyids_report_filename),
+                error_count=broken_linkbyids_count,
+                error_type="Broken LinkByIds",
+            )
 
     if not site_config.args.override_exit_status:
         handle_exit(error_list)
+
+
+def display_error_report(report_file, error_count, error_type):
+    if error_count < 6 or site_config.args.print_tests:
+        with open(report_file, "r", encoding="utf-8") as error_report:
+            logger.warning(error_report.read())
+    else:
+        logger.warning(f"{error_type} report written to {report_file}")
 
 
 def check_links(external_links):
@@ -169,10 +195,7 @@ def check_citations():
     else:
         STATUS = tests_config.FAILED_STATUS
 
-    if pages[1] == 1:
-        MSG = "{} pages OK, {} page broken".format(pages[0], pages[1])
-    else:
-        MSG = "{} pages OK, {} pages broken".format(pages[0], pages[1])
+    MSG = f"{pages[0]} page(s) OK, {pages[1]} page(s) broken"
 
     util.buildhelpers.print_test_output(STATUS, TEST, MSG)
 
@@ -204,13 +227,35 @@ def check_size():
     return exit_code
 
 
+def check_linkbyids():
+    """Wrapper to check for broken LinkById's"""
+    TEST = "Broken LinkByIds"
+    util.buildhelpers.print_test_output("RUNNING", TEST, "-")
+
+    exit_code, broken_linkbyids_count = linkbyidchecker.linkbyid_check()
+
+    if exit_code == tests_config.SUCCESS:
+        STATUS = tests_config.PASSED_STATUS
+    else:
+        STATUS = tests_config.FAILED_STATUS
+
+    MSG = f"{broken_linkbyids_count} broken LinkByIds"
+
+    util.buildhelpers.print_test_output(STATUS, TEST, MSG)
+    return exit_code, broken_linkbyids_count
+
+
 def create_combined_reports_html():
     reports = os.listdir(site_config.test_report_directory)
 
     report_sections = []
     for report in reports:
         with open(os.path.join(site_config.test_report_directory, report), "r") as f:
-            report_sections.append("<code><pre>\n" + bleach.clean(f.read()) + "\n</pre></code>")
+            if (report.endswith(".md")):
+                report_sections.append(markdown.markdown(f.read(), extensions=['tables']))
+            else:
+                report_sections.append("<code><pre>\n" + bleach.clean(f.read()) + "\n</pre></code>")
+
 
     report_sections = "\n<hr />\n".join(report_sections)
     now = datetime.now().strftime("%m/%d/%Y, %H:%M")

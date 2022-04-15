@@ -302,9 +302,7 @@ def add_replace_or_ignore(stix_objs, attack_id_objs, obj_in_question):
             replace_object(attack_id, conflict_attack_id)
     
 def grab_resources(ms):
-    """Returns a dict that contains lists for the software, group,
-       technique and mitigation objects.
-    """
+    """Returns a dict that contains lists for the software, group, technique and mitigation objects."""
 
     def get_domain_resources(types):
         # Returns sorted list by name of domain resources by given type list
@@ -366,21 +364,11 @@ def get_stix_memory_stores():
     """This function reads the json files for each domain and creates a dict
        that contains the memory stores for each domain.
     """
-
     # suppress InsecureRequestWarning: Unverified HTTPS request is being made
     urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
     ms = {}
     srcs = []
-
-    # Set proxy
-    proxy  = ""
-    if site_config.args.proxy:
-        proxy = site_config.args.proxy
-    proxyDict = { 
-        "http"  : proxy,
-        "https" : proxy
-    }
 
     for domain in site_config.domains:
 
@@ -454,3 +442,13 @@ def download_stix_file(url, download_dir, filepath):
         exit(f"\n{url} stix bundle was not found")
     else:
         exit(f"\n{url} stix bundle download was unsuccessful")
+
+def get_url_from_stix(stix_object, is_subtechnique=False):
+    """Parse the website url from a stix object."""
+    if stix_object.get("external_references"):
+        url = stix_object["external_references"][0]["url"]
+        split_url = url.split("/")
+        splitfrom = -3 if is_subtechnique else -2
+        link = "/".join(split_url[splitfrom:])
+        return link
+    return None

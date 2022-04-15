@@ -1,12 +1,14 @@
-import os
-import json
 import collections
-import re
-import time
-import markdown
-from .. import site_config
-from . import software_config
+import json
+import os
+from pprint import pformat
+
+from loguru import logger
+
 from modules import util
+
+from . import software_config
+from .. import site_config
 
 
 def generate_software():
@@ -265,9 +267,12 @@ def get_techniques_used_by_software_data(software, reference_list):
     if techniques_used_by_software:
 
         for technique in techniques_used_by_software:
+
             # Do not add if technique is deprecated
-            if not technique["object"].get("x_mitre_deprecated"):
-                technique_list = util.buildhelpers.technique_used_helper(technique_list, technique, reference_list)
+            if technique["object"].get("x_mitre_deprecated"):
+                continue
+
+            technique_list = util.buildhelpers.technique_used_helper(technique_list, technique, reference_list)
 
     technique_data = []
     for item in technique_list:

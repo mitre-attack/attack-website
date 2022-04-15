@@ -9,6 +9,7 @@ citations_report_filename = "broken-citations-report.txt"
 links_report_filename = "broken-links-report.txt"
 unlinked_report_filename = "unlinked-pages-report.txt"
 relative_links_report_filename = "relative-links-report.txt"
+linkbyids_report_filename = "linkbyids-report.md"
 
 combined_reports_filename = "tests.html"
 
@@ -22,6 +23,7 @@ BROKEN_EXTERNAL_LINKS = -10
 SIZE_ERROR = -11
 UNLINKED_PAGES = -12
 RELATIVE_LINKS_FOUND = -13
+BROKEN_LINKBYID = -14
 
 # Used to reset text color
 RESET = '\033[0m'  # mode 0  = reset
