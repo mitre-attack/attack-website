@@ -15,7 +15,6 @@ from . import relationshiphelpers as rsh
 
 def get_mitigation_list(src):
     """Reads the STIX and returns a list of all mitigations in the STIX"""
-
     mitigations = src.query([
         stix2.Filter('type', '=', 'course-of-action'),
         stix2.Filter('revoked', '=', False)
@@ -28,13 +27,20 @@ def get_mitigation_list(src):
 
 def get_matrices(src, domain):
     """Reads the STIX and returns a list of all matrices in the STIX"""
-
-    matrices = src.query([
+    stix_matrices = src.query([
         stix2.Filter('type', '=', 'x-mitre-matrix'),
     ])
 
     # Filter out by domain
-    matrices = [x for x in matrices if not hasattr(x, 'x_mitre_domains') or domain in x.get('x_mitre_domains')]
+    matrices = []
+    for matrix in stix_matrices:
+        is_deprecated = matrix.get("x_mitre_deprecated")
+        if is_deprecated:
+            # logger.info(f"skipping deprecated matrix for {domain}: {matrix['id']}")
+            continue
+        else:
+            # logger.info(f"including matrix for {domain}: {matrix['id']}")
+            matrices.append(matrix)
 
     return matrices
 
