@@ -902,12 +902,10 @@ def generate_redirections(redirections_filename):
             os.mkdir(site_config.redirects_markdown_path)
 
         for obj in redirects:
-
             subs = site_config.redirect_md.substitute(obj)
 
-            with open(
-                os.path.join(site_config.redirects_markdown_path, obj["title"] + ".md"), "w", encoding="utf8"
-            ) as md_file:
+            redirect_md_file = os.path.join(site_config.redirects_markdown_path, f"{obj['title']}.md")
+            with open(redirect_md_file, "w", encoding="utf8") as md_file:
                 md_file.write(subs)
 
 
