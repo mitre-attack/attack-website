@@ -1,15 +1,13 @@
 import os
 import uuid
-from modules import site_config
-from modules import util
+
+from modules import site_config, util
+
 from . import redirections_config
 
 
 def generate_redirections():
-    """Responsible for verifying redirects directory and starting off
-    markdown generation process
-    """
-
+    """Responsible for verifying redirects directory and starting off markdown generation process."""
     # Create content pages directory if does not already exist
     util.buildhelpers.create_content_pages_dir()
 
@@ -27,7 +25,7 @@ def generate_redirections():
 
 
 def generate_markdown_files(domain):
-    """Given a domain, changes all the old links to new redirected links"""
+    """Given a domain, changes all the old links to new redirected links."""
     # Reads the json attack STIX and creates a list of the ATT&CK Tactics
     ms = util.relationshipgetters.get_ms()
 
@@ -78,8 +76,7 @@ def generate_markdown_files(domain):
 
 
 def generate_tactic_redirects(ms, domain):
-    """Responsible for generating tactic redirects markdown"""
-
+    """Responsible for generating tactic redirects markdown."""
     tactics = util.stixhelpers.get_all_of_type(ms[domain], ["x-mitre-tactic"])
 
     data = {}
@@ -102,8 +99,7 @@ def generate_tactic_redirects(ms, domain):
 
 
 def generate_obj_redirect(redirect_link, new_attack_id, old_attack_id, domain):
-    """Responsible for generating redirects markdown for given data"""
-
+    """Responsible for generating redirects markdown for given data."""
     data = {}
 
     data["title"] = old_attack_id + str(uuid.uuid1())
@@ -139,10 +135,7 @@ def generate_obj_redirect(redirect_link, new_attack_id, old_attack_id, domain):
 
 
 def get_new_and_old_ids(obj):
-    """Given an object, return current or new ATT&CK id and old ATT&CK
-    id if there is one
-    """
-
+    """Given an object, return current or new ATT&CK id and old ATT&CK id if there is one."""
     new_attack_id = util.buildhelpers.get_attack_id(obj)
     if new_attack_id:
         if obj.get("x_mitre_old_attack_id"):
