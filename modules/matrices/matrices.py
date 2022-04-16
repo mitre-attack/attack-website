@@ -1,4 +1,3 @@
-import datetime
 import json
 import os
 
@@ -10,10 +9,7 @@ from . import matrices_config
 
 
 def generate_matrices():
-    """Responsible for verifying matrix directory and generating index
-    matrix markdown.
-    """
-
+    """Responsible for verifying matrix directory and generating index matrix markdown."""
     # Create content pages directory if does not already exist
     util.buildhelpers.create_content_pages_dir()
 
@@ -36,7 +32,8 @@ def generate_matrices():
 
     for matrix in matrices_config.matrices:
         if matrix["type"] == "external":
-            continue  # link to externally hosted matrix, don't create a page for it
+            # link to externally hosted matrix, don't create a page for it
+            continue
         matrix_generated = generate_platform_matrices(matrix, notes, side_menu_data)
 
     for deprecated_matrix in matrices_config.deprecated_matrices:
@@ -48,7 +45,6 @@ def generate_matrices():
 
 def generate_platform_matrices(matrix, notes, side_menu_data=None):
     """Given a matrix, generates the matrix markdown"""
-
     has_data = False
     data = {}
     data["menu"] = side_menu_data
@@ -134,7 +130,6 @@ def get_matrix_ids(matrices):
 
 
 def get_sub_matrices(matrix):
-
     ms = util.relationshipgetters.get_ms()
 
     # memorystore for the current domain
