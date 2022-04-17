@@ -12,7 +12,7 @@ general_redirects_dict = {
     "intrusion-set": {"old": "Group", "new": "groups"},
 }
 
-general_redirects_types_dict = [["attack-pattern"], ["malware", "tool"], ["intrusion-set"]]
+general_redirects_types = [["attack-pattern"], ["malware", "tool"], ["intrusion-set"]]
 
 # Mobile redirects
 mobile_redirect_dict = {"course-of-action": {"old": "Mitigation", "new": "mitigations"}}

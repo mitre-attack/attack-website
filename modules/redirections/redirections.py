@@ -29,13 +29,14 @@ def generate_markdown_files(domain):
     # Reads the json attack STIX and creates a list of the ATT&CK Tactics
     ms = util.relationshipgetters.get_ms()
 
-    for types in redirections_config.general_redirects_types_dict:
+    for types in redirections_config.general_redirects_types:
         objs = util.stixhelpers.get_all_of_type(ms[domain], types)
         for obj in objs:
             new_attack_id, old_attack_id = get_new_and_old_ids(obj)
 
             if new_attack_id:
                 if obj.get("revoked"):
+                    
                     revoked_by_obj = util.stixhelpers.get_revoked_by(obj["id"], ms[domain])
 
                     if revoked_by_obj:
