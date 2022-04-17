@@ -59,11 +59,12 @@ def find_index_id(ext_ref):
 
 def get_attack_id(object):
     """Given an object, return attack_id."""
-    if object.get("external_references"):
-        index = find_index_id(object["external_references"])
+    external_references = object.get("external_references")
+    if external_references:
+        index = find_index_id(external_references)
 
         if index != util_config.NOT_FOUND:
-            return object["external_references"][index]["external_id"]
+            return external_references[index]["external_id"]
 
     return None
 
