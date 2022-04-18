@@ -1,17 +1,15 @@
 import json
 import os
-import datetime
+
 from loguru import logger
-from modules import util
-from modules import site_config
+
+from modules import site_config, util
+
 from . import matrices_config
 
 
 def generate_matrices():
-    """Responsible for verifying matrix directory and generating index
-    matrix markdown.
-    """
-
+    """Responsible for verifying matrix directory and generating index matrix markdown."""
     # Create content pages directory if does not already exist
     util.buildhelpers.create_content_pages_dir()
 
@@ -34,7 +32,8 @@ def generate_matrices():
 
     for matrix in matrices_config.matrices:
         if matrix["type"] == "external":
-            continue  # link to externally hosted matrix, don't create a page for it
+            # link to externally hosted matrix, don't create a page for it
+            continue
         matrix_generated = generate_platform_matrices(matrix, notes, side_menu_data)
 
     for deprecated_matrix in matrices_config.deprecated_matrices:
@@ -46,7 +45,6 @@ def generate_matrices():
 
 def generate_platform_matrices(matrix, notes, side_menu_data=None):
     """Given a matrix, generates the matrix markdown"""
-
     has_data = False
     data = {}
     data["menu"] = side_menu_data
@@ -132,7 +130,6 @@ def get_matrix_ids(matrices):
 
 
 def get_sub_matrices(matrix):
-
     ms = util.relationshipgetters.get_ms()
 
     # memorystore for the current domain
@@ -145,7 +142,12 @@ def get_sub_matrices(matrix):
     platform_techniques = util.buildhelpers.filter_deprecated_revoked(platform_techniques)
     # get relevant tactics
     all_tactics = util.stixhelpers.get_all_of_type(domain_ms, ["x-mitre-tactic"])
-    tactic_id_to_shortname = {tactic["id"]: tactic["x_mitre_shortname"] for tactic in all_tactics}
+    tactic_id_to_shortname = {}
+    for tactic in all_tactics:
+        if "x_mitre_shortname" in tactic:
+            tactic_id_to_shortname[tactic["id"]] = tactic["x_mitre_shortname"]
+        else:
+            logger.error(f"[{tactic['id']}] Tactic does not have 'x_mitre_shortname' set, ignoring: {tactic['name']}")
 
     has_subtechniques = False  # track whether the current matrix has subtechniques
     tour_technique = {  # technique used as an example in the sub-technique tour / usage explainer

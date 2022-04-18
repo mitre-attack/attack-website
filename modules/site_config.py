@@ -1,13 +1,10 @@
 import json
 import os
-import shutil
 from string import Template
 
-import colorama
 from dotenv import load_dotenv
 
 import modules
-from modules import util
 
 load_dotenv()
 
@@ -44,11 +41,9 @@ domains = [
 ]
 
 # banner for the website
+default_banner_message = "This is a custom instance of the MITRE ATT&CK Website. The official website can be found at <a href='https://attack.mitre.org'>attack.mitre.org</a>."
 BANNER_ENABLED = os.getenv("BANNER_ENABLED", True)
-BANNER_MESSAGE = os.getenv(
-    "BANNER_MESSAGE",
-    "This is a custom instance of the MITRE ATT&CK Website. The official website can be found at <a href='https://attack.mitre.org'>attack.mitre.org</a>.",
-)
+BANNER_MESSAGE = os.getenv("BANNER_MESSAGE", default_banner_message)
 
 # Args for modules to use if needed
 args = []
@@ -172,3 +167,6 @@ layer_md = Template(
     "save_as: ${path}/${attack_id}-${domain}-layer.json\n"
     "json: "
 )
+
+# Directory for test reports
+test_report_directory = "reports"

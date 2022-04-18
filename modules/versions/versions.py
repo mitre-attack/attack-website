@@ -1,14 +1,16 @@
-from git import Repo
+import json
 import os
+import re
 import shutil
 import stat
-import json
-import stat
 from datetime import datetime
-import re
+
+from git import Repo
+
+from modules import site_config, util
+
 from . import versions_config
-from modules import site_config
-from modules import util
+
 
 def generate_versions():
     """Responsible for generating the versions pages"""
@@ -135,7 +137,12 @@ def deploy_previous_version(version, repo):
     # check out the commit for that version
     repo.git.checkout(version["commit"])
     # copy over files
-    shutil.copytree(os.path.join(versions_config.versions_directory), os.path.join(versions_config.prev_versions_deploy_folder, versionPath(version)))
+    ignored_stuff = shutil.ignore_patterns(".git", "beta", "CNAME", "robots.txt", "previous", "previous-versions", "versions")
+    shutil.copytree(
+        os.path.join(versions_config.versions_directory),
+        os.path.join(versions_config.prev_versions_deploy_folder, versionPath(version)),
+        ignore=ignored_stuff
+    )
     # run archival scripts on version
     archive(version)
     # build alias for version
@@ -170,7 +177,15 @@ def archive(version_data, is_current=False):
     saferemove(os.path.join(version_path, "robots.txt"), "file")
 
     # remove previous versions from this previous version
-    for prev_directory in map(lambda d: os.path.join(version_path, d), ["previous", versions_config.prev_versions_path, os.path.join("resources", "previous-versions"), os.path.join("resources", "versions")]):
+    for prev_directory in map(
+        lambda d: os.path.join(version_path, d),
+        [
+            "previous",
+            versions_config.prev_versions_path,
+            os.path.join("resources", "previous-versions"),
+            os.path.join("resources", "versions")
+        ]
+    ):
         if os.path.exists(prev_directory):
             shutil.rmtree(prev_directory, onerror=onerror)
     
@@ -311,5 +326,3 @@ def build_markdown(versions):
     subs = versions_config.versions_md + json.dumps(versions_data)
     with open(os.path.join(versions_config.versions_markdown_path, "versions.md"), "w", encoding='utf8') as md_file:
         md_file.write(subs)
-
-
