@@ -109,8 +109,7 @@ def generate_domain_markdown(domain, techniques_no_sub, tactics, side_nav_data, 
 
 
 def generate_technique_md(technique, domain, side_nav_data, tactic_list, notes):
-    """Generetes markdown data for given technique"""
-
+    """Generetes markdown data for given technique."""
     attack_id = util.buildhelpers.get_attack_id(technique)
 
     # Only add technique if the attack id was found
@@ -173,10 +172,7 @@ def generate_technique_md(technique, domain, side_nav_data, tactic_list, notes):
 
 
 def generate_data_for_md(technique_dict, technique, tactic_list, is_sub_technique=False):
-    """Given a technique or subtechnique, fill technique dictionary to create
-    markdown file
-    """
-
+    """Given a technique or subtechnique, fill technique dictionary to create markdown file."""
     technique_dict["name"] = technique.get("name")
 
     if is_sub_technique:
@@ -241,7 +237,19 @@ def generate_data_for_md(technique_dict, technique, tactic_list, is_sub_techniqu
                 technique_dict["tactics"] = []
                 for elem in technique["kill_chain_phases"]:
                     # Get tactic from tactic_list
-                    tactic = [x for x in tactic_list if x["x_mitre_shortname"] == elem["phase_name"]][0]
+                    phase_name = elem["phase_name"]
+
+                    tmp_tactic_list = []
+                    for _tactic in tactic_list:
+                        shortname = _tactic["x_mitre_shortname"]
+                        if shortname == phase_name:
+                            tmp_tactic_list.append(_tactic)
+
+                    if not tmp_tactic_list:
+                        logger.error(f"Technique: {technique_dict['name']} is in Tactic: {phase_name}, but that is an unknown Tactic for domain: {technique['domain']}!")
+                        continue
+                    tactic = tmp_tactic_list[0]
+
                     tactic_info = {"name": tactic["name"], "id": util.buildhelpers.get_attack_id(tactic)}
                     technique_dict["tactics"].append(tactic_info)
 
@@ -355,7 +363,7 @@ def get_mitigations_table_data(technique, reference_list):
         for mitigation in util.relationshipgetters.get_technique_mitigated_by_mitigation()[technique["id"]]:
 
             # Do not add deprecated mitigation to table
-            if not mitigation['object'].get('x_mitre_deprecated'):
+            if not mitigation["object"].get("x_mitre_deprecated"):
 
                 attack_id = util.buildhelpers.get_attack_id(mitigation["object"])
 
