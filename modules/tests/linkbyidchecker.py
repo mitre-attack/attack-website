@@ -20,23 +20,42 @@ def linkbyid_check():
         stix_objects_in_domain = memory_store.query()
         all_stix_objects.extend(stix_objects_in_domain)
 
+    stix_types_that_should_have_attack_ids = (
+        stix2.v21.sdo.AttackPattern,
+        stix2.v21.sdo.CourseOfAction,
+        stix2.v21.sdo.IntrusionSet,
+        stix2.v21.sdo.Malware,
+        stix2.v21.sdo.Tool,
+    )
+    custom_stix_types_that_should_have_attack_ids = (
+        "x-mitre-data-source",
+        "x-mitre-tactic",
+    )
+
     all_attack_ids = []
     stix_id_to_attack_id = {}
     stix_id_to_stix_object = {}
     all_data_components = []
     for stix_object in all_stix_objects:
-        stix_id_to_stix_object[stix_object["id"]] = stix_object
+        _id = stix_object["id"]
+
+        stix_id_to_stix_object[_id] = stix_object
 
         external_references = stix_object.get("external_references")
-        if external_references:
-            if "external_id" in external_references[0]:
-                attack_id = external_references[0]["external_id"]
-                stix_id = stix_object["id"]
+        if isinstance(stix_object, stix_types_that_should_have_attack_ids) or _id.startswith(
+            custom_stix_types_that_should_have_attack_ids
+        ):
+            if external_references:
+                if "external_id" in external_references[0]:
+                    attack_id = external_references[0]["external_id"]
+                    stix_id = _id
 
-                all_attack_ids.append(attack_id)
-                stix_id_to_attack_id[stix_id] = attack_id
+                    all_attack_ids.append(attack_id)
+                    stix_id_to_attack_id[stix_id] = attack_id
+            else:
+                logger.error(f"STIX object does not have an expected ATT&CK ID: {_id}")
 
-        if stix_object["id"].startswith("x-mitre-data-component"):
+        if _id.startswith("x-mitre-data-component"):
             all_data_components.append(stix_object)
 
     data_component_stix_id_to_datasource_attack_id = {}
@@ -75,8 +94,7 @@ def linkbyid_check():
             target_attack_id = stix_id_to_attack_id[target]
 
             url = util.stixhelpers.get_url_from_stix(
-                stix_object=stix_id_to_stix_object[source],
-                is_subtechnique=is_subtechnique
+                stix_object=stix_id_to_stix_object[source], is_subtechnique=is_subtechnique
             )
 
             if url:
@@ -134,11 +152,7 @@ def write_report(report_file, report_title, broken_items):
 
         if broken_items:
             f.write(f"{len(broken_items)} LinkByIDs could not be parsed:\n\n")
-            f.write(tabulate(
-                broken_items,
-                headers="keys",
-                tablefmt="github"
-            ))
+            f.write(tabulate(broken_items, headers="keys", tablefmt="github"))
             exit_code = tests_config.BROKEN_LINKBYID
         else:
             f.write("No broken citations found\n")
