@@ -10,10 +10,7 @@ from . import techniques_config
 
 
 def generate_techniques():
-    """Generate techniques, return True if technique was generated,
-    False if nothing was generated
-    """
-
+    """Generate techniques, return True if technique was generated, False if nothing was generated."""
     # Create content pages directory if does not already exist
     util.buildhelpers.create_content_pages_dir()
 
@@ -64,10 +61,7 @@ def generate_techniques():
 
 
 def generate_domain_markdown(domain, techniques_no_sub, tactics, side_nav_data, notes, deprecated=None):
-    """Generate technique index markdown for each domain and generates
-    shared data for techniques
-    """
-
+    """Generate technique index markdown for each domain and generates shared data for techniques."""
     # Check if there is at least one technique
     if techniques_no_sub[domain]:
 
@@ -246,7 +240,9 @@ def generate_data_for_md(technique_dict, technique, tactic_list, is_sub_techniqu
                             tmp_tactic_list.append(_tactic)
 
                     if not tmp_tactic_list:
-                        logger.error(f"Technique: {technique_dict['name']} is in Tactic: {phase_name}, but that is an unknown Tactic for domain: {technique['domain']}!")
+                        logger.error(
+                            f"Technique: {technique_dict['name']} is in Tactic: {phase_name}, but that is an unknown Tactic for domain: {technique['domain']}!"
+                        )
                         continue
                     tactic = tmp_tactic_list[0]
 
@@ -354,7 +350,6 @@ def get_mitigations_table_data(technique, reference_list):
     technique and return list with mitigation data. Also modifies the
     reference list if it finds a reference that is not on the list
     """
-
     mitigation_data = []
 
     # Check if technique has mitigations
@@ -392,7 +387,6 @@ def get_examples_table_data(technique, reference_list):
     tools using technique and groups using technique. Return list with
     example data
     """
-
     # Creating map to avoid repeating the code 3 times
     examples_map = [
         {"example_type": util.relationshipgetters.get_tools_using_technique()},
@@ -437,10 +431,7 @@ def get_examples_table_data(technique, reference_list):
 
 
 def get_technique_side_nav_data(techniques, tactics):
-    """Responsible for generating the links that are located on the
-    left side of individual technique domain pages
-    """
-
+    """Responsible for generating the links that are located on the left side of individual technique domain pages."""
     side_nav_data = []
 
     subtechniques_of = util.relationshipgetters.get_subtechniques_of()
@@ -511,8 +502,7 @@ def get_technique_side_nav_data(techniques, tactics):
 
 
 def get_techniques_list(techniques):
-    """This method is used to generate a list of techniques"""
-
+    """This method is used to generate a list of techniques."""
     technique_list = {}
 
     for technique in techniques:
@@ -543,8 +533,7 @@ def get_techniques_list(techniques):
 
 
 def get_subtechniques(technique):
-    """Given a technique, return the ID and name of the subtechnique"""
-
+    """Given a technique, return the ID and name of the subtechnique."""
     subtechs = []
     attack_id = util.buildhelpers.get_attack_id(technique)
 
@@ -577,7 +566,6 @@ def get_datasources_and_components_of_technique(technique, reference_list):
           Data component name
           Data component descr
     """
-
     datasource_and_components = []
 
     datacomponents_of_technique = util.relationshipgetters.get_datacomponents_detecting_technique().get(technique["id"])
