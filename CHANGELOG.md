@@ -25,6 +25,11 @@
 <!--    PATCH updates are when a bugfix is made without the             -->
 <!--          addition of notable features. When PATCH is 0 it can      -->
 <!--          be omitted                                                -->
+# 25 April 2022
+## ATT&CK Website version 3.5.0
+### Improvements
+- Updated resources page with ATT&CKcon 3.0 presentations.
+
 # 7 January 2021
 ## ATT&CK Website version 3.5.0
 ### Improvements
