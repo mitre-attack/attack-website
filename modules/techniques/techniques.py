@@ -549,7 +549,7 @@ def get_subtechniques(technique):
                 sub_data["name"] = subtechnique["object"]["name"]
                 sub_number = sub_data["id"].split(".")[1]
                 attack_id = util.buildhelpers.get_attack_id(technique)
-                sub_data["path"] = "/techniques/{}/{}/".format(attack_id, sub_number)
+                sub_data["path"] = f"/techniques/{attack_id}/{sub_number}/"
                 subtechs.append(sub_data)
 
     return sorted(subtechs, key=lambda k: k["id"])
@@ -563,8 +563,8 @@ def get_datasources_and_components_of_technique(technique, reference_list):
     Data Source ATT&CK ID
     Data Source name
     Data components
-          Data component name
-          Data component descr
+            Data component name
+            Data component descr
     """
     datasource_and_components = []
 
