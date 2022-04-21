@@ -1,15 +1,17 @@
-import colorama
 import json
-import modules
 import os
-import shutil
-from modules import util
 from string import Template
+
+from dotenv import load_dotenv
+
+import modules
+
+load_dotenv()
 
 attack_version = ""
 
 # Read versions file for ATT&CK version
-with open("data/versions.json", "r",encoding="utf8") as f:
+with open("data/versions.json", "r", encoding="utf8") as f:
     attack_version = json.load(f)["current"]["name"]
 
 # ATT&CK version
@@ -18,26 +20,26 @@ if attack_version.startswith("v"):
     attack_version = attack_version[1:]
 
 # Domains for stix objects
+STIX_LOCATION_ENTERPRISE = os.getenv(
+    "STIX_LOCATION_ENTERPRISE",
+    "https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json",
+)
+STIX_LOCATION_MOBILE = os.getenv(
+    "STIX_LOCATION_MOBILE", "https://raw.githubusercontent.com/mitre/cti/master/mobile-attack/mobile-attack.json"
+)
+STIX_LOCATION_PRE = os.getenv(
+    "STIX_LOCATION_PRE", "https://raw.githubusercontent.com/mitre/cti/master/pre-attack/pre-attack.json"
+)
 domains = [
-    {
-        "name" : "enterprise-attack",
-        "location" : "https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json",
-        "alias" : "Enterprise",
-        "deprecated" : False
-    },
-    {
-        "name" : "mobile-attack",
-        "location" : "https://raw.githubusercontent.com/mitre/cti/master/mobile-attack/mobile-attack.json",
-        "alias" : "Mobile",
-        "deprecated" : False
-    },
-    {
-        "name" : "pre-attack",
-        "location" : "https://raw.githubusercontent.com/mitre/cti/master/pre-attack/pre-attack.json",
-        "alias": "PRE-ATT&CK",
-        "deprecated" : True
-    }
+    {"name": "enterprise-attack", "location": STIX_LOCATION_ENTERPRISE, "alias": "Enterprise", "deprecated": False},
+    {"name": "mobile-attack", "location": STIX_LOCATION_MOBILE, "alias": "Mobile", "deprecated": False},
+    {"name": "pre-attack", "location": STIX_LOCATION_PRE, "alias": "PRE-ATT&CK", "deprecated": True},
 ]
+
+# banner for the website
+default_banner_message = "This is a custom instance of the MITRE ATT&CK Website. The official website can be found at <a href='https://attack.mitre.org'>attack.mitre.org</a>."
+BANNER_ENABLED = os.getenv("BANNER_ENABLED", True)
+BANNER_MESSAGE = os.getenv("BANNER_MESSAGE", default_banner_message)
 
 # Args for modules to use if needed
 args = []
@@ -45,30 +47,28 @@ args = []
 # Staged for pelican settings
 staged_pelican = {}
 
+
 def send_to_pelican(key, value):
-    """ Method to stage key value pairs for pelican use """
+    """Method to stage key value pairs for pelican use"""
     staged_pelican[key] = value
 
+
 def check_versions_module():
-    """ Return if versions module is loaded """
-    
-    if [key['module_name'] for key in modules.run_ptr if key['module_name'] == 'versions']:
+    """Return if versions module is loaded"""
+    if [key["module_name"] for key in modules.run_ptr if key["module_name"] == "versions"]:
         return True
     return False
+
 
 def check_resources_module():
-    """ Return if resources module is loaded """
-    
-    if [key['module_name'] for key in modules.run_ptr if key['module_name'] == 'resources']:
+    """Return if resources module is loaded"""
+    if [key["module_name"] for key in modules.run_ptr if key["module_name"] == "resources"]:
         return True
     return False
 
+
 # Source names for ATT&CK
-source_names = [
-    "mitre-attack", 
-    "mitre-mobile-attack",
-    "mitre-pre-attack"
-]
+source_names = ["mitre-attack", "mitre-mobile-attack", "mitre-pre-attack"]
 
 # Declare file location of web pages
 web_directory = "output"
@@ -80,8 +80,9 @@ parent_web_directory = "output"
 # Declare as empty string
 subdirectory = ""
 
+
 def set_subdirectory(subdirectory_str):
-    """ Method to globally set the subdirectory """
+    """Method to globally set the subdirectory"""
 
     global subdirectory
     global web_directory
@@ -94,6 +95,7 @@ def set_subdirectory(subdirectory_str):
 
     # Add subdirectory to web directory
     web_directory = os.path.join(web_directory, subdirectory)
+
 
 # Location of html templates
 templates_directory = "attack-theme/templates/"
@@ -125,23 +127,22 @@ redirects_markdown_path = "content/pages/redirects/"
 resources_markdown_path = "content/pages/resources/"
 
 # Redirect md string template
-redirect_md = Template("Title: ${title}\n"
-                       "Template: general/redirect-index\n"
-                       "RedirectLink: ${to}\n"
-                       "save_as: ${from}/index.html")
+redirect_md = Template(
+    "Title: ${title}\n" "Template: general/redirect-index\n" "RedirectLink: ${to}\n" "save_as: ${from}/index.html"
+)
 
-# Custom_alphabet used to sort list of dictionaries by domain name 
+# Custom_alphabet used to sort list of dictionaries by domain name
 # depending on domain ordering
 custom_alphabet = ""
 rest_of_alphabet = ""
 
 for domain in domains:
-    if not domain['deprecated']:
+    if not domain["deprecated"]:
         # Remove whatever comes after the -
-        if '-' in domain['name']:
-            short_domain = domain['name'].split('-')[0]
+        if "-" in domain["name"]:
+            short_domain = domain["name"].split("-")[0]
         else:
-            short_domain = domain['name']
+            short_domain = domain["name"]
 
         # Get first character of domain
         custom_alphabet += short_domain.lower()[:1]
@@ -153,10 +154,15 @@ custom_alphabet += rest_of_alphabet
 
 # Constants used for generated layers
 # ----------------------------------------------------------------------------
-# usage: 
+# usage:
 #     domain: "enterprise" or "mobile"
 #     path: the path to the object, e.g "software/S1001" or "groups/G2021"
-layer_md = Template("Title: ${domain} Techniques\n"
-                    "Template: general/json\n"
-                    "save_as: ${path}/${attack_id}-${domain}-layer.json\n"
-                    "json: ")
+layer_md = Template(
+    "Title: ${domain} Techniques\n"
+    "Template: general/json\n"
+    "save_as: ${path}/${attack_id}-${domain}-layer.json\n"
+    "json: "
+)
+
+# Directory for test reports
+test_report_directory = "reports"

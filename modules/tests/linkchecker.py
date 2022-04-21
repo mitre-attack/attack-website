@@ -1,8 +1,12 @@
 import os
 import re
+from pathlib import Path
+
 import requests
-import json
+from loguru import logger
+
 from modules import site_config
+
 from . import tests_config
 
 # STATIC PROPERTIES
@@ -81,25 +85,21 @@ def get_correct_link(path):
         path = "/" + path
 
     # Check if path is directory
-    extensions = [".html", ".css", ".htm", ".gif", ".jpg", ".png", ".js", ".json", ".ico", ".jpeg", ".svg", ".pdf", ".xlsx", ".docx", ".rtf"]
-    isDirectory = True
-    for extension in extensions:
-        if (path.endswith(extension)): isDirectory = False
-    if isDirectory:
-        # is referring to a directory, not a file; webserver would 
-        # serve index.html if you fetch the directory without 
-        # serving a file add index.html to replicate webserver 
-        # functionality
-        if not path.endswith("/"): path += "/"
-        path += "index.html"
-    # check for cache-disabling query string suffix, 
-    # e.g style.min.css?f8be4c06
-    if re.search("\.css\?[\w\d]+", path):
-        path = path.split("?")[0] # remove suffix
-    # ditto for js
-    if re.search("\.js\?[\w\d]+", path):
-        path = path.split("?")[0] # remove suffix
-    
+    sort_of_extension = path.split(".")[-1]
+    if sort_of_extension not in ["html", "css", "htm", "gif", "jpg", "png", "js", "json", "ico", "jpeg", "svg", "pdf", "xlsx", "docx", "rtf"]:
+        if re.search("(css|js)\?[\w\d]+", sort_of_extension):
+            # CSS & JavaScript: check for cache-disabling query string suffix, e.g style.min.css?f8be4c06
+            path = path.split("?")[0] # remove suffix
+        else:
+            # is referring to a directory, not a file; webserver would 
+            # serve index.html if you fetch the directory without 
+            # serving a file add index.html to replicate webserver 
+            # functionality
+            if not path.endswith("/"):
+                # logger.debug(f"does this even happen? even once? {path}")
+                path += "/"
+            path += "index.html"
+
     return path
 
 def check_if_link_in_use(filepath, link):
@@ -228,14 +228,9 @@ def internal_external_link_checker(filepath, html_str):
     return problems, relative_links, internal_link_error
 
 def internal_link_checker(filepath, html_str):
-    """Given an html page as a string, check if there are broken 
-       internal links
-    """
-
+    """Given an html page as a string, check if there are broken internal links"""
     # Flag to determine if internal link is broken
     internal_link_error = False
-
-    # 
 
     problems = []
     relative_links = []
@@ -283,7 +278,6 @@ def check_if_file_is_deprecated(filename):
     """ Given a filename, verify if it is deprecated 
         Return True if it is deprecated, False if not
     """
-  
     with open(filename, "r", encoding="utf8") as f:
         lines = f.readlines()
         for line in lines:
@@ -387,7 +381,6 @@ def check_links(external_links = False):
     
     for directory, _, files in os.walk(site_config.web_directory):
         for filename in filter(lambda f: f.endswith(".html"), files):
-                   
             filepath = os.path.join(directory, filename)
 
             filenames.append(filepath)
@@ -409,48 +402,49 @@ def check_links(external_links = False):
                 broken_pages.append(report)
 
             if report.get("relative_links"):
-                relative_links_report = {}
-                relative_links_report['path'] = report["path"]
-                relative_links_report['relative_links'] = report["relative_links"]
+                relative_links_report = {
+                    "path": report["path"],
+                    "relative_links": report["relative_links"],
+                }
                 relative_links.append(relative_links_report)
 
     # Get unlinked pages list
     unlinked_pages = check_unlinked_pages(filenames)
 
-    # Write unlinked pages report
-    if unlinked_pages:
-        if not (os.path.isdir(tests_config.test_report_directory)):
-            os.mkdir(tests_config.test_report_directory)
+    if not (os.path.isdir(site_config.test_report_directory)):
+        os.mkdir(site_config.test_report_directory)
 
-        with open(os.path.join(tests_config.test_report_directory, tests_config.unlinked_report_filename), 'w') as f:
-            f.write("Unlinked pages report:\n")
+    # logger.info(f"Writing report: unlinked pages")
+    with open(os.path.join(site_config.test_report_directory, tests_config.unlinked_report_filename), 'w') as f:
+        f.write("Unlinked pages report:\n\n")
+        if unlinked_pages:
             f.write("Pages listed were not linked from another page\n\n")
             for page in unlinked_pages:
                 f.write(page + "\n")
+        else:
+            f.write("No unlinked pages found\n")
 
-    # Write broken links report
-    if broken_pages:
-        if not (os.path.isdir(tests_config.test_report_directory)):
-            os.mkdir(tests_config.test_report_directory)
-
-        with open(os.path.join(tests_config.test_report_directory, tests_config.links_report_filename), 'w') as f:
-            f.write("Broken links report:\n\n")
+    # logger.info(f"Writing report: broken links")
+    with open(os.path.join(site_config.test_report_directory, tests_config.links_report_filename), 'w') as f:
+        f.write("Broken links report:\n\n")
+        if broken_pages:
             for page in broken_pages:
                 f.write(page["path"] + "\n")
                 for problem in page["problems"]:
                     f.write("\t- " + problem + "\n")
+        else:
+            f.write("No broken links found\n")
 
-    # Write relative links report
-    if relative_links:
-        if not (os.path.isdir(tests_config.test_report_directory)):
-            os.mkdir(tests_config.test_report_directory)
-
-        with open(os.path.join(tests_config.test_report_directory, tests_config.relative_links_report_filename), 'w') as f:
-            f.write("Relative links report:\n\n")
+    # logger.info(f"Writing report: relative links")
+    with open(os.path.join(site_config.test_report_directory, tests_config.relative_links_report_filename), 'w') as f:
+        f.write("Relative links report:\n\n")
+        if relative_links:
             for page in relative_links:
                 f.write(page["path"] + "\n")
                 for relative_link in page["relative_links"]:
                     f.write("\t- " + relative_link + "\n")     
+        else:
+            f.write("No relative links found\n")
 
     broken_count = get_amount_of_broken_links() 
 

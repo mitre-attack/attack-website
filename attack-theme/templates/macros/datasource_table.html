@@ -1,13 +1,13 @@
 {% import 'macros/clean_output.html' as clean_output %}
 
-{% macro datasource_table(datasources, descriptions, citations=None) %}
+{% macro datasource_table(datasources, show_descriptions, citations=None) %}
 <table class="table datasources-table table-bordered">
     <thead>
         <tr>
             <th class="p-2" scope="col">ID</th>
             <th class="p-2 nowrap" scope="col">Data Source</th>
             <th class="p-2 nowrap" scope="col">Data Component</th>
-            {% if descriptions %}
+            {% if show_descriptions %}
             <th class="p-2" scope="col">Detects</th>
             {% endif %}
         </tr>
@@ -25,8 +25,10 @@
                 <td> 
                     <a href="/datasources/{{datasource.attack_id}}/#{{datasource.datacomponents[0].name | escape_spaces}}">{{datasource.datacomponents[0].name}}</a>
                 </td>
-                {% if description %}
-                    <td></td>
+                {% if show_descriptions %}
+                    <td>
+                        {{clean_output.stixToHTML(datasource.datacomponents[0].descr, citations)}}
+                    </td>
                 {% endif %}
             </tr>
             {% for datacomponent in datasource.datacomponents %}
@@ -37,10 +39,10 @@
                         <td>
                             <a href="/datasources/{{datasource.attack_id}}/#{{datacomponent.name | escape_spaces}}">{{datacomponent.name}}</a>
                         </td>
-                        {% if description %}
-                        <td>
-                            {{clean_output.stixToHTML(datacomponent.descr, citations)}}
-                        </td>
+                        {% if show_descriptions %}
+                            <td>
+                                {{clean_output.stixToHTML(datacomponent.descr, citations)}}
+                            </td>
                         {% endif %}
                     </tr>
                 {% endif %}
