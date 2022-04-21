@@ -25,11 +25,19 @@
 <!--    PATCH updates are when a bugfix is made without the             -->
 <!--          addition of notable features. When PATCH is 0 it can      -->
 <!--          be omitted                                                -->
-# 25 April 2022
+# Changes staged on develop
 
-## ATT&CK Website version 3.5.0
+## ATT&CK Website version x.y.z
+
+### Fixes
+
+- Fixed brackets inside of descriptions from being duplicated. See issue [#353](https://github.com/mitre-attack/attack-website/issues/343).
+- Fixed non-deprecated relationships between mitigations and techniques from showing up on technique pages. See issue [#358](https://github.com/mitre-attack/attack-website/issues/358).
+- Fixed non-deprecated software created by Workbench from appearing as deprecated in the page's description. See issue [#355](https://github.com/mitre-attack/attack-website/issues/355).
 
 ### Improvements
+
+- Add LinkById test that checks STIX used to build the site for any unparseable ATT&CK IDs. LinkById is a construct used in ATT&CK Workbench
 - Updated resources page with ATT&CKcon 3.0 presentations.
 
 # 7 January 2022
