@@ -1,8 +1,10 @@
 #!/usr/bin/env python
 import json
-import markdown
-import re
 import os
+import re
+
+import markdown
+
 from modules import site_config
 
 # Template for HTML references inside of STIX data
