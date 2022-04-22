@@ -81,7 +81,7 @@ def get_html_citation(citations, citation_name):
     global reference_marker_template
     global reference_marker_template_no_url
 
-    if "&" in citation_name:
+    if "&amp;" in citation_name:
         citation_name = citation_name.replace("&amp;", "&")
 
     citation = citations.get(citation_name)
