@@ -54,6 +54,8 @@ def linkbyid_check():
                     stix_id_to_attack_id[stix_id] = attack_id
             else:
                 logger.error(f"STIX object does not have an expected ATT&CK ID: {_id}")
+        else:
+            logger.debug(f"STIX object {_id} is type {type(stix_object)}. not extracting an ATT&CK ID")
 
         if _id.startswith("x-mitre-data-component"):
             all_data_components.append(stix_object)
