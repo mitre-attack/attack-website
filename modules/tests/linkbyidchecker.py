@@ -21,6 +21,13 @@ def linkbyid_check():
         all_stix_objects.extend(stix_objects_in_domain)
 
     stix_types_that_should_have_attack_ids = (
+        # STIX 2.0
+        stix2.v20.sdo.AttackPattern,
+        stix2.v20.sdo.CourseOfAction,
+        stix2.v20.sdo.IntrusionSet,
+        stix2.v20.sdo.Malware,
+        stix2.v20.sdo.Tool,
+        # STIX 2.1
         stix2.v21.sdo.AttackPattern,
         stix2.v21.sdo.CourseOfAction,
         stix2.v21.sdo.IntrusionSet,
@@ -54,8 +61,6 @@ def linkbyid_check():
                     stix_id_to_attack_id[stix_id] = attack_id
             else:
                 logger.error(f"STIX object does not have an expected ATT&CK ID: {_id}")
-        else:
-            logger.debug(f"STIX object {_id} is type {type(stix_object)}. not extracting an ATT&CK ID")
 
         if _id.startswith("x-mitre-data-component"):
             all_data_components.append(stix_object)
