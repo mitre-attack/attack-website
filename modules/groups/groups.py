@@ -29,6 +29,7 @@ def generate_groups():
         os.mkdir(groups_config.group_markdown_path)
 
     # Generate redirections
+    # of note: G0058 redirects to G0059 manually because it is not in the STIX object
     util.buildhelpers.generate_redirections(groups_config.groups_redirection_location)
 
     # Generates the markdown files to be used for page generation
