@@ -13,12 +13,18 @@ from . import buildhelpers, relationshipgetters
 from . import relationshiphelpers as rsh
 
 
-def get_mitigation_list(src):
+def get_mitigation_list(src, get_deprecated=False):
     """Reads the STIX and returns a list of all mitigations in the STIX"""
-    mitigations = src.query([stix2.Filter("type", "=", "course-of-action"), stix2.Filter("revoked", "=", False)])
+    mitigations = src.query(
+        [
+            stix2.Filter("type", "=", "course-of-action"),
+            stix2.Filter("revoked", "=", False)
+        ]
+    )
 
-    # Filter out deprecated objects for mitigation pages
-    mitigations = [x for x in mitigations if not hasattr(x, "x_mitre_deprecated") or x.x_mitre_deprecated == False]
+    if not get_deprecated:
+        # Filter out deprecated objects for mitigation pages
+        mitigations = [x for x in mitigations if not hasattr(x, "x_mitre_deprecated") or x.x_mitre_deprecated == False]
 
     return sorted(mitigations, key=lambda k: k["name"].lower())
 

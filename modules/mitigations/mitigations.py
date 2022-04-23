@@ -1,6 +1,8 @@
 import json
 import os
 
+from loguru import logger
+
 from modules import site_config, util
 
 from . import mitigations_config
@@ -19,16 +21,14 @@ def generate_mitigations():
         os.mkdir(mitigations_config.mitigation_markdown_path)
 
     # Create the mitigation index markdown
-    with open(
-        os.path.join(mitigations_config.mitigation_markdown_path, "overview.md"), "w", encoding="utf8"
-    ) as md_file:
+    overview_file = os.path.join(mitigations_config.mitigation_markdown_path, "overview.md")
+    with open(overview_file, "w", encoding="utf8") as md_file:
         md_file.write(mitigations_config.mitigation_overview_md)
 
     # To verify if a technique was generated
     mitigation_generated = False
-
     mitigations = {}
-
+    mitigations_with_deprecated = {}
     ms = util.relationshipgetters.get_ms()
 
     for domain in site_config.domains:
@@ -36,6 +36,10 @@ def generate_mitigations():
             continue
         # Reads the STIX and creates a list of the ATT&CK mitigations
         mitigations[domain["name"]] = util.stixhelpers.get_mitigation_list(ms[domain["name"]])
+        mitigations_with_deprecated[domain["name"]] = util.stixhelpers.get_mitigation_list(
+            src=ms[domain["name"]],
+            get_deprecated=True
+        )
 
     # Amount of characters per category
     group_by = 3
@@ -48,7 +52,7 @@ def generate_mitigations():
         if domain["deprecated"]:
             continue
         check_if_generated = generate_markdown_files(
-            domain["name"], mitigations[domain["name"]], side_nav_data, side_nav_mobile_data, notes
+            domain["name"], mitigations_with_deprecated[domain["name"]], side_nav_data, side_nav_mobile_data, notes
         )
         if not mitigation_generated:
             if check_if_generated:
@@ -74,11 +78,11 @@ def generate_markdown_files(domain, mitigations, side_nav_data, side_nav_mobile_
         subs = mitigations_config.mitigation_domain_md.substitute(data)
         subs = subs + json.dumps(data)
 
-        with open(
-            os.path.join(mitigations_config.mitigation_markdown_path, data["domain"] + "-mitigations.md"),
-            "w",
-            encoding="utf8",
-        ) as md_file:
+        mitigations_file = os.path.join(
+            mitigations_config.mitigation_markdown_path,
+            f"{data['domain']}-mitigations.md"
+        )
+        with open(mitigations_file, "w", encoding="utf8") as md_file:
             md_file.write(subs)
 
         # Generates the markdown files to be used for page generation
