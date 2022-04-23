@@ -69,11 +69,12 @@ def generate_markdown_files(domain, mitigations, side_nav_data, side_nav_mobile_
     if mitigations:
 
         data["domain"] = domain.split("-")[0]
-        data["mitigation_list_len"] = str(len(mitigations))
+        non_deprecated_mitigations = [mitigation for mitigation in mitigations if not mitigation.get("x_mitre_deprecated")]
+        data["mitigation_list_len"] = str(len(non_deprecated_mitigations))
         data["side_menu_data"] = side_nav_data
         data["side_menu_mobile_view_data"] = side_nav_mobile_data
 
-        data["mitigation_table"] = get_mitigation_table_data(mitigations)
+        data["mitigation_table"] = get_mitigation_table_data(non_deprecated_mitigations)
 
         subs = mitigations_config.mitigation_domain_md.substitute(data)
         subs = subs + json.dumps(data)
@@ -86,7 +87,7 @@ def generate_markdown_files(domain, mitigations, side_nav_data, side_nav_mobile_
             md_file.write(subs)
 
         # Generates the markdown files to be used for page generation
-        for mitigation in mitigations:
+        for mitigation in non_deprecated_mitigations:
             generate_mitigation_md(mitigation, domain, side_nav_data, side_nav_mobile_data, notes)
 
         return True
