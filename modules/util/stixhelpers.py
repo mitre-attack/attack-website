@@ -133,14 +133,20 @@ def get_revoked_by(stix_id, src):
     """Given a stix_id, return an object that revokes it, if no object is found, return None."""
     relations = src.relationships(stix_id, "revoked-by", source_only=True)
     revoked_by = src.query(
-        [stix2.Filter("id", "in", [r.target_ref for r in relations]), stix2.Filter("revoked", "=", False)]
+        [
+            stix2.Filter("id", "in", [r.target_ref for r in relations]),
+            # this filter was originally used so redirects could not take you to a revoked page
+            # however, there are some techniques that have been revoked, then revoked again,
+            # so removing this filter for now to see if it does more to help or hurt (should work though)
+            # stix2.Filter("revoked", "=", False)
+        ]
     )
     if revoked_by:
         try:
             revoked_by = revoked_by[0]
         except IndexError:
-            print("Malformed STIX content detected")
-            print(stix_id)
+            logger.error("Malformed STIX content detected")
+            logger.error(stix_id)
             revoked_by = revoked_by[0]
     return revoked_by
 
