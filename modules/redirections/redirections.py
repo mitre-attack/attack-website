@@ -1,6 +1,8 @@
 import os
 import uuid
 
+from loguru import logger
+
 from modules import site_config, util
 
 from . import redirections_config
@@ -44,22 +46,25 @@ def generate_markdown_files(domain):
 
                         if revoked_attack_id:
                             generate_obj_redirect(
-                                redirections_config.general_redirects_dict[types[0]],
-                                revoked_attack_id,
-                                old_attack_id,
-                                domain,
+                                redirect_link=redirections_config.general_redirects_dict[types[0]],
+                                new_attack_id=revoked_attack_id,
+                                old_attack_id=old_attack_id,
+                                domain=domain,
                             )
 
                             if old_attack_id != new_attack_id:
                                 generate_obj_redirect(
-                                    redirections_config.general_redirects_dict[types[0]],
-                                    revoked_attack_id,
-                                    new_attack_id,
-                                    domain,
+                                    redirect_link=redirections_config.general_redirects_dict[types[0]],
+                                    new_attack_id=revoked_attack_id,
+                                    old_attack_id=new_attack_id,
+                                    domain=domain,
                                 )
                 else:
                     generate_obj_redirect(
-                        redirections_config.general_redirects_dict[types[0]], new_attack_id, old_attack_id, domain
+                        redirect_link=redirections_config.general_redirects_dict[types[0]],
+                        new_attack_id=new_attack_id,
+                        old_attack_id=old_attack_id,
+                        domain=domain,
                     )
 
     if domain == "mobile-attack":
@@ -112,26 +117,22 @@ def generate_obj_redirect(redirect_link, new_attack_id, old_attack_id, domain):
     if util.buildhelpers.is_sub_tid(old_attack_id):
         old_attack_id = util.buildhelpers.redirection_subtechnique(old_attack_id)
 
-    data["to"] = "/" + redirect_link["new"] + "/" + new_attack_id
-    data["from"] = redirections_config.redirects_paths[domain] + redirect_link["old"] + "/" + old_attack_id
+    data["to"] = f"/{redirect_link['new']}/{new_attack_id}"
+    data["from"] = f"{redirections_config.redirects_paths[domain]}{redirect_link['old']}/{old_attack_id}"
 
     subs = site_config.redirect_md.substitute(data)
 
-    with open(
-        os.path.join(site_config.redirects_markdown_path, data["title"] + ".md"), "w", encoding="utf8"
-    ) as md_file:
+    redirect_file = os.path.join(site_config.redirects_markdown_path, f"{data['title']}.md")
+    with open(redirect_file, "w", encoding="utf8") as md_file:
         md_file.write(subs)
 
     if new_attack_id != old_attack_id:
-        data["from"] = redirect_link["new"] + "/" + old_attack_id
+        data["from"] = f"{redirect_link['new']}/{old_attack_id}"
 
         subs = site_config.redirect_md.substitute(data)
 
-        with open(
-            os.path.join(site_config.redirects_markdown_path, redirect_link["new"] + data["title"] + ".md"),
-            "w",
-            encoding="utf8",
-        ) as md_file:
+        redirect_file = os.path.join(site_config.redirects_markdown_path, f"{redirect_link['new']}{data['title']}.md")
+        with open(redirect_file, "w", encoding="utf8") as md_file:
             md_file.write(subs)
 
 
