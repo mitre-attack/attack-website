@@ -87,7 +87,7 @@ def generate_markdown_files(domain, mitigations, side_nav_data, side_nav_mobile_
             md_file.write(subs)
 
         # Generates the markdown files to be used for page generation
-        for mitigation in non_deprecated_mitigations:
+        for mitigation in mitigations:
             generate_mitigation_md(mitigation, domain, side_nav_data, side_nav_mobile_data, notes)
 
         return True
