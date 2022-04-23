@@ -71,7 +71,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                            {% for row in parsed.mitigation_table %}
+                            {% for row in parsed.mitigation_table if not row.deprecated %}
                                 <tr>
                                     <td>
                                         <a href="/mitigations/{{row.id}}"> {{row.id}} </a>
@@ -80,9 +80,6 @@
                                         <a href="/mitigations/{{row.id}}"> {{row.name}} </a>
                                     </td>
                                     <td>
-                                        {% if row.deprecated %}
-                                            <font color="red">****Deprecation Warning****</font>
-                                        {% endif %}
                                         {{clean_output.stixToHTML(row.descr, firstParagraphOnly=True)}}
                                     </td>
                                 </tr>
