@@ -85,11 +85,11 @@ def generate_domain_markdown(domain, techniques_no_sub, tactics, side_nav_data, 
         subs = techniques_config.technique_domain_md.substitute(data)
         subs = subs + json.dumps(data)
 
-        with open(
-            os.path.join(techniques_config.techniques_markdown_path, data["domain"] + "-techniques.md"),
-            "w",
-            encoding="utf8",
-        ) as md_file:
+        techniques_markdown = os.path.join(
+            techniques_config.techniques_markdown_path,
+            f"{data['domain']}-techniques.md"
+        )
+        with open(techniques_markdown, "w", encoding="utf8") as md_file:
             md_file.write(subs)
 
         # Create the markdown for techniques in the STIX
