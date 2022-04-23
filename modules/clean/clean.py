@@ -12,7 +12,7 @@ def clean_website_build():
     # Clean content directory
     if os.path.isdir(site_config.content_dir):
         shutil.rmtree(site_config.content_dir)
-    
+
     # Delete module templates from template directory
     for filename in os.listdir(site_config.templates_directory):
         if filename != "general" and filename != "macros":
@@ -22,15 +22,15 @@ def clean_website_build():
                 shutil.rmtree(full_file_path)
             else:
                 os.remove(full_file_path)
-                
+
     # Remove output directory
     if os.path.isdir(site_config.web_directory):
         shutil.rmtree(site_config.web_directory)
-    
+
     # Remove reports directory
     if os.path.isdir(site_config.test_report_directory):
         shutil.rmtree(site_config.test_report_directory)
-    
+
     # Remove dynamic javascript file
     settings_js = os.path.join(site_config.javascript_path, "settings.js")
     if os.path.isfile(settings_js):

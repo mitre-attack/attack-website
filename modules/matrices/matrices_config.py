@@ -192,8 +192,8 @@ matrices = [
                 "The Matrices cover techniques involving device access and network-based effects that can be used by adversaries without device access. ",
                 "subtypes": [],
             },
-        ]
-    }, 
+        ],
+    },
     {
         "name": "ICS",
         "type": "local",
@@ -201,8 +201,8 @@ matrices = [
         "matrix": "ics-attack",
         "platforms": [],
         "descr": "Below are the tactics and techniques representing the MITRE ATT&CK<sup>&reg;</sup> Matrix for ICS.",
-        "subtypes": []
-    }
+        "subtypes": [],
+    },
 ]
 
 deprecated_matrices = [

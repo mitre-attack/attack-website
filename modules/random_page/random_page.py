@@ -1,14 +1,26 @@
-import os
-import json
 import html
-import bleach, re
+import json
+import os
+import re
+
+import bleach
+
 from modules import site_config
 
 skiplines = ["breadcrumb-item", "nav-link"]
 
+
 def generate_json():
     json_data = {}
-    all_routes = {"matrices": "Matrix", "tactics": "Tactic", "techniques": "Technique", "mitigations": "Mitigation", "groups": "Group", "software": "Software", "datasources": "Data Source"}
+    all_routes = {
+        "matrices": "Matrix",
+        "tactics": "Tactic",
+        "techniques": "Technique",
+        "mitigations": "Mitigation",
+        "groups": "Group",
+        "software": "Software",
+        "datasources": "Data Source",
+    }
     routes = {}
 
     if site_config.args.modules:
@@ -17,7 +29,7 @@ def generate_json():
                 routes[module] = all_routes[module]
     else:
         routes = all_routes
-    
+
     for root, __, files in os.walk("output"):
         # only walk specified routes for object pages
         for route, value in routes.items():
@@ -50,11 +62,16 @@ def generate_json():
 
                         if add_to_json:
                             json_data[value].append(thepath[6:])
-    
+
     if not os.path.isdir(site_config.web_directory):
         os.makedirs(site_config.web_directory)
 
-    json.dump(json_data, open(os.path.join(site_config.web_directory, "random_page.json"), mode="w",  encoding="utf-8"), indent=4)
+    json.dump(
+        json_data,
+        open(os.path.join(site_config.web_directory, "random_page.json"), mode="w", encoding="utf-8"),
+        indent=4,
+    )
+
 
 def check_skipindex(filepath):
     """clean the file of all HTML tags and unnecessary data"""
@@ -64,7 +81,9 @@ def check_skipindex(filepath):
 
     skipindex = False
     for line in lines:
-        if 'http-equiv="refresh"' in line: skipindex = True
-        if '<meta name="robots" content="noindex, nofollow">' in line: skipindex = True
+        if 'http-equiv="refresh"' in line:
+            skipindex = True
+        if '<meta name="robots" content="noindex, nofollow">' in line:
+            skipindex = True
 
     return skipindex

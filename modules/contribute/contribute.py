@@ -1,8 +1,11 @@
-import math
 import json
+import math
 import os
-from . import contribute_config
+
 from modules import util
+
+from . import contribute_config
+
 
 def generate_contribute():
     """Generate contribute page markdown"""
@@ -15,32 +18,32 @@ def generate_contribute():
 
     # Generate redirections
     util.buildhelpers.generate_redirections(contribute_config.contribute_redirection_location)
-    
+
     ms = util.relationshipgetters.get_ms()
     contributors = util.stixhelpers.get_contributors(ms)
 
     if not contributors:
         util.buildhelpers.remove_module_from_menu(contribute_config.module_name)
-        return  
+        return
 
     data = {}
 
-    data['contributors'] = []
+    data["contributors"] = []
 
     contributors_first_col = []
     contributors_second_col = []
 
-    half = math.ceil((len(contributors))/2)
+    half = math.ceil((len(contributors)) / 2)
     list_size = len(contributors)
 
     for index in range(0, half):
         contributors_first_col.append(contributors[index])
-    
+
     for index in range(half, list_size):
         contributors_second_col.append(contributors[index])
 
-    data['contributors'].append(contributors_first_col)
-    data['contributors'].append(contributors_second_col)
+    data["contributors"].append(contributors_first_col)
+    data["contributors"].append(contributors_second_col)
 
     subs = contribute_config.contribute_index_md + json.dumps(data)
 
@@ -49,5 +52,7 @@ def generate_contribute():
         os.mkdir(contribute_config.contribute_markdown_path)
 
     # Open markdown file for the contribute page
-    with open(os.path.join(contribute_config.contribute_markdown_path, "contribute.md"), "w", encoding='utf8') as md_file:
+    with open(
+        os.path.join(contribute_config.contribute_markdown_path, "contribute.md"), "w", encoding="utf8"
+    ) as md_file:
         md_file.write(subs)

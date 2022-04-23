@@ -1,13 +1,15 @@
-import os
-import json
 import collections
+import json
+import os
 import re
+
 import markdown
-from .. import site_config
-from . import groups_config
+
 from modules import util
-from modules.util import stixhelpers
-from modules.util import relationshiphelpers
+from modules.util import relationshiphelpers, stixhelpers
+
+from . import groups_config
+from .. import site_config
 
 
 def generate_groups():

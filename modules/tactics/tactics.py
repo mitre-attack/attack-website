@@ -1,13 +1,15 @@
+import collections
 import json
 import os
-import requests
-import collections
-import urllib3
 import re
+
 import markdown
+import requests
+import urllib3
 from loguru import logger
-from modules import site_config
-from modules import util
+
+from modules import site_config, util
+
 from . import tactics_config
 
 

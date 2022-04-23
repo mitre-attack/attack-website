@@ -19,10 +19,11 @@ def generate_redirections():
     util.buildhelpers.generate_redirections(redirections_config.redirections_location)
 
     for domain in site_config.domains:
-        if domain['deprecated'] or (redirections_config.redirects_paths.get(domain['name']) == None):
+        if domain["deprecated"] or (redirections_config.redirects_paths.get(domain["name"]) == None):
             continue
-        generate_markdown_files(domain['name'])
-    
+        generate_markdown_files(domain["name"])
+
+
 def generate_markdown_files(domain):
     """Given a domain, changes all the old links to new redirected links."""
     # Reads the json attack STIX and creates a list of the ATT&CK Tactics
@@ -35,7 +36,7 @@ def generate_markdown_files(domain):
 
             if new_attack_id:
                 if obj.get("revoked"):
-                    
+
                     revoked_by_obj = util.stixhelpers.get_revoked_by(obj["id"], ms[domain])
 
                     if revoked_by_obj:

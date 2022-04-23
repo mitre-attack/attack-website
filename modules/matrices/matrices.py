@@ -195,7 +195,7 @@ def get_sub_matrices(matrix):
                 # remove deprecated and revoked
                 obj["subtechniques"] = util.buildhelpers.filter_deprecated_revoked(obj["subtechniques"])
                 # sort subtechniques by ATT&CK ID
-                obj["subtechniques"] = sorted(obj["subtechniques"], key=lambda x: x['external_id'])
+                obj["subtechniques"] = sorted(obj["subtechniques"], key=lambda x: x["external_id"])
 
                 nonlocal has_subtechniques
                 has_subtechniques = True
