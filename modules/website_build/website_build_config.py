@@ -1,7 +1,8 @@
 import os
+from string import Template
+
 import modules
 from modules import site_config
-from string import Template
 
 module_name = "website_build"
 priority = 16

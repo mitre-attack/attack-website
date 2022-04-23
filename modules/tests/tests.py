@@ -8,7 +8,8 @@ from loguru import logger
 
 from modules import site_config, util
 
-from . import citationchecker, linkchecker, sizechecker, tests_config, linkbyidchecker
+from . import (citationchecker, linkbyidchecker, linkchecker, sizechecker,
+               tests_config)
 
 
 def run_tests():
@@ -251,11 +252,10 @@ def create_combined_reports_html():
     report_sections = []
     for report in reports:
         with open(os.path.join(site_config.test_report_directory, report), "r") as f:
-            if (report.endswith(".md")):
-                report_sections.append(markdown.markdown(f.read(), extensions=['tables']))
+            if report.endswith(".md"):
+                report_sections.append(markdown.markdown(f.read(), extensions=["tables"]))
             else:
                 report_sections.append("<code><pre>\n" + bleach.clean(f.read()) + "\n</pre></code>")
-
 
     report_sections = "\n<hr />\n".join(report_sections)
     now = datetime.now().strftime("%m/%d/%Y, %H:%M")

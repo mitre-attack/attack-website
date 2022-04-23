@@ -53,9 +53,9 @@ def get_datasources(srcs):
     results = []
     # Filter out duplicates
     for datasource in datasources:
-        if not datasource['id'] in resultUsedIds:
+        if not datasource["id"] in resultUsedIds:
             results.append(datasource)
-            resultUsedIds.append(datasource['id'])
+            resultUsedIds.append(datasource["id"])
 
     return results
 
@@ -68,9 +68,9 @@ def get_datacomponents(srcs):
     results = []
     # Filter out duplicates
     for datacomponent in datacomponents:
-        if not datacomponent['id'] in resultUsedIds:
+        if not datacomponent["id"] in resultUsedIds:
             results.append(datacomponent)
-            resultUsedIds.append(datacomponent['id'])
+            resultUsedIds.append(datacomponent["id"])
 
     return results
 
@@ -241,7 +241,7 @@ def add_replace_or_ignore(stix_objs, attack_id_objs, obj_in_question):
 
     def has_STIX_ATTACK_ID_conflict(attack_id):
         """Check if STIX ID has been seen before.
-        
+
         If it has, return ATT&CK ID of conflict ATT&CK if ATT&CK IDs are different.
         """
         conflict = stix_objs.get(obj_in_question.get("id"))

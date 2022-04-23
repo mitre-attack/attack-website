@@ -106,7 +106,7 @@ def get_related(srcs, src_type, rel_type, target_type, reverse=False):
 # tool:group
 def tools_used_by_groups(srcs):
     """Return group_id => {tool, relationship} for each tool used by the group.
-    
+
     srcs should be an array of memorystores for enterprise, mobile, and pre
     """
     return get_related(srcs, "intrusion-set", "uses", "tool")
@@ -123,7 +123,7 @@ def groups_using_tool(srcs):
 # malware:group
 def malware_used_by_groups(srcs):
     """Return group_id => {malware, relationship} for each malware used by group.
-    
+
     srcs should be an array of memorystores for enterprise, mobile, and pre
     """
     return get_related(srcs, "intrusion-set", "uses", "malware")
@@ -131,7 +131,7 @@ def malware_used_by_groups(srcs):
 
 def groups_using_malware(srcs):
     """Return malware_id => {group, relationship} for each group using the malware.
-    
+
     srcs should be an array of memorystores for enterprise, mobile, and pre
     """
     return get_related(srcs, "intrusion-set", "uses", "malware", reverse=True)
@@ -140,7 +140,7 @@ def groups_using_malware(srcs):
 # technique:data component
 def techniques_detected_by_datacomponent(srcs):
     """Return datacomponent_id => {technique, relationship} for each technique detected by data component.
-    
+
     srcs should be an array of memorystores for enterprise, mobile, and pre.
     The mobile and pre memorystores should not contain data components nor data sources.
     """
@@ -149,7 +149,7 @@ def techniques_detected_by_datacomponent(srcs):
 
 def datacomponents_detecting_technique(srcs):
     """Return technique => {data component, relationship} for each data component decting a technique.
-    
+
     srcs should be an array of memorystores for enterprise, mobile, and pre.
     The mobile and pre memorystores should not contain data components nor data sources.
     """
@@ -159,7 +159,7 @@ def datacomponents_detecting_technique(srcs):
 # technique:group
 def techniques_used_by_groups(srcs):
     """Return group_id => {technique, relationship} for each technique used by the group.
-    
+
     srcs should be an array of memorystores for enterprise, mobile, and pre
     """
     return get_related(srcs, "intrusion-set", "uses", "attack-pattern")
@@ -167,7 +167,7 @@ def techniques_used_by_groups(srcs):
 
 def groups_using_technique(srcs):
     """Return technique_id => {group, relationship} for each group using the technique.
-    
+
     srcs should be an array of memorystores for enterprise, mobile and pre
     """
     return get_related(srcs, "intrusion-set", "uses", "attack-pattern", reverse=True)
@@ -176,7 +176,7 @@ def groups_using_technique(srcs):
 # technique:malware
 def techniques_used_by_malware(srcs):
     """Return malware => {technique, relationship} for each technique used by the malware.
-    
+
     srcs should be an array of memorystores for enterprise, mobile, and pre
     """
     return get_related(srcs, "malware", "uses", "attack-pattern")
@@ -184,7 +184,7 @@ def techniques_used_by_malware(srcs):
 
 def malware_using_technique(srcs):
     """Return technique_id  => {malware, relationship} for each malware using the technique.
-    
+
     srcs should be an array of memorystores for enterprise, mobile, and pre
     """
     return get_related(srcs, "malware", "uses", "attack-pattern", reverse=True)
@@ -193,7 +193,7 @@ def malware_using_technique(srcs):
 # technique:tool
 def techniques_used_by_tools(srcs):
     """Return tool_id => {technique, relationship} for each technique used by the tool.
-    
+
     srcs should be an array of memorystores for enterprise, mobile, and pre
     """
     return get_related(srcs, "tool", "uses", "attack-pattern")
@@ -201,7 +201,7 @@ def techniques_used_by_tools(srcs):
 
 def tools_using_technique(srcs):
     """Return technique_id => {tool, relationship} for each tool using the technique.
-    
+
     srcs should be an array of memorystores for enterprise, mobile, and pre
     """
     return get_related(srcs, "tool", "uses", "attack-pattern", reverse=True)
@@ -210,7 +210,7 @@ def tools_using_technique(srcs):
 # technique:mitigation
 def mitigation_mitigates_techniques(srcs):
     """Return mitigation_id => {technique, relationship} for each technique mitigated by the mitigation.
-    
+
     srcs should be an array of memorystores for enterprise, mobile, and pre
     """
     return get_related(srcs, "course-of-action", "mitigates", "attack-pattern", reverse=False)
@@ -218,7 +218,7 @@ def mitigation_mitigates_techniques(srcs):
 
 def technique_mitigated_by_mitigation(srcs):
     """Return technique_id => {mitigation, relationship} for each mitigation of the technique.
-    
+
     srcs should be an array of memorystores for enterprise, mobile, and pre
     """
     return get_related(srcs, "course-of-action", "mitigates", "attack-pattern", reverse=True)
@@ -227,7 +227,7 @@ def technique_mitigated_by_mitigation(srcs):
 # technique:technique
 def technique_related_to_technique(srcs):
     """Return technique_id => {technique, relationship} for each technique related to the technique.
-    
+
     srcs should be an array of memorystores for enterprise, mobile, and pre
     """
     return get_related(srcs, "attack-pattern", "related-to", "attack-pattern")
@@ -236,7 +236,7 @@ def technique_related_to_technique(srcs):
 # technique:subtechnique
 def subtechniques_of(srcs):
     """Return technique_id => {subtechnique, relationship} for each subtechnique of the technique.
-    
+
     srcs should be an array of memorystores for enterprise, mobile, and pre
     """
     return get_related(srcs, "attack-pattern", "subtechnique-of", "attack-pattern", reverse=True)
@@ -244,7 +244,7 @@ def subtechniques_of(srcs):
 
 def parent_technique_of(srcs):
     """Return subtechnique_id => {technique, relationship} describing the parent technique of the subtechnique.
-    
+
     srcs should be an array of memorystores for enterprise, mobile, and pre
     """
     return get_related(srcs, "attack-pattern", "subtechnique-of", "attack-pattern")
