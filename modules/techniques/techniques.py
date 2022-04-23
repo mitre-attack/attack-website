@@ -65,16 +65,16 @@ def generate_domain_markdown(domain, techniques_no_sub, tactics, side_nav_data, 
     # Check if there is at least one technique
     if techniques_no_sub[domain]:
 
-        techhnique_list_no_sub_no_deprecated = util.buildhelpers.filter_deprecated_revoked(techniques_no_sub[domain])
+        technique_list_no_sub_no_deprecated = util.buildhelpers.filter_deprecated_revoked(techniques_no_sub[domain])
 
         data = {}
 
         data["domain"] = domain.split("-")[0]
 
         # Get technique table data and number of techniques
-        data["technique_table"] = util.buildhelpers.get_technique_table_data(None, techhnique_list_no_sub_no_deprecated)
-        data["technique_list_len"] = str(len(techhnique_list_no_sub_no_deprecated))
-        data["subtechniques_len"] = util.buildhelpers.get_subtechnique_count(techhnique_list_no_sub_no_deprecated)
+        data["technique_table"] = util.buildhelpers.get_technique_table_data(None, technique_list_no_sub_no_deprecated)
+        data["technique_list_len"] = str(len(technique_list_no_sub_no_deprecated))
+        data["subtechniques_len"] = util.buildhelpers.get_subtechnique_count(technique_list_no_sub_no_deprecated)
 
         # Get tactic-techniques table
         data["menu"] = side_nav_data
