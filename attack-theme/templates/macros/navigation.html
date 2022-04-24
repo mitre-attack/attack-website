@@ -9,6 +9,7 @@ params:
           }
     output_file: the current path the navigation is being built to,
                  use jinja's builtin `output_file` for this argument.
+    filter: boolean to activate navigation filtering based on domains
 
 Notes:
     the root level node has special behavior. If it has a path,
@@ -17,9 +18,21 @@ Notes:
     and the immediate children are not grouped under an expansion panel,
     unlike grand+ children.
 -->
-{% macro sidenav(root, output_file) %}
+{% macro sidenav(root, output_file, filter=False) %}
 <div class="sidenav-wrapper">
     <div class="heading" id="v-home-tab" aria-selected="false">{{root.name | upper}}</div>
+    {% if filter %}
+    <div class="checkbox-div" id="v-home-tab" aria-selected="false">
+        <div class="custom-control custom-switch">
+            <input type="checkbox" class="custom-control-input" id="enterpriseSwitch" onchange="filterTables(enterpriseSwitch, icsSwitch)">
+            <label class="custom-control-label" for="enterpriseSwitch">Enterprise</label>
+        </div>
+        <div class="custom-control custom-switch">
+            <input type="checkbox" class="custom-control-input" id="icsSwitch" onchange="filterTables(icsSwitch, enterpriseSwitch)">
+            <label class="custom-control-label" for="icsSwitch">ICS</label>
+        </div>
+    </div>
+    {% endif %}
     <div class="sidenav-list">
         {# "overview" link as first item in list if root.path exists #}
         {% if root.path %}
@@ -40,7 +53,7 @@ Notes:
 <div class="sidenav">
     {% if root.children | length == 0 %}
         {% if root.path %}
-            <div class="sidenav-head{% if output_file | clean_path == root.path %} active{% endif %}" id="{{root_id}}-{{root.id}}">
+            <div class="sidenav-head{% if output_file | clean_path == root.path %} active{% endif %} {% for domain in root.domains %}{{domain}} {% endfor %}" id="{{root_id}}-{{root.id}}">
                 <a href="{{root.path | escape_spaces}}"{% if "external" in root and root.external %} target="_blank"{% endif %}>
                     {{root.name}}
                     {% if "external" in root and root.external %}
@@ -52,7 +65,7 @@ Notes:
             <span>{{root.name}}</span>
         {% endif %}
     {% else %}
-        <div class="sidenav-head {% if output_file | clean_path == root.path %} active{% endif %}" id="{% if root.id != root_id %}{{root_id}}-{% endif %}{{root.id}}">
+        <div class="sidenav-head {% if output_file | clean_path == root.path %} active{% endif %} {% for domain in root.domains %}{{domain}} {% endfor %}" id="{% if root.id != root_id %}{{root_id}}-{% endif %}{{root.id}}">
             {% if root.path %}
                 <a href="{{root.path | escape_spaces}}"{% if "external" in root and root.external %} target="_blank"{% endif %}>
                     {{root.name}}

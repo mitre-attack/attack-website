@@ -10,10 +10,7 @@ from . import techniques_config
 
 
 def generate_techniques():
-    """Generate techniques, return True if technique was generated,
-    False if nothing was generated
-    """
-
+    """Generate techniques, return True if technique was generated, False if nothing was generated."""
     # Create content pages directory if does not already exist
     util.buildhelpers.create_content_pages_dir()
 
@@ -64,23 +61,20 @@ def generate_techniques():
 
 
 def generate_domain_markdown(domain, techniques_no_sub, tactics, side_nav_data, notes, deprecated=None):
-    """Generate technique index markdown for each domain and generates
-    shared data for techniques
-    """
-
+    """Generate technique index markdown for each domain and generates shared data for techniques."""
     # Check if there is at least one technique
     if techniques_no_sub[domain]:
 
-        techhnique_list_no_sub_no_deprecated = util.buildhelpers.filter_deprecated_revoked(techniques_no_sub[domain])
+        technique_list_no_sub_no_deprecated = util.buildhelpers.filter_deprecated_revoked(techniques_no_sub[domain])
 
         data = {}
 
         data["domain"] = domain.split("-")[0]
 
         # Get technique table data and number of techniques
-        data["technique_table"] = util.buildhelpers.get_technique_table_data(None, techhnique_list_no_sub_no_deprecated)
-        data["technique_list_len"] = str(len(techhnique_list_no_sub_no_deprecated))
-        data["subtechniques_len"] = util.buildhelpers.get_subtechnique_count(techhnique_list_no_sub_no_deprecated)
+        data["technique_table"] = util.buildhelpers.get_technique_table_data(None, technique_list_no_sub_no_deprecated)
+        data["technique_list_len"] = str(len(technique_list_no_sub_no_deprecated))
+        data["subtechniques_len"] = util.buildhelpers.get_subtechnique_count(technique_list_no_sub_no_deprecated)
 
         # Get tactic-techniques table
         data["menu"] = side_nav_data
@@ -91,11 +85,11 @@ def generate_domain_markdown(domain, techniques_no_sub, tactics, side_nav_data, 
         subs = techniques_config.technique_domain_md.substitute(data)
         subs = subs + json.dumps(data)
 
-        with open(
-            os.path.join(techniques_config.techniques_markdown_path, data["domain"] + "-techniques.md"),
-            "w",
-            encoding="utf8",
-        ) as md_file:
+        techniques_markdown = os.path.join(
+            techniques_config.techniques_markdown_path,
+            f"{data['domain']}-techniques.md"
+        )
+        with open(techniques_markdown, "w", encoding="utf8") as md_file:
             md_file.write(subs)
 
         # Create the markdown for techniques in the STIX
@@ -109,8 +103,7 @@ def generate_domain_markdown(domain, techniques_no_sub, tactics, side_nav_data, 
 
 
 def generate_technique_md(technique, domain, side_nav_data, tactic_list, notes):
-    """Generetes markdown data for given technique"""
-
+    """Generetes markdown data for given technique."""
     attack_id = util.buildhelpers.get_attack_id(technique)
 
     # Only add technique if the attack id was found
@@ -173,10 +166,7 @@ def generate_technique_md(technique, domain, side_nav_data, tactic_list, notes):
 
 
 def generate_data_for_md(technique_dict, technique, tactic_list, is_sub_technique=False):
-    """Given a technique or subtechnique, fill technique dictionary to create
-    markdown file
-    """
-
+    """Given a technique or subtechnique, fill technique dictionary to create markdown file."""
     technique_dict["name"] = technique.get("name")
 
     if is_sub_technique:
@@ -241,7 +231,21 @@ def generate_data_for_md(technique_dict, technique, tactic_list, is_sub_techniqu
                 technique_dict["tactics"] = []
                 for elem in technique["kill_chain_phases"]:
                     # Get tactic from tactic_list
-                    tactic = [x for x in tactic_list if x["x_mitre_shortname"] == elem["phase_name"]][0]
+                    phase_name = elem["phase_name"]
+
+                    tmp_tactic_list = []
+                    for _tactic in tactic_list:
+                        shortname = _tactic["x_mitre_shortname"]
+                        if shortname == phase_name:
+                            tmp_tactic_list.append(_tactic)
+
+                    if not tmp_tactic_list:
+                        logger.error(
+                            f"Technique: {technique_dict['name']} is in Tactic: {phase_name}, but that is an unknown Tactic for domain: {technique['domain']}!"
+                        )
+                        continue
+                    tactic = tmp_tactic_list[0]
+
                     tactic_info = {"name": tactic["name"], "id": util.buildhelpers.get_attack_id(tactic)}
                     technique_dict["tactics"].append(tactic_info)
 
@@ -346,7 +350,6 @@ def get_mitigations_table_data(technique, reference_list):
     technique and return list with mitigation data. Also modifies the
     reference list if it finds a reference that is not on the list
     """
-
     mitigation_data = []
 
     # Check if technique has mitigations
@@ -355,7 +358,7 @@ def get_mitigations_table_data(technique, reference_list):
         for mitigation in util.relationshipgetters.get_technique_mitigated_by_mitigation()[technique["id"]]:
 
             # Do not add deprecated mitigation to table
-            if not mitigation['object'].get('x_mitre_deprecated'):
+            if not mitigation["object"].get("x_mitre_deprecated"):
 
                 attack_id = util.buildhelpers.get_attack_id(mitigation["object"])
 
@@ -384,7 +387,6 @@ def get_examples_table_data(technique, reference_list):
     tools using technique and groups using technique. Return list with
     example data
     """
-
     # Creating map to avoid repeating the code 3 times
     examples_map = [
         {"example_type": util.relationshipgetters.get_tools_using_technique()},
@@ -429,10 +431,7 @@ def get_examples_table_data(technique, reference_list):
 
 
 def get_technique_side_nav_data(techniques, tactics):
-    """Responsible for generating the links that are located on the
-    left side of individual technique domain pages
-    """
-
+    """Responsible for generating the links that are located on the left side of individual technique domain pages."""
     side_nav_data = []
 
     subtechniques_of = util.relationshipgetters.get_subtechniques_of()
@@ -503,8 +502,7 @@ def get_technique_side_nav_data(techniques, tactics):
 
 
 def get_techniques_list(techniques):
-    """This method is used to generate a list of techniques"""
-
+    """This method is used to generate a list of techniques."""
     technique_list = {}
 
     for technique in techniques:
@@ -535,8 +533,7 @@ def get_techniques_list(techniques):
 
 
 def get_subtechniques(technique):
-    """Given a technique, return the ID and name of the subtechnique"""
-
+    """Given a technique, return the ID and name of the subtechnique."""
     subtechs = []
     attack_id = util.buildhelpers.get_attack_id(technique)
 
@@ -552,7 +549,7 @@ def get_subtechniques(technique):
                 sub_data["name"] = subtechnique["object"]["name"]
                 sub_number = sub_data["id"].split(".")[1]
                 attack_id = util.buildhelpers.get_attack_id(technique)
-                sub_data["path"] = "/techniques/{}/{}/".format(attack_id, sub_number)
+                sub_data["path"] = f"/techniques/{attack_id}/{sub_number}/"
                 subtechs.append(sub_data)
 
     return sorted(subtechs, key=lambda k: k["id"])
@@ -566,10 +563,9 @@ def get_datasources_and_components_of_technique(technique, reference_list):
     Data Source ATT&CK ID
     Data Source name
     Data components
-          Data component name
-          Data component descr
+            Data component name
+            Data component descr
     """
-
     datasource_and_components = []
 
     datacomponents_of_technique = util.relationshipgetters.get_datacomponents_detecting_technique().get(technique["id"])

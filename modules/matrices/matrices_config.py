@@ -194,7 +194,15 @@ matrices = [
             },
         ],
     },
-    {"name": "ICS", "type": "external", "path": "https://collaborate.mitre.org/attackics", "subtypes": []},
+    {
+        "name": "ICS",
+        "type": "local",
+        "path": "ics",
+        "matrix": "ics-attack",
+        "platforms": [],
+        "descr": "Below are the tactics and techniques representing the MITRE ATT&CK<sup>&reg;</sup> Matrix for ICS.",
+        "subtypes": [],
+    },
 ]
 
 deprecated_matrices = [

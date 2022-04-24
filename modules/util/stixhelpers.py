@@ -13,12 +13,18 @@ from . import buildhelpers, relationshipgetters
 from . import relationshiphelpers as rsh
 
 
-def get_mitigation_list(src):
+def get_mitigation_list(src, get_deprecated=False):
     """Reads the STIX and returns a list of all mitigations in the STIX"""
-    mitigations = src.query([stix2.Filter("type", "=", "course-of-action"), stix2.Filter("revoked", "=", False)])
+    mitigations = src.query(
+        [
+            stix2.Filter("type", "=", "course-of-action"),
+            stix2.Filter("revoked", "=", False)
+        ]
+    )
 
-    # Filter out deprecated objects for mitigation pages
-    mitigations = [x for x in mitigations if not hasattr(x, "x_mitre_deprecated") or x.x_mitre_deprecated == False]
+    if not get_deprecated:
+        # Filter out deprecated objects for mitigation pages
+        mitigations = [x for x in mitigations if not hasattr(x, "x_mitre_deprecated") or x.x_mitre_deprecated == False]
 
     return sorted(mitigations, key=lambda k: k["name"].lower())
 
@@ -49,14 +55,30 @@ def get_datasources(srcs):
     """Reads the STIX and returns a list of data sources in the STIX"""
     datasources = rsh.query_all(srcs, [stix2.Filter("type", "=", "x-mitre-data-source")])
 
-    return datasources
+    resultUsedIds = []
+    results = []
+    # Filter out duplicates
+    for datasource in datasources:
+        if not datasource["id"] in resultUsedIds:
+            results.append(datasource)
+            resultUsedIds.append(datasource["id"])
+
+    return results
 
 
 def get_datacomponents(srcs):
     """Reads the STIX and returns a list of data components in the STIX"""
     datacomponents = rsh.query_all(srcs, [stix2.Filter("type", "=", "x-mitre-data-component")])
 
-    return datacomponents
+    resultUsedIds = []
+    results = []
+    # Filter out duplicates
+    for datacomponent in datacomponents:
+        if not datacomponent["id"] in resultUsedIds:
+            results.append(datacomponent)
+            resultUsedIds.append(datacomponent["id"])
+
+    return results
 
 
 def get_tactic_list(src, domain, matrix_id=None):
@@ -117,14 +139,20 @@ def get_revoked_by(stix_id, src):
     """Given a stix_id, return an object that revokes it, if no object is found, return None."""
     relations = src.relationships(stix_id, "revoked-by", source_only=True)
     revoked_by = src.query(
-        [stix2.Filter("id", "in", [r.target_ref for r in relations]), stix2.Filter("revoked", "=", False)]
+        [
+            stix2.Filter("id", "in", [r.target_ref for r in relations]),
+            # this filter was originally used so redirects could not take you to a revoked page
+            # however, there are some techniques that have been revoked, then revoked again,
+            # so removing this filter for now to see if it does more to help or hurt (should work though)
+            # stix2.Filter("revoked", "=", False)
+        ]
     )
     if revoked_by:
         try:
             revoked_by = revoked_by[0]
         except IndexError:
-            print("Malformed STIX content detected")
-            print(stix_id)
+            logger.error("Malformed STIX content detected")
+            logger.error(stix_id)
             revoked_by = revoked_by[0]
     return revoked_by
 
@@ -225,7 +253,7 @@ def add_replace_or_ignore(stix_objs, attack_id_objs, obj_in_question):
 
     def has_STIX_ATTACK_ID_conflict(attack_id):
         """Check if STIX ID has been seen before.
-        
+
         If it has, return ATT&CK ID of conflict ATT&CK if ATT&CK IDs are different.
         """
         conflict = stix_objs.get(obj_in_question.get("id"))
@@ -375,6 +403,7 @@ def get_stix_memory_stores():
             stix_filename = domain["location"]
 
         if os.path.exists(stix_filename):
+            logger.info(f"Loading STIX file from: {stix_filename}")
             ms[domain["name"]] = stix2.MemoryStore()
             ms[domain["name"]].load_from_file(stix_filename)
         else:

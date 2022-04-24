@@ -157,9 +157,15 @@ def generate_working_with_attack():
     if not os.path.isdir(docs_dir):
         os.makedirs(docs_dir)
 
-    attackToExcel.export("enterprise-attack", site_config.full_attack_version, docs_dir)
-    attackToExcel.export("mobile-attack", site_config.full_attack_version, docs_dir)
-    attackToExcel.export("ics-attack", site_config.full_attack_version, docs_dir)
+    attackToExcel.export(
+        "enterprise-attack", site_config.full_attack_version, docs_dir, stix_file=site_config.STIX_LOCATION_ENTERPRISE
+    )
+    attackToExcel.export(
+        "mobile-attack", site_config.full_attack_version, docs_dir, stix_file=site_config.STIX_LOCATION_MOBILE
+    )
+    attackToExcel.export(
+        "ics-attack", site_config.full_attack_version, docs_dir, stix_file=site_config.STIX_LOCATION_ICS
+    )
 
     files_json = {"excel_files": []}
     for excel_dir in excel_dirs:
