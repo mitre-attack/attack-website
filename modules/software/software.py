@@ -236,10 +236,18 @@ def get_groups_using_software(software, reference_list):
     used_groups = {}
     if groups_using_software:
         # Get name, id of group
+        # attack_ids_seen = set()
         for group in groups_using_software:
             attack_id = util.buildhelpers.get_attack_id(group["object"])
 
             if attack_id:
+
+                # if attack_id in attack_ids_seen:
+                #     software_attack_id = util.buildhelpers.get_attack_id(software)
+                #     logger.debug(f"Skipping extra use of [{attack_id}] {group['object']['name']} for {software_attack_id}")
+                #     continue
+                # attack_ids_seen.add(attack_id)
+
                 row = {}
                 row["id"] = attack_id
                 row["name"] = group["object"]["name"]
