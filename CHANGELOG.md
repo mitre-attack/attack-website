@@ -25,9 +25,13 @@
 <!--    PATCH updates are when a bugfix is made without the             -->
 <!--          addition of notable features. When PATCH is 0 it can      -->
 <!--          be omitted                                                -->
-# Changes staged on develop
+# 25 April 2022
 
-## ATT&CK Website version x.y.z
+## [ATT&CK content version 11.0](https://github.com/mitre/cti/releases/tag/ATT%26CK-v11.0)
+
+See the release notes [here](https://attack.mitre.org/resources/updates/updates-april-2022/).
+
+## ATT&CK Website version 3.6.0
 
 ### Fixes
 
