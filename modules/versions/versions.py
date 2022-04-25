@@ -6,6 +6,7 @@ import stat
 from datetime import datetime
 
 from git import Repo
+from loguru import logger
 
 from modules import site_config, util
 
@@ -93,6 +94,7 @@ def deploy():
     if os.path.exists(versions_config.versions_directory):
         shutil.rmtree(versions_config.versions_directory, onerror=onerror)
     # download new version of attack-website for use in versioning
+    logger.info(f"git cloning {versions_config.versions_repo} >>> {versions_config.versions_directory}")
     versions_repo = Repo.clone_from(versions_config.versions_repo, versions_config.versions_directory)
 
     # remove previously deployed previous versions
@@ -123,8 +125,7 @@ def deploy():
 
 
 def deploy_current_version():
-    """build a permalink of the current version"""
-
+    """Build a permalink of the current version."""
     versions_config.prev_versions_deploy_folder = os.path.join(
         site_config.web_directory, versions_config.prev_versions_path
     )
@@ -154,7 +155,8 @@ def deploy_current_version():
 
 
 def deploy_previous_version(version, repo):
-    """build a version of the site to /prev_versions_path. version is a version from versions.json, repo is a reference to the attack-website Repo object"""
+    """Build a version of the site to /prev_versions_path. version is a version from versions.json, repo is a reference to the attack-website Repo object."""
+    logger.info(f"Building website for ATT&CK {version}")
     # check out the commit for that version
     repo.git.checkout(version["commit"])
     # copy over files
