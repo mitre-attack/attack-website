@@ -1,3 +1,3 @@
 var base_url = "/";
-var build_uuid = "7381ac61-6964-439e-bdfe-5581ea0e5a6d";
-var tour_steps = {'matrix': 'matrices/enterprise', 'technique': 'techniques/T1548', 'subtechnique': 'techniques/T1548/001', 'relationships': {'step1': 'T1125', 'step3': ['T1021-004', 3], 'step2': ['T1059', 4], 'obj_id': 'groups/G0046'}};
+var build_uuid = "de7502b2-d719-4095-a5a0-4c2251cb9532";
+var tour_steps = {'matrix': 'matrices/enterprise', 'technique': 'techniques/T1548', 'subtechnique': 'techniques/T1548/001', 'relationships': {'step2': ['T1555', 3], 'step3': ['T1003-005', 5], 'obj_id': 'software/S0349'}};
