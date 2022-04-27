@@ -1,10 +1,12 @@
-from stix2 import MemoryStore, Filter
 import json
 from itertools import chain
 
+from loguru import logger
+from stix2 import Filter
+
+
 def query_all(srcs, filters):
     """return the union of a query across multiple memorystores"""
-    
     return list(chain.from_iterable(
         src.query(filters) for src in srcs
     ))
@@ -248,9 +250,3 @@ def get_objects_using_notes(srcs):
                     id_to_notes[obj] = [json.loads(note.serialize())]
 
     return id_to_notes
-
-def load(url):
-    """Load stix data from file"""
-    src = MemoryStore()
-    src.load_from_file(url)
-    return src

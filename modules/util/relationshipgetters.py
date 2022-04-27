@@ -12,7 +12,6 @@ groups_using_tool = {}
 groups_using_malware = {}
 mitigation_mitigates_techniques = {}
 technique_mitigated_by_mitigation = {}
-technique_related_to_technique = {}
 datacomponents_detecting_technique = {}
 tools_using_technique = {}
 malware_using_technique = {}
@@ -135,15 +134,6 @@ def get_technique_mitigated_by_mitigation():
 
     return technique_mitigated_by_mitigation
 
-def get_technique_related_to_technique():
-    """ technique related to technique """
-    global technique_related_to_technique
-
-    if not technique_related_to_technique:
-        technique_related_to_technique = rsh.technique_related_to_technique(get_srcs())
-
-    return technique_related_to_technique
-
 def get_tools_using_technique():
     """ tools using technique getter """
     global tools_using_technique
@@ -188,7 +178,6 @@ def get_datacomponent_of():
         datacomponent_of = stixhelpers.datacomponent_of()
     
     return datacomponent_of
-
 
 def get_datasource_of():
     """ data source of data component getter """

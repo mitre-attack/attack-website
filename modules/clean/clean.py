@@ -1,7 +1,10 @@
-import shutil
 import os
+import shutil
+
 from modules import site_config
+
 from . import clean_config
+
 
 def clean_website_build():
     """Clean content directory and remove output directory"""
@@ -23,6 +26,10 @@ def clean_website_build():
     # Remove output directory
     if os.path.isdir(site_config.web_directory):
         shutil.rmtree(site_config.web_directory)
+    
+    # Remove reports directory
+    if os.path.isdir(site_config.test_report_directory):
+        shutil.rmtree(site_config.test_report_directory)
     
     # Remove dynamic javascript file
     settings_js = os.path.join(site_config.javascript_path, "settings.js")

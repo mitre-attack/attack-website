@@ -55,8 +55,6 @@ def clean_stix_data(data):
     """ Clean stix data from unwanted characters """
 
     return data.replace("\n", "")\
-               .replace("{", "{{")\
-               .replace("}", "}}")\
                .replace("”","\"")\
                .replace("“","\"")
 
