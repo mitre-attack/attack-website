@@ -42,7 +42,7 @@ def citations_check():
     exit_code = write_report(
         report_file=os.path.join(site_config.test_report_directory, tests_config.citations_report_filename),
         report_title="Broken Citations Report",
-        broken_pages=broken_pages
+        broken_pages=broken_pages,
     )
 
     # Return exit code and file information

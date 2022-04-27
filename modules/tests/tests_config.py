@@ -1,5 +1,6 @@
-from modules import util
 import colorama
+
+from modules import util
 
 module_name = "Tests"
 priority = 21
@@ -26,10 +27,9 @@ RELATIVE_LINKS_FOUND = -13
 BROKEN_LINKBYID = -14
 
 # Used to reset text color
-RESET = '\033[0m'  # mode 0  = reset
+RESET = "\033[0m"  # mode 0  = reset
 
 # Testing output statuses
 PASSED_STATUS = colorama.Fore.GREEN + "PASSED" + RESET + " " * (util.util_config.status_space - len("PASSED"))
 FAILED_STATUS = colorama.Fore.RED + "FAILED" + RESET + " " * (util.util_config.status_space - len("FAILED"))
-WARNING_STATUS = colorama.Fore.YELLOW + "WARNING" + RESET + " " * (util.util_config.status_space - len("WARNING")) 
-
+WARNING_STATUS = colorama.Fore.YELLOW + "WARNING" + RESET + " " * (util.util_config.status_space - len("WARNING"))

@@ -167,7 +167,6 @@ def get_sub_matrices(matrix):
 
     def transform_technique(technique, tactic_id):
         """transform a technique object into the format required by the matrix macro"""
-
         attack_id = util.buildhelpers.get_attack_id(technique)
 
         obj = {}
@@ -195,6 +194,8 @@ def get_sub_matrices(matrix):
                 )
                 # remove deprecated and revoked
                 obj["subtechniques"] = util.buildhelpers.filter_deprecated_revoked(obj["subtechniques"])
+                # sort subtechniques by ATT&CK ID
+                obj["subtechniques"] = sorted(obj["subtechniques"], key=lambda x: x["external_id"])
 
                 nonlocal has_subtechniques
                 has_subtechniques = True
@@ -213,7 +214,6 @@ def get_sub_matrices(matrix):
         """helper function mapping a tactic_id
         to a structured tactic object including the (filtered) techniques
         in the tactic"""
-
         # filter platform techniques to those inside of this tactic
         techniques = list(
             filter(lambda technique: tactic_id_to_shortname[tactic_id] in phase_names(technique), platform_techniques)

@@ -20,9 +20,11 @@
     {% set title = title_prefix + parsed.name + ", " + title_type + " " + parsed.attack_id + " - Mobile | MITRE ATT&CK&reg;" -%}
 {% elif parsed.domain == "enterprise" %} 
     {% set title = title_prefix + parsed.name + ", " + title_type + " " + parsed.attack_id + " - Enterprise | MITRE ATT&CK&reg;" -%}
+{% elif parsed.domain == "ics" %} 
+    {% set title = title_prefix + parsed.name + ", " + title_type + " " + parsed.attack_id + " - ICS | MITRE ATT&CK&reg;" -%}
 {% else %}
     {% set title = title_prefix + parsed.name + ", " + title_type + " " + parsed.attack_id + " | MITRE ATT&CK&reg;" -%}
-{% endif %} 
+{% endif %}
 
 {% set active_page = "techniques" -%}
 
@@ -49,11 +51,15 @@
             <li class="breadcrumb-item"><a href="/techniques/enterprise">Techniques</a></li>
         {% elif parsed.domain == 'mobile' %}
             <li class="breadcrumb-item"><a href="/techniques/mobile">Techniques</a></li>
+        {% elif parsed.domain == 'ics' %}
+            <li class="breadcrumb-item"><a href="/techniques/ics">Techniques</a></li>
         {% else %}
             <li class="breadcrumb-item"><a href="/techniques/">Techniques</a></li>
         {% endif %}
         {% if parsed.domain == 'enterprise' %}
             <li class="breadcrumb-item"><a href="/techniques/enterprise">Enterprise</a></li>
+        {% elif parsed.domain == 'ics' %}
+            <li class="breadcrumb-item"><a href="/techniques/ics">ICS</a></li>
         {% elif parsed.domain == 'mobile'%}
             <li class="breadcrumb-item"><a href="/techniques/mobile">Mobile</a></li>
         {% endif %}
@@ -399,14 +405,16 @@
                                 </p>
                             {% endif %}
                         {% endif %}
-                        {% if parsed.detection %}
+                        {% if parsed.detection or parsed.datasources %}
                             <h2 class="pt-3" id="detection">Detection</h2>
                             {% if parsed.datasources %}
                                 {{datasource_table.datasource_table(parsed.datasources, parsed.show_descriptions, parsed.citations)}}
                             {% endif %}
-                            <div>
-                                {{clean_output.stixToHTML(parsed.detection, parsed.citations)}}
-                            </div>
+                            {% if parsed.detection and not parsed.show_descriptions %}
+                                <div>
+                                    {{clean_output.stixToHTML(parsed.detection, parsed.citations)}}
+                                </div>
+                            {% endif %}
                         {% endif %}
                         {% if parsed.detectable %}
                             <h2 class="pt-3" id="detectable">Detection</h2>
