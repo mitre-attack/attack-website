@@ -396,9 +396,8 @@ def get_stix_memory_stores():
         # Download json from http or https
         if domain["location"].startswith("http"):
             download_dir = Path(f"{site_config.web_directory}/stix")
-            download_filename = f"{download_dir}/{domain['name']}.json"
-            download_stix_file(url=domain["location"], download_dir=download_dir, filepath=download_filename)
-            stix_filename = download_filename
+            stix_filename = f"{download_dir}/{domain['name']}.json"
+            download_stix_file(url=domain["location"], download_dir=download_dir, filepath=stix_filename)
         else:
             stix_filename = domain["location"]
 

@@ -1,6 +1,7 @@
 import json
 import os
 from datetime import datetime
+from pathlib import Path
 
 from mitreattack.attackToExcel import attackToExcel
 
@@ -157,15 +158,24 @@ def generate_working_with_attack():
     if not os.path.isdir(docs_dir):
         os.makedirs(docs_dir)
 
-    attackToExcel.export(
-        "enterprise-attack", site_config.full_attack_version, docs_dir, stix_file=site_config.STIX_LOCATION_ENTERPRISE
-    )
-    attackToExcel.export(
-        "mobile-attack", site_config.full_attack_version, docs_dir, stix_file=site_config.STIX_LOCATION_MOBILE
-    )
-    attackToExcel.export(
-        "ics-attack", site_config.full_attack_version, docs_dir, stix_file=site_config.STIX_LOCATION_ICS
-    )
+    for domain in site_config.domains:
+
+        if domain["deprecated"]:
+            continue
+
+        # this can be used because it was called previously in modules/util/stixhelpers.py to download the file
+        if domain["location"].startswith("http"):
+            download_dir = Path(f"{site_config.web_directory}/stix")
+            stix_filename = f"{download_dir}/{domain['name']}.json"
+        else:
+            stix_filename = domain["location"]
+
+        attackToExcel.export(
+            domain=domain["name"],
+            version=site_config.full_attack_version,
+            outputDir=docs_dir,
+            stix_file=stix_filename,
+        )
 
     files_json = {"excel_files": []}
     for excel_dir in excel_dirs:
