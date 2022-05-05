@@ -170,3 +170,7 @@ layer_md = Template(
 
 # Directory for test reports
 test_report_directory = "reports"
+
+# Workbench credentials to use if pulling STIX from ATT&CK Workbench version 1.2.0 or later
+WORKBENCH_USER = os.getenv("WORKBENCH_USER")
+WORKBENCH_API_KEY = os.getenv("WORKBENCH_API_KEY")

@@ -447,7 +447,17 @@ def download_stix_file(url, download_dir, filepath):
         proxy = site_config.args.proxy
     proxyDict = {"http": proxy, "https": proxy}
 
-    response = requests.get(url, verify=False, proxies=proxyDict)
+    download_from_workbench_instance = False
+    if site_config.WORKBENCH_USER:
+        download_from_workbench_instance = True
+
+    auth = None
+    if download_from_workbench_instance:
+        user = site_config.WORKBENCH_USER
+        password = site_config.WORKBENCH_API_KEY
+        auth = (user, password)
+
+    response = requests.get(url, verify=False, proxies=proxyDict, auth=auth)
     if response.status_code == 200:
         stix_json = response.json()
         with open(filepath, "w") as json_file:
