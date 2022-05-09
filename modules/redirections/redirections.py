@@ -18,7 +18,10 @@ def generate_redirections():
         os.mkdir(site_config.redirects_markdown_path)
 
     # Generate redirections
-    util.buildhelpers.generate_redirections(redirections_config.redirections_location)
+    util.buildhelpers.generate_redirections(
+        redirections_filename=redirections_config.redirections_location,
+        redirect_md=site_config.redirect_md_index
+    )
 
     for domain in site_config.domains:
         if domain["deprecated"] or (redirections_config.redirects_paths.get(domain["name"]) == None):
@@ -96,7 +99,7 @@ def generate_tactic_redirects(ms, domain):
             data["to"] = "/tactics/" + attack_id
             data["from"] = redirections_config.redirects_paths[domain] + tactic["name"].replace(" ", "_")
 
-        subs = site_config.redirect_md.substitute(data)
+        subs = site_config.redirect_md_index.substitute(data)
 
         with open(
             os.path.join(site_config.redirects_markdown_path, data["title"] + ".md"), "w", encoding="utf8"
@@ -120,7 +123,7 @@ def generate_obj_redirect(redirect_link, new_attack_id, old_attack_id, domain):
     data["to"] = f"/{redirect_link['new']}/{new_attack_id}"
     data["from"] = f"{redirections_config.redirects_paths[domain]}{redirect_link['old']}/{old_attack_id}"
 
-    subs = site_config.redirect_md.substitute(data)
+    subs = site_config.redirect_md_index.substitute(data)
 
     redirect_file = os.path.join(site_config.redirects_markdown_path, f"{data['title']}.md")
     with open(redirect_file, "w", encoding="utf8") as md_file:
@@ -129,7 +132,7 @@ def generate_obj_redirect(redirect_link, new_attack_id, old_attack_id, domain):
     if new_attack_id != old_attack_id:
         data["from"] = f"{redirect_link['new']}/{old_attack_id}"
 
-        subs = site_config.redirect_md.substitute(data)
+        subs = site_config.redirect_md_index.substitute(data)
 
         redirect_file = os.path.join(site_config.redirects_markdown_path, f"{redirect_link['new']}{data['title']}.md")
         with open(redirect_file, "w", encoding="utf8") as md_file:

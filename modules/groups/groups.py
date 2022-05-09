@@ -1,12 +1,8 @@
 import collections
 import json
 import os
-import re
-
-import markdown
 
 from modules import util
-from modules.util import relationshiphelpers, stixhelpers
 
 from . import groups_config
 from .. import site_config
@@ -32,7 +28,10 @@ def generate_groups():
 
     # Generate redirections
     # of note: G0058 redirects to G0059 manually because it is not in the STIX object
-    util.buildhelpers.generate_redirections(groups_config.groups_redirection_location)
+    util.buildhelpers.generate_redirections(
+        redirections_filename=groups_config.groups_redirection_location,
+        redirect_md=site_config.redirect_md
+    )
 
     # Generates the markdown files to be used for page generation
     group_generated = generate_markdown_files()

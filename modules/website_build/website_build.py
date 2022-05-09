@@ -36,7 +36,8 @@ def generate_website():
     override_colors()
     pelican_content()
     reset_override_colors()
-    remove_pelican_settings()
+    # this is nice to have if you want to run pelican manually later
+    # remove_pelican_settings()
     remove_unwanted_output()
 
 
