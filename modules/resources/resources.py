@@ -163,6 +163,7 @@ def generate_working_with_attack():
         if domain["deprecated"]:
             continue
 
+        # TODO: refactor this to use a function rather than copy/paste from modules/util/stixhelpers.py
         # this can be used because it was called previously in modules/util/stixhelpers.py to download the file
         if domain["location"].startswith("http"):
             download_dir = Path(f"{site_config.web_directory}/stix")

@@ -448,7 +448,7 @@ def download_stix_file(url, download_dir, filepath):
     proxyDict = {"http": proxy, "https": proxy}
 
     download_from_workbench_instance = False
-    if site_config.WORKBENCH_USER:
+    if site_config.WORKBENCH_USER and site_config.WORKBENCH_API_KEY:
         download_from_workbench_instance = True
 
     auth = None

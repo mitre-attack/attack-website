@@ -458,9 +458,6 @@ def check_links(external_links=False):
     # Get unlinked pages list
     unlinked_pages = check_unlinked_pages(filenames)
 
-    if not (os.path.isdir(site_config.test_report_directory)):
-        os.mkdir(site_config.test_report_directory)
-
     # logger.info(f"Writing report: unlinked pages")
     with open(os.path.join(site_config.test_report_directory, tests_config.unlinked_report_filename), "w") as f:
         f.write("Unlinked pages report:\n\n")

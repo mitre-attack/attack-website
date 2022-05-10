@@ -7,9 +7,7 @@ from . import tests_config
 
 def check_output_size():
     """Check output folder size"""
-
-    # In base 10
-    MB_CONVERSION = 1000000
+    MB_CONVERSION = 1048576
     total_sum = 0
     for root, _, files in os.walk(site_config.web_directory):
         for name in files:
