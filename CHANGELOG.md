@@ -25,6 +25,97 @@
 <!--    PATCH updates are when a bugfix is made without the             -->
 <!--          addition of notable features. When PATCH is 0 it can      -->
 <!--          be omitted                                                -->
+# 12 May 2022
+
+## [ATT&CK content version 11.1](https://github.com/mitre/cti/releases/tag/ATT%26CK-v11.1)
+
+This minor release includes the following bugfixes:
+
+### Techniques
+
+#### Enterprise
+
+##### Technique changes
+
+* [Exploitation for Credential Access](/techniques/T1212)
+* [Exploitation for Defense Evasion](/techniques/T1211)
+* [Hardware Additions](/techniques/T1200)
+* Obfuscated Files or Information: [Indicator Removal from Tools](/techniques/T1027/005)
+* [Supply Chain Compromise](/techniques/T1195)
+  * [Compromise Hardware Supply Chain](/techniques/T1195/003)
+  * [Compromise Software Dependencies and Development Tools](/techniques/T1195/001)
+  * [Compromise Software Supply Chain](/techniques/T1195/002)
+
+##### Minor Technique changes
+
+* [Access Token Manipulation](/techniques/T1134)
+  * [Parent PID Spoofing](/techniques/T1134/004)
+* Account Manipulation: [Device Registration](/techniques/T1098/005)
+* [Deobfuscate/Decode Files or Information](/techniques/T1140)
+* [Execution Guardrails](/techniques/T1480)
+  * [Environmental Keying](/techniques/T1480/001)
+* Hide Artifacts: [Resource Forking](/techniques/T1564/009)
+* [Hijack Execution Flow](/techniques/T1574)
+  * [DLL Side-Loading](/techniques/T1574/002)
+  * [Dylib Hijacking](/techniques/T1574/004)
+  * [Path Interception by PATH Environment Variable](/techniques/T1574/007)
+  * [Services Registry Permissions Weakness](/techniques/T1574/011)
+* [Indirect Command Execution](/techniques/T1202)
+* [Masquerading](/techniques/T1036)
+  * [Match Legitimate Name or Location](/techniques/T1036/005)
+* [Network Boundary Bridging](/techniques/T1599)
+* [Obfuscated Files or Information](/techniques/T1027)
+  * [HTML Smuggling](/techniques/T1027/006)
+* [Rootkit](/techniques/T1014)
+* [Subvert Trust Controls](/techniques/T1553)
+  * [Code Signing Policy Modification](/techniques/T1553/006)
+  * [Gatekeeper Bypass](/techniques/T1553/001)
+  * [Mark-of-the-Web Bypass](/techniques/T1553/005)
+  * [SIP and Trust Provider Hijacking](/techniques/T1553/003)
+* [Trusted Developer Utilities Proxy Execution](/techniques/T1127)
+* [Valid Accounts](/techniques/T1078)
+* [XSL Script Processing](/techniques/T1220)
+
+### Software
+
+#### Enterprise
+
+##### Minor Software changes
+
+* [Chrommme](/software/S0667)
+* [Gelsemium](/software/S0666)
+
+### Groups
+
+#### Enterprise
+
+##### Minor Group changes
+
+* [Kimsuky](/groups/G0094)
+
+##### Group deprecations
+
+* [Gelsemium](/groups/G0141)
+
+### Data Sources and/or Components
+
+#### Enterprise
+
+##### Minor Data Source and/or Component changes
+
+* Domain Name: [Active DNS](/datasources/DS0038/#Active%20DNS)
+
+### Contributors to this release
+
+* Dongwook Kim, KISA
+* Mike Moran
+
+## ATT&CK Website version 3.6.1
+
+### Improvements
+
+- Update requirements.txt dependencies to latest versions of libraries, and only includes libraries directly used
+
 # 25 April 2022
 
 ## [ATT&CK content version 11.0](https://github.com/mitre/cti/releases/tag/ATT%26CK-v11.0)
