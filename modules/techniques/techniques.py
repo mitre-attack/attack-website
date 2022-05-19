@@ -244,7 +244,7 @@ def generate_data_for_md(technique_dict, technique, tactic_list, is_sub_techniqu
 
                     if not tmp_tactic_list:
                         logger.error(
-                            f"Technique: {technique_dict['name']} is in Tactic: {phase_name}, but that is an unknown Tactic for domain: {technique['domain']}!"
+                            f"Technique: {technique_dict['name']} is in Tactic: {phase_name}, but that is an unknown Tactic for domain: {technique_dict['domain']}!"
                         )
                         continue
                     tactic = tmp_tactic_list[0]
