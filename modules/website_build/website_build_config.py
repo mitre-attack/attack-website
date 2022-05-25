@@ -18,7 +18,7 @@ template_dir = os.path.join("attack-theme", "templates", "general/")
 #    RESOURCES
 base_page_data = {
     "CONTENT_VERSION": site_config.attack_version,
-    "WEBSITE_VERSION": "3.6.1",
+    "WEBSITE_VERSION": "3.6.2",
     "CHANGELOG_LOCATION": "/resources/changelog.html",
     "LOGO_HEADER": "/theme/images/mitre_attack_logo.png",
     "LOGO_FOOTER": "/theme/images/mitrelogowhiteontrans.gif",
