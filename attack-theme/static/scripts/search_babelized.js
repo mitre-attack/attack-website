@@ -150,12 +150,10 @@ var IndexHelper = /*#__PURE__*/function () {
         threshold: 2,
         //exclude scores below this number
         resolution: 15,
+        fastupdate: true,
         //how many steps in the scoring algorithm
         depth: 4,
-        cache: true,
-        limit: 2,
-        minlength: 50,
-        fastupdate: true,
+        cache: 100,
         //how far around words to search for adjacent matches. Disabled for title
         doc: {
           id: "id",
@@ -171,11 +169,9 @@ var IndexHelper = /*#__PURE__*/function () {
         //exclude scores below this number
         resolution: 15,
         //how many steps in the scoring algorithm
-        cache: true,
-        limit: 2,
-        depth: 4,
-        minlength: 50,
+        cache: 100,
         fastupdate: true,
+        depth: 4,
         //how far around words to search for adjacent matches. Disabled for title
         doc: {
           id: "id",
@@ -188,8 +184,8 @@ var IndexHelper = /*#__PURE__*/function () {
       this.indexes.title.add(documents);
       //this.indexes.content.add(documents);
       localStorage.setItem("saved_uuid", build_uuid);
-      //localforage.setItem("index_helper_title", this.indexes.title.export());
-      //localforage.setItem("index_helper_content", this.indexes.content.export());
+      localforage.setItem("index_helper_title", this.indexes.title.export());
+      localforage.setItem("index_helper_content", this.indexes.content.export());
     } else if (!documents && exported) {
       this.indexes.title.import(exported.title);
       this.indexes.content.import(exported.content);
@@ -573,15 +569,16 @@ var search = function search(query) {
 
     if (!isGoogleChrome && 'indexedDB' in window && saved_uuid && saved_uuid == build_uuid) {
       // console.log("getting cached flexsearch objects");
-      $.ajax({
-        //if docs have not yet been loaded
-        url: base_url + "index.json",
-        dataType: "json",
-        success: function success(data) {
-          search_service = new SearchService("search-results", data, null);
+        localforage.getItem("index_helper_title").then(function (saved_title) {
+        localforage.getItem("index_helper_content").then(function (saved_content) {
+        exported = {
+            title: saved_title,
+            content: saved_content
+          };
+          search_service = new SearchService("search-results", null, exported);
           search_service.query(query);
           search_parsing_icon.hide();
-        }
+        });
       });
     } else {
       // console.log("making new flexsearch objects");

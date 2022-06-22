@@ -8,7 +8,6 @@ import bleach
 
 import modules
 from modules import site_config
-import preprocessing
 
 # Check if resources module exist
 if importlib.util.find_spec("modules.versions"):
@@ -114,7 +113,6 @@ def clean(filepath):
     out = re.sub(r"[\n ]+", " ", out)  # remove extra newlines, smush to 1 line
     out = html.unescape(out)  # fix &amp and &#nnn unicode escaping
     skipindex = skipindex or out == "" or out == " "
-    #out = preprocessing.preprocess(out)
     count = count + 1
     return out, skipindex, title
 
