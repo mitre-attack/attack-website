@@ -8,6 +8,7 @@ import bleach
 
 import modules
 from modules import site_config
+import preprocessing
 
 # Check if resources module exist
 if importlib.util.find_spec("modules.versions"):
@@ -34,17 +35,12 @@ def generate_index():
                 #     title = "MITRE ATT&CK&trade;"
 
                 index.append(
-                    {
-                        "id": len(index),
-                        "title": title,
-                        "path": thepath[6:],  # strip output prefix
-                        "content": cleancontent,
-                    }
+                    {"id": len(index),"title": title,"path": thepath[6:], "content": cleancontent,}
                 )
     if not os.path.isdir(site_config.web_directory):
         os.makedirs(site_config.web_directory)
 
-    json.dump(index, open(os.path.join(site_config.web_directory, "index.json"), mode="w", encoding="utf8"), indent=2)
+    json.dump(index, open(os.path.join(site_config.web_directory, "index.json"), mode="w", encoding="utf8"), indent=0)
 
     if site_config.subdirectory:
         # update search base url to subdirectory
@@ -93,9 +89,11 @@ def clean(filepath):
     f.close()
 
     content = ""
+    count = 0
     title = ""
     skipindex = False
     indexing = False
+
     for line in lines:
         if (not skipline(line)) and indexing:
             content += clean_line(line) + "\n"
@@ -111,11 +109,13 @@ def clean(filepath):
         if 'http-equiv="refresh"' in line:
             skipindex = True
 
+    #content = ps.stem(content)
     out = bleach.clean(content, tags=[], strip=True)  # remove tags
     out = re.sub(r"[\n ]+", " ", out)  # remove extra newlines, smush to 1 line
     out = html.unescape(out)  # fix &amp and &#nnn unicode escaping
-
     skipindex = skipindex or out == "" or out == " "
+    #out = preprocessing.preprocess(out)
+    count = count + 1
     return out, skipindex, title
 
 
