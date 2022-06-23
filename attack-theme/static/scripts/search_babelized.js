@@ -149,35 +149,18 @@ var IndexHelper = /*#__PURE__*/function () {
         //match substring beginning of word
         threshold: 2,
         //exclude scores below this number
-        resolution: 15,
+        resolution: 100,
         fastupdate: true,
         //how many steps in the scoring algorithm
         depth: 4,
-        cache: 100,
+        cache: true,
+        minlength: 100,
         //how far around words to search for adjacent matches. Disabled for title
         doc: {
           id: "id",
-          field: "title"
+          field: ["title","content"]
         }
       }),
-      "content": new FlexSearch({
-        encode: "icase",
-        //phonetic normalizations
-        tokenize: "strict",
-        //match substring beginning of word
-        threshold: 2,
-        //exclude scores below this number
-        resolution: 15,
-        //how many steps in the scoring algorithm
-        cache: 100,
-        fastupdate: true,
-        depth: 4,
-        //how far around words to search for adjacent matches. Disabled for title
-        doc: {
-          id: "id",
-          field: "content"
-        }
-      })
     }; // console.log("adding pages to index");
 
     if (documents && !exported) {
@@ -185,10 +168,10 @@ var IndexHelper = /*#__PURE__*/function () {
       //this.indexes.content.add(documents);
       localStorage.setItem("saved_uuid", build_uuid);
       localforage.setItem("index_helper_title", this.indexes.title.export());
-      localforage.setItem("index_helper_content", this.indexes.content.export());
+      //localforage.setItem("index_helper_content", this.indexes.content.export());
     } else if (!documents && exported) {
       this.indexes.title.import(exported.title);
-      this.indexes.content.import(exported.content);
+      //this.indexes.content.import(exported.content);
     } else {
       console.error("invalid argument: constructor must be called with either documents or exported");
     }
@@ -252,6 +235,7 @@ var IndexHelper = /*#__PURE__*/function () {
         // console.log("fetching next title page")
         var response = this.indexes.title.search(this.query, {
           limit: limit,
+          field: "title",
           page: this.nextPageRef
         });
         var results = response.result.map(function (result) {
@@ -272,8 +256,9 @@ var IndexHelper = /*#__PURE__*/function () {
       } else {
         //content stage
         // console.log("fetching next content page")
-        var _response = this.indexes.content.search(this.query, {
+        var _response = this.indexes.title.search(this.query, {
           limit: limit,
+          field: "content",
           page: this.nextPageRef
         });
 
@@ -573,7 +558,7 @@ var search = function search(query) {
         localforage.getItem("index_helper_content").then(function (saved_content) {
         exported = {
             title: saved_title,
-            content: saved_content
+            //content: saved_content
           };
           search_service = new SearchService("search-results", null, exported);
           search_service.query(query);
