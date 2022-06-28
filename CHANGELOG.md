@@ -25,6 +25,14 @@
 <!--    PATCH updates are when a bugfix is made without the             -->
 <!--          addition of notable features. When PATCH is 0 it can      -->
 <!--          be omitted                                                -->
+# Upcoming
+
+## ATT&CK website version 3.6.3
+
+### Fixes
+
+* Deprecated subtechniques will no longer be displayed.
+
 # 24 May 2022
 
 ## [ATT&CK content version 11.2](https://github.com/mitre/cti/releases/tag/ATT%26CK-v11.2)

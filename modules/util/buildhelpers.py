@@ -123,17 +123,33 @@ def get_alias_data(alias_list, ext_refs):
     return alias_data
 
 
+def is_deprecated(sdo):
+    """Given a STIX Domain Object, return if it is deprecated."""
+    deprecated = sdo.get("x_mitre_deprecated")
+    return deprecated
+
+
+def is_revoked(sdo):
+    """Given a STIX Domain Object, return if it is revoked."""
+    revoked = sdo.get("revoked")
+    return revoked
+
+
 def get_subtechnique_count(technique_list_no_sub):
     """Given a technique list, return the number of subtechniques."""
     subtech_count = 0
-
     subtechniques_of = relationshipgetters.get_subtechniques_of()
 
     for technique in technique_list_no_sub:
-
         if technique["id"] in subtechniques_of:
             subtechniques = subtechniques_of[technique["id"]]
-            subtech_count += len(subtechniques)
+
+            for sub in subtechniques:
+                revoked = is_revoked(sdo=sub["object"])
+                deprecated = is_deprecated(sdo=sub["object"])
+                if revoked or deprecated:
+                    continue
+                subtech_count += 1
 
     return subtech_count
 
@@ -144,14 +160,11 @@ def get_technique_table_data(tactic, techniques_list):
     subtechniques_of = relationshipgetters.get_subtechniques_of()
 
     for tech in techniques_list:
-
         attack_id = get_attack_id(tech)
 
         if attack_id:
-
             row = {}
             row["tid"] = attack_id
-
             row["descr"] = tech["description"]
 
             if tactic is None and tech.get("x_mitre_deprecated"):
@@ -172,6 +185,12 @@ def get_technique_table_data(tactic, techniques_list):
                             raise Exception(f"{attack_id} subtechnique's attackID '{sub_attack_id}' is malformed")
                         sub_data["id"] = sub_attack_id.split(".")[1]
                         sub_data["descr"] = subtechnique["object"]["description"]
+
+                        revoked = is_revoked(sdo=subtechnique["object"])
+                        deprecated = is_deprecated(sdo=subtechnique["object"])
+                        if revoked or deprecated:
+                            continue
+
                         row["subtechniques"].append(sub_data)
 
             technique_table.append(row)
@@ -759,14 +778,14 @@ def filter_techniques_by_platform(tech_list, platforms):
 
 
 def filter_deprecated_revoked(sdos):
-    return list(
-        filter(
-            lambda t: not (
-                ("x_mitre_deprecated" in t and t["x_mitre_deprecated"]) or ("revoked" in t and t["revoked"])
-            ),
-            sdos,
-        )
-    )
+    filtered_sdos = []
+    for sdo in sdos:
+        deprecated = is_deprecated(sdo=sdo)
+        revoked = is_revoked(sdo=sdo)
+        if not deprecated or revoked:
+            filtered_sdos.append(sdo)
+
+    return filtered_sdos
 
 
 def filter_out_subtechniques(techniques):
