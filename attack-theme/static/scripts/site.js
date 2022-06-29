@@ -43,18 +43,25 @@ async function Indexer(documents, exported) {
   });
   let result = await promise;
   localforage.setItem("index_helper_content", int.export());
+  localStorage.setItem("forage_used", "true");
     //alert("hi");
 }
 // when the document loads, position the body
 $(document).ready(function() {
-    $.ajax({
+if(localStorage.getItem("forage_used") != "true"){
+$.ajax({
         //if docs have not yet been loaded
         url: base_url + "index.json",
         dataType: "json",
         success: function success(data) {
           Indexer(data,null);
+          console.log("10");
+          console.log("20");
+          console.log("30");
         }
       });
+}
+    
     positionBody();
     initSidenavScroll();
     $('[data-toggle="tooltip"]').tooltip();
