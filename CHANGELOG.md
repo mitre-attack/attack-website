@@ -33,6 +33,10 @@
 
 * Deprecated subtechniques will no longer be displayed.
 
+### Improvements
+
+* Added optional Google Analytics to the attack-theme Pelican template
+
 # 24 May 2022
 
 ## [ATT&CK content version 11.2](https://github.com/mitre/cti/releases/tag/ATT%26CK-v11.2)
