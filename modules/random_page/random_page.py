@@ -1,13 +1,8 @@
-import html
 import json
 import os
 import re
 
-import bleach
-
 from modules import site_config
-
-skiplines = ["breadcrumb-item", "nav-link"]
 
 
 def generate_json():
