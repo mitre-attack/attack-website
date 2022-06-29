@@ -146,17 +146,16 @@ def get_parsed_args():
             "Default behavior without this flag is to have a banner generated on the site."
         ),
     )
-    # Coming soon!
-    # parser.add_argument(
-    #     "--google-analytics",
-    #     type=str,
-    #     help=("If a Google Analytics ID is provided, then the site will include it on all pages."),
-    # )
-    # parser.add_argument(
-    #     "--google-site-verification",
-    #     type=str,
-    #     help=("If a Google site verification code is provided, then the site will include it on all pages."),
-    # )
+    parser.add_argument(
+        "--google-analytics",
+        type=str,
+        help=("If a Google Analytics ID is provided, then the site will include it on all pages."),
+    )
+    parser.add_argument(
+        "--google-site-verification",
+        type=str,
+        help=("If a Google site verification code is provided, then the site will include it on all pages."),
+    )
 
     args = parser.parse_args()
 

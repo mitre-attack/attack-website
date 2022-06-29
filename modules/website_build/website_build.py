@@ -5,6 +5,8 @@ import subprocess
 import uuid
 from string import Template
 
+from loguru import logger
+
 import modules
 from modules import matrices, site_config, util
 
@@ -16,6 +18,7 @@ def generate_website():
     generates the index page of the website and
     runs pelican content to convert markdown pages into html
     """
+    logger.info("Generating the website")
     # Create content pages directory if does not already exist
     util.buildhelpers.create_content_pages_dir()
 
@@ -43,6 +46,7 @@ def generate_website():
 
 def generate_javascript_settings():
     """Creates javascript settings file that will be used to other javascript files"""
+    logger.info("Generating JavaScript settings.js")
     javascript_settings_file = os.path.join(site_config.javascript_path, "settings.js")
 
     # Check if file already exists
@@ -81,6 +85,7 @@ def generate_javascript_settings():
 
 def generate_base_html():
     """Responsible for generating the header and footer of website pages"""
+    logger.info("Generating base.html from template")
     # Update navigation menu in the case that some module did not generate markdowns
     website_build_config.base_page_data["NAVIGATION_MENU"] = modules.menu_ptr
     website_build_config.base_page_data["ATTACK_BRANDING"] = site_config.args.attack_brand
@@ -117,6 +122,7 @@ def generate_base_html():
 
 def generate_index_page():
     """Responsible for creating the landing page"""
+    logger.info("Generating index page")
     data = {}
 
     # get index matrix data
@@ -158,6 +164,7 @@ def generate_index_page():
 
 def store_pelican_settings():
     """Store pelican settings"""
+    logger.info("Storing additional Pelican settings")
     pelican_settings_f = os.path.join(site_config.data_directory, "pelican_settings.json")
     with open(pelican_settings_f, "w", encoding="utf8") as json_f:
         json_f.write(json.dumps(site_config.staged_pelican))
@@ -166,6 +173,7 @@ def store_pelican_settings():
 def override_colors():
     """Override colors scss file if attack brand flag is enabled"""
     if site_config.args.attack_brand:
+        logger.info("Overriding colors for attack-brand")
         colors_scss_f = os.path.join(site_config.static_style_dir, "_colors.scss")
 
         temp_file = ""
@@ -189,6 +197,7 @@ def override_colors():
 def reset_override_colors():
     """Reset override colors scss file if attack brand flag is enabled"""
     if site_config.args.attack_brand:
+        logger.info("Resetting override colors for using attack-brand")
         colors_scss_f = os.path.join(site_config.static_style_dir, "_colors.scss")
 
         temp_file = ""
@@ -211,6 +220,7 @@ def reset_override_colors():
 
 def generate_faq_page():
     """Responsible for compiling faq json into faq markdown file for rendering on the HMTL."""
+    logger.info("Generating FAQ page")
     # load faq data from json
     with open(os.path.join(site_config.data_directory, "faq.json"), "r", encoding="utf8") as f:
         faqdata = json.load(f)
@@ -230,6 +240,7 @@ def generate_changelog_page():
     """Responsible for compiling original changelog markdown into changelog markdown file
     for rendering on the HTML
     """
+    logger.info("Generating Changelog page")
     current_changelog = None
     # Read local changelog
     with open("CHANGELOG.md", "r", encoding="utf8") as f:
@@ -242,15 +253,37 @@ def generate_changelog_page():
 
 
 def pelican_content():
-    # Run pelican with limited output, -q is for quiet
+    logger.info("Building website with Pelican")
+    pelican_cmd = "pelican content"
+
     if site_config.subdirectory:
-        subprocess.check_output(f"pelican content -q -o {site_config.web_directory}", shell=True)
-    else:
-        subprocess.check_output("pelican content -q", shell=True)
+        pelican_cmd = f"{pelican_cmd} -o {site_config.web_directory}"
+
+    google_analytics = site_config.GOOGLE_ANALYTICS
+    google_site_verification = site_config.GOOGLE_SITE_VERIFICATION
+
+    if site_config.args.google_analytics:
+        google_analytics = site_config.args.google_analytics
+    if site_config.args.google_site_verification:
+        google_site_verification = site_config.args.google_site_verification
+
+    extra_settings = ""
+    if google_analytics:
+        extra_settings = f"{extra_settings} GOOGLE_ANALYTICS='\"{google_analytics}\"'"
+    if google_site_verification:
+        extra_settings = f"{extra_settings} GOOGLE_SITE_VERIFICATION='\"{google_site_verification}\"'"
+
+    if extra_settings:
+        pelican_cmd = f"{pelican_cmd} -e {extra_settings}"
+
+    logger.debug(f"{pelican_cmd=}")
+
+    subprocess.check_output(pelican_cmd, shell=True)
 
 
 def remove_pelican_settings():
     """Remove pelican settings"""
+    logger.info("Removing additional Pelican settings")
     pelican_settings_f = os.path.join(site_config.data_directory, "pelican_settings.json")
     if os.path.isfile(pelican_settings_f):
         os.remove(pelican_settings_f)
@@ -258,32 +291,40 @@ def remove_pelican_settings():
 
 def remove_unwanted_output():
     """Remove unwanted files from the output directory"""
+    logger.info("Removing unwanted files from the output directory")
     # Files to be deleted:
     # archives.html, authors.html, categories.html, tags.html,
     # author\blake-strom.html, category\cyber-threat-intelligence.html
 
     archives_path = os.path.join(site_config.web_directory, "archives.html")
+    authors_path = os.path.join(site_config.web_directory, "authors.html")
+    categories_path = os.path.join(site_config.web_directory, "categories.html")
+    tags_path = os.path.join(site_config.web_directory, "tags.html")
+    author_path = os.path.join(site_config.web_directory, "author")
+    category_path = os.path.join(site_config.web_directory, "category")
+
     if os.path.exists(archives_path):
+        logger.debug(f"Removing: {archives_path}")
         os.remove(archives_path)
 
-    authors_path = os.path.join(site_config.web_directory, "authors.html")
     if os.path.exists(authors_path):
+        logger.debug(f"Removing: {authors_path}")
         os.remove(authors_path)
 
-    categories_path = os.path.join(site_config.web_directory, "categories.html")
     if os.path.exists(categories_path):
+        logger.debug(f"Removing: {categories_path}")
         os.remove(categories_path)
 
-    tags_path = os.path.join(site_config.web_directory, "tags.html")
     if os.path.exists(tags_path):
+        logger.debug(f"Removing: {tags_path}")
         os.remove(tags_path)
 
-    author_path = os.path.join(site_config.web_directory, "author")
     if os.path.exists(author_path):
+        logger.debug(f"Removing: {author_path}")
         shutil.rmtree(author_path)
 
-    category_path = os.path.join(site_config.web_directory, "category")
     if os.path.exists(category_path):
+        logger.debug(f"Removing: {category_path}")
         shutil.rmtree(category_path)
 
 
@@ -291,6 +332,7 @@ def generate_static_pages():
     """Reads markdown files from the static pages directory and copies them into
     the markdown directory
     """
+    logger.info("Generating static pages")
     # Verify if content/pages directory exists
     if not os.path.isdir(website_build_config.website_build_markdown_path):
         os.mkdir(website_build_config.website_build_markdown_path)
