@@ -1,8 +1,10 @@
 import json
 import os
+import shutil
 from datetime import datetime
 from pathlib import Path
 
+from loguru import logger
 from mitreattack.attackToExcel import attackToExcel
 
 import modules
@@ -13,7 +15,7 @@ from . import resources_config
 
 def generate_resources():
     """Responsible for generating the resources pages"""
-
+    logger.info("Generating Resources")
     # Create content pages directory if does not already exist
     util.buildhelpers.create_content_pages_dir()
 
@@ -27,7 +29,7 @@ def generate_resources():
 
     # Move templates to templates directory
     util.buildhelpers.move_templates(resources_config.module_name, resources_config.resources_templates_path)
-    util.buildhelpers.move_docs(resources_config.docs_path)
+    copy_docs(module_docs_path=resources_config.docs_path)
     generate_working_with_attack()
     generate_general_information()
     generate_training_pages()
@@ -36,10 +38,29 @@ def generate_resources():
     generate_static_pages()
 
 
+def copy_docs(module_docs_path):
+    """Move module specific docs into the website's content directory for pelican."""
+    logger.info("Copying files to docs directory")
+    if os.path.isdir(module_docs_path):
+        # Check that content directory exist
+        if not os.path.exists(site_config.content_dir):
+            os.mkdir(site_config.content_dir)
+        # Check that docs directory exist
+        if not os.path.exists(site_config.docs_dir):
+            os.mkdir(site_config.docs_dir)
+
+        for doc in os.listdir(module_docs_path):
+            if os.path.isdir(os.path.join(module_docs_path, doc)):
+                shutil.copytree(os.path.join(module_docs_path, doc), os.path.join(site_config.docs_dir, doc))
+            else:
+                shutil.copyfile(os.path.join(module_docs_path, doc), os.path.join(site_config.docs_dir, doc))
+
+
 def generate_general_information():
     """Responsible for compiling resources json into resources markdown files
     for rendering on the HMTL
     """
+    logger.info("Generating general information")
     # load papers and presentations list
     with open(os.path.join(site_config.data_directory, "resources.json"), "r", encoding="utf8") as f:
         resources = json.load(f)
@@ -62,7 +83,7 @@ def generate_general_information():
 
 def generate_training_pages():
     """Responsible for generating the markdown pages of the training pages"""
-
+    logger.info("Generating training pages")
     data = {}
 
     # Side navigation for training
@@ -87,6 +108,7 @@ def generate_attackcon_page():
     """Responsible for compiling ATT&CKcon json into attackcon markdown file
     for rendering on the HTML
     """
+    logger.info("Generating ATT&CKcon page")
     # load ATT&CKcon data
     with open(os.path.join(site_config.data_directory, "attackcon.json"), "r", encoding="utf8") as f:
         attackcon = json.load(f)
@@ -103,7 +125,6 @@ def check_menu_versions_module():
     """Verify if versions module is in the running pool, if not
     remove from submenu
     """
-
     if not [key["module_name"] for key in modules.run_ptr if key["module_name"] == "versions"]:
         util.buildhelpers.remove_element_from_sub_menu(resources_config.module_name, "Versions of ATT&CK")
 
@@ -112,6 +133,7 @@ def generate_static_pages():
     """Reads markdown files from the static pages directory and copies them into
     the markdown directory
     """
+    logger.info("Generating static pages")
     static_pages_dir = os.path.join("modules", "resources", "static_pages")
 
     for static_page in os.listdir(static_pages_dir):
@@ -133,7 +155,7 @@ def generate_static_pages():
 
 def generate_working_with_attack():
     """Responsible for generating working with ATT&CK and creating excel files"""
-
+    logger.info("Generating Working with ATT&CK page")
     excel_dirs = [
         f"enterprise-attack-{site_config.full_attack_version}",
         f"mobile-attack-{site_config.full_attack_version}",

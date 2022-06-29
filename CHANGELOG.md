@@ -32,6 +32,7 @@
 ### Fixes
 
 * Deprecated subtechniques will no longer be displayed.
+* Add [mobile-subtechniques-crosswalk.json](https://attack.mitre.org/docs/subtechniques/mobile-subtechniques-crosswalk.json)
 
 ### Improvements
 
