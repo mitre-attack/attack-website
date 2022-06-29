@@ -143,40 +143,65 @@ var IndexHelper = /*#__PURE__*/function () {
 
     this.indexes = {
       "title": new FlexSearch({
-        encode: "icase",
+        encode: "simple",
         //phonetic normalizations
         tokenize: "forward",
         //match substring beginning of word
-        threshold: 2,
+        threshold: 50,
         //exclude scores below this number
-        resolution: 100,
-        fastupdate: true,
+        resolution: 50,
         //how many steps in the scoring algorithm
         depth: 4,
-        cache: true,
-        minlength: 100,
         //how far around words to search for adjacent matches. Disabled for title
         doc: {
           id: "id",
-          field: ["title","content"]
+          field: "title"
         }
       }),
+      "content": new FlexSearch({
+        encode: "simple",
+        //phonetic normalizations
+        tokenize: "strict",
+        //match substring beginning of word
+        threshold: 50,
+        //exclude scores below this number
+        resolution: 50,
+        //how many steps in the scoring algorithm
+        depth: 4,
+        //how far around words to search for adjacent matches. Disabled for title
+        doc: {
+          id: "id",
+          field: "content"
+        }
+      })
     }; // console.log("adding pages to index");
 
     if (documents && !exported) {
       this.indexes.title.add(documents);
       //this.indexes.content.add(documents);
       localStorage.setItem("saved_uuid", build_uuid);
+      var temp = this.indexes.content;
+      localforage.getItem("index_helper_content").then(function (saved_content) {
+          exported = {
+            content: saved_content,
+          };
+          temp.import(exported.content);
+      
+      
+      //localforage.setItem("index_helper_title", this.indexes.title.export());
+      
+       });
+      this.indexes.content = temp;
       localforage.setItem("index_helper_title", this.indexes.title.export());
-      //localforage.setItem("index_helper_content", this.indexes.content.export());
     } else if (!documents && exported) {
       this.indexes.title.import(exported.title);
-      //this.indexes.content.import(exported.content);
+      this.indexes.content.import(exported.content);
     } else {
       console.error("invalid argument: constructor must be called with either documents or exported");
     }
 
     this.setQuery("");
+   
   }
 
   _createClass(IndexHelper, [{
@@ -235,7 +260,6 @@ var IndexHelper = /*#__PURE__*/function () {
         // console.log("fetching next title page")
         var response = this.indexes.title.search(this.query, {
           limit: limit,
-          field: "title",
           page: this.nextPageRef
         });
         var results = response.result.map(function (result) {
@@ -256,9 +280,8 @@ var IndexHelper = /*#__PURE__*/function () {
       } else {
         //content stage
         // console.log("fetching next content page")
-        var _response = this.indexes.title.search(this.query, {
+        var _response = this.indexes.content.search(this.query, {
           limit: limit,
-          field: "content",
           page: this.nextPageRef
         });
 
@@ -552,13 +575,13 @@ var search = function search(query) {
 
     var saved_uuid = localStorage.getItem("saved_uuid");
 
-    if (!isGoogleChrome && 'indexedDB' in window && saved_uuid && saved_uuid == build_uuid) {
+    if ('indexedDB' in window && saved_uuid && saved_uuid == build_uuid) {
       // console.log("getting cached flexsearch objects");
-        localforage.getItem("index_helper_title").then(function (saved_title) {
+      localforage.getItem("index_helper_title").then(function (saved_title) {
         localforage.getItem("index_helper_content").then(function (saved_content) {
-        exported = {
+          exported = {
             title: saved_title,
-            //content: saved_content
+            content: saved_content
           };
           search_service = new SearchService("search-results", null, exported);
           search_service.query(query);
