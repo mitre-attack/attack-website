@@ -37,6 +37,7 @@
 ### Improvements
 
 * Added optional Google Analytics to the attack-theme Pelican template
+* Fixed link in v11 Updates page to go to Boot or Logon Autostart Execution: Plist Modification (T1547.011)
 
 # 24 May 2022
 
