@@ -195,14 +195,7 @@ var IndexHelper = /*#__PURE__*/function () {
       localforage.setItem("index_helper_title", this.indexes.title.export());
     } else if (!documents && exported) {
       this.indexes.title.import(exported.title);
-      localforage.getItem("index_helper_content").then(function (saved_content) {
-          exported = {
-            content: saved_content,
-          };
-          temp.import(exported.content);
-          });
-         this.indexes.content = temp;
-      //this.indexes.content.import(exported.content);
+      this.indexes.content.import(exported.content);
     } else {
       console.error("invalid argument: constructor must be called with either documents or exported");
     }
