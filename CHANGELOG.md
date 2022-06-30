@@ -25,7 +25,7 @@
 <!--    PATCH updates are when a bugfix is made without the             -->
 <!--          addition of notable features. When PATCH is 0 it can      -->
 <!--          be omitted                                                -->
-# 29 June 2022
+# 30 June 2022
 
 ## ATT&CK website version 3.6.3
 
