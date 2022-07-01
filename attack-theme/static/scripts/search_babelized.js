@@ -177,22 +177,8 @@ var IndexHelper = /*#__PURE__*/function () {
     }; // console.log("adding pages to index");
 
     if (documents || exported) {
-      this.indexes.title.add(documents);
-      //this.indexes.content.add(documents);
-      localStorage.setItem("saved_uuid", build_uuid);
-      var temp = this.indexes.content;
-      localforage.getItem("index_helper_content").then(function (saved_content) {
-          exported = {
-            content: saved_content,
-          };
-          temp.import(exported.content);
-      
-      
-      //localforage.setItem("index_helper_title", this.indexes.title.export());
-      
-       });
-      this.indexes.content = temp;
-      localforage.setItem("index_helper_title", this.indexes.title.export());
+      this.indexes.title.import(exported.title);
+      this.indexes.content.import(exported.content);
     } else {
       console.error("invalid argument: constructor must be called with either documents or exported");
     }
@@ -574,15 +560,16 @@ var search = function search(query) {
 
     var saved_uuid = localStorage.getItem("saved_uuid");
       // console.log("getting cached flexsearch objects");
-      $.ajax({
-        //if docs have not yet been loaded
-        url: base_url + "index.json",
-        dataType: "json",
-        success: function success(data) {
-          search_service = new SearchService("search-results", data, null);
+      localforage.getItem("index_helper_title").then(function (saved_title) {
+        localforage.getItem("index_helper_content").then(function (saved_content) {
+          exported = {
+            title: saved_title,
+            content: saved_content
+          };
+          search_service = new SearchService("search-results", null, exported);
           search_service.query(query);
           search_parsing_icon.hide();
-        }
+        });
       });
   } else {
     search_service.query(query);
