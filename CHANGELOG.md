@@ -25,9 +25,13 @@
 <!--    PATCH updates are when a bugfix is made without the             -->
 <!--          addition of notable features. When PATCH is 0 it can      -->
 <!--          be omitted                                                -->
-# Upcoming
+# 7 July 2022
 
-## ATT&CK website version x.y.z
+## ATT&CK website version 3.6.4
+
+## [ATT&CK content version 11.3](https://github.com/mitre/cti/releases/tag/ATT%26CK-v11.3)
+
+This release promotes the Mobile sub-techniques from beta to stable. It also fixes a few minor STIX abnormalities for ICS Techniques.
 
 ### Improvements
 
