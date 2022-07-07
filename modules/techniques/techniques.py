@@ -22,7 +22,9 @@ def generate_techniques():
         os.mkdir(techniques_config.techniques_markdown_path)
 
     # Generate redirections
-    util.buildhelpers.generate_redirections(techniques_config.techniques_redirection_location)
+    util.buildhelpers.generate_redirections(
+        redirections_filename=techniques_config.techniques_redirection_location, redirect_md=site_config.redirect_md
+    )
 
     # Write the technique index.html page
     with open(os.path.join(techniques_config.techniques_markdown_path, "overview.md"), "w", encoding="utf8") as md_file:
@@ -86,8 +88,7 @@ def generate_domain_markdown(domain, techniques_no_sub, tactics, side_nav_data, 
         subs = subs + json.dumps(data)
 
         techniques_markdown = os.path.join(
-            techniques_config.techniques_markdown_path,
-            f"{data['domain']}-techniques.md"
+            techniques_config.techniques_markdown_path, f"{data['domain']}-techniques.md"
         )
         with open(techniques_markdown, "w", encoding="utf8") as md_file:
             md_file.write(subs)
@@ -119,7 +120,7 @@ def generate_technique_md(technique, domain, side_nav_data, tactic_list, notes):
         technique_dict["name"] = technique.get("name")
         technique_dict["notes"] = notes.get(technique["id"])
 
-        # Get subtechniques
+        # Get subtechniques (not deprecated/revoked)
         technique_dict["subtechniques"] = get_subtechniques(technique)
 
         # Generate data for technique
@@ -241,7 +242,7 @@ def generate_data_for_md(technique_dict, technique, tactic_list, is_sub_techniqu
 
                     if not tmp_tactic_list:
                         logger.error(
-                            f"Technique: {technique_dict['name']} is in Tactic: {phase_name}, but that is an unknown Tactic for domain: {technique['domain']}!"
+                            f"Technique: {technique_dict['name']} is in Tactic: {phase_name}, but that is an unknown Tactic for domain: {technique_dict['domain']}!"
                         )
                         continue
                     tactic = tmp_tactic_list[0]
@@ -542,6 +543,11 @@ def get_subtechniques(technique):
     if technique["id"] in subtechniques_of:
         subtechniques = subtechniques_of[technique["id"]]
         for subtechnique in subtechniques:
+            revoked = util.buildhelpers.is_revoked(sdo=subtechnique["object"])
+            deprecated = util.buildhelpers.is_deprecated(sdo=subtechnique["object"])
+            if revoked or deprecated:
+                continue
+
             sub_data = {}
             sub_data["id"] = util.buildhelpers.get_attack_id(subtechnique["object"])
             if sub_data["id"]:

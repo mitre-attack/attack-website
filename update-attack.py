@@ -3,6 +3,7 @@ import time
 
 import colorama
 from dotenv import load_dotenv
+from loguru import logger
 
 import modules
 from modules import site_config, util
@@ -27,14 +28,14 @@ module_choices = [
     "subdirectory",
     "tests",
 ]
-extras = ["resources", "versions", "contribute", "blog"]
-test_choices = ["size", "links", "external_links", "citations", "linkbyid"]
+extras = ["resources", "versions", "contribute", "blog", "stixtests"]
+test_choices = ["size", "links", "external_links", "citations"]
 
 
 def validate_subdirectory_string(subdirectory_str):
-    """Validate subdirectory string"""
+    """Validate subdirectory string."""
     if not subdirectory_str.isascii():
-        raise argparse.ArgumentTypeError("%s contains non ascii characters" % subdirectory_str)
+        raise argparse.ArgumentTypeError(f"{subdirectory_str} contains non ascii characters")
 
     # Remove leading and trailing /
     if subdirectory_str.startswith("/"):
@@ -48,7 +49,7 @@ def validate_subdirectory_string(subdirectory_str):
 
 
 def get_parsed_args():
-    """Create argument parser and parse arguments"""
+    """Create argument parser and parse arguments."""
     parser = argparse.ArgumentParser(
         description=(
             "Build the ATT&CK website.\n"
@@ -105,7 +106,6 @@ def get_parsed_args():
             "links (dead internal hyperlinks and relative hyperlinks); "
             "external_links (dead external hyperlinks); "
             "citations (unparsed citation text)."
-            "linkbyid (detect unparsed LinkByIds)."
         ),
     )
     parser.add_argument(
@@ -146,6 +146,16 @@ def get_parsed_args():
             "Default behavior without this flag is to have a banner generated on the site."
         ),
     )
+    parser.add_argument(
+        "--google-analytics",
+        type=str,
+        help=("If a Google Analytics ID is provided, then the site will include it on all pages."),
+    )
+    parser.add_argument(
+        "--google-site-verification",
+        type=str,
+        help=("If a Google site verification code is provided, then the site will include it on all pages."),
+    )
 
     args = parser.parse_args()
 
@@ -164,9 +174,7 @@ def get_parsed_args():
 
 
 def remove_from_build(arg_modules, arg_extras):
-    """Given a list of modules from command line, remove modules that appear in module
-    directory that are not in list.
-    """
+    """Given a list of modules from command line, remove modules that appear in module directory that are not in list."""
 
     def remove_from_running_pool():
         """Remove modules from running pool if they are not in modules list from argument"""

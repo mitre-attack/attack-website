@@ -131,8 +131,17 @@ redirects_markdown_path = "content/pages/redirects/"
 resources_markdown_path = "content/pages/resources/"
 
 # Redirect md string template
+redirect_md_index = Template(
+    "Title: ${title}\n"
+    "Template: general/redirect-index\n"
+    "RedirectLink: ${to}\n"
+    "save_as: ${from}/index.html"
+)
 redirect_md = Template(
-    "Title: ${title}\n" "Template: general/redirect-index\n" "RedirectLink: ${to}\n" "save_as: ${from}/index.html"
+    "Title: ${title}\n"
+    "Template: general/redirect-index\n"
+    "RedirectLink: ${to}\n"
+    "save_as: ${from}"
 )
 
 # Custom_alphabet used to sort list of dictionaries by domain name
@@ -170,3 +179,10 @@ layer_md = Template(
 
 # Directory for test reports
 test_report_directory = "reports"
+
+# Workbench credentials to use if pulling STIX from ATT&CK Workbench version 1.2.0 or later
+WORKBENCH_USER = os.getenv("WORKBENCH_USER")
+WORKBENCH_API_KEY = os.getenv("WORKBENCH_API_KEY")
+
+GOOGLE_ANALYTICS = os.getenv("GOOGLE_ANALYTICS")
+GOOGLE_SITE_VERIFICATION = os.getenv("GOOGLE_SITE_VERIFICATION")

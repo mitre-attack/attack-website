@@ -5,6 +5,7 @@ import os
 from modules import util
 
 from . import contribute_config
+from .. import site_config
 
 
 def generate_contribute():
@@ -17,7 +18,10 @@ def generate_contribute():
     util.buildhelpers.move_templates(contribute_config.module_name, contribute_config.contribute_templates_path)
 
     # Generate redirections
-    util.buildhelpers.generate_redirections(contribute_config.contribute_redirection_location)
+    util.buildhelpers.generate_redirections(
+        redirections_filename=contribute_config.contribute_redirection_location,
+        redirect_md=site_config.redirect_md
+    )
 
     ms = util.relationshipgetters.get_ms()
     contributors = util.stixhelpers.get_contributors(ms)

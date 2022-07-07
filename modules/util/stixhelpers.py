@@ -396,9 +396,8 @@ def get_stix_memory_stores():
         # Download json from http or https
         if domain["location"].startswith("http"):
             download_dir = Path(f"{site_config.web_directory}/stix")
-            download_filename = f"{download_dir}/{domain['name']}.json"
-            download_stix_file(url=domain["location"], download_dir=download_dir, filepath=download_filename)
-            stix_filename = download_filename
+            stix_filename = f"{download_dir}/{domain['name']}.json"
+            download_stix_file(url=domain["location"], download_dir=download_dir, filepath=stix_filename)
         else:
             stix_filename = domain["location"]
 
@@ -448,7 +447,17 @@ def download_stix_file(url, download_dir, filepath):
         proxy = site_config.args.proxy
     proxyDict = {"http": proxy, "https": proxy}
 
-    response = requests.get(url, verify=False, proxies=proxyDict)
+    download_from_workbench_instance = False
+    if site_config.WORKBENCH_USER and site_config.WORKBENCH_API_KEY:
+        download_from_workbench_instance = True
+
+    auth = None
+    if download_from_workbench_instance:
+        user = site_config.WORKBENCH_USER
+        password = site_config.WORKBENCH_API_KEY
+        auth = (user, password)
+
+    response = requests.get(url, verify=False, proxies=proxyDict, auth=auth)
     if response.status_code == 200:
         stix_json = response.json()
         with open(filepath, "w") as json_file:

@@ -7,7 +7,7 @@ from tabulate import tabulate
 
 from modules import site_config, util
 
-from . import tests_config
+from . import stixtests_config
 
 
 def linkbyid_check():
@@ -143,7 +143,7 @@ def linkbyid_check():
                     link_by_id_warnings.append(warning)
 
     exit_code = write_report(
-        report_file=os.path.join(site_config.test_report_directory, tests_config.linkbyids_report_filename),
+        report_file=os.path.join(site_config.test_report_directory, stixtests_config.linkbyids_report_filename),
         report_title="Broken LinkByIds Report",
         broken_items=link_by_id_warnings,
     )
@@ -160,9 +160,9 @@ def write_report(report_file, report_title, broken_items):
         if broken_items:
             f.write(f"{len(broken_items)} LinkByIDs could not be parsed:\n\n")
             f.write(tabulate(broken_items, headers="keys", tablefmt="github"))
-            exit_code = tests_config.BROKEN_LINKBYID
+            exit_code = stixtests_config.BROKEN_LINKBYID
         else:
             f.write("No broken citations found\n")
-            exit_code = tests_config.SUCCESS
+            exit_code = stixtests_config.SUCCESS
 
     return exit_code

@@ -1,5 +1,4 @@
 import html
-import importlib
 import json
 import os
 import re
@@ -7,11 +6,7 @@ import re
 import bleach
 
 import modules
-from modules import site_config
-
-# Check if resources module exist
-if importlib.util.find_spec("modules.versions"):
-    from modules import versions
+from modules import site_config, versions
 
 
 def generate_index():
@@ -88,9 +83,8 @@ def clean_line(line):
 
 def clean(filepath):
     """clean the file of all HTML tags and unnecessary data"""
-    f = open(filepath, mode="r", encoding="utf8")
-    lines = f.readlines()
-    f.close()
+    with open(filepath, mode="r", encoding="utf8") as f:
+        lines = f.readlines()
 
     content = ""
     title = ""
@@ -110,6 +104,10 @@ def clean(filepath):
                 title = match.group(1).strip()
         if 'http-equiv="refresh"' in line:
             skipindex = True
+        # TODO: determine if this is good enough to address the following GitHub issue
+        # https://github.com/mitre-attack/attack-website/issues/352
+        # if '<h5 class="mb-0">Deprecation Warning</h5>' in line:
+        #     skipindex = True
 
     out = bleach.clean(content, tags=[], strip=True)  # remove tags
     out = re.sub(r"[\n ]+", " ", out)  # remove extra newlines, smush to 1 line

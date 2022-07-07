@@ -123,17 +123,33 @@ def get_alias_data(alias_list, ext_refs):
     return alias_data
 
 
+def is_deprecated(sdo):
+    """Given a STIX Domain Object, return if it is deprecated."""
+    deprecated = sdo.get("x_mitre_deprecated")
+    return deprecated
+
+
+def is_revoked(sdo):
+    """Given a STIX Domain Object, return if it is revoked."""
+    revoked = sdo.get("revoked")
+    return revoked
+
+
 def get_subtechnique_count(technique_list_no_sub):
     """Given a technique list, return the number of subtechniques."""
     subtech_count = 0
-
     subtechniques_of = relationshipgetters.get_subtechniques_of()
 
     for technique in technique_list_no_sub:
-
         if technique["id"] in subtechniques_of:
             subtechniques = subtechniques_of[technique["id"]]
-            subtech_count += len(subtechniques)
+
+            for sub in subtechniques:
+                revoked = is_revoked(sdo=sub["object"])
+                deprecated = is_deprecated(sdo=sub["object"])
+                if revoked or deprecated:
+                    continue
+                subtech_count += 1
 
     return subtech_count
 
@@ -144,14 +160,11 @@ def get_technique_table_data(tactic, techniques_list):
     subtechniques_of = relationshipgetters.get_subtechniques_of()
 
     for tech in techniques_list:
-
         attack_id = get_attack_id(tech)
 
         if attack_id:
-
             row = {}
             row["tid"] = attack_id
-
             row["descr"] = tech["description"]
 
             if tactic is None and tech.get("x_mitre_deprecated"):
@@ -172,6 +185,12 @@ def get_technique_table_data(tactic, techniques_list):
                             raise Exception(f"{attack_id} subtechnique's attackID '{sub_attack_id}' is malformed")
                         sub_data["id"] = sub_attack_id.split(".")[1]
                         sub_data["descr"] = subtechnique["object"]["description"]
+
+                        revoked = is_revoked(sdo=subtechnique["object"])
+                        deprecated = is_deprecated(sdo=subtechnique["object"])
+                        if revoked or deprecated:
+                            continue
+
                         row["subtechniques"].append(sub_data)
 
             technique_table.append(row)
@@ -759,14 +778,14 @@ def filter_techniques_by_platform(tech_list, platforms):
 
 
 def filter_deprecated_revoked(sdos):
-    return list(
-        filter(
-            lambda t: not (
-                ("x_mitre_deprecated" in t and t["x_mitre_deprecated"]) or ("revoked" in t and t["revoked"])
-            ),
-            sdos,
-        )
-    )
+    filtered_sdos = []
+    for sdo in sdos:
+        deprecated = is_deprecated(sdo=sdo)
+        revoked = is_revoked(sdo=sdo)
+        if not deprecated or revoked:
+            filtered_sdos.append(sdo)
+
+    return filtered_sdos
 
 
 def filter_out_subtechniques(techniques):
@@ -891,7 +910,7 @@ def get_tactics_data(tactics):
     return tactics_data
 
 
-def generate_redirections(redirections_filename):
+def generate_redirections(redirections_filename, redirect_md=None):
     """Given redirections filename, open and create markdown file for redirections."""
     with open(redirections_filename, "r", encoding="utf8") as json_redirections:
         redirects = json.load(json_redirections)
@@ -903,7 +922,7 @@ def generate_redirections(redirections_filename):
             os.mkdir(site_config.redirects_markdown_path)
 
         for obj in redirects:
-            subs = site_config.redirect_md.substitute(obj)
+            subs = redirect_md.substitute(obj)
 
             redirect_md_file = os.path.join(site_config.redirects_markdown_path, f"{obj['title']}.md")
             with open(redirect_md_file, "w", encoding="utf8") as md_file:
@@ -933,20 +952,3 @@ def move_templates(module_name, module_template_path):
         for template in os.listdir(module_template_path):
             # Copy template to new directory
             shutil.copyfile(os.path.join(module_template_path, template), os.path.join(new_template_dir, template))
-
-
-def move_docs(module_docs_path):
-    """Move module specific docs into the website's content directory for pelican."""
-    if os.path.isdir(module_docs_path):
-        # Check that content directory exist
-        if not os.path.exists(site_config.content_dir):
-            os.mkdir(site_config.content_dir)
-        # Check that docs directory exist
-        if not os.path.exists(site_config.docs_dir):
-            os.mkdir(site_config.docs_dir)
-
-        for doc in os.listdir(module_docs_path):
-            if os.path.isdir(os.path.join(module_docs_path, doc)):
-                shutil.copytree(os.path.join(module_docs_path, doc), os.path.join(site_config.docs_dir, doc))
-            else:
-                shutil.copyfile(os.path.join(module_docs_path, doc), os.path.join(site_config.docs_dir, doc))

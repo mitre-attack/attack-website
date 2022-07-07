@@ -1,6 +1,6 @@
 import os
-import shutil
 from datetime import datetime
+from pathlib import Path
 
 import bleach
 import markdown
@@ -8,8 +8,7 @@ from loguru import logger
 
 from modules import site_config, util
 
-from . import (citationchecker, linkbyidchecker, linkchecker, sizechecker,
-               tests_config)
+from . import citationchecker, linkchecker, sizechecker, tests_config
 
 
 def run_tests():
@@ -18,9 +17,18 @@ def run_tests():
     tests = 0
 
     logger.info("Removing old reports")
-    if os.path.isdir(site_config.test_report_directory):
-        shutil.rmtree(site_config.test_report_directory)
-        os.mkdir(site_config.test_report_directory)
+    reports = [
+        tests_config.citations_report_filename,
+        tests_config.links_report_filename,
+        tests_config.unlinked_report_filename,
+        tests_config.relative_links_report_filename
+    ]
+    for report in reports:
+        Path(f"{site_config.test_report_directory}/{report}").unlink(missing_ok=True)
+
+
+    logger.info("Creating reports directory")
+    Path(site_config.test_report_directory).mkdir(parents=True, exist_ok=True)
 
     logger.info("Running tests:")
     util.buildhelpers.print_test_output("-", "-", "-")
@@ -63,15 +71,6 @@ def run_tests():
         if exit_code == tests_config.BROKEN_CITATION:
             error_list.append(tests_config.BROKEN_CITATION)
 
-    #################
-    # Check LinkByIds
-    #################
-    if (site_config.args.tests and "linkbyid" in site_config.args.tests) or not site_config.args.tests:
-        tests += 1
-        exit_code, broken_linkbyids_count = check_linkbyids()
-        if exit_code == tests_config.BROKEN_LINKBYID:
-            error_list.append(tests_config.BROKEN_LINKBYID)
-
     create_combined_reports_html()
 
     util.buildhelpers.print_test_output("-", "-", "-")
@@ -110,13 +109,6 @@ def run_tests():
                 ),
                 error_count=relative_links,
                 error_type="Relative links",
-            )
-
-        if tests_config.BROKEN_LINKBYID in error_list:
-            display_error_report(
-                report_file=os.path.join(site_config.test_report_directory, tests_config.linkbyids_report_filename),
-                error_count=broken_linkbyids_count,
-                error_type="Broken LinkByIds",
             )
 
     if not site_config.args.override_exit_status:
@@ -208,7 +200,7 @@ def check_size():
     TEST = "Output Folder Size"
     util.buildhelpers.print_test_output("RUNNING", TEST, "-")
 
-    MB_TO_GB_CONVERSION = 1000
+    MB_TO_GB_CONVERSION = 1024
 
     exit_code, size_MB = sizechecker.check_output_size()
 
@@ -226,24 +218,6 @@ def check_size():
     util.buildhelpers.print_test_output(STATUS, TEST, MSG)
 
     return exit_code
-
-
-def check_linkbyids():
-    """Wrapper to check for broken LinkById's"""
-    TEST = "Broken LinkByIds"
-    util.buildhelpers.print_test_output("RUNNING", TEST, "-")
-
-    exit_code, broken_linkbyids_count = linkbyidchecker.linkbyid_check()
-
-    if exit_code == tests_config.SUCCESS:
-        STATUS = tests_config.PASSED_STATUS
-    else:
-        STATUS = tests_config.FAILED_STATUS
-
-    MSG = f"{broken_linkbyids_count} broken LinkByIds"
-
-    util.buildhelpers.print_test_output(STATUS, TEST, MSG)
-    return exit_code, broken_linkbyids_count
 
 
 def create_combined_reports_html():
