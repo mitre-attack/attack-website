@@ -66,10 +66,12 @@ async function Indexer(documents, exported) {
   localforage.setItem("index_helper_content", int.export());
   localforage.setItem("index_helper_title", til.export());
   localStorage.setItem("forage_used", "true");
+  localStorage.setItem("saved_uuid", build_uuid);
 }
 // when the document loads, position the body
 $(document).ready(function() {
-if(localStorage.getItem("forage_used") != "true"){
+var saved_uuid = localStorage.getItem("saved_uuid");
+if(localStorage.getItem("forage_used") != "true" || !saved_uuid || saved_uuid != build_uuid){
 $.ajax({
         //if docs have not yet been loaded
         url: base_url + "index.json",

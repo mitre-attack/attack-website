@@ -1,6 +1,7 @@
 import html
 import json
 import os
+import pdb
 import re
 
 import bleach
@@ -8,6 +9,10 @@ from loguru import logger
 
 import modules
 from modules import site_config, versions
+
+types = ["software", "datasources", "groups", "tactics", "techniques"]
+sub_types = ["mobile", "enterprise", "ics"]
+dist_words = 0
 
 
 def generate_index():
@@ -24,7 +29,26 @@ def generate_index():
 
         for thefile in filter(lambda fname: fname.endswith(".html"), files):
             thepath = os.path.join(root, thefile)
+            global dist_words
+            if any(file_name in thepath for file_name in types):
+                file_name_split = thepath.split("/")
+                if any(file_name in file_name_split for file_name in sub_types):
+                    file_name_split = thepath.split("/")
+                    type_temp = [file_name_split.index(val) for val in file_name_split if val in sub_types]
+                    if "index.html" in file_name_split:
+                        dist_words = file_name_split.index("index.html") - type_temp[0]
+                else:
+                    file_name_split = thepath.split("/")
+                    type_temp = [file_name_split.index(val) for val in file_name_split if val in types]
+                    if "index.html" in file_name_split:
+                        dist_words = file_name_split.index("index.html") - type_temp[0]
             cleancontent, skipindex, title = clean(thepath)
+            if dist_words == 1:
+                skipindex = True
+                dist_words = 0
+            if thepath[6:] == "/index.html":
+            	skipindex = True
+            	dist_words = 0
             if not skipindex:
                 # if title == "":
                 #     print(thepath, "has generic title")
@@ -34,14 +58,14 @@ def generate_index():
                     {
                         "id": len(index),
                         "title": title,
-                        "path": thepath[6:],  # strip output prefix
+                        "path": thepath[6:],
                         "content": cleancontent,
                     }
                 )
     if not os.path.isdir(site_config.web_directory):
         os.makedirs(site_config.web_directory)
 
-    json.dump(index, open(os.path.join(site_config.web_directory, "index.json"), mode="w", encoding="utf8"), indent=2)
+    json.dump(index, open(os.path.join(site_config.web_directory, "index.json"), mode="w", encoding="utf8"), indent=0)
 
     if site_config.subdirectory:
         # update search base url to subdirectory
@@ -89,9 +113,11 @@ def clean(filepath):
         lines = f.readlines()
 
     content = ""
+    count = 0
     title = ""
     skipindex = False
     indexing = False
+
     for line in lines:
         if (not skipline(line)) and indexing:
             content += clean_line(line) + "\n"
@@ -111,11 +137,12 @@ def clean(filepath):
             skipindex = True
             break
 
+    # content = ps.stem(content)
     out = bleach.clean(content, tags=[], strip=True)  # remove tags
     out = re.sub(r"[\n ]+", " ", out)  # remove extra newlines, smush to 1 line
     out = html.unescape(out)  # fix &amp and &#nnn unicode escaping
-
     skipindex = skipindex or out == "" or out == " "
+    count = count + 1
     return out, skipindex, title
 
 
