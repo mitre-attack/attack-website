@@ -50,6 +50,10 @@ def generate_index():
                 print(thepath)
                 skipindex = True
                 dist_words = 0
+            if thepath[6:] == "/index.html":
+            	print(thepath)
+            	skipindex = True
+            	dist_words = 0
             if not skipindex:
                 # if title == "":
                 #     print(thepath, "has generic title")
