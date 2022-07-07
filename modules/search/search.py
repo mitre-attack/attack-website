@@ -2,21 +2,23 @@ import html
 import importlib
 import json
 import os
+import pdb
 import re
 
 import bleach
 
 import modules
-import pdb
-
 from modules import site_config
 
 # Check if resources module exist
 if importlib.util.find_spec("modules.versions"):
     from modules import versions
 
-checker = ['software','datasources','groups']
+types = ["software", "datasources", "groups", "tactics", "techniques"]
+sub_types = ["mobile", "enterprise", "ics"]
 dist_words = 0
+
+
 def generate_index():
     index = []
     for root, __, files in os.walk(site_config.web_directory):
@@ -31,22 +33,35 @@ def generate_index():
         for thefile in filter(lambda fname: fname.endswith(".html"), files):
             thepath = os.path.join(root, thefile)
             global dist_words
-            if any(file_name in thepath for file_name in checker):
-            	file_name_split = thepath.split("/")
-            	checker_temp = [file_name_split.index(val) for val in file_name_split if val in checker]
-            	if "index.html" in file_name_split:
-            		dist_words = file_name_split.index('index.html') - checker_temp[0]
+            if any(file_name in thepath for file_name in types):
+                file_name_split = thepath.split("/")
+                if any(file_name in file_name_split for file_name in sub_types):
+                    file_name_split = thepath.split("/")
+                    type_temp = [file_name_split.index(val) for val in file_name_split if val in sub_types]
+                    if "index.html" in file_name_split:
+                        dist_words = file_name_split.index("index.html") - type_temp[0]
+                else:
+                    file_name_split = thepath.split("/")
+                    type_temp = [file_name_split.index(val) for val in file_name_split if val in types]
+                    if "index.html" in file_name_split:
+                        dist_words = file_name_split.index("index.html") - type_temp[0]
             cleancontent, skipindex, title = clean(thepath)
             if dist_words == 1:
-            	skipindex = True
-            	dist_words = 0
+                print(thepath)
+                skipindex = True
+                dist_words = 0
             if not skipindex:
                 # if title == "":
                 #     print(thepath, "has generic title")
                 #     title = "MITRE ATT&CK&trade;"
 
                 index.append(
-                    {"id": len(index),"title": title,"path": thepath[6:], "content": cleancontent,}
+                    {
+                        "id": len(index),
+                        "title": title,
+                        "path": thepath[6:],
+                        "content": cleancontent,
+                    }
                 )
     if not os.path.isdir(site_config.web_directory):
         os.makedirs(site_config.web_directory)
@@ -120,7 +135,7 @@ def clean(filepath):
         if 'http-equiv="refresh"' in line:
             skipindex = True
 
-    #content = ps.stem(content)
+    # content = ps.stem(content)
     out = bleach.clean(content, tags=[], strip=True)  # remove tags
     out = re.sub(r"[\n ]+", " ", out)  # remove extra newlines, smush to 1 line
     out = html.unescape(out)  # fix &amp and &#nnn unicode escaping
