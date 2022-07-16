@@ -1,0 +1,56 @@
+name: GitHub Pages
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+          cache: 'pip'
+
+      - name: Upgrade pip
+        run: python3 -m pip install --upgrade pip
+
+      - name: Install python requirements
+        run: python3 -m pip install -r requirements.txt
+
+      - name: Get banner message
+        run: echo "BANNER_MESSAGE=$(<website-banner.production)" >> $GITHUB_ENV
+
+      - name: Toggle banner if there is a message
+        run: |
+          if [[ -z "${BANNER_MESSAGE}" ]]; then
+            echo "BANNER_ENABLED=False" >> $GITHUB_ENV
+          else
+            echo "BANNER_ENABLED=True" >> $GITHUB_ENV
+          fi
+
+      - name: Build website
+        run: python3 update-attack.py --attack-brand --extras --no-test-exitstatus
+        env:
+          GOOGLE_ANALYTICS: ${{ secrets.GOOGLE_ANALYTICS }}
+          GOOGLE_SITE_VERIFICATION: ${{ secrets.GOOGLE_SITE_VERIFICATION }}
+
+      - name: Remove STIX directory
+        run: rm -rf output/stix/
+
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        if: ${{ github.ref == 'refs/heads/master' }}
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./output
+          cname: attack.mitre.com
