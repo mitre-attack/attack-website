@@ -1,6 +1,8 @@
 import os
 from string import Template
 
+import toml
+
 import modules
 from modules import site_config
 
@@ -10,6 +12,9 @@ priority = 16
 # Template directory
 template_dir = os.path.join("attack-theme", "templates", "general/")
 
+pyproject_toml = toml.load("pyproject.toml")
+website_version = pyproject_toml["tool"]["towncrier"]["version"]
+
 # Base page data for website header and footer
 # additional keys that are used/set in website_build.py:
 #    BANNER_ENABLED
@@ -18,7 +23,7 @@ template_dir = os.path.join("attack-theme", "templates", "general/")
 #    RESOURCES
 base_page_data = {
     "CONTENT_VERSION": site_config.attack_version,
-    "WEBSITE_VERSION": "3.6.4",
+    "WEBSITE_VERSION": website_version,
     "CHANGELOG_LOCATION": "/resources/changelog.html",
     "LOGO_HEADER": "/theme/images/mitre_attack_logo.png",
     "LOGO_FOOTER": "/theme/images/mitrelogowhiteontrans.gif",

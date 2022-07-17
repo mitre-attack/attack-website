@@ -25,6 +25,9 @@
 <!--    PATCH updates are when a bugfix is made without the             -->
 <!--          addition of notable features. When PATCH is 0 it can      -->
 <!--          be omitted                                                -->
+
+<!-- TOWNCRIER -->
+
 # 7 July 2022
 
 ## ATT&CK website version 3.6.4
