@@ -28,6 +28,12 @@
 
 <!-- TOWNCRIER -->
 
+# ATT&CK website 3.6.5 (2022-07-17)
+
+## Bugfixes
+
+* Resource pages now display properly when displayed on large monitors. [#378](https://github.com/mitre-attack/attack-website/issues/378)
+
 # 7 July 2022
 
 ## ATT&CK website version 3.6.4
