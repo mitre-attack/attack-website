@@ -1,0 +1,233 @@
+{% extends "general/two-column.html" %}
+{% set parsed = page.data | from_json %}
+{% if parsed.aliases_list %}
+    {% set alias_string = parsed.aliases_list|join(", ") %} 
+    {% set title = parsed.name + ", " + alias_string + ", Campaign " + parsed.attack_id + " | MITRE ATT&CK&reg;" -%} 
+{% else %}
+    {% set title = parsed.name + ", Campaign " + parsed.attack_id + " | MITRE ATT&CK&reg;" -%} 
+{% endif %}
+{% set active_page = "campaigns" -%}
+
+{% import 'macros/deprecated.html' as deprecated %}
+{% import 'macros/navigator.html' as navigator %}
+{% import 'macros/references.html' as references %}
+{% import 'macros/navigation.html' as navigation %}
+{% import 'macros/techniques_used.html' as techniques_used %}
+{% import 'macros/versioning.html' as versioning %}
+{% import 'macros/clean_output.html' as clean_output %}
+{% import 'macros/citations.html' as citations %}
+{% import 'macros/notes.html' as notes %}
+
+{% block head %}
+    {{ super () }}
+    {% if parsed.deprecated %}
+    <meta name="robots" content="noindex, nofollow">
+    {% endif %}
+{%  endblock %}
+
+{% block innerleft %}
+<!--stop-indexing-for-search-->
+    <div class="side-nav-desktop-view h-100">
+        {{ navigation.sidenav(parsed.side_menu_data, output_file) }} 
+    </div>
+    <div class="side-nav-mobile-view">
+        {{ navigation.sidenav(parsed.side_menu_mobile_view_data, output_file) }} 
+    </div>
+<!--start-indexing-for-search-->
+{% endblock %}
+
+{% block innerright %}
+{{ super () }}
+
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/">Home</a></li>
+        <li class="breadcrumb-item"><a href="/groups/">Campaigns</a></li>
+        <li class="breadcrumb-item">{{ parsed.name }}</li>
+    </ol>
+    <div class="tab-pane fade show active" id="v-{{pages.title}}" role="tabpanel" aria-labelledby="v-{{pages.title}}-tab"></div>
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="jumbotron jumbotron-fluid">
+                <div class="container-fluid">
+                    <h1>{{ parsed.name }}</h1>
+
+                    {% if parsed.deprecated %}
+                        {% if parsed.descr %}
+                            {{ deprecated.deprecated(clean_output.stixToHTML(parsed.descr, firstParagraphOnly=True)) }}
+                        {% else %}
+                            {{ deprecated.deprecated("This campaign has been deprecated.") }}
+                        {% endif %}
+                    {% else %}
+                        <div class="row">
+                            <div class="col-md-8">
+                                {% if parsed.descr %}
+                                    <div class="description-body">
+                                        {% if parsed.deprecated %}
+                                            <font color="red">****Deprecation Warning****</font>
+                                        {% endif %}
+                                        {{ clean_output.stixToHTML(parsed.descr, parsed.citations) }}
+                                    </div>
+                                {% endif %}
+                                {% if parsed.notes %}
+                                    {{ notes.notes_section(parsed.notes) }}
+                                {% endif %}
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card">
+                                    <div class="card-body">
+                                        {% set has_alias_list = parsed.aliases_list %}
+                                        {% if parsed.attack_id %}
+                                            <div id="card-id" class="row card-data">
+                                                {% if has_alias_list %}
+                                                    <div class="col-md-1 px-0 text-center"></div>
+                                                {% endif %}
+                                                <div class="{% if has_alias_list %}col-md-11 pl-0{% else %}col-md-12{% endif %}">
+                                                    <span class="h5 card-title">ID:&nbsp;</span>{{ parsed.attack_id }}
+                                                </div>
+                                            </div>
+                                        {% endif %}
+                                        {% if parsed.aliases_list %}
+                                            <div class="row card-data">
+                                                <div class="col-md-1 px-0 text-center">
+                                                    <span data-toggle="tooltip" data-placement="left" title="" data-test-ignore="true" data-original-title="Names that have overlapping reference to a group entry and may refer to the same or similar group in threat intelligence reporting">&#9432;</span>
+                                                </div>
+                                                <div class="col-md-11 pl-0">
+                                                    <span class="h5 card-title">Associated Campaigns</span>: {{ parsed.aliases_list|join(", ") }}
+                                                </div>
+                                            </div>
+                                        {% endif %}
+                                        {% if parsed.contributors_list %}
+                                            <div class="row card-data">
+                                                {% if has_alias_list %}
+                                                    <div class="col-md-1 px-0 text-center"></div>
+                                                {% endif %}                                            
+                                                <div class="{% if has_alias_list %}col-md-11 pl-0{% else %}col-md-12{% endif %}">
+                                                    <span class="h5 card-title">Contributors</span>: {{ parsed.contributors_list|join("; ") }}
+                                                </div>
+                                            </div>
+                                        {% endif %}
+                                        {% if parsed.version %}
+                                            <div class="row card-data">
+                                                {% if has_alias_list %}
+                                                    <div class="col-md-1 px-0 text-center"></div>
+                                                {% endif %} 
+                                                <div class="{% if has_alias_list %}col-md-11 pl-0{% else %}col-md-12{% endif %}">
+                                                    <span class="h5 card-title">Version</span>: {{ parsed.version }}
+                                                </div>
+                                            </div>
+                                        {% endif %}
+                                        {% if parsed.created %}
+                                            <div class="row card-data">
+                                                {% if has_alias_list %}
+                                                    <div class="col-md-1 px-0 text-center"></div>
+                                                {% endif %} 
+                                                <div class="{% if has_alias_list %}col-md-11 pl-0{% else %}col-md-12{% endif %}">
+                                                    <span class="h5 card-title">Created:&nbsp;</span>{{ parsed.created }}
+                                                </div>
+                                            </div>
+                                        {% endif %}
+                                        {% if parsed.modified %}
+                                            <div class="row card-data">
+                                                {% if has_alias_list %}
+                                                    <div class="col-md-1 px-0 text-center"></div>
+                                                {% endif %} 
+                                                <div class="{% if has_alias_list %}col-md-11 pl-0{% else %}col-md-12{% endif %}">
+                                                    <span class="h5 card-title">Last Modified:&nbsp;</span>{{ parsed.modified }}
+                                                </div>
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                {% if parsed.versioning_feature %}
+                                    {{ versioning.permalink_button(output_file, parsed.attack_id)}}
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% if parsed.alias_descriptions %}
+                            <h2 class="pt-3" id ="aliasDescription">Associated Group Descriptions</h2>
+                            <table class="table table-bordered table-alternate mt-2">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Name</th>
+                                        <th scope="col">Description</th>
+                                    </tr>
+                                </thead>
+                                <tbody> 
+                                    {% for alias in parsed.alias_descriptions %}
+                                    <tr>
+                                        <td>
+                                            {{ alias.name }}
+                                        </td>
+                                        <td>
+                                            {{ clean_output.stixToHTML(alias.descr, parsed.citations) }}
+                                        </td>
+                                    </tr>
+                                    {% endfor %} 
+                                </tbody>
+                            </table>
+                        {% endif %}
+
+                        {% if parsed.technique_table_data %}
+                            {{ navigator.layer_links(parsed.attack_id, "groups", parsed.layers) }}
+                            {{ techniques_used.techniques_used(parsed.technique_table_data, "Techniques Used", true, "Use", parsed.citations) }}
+                        {% endif %}
+
+                        {% if parsed.software_data %}
+                            <h2 class="pt-3" id="software">Software</h2>
+                            <table class="table table-bordered table-alternate mt-2">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">ID</th>
+                                        <th scope="col">Name</th>
+                                        {% if parsed.add_software_ref == True %}
+                                            <th scope="col">References</th>
+                                        {% endif %}
+                                        <th scope="col">Techniques</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for software in parsed.software_data %}
+                                        <tr>
+                                            <td>
+                                                <a href="/software/{{software.id}}">{{ software.id }}</a>
+                                            </td>
+                                            <td>
+                                                <a href="/software/{{software.id}}">{{ software.name }}</a>
+                                            </td>
+                                            {% if parsed.add_software_ref == True %}
+                                                <td>
+                                                    {{ clean_output.stixToHTML(software.descr, parsed.citations, firstParagraphOnly=True) }}
+                                                </td>
+                                            {% endif %}
+                                            <td>
+                                                {% for technique in software.techniques %}
+                                                    {% if technique.parent_id %}
+                                                        <a href="/techniques/{{ technique.parent_id }}">{{ technique.name }}</a>: <a href="/techniques/{{technique.parent_id}}/{{technique.id}}">{{technique.sub_name}}</a>{% if not loop.last %}, {% endif %}
+                                                    {% else %}
+                                                        <a href="/techniques/{{ technique.id }}">{{ technique.name }}</a>{% if not loop.last %}, {% endif %}
+                                                    {% endif %}    
+                                                {% endfor %}
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        {% endif %}
+
+                        {{ citations.reference_section(parsed.citations) }}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    <!--SCRIPTS-->
+    <script src="/theme/scripts/navigation.js"></script>
+    <script src="/theme/scripts/bootstrap-tourist.js"></script>
+    <script src="/theme/scripts/settings.js"></script>
+    <script src="/theme/scripts/tour/tour-relationships.js"></script>
+{% endblock %}

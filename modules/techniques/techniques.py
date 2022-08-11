@@ -393,6 +393,7 @@ def get_examples_table_data(technique, reference_list):
         {"example_type": util.relationshipgetters.get_tools_using_technique()},
         {"example_type": util.relationshipgetters.get_malware_using_technique()},
         {"example_type": util.relationshipgetters.get_groups_using_technique()},
+        {"example_type": util.relationshipgetters.get_campaigns_using_technique()},
     ]
 
     example_data = []

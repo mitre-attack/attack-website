@@ -120,6 +120,23 @@ def groups_using_tool(srcs):
     return get_related(srcs, "intrusion-set", "uses", "tool", reverse=True)
 
 
+# tool:campaign
+def tools_used_by_campaigns(srcs):
+    """Return campaign_id => {tool, relationship} for each tool used by the campaign.
+
+    srcs should be an array of memorystores for enterprise, mobile, and pre
+    """
+    return get_related(srcs, "campaign", "uses", "tool")
+
+
+def campaigns_using_tool(srcs):
+    """Return tool_id => {campaign, relationship} for each campaign using the tool.
+
+    srcs should be an array of memorystores for enterprise, mobile and pre
+    """
+    return get_related(srcs, "campaign", "uses", "tool", reverse=True)
+
+
 # malware:group
 def malware_used_by_groups(srcs):
     """Return group_id => {malware, relationship} for each malware used by group.
@@ -135,6 +152,23 @@ def groups_using_malware(srcs):
     srcs should be an array of memorystores for enterprise, mobile, and pre
     """
     return get_related(srcs, "intrusion-set", "uses", "malware", reverse=True)
+
+
+# malware:campaign
+def malware_used_by_campaigns(srcs):
+    """Return campaign_id => {malware, relationship} for each malware used by campaign.
+
+    srcs should be an array of memorystores for enterprise, mobile, and pre
+    """
+    return get_related(srcs, "campaign", "uses", "malware")
+
+
+def campaigns_using_malware(srcs):
+    """Return malware_id => {campaign, relationship} for each campaign using the malware.
+
+    srcs should be an array of memorystores for enterprise, mobile, and pre
+    """
+    return get_related(srcs, "campaign", "uses", "malware", reverse=True)
 
 
 # technique:data component
@@ -171,6 +205,23 @@ def groups_using_technique(srcs):
     srcs should be an array of memorystores for enterprise, mobile and pre
     """
     return get_related(srcs, "intrusion-set", "uses", "attack-pattern", reverse=True)
+
+
+# technique:campaign
+def techniques_used_by_campaigns(srcs):
+    """Return campaign_id => {technique, relationship} for each technique used by the campaign.
+
+    srcs should be an array of memorystores for enterprise, mobile, and pre
+    """
+    return get_related(srcs, "campaign", "uses", "attack-pattern")
+
+
+def campaigns_using_technique(srcs):
+    """Return technique_id => {campaign, relationship} for each campaign using the technique.
+
+    srcs should be an array of memorystores for enterprise, mobile and pre
+    """
+    return get_related(srcs, "campaign", "uses", "attack-pattern", reverse=True)
 
 
 # technique:malware

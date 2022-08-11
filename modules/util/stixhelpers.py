@@ -361,6 +361,9 @@ def grab_resources(ms):
     # Generates a list of CoA
     coa_list = get_domain_resources(["course-of-action"])
 
+    # Generates list of campaigns
+    campaign_list = get_domain_resources(["campaign"])
+
     # Generates list of relationships
     rel_list = []
     for domain in site_config.domains:
@@ -378,6 +381,7 @@ def grab_resources(ms):
         "software": software_list,
         "techniques": tech_list,
         "mitigations": coa_list,
+        "campaigns": campaign_list,
     }
     return resources
 

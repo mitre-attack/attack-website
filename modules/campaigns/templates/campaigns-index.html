@@ -1,0 +1,77 @@
+{% extends "general/two-column.html" %} 
+{% set title = "Campaigns | MITRE ATT&CK&reg;" %}
+{% set parsed = page.data | from_json %}
+{% set active_page = "campaigns" -%}
+{% import 'macros/navigation.html' as navigation %}
+{% import 'macros/clean_output.html' as clean_output %}
+
+{% block innerleft %}
+<!--stop-indexing-for-search-->
+<div class="side-nav-desktop-view h-100">
+        {{ navigation.sidenav(parsed.side_menu_data, output_file) }} 
+    </div>
+    <div class="side-nav-mobile-view">
+        {{ navigation.sidenav(parsed.side_menu_mobile_view_data, output_file) }} 
+    </div>
+<!--start-indexing-for-search-->
+{% endblock %}
+
+{% block innerright %}
+    {{ super () }}
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/">Home</a></li>
+        <li class="breadcrumb-item">Campaigns</li>
+    </ol>
+    <div class="tab-pane fade show active" id="v-{{ pages.title }}" role="tabpanel" aria-labelledby="v-{{ pages.title }}-tab"></div>
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="jumbotron jumbotron-fluid">
+                <div class="container-fluid">
+                    <div class="overflow-x-auto">
+                        <h1>Campaigns</h1>
+                        <p>Campaigns are (full description still needed).</p>
+                        <h6 class="table-object-count">Campaigns: {{ parsed.campaigns_list_len }}</h6>
+                        <table class="table table-bordered table-alternate mt-2">
+                            <thead>
+                                <tr>
+                                    <th scope="col">ID</th>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Associated Groups</th>
+                                    <th scope="col">Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for row in parsed.campaigns_table %}
+                                    <tr>
+                                        <td>
+                                            <a href="/campaigns/{{ row.id | upper }}"> {{ row.id | upper }} </a>
+                                        </td>
+                                        <td>
+                                            <a href="/campaigns/{{ row.id | upper }}"> {{ row.name }} </a>
+                                        </td>
+                                        <td>
+                                            {{ row.aliases_list|join(", ") }}
+                                        </td>
+                                        <td>
+                                            {% if row.deprecated %}
+                                                <font color="red">****Deprecation Warning****</font>
+                                            {% endif %}
+                                            {{ clean_output.stixToHTML(row.descr) }}                                            
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    <!--SCRIPTS-->
+    <script src="/theme/scripts/navigation.js"></script>
+{% endblock %}
