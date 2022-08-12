@@ -41,7 +41,7 @@
 
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="/">Home</a></li>
-        <li class="breadcrumb-item"><a href="/groups/">Campaigns</a></li>
+        <li class="breadcrumb-item"><a href="/campaigns/">Campaigns</a></li>
         <li class="breadcrumb-item">{{ parsed.name }}</li>
     </ol>
     <div class="tab-pane fade show active" id="v-{{pages.title}}" role="tabpanel" aria-labelledby="v-{{pages.title}}-tab"></div>
@@ -163,32 +163,39 @@
                                 {% endif %}
                             </div>
                         </div>
-                        {% if parsed.alias_descriptions %}
-                            <h2 class="pt-3" id ="aliasDescription">Associated Group Descriptions</h2>
+
+                        {% if parsed.group_data %}
+                            <h2 class="pt-3" id="groups">Groups</h2>
                             <table class="table table-bordered table-alternate mt-2">
                                 <thead>
                                     <tr>
+                                        <th scope="col">ID</th>
                                         <th scope="col">Name</th>
                                         <th scope="col">Description</th>
                                     </tr>
                                 </thead>
-                                <tbody> 
-                                    {% for alias in parsed.alias_descriptions %}
+                                <tbody>
+                                    {% for group in parsed.group_data %}
                                     <tr>
                                         <td>
-                                            {{ alias.name }}
+                                            <a href="/groups/{{group.id}}">{{group.id}}</a>
                                         </td>
                                         <td>
-                                            {{ clean_output.stixToHTML(alias.descr, parsed.citations) }}
+                                            <a href="/groups/{{group.id}}">{{group.name}}</a>
+                                        </td>
+                                        <td>
+                                            {% if group.desc %}
+                                                {{clean_output.stixToHTML(group.desc, parsed.citations)}}
+                                            {% endif %}
                                         </td>
                                     </tr>
-                                    {% endfor %} 
+                                    {% endfor %}
                                 </tbody>
                             </table>
                         {% endif %}
 
                         {% if parsed.technique_table_data %}
-                            {{ navigator.layer_links(parsed.attack_id, "groups", parsed.layers) }}
+                            {{ navigator.layer_links(parsed.attack_id, "campaigns", parsed.layers) }}
                             {{ techniques_used.techniques_used(parsed.technique_table_data, "Techniques Used", true, "Use", parsed.citations) }}
                         {% endif %}
 

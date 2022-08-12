@@ -21,6 +21,7 @@ tools_using_technique = {}
 malware_using_technique = {}
 groups_using_technique = {}
 campaigns_using_technique = {}
+groups_attributed_to_campaign = {}
 subtechniques_of = {}
 datacomponent_of = {}
 datasource_of = {}
@@ -222,6 +223,16 @@ def get_campaigns_using_technique():
         campaigns_using_technique = rsh.campaigns_using_technique(get_srcs())
 
     return campaigns_using_technique
+
+
+def get_groups_attributed_to_campaigns():
+    """groups attributed to campaign getter"""
+    global groups_attributed_to_campaign
+
+    if not groups_attributed_to_campaign:
+        groups_attributed_to_campaign = rsh.groups_attributed_to_campaign(get_srcs())
+
+    return groups_attributed_to_campaign
 
 
 def get_subtechniques_of():
