@@ -43,6 +43,26 @@ def format_date(date):
     return ("{} {} {}").format(date.strftime("%d"), date.strftime("%B"), date.strftime("%Y"))
 
 
+def get_first_last_seen_dates(obj):
+    """ Given an object, return the first_seen and last_seen dates. """
+    dates = {}
+
+    if obj.get("first_seen"):
+        dates["first_seen"] = format_date_as_month_year(obj["first_seen"])
+    if obj.get("last_seen"):
+        dates["last_seen"] = format_date_as_month_year(obj["last_seen"])
+    
+    return dates
+
+
+def format_date_as_month_year(date):
+    """Given a date string, format to %B %Y."""
+    if isinstance(date, str):
+        date = datetime.datetime.strptime(date, "%Y-%m-%dT%H:%M:%S.%fZ")
+    
+    return ("{} {}").format(date.strftime("%B"), date.strftime("%Y"))
+
+
 def find_index_id(ext_ref):
     """This method will search for the index of the external_id in the external reference list."""
     count = 0
