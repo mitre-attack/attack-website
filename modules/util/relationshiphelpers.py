@@ -232,6 +232,14 @@ def groups_attributed_to_campaign(srcs):
     return get_related(srcs, "campaign", "attributed-to", "intrusion-set")
 
 
+def campaigns_attributed_to_group(srcs):
+    """Return group_id => {campaign, relationship} for each campaign attributed to the group
+    
+    srcs should be an array of memorystores for enterprise, mobile, and pre
+    """
+    return get_related(srcs, "campaign", "attributed-to", "intrusion-set", reverse=True)
+
+
 # technique:malware
 def techniques_used_by_malware(srcs):
     """Return malware => {technique, relationship} for each technique used by the malware.

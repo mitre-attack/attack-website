@@ -226,8 +226,7 @@ def get_campaigns_table_data(campaign_list):
 
 def get_group_table_data(campaign, reference_list):
     """Given a campaign, get the group table data."""
-    group_list = {} # stix_id => {attack_id, name, description}
-    reference = False
+    group_list = {} # group stix_id => {attack_id, name, description}
     groups_attributed_to_campaign = util.relationshipgetters.get_groups_attributed_to_campaigns()
 
     if groups_attributed_to_campaign.get(campaign.get("id")):
@@ -241,9 +240,6 @@ def get_group_table_data(campaign, reference_list):
                 }
 
                 if group["relationship"].get("description"):
-                    if reference == False:
-                        reference = True
-
                     group_list[group_id]["desc"] = group["relationship"]["description"]
 
                     # update reference list
