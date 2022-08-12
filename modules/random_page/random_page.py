@@ -55,7 +55,7 @@ def generate_json():
                             add_to_json = True
                         elif route == "software" and re.search(r"S[0-9]{4}", thepath):
                             add_to_json = True
-                        elif route == "campaigns" and re.searc(r"C[0-9]{4}", thepath):
+                        elif route == "campaigns" and re.search(r"C[0-9]{4}", thepath):
                             add_to_json = True
 
                         if add_to_json:
