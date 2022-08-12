@@ -11,10 +11,10 @@ def generate_json():
         "matrices": "Matrix",
         "tactics": "Tactic",
         "techniques": "Technique",
+        "datasources": "Data Source",
         "mitigations": "Mitigation",
         "groups": "Group",
         "software": "Software",
-        "datasources": "Data Source",
         "campaigns": "Campaign"
     }
     routes = {}
