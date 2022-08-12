@@ -143,6 +143,7 @@ def generate_index_page():
         "groups": "Group",
         "software": "Software",
         "datasources": "Data Source",
+        "campaigns": "Campaign"
     }
     routes = {}
 

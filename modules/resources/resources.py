@@ -170,6 +170,7 @@ def generate_working_with_attack():
         "tactics",
         "techniques",
         "datasources",
+        "campaigns"
     ]
 
     # Verify if directories exists
