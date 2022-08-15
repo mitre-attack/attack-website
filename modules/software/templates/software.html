@@ -168,6 +168,36 @@
                                 </tbody>
                             </table>
                         {% endif %}
+
+                        {% if parsed.campaign_data %}
+                            <h2 class="pt-3" id="campaigns">Campaigns</h2>
+                            <table class="table table-bordered table-alternate mt-2">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">ID</th>
+                                        <th scope="col">Name</th>
+                                        <th scope="col">Description</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for campaign in parsed.campaign_data %}
+                                    <tr>
+                                        <td>
+                                            <a href="/campaigns/{{campaign.id}}">{{campaign.id}}</a>
+                                        </td>
+                                        <td>
+                                            <a href="/campaigns/{{campaign.id}}">{{campaign.name}}</a>
+                                        </td>
+                                        <td>
+                                            {% if campaign.desc %}
+                                                {{clean_output.stixToHTML(campaign.desc, parsed.citations)}}
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        {% endif %}
                         
                         {% if parsed.technique_table_data %}
                             {{navigator.layer_links(parsed.attack_id, "software", parsed.layers)}}

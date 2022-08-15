@@ -133,6 +133,9 @@ def generate_software_md(software, side_menu_data, side_menu_mobile_view_data, n
         # Get techniques used by software
         data["technique_table_data"] = get_techniques_used_by_software_data(software, reference_list)
 
+        # Get campaigns that use this software
+        data["campaign_data"] = get_campaign_table_data(software, reference_list)
+
         # Get navigator layers for this group
         layers = util.buildhelpers.get_navigator_layers(
             data["name"],
@@ -296,3 +299,32 @@ def get_techniques_used_by_software_data(software, reference_list):
         technique_data, key=lambda k: [site_config.custom_alphabet.index(c) for c in k["domain"].lower()]
     )
     return technique_data
+
+
+def get_campaign_table_data(software, reference_list):
+    """Given a software, get the campaign table data."""
+    if software.get("type").lower() == "malware":
+        campaigns_using_software = util.relationshipgetters.get_campaigns_using_malware().get(software["id"])
+    else:
+        campaigns_using_software = util.relationshipgetters.get_campaigns_using_tool().get(software["id"])
+
+    campaign_list = {} # campaign stix id => {attack id, name, description}
+    if campaigns_using_software:
+        for campaign in campaigns_using_software:
+            campaign_id = campaign["object"]["id"]
+            if campaign_id not in campaign_list:
+                attack_id = util.buildhelpers.get_attack_id(campaign["object"])
+                campaign_list[campaign_id] = {
+                    "id": attack_id,
+                    "name": campaign["object"]["name"]
+                }
+
+                if campaign["relationship"].get("description"):
+                    campaign_list[campaign_id]["desc"] = campaign["relationship"]["description"]
+
+                    # update reference list
+                    reference_list = util.buildhelpers.update_reference_list(reference_list, campaign["relationship"])
+
+    campaign_data = [campaign_list[item] for item in campaign_list]
+    campaign_data = sorted(campaign_data, key=lambda k: k["name"].lower())
+    return campaign_data

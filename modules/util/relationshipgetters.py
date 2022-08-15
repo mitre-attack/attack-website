@@ -21,6 +21,8 @@ tools_using_technique = {}
 malware_using_technique = {}
 groups_using_technique = {}
 campaigns_using_technique = {}
+campaigns_using_tool = {}
+campaigns_using_malware = {}
 groups_attributed_to_campaign = {}
 campaigns_attributed_to_group = {}
 subtechniques_of = {}
@@ -224,6 +226,26 @@ def get_campaigns_using_technique():
         campaigns_using_technique = rsh.campaigns_using_technique(get_srcs())
 
     return campaigns_using_technique
+
+
+def get_campaigns_using_tool():
+    """campaigns using tool getter"""
+    global campaigns_using_tool
+
+    if not campaigns_using_tool:
+        campaigns_using_tool = rsh.campaigns_using_tool(get_srcs())
+
+    return campaigns_using_tool
+
+
+def get_campaigns_using_malware():
+    """campaigns using malware getter"""
+    global campaigns_using_malware
+
+    if not campaigns_using_malware:
+        campaigns_using_malware = rsh.campaigns_using_malware(get_srcs())
+
+    return campaigns_using_malware
 
 
 def get_groups_attributed_to_campaigns():
