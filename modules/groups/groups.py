@@ -166,7 +166,7 @@ def generate_group_md(group, side_menu_data, side_menu_mobile_view_data, notes):
             )
 
         # get campaign data for campaign table
-        data["campaign_data"] = get_campaign_table_data(group, reference_list)
+        data["campaign_data"], data["add_campaign_ref"] = get_campaign_table_data(group, reference_list)
 
         # Grab software data for Software table
         data["software_data"], data["add_software_ref"] = get_software_table_data(group, reference_list)
@@ -254,10 +254,14 @@ def get_techniques_used_by_group_data(group, reference_list):
 def get_campaign_table_data(group, reference_list):
     """Given a group, get the campaign table data."""
     campaign_list = {} # campaign stix id => {attack id, name, description}
-    campaign_attributed_to_group = util.relationshipgetters.get_campaigns_attributed_to_group()
+    reference = False
+    campaigns_attributed_to_group = {
+        "campaigns": util.relationshipgetters.get_campaigns_attributed_to_group(),
+        "techniques": util.relationshipgetters.get_techniques_used_by_campaigns()
+    }
 
-    if campaign_attributed_to_group.get(group.get("id")):
-        for campaign in campaign_attributed_to_group[group["id"]]:
+    if campaigns_attributed_to_group["campaigns"].get(group.get("id")):
+        for campaign in campaigns_attributed_to_group["campaigns"][group["id"]]:
             campaign_id = campaign["object"]["id"]
             if campaign_id not in campaign_list:
                 attack_id = util.buildhelpers.get_attack_id(campaign["object"])
@@ -267,14 +271,41 @@ def get_campaign_table_data(group, reference_list):
                 }
 
                 if campaign["relationship"].get("description"):
+                    if reference == False:
+                        reference = True
+
                     campaign_list[campaign_id]["desc"] = campaign["relationship"]["description"]
 
                     # update reference list
                     reference_list = util.buildhelpers.update_reference_list(reference_list, campaign["relationship"])
 
-    campaign_data = [campaign_list[item] for item in campaign_list]
+                if campaigns_attributed_to_group["techniques"].get(campaign_id):
+                    if "techniques" not in campaign_list[campaign_id]:
+                        campaign_list[campaign_id]["techniques"] = []
+
+                    for technique in campaigns_attributed_to_group["techniques"][campaign_id]:
+                        t_id = util.buildhelpers.get_attack_id(technique["object"])
+                        tech_data = {}
+
+                        if t_id:
+                            if util.buildhelpers.is_sub_tid(t_id):
+                                tech_data["parent_id"] = util.buildhelpers.get_parent_technique_id(t_id)
+                                tech_data["id"] = util.buildhelpers.get_sub_technique_id(t_id)
+                                tech_data["name"] = util.buildhelpers.get_technique_name(tech_data["parent_id"])
+                                tech_data["sub_name"] = technique["object"]["name"]
+                            else:
+                                tech_data["id"] = t_id
+                                tech_data["name"] = technique["object"]["name"]
+
+                            campaign_list[campaign_id]["techniques"].append(tech_data)
+
+    campaign_data = []
+    for item in campaign_list:
+        if "techniques" in campaign_list[item]:
+            campaign_list[item]["techniques"] = sorted(campaign_list[item]["techniques"], key=lambda k: k["name"].lower())
+        campaign_data.append(campaign_list[item])
     campaign_data = sorted(campaign_data, key=lambda k: k["name"].lower())
-    return campaign_data
+    return campaign_data, reference
 
 
 def get_software_table_data(group, reference_list):
