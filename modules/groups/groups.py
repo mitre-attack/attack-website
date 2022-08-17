@@ -27,7 +27,8 @@ def generate_groups():
         os.mkdir(groups_config.group_markdown_path)
 
     # Generate redirections
-    # of note: G0058 redirects to G0059 manually because it is not in the STIX object
+    # of note: G0058 used to redirect to G0059 manually because it is not in the STIX object
+    # TODO: bring G0058 back into the STIX so this scenario doesn't happen any more in the future
     util.buildhelpers.generate_redirections(
         redirections_filename=groups_config.groups_redirection_location,
         redirect_md=site_config.redirect_md
