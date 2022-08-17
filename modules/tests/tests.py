@@ -144,7 +144,7 @@ def check_links(external_links):
     else:
         TEST = "Internal Links"
 
-    MSG = ("{} OK - {} broken link(s) ").format(links[0], links[1])
+    MSG = f"{links[0]} OK - {links[1]} pages referencing broken link(s)"
 
     # Print output
     util.buildhelpers.print_test_output(STATUS, TEST, MSG)
