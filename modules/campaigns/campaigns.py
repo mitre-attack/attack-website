@@ -116,7 +116,7 @@ def generate_campaign_md(campaign, side_menu_data, side_menu_mobile_view_data, n
         if campaign_dates.get("last_seen"):
             data["last_seen"] = campaign_dates["last_seen"]
 
-        if isinstance(campaign.get("x_mitre_contributors"), collections.Iterable):
+        if isinstance(campaign.get("x_mitre_contributors"), collections.abc.Iterable):
             data["contributors_list"] = campaign["x_mitre_contributors"]
 
         # Get initial reference list
@@ -177,7 +177,7 @@ def generate_campaign_md(campaign, side_menu_data, side_menu_mobile_view_data, n
 
         data["citations"] = reference_list
 
-        if isinstance(campaign.get("aliases"), collections.Iterable):
+        if isinstance(campaign.get("aliases"), collections.abc.Iterable):
             data["aliases_list"] = campaign["aliases"][1:]
 
         data["versioning_feature"] = site_config.check_versions_module()
@@ -216,7 +216,7 @@ def get_campaigns_table_data(campaign_list):
                 if campaign.get("x_mitre_deprecated"):
                     row["deprecated"] = True
 
-            if isinstance(campaign.get("aliases"), collections.Iterable):
+            if isinstance(campaign.get("aliases"), collections.abc.Iterable):
                 row["aliases_list"] = campaign["aliases"][1:]
 
             campaigns_table_data.append(row)
