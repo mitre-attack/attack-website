@@ -25,7 +25,8 @@ If you are only updating the banner and nothing else, follow these steps.
   * Update the website version number in `pyproject.toml`
   * Run `towncrier --draft`.
   * If everything looks good, then proceed with running `towncrier`.
-    * This will remove the newsfragment files and make a git commit.
+    * This will delete the newsfragment files.
+    * Run `git status`, then stage and commit changes to `CHANGELOG.md` and removed files from `newsfragments/`.
 * Build the website locally to do one final test that it looks correct
   * e.g. `python update-attack.py --attack-brand --extras --no-test-exitstatus`
   * Look in the generated `reports/broken-links-report.txt` for broken links.
