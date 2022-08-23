@@ -4,12 +4,14 @@ import os
 import re
 
 import bleach
+from loguru import logger
 
 import modules
 from modules import site_config, versions
 
 
 def generate_index():
+    logger.info("Creating searchable index for the site")
     index = []
     for root, __, files in os.walk(site_config.web_directory):
         # don't walk previous routes
@@ -71,7 +73,7 @@ def skipline(line):
 
 
 def clean_line(line):
-    """clean unicode spaces from line"""
+    """Clean unicode spaces from line."""
     # Replace unicode spaces
     line = line.replace("\u00a0", " ")
     line = line.replace("\u202f", " ")
@@ -82,7 +84,7 @@ def clean_line(line):
 
 
 def clean(filepath):
-    """clean the file of all HTML tags and unnecessary data"""
+    """Clean the file of all HTML tags and unnecessary data."""
     with open(filepath, mode="r", encoding="utf8") as f:
         lines = f.readlines()
 
@@ -104,10 +106,10 @@ def clean(filepath):
                 title = match.group(1).strip()
         if 'http-equiv="refresh"' in line:
             skipindex = True
-        # TODO: determine if this is good enough to address the following GitHub issue
-        # https://github.com/mitre-attack/attack-website/issues/352
-        # if '<h5 class="mb-0">Deprecation Warning</h5>' in line:
-        #     skipindex = True
+            break
+        if '<h5 class="mb-0">Deprecation Warning</h5>' in line:
+            skipindex = True
+            break
 
     out = bleach.clean(content, tags=[], strip=True)  # remove tags
     out = re.sub(r"[\n ]+", " ", out)  # remove extra newlines, smush to 1 line

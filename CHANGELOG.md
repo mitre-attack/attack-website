@@ -28,7 +28,13 @@
 
 <!-- TOWNCRIER -->
 
-# ATT&CK website 3.6.5 (2022-07-17)
+# v3.6.6 (2022-08-23)
+
+## Bugfixes
+
+* Removed deprecated objects from search results. [#352](https://github.com/mitre-attack/attack-website/issues/352)
+
+# v3.6.5 (2022-07-17)
 
 ## Bugfixes
 
