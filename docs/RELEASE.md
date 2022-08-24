@@ -26,6 +26,7 @@ If you are only updating the banner and nothing else, follow these steps.
   * Run `towncrier --draft`.
   * If everything looks good, then proceed with running `towncrier`.
     * This will delete the newsfragment files.
+    * Doublecheck the `CHANGELOG.md` file since the template isn't perfect and whitespace issues get introduced.
     * Run `git status`, then stage and commit changes to `CHANGELOG.md` and removed files from `newsfragments/`.
 * Build the website locally to do one final test that it looks correct
   * e.g. `python update-attack.py --attack-brand --extras --no-test-exitstatus`
