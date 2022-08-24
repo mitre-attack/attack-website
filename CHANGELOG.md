@@ -28,6 +28,12 @@
 
 <!-- TOWNCRIER -->
 
+# v3.6.7 (2022-08-24)
+
+## Bugfixes
+
+* Update mitreattack-python library dependency to get diff_stix script to work again. [#386](https://github.com/mitre-attack/attack-website/issues/386)
+
 # v3.6.6 (2022-08-23)
 
 ## Bugfixes
