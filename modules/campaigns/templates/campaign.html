@@ -163,10 +163,29 @@
                                 {% endif %}
                             </div>
                         </div>
-
-                        {% if parsed.technique_table_data %}
-                            {{ navigator.layer_links(parsed.attack_id, "campaigns", parsed.layers) }}
-                            {{ techniques_used.techniques_used(parsed.technique_table_data, "Techniques Used", true, "Use", parsed.citations) }}
+                        
+                        {% if parsed.alias_descriptions %}
+                            <h2 class="pt-3" id ="aliasDescription">Associated Campaign Descriptions</h2>
+                            <table class="table table-bordered table-alternate mt-2">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Name</th>
+                                        <th scope="col">Description</th>
+                                    </tr>
+                                </thead>
+                                <tbody> 
+                                    {% for alias in parsed.alias_descriptions %}
+                                    <tr>
+                                        <td>
+                                            {{ alias.name }}
+                                        </td>
+                                        <td>
+                                            {{ clean_output.stixToHTML(alias.descr, parsed.citations) }}
+                                        </td>
+                                    </tr>
+                                    {% endfor %} 
+                                </tbody>
+                            </table>
                         {% endif %}
 
                         {% if parsed.group_data %}
@@ -197,6 +216,11 @@
                                     {% endfor %}
                                 </tbody>
                             </table>
+                        {% endif %}
+
+                        {% if parsed.technique_table_data %}
+                            {{ navigator.layer_links(parsed.attack_id, "campaigns", parsed.layers) }}
+                            {{ techniques_used.techniques_used(parsed.technique_table_data, "Techniques Used", true, "Use", parsed.citations) }}
                         {% endif %}
 
                         {% if parsed.software_data %}
