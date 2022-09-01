@@ -38,8 +38,8 @@ If you are only updating the banner and nothing else, follow these steps.
 * After the PR is accepted, tag the commit in the master branch and push the changes
 
     ```bash
-    git pull
     git checkout master
+    git pull
     git tag -a "website-vX.Y.Z" -m "website-vX.Y.Z"
     git push --tags  # no need to `git push`, since that was done in the PR itself
     ```
