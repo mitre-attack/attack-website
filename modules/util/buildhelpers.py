@@ -777,7 +777,7 @@ def print_end(name, start_time, end_time):
 
 
 def filter_techniques_by_platform(tech_list, platforms):
-    """Given a technique lsit and a platforms list, filter out techniques that are not part of the platforms."""
+    """Given a technique list and a platforms list, filter out techniques that are not part of the platforms."""
     if not platforms:
         return tech_list
 

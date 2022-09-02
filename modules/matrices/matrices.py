@@ -138,7 +138,6 @@ def get_sub_matrices(matrix):
     techniques = util.stixhelpers.get_techniques(domain_ms, matrix["matrix"])
     platform_techniques = util.buildhelpers.filter_techniques_by_platform(techniques, matrix["platforms"])
     platform_techniques = util.buildhelpers.filter_out_subtechniques(platform_techniques)
-    # remove revoked
     platform_techniques = util.buildhelpers.filter_deprecated_revoked(platform_techniques)
     # get relevant tactics
     all_tactics = util.stixhelpers.get_all_of_type(domain_ms, ["x-mitre-tactic"])
