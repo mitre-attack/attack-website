@@ -233,12 +233,19 @@ def get_groups_using_software(software, reference_list):
     """Given a software object, return group list with id and name of groups."""
     if software.get("type").lower() == "malware":
         groups_using_software = util.relationshipgetters.get_groups_using_malware().get(software["id"])
+        groups_attributed_to_campaigns = {
+            "campaigns": util.relationshipgetters.get_campaigns_using_malware(),
+            "groups": util.relationshipgetters.get_groups_attributed_to_campaigns()
+        }
     else:
         groups_using_software = util.relationshipgetters.get_groups_using_tool().get(software["id"])
+        groups_attributed_to_campaigns = {
+            "campaigns": util.relationshipgetters.get_campaigns_using_tool(),
+            "groups": util.relationshipgetters.get_groups_attributed_to_campaigns()
+        }
 
     groups = []
 
-    used_groups = {}
     if groups_using_software:
         # Get name, id of group
         # attack_ids_seen = set()
@@ -263,6 +270,22 @@ def get_groups_using_software(software, reference_list):
                     reference_list = util.buildhelpers.update_reference_list(reference_list, group["relationship"])
 
                 groups.append(row)
+
+    if groups_attributed_to_campaigns["campaigns"].get(software.get("id")):
+        # campaigns related to this software
+        for campaign in groups_attributed_to_campaigns["campaigns"][software["id"]]:
+            campaign_id = campaign["object"]["id"]
+            if groups_attributed_to_campaigns["groups"].get(campaign_id):
+                # groups related to this campaign
+                for group in groups_attributed_to_campaigns["groups"][campaign_id]:
+                    row = {
+                        "id": util.buildhelpers.get_attack_id(group["object"]),
+                        "name": group["object"]["name"]
+                    }
+                    if group["relationship"].get("description"):
+                        row["descr"] = group["relationship"]["description"]
+                        reference_list = util.buildhelpers.update_reference_list(reference_list, group["relationship"])
+                    groups.append(row)
 
     return groups
 

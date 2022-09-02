@@ -239,6 +239,22 @@ def get_techniques_used_by_group_data(group, reference_list):
             if not technique["object"].get("x_mitre_deprecated"):
                 technique_list = util.buildhelpers.technique_used_helper(technique_list, technique, reference_list)
 
+    # add campaign-related techniques to list
+    # if a campaign-related technique/subtechnique already exists in the list of relationships 
+    # with the group, the descriptions of these relationships will be concatenated with a newline
+    campaigns_attributed_to_group = {
+        "campaigns": util.relationshipgetters.get_campaigns_attributed_to_group(),
+        "techniques": util.relationshipgetters.get_techniques_used_by_campaigns()
+    }
+    if campaigns_attributed_to_group["campaigns"].get(group.get("id")):
+        for campaign in campaigns_attributed_to_group["campaigns"][group["id"]]:
+            campaign_id = campaign["object"]["id"]
+            if campaigns_attributed_to_group["techniques"].get(campaign_id): # campaign has techniques
+                for technique in campaigns_attributed_to_group["techniques"][campaign_id]:
+                    # Do not add if technique is deprecated
+                    if not technique["object"].get("x_mitre_deprecated"):
+                        technique_list = util.buildhelpers.technique_used_helper(technique_list, technique, reference_list, True)
+
     technique_data = []
     for item in technique_list:
         technique_data.append(technique_list[item])

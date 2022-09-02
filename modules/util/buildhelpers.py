@@ -505,13 +505,14 @@ def get_technique_name(tid):
     return util_config.NOT_FOUND
 
 
-def technique_used_helper(technique_list, technique, reference_list):
+def technique_used_helper(technique_list, technique, reference_list, inherited=False):
     """Add technique to technique list and make distinction between techniques subtechniques."""
     attack_id = get_attack_id(technique["object"])
 
     if attack_id:
         # Check if technique not already in technique_list dict
-        if attack_id not in technique_list:
+        # or if the technique was inherited from a relationship (i.e. Group => Campaign => Technique)
+        if attack_id not in technique_list or inherited:
             technique_data = get_technique_data_helper(attack_id, technique, reference_list)
             if not technique_data:
                 logger.error(f"{attack_id} technique data unavailable, possibly due to domain mismatch")
@@ -520,13 +521,26 @@ def technique_used_helper(technique_list, technique, reference_list):
             if is_sub_tid(attack_id):
                 parent_id = get_parent_technique_id(attack_id)
 
-                # If parent technique not already in list, add to list and add current sub-technique
+                # If parent technique not already in list, add to list
                 # Parent technique will be marked as not used until it is seen
                 if parent_id not in technique_list:
                     technique_list[parent_id] = {}
                     technique_list[parent_id] = parent_technique_used_helper(parent_id)
 
-                technique_list[parent_id]["subtechniques"].append(technique_data)
+                # Check if sub-technique is already in list
+                for subtechnique in technique_list[parent_id]["subtechniques"]:
+                    # Concatenate the inherited object's description to the existing ID
+                    if subtechnique["id"] == technique_data["id"] and inherited:
+                        if "descr" in technique_data and "descr" in subtechnique:
+                            # add markdown newline between descriptions
+                            subtechnique["descr"] += "<p>" + technique_data["descr"] + "</p>"
+                        elif "descr" in technique_data:
+                            subtechnique["descr"] = technique_data["descr"]
+                        break;
+                else: # sub-technique is not in list
+                    # Add subtechnique to list
+                    technique_list[parent_id]["subtechniques"].append(technique_data)
+
                 # Sort subtechniques by name
                 technique_list[parent_id]["subtechniques"] = sorted(
                     technique_list[parent_id]["subtechniques"], key=lambda k: k["id"]
@@ -534,8 +548,16 @@ def technique_used_helper(technique_list, technique, reference_list):
 
             # Attack id is regular technique
             else:
-                # Add technique to list
-                technique_list[attack_id] = technique_data
+                # Check if technique is already in list (inherited)
+                if attack_id in technique_list:
+                    if "descr" in technique_data and "descr" in technique_list[attack_id]:
+                        # add markdown newline between descriptions
+                        technique_list[attack_id]["descr"] += "<p>" + technique_data["descr"] + "</p>"
+                    elif "descr" in technique_data:
+                        technique_list[attack_id]["descr"] = technique_data["descr"]
+                else:
+                    # Add technique to list
+                    technique_list[attack_id] = technique_data
 
         # Check if parent ID was added by sub-technique
         # parent technique will be marked as not used
