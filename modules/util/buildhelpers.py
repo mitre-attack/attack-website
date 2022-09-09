@@ -55,6 +55,17 @@ def get_first_last_seen_dates(obj):
     return dates
 
 
+def get_first_last_seen_citations(obj):
+    """Given an object, return the first seen and last seen citations. This function generates
+    the descriptions/citations for the first/last seen fields."""
+    data = {}
+    if obj.get("x_mitre_first_seen_citation"):
+        data["first_seen_citation"] = obj.get("x_mitre_first_seen_citation")
+    if obj.get("x_mitre_last_seen_citation"):
+        data["last_seen_citation"] = obj.get("x_mitre_last_seen_citation")
+    return data
+
+
 def format_date_as_month_year(date):
     """Given a date string, format to %B %Y."""
     if isinstance(date, str):

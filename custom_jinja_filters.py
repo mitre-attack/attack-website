@@ -147,7 +147,7 @@ def filter_urls(data):
     return data
 
 
-def stixToHTML(data, citations, firstParagraphOnly):
+def stixToHTML(data, citations, firstParagraphOnly, convert):
     """Clean output of STIX content.
 
     params:
@@ -155,8 +155,9 @@ def stixToHTML(data, citations, firstParagraphOnly):
         citations (optional, object), if not None, add citation markers to the data.
         firstParagraphOnly (optional, boolean), if true, only return the first paragraph of the data in question.
     """
-    # Replace data from markdown format
-    data = markdown.markdown(data)
+    if (convert):
+        # Replace data from markdown format
+        data = markdown.markdown(data)
 
     # Replace url links
     data = filter_urls(data)

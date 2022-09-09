@@ -116,6 +116,12 @@ def generate_campaign_md(campaign, side_menu_data, side_menu_mobile_view_data, n
         if campaign_dates.get("last_seen"):
             data["last_seen"] = campaign_dates["last_seen"]
 
+        campaign_date_citations = util.buildhelpers.get_first_last_seen_citations(campaign)
+        if campaign_date_citations.get("first_seen_citation"):
+            data["first_seen_citation"] = campaign_date_citations["first_seen_citation"]
+        if campaign_date_citations.get("last_seen_citation"):
+            data["last_seen_citation"] = campaign_date_citations["last_seen_citation"]
+
         if isinstance(campaign.get("x_mitre_contributors"), collections.abc.Iterable):
             data["contributors_list"] = campaign["x_mitre_contributors"]
 
