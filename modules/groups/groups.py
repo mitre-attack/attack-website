@@ -132,7 +132,7 @@ def generate_group_md(group, side_menu_data, side_menu_mobile_view_data, notes):
             data["deprecated"] = True
 
         # Get technique data for techniques used table
-        data["technique_table_data"] = get_techniques_used_by_group_data(group, reference_list)
+        data["technique_table_data"], inheritance = get_techniques_used_by_group_data(group, reference_list)
 
         # Get navigator layers for this group
         layers = util.buildhelpers.get_navigator_layers(
@@ -141,6 +141,7 @@ def generate_group_md(group, side_menu_data, side_menu_mobile_view_data, notes):
             "group",
             data["version"] if "version" in data else None,
             data["technique_table_data"],
+            inheritance # extend legend to include color coding for inherited techniques, if applicable
         )
 
         data["layers"] = []
@@ -246,6 +247,7 @@ def get_techniques_used_by_group_data(group, reference_list):
         "campaigns": util.relationshipgetters.get_campaigns_attributed_to_group(),
         "techniques": util.relationshipgetters.get_techniques_used_by_campaigns()
     }
+    hasInheritedTechniques = False
     if campaigns_attributed_to_group["campaigns"].get(group.get("id")):
         for campaign in campaigns_attributed_to_group["campaigns"][group["id"]]:
             campaign_id = campaign["object"]["id"]
@@ -253,6 +255,7 @@ def get_techniques_used_by_group_data(group, reference_list):
                 for technique in campaigns_attributed_to_group["techniques"][campaign_id]:
                     # Do not add if technique is deprecated
                     if not technique["object"].get("x_mitre_deprecated"):
+                        hasInheritedTechniques = True
                         technique_list = util.buildhelpers.technique_used_helper(technique_list, technique, reference_list, True)
 
     technique_data = []
@@ -265,7 +268,7 @@ def get_techniques_used_by_group_data(group, reference_list):
     technique_data = sorted(
         technique_data, key=lambda k: [site_config.custom_alphabet.index(c) for c in k["domain"].lower()]
     )
-    return technique_data
+    return technique_data, hasInheritedTechniques
 
 
 def get_campaign_table_data(group, reference_list):
