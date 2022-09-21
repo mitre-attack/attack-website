@@ -333,13 +333,10 @@ def get_campaign_table_data(group, reference_list):
 
 def get_software_table_data(group, reference_list):
     """Given a group, get software table data"""
-
     software_list = {}
-
     reference = False
 
-    # Creating map for tools/malware used by groups
-    # and techniques used by malware/tools
+    # map for tools/malware used by groups and techniques used by malware/tools
     tools_and_malware = [
         {
             "software": util.relationshipgetters.get_tools_used_by_groups(),
@@ -348,64 +345,33 @@ def get_software_table_data(group, reference_list):
         {
             "software": util.relationshipgetters.get_malware_used_by_groups(),
             "techniques": util.relationshipgetters.get_techniques_used_by_malware(),
+        }
+    ]
+    # get malware or tools used by group
+    software_list, reference = update_software_list(tools_and_malware, software_list, reference_list, reference, group.get("id"))
+
+    # campaigns attributed to groups
+    campaigns_attributed_to_group = util.relationshipgetters.get_campaigns_attributed_to_group()
+    # map for tools/malware used by campaigns
+    software_used_by_campaigns = [
+        {
+            "software": util.relationshipgetters.get_malware_used_by_campaigns(),
+            "techniques": util.relationshipgetters.get_techniques_used_by_malware()
         },
+        {
+            "software": util.relationshipgetters.get_tools_used_by_campaigns(),
+            "techniques": util.relationshipgetters.get_techniques_used_by_tools()
+        }
     ]
 
-    # Get malware or tools used by group
-    for pairing in tools_and_malware:
-        if pairing["software"].get(group.get("id")):
-            for software in pairing["software"][group["id"]]:
+    # get campaigns attributed to the group
+    if campaigns_attributed_to_group.get(group.get("id")):
+        for campaign in campaigns_attributed_to_group[group["id"]]:
+            campaign_id = campaign["object"]["id"]
+            # get malware or tools used by campaigns
+            software_list, reference = update_software_list(software_used_by_campaigns, software_list, reference_list, reference, campaign_id)
 
-                software_id = software["object"]["id"]
-
-                # Check if software not already in software_list dict
-                if software_id not in software_list:
-
-                    attack_id = util.buildhelpers.get_attack_id(software["object"])
-
-                    if attack_id:
-                        software_list[software_id] = {}
-
-                        software_list[software_id]["id"] = attack_id
-                        software_list[software_id]["name"] = software["object"]["name"]
-
-                        if software["relationship"].get("description"):
-                            if reference == False:
-                                reference = True
-
-                            # Get filtered description
-                            software_list[software_id]["descr"] = software["relationship"]["description"]
-                            # Update reference list
-                            reference_list = util.buildhelpers.update_reference_list(
-                                reference_list, software["relationship"]
-                            )
-
-                        # Check if techniques exists, add techniques used by software
-                        if pairing["techniques"].get(software_id):
-
-                            if "techniques" not in software_list[software_id]:
-                                software_list[software_id]["techniques"] = []
-
-                            for technique in pairing["techniques"][software_id]:
-
-                                tech_data = {}
-
-                                t_id = util.buildhelpers.get_attack_id(technique["object"])
-
-                                if t_id:
-                                    if util.buildhelpers.is_sub_tid(t_id):
-                                        tech_data["parent_id"] = util.buildhelpers.get_parent_technique_id(t_id)
-                                        tech_data["id"] = util.buildhelpers.get_sub_technique_id(t_id)
-                                        tech_data["name"] = util.buildhelpers.get_technique_name(tech_data["parent_id"])
-                                        tech_data["sub_name"] = technique["object"]["name"]
-                                    else:
-                                        tech_data["id"] = t_id
-                                        tech_data["name"] = technique["object"]["name"]
-
-                                    software_list[software_id]["techniques"].append(tech_data)
-
-    # Moving it to an array because jinja does not like to loop
-    # through dictionaries
+    # Moving it to an array because jinja does not like to loop through dictionaries
     data = []
     for item in software_list:
         if "techniques" in software_list[item]:
@@ -416,3 +382,47 @@ def get_software_table_data(group, reference_list):
     data = sorted(data, key=lambda k: k["name"].lower())
 
     return data, reference
+
+
+def update_software_list(pairings, software_list, reference_list, reference, id):
+    for pairing in pairings:
+        if pairing["software"].get(id):
+            for software in pairing["software"][id]:
+                software_stix_id = software["object"]["id"]
+                software_attack_id = util.buildhelpers.get_attack_id(software["object"])
+                # check if software not in software_list dict
+                if software_stix_id not in software_list and software_attack_id:
+                    software_list[software_stix_id] = {
+                        "id": software_attack_id,
+                        "name": software["object"]["name"]
+                    }
+
+                    if software["relationship"].get("description"):
+                        reference = True
+                        # Get filtered description
+                        software_list[software_stix_id]["descr"] = software["relationship"]["description"]
+                        # Update reference list
+                        reference_list = util.buildhelpers.update_reference_list(
+                            reference_list, software["relationship"]
+                        )
+
+                    # Check if techniques exists, add techniques used by software
+                    if pairing["techniques"].get(software_stix_id):
+                        if "techniques" not in software_list[software_stix_id]:
+                            software_list[software_stix_id]["techniques"] = []
+
+                        for technique in pairing["techniques"][software_stix_id]:
+                            tech_data = {}
+                            t_id = util.buildhelpers.get_attack_id(technique["object"])
+                            if t_id:
+                                if util.buildhelpers.is_sub_tid(t_id):
+                                    tech_data["parent_id"] = util.buildhelpers.get_parent_technique_id(t_id)
+                                    tech_data["id"] = util.buildhelpers.get_sub_technique_id(t_id)
+                                    tech_data["name"] = util.buildhelpers.get_technique_name(tech_data["parent_id"])
+                                    tech_data["sub_name"] = technique["object"]["name"]
+                                else:
+                                    tech_data["id"] = t_id
+                                    tech_data["name"] = technique["object"]["name"]
+
+                                software_list[software_stix_id]["techniques"].append(tech_data)
+    return software_list, reference
