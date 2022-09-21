@@ -285,9 +285,12 @@ def get_campaign_table_data(group, reference_list):
             campaign_id = campaign["object"]["id"]
             if campaign_id not in campaign_list:
                 attack_id = util.buildhelpers.get_attack_id(campaign["object"])
+                campaign_dates = util.buildhelpers.get_first_last_seen_dates(campaign["object"])
                 campaign_list[campaign_id] = {
                     "id": attack_id,
-                    "name": campaign["object"]["name"]
+                    "name": campaign["object"]["name"],
+                    "first_seen": campaign_dates["first_seen"] if campaign_dates.get("first_seen") else '',
+                    "last_seen": campaign_dates["last_seen"] if campaign_dates.get("last_seen") else ''
                 }
 
                 if campaign["relationship"].get("description"):

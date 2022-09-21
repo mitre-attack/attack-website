@@ -69,7 +69,7 @@ def get_first_last_seen_citations(obj):
 def format_date_as_month_year(date):
     """Given a date string, format to %B %Y."""
     if isinstance(date, str):
-        date = datetime.datetime.strptime(date, "%Y-%m-%dT%H:%M:%S.%fZ")
+        date = datetime.datetime.strptime(date, "%Y-%m-%dT%H:%M:%SZ")
     
     return ("{} {}").format(date.strftime("%B"), date.strftime("%Y"))
 
