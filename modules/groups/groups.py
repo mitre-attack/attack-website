@@ -286,12 +286,19 @@ def get_campaign_table_data(group, reference_list):
             if campaign_id not in campaign_list:
                 attack_id = util.buildhelpers.get_attack_id(campaign["object"])
                 campaign_dates = util.buildhelpers.get_first_last_seen_dates(campaign["object"])
+                date_citations = util.buildhelpers.get_first_last_seen_citations(campaign["object"])
                 campaign_list[campaign_id] = {
                     "id": attack_id,
                     "name": campaign["object"]["name"],
                     "first_seen": campaign_dates["first_seen"] if campaign_dates.get("first_seen") else '',
-                    "last_seen": campaign_dates["last_seen"] if campaign_dates.get("last_seen") else ''
+                    "last_seen": campaign_dates["last_seen"] if campaign_dates.get("last_seen") else '',
+                    "first_seen_citation": date_citations["first_seen_citation"] if date_citations.get("first_seen_citation") else '',
+                    "last_seen_citation": date_citations["last_seen_citation"] if date_citations.get("last_seen_citation") else ''
                 }
+                if date_citations.get("first_seen_citation") or date_citations.get("last_seen_citation"):
+                    reference = True
+                    # update reference list
+                    reference_list = util.buildhelpers.update_reference_list(reference_list, campaign["object"])
 
                 if campaign["relationship"].get("description"):
                     if reference == False:
