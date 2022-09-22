@@ -200,21 +200,19 @@ def generate_campaign_md(campaign, side_menu_data, side_menu_mobile_view_data, n
 
 def get_campaigns_table_data(campaign_list):
     """Responsible for generating campaign table data for the campaign index page"""
-
     campaigns_table_data = []
 
     # Now the table on the right, which is made up of campaign data
     for campaign in campaign_list:
-
         attack_id = util.buildhelpers.get_attack_id(campaign)
-
         if attack_id:
-            row = {}
-
-            row["id"] = attack_id
-
-            if campaign.get("name"):
-                row["name"] = campaign["name"]
+            campaign_dates = util.buildhelpers.get_first_last_seen_dates(campaign)
+            row = {
+                "id": attack_id,
+                "name": campaign["name"] if campaign.get("name") else attack_id,
+                "first_seen": campaign_dates["first_seen"] if campaign_dates.get("first_seen") else '',
+                "last_seen": campaign_dates["last_seen"] if campaign_dates.get("last_seen") else '',
+            }
 
             if campaign.get("description"):
                 row["descr"] = campaign["description"]
