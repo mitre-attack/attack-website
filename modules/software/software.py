@@ -291,7 +291,7 @@ def get_groups_using_software(software, reference_list):
                         r = next(row for row in groups if row["id"] == attack_id)
 
                         if r["descr"] and descr: # concatenate descriptions
-                            r["descr"] += descr
+                            r["descr"] += "<p>" + descr + "</p>"
                         elif descr:
                             r["descr"] = descr
                     else: # new group seen, add row
