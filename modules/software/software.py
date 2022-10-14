@@ -245,47 +245,66 @@ def get_groups_using_software(software, reference_list):
         }
 
     groups = []
+    seen_attack_ids = set()
 
     if groups_using_software:
         # Get name, id of group
-        # attack_ids_seen = set()
         for group in groups_using_software:
             attack_id = util.buildhelpers.get_attack_id(group["object"])
 
             if attack_id:
+                if attack_id in seen_attack_ids:
+                    software_attack_id = util.buildhelpers.get_attack_id(software)
+                    logger.debug(f"Skipping extra use of [{attack_id}] {group['object']['name']} for {software_attack_id}")
+                    continue
 
-                # if attack_id in attack_ids_seen:
-                #     software_attack_id = util.buildhelpers.get_attack_id(software)
-                #     logger.debug(f"Skipping extra use of [{attack_id}] {group['object']['name']} for {software_attack_id}")
-                #     continue
-                # attack_ids_seen.add(attack_id)
-
-                row = {}
-                row["id"] = attack_id
-                row["name"] = group["object"]["name"]
+                row = {
+                    "id": attack_id,
+                    "name": group["object"]["name"]
+                }
 
                 if group["relationship"].get("description"):
                     # Get filtered description
                     row["descr"] = group["relationship"]["description"]
                     reference_list = util.buildhelpers.update_reference_list(reference_list, group["relationship"])
 
+                seen_attack_ids.add(attack_id)
                 groups.append(row)
 
     if groups_attributed_to_campaigns["campaigns"].get(software.get("id")):
         # campaigns related to this software
         for campaign in groups_attributed_to_campaigns["campaigns"][software["id"]]:
             campaign_id = campaign["object"]["id"]
+
             if groups_attributed_to_campaigns["groups"].get(campaign_id):
                 # groups related to this campaign
                 for group in groups_attributed_to_campaigns["groups"][campaign_id]:
-                    row = {
-                        "id": util.buildhelpers.get_attack_id(group["object"]),
-                        "name": group["object"]["name"]
-                    }
+                    attack_id = util.buildhelpers.get_attack_id(group["object"])
+
+                    descr = None
                     if group["relationship"].get("description"):
-                        row["descr"] = group["relationship"]["description"]
+                        descr = group["relationship"]["description"]
                         reference_list = util.buildhelpers.update_reference_list(reference_list, group["relationship"])
-                    groups.append(row)
+
+                    if attack_id in seen_attack_ids:
+                        # group already in table, concatenate descriptions
+                        r = next(row for row in groups if row["id"] == attack_id)
+
+                        if r["descr"] and descr: # concatenate descriptions
+                            r["descr"] += descr
+                        elif descr:
+                            r["descr"] = descr
+                    else: # new group seen, add row
+                        row = {
+                            "id": attack_id,
+                            "name": group["object"]["name"]
+                        }
+
+                        if descr:
+                            row["descr"] = descr
+
+                        seen_attack_ids.add(attack_id)
+                        groups.append(row)
 
     return groups
 
