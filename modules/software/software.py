@@ -291,7 +291,8 @@ def get_groups_using_software(software, reference_list):
                         r = next(row for row in groups if row["id"] == attack_id)
 
                         if r["descr"] and descr: # concatenate descriptions
-                            r["descr"] += "<p>" + descr + "</p>"
+                            # get unique set of references
+                            r["descr"] = util.buildhelpers.get_reference_set([r["descr"], descr])
                         elif descr:
                             r["descr"] = descr
                     else: # new group seen, add row

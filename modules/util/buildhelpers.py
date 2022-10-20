@@ -129,6 +129,17 @@ def update_reference_list(reference_list, obj):
     return reference_list
 
 
+def get_reference_set(reflist):
+    """This function retrieves the unique set of references in the given list of descriptions and 
+       returns them in string format to be displayed as citations."""
+    p = re.compile("\(Citation: (.*?)\)")
+    citations = set()
+    for c in reflist:
+        citations.update(p.findall(c))
+    refs = [f"(Citation: {c})" for c in citations]
+    return ''.join(refs)
+
+
 def get_alias_data(alias_list, ext_refs):
     """This function generates the Alias Description section for the pages."""
     if not alias_list:
