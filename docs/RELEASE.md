@@ -27,6 +27,18 @@ If you are only updating the banner and nothing else, follow these steps.
   * If everything looks good, then proceed with running `towncrier`.
     * This will delete the newsfragment files.
     * Doublecheck the `CHANGELOG.md` file since the template isn't perfect and whitespace issues get introduced.
+      * Here is an example of `towncrier` output. Notice that it adds a bunch of hyphens under the main header and
+        adds a trailing newline. These lines can be removed to ensure consistency with the rest of the CHANGELOG.md
+        file.
+      ```text
+        # v4.0.0 (2022-10-24)
+        --------------------- <--- DELETE THIS LINE
+        ## Features
+        * Adds support for [Campaigns](https://github.com/mitre/cti/blob/master/USAGE.md#campaigns) [#384]
+         (https://github.com/mitre-attack/attack-website/issues/384)
+        <newline>
+        <newline>  <-- DELETE THIS LINE
+      ```
     * Run `git status`, then stage and commit changes to `CHANGELOG.md` and removed files from `newsfragments/`.
 * Build the website locally to do one final test that it looks correct
   * e.g. `python update-attack.py --attack-brand --extras --no-test-exitstatus`
