@@ -1,0 +1,102 @@
+{% extends "general/two-column.html" %} 
+{% set title = "Campaigns | MITRE ATT&CK&reg;" %}
+{% set parsed = page.data | from_json %}
+{% set active_page = "campaigns" -%}
+{% import 'macros/navigation.html' as navigation %}
+{% import 'macros/clean_output.html' as clean_output %}
+
+{% block innerleft %}
+<!--stop-indexing-for-search-->
+<div class="side-nav-desktop-view h-100">
+        {{ navigation.sidenav(parsed.side_menu_data, output_file) }} 
+    </div>
+    <div class="side-nav-mobile-view">
+        {{ navigation.sidenav(parsed.side_menu_mobile_view_data, output_file) }} 
+    </div>
+<!--start-indexing-for-search-->
+{% endblock %}
+
+{% block innerright %}
+    {{ super () }}
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/">Home</a></li>
+        <li class="breadcrumb-item">Campaigns</li>
+    </ol>
+    <div class="tab-pane fade show active" id="v-{{ pages.title }}" role="tabpanel" aria-labelledby="v-{{ pages.title }}-tab"></div>
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="jumbotron jumbotron-fluid">
+                <div class="container-fluid">
+                    <div class="overflow-x-auto">
+                        <h1>Campaigns</h1>
+                        <p>
+                            The security community tracks intrusion activity using various analytic methodologies and terms, such as operations, intrusion sets, and campaigns.
+                            Some intrusion activity may be referenced by a variety of names due to different organizations tracking similar activity, often from different vantage points;
+                            conversely other times reported activity is not given a designated name.
+                        </p>
+                        <p>
+                            Malicious cyber activity may be attributed to a threat group, or referenced as unattributed activity.
+                            Alternatively, complex cyber operations may involve multiple affiliated or unaffiliated groups, with each playing a unique role
+                            (ie. initial access, data exfiltration, etc).
+                        </p>
+                        <p>
+                            For the purposes of the Campaigns page, the MITRE ATT&CK team uses the term Campaign to describe any grouping of intrusion activity
+                            conducted over a specific period of time with common targets and objectives.
+                            Unnamed intrusion activity is cited using a unique ATT&CK identifier, otherwise the team will use the activity name as noted in public reporting.
+                            For named Campaigns, the team makes a best effort to track overlapping names, which are designated as “Associated Campaigns” on each page,
+                            as we believe these overlaps are useful for analysts.
+                            Campaign entries will also be attributed to ATT&CK Group and Software pages, when possible, based on public reporting;
+                            unattributed activity will simply reference “threat actors” in the procedure example.
+                        </p>
+                        <p>
+                            Campaigns are mapped to publicly reporting techniques and original references are included.
+                            The information provided does not represent all possible techniques used in a Campaign but rather a subset that is available through open source reporting.
+                        </p>
+
+                        <h6 class="table-object-count">Campaigns: {{ parsed.campaigns_list_len }}</h6>
+                        <table class="table table-bordered table-alternate mt-2">
+                            <thead>
+                                <tr>
+                                    <th scope="col">ID</th>
+                                    <th scope="col">Name</th>
+                                    <!-- <th scope="col">First Seen</th> -->
+                                    <!-- <th scope="col">Last Seen</th> -->
+                                    <!-- <th scope="col">Associated Campaigns</th> -->
+                                    <th scope="col">Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for row in parsed.campaigns_table %}
+                                    <tr>
+                                        <td>
+                                            <a href="/campaigns/{{ row.id | upper }}"> {{ row.id | upper }} </a>
+                                        </td>
+                                        <td>
+                                            <a href="/campaigns/{{ row.id | upper }}"> {{ row.name }} </a>
+                                        </td>
+                                        <!-- <td>{{row.first_seen}}</td> -->
+                                        <!-- <td>{{row.last_seen}}</td> -->
+                                        <!-- <td>{{ row.aliases_list|join(", ") }}</td> -->
+                                        <td>
+                                            {% if row.deprecated %}
+                                                <font color="red">****Deprecation Warning****</font>
+                                            {% endif %}
+                                            {{ clean_output.stixToHTML(row.descr) }}                                            
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    <!--SCRIPTS-->
+    <script src="/theme/scripts/navigation.js"></script>
+{% endblock %}

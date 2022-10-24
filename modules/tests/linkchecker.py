@@ -10,8 +10,8 @@ from modules import site_config
 from . import tests_config
 
 # STATIC PROPERTIES
-# I'm doing spaces here for readability with symbol characters.
-# The strings will get stripped of whitespace.
+# The spaces here are for readability with symbol characters.
+# The strings are stripped of whitespace.
 # These get compiled into a regex string
 
 allowed_in_link_with_external_links = "".join(
@@ -82,16 +82,11 @@ headers = {
 
 def remove_extra_from_path(filepath):
     """Given a path, remove unwanted path from a website link"""
-
     return filepath.split(site_config.parent_web_directory)[1]
 
 
 def get_correct_link(path):
-    """Given a path, return the correct path by adding
-    index.html or removing cache-disabling query string
-    suffix
-    """
-
+    """Given a path, return the correct path by adding index.html or removing cache-disabling query string suffix."""
     # Ignore if it starts with http
     if path.startswith("http"):
         return path
@@ -136,12 +131,10 @@ def get_correct_link(path):
 
 
 def check_if_link_in_use(filepath, link):
-    """Given a filepath and a link, check if the link is
-    already linked by another page. If not, verify that the
-    link is not the same as the filepath and add it to the
-    in use links map
+    """Given a filepath and a link, check if the link is already linked by another page.
+    
+    If not, verify that the link is not the same as the filepath and add it to the in use links map.
     """
-
     if not "previous" in link and not "versions" in link:
         if not in_use_links.get(link):
             new_file_name = remove_extra_from_path(filepath)
@@ -154,7 +147,6 @@ def check_if_link_in_use(filepath, link):
 
 
 def remove_subdirectory_from_web_directory():
-
     if site_config.subdirectory:
         return site_config.web_directory.split(site_config.subdirectory)[0]
     else:
@@ -162,8 +154,7 @@ def remove_subdirectory_from_web_directory():
 
 
 def internal_link_test(link):
-    """Given a link, make sure that that it exists on the file system"""
-
+    """Given a link, make sure that that it exists on the file system."""
     # Get correct link path
     path = get_correct_link(link)
 
@@ -188,8 +179,7 @@ def internal_link_test(link):
 
 
 def check_if_relative_link(link):
-    """Given a link, return true if it is a relative path"""
-
+    """Given a link, return true if it is a relative path."""
     if not link.startswith("http"):
         if not link.startswith("/"):
             return True
@@ -197,8 +187,7 @@ def check_if_relative_link(link):
 
 
 def internal_external_link_checker(filepath, html_str):
-    """Check internal and external links"""
-
+    """Check internal and external links."""
     # Flag to determine if internal link is broken
     internal_link_error = False
 
@@ -265,7 +254,7 @@ def internal_external_link_checker(filepath, html_str):
 
 
 def internal_link_checker(filepath, html_str):
-    """Given an html page as a string, check if there are broken internal links"""
+    """Given an html page as a string, check if there are broken internal links."""
     # Flag to determine if internal link is broken
     internal_link_error = False
 
@@ -311,8 +300,9 @@ def internal_link_checker(filepath, html_str):
 
 
 def check_if_file_is_deprecated(filename):
-    """Given a filename, verify if it is deprecated
-    Return True if it is deprecated, False if not
+    """Given a filename, verify if it is deprecated.
+
+    Return True if it is deprecated, False if not.
     """
     with open(filename, "r", encoding="utf8") as f:
         lines = f.readlines()
@@ -323,11 +313,10 @@ def check_if_file_is_deprecated(filename):
 
 
 def check_unlinked_pages(filenames):
-    """Given a list of filenames, check if they where linked from
-    another page. Add the files that are not linked to a list a return
-    the list
+    """Given a list of filenames, check if they where linked from another page.
+    
+    Add the files that are not linked to a list a return the list.
     """
-
     unlinked_pages = []
     for filename in filenames:
         if not "previous" in filename and not "versions" in filename:
@@ -369,8 +358,7 @@ def check_unlinked_pages(filenames):
 
 
 def check_links_on_page(filepath, check_external_links=False):
-    """return whether the links on the given file are all valid"""
-
+    """Return whether the links on the given file are all valid."""
     # Declare just in case there is a problem opening the file
     problems = []
     relative_links = []
@@ -404,26 +392,11 @@ def check_links_on_page(filepath, check_external_links=False):
     }
 
 
-def get_amount_of_broken_links():
-    """Return the number of broken links"""
-
-    count = 0
-    for link in links_list:
-        if links_list[link]:
-            count += 1
-    return count
-
-
 def check_links(external_links=False):
-    """checks all links on the site to make sure that they have a valid
-    destination
-    """
-
+    """Check all links on the site to make sure that they have a valid destination."""
     broken_pages = []
     relative_links = []
-
     filenames = []
-
     internal_problem = False
 
     for directory, _, files in os.walk(site_config.web_directory):
@@ -469,6 +442,7 @@ def check_links(external_links=False):
             f.write("No unlinked pages found\n")
 
     # logger.info(f"Writing report: broken links")
+    broken_count = 0
     with open(os.path.join(site_config.test_report_directory, tests_config.links_report_filename), "w") as f:
         f.write("Broken links report:\n\n")
         if broken_pages:
@@ -476,6 +450,7 @@ def check_links(external_links=False):
                 f.write(page["path"] + "\n")
                 for problem in page["problems"]:
                     f.write("\t- " + problem + "\n")
+                    broken_count += 1
         else:
             f.write("No broken links found\n")
 
@@ -489,8 +464,6 @@ def check_links(external_links=False):
                     f.write("\t- " + relative_link + "\n")
         else:
             f.write("No relative links found\n")
-
-    broken_count = get_amount_of_broken_links()
 
     links = (len(links_list) - broken_count, broken_count)
 

@@ -6,7 +6,7 @@ import bleach
 import markdown
 from loguru import logger
 
-from modules import site_config, util
+from modules import site_config, stixtests, util
 
 from . import citationchecker, linkchecker, sizechecker, tests_config
 
@@ -144,7 +144,7 @@ def check_links(external_links):
     else:
         TEST = "Internal Links"
 
-    MSG = ("{} OK - {} broken link(s) ").format(links[0], links[1])
+    MSG = f"{links[0]} OK - {links[1]} pages referencing broken link(s)"
 
     # Print output
     util.buildhelpers.print_test_output(STATUS, TEST, MSG)
@@ -223,8 +223,12 @@ def check_size():
 def create_combined_reports_html():
     reports = os.listdir(site_config.test_report_directory)
 
+    stixtests_html = stixtests.stixtests_config.combined_reports_filename
     report_sections = []
     for report in reports:
+        if report == stixtests_html:
+            # not combining with the stixtests_html file because its components already exist
+            continue
         with open(os.path.join(site_config.test_report_directory, report), "r") as f:
             if report.endswith(".md"):
                 report_sections.append(markdown.markdown(f.read(), extensions=["tables"]))

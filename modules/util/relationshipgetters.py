@@ -5,9 +5,12 @@ from . import stixhelpers
 
 malware_used_by_groups = {}
 tools_used_by_groups = {}
+malware_used_by_campaigns = {}
+tools_used_by_campaigns = {}
 techniques_used_by_malware = {}
 techniques_used_by_tools = {}
 techniques_used_by_groups = {}
+techniques_used_by_campaigns = {}
 techniques_detected_by_datacomponent = {}
 groups_using_tool = {}
 groups_using_malware = {}
@@ -17,21 +20,31 @@ datacomponents_detecting_technique = {}
 tools_using_technique = {}
 malware_using_technique = {}
 groups_using_technique = {}
+campaigns_using_technique = {}
+campaigns_using_tool = {}
+campaigns_using_malware = {}
+groups_attributed_to_campaign = {}
+campaigns_attributed_to_group = {}
 subtechniques_of = {}
 datacomponent_of = {}
 datasource_of = {}
 parent_technique_of = {}
 objects_using_notes = {}
+
 ms = {}
 srcs = []
+
 resources = {}
 relationships = []
+
 group_list = []
 software_list = []
 technique_list = []
 datasource_list = []
 datacomponent_list = []
 mitigation_list = []
+campaign_list = []
+
 technique_to_domain = {}
 
 # Relationship getters
@@ -55,6 +68,26 @@ def get_tools_used_by_groups():
         tools_used_by_groups = rsh.tools_used_by_groups(get_srcs())
 
     return tools_used_by_groups
+
+
+def get_malware_used_by_campaigns():
+    """malware used by campaigns getter"""
+    global malware_used_by_campaigns
+
+    if not malware_used_by_campaigns:
+        malware_used_by_campaigns = rsh.malware_used_by_campaigns(get_srcs())
+
+    return malware_used_by_campaigns
+
+
+def get_tools_used_by_campaigns():
+    """tools used by campaigns getter"""
+    global tools_used_by_campaigns
+
+    if not tools_used_by_campaigns:
+        tools_used_by_campaigns = rsh.tools_used_by_campaigns(get_srcs())
+
+    return tools_used_by_campaigns
 
 
 def get_techniques_used_by_malware():
@@ -85,6 +118,16 @@ def get_techniques_used_by_groups():
         techniques_used_by_groups = rsh.techniques_used_by_groups(get_srcs())
 
     return techniques_used_by_groups
+
+
+def get_techniques_used_by_campaigns():
+    """techniques used by campaigns getter"""
+    global techniques_used_by_campaigns
+
+    if not techniques_used_by_campaigns:
+        techniques_used_by_campaigns = rsh.techniques_used_by_campaigns(get_srcs())
+
+    return techniques_used_by_campaigns
 
 
 def get_techniques_detected_by_datacomponent():
@@ -173,6 +216,56 @@ def get_groups_using_technique():
         groups_using_technique = rsh.groups_using_technique(get_srcs())
 
     return groups_using_technique
+
+
+def get_campaigns_using_technique():
+    """campaigns using technique getter"""
+    global campaigns_using_technique
+
+    if not campaigns_using_technique:
+        campaigns_using_technique = rsh.campaigns_using_technique(get_srcs())
+
+    return campaigns_using_technique
+
+
+def get_campaigns_using_tool():
+    """campaigns using tool getter"""
+    global campaigns_using_tool
+
+    if not campaigns_using_tool:
+        campaigns_using_tool = rsh.campaigns_using_tool(get_srcs())
+
+    return campaigns_using_tool
+
+
+def get_campaigns_using_malware():
+    """campaigns using malware getter"""
+    global campaigns_using_malware
+
+    if not campaigns_using_malware:
+        campaigns_using_malware = rsh.campaigns_using_malware(get_srcs())
+
+    return campaigns_using_malware
+
+
+def get_groups_attributed_to_campaigns():
+    """groups attributed to campaign getter"""
+    global groups_attributed_to_campaign
+
+    if not groups_attributed_to_campaign:
+        groups_attributed_to_campaign = rsh.groups_attributed_to_campaign(get_srcs())
+
+    return groups_attributed_to_campaign
+
+
+def get_campaigns_attributed_to_group():
+    """campaigns attributed to group getter"""
+    global campaigns_attributed_to_group
+    
+    if not campaigns_attributed_to_group:
+        campaigns_attributed_to_group = rsh.campaigns_attributed_to_group(get_srcs())
+
+    return campaigns_attributed_to_group
 
 
 def get_subtechniques_of():
@@ -327,6 +420,16 @@ def get_mitigation_list():
         mitigation_list = get_resources()["mitigations"]
 
     return mitigation_list
+
+
+def get_campaign_list():
+    """campaign list getter"""
+    global campaign_list
+
+    if not campaign_list:
+        campaign_list = get_resources()["campaigns"]
+
+    return campaign_list
 
 
 def get_technique_to_domain():

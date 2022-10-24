@@ -133,6 +133,9 @@ def generate_software_md(software, side_menu_data, side_menu_mobile_view_data, n
         # Get techniques used by software
         data["technique_table_data"] = get_techniques_used_by_software_data(software, reference_list)
 
+        # Get campaigns that use this software
+        data["campaign_data"] = get_campaign_table_data(software, reference_list)
+
         # Get navigator layers for this group
         layers = util.buildhelpers.get_navigator_layers(
             data["name"],
@@ -173,15 +176,15 @@ def generate_software_md(software, side_menu_data, side_menu_mobile_view_data, n
         data["groups"] = get_groups_using_software(software, reference_list)
 
         # Get aliases list
-        if isinstance(software.get("x_mitre_aliases"), collections.Iterable):
+        if isinstance(software.get("x_mitre_aliases"), collections.abc.Iterable):
             data["aliases_list"] = software["x_mitre_aliases"][1:]
 
         # Get contributors
-        if isinstance(software.get("x_mitre_contributors"), collections.Iterable):
+        if isinstance(software.get("x_mitre_contributors"), collections.abc.Iterable):
             data["contributors_list"] = software["x_mitre_contributors"]
 
         # Get platform list
-        if isinstance(software.get("x_mitre_platforms"), collections.Iterable):
+        if isinstance(software.get("x_mitre_platforms"), collections.abc.Iterable):
             data["platform_list"] = software["x_mitre_platforms"]
 
         data["citations"] = reference_list
@@ -218,7 +221,7 @@ def get_software_table_data(software_list):
             if attack_id:
                 row["id"] = attack_id
 
-            if isinstance(software.get("x_mitre_aliases"), collections.Iterable):
+            if isinstance(software.get("x_mitre_aliases"), collections.abc.Iterable):
                 row["aliases_list"] = software["x_mitre_aliases"][1:]
 
             software_table_data.append(row)
@@ -230,36 +233,79 @@ def get_groups_using_software(software, reference_list):
     """Given a software object, return group list with id and name of groups."""
     if software.get("type").lower() == "malware":
         groups_using_software = util.relationshipgetters.get_groups_using_malware().get(software["id"])
+        groups_attributed_to_campaigns = {
+            "campaigns": util.relationshipgetters.get_campaigns_using_malware(),
+            "groups": util.relationshipgetters.get_groups_attributed_to_campaigns()
+        }
     else:
         groups_using_software = util.relationshipgetters.get_groups_using_tool().get(software["id"])
+        groups_attributed_to_campaigns = {
+            "campaigns": util.relationshipgetters.get_campaigns_using_tool(),
+            "groups": util.relationshipgetters.get_groups_attributed_to_campaigns()
+        }
 
     groups = []
+    seen_attack_ids = set()
 
-    used_groups = {}
     if groups_using_software:
         # Get name, id of group
-        # attack_ids_seen = set()
         for group in groups_using_software:
             attack_id = util.buildhelpers.get_attack_id(group["object"])
 
             if attack_id:
+                if attack_id in seen_attack_ids:
+                    software_attack_id = util.buildhelpers.get_attack_id(software)
+                    logger.debug(f"Skipping extra use of [{attack_id}] {group['object']['name']} for {software_attack_id}")
+                    continue
 
-                # if attack_id in attack_ids_seen:
-                #     software_attack_id = util.buildhelpers.get_attack_id(software)
-                #     logger.debug(f"Skipping extra use of [{attack_id}] {group['object']['name']} for {software_attack_id}")
-                #     continue
-                # attack_ids_seen.add(attack_id)
-
-                row = {}
-                row["id"] = attack_id
-                row["name"] = group["object"]["name"]
+                row = {
+                    "id": attack_id,
+                    "name": group["object"]["name"]
+                }
 
                 if group["relationship"].get("description"):
                     # Get filtered description
                     row["descr"] = group["relationship"]["description"]
                     reference_list = util.buildhelpers.update_reference_list(reference_list, group["relationship"])
 
+                seen_attack_ids.add(attack_id)
                 groups.append(row)
+
+    if groups_attributed_to_campaigns["campaigns"].get(software.get("id")):
+        # campaigns related to this software
+        for campaign in groups_attributed_to_campaigns["campaigns"][software["id"]]:
+            campaign_id = campaign["object"]["id"]
+
+            if groups_attributed_to_campaigns["groups"].get(campaign_id):
+                # groups related to this campaign
+                for group in groups_attributed_to_campaigns["groups"][campaign_id]:
+                    attack_id = util.buildhelpers.get_attack_id(group["object"])
+
+                    descr = None
+                    if group["relationship"].get("description"):
+                        descr = group["relationship"]["description"]
+                        reference_list = util.buildhelpers.update_reference_list(reference_list, group["relationship"])
+
+                    if attack_id in seen_attack_ids:
+                        # group already in table, concatenate descriptions
+                        r = next(row for row in groups if row["id"] == attack_id)
+
+                        if r["descr"] and descr: # concatenate descriptions
+                            # get unique set of references
+                            r["descr"] = util.buildhelpers.get_reference_set([r["descr"], descr])
+                        elif descr:
+                            r["descr"] = descr
+                    else: # new group seen, add row
+                        row = {
+                            "id": attack_id,
+                            "name": group["object"]["name"]
+                        }
+
+                        if descr:
+                            row["descr"] = descr
+
+                        seen_attack_ids.add(attack_id)
+                        groups.append(row)
 
     return groups
 
@@ -296,3 +342,32 @@ def get_techniques_used_by_software_data(software, reference_list):
         technique_data, key=lambda k: [site_config.custom_alphabet.index(c) for c in k["domain"].lower()]
     )
     return technique_data
+
+
+def get_campaign_table_data(software, reference_list):
+    """Given a software, get the campaign table data."""
+    if software.get("type").lower() == "malware":
+        campaigns_using_software = util.relationshipgetters.get_campaigns_using_malware().get(software["id"])
+    else:
+        campaigns_using_software = util.relationshipgetters.get_campaigns_using_tool().get(software["id"])
+
+    campaign_list = {} # campaign stix id => {attack id, name, description}
+    if campaigns_using_software:
+        for campaign in campaigns_using_software:
+            campaign_id = campaign["object"]["id"]
+            if campaign_id not in campaign_list:
+                attack_id = util.buildhelpers.get_attack_id(campaign["object"])
+                campaign_list[campaign_id] = {
+                    "id": attack_id,
+                    "name": campaign["object"]["name"]
+                }
+
+                if campaign["relationship"].get("description"):
+                    campaign_list[campaign_id]["desc"] = campaign["relationship"]["description"]
+
+                    # update reference list
+                    reference_list = util.buildhelpers.update_reference_list(reference_list, campaign["relationship"])
+
+    campaign_data = [campaign_list[item] for item in campaign_list]
+    campaign_data = sorted(campaign_data, key=lambda k: k["name"].lower())
+    return campaign_data

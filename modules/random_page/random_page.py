@@ -11,10 +11,11 @@ def generate_json():
         "matrices": "Matrix",
         "tactics": "Tactic",
         "techniques": "Technique",
+        "datasources": "Data Source",
         "mitigations": "Mitigation",
         "groups": "Group",
         "software": "Software",
-        "datasources": "Data Source",
+        "campaigns": "Campaign"
     }
     routes = {}
 
@@ -53,6 +54,8 @@ def generate_json():
                         elif route == "groups" and re.search(r"G[0-9]{4}", thepath):
                             add_to_json = True
                         elif route == "software" and re.search(r"S[0-9]{4}", thepath):
+                            add_to_json = True
+                        elif route == "campaigns" and re.search(r"C[0-9]{4}", thepath):
                             add_to_json = True
 
                         if add_to_json:

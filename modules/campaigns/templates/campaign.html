@@ -2,11 +2,11 @@
 {% set parsed = page.data | from_json %}
 {% if parsed.aliases_list %}
     {% set alias_string = parsed.aliases_list|join(", ") %} 
-    {% set title = parsed.name + ", " + alias_string + ", Group " + parsed.attack_id + " | MITRE ATT&CK&reg;" -%} 
+    {% set title = parsed.name + ", " + alias_string + ", Campaign " + parsed.attack_id + " | MITRE ATT&CK&reg;" -%} 
 {% else %}
-    {% set title = parsed.name + ", Group " + parsed.attack_id + " | MITRE ATT&CK&reg;" -%} 
+    {% set title = parsed.name + ", Campaign " + parsed.attack_id + " | MITRE ATT&CK&reg;" -%} 
 {% endif %}
-{% set active_page = "groups" -%}
+{% set active_page = "campaigns" -%}
 
 {% import 'macros/deprecated.html' as deprecated %}
 {% import 'macros/navigator.html' as navigator %}
@@ -41,7 +41,7 @@
 
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="/">Home</a></li>
-        <li class="breadcrumb-item"><a href="/groups/">Groups</a></li>
+        <li class="breadcrumb-item"><a href="/campaigns/">Campaigns</a></li>
         <li class="breadcrumb-item">{{ parsed.name }}</li>
     </ol>
     <div class="tab-pane fade show active" id="v-{{pages.title}}" role="tabpanel" aria-labelledby="v-{{pages.title}}-tab"></div>
@@ -49,15 +49,13 @@
         <div class="col-xl-12">
             <div class="jumbotron jumbotron-fluid">
                 <div class="container-fluid">
-                    <h1>
-                        {{ parsed.name }}
-                    </h1>
+                    <h1>{{ parsed.name }}</h1>
 
                     {% if parsed.deprecated %}
                         {% if parsed.descr %}
                             {{ deprecated.deprecated(clean_output.stixToHTML(parsed.descr, firstParagraphOnly=True)) }}
                         {% else %}
-                            {{ deprecated.deprecated("This group has been deprecated.") }}
+                            {{ deprecated.deprecated("This campaign has been deprecated.") }}
                         {% endif %}
                     {% else %}
                         <div class="row">
@@ -88,13 +86,35 @@
                                                 </div>
                                             </div>
                                         {% endif %}
+                                        {% if parsed.first_seen %}
+                                            <div class="row card-data">
+                                                {% if has_alias_list %}
+                                                    <div class="col-md-1 px-0 text-center"></div>
+                                                {% endif %} 
+                                                <div class="{% if has_alias_list %}col-md-11 pl-0{% else %}col-md-12{% endif %}">
+                                                    <span class="h5 card-title">First Seen:&nbsp;</span>
+                                                    <span>{{ parsed.first_seen }}{{ clean_output.stixToHTML(parsed.first_seen_citation, parsed.citations, convert=False) }}</span>
+                                                </div>
+                                            </div>
+                                        {% endif %}
+                                        {% if parsed.last_seen %}
+                                            <div class="row card-data">
+                                                {% if has_alias_list %}
+                                                    <div class="col-md-1 px-0 text-center"></div>
+                                                {% endif %} 
+                                                <div class="{% if has_alias_list %}col-md-11 pl-0{% else %}col-md-12{% endif %}">
+                                                    <span class="h5 card-title">Last Seen:&nbsp;</span>
+                                                    <span>{{ parsed.last_seen }}{{ clean_output.stixToHTML(parsed.last_seen_citation, parsed.citations, convert=False) }}</span>
+                                                </div>
+                                            </div>
+                                        {% endif %}
                                         {% if parsed.aliases_list %}
                                             <div class="row card-data">
                                                 <div class="col-md-1 px-0 text-center">
-                                                    <span data-toggle="tooltip" data-placement="left" title="" data-test-ignore="true" data-original-title="Names that have overlapping reference to a group entry and may refer to the same or similar group in threat intelligence reporting">&#9432;</span>
+                                                    <span data-toggle="tooltip" data-placement="left" title="" data-test-ignore="true" data-original-title="Names that have overlapping reference to a campaign entry and may refer to the same or similar campaign in threat intelligence reporting">&#9432;</span>
                                                 </div>
                                                 <div class="col-md-11 pl-0">
-                                                    <span class="h5 card-title">Associated Groups</span>: {{ parsed.aliases_list|join(", ") }}
+                                                    <span class="h5 card-title">Associated Campaigns</span>: {{ parsed.aliases_list|join(", ") }}
                                                 </div>
                                             </div>
                                         {% endif %}
@@ -145,8 +165,9 @@
                                 {% endif %}
                             </div>
                         </div>
+                        
                         {% if parsed.alias_descriptions %}
-                            <h2 class="pt-3" id ="aliasDescription">Associated Group Descriptions</h2>
+                            <h2 class="pt-3" id ="aliasDescription">Associated Campaign Descriptions</h2>
                             <table class="table table-bordered table-alternate mt-2">
                                 <thead>
                                     <tr>
@@ -169,43 +190,29 @@
                             </table>
                         {% endif %}
 
-                        {% if parsed.campaign_data %}
-                            <h2 class="pt-3" id="campaigns">Campaigns</h2>
+                        {% if parsed.group_data %}
+                            <h2 class="pt-3" id="groups">Groups</h2>
                             <table class="table table-bordered table-alternate mt-2">
                                 <thead>
                                     <tr>
                                         <th scope="col">ID</th>
                                         <th scope="col">Name</th>
-                                        <th scope="col">First Seen</th>
-                                        <th scope="col">Last Seen</th>
-                                        <th scope="col">References</th>
-                                        <th scope="col">Techniques</th>
+                                        <th scope="col">Description</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {% for campaign in parsed.campaign_data %}
+                                    {% for group in parsed.group_data %}
                                     <tr>
                                         <td>
-                                            <a href="/campaigns/{{campaign.id}}">{{campaign.id}}</a>
+                                            <a href="/groups/{{group.id}}">{{group.id}}</a>
                                         </td>
                                         <td>
-                                            <a href="/campaigns/{{campaign.id}}">{{campaign.name}}</a>
+                                            <a href="/groups/{{group.id}}">{{group.name}}</a>
                                         </td>
-                                        <td style="white-space:nowrap">{{campaign.first_seen}}{{ clean_output.stixToHTML(campaign.first_seen_citation, parsed.citations, convert=False) }}</td>
-                                        <td style="white-space:nowrap">{{campaign.last_seen}}{{ clean_output.stixToHTML(campaign.last_seen_citation, parsed.citations, convert=False) }}</td>
                                         <td>
-                                            {% if campaign.desc %}
-                                                {{clean_output.stixToHTML(campaign.desc, parsed.citations)}}
+                                            {% if group.desc %}
+                                                {{clean_output.stixToHTML(group.desc, parsed.citations)}}
                                             {% endif %}
-                                        </td>
-                                        <td>
-                                            {% for technique in campaign.techniques %}
-                                                {% if technique.parent_id %}
-                                                    <a href="/techniques/{{ technique.parent_id }}">{{ technique.name }}</a>: <a href="/techniques/{{technique.parent_id}}/{{technique.id}}">{{technique.sub_name}}</a>{% if not loop.last %}, {% endif %}
-                                                {% else %}
-                                                    <a href="/techniques/{{ technique.id }}">{{ technique.name }}</a>{% if not loop.last %}, {% endif %}
-                                                {% endif %}    
-                                            {% endfor %}
                                         </td>
                                     </tr>
                                     {% endfor %}
@@ -214,7 +221,7 @@
                         {% endif %}
 
                         {% if parsed.technique_table_data %}
-                            {{ navigator.layer_links(parsed.attack_id, "groups", parsed.layers) }}
+                            {{ navigator.layer_links(parsed.attack_id, "campaigns", parsed.layers) }}
                             {{ techniques_used.techniques_used(parsed.technique_table_data, "Techniques Used", true, "Use", parsed.citations) }}
                         {% endif %}
 
@@ -225,34 +232,22 @@
                                     <tr>
                                         <th scope="col">ID</th>
                                         <th scope="col">Name</th>
-                                        {% if parsed.add_software_ref == True %}
-                                            <th scope="col">References</th>
-                                        {% endif %}
-                                        <th scope="col">Techniques</th>
+                                        <th scope="col">Description</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {% for software in parsed.software_data %}
                                         <tr>
                                             <td>
-                                                <a href="/software/{{software.id}}">{{ software.id }}</a>
+                                                <a href="/software/{{software.id}}"> {{software.id}} </a>
                                             </td>
                                             <td>
-                                                <a href="/software/{{software.id}}">{{ software.name }}</a>
+                                                <a href="/software/{{software.id}}"> {{software.name}} </a>
                                             </td>
-                                            {% if parsed.add_software_ref == True %}
-                                                <td>
-                                                    {{ clean_output.stixToHTML(software.descr, parsed.citations, firstParagraphOnly=True) }}
-                                                </td>
-                                            {% endif %}
                                             <td>
-                                                {% for technique in software.techniques %}
-                                                    {% if technique.parent_id %}
-                                                        <a href="/techniques/{{ technique.parent_id }}">{{ technique.name }}</a>: <a href="/techniques/{{technique.parent_id}}/{{technique.id}}">{{technique.sub_name}}</a>{% if not loop.last %}, {% endif %}
-                                                    {% else %}
-                                                        <a href="/techniques/{{ technique.id }}">{{ technique.name }}</a>{% if not loop.last %}, {% endif %}
-                                                    {% endif %}    
-                                                {% endfor %}
+                                                {% if software.desc %}
+                                                    {{clean_output.stixToHTML(software.desc, parsed.citations)}}
+                                                {% endif %}
                                             </td>
                                         </tr>
                                     {% endfor %}

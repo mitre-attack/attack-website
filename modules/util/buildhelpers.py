@@ -43,6 +43,37 @@ def format_date(date):
     return ("{} {} {}").format(date.strftime("%d"), date.strftime("%B"), date.strftime("%Y"))
 
 
+def get_first_last_seen_dates(obj):
+    """ Given an object, return the first_seen and last_seen dates. """
+    dates = {}
+
+    if obj.get("first_seen"):
+        dates["first_seen"] = format_date_as_month_year(obj["first_seen"])
+    if obj.get("last_seen"):
+        dates["last_seen"] = format_date_as_month_year(obj["last_seen"])
+    
+    return dates
+
+
+def get_first_last_seen_citations(obj):
+    """Given an object, return the first seen and last seen citations. This function generates
+    the descriptions/citations for the first/last seen fields."""
+    data = {}
+    if obj.get("x_mitre_first_seen_citation"):
+        data["first_seen_citation"] = obj.get("x_mitre_first_seen_citation")
+    if obj.get("x_mitre_last_seen_citation"):
+        data["last_seen_citation"] = obj.get("x_mitre_last_seen_citation")
+    return data
+
+
+def format_date_as_month_year(date):
+    """Given a date string, format to %B %Y."""
+    if isinstance(date, str):
+        date = datetime.datetime.strptime(date, "%Y-%m-%dT%H:%M:%SZ")
+    
+    return ("{} {}").format(date.strftime("%B"), date.strftime("%Y"))
+
+
 def find_index_id(ext_ref):
     """This method will search for the index of the external_id in the external reference list."""
     count = 0
@@ -96,6 +127,17 @@ def update_reference_list(reference_list, obj):
                     reference_list[ext_ref["source_name"]] = new_ref
 
     return reference_list
+
+
+def get_reference_set(reflist):
+    """This function retrieves the unique set of references in the given list of descriptions and 
+       returns them in string format to be displayed as citations."""
+    p = re.compile("\(Citation: (.*?)\)")
+    citations = set()
+    for c in reflist:
+        citations.update(p.findall(c))
+    refs = [f"(Citation: {c})" for c in citations]
+    return ''.join(refs)
 
 
 def get_alias_data(alias_list, ext_refs):
@@ -485,13 +527,14 @@ def get_technique_name(tid):
     return util_config.NOT_FOUND
 
 
-def technique_used_helper(technique_list, technique, reference_list):
+def technique_used_helper(technique_list, technique, reference_list, inherited=False):
     """Add technique to technique list and make distinction between techniques subtechniques."""
     attack_id = get_attack_id(technique["object"])
 
     if attack_id:
         # Check if technique not already in technique_list dict
-        if attack_id not in technique_list:
+        # or if the technique was inherited from a relationship (i.e. Group => Campaign => Technique)
+        if attack_id not in technique_list or inherited:
             technique_data = get_technique_data_helper(attack_id, technique, reference_list)
             if not technique_data:
                 logger.error(f"{attack_id} technique data unavailable, possibly due to domain mismatch")
@@ -500,13 +543,29 @@ def technique_used_helper(technique_list, technique, reference_list):
             if is_sub_tid(attack_id):
                 parent_id = get_parent_technique_id(attack_id)
 
-                # If parent technique not already in list, add to list and add current sub-technique
+                # If parent technique not already in list, add to list
                 # Parent technique will be marked as not used until it is seen
                 if parent_id not in technique_list:
                     technique_list[parent_id] = {}
                     technique_list[parent_id] = parent_technique_used_helper(parent_id)
 
-                technique_list[parent_id]["subtechniques"].append(technique_data)
+                # Check if sub-technique is already in list
+                for subtechnique in technique_list[parent_id]["subtechniques"]:
+                    # Concatenate the inherited object's description to the existing ID
+                    if subtechnique["id"] == technique_data["id"] and inherited:
+                        subtechnique["color"] = 3 # belongs both to object and inherited from another
+                        if "descr" in technique_data and "descr" in subtechnique:
+                            # add markdown newline between descriptions
+                            subtechnique["descr"] += "<p>" + technique_data["descr"] + "</p>"
+                        elif "descr" in technique_data:
+                            subtechnique["descr"] = technique_data["descr"]
+                        break;
+                else: # sub-technique is not in list
+                    # Add subtechnique to list
+                    if (inherited): technique_data["color"] = 2 # inherited from another object only
+                    else: technique_data["color"] = 1 # belongs to object only (not inherited)
+                    technique_list[parent_id]["subtechniques"].append(technique_data)
+
                 # Sort subtechniques by name
                 technique_list[parent_id]["subtechniques"] = sorted(
                     technique_list[parent_id]["subtechniques"], key=lambda k: k["id"]
@@ -514,8 +573,19 @@ def technique_used_helper(technique_list, technique, reference_list):
 
             # Attack id is regular technique
             else:
-                # Add technique to list
-                technique_list[attack_id] = technique_data
+                # Check if technique is already in list (inherited)
+                if attack_id in technique_list:
+                    technique_list[attack_id]["color"] = 3 # belongs both to object and inherited from another
+                    if "descr" in technique_data and "descr" in technique_list[attack_id]:
+                        # add markdown newline between descriptions
+                        technique_list[attack_id]["descr"] += "<p>" + technique_data["descr"] + "</p>"
+                    elif "descr" in technique_data:
+                        technique_list[attack_id]["descr"] = technique_data["descr"]
+                else:
+                    # Add technique to list
+                    if (inherited): technique_data["color"] = 2 # inherited from another object only
+                    else: technique_data["color"] = 1 # belongs to object only (not inherited)
+                    technique_list[attack_id] = technique_data
 
         # Check if parent ID was added by sub-technique
         # parent technique will be marked as not used
@@ -587,7 +657,13 @@ def replace_html_chars(to_be_replaced):
     return to_be_replaced.replace("\n", "").replace("{", "{{").replace("}", "}}").replace("”", '"').replace("“", '"')
 
 
-def get_navigator_layers(name, attack_id, obj_type, version, techniques_used):
+colorMap = {
+    0: "#ffffff",
+    1: "#66b1ff",
+    2: "#ff6666", # used for inherited relationships
+    3: "#ff66f4"  # used for inherited relationships
+}
+def get_navigator_layers(name, attack_id, obj_type, version, techniques_used, inheritance=False):
     """Given a list of techniques used, return the navigator json objects for enterprise and mobile."""
     # Remove minor version from ATT&CK version if any
     major_attack_version = site_config.attack_version.split(".")[0]
@@ -609,11 +685,17 @@ def get_navigator_layers(name, attack_id, obj_type, version, techniques_used):
     enterprise_layer["versions"] = {"layer": "4.3", "attack": major_attack_version, "navigator": "4.5"}
     enterprise_layer["techniques"] = []
     enterprise_layer["gradient"] = {  # white for nonused, blue for used
-        "colors": ["#ffffff", "#66b1ff"],
+        "colors": [colorMap[0], colorMap[1]],
         "minValue": 0,
         "maxValue": 1,
     }
-    enterprise_layer["legendItems"] = [{"label": f"used by {name}", "color": "#66b1ff"}]
+    enterprise_layer["legendItems"] = [{"label": f"used by {name}", "color": colorMap[1]}]
+    if inheritance:
+        # add campaign inheritance to legend
+        enterprise_layer["legendItems"].extend([
+            {"label": f"used by a campaign attributed to {name}", "color": colorMap[2]},
+            {"label": f"used by {name} and used by a campaign attributed to {name}", "color": colorMap[3]}
+        ])
 
     # Mobile navigator layer
     mobile_layer = {}
@@ -623,11 +705,17 @@ def get_navigator_layers(name, attack_id, obj_type, version, techniques_used):
     mobile_layer["versions"] = {"layer": "4.2", "attack": major_attack_version, "navigator": "4.3"}
     mobile_layer["techniques"] = []
     mobile_layer["gradient"] = {  # white for nonused, blue for used
-        "colors": ["#ffffff", "#66b1ff"],
+        "colors": [colorMap[0], colorMap[1]],
         "minValue": 0,
         "maxValue": 1,
     }
-    mobile_layer["legendItems"] = [{"label": f"used by {name}", "color": "#66b1ff"}]
+    mobile_layer["legendItems"] = [{"label": f"used by {name}", "color": colorMap[1]}]
+    if inheritance:
+        # add campaign inheritance to legend
+        mobile_layer["legendItems"].extend([
+            {"label": f"used by a campaign attributed to {name}", "color": colorMap[2]},
+            {"label": f"used by {name} and used by a campaign attributed to {name}", "color": colorMap[3]}
+        ])
 
     # Append techniques to enterprise and mobile layers
     for technique in techniques_used:
@@ -638,15 +726,15 @@ def get_navigator_layers(name, attack_id, obj_type, version, techniques_used):
             score = 1
             if technique.get("subtechniques"):
                 navigator_technique = get_navigator_technique(
-                    technique["id"], technique["descr"] if "descr" in technique else "", score, True
+                    technique["id"], technique["descr"] if "descr" in technique else "", score, technique["color"] if "color" in technique else 0, True
                 )
             else:
                 navigator_technique = get_navigator_technique(
-                    technique["id"], technique["descr"] if "descr" in technique else "", score, False
+                    technique["id"], technique["descr"] if "descr" in technique else "", score, technique["color"] if "color" in technique else 0, False
                 )
         else:
             if technique.get("subtechniques"):
-                navigator_technique = get_navigator_technique(technique["id"], None, None, True)
+                navigator_technique = get_navigator_technique(technique["id"], None, None, 0, True)
 
         if navigator_technique:
             if technique["domain"].startswith("enterprise"):
@@ -662,6 +750,7 @@ def get_navigator_layers(name, attack_id, obj_type, version, techniques_used):
                     technique["id"] + "." + subtechnique["id"],
                     subtechnique["descr"] if "descr" in subtechnique else "",
                     score,
+                    subtechnique["color"] if "color" in subtechnique else 0,
                     True,
                 )
 
@@ -678,11 +767,13 @@ def get_navigator_layers(name, attack_id, obj_type, version, techniques_used):
     return layers
 
 
-def get_navigator_technique(attack_id, description, score, showSub=False):
+def get_navigator_technique(attack_id, description, score, color, showSub=False):
     """Given an attack id, return it as a dict for the navigator layer."""
     navigator_technique = {}
     if score:
         navigator_technique["score"] = score
+    if color and color in colorMap.keys():
+        navigator_technique["color"] = colorMap[color]
     navigator_technique["techniqueID"] = attack_id
     navigator_technique["showSubtechniques"] = showSub
     if description:

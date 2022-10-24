@@ -136,11 +136,13 @@ def generate_static_pages():
                 with open(
                     os.path.join(resources_config.updates_markdown_path, static_page), "w", encoding="utf8"
                 ) as md_file:
+                    logger.debug(f"{md.name} >>> {md_file.name}")
                     md_file.write(content)
             else:
                 with open(
                     os.path.join(site_config.resources_markdown_path, static_page), "w", encoding="utf8"
                 ) as md_file:
+                    logger.debug(f"{md.name} >>> {md_file.name}")
                     md_file.write(content)
 
 
@@ -161,6 +163,7 @@ def generate_working_with_attack():
         "tactics",
         "techniques",
         "datasources",
+        "campaigns"
     ]
 
     # Verify if directories exists
@@ -187,7 +190,7 @@ def generate_working_with_attack():
         attackToExcel.export(
             domain=domain["name"],
             version=site_config.full_attack_version,
-            outputDir=docs_dir,
+            output_dir=docs_dir,
             stix_file=stix_filename,
         )
 

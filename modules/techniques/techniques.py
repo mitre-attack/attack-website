@@ -388,16 +388,17 @@ def get_examples_table_data(technique, reference_list):
     tools using technique and groups using technique. Return list with
     example data
     """
-    # Creating map to avoid repeating the code 3 times
+    # Creating map to avoid repeating the code multiple times
     examples_map = [
         {"example_type": util.relationshipgetters.get_tools_using_technique()},
         {"example_type": util.relationshipgetters.get_malware_using_technique()},
         {"example_type": util.relationshipgetters.get_groups_using_technique()},
+        {"example_type": util.relationshipgetters.get_campaigns_using_technique()},
     ]
 
     example_data = []
 
-    # Get malware or tools used by group
+    # Get malware, tools, or campaigns used by group
     for examples in examples_map:
         if examples["example_type"].get(technique.get("id")):
             for example in examples["example_type"][technique["id"]]:
@@ -410,10 +411,7 @@ def get_examples_table_data(technique, reference_list):
 
                     row["id"] = attack_id
 
-                    if attack_id.startswith("S"):
-                        row["path"] = "software"
-                    else:
-                        row["path"] = "groups"
+                    row["path"] = get_path_from_type(example["object"])
 
                     row["name"] = example["object"]["name"]
 
@@ -429,6 +427,17 @@ def get_examples_table_data(technique, reference_list):
     if example_data:
         example_data = sorted(example_data, key=lambda k: k["name"].lower())
     return example_data
+
+
+def get_path_from_type(object):
+    """Given an object, return the path"""
+    path_map = {
+        "intrusion-set": "groups",
+        "malware": "software",
+        "tool": "software",
+        "campaign": "campaigns"
+    }
+    return path_map[object.get("type")]
 
 
 def get_technique_side_nav_data(techniques, tactics):
