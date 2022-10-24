@@ -30,6 +30,7 @@ If you are only updating the banner and nothing else, follow these steps.
       * Here is an example of `towncrier` output. Notice that it adds a bunch of hyphens under the main header and
         adds a trailing newline. These lines can be removed to ensure consistency with the rest of the CHANGELOG.md
         file.
+
       ```text
         # v4.0.0 (2022-10-24)
         --------------------- <--- DELETE THIS LINE
@@ -39,6 +40,7 @@ If you are only updating the banner and nothing else, follow these steps.
         <newline>
         <newline>  <-- DELETE THIS LINE
       ```
+
     * Run `git status`, then stage and commit changes to `CHANGELOG.md` and removed files from `newsfragments/`.
 * Build the website locally to do one final test that it looks correct
   * e.g. `python update-attack.py --attack-brand --extras --no-test-exitstatus`
