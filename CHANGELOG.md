@@ -31,7 +31,7 @@
 # v4.0.0 (2022-10-25)
 
 ## Features
-      
+
 * Add support for [Campaigns](https://github.com/mitre/cti/blob/master/USAGE.md#campaigns) [#384](https://github.com/mitre-attack/attack-website/issues/384)
 
 # v3.6.7 (2022-08-24)
