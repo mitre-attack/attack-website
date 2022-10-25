@@ -8,7 +8,7 @@ save_as: resources/updates/updates-april-2022/index.html
 
 | Version | Start Date | End Date | Data |
 |:--------|:-----------|:---------|:-----|
-| [ATT&CK v11](/versions/v11) | April 25, 2022 |This is the current version of ATT&CK | [v11.3 on MITRE/CTI](https://github.com/mitre/cti/releases/tag/ATT%26CK-v11.3) |
+| [ATT&CK v11](/versions/v11) | April 25, 2022 | October 24, 2022 | [v11.3 on MITRE/CTI](https://github.com/mitre/cti/releases/tag/ATT%26CK-v11.3) |
 
 The April 2022 (v11) ATT&CK release updates Techniques, Groups, and Software for Enterprise, Mobile, and ICS. The biggest changes are the restructuring of Detections, now tied to [Data Source](/datasources/) and Data Component objects in Enterprise ATT&CK, a beta release of ATT&CK for Mobile leveraging sub-techniques, and [ATT&CK for ICS now on attack.mitre.org](/matrices/ics/) An [accompanying blog post](https://medium.com/mitre-attack/attack-goes-to-v11-599a9112a025) describes these changes as well as improvements across ATT&CK's various domains and platforms.
 
