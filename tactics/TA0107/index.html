@@ -96,6 +96,9 @@
                         <li class="nav-item">
                             <a href="/software/"  class="nav-link" ><b>Software</b></a>
                         </li>
+                        <li class="nav-item">
+                            <a href="/campaigns"  class="nav-link" ><b>Campaigns</b></a>
+                        </li>
                         <li class="nav-item dropdown">
                                 
     <a class="nav-link dropdown-toggle" href="/resources/" id="navbarDropdown" role="button"
@@ -140,6 +143,9 @@
             <div class="col px-0">
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
+                    <div class="container-fluid banner-message">
+                        ATT&CK v12 is now live! <a href='https://attack.mitre.org/resources/updates/updates-october-2022/'>Check out the updates here</a>
+                    </div>
             </div>
         </div>
         <div class="row flex-grow-1 flex-shrink-0">
@@ -636,7 +642,7 @@
                                     <div class="card-body">
                                         <div class="card-data"><span class="h5 card-title">ID:</span> TA0107</div>    
                                             <div class="card-data"><span class="h5 card-title">Created:&nbsp;</span>17 October 2018</div>
-                                            <div class="card-data"><span class="h5 card-title">Last Modified:&nbsp;</span>06 May 2022</div>
+                                            <div class="card-data"><span class="h5 card-title">Last Modified:&nbsp;</span>24 October 2022</div>
               
                                     </div>
                                 </div>
@@ -645,13 +651,13 @@
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Permalink to this version of TA0107" 
-           href="/versions/v11/tactics/TA0107/" data-test-ignore="true">Version Permalink</a>
+           href="/versions/v12/tactics/TA0107/" data-test-ignore="true">Version Permalink</a>
     </div>
     <div class="permalink">
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Go to the live version of TA0107" 
-           href="/versions/v11/tactics/TA0107/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+           href="/versions/v12/tactics/TA0107/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
     </div>
 </div>
 
@@ -687,7 +693,7 @@
                         <a href="/techniques/T0878"> Alarm Suppression </a>
                     </td>
                     <td>
-                                Adversaries may target protection function alarms to prevent them from notifying operators of critical conditions. Alarm messages may be a part of an overall reporting system and of particular interest for adversaries. Disruption of the alarm system does not imply the disruption of the reporting system as a whole.   In the Maroochy Attack, the adversary suppressed alarm reporting to the central computer.   A Secura presentation on targeting OT notes a dual fold goal for adversaries attempting alarm suppression: prevent outgoing alarms from being raised and prevent incoming alarms from being responded to.   The method of suppression may greatly depend on the type of alarm in question:  * An alarm raised by a protocol message * An alarm signaled with I/O * An alarm bit set in a flag (and read)  In ICS environments, the adversary may have to suppress or contend with multiple alarms and/or alarm propagation to achieve a specific goal to evade detection or prevent intended responses from occurring.   Methods of suppression may involve tampering or altering device displays and logs, modifying in memory code to fixed values, or even tampering with assembly level instruction code.
+                                Adversaries may target protection function alarms to prevent them from notifying operators of critical conditions. Alarm messages may be a part of an overall reporting system and of particular interest for adversaries. Disruption of the alarm system does not imply the disruption of the reporting system as a whole.
 
                     </td>
                 </tr>
@@ -711,7 +717,7 @@
                         <a href="/techniques/T0804"> Block Reporting Message </a>
                     </td>
                     <td>
-                                Adversaries may block or prevent a reporting message from reaching its intended target. In control systems, reporting messages contain telemetry data (e.g., I/O values) pertaining to the current state of equipment and the industrial process. By blocking these reporting messages, an adversary can potentially hide their actions from an operator.  Blocking reporting messages in control systems that manage physical processes may contribute to system impact, causing inhibition of a response function. A control system may not be able to respond in a proper or timely manner to an event, such as a dangerous fault, if its corresponding reporting message is blocked.   
+                                Adversaries may block or prevent a reporting message from reaching its intended target. In control systems, reporting messages contain telemetry data (e.g., I/O values) pertaining to the current state of equipment and the industrial process. By blocking these reporting messages, an adversary can potentially hide their actions from an operator.
 
                     </td>
                 </tr>
@@ -723,7 +729,7 @@
                         <a href="/techniques/T0805"> Block Serial COM </a>
                     </td>
                     <td>
-                                Adversaries may block access to serial COM to prevent instructions or configurations from reaching target devices. Serial Communication ports (COM) allow communication with control system devices. Devices can receive command and configuration messages over such serial COM. Devices also use serial COM to send command and reporting messages. Blocking device serial COM may also block command messages and block reporting messages.   A serial to Ethernet converter is often connected to a serial COM to facilitate communication between serial and Ethernet devices. One approach to blocking a serial COM would be to create and hold open a TCP session with the Ethernet side of the converter. A serial to Ethernet converter may have a few ports open to facilitate multiple communications. For example, if there are three serial COM available -- 1, 2 and 3 --, the converter might be listening on the corresponding ports 20001, 20002, and 20003. If a TCP/IP connection is opened with one of these ports and held open, then the port will be unavailable for use by another party. One way the adversary could achieve this would be to initiate a TCP session with the serial to Ethernet converter at 10.0.0.1 via Telnet on serial port 1 with the following command: telnet 10.0.0.1 20001.
+                                Adversaries may block access to serial COM to prevent instructions or configurations from reaching target devices. Serial Communication ports (COM) allow communication with control system devices. Devices can receive command and configuration messages over such serial COM. Devices also use serial COM to send command and reporting messages. Blocking device serial COM may also block command messages and block reporting messages. 
 
                     </td>
                 </tr>
@@ -735,7 +741,7 @@
                         <a href="/techniques/T0809"> Data Destruction </a>
                     </td>
                     <td>
-                                Adversaries may perform data destruction over the course of an operation. The adversary may drop or create malware, tools, or other non-native files on a target system to accomplish this, potentially leaving behind traces of malicious activities. Such non-native files and other data may be removed over the course of an intrusion to maintain a small footprint or as a standard part of the post-intrusion cleanup process.    Data destruction may also be used to render operator interfaces unable to respond and to disrupt response functions from occurring as expected. An adversary may also destroy data backups that are vital to recovery after an incident.  Standard file deletion commands are available on most operating system and device interfaces to perform cleanup, but adversaries may use other tools as well. Two examples are Windows Sysinternals SDelete and Active@ Killdisk.
+                                Adversaries may perform data destruction over the course of an operation. The adversary may drop or create malware, tools, or other non-native files on a target system to accomplish this, potentially leaving behind traces of malicious activities. Such non-native files and other data may be removed over the course of an intrusion to maintain a small footprint or as a standard part of the post-intrusion cleanup process. 
 
                     </td>
                 </tr>
@@ -747,7 +753,7 @@
                         <a href="/techniques/T0814"> Denial of Service </a>
                     </td>
                     <td>
-                                Adversaries may perform Denial-of-Service (DoS) attacks to disrupt expected device functionality. Examples of DoS attacks include overwhelming the target device with a high volume of requests in a short time period and sending the target device a request it does not know how to handle. Disrupting device state may temporarily render it unresponsive, possibly lasting until a reboot can occur. When placed in this state, devices may be unable to send and receive requests, and may not perform expected response functions in reaction to other events in the environment.  Some ICS devices are particularly sensitive to DoS events, and may become unresponsive in reaction to even a simple ping sweep. Adversaries may also attempt to execute a Permanent Denial-of-Service (PDoS) against certain devices, such as in the case of the BrickerBot malware.   Adversaries may exploit a software vulnerability to cause a denial of service by taking advantage of a programming error in a program, service, or within the operating system software or kernel itself to execute adversary-controlled code. Vulnerabilities may exist in software that can be used to cause a T1023 or denial of service condition.  Adversaries may have prior knowledge about industrial protocols or control devices used in the environment through <a href="/techniques/T0888">Remote System Information Discovery</a>. There are examples of adversaries remotely causing a <a href="/techniques/T0816">Device Restart/Shutdown</a> by exploiting a vulnerability that induces uncontrolled resource consumption.     In the Maroochy attack, the adversary was able to shut an investigator out of the network. 
+                                Adversaries may perform Denial-of-Service (DoS) attacks to disrupt expected device functionality. Examples of DoS attacks include overwhelming the target device with a high volume of requests in a short time period and sending the target device a request it does not know how to handle. Disrupting device state may temporarily render it unresponsive, possibly lasting until a reboot can occur. When placed in this state, devices may be unable to send and receive requests, and may not perform expected response functions in reaction to other events in the environment. 
 
                     </td>
                 </tr>
@@ -759,7 +765,7 @@
                         <a href="/techniques/T0816"> Device Restart/Shutdown </a>
                     </td>
                     <td>
-                                Adversaries may forcibly restart or shutdown a device in an ICS environment to disrupt and potentially negatively impact physical processes. Methods of device restart and shutdown exist in some devices as built-in, standard functionalities. These functionalities can be executed using interactive device web interfaces, CLIs, and network protocol commands.   Unexpected restart or shutdown of control system devices may prevent expected response functions happening during critical states.   A device restart can also be a sign of malicious device modifications, as many updates require a shutdown in order to take effect.
+                                Adversaries may forcibly restart or shutdown a device in an ICS environment to disrupt and potentially negatively impact physical processes. Methods of device restart and shutdown exist in some devices as built-in, standard functionalities. These functionalities can be executed using interactive device web interfaces, CLIs, and network protocol commands.
 
                     </td>
                 </tr>
@@ -771,7 +777,7 @@
                         <a href="/techniques/T0835"> Manipulate I/O Image </a>
                     </td>
                     <td>
-                                Adversaries may manipulate the I/O image of PLCs through various means to prevent them from functioning as expected. Methods of I/O image manipulation may include overriding the I/O table via direct memory manipulation or using the override function used for testing PLC programs.  During the scan cycle, a PLC reads the status of all inputs and stores them in an image table.  The image table is the PLCs internal storage location where values of inputs/outputs for one scan are stored while it executes the user program. After the PLC has solved the entire logic program, it updates the output image table. The contents of this output image table are written to the corresponding output points in I/O Modules.  One of the unique characteristics of PLCs is their ability to override the status of a physical discrete input or to override the logic driving a physical output coil and force the output to a desired status.
+                                Adversaries may manipulate the I/O image of PLCs through various means to prevent them from functioning as expected. Methods of I/O image manipulation may include overriding the I/O table via direct memory manipulation or using the override function used for testing PLC programs.  During the scan cycle, a PLC reads the status of all inputs and stores them in an image table.  The image table is the PLCs internal storage location where values of inputs/outputs for one scan are stored while it executes the user program. After the PLC has solved the entire logic program, it updates the output image table. The contents of this output image table are written to the corresponding output points in I/O Modules. 
 
                     </td>
                 </tr>
@@ -783,7 +789,7 @@
                         <a href="/techniques/T0838"> Modify Alarm Settings </a>
                     </td>
                     <td>
-                                Adversaries may modify alarm settings to prevent alerts that may inform operators of their presence or to prevent responses to dangerous and unintended scenarios. Reporting messages are a standard part of data acquisition in control systems. Reporting messages are used as a way to transmit system state information and acknowledgements that specific actions have occurred. These messages provide vital information for the management of a physical process, and keep operators, engineers, and administrators aware of the state of system devices and physical processes.  If an adversary is able to change the reporting settings, certain events could be prevented from being reported. This type of modification can also prevent operators or devices from performing actions to keep the system in a safe state. If critical reporting messages cannot trigger these actions then a [[Impact]] could occur.  In ICS environments, the adversary may have to use <a href="/techniques/T0878">Alarm Suppression</a> or contend with multiple alarms and/or alarm propagation to achieve a specific goal to evade detection or prevent intended responses from occurring.   Methods of suppression often rely on modification of alarm settings, such as modifying in memory code to fixed values or tampering with assembly level instruction code.    In the Maroochy Attack, the adversary disabled alarms at four pumping stations. This caused alarms to not be reported to the central computer. 
+                                Adversaries may modify alarm settings to prevent alerts that may inform operators of their presence or to prevent responses to dangerous and unintended scenarios. Reporting messages are a standard part of data acquisition in control systems. Reporting messages are used as a way to transmit system state information and acknowledgements that specific actions have occurred. These messages provide vital information for the management of a physical process, and keep operators, engineers, and administrators aware of the state of system devices and physical processes. 
 
                     </td>
                 </tr>
@@ -819,7 +825,7 @@
                         <a href="/techniques/T0857"> System Firmware </a>
                     </td>
                     <td>
-                                System firmware on modern assets is often designed with an update feature. Older device firmware may be factory installed and require special reprograming equipment. When available, the firmware update feature enables vendors to remotely patch bugs and perform upgrades. Device firmware updates are often delegated to the user and may be done using a software update package. It may also be possible to perform this task over the network.  An adversary may exploit the firmware update feature on accessible devices to upload malicious or out-of-date firmware. Malicious modification of device firmware may provide an adversary with root access to a device, given firmware is one of the lowest programming abstraction layers. 
+                                System firmware on modern assets is often designed with an update feature. Older device firmware may be factory installed and require special reprograming equipment. When available, the firmware update feature enables vendors to remotely patch bugs and perform upgrades. Device firmware updates are often delegated to the user and may be done using a software update package. It may also be possible to perform this task over the network. 
 
                     </td>
                 </tr>
@@ -892,7 +898,7 @@
                                 </div>
                                 <div class="col  text-left ">
                                     <small>
-                                        <a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v11.3&#013;Website  v3.6.7">ATT&CK v11.3</a>
+                                        <a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v12.0&#013;Website  v4.0.0">ATT&CK v12.0</a>
                                     </small>
                                 </div>
             
@@ -931,10 +937,10 @@
     <script src="/theme/scripts/popper.min.js"></script>
     <script src="/theme/scripts/bootstrap-select.min.js"></script>
     <script src="/theme/scripts/bootstrap.bundle.min.js"></script>
-    <script src="/theme/scripts/site.js?1012"></script>
+    <script src="/theme/scripts/site.js?6884"></script>
     <script src="/theme/scripts/flexsearch.es5.js"></script> 
     <script src="/theme/scripts/localforage.min.js"></script>
-    <script src="/theme/scripts/settings.js?5779"></script>
+    <script src="/theme/scripts/settings.js?2286"></script>
     <script src="/theme/scripts/search_babelized.js"></script>
 
     <!--SCRIPTS-->
