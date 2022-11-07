@@ -200,22 +200,25 @@ def get_datasources_side_nav_data(datasources):
                 for datacomponent in datacomponent_of[datasource["id"]]:
 
                     if not datacomponent.get("x_mitre_deprecated") and not datacomponent.get("revoked"):
-                        domains_of_datacomponent = get_domains_of_datacomponent(datacomponent)
-                        # Add missing domains to data source
-                        for domain in domains_of_datacomponent:
-                            if not domain in domains_of_datasource:
-                                domains_of_datasource.append(domain)
+                        # get data component detections
+                        techniques_of_datacomp = techniques_detected_by_datacomponent.get(datacomponent["id"])
+                        if techniques_of_datacomp: 
+                            domains_of_datacomponent = get_domains_of_datacomponent(datacomponent)
+                            # Add missing domains to data source
+                            for domain in domains_of_datacomponent:
+                                if not domain in domains_of_datasource:
+                                    domains_of_datasource.append(domain)
 
-                        datacomponent_data = {
-                            "name": datacomponent["name"],
-                            "id": datacomponent["name"],
-                            "path": "/datasources/{}/#{}".format(attack_id, datacomponent["name"]),
-                            "domains": domains_of_datacomponent,
-                            "children": [],
-                        }
+                            datacomponent_data = {
+                                "name": datacomponent["name"],
+                                "id": datacomponent["name"],
+                                "path": "/datasources/{}/#{}".format(attack_id, datacomponent["name"]),
+                                "domains": domains_of_datacomponent,
+                                "children": [],
+                            }
 
-                        # Add data component data to data source
-                        datasource_data["children"].append(datacomponent_data)
+                            # Add data component data to data source
+                            datasource_data["children"].append(datacomponent_data)
 
                     # Sort subtechniques by ATT&CK ID
                     if datasource_data["children"]:
@@ -284,49 +287,50 @@ def get_datacomponents_data(datasource, reference_list):
 
     if datacomponent_of.get(datasource["id"]):
         for datacomponent in datacomponent_of[datasource["id"]]:
-
             if not datacomponent.get("x_mitre_deprecated") and not datacomponent.get("revoked"):
-                reference = False
+                # get data component detections
+                techniques_of_datacomp = techniques_detected_by_datacomponent.get(datacomponent["id"])
 
-                datacomponent_data = {}
-                datacomponent_data["name"] = datacomponent["name"]
-                datacomponent_data["descr"] = datacomponent["description"]
-                domains_of_datacomponent = []
-                # Update reference list
+                # skip if no detections
+                if not techniques_of_datacomp: continue
+
+                reference = False
+                datacomponent_data = {
+                    "name": datacomponent["name"],
+                    "descr": datacomponent["description"]
+                }
+
+                # update reference list
                 reference_list = util.buildhelpers.update_reference_list(reference_list, datacomponent)
 
                 # get data components to techniques mapping
-                techniques_of_datacomp = techniques_detected_by_datacomponent.get(datacomponent["id"])
-                if techniques_of_datacomp:
-                    datacomponent_data["techniques"] = []
+                datacomponent_data["techniques"] = []
+                domains_of_datacomponent = []
+                technique_list = {}
+                for technique_rel in techniques_of_datacomp:
+                    # Do not add if technique is deprecated
+                    if not technique_rel["object"].get("x_mitre_deprecated"):
+                        technique_list = util.buildhelpers.technique_used_helper(technique_list, technique_rel, reference_list)
 
-                    technique_list = {}
-                    for technique_rel in techniques_of_datacomp:
+                        # Get domain of technique
+                        attack_id = util.buildhelpers.get_attack_id(technique_rel["object"])
+                        if attack_id:
+                            domain = technique_to_domain[attack_id].split("-")[0]
+                            if not domain in domains_of_datacomponent:
+                                domains_of_datacomponent.append(domain)
 
-                        # Do not add if technique is deprecated
-                        if not technique_rel["object"].get("x_mitre_deprecated"):
-                            technique_list = util.buildhelpers.technique_used_helper(
-                                technique_list, technique_rel, reference_list
-                            )
+                        technique_data = []
+                        for item in technique_list:
+                            if technique_list[item].get("descr"):
+                                if reference == False:
+                                    reference = True
+                            technique_data.append(technique_list[item])
 
-                            # Get domain of technique
-                            attack_id = util.buildhelpers.get_attack_id(technique_rel["object"])
-                            if attack_id:
-                                domain = technique_to_domain[attack_id].split("-")[0]
-                                if not domain in domains_of_datacomponent:
-                                    domains_of_datacomponent.append(domain)
+                        # Sort by technique name
+                        technique_data = sorted(technique_data, key=lambda k: k["name"].lower())
 
-                            technique_data = []
-                            for item in technique_list:
-                                if technique_list[item].get("descr"):
-                                    if reference == False:
-                                        reference = True
-                                technique_data.append(technique_list[item])
-                            # Sort by technique name
-                            technique_data = sorted(technique_data, key=lambda k: k["name"].lower())
-
-                            datacomponent_data["techniques"] = technique_data
-                            datacomponent_data["add_datacomponent_ref"] = reference
+                        datacomponent_data["techniques"] = technique_data
+                        datacomponent_data["add_datacomponent_ref"] = reference
 
                 datacomponent_data["domains"] = domains_of_datacomponent
                 datacomponents_data.append(datacomponent_data)
