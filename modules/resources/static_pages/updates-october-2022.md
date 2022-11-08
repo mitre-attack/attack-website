@@ -8,11 +8,11 @@ save_as: resources/updates/updates-october-2022/index.html
 
 | Version | Start Date | End Date | Data |
 |:--------|:-----------|:---------|:-----|
-| [ATT&CK v12](/versions/v12) | October 25, 2022 |This is the current version of ATT&CK | [v12.0 on MITRE/CTI](https://github.com/mitre/cti/releases/tag/ATT%26CK-v12.0) |
+| [ATT&CK v12](/versions/v12) | October 25, 2022 |This is the current version of ATT&CK | [v12.1 on MITRE/CTI](https://github.com/mitre/cti/releases/tag/ATT%26CK-v12.1) |
 
 The October 2022 (v12) ATT&CK release updates Techniques, Groups, and Software for Enterprise, Mobile, and ICS. The biggest changes in ATT&CK v12 are the addition of detections to ATT&CK for ICS, and the introduction of Campaigns.
 
-Matching the model introduced to ATT&CK for Enterprise in ATT&CK v11, [ATT&CK for ICS](/matrices/ICS/) detections describe ways of detecting various ICS techniques and are each tied to specific Data Sources and Data Components. This detection format was described in detail in our [ATT&CK v11 release blog post](https://medium.com/mitre-attack/attack-goes-to-v11-599a9112a025). The new detections added leverage both traditional host and network-based collection as well as ICS specific sources such as [Asset](/datasources/DS0039/) and [Operational Databases](/datasources/DS0040/). As there are overlaps between the Enterprise and ICS ATT&CK domains some ICS detections include references to Enterprise techniques where the additional context may assist defenders.
+Matching the model introduced to ATT&CK for Enterprise in ATT&CK v11, [ATT&CK for ICS](/matrices/ics/) detections describe ways of detecting various ICS techniques and are each tied to specific Data Sources and Data Components. This detection format was described in detail in our [ATT&CK v11 release blog post](https://medium.com/mitre-attack/attack-goes-to-v11-599a9112a025). The new detections added leverage both traditional host and network-based collection as well as ICS specific sources such as [Asset](/datasources/DS0039/) and [Operational Databases](/datasources/DS0040/). As there are overlaps between the Enterprise and ICS ATT&CK domains some ICS detections include references to Enterprise techniques where the additional context may assist defenders.
 
 This release introduces the Campaign data structure to ATT&CK and an initial limited set of Campaigns. ATT&CK's Campaigns are defined as a grouping of intrusion activity conducted over a specific period of time with common targets and objectives. A key aspect of Campaigns is that the activity may or may not be linked to a specific threat actor. Campaigns are described in detail in the blog post [Introducing Campaigns to MITRE ATT&CK](https://medium.com/mitre-attack/introducing-attack-campaigns-6b15baa6cbb4). Specifics on how Campaigns are implemented in ATT&CK's Enterprise, ICS, and Mobile STIX representations are described in ATT&CK's [STIX 2.0 Data Model](https://github.com/mitre/cti/blob/master/USAGE.md#campaigns) and [STIX 2.1 Data Model](https://github.com/mitre-attack/attack-stix-data/blob/master/USAGE.md#campaigns). Several existing Groups were identified as more closely matching the Campaign than the Group definition and were converted to Campaigns. The 7 impacted groups were deprecated (noted below) and new Campaigns were created in their place.
 
@@ -663,23 +663,23 @@ This version of ATT&CK for Enterprise contains 14 Tactics, 193 Techniques, 401 S
 
 #### Data Source and/or Component Changes
 
-* [Command](/data-sources/DS0017) <small style="color:#929393">(v1.0&#8594;v1.1)</small>
-  * [Command Execution](/data-sources/DS0017/#Command%20Execution) <small style="color:#929393">(v1.0&#8594;v1.1)</small>
-* [Logon Session](/data-sources/DS0028) <small style="color:#929393">(v1.0&#8594;v1.1)</small>
-  * [Logon Session Creation](/data-sources/DS0028/#Logon%20Session%20Creation) <small style="color:#929393">(v1.0&#8594;v1.1)</small>
-* [Malware Repository](/data-sources/DS0004) <small style="color:#929393">(v1.0&#8594;v1.1)</small>
-  * [Malware Content](/data-sources/DS0004/#Malware%20Content) <small style="color:#929393">(v1.0&#8594;v1.1)</small>
-  * [Malware Metadata](/data-sources/DS0004/#Malware%20Metadata) <small style="color:#929393">(v1.0&#8594;v1.1)</small>
-* [Network Traffic](/data-sources/DS0029) <small style="color:#929393">(v1.0&#8594;v1.1)</small>
-  * [Network Connection Creation](/data-sources/DS0029/#Network%20Connection%20Creation) <small style="color:#929393">(v1.0&#8594;v1.1)</small>
-* [Process](/data-sources/DS0009) <small style="color:#929393">(v1.0&#8594;v1.1)</small>
-  * [Process Creation](/data-sources/DS0009/#Process%20Creation) <small style="color:#929393">(v1.0&#8594;v1.1)</small>
-* [Script](/data-sources/DS0012) <small style="color:#929393">(v1.0&#8594;v1.1)</small>
-  * [Script Execution](/data-sources/DS0012/#Script%20Execution) <small style="color:#929393">(v1.0&#8594;v1.1)</small>
-* [Sensor Health](/data-sources/DS0013) <small style="color:#929393">(v1.0&#8594;v1.1)</small>
-  * [Host Status](/data-sources/DS0013/#Host%20Status) <small style="color:#929393">(v1.0&#8594;v1.1)</small>
-* [User Account](/data-sources/DS0002) <small style="color:#929393">(v1.0&#8594;v1.1)</small>
-  * [User Account Authentication](/data-sources/DS0002/#User%20Account%20Authentication) <small style="color:#929393">(v1.0&#8594;v1.1)</small>
+* [Command](/datasources/DS0017) <small style="color:#929393">(v1.0&#8594;v1.1)</small>
+  * [Command Execution](/datasources/DS0017/#Command%20Execution) <small style="color:#929393">(v1.0&#8594;v1.1)</small>
+* [Logon Session](/datasources/DS0028) <small style="color:#929393">(v1.0&#8594;v1.1)</small>
+  * [Logon Session Creation](/datasources/DS0028/#Logon%20Session%20Creation) <small style="color:#929393">(v1.0&#8594;v1.1)</small>
+* [Malware Repository](/datasources/DS0004) <small style="color:#929393">(v1.0&#8594;v1.1)</small>
+  * [Malware Content](/datasources/DS0004/#Malware%20Content) <small style="color:#929393">(v1.0&#8594;v1.1)</small>
+  * [Malware Metadata](/datasources/DS0004/#Malware%20Metadata) <small style="color:#929393">(v1.0&#8594;v1.1)</small>
+* [Network Traffic](/datasources/DS0029) <small style="color:#929393">(v1.0&#8594;v1.1)</small>
+  * [Network Connection Creation](/datasources/DS0029/#Network%20Connection%20Creation) <small style="color:#929393">(v1.0&#8594;v1.1)</small>
+* [Process](/datasources/DS0009) <small style="color:#929393">(v1.0&#8594;v1.1)</small>
+  * [Process Creation](/datasources/DS0009/#Process%20Creation) <small style="color:#929393">(v1.0&#8594;v1.1)</small>
+* [Script](/datasources/DS0012) <small style="color:#929393">(v1.0&#8594;v1.1)</small>
+  * [Script Execution](/datasources/DS0012/#Script%20Execution) <small style="color:#929393">(v1.0&#8594;v1.1)</small>
+* [Sensor Health](/datasources/DS0013) <small style="color:#929393">(v1.0&#8594;v1.1)</small>
+  * [Host Status](/datasources/DS0013/#Host%20Status) <small style="color:#929393">(v1.0&#8594;v1.1)</small>
+* [User Account](/datasources/DS0002) <small style="color:#929393">(v1.0&#8594;v1.1)</small>
+  * [User Account Authentication](/datasources/DS0002/#User%20Account%20Authentication) <small style="color:#929393">(v1.0&#8594;v1.1)</small>
 
 #### Minor Data Source and/or Component Changes
 
@@ -691,8 +691,8 @@ This version of ATT&CK for Enterprise contains 14 Tactics, 193 Techniques, 401 S
 
 #### Data Source and/or Component Deprecations
 
-* [Cluster](/data-sources/DS0031) <small style="color:#929393">(v1.0)</small>
-  * [Cluster Metadata](/data-sources/DS0031/#Cluster%20Metadata) <small style="color:#929393">(v1.0)</small>
+* [Cluster](/datasources/DS0031) <small style="color:#929393">(v1.0)</small>
+  * [Cluster Metadata](/datasources/DS0031/#Cluster%20Metadata) <small style="color:#929393">(v1.0)</small>
 
 ### Mobile
 
@@ -702,26 +702,26 @@ ATT&CK for Mobile does not support structured data sources
 
 #### New Data Sources and/or Components
 
-* [Asset](/data-sources/DS0039) <small style="color:#929393">(v1.0)</small>
-  * [Asset Inventory](/data-sources/DS0039/#Asset%20Inventory) <small style="color:#929393">(v1.0)</small>
-  * [Software](/data-sources/DS0039/#Software) <small style="color:#929393">(v1.0)</small>
+* [Asset](/datasources/DS0039) <small style="color:#929393">(v1.0)</small>
+  * [Asset Inventory](/datasources/DS0039/#Asset%20Inventory) <small style="color:#929393">(v1.0)</small>
+  * [Software](/datasources/DS0039/#Software) <small style="color:#929393">(v1.0)</small>
 * Scheduled Job: [Scheduled Job Creation](/datasources/DS0003/#Scheduled%20Job%20Creation) <small style="color:#929393">(v1.0)</small>
 * Service: [Service Modification](/datasources/DS0019/#Service%20Modification) <small style="color:#929393">(v1.0)</small>
 
 #### Data Source and/or Component Changes
 
-* [Command](/data-sources/DS0017) <small style="color:#929393">(v1.0&#8594;v1.1)</small>
-  * [Command Execution](/data-sources/DS0017/#Command%20Execution) <small style="color:#929393">(v1.0&#8594;v1.1)</small>
-* [Logon Session](/data-sources/DS0028) <small style="color:#929393">(v1.0&#8594;v1.1)</small>
-  * [Logon Session Creation](/data-sources/DS0028/#Logon%20Session%20Creation) <small style="color:#929393">(v1.0&#8594;v1.1)</small>
-* [Network Traffic](/data-sources/DS0029) <small style="color:#929393">(v1.0&#8594;v1.1)</small>
-  * [Network Connection Creation](/data-sources/DS0029/#Network%20Connection%20Creation) <small style="color:#929393">(v1.0&#8594;v1.1)</small>
-* [Process](/data-sources/DS0009) <small style="color:#929393">(v1.0&#8594;v1.1)</small>
-  * [Process Creation](/data-sources/DS0009/#Process%20Creation) <small style="color:#929393">(v1.0&#8594;v1.1)</small>
-* [Script](/data-sources/DS0012) <small style="color:#929393">(v1.0&#8594;v1.1)</small>
-  * [Script Execution](/data-sources/DS0012/#Script%20Execution) <small style="color:#929393">(v1.0&#8594;v1.1)</small>
-* [User Account](/data-sources/DS0002) <small style="color:#929393">(v1.0&#8594;v1.1)</small>
-  * [User Account Authentication](/data-sources/DS0002/#User%20Account%20Authentication) <small style="color:#929393">(v1.0&#8594;v1.1)</small>
+* [Command](/datasources/DS0017) <small style="color:#929393">(v1.0&#8594;v1.1)</small>
+  * [Command Execution](/datasources/DS0017/#Command%20Execution) <small style="color:#929393">(v1.0&#8594;v1.1)</small>
+* [Logon Session](/datasources/DS0028) <small style="color:#929393">(v1.0&#8594;v1.1)</small>
+  * [Logon Session Creation](/datasources/DS0028/#Logon%20Session%20Creation) <small style="color:#929393">(v1.0&#8594;v1.1)</small>
+* [Network Traffic](/datasources/DS0029) <small style="color:#929393">(v1.0&#8594;v1.1)</small>
+  * [Network Connection Creation](/datasources/DS0029/#Network%20Connection%20Creation) <small style="color:#929393">(v1.0&#8594;v1.1)</small>
+* [Process](/datasources/DS0009) <small style="color:#929393">(v1.0&#8594;v1.1)</small>
+  * [Process Creation](/datasources/DS0009/#Process%20Creation) <small style="color:#929393">(v1.0&#8594;v1.1)</small>
+* [Script](/datasources/DS0012) <small style="color:#929393">(v1.0&#8594;v1.1)</small>
+  * [Script Execution](/datasources/DS0012/#Script%20Execution) <small style="color:#929393">(v1.0&#8594;v1.1)</small>
+* [User Account](/datasources/DS0002) <small style="color:#929393">(v1.0&#8594;v1.1)</small>
+  * [User Account Authentication](/datasources/DS0002/#User%20Account%20Authentication) <small style="color:#929393">(v1.0&#8594;v1.1)</small>
 
 #### Minor Data Source and/or Component Changes
 
