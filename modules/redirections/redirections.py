@@ -132,10 +132,10 @@ def generate_datasource_redirects(ms, domain):
                 data = {
                     "title": ds_redirect_title,
                     "from": f"data-sources/{attack_id}",
-                    "to": f"/datasources/{attack_id}/"
+                    "to": f"/datasources/{attack_id}"
                 }
 
-        subs = site_config.redirect_md.substitute(data)
+        subs = site_config.redirect_md_index.substitute(data)
         with open(
             os.path.join(site_config.redirects_markdown_path, data["title"] + ".md"), "w", encoding="utf8"
         ) as md_file:
