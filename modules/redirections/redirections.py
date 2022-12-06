@@ -95,10 +95,15 @@ def generate_tactic_redirects(ms, domain):
         attack_id = util.buildhelpers.get_attack_id(tactic)
 
         if attack_id:
+            clean_tactic_name = tactic["name"].replace(" ", "_")
+            old_site_prefix = redirections_config.redirects_paths[domain]
+            redirect_title = f"{clean_tactic_name}-{domain}-{uuid.uuid1()}"
 
-            data["title"] = tactic["name"].replace(" ", "_") + "-" + domain + str(uuid.uuid1())
-            data["to"] = "/tactics/" + attack_id
-            data["from"] = redirections_config.redirects_paths[domain] + tactic["name"].replace(" ", "_")
+            data = {
+                "title": redirect_title,
+                "from": f"{old_site_prefix}{clean_tactic_name}",
+                "to": f"/tactics/{attack_id}"
+            }
 
         subs = site_config.redirect_md_index.substitute(data)
 
@@ -123,10 +128,11 @@ def generate_datasource_redirects(ms, domain):
                 
                 if not invalid_url: continue # skip this datasource
 
+                ds_redirect_title = f"{attack_id}-{uuid.uuid1()}"
                 data = {
-                    "title": attack_id + str(uuid.uuid1()),
-                    "from": "data-sources/" + attack_id,
-                    "to": "/datasources/" + attack_id + "/"
+                    "title": ds_redirect_title,
+                    "from": f"data-sources/{attack_id}",
+                    "to": f"/datasources/{attack_id}/"
                 }
 
         subs = site_config.redirect_md.substitute(data)
