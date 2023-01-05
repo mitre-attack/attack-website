@@ -33,15 +33,15 @@ _See [CONTRIBUTING.md](/CONTRIBUTING.md) for more information on making contribu
 
 1. Update ATT&CK markdown from the STIX content, and generate the output html from the markdown: `python3 update-attack.py`. _Note: `update-attack.py`, has many optional command line arguments which affect the behavior of the build. Run `python3 update-attack.py -h` for a list of arguments and an explanation of their functionality._
 2. Serve the html to `localhost:8000`: 
-    1. `cd output`
-    2. `python3 -m pelican.server`
+    1. Ensure you are in the root of the repository, e.g. `path/to/attack-website`
+    2. `pelican -l`
 
 ### Installing, building, and serving the site via Docker 
 
 1. Build the docker image:
     - `docker build -t <your_preferred_image_name> .`
 2. Run a docker container:
-    - `docker run --name <your_preferred_container_name -d -p <your_preferred_port>:80 <image_name_from_build_command>`
+    - `docker run --name <your_preferred_container_name> -d -p <your_preferred_port>:80 <image_name_from_build_command>`
 3. View the site on your preferred localhost port
 
 ## Related MITRE Work

@@ -2,7 +2,7 @@
 
 ## Building the site with custom content
 
-The MITRE ATT&CK Website® is designed support an evolving knowledge base The content seen on the site is generated from data in STIX JSON format.
+The MITRE ATT&CK Website® is designed to support an evolving knowledge base. The content seen on the site is generated from data in STIX JSON format.
 Both STIX 2.0 and STIX 2.1 data is supported.
 The data used to generate the live site at [attack.mitre.org](https://attack.mitre.org) can be found on our [mitre/cti](https://github.com/mitre/cti) github repo.
 
