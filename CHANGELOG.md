@@ -1,11 +1,5 @@
 <!-- TOWNCRIER -->
 
-# v4.0.2 (2022-12-19)
-
-## Miscellaneous
-
-* Fixed typos, centered contacts page content, and updated instructions to serve the local site.
-
 # v4.0.1 (2022-11-08)
 
 ## Features
