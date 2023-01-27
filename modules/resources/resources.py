@@ -196,7 +196,7 @@ def generate_working_with_attack():
         attackToExcel.export(
             domain=domain["name"],
             version=site_config.full_attack_version,
-            outputDir=docs_dir,
+            output_dir=docs_dir,
             stix_file=stix_filename,
         )
 
