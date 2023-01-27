@@ -19,4 +19,4 @@ def get_menu():
 
 
 def run_module():
-    return (search.generate_index(), search_config.module_name)
+    return search.generate_index(), search_config.module_name
