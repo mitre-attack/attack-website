@@ -14,6 +14,10 @@ types = ["software", "datasources", "groups", "tactics", "techniques"]
 sub_types = ["mobile", "enterprise", "ics"]
 dist_words = 0
 
+types = ["software", "datasources", "groups", "tactics", "techniques"]
+sub_types = ["mobile", "enterprise", "ics"]
+dist_words = 0
+
 
 def generate_index():
     logger.info("Creating searchable index for the site")
