@@ -6,7 +6,7 @@ import bleach
 import markdown
 from loguru import logger
 
-from modules import site_config, util
+from modules import site_config
 
 from . import citationchecker, linkchecker, sizechecker, tests_config
 
@@ -31,9 +31,6 @@ def run_tests():
     Path(site_config.test_report_directory).mkdir(parents=True, exist_ok=True)
 
     logger.info("Running tests:")
-    util.buildhelpers.print_test_output("-", "-", "-")
-    util.buildhelpers.print_test_output("STATUS", "TEST", "MESSAGE")
-    util.buildhelpers.print_test_output("-", "-", "-")
 
     ###################
     # Check output size
@@ -72,8 +69,6 @@ def run_tests():
             error_list.append(tests_config.BROKEN_CITATION)
 
     create_combined_reports_html()
-
-    util.buildhelpers.print_test_output("-", "-", "-")
 
     # Successful tests vs failed tests
     tests_passed = tests - len(error_list)
@@ -128,7 +123,7 @@ def check_links(external_links):
     # Link test
     TEST = "Links"
 
-    util.buildhelpers.print_test_output("RUNNING", TEST, "-")
+    logger.info(f'RUNNING {TEST}')
 
     exit_codes, links, unlinked_pages, relative_links = linkchecker.check_links(external_links)
 
@@ -147,7 +142,7 @@ def check_links(external_links):
     MSG = ("{} OK - {} broken link(s) ").format(links[0], links[1])
 
     # Print output
-    util.buildhelpers.print_test_output(STATUS, TEST, MSG)
+    logger.info(f'STATUS {STATUS} TEST {TEST} MSG {MSG}')
 
     # Unlinked pages test
     TEST = "Unlinked Pages"
@@ -159,7 +154,7 @@ def check_links(external_links):
 
     MSG = ("{} unlinked page(s)").format(unlinked_pages)
 
-    util.buildhelpers.print_test_output(STATUS, TEST, MSG)
+    logger.info(f'STATUS {STATUS} TEST {TEST} MSG {MSG}')
 
     # Unlinked pages test
     TEST = "Relative Links"
@@ -171,7 +166,7 @@ def check_links(external_links):
 
     MSG = ("{} page(s) with relative link(s) found").format(relative_links)
 
-    util.buildhelpers.print_test_output(STATUS, TEST, MSG)
+    logger.info(f'STATUS {STATUS} TEST {TEST} MSG {MSG}')
 
     return exit_codes, links[1], unlinked_pages, relative_links
 
@@ -179,7 +174,7 @@ def check_links(external_links):
 def check_citations():
     """Wrapper to check for broken citations"""
     TEST = "Broken Citations"
-    util.buildhelpers.print_test_output("RUNNING", TEST, "-")
+    logger.info(f'RUNNING {TEST}')
 
     exit_code, pages = citationchecker.citations_check()
 
@@ -190,7 +185,7 @@ def check_citations():
 
     MSG = f"{pages[0]} page(s) OK, {pages[1]} page(s) broken"
 
-    util.buildhelpers.print_test_output(STATUS, TEST, MSG)
+    logger.info(f'STATUS {STATUS} TEST {TEST} MSG {MSG}')
 
     return exit_code, pages[1]
 
@@ -198,7 +193,7 @@ def check_citations():
 def check_size():
     """Wrapper to check output size for Github's limit"""
     TEST = "Output Folder Size"
-    util.buildhelpers.print_test_output("RUNNING", TEST, "-")
+    logger.info(f'RUNNING {TEST}')
 
     MB_TO_GB_CONVERSION = 1024
 
@@ -215,7 +210,7 @@ def check_size():
         STATUS = tests_config.FAILED_STATUS
         MSG = "Surpassed 1 GB limit: " f"{size_MB/MB_TO_GB_CONVERSION:.3f} GB" + tests_config.RESET
 
-    util.buildhelpers.print_test_output(STATUS, TEST, MSG)
+    logger.info(f'STATUS {STATUS} TEST {TEST} MSG {MSG}')
 
     return exit_code
 
