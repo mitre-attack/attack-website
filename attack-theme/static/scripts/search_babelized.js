@@ -176,7 +176,24 @@ var IndexHelper = /*#__PURE__*/function () {
       })
     }; // console.log("adding pages to index");
 
-    if (documents || exported) {
+    if (documents && !exported) {
+      this.indexes.title.add(documents);
+      //this.indexes.content.add(documents);
+      localStorage.setItem("saved_uuid", build_uuid);
+      var temp = this.indexes.content;
+      localforage.getItem("index_helper_content").then(function (saved_content) {
+          exported = {
+            content: saved_content,
+          };
+          temp.import(exported.content);
+
+
+      //localforage.setItem("index_helper_title", this.indexes.title.export());
+
+       });
+      this.indexes.content = temp;
+      localforage.setItem("index_helper_title", this.indexes.title.export());
+    } else if (!documents && exported) {
       this.indexes.title.import(exported.title);
       this.indexes.content.import(exported.content);
     } else {
@@ -184,7 +201,6 @@ var IndexHelper = /*#__PURE__*/function () {
     }
 
     this.setQuery("");
-   
   }
 
   _createClass(IndexHelper, [{
@@ -243,7 +259,6 @@ var IndexHelper = /*#__PURE__*/function () {
         // console.log("fetching next title page")
         var response = this.indexes.title.search(this.query, {
           limit: limit,
-          field:"title",
           page: this.nextPageRef
         });
         var results = response.result.map(function (result) {
@@ -266,7 +281,6 @@ var IndexHelper = /*#__PURE__*/function () {
         // console.log("fetching next content page")
         var _response = this.indexes.content.search(this.query, {
           limit: limit,
-          field: "content",
           page: this.nextPageRef
         });
 
@@ -293,8 +307,8 @@ var SearchService = /*#__PURE__*/function () {
     this.current_query = {
       clean: "",
       words: [
-        /* 
-         * { 
+        /*
+         * {
          *    word: the raw word
          *    regex: regular expression to find this word in the document
          * }
@@ -559,6 +573,8 @@ var search = function search(query) {
     search_parsing_icon.show(); // console.log("initializing search service")
 
     var saved_uuid = localStorage.getItem("saved_uuid");
+
+    if ('indexedDB' in window && saved_uuid && saved_uuid == build_uuid) {
       // console.log("getting cached flexsearch objects");
       localforage.getItem("index_helper_title").then(function (saved_title) {
         localforage.getItem("index_helper_content").then(function (saved_content) {
@@ -571,6 +587,19 @@ var search = function search(query) {
           search_parsing_icon.hide();
         });
       });
+    } else {
+      // console.log("making new flexsearch objects");
+      $.ajax({
+        //if docs have not yet been loaded
+        url: base_url + "index.json",
+        dataType: "json",
+        success: function success(data) {
+          search_service = new SearchService("search-results", data, null);
+          search_service.query(query);
+          search_parsing_icon.hide();
+        }
+      });
+    }
   } else {
     search_service.query(query);
   }
