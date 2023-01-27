@@ -1,4 +1,4 @@
-import collections
+from collections.abc import Iterable
 import json
 import os
 
@@ -176,15 +176,15 @@ def generate_software_md(software, side_menu_data, side_menu_mobile_view_data, n
         data["groups"] = get_groups_using_software(software, reference_list)
 
         # Get aliases list
-        if isinstance(software.get("x_mitre_aliases"), collections.abc.Iterable):
+        if isinstance(software.get("x_mitre_aliases"), Iterable):
             data["aliases_list"] = software["x_mitre_aliases"][1:]
 
         # Get contributors
-        if isinstance(software.get("x_mitre_contributors"), collections.abc.Iterable):
+        if isinstance(software.get("x_mitre_contributors"), Iterable):
             data["contributors_list"] = software["x_mitre_contributors"]
 
         # Get platform list
-        if isinstance(software.get("x_mitre_platforms"), collections.abc.Iterable):
+        if isinstance(software.get("x_mitre_platforms"), Iterable):
             data["platform_list"] = software["x_mitre_platforms"]
 
         data["citations"] = reference_list
@@ -221,7 +221,7 @@ def get_software_table_data(software_list):
             if attack_id:
                 row["id"] = attack_id
 
-            if isinstance(software.get("x_mitre_aliases"), collections.abc.Iterable):
+            if isinstance(software.get("x_mitre_aliases"), Iterable):
                 row["aliases_list"] = software["x_mitre_aliases"][1:]
 
             software_table_data.append(row)

@@ -1,4 +1,4 @@
-import collections
+from collections.abc import Iterable
 import json
 import os
 import re
@@ -118,7 +118,7 @@ def generate_datasource_md(datasource, side_menu_data, side_menu_mobile_view_dat
         if datasource.get("x_mitre_version"):
             data["version"] = datasource["x_mitre_version"]
 
-        if isinstance(datasource.get("x_mitre_contributors"), collections.abc.Iterable):
+        if isinstance(datasource.get("x_mitre_contributors"), Iterable):
             data["contributors_list"] = datasource["x_mitre_contributors"]
 
         if datasource.get("description"):

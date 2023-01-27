@@ -1,4 +1,4 @@
-import collections
+from collections.abc import Iterable
 import json
 import os
 
@@ -116,7 +116,7 @@ def generate_group_md(group, side_menu_data, side_menu_mobile_view_data, notes):
         if group.get("x_mitre_version"):
             data["version"] = group["x_mitre_version"]
 
-        if isinstance(group.get("x_mitre_contributors"), collections.abc.Iterable):
+        if isinstance(group.get("x_mitre_contributors"), Iterable):
             data["contributors_list"] = group["x_mitre_contributors"]
 
         # Get initial reference list
@@ -178,7 +178,7 @@ def generate_group_md(group, side_menu_data, side_menu_mobile_view_data, notes):
 
         data["citations"] = reference_list
 
-        if isinstance(group.get("aliases"), collections.abc.Iterable):
+        if isinstance(group.get("aliases"), Iterable):
             data["aliases_list"] = group["aliases"][1:]
 
         data["versioning_feature"] = site_config.check_versions_module()
@@ -217,7 +217,7 @@ def get_groups_table_data(group_list):
                 if group.get("x_mitre_deprecated"):
                     row["deprecated"] = True
 
-            if isinstance(group.get("aliases"), collections.abc.Iterable):
+            if isinstance(group.get("aliases"), Iterable):
                 row["aliases_list"] = group["aliases"][1:]
 
             groups_table_data.append(row)
@@ -241,7 +241,7 @@ def get_techniques_used_by_group_data(group, reference_list):
                 technique_list = util.buildhelpers.technique_used_helper(technique_list, technique, reference_list)
 
     # add campaign-related techniques to list
-    # if a campaign-related technique/subtechnique already exists in the list of relationships 
+    # if a campaign-related technique/subtechnique already exists in the list of relationships
     # with the group, the descriptions of these relationships will be concatenated with a newline
     campaigns_attributed_to_group = {
         "campaigns": util.relationshipgetters.get_campaigns_attributed_to_group(),
