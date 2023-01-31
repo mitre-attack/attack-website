@@ -30,8 +30,7 @@ def generate_groups():
     # of note: G0058 used to redirect to G0059 manually because it is not in the STIX object
     # TODO: bring G0058 back into the STIX so this scenario doesn't happen any more in the future
     util.buildhelpers.generate_redirections(
-        redirections_filename=groups_config.groups_redirection_location,
-        redirect_md=site_config.redirect_md
+        redirections_filename=groups_config.groups_redirection_location, redirect_md=site_config.redirect_md
     )
 
     # Generates the markdown files to be used for page generation
@@ -141,7 +140,7 @@ def generate_group_md(group, side_menu_data, side_menu_mobile_view_data, notes):
             "group",
             data["version"] if "version" in data else None,
             data["technique_table_data"],
-            inheritance # extend legend to include color coding for inherited techniques, if applicable
+            inheritance,  # extend legend to include color coding for inherited techniques, if applicable
         )
 
         data["layers"] = []
@@ -245,18 +244,20 @@ def get_techniques_used_by_group_data(group, reference_list):
     # with the group, the descriptions of these relationships will be concatenated with a newline
     campaigns_attributed_to_group = {
         "campaigns": util.relationshipgetters.get_campaigns_attributed_to_group(),
-        "techniques": util.relationshipgetters.get_techniques_used_by_campaigns()
+        "techniques": util.relationshipgetters.get_techniques_used_by_campaigns(),
     }
     hasInheritedTechniques = False
     if campaigns_attributed_to_group["campaigns"].get(group.get("id")):
         for campaign in campaigns_attributed_to_group["campaigns"][group["id"]]:
             campaign_id = campaign["object"]["id"]
-            if campaigns_attributed_to_group["techniques"].get(campaign_id): # campaign has techniques
+            if campaigns_attributed_to_group["techniques"].get(campaign_id):  # campaign has techniques
                 for technique in campaigns_attributed_to_group["techniques"][campaign_id]:
                     # Do not add if technique is deprecated
                     if not technique["object"].get("x_mitre_deprecated"):
                         hasInheritedTechniques = True
-                        technique_list = util.buildhelpers.technique_used_helper(technique_list, technique, reference_list, True)
+                        technique_list = util.buildhelpers.technique_used_helper(
+                            technique_list, technique, reference_list, True
+                        )
 
     technique_data = []
     for item in technique_list:
@@ -273,11 +274,11 @@ def get_techniques_used_by_group_data(group, reference_list):
 
 def get_campaign_table_data(group, reference_list):
     """Given a group, get the campaign table data."""
-    campaign_list = {} # campaign stix id => {attack id, name, description}
+    campaign_list = {}  # campaign stix id => {attack id, name, description}
     reference = False
     campaigns_attributed_to_group = {
         "campaigns": util.relationshipgetters.get_campaigns_attributed_to_group(),
-        "techniques": util.relationshipgetters.get_techniques_used_by_campaigns()
+        "techniques": util.relationshipgetters.get_techniques_used_by_campaigns(),
     }
 
     if campaigns_attributed_to_group["campaigns"].get(group.get("id")):
@@ -290,10 +291,14 @@ def get_campaign_table_data(group, reference_list):
                 campaign_list[campaign_id] = {
                     "id": attack_id,
                     "name": campaign["object"]["name"],
-                    "first_seen": campaign_dates["first_seen"] if campaign_dates.get("first_seen") else '',
-                    "last_seen": campaign_dates["last_seen"] if campaign_dates.get("last_seen") else '',
-                    "first_seen_citation": date_citations["first_seen_citation"] if date_citations.get("first_seen_citation") else '',
-                    "last_seen_citation": date_citations["last_seen_citation"] if date_citations.get("last_seen_citation") else ''
+                    "first_seen": campaign_dates["first_seen"] if campaign_dates.get("first_seen") else "",
+                    "last_seen": campaign_dates["last_seen"] if campaign_dates.get("last_seen") else "",
+                    "first_seen_citation": date_citations["first_seen_citation"]
+                    if date_citations.get("first_seen_citation")
+                    else "",
+                    "last_seen_citation": date_citations["last_seen_citation"]
+                    if date_citations.get("last_seen_citation")
+                    else "",
                 }
                 if date_citations.get("first_seen_citation") or date_citations.get("last_seen_citation"):
                     reference = True
@@ -332,7 +337,9 @@ def get_campaign_table_data(group, reference_list):
     campaign_data = []
     for item in campaign_list:
         if "techniques" in campaign_list[item]:
-            campaign_list[item]["techniques"] = sorted(campaign_list[item]["techniques"], key=lambda k: k["name"].lower())
+            campaign_list[item]["techniques"] = sorted(
+                campaign_list[item]["techniques"], key=lambda k: k["name"].lower()
+            )
         campaign_data.append(campaign_list[item])
     campaign_data = sorted(campaign_data, key=lambda k: k["name"].lower())
     return campaign_data, reference
@@ -352,10 +359,12 @@ def get_software_table_data(group, reference_list):
         {
             "software": util.relationshipgetters.get_malware_used_by_groups(),
             "techniques": util.relationshipgetters.get_techniques_used_by_malware(),
-        }
+        },
     ]
     # get malware or tools used by group
-    software_list, reference = update_software_list(tools_and_malware, software_list, reference_list, reference, group.get("id"))
+    software_list, reference = update_software_list(
+        tools_and_malware, software_list, reference_list, reference, group.get("id")
+    )
 
     # campaigns attributed to groups
     campaigns_attributed_to_group = util.relationshipgetters.get_campaigns_attributed_to_group()
@@ -363,12 +372,12 @@ def get_software_table_data(group, reference_list):
     software_used_by_campaigns = [
         {
             "software": util.relationshipgetters.get_malware_used_by_campaigns(),
-            "techniques": util.relationshipgetters.get_techniques_used_by_malware()
+            "techniques": util.relationshipgetters.get_techniques_used_by_malware(),
         },
         {
             "software": util.relationshipgetters.get_tools_used_by_campaigns(),
-            "techniques": util.relationshipgetters.get_techniques_used_by_tools()
-        }
+            "techniques": util.relationshipgetters.get_techniques_used_by_tools(),
+        },
     ]
 
     # get campaigns attributed to the group
@@ -376,7 +385,9 @@ def get_software_table_data(group, reference_list):
         for campaign in campaigns_attributed_to_group[group["id"]]:
             campaign_id = campaign["object"]["id"]
             # get malware or tools used by campaigns
-            software_list, reference = update_software_list(software_used_by_campaigns, software_list, reference_list, reference, campaign_id)
+            software_list, reference = update_software_list(
+                software_used_by_campaigns, software_list, reference_list, reference, campaign_id
+            )
 
     # Moving it to an array because jinja does not like to loop through dictionaries
     data = []
@@ -399,10 +410,7 @@ def update_software_list(pairings, software_list, reference_list, reference, id)
                 software_attack_id = util.buildhelpers.get_attack_id(software["object"])
                 # check if software not in software_list dict
                 if software_stix_id not in software_list and software_attack_id:
-                    software_list[software_stix_id] = {
-                        "id": software_attack_id,
-                        "name": software["object"]["name"]
-                    }
+                    software_list[software_stix_id] = {"id": software_attack_id, "name": software["object"]["name"]}
 
                     if software["relationship"].get("description"):
                         reference = True
