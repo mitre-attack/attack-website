@@ -14,10 +14,6 @@ types = ["software", "datasources", "groups", "tactics", "techniques"]
 sub_types = ["mobile", "enterprise", "ics"]
 dist_words = 0
 
-types = ["software", "datasources", "groups", "tactics", "techniques"]
-sub_types = ["mobile", "enterprise", "ics"]
-dist_words = 0
-
 
 def generate_index():
     logger.info("Creating searchable index for the site")
@@ -51,8 +47,8 @@ def generate_index():
                 skipindex = True
                 dist_words = 0
             if thepath[6:] == "/index.html":
-            	skipindex = True
-            	dist_words = 0
+                skipindex = True
+                dist_words = 0
             if not skipindex:
                 # if title == "":
                 #     print(thepath, "has generic title")
