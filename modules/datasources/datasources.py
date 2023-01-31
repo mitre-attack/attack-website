@@ -1,9 +1,6 @@
 import collections
 import json
 import os
-import re
-
-import markdown
 
 from modules import util
 from modules.util import relationshipgetters as rsg
@@ -13,10 +10,7 @@ from .. import site_config
 
 
 def generate_datasources():
-    """Responsible for verifying data source directory and starting off
-    data source markdown generation
-    """
-
+    """Responsible for verifying data source directory and starting off data source markdown generation."""
     # Create content pages directory if does not already exist
     util.buildhelpers.create_content_pages_dir()
 
@@ -40,10 +34,7 @@ def generate_datasources():
 
 
 def generate_markdown_files():
-    """Responsible for generating datasource index page and getting shared data for
-    all datasources
-    """
-
+    """Responsible for generating datasource index page and getting shared data for all datasources."""
     has_datasource = False
 
     datasource_list = rsg.get_datasource_list()
@@ -85,8 +76,7 @@ def generate_markdown_files():
 
 
 def generate_datasource_md(datasource, side_menu_data, side_menu_mobile_view_data, notes):
-    """Responsible for generating markdown of all datasources"""
-
+    """Responsible for generating markdown of all datasources."""
     attack_id = util.buildhelpers.get_attack_id(datasource)
 
     if attack_id:
@@ -153,10 +143,7 @@ def generate_datasource_md(datasource, side_menu_data, side_menu_mobile_view_dat
 
 
 def get_datasources_side_nav_data(datasources):
-    """Responsible for generating the links that are located on the
-    left side of individual data sources domain pages
-    """
-
+    """Responsible for generating the links that are located on the left side of individual data sources domain pages."""
     side_nav_data = []
 
     # Get data components of data source
@@ -241,8 +228,7 @@ def get_datasources_side_nav_data(datasources):
 
 
 def get_datasources_table_data(datasource_list):
-    """Responsible for generating datasource table data for the datasource index page"""
-
+    """Responsible for generating datasource table data for the datasource index page."""
     datasources_table_data = []
 
     # Now the table on the right, which is made up of datasource data
@@ -273,11 +259,10 @@ def get_datasources_table_data(datasource_list):
 
 
 def get_datacomponents_data(datasource, reference_list):
-    """Given a data source and its reference list, get a list of data components of the
-    data source. Add techniques detected by data components. Check the reference list for citations, if not found
-    in list, add it.
+    """Given a data source and its reference list, get a list of data components of the data source.
+    
+    Add techniques detected by data components. Check the reference list for citations, if not found in list, add it.
     """
-
     datacomponents_data = []
 
     # Get data components of data source
