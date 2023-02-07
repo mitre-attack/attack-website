@@ -17,11 +17,8 @@ def run_tests():
     error_list = []
     tests = 0
 
-
     logger.info("Removing old reports")
-    reports = [
-        stixtests_config.linkbyids_report_filename
-    ]
+    reports = [stixtests_config.linkbyids_report_filename]
     for report in reports:
         Path(f"{site_config.test_report_directory}/{report}").unlink(missing_ok=True)
 
@@ -33,10 +30,7 @@ def run_tests():
     # using this to download STIX if needed
     util.relationshipgetters.get_ms()
 
-    options = stix2validator.ValidationOptions(
-        version="2.0",
-        disabled=["all"]
-    )
+    options = stix2validator.ValidationOptions(version="2.0", disabled=["all"])
     for domain in site_config.domains:
         if domain["deprecated"]:
             logger.debug(f"Skipping validation for {domain['name']} because it is deprecated")
@@ -105,7 +99,7 @@ def display_error_report(report_file, error_count, error_type):
 def check_linkbyids():
     """Wrapper to check for broken LinkById's"""
     TEST = "Broken LinkByIds"
-    logger.info(f'Running {TEST}')
+    logger.info(f"Running {TEST}")
 
     exit_code, broken_linkbyids_count = linkbyidchecker.linkbyid_check()
 
@@ -116,7 +110,7 @@ def check_linkbyids():
 
     MSG = f"{broken_linkbyids_count} broken LinkByIds"
 
-    logger.debug(f'STATUS {STATUS} TEST {TEST} MSG {MSG}')
+    logger.debug(f"STATUS {STATUS} TEST {TEST} MSG {MSG}")
     return exit_code, broken_linkbyids_count
 
 

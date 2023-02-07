@@ -1,7 +1,6 @@
 import html
 import json
 import os
-import pdb
 import re
 
 import bleach
@@ -9,10 +8,6 @@ from loguru import logger
 
 import modules
 from modules import site_config, versions
-
-types = ["software", "datasources", "groups", "tactics", "techniques"]
-sub_types = ["mobile", "enterprise", "ics"]
-dist_words = 0
 
 types = ["software", "datasources", "groups", "tactics", "techniques"]
 sub_types = ["mobile", "enterprise", "ics"]
@@ -51,8 +46,8 @@ def generate_index():
                 skipindex = True
                 dist_words = 0
             if thepath[6:] == "/index.html":
-            	skipindex = True
-            	dist_words = 0
+                skipindex = True
+                dist_words = 0
             if not skipindex:
                 # if title == "":
                 #     print(thepath, "has generic title")

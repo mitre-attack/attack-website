@@ -21,11 +21,10 @@ def run_tests():
         tests_config.citations_report_filename,
         tests_config.links_report_filename,
         tests_config.unlinked_report_filename,
-        tests_config.relative_links_report_filename
+        tests_config.relative_links_report_filename,
     ]
     for report in reports:
         Path(f"{site_config.test_report_directory}/{report}").unlink(missing_ok=True)
-
 
     logger.info("Creating reports directory")
     Path(site_config.test_report_directory).mkdir(parents=True, exist_ok=True)
@@ -123,7 +122,7 @@ def check_links(external_links):
     # Link test
     TEST = "Links"
 
-    logger.info(f'RUNNING {TEST}')
+    logger.info(f"RUNNING {TEST}")
 
     exit_codes, links, unlinked_pages, relative_links = linkchecker.check_links(external_links)
 
@@ -142,7 +141,7 @@ def check_links(external_links):
     MSG = f"{links[0]} OK - {links[1]} pages referencing broken link(s)"
 
     # Print output
-    logger.info(f'STATUS {STATUS} TEST {TEST} MSG {MSG}')
+    logger.info(f"STATUS {STATUS} TEST {TEST} MSG {MSG}")
 
     # Unlinked pages test
     TEST = "Unlinked Pages"
@@ -154,7 +153,7 @@ def check_links(external_links):
 
     MSG = ("{} unlinked page(s)").format(unlinked_pages)
 
-    logger.info(f'STATUS {STATUS} TEST {TEST} MSG {MSG}')
+    logger.info(f"STATUS {STATUS} TEST {TEST} MSG {MSG}")
 
     # Unlinked pages test
     TEST = "Relative Links"
@@ -166,7 +165,7 @@ def check_links(external_links):
 
     MSG = ("{} page(s) with relative link(s) found").format(relative_links)
 
-    logger.info(f'STATUS {STATUS} TEST {TEST} MSG {MSG}')
+    logger.info(f"STATUS {STATUS} TEST {TEST} MSG {MSG}")
 
     return exit_codes, links[1], unlinked_pages, relative_links
 
@@ -174,7 +173,7 @@ def check_links(external_links):
 def check_citations():
     """Wrapper to check for broken citations"""
     TEST = "Broken Citations"
-    logger.info(f'RUNNING {TEST}')
+    logger.info(f"RUNNING {TEST}")
 
     exit_code, pages = citationchecker.citations_check()
 
@@ -185,7 +184,7 @@ def check_citations():
 
     MSG = f"{pages[0]} page(s) OK, {pages[1]} page(s) broken"
 
-    logger.info(f'STATUS {STATUS} TEST {TEST} MSG {MSG}')
+    logger.info(f"STATUS {STATUS} TEST {TEST} MSG {MSG}")
 
     return exit_code, pages[1]
 
@@ -193,7 +192,7 @@ def check_citations():
 def check_size():
     """Wrapper to check output size for Github's limit"""
     TEST = "Output Folder Size"
-    logger.info(f'RUNNING {TEST}')
+    logger.info(f"RUNNING {TEST}")
 
     MB_TO_GB_CONVERSION = 1024
 
@@ -210,7 +209,7 @@ def check_size():
         STATUS = tests_config.FAILED_STATUS
         MSG = "Surpassed 1 GB limit: " f"{size_MB/MB_TO_GB_CONVERSION:.3f} GB" + tests_config.RESET
 
-    logger.info(f'STATUS {STATUS} TEST {TEST} MSG {MSG}')
+    logger.info(f"STATUS {STATUS} TEST {TEST} MSG {MSG}")
 
     return exit_code
 
