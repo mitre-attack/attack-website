@@ -34,7 +34,7 @@ let search_parsing_icon = document.querySelector("#search-parsing-icon");
 // Register custom matchers globally
 FlexSearch.registerMatcher({
     //attack and ATT&CK are equivalent for the purposes of search
-    "ATT&CK": "ATTACK", 
+    "ATT&CK": "ATTACK",
     "ATTACK": "ATT&CK"
 });
 
@@ -46,12 +46,12 @@ FlexSearch.registerMatcher({
  * @returns {boolean}
  */
 const isGoogleChrome = () => {
-  try {
-      return window && window.chrome && window.chrome.runtime;
-  } catch (error) {
-      console.warn(error);
-      return false;
-  }
+    try {
+        return window && window.chrome && window.chrome.runtime;
+    } catch (error) {
+        console.warn(error);
+        return false;
+    }
 };
 
 class IndexHelper {
@@ -88,10 +88,15 @@ class IndexHelper {
             this.indexes.content.add(documents);
 
             localStorage.setItem("saved_uuid", build_uuid);
-            localforage.setItem("index_helper_title", this.indexes.title.export(() => {}))
-                .then(() => {});
-            localforage.setItem("index_helper_content", this.indexes.content.export(() => {}))
-                .then(() => {});;
+            localforage.setItem("index_helper_title", this.indexes.title.export(() => {
+            }))
+                .then(() => {
+                });
+            localforage.setItem("index_helper_content", this.indexes.content.export(() => {
+            }))
+                .then(() => {
+                });
+            ;
         } else if (!documents && exported) {
             this.indexes.title.import(exported.title);
             this.indexes.content.import(exported.content);
@@ -101,36 +106,47 @@ class IndexHelper {
 
         this.setQuery("");
     }
+
     setQuery(query) {
         this.query = query;
         this.nextPageRef = true;
         this.titleStage = true;
         this.seenPaths = new Set();
     }
+
     nextPage() {
         let results = this.nextPageHelper();
         let self = this;
-        results = results.filter(function(result) { return !self.seenPaths.has(result.path) });
-        results.forEach(function(result) { self.seenPaths.add(result.path) });
+        results = results.filter(function (result) {
+            return !self.seenPaths.has(result.path)
+        });
+        results.forEach(function (result) {
+            self.seenPaths.add(result.path)
+        });
 
         // keep fetching until we have no more results or we have enough results
         while (results.length < page_limit) {
             let newResults = this.nextPageHelper(page_limit - results.length);
             if (newResults.length == 0) break; //ran out of results
             // cull duplicates
-            newResults = newResults.filter(function(result) { return !self.seenPaths.has(result.path) });
-            newResults.forEach(function(result) { self.seenPaths.add(result.path) });
+            newResults = newResults.filter(function (result) {
+                return !self.seenPaths.has(result.path)
+            });
+            newResults.forEach(function (result) {
+                self.seenPaths.add(result.path)
+            });
             // append to master list
             results = results.concat(newResults);
         }
 
         return results;
     }
+
     /**
      * Get the next page of results, or null if no more pages
      * @param {int} limit the number of results to get (default is the page_limit)
      */
-    nextPageHelper(limit=page_limit) {
+    nextPageHelper(limit = page_limit) {
         if (!this.nextPageRef) {
             console.warn("no next page")
             return []
@@ -142,7 +158,7 @@ class IndexHelper {
                 limit: limit,
                 page: this.nextPageRef
             });
-            let results = response.result.map(function(result) {
+            let results = response.result.map(function (result) {
                 result.source = "title";
                 return result;
             });
@@ -162,12 +178,12 @@ class IndexHelper {
                 page: this.nextPageRef
             });
             this.nextPageRef = response.next;
-            return response.result.map(function(result) {
+            return response.result.map(function (result) {
                 result.source = "content";
                 return result;
             });
         }
-        
+
     }
 }
 
@@ -183,7 +199,7 @@ class SearchService {
                  *    word: the raw word
                  *    regex: regular expression to find this word in the document
                  * }
-                 */ 
+                 */
             ],
             joined: "" //alternation
         }
@@ -204,10 +220,10 @@ class SearchService {
 
         //build regex for each word
         let escaped = this.current_query.clean.replace(/\s+/, " "); //remove double spaces which causes query to match on every 0 length string and flip out
-        this.current_query.words = escaped.split(" ").map(function(searchword) {
+        this.current_query.words = escaped.split(" ").map(function (searchword) {
             let regexstr = searchword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); //escape all regex chars so that entering ".." doesn't cause it to flip out
             regexstr = regexstr.replace(/((?:att&ck)|(?:attack))/gi, '((?:att&ck)|(?:attack))') //equivalence of ATT&CK and attack
-            return { word: searchword, regex: new RegExp(regexstr, "gi") }
+            return {word: searchword, regex: new RegExp(regexstr, "gi")}
         });
 
         this.index.setQuery(this.current_query.clean);
@@ -228,13 +244,13 @@ class SearchService {
         }
         // create preview html
         let preview = result.content;
-        
+
         // Find a position where the search words occur near each other
         let positions = []
 
-        this.current_query.words.forEach(function(searchword) {
+        this.current_query.words.forEach(function (searchword) {
             let currMatches;
-            while((currMatches = searchword.regex.exec(preview)) !== null) {
+            while ((currMatches = searchword.regex.exec(preview)) !== null) {
                 positions.push({
                     index: searchword.regex.lastIndex,
                     word: searchword.word
@@ -243,17 +259,21 @@ class SearchService {
         })
 
 
+        positions.sort(function (a, b) {
+            return a.index - b.index
+        });
 
-        
-        positions.sort(function(a,b) { return a.index - b.index });
         //are two sets equal
         function setsEqual(s1, s2) {
             if (s1.size !== s2.size) return false;
             for (var a of s1) if (!s2.has(a)) return false;
             return true;
         }
-        let allWords = new Set(this.current_query.words.map(function(word) { return word.word }))
-        
+
+        let allWords = new Set(this.current_query.words.map(function (word) {
+            return word.word
+        }))
+
         let pos = 0;
         let best = {
             min: 0,
@@ -322,7 +342,7 @@ class SearchService {
                 best.totalFound = foundWords.size;
             }
         }
-        
+
         // buffer around keyword
         let left = Math.max(0, best.min - buffer);
         let right = Math.min(preview.length, best.max + buffer);
@@ -367,11 +387,13 @@ class SearchService {
         if (this.hasResults) {
             search_body.show();
             let self = this;
-            let resultHTML = results.map(function(result) { return self.result_to_html(result) });
+            let resultHTML = results.map(function (result) {
+                return self.result_to_html(result)
+            });
             resultHTML = resultHTML.join("");
             this.render_container.append(resultHTML);
             if (this.index.nextPageRef) load_more_results.show();
-            else                        load_more_results.hide();
+            else load_more_results.hide();
         } else {
             if (this.current_query.clean !== "") { //search with no results
                 search_body.show();
@@ -387,10 +409,7 @@ class SearchService {
 }
 
 
-
-
-
-let openSearch = function() {
+let openSearch = function () {
     // console.log("open search")
     search_body.hide();
     search_overlay.show();
@@ -398,50 +417,53 @@ let openSearch = function() {
     search_input.focus();
 }
 
-let closeSearch = function() {
+let closeSearch = function () {
     // console.log("close search")
     search_input.val('');
     search_overlay.hide();
     search_overlay.addClass("hidden");
 }
 
-let search_service = null;
-let search = function(query) {
-    if (search_service == null) {
+let searchService;
+let search = function (query) {
+    if (searchService) {
         search_parsing_icon.show()
-        // console.log("initializing search service")
+
+        // Initializing search service
 
         let saved_uuid = localStorage.getItem("saved_uuid");
 
-        if (!isGoogleChrome && 'indexedDB' in window && saved_uuid && saved_uuid == build_uuid) {
-            // console.log("getting cached flexsearch objects");
+        if (!isGoogleChrome && 'indexedDB' in window && saved_uuid && saved_uuid === build_uuid) {
+            // Retrieving cached FlexSearch instances
             localforage.getItem("index_helper_title").then((saved_title) => {
                 localforage.getItem("index_helper_content").then((saved_content) => {
                     exported = {title: saved_title, content: saved_content};
-                    search_service = new SearchService("search-results", null, exported);
-                    search_service.query(query);
+                    searchService = new SearchService("search-results", null, exported);
+                    searchService.query(query);
                     search_parsing_icon.hide();
                 });
             });
         } else {
-            // console.log("making new flexsearch objects");
-            $.ajax({ //if docs have not yet been loaded
-                url: base_url + "/index.json",
-                dataType: "json",
-                success: function (data) {
-                    search_service = new SearchService("search-results", data, null);
+            // Initializing instances of FlexSearch
+            fetch(`${base_url}/index.json`)
+                .then(response => response.json())
+                .then(data => {
+                    let search_service = new SearchService("search-results", data, null);
                     search_service.query(query);
-                    search_parsing_icon.hide();     
-                }
-            });
+                    search_parsing_icon.style.display = 'none';
+                })
+                .catch(error => console.error(error));
         }
     } else {
-        search_service.query(query);
+        searchService.query(query);
     }
 }
 
-//utility class for debouncing function calls.
-//used to debounce keyboard input so that rapid keypresses doesn't overwhelm the computer.
+
+/**
+ * Debouncer is a utility class for debouncing function calls. It is used to debounce keyboard input so that rapid
+ * keypresses doesn't overwhelm the computer.
+ */
 class Debouncer {
     // new debouncer, param is the amount of debounce delay time in ms
     constructor(delay) {
@@ -449,46 +471,53 @@ class Debouncer {
         this.i = 0;
         this.delay = delay;
     }
+
     //callback with debounce
     debounce(callback) {
         this.callback = callback;
         this.i++;
         let i = this.i;
         let self = this;
-        setTimeout(function() {
+        setTimeout(function () {
             self.resolve(i)
         }, this.delay)
     }
+
     //resolve the debounced callback
     resolve(i) {
         // only do the callback if a new debounced input hasn't been added.
         if (this.i == i) this.callback();
     }
 }
+
 let debounce = new Debouncer(300);
 
 // triggers for closing search
-search_overlay.on("click", function(e) {
+search_overlay.on("click", function (e) {
     if (e.target != this) return; //don't close for children
     else closeSearch();
 })
-$(document).keyup(function(e) { e.key === 'Escape'? closeSearch():null });
+$(document).keyup(function (e) {
+    e.key === 'Escape' ? closeSearch() : null
+});
 close_button.on("click", closeSearch);
 // triggers for opening search
 search_open_trigger.on("click", openSearch);
 // triggers for performing search functions
-search_input.on("input", function(e) { 
-    debounce.debounce(function() { search(e.target.value) });
+search_input.on("input", function (e) {
+    debounce.debounce(function () {
+        search(e.target.value)
+    });
 })
 // trigger to render more results
-load_more_results_button.on("click", function() {
-    if (search_service) search_service.nextPage();
+load_more_results_button.on("click", function () {
+    if (searchService) searchService.nextPage();
     load_more_results_button.blur(); //onfocus
 });
 
 //internet explorer compatability patches
 if (!String.prototype.includes) {
-    String.prototype.includes = function(search, start) {
+    String.prototype.includes = function (search, start) {
         if (typeof start !== 'number') {
             start = 0;
         }
@@ -502,7 +531,7 @@ if (!String.prototype.includes) {
 }
 
 if (typeof String.prototype.endsWith !== 'function') {
-    String.prototype.endsWith = function(suffix) {
+    String.prototype.endsWith = function (suffix) {
         return this.indexOf(suffix, this.length - suffix.length) !== -1;
     };
 }
