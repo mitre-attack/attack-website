@@ -1,39 +1,64 @@
-let site_base_url = "";
-let page_limit = 5; //number of results per page
-let buffer = 200; //2* buffer is roughly the size of the result preview
+import FlexSearch from "flexsearch";
+import localforage from "localforage";
 
+let site_base_url = "";
+
+// number of results per page
+let page_limit = 5;
+
+// 2* buffer is roughly the size of the result preview
+let buffer = 200;
 
 // overlay container
-let search_overlay = $("#search-overlay");
-// button in header to open search
-let search_open_trigger = $("#search-button"); 
-// button to close search
-let close_button = $("#close-search-icon")
-// text input on search page
-let search_input = $("#search-input");
-// body of search results
-let search_body = $("#search-body");
-// button to show more results
-let load_more_results = $("#load-more-results");
-let load_more_results_button = $("#load-more-results-button");
-// search parsing icon
-let search_parsing_icon = $("#search-parsing-icon");
+let search_overlay = document.querySelector("#search-overlay");
 
-// register custom matchers globally
+// button in header to open search
+let search_open_trigger = document.querySelector("#search-button");
+
+// button to close search
+let close_button = document.querySelector("#close-search-icon");
+
+// text input on search page
+let search_input = document.querySelector("#search-input");
+
+// body of search results
+let search_body = document.querySelector("#search-body");
+
+// button to show more results
+let load_more_results = document.querySelector("#load-more-results");
+let load_more_results_button = document.querySelector("#load-more-results-button");
+
+// search parsing icon
+let search_parsing_icon = document.querySelector("#search-parsing-icon");
+
+// Register custom matchers globally
 FlexSearch.registerMatcher({
     //attack and ATT&CK are equivalent for the purposes of search
     "ATT&CK": "ATTACK", 
     "ATTACK": "ATT&CK"
-})
+});
 
-var isChromium = window.chrome;
-var isEdgeChromium = isChromium && navigator.userAgent.indexOf("Edg") != -1;
-var isGoogleChrome = isChromium && !isEdgeChromium ? true : false;
+
+/**
+ * The following function does the same thing as:
+ * `const isGoogleChrome = () => window && window.chrome && window.chrome.runtime;`
+ * But without the possibility of any TypeErrors being thrown
+ * @returns {boolean}
+ */
+const isGoogleChrome = () => {
+  try {
+      return window && window.chrome && window.chrome.runtime;
+  } catch (error) {
+      console.warn(error);
+      return false;
+  }
+};
 
 class IndexHelper {
+
     constructor(documents, exported) {
         this.indexes = {
-            "title": new FlexSearch({
+            "title": new FlexSearch.create({
                 encode: "simple",     //phonetic normalizations
                 tokenize: "forward",  //match substring beginning of word
                 threshold: 2,         //exclude scores below this number
@@ -44,7 +69,7 @@ class IndexHelper {
                     field: "title"
                 }
             }),
-            "content": new FlexSearch({
+            "content": new FlexSearch.create({
                 encode: "simple",     //phonetic normalizations
                 tokenize: "strict",  //match substring beginning of word
                 threshold: 2,        //exclude scores below this number
@@ -57,14 +82,16 @@ class IndexHelper {
             })
         }
 
-        // console.log("adding pages to index");
+        // Adding pages to index
         if (documents && !exported) {
             this.indexes.title.add(documents);
             this.indexes.content.add(documents);
 
             localStorage.setItem("saved_uuid", build_uuid);
-            localforage.setItem("index_helper_title", this.indexes.title.export());
-            localforage.setItem("index_helper_content", this.indexes.content.export());
+            localforage.setItem("index_helper_title", this.indexes.title.export(() => {}))
+                .then(() => {});
+            localforage.setItem("index_helper_content", this.indexes.content.export(() => {}))
+                .then(() => {});;
         } else if (!documents && exported) {
             this.indexes.title.import(exported.title);
             this.indexes.content.import(exported.content);
@@ -160,16 +187,16 @@ class SearchService {
             ],
             joined: "" //alternation
         }
-        this.render_container = $("#" + tag);
+        this.render_container = document.querySelector(`#${tag}`);
     }
 
 
     /**
      * update the search (query) string
-     * @param {str} querystr string to search for in the indexes
+     * @param {str} queryString string to search for in the indexes
      */
-    query(querystr) {
-        this.current_query.clean = querystr.trim();
+    query(queryString) {
+        this.current_query.clean = queryString.trim();
 
         // build joined string
         let joined = "(" + this.current_query.clean.split(" ").join("|") + ")";
