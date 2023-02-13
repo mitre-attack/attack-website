@@ -1,5 +1,14 @@
 import FlexSearch from "flexsearch";
 import localforage from "localforage";
+import $ from "jquery";
+
+/**
+ * It is important that the `.js` file extension be included on the following import, otherwise webpack won't be able to
+ * resolve it. Otherwise, webpack will throw an error like the following:
+ *
+ * ERROR in ./src/search.js 12:0-20
+ * Module not found: Error: Can't resolve './settings' in '/foo/bar/attack-website/attack-search/src'
+ */
 
 let site_base_url = "";
 
@@ -10,26 +19,26 @@ let page_limit = 5;
 let buffer = 200;
 
 // overlay container
-let search_overlay = document.querySelector("#search-overlay");
+let search_overlay = $("#search-overlay");
 
 // button in header to open search
-let search_open_trigger = document.querySelector("#search-button");
+let search_open_trigger = $("#search-button");
 
 // button to close search
-let close_button = document.querySelector("#close-search-icon");
+let close_button = $("#close-search-icon");
 
 // text input on search page
-let search_input = document.querySelector("#search-input");
+let search_input = $("#search-input");
 
 // body of search results
-let search_body = document.querySelector("#search-body");
+let search_body = $("#search-body");
 
 // button to show more results
-let load_more_results = document.querySelector("#load-more-results");
-let load_more_results_button = document.querySelector("#load-more-results-button");
+let load_more_results = $("#load-more-results");
+let load_more_results_button = $("#load-more-results-button");
 
 // search parsing icon
-let search_parsing_icon = document.querySelector("#search-parsing-icon");
+let search_parsing_icon = $("#search-parsing-icon");
 
 // Register custom matchers globally
 FlexSearch.registerMatcher({
