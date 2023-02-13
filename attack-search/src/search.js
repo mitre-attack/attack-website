@@ -10,7 +10,9 @@ import $ from "jquery";
  * Module not found: Error: Can't resolve './settings' in '/foo/bar/attack-website/attack-search/src'
  */
 
-let site_base_url = "";
+import "./settings.js";
+
+// let site_base_url = "";
 
 // number of results per page
 let page_limit = 5;
