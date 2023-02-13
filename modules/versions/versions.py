@@ -308,7 +308,7 @@ def archive(version_data, is_current=False):
             settings_file.write(settings_contents)
     else:
         # update search page for old versions of the site
-        for search_file_name in ["search.js"]:
+        for search_file_name in ["search_bundle.js"]:
             search_file_path = os.path.join(version_path, "theme", "scripts", search_file_name)
             if os.path.exists(search_file_path):
 
