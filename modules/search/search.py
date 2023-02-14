@@ -26,8 +26,17 @@ def generate_index():
         if skip:
             continue
 
-        for thefile in filter(lambda fname: fname.endswith(".html"), files):
-            thepath = os.path.join(root, thefile)
+        # The next line is using a for loop to iterate over the files in the current directory (files) and applying a
+        # filter to select only the files that end with the .html extension. In other words, this line of code is
+        # selecting only the HTML files from the files list and iterating over them.
+
+        for html_file in filter(lambda filename: filename.endswith(".html"), files):
+
+            # Example: If `root` equals "/foo/bar/" and `html_file` equals "hello_world.html" then `absolute_path` will
+            # equal "/foo/bar/hello_world.html"
+
+            absolute_path = os.path.join(root, html_file)
+
             global dist_words
             if any(file_name in thepath for file_name in types):
                 file_name_split = thepath.split("/")
