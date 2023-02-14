@@ -11,6 +11,8 @@ from modules import site_config, versions
 
 types = ["software", "datasources", "groups", "tactics", "techniques"]
 sub_types = ["mobile", "enterprise", "ics"]
+types_hash = set(types)
+sub_types_hash = set(sub_types)
 dist_words = 0
 
 
