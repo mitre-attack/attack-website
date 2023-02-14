@@ -87,35 +87,41 @@ def generate_index():
             absolute_path = os.path.join(root, html_file)
 
             global dist_words
-            if any(file_name in thepath for file_name in types):
-                file_name_split = thepath.split("/")
+
+            # It is worth noting that the `any` function and the .index method used in the code have a time complexity
+            # of O(n), where n is the length of the list being searched.
+
+            if any(file_name in absolute_path for file_name in types_hash):
+
+                file_name_split = absolute_path.split("/")
+
                 if any(file_name in file_name_split for file_name in sub_types):
-                    file_name_split = thepath.split("/")
+                    file_name_split = absolute_path.split("/")
                     type_temp = [file_name_split.index(val) for val in file_name_split if val in sub_types]
                     if "index.html" in file_name_split:
                         dist_words = file_name_split.index("index.html") - type_temp[0]
                 else:
-                    file_name_split = thepath.split("/")
+                    file_name_split = absolute_path.split("/")
                     type_temp = [file_name_split.index(val) for val in file_name_split if val in types]
                     if "index.html" in file_name_split:
                         dist_words = file_name_split.index("index.html") - type_temp[0]
-            cleancontent, skipindex, title = clean(thepath)
+            cleancontent, skipindex, title = clean(absolute_path)
             if dist_words == 1:
                 skipindex = True
                 dist_words = 0
-            if thepath[6:] == "/index.html":
+            if absolute_path[6:] == "/index.html":
                 skipindex = True
                 dist_words = 0
             if not skipindex:
                 # if title == "":
-                #     print(thepath, "has generic title")
+                #     print(absolute_path, "has generic title")
                 #     title = "MITRE ATT&CK&trade;"
 
                 index.append(
                     {
                         "id": len(index),
                         "title": title,
-                        "path": thepath[6:],
+                        "path": absolute_path[6:],
                         "content": cleancontent,
                     }
                 )
