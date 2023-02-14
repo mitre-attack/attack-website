@@ -82,7 +82,7 @@ let search = function (query) {
             // Retrieving cached FlexSearch instances
             localforage.getItem("index_helper_title").then((saved_title) => {
                 localforage.getItem("index_helper_content").then((saved_content) => {
-                    exported = {title: saved_title, content: saved_content};
+                    const exported = {title: saved_title, content: saved_content};
                     searchService = new SearchService("search-results", null, exported);
                     console.debug(`Initialized new searchService (1)`);
                     searchService.query(query);
