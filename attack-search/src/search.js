@@ -44,7 +44,9 @@ let closeSearch = function () {
 
 let searchService;
 let search = function (query) {
-    if (searchService) {
+    console.debug(`Executing search on query: ${query}`);
+    if (!searchService) {
+        console.debug(`searchService is NOT defined!`);
         search_parsing_icon.show()
 
         // Initializing search service
