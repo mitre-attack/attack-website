@@ -10,37 +10,11 @@ import $ from "jquery";
  * Module not found: Error: Can't resolve './settings' in '/foo/bar/attack-website/attack-search/src'
  */
 
-import "./settings.js";
-
-// let site_base_url = "";
-
-// number of results per page
-let page_limit = 5;
-
-// 2* buffer is roughly the size of the result preview
-let buffer = 200;
-
-// overlay container
-let search_overlay = $("#search-overlay");
-
-// button in header to open search
-let search_open_trigger = $("#search-button");
-
-// button to close search
-let close_button = $("#close-search-icon");
-
-// text input on search page
-let search_input = $("#search-input");
-
-// body of search results
-let search_body = $("#search-body");
-
-// button to show more results
-let load_more_results = $("#load-more-results");
-let load_more_results_button = $("#load-more-results-button");
-
-// search parsing icon
-let search_parsing_icon = $("#search-parsing-icon");
+import { base_url } from "./settings.js";
+import { Debouncer } from "./debouncer.js";
+import { SearchService } from "./search-service.js";
+import {search_body, search_overlay, search_input, search_parsing_icon, search_open_trigger, close_button,
+    load_more_results_button} from "./components.js";
 
 // Register custom matchers globally
 FlexSearch.registerMatcher({
