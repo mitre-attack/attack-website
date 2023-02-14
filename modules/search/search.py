@@ -132,7 +132,7 @@ def generate_index():
 
     if site_config.subdirectory:
         # update search base url to subdirectory
-        search_file_path = os.path.join(site_config.web_directory, "theme", "scripts", "search.js")
+        search_file_path = os.path.join(site_config.web_directory, "theme", "scripts", "search_bundle.js")
 
         if os.path.exists(search_file_path):
             search_contents = ""
