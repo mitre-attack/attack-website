@@ -48,22 +48,49 @@ let search = function (query) {
     if (!searchService) {
         console.debug(`searchService is NOT defined!`);
         search_parsing_icon.show()
+        console.debug(`Showed the search_parsing_icon`);
 
         // Initializing search service
 
         let saved_uuid = localStorage.getItem("saved_uuid");
+        console.debug(`Retrieved the saved_uuid from localStorage: ${saved_uuid}`);
+
+        /**
+         * IndexedDB is a web-based database that allows you to store and retrieve data in the client-side (in the
+         * browser). It is designed for web applications that need to store large amounts of data, such as audio and
+         * video files, images, and structured data, on the client side. IndexedDB provides a transactional, NoSQL-style
+         * database that can be used to store and retrieve data even when the user is offline.
+         *
+         * IndexedDB is a part of the Web Storage API and is supported by modern browsers, including Google Chrome,
+         * Mozilla Firefox, Microsoft Edge, and Apple Safari.
+         *
+         * The main benefits of using IndexedDB over other client-side storage options, such as local storage or
+         * cookies, are its ability to store large amounts of structured data, its transactional nature, and its ability
+         * to search and retrieve data using indexes.
+         *
+         * To use IndexedDB in your web application, you need to create a database, define object stores to store your
+         * data, and use transactions to interact with the data. The database is created using the indexedDB.open
+         * method, and transactions are used to read and write data using the IDBTransaction object.
+         *
+         * Overall, IndexedDB is a powerful and flexible client-side database that can be used to store and retrieve
+         * large amounts of structured data in web applications. It is particularly useful for web applications that
+         * need to work offline or that need to store large amounts of data on the client side.
+         */
 
         if (!isGoogleChrome && 'indexedDB' in window && saved_uuid && saved_uuid === build_uuid) {
+            console.debug(`isGoogleChrome=False; indexedDB=truthy; saved_uuid=Truthy; saved_uuid==build_uuid=truthy`);
             // Retrieving cached FlexSearch instances
             localforage.getItem("index_helper_title").then((saved_title) => {
                 localforage.getItem("index_helper_content").then((saved_content) => {
                     exported = {title: saved_title, content: saved_content};
                     searchService = new SearchService("search-results", null, exported);
+                    console.debug(`Initialized new searchService (1)`);
                     searchService.query(query);
                     search_parsing_icon.hide();
                 });
             });
         } else {
+            console.debug(`Something in that last condition was falsy so we need to initialize some instances of FlexSearch`);
             // Initializing instances of FlexSearch
             fetch(`${base_url}/index.json`)
                 .then(response => response.json())
@@ -75,6 +102,7 @@ let search = function (query) {
                 .catch(error => console.error(error));
         }
     } else {
+        console.debug(`searchService IS defined! Executing searchService.query(${query})`);
         searchService.query(query);
     }
 }
@@ -125,7 +153,9 @@ close_button.on("click", closeSearch);
 search_open_trigger.on("click", openSearch);
 // triggers for performing search functions
 search_input.on("input", function (e) {
+    console.log(`Executing search on input: ${e.target.value}`);
     debounce.debounce(function () {
+        console.log(`debounce callback: ${e.target.value}`);
         search(e.target.value)
     });
 })
@@ -141,7 +171,6 @@ if (!String.prototype.includes) {
         if (typeof start !== 'number') {
             start = 0;
         }
-
         if (start + search.length > this.length) {
             return false;
         } else {
@@ -155,3 +184,5 @@ if (typeof String.prototype.endsWith !== 'function') {
         return this.indexOf(suffix, this.length - suffix.length) !== -1;
     };
 }
+
+console.debug("search.js is loaded.");
