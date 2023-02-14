@@ -137,7 +137,7 @@ load_more_results_button.on("click", function () {
     load_more_results_button.blur(); //onfocus
 });
 
-//internet explorer compatability patches
+// Internet Explorer compatability patches
 if (!String.prototype.includes) {
     String.prototype.includes = function (search, start) {
         if (typeof start !== 'number') {
