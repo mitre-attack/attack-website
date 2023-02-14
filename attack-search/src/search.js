@@ -92,14 +92,17 @@ let search = function (query) {
         } else {
             console.debug(`Something in that last condition was falsy so we need to initialize some instances of FlexSearch`);
             // Initializing instances of FlexSearch
-            fetch(`${base_url}/index.json`)
-                .then(response => response.json())
-                .then(data => {
-                    let search_service = new SearchService("search-results", data, null);
-                    search_service.query(query);
-                    search_parsing_icon.style.display = 'none';
-                })
-                .catch(error => console.error(error));
+            $.ajax({ //if docs have not yet been loaded
+                url: base_url + "/index.json",
+                dataType: "json",
+                success: function (data) {
+                    searchService = new SearchService("search-results", data, null);
+                    console.debug(`Initialized new searchService (2)`);
+                    searchService.query(query);
+                    search_parsing_icon.hide();
+                }
+            });
+            console.debug(`Retrieved and processed index.json`);
         }
     } else {
         console.debug(`searchService IS defined! Executing searchService.query(${query})`);
