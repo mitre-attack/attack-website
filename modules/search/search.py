@@ -17,6 +17,55 @@ dist_words = 0
 def generate_index():
     logger.info("Creating searchable index for the site")
     index = []
+
+    # os.walk(site_config.web_directory) is a function that generates the file names in a directory tree, and it returns
+    # a 3-tuple (root, dirs, files), where root is a string representing the root directory, dirs is a list of the
+    # directories in the root directory, and files is a list of the files in the root directory.
+    #
+    # The code is using the for loop to iterate over the results of os.walk(site_config.web_directory) and access the
+    # files in each directory. The root and files values are then used in the loop body to perform some operation.
+    # The __ placeholder is used to ignore the dirs value, which is not needed in this code.
+    #
+    # EXAMPLE:
+    #
+    # import os
+    #
+    # root_dir = '/path/to/root/directory'
+    #
+    # for root, dirs, files in os.walk(root_dir):
+    #     print(f'Root directory: {root}')
+    #     print(f'Directories in root: {dirs}')
+    #     print(f'Files in root: {files}')
+    #     print()
+    #
+    # If the directory tree rooted at root_dir looks like this:
+    #
+    # /path/to/root/directory/
+    #     dir1/
+    #         file1.txt
+    #         file2.txt
+    #     dir2/
+    #         file3.txt
+    #         file4.txt
+    #     file5.txt
+    #
+    # Then the output of the code would be:
+    #
+    # Root directory: /path/to/root/directory/
+    # Directories in root: ['dir1', 'dir2']
+    # Files in root: ['file5.txt']
+    #
+    # Root directory: /path/to/root/directory/dir1/
+    # Directories in root: []
+    # Files in root: ['file1.txt', 'file2.txt']
+    #
+    # Root directory: /path/to/root/directory/dir2/
+    # Directories in root: []
+    # Files in root: ['file3.txt', 'file4.txt']
+
+    # TL;DR This code is processing the HTML files in a directory tree, cleaning their content, and appending relevant
+    # information to an index list, skipping certain files and directories if necessary.
+
     for root, __, files in os.walk(site_config.web_directory):
         # don't walk previous routes
         skip = False
