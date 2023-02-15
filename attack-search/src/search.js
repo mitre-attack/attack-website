@@ -66,8 +66,10 @@ const search = function (query) {
 
     // Initializing search service
 
-    const savedUUID = localStorage.getItem('saved_uuid');
-    console.debug(`Retrieved the saved_uuid from localStorage: ${savedUUID}`);
+    // eslint-disable-next-line camelcase
+    const saved_uuid = localStorage.getItem('saved_uuid');
+    // eslint-disable-next-line camelcase
+    console.debug(`Retrieved the saved_uuid from localStorage: ${saved_uuid}`);
 
     /**
      * IndexedDB is a web-based database that allows you to store and retrieve data in the client-side (in the
@@ -91,7 +93,8 @@ const search = function (query) {
      * need to work offline or that need to store large amounts of data on the client side.
      */
 
-    if (!isGoogleChrome && 'indexedDB' in window && savedUUID && savedUUID === buildUUID) {
+    // eslint-disable-next-line camelcase
+    if (!isGoogleChrome && 'indexedDB' in window && saved_uuid && saved_uuid === build_uuid) {
       console.debug('isGoogleChrome=False; indexedDB=truthy; saved_uuid=Truthy; saved_uuid==build_uuid=truthy');
       // Retrieving cached FlexSearch instances
       localforage.getItem('index_helper_title').then((savedTitle) => {

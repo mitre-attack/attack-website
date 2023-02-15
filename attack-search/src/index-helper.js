@@ -36,7 +36,7 @@ export default class IndexHelper {
       this.indexes.title.add(documents);
       this.indexes.content.add(documents);
 
-      localStorage.setItem('saved_uuid', buildUUID);
+      localStorage.setItem('saved_uuid', build_uuid);
       localforage.setItem('index_helper_title', this.indexes.title.export(() => {
       }))
         .then(() => {
