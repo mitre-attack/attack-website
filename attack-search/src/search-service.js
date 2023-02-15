@@ -1,5 +1,10 @@
-import { IndexHelper } from './index-helper.js';
+// eslint-disable-next-line import/extensions
+import IndexHelper from './index-helper.js';
+
+// eslint-disable-next-line import/extensions
 import { loadMoreResults, searchBody } from './components.js';
+
+// eslint-disable-next-line import/extensions
 import { buffer } from './settings.js';
 
 export default class SearchService {
