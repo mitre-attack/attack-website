@@ -106,7 +106,8 @@ const search = function (query) {
           searchParsingIcon.hide();
         });
       });
-    } else {
+    }
+    else {
       console.debug('Something in that last condition was falsy so we need to initialize some instances of FlexSearch');
       // Initializing instances of FlexSearch
       $.ajax({ // if docs have not yet been loaded
