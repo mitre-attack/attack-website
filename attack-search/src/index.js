@@ -32,12 +32,17 @@ const {
 // eslint-disable-next-line import/extensions
 const { CONTENT_INDEX_KEY } = require('./settings.js');
 
-// Register custom matchers globally
-FlexSearch.registerMatcher({
-  // attack and ATT&CK are equivalent for the purposes of search
-  'ATT&CK': 'ATTACK',
-  ATTACK: 'ATT&CK',
-});
+/**
+ * FlexSearch.registerMatcher({REGEX: REPLACE})
+ * Enables FlexSearch to globally replace RegEx matches.
+ * Here, we use it to augment the "&" in ATT&CK, so searches for "attack" will still match "ATT&CK" and vice versa.
+ */
+
+// TODO Figure out how to do this is v0.7.31
+// flexsearch.default.registerMatcher({
+//   'ATT&CK': 'ATTACK',
+//   ATTACK: 'ATT&CK',
+// });
 
 const isChromium = window.chrome;
 const isEdgeChromium = isChromium && navigator.userAgent.indexOf('Edg') != -1;
