@@ -21,11 +21,11 @@ def get_menu():
         ],
     }
 
-
-def get_redirections():
-    with open(tactics_config.tactics_redirection_location, "r", encoding="utf8") as json_redirections:
-        return json.load(json_redirections)
-    return []
+# TODO commented out to resolve infinite redirect loop when run locally. Needs further testing before code removal.
+# def get_redirections():
+#     with open(tactics_config.tactics_redirection_location, "r", encoding="utf8") as json_redirections:
+#         return json.load(json_redirections)
+#     return []
 
 
 def run_module():

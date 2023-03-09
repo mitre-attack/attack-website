@@ -29,9 +29,10 @@ def generate_groups():
     # Generate redirections
     # of note: G0058 used to redirect to G0059 manually because it is not in the STIX object
     # TODO: bring G0058 back into the STIX so this scenario doesn't happen any more in the future
-    util.buildhelpers.generate_redirections(
-        redirections_filename=groups_config.groups_redirection_location, redirect_md=site_config.redirect_md
-    )
+    # TODO commented out to resolve infinite redirect loop when run locally. Needs further testing before code removal.
+    # util.buildhelpers.generate_redirections(
+    #     redirections_filename=groups_config.groups_redirection_location, redirect_md=site_config.redirect_md
+    # )
 
     # Generates the markdown files to be used for page generation
     group_generated = generate_markdown_files()

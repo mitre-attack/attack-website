@@ -25,10 +25,11 @@ def generate_campaigns():
     if not os.path.isdir(campaigns_config.campaign_markdown_path):
         os.mkdir(campaigns_config.campaign_markdown_path)
 
+    # TODO commented out to resolve infinite redirect loop when run locally. Needs further testing before code removal.
     # Generate redirections
-    util.buildhelpers.generate_redirections(
-        redirections_filename=campaigns_config.campaigns_redirection_location, redirect_md=site_config.redirect_md
-    )
+    # util.buildhelpers.generate_redirections(
+    #     redirections_filename=campaigns_config.campaigns_redirection_location, redirect_md=site_config.redirect_md
+    # )
 
     # Generates the markdown files to be used for page generation
     campaigns_generated = generate_markdown_files()
@@ -256,7 +257,7 @@ def get_group_table_data(campaign, reference_list):
 
 def get_techniques_used_by_campaign_data(campaign, reference_list):
     """Given a campaign and its reference list, get the techniques used by the campaign.
-    
+
     Check the reference list for citations, if not found in list, add it.
     """
     technique_list = {}
@@ -306,7 +307,7 @@ def get_software_table_data(campaign, reference_list):
 
                         # update reference list
                         reference_list = util.buildhelpers.update_reference_list(reference_list, software["relationship"])
-    
+
     software_data = [software_list[item] for item in software_list]
     software_data = sorted(software_data, key=lambda k: k["name"].lower())
     return software_data

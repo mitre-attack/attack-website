@@ -22,10 +22,11 @@ def generate_software():
     if not os.path.isdir(software_config.software_markdown_path):
         os.mkdir(software_config.software_markdown_path)
 
+    # TODO commented out to resolve infinite redirect loop when run locally. Needs further testing before code removal.
     # Generate redirections
-    util.buildhelpers.generate_redirections(
-        redirections_filename=software_config.software_redirection_location, redirect_md=site_config.redirect_md
-    )
+    # util.buildhelpers.generate_redirections(
+    #     redirections_filename=software_config.software_redirection_location, redirect_md=site_config.redirect_md
+    # )
 
     # Generates the markdown files to be used for page generation and verifies if a software was generated
     software_generated = generate_markdown_files()
