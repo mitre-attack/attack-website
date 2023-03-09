@@ -4,4 +4,8 @@ module.exports.baseURL = '';
 module.exports.pageLimit = 5;
 
 // 2* buffer is roughly the size of the result preview
-export const buffer = 200;
+module.exports.buffer = 200;
+
+module.exports.ATTACK_INDEX_KEY = 'index_helper';
+module.exports.TITLE_INDEX_KEY = 'index_helper_title';
+module.exports.CONTENT_INDEX_KEY = 'index_helper_content';
