@@ -1,13 +1,17 @@
-// eslint-disable-next-line import/extensions
-import IndexHelper from './index-helper.js';
+const $ = require('jquery');
 
 // eslint-disable-next-line import/extensions
-import { loadMoreResults, searchBody } from './components.js';
+const localforage = require('localforage');
+const IndexHelper = require('./index-helper.js');
 
 // eslint-disable-next-line import/extensions
-import { buffer } from './settings.js';
+const { loadMoreResults, searchBody } = require('./components.js');
 
-export default class SearchService {
+// eslint-disable-next-line import/extensions
+const { buffer } = require('./settings.js');
+const { TITLE_INDEX_KEY } = require('./settings');
+
+module.exports = class SearchService {
   constructor(tag, documents, exported) {
     // init indexes
     this.index = new IndexHelper(documents, exported);
