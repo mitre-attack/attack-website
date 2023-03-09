@@ -1,6 +1,5 @@
-import FlexSearch from 'flexsearch';
-import localforage from 'localforage';
-import $ from 'jquery';
+const localforage = require('localforage');
+const $ = require('jquery');
 
 /**
  * It is important that the `.js` file extension be included for local imports, otherwise webpack won't be able to
@@ -11,15 +10,15 @@ import $ from 'jquery';
  */
 
 // eslint-disable-next-line import/extensions
-import { baseURL } from './settings.js';
+const { baseURL, TITLE_INDEX_KEY } = require('./settings.js');
 
 // eslint-disable-next-line import/extensions
-import Debouncer from './debouncer.js';
+const Debouncer = require('./debouncer.js');
 
 // eslint-disable-next-line import/extensions
-import SearchService from './search-service.js';
+const SearchService = require('./search-service.js');
 
-import {
+const {
   searchBody,
   searchOverlay,
   searchInput,
@@ -28,7 +27,10 @@ import {
   closeButton,
   loadMoreResultsButton,
 // eslint-disable-next-line import/extensions
-} from './components.js';
+} = require('./components.js');
+
+// eslint-disable-next-line import/extensions
+const { CONTENT_INDEX_KEY } = require('./settings.js');
 
 // Register custom matchers globally
 FlexSearch.registerMatcher({
