@@ -29,4 +29,4 @@ def get_redirections():
 
 
 def run_module():
-    return (tactics.generate_tactics(), tactics_config.module_name)
+    return tactics.generate_tactics(), tactics_config.module_name

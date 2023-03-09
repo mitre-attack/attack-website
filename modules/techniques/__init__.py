@@ -29,4 +29,4 @@ def get_redirections():
 
 
 def run_module():
-    return (techniques.generate_techniques(), techniques_config.module_name)
+    return techniques.generate_techniques(), techniques_config.module_name

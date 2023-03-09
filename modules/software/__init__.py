@@ -21,4 +21,4 @@ def get_redirections():
     return []
 
 def run_module():
-    return (software.generate_software(), software_config.module_name)
+    return software.generate_software(), software_config.module_name
