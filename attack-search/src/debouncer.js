@@ -2,7 +2,7 @@
  * Debouncer is a utility class for debouncing function calls. It is used to debounce keyboard input so that rapid
  * keypresses doesn't overwhelm the computer.
  */
-export default class Debouncer {
+module.exports = class Debouncer {
   // new debouncer, param is the amount of debounce delay time in ms
   constructor(delay) {
     this.callback = null;
@@ -26,4 +26,4 @@ export default class Debouncer {
     // only do the callback if a new debounced input hasn't been added.
     if (this.i == i) this.callback();
   }
-}
+};
