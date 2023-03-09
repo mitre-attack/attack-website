@@ -13,6 +13,7 @@ const { TITLE_INDEX_KEY } = require('./settings');
 
 module.exports = class SearchService {
   constructor(tag, documents, exported) {
+    console.debug('Initializing new SearchService instance...');
     // init indexes
     this.index = new IndexHelper(documents, exported);
     this.current_query = {
@@ -28,43 +29,78 @@ module.exports = class SearchService {
       joined: '', // alternation
     };
     this.render_container = $(`#${tag}`);
+    console.debug('SearchService is initialized.');
   }
 
   /**
      * update the search (query) string
-     * @param {str} queryString string to search for in the indexes
+     * @param {string} query string to search for in the indexes
      */
-  query(queryString) {
-    console.debug('Executing query method.');
+  query(query) {
+    console.debug(`Executing query on: ${query}`);
 
-    console.debug('SearchService.query: Executing queryString.trim()');
-    this.current_query.clean = queryString.trim();
-    console.debug(`this.current_query.clean=${this.current_query.clean}`);
+    // eslint-disable-next-line no-underscore-dangle
+    this.#cleanTheQuery(query);
+
+    console.debug(`Setting index query to ${this.current_query.clean}`);
+
+    this.index.setQuery(this.current_query.clean);
+
+    console.debug('Clearing results.');
+    this.clearResults();
+
+    console.debug('Calling this.nextPage()');
+    this.nextPage(); // render first page of results
+  }
+
+  /**
+   * Preps the query string before executing it.
+   * @param {string} query
+   * @private
+   */
+  #cleanTheQuery(query) {
+    console.debug(`Cleaning query string: ${query}`);
+
+    this.current_query.clean = query.trim();
 
     // build joined string
     const joined = `(${this.current_query.clean.split(' ').join('|')})`;
     this.current_query.joined = new RegExp(joined, 'gi');
 
-    // build regex for each word
-    const escaped = this.current_query.clean.replace(/\s+/, ' '); // remove double spaces which causes query to match on every 0 length string and flip out
+    // Build regex for each word
+
+    // remove double spaces which causes query to match on every 0 length string and flip out
+    const escaped = this.current_query.clean.replace(/\s+/, ' ');
+
+    // The following map code is modifying the current_query object by setting its words property to an array of
+    // objects. Each object in the array represents a word that was entered as part of a search query, along with a
+    // regular expression that can be used to match that word in a larger body of text.
+
     this.current_query.words = escaped.split(' ').map((searchWord) => {
-      let regexString = searchWord.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // escape all regex chars so that entering ".." doesn't cause it to flip out
-      regexString = regexString.replace(/((?:att&ck)|(?:attack))/gi, '((?:att&ck)|(?:attack))'); // equivalence of ATT&CK and attack
+      // This line replaces any special characters in the search word with escape characters, so that they can be safely
+      // used in a regular expression. The g flag ensures that all occurrences of special characters in the word are
+      // replaced, and \\$& inserts the original character as a literal string in the replacement.
+      // In other words: escape all regex chars so that entering ".." doesn't cause it to flip out
+      let regexString = searchWord.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+      // This line replaces any occurrence of "att&ck" or "attack" with the regular expression pattern
+      // ((?:att&ck)|(?:attack)). This is done to make the search more flexible and include results that may use
+      // different forms of the term.
+      regexString = regexString.replace(/((?:att&ck)|(?:attack))/gi, '((?:att&ck)|(?:attack))');
+
+      // This line creates a new object that contains the original search word and its corresponding regular expression.
+      // The regular expression is created using the RegExp constructor, with the gi flags to make it global and
+      // case-insensitive.
       return { word: searchWord, regex: new RegExp(regexString, 'gi') };
     });
-    console.debug(`Setting index query to ${this.current_query.clean}`);
-    this.index.setQuery(this.current_query.clean);
-    console.debug('Clearing results.');
-    this.clearResults();
-    console.debug('Calling this.nextPage()');
-    this.nextPage(); // render first page of results
   }
 
   /**
      * parse the result to the HTML required to render it
      * @param result object of format {title, path, content} which describes a page on the site
      */
-  result_to_html(result) {
+  #resultToHTML(result) {
+    console.debug('SearchService.result_to_html was executed.');
     // create title and path
     let { title } = result;
     let path = base_url.slice(0, -1) + result.path;
@@ -87,11 +123,10 @@ module.exports = class SearchService {
       }
     });
 
-    positions.sort((a, b) => {
-      console.debug(`a=${a}`);
-      console.debug(`b=${b}`);
-      return a.index - b.index;
-    });
+    positions.sort((a, b) =>
+      // console.debug(`a=${a}`);
+      // console.debug(`b=${b}`);
+      a.index - b.index);
 
     // are two sets equal
     function setsEqual(s1, s2) {
@@ -222,7 +257,7 @@ module.exports = class SearchService {
       searchBody.show();
       console.debug('search_body.show() was executed.');
       const self = this;
-      let resultHTML = results.map((result) => self.result_to_html(result));
+      let resultHTML = results.map((result) => self.#resultToHTML(result));
       resultHTML = resultHTML.join('');
       this.render_container.append(resultHTML);
       if (this.index.nextPageRef) loadMoreResults.show();
@@ -238,4 +273,4 @@ module.exports = class SearchService {
       searchBody.hide();
     }
   }
-}
+};

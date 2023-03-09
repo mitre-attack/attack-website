@@ -65,16 +65,16 @@ const closeSearch = function () {
 
 let searchService;
 const search = function (query) {
-  console.debug(`Executing search on query: ${query}`);
+  console.debug(`search -> Received search query: ${query}`);
   if (!searchService) {
-    console.debug('searchService is NOT defined!');
+    console.debug('search -> search index is not loaded...');
     searchParsingIcon.show();
-    console.debug('Showed the search_parsing_icon');
 
     // Initializing search service
 
     // eslint-disable-next-line camelcase
     const saved_uuid = localStorage.getItem('saved_uuid');
+
     // eslint-disable-next-line camelcase
     console.debug(`Retrieved the saved_uuid from localStorage: ${saved_uuid}`);
 
@@ -102,35 +102,46 @@ const search = function (query) {
 
     // eslint-disable-next-line camelcase
     if (!isGoogleChrome && 'indexedDB' in window && saved_uuid && saved_uuid === build_uuid) {
-      console.debug('isGoogleChrome=False; indexedDB=truthy; saved_uuid=Truthy; saved_uuid==build_uuid=truthy');
+
+      /**
+       * Basically, if we're running in a non Chrome-based browser (such as Firefox) that has access to an IndexDB (most
+       * modern web browsers should...) AND we already have the build UUID stored in localStorage, then we can assume
+       * that the search indexes (there are two: one for title queries and one for content queries) are cached in the
+       * IndexDB, in which case we should retrieve them (using localforage) and load them into memory; THEN we can
+       * execute the user's search query.
+       */
+
+      console.debug('search -> Attempting to retrieve cached search index...');
+
       // Retrieving cached FlexSearch instances
-      localforage.getItem('index_helper_title').then((savedTitle) => {
-        localforage.getItem('index_helper_content').then((savedContent) => {
+      localforage.getItem(TITLE_INDEX_KEY).then((savedTitle) => {
+        localforage.getItem(CONTENT_INDEX_KEY).then((savedContent) => {
           const exported = { title: savedTitle, content: savedContent };
           searchService = new SearchService('search-results', null, exported);
-          console.debug('Initialized new searchService (1)');
+          console.debug('search -> Initialized new search index!');
+          console.debug(`search -> Executing search query: ${query}`);
           searchService.query(query);
           searchParsingIcon.hide();
         });
       });
-    }
-    else {
-      console.debug('Something in that last condition was falsy so we need to initialize some instances of FlexSearch');
+    } else {
+      console.debug('search -> Generating new search index...');
       // Initializing instances of FlexSearch
       $.ajax({ // if docs have not yet been loaded
         url: `${baseURL}/index.json`,
         dataType: 'json',
         success(data) {
+          console.debug('Retrieved and processed index.json');
           searchService = new SearchService('search-results', data, null);
-          console.debug('Initialized new searchService (2)');
+          console.debug('search -> Initialized new search index!');
+          console.debug(`search -> Executing search query: ${query}`);
           searchService.query(query);
           searchParsingIcon.hide();
         },
       });
-      console.debug('Retrieved and processed index.json');
     }
   } else {
-    console.debug(`searchService IS defined! Executing searchService.query(${query})`);
+    console.debug(`search -> Executing search query: ${query}`);
     searchService.query(query);
   }
 };
