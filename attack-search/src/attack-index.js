@@ -1,3 +1,4 @@
+const Dexie = require('dexie');
 const FlexSearch = require('flexsearch');
 const { Document } = FlexSearch;
 
@@ -17,7 +18,6 @@ module.exports = class AttackIndex {
 
         // If running in a Node.js environment, import Dexie and fake-indexeddb
         if (isNode) {
-            const Dexie = require('dexie');
             const { indexedDB, IDBKeyRange } = require('fake-indexeddb');
 
             // Initialize the IndexedDB with fake-indexeddb for Node.js environment
