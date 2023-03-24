@@ -112,18 +112,28 @@ const search = function (query) {
        */
 
       console.debug('search -> Attempting to retrieve cached search index...');
+      searchService = new SearchService('search-results', null, true);
+      console.debug('search -> Initialized new search index!');
+      console.debug(`search -> Executing search query: ${query}`);
+      searchService.query(query);
+      searchParsingIcon.hide();
 
+      // TODO remove this block after all IndexedDB logic has been migrated to the new AttackIndex class
       // Retrieving cached FlexSearch instances
-      localforage.getItem(TITLE_INDEX_KEY).then((savedTitle) => {
-        localforage.getItem(CONTENT_INDEX_KEY).then((savedContent) => {
-          const exported = { title: savedTitle, content: savedContent };
-          searchService = new SearchService('search-results', null, exported);
-          console.debug('search -> Initialized new search index!');
-          console.debug(`search -> Executing search query: ${query}`);
-          searchService.query(query);
-          searchParsingIcon.hide();
-        });
-      });
+      // localforage.getItem(TITLE_INDEX_KEY).then((savedTitle) => {
+      //   localforage.getItem(CONTENT_INDEX_KEY).then((savedContent) => {
+      //     const exported = {
+      //       title: savedTitle,
+      //       content: savedContent
+      //     };
+      //     searchService = new SearchService('search-results', null, exported);
+      //     console.debug('search -> Initialized new search index!');
+      //     console.debug(`search -> Executing search query: ${query}`);
+      //     searchService.query(query);
+      //     searchParsingIcon.hide();
+      //   });
+      // });
+
     } else {
       console.debug('search -> Generating new search index...');
       // Initializing instances of FlexSearch
@@ -132,7 +142,7 @@ const search = function (query) {
         dataType: 'json',
         success(data) {
           console.debug('Retrieved and processed index.json');
-          searchService = new SearchService('search-results', data, null);
+          searchService = new SearchService('search-results', data, false);
           console.debug('search -> Initialized new search index!');
           console.debug(`search -> Executing search query: ${query}`);
           searchService.query(query);
