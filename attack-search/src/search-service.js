@@ -3,19 +3,43 @@ const $ = require('jquery');
 // eslint-disable-next-line import/extensions
 const localforage = require('localforage');
 const IndexHelper = require('./index-helper.js');
+const AttackIndex = require('./attack-index.js');
 
 // eslint-disable-next-line import/extensions
 const { loadMoreResults, searchBody } = require('./components.js');
 
 // eslint-disable-next-line import/extensions
-const { buffer } = require('./settings.js');
-const { TITLE_INDEX_KEY } = require('./settings');
+const { buffer, ATTACK_INDEX_KEY } = require('./settings.js');
+
+module.exports.createSearchService = async function(tag, documents, exported) {
+  return new Promise((resolve, reject) => {
+    const searchService = new SearchService(tag, documents, exported);
+    if (searchService.initialized) {
+      resolve(searchService);
+    } else {
+      reject();
+    }
+  });
+}
 
 module.exports = class SearchService {
-  constructor(tag, documents, exported) {
+  constructor(tag, documents, exported= false) {
     console.debug('Initializing new SearchService instance...');
-    // init indexes
-    this.index = new IndexHelper(documents, exported);
+    this.initialized = false;
+    this.attackIndex = new AttackIndex(ATTACK_INDEX_KEY, 'website');
+    /**
+     * If documents are defined, then load them into the AttackIndex instance.
+     * Otherwise, if exported equals 'true', then fetch the documents from the IndexDB and load them into the
+     * AttackIndex instance.
+     */
+    if (documents) {
+      this.attackIndex.add(documents).then(r => {});
+    } else if (exported) {
+      this.attackIndex.importFromIndexedDBtoFlexSearch().then(r => {});
+    } else {
+      console.error('No documents or exported data provided to SearchService.');
+      throw Error('AttackIndex cannot be initialized empty.')
+    }
     this.current_query = {
       clean: '',
       words: [
@@ -29,6 +53,7 @@ module.exports = class SearchService {
       joined: '', // alternation
     };
     this.render_container = $(`#${tag}`);
+    this.initialized = true;
     console.debug('SearchService is initialized.');
   }
 
@@ -44,7 +69,8 @@ module.exports = class SearchService {
 
     console.debug(`Setting index query to ${this.current_query.clean}`);
 
-    this.index.setQuery(this.current_query.clean);
+    // this.index.setQuery(this.current_query.clean);
+    this.attackIndex.setQuery(this.current_query.clean);
 
     console.debug('Clearing results.');
     this.clearResults();
@@ -249,7 +275,8 @@ module.exports = class SearchService {
      */
   nextPage() {
     console.debug('Executing SearchService.nextPage');
-    const results = this.index.nextPage();
+    // const results = this.index.nextPage();
+    const results = this.attackIndex.nextPage();
     console.debug(`SearchService.nextPage: processing results: ${results}`);
     if (results.length > 0) this.hasResults = true;
     console.debug(`this.hasResults=${this.hasResults}`);
