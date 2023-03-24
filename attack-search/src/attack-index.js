@@ -1,102 +1,146 @@
+const Dexie = require('dexie');
 const FlexSearch = require('flexsearch');
-const localforage = require('localforage');
+const { indexedDB, IDBKeyRange } = require('fake-indexeddb');
 
 const { Document } = FlexSearch;
 
 module.exports = class AttackIndex {
-  constructor(cacheKey) {
-    this.cacheKey = cacheKey;
-    this.index = new Document({
-      id: 'id',
-      index: [
-        {
-          field: 'title',
-          tokenize: 'forward',
-          optimize: true,
-          resolution: 9,
-        },
-        {
-          field: 'content',
-          tokenize: 'strict',
-          optimize: true,
-          resolution: 9,
-          minlength: 3,
-          context: {
-            depth: 4,
-            resolution: 2,
-          },
-        },
-      ],
-    });
-  }
+    /**
+     * Creates a new AttackIndex instance.
+     * @param {string} cacheKey - The key used to access the IndexedDB.
+     * @param {string} tableName - The name of the IndexedDB table.
+     * @param {string} [dbName='AttackDatabase'] - The name of the IndexedDB.
+     */
+    constructor(cacheKey, tableName, dbName = 'AttackDatabase') {
+        this.cacheKey = cacheKey;
+        this.tableName = tableName;
 
-  /**
-   * Adds new search content to a search index.
-   * @param {flexsearch.Document} document The search index to which data should be added.
-   * @param {object[]|object} data An array of objects or a single object.
-   * If an array, each object must have the following properties:
-   * - id: number
-   * - title: string
-   * - content: string
-   * If a single object, it must have the same properties as described above.
-   * @returns {Promise<void>}
-  */
-  async addOne(data) {
-    await this.index.addAsync(data);
-    console.log('Task "Add Bulk" Done');
-  }
-
-  /**
-   * Queries a given search index.
-   * @param {flexsearch.Document} document The instance of FlexSearch.Document to which data should be added.
-   * @param {string} query The search query to perform
-   * @param {'title'|'content'} [field='title'] Optional. The name of the field to search. Defaults to 'title'.
-   * @returns {Promise<*>}
-   */
-  async search(query) {
-    const results = await this.index.searchAsync(query);
-    console.log(`results: ${results}`);
-    console.log('Task "Search" Done.');
-    return results;
-  }
-
-  /**
-   * Exports indexed search data from the index to IndexDB
-   * @param {flexsearch.Document} document The instance of FlexSearch.Document from which data should be exported.
-   * @returns {Promise<void>}
-   */
-  async exportToIndexDB() {
-    try {
-      const backups = [];
-
-      await new Promise((resolve) => {
-        this.index.export((key, d) => {
-          const backup = { key, data: d };
-          backups.push(backup);
-        }).then(resolve);
-      });
-
-      await localforage.setItem(this.cacheKey, backups);
-    } catch (err) {
-      console.error(err);
-    }
-  }
-
-  /**
-   *
-   * @returns {Promise<void>}
-   */
-  async importFromIndexDB() {
-    try {
-      const dataFromStorage = await localforage.getItem(this.cacheKey);
-
-      if (dataFromStorage) {
-        dataFromStorage.forEach((item) => {
-          this.index.add(item.key, item.data);
+        this.indexeddb = new Dexie(dbName, {
+            indexedDB,
+            IDBKeyRange,
         });
-      }
-    } catch (err) {
-      console.error(err);
+
+        this.indexeddb.version(1).stores({
+            [this.tableName]: '++id, title, content',
+        });
+
+        this.index = new Document({
+            id: 'id',
+            index: [
+                {
+                    field: 'title',
+                    tokenize: 'forward',
+                    optimize: true,
+                },
+                {
+                    field: 'content',
+                    tokenize: 'forward',
+                    optimize: true,
+                    minlength: 3,
+                    context: {
+                        depth: 3,
+                        resolution: 2,
+                    },
+                },
+            ],
+            page: 0, // Default starting page,
+            limit: Number.MAX_SAFE_INTEGER // Default limit for results per page
+        });
     }
-  }
-};
+
+    /**
+     * Performs a put operation on the IndexedDB.
+     * @param {Object} data - The data to store in the IndexedDB.
+     * @returns {Promise<void>}
+     */
+    async putInIndexedDB(data) {
+        await this.indexeddb[this.tableName].put(data, this.cacheKey);
+    }
+
+    /**
+     * Performs bulk put operations on the IndexedDB.
+     * @param {Array<Object>} data - An array of objects to store in the IndexedDB.
+     * @returns {Promise<void>}
+     */
+    async bulkPutInIndexedDB(data) {
+        const putPromises = data.map((eachItem) => this.indexeddb[this.tableName].put(eachItem));
+        await Promise.all(putPromises);
+    }
+
+    /**
+     * Retrieves data from the IndexedDB using the specified key.
+     * @param {string} key - The key to retrieve data from the IndexedDB.
+     * @returns {Promise<Object>}
+     */
+    async getFromIndexedDB(id) {
+        const result = await this.indexeddb[this.tableName].get(id);
+        return result;
+    }
+
+    /**
+     * Searches the FlexSearch instance.
+     * @param {string} query - The search query.
+     * @param {string} field - The index field to search: 'title' or 'content'.
+     * @param {number} [limit=5] - The maximum number of results to return.
+     * @param {number} [offset=0] - The offset to start the search results from.
+     * @returns {Promise<Array<Object>>} - An array of search results.
+     */
+    async search(query, field, limit = 5, offset = 0) {
+        const searchOptions = {
+            field,
+            limit,
+            offset,
+        };
+        return await this.index.searchAsync(query, searchOptions);
+    }
+
+    async add(data) {
+        await this.index.addAsync(data);
+    }
+
+    async addBulk(data) {
+        data.map(async (item) => await this.index.addAsync(item));
+    }
+
+    /**
+     * Exports data from the FlexSearch instance to the IndexedDB.
+     * @returns {Promise<Array<string>>}
+     */
+    async exportFromFlexSearchToIndexedDB() {
+        return new Promise(async (resolve) => {
+            const keys = [];
+            let processedKeys = 0;
+
+            // totalKeys(x) = (3 * #searchFields) + 3
+            // x = len['title', 'content']
+            const totalKeys = 9;
+
+            this.index.export(async (key, data) => {
+                this.indexeddb[this.tableName].put({ key, data }).then((key) => {
+                    keys.push(key);
+                    processedKeys++;
+
+                    if (processedKeys === totalKeys) {
+                        resolve(true); // TODO validate this -- changed from `resolve(keys)`
+                    }
+                });
+            });
+        });
+    }
+
+    /**
+     * Imports data from the IndexedDB to the FlexSearch instance.
+     * @returns {Promise<void>}
+     */
+    async importFromIndexedDBtoFlexSearch() {
+        console.log(`Executing importBooksFromIndexedDBtoFlexSearch...`);
+        // Retrieve all records from the specified object store
+        const records = await this.indexeddb[this.tableName].toArray();
+
+        // Import the records into the FlexSearch instance
+        for (const record of records) {
+            await this.index.import(record.key, record.data);
+        }
+    }
+
+}
