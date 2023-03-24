@@ -94,10 +94,22 @@ module.exports = class AttackIndex {
         return await this.index.searchAsync(query, searchOptions);
     }
 
+    /**
+     * Adds a single data object to the FlexSearch index.
+     *
+     * @param {Object} data - The data object to be added to the FlexSearch index.
+     * @returns {Promise<void>} - A Promise that resolves when the data object is added to the FlexSearch index.
+     */
     async add(data) {
         await this.index.addAsync(data);
     }
 
+    /**
+     * Adds an array of data objects to the FlexSearch index in bulk.
+     *
+     * @param {Object[]} data - An array of data objects to be added to the FlexSearch index.
+     * @returns {Promise<void>[]} - An array of Promises that resolve when each data object is added to the FlexSearch index.
+     */
     async addBulk(data) {
         data.map(async (item) => await this.index.addAsync(item));
     }
