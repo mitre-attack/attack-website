@@ -151,4 +151,91 @@ describe('AttackIndex', () => {
          */
         expect(results).toEqual([]);
     });
+
+    test('can paginate FlexSearch responses', async () => {
+        attackIndex.addBulk(data);
+
+        /**
+         * limit, offset --> [ paginatedSearchResults ]
+         *
+         * 10, 0 --> [ 2, 3, 4, 5, 6, 7, 8, 9, 10 ]
+         * 1, 0 --> [ 2 ]       1, 5 --> [ 7 ]
+         * 1, 1 --> [ 3 ]       1, 6 --> [ 8 ]
+         * 1, 2 --> [ 4 ]       1, 7 --> [ 9 ]
+         * 1, 3 --> [ 5 ]       1, 8 --> [ 10 ]
+         * 1, 4 --> [ 6 ]       1, 9 --> [ ]
+         */
+
+        let results;
+        let expectedResult;
+
+        // Get all documents - there should be 9 results with string 'The' in the title
+        results = await attackIndex.search('The', ['title'], 10, 0);
+        expectedResult = [{"field":"title","result":[2, 3, 4, 5, 6, 7, 8, 9, 10]}]
+        expect(results).toEqual(expectedResult);
+
+        // Get the first matching object by setting the limit parameter to 1
+        results = await attackIndex.search('The', ['title'], 1);
+        expectedResult = [{"field":"title","result":[2]}]
+        expect(results).toEqual(expectedResult);
+
+        // Get the second matching object by setting limit to 1 and offset to 1
+        results = await attackIndex.search('The', ['title'], 1, 1);
+        expectedResult = [{"field":"title","result":[3]}]
+        expect(results).toEqual(expectedResult);
+
+        // Get the last matching object by setting limit to 1 and offset to 8
+        results = await attackIndex.search('The', ['title'], 1, 8);
+        expectedResult = [{"field":"title","result":[10]}]
+        expect(results).toEqual(expectedResult);
+
+        // Request a page that does not exist - should return an empty array
+        results = await attackIndex.search('The', ['title'], 1, 9);
+        expectedResult = []
+        expect(results).toEqual(expectedResult);
+    });
+
+    test('can exclusively search the title index', async () => {
+        attackIndex.addBulk(data);
+        await attackIndex.exportFromFlexSearchToIndexedDB();
+
+        let results;
+        let expectedResult;
+
+        // Search title index: "The" -- expect 9 results
+        results = await attackIndex.search('The', ['title'], 10, 0);
+        expectedResult = [{"field":"title","result":[2, 3, 4, 5, 6, 7, 8, 9, 10]}]
+        expect(results).toEqual(expectedResult);
+
+        // Search content index: "of"
+        results = await attackIndex.search('of', ['title','content'], 10, 0);
+        console.debug('results: ', results);
+        /**
+         * results:  [
+         *       {
+         *         field: 'title',
+         *         result: [
+         *           2, 3, 4,  5, 6,
+         *           7, 8, 9, 10
+         *         ]
+         *       },
+         *       {
+         *         field: 'content',
+         *         result: [
+         *           1, 5, 6, 7,
+         *           2, 3, 8, 9
+         *         ]
+         *       }
+         *     ]
+         */
+        // Get documents corresponding to index positions
+        const titlePositions = results.find(r => r.field === 'title').result;
+        const contentPositions = results.find(r => r.field === 'content').result;
+
+        const titleDocuments = await attackIndex.getDocumentsByPositions(titlePositions);
+        const contentDocuments = await attackIndex.getDocumentsByPositions(contentPositions);
+
+        console.debug('titleDocuments: ', titleDocuments);
+        console.debug('contentDocuments: ', contentDocuments);
+    });
 })
