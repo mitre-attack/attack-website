@@ -1,8 +1,6 @@
 const $ = require('jquery');
 
 // eslint-disable-next-line import/extensions
-const localforage = require('localforage');
-const IndexHelper = require('./index-helper.js');
 const AttackIndex = require('./attack-index.js');
 
 // eslint-disable-next-line import/extensions
