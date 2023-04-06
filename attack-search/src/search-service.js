@@ -1,4 +1,5 @@
 const $ = require('jquery');
+const IndexedDBWrapper = require("./indexed-db-wrapper");
 
 // eslint-disable-next-line import/extensions
 const AttackIndex = require('./attack-index.js');
@@ -196,21 +197,36 @@ module.exports = class SearchService {
      * @param {string} query string to search for in the indexes
      */
   query(query) {
-    console.debug(`Executing query on: ${query}`);
-
-    // eslint-disable-next-line no-underscore-dangle
     this.#cleanTheQuery(query);
+    this.#clearResults();
 
-    console.debug(`Setting index query to ${this.current_query.clean}`);
+    // this.search(); // render first page of results
 
-    // this.index.setQuery(this.current_query.clean);
-    this.attackIndex.setQuery(this.current_query.clean);
+    // const results = this.index.nextPage();
+    // const results = this.attackIndex.nextPage();
+    const results = this.attackIndex.search(this.query, ["title", "content"], 5, 0)
 
-    console.debug('Clearing results.');
-    this.clearResults();
-
-    console.debug('Calling this.nextPage()');
-    this.nextPage(); // render first page of results
+    if (results.length > 0) this.hasResults = true;
+    console.debug(`this.hasResults=${this.hasResults}`);
+    if (this.hasResults) {
+      searchBody.show();
+      console.debug('search_body.show() was executed.');
+      const self = this;
+      let resultHTML = results.map((result) => self.#resultToHTML(result));
+      resultHTML = resultHTML.join('');
+      this.render_container.append(resultHTML);
+      if (this.index.nextPageRef) loadMoreResults.show();
+      else loadMoreResults.hide();
+    } else if (this.currentQuery.clean !== '') { // search with no results
+      searchBody.show();
+      console.debug('search_body.show() was executed.');
+      this.render_container.html(`
+                    <div class="search-result">no results</div>
+                `);
+      loadMoreResults.hide();
+    } else { // query for empty string
+      searchBody.hide();
+    }
   }
 
   /**
@@ -221,22 +237,22 @@ module.exports = class SearchService {
   #cleanTheQuery(query) {
     console.debug(`Cleaning query string: ${query}`);
 
-    this.current_query.clean = query.trim();
+    this.currentQuery.clean = query.trim();
 
     // build joined string
-    const joined = `(${this.current_query.clean.split(' ').join('|')})`;
-    this.current_query.joined = new RegExp(joined, 'gi');
+    const joined = `(${this.currentQuery.clean.split(' ').join('|')})`;
+    this.currentQuery.joined = new RegExp(joined, 'gi');
 
     // Build regex for each word
 
     // remove double spaces which causes query to match on every 0 length string and flip out
-    const escaped = this.current_query.clean.replace(/\s+/, ' ');
+    const escaped = this.currentQuery.clean.replace(/\s+/, ' ');
 
     // The following map code is modifying the current_query object by setting its words property to an array of
     // objects. Each object in the array represents a word that was entered as part of a search query, along with a
     // regular expression that can be used to match that word in a larger body of text.
 
-    this.current_query.words = escaped.split(' ').map((searchWord) => {
+    this.currentQuery.words = escaped.split(' ').map((searchWord) => {
       // This line replaces any special characters in the search word with escape characters, so that they can be safely
       // used in a regular expression. The g flag ensures that all occurrences of special characters in the word are
       // replaced, and \\$& inserts the original character as a literal string in the replacement.
@@ -273,7 +289,7 @@ module.exports = class SearchService {
     // Find a position where the search words occur near each other
     const positions = [];
 
-    this.current_query.words.forEach((searchWord) => {
+    this.currentQuery.words.forEach((searchWord) => {
       let currMatches;
       while ((currMatches = searchWord.regex.exec(preview)) !== null) {
         positions.push({
@@ -295,7 +311,7 @@ module.exports = class SearchService {
       return true;
     }
 
-    const allWords = new Set(this.current_query.words.map((word) => word.word));
+    const allWords = new Set(this.currentQuery.words.map((word) => word.word));
 
     const pos = 0;
     const best = {
@@ -379,9 +395,9 @@ module.exports = class SearchService {
     if (left > 0) preview = `&hellip; ${preview}`;
 
     // surround preview keywords with highlight class span tags
-    preview = preview.replace(this.current_query.joined, "<span class='search-word-found'>$1</span>");
+    preview = preview.replace(this.currentQuery.joined, "<span class='search-word-found'>$1</span>");
     // surround title keywords with highlight class span tags
-    title = title.replace(this.current_query.joined, "<span class='search-word-found'>$1</span>");
+    title = title.replace(this.currentQuery.joined, "<span class='search-word-found'>$1</span>");
 
     // result html template
     return `
@@ -399,7 +415,7 @@ module.exports = class SearchService {
   /**
      * clear the rendered results from the page
      */
-  clearResults() {
+  #clearResults() {
     this.render_container.html('');
     this.hasResults = false;
   }
