@@ -9,17 +9,6 @@ const { loadMoreResults, searchBody } = require('./components.js');
 // eslint-disable-next-line import/extensions
 const { buffer, ATTACK_INDEX_KEY } = require('./settings.js');
 
-module.exports.createSearchService = async function(tag, documents, exported) {
-  return new Promise((resolve, reject) => {
-    const searchService = new SearchService(tag, documents, exported);
-    if (searchService.initialized) {
-      resolve(searchService);
-    } else {
-      reject();
-    }
-  });
-}
-
 module.exports = class SearchService {
   constructor(tag, documents, exported= false) {
     console.debug('Initializing new SearchService instance...');
