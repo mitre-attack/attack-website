@@ -35,34 +35,6 @@ module.exports = class AttackIndex {
         });
     }
 
-    /**
-     * Performs a put operation on the IndexedDB.
-     * @param {Object} data - The data to store in the IndexedDB.
-     * @returns {Promise<void>}
-     */
-    async putInIndexedDB(data) {
-        await this.indexeddb[this.tableName].put(data, this.cacheKey);
-    }
-
-    /**
-     * Performs bulk put operations on the IndexedDB.
-     * @param {Array<Object>} data - An array of objects to store in the IndexedDB.
-     * @returns {Promise<void>}
-     */
-    async bulkPutInIndexedDB(data) {
-        const putPromises = data.map((eachItem) => this.indexeddb[this.tableName].put(eachItem));
-        await Promise.all(putPromises);
-    }
-
-    /**
-     * Retrieves data from the IndexedDB using the specified key.
-     * @param {string} key - The key to retrieve data from the IndexedDB.
-     * @returns {Promise<Object>}
-     */
-    async getFromIndexedDB(id) {
-        const result = await this.indexeddb[this.tableName].get(id);
-        return result;
-    }
 
     /**
      * Searches the FlexSearch instance.
