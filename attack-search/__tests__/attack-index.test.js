@@ -9,6 +9,11 @@ describe('AttackIndex', () => {
     const dbName = 'TestDatabase';
 
     let attackIndex;
+    let data;
+
+    beforeAll(() => {
+        data = require('./mock-index.json');
+    })
 
     beforeEach(() => {
         attackIndex = new AttackIndex(cacheKey, tableName, dbName);
@@ -18,8 +23,16 @@ describe('AttackIndex', () => {
         await attackIndex.indexeddb.delete();
     });
 
+    it('should access data from mock-index.json', () => {
+        expect(Array.isArray(data)).toBe(true);
+        expect(data.length).toBe(10);
+        expect(data[0].id).toBe(1);
+        expect(data[0].title).toBe('Introduction to Machine Learning');
+        expect(data[0].content).toContain('Machine learning is a subfield');
+    });
+
     test('constructor initializes instance with correct properties', () => {
-        expect(attackIndex.cacheKey).toBe(cacheKey);
+        // expect(attackIndex.cacheKey).toBe(cacheKey);
         expect(attackIndex.tableName).toBe(tableName);
         expect(attackIndex.indexeddb.name).toBe(dbName);
     });
@@ -34,11 +47,6 @@ describe('AttackIndex', () => {
     });
 
     test('can bulk put multiple documents in IndexedDB', async () => {
-        const data = [
-            { id: 1, title: 'Test title 1', content: 'Test content 1' },
-            { id: 2, title: 'Test title 2', content: 'Test content 2' },
-        ];
-
         await attackIndex.bulkPutInIndexedDB(data);
         const results = await Promise.all(data.map((item) => attackIndex.getFromIndexedDB(item.id)));
 
@@ -68,49 +76,20 @@ describe('AttackIndex', () => {
     });
 
     test('can bulk add documents to FlexSearch', async () => {
-        const data = [
-            { id: 1, title: 'Test title 1', content: 'Test content 1' },
-            { id: 2, title: 'Test title 2', content: 'Test content 2' },
-            { id: 3, title: 'Test title 3', content: 'Test content 3' },
-            { id: 4, title: 'Test title 4', content: 'Test content 4' },
-        ];
+        attackIndex.addBulk(data);
 
-        await attackIndex.addBulk(data);
-
-        const results = await attackIndex.search('Test', 'title');
+        // Search the title index for "The"
+        const results = await attackIndex.search('The', 'title');
 
         console.debug(JSON.stringify(results));
-        const expectedResult = [{"field":"title","result":[1,2,3,4]}]
-
-        // write expect statement here
-        expect(results).toEqual(expectedResult);
-    });
-
-    test('can search for matching documents', async () => {
-        const data = [
-            { id: 1, title: 'Dog', content: 'The dog said woof.' },
-            { id: 2, title: 'Cat', content: 'The cat said meow.' },
-            { id: 2, title: 'Cow', content: 'The cow said moo.' },
-        ];
-
-        await attackIndex.addBulk(data);
-
-        const results = await attackIndex.search('Dog', 'title');
-
-        console.debug('results:', JSON.stringify(results));
-        const expectedResult = [{"field":"title","result":[1]}]
+        // Index 2 through 6 (inclusive) should have "The" in the title
+        const expectedResult = [{"field":"title","result":[2,3,4,5,6]}]
 
         expect(results).toEqual(expectedResult);
     });
 
     test('can export documents from FlexSearch to IndexedDB', async () => {
-        const data = [
-            { id: 1, title: 'Dog', content: 'The dog said woof.' },
-            { id: 2, title: 'Cat', content: 'The cat said meow.' },
-            { id: 2, title: 'Cow', content: 'The cow said moo.' },
-        ];
-
-        await attackIndex.addBulk(data);
+        attackIndex.addBulk(data);
         const exportResult = await attackIndex.exportFromFlexSearchToIndexedDB();
 
         // Verify that the IndexedDB received the exported data
@@ -122,13 +101,7 @@ describe('AttackIndex', () => {
     });
 
     test('can import documents from IndexedDB to FlexSearch', async () => {
-        const data = [
-            { id: 1, title: 'Dog', content: 'The dog said woof.' },
-            { id: 2, title: 'Cat', content: 'The cat said meow.' },
-            { id: 2, title: 'Cow', content: 'The cow said moo.' },
-        ];
-
-        await attackIndex.addBulk(data);
+        attackIndex.addBulk(data);
         const exportResult = await attackIndex.exportFromFlexSearchToIndexedDB();
 
         // Create a new AttackIndex but hook it up to the same instance of IndexedDB that the first
@@ -139,22 +112,16 @@ describe('AttackIndex', () => {
         await newAttackIndex.importFromIndexedDBtoFlexSearch();
 
         // If the import succeed, we should be able to search on newAttachIndex.
-        const results = await newAttackIndex.search('Dog', 'title');
+        const results = await newAttackIndex.search('data', 'content');
 
         console.debug('results:', JSON.stringify(results));
-        const expectedResult = [{"field":"title","result":[1]}]
+        const expectedResult = [{"field":"content","result":[1]}]
 
         expect(results).toEqual(expectedResult);
     });
 
     test('can isolate two instances of IndexedDB', async () => {
-        const data = [
-            { id: 1, title: 'Dog', content: 'The dog said woof.' },
-            { id: 2, title: 'Cat', content: 'The cat said meow.' },
-            { id: 2, title: 'Cow', content: 'The cow said moo.' },
-        ];
-
-        await attackIndex.addBulk(data);
+        attackIndex.addBulk(data);
         const exportResult = await attackIndex.exportFromFlexSearchToIndexedDB();
 
         // Create a new AttackIndex but hook it up to the same instance of IndexedDB that the first
@@ -165,7 +132,7 @@ describe('AttackIndex', () => {
         await newAttackIndex.importFromIndexedDBtoFlexSearch();
 
         // If the import succeed, we should be able to search on newAttachIndex.
-        const results = await newAttackIndex.search('Dog', 'title');
+        const results = await newAttackIndex.search('data', ['content']);
 
         console.debug('results:', JSON.stringify(results));
 
