@@ -112,7 +112,7 @@ const search = function (query) {
        */
 
       console.debug('search -> Attempting to retrieve cached search index...');
-      searchService = new SearchService('search-results', null, true);
+      searchService = new SearchService('search-results', null);
       console.debug('search -> Initialized new search index!');
       console.debug(`search -> Executing search query: ${query}`);
       searchService.query(query);
@@ -142,7 +142,7 @@ const search = function (query) {
         dataType: 'json',
         success(data) {
           console.debug('Retrieved and processed index.json');
-          searchService = new SearchService('search-results', data, false);
+          searchService = new SearchService('search-results', data);
           console.debug('search -> Initialized new search index!');
           console.debug(`search -> Executing search query: ${query}`);
           searchService.query(query);
