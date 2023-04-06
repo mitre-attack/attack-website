@@ -118,14 +118,9 @@ module.exports = class AttackIndex {
         await Promise.all(promises);
     }
 
-    /**
-     * Exports data from the FlexSearch instance to the IndexedDB.
-     * @returns {Promise<Array<string>>}
-     */
-    async exportFromFlexSearchToIndexedDB() {
-        return new Promise(async (resolve) => {
-            const keys = [];
-            let processedKeys = 0;
+    async import(key, data) {
+        return await this.index.import(key, data);
+    }
 
     /*** LEGACY INDEX-HELPER.JS CODE BELOW ***/
 
