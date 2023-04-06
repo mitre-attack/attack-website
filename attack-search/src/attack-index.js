@@ -39,18 +39,60 @@ module.exports = class AttackIndex {
     /**
      * Searches the FlexSearch instance.
      * @param {string} query - The search query.
-     * @param {string} field - The index field to search: 'title' or 'content'.
+     * @param {Array<string>} fields - The index fields to search: ['title'], ['content'], or ['title', 'content'].
      * @param {number} [limit=5] - The maximum number of results to return.
      * @param {number} [offset=0] - The offset to start the search results from.
      * @returns {Promise<Array<Object>>} - An array of search results.
      */
-    async search(query, field, limit = 5, offset = 0) {
+    async search(query, fields, limit = 5, offset = 0) {
+
+        // Validate input fields
+        const allowedFields = [
+            ['title'],
+            ['content'],
+            ['title', 'content']
+        ];
+
+        if (!allowedFields.some(allowed => fields.join(',') === allowed.join(','))) {
+            throw new Error(`Invalid fields specified. Allowed values are: ${allowedFields.join(', ')}`);
+        }
+
         const searchOptions = {
-            field,
+            index: fields,
+            bool: 'or', // the bool option specifies that the search should match documents that container either the
+                        // title or the content field
             limit,
             offset,
         };
-        return await this.index.searchAsync(query, searchOptions);
+        const results = await this.index.searchAsync(query, searchOptions);
+
+        /**
+         * Here is a typical FlexSearch response -- it only provides the index positions of the matching documents, not
+         * the documents themselves!
+         *
+         * results:  [
+         *       {
+         *         field: 'title',
+         *         result: [
+         *           2, 3, 4,  5, 6,
+         *           7, 8, 9, 10
+         *         ]
+         *       },
+         *       {
+         *         field: 'content',
+         *         result: [
+         *           1, 5, 6, 7,
+         *           2, 3, 8, 9
+         *         ]
+         *       }
+         *     ]
+         */
+
+        // If both indexes (title and content) were searched, then we need to combine their results and remove any
+        // duplicate IDs.
+        const uniqueIds = new Set([...results[0].result, ...results[1].result]);
+
+        // TODO make this 👆 conditional - only execute when both indexes are searched, then return the result
     }
 
     /**
