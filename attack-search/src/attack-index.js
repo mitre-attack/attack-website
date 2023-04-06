@@ -109,7 +109,7 @@ module.exports = class AttackIndex {
      * Adds an array of data objects to the FlexSearch index in bulk.
      *
      * @param {Object[]} data - An array of data objects to be added to the FlexSearch index.
-     * @returns {Promise<void>[]} - An array of Promises that resolve when each data object is added to the FlexSearch index.
+     * @returns {Promise<void>[]} - A promise that resolves when all data objects have been added to the FlexSearch index.
      */
     async addBulk(data) {
         // data.map(async (item) => await this.index.addAsync(item));
