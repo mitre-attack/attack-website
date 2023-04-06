@@ -69,10 +69,10 @@ module.exports = class SearchService {
     // If documents are defined, then load them into the AttackIndex instance.
     if (documents) {
       this.attackIndex.addBulk(documents); // Add the data to the in-memory FlexSearch instance
-      await this.backupFlexSearch(); // Backup the in-memory FlexSearch index for later restoration
+      await this.backupSearchIndex(); // Backup the in-memory FlexSearch index for later restoration
     } else {
       // If no documents were provided, then attempt to load them from the IndexedDB database
-      await this.restoreFlexSearchFromBackup();
+      await this.restoreSearchIndexFromBackup();
     }
   }
 
@@ -99,7 +99,7 @@ module.exports = class SearchService {
    * Exports data from the in-memory FlexSearch instance to the IndexedDB.
    * @returns {Promise<Array<string>>}
    */
-  async backupFlexSearch() {
+  async backupSearchIndex() {
     return new Promise(async (resolve) => {
       const keys = [];
       let processedKeys = 0;
@@ -162,7 +162,7 @@ module.exports = class SearchService {
    * Imports data from the IndexedDB to the in-memory FlexSearch instance.
    * @returns {Promise<void>}
    */
-  async restoreFlexSearchFromBackup() {
+  async restoreSearchIndexFromBackup() {
     // Retrieve all records from the specified object store
     const documents = await this.flexsearchDb.getAll();
 
