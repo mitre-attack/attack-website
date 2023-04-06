@@ -48,11 +48,11 @@ module.exports = class AttackIndex {
                     field: 'content',
                     tokenize: 'forward',
                     optimize: true,
-                    minlength: 3,
-                    context: {
-                        depth: 3,
-                        resolution: 2,
-                    },
+                    // minlength: 3,   <--- THESE TWO PROPS ARE COMMENTED OUT BECAUSE THEY APPEAR TO BREAK
+                    // context: {      <---  SEARCHING ON THE CONTENT INDEX!
+                    //     depth: 3,
+                    //     resolution: 2,
+                    // },
                 },
             ],
             page: 0, // Default starting page,
