@@ -1,40 +1,15 @@
-const Dexie = require('dexie');
+// const Dexie = require('dexie');
 const FlexSearch = require('flexsearch');
+// const {pageLimit} = require("./settings");
+// const {indexedDB, IDBKeyRange} = require("fake-indexeddb");
+// const IndexedDBWrapper = require("./indexed-db-wrapper");
 const { Document } = FlexSearch;
 
 module.exports = class AttackIndex {
     /**
      * Creates a new AttackIndex instance.
-     * @param {string} cacheKey - The key used to access the IndexedDB.
-     * @param {string} tableName - The name of the IndexedDB table.
-     * @param {string} [dbName='AttackDatabase'] - The name of the IndexedDB.
      */
-    constructor(cacheKey, tableName, dbName = 'AttackDatabase') {
-        this.cacheKey = cacheKey;
-        this.tableName = tableName;
-
-        // Check if the code is running a a Node.js environment
-        const isNode = typeof process !== 'undefined' && process.release && process.release.name === 'node';
-
-        // If running in a Node.js environment, import Dexie and fake-indexeddb
-        if (isNode) {
-            const { indexedDB, IDBKeyRange } = require('fake-indexeddb');
-
-            // Initialize the IndexedDB with fake-indexeddb for Node.js environment
-            this.indexeddb = new Dexie(dbName, {
-                indexedDB,
-                IDBKeyRange,
-            });
-        } else {
-            // If running in a browser environment, initialize the IndexedDB with the real IndexedDB provided by the browser
-            this.indexeddb = new Dexie(dbName);
-        }
-
-        // Define the schema for the IndexedDB
-        this.indexeddb.version(1).stores({
-            [this.tableName]: '++id, title, content',
-        });
-
+    constructor() {
         // Initialize the FlexSearch instance with two indexes: 'title' and 'content'
         this.index = new Document({
             id: 'id',
