@@ -10,24 +10,11 @@ const { loadMoreResults, searchBody } = require('./components.js');
 const { buffer, ATTACK_INDEX_KEY } = require('./settings.js');
 
 module.exports = class SearchService {
-  constructor(tag, documents, exported= false) {
+  constructor(tag, documents) {
+
     console.debug('Initializing new SearchService instance...');
-    this.initialized = false;
-    this.attackIndex = new AttackIndex(ATTACK_INDEX_KEY, 'website');
-    /**
-     * If documents are defined, then load them into the AttackIndex instance.
-     * Otherwise, if exported equals 'true', then fetch the documents from the IndexDB and load them into the
-     * AttackIndex instance.
-     */
-    if (documents) {
-      this.attackIndex.add(documents).then(r => {});
-    } else if (exported) {
-      this.attackIndex.importFromIndexedDBtoFlexSearch().then(r => {});
-    } else {
-      console.error('No documents or exported data provided to SearchService.');
-      throw Error('AttackIndex cannot be initialized empty.')
-    }
-    this.current_query = {
+
+    this.currentQuery = {
       clean: '',
       words: [
         /*
@@ -40,8 +27,168 @@ module.exports = class SearchService {
       joined: '', // alternation
     };
     this.render_container = $(`#${tag}`);
-    this.initialized = true;
-    console.debug('SearchService is initialized.');
+
+    this.initializeAsync(documents).then(() => {
+      console.debug('SearchService is initialized.');
+    }).catch(error => {
+      console.error('Failed to initialize SearchService:', error);
+    });
+  }
+
+  async initializeAsync(documents) {
+
+    /**
+     * The following two IndexedDBWrapper instances initialize two IndexedDB tables. Each instance corresponds to one
+     * table. The wrapper class obfuscates the CRUD logic for interfacing with IndexedDB.
+     *
+     * 1. content_table: handles all objects loaded from index.json
+     *
+     * 2. flexsearch_table: handles the FlexSearch document instance (so we don't have to re-index index.json every time
+     *    FlexSearch is cleared from browser memory!).
+     */
+
+    this.contentDb = new IndexedDBWrapper('AttackWebsite', 'content_table', ATTACK_INDEX_KEY, '&id, title, path, content');
+    this.flexsearchDb = new IndexedDBWrapper('AttackWebsite', 'flexsearch_table', ATTACK_INDEX_KEY, '++id, title, content');
+
+    /**
+     * A quick note on the schemas passed in the above 👆 IndexedDBWrapper initializations:
+     *
+     * The &id syntax means that the id field is the primary key of the table, but it will not be auto-incremented.
+     * In this case, you must provide a unique value for the id field when inserting a new record, and the
+     * IndexedDB will enforce uniqueness on the id field.
+     *
+     * The ++id syntax means that the id field is the primary key of the table and it will be auto-incremented. In
+     * other words, when you insert a new record without providing a value for the id field, the IndexedDB will
+     * automatically assign a unique, incremental value to the id field.
+     */
+
+    // Initialize the AttackIndex instance (this is our in-memory FlexSearch instance)
+    this.attackIndex = new AttackIndex();
+
+    // If documents are defined, then load them into the AttackIndex instance.
+    if (documents) {
+      this.attackIndex.addBulk(documents); // Add the data to the in-memory FlexSearch instance
+      await this.backupFlexSearch(); // Backup the in-memory FlexSearch index for later restoration
+    } else {
+      // If no documents were provided, then attempt to load them from the IndexedDB database
+      await this.restoreFlexSearchFromBackup();
+    }
+  }
+
+  /**
+   * Given an array of index positions returned by a FlexSearch query, retrieves the original content for each position
+   * from the IndexedDB content_table and returns an array of matching documents.
+   *
+   * @param {number[]} positions - An array of index positions returned by a FlexSearch query.
+   * @returns {Promise<Object[]>} - An array of matching documents retrieved from the IndexedDB content_table.
+   */
+  async resolveSearchResults(positions) {
+    const results = [];
+    for (const position of positions) {
+      const doc = await this.contentDb.get(position);
+      if (doc) {
+        results.push(doc);
+      }
+    }
+    return results;
+  }
+
+  /**
+   * FORMERLY: exportFromFlexSearchToIndexedDB
+   * Exports data from the in-memory FlexSearch instance to the IndexedDB.
+   * @returns {Promise<Array<string>>}
+   */
+  async backupFlexSearch() {
+    return new Promise(async (resolve) => {
+      const keys = [];
+      let processedKeys = 0;
+
+      // totalKeys(x) = (3 * #searchFields) + 3
+      // x = len['title', 'content']
+      const totalKeys = 9;
+
+      // NOTE this is the original way the export worked when this method was still located in the AttackIndex class.
+      //
+      // this.index.export(async (key, data) => {
+      //   this.flexsearchDb[this.searchIndexTableName].put({ key, data }).then((key) => {
+      //     keys.push(key);
+      //     processedKeys++;
+      //
+      //     if (processedKeys === totalKeys) {
+      //       resolve(true); // TODO validate this -- changed from `resolve(keys)`
+      //     }
+      //   });
+      // });
+
+      this.attackIndex.index.export(async (key, data) => {
+        this.flexsearchDb[this.flexsearchDb.tableName].put({ key, data }).then((key) => {
+          keys.push(key);
+          processedKeys++;
+
+          if (processedKeys === totalKeys) {
+            resolve(true); // TODO validate this -- changed from `resolve(keys)`
+          }
+        });
+      });
+    });
+
+    // TODO there is one issue with the current implementation 👆. The method is using a Promise constructor to create
+    //  a new promise, but it's already inside an async function, so this is unnecessary. Instead, you can just return
+    //  a promise directly from the method, like this:
+    //
+    // const keys = [];
+    // let processedKeys = 0;
+    //
+    // // totalKeys(x) = (3 * #searchFields) + 3
+    // // x = len['title', 'content']
+    // const totalKeys = 9;
+    //
+    // return new Promise((resolve) => {
+    //   this.attackIndex.index.export(async (key, data) => {
+    //     await this.flexsearchDb.put({ key, data });
+    //     keys.push(key);
+    //     processedKeys++;
+    //
+    //     if (processedKeys === totalKeys) {
+    //       resolve(true);
+    //     }
+    //   });
+    // });
+  }
+
+  /**
+   * FORMERLY: importFromIndexedDBtoFlexSearch
+   * Imports data from the IndexedDB to the in-memory FlexSearch instance.
+   * @returns {Promise<void>}
+   */
+  async restoreFlexSearchFromBackup() {
+    // Retrieve all records from the specified object store
+    const documents = await this.flexsearchDb.getAll();
+
+    // Import the records into the FlexSearch instance
+    // TODO decide which approach to keep: import vs addBulk
+
+    // APPROACH #1: AttackIndex.import
+    // for (const document of documents) {
+    //   await this.attackIndex.import(document.key, document.data);
+    // }
+
+    // APPROACH #2: AttackIndex.addBulk
+    if (documents && documents.length > 0) {
+      this.attackIndex.addBulk(documents);
+    } else {
+      console.warn('No documents found in flexsearch table.');
+    }
+
+    // The addBulk method is likely to be more efficient than calling the import method in a loop, because it adds the
+    // data to the index in batches rather than one record at a time.
+  }
+
+  setQuery(query) {
+    this.query = query;
+    this.offset = 0;
+    // this.titleStage = true; // TODO remove this, search title and content at same time instead
+    // this.seenPaths = new Set(); // TODO replace this with an offset tracker
   }
 
   /**
