@@ -89,10 +89,10 @@ module.exports = class AttackIndex {
          */
 
         // If both indexes (title and content) were searched, then we need to combine their results and remove any
-        // duplicate IDs.
-        const uniqueIds = new Set([...results[0].result, ...results[1].result]);
+        // duplicate IDs. Use flatMap to extract all the result arrays and flatten them into a single array
+        // return new Set(results.flatMap(r => r.result));
 
-        // TODO make this 👆 conditional - only execute when both indexes are searched, then return the result
+        return results;
     }
 
     /**
