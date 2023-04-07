@@ -1,26 +1,35 @@
 const AttackIndex = require('../src/attack-index');
+const IndexedDBWrapper = require("../src/indexed-db-wrapper");
+import 'fake-indexeddb/auto';
 
 // Mock the console.log function to prevent logs during testing
 console.log = jest.fn();
 
 describe('AttackIndex', () => {
     const cacheKey = 'test-cache-key';
-    const tableName = 'test-table-name';
+    const contentTableName = 'test_content_table_name';
     const dbName = 'TestDatabase';
 
     let attackIndex;
+    let contentDb;
     let data;
 
     beforeAll(() => {
         data = require('./mock-index.json');
+        contentDb = new IndexedDBWrapper(dbName, contentTableName, cacheKey, '&id, title, path, content');
+        contentDb.bulkPut(data);
     })
 
     beforeEach(() => {
-        attackIndex = new AttackIndex(cacheKey, tableName, dbName);
+        attackIndex = new AttackIndex();
     });
 
     afterEach(async () => {
-        await attackIndex.indexeddb.delete();
+        attackIndex = null;
+    });
+
+    afterAll(async () => {
+        await contentDb.indexeddb.delete();
     });
 
     it('should access data from mock-index.json', () => {
@@ -32,34 +41,7 @@ describe('AttackIndex', () => {
     });
 
     test('constructor initializes instance with correct properties', () => {
-        // expect(attackIndex.cacheKey).toBe(cacheKey);
-        expect(attackIndex.tableName).toBe(tableName);
-        expect(attackIndex.indexeddb.name).toBe(dbName);
-    });
-
-    test('putInIndexedDB stores data in IndexedDB', async () => {
-        const data = { id: 1, title: 'Test title', content: 'Test content' };
-
-        await attackIndex.putInIndexedDB(data);
-        const result = await attackIndex.getFromIndexedDB(data.id);
-
-        expect(result).toEqual(data);
-    });
-
-    test('can bulk put multiple documents in IndexedDB', async () => {
-        await attackIndex.bulkPutInIndexedDB(data);
-        const results = await Promise.all(data.map((item) => attackIndex.getFromIndexedDB(item.id)));
-
-        expect(results).toEqual(data);
-    });
-
-    test('can retrieve data from IndexedDB', async () => {
-        const data = { id: 1, title: 'Test title', content: 'Test content' };
-
-        await attackIndex.putInIndexedDB(data);
-        const result = await attackIndex.getFromIndexedDB(data.id);
-
-        expect(result).toEqual(data);
+        expect(attackIndex.index).toBeDefined();
     });
 
     test('can add one document to FlexSearch', async () => {
@@ -67,7 +49,7 @@ describe('AttackIndex', () => {
 
         await attackIndex.add(data);
 
-        const results = await attackIndex.search('Test', 'title', 5, 0);
+        const results = await attackIndex.search('Test', ['title'], 5, 0);
 
         console.debug(JSON.stringify(results));
         const expectedResult = [{"field":"title","result":[1]}]
@@ -79,7 +61,7 @@ describe('AttackIndex', () => {
         attackIndex.addBulk(data);
 
         // Search the title index for "The"
-        const results = await attackIndex.search('The', 'title');
+        const results = await attackIndex.search('The', ['title']);
 
         console.debug(JSON.stringify(results));
         // Index 2 through 6 (inclusive) should have "The" in the title
@@ -88,77 +70,13 @@ describe('AttackIndex', () => {
         expect(results).toEqual(expectedResult);
     });
 
-    test('can export documents from FlexSearch to IndexedDB', async () => {
-        attackIndex.addBulk(data);
-        const exportResult = await attackIndex.exportFromFlexSearchToIndexedDB();
-
-        // Verify that the IndexedDB received the exported data
-        await attackIndex.indexeddb[attackIndex.tableName].toArray().then((items) => {
-            console.debug('IndexedDB contents:', items);
-        });
-
-        expect(exportResult).toBeTruthy();
-    });
-
-    test('can import documents from IndexedDB to FlexSearch', async () => {
-        attackIndex.addBulk(data);
-        const exportResult = await attackIndex.exportFromFlexSearchToIndexedDB();
-
-        // Create a new AttackIndex but hook it up to the same instance of IndexedDB that the first
-        // attackIndex exported to.
-        const newAttackIndex = new AttackIndex(cacheKey, tableName, dbName);
-
-        // Now perform an import. The newAttackIndex should populate itself with content from the IndexedDB.
-        await newAttackIndex.importFromIndexedDBtoFlexSearch();
-
-        // If the import succeed, we should be able to search on newAttachIndex.
-        const results = await newAttackIndex.search('data', 'content');
-
-        console.debug('results:', JSON.stringify(results));
-        const expectedResult = [{"field":"content","result":[1]}]
-
-        expect(results).toEqual(expectedResult);
-    });
-
-    test('can isolate two instances of IndexedDB', async () => {
-        attackIndex.addBulk(data);
-        const exportResult = await attackIndex.exportFromFlexSearchToIndexedDB();
-
-        // Create a new AttackIndex but hook it up to the same instance of IndexedDB that the first
-        // attackIndex exported to.
-        const newAttackIndex = new AttackIndex('test-cache-key-2', 'test-table-name-2', 'NewTestDatabase');
-
-        // Now perform an import. The newAttackIndex should populate itself with content from the IndexedDB.
-        await newAttackIndex.importFromIndexedDBtoFlexSearch();
-
-        // If the import succeed, we should be able to search on newAttachIndex.
-        const results = await newAttackIndex.search('data', ['content']);
-
-        console.debug('results:', JSON.stringify(results));
-
-        /**
-         * We expect an empty response back because we wired up a new IndexedDB instance.
-         *
-         * Explanation:
-         *
-         * `attackIndex` exports its documents to an IndexedDB instance with a dbName of 'TestDatabase'. TestDatabase
-         * contains importable data. But we don't import it. We spin up a *new* instance of AttackIndex (called
-         * `newAttackIndex`) and wire it up to an IndexedDB instance with a dbName of 'NewTestDatabase'. We want to
-         * demonstrate that the two IndexedDB instances (TestDatabase and NewTestDatabase) are not interconnected. We
-         * can validate this by trying performing an import on `newAttackIndex`. Because we wired it up to an allegedly
-         * empty IndexedDB instance, it should import nothing. We can validate this by performing a search on
-         * `newAttackIndex` and validating that no results are returned.
-         */
-        expect(results).toEqual([]);
-    });
-
     test('can paginate FlexSearch responses', async () => {
         attackIndex.addBulk(data);
 
         /**
          * limit, offset --> [ paginatedSearchResults ]
          *
-         * 10, 0 --> [ 2, 3, 4, 5, 6, 7, 8, 9, 10 ]
+         * 10, 1 --> [ 2, 3, 4, 5, 6, 7, 8, 9, 10 ]
          * 1, 0 --> [ 2 ]       1, 5 --> [ 7 ]
          * 1, 1 --> [ 3 ]       1, 6 --> [ 8 ]
          * 1, 2 --> [ 4 ]       1, 7 --> [ 9 ]
@@ -195,20 +113,12 @@ describe('AttackIndex', () => {
         expect(results).toEqual(expectedResult);
     });
 
-    test('can exclusively search the title index', async () => {
+    test('can resolve search results', async () => {
+        // Index the data
         attackIndex.addBulk(data);
-        await attackIndex.exportFromFlexSearchToIndexedDB();
 
-        let results;
-        let expectedResult;
+        const results = await attackIndex.search('of', ['title','content'], 10, 0);
 
-        // Search title index: "The" -- expect 9 results
-        results = await attackIndex.search('The', ['title'], 10, 0);
-        expectedResult = [{"field":"title","result":[2, 3, 4, 5, 6, 7, 8, 9, 10]}]
-        expect(results).toEqual(expectedResult);
-
-        // Search content index: "of"
-        results = await attackIndex.search('of', ['title','content'], 10, 0);
         console.debug('results: ', results);
         /**
          * results:  [
@@ -228,14 +138,32 @@ describe('AttackIndex', () => {
          *       }
          *     ]
          */
+
         // Get documents corresponding to index positions
         const titlePositions = results.find(r => r.field === 'title').result;
         const contentPositions = results.find(r => r.field === 'content').result;
 
-        const titleDocuments = await attackIndex.getDocumentsByPositions(titlePositions);
-        const contentDocuments = await attackIndex.getDocumentsByPositions(contentPositions);
+        async function resolveSearchResults(positions) {
+            const results = [];
+            for (const position of positions) {
+                const doc = await contentDb.get(position);
+                if (doc) {
+                    results.push(doc);
+                }
+            }
+            return results;
+        }
 
-        console.debug('titleDocuments: ', titleDocuments);
-        console.debug('contentDocuments: ', contentDocuments);
+        const titleDocuments = await resolveSearchResults(titlePositions);
+        const contentDocuments = await resolveSearchResults(contentPositions);
+
+        titleDocuments.forEach((doc, index) => {
+            expect(doc.id).toEqual(titlePositions[index]);
+        });
+
+        contentDocuments.forEach((doc, index) => {
+            expect(doc.id).toEqual(contentPositions[index]);
+        });
+
     });
 })
