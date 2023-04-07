@@ -1,5 +1,5 @@
 const $ = require('jquery');
-const IndexedDBWrapper = require("./indexed-db-wrapper");
+const { IndexedDBWrapper } = require("./indexed-db-wrapper");
 
 // eslint-disable-next-line import/extensions
 const AttackIndex = require('./attack-index.js');
@@ -8,12 +8,10 @@ const AttackIndex = require('./attack-index.js');
 const { loadMoreResults, searchBody } = require('./components.js');
 
 // eslint-disable-next-line import/extensions
-const { buffer, ATTACK_INDEX_KEY } = require('./settings.js');
+const { buffer } = require('./settings.js');
 
 module.exports = class SearchService {
-  constructor(tag, documents) {
-
-    console.debug('Initializing new SearchService instance...');
+  constructor(tag) {
 
     this.currentQuery = {
       clean: '',
@@ -27,16 +25,8 @@ module.exports = class SearchService {
       ],
       joined: '', // alternation
     };
+
     this.render_container = $(`#${tag}`);
-
-    this.initializeAsync(documents).then(() => {
-      console.debug('SearchService is initialized.');
-    }).catch(error => {
-      console.error('Failed to initialize SearchService:', error);
-    });
-  }
-
-  async initializeAsync(documents) {
 
     /**
      * The following two IndexedDBWrapper instances initialize two IndexedDB tables. Each instance corresponds to one
@@ -48,8 +38,15 @@ module.exports = class SearchService {
      *    FlexSearch is cleared from browser memory!).
      */
 
-    this.contentDb = new IndexedDBWrapper('AttackWebsite', 'content_table', ATTACK_INDEX_KEY, '&id, title, path, content');
-    this.flexsearchDb = new IndexedDBWrapper('AttackWebsite', 'flexsearch_table', ATTACK_INDEX_KEY, '++id, title, content');
+    const schemas = {
+      content_table: '&id, title, path, content',
+      searchindex_table: '++id, title, content',
+    };
+
+    const db = new IndexedDBWrapper('AttackWebsite', schemas);
+
+    this.contentDb = db.getTableWrapper('content_table');
+    this.searchIndexDb = db.getTableWrapper('searchindex_table');
 
     /**
      * A quick note on the schemas passed in the above 👆 IndexedDBWrapper initializations:
@@ -65,15 +62,78 @@ module.exports = class SearchService {
 
     // Initialize the AttackIndex instance (this is our in-memory FlexSearch instance)
     this.attackIndex = new AttackIndex();
+  }
+
+  async initializeAsync(documents) {
 
     // If documents are defined, then load them into the AttackIndex instance.
     if (documents) {
+      console.debug('Indexing documents: ', documents);
       this.attackIndex.addBulk(documents); // Add the data to the in-memory FlexSearch instance
+      console.debug('Backing up search index...');
       await this.backupSearchIndex(); // Backup the in-memory FlexSearch index for later restoration
+      await this.contentDb.bulkPut(documents);
+      console.debug('Backup of search index completed.');
     } else {
+      console.debug('Restoring search index from backup...');
       // If no documents were provided, then attempt to load them from the IndexedDB database
       await this.restoreSearchIndexFromBackup();
     }
+  }
+
+  /**
+   * FORMERLY: exportFromFlexSearchToIndexedDB
+   * Exports data from the in-memory FlexSearch instance to the IndexedDB.
+   * @returns {Promise<Array<string>>}
+   */
+  async backupSearchIndex() {
+
+    const keys = [];
+    let processedKeys = 0;
+
+    // totalKeys(x) = (3 * #searchFields) + 3
+    //                          ^
+    //                    title + content --> 2 fields
+    const totalKeys = 9;
+
+    return new Promise((resolve) => {
+      this.attackIndex.index.export(async (key, data) => {
+        await this.searchIndexDb.put({ key, data });
+        keys.push(key);
+        processedKeys++;
+
+        if (processedKeys === totalKeys) {
+          resolve(true);
+        }
+      });
+    });
+  }
+
+  /**
+   * Imports data from the IndexedDB to the in-memory FlexSearch instance.
+   * @returns {Promise<void>}
+   */
+  async restoreSearchIndexFromBackup() {
+    // Retrieve all records from the specified object store
+    const documents = await this.searchIndexDb.getAll();
+
+    // Import the records into the FlexSearch instance
+    // TODO decide which approach to keep: import vs addBulk
+
+    // APPROACH #1: AttackIndex.import
+    // for (const document of documents) {
+    //   await this.attackIndex.import(document.key, document.data);
+    // }
+
+    // APPROACH #2: AttackIndex.addBulk
+    if (documents && documents.length > 0) {
+      this.attackIndex.addBulk(documents);
+    } else {
+      console.warn('No documents found in flexsearch table.');
+    }
+
+    // The addBulk method is likely to be more efficient than calling the import method in a loop, because it adds the
+    // data to the index in batches rather than one record at a time.
   }
 
   /**
@@ -95,123 +155,16 @@ module.exports = class SearchService {
   }
 
   /**
-   * FORMERLY: exportFromFlexSearchToIndexedDB
-   * Exports data from the in-memory FlexSearch instance to the IndexedDB.
-   * @returns {Promise<Array<string>>}
-   */
-  async backupSearchIndex() {
-    return new Promise(async (resolve) => {
-      const keys = [];
-      let processedKeys = 0;
-
-      // totalKeys(x) = (3 * #searchFields) + 3
-      // x = len['title', 'content']
-      const totalKeys = 9;
-
-      // NOTE this is the original way the export worked when this method was still located in the AttackIndex class.
-      //
-      // this.index.export(async (key, data) => {
-      //   this.flexsearchDb[this.searchIndexTableName].put({ key, data }).then((key) => {
-      //     keys.push(key);
-      //     processedKeys++;
-      //
-      //     if (processedKeys === totalKeys) {
-      //       resolve(true); // TODO validate this -- changed from `resolve(keys)`
-      //     }
-      //   });
-      // });
-
-      this.attackIndex.index.export(async (key, data) => {
-        this.flexsearchDb[this.flexsearchDb.tableName].put({key, data}).then((key) => {
-          keys.push(key);
-          processedKeys++;
-
-          if (processedKeys === totalKeys) {
-            resolve(true); // TODO validate this -- changed from `resolve(keys)`
-          }
-        });
-      });
-    });
-
-    // TODO there is one issue with the current implementation 👆. The method is using a Promise constructor to create
-    //  a new promise, but it's already inside an async function, so this is unnecessary. Instead, you can just return
-    //  a promise directly from the method, like this: (THIS MUST BE VALIDATED before it can be used!)
-    //
-    // const keys = [];
-    // let processedKeys = 0;
-    //
-    // // totalKeys(x) = (3 * #searchFields) + 3
-    // // x = len['title', 'content']
-    // const totalKeys = 9;
-    //
-    // return new Promise((resolve) => {
-    //   this.attackIndex.index.export(async (key, data) => {
-    //     await this.flexsearchDb.put({ key, data });
-    //     keys.push(key);
-    //     processedKeys++;
-    //
-    //     if (processedKeys === totalKeys) {
-    //       resolve(true);
-    //     }
-    //   });
-    // });
-  }
-
-  /**
-   * FORMERLY: importFromIndexedDBtoFlexSearch
-   * Imports data from the IndexedDB to the in-memory FlexSearch instance.
-   * @returns {Promise<void>}
-   */
-  async restoreSearchIndexFromBackup() {
-    // Retrieve all records from the specified object store
-    const documents = await this.flexsearchDb.getAll();
-
-    // Import the records into the FlexSearch instance
-    // TODO decide which approach to keep: import vs addBulk
-
-    // APPROACH #1: AttackIndex.import
-    // for (const document of documents) {
-    //   await this.attackIndex.import(document.key, document.data);
-    // }
-
-    // APPROACH #2: AttackIndex.addBulk
-    if (documents && documents.length > 0) {
-      this.attackIndex.addBulk(documents);
-    } else {
-      console.warn('No documents found in flexsearch table.');
-    }
-
-    // The addBulk method is likely to be more efficient than calling the import method in a loop, because it adds the
-    // data to the index in batches rather than one record at a time.
-  }
-
-  setQuery(query) {
-    this.query = query;
-    this.offset = 0;
-    // this.titleStage = true; // TODO remove this, search title and content at same time instead
-    // this.seenPaths = new Set(); // TODO replace this with an offset tracker
-  }
-
-  async resolveSearchResults(positions) {
-    const results = [];
-    for (const position of positions) {
-      const doc = await this.contentDb.get(position);
-      if (doc) {
-        results.push(doc);
-      }
-    }
-    return results;
-  }
-
-  /**
    * update the search (query) string
    * @param {string} query string to search for in the indexes
    */
   async query(query) {
     this.#cleanTheQuery(query);
-    this.#clearResults();
+    // this.#clearResults();
+    this.render_container.html('');
     this.offset = 0;
-    const results = await this.attackIndex.search(this.query, ["title", "content"], 10, this.offset);
+    const results = await this.attackIndex.search(this.currentQuery.clean, ["title", "content"], 10, this.offset);
+    console.debug('search index results: ', results);
     /**
      * results:  [
      *       {
@@ -231,12 +184,6 @@ module.exports = class SearchService {
      *     ]
      */
     await this.#setSearchResults(results);
-
-    /**
-     * this.searchResults: [ {id,title,path,content}, {original objects loaded from index.json}, ..., {}]
-     */
-
-    //** TODO render first 5 search results **/
     this.#renderSearchResults();
   }
 
@@ -249,9 +196,11 @@ module.exports = class SearchService {
       resultHTML = resultHTML.join('');
       this.render_container.append(resultHTML);
 
-      if (this.nextPageRef) {
-        loadMoreResults.show();
-      } else loadMoreResults.hide();
+      // TODO is this necessary? As long as we hit last page and click loadMoreResults and nothing happens then it's not
+      //  explicitly necessary if the button is still visible
+      // if (this.nextPageRef) {
+      //   loadMoreResults.show();
+      // } else loadMoreResults.hide();
 
     } else if (this.currentQuery.clean !== '') {
       // search with no results
@@ -260,7 +209,8 @@ module.exports = class SearchService {
       loadMoreResults.hide();
     } else {
       // query for empty string
-      searchBody.hide();
+      // searchBody.hide();
+      loadMoreResults.show();
     }
   }
 
@@ -288,11 +238,11 @@ module.exports = class SearchService {
 
   async loadMoreResults() {
     this.offset += 5;
-    this.searchResults = await this.attackIndex.search(this.query, ["title", "content"], 5, this.offset);
-    //** TODO render the next ${offset} amount of this.searchResults */
+    const results = await this.attackIndex.search(this.currentQuery.clean, ["title", "content"], 10, this.offset);
+    console.debug('search index results: ', results);
+    await this.#setSearchResults(results);
+    this.#renderSearchResults();
   }
-
-  async
 
   /**
    * Preps the query string before executing it.
@@ -332,7 +282,10 @@ module.exports = class SearchService {
       // This line creates a new object that contains the original search word and its corresponding regular expression.
       // The regular expression is created using the RegExp constructor, with the gi flags to make it global and
       // case-insensitive.
-      return {word: searchWord, regex: new RegExp(regexString, 'gi')};
+      return {
+        word: searchWord,
+        regex: new RegExp(regexString, 'gi')
+      };
     });
   }
 
@@ -341,13 +294,15 @@ module.exports = class SearchService {
    * @param result object of format {title, path, content} which describes a page on the site
    */
   #resultToHTML(result) {
-    console.debug('SearchService.result_to_html was executed.');
     // create title and path
-    let {title} = result;
+    let { title } = result;
+
     let path = base_url.slice(0, -1) + result.path;
+
     if (path.endsWith('/index.html')) {
       path = path.slice(0, -11);
     }
+
     // create preview html
     let preview = result.content;
 
@@ -364,10 +319,7 @@ module.exports = class SearchService {
       }
     });
 
-    positions.sort((a, b) =>
-        // console.debug(`a=${a}`);
-        // console.debug(`b=${b}`);
-        a.index - b.index);
+    positions.sort((a, b) => a.index - b.index);
 
     // are two sets equal
     function setsEqual(s1, s2) {
@@ -480,9 +432,9 @@ module.exports = class SearchService {
   /**
    * clear the rendered results from the page
    */
-  #clearResults() {
-    this.render_container.html('');
-    this.hasResults = false;
-  }
+  // #clearResults() {
+  //   this.render_container.html('');
+  //   this.hasResults = false;
+  // }
 
 }

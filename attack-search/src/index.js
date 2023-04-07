@@ -64,7 +64,7 @@ const closeSearch = function () {
 };
 
 let searchService;
-const search = function (query) {
+const search = async function (query) {
   console.debug(`search -> Received search query: ${query}`);
   if (!searchService) {
     console.debug('search -> search index is not loaded...');
@@ -112,11 +112,24 @@ const search = function (query) {
        */
 
       console.debug('search -> Attempting to retrieve cached search index...');
-      searchService = new SearchService('search-results', null);
-      console.debug('search -> Initialized new search index!');
-      console.debug(`search -> Executing search query: ${query}`);
-      searchService.query(query);
-      searchParsingIcon.hide();
+      searchService = new SearchService('search-results');
+
+      try {
+        console.debug('Retrieved and processed index.json');
+        console.debug('Initializing SearchService...');
+
+        const searchService = new SearchService('search-results');
+        await searchService.initializeAsync(null);
+
+        console.debug('SearchService is initialized.');
+        console.debug(`Executing search: ${query}`);
+
+        await searchService.query(query);
+        searchParsingIcon.hide();
+
+      } catch(error) {
+        console.error('Failed to initialize SearchService:', error);
+      }
 
       // TODO remove this block after all IndexedDB logic has been migrated to the new AttackIndex class
       // Retrieving cached FlexSearch instances
@@ -135,24 +148,33 @@ const search = function (query) {
       // });
 
     } else {
-      console.debug('search -> Generating new search index...');
-      // Initializing instances of FlexSearch
-      $.ajax({ // if docs have not yet been loaded
+      console.debug('Generating search index...');
+      $.ajax({
         url: `${baseURL}/index.json`,
         dataType: 'json',
-        success(data) {
-          console.debug('Retrieved and processed index.json');
-          searchService = new SearchService('search-results', data);
-          console.debug('search -> Initialized new search index!');
-          console.debug(`search -> Executing search query: ${query}`);
-          searchService.query(query);
-          searchParsingIcon.hide();
+        async success(data) {
+          try {
+            console.debug('Retrieved and processed index.json');
+            console.debug('Initializing SearchService...');
+
+            const searchService = new SearchService('search-results');
+            await searchService.initializeAsync(data);
+
+            console.debug('SearchService is initialized.');
+            console.debug(`Executing search: ${query}`);
+
+            await searchService.query(query);
+            searchParsingIcon.hide();
+
+          } catch(error) {
+            console.error('Failed to initialize SearchService:', error);
+          }
         },
       });
     }
   } else {
-    console.debug(`search -> Executing search query: ${query}`);
-    searchService.query(query);
+    console.debug(`Executing search: ${query}`);
+    await searchService.query(query);
   }
 };
 

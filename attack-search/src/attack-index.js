@@ -1,8 +1,4 @@
-// const Dexie = require('dexie');
 const FlexSearch = require('flexsearch');
-// const {pageLimit} = require("./settings");
-// const {indexedDB, IDBKeyRange} = require("fake-indexeddb");
-// const IndexedDBWrapper = require("./indexed-db-wrapper");
 const { Document } = FlexSearch;
 
 module.exports = class AttackIndex {
@@ -64,7 +60,13 @@ module.exports = class AttackIndex {
             limit,
             offset,
         };
+
+        console.debug('query: ', query);
+        console.debug('searchOptions: ', searchOptions);
+
         const results = await this.index.searchAsync(query, searchOptions);
+
+        console.debug('results: ', results);
 
         /**
          * Here is a typical FlexSearch response -- it only provides the index positions of the matching documents, not
