@@ -210,8 +210,8 @@ module.exports = class SearchService {
   async query(query) {
     this.#cleanTheQuery(query);
     this.#clearResults();
-
-    const results = await this.attackIndex.search(this.query, ["title", "content"], 5, 0)
+    this.offset = 0;
+    const results = await this.attackIndex.search(this.query, ["title", "content"], 10, this.offset);
     /**
      * results:  [
      *       {
@@ -230,32 +230,22 @@ module.exports = class SearchService {
      *       }
      *     ]
      */
-
-        // Get documents corresponding to index positions
-    const titlePositions = results.find(r => r.field === 'title').result;
-    const contentPositions = results.find(r => r.field === 'content').result;
+    await this.#setSearchResults(results);
 
     /**
-     * Dedup the search results retrieved by searching the content index. The new filtered array will contain only those
-     * elements from contentPositions that are not present in titlePositions.
-     *
-     * We do this because (1) we don't want to render duplicate search results, and (2) we want to prioritize search
-     * results retrieved from the title index because title matches are weighted higher than content matches
+     * this.searchResults: [ {id,title,path,content}, {original objects loaded from index.json}, ..., {}]
      */
-    const filteredContentPositions = contentPositions.filter(pos => !titlePositions.includes(pos));
 
-    // Resolve the FlexSearch results to the original elements stored in index.json
-    const titleDocuments = await this.resolveSearchResults(titlePositions);
-    const contentDocuments = await this.resolveSearchResults(filteredContentPositions);
+    //** TODO render first 5 search results **/
+    this.#renderSearchResults();
+  }
 
-    // Concatenate the two arrays, with title results appearing first in the concatenated array.
-    const searchResults = titleDocuments.concat(contentDocuments);
-
-    if (searchResults.length > 0) {
+  #renderSearchResults() {
+    if (this.searchResults.length > 0) {
       // Render the search results
       searchBody.show();
       const self = this;
-      let resultHTML = searchResults.map((result) => self.#resultToHTML(result));
+      let resultHTML = this.searchResults.map((result) => self.#resultToHTML(result));
       resultHTML = resultHTML.join('');
       this.render_container.append(resultHTML);
 
@@ -273,6 +263,36 @@ module.exports = class SearchService {
       searchBody.hide();
     }
   }
+
+  async #setSearchResults(results) {
+    // Get documents corresponding to index positions
+    const titlePositions = results.find(r => r.field === 'title').result;
+    const contentPositions = results.find(r => r.field === 'content').result;
+
+    /**
+     * Dedup the search results retrieved by searching the content index. The new filtered array will contain only those
+     * elements from contentPositions that are not present in titlePositions.
+     *
+     * We do this because (1) we don't want to render duplicate search results, and (2) we want to prioritize search
+     * results retrieved from the title index because title matches are weighted higher than content matches
+     */
+    const filteredContentPositions = contentPositions.filter(pos => !titlePositions.includes(pos));
+
+    // Resolve the FlexSearch results to the original elements stored in index.json
+    const titleDocuments = await this.resolveSearchResults(titlePositions);
+    const contentDocuments = await this.resolveSearchResults(filteredContentPositions);
+
+    // Concatenate the two arrays, with title results appearing first in the concatenated array.
+    this.searchResults = titleDocuments.concat(contentDocuments);
+  }
+
+  async loadMoreResults() {
+    this.offset += 5;
+    this.searchResults = await this.attackIndex.search(this.query, ["title", "content"], 5, this.offset);
+    //** TODO render the next ${offset} amount of this.searchResults */
+  }
+
+  async
 
   /**
    * Preps the query string before executing it.

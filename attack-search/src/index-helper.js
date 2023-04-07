@@ -67,15 +67,21 @@ module.exports = class IndexHelper {
     console.debug(`IndexHelper.titleIndex: ${JSON.stringify(this.index)}`);
 
     // Adding pages to index
+    // we have docs but we haven't stored them in IndexDB yet
+
     if (documents && !exported) {
       console.debug('IndexHelper.constructor -> documents have not been exported yet. Commence export...');
-      this.export(documents);
-    } else if (!documents && exported) {
+      // this.export(documents);
+      this.attackIndex.export(documents);
+    }
+    // we don't have docs but they are luckily already stored in IndexDB
+    else if (!documents && exported) {
       console.debug('Commence importation of search indexes retrieved via localforage...');
       console.debug(`Loading index into memory: ${JSON.stringify(exported)}`);
       // console.debug(`Loading title index into memory: ${JSON.stringify(exported.title)}`);
       // console.debug(`Loading content index into memory: ${JSON.stringify(exported.content)}`);
-      this.index.import(exported);
+      // this.index.import(exported);
+      this.attackIndex.import(exported);
       // this.titleIndex.import(exported.title);
       // this.contentIndex.import(exported.content);
     } else {

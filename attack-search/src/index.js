@@ -179,7 +179,7 @@ searchInput.on('input', (e) => {
 });
 // trigger to render more results
 loadMoreResultsButton.on('click', () => {
-  if (searchService) searchService.nextPage();
+  if (searchService) searchService.loadMoreResults();
   loadMoreResultsButton.blur(); // onfocus
 });
 
