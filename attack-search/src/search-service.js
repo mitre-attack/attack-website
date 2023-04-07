@@ -122,7 +122,7 @@ module.exports = class SearchService {
       // });
 
       this.attackIndex.index.export(async (key, data) => {
-        this.flexsearchDb[this.flexsearchDb.tableName].put({ key, data }).then((key) => {
+        this.flexsearchDb[this.flexsearchDb.tableName].put({key, data}).then((key) => {
           keys.push(key);
           processedKeys++;
 
@@ -135,7 +135,7 @@ module.exports = class SearchService {
 
     // TODO there is one issue with the current implementation 👆. The method is using a Promise constructor to create
     //  a new promise, but it's already inside an async function, so this is unnecessary. Instead, you can just return
-    //  a promise directly from the method, like this:
+    //  a promise directly from the method, like this: (THIS MUST BE VALIDATED before it can be used!)
     //
     // const keys = [];
     // let processedKeys = 0;
@@ -192,39 +192,84 @@ module.exports = class SearchService {
     // this.seenPaths = new Set(); // TODO replace this with an offset tracker
   }
 
+  async resolveSearchResults(positions) {
+    const results = [];
+    for (const position of positions) {
+      const doc = await this.contentDb.get(position);
+      if (doc) {
+        results.push(doc);
+      }
+    }
+    return results;
+  }
+
   /**
-     * update the search (query) string
-     * @param {string} query string to search for in the indexes
-     */
-  query(query) {
+   * update the search (query) string
+   * @param {string} query string to search for in the indexes
+   */
+  async query(query) {
     this.#cleanTheQuery(query);
     this.#clearResults();
 
-    // this.search(); // render first page of results
+    const results = await this.attackIndex.search(this.query, ["title", "content"], 5, 0)
+    /**
+     * results:  [
+     *       {
+     *         field: 'title',
+     *         result: [
+     *           2, 3, 4,  5, 6,
+     *           7, 8, 9, 10
+     *         ]
+     *       },
+     *       {
+     *         field: 'content',
+     *         result: [
+     *           1, 5, 6, 7,
+     *           2, 3, 8, 9
+     *         ]
+     *       }
+     *     ]
+     */
 
-    // const results = this.index.nextPage();
-    // const results = this.attackIndex.nextPage();
-    const results = this.attackIndex.search(this.query, ["title", "content"], 5, 0)
+        // Get documents corresponding to index positions
+    const titlePositions = results.find(r => r.field === 'title').result;
+    const contentPositions = results.find(r => r.field === 'content').result;
 
-    if (results.length > 0) this.hasResults = true;
-    console.debug(`this.hasResults=${this.hasResults}`);
-    if (this.hasResults) {
+    /**
+     * Dedup the search results retrieved by searching the content index. The new filtered array will contain only those
+     * elements from contentPositions that are not present in titlePositions.
+     *
+     * We do this because (1) we don't want to render duplicate search results, and (2) we want to prioritize search
+     * results retrieved from the title index because title matches are weighted higher than content matches
+     */
+    const filteredContentPositions = contentPositions.filter(pos => !titlePositions.includes(pos));
+
+    // Resolve the FlexSearch results to the original elements stored in index.json
+    const titleDocuments = await this.resolveSearchResults(titlePositions);
+    const contentDocuments = await this.resolveSearchResults(filteredContentPositions);
+
+    // Concatenate the two arrays, with title results appearing first in the concatenated array.
+    const searchResults = titleDocuments.concat(contentDocuments);
+
+    if (searchResults.length > 0) {
+      // Render the search results
       searchBody.show();
-      console.debug('search_body.show() was executed.');
       const self = this;
-      let resultHTML = results.map((result) => self.#resultToHTML(result));
+      let resultHTML = searchResults.map((result) => self.#resultToHTML(result));
       resultHTML = resultHTML.join('');
       this.render_container.append(resultHTML);
-      if (this.index.nextPageRef) loadMoreResults.show();
-      else loadMoreResults.hide();
-    } else if (this.currentQuery.clean !== '') { // search with no results
+
+      if (this.nextPageRef) {
+        loadMoreResults.show();
+      } else loadMoreResults.hide();
+
+    } else if (this.currentQuery.clean !== '') {
+      // search with no results
       searchBody.show();
-      console.debug('search_body.show() was executed.');
-      this.render_container.html(`
-                    <div class="search-result">no results</div>
-                `);
+      this.render_container.html(`<div class="search-result">no results</div>`);
       loadMoreResults.hide();
-    } else { // query for empty string
+    } else {
+      // query for empty string
       searchBody.hide();
     }
   }
@@ -267,18 +312,18 @@ module.exports = class SearchService {
       // This line creates a new object that contains the original search word and its corresponding regular expression.
       // The regular expression is created using the RegExp constructor, with the gi flags to make it global and
       // case-insensitive.
-      return { word: searchWord, regex: new RegExp(regexString, 'gi') };
+      return {word: searchWord, regex: new RegExp(regexString, 'gi')};
     });
   }
 
   /**
-     * parse the result to the HTML required to render it
-     * @param result object of format {title, path, content} which describes a page on the site
-     */
+   * parse the result to the HTML required to render it
+   * @param result object of format {title, path, content} which describes a page on the site
+   */
   #resultToHTML(result) {
     console.debug('SearchService.result_to_html was executed.');
     // create title and path
-    let { title } = result;
+    let {title} = result;
     let path = base_url.slice(0, -1) + result.path;
     if (path.endsWith('/index.html')) {
       path = path.slice(0, -11);
@@ -300,9 +345,9 @@ module.exports = class SearchService {
     });
 
     positions.sort((a, b) =>
-      // console.debug(`a=${a}`);
-      // console.debug(`b=${b}`);
-      a.index - b.index);
+        // console.debug(`a=${a}`);
+        // console.debug(`b=${b}`);
+        a.index - b.index);
 
     // are two sets equal
     function setsEqual(s1, s2) {
@@ -322,8 +367,8 @@ module.exports = class SearchService {
     };
     for (let i = 0; i < positions.length; i++) {
       const position = positions[i];
-      const { word } = position;
-      const { index } = position;
+      const {word} = position;
+      const {index} = position;
 
       // find out how far we have to go from this position to find all words
       const foundWords = new Set();
@@ -376,7 +421,7 @@ module.exports = class SearchService {
       // by now we must have found as many words as we can
       // total found words takes priority over the distance
       if (foundWords.size > best.totalFound || (totalDist < best.totalDist
-        && foundWords.size >= best.totalFound)) {
+          && foundWords.size >= best.totalFound)) {
         // new best
         best.totalDist = totalDist;
         best.max = max;
@@ -413,41 +458,11 @@ module.exports = class SearchService {
   }
 
   /**
-     * clear the rendered results from the page
-     */
+   * clear the rendered results from the page
+   */
   #clearResults() {
     this.render_container.html('');
     this.hasResults = false;
   }
 
-  /**
-     * render the next page of results if one exists
-     */
-  nextPage() {
-    console.debug('Executing SearchService.nextPage');
-    // const results = this.index.nextPage();
-    const results = this.attackIndex.nextPage();
-    console.debug(`SearchService.nextPage: processing results: ${results}`);
-    if (results.length > 0) this.hasResults = true;
-    console.debug(`this.hasResults=${this.hasResults}`);
-    if (this.hasResults) {
-      searchBody.show();
-      console.debug('search_body.show() was executed.');
-      const self = this;
-      let resultHTML = results.map((result) => self.#resultToHTML(result));
-      resultHTML = resultHTML.join('');
-      this.render_container.append(resultHTML);
-      if (this.index.nextPageRef) loadMoreResults.show();
-      else loadMoreResults.hide();
-    } else if (this.current_query.clean !== '') { // search with no results
-      searchBody.show();
-      console.debug('search_body.show() was executed.');
-      this.render_container.html(`
-                    <div class="search-result">no results</div>
-                `);
-      loadMoreResults.hide();
-    } else { // query for empty string
-      searchBody.hide();
-    }
-  }
-};
+}
