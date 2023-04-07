@@ -1,10 +1,12 @@
 const Dexie = require("dexie");
+const { TransactionMode } = Dexie;
 
 module.exports = class IndexedDBWrapper {
-    constructor(dbName, tableName, cacheKey, schema) {
+    constructor(dbName, tableName, cacheKey, schema, version= 1) {
         this.dbName = dbName;
         this.tableName = tableName;
         this.cacheKey = cacheKey;
+        this.version = version;
 
         // Initialize the IndexedDB
 
@@ -26,7 +28,7 @@ module.exports = class IndexedDBWrapper {
         }
 
         // Define the schema for the IndexedDB
-        this.indexeddb.version(1).stores({
+        this.indexeddb.version(this.version).stores({
             [this.tableName]: schema,
         });
 
@@ -37,6 +39,9 @@ module.exports = class IndexedDBWrapper {
         // this.indexeddb.version(1).stores({
         //     [this.tableName]: '&id',
         // });
+
+        // Open the database connection
+        // this.indexeddb.open();
     }
 
     /**
@@ -69,5 +74,40 @@ module.exports = class IndexedDBWrapper {
 
     async getAll() {
         return await this.indexeddb[this.tableName].toArray();
+    }
+
+    async deleteObjectStore() {
+        // await new Promise((resolve, reject) => {
+        //     const deleteRequest = this.indexeddb.deleteObjectStore(objectStoreName);
+        //     deleteRequest.onsuccess = () => resolve();
+        //     deleteRequest.onerror = () => reject(deleteRequest.error);
+        //     deleteRequest.onblocked = () => reject('Database is blocked.');
+        // });
+
+        // To delete an object store you need to add a new version where you use null as the value of the stores spec.
+        // You must also have version 1 kept there to make Dexie understand this is a deletion.
+        //
+        // this.indexeddb.version(2).stores({
+        //     [this.tableName]: null,
+        // })
+
+        return await Dexie.delete(this.tableName);
+    }
+
+    async clearTable() {
+        return new Promise((resolve, reject) => {
+            const tx = this.indexeddb.transaction('readwrite', this.tableName, (trans) => {
+                const clearRequest = trans.table(this.tableName).clear();
+                // const clearRequest = trans.objectStore(this.tableName).clear();
+                clearRequest.onsuccess = () => {
+                    console.debug('onsuccess 😁');
+                    resolve();
+                };
+                clearRequest.onerror = () => {
+                    console.debug('onerror 😭');
+                    reject(clearRequest.error);
+                };
+            });
+        });
     }
 }
