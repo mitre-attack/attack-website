@@ -9,9 +9,6 @@ const AttackIndex = require('./attack-index.js');
 // eslint-disable-next-line import/extensions
 const { loadMoreResults, searchBody } = require('./components.js');
 
-// eslint-disable-next-line import/extensions
-const { buffer, pageLimit } = require('./settings.js');
-
 module.exports = class SearchService {
 
   /**
@@ -24,6 +21,13 @@ module.exports = class SearchService {
    * @param {string} [buildId] - An optional build ID used as a part of the IndexedDB database name.
    */
   constructor(tag, buildId) {
+
+    // 2* buffer is roughly the size of the result preview
+    this.buffer = 200;
+
+    // Sets the maximum number of search results displayed on a single page.
+    // Clicking "Load more results" will add ${pageLimit} additional results to the current page.
+    this.pageLimit = 5;
 
     this.currentQuery = {
       clean: '',
@@ -208,7 +212,7 @@ module.exports = class SearchService {
      */
 
     this.searchResults = await this.#setSearchResults(results);
-    const firstPage = this.searchResults.slice(0, pageLimit);
+    const firstPage = this.searchResults.slice(0, this.pageLimit);
     this.#renderSearchResults(firstPage);
   }
 
@@ -314,8 +318,8 @@ module.exports = class SearchService {
    * @function
    */
   async loadMoreResults() {
-    this.offset += pageLimit;
-    const nextPage = this.searchResults.slice(this.offset, this.offset + pageLimit);
+    this.offset += this.pageLimit;
+    const nextPage = this.searchResults.slice(this.offset, this.offset + this.pageLimit);
     console.debug('search index results: ', nextPage);
     this.#renderSearchResults(nextPage);
   }
@@ -448,7 +452,7 @@ module.exports = class SearchService {
           if (i + j < positions.length - 1) {
             const ahead = positions[i + j];
             const dist = ahead.index - index;
-            if (dist > buffer) { // exceeded buffer
+            if (dist > this.buffer) { // exceeded buffer
               exceeded++;
             } else if (!foundWords.has(ahead.word)) { // found a word
               foundWords.add(ahead.word);
@@ -460,7 +464,7 @@ module.exports = class SearchService {
           if (i - j >= 0) {
             const behind = positions[i - j];
             const dist = index - behind.index;
-            if (dist > buffer) { // exceeded buffer
+            if (dist > this.buffer) { // exceeded buffer
               exceeded++;
             } else if (!foundWords.has(behind.word)) { // found a word
               foundWords.add(behind.word);
@@ -488,8 +492,8 @@ module.exports = class SearchService {
     }
 
     // buffer around keyword
-    const left = Math.max(0, best.min - buffer);
-    const right = Math.min(preview.length, best.max + buffer);
+    const left = Math.max(0, best.min - this.buffer);
+    const right = Math.min(preview.length, best.max + this.buffer);
     preview = preview.slice(left, right); // extract buffer
 
     // add ellipses to preview so people know that the preview is not the complete page data
