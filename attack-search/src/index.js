@@ -132,13 +132,13 @@ async function initializeSearchService() {
     try {
       console.debug('Initializing SearchService (assume documents already cached)...');
       searchService = new SearchService('search-results', saved_uuid);
-      await searchService.initializeAsync(null); // <---- IMPORTANT!
+      await searchService.initializeAsync(null);
       console.debug('SearchService is initialized.');
     } catch (error) {
       console.error('Failed to initialize SearchService:', error);
     } finally {
       searchParsingIcon.hide();
-      toggleLoadingAnimation(false); // Add this line here
+      toggleLoadingAnimation(false);
     }
   } else {
     console.debug('Documents not cached yet.');
@@ -162,7 +162,7 @@ async function initializeSearchService() {
           console.error('Failed to initialize SearchService:', error);
         } finally {
           searchParsingIcon.hide();
-          toggleLoadingAnimation(false); // Add this line here as well
+          toggleLoadingAnimation(false);
         }
       },
     });
@@ -192,9 +192,12 @@ searchOverlay.on('click', function (e) {
 $(document).keyup((e) => {
   e.key === 'Escape' ? closeSearch() : null;
 });
+
 closeButton.on('click', closeSearch);
+
 // triggers for opening search
 searchOpenTrigger.on('click', openSearch);
+
 // triggers for performing search functions
 searchInput.on('input', (e) => {
   console.log(`Executing search on input: ${e.target.value}`);
@@ -203,6 +206,7 @@ searchInput.on('input', (e) => {
     search(e.target.value);
   });
 });
+
 // trigger to render more results
 loadMoreResultsButton.on('click', () => {
   if (searchService) searchService.loadMoreResults();
@@ -221,7 +225,6 @@ if (!String.prototype.includes) {
     return this.indexOf(search, start) !== -1;
   };
 }
-
 if (typeof String.prototype.endsWith !== 'function') {
   String.prototype.endsWith = function (suffix) {
     return this.indexOf(suffix, this.length - suffix.length) !== -1;
