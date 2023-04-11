@@ -98,6 +98,8 @@ module.exports = class SearchService {
     if (documents) {
       console.debug('Indexing documents: ', documents);
 
+      this.maxSearchResults = documents.length;
+
       // Add the data to the in-memory FlexSearch instance
       this.attackIndex.addBulk(documents);
 
@@ -110,6 +112,8 @@ module.exports = class SearchService {
       console.debug('Backup of search index completed.');
     } else {
       console.debug('Restoring search index from backup...');
+
+      this.maxSearchResults = await this.contentDb.count();
 
       // If no documents were provided, then attempt to load them from the IndexedDB database
       await this.restoreSearchIndexFromBackup();
@@ -188,8 +192,7 @@ module.exports = class SearchService {
   async query(query) {
     this.#cleanTheQuery(query);
     this.render_container.html('');
-    this.offset = 0;
-    const results = await this.attackIndex.search(this.currentQuery.clean, ["title", "content"], 100, this.offset);
+    const results = await this.attackIndex.search(this.currentQuery.clean, ["title", "content"], this.maxSearchResults);
     console.debug('search index results: ', results);
 
     /**

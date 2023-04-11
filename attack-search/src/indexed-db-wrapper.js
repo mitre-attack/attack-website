@@ -84,6 +84,14 @@ class TableWrapper {
     async getAll() {
         return await this.indexeddb[this.tableName].toArray();
     }
+
+    /**
+     * Retrieves the total number of entries in the table.
+     * @returns {Promise<number>} The total number of entries in the table.
+     */
+    async count() {
+        return await this.indexeddb[this.tableName].count();
+    }
 }
 
 class IndexedDBWrapper {
