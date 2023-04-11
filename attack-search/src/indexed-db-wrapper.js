@@ -89,8 +89,6 @@ class TableWrapper {
 class IndexedDBWrapper {
     constructor(dbName, schemas, version= 1) {
         this.dbName = dbName;
-        // this.tableName = tableName;
-        // this.cacheKey = cacheKey;
         this.version = version;
 
         // Initialize the IndexedDB
