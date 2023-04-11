@@ -170,14 +170,14 @@ module.exports = class SearchService {
    * @returns {Promise<Object[]>} - An array of matching documents retrieved from the IndexedDB content_table.
    */
   async resolveSearchResults(positions) {
-    const results = [];
-    for (const position of positions) {
-      const doc = await this.contentDb.get(position);
-      if (doc) {
-        results.push(doc);
-      }
-    }
-    return results;
+    // Create an array of promises to get documents from the IndexedDB content_table
+    const getPromises = positions.map(position => this.contentDb.get(position));
+
+    // Wait for all promises to resolve
+    const docs = await Promise.all(getPromises);
+
+    // Filter out null or undefined documents
+    return docs.filter(doc => doc !== null && doc !== undefined);
   }
 
   /**
