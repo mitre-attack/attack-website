@@ -19,8 +19,8 @@ module.exports = class AttackIndex {
                     field: 'content',
                     tokenize: 'forward',
                     optimize: true,
-                    // minlength: 3,   <--- THESE TWO PROPS ARE COMMENTED OUT BECAUSE THEY APPEAR TO BREAK
-                    // context: {      <---  SEARCHING ON THE CONTENT INDEX!
+                    // minlength: 3,   <--- These two props are commented out because they appear to break
+                    // context: {      <---  searching on the content index.
                     //     depth: 3,
                     //     resolution: 2,
                     // },
@@ -92,10 +92,6 @@ module.exports = class AttackIndex {
          *     ]
          */
 
-        // If both indexes (title and content) were searched, then we need to combine their results and remove any
-        // duplicate IDs. Use flatMap to extract all the result arrays and flatten them into a single array
-        // return new Set(results.flatMap(r => r.result));
-
         return results;
     }
 
@@ -116,8 +112,6 @@ module.exports = class AttackIndex {
      * @returns {Promise<void>[]} - A promise that resolves when all data objects have been added to the FlexSearch index.
      */
     async addBulk(data) {
-        // data.map(async (item) => await this.index.addAsync(item));
-
         const promises = data.map(async (item) => await this.index.addAsync(item));
         await Promise.all(promises);
     }
@@ -125,84 +119,4 @@ module.exports = class AttackIndex {
     async import(key, data) {
         return await this.index.import(key, data);
     }
-
-    /*** LEGACY INDEX-HELPER.JS CODE BELOW ***/
-
-
-    // setQuery(query) {
-    //     this.queryString = query;
-    //     this.nextPageRef = true;
-    //     this.titleStage = true;
-    //     this.seenPaths = new Set();
-    // }
-
-    /**
-     * This method is used to fetch the search results, filter out any duplicates, and return the results up to a
-     * specified limit, while continuing to fetch more results until the limit has been reached or there are no more
-     * results available.
-     * @returns {T[]}
-     */
-    // nextPage() {
-    //     console.debug('IndexHelper.nextPage is executing...');
-    //     let results = this.nextPageHelper();
-    //     const self = this;
-    //     results = results.filter((result) => !self.seenPaths.has(result.path));
-    //     results.forEach((result) => {
-    //         self.seenPaths.add(result.path);
-    //     });
-    //
-    //     // continue fetching new results from nextPageHelper until the pageLimit number of results has been reached or
-    //     // there are no more results available.
-    //
-    //     while (results.length < pageLimit) {
-    //
-    //         // For each new result set obtained from nextPageHelper, filter out duplicates, add new results to the
-    //         // seenPaths set, and append the new results to the existing results array.
-    //
-    //         let newResults = this.nextPageHelper(pageLimit - results.length);
-    //         if (newResults.length == 0) break; // ran out of results
-    //         // cull duplicates
-    //         newResults = newResults.filter((result) => !self.seenPaths.has(result.path));
-    //         newResults.forEach((result) => {
-    //             self.seenPaths.add(result.path);
-    //         });
-    //         // append to master list
-    //         results = results.concat(newResults);
-    //     }
-    //
-    //     return results;
-    // }
-
-    /**
-     * Get the next page of results, or null if no more pages
-     * @param {int} limit the number of results to get (default is the page_limit)
-     */
-    // nextPageHelper(limit = pageLimit) {
-    //     if (!this.nextPageRef) {
-    //         console.warn('no next page');
-    //         return [];
-    //     }
-    //
-    //     if (this.titleStage) {
-    //         const response = this.search(this.query, 'title', limit)
-    //
-    //         const results = response.result.map((result) => {
-    //             result.source = 'title';
-    //             return result;
-    //         });
-    //         if (response.next) { // next page exists on title stage
-    //             this.nextPageRef = response.next;
-    //             return results;
-    //         } // end of title stage
-    //         this.titleStage = false;
-    //         this.nextPageRef = true;
-    //         return results;
-    //     } // content stage
-    //     const response = this.search(this.query, 'content', limit);
-    //     this.nextPageRef = response.next;
-    //     return response.result.map((result) => {
-    //         result.source = 'content';
-    //         return result;
-    //     });
-    // }
 }
