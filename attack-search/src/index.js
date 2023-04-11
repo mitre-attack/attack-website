@@ -10,7 +10,7 @@ const $ = require('jquery');
  */
 
 // eslint-disable-next-line import/extensions
-const { baseURL, TITLE_INDEX_KEY } = require('./settings.js');
+const { baseURL } = require('./settings.js');
 
 // eslint-disable-next-line import/extensions
 const Debouncer = require('./debouncer.js');
@@ -29,15 +29,11 @@ const {
 // eslint-disable-next-line import/extensions
 } = require('./components.js');
 
-// eslint-disable-next-line import/extensions
-const { CONTENT_INDEX_KEY } = require('./settings.js');
-
 /**
  * FlexSearch.registerMatcher({REGEX: REPLACE})
  * Enables FlexSearch to globally replace RegEx matches.
  * Here, we use it to augment the "&" in ATT&CK, so searches for "attack" will still match "ATT&CK" and vice versa.
  */
-
 // TODO Figure out how to do this is v0.7.31
 // flexsearch.default.registerMatcher({
 //   'ATT&CK': 'ATTACK',
@@ -63,119 +59,127 @@ const closeSearch = function () {
   searchOverlay.addClass('hidden');
 };
 
+// function toggleLoadingAnimation(show) {
+//   const loadingBar = $('#loading-bar');
+//   const searchInput = $('#search-input');
+//
+//   if (show) {
+//     searchInput.prop('disabled', true);
+//     searchInput.attr('placeholder', 'Please count to five...');
+//     loadingBar.css({ width: '100%', opacity: 1 });
+//   } else {
+//     searchInput.prop('disabled', false);
+//     searchInput.attr('placeholder', 'search');
+//     loadingBar.css({ width: '0%', opacity: 0 });
+//   }
+// }
+
+function toggleLoadingAnimation(show) {
+  const loadingBar = $('<div class="loading-bar"></div>');
+  const overlayInner = $('#overlay-inner');
+  const searchInput = $('#search-input');
+
+  if (show) {
+    searchInput.prop('disabled', true);
+    searchInput.attr('placeholder', 'Please count to five...');
+    overlayInner.append(loadingBar);
+    loadingBar.css({ width: '100%', opacity: 1 });
+  } else {
+    searchInput.prop('disabled', false);
+    searchInput.attr('placeholder', 'search');
+    loadingBar.remove();
+  }
+}
+
+// Simulate initialization
+// toggleLoadingAnimation(true);
+// setTimeout(() => {
+//   toggleLoadingAnimation(false);
+// }, 5000); // Adjust the timeout value to match the actual initialization time
+
+
+// function toggleLoadingAnimation(show) {
+//   const loadingIcon = $('.loading-icon');
+//   const searchInput = $('#search-input');
+//   const loadingBar = $('.loading-bar');
+//
+//   if (show) {
+//     loadingIcon.show();
+//     searchInput.prop('disabled', true);
+//     searchInput.attr('placeholder', 'Please count to five...');
+//     searchInput.hide();
+//     loadingBar.show();
+//     loadingBar.css({ opacity: 1 });
+//   } else {
+//     loadingIcon.hide();
+//     searchInput.prop('disabled', false);
+//     searchInput.attr('placeholder', 'search');
+//     searchInput.show();
+//     loadingBar.hide();
+//     loadingBar.css({ opacity: 0 });
+//   }
+// }
+
+async function initializeSearchService() {
+  toggleLoadingAnimation(true);
+  console.debug('Initializing search service...');
+  searchParsingIcon.show();
+
+  const saved_uuid = localStorage.getItem('saved_uuid');
+  console.debug(`Retrieved the saved_uuid from localStorage: ${saved_uuid}`);
+
+  if (!isGoogleChrome && 'indexedDB' in window && saved_uuid && saved_uuid === build_uuid) {
+    try {
+      console.debug('Initializing SearchService (assume documents already cached)...');
+      searchService = new SearchService('search-results', saved_uuid);
+      await searchService.initializeAsync(null); // <---- IMPORTANT!
+      console.debug('SearchService is initialized.');
+    } catch (error) {
+      console.error('Failed to initialize SearchService:', error);
+    } finally {
+      searchParsingIcon.hide();
+      toggleLoadingAnimation(false); // Add this line here
+    }
+  } else {
+    console.debug('Documents not cached yet.');
+
+    $.ajax({
+      url: `${baseURL}/index.json`,
+      dataType: 'json',
+      async success(data) {
+        try {
+          console.debug('Retrieved and processed index.json.');
+          console.debug('Initializing SearchService...');
+
+          searchService = new SearchService('search-results', build_uuid);
+          await searchService.initializeAsync(data);
+
+          localStorage.setItem("saved_uuid", build_uuid);
+
+          console.debug('SearchService is initialized.');
+          searchParsingIcon.hide();
+        } catch (error) {
+          console.error('Failed to initialize SearchService:', error);
+        } finally {
+          searchParsingIcon.hide();
+          toggleLoadingAnimation(false); // Add this line here as well
+        }
+      },
+    });
+  }
+}
+
 let searchService;
 const search = async function (query) {
   console.debug(`search -> Received search query: ${query}`);
   if (!searchService) {
     console.debug('search -> search index is not loaded...');
     searchParsingIcon.show();
-
-    // Initializing search service
-
-    // eslint-disable-next-line camelcase
-    const saved_uuid = localStorage.getItem('saved_uuid');
-
-    // eslint-disable-next-line camelcase
-    console.debug(`Retrieved the saved_uuid from localStorage: ${saved_uuid}`);
-
-    /**
-     * IndexedDB is a web-based database that allows you to store and retrieve data in the client-side (in the
-     * browser). It is designed for web applications that need to store large amounts of data, such as audio and
-     * video files, images, and structured data, on the client side. IndexedDB provides a transactional, NoSQL-style
-     * database that can be used to store and retrieve data even when the user is offline.
-     *
-     * IndexedDB is a part of the Web Storage API and is supported by modern browsers, including Google Chrome,
-     * Mozilla Firefox, Microsoft Edge, and Apple Safari.
-     *
-     * The main benefits of using IndexedDB over other client-side storage options, such as local storage or
-     * cookies, are its ability to store large amounts of structured data, its transactional nature, and its ability
-     * to search and retrieve data using indexes.
-     *
-     * To use IndexedDB in your web application, you need to create a database, define object stores to store your
-     * data, and use transactions to interact with the data. The database is created using the indexedDB.open
-     * method, and transactions are used to read and write data using the IDBTransaction object.
-     *
-     * Overall, IndexedDB is a powerful and flexible client-side database that can be used to store and retrieve
-     * large amounts of structured data in web applications. It is particularly useful for web applications that
-     * need to work offline or that need to store large amounts of data on the client side.
-     */
-
-    // eslint-disable-next-line camelcase
-    if (!isGoogleChrome && 'indexedDB' in window && saved_uuid && saved_uuid === build_uuid) {
-
-      /**
-       * Basically, if we're running in a non Chrome-based browser (such as Firefox) that has access to an IndexDB (most
-       * modern web browsers should...) AND we already have the build UUID stored in localStorage, then we can assume
-       * that the search indexes (there are two: one for title queries and one for content queries) are cached in the
-       * IndexDB, in which case we should retrieve them (using localforage) and load them into memory; THEN we can
-       * execute the user's search query.
-       */
-
-      console.debug('search -> Attempting to retrieve cached search index...');
-      searchService = new SearchService('search-results');
-
-      try {
-        console.debug('Retrieved and processed index.json');
-        console.debug('Initializing SearchService...');
-
-        const searchService = new SearchService('search-results');
-        await searchService.initializeAsync(null);
-
-        console.debug('SearchService is initialized.');
-        console.debug(`Executing search: ${query}`);
-
-        await searchService.query(query);
-        searchParsingIcon.hide();
-
-      } catch(error) {
-        console.error('Failed to initialize SearchService:', error);
-      }
-
-      // TODO remove this block after all IndexedDB logic has been migrated to the new AttackIndex class
-      // Retrieving cached FlexSearch instances
-      // localforage.getItem(TITLE_INDEX_KEY).then((savedTitle) => {
-      //   localforage.getItem(CONTENT_INDEX_KEY).then((savedContent) => {
-      //     const exported = {
-      //       title: savedTitle,
-      //       content: savedContent
-      //     };
-      //     searchService = new SearchService('search-results', null, exported);
-      //     console.debug('search -> Initialized new search index!');
-      //     console.debug(`search -> Executing search query: ${query}`);
-      //     searchService.query(query);
-      //     searchParsingIcon.hide();
-      //   });
-      // });
-
-    } else {
-      console.debug('Generating search index...');
-      $.ajax({
-        url: `${baseURL}/index.json`,
-        dataType: 'json',
-        async success(data) {
-          try {
-            console.debug('Retrieved and processed index.json');
-            console.debug('Initializing SearchService...');
-
-            const searchService = new SearchService('search-results');
-            await searchService.initializeAsync(data);
-
-            console.debug('SearchService is initialized.');
-            console.debug(`Executing search: ${query}`);
-
-            await searchService.query(query);
-            searchParsingIcon.hide();
-
-          } catch(error) {
-            console.error('Failed to initialize SearchService:', error);
-          }
-        },
-      });
-    }
-  } else {
-    console.debug(`Executing search: ${query}`);
-    await searchService.query(query);
+    await initializeSearchService();
   }
+  console.debug(`Executing search: ${query}`);
+  await searchService.query(query);
+  searchParsingIcon.hide();
 };
 
 const debounce = new Debouncer(300);
@@ -225,3 +229,6 @@ if (typeof String.prototype.endsWith !== 'function') {
 }
 
 console.debug('search module is loaded.');
+
+// Initialize the search service when the module loads
+initializeSearchService();

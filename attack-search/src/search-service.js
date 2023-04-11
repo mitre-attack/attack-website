@@ -1,5 +1,7 @@
 const $ = require('jquery');
-const { IndexedDBWrapper } = require("./indexed-db-wrapper");
+
+// eslint-disable-next-line import/extensions
+const { IndexedDBWrapper } = require("./indexed-db-wrapper.js");
 
 // eslint-disable-next-line import/extensions
 const AttackIndex = require('./attack-index.js');
@@ -9,9 +11,10 @@ const { loadMoreResults, searchBody } = require('./components.js');
 
 // eslint-disable-next-line import/extensions
 const { buffer } = require('./settings.js');
+const {pageLimit} = require("./settings");
 
 module.exports = class SearchService {
-  constructor(tag) {
+  constructor(tag, buildId) {
 
     this.currentQuery = {
       clean: '',
@@ -43,10 +46,12 @@ module.exports = class SearchService {
       searchindex_table: '++id, title, content',
     };
 
-    const db = new IndexedDBWrapper('AttackWebsite', schemas);
+    const dbName = buildId ? `AttackWebsite-${buildId}` : 'AttackWebsite';
 
-    this.contentDb = db.getTableWrapper('content_table');
-    this.searchIndexDb = db.getTableWrapper('searchindex_table');
+    this.db = new IndexedDBWrapper(dbName, schemas);
+
+    this.contentDb = this.db.getTableWrapper('content_table');
+    this.searchIndexDb = this.db.getTableWrapper('searchindex_table');
 
     /**
      * A quick note on the schemas passed in the above 👆 IndexedDBWrapper initializations:
@@ -69,13 +74,20 @@ module.exports = class SearchService {
     // If documents are defined, then load them into the AttackIndex instance.
     if (documents) {
       console.debug('Indexing documents: ', documents);
-      this.attackIndex.addBulk(documents); // Add the data to the in-memory FlexSearch instance
+
+      // Add the data to the in-memory FlexSearch instance
+      this.attackIndex.addBulk(documents);
+
       console.debug('Backing up search index...');
-      await this.backupSearchIndex(); // Backup the in-memory FlexSearch index for later restoration
-      await this.contentDb.bulkPut(documents);
+
+      // Backup the in-memory FlexSearch index for later restoration
+      await this.backupSearchIndex();
+      await this.contentDb.bulkPut(documents, 100);
+
       console.debug('Backup of search index completed.');
     } else {
       console.debug('Restoring search index from backup...');
+
       // If no documents were provided, then attempt to load them from the IndexedDB database
       await this.restoreSearchIndexFromBackup();
     }
@@ -117,23 +129,11 @@ module.exports = class SearchService {
     // Retrieve all records from the specified object store
     const documents = await this.searchIndexDb.getAll();
 
-    // Import the records into the FlexSearch instance
-    // TODO decide which approach to keep: import vs addBulk
+    console.debug(`Located ${documents.length} documents in the searchindex_table`);
 
-    // APPROACH #1: AttackIndex.import
-    // for (const document of documents) {
-    //   await this.attackIndex.import(document.key, document.data);
-    // }
-
-    // APPROACH #2: AttackIndex.addBulk
-    if (documents && documents.length > 0) {
-      this.attackIndex.addBulk(documents);
-    } else {
-      console.warn('No documents found in flexsearch table.');
+    for (const document of documents) {
+      await this.attackIndex.import(document.key, document.data);
     }
-
-    // The addBulk method is likely to be more efficient than calling the import method in a loop, because it adds the
-    // data to the index in batches rather than one record at a time.
   }
 
   /**
@@ -163,44 +163,42 @@ module.exports = class SearchService {
     // this.#clearResults();
     this.render_container.html('');
     this.offset = 0;
-    const results = await this.attackIndex.search(this.currentQuery.clean, ["title", "content"], 10, this.offset);
+    const results = await this.attackIndex.search(this.currentQuery.clean, ["title", "content"], 100, this.offset);
     console.debug('search index results: ', results);
     /**
      * results:  [
      *       {
      *         field: 'title',
      *         result: [
-     *           2, 3, 4,  5, 6,
-     *           7, 8, 9, 10
+     *           2, 3, 4,  5, 6, ..., 100
+     *
      *         ]
      *       },
      *       {
      *         field: 'content',
      *         result: [
      *           1, 5, 6, 7,
-     *           2, 3, 8, 9
+     *           2, 3, 8, 9,
      *         ]
      *       }
      *     ]
      */
-    await this.#setSearchResults(results);
-    this.#renderSearchResults();
+
+    // title [b,x,y,z] , content [a,b,c] --> [b,x,y,z, a,c]
+
+    this.searchResults = await this.#setSearchResults(results);
+    const firstPage = this.searchResults.slice(0, 5);
+    this.#renderSearchResults(firstPage);
   }
 
-  #renderSearchResults() {
-    if (this.searchResults.length > 0) {
+  #renderSearchResults(page) {
+    if (page.length > 0) {
       // Render the search results
       searchBody.show();
       const self = this;
-      let resultHTML = this.searchResults.map((result) => self.#resultToHTML(result));
+      let resultHTML = page.map((result) => self.#resultToHTML(result));
       resultHTML = resultHTML.join('');
       this.render_container.append(resultHTML);
-
-      // TODO is this necessary? As long as we hit last page and click loadMoreResults and nothing happens then it's not
-      //  explicitly necessary if the button is still visible
-      // if (this.nextPageRef) {
-      //   loadMoreResults.show();
-      // } else loadMoreResults.hide();
 
     } else if (this.currentQuery.clean !== '') {
       // search with no results
@@ -216,8 +214,8 @@ module.exports = class SearchService {
 
   async #setSearchResults(results) {
     // Get documents corresponding to index positions
-    const titlePositions = results.find(r => r.field === 'title').result;
-    const contentPositions = results.find(r => r.field === 'content').result;
+    const titlePositions = results.find(r => r?.field === 'title')?.result ?? [];
+    const contentPositions = results.find(r => r?.field === 'content')?.result ?? [];
 
     /**
      * Dedup the search results retrieved by searching the content index. The new filtered array will contain only those
@@ -233,15 +231,14 @@ module.exports = class SearchService {
     const contentDocuments = await this.resolveSearchResults(filteredContentPositions);
 
     // Concatenate the two arrays, with title results appearing first in the concatenated array.
-    this.searchResults = titleDocuments.concat(contentDocuments);
+    return titleDocuments.concat(contentDocuments);
   }
 
   async loadMoreResults() {
     this.offset += 5;
-    const results = await this.attackIndex.search(this.currentQuery.clean, ["title", "content"], 10, this.offset);
-    console.debug('search index results: ', results);
-    await this.#setSearchResults(results);
-    this.#renderSearchResults();
+    const nextPage = this.searchResults.slice(this.offset, this.offset + 5);
+    console.debug('search index results: ', nextPage);
+    this.#renderSearchResults(nextPage);
   }
 
   /**
@@ -428,13 +425,5 @@ module.exports = class SearchService {
             </div>
         `; // end template
   }
-
-  /**
-   * clear the rendered results from the page
-   */
-  // #clearResults() {
-  //   this.render_container.html('');
-  //   this.hasResults = false;
-  // }
 
 }

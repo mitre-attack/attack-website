@@ -27,7 +27,9 @@ module.exports = class AttackIndex {
                 },
             ],
             page: 0, // Default starting page,
-            limit: Number.MAX_SAFE_INTEGER // Default limit for results per page
+            limit: Number.MAX_SAFE_INTEGER, // Default limit for results per page
+            // worker: true <--- Cannot call import when this is passed:
+            //                   TypeError: this.index[c].import is not a function
         });
     }
 

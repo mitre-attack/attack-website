@@ -16,13 +16,56 @@ class TableWrapper {
     }
 
     /**
-     * Performs bulk put operations on the IndexedDB.
+     * Performs bulk put operations on the IndexedDB in chunks to improve performance.
      * @param {Array<Object>} data - An array of objects to store in the IndexedDB.
+     * @param {number} [chunkSize=100] - The number of objects to put in the IndexedDB at a time.
      * @returns {Promise<void>}
      */
-    async bulkPut(data) {
-        const putPromises = data.map((eachItem) => this.indexeddb[this.tableName].put(eachItem));
-        await Promise.all(putPromises);
+    async bulkPut(data, chunkSize = 100) {
+
+        return new Promise(async (resolve) => {
+            /**
+             * Schedules work using requestIdleCallback if supported, or setTimeout as a fallback.
+             * @param {Function} callback - The function to be executed when the browser is idle or after the specified delay.
+             */
+            const scheduleWork = (callback) => {
+                // As of April 2023, the `requestIdleCallback` function is still an experimental feature and lacks
+                // support in Safari. In Safari, we use setTimeout as an alternative.
+                if (typeof requestIdleCallback === 'function') {
+                    requestIdleCallback(callback);
+                } else {
+                    // Use setTimeout with a small delay as a fallback
+                    setTimeout(callback, 10);
+                }
+            };
+
+            /**
+             * Inserts a chunk of data into the IndexedDB table, and schedules the next chunk to be inserted.
+             * @param {number} start - The index of the first item in the data array to be included in the current chunk.
+             */
+            const putChunk = async (start) => {
+                // If all data has been processed, resolve the promise
+                if (start >= data.length) {
+                    resolve();
+                    return;
+                }
+
+                // Determine the end index for the current chunk
+                const end = Math.min(start + chunkSize, data.length);
+
+                // Extract the chunk from the data array
+                const chunk = data.slice(start, end);
+
+                // Insert the chunk into the IndexedDB table
+                await this.indexeddb[this.tableName].bulkPut(chunk);
+
+                // Schedule the next chunk to be processed
+                scheduleWork(() => putChunk(end));
+            };
+
+            // Start processing the data array by inserting the first chunk
+            putChunk(0);
+        });
     }
 
     /**
