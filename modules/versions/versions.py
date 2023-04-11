@@ -3,6 +3,8 @@ import os
 import re
 import shutil
 import stat
+from zipfile import ZipFile
+import requests
 from datetime import datetime
 
 from git import Repo
@@ -94,12 +96,21 @@ def deploy():
     if os.path.exists(versions_config.versions_directory):
         shutil.rmtree(versions_config.versions_directory, onerror=onerror)
     # download new version of attack-website for use in versioning
-    logger.info(f"git cloning {versions_config.versions_repo} >>> {versions_config.versions_directory}")
-    versions_repo = Repo.clone_from(versions_config.versions_repo, versions_config.versions_directory)
+   
+    url = versions_config.versions_repo + ".zip"
+    req = requests.get(url, verify=False)
+    
+    filename = url.split('/')[-1]
+    
+    with open(filename, 'wb') as output_file:
+    	output_file.write(req.content)
+    
+    with Zipfile(filename, 'r') as zObject:
+    	zObject.extractall() 
 
     # remove previously deployed previous versions
     if os.path.exists(versions_config.prev_versions_deploy_folder):
-        for child in os.listdir(versions_config.prev_versions_deploy_folder):
+        for child in os.scandir(versions_config.prev_versions_deploy_folder):
             if os.path.isdir(os.path.join(versions_config.prev_versions_deploy_folder, child)):
                 shutil.rmtree(versions_config.prev_versions_deploy_folder)
 
@@ -135,7 +146,7 @@ def deploy_current_version():
 
     if not os.path.exists(os.path.join(versions_config.prev_versions_deploy_folder, versionPath(version))):
         os.mkdir(os.path.join(versions_config.prev_versions_deploy_folder, versionPath(version)))
-    for item in os.listdir(site_config.web_directory):
+    for item in os.scandir(site_config.web_directory):
         # skip previous and versions directories when copying
         if item == "previous" or item == "versions":
             continue
@@ -158,7 +169,16 @@ def deploy_previous_version(version, repo):
     """Build a version of the site to /prev_versions_path. version is a version from versions.json, repo is a reference to the attack-website Repo object."""
     logger.info(f"Building website for ATT&CK {version}")
     # check out the commit for that version
-    repo.git.checkout(version["commit"])
+    url = version["commit"] + ".zip"
+    req = requests.get(url, verify=False)
+    
+    filename = url.split('/')[-1]
+    
+    with open(filename, 'wb') as output_file:
+    	output_file.write(req.content)
+    
+    with Zipfile(filename, 'r') as zObject:
+    	zObject.extractall() 
     # copy over files
     ignored_stuff = shutil.ignore_patterns(
         ".git", "beta", "CNAME", "robots.txt", "previous", "previous-versions", "versions"
@@ -226,7 +246,7 @@ def archive(version_data, is_current=False):
         shutil.rmtree(updates_dir, onerror=onerror)
 
     # walk version HTML files
-    for directory, _, files in os.walk(version_path):
+    for directory, _, files in os.scandir(version_path):
         for filename in filter(lambda f: f.endswith(".html"), files):
             # replace links in the file
 
@@ -328,7 +348,7 @@ def build_alias(version, alias):
     version is the path of the version, e.g "v5"
     alias is the alias to build, e.g "october2018"
     """
-    for root, folder, files in os.walk(os.path.join(versions_config.prev_versions_deploy_folder, version)):
+    for root, folder, files in os.scandir(os.path.join(versions_config.prev_versions_deploy_folder, version)):
         for thefile in files:
             # where the file should go
             newRoot = root.replace(version, alias).replace(versions_config.prev_versions_path, "previous")
