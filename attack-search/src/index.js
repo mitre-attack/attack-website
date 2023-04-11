@@ -59,25 +59,8 @@ const closeSearch = function () {
   searchOverlay.addClass('hidden');
 };
 
-// function toggleLoadingAnimation(show) {
-//   const loadingBar = $('#loading-bar');
-//   const searchInput = $('#search-input');
-//
-//   if (show) {
-//     searchInput.prop('disabled', true);
-//     searchInput.attr('placeholder', 'Please count to five...');
-//     loadingBar.css({ width: '100%', opacity: 1 });
-//   } else {
-//     searchInput.prop('disabled', false);
-//     searchInput.attr('placeholder', 'search');
-//     loadingBar.css({ width: '0%', opacity: 0 });
-//   }
-// }
-
-function toggleLoadingAnimation(show) {
-  const loadingBar = $('<div class="loading-bar"></div>');
-  const overlayInner = $('#overlay-inner');
-  const searchInput = $('#search-input');
+// Variable to check if search service is loaded
+let searchServiceIsLoaded = false;
 
   if (show) {
     searchInput.prop('disabled', true);
@@ -136,9 +119,10 @@ async function initializeSearchService() {
       console.debug('SearchService is initialized.');
     } catch (error) {
       console.error('Failed to initialize SearchService:', error);
+      searchServiceIsLoaded = false;
     } finally {
       searchParsingIcon.hide();
-      toggleLoadingAnimation(false);
+      searchServiceIsLoaded = true;
     }
   } else {
     console.debug('Documents not cached yet.');
@@ -160,9 +144,10 @@ async function initializeSearchService() {
           searchParsingIcon.hide();
         } catch (error) {
           console.error('Failed to initialize SearchService:', error);
+          searchServiceIsLoaded = false;
         } finally {
           searchParsingIcon.hide();
-          toggleLoadingAnimation(false);
+          searchServiceIsLoaded = true;
         }
       },
     });
@@ -172,11 +157,14 @@ async function initializeSearchService() {
 let searchService;
 const search = async function (query) {
   console.debug(`search -> Received search query: ${query}`);
-  if (!searchService) {
+
+  // Wait until the search service is loaded
+  while (!searchServiceIsLoaded) {
     console.debug('search -> search index is not loaded...');
     searchParsingIcon.show();
-    await initializeSearchService();
+    await new Promise(resolve => setTimeout(resolve, 100));
   }
+
   console.debug(`Executing search: ${query}`);
   await searchService.query(query);
   searchParsingIcon.hide();
