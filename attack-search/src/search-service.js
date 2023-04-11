@@ -190,6 +190,7 @@ module.exports = class SearchService {
    * @param {string} query - The raw search query string.
    */
   async query(query) {
+    this.offset = 0;
     this.#cleanTheQuery(query);
     this.render_container.html('');
     const results = await this.attackIndex.search(this.currentQuery.clean, ["title", "content"], this.maxSearchResults);
