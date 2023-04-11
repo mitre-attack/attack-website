@@ -10,10 +10,19 @@ const AttackIndex = require('./attack-index.js');
 const { loadMoreResults, searchBody } = require('./components.js');
 
 // eslint-disable-next-line import/extensions
-const { buffer } = require('./settings.js');
-const {pageLimit} = require("./settings");
+const { buffer, pageLimit } = require('./settings.js');
 
 module.exports = class SearchService {
+
+  /**
+   * The SearchService class is responsible for managing the search functionality of the application. It allows for
+   * initialization of the search index, processing search queries, and rendering search results.
+   *
+   * @class SearchService
+   * @constructor
+   * @param {string} tag - The ID of the DOM element that will be used as the container for rendering search results.
+   * @param {string} [buildId] - An optional build ID used as a part of the IndexedDB database name.
+   */
   constructor(tag, buildId) {
 
     this.currentQuery = {
@@ -69,6 +78,16 @@ module.exports = class SearchService {
     this.attackIndex = new AttackIndex();
   }
 
+  /**
+   * Asynchronously initializes the search engine by either indexing the provided documents or restoring the search
+   * index from a backup stored in IndexedDB. If documents are provided, the method will add them to the search index,
+   * create a backup of the search index, and store the documents in IndexedDB.
+   *
+   * @async
+   * @function
+   * @param {Array<Object>} [documents] - An optional array of document objects to be indexed. Each document object
+   * should have an `id`, a `title`, a `path`, and a `content` property.
+   */
   async initializeAsync(documents) {
 
     // If documents are defined, then load them into the AttackIndex instance.
@@ -94,7 +113,6 @@ module.exports = class SearchService {
   }
 
   /**
-   * FORMERLY: exportFromFlexSearchToIndexedDB
    * Exports data from the in-memory FlexSearch instance to the IndexedDB.
    * @returns {Promise<Array<string>>}
    */
@@ -155,23 +173,28 @@ module.exports = class SearchService {
   }
 
   /**
-   * update the search (query) string
-   * @param {string} query string to search for in the indexes
+   * Asynchronously performs a search query on the search index and renders the search results on the web page.
+   * The search will be performed on both the title and content fields of the indexed documents.
+   * The search results are paginated, showing the first page of results after the search.
+   *
+   * @async
+   * @function
+   * @param {string} query - The raw search query string.
    */
   async query(query) {
     this.#cleanTheQuery(query);
-    // this.#clearResults();
     this.render_container.html('');
     this.offset = 0;
     const results = await this.attackIndex.search(this.currentQuery.clean, ["title", "content"], 100, this.offset);
     console.debug('search index results: ', results);
+
     /**
      * results:  [
      *       {
      *         field: 'title',
      *         result: [
-     *           2, 3, 4,  5, 6, ..., 100
-     *
+     *           2, 3, 4, 5, 6,
+     *           ..., 100
      *         ]
      *       },
      *       {
@@ -184,13 +207,37 @@ module.exports = class SearchService {
      *     ]
      */
 
-    // title [b,x,y,z] , content [a,b,c] --> [b,x,y,z, a,c]
-
     this.searchResults = await this.#setSearchResults(results);
-    const firstPage = this.searchResults.slice(0, 5);
+    const firstPage = this.searchResults.slice(0, pageLimit);
     this.#renderSearchResults(firstPage);
   }
 
+  /**
+   * Renders the search results on the web page based on the given search result page.
+   * If the search query is empty, it will show the "Load More Results" button.
+   * If the search query has no results, it will display a "no results" message.
+   *
+   * @private
+   * @function
+   * @param {Array<{ id: number, title: string, path: string, content: string }>} page - An array of search result
+   * objects, where each object has an `id`, a `title`, a `path`, and a `content` property.
+   *
+   * @example
+   * page: [
+   *   {
+   *     id: 0,
+   *     title: "Random title",
+   *     path: "/path/to/random/page.html",
+   *     content: "Some random content."
+   *   },
+   *   {
+   *     id: 1,
+   *     title: "Another random title",
+   *     path: "/path/to/another/random/page.html",
+   *     content: "Some more random content."
+   *   }
+   * ]
+   */
   #renderSearchResults(page) {
     if (page.length > 0) {
       // Render the search results
@@ -212,6 +259,31 @@ module.exports = class SearchService {
     }
   }
 
+  /**
+   * Asynchronously sets the search results by merging title and content results without duplication, prioritizing
+   * title matches over content matches.
+   *
+   * @async
+   * @private
+   * @function
+   * @param {Array<{ field: string, result: Array<number> }>} results - An array containing search results, each object
+   * in the array should have a `field` property ("title" or "content") and a `result` property (an array of indices).
+   *
+   * @returns {Promise<Array>} A Promise that resolves to an array containing the search results with duplicates removed
+   * and title matches prioritized over content matches.
+   *
+   * @example
+   * results: [
+   *   {
+   *     field: 'title',
+   *     result: [2, 3, 4, 5, 6, ..., 100]
+   *   },
+   *   {
+   *     field: 'content',
+   *     result: [1, 5, 6, 7, 2, 3, 8, 9]
+   *   }
+   * ]
+   */
   async #setSearchResults(results) {
     // Get documents corresponding to index positions
     const titlePositions = results.find(r => r?.field === 'title')?.result ?? [];
@@ -234,17 +306,27 @@ module.exports = class SearchService {
     return titleDocuments.concat(contentDocuments);
   }
 
+  /**
+   * Asynchronously loads and renders more search results by increasing the current offset.
+   * This method is used for paginating the search results.
+   *
+   * @async
+   * @function
+   */
   async loadMoreResults() {
-    this.offset += 5;
-    const nextPage = this.searchResults.slice(this.offset, this.offset + 5);
+    this.offset += pageLimit;
+    const nextPage = this.searchResults.slice(this.offset, this.offset + pageLimit);
     console.debug('search index results: ', nextPage);
     this.#renderSearchResults(nextPage);
   }
 
   /**
-   * Preps the query string before executing it.
-   * @param {string} query
+   * Cleans and processes the search query by trimming white spaces, escaping special characters, and creating
+   * regular expressions for each word in the query. The processed query is stored in the `this.currentQuery` object.
+   *
    * @private
+   * @function
+   * @param {string} query - The raw search query string.
    */
   #cleanTheQuery(query) {
     console.debug(`Cleaning query string: ${query}`);
@@ -287,8 +369,14 @@ module.exports = class SearchService {
   }
 
   /**
-   * parse the result to the HTML required to render it
-   * @param result object of format {title, path, content} which describes a page on the site
+   * Converts a search result object to an HTML string with highlighted search words.
+   * The HTML string will include the result's title, a link to the result's path, and a preview of the content
+   * with search words highlighted. The preview will be trimmed to a buffer size around the found words.
+   *
+   * @private
+   * @function
+   * @param {Object} result - A search result object containing an `id`, a `title`, a `path`, and a `content` property.
+   * @returns {string} An HTML string representing the search result with highlighted search words.
    */
   #resultToHTML(result) {
     // create title and path
