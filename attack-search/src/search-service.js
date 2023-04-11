@@ -255,6 +255,13 @@ module.exports = class SearchService {
       resultHTML = resultHTML.join('');
       this.render_container.append(resultHTML);
 
+      // if there are more pages to show
+      if (this.offset + this.pageLimit < this.searchResults.length) {
+        loadMoreResults.show();
+      } else {
+        loadMoreResults.hide();
+      }
+
     } else if (this.currentQuery.clean !== '') {
       // search with no results
       searchBody.show();
@@ -262,8 +269,7 @@ module.exports = class SearchService {
       loadMoreResults.hide();
     } else {
       // query for empty string
-      // searchBody.hide();
-      loadMoreResults.show();
+      searchBody.hide();
     }
   }
 
