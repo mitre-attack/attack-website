@@ -1,4 +1,4 @@
-const localforage = require('localforage');
+// Require necessary libraries
 const $ = require('jquery');
 
 /**
@@ -9,15 +9,12 @@ const $ = require('jquery');
  * Module not found: Error: Can't resolve './settings' in '/foo/bar/attack-website/attack-search/src'
  */
 
-// eslint-disable-next-line import/extensions
+// Import required modules with the correct file extension
 const { baseURL } = require('./settings.js');
-
-// eslint-disable-next-line import/extensions
 const Debouncer = require('./debouncer.js');
-
-// eslint-disable-next-line import/extensions
 const SearchService = require('./search-service.js');
 
+// Import required components
 const {
   searchBody,
   searchOverlay,
@@ -26,7 +23,6 @@ const {
   searchOpenTrigger,
   closeButton,
   loadMoreResultsButton,
-// eslint-disable-next-line import/extensions
 } = require('./components.js');
 
 /**
@@ -34,26 +30,27 @@ const {
  * Enables FlexSearch to globally replace RegEx matches.
  * Here, we use it to augment the "&" in ATT&CK, so searches for "attack" will still match "ATT&CK" and vice versa.
  */
-// TODO Figure out how to do this is v0.7.31
+// TODO: Figure out how to do this is v0.7.31
 // flexsearch.default.registerMatcher({
 //   'ATT&CK': 'ATTACK',
 //   ATTACK: 'ATT&CK',
 // });
 
+// Check browser types
 const isChromium = window.chrome;
 const isEdgeChromium = isChromium && navigator.userAgent.indexOf('Edg') != -1;
 const isGoogleChrome = !!(isChromium && !isEdgeChromium);
 
+// Open search overlay
 const openSearch = function () {
-  // console.log("open search")
   searchBody.hide();
   searchOverlay.show();
   searchOverlay.removeClass('hidden');
   searchInput.focus();
 };
 
+// Close search overlay
 const closeSearch = function () {
-  // console.log("close search")
   searchInput.val('');
   searchOverlay.hide();
   searchOverlay.addClass('hidden');
@@ -62,55 +59,15 @@ const closeSearch = function () {
 // Variable to check if search service is loaded
 let searchServiceIsLoaded = false;
 
-  if (show) {
-    searchInput.prop('disabled', true);
-    searchInput.attr('placeholder', 'Please count to five...');
-    overlayInner.append(loadingBar);
-    loadingBar.css({ width: '100%', opacity: 1 });
-  } else {
-    searchInput.prop('disabled', false);
-    searchInput.attr('placeholder', 'search');
-    loadingBar.remove();
-  }
-}
-
-// Simulate initialization
-// toggleLoadingAnimation(true);
-// setTimeout(() => {
-//   toggleLoadingAnimation(false);
-// }, 5000); // Adjust the timeout value to match the actual initialization time
-
-
-// function toggleLoadingAnimation(show) {
-//   const loadingIcon = $('.loading-icon');
-//   const searchInput = $('#search-input');
-//   const loadingBar = $('.loading-bar');
-//
-//   if (show) {
-//     loadingIcon.show();
-//     searchInput.prop('disabled', true);
-//     searchInput.attr('placeholder', 'Please count to five...');
-//     searchInput.hide();
-//     loadingBar.show();
-//     loadingBar.css({ opacity: 1 });
-//   } else {
-//     loadingIcon.hide();
-//     searchInput.prop('disabled', false);
-//     searchInput.attr('placeholder', 'search');
-//     searchInput.show();
-//     loadingBar.hide();
-//     loadingBar.css({ opacity: 0 });
-//   }
-// }
-
+// Initialize the search service
 async function initializeSearchService() {
-  toggleLoadingAnimation(true);
   console.debug('Initializing search service...');
   searchParsingIcon.show();
 
   const saved_uuid = localStorage.getItem('saved_uuid');
   console.debug(`Retrieved the saved_uuid from localStorage: ${saved_uuid}`);
 
+  // Check if the browser is not Google Chrome and the documents are already cached
   if (!isGoogleChrome && 'indexedDB' in window && saved_uuid && saved_uuid === build_uuid) {
     try {
       console.debug('Initializing SearchService (assume documents already cached)...');
@@ -127,6 +84,7 @@ async function initializeSearchService() {
   } else {
     console.debug('Documents not cached yet.');
 
+    // Fetch index.json if documents are not cached
     $.ajax({
       url: `${baseURL}/index.json`,
       dataType: 'json',
@@ -154,7 +112,10 @@ async function initializeSearchService() {
   }
 }
 
+// Declare search service variable
 let searchService;
+
+// Perform a search using the search service
 const search = async function (query) {
   console.debug(`search -> Received search query: ${query}`);
 
@@ -170,9 +131,10 @@ const search = async function (query) {
   searchParsingIcon.hide();
 };
 
+// Instantiate a debouncer
 const debounce = new Debouncer(300);
 
-// triggers for closing search
+// Set up event handlers for closing search
 searchOverlay.on('click', function (e) {
   if (e.target != this) return; // don't close for children
   closeSearch();
@@ -181,12 +143,13 @@ $(document).keyup((e) => {
   e.key === 'Escape' ? closeSearch() : null;
 });
 
+// Set up event handler for close button
 closeButton.on('click', closeSearch);
 
-// triggers for opening search
+// Set up event handlers for opening search
 searchOpenTrigger.on('click', openSearch);
 
-// triggers for performing search functions
+// Set up event handler for search input
 searchInput.on('input', (e) => {
   console.log(`Executing search on input: ${e.target.value}`);
   debounce.debounce(() => {
@@ -195,13 +158,13 @@ searchInput.on('input', (e) => {
   });
 });
 
-// trigger to render more results
+// Set up event handler for load more results button
 loadMoreResultsButton.on('click', () => {
   if (searchService) searchService.loadMoreResults();
   loadMoreResultsButton.blur(); // onfocus
 });
 
-// Internet Explorer compatability patches
+// Add compatibility patches for Internet Explorer
 if (!String.prototype.includes) {
   String.prototype.includes = function (search, start) {
     if (typeof start !== 'number') {
@@ -219,7 +182,9 @@ if (typeof String.prototype.endsWith !== 'function') {
   };
 }
 
+// Log that search module is loaded
 console.debug('search module is loaded.');
 
 // Initialize the search service when the module loads
 initializeSearchService();
+
