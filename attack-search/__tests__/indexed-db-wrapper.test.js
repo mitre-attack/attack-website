@@ -51,4 +51,10 @@ describe('IndexedDBWrapper', () => {
         const result = await contentDb.get(data.id);
         expect(result).toEqual(data);
     });
+
+    test('Count documents in IndexedDB', async() => {
+        await contentDb.bulkPut(data);
+        const count = await contentDb.count();
+        expect(count).toEqual(data.length);
+    });
 });
