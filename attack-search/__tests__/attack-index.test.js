@@ -6,8 +6,6 @@ import 'fake-indexeddb/auto';
 console.log = jest.fn();
 
 describe('AttackIndex', () => {
-    const cacheKey = 'test-cache-key';
-    const contentTableName = 'test_content_table_name';
     const dbName = 'TestDatabase';
 
     let attackIndex;
@@ -61,7 +59,6 @@ describe('AttackIndex', () => {
 
         const results = await attackIndex.search('Test', ['title'], 5, 0);
 
-        console.debug(JSON.stringify(results));
         const expectedResult = [{"field":"title","result":[1]}]
 
         expect(results).toEqual(expectedResult);
@@ -73,7 +70,6 @@ describe('AttackIndex', () => {
         // Search the title index for "The"
         const results = await attackIndex.search('The', ['title']);
 
-        console.debug(JSON.stringify(results));
         // Index 2 through 6 (inclusive) should have "The" in the title
         const expectedResult = [{"field":"title","result":[2,3,4,5,6]}]
 
@@ -129,7 +125,6 @@ describe('AttackIndex', () => {
 
         const results = await attackIndex.search('of', ['title','content'], 10, 0);
 
-        console.debug('results: ', results);
         /**
          * results:  [
          *       {
