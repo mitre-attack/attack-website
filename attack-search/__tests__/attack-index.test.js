@@ -1,5 +1,5 @@
 const AttackIndex = require('../src/attack-index');
-const IndexedDBWrapper = require("../src/indexed-db-wrapper");
+const { IndexedDBWrapper } = require("../src/indexed-db-wrapper");
 import 'fake-indexeddb/auto';
 
 // Mock the console.log function to prevent logs during testing
@@ -11,13 +11,23 @@ describe('AttackIndex', () => {
     const dbName = 'TestDatabase';
 
     let attackIndex;
+    let testDb;
     let contentDb;
     let data;
 
-    beforeAll(() => {
+    beforeAll(async () => {
         data = require('./mock-index.json');
-        contentDb = new IndexedDBWrapper(dbName, contentTableName, cacheKey, '&id, title, path, content');
-        contentDb.bulkPut(data);
+
+        // define schemas for the content_table (objects loaded from index.json)
+        // and the search_index_table (FlexSearch instance)
+        const schemas = {
+            test_content_table: '&id, title, path, content',
+            test_search_index_table: '++id, title, content'
+        };
+
+        testDb = new IndexedDBWrapper(dbName, schemas);
+        contentDb = testDb.getTableWrapper('test_content_table');
+        await contentDb.bulkPut(data);
     })
 
     beforeEach(() => {
@@ -29,10 +39,10 @@ describe('AttackIndex', () => {
     });
 
     afterAll(async () => {
-        await contentDb.indexeddb.delete();
+        await testDb.indexeddb.delete();
     });
 
-    it('should access data from mock-index.json', () => {
+    it('Access data from mock-index.json', () => {
         expect(Array.isArray(data)).toBe(true);
         expect(data.length).toBe(10);
         expect(data[0].id).toBe(1);
@@ -40,11 +50,11 @@ describe('AttackIndex', () => {
         expect(data[0].content).toContain('Machine learning is a subfield');
     });
 
-    test('constructor initializes instance with correct properties', () => {
+    test('Initialize AttackIndex instance', () => {
         expect(attackIndex.index).toBeDefined();
     });
 
-    test('can add one document to FlexSearch', async () => {
+    test('Add one document to FlexSearch', async () => {
         const data = { id: 1, title: 'Test title', content: 'Test content' };
 
         await attackIndex.add(data);
@@ -57,7 +67,7 @@ describe('AttackIndex', () => {
         expect(results).toEqual(expectedResult);
     });
 
-    test('can bulk add documents to FlexSearch', async () => {
+    test('Bulk add documents to FlexSearch', async () => {
         attackIndex.addBulk(data);
 
         // Search the title index for "The"
@@ -70,7 +80,7 @@ describe('AttackIndex', () => {
         expect(results).toEqual(expectedResult);
     });
 
-    test('can paginate FlexSearch responses', async () => {
+    test('Paginate FlexSearch responses', async () => {
         attackIndex.addBulk(data);
 
         /**
@@ -113,7 +123,7 @@ describe('AttackIndex', () => {
         expect(results).toEqual(expectedResult);
     });
 
-    test('can resolve search results', async () => {
+    test('Resolve search results', async () => {
         // Index the data
         attackIndex.addBulk(data);
 
