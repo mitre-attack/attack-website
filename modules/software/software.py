@@ -245,7 +245,7 @@ def get_groups_using_software(software, reference_list):
         }
 
     groups = []
-    seen_attack_ids = set()
+    seen_attack_ids = {}
 
     if groups_using_software:
         # Get name, id of group
@@ -268,7 +268,7 @@ def get_groups_using_software(software, reference_list):
                     row["descr"] = group["relationship"]["description"]
                     reference_list = util.buildhelpers.update_reference_list(reference_list, group["relationship"])
 
-                seen_attack_ids.add(attack_id)
+                seen_attack_ids[attack_id] = True
                 groups.append(row)
 
     if groups_attributed_to_campaigns["campaigns"].get(software.get("id")):
@@ -304,7 +304,7 @@ def get_groups_using_software(software, reference_list):
                         if descr:
                             row["descr"] = descr
 
-                        seen_attack_ids.add(attack_id)
+                        seen_attack_ids[attack_id] = True
                         groups.append(row)
 
     return groups
