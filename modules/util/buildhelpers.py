@@ -133,9 +133,12 @@ def get_reference_set(reflist):
     """This function retrieves the unique set of references in the given list of descriptions and 
        returns them in string format to be displayed as citations."""
     p = re.compile("\(Citation: (.*?)\)")
-    citations = set()
+    citations = {}
     for c in reflist:
-        citations.update(p.findall(c))
+        citations_in_ref = p.findall(c)
+        for citation in citations_in_ref:
+            if citation not in citations:
+                citations[citation] = True
     refs = [f"(Citation: {c})" for c in citations]
     return ''.join(refs)
 

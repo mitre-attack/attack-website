@@ -115,6 +115,31 @@ function filterTables(switchID, switchID2) {
             }
         }
     }
+
+    // Determine if any of the associated techniques are visible
+    var techniqueObjects = $('.technique');
+    var techniquesVisible = false;
+    for (let techniqueObject of techniqueObjects) {
+        var display = techniqueObject.style.display;
+        if (display.length === 0) {
+            techniquesVisible = true;
+        }
+    }
+
+    // Only show the message if all the associated techniques are hidden
+    var messageObjects = $('.no-techniques-in-data-source-message');
+    if (messageObjects.length > 0) {
+        for (i in messageObjects) {
+            if (messageObjects[i].style) {
+                if (techniquesVisible) {
+                    messageObjects[i].style.display = "none";
+                } else {
+                    messageObjects[i].style.display = "";
+                }
+            }
+        }
+    }
+
     // Update session storage
     sessionStorage.setItem('filter', includedDomains);
 }
