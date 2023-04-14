@@ -426,7 +426,17 @@ def get_contributors(ms):
     for domain in site_config.domains:
         if domain["deprecated"]:
             continue
-        obj_types = ["attack-pattern", "malware", "tool", "intrusion-set"]
+        obj_types = [
+            "attack-pattern",
+            "campaign",
+            "course-of-action",
+            "intrusion-set",
+            "malware",
+            "tool",
+            "x-mitre-data-component",
+            "x-mitre-data-source",
+            "x-mitre-tactic",
+        ]
         src = ms[domain["name"]]
         obj_list = []
         for curr_type in obj_types:
