@@ -37,9 +37,9 @@ const {
 // });
 
 // Check browser types
-const isChromium = window.chrome;
-const isEdgeChromium = isChromium && navigator.userAgent.indexOf('Edg') != -1;
-const isGoogleChrome = !!(isChromium && !isEdgeChromium);
+// const isChromium = window.chrome;
+// const isEdgeChromium = isChromium && navigator.userAgent.indexOf('Edg') != -1;
+// const isGoogleChrome = !!(isChromium && !isEdgeChromium);
 
 // Open search overlay
 const openSearch = function () {
@@ -68,47 +68,58 @@ async function initializeSearchService() {
   console.debug(`Retrieved the saved_uuid from localStorage: ${saved_uuid}`);
 
   // Check if the browser is not Google Chrome and the documents are already cached
-  if (!isGoogleChrome && 'indexedDB' in window && saved_uuid && saved_uuid === build_uuid) {
-    try {
-      console.debug('Initializing SearchService (assume documents already cached)...');
-      searchService = new SearchService('search-results', saved_uuid);
-      await searchService.initializeAsync(null);
-      console.debug('SearchService is initialized.');
-    } catch (error) {
-      console.error('Failed to initialize SearchService:', error);
-      searchServiceIsLoaded = false;
-    } finally {
-      searchParsingIcon.hide();
-      searchServiceIsLoaded = true;
+  if ('indexedDB' in window) {
+    if (saved_uuid && saved_uuid === build_uuid) {
+      // Restore search service from IndexedDB
+      try {
+        console.debug('Initializing SearchService (assume documents already cached)...');
+        searchService = new SearchService('search-results', saved_uuid);
+        await searchService.initializeAsync(null);
+        console.debug('SearchService is initialized.');
+      } catch (error) {
+        console.error('Failed to initialize SearchService:', error);
+        searchServiceIsLoaded = false;
+      } finally {
+        searchParsingIcon.hide();
+        searchServiceIsLoaded = true;
+      }
     }
-  } else {
-    console.debug('Documents not cached yet.');
+    else {
+      // Initialize search service from scratch
+      console.debug('Documents not cached yet.');
 
-    // Fetch index.json if documents are not cached
-    $.ajax({
-      url: `${baseURL}/index.json`,
-      dataType: 'json',
-      async success(data) {
-        try {
-          console.debug('Retrieved and processed index.json.');
-          console.debug('Initializing SearchService...');
+      // Fetch index.json if documents are not cached
+      $.ajax({
+        url: `${baseURL}/index.json`,
+        dataType: 'json',
+        async success(data) {
+          try {
+            console.debug('Retrieved and processed index.json.');
+            console.debug('Initializing SearchService...');
 
-          searchService = new SearchService('search-results', build_uuid);
-          await searchService.initializeAsync(data);
+            searchService = new SearchService('search-results', build_uuid);
+            await searchService.initializeAsync(data);
 
-          localStorage.setItem("saved_uuid", build_uuid);
+            localStorage.setItem("saved_uuid", build_uuid);
 
-          console.debug('SearchService is initialized.');
-          searchParsingIcon.hide();
-        } catch (error) {
-          console.error('Failed to initialize SearchService:', error);
-          searchServiceIsLoaded = false;
-        } finally {
-          searchParsingIcon.hide();
-          searchServiceIsLoaded = true;
-        }
-      },
-    });
+            console.debug('SearchService is initialized.');
+            searchParsingIcon.hide();
+          } catch (error) {
+            console.error('Failed to initialize SearchService:', error);
+            searchServiceIsLoaded = false;
+          } finally {
+            searchParsingIcon.hide();
+            searchServiceIsLoaded = true;
+          }
+        },
+      });
+    }
+  }
+  else {
+    // Disable the search button and display an error icon with a hover effect that displays a message/explanation
+    console.error('Search is only available in browsers that support IndexedDB. Please try using Firefox, Chrome, Safari, or another browser that supports IndexedDB.');
+    searchInput.prop('disabled', true);
+    searchOpenTrigger.prop('disabled', true);
   }
 }
 
