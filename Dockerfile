@@ -25,7 +25,7 @@ ENV LC_ALL en_US.UTF-8
 # Install dependencies
 RUN apt-get update --fix-missing && \
     apt-get upgrade -y && \
-    apt-get install -y -qq --no-install-recommends locales sudo git pelican apt-transport-https ca-certificates && \
+    apt-get install -y -qq --no-install-recommends locales sudo git apt-transport-https ca-certificates && \
     echo "en_US.UTF-8 UTF-8" > /etc/locale.gen && \
     locale-gen && \
     update-ca-certificates
@@ -43,7 +43,7 @@ RUN python3 -m pip install --no-cache-dir wheel && \
 RUN python3 update-attack.py --no-test-exitstatus
 
 # Copy the search service webpack bundle from the node-build stage
-COPY --from=node-build /app/attack-search/dist output/theme/scripts
+COPY --from=node-build /app/attack-search/dist/search_bundle.js output/theme/scripts/search_bundle.js
 
 # Label metadata
 LABEL name="attack-website" \
