@@ -4,7 +4,10 @@ const $ = require('jquery');
 module.exports.searchOverlay = $('#search-overlay');
 
 // button in header to open search
-module.exports.searchOpenTrigger = $('#search-button');
+module.exports.searchButton = $('#search-button');
+
+// icon shown in search button
+module.exports.searchIcon = $('#search-icon');
 
 // button to close search
 module.exports.closeButton = $('#close-search-icon');

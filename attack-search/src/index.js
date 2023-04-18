@@ -20,7 +20,8 @@ const {
   searchOverlay,
   searchInput,
   searchParsingIcon,
-  searchOpenTrigger,
+  searchButton,
+  searchIcon,
   closeButton,
   loadMoreResultsButton,
 } = require('./components.js');
@@ -119,7 +120,10 @@ async function initializeSearchService() {
     // Disable the search button and display an error icon with a hover effect that displays a message/explanation
     console.error('Search is only available in browsers that support IndexedDB. Please try using Firefox, Chrome, Safari, or another browser that supports IndexedDB.');
     searchInput.prop('disabled', true);
-    searchOpenTrigger.prop('disabled', true);
+    searchButton.prop('disabled', true);
+    searchIcon.removeClass('search-icon');
+    searchIcon.addClass('error-icon');
+    searchButton.prop('title', 'To use the search feature, please make sure your browser supports IndexedDB. If not, consider upgrading your browser or switching to a supported browser such as Firefox, Chrome, or Safari.')
   }
 }
 
@@ -158,7 +162,7 @@ $(document).keyup((e) => {
 closeButton.on('click', closeSearch);
 
 // Set up event handlers for opening search
-searchOpenTrigger.on('click', openSearch);
+searchButton.on('click', openSearch);
 
 // Set up event handler for search input
 searchInput.on('input', (e) => {
