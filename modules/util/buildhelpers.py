@@ -781,30 +781,6 @@ def get_navigator_technique(attack_id, description, score, color, showSub=False)
     return navigator_technique
 
 
-def print_test_output(status, test, message):
-    """Standard printing for all tests."""
-    if status.startswith("-"):
-        sys.stdout.write(
-            f"\r{(status*(util_config.status_space-1)): <{util_config.status_space}} "
-            f"{(test*(util_config.other_column_space-1)): <{util_config.other_column_space}} "
-            f"{(message*(util_config.other_column_space-1)): <{util_config.other_column_space}}\n"
-        )
-    elif status.startswith("RUNNING"):
-        sys.stdout.write(
-            f"\r{status: <{util_config.status_space}} "
-            f"{test: <{util_config.other_column_space}} "
-            f"{message: <{util_config.other_column_space}}"
-        )
-    else:
-        sys.stdout.write(
-            f"\r{status: <{util_config.status_space}} "
-            f"{test: <{util_config.other_column_space}} "
-            f"{message: <{util_config.other_column_space}}\n"
-        )
-
-    sys.stdout.flush()
-
-
 def get_platform_path(platform):
     """Given a platform plath, remove spaces and return lower case string."""
     platform_split = platform.split(" ")
