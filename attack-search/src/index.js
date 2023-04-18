@@ -26,22 +26,6 @@ const {
   loadMoreResultsButton,
 } = require('./components.js');
 
-/**
- * FlexSearch.registerMatcher({REGEX: REPLACE})
- * Enables FlexSearch to globally replace RegEx matches.
- * Here, we use it to augment the "&" in ATT&CK, so searches for "attack" will still match "ATT&CK" and vice versa.
- */
-// TODO: Figure out how to do this is v0.7.31
-// flexsearch.default.registerMatcher({
-//   'ATT&CK': 'ATTACK',
-//   ATTACK: 'ATT&CK',
-// });
-
-// Check browser types
-// const isChromium = window.chrome;
-// const isEdgeChromium = isChromium && navigator.userAgent.indexOf('Edg') != -1;
-// const isGoogleChrome = !!(isChromium && !isEdgeChromium);
-
 // Open search overlay
 const openSearch = function () {
   searchBody.hide();
@@ -68,14 +52,18 @@ async function initializeSearchService() {
   const saved_uuid = localStorage.getItem('saved_uuid');
   console.debug(`Retrieved the saved_uuid from localStorage: ${saved_uuid}`);
 
-  // Check if the browser is not Google Chrome and the documents are already cached
+  // Check if the browser supports IndexedDB. Search service can only work in environments that support IndexedDB.
   if ('indexedDB' in window) {
+    // Verify if the buildUUID is already cached in LocalStorage. This check is performed to determine if the search
+    // service has been initialized. Each website build instance possesses a unique buildUUID, preventing different
+    // website builds from sharing the same search index.
     if (saved_uuid && saved_uuid === build_uuid) {
       // Restore search service from IndexedDB
       try {
         console.debug('Initializing SearchService (assume documents already cached)...');
         searchService = new SearchService('search-results', saved_uuid);
-        await searchService.initializeAsync(null);
+        await searchService.initializeAsync(null); // Passing null will instruct the search service to attempt
+                                                             // restoring itself from the IndexedDB
         console.debug('SearchService is initialized.');
       } catch (error) {
         console.error('Failed to initialize SearchService:', error);
@@ -99,7 +87,8 @@ async function initializeSearchService() {
             console.debug('Initializing SearchService...');
 
             searchService = new SearchService('search-results', build_uuid);
-            await searchService.initializeAsync(data);
+            await searchService.initializeAsync(data); // Passing data will instruct the search service to index the
+                                                       // data and cache itself in the IndexedDB for later restoration.
 
             localStorage.setItem("saved_uuid", build_uuid);
 
