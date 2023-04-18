@@ -25,11 +25,11 @@ def generate_campaigns():
     if not os.path.isdir(campaigns_config.campaign_markdown_path):
         os.mkdir(campaigns_config.campaign_markdown_path)
 
-    # TODO commented out to resolve infinite redirect loop when run locally. Needs further testing before code removal.
+    # TODO resolve infinite redirect loop when run locally. Needs further testing before code removal.
     # Generate redirections
-    # util.buildhelpers.generate_redirections(
-    #     redirections_filename=campaigns_config.campaigns_redirection_location, redirect_md=site_config.redirect_md
-    # )
+    util.buildhelpers.generate_redirections(
+        redirections_filename=campaigns_config.campaigns_redirection_location, redirect_md=site_config.redirect_md
+    )
 
     # Generates the markdown files to be used for page generation
     campaigns_generated = generate_markdown_files()
