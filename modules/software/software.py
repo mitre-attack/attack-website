@@ -1,4 +1,4 @@
-import collections
+from collections.abc import Iterable
 import json
 import os
 
@@ -22,10 +22,10 @@ def generate_software():
     if not os.path.isdir(software_config.software_markdown_path):
         os.mkdir(software_config.software_markdown_path)
 
+    # TODO resolve infinite redirect loop when run locally. Needs further testing before code removal.
     # Generate redirections
     util.buildhelpers.generate_redirections(
-        redirections_filename=software_config.software_redirection_location,
-        redirect_md=site_config.redirect_md
+        redirections_filename=software_config.software_redirection_location, redirect_md=site_config.redirect_md
     )
 
     # Generates the markdown files to be used for page generation and verifies if a software was generated
@@ -176,15 +176,15 @@ def generate_software_md(software, side_menu_data, side_menu_mobile_view_data, n
         data["groups"] = get_groups_using_software(software, reference_list)
 
         # Get aliases list
-        if isinstance(software.get("x_mitre_aliases"), collections.abc.Iterable):
+        if isinstance(software.get("x_mitre_aliases"), Iterable):
             data["aliases_list"] = software["x_mitre_aliases"][1:]
 
         # Get contributors
-        if isinstance(software.get("x_mitre_contributors"), collections.abc.Iterable):
+        if isinstance(software.get("x_mitre_contributors"), Iterable):
             data["contributors_list"] = software["x_mitre_contributors"]
 
         # Get platform list
-        if isinstance(software.get("x_mitre_platforms"), collections.abc.Iterable):
+        if isinstance(software.get("x_mitre_platforms"), Iterable):
             data["platform_list"] = software["x_mitre_platforms"]
 
         data["citations"] = reference_list
@@ -221,7 +221,7 @@ def get_software_table_data(software_list):
             if attack_id:
                 row["id"] = attack_id
 
-            if isinstance(software.get("x_mitre_aliases"), collections.abc.Iterable):
+            if isinstance(software.get("x_mitre_aliases"), Iterable):
                 row["aliases_list"] = software["x_mitre_aliases"][1:]
 
             software_table_data.append(row)
@@ -235,13 +235,13 @@ def get_groups_using_software(software, reference_list):
         groups_using_software = util.relationshipgetters.get_groups_using_malware().get(software["id"])
         groups_attributed_to_campaigns = {
             "campaigns": util.relationshipgetters.get_campaigns_using_malware(),
-            "groups": util.relationshipgetters.get_groups_attributed_to_campaigns()
+            "groups": util.relationshipgetters.get_groups_attributed_to_campaigns(),
         }
     else:
         groups_using_software = util.relationshipgetters.get_groups_using_tool().get(software["id"])
         groups_attributed_to_campaigns = {
             "campaigns": util.relationshipgetters.get_campaigns_using_tool(),
-            "groups": util.relationshipgetters.get_groups_attributed_to_campaigns()
+            "groups": util.relationshipgetters.get_groups_attributed_to_campaigns(),
         }
 
     groups = []
@@ -255,13 +255,12 @@ def get_groups_using_software(software, reference_list):
             if attack_id:
                 if attack_id in seen_attack_ids:
                     software_attack_id = util.buildhelpers.get_attack_id(software)
-                    logger.debug(f"Skipping extra use of [{attack_id}] {group['object']['name']} for {software_attack_id}")
+                    logger.debug(
+                        f"Skipping extra use of [{attack_id}] {group['object']['name']} for {software_attack_id}"
+                    )
                     continue
 
-                row = {
-                    "id": attack_id,
-                    "name": group["object"]["name"]
-                }
+                row = {"id": attack_id, "name": group["object"]["name"]}
 
                 if group["relationship"].get("description"):
                     # Get filtered description
@@ -290,16 +289,13 @@ def get_groups_using_software(software, reference_list):
                         # group already in table, concatenate descriptions
                         r = next(row for row in groups if row["id"] == attack_id)
 
-                        if r["descr"] and descr: # concatenate descriptions
+                        if r["descr"] and descr:  # concatenate descriptions
                             # get unique set of references
                             r["descr"] = util.buildhelpers.get_reference_set([r["descr"], descr])
                         elif descr:
                             r["descr"] = descr
-                    else: # new group seen, add row
-                        row = {
-                            "id": attack_id,
-                            "name": group["object"]["name"]
-                        }
+                    else:  # new group seen, add row
+                        row = {"id": attack_id, "name": group["object"]["name"]}
 
                         if descr:
                             row["descr"] = descr
@@ -351,16 +347,13 @@ def get_campaign_table_data(software, reference_list):
     else:
         campaigns_using_software = util.relationshipgetters.get_campaigns_using_tool().get(software["id"])
 
-    campaign_list = {} # campaign stix id => {attack id, name, description}
+    campaign_list = {}  # campaign stix id => {attack id, name, description}
     if campaigns_using_software:
         for campaign in campaigns_using_software:
             campaign_id = campaign["object"]["id"]
             if campaign_id not in campaign_list:
                 attack_id = util.buildhelpers.get_attack_id(campaign["object"])
-                campaign_list[campaign_id] = {
-                    "id": attack_id,
-                    "name": campaign["object"]["name"]
-                }
+                campaign_list[campaign_id] = {"id": attack_id, "name": campaign["object"]["name"]}
 
                 if campaign["relationship"].get("description"):
                     campaign_list[campaign_id]["desc"] = campaign["relationship"]["description"]

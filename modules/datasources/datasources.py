@@ -1,4 +1,4 @@
-import collections
+from collections.abc import Iterable
 import json
 import os
 
@@ -108,7 +108,7 @@ def generate_datasource_md(datasource, side_menu_data, side_menu_mobile_view_dat
         if datasource.get("x_mitre_version"):
             data["version"] = datasource["x_mitre_version"]
 
-        if isinstance(datasource.get("x_mitre_contributors"), collections.abc.Iterable):
+        if isinstance(datasource.get("x_mitre_contributors"), Iterable):
             data["contributors_list"] = datasource["x_mitre_contributors"]
 
         if datasource.get("description"):
@@ -189,7 +189,7 @@ def get_datasources_side_nav_data(datasources):
                     if not datacomponent.get("x_mitre_deprecated") and not datacomponent.get("revoked"):
                         # get data component detections
                         techniques_of_datacomp = techniques_detected_by_datacomponent.get(datacomponent["id"])
-                        if techniques_of_datacomp: 
+                        if techniques_of_datacomp:
                             domains_of_datacomponent = get_domains_of_datacomponent(datacomponent)
                             # Add missing domains to data source
                             for domain in domains_of_datacomponent:
@@ -260,7 +260,7 @@ def get_datasources_table_data(datasource_list):
 
 def get_datacomponents_data(datasource, reference_list):
     """Given a data source and its reference list, get a list of data components of the data source.
-    
+
     Add techniques detected by data components. Check the reference list for citations, if not found in list, add it.
     """
     datacomponents_data = []
@@ -277,13 +277,11 @@ def get_datacomponents_data(datasource, reference_list):
                 techniques_of_datacomp = techniques_detected_by_datacomponent.get(datacomponent["id"])
 
                 # skip if no detections
-                if not techniques_of_datacomp: continue
+                if not techniques_of_datacomp:
+                    continue
 
                 reference = False
-                datacomponent_data = {
-                    "name": datacomponent["name"],
-                    "descr": datacomponent["description"]
-                }
+                datacomponent_data = {"name": datacomponent["name"], "descr": datacomponent["description"]}
 
                 # update reference list
                 reference_list = util.buildhelpers.update_reference_list(reference_list, datacomponent)
@@ -295,7 +293,9 @@ def get_datacomponents_data(datasource, reference_list):
                 for technique_rel in techniques_of_datacomp:
                     # Do not add if technique is deprecated
                     if not technique_rel["object"].get("x_mitre_deprecated"):
-                        technique_list = util.buildhelpers.technique_used_helper(technique_list, technique_rel, reference_list)
+                        technique_list = util.buildhelpers.technique_used_helper(
+                            technique_list, technique_rel, reference_list
+                        )
 
                         # Get domain of technique
                         attack_id = util.buildhelpers.get_attack_id(technique_rel["object"])

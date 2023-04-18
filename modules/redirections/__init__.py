@@ -14,4 +14,4 @@ def get_redirections():
 
 
 def run_module():
-    return (redirections.generate_redirections(), redirections_config.module_name)
+    return redirections.generate_redirections(), redirections_config.module_name

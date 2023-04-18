@@ -22,6 +22,7 @@ def generate_tactics():
     if not os.path.isdir(tactics_config.tactics_markdown_path):
         os.mkdir(tactics_config.tactics_markdown_path)
 
+    # TODO resolve infinite redirect loop when run locally. Needs further testing before code removal.
     # Generate redirections
     util.buildhelpers.generate_redirections(
         redirections_filename=tactics_config.tactics_redirection_location,
