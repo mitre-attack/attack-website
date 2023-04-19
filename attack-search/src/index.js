@@ -78,31 +78,72 @@ async function initializeSearchService() {
       console.debug('Documents not cached yet.');
 
       // Fetch index.json if documents are not cached
+      // $.ajax({
+      //   url: `${baseURL}/index.json`,
+      //   dataType: 'json',
+      //   async success(data) {
+      //     try {
+      //       console.debug('Retrieved and processed index.json.');
+      //       console.debug('Initializing SearchService...');
+      //
+      //       searchService = new SearchService('search-results', build_uuid);
+      //       await searchService.initializeAsync(data); // Passing data will instruct the search service to index the
+      //                                                  // data and cache itself in the IndexedDB for later restoration.
+      //
+      //       localStorage.setItem("saved_uuid", build_uuid);
+      //
+      //       console.debug('SearchService is initialized.');
+      //       searchParsingIcon.hide();
+      //     } catch (error) {
+      //       console.error('Failed to initialize SearchService:', error);
+      //       searchServiceIsLoaded = false;
+      //     } finally {
+      //       searchParsingIcon.hide();
+      //       searchServiceIsLoaded = true;
+      //     }
+      //   },
+      // });
+
+      const baseUrl = `${baseURL}/search/`;
+      const jsonFiles = [];
+
+      // Download all JSON files from directory
       $.ajax({
-        url: `${baseURL}/index.json`,
-        dataType: 'json',
-        async success(data) {
-          try {
-            console.debug('Retrieved and processed index.json.');
-            console.debug('Initializing SearchService...');
+        url: baseUrl,
+        success(data) {
+          $(data).find('a:contains(".json")').each(function() {
+            jsonFiles.push(baseUrl + $(this).attr('href'));
+          });
 
-            searchService = new SearchService('search-results', build_uuid);
-            await searchService.initializeAsync(data); // Passing data will instruct the search service to index the
-                                                       // data and cache itself in the IndexedDB for later restoration.
+          // Use Promise.all() to download all files concurrently
+          Promise.all(jsonFiles.map(url => $.getJSON(url)))
+              .then(data => {
+                // Concatenate all file data into a single array
+                const combinedData = data.reduce((acc, curr) => acc.concat(curr), []);
 
-            localStorage.setItem("saved_uuid", build_uuid);
-
-            console.debug('SearchService is initialized.');
-            searchParsingIcon.hide();
-          } catch (error) {
-            console.error('Failed to initialize SearchService:', error);
-            searchServiceIsLoaded = false;
-          } finally {
-            searchParsingIcon.hide();
-            searchServiceIsLoaded = true;
-          }
+                // Initialize search service with combined data
+                searchService = new SearchService('search-results', build_uuid);
+                return searchService.initializeAsync(combinedData);
+              })
+              .then(() => {
+                localStorage.setItem('saved_uuid', build_uuid);
+                console.debug('SearchService is initialized.');
+                searchParsingIcon.hide();
+                searchServiceIsLoaded = true;
+              })
+              .catch(error => {
+                console.error('Failed to initialize SearchService:', error);
+                searchParsingIcon.hide();
+                searchServiceIsLoaded = false;
+              });
         },
+        error(error) {
+          console.error('Failed to retrieve directory contents:', error);
+          searchParsingIcon.hide();
+          searchServiceIsLoaded = false;
+        }
       });
+
     }
   }
   else {
