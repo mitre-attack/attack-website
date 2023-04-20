@@ -77,33 +77,6 @@ async function initializeSearchService() {
       // Initialize search service from scratch
       console.debug('Documents not cached yet.');
 
-      // Fetch index.json if documents are not cached
-      // $.ajax({
-      //   url: `${baseURL}/index.json`,
-      //   dataType: 'json',
-      //   async success(data) {
-      //     try {
-      //       console.debug('Retrieved and processed index.json.');
-      //       console.debug('Initializing SearchService...');
-      //
-      //       searchService = new SearchService('search-results', build_uuid);
-      //       await searchService.initializeAsync(data); // Passing data will instruct the search service to index the
-      //                                                  // data and cache itself in the IndexedDB for later restoration.
-      //
-      //       localStorage.setItem("saved_uuid", build_uuid);
-      //
-      //       console.debug('SearchService is initialized.');
-      //       searchParsingIcon.hide();
-      //     } catch (error) {
-      //       console.error('Failed to initialize SearchService:', error);
-      //       searchServiceIsLoaded = false;
-      //     } finally {
-      //       searchParsingIcon.hide();
-      //       searchServiceIsLoaded = true;
-      //     }
-      //   },
-      // });
-
       const baseUrl = `${baseURL}/search/`;
       const jsonFiles = [];
 
@@ -143,7 +116,6 @@ async function initializeSearchService() {
           searchServiceIsLoaded = false;
         }
       });
-
     }
   }
   else {
