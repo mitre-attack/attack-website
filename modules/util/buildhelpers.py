@@ -661,126 +661,133 @@ def replace_html_chars(to_be_replaced):
 
 
 colorMap = {
-    0: "#ffffff",
-    1: "#66b1ff",
-    2: "#ff6666", # used for inherited relationships
-    3: "#ff66f4"  # used for inherited relationships
+    0: "#ffffff", # techniques not used by the object
+    1: "#66b1ff", # techniques used by the object
+    2: "#ff6666", # techniques used by inherited campaign relationships
+    3: "#ff66f4"  # techniques used by the object AND used by inherited campaign relationships (1 + 2)
 }
 def get_navigator_layers(name, attack_id, obj_type, version, techniques_used, inheritance=False):
-    """Given a list of techniques used, return the navigator json objects for enterprise and mobile."""
-    # Remove minor version from ATT&CK version if any
-    major_attack_version = site_config.attack_version.split(".")[0]
+    """Generate the Enterprise and Mobile Navigator JSON layers for the given object."""
 
-    layer_name = f"{name} ({attack_id})"
+    # Generate Enterprise base layer
+    enterprise_layer = build_base_layer("enterprise-attack", name, obj_type, attack_id, version, inheritance)
 
-    enterprise_layer_description = f"Enterprise techniques used by {name}, ATT&CK {obj_type} {attack_id}"
-    mobile_layer_description = f"Mobile techniques used by {name}, ATT&CK {obj_type} {attack_id}"
+    # Generate Mobile base layer
+    mobile_layer = build_base_layer("mobile-attack", name, obj_type, attack_id, version, inheritance)
 
-    if version:  # add version number if it exists
-        enterprise_layer_description += f" v{version}"
-        mobile_layer_description += f" v{version}"
-
-    # Enterprise navigator layer
-    enterprise_layer = {}
-    enterprise_layer["description"] = enterprise_layer_description
-    enterprise_layer["name"] = layer_name
-    enterprise_layer["domain"] = "enterprise-attack"
-    enterprise_layer["versions"] = {"layer": "4.3", "attack": major_attack_version, "navigator": "4.5"}
-    enterprise_layer["techniques"] = []
-    enterprise_layer["gradient"] = {  # white for nonused, blue for used
-        "colors": [colorMap[0], colorMap[1]],
-        "minValue": 0,
-        "maxValue": 1,
-    }
-    enterprise_layer["legendItems"] = [{"label": f"used by {name}", "color": colorMap[1]}]
-    if inheritance:
-        # add campaign inheritance to legend
-        enterprise_layer["legendItems"].extend([
-            {"label": f"used by a campaign attributed to {name}", "color": colorMap[2]},
-            {"label": f"used by {name} and used by a campaign attributed to {name}", "color": colorMap[3]}
-        ])
-
-    # Mobile navigator layer
-    mobile_layer = {}
-    mobile_layer["description"] = mobile_layer_description
-    mobile_layer["name"] = layer_name
-    mobile_layer["domain"] = "mobile-attack"
-    mobile_layer["versions"] = {"layer": "4.2", "attack": major_attack_version, "navigator": "4.3"}
-    mobile_layer["techniques"] = []
-    mobile_layer["gradient"] = {  # white for nonused, blue for used
-        "colors": [colorMap[0], colorMap[1]],
-        "minValue": 0,
-        "maxValue": 1,
-    }
-    mobile_layer["legendItems"] = [{"label": f"used by {name}", "color": colorMap[1]}]
-    if inheritance:
-        # add campaign inheritance to legend
-        mobile_layer["legendItems"].extend([
-            {"label": f"used by a campaign attributed to {name}", "color": colorMap[2]},
-            {"label": f"used by {name} and used by a campaign attributed to {name}", "color": colorMap[3]}
-        ])
-
-    # Append techniques to enterprise and mobile layers
+    # Add technique data to layer
     for technique in techniques_used:
-        navigator_technique = {}
+        # Generate the navigator technique layer object
+        description = technique["descr"] if technique.get("descr") else None
+        color = technique["color"] if technique.get("color") else 0
+        has_subtechniques = True if technique.get("subtechniques") else False
+        score = 1 if technique.get("descr") else 0
+        technique_layer_object = get_technique_layer_object(technique["id"], description, score, color, has_subtechniques)
 
-        # Add parent technique
-        if technique.get("descr"):
+        # Skip this technique if no layer object
+        if not technique_layer_object: continue
+
+        # Add technique layer object to domain layer
+        if "enterprise" in technique["domain"]:
+            enterprise_layer["techniques"].append(technique_layer_object)
+        if "mobile" in technique["domain"]:
+            mobile_layer["techniques"].append(technique_layer_object)
+
+        # Add subtechnique data to layer
+        if has_subtechniques:
             score = 1
-            if technique.get("subtechniques"):
-                navigator_technique = get_navigator_technique(
-                    technique["id"], technique["descr"] if "descr" in technique else "", score, technique["color"] if "color" in technique else 0, True
-                )
-            else:
-                navigator_technique = get_navigator_technique(
-                    technique["id"], technique["descr"] if "descr" in technique else "", score, technique["color"] if "color" in technique else 0, False
-                )
-        else:
-            if technique.get("subtechniques"):
-                navigator_technique = get_navigator_technique(technique["id"], None, None, 0, True)
-
-        if navigator_technique:
-            if technique["domain"].startswith("enterprise"):
-                enterprise_layer["techniques"].append(navigator_technique)
-            elif technique["domain"].startswith("mobile"):
-                mobile_layer["techniques"].append(navigator_technique)
-
-        # Add subtechniques
-        if technique.get("subtechniques"):
             for subtechnique in technique["subtechniques"]:
-                score = 1
-                navigator_technique = get_navigator_technique(
-                    technique["id"] + "." + subtechnique["id"],
-                    subtechnique["descr"] if "descr" in subtechnique else "",
-                    score,
-                    subtechnique["color"] if "color" in subtechnique else 0,
-                    True,
-                )
+                # Generate the navigator (sub)technique layer object
+                sub_id = f"{technique['id']}.{subtechnique['id']}"
+                sub_descr = subtechnique["descr"] if subtechnique.get("descr") else None
+                sub_color = subtechnique["color"] if subtechnique.get("color") else 0
+                subtechnique_layer_object = get_technique_layer_object(sub_id, sub_descr, score, sub_color, True)
 
-                if technique["domain"].startswith("enterprise"):
-                    enterprise_layer["techniques"].append(navigator_technique)
-                elif technique["domain"].startswith("mobile"):
-                    mobile_layer["techniques"].append(navigator_technique)
+                # Add (sub)technique layer object to domain layer
+                if "enterprise" in technique["domain"]:
+                    enterprise_layer["techniques"].append(subtechnique_layer_object)
+                if "mobile" in technique["domain"]:
+                    mobile_layer["techniques"].append(subtechnique_layer_object)
 
+    # Build list of domains with navigator layers
     layers = []
     if enterprise_layer["techniques"]:
         layers.append({"domain": "enterprise", "layer": json.dumps(enterprise_layer)})
     if mobile_layer["techniques"]:
         layers.append({"domain": "mobile", "layer": json.dumps(mobile_layer)})
+
     return layers
 
 
-def get_navigator_technique(attack_id, description, score, color, showSub=False):
-    """Given an attack id, return it as a dict for the navigator layer."""
+domain_name_map = {
+    "enterprise-attack": "Enterprise",
+    "mobile-attack": "Mobile"
+}
+def build_base_layer(domain, object_name, object_type, attack_id, version, inheritance=False):
+    """Build the base Navigator layer for the given object."""
+    layer = {}
+
+    # Layer description
+    layer["description"] = f"{domain_name_map[domain]} techniques used by {object_name}, ATT&CK {object_type} {attack_id}"
+    if version:
+        # Add object version number if it exists
+        layer["description"] += f" (v{version})"
+
+    # Layer name and domain
+    layer["name"] = f"{object_name} ({attack_id})"
+    layer["domain"] = domain
+
+    # Layer versions (layer/attack/navigator)
+    major_attack_version = site_config.attack_version.split(".")[0]
+    layer_version = site_config.layer_version
+    navigator_version = site_config.navigator_version
+    layer["versions"] = {"layer": layer_version, "attack": major_attack_version, "navigator": navigator_version}
+
+    # Layer techniques list
+    layer["techniques"] = []
+
+    # Layer gradient (white for un-used, blue for used)
+    layer["gradient"] = {
+        "colors": [colorMap[0], colorMap[1]],
+        "minValue": 0,
+        "maxValue": 1,
+    }
+
+    # Layer legend
+    layer["legendItems"] = [
+        {"label": f"used by {object_name}", "color": colorMap[1]}
+    ]
+
+    # Add campaign inheritance to legend, if applicable
+    if inheritance:
+        layer["legendItems"].extend([
+            {"label": f"used by a campaign attributed to {object_name}", "color": colorMap[2]},
+            {"label": f"used by {object_name} and used by a campaign attributed to {object_name}", "color": colorMap[3]}
+        ])
+
+    return layer
+
+
+def get_technique_layer_object(attack_id, description, score, color, showSub=False):
+    """Generate the Navigator technique layer object for the given technique."""
     navigator_technique = {}
+
+    # technique ID
+    navigator_technique["techniqueID"] = attack_id
+
+    # technique description
+    if description:
+        navigator_technique["comment"] = bleach.clean(description, tags=[], strip=True)  # remove html tags
+
+    # optional technique score/color
     if score:
         navigator_technique["score"] = score
     if color and color in colorMap.keys():
         navigator_technique["color"] = colorMap[color]
-    navigator_technique["techniqueID"] = attack_id
+    
+    # show subtechniques?
     navigator_technique["showSubtechniques"] = showSub
-    if description:
-        navigator_technique["comment"] = bleach.clean(description, tags=[], strip=True)  # remove html tags
+
     return navigator_technique
 
 
