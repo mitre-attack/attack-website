@@ -667,13 +667,16 @@ colorMap = {
     3: "#ff66f4"  # techniques used by the object AND used by inherited campaign relationships (1 + 2)
 }
 def get_navigator_layers(name, attack_id, obj_type, version, techniques_used, inheritance=False):
-    """Generate the Enterprise and Mobile Navigator JSON layers for the given object."""
+    """Generate the Enterprise, Mobile, and ICS Navigator JSON layers for the given object."""
 
     # Generate Enterprise base layer
     enterprise_layer = build_base_layer("enterprise-attack", name, obj_type, attack_id, version, inheritance)
 
     # Generate Mobile base layer
     mobile_layer = build_base_layer("mobile-attack", name, obj_type, attack_id, version, inheritance)
+
+    # Generate ICS base layer
+    ics_layer = build_base_layer("ics-attack", name, obj_type, attack_id, version, inheritance)
 
     # Add technique data to layer
     for technique in techniques_used:
@@ -692,6 +695,8 @@ def get_navigator_layers(name, attack_id, obj_type, version, techniques_used, in
             enterprise_layer["techniques"].append(technique_layer_object)
         if "mobile" in technique["domain"]:
             mobile_layer["techniques"].append(technique_layer_object)
+        if "ics" in technique["domain"]:
+            ics_layer["techniques"].append(technique_layer_object)
 
         # Add subtechnique data to layer
         if has_subtechniques:
@@ -708,6 +713,8 @@ def get_navigator_layers(name, attack_id, obj_type, version, techniques_used, in
                     enterprise_layer["techniques"].append(subtechnique_layer_object)
                 if "mobile" in technique["domain"]:
                     mobile_layer["techniques"].append(subtechnique_layer_object)
+                if "ics" in technique["domain"]:
+                    ics_layer["techniques"].append(subtechnique_layer_object)
 
     # Build list of domains with navigator layers
     layers = []
@@ -715,13 +722,16 @@ def get_navigator_layers(name, attack_id, obj_type, version, techniques_used, in
         layers.append({"domain": "enterprise", "layer": json.dumps(enterprise_layer)})
     if mobile_layer["techniques"]:
         layers.append({"domain": "mobile", "layer": json.dumps(mobile_layer)})
+    if ics_layer["techniques"]:
+        layers.append({"domain": "ics", "layer": json.dumps(ics_layer)})
 
     return layers
 
 
 domain_name_map = {
     "enterprise-attack": "Enterprise",
-    "mobile-attack": "Mobile"
+    "mobile-attack": "Mobile",
+    "ics-attack": "ICS"
 }
 def build_base_layer(domain, object_name, object_type, attack_id, version, inheritance=False):
     """Build the base Navigator layer for the given object."""
