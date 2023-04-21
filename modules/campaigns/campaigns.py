@@ -250,10 +250,10 @@ def get_group_table_data(campaign, reference_list):
                     # update reference list
                     reference_list = util.buildhelpers.update_reference_list(reference_list, group["relationship"])
 
-
     group_data = [group_list[item] for item in group_list]
     group_data = sorted(group_data, key=lambda k: k["name"].lower())
     return group_data
+
 
 def get_techniques_used_by_campaign_data(campaign, reference_list):
     """Given a campaign and its reference list, get the techniques used by the campaign.

@@ -51,7 +51,7 @@ def get_first_last_seen_dates(obj):
         dates["first_seen"] = format_date_as_month_year(obj["first_seen"])
     if obj.get("last_seen"):
         dates["last_seen"] = format_date_as_month_year(obj["last_seen"])
-    
+
     return dates
 
 
@@ -70,7 +70,7 @@ def format_date_as_month_year(date):
     """Given a date string, format to %B %Y."""
     if isinstance(date, str):
         date = datetime.datetime.strptime(date, "%Y-%m-%dT%H:%M:%SZ")
-    
+
     return ("{} {}").format(date.strftime("%B"), date.strftime("%Y"))
 
 
