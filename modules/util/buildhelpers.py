@@ -664,7 +664,7 @@ colorMap = {
     0: "#ffffff", # techniques not used by the object
     1: "#66b1ff", # techniques used by the object
     2: "#ff6666", # techniques used by inherited campaign relationships
-    3: "#ff66f4"  # techniques used by the object AND used by inherited campaign relationships (1 + 2)
+    3: "#ff66f4"  # techniques used by the object AND used by inherited campaign relationships (1 & 2)
 }
 domain_name_map = {
     "enterprise-attack": "Enterprise",
