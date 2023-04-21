@@ -666,6 +666,11 @@ colorMap = {
     2: "#ff6666", # techniques used by inherited campaign relationships
     3: "#ff66f4"  # techniques used by the object AND used by inherited campaign relationships (1 + 2)
 }
+domain_name_map = {
+    "enterprise-attack": "Enterprise",
+    "mobile-attack": "Mobile",
+    "ics-attack": "ICS"
+}
 def get_navigator_layers(name, attack_id, obj_type, version, techniques_used, inheritance=False):
     """Generate the Enterprise, Mobile, and ICS Navigator JSON layers for the given object."""
 
@@ -719,20 +724,27 @@ def get_navigator_layers(name, attack_id, obj_type, version, techniques_used, in
     # Build list of domains with navigator layers
     layers = []
     if enterprise_layer["techniques"]:
-        layers.append({"domain": "enterprise", "layer": json.dumps(enterprise_layer)})
+        layers.append({
+            "domain": domain_name_map["enterprise-attack"],
+            "filename": f"{attack_id}-enterprise-layer.json",
+            "layer": json.dumps(enterprise_layer)
+        })
     if mobile_layer["techniques"]:
-        layers.append({"domain": "mobile", "layer": json.dumps(mobile_layer)})
+        layers.append({
+            "domain": domain_name_map["mobile-attack"],
+            "filename": f"{attack_id}-mobile-layer.json",
+            "layer": json.dumps(mobile_layer)
+        })
     if ics_layer["techniques"]:
-        layers.append({"domain": "ics", "layer": json.dumps(ics_layer)})
+        layers.append({
+            "domain": domain_name_map["ics-attack"],
+            "filename": f"{attack_id}-ics-layer.json",
+            "layer": json.dumps(ics_layer)
+        })
 
     return layers
 
 
-domain_name_map = {
-    "enterprise-attack": "Enterprise",
-    "mobile-attack": "Mobile",
-    "ics-attack": "ICS"
-}
 def build_base_layer(domain, object_name, object_type, attack_id, version, inheritance=False):
     """Build the base Navigator layer for the given object."""
     layer = {}

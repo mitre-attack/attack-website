@@ -171,7 +171,7 @@ def generate_mitigation_md(mitigation, domain, side_menu_data, side_menu_mobile_
             data["layers"].append(
                 {
                     "domain": layer["domain"],
-                    "filename": "-".join([data["attack_id"], layer["domain"], "layer"]) + ".json",
+                    "filename": layer["filename"],
                     "navigator_link": site_config.navigator_link,
                 }
             )
