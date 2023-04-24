@@ -162,7 +162,7 @@ def generate_software_md(software, side_menu_data, side_menu_mobile_view_data, n
             data["layers"].append(
                 {
                     "domain": layer["domain"],
-                    "filename": "-".join([data["attack_id"], layer["domain"], "layer"]) + ".json",
+                    "filename": layer["filename"],
                     "navigator_link": site_config.navigator_link,
                 }
             )
