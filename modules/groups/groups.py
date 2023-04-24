@@ -200,7 +200,6 @@ def get_groups_table_data(group_list):
 
     # Now the table on the right, which is made up of group data
     for group in group_list:
-
         attack_id = util.buildhelpers.get_attack_id(group)
 
         if attack_id:

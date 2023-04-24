@@ -86,7 +86,6 @@ def generate_software_md(software, side_menu_data, side_menu_mobile_view_data, n
 
     # If software has id generate software data
     if attack_id:
-
         data = {}
 
         data["attack_id"] = attack_id
@@ -205,7 +204,6 @@ def get_software_table_data(software_list):
     software_table_data = []
 
     for software in software_list:
-
         if software.get("name"):
             row = {}
 
@@ -318,9 +316,7 @@ def get_techniques_used_by_software_data(software, reference_list):
 
     technique_list = {}
     if techniques_used_by_software:
-
         for technique in techniques_used_by_software:
-
             # Do not add if technique is deprecated
             if technique["object"].get("x_mitre_deprecated"):
                 continue

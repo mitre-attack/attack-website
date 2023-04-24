@@ -69,7 +69,7 @@ def generate_index():
     if not os.path.isdir(site_config.web_directory):
         os.makedirs(site_config.web_directory)
 
-    searchable_pages = os.path.join(site_config.web_directory, "search");
+    searchable_pages = os.path.join(site_config.web_directory, "search")
 
     # create the subdirectory if it doesn't exist
     if not os.path.exists(searchable_pages):

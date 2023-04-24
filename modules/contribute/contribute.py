@@ -19,8 +19,7 @@ def generate_contribute():
 
     # Generate redirections
     util.buildhelpers.generate_redirections(
-        redirections_filename=contribute_config.contribute_redirection_location,
-        redirect_md=site_config.redirect_md
+        redirections_filename=contribute_config.contribute_redirection_location, redirect_md=site_config.redirect_md
     )
 
     ms = util.relationshipgetters.get_ms()

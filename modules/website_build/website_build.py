@@ -143,7 +143,7 @@ def generate_index_page():
         "mitigations": "Mitigation",
         "groups": "Group",
         "software": "Software",
-        "campaigns": "Campaign"
+        "campaigns": "Campaign",
     }
     routes = {}
 
@@ -341,7 +341,6 @@ def generate_static_pages():
     static_pages_dir = os.path.join("modules", website_build_config.module_name, "static_pages")
 
     for static_page in os.listdir(static_pages_dir):
-
         with open(os.path.join(static_pages_dir, static_page), "r", encoding="utf8") as md:
             content = md.read()
 
