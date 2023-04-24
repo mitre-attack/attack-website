@@ -38,7 +38,6 @@ def generate_tour():
 
     # Choose longest tour
     def get_longest_tour():
-
         if tours:
             longest = {}
             for tour in tours:
@@ -201,7 +200,6 @@ def get_technique_with_subtechniques(techs_no_subtechs):
 
     for tech in techs_no_subtechs:
         if tech["id"] in subtechniques_of:
-
             # Grab sub-technique count from technique
             subtech_count = len(subtechniques_of[tech["id"]])
             # Check if sub-technique count is bigger than counter
@@ -244,7 +242,6 @@ def get_group_or_software_with_subtechniques(object_type):
     obj_tour_list = []
 
     for obj in obj_list:
-
         technique_list = {}
 
         if techniques_used_by_type.get(obj.get("id")):
@@ -272,7 +269,6 @@ def find_best_group_or_software(obj_tour_list):
     # Ideal: find Step 2 and Step 3 with most subtechniques
     obj_w_best_step_2_3 = {}
     for obj_tour in obj_tour_list:
-
         # First group
         if not obj_w_best_step_2_3:
             obj_w_best_step_2_3 = obj_tour
@@ -317,7 +313,6 @@ def techniques_used(technique_list, technique):
     if attack_id:
         # Check if technique not already in technique_list dict
         if attack_id not in technique_list:
-
             # Check if attack id is a sub-technique
             if util.buildhelpers.is_sub_tid(attack_id):
                 has_subtechniques = True
@@ -354,7 +349,6 @@ def get_groups_tour(technique_list):
     groups = {}
 
     for technique in technique_list:
-
         # Step 1
         if not technique_list[technique]["subtechniques"]:
             if not groups.get("step1"):

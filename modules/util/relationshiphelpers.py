@@ -43,7 +43,6 @@ def get_related(srcs, src_type, rel_type, target_type, reverse=False):
 
     # build the dict
     for relationship in relationships:
-
         if relationship.get("x_mitre_deprecated"):
             continue
 
@@ -234,7 +233,7 @@ def campaigns_using_technique(srcs):
 
 def groups_attributed_to_campaign(srcs):
     """Return campaign_id => {group, relationship} for each group attributed to the campaign
-    
+
     srcs should be an array of memorystores for enterprise, mobile, and pre
     """
     return get_related(srcs, "campaign", "attributed-to", "intrusion-set")
@@ -242,7 +241,7 @@ def groups_attributed_to_campaign(srcs):
 
 def campaigns_attributed_to_group(srcs):
     """Return group_id => {campaign, relationship} for each campaign attributed to the group
-    
+
     srcs should be an array of memorystores for enterprise, mobile, and pre
     """
     return get_related(srcs, "campaign", "attributed-to", "intrusion-set", reverse=True)
