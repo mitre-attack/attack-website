@@ -1,11 +1,13 @@
+const Comlink = require('comlink');
 const FlexSearch = require('flexsearch');
 const { Document } = FlexSearch;
+const SearchResults = require('./search-results'); // Import the SearchResults class
 
 module.exports = class AttackIndex {
     /**
      * Creates a new AttackIndex instance.
      */
-    constructor() {
+    constructor(onResultsUpdated) {
         // Initialize the FlexSearch instance with two indexes: 'title' and 'content'
         this.index = new Document({
             id: 'id',
@@ -31,6 +33,9 @@ module.exports = class AttackIndex {
             // worker: true <--- Cannot call import when this is passed:
             //                   TypeError: this.index[c].import is not a function
         });
+
+        // Create a reference to the SearchResults singleton
+        this.searchResults = new SearchResults();
     }
 
 
@@ -92,7 +97,10 @@ module.exports = class AttackIndex {
          *     ]
          */
 
-        return results;
+        // return results;
+
+        // Instead of returning the results, add them to the SearchResults singleton
+        await this.searchResults.bulkAdd(results);
     }
 
     /**
@@ -120,3 +128,5 @@ module.exports = class AttackIndex {
         return await this.index.import(key, data);
     }
 }
+
+Comlink.expose(AttackIndex);

@@ -96,7 +96,13 @@ async function initializeSearchService() {
 
                 // Initialize search service with combined data
                 searchService = new SearchService('search-results', build_uuid);
-                return searchService.initializeAsync(combinedData);
+                // return searchService.initializeAsync(combinedData);
+
+                // Initialize each AttackIndex with the corresponding data
+                data.forEach((fileData, index) => {
+                  const fileName = jsonFiles[index].split('/').pop().split('.')[0];
+                  searchService.initializeAsync(fileData, fileName);
+                });
               })
               .then(() => {
                 localStorage.setItem('saved_uuid', build_uuid);
