@@ -20,6 +20,7 @@ dist_words = 0
 def generate_index():
     logger.info("Creating searchable index for the site")
     index_data = defaultdict(list)
+    global_id_counter = 0
 
     for root, __, files in os.walk(site_config.web_directory):
         skip = False
@@ -57,12 +58,13 @@ def generate_index():
             if not skipindex:
                 index_data[file_type].append(
                     {
-                        "id": len(index_data[file_type]),
+                        "id": global_id_counter,
                         "title": title,
                         "path": path,
                         "content": cleancontent,
                     }
                 )
+                global_id_counter += 1
 
     if not os.path.isdir(site_config.web_directory):
         os.makedirs(site_config.web_directory)
