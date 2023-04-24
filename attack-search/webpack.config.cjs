@@ -5,10 +5,13 @@ module.exports = (env, argv) => {
     const isProduction = argv.mode === 'production';
 
     return {
-        entry: './src/index.js',
+        entry: {
+            'search_bundle': './src/index.js',
+            'search_bundle.worker': './src/attack-index.js'
+        },
         output: {
             path: path.resolve(__dirname, 'dist'),
-            filename: 'search_bundle.js'
+            filename: '[name].js'
         },
         mode: isProduction ? 'production' : 'development',
         target: 'web',
@@ -16,7 +19,6 @@ module.exports = (env, argv) => {
             rules: [
                 {
                     test: /\.js$/,
-                    // exclude: /node_modules/,
                     use: {
                         loader: 'babel-loader',
                         options: {
