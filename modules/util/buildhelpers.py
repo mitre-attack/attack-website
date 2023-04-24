@@ -44,7 +44,7 @@ def format_date(date):
 
 
 def get_first_last_seen_dates(obj):
-    """ Given an object, return the first_seen and last_seen dates. """
+    """Given an object, return the first_seen and last_seen dates."""
     dates = {}
 
     if obj.get("first_seen"):
@@ -103,13 +103,10 @@ def get_attack_id(object):
 def update_reference_list(reference_list, obj):
     """Given a reference list and an object, update the reference list with the external references found in the object."""
     if obj.get("external_references"):
-
         # Add external reference to reference list if not found
         for ext_ref in obj["external_references"]:
-
             # Only add if reference has source name and a description
             if ext_ref.get("source_name") and ext_ref.get("description"):
-
                 # Do not add to reference list if citation is in description
                 if "(Citation:" in ext_ref["description"]:
                     continue
@@ -130,8 +127,8 @@ def update_reference_list(reference_list, obj):
 
 
 def get_reference_set(reflist):
-    """This function retrieves the unique set of references in the given list of descriptions and 
-       returns them in string format to be displayed as citations."""
+    """This function retrieves the unique set of references in the given list of descriptions and
+    returns them in string format to be displayed as citations."""
     p = re.compile("\(Citation: (.*?)\)")
     citations = {}
     for c in reflist:
@@ -140,7 +137,7 @@ def get_reference_set(reflist):
             if citation not in citations:
                 citations[citation] = True
     refs = [f"(Citation: {c})" for c in citations]
-    return ''.join(refs)
+    return "".join(refs)
 
 
 def get_alias_data(alias_list, ext_refs):
@@ -269,7 +266,6 @@ def get_side_nav_domains_data(side_nav_title, elements_list):
         if domain["deprecated"]:
             continue
         if elements_list[domain["name"]]:
-
             domain_data = {
                 "name": domain["alias"],
                 "id": domain["name"].split("-")[0],
@@ -348,7 +344,6 @@ def get_side_nav_domains_mobile_view_data(side_nav_title, elements_list, amount_
         if domain["deprecated"]:
             continue
         if elements_list[domain["name"]]:
-
             caterogy_list = get_category_list()
 
             domain_data = {
@@ -361,7 +356,6 @@ def get_side_nav_domains_mobile_view_data(side_nav_title, elements_list, amount_
             for element in elements_list[domain["name"]]:
                 attack_id = get_attack_id(element)
                 if attack_id:
-
                     child = get_element_data(element)
 
                     # Get first character and find in map
@@ -556,17 +550,19 @@ def technique_used_helper(technique_list, technique, reference_list, inherited=F
                 for subtechnique in technique_list[parent_id]["subtechniques"]:
                     # Concatenate the inherited object's description to the existing ID
                     if subtechnique["id"] == technique_data["id"] and inherited:
-                        subtechnique["color"] = 3 # belongs both to object and inherited from another
+                        subtechnique["color"] = 3  # belongs both to object and inherited from another
                         if "descr" in technique_data and "descr" in subtechnique:
                             # add markdown newline between descriptions
                             subtechnique["descr"] += "<p>" + technique_data["descr"] + "</p>"
                         elif "descr" in technique_data:
                             subtechnique["descr"] = technique_data["descr"]
-                        break;
-                else: # sub-technique is not in list
+                        break
+                else:  # sub-technique is not in list
                     # Add subtechnique to list
-                    if (inherited): technique_data["color"] = 2 # inherited from another object only
-                    else: technique_data["color"] = 1 # belongs to object only (not inherited)
+                    if inherited:
+                        technique_data["color"] = 2  # inherited from another object only
+                    else:
+                        technique_data["color"] = 1  # belongs to object only (not inherited)
                     technique_list[parent_id]["subtechniques"].append(technique_data)
 
                 # Sort subtechniques by name
@@ -578,7 +574,7 @@ def technique_used_helper(technique_list, technique, reference_list, inherited=F
             else:
                 # Check if technique is already in list (inherited)
                 if attack_id in technique_list:
-                    technique_list[attack_id]["color"] = 3 # belongs both to object and inherited from another
+                    technique_list[attack_id]["color"] = 3  # belongs both to object and inherited from another
                     if "descr" in technique_data and "descr" in technique_list[attack_id]:
                         # add markdown newline between descriptions
                         technique_list[attack_id]["descr"] += "<p>" + technique_data["descr"] + "</p>"
@@ -586,8 +582,10 @@ def technique_used_helper(technique_list, technique, reference_list, inherited=F
                         technique_list[attack_id]["descr"] = technique_data["descr"]
                 else:
                     # Add technique to list
-                    if (inherited): technique_data["color"] = 2 # inherited from another object only
-                    else: technique_data["color"] = 1 # belongs to object only (not inherited)
+                    if inherited:
+                        technique_data["color"] = 2  # inherited from another object only
+                    else:
+                        technique_data["color"] = 1  # belongs to object only (not inherited)
                     technique_list[attack_id] = technique_data
 
         # Check if parent ID was added by sub-technique
@@ -663,9 +661,11 @@ def replace_html_chars(to_be_replaced):
 colorMap = {
     0: "#ffffff",
     1: "#66b1ff",
-    2: "#ff6666", # used for inherited relationships
-    3: "#ff66f4"  # used for inherited relationships
+    2: "#ff6666",  # used for inherited relationships
+    3: "#ff66f4",  # used for inherited relationships
 }
+
+
 def get_navigator_layers(name, attack_id, obj_type, version, techniques_used, inheritance=False):
     """Given a list of techniques used, return the navigator json objects for enterprise and mobile."""
     # Remove minor version from ATT&CK version if any
@@ -695,10 +695,12 @@ def get_navigator_layers(name, attack_id, obj_type, version, techniques_used, in
     enterprise_layer["legendItems"] = [{"label": f"used by {name}", "color": colorMap[1]}]
     if inheritance:
         # add campaign inheritance to legend
-        enterprise_layer["legendItems"].extend([
-            {"label": f"used by a campaign attributed to {name}", "color": colorMap[2]},
-            {"label": f"used by {name} and used by a campaign attributed to {name}", "color": colorMap[3]}
-        ])
+        enterprise_layer["legendItems"].extend(
+            [
+                {"label": f"used by a campaign attributed to {name}", "color": colorMap[2]},
+                {"label": f"used by {name} and used by a campaign attributed to {name}", "color": colorMap[3]},
+            ]
+        )
 
     # Mobile navigator layer
     mobile_layer = {}
@@ -715,10 +717,12 @@ def get_navigator_layers(name, attack_id, obj_type, version, techniques_used, in
     mobile_layer["legendItems"] = [{"label": f"used by {name}", "color": colorMap[1]}]
     if inheritance:
         # add campaign inheritance to legend
-        mobile_layer["legendItems"].extend([
-            {"label": f"used by a campaign attributed to {name}", "color": colorMap[2]},
-            {"label": f"used by {name} and used by a campaign attributed to {name}", "color": colorMap[3]}
-        ])
+        mobile_layer["legendItems"].extend(
+            [
+                {"label": f"used by a campaign attributed to {name}", "color": colorMap[2]},
+                {"label": f"used by {name} and used by a campaign attributed to {name}", "color": colorMap[3]},
+            ]
+        )
 
     # Append techniques to enterprise and mobile layers
     for technique in techniques_used:
@@ -729,11 +733,19 @@ def get_navigator_layers(name, attack_id, obj_type, version, techniques_used, in
             score = 1
             if technique.get("subtechniques"):
                 navigator_technique = get_navigator_technique(
-                    technique["id"], technique["descr"] if "descr" in technique else "", score, technique["color"] if "color" in technique else 0, True
+                    technique["id"],
+                    technique["descr"] if "descr" in technique else "",
+                    score,
+                    technique["color"] if "color" in technique else 0,
+                    True,
                 )
             else:
                 navigator_technique = get_navigator_technique(
-                    technique["id"], technique["descr"] if "descr" in technique else "", score, technique["color"] if "color" in technique else 0, False
+                    technique["id"],
+                    technique["descr"] if "descr" in technique else "",
+                    score,
+                    technique["color"] if "color" in technique else 0,
+                    False,
                 )
         else:
             if technique.get("subtechniques"):
@@ -986,7 +998,6 @@ def generate_redirections(redirections_filename, redirect_md=None):
         redirects = json.load(json_redirections)
 
     if redirects:
-
         # Verify if redirection directory exists
         if not os.path.isdir(site_config.redirects_markdown_path):
             os.mkdir(site_config.redirects_markdown_path)
@@ -1011,7 +1022,6 @@ def create_content_pages_dir():
 def move_templates(module_name, module_template_path):
     """Move module specific templates into the website's main template directory holder."""
     if os.path.isdir(module_template_path):
-
         # New template directory for module
         new_template_dir = os.path.join(site_config.templates_directory, module_name.lower())
 

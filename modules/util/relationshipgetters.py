@@ -261,7 +261,7 @@ def get_groups_attributed_to_campaigns():
 def get_campaigns_attributed_to_group():
     """campaigns attributed to group getter"""
     global campaigns_attributed_to_group
-    
+
     if not campaigns_attributed_to_group:
         campaigns_attributed_to_group = rsh.campaigns_attributed_to_group(get_srcs())
 

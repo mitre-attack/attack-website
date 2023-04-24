@@ -67,7 +67,6 @@ def generate_domain_markdown(domain, techniques_no_sub, tactics, side_nav_data, 
     """Generate technique index markdown for each domain and generates shared data for techniques."""
     # Check if there is at least one technique
     if techniques_no_sub[domain]:
-
         technique_list_no_sub_no_deprecated = util.buildhelpers.filter_deprecated_revoked(techniques_no_sub[domain])
 
         data = {}
@@ -110,7 +109,6 @@ def generate_technique_md(technique, domain, side_nav_data, tactic_list, notes):
 
     # Only add technique if the attack id was found
     if attack_id:
-
         subtechniques_of = util.relationshipgetters.get_subtechniques_of()
 
         technique_dict = {}
@@ -140,7 +138,6 @@ def generate_technique_md(technique, domain, side_nav_data, tactic_list, notes):
 
         # Generate data for sub-techniques
         if technique_dict["subtechniques"]:
-
             # Generate sub-technique markdown file for each sub technique
             subtechniques = subtechniques_of[technique["id"]]
             for subtechnique in subtechniques:
@@ -215,7 +212,6 @@ def generate_data_for_md(technique_dict, technique, tactic_list, is_sub_techniqu
 
         # Get technique description with citations
         if technique.get("description") and not technique_dict["deprecated"]:
-
             technique_dict["descr"] = technique["description"]
 
             # Get mitigation table
@@ -358,15 +354,12 @@ def get_mitigations_table_data(technique, reference_list):
     if util.relationshipgetters.get_technique_mitigated_by_mitigation().get(technique["id"]):
         # Iterate through technique mitigations
         for mitigation in util.relationshipgetters.get_technique_mitigated_by_mitigation()[technique["id"]]:
-
             # Do not add deprecated mitigation to table
             if not mitigation["object"].get("x_mitre_deprecated"):
-
                 attack_id = util.buildhelpers.get_attack_id(mitigation["object"])
 
                 # Only add if mitigation attack id is found
                 if attack_id:
-
                     row = {}
                     row["mid"] = attack_id
                     row["name"] = mitigation["object"]["name"]
@@ -403,7 +396,6 @@ def get_examples_table_data(technique, reference_list):
     for examples in examples_map:
         if examples["example_type"].get(technique.get("id")):
             for example in examples["example_type"][technique["id"]]:
-
                 attack_id = util.buildhelpers.get_attack_id(example["object"])
 
                 # Only add example data if the attack id is found
@@ -432,12 +424,7 @@ def get_examples_table_data(technique, reference_list):
 
 def get_path_from_type(object):
     """Given an object, return the path"""
-    path_map = {
-        "intrusion-set": "groups",
-        "malware": "software",
-        "tool": "software",
-        "campaign": "campaigns"
-    }
+    path_map = {"intrusion-set": "groups", "malware": "software", "tool": "software", "campaign": "campaigns"}
     return path_map[object.get("type")]
 
 
@@ -518,11 +505,9 @@ def get_techniques_list(techniques):
 
     for technique in techniques:
         if not technique.get("revoked") and not technique.get("x_mitre_deprecated"):
-
             attack_id = util.buildhelpers.get_attack_id(technique)
 
             if attack_id:
-
                 technique_dict = {}
                 technique_dict["id"] = attack_id
                 technique_dict["stix_id"] = technique["id"]
@@ -592,11 +577,9 @@ def get_datasources_and_components_of_technique(technique, reference_list):
     if datacomponents_of_technique:
         datasources_data = {}
         for datacomponent in datacomponents_of_technique:
-
             datasource = datasource_of.get(datacomponent["object"]["id"])
             datasource_attack_id = util.buildhelpers.get_attack_id(datasource)
             if datasource_attack_id:
-
                 if not datasources_data.get(datasource_attack_id):
                     datasources_data[datasource_attack_id] = {}
                     datasources_data[datasource_attack_id]["attack_id"] = datasource_attack_id
