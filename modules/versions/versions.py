@@ -4,6 +4,7 @@ import re
 import shutil
 import stat
 from datetime import datetime
+import requests
 
 from git import Repo
 from loguru import logger
@@ -95,7 +96,14 @@ def deploy():
         shutil.rmtree(versions_config.versions_directory, onerror=onerror)
     # download new version of attack-website for use in versioning
     logger.info(f"git cloning {versions_config.versions_repo} >>> {versions_config.versions_directory}")
-    versions_repo = Repo.clone_from(versions_config.versions_repo, versions_config.versions_directory)
+
+    url = versions_config.versions_repo + ".zip"
+    req = requests.get(url, verify=False)
+    filename = url.split('/')[-1]
+    with open(filename, 'wb') as output_file:
+        output_file.write(req.content)
+    with Zipfile(filename, 'r') as zObject:
+        zObject.extractall()
 
     # remove previously deployed previous versions
     if os.path.exists(versions_config.prev_versions_deploy_folder):
@@ -158,7 +166,13 @@ def deploy_previous_version(version, repo):
     """Build a version of the site to /prev_versions_path. version is a version from versions.json, repo is a reference to the attack-website Repo object."""
     logger.info(f"Building website for ATT&CK {version}")
     # check out the commit for that version
-    repo.git.checkout(version["commit"])
+    url = version["commit"] + ".zip"
+    req = requests.get(url, verify=False)
+    filename = url.split('/')[-1]
+    with open(filename, 'wb') as output_file:
+        output_file.write(req.content)
+    with Zipfile(filename, 'r') as zObject:
+        zObject.extractall()
     # copy over files
     ignored_stuff = shutil.ignore_patterns(
         ".git", "beta", "CNAME", "robots.txt", "previous", "previous-versions", "versions"
