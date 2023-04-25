@@ -81,42 +81,32 @@ async function initializeSearchService() {
       const jsonFiles = [];
 
       // Download all JSON files from directory
-      $.ajax({
-        url: baseUrl,
-        success(data) {
-          // Loop through the searchFilePaths array to construct the URLs
-          searchFilePaths.forEach(function(filename) {
-            jsonFiles.push(baseUrl + filename);
-          });
-
-          // Use Promise.all() to download all files concurrently
-          Promise.all(jsonFiles.map(url => $.getJSON(url)))
-              .then(data => {
-                // Concatenate all file data into a single array
-                const combinedData = data.reduce((acc, curr) => acc.concat(curr), []);
-
-                // Initialize search service with combined data
-                searchService = new SearchService('search-results', build_uuid);
-                return searchService.initializeAsync(combinedData);
-              })
-              .then(() => {
-                localStorage.setItem('saved_uuid', build_uuid);
-                console.debug('SearchService is initialized.');
-                searchParsingIcon.hide();
-                searchServiceIsLoaded = true;
-              })
-              .catch(error => {
-                console.error('Failed to initialize SearchService:', error);
-                searchParsingIcon.hide();
-                searchServiceIsLoaded = false;
-              });
-        },
-        error(error) {
-          console.error('Failed to retrieve directory contents:', error);
-          searchParsingIcon.hide();
-          searchServiceIsLoaded = false;
-        }
+      // Loop through the searchFilePaths array to construct the URLs
+      searchFilePaths.forEach(function(filename) {
+        jsonFiles.push(baseUrl + filename);
       });
+
+      // Use Promise.all() to download all files concurrently
+      Promise.all(jsonFiles.map(url => $.getJSON(url)))
+          .then(data => {
+            // Concatenate all file data into a single array
+            const combinedData = data.reduce((acc, curr) => acc.concat(curr), []);
+
+            // Initialize search service with combined data
+            searchService = new SearchService('search-results', build_uuid);
+            return searchService.initializeAsync(combinedData);
+          })
+          .then(() => {
+            localStorage.setItem('saved_uuid', build_uuid);
+            console.debug('SearchService is initialized.');
+            searchParsingIcon.hide();
+            searchServiceIsLoaded = true;
+          })
+          .catch(error => {
+            console.error('Failed to initialize SearchService:', error);
+            searchParsingIcon.hide();
+            searchServiceIsLoaded = false;
+          });
     }
   }
   else {
