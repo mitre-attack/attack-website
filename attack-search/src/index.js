@@ -10,7 +10,7 @@ const $ = require('jquery');
  */
 
 // Import required modules with the correct file extension
-const { baseURL } = require('./settings.js');
+const { baseURL, searchFilePaths } = require('./settings.js');
 const Debouncer = require('./debouncer.js');
 const SearchService = require('./search-service.js');
 
@@ -84,8 +84,9 @@ async function initializeSearchService() {
       $.ajax({
         url: baseUrl,
         success(data) {
-          $(data).find('a:contains(".json")').each(function() {
-            jsonFiles.push(baseUrl + $(this).attr('href'));
+          // Loop through the searchFilePaths array to construct the URLs
+          searchFilePaths.forEach(function(filename) {
+            jsonFiles.push(baseUrl + filename);
           });
 
           // Use Promise.all() to download all files concurrently
