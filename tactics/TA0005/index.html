@@ -23,7 +23,7 @@
         <link rel='stylesheet' href='/theme/style/bootstrap-glyphicon.min.css' />
         <link rel='stylesheet' href='/theme/style/bootstrap-tourist.css' />
         <link rel='stylesheet' href='/theme/style/bootstrap-select.min.css' />
-        <link rel="stylesheet" type="text/css" href="/theme/style.min.css?a2a04da3">
+        <link rel="stylesheet" type="text/css" href="/theme/style.min.css?32a923e1">
 
 </head>
 
@@ -42,8 +42,19 @@
         </button>
         <div class='collapse navbar-collapse' id='navbarCollapse'>
             <ul class='nav nav-tabs ml-auto'>
-                        <li class="nav-item">
-                            <a href="/matrices/"  class="nav-link" ><b>Matrices</b></a>
+                        <li class="nav-item dropdown">
+                                
+    <a class="nav-link dropdown-toggle" href="/matrices/" id="navbarDropdown" role="button"
+    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <b>Matrices</b>
+    </a>
+    <div class="dropdown-menu " aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="/matrices/enterprise/">Enterprise</a>
+                <a class="dropdown-item" href="/matrices/mobile/">Mobile</a>
+                <a class="dropdown-item" href="/matrices/ics/">ICS</a>
+    </div>
+
+
                         </li>
                         <li class="nav-item dropdown">
                                 
@@ -130,7 +141,7 @@
                             <a href="/resources/contribute/"  class="nav-link" ><b>Contribute</b></a>
                         </li>
                         <li class="nav-item">
-                            <button id="search-button" class="btn search-button">Search <div class="search-icon"></div></button>
+                            <button id="search-button" class="btn search-button">Search <div id="search-icon" class="icon-button search-icon"></div></button>
                         </li>
             </ul>
         </div>
@@ -144,7 +155,7 @@
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
                     <div class="container-fluid banner-message">
-                        ATT&CK v12 is now live! <a href='https://attack.mitre.org/resources/updates/updates-october-2022/'>Check out the updates here</a>
+                        ATT&CK v13 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v13-enters-the-room-5cef174c32ff'>blog post</a> or <a href='https://attack.mitre.org/resources/updates/updates-april-2023/'>release notes</a> for more information.
                     </div>
             </div>
         </div>
@@ -651,13 +662,13 @@
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Permalink to this version of TA0005" 
-           href="/versions/v12/tactics/TA0005/" data-test-ignore="true">Version Permalink</a>
+           href="/versions/v13/tactics/TA0005/" data-test-ignore="true">Version Permalink</a>
     </div>
     <div class="permalink">
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Go to the live version of TA0005" 
-           href="/versions/v12/tactics/TA0005/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+           href="/versions/v13/tactics/TA0005/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
     </div>
 </div>
 
@@ -758,7 +769,7 @@
                             <a href="/techniques/T1134/001"> Token Impersonation/Theft </a>
                         </td>
                         <td>
-                                    Adversaries may duplicate then impersonate another user's token to escalate privileges and bypass access controls. An adversary can create a new access token that duplicates an existing token using <code>DuplicateToken(Ex)</code>. The token can then be used with <code>ImpersonateLoggedOnUser</code> to allow the calling thread to impersonate a logged on user's security context, or with <code>SetThreadToken</code> to assign the impersonated token to a thread.
+                                    Adversaries may duplicate then impersonate another user's existing token to escalate privileges and bypass access controls. For example, an adversary can duplicate an existing token using <code>DuplicateToken</code> or <code>DuplicateTokenEx</code>. The token can then be used with <code>ImpersonateLoggedOnUser</code> to allow the calling thread to impersonate a logged on user's security context, or with <code>SetThreadToken</code> to assign the impersonated token to a thread.
 
                         </td>
                     </tr>   
@@ -771,7 +782,7 @@
                             <a href="/techniques/T1134/002"> Create Process with Token </a>
                         </td>
                         <td>
-                                    Adversaries may create a new process with a different token to escalate privileges and bypass access controls. Processes can be created with the token and resulting security context of another user using features such as <code>CreateProcessWithTokenW</code> and <code>runas</code>.
+                                    Adversaries may create a new process with an existing token to escalate privileges and bypass access controls. Processes can be created with the token and resulting security context of another user using features such as <code>CreateProcessWithTokenW</code> and <code>runas</code>.
 
                         </td>
                     </tr>   
@@ -784,7 +795,7 @@
                             <a href="/techniques/T1134/003"> Make and Impersonate Token </a>
                         </td>
                         <td>
-                                    Adversaries may make and impersonate tokens to escalate privileges and bypass access controls. If an adversary has a username and password but the user is not logged onto the system, the adversary can then create a logon session for the user using the <code>LogonUser</code> function. The function will return a copy of the new session's access token and the adversary can use <code>SetThreadToken</code> to assign the token to a thread.
+                                    Adversaries may make new tokens and impersonate users to escalate privileges and bypass access controls. For example, if an adversary has a username and password but the user is not logged onto the system the adversary can then create a logon session for the user using the <code>LogonUser</code> function. The function will return a copy of the new session's access token and the adversary can use <code>SetThreadToken</code> to assign the token to a thread.
 
                         </td>
                     </tr>   
@@ -907,7 +918,7 @@
                             <a href="/techniques/T1484/001"> Group Policy Modification </a>
                         </td>
                         <td>
-                                    Adversaries may modify Group Policy Objects (GPOs) to subvert the intended discretionary access controls for a domain, usually with the intention of escalating privileges on the domain. Group policy allows for centralized management of user and computer settings in Active Directory (AD). GPOs are containers for group policy settings made up of files stored within a predicable network path <code>\&lt;DOMAIN&gt;\SYSVOL\&lt;DOMAIN&gt;\Policies\</code>. 
+                                    Adversaries may modify Group Policy Objects (GPOs) to subvert the intended discretionary access controls for a domain, usually with the intention of escalating privileges on the domain. Group policy allows for centralized management of user and computer settings in Active Directory (AD). GPOs are containers for group policy settings made up of files stored within a predictable network path <code>\&lt;DOMAIN&gt;\SYSVOL\&lt;DOMAIN&gt;\Policies\</code>. 
 
                         </td>
                     </tr>   
@@ -1382,7 +1393,7 @@
                             <a href="/techniques/T1562/006"> Indicator Blocking </a>
                         </td>
                         <td>
-                                    An adversary may attempt to block indicators or events typically captured by sensors from being gathered and analyzed. This could include maliciously redirecting  or even disabling host-based sensors, such as Event Tracing for Windows (ETW), by tampering settings that control the collection and flow of event telemetry.  These settings may be stored on the system in configuration files and/or in the Registry as well as being accessible via administrative utilities such as <a href="/techniques/T1059/001">PowerShell</a> or <a href="/techniques/T1047">Windows Management Instrumentation</a>.
+                                    An adversary may attempt to block indicators or events typically captured by sensors from being gathered and analyzed. This could include maliciously redirecting or even disabling host-based sensors, such as Event Tracing for Windows (ETW), by tampering settings that control the collection and flow of event telemetry. These settings may be stored on the system in configuration files and/or in the Registry as well as being accessible via administrative utilities such as <a href="/techniques/T1059/001">PowerShell</a> or <a href="/techniques/T1047">Windows Management Instrumentation</a>.
 
                         </td>
                     </tr>   
@@ -1408,7 +1419,7 @@
                             <a href="/techniques/T1562/008"> Disable Cloud Logs </a>
                         </td>
                         <td>
-                                    An adversary may disable cloud logging capabilities and integrations to limit what data is collected on their activities and avoid detection. 
+                                    An adversary may disable cloud logging capabilities and integrations to limit what data is collected on their activities and avoid detection. Cloud environments allow for collection and analysis of audit and application logs that provide insight into what activities a user does within the environment. If an adversary has sufficient permissions, they can disable logging to avoid detection of their activities.
 
                         </td>
                     </tr>   
@@ -1435,6 +1446,19 @@
                         </td>
                         <td>
                                     Adversaries may downgrade or use a version of system features that may be outdated, vulnerable, and/or does not support updated security controls such as logging. For example, <a href="/techniques/T1059/001">PowerShell</a> versions 5+ includes Script Block Logging (SBL) which can record executed script content. However, adversaries may attempt to execute a previous version of PowerShell that does not support SBL with the intent to <a href="/techniques/T1562">Impair Defenses</a> while running malicious scripts that may have otherwise been detected.
+
+                        </td>
+                    </tr>   
+                    <tr class="sub technique">
+                        <td></td>
+                        <td>
+                            <a href="/techniques/T1562/011"> .011 </a>
+                        </td>
+                        <td>
+                            <a href="/techniques/T1562/011"> Spoof Security Alerting </a>
+                        </td>
+                        <td>
+                                    Adversaries may spoof security alerting from tools, presenting false evidence to impair defenders’ awareness of malicious activity. Messages produced by defensive tools contain information about potential security events as well as the functioning status of security software and the system. Security reporting messages are important for monitoring the normal operation of a system and identifying important events that can signal a security incident.
 
                         </td>
                     </tr>   
@@ -1550,7 +1574,7 @@
                             <a href="/techniques/T1070/008"> Clear Mailbox Data </a>
                         </td>
                         <td>
-                                    Adversaries may modify mail application data to remove evidence of their activity. Email applications allow users and other programs to export and delete mailbox data via command line tools or use of APIs. Mail application data can be emails or logs generated by the application or operating system, such as export requests. 
+                                    Adversaries may modify mail and mail application data to remove evidence of their activity. Email applications allow users and other programs to export and delete mailbox data via command line tools or use of APIs. Mail application data can be emails, email metadata, or logs generated by the application or operating system, such as export requests. 
 
                         </td>
                     </tr>   
@@ -1563,7 +1587,7 @@
                             <a href="/techniques/T1070/009"> Clear Persistence </a>
                         </td>
                         <td>
-                                    Adversaries may clear artifacts associated with previously established persistence on a host system to remove evidence of their activity. This may involve various actions, such as removing services, deleting executables, <a href="/techniques/T1112">Modify Registry</a>, <a href="/techniques/T1647">Plist File Modification</a>, or other methods of cleanup to prevent defenders from collecting evidence of their persistent presence.
+                                    Adversaries may clear artifacts associated with previously established persistence on a host system to remove evidence of their activity. This may involve various actions, such as removing services, deleting executables, <a href="/techniques/T1112">Modify Registry</a>, <a href="/techniques/T1647">Plist File Modification</a>, or other methods of cleanup to prevent defenders from collecting evidence of their persistent presence. Adversaries may also delete accounts previously created to maintain persistence (i.e. <a href="/techniques/T1136">Create Account</a>).
 
                         </td>
                     </tr>   
@@ -1682,6 +1706,19 @@
 
                         </td>
                     </tr>   
+                    <tr class="sub technique">
+                        <td></td>
+                        <td>
+                            <a href="/techniques/T1036/008"> .008 </a>
+                        </td>
+                        <td>
+                            <a href="/techniques/T1036/008"> Masquerade File Type </a>
+                        </td>
+                        <td>
+                                    Adversaries may masquerade malicious payloads as legitimate files through changes to the payload's formatting, including the file’s signature, extension, and contents. Various file types have a typical standard format, including how they are encoded and organized. For example, a file’s signature (also known as header or magic bytes) is the beginning bytes of a file and is often used to identify the file’s type. For example, the header of a JPEG file,  is <code> 0xFF 0xD8</code> and the file extension is either <code>.JPE</code>, <code>.JPEG</code> or <code>.JPG</code>. 
+
+                        </td>
+                    </tr>   
                 <tr class="technique">
                     <td colspan="2">
                         <a href="/techniques/T1556"> T1556 </a>
@@ -1782,6 +1819,19 @@
                         </td>
                         <td>
                                     Adversaries may patch, modify, or otherwise backdoor cloud authentication processes that are tied to on-premises user identities in order to bypass typical authentication mechanisms, access credentials, and enable persistent access to accounts.  
+
+                        </td>
+                    </tr>   
+                    <tr class="sub technique">
+                        <td></td>
+                        <td>
+                            <a href="/techniques/T1556/008"> .008 </a>
+                        </td>
+                        <td>
+                            <a href="/techniques/T1556/008"> Network Provider DLL </a>
+                        </td>
+                        <td>
+                                    Adversaries may register malicious network provider dynamic link libraries (DLLs) to capture cleartext user credentials during the authentication process. Network provider DLLs allow Windows to interface with specific network protocols and can also support add-on credential management functions. During the logon process, Winlogon (the interactive logon module) sends credentials to the local <code>mpnotify.exe</code> process via RPC. The <code>mpnotify.exe</code> process then shares the credentials in cleartext with registered credential managers when notifying that a logon event is happening. 
 
                         </td>
                     </tr>   
@@ -2050,6 +2100,32 @@
                         </td>
                         <td>
                                     Adversaries may embed payloads within other files to conceal malicious content from defenses. Otherwise seemingly benign files (such as scripts and executables) may be abused to carry and obfuscate malicious payloads and content. In some cases, embedded payloads may also enable adversaries to <a href="/techniques/T1553">Subvert Trust Controls</a> by not impacting execution controls such as digital signatures and notarization tickets. 
+
+                        </td>
+                    </tr>   
+                    <tr class="sub technique">
+                        <td></td>
+                        <td>
+                            <a href="/techniques/T1027/010"> .010 </a>
+                        </td>
+                        <td>
+                            <a href="/techniques/T1027/010"> Command Obfuscation </a>
+                        </td>
+                        <td>
+                                    Adversaries may obfuscate content during command execution to impede detection. Command-line obfuscation is a method of making strings and patterns within commands and scripts more difficult to signature and analyze. This type of obfuscation can be included within commands executed by delivered payloads (e.g., <a href="/techniques/T1566">Phishing</a> and <a href="/techniques/T1189">Drive-by Compromise</a>) or interactively via <a href="/techniques/T1059">Command and Scripting Interpreter</a>.
+
+                        </td>
+                    </tr>   
+                    <tr class="sub technique">
+                        <td></td>
+                        <td>
+                            <a href="/techniques/T1027/011"> .011 </a>
+                        </td>
+                        <td>
+                            <a href="/techniques/T1027/011"> Fileless Storage </a>
+                        </td>
+                        <td>
+                                    Adversaries may store data in "fileless" formats to conceal malicious activity from defenses. Fileless storage can be broadly defined as any format other than a file. Common examples of non-volatile fileless storage include the Windows Registry, event logs, or WMI repository.
 
                         </td>
                     </tr>   
@@ -2419,7 +2495,7 @@
                             <a href="/techniques/T1553/005"> Mark-of-the-Web Bypass </a>
                         </td>
                         <td>
-                                    Adversaries may abuse specific file formats to subvert Mark-of-the-Web (MOTW) controls. In Windows, when files are downloaded from the Internet, they are tagged with a hidden NTFS Alternate Data Stream (ADS) named <code>Zone.Identifier</code> with a specific value known as the MOTW. Files that are tagged with MOTW are protected and cannot perform certain actions. For example, starting in MS Office 10, if a MS Office file has the MOTW, it will open in Protected View. Executables tagged with the MOTW will be processed by Windows Defender SmartScreen that compares files with an allowlist of well-known executables. If the file in not known/trusted, SmartScreen will prevent the execution and warn the user not to run it.
+                                    Adversaries may abuse specific file formats to subvert Mark-of-the-Web (MOTW) controls. In Windows, when files are downloaded from the Internet, they are tagged with a hidden NTFS Alternate Data Stream (ADS) named <code>Zone.Identifier</code> with a specific value known as the MOTW. Files that are tagged with MOTW are protected and cannot perform certain actions. For example, starting in MS Office 10, if a MS Office file has the MOTW, it will open in Protected View. Executables tagged with the MOTW will be processed by Windows Defender SmartScreen that compares files with an allowlist of well-known executables. If the file is not known/trusted, SmartScreen will prevent the execution and warn the user not to run it.
 
                         </td>
                     </tr>   
@@ -2853,7 +2929,7 @@
                             <a href="/techniques/T1078/004"> Cloud Accounts </a>
                         </td>
                         <td>
-                                    Adversaries may obtain and abuse credentials of a cloud account as a means of gaining Initial Access, Persistence, Privilege Escalation, or Defense Evasion. Cloud accounts are those created and configured by an organization for use by users, remote support, services, or for administration of resources within a cloud service provider or SaaS application. In some cases, cloud accounts may be federated with traditional identity management system, such as Window Active Directory.
+                                    Adversaries may obtain and abuse credentials of a cloud account as a means of gaining Initial Access, Persistence, Privilege Escalation, or Defense Evasion. Cloud accounts are those created and configured by an organization for use by users, remote support, services, or for administration of resources within a cloud service provider or SaaS application. In some cases, cloud accounts may be federated with traditional identity management systems, such as Windows Active Directory.
 
                         </td>
                     </tr>   
@@ -3027,7 +3103,7 @@
                                 </div>
                                 <div class="col  text-left ">
                                     <small>
-                                        <a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v12.1&#013;Website  v4.0.1">ATT&CK v12.1</a>
+                                        <a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v13.0&#013;Website  v4.0.2">ATT&CK v13.0</a>
                                     </small>
                                 </div>
             
@@ -3066,11 +3142,9 @@
     <script src="/theme/scripts/popper.min.js"></script>
     <script src="/theme/scripts/bootstrap-select.min.js"></script>
     <script src="/theme/scripts/bootstrap.bundle.min.js"></script>
-    <script src="/theme/scripts/site.js?2239"></script>
-    <script src="/theme/scripts/flexsearch.es5.js"></script> 
-    <script src="/theme/scripts/localforage.min.js"></script>
-    <script src="/theme/scripts/settings.js?6544"></script>
-    <script src="/theme/scripts/search_babelized.js"></script>
+    <script src="/theme/scripts/site.js?203"></script>
+    <script src="/theme/scripts/settings.js?4876"></script>
+    <script src="/theme/scripts/search_bundle.js"></script>
 
     <!--SCRIPTS-->
     <script src="/theme/scripts/navigation.js"></script>

@@ -32,7 +32,7 @@ function _instanceof(left, right) {
     return Constructor;
   }
   
-  var site_base_url = "/versions/v6";
+  var site_base_url = "";
   var page_limit = 5; //number of results per page
   
   var buffer = 200; //2* buffer is roughly the size of the result preview

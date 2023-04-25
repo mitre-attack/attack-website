@@ -1,4 +1,4 @@
-let site_base_url = "/versions/v6";
+let site_base_url = "";
 let page_limit = 5; //number of results per page
 let buffer = 200; //2* buffer is roughly the size of the result preview
 
