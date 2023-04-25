@@ -6,9 +6,9 @@ Template: resources/update-post
 url: /resources/updates/updates-april-2022
 save_as: resources/updates/updates-april-2022/index.html
 
-| Version | Start Date | End Date | Data |
-|:--------|:-----------|:---------|:-----|
-| [ATT&CK v11](/versions/v11) | April 25, 2022 | October 24, 2022 | [v11.3 on MITRE/CTI](https://github.com/mitre/cti/releases/tag/ATT%26CK-v11.3) |
+| Version | Start Date | End Date | Data | Changelogs |
+|:--------|:-----------|:---------|:-----|:-----------|
+| [ATT&CK v11](/versions/v11) | April 25, 2022 | October 24, 2022 | [v11.0 on MITRE/CTI](https://github.com/mitre/cti/releases/tag/ATT%26CK-v11.0)<br />[v11.1 on MITRE/CTI](https://github.com/mitre/cti/releases/tag/ATT%26CK-v11.1)<br />[v11.2 on MITRE/CTI](https://github.com/mitre/cti/releases/tag/ATT%26CK-v11.2)<br />[v11.3 on MITRE/CTI](https://github.com/mitre/cti/releases/tag/ATT%26CK-v11.3) | v10.1 - v11.0 [Details](/docs/changelogs/v10.1-v11.0/changelog-detailed.html) ([JSON](/docs/changelogs/v10.1-v11.0/changelog.json))<br />v11.0 - v11.1 [Details](/docs/changelogs/v11.0-v11.1/changelog-detailed.html) ([JSON](/docs/changelogs/v11.0-v11.1/changelog.json))<br />v11.1 - v11.2 [Details](/docs/changelogs/v11.1-v11.2/changelog-detailed.html) ([JSON](/docs/changelogs/v11.1-v11.2/changelog.json))<br />v11.2 - v11.3 [Details](/docs/changelogs/v11.2-v11.3/changelog-detailed.html) ([JSON](/docs/changelogs/v11.2-v11.3/changelog.json)) |
 
 The April 2022 (v11) ATT&CK release updates Techniques, Groups, and Software for Enterprise, Mobile, and ICS. The biggest changes are the restructuring of Detections, now tied to [Data Source](/datasources/) and Data Component objects in Enterprise ATT&CK, a beta release of ATT&CK for Mobile leveraging sub-techniques, and [ATT&CK for ICS now on attack.mitre.org](/matrices/ics/) An [accompanying blog post](https://medium.com/mitre-attack/attack-goes-to-v11-599a9112a025) describes these changes as well as improvements across ATT&CK's various domains and platforms.
 
