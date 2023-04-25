@@ -16,16 +16,18 @@ module.exports = class AttackIndex {
                     field: 'title',
                     tokenize: 'forward',
                     optimize: true,
+                    resolution: 9,
                 },
                 {
                     field: 'content',
-                    tokenize: 'forward',
+                    tokenize: 'strict',
                     optimize: true,
-                    // minlength: 3,   <--- These two props are commented out because they appear to break
-                    // context: {      <---  searching on the content index.
-                    //     depth: 3,
-                    //     resolution: 2,
-                    // },
+                    resolution: 9,
+                    minlength: 3,
+                    context: {
+                        depth: 3,
+                        resolution: 2,
+                    },
                 },
             ],
             page: 0, // Default starting page,

@@ -1,0 +1,1125 @@
+{
+    "enterprise-attack": {
+        "techniques": {
+            "additions": [
+                {
+                    "type": "attack-pattern",
+                    "id": "attack-pattern--24769ab5-14bd-4f4e-a752-cfb185da53ee",
+                    "created_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "created": "2020-12-28 21:59:02.181000+00:00",
+                    "modified": "2021-01-11 18:21:20.213000+00:00",
+                    "name": "Domain Trust Modification",
+                    "description": "Adversaries may add new domain trusts or modify the properties of existing domain trusts to evade defenses and/or elevate privileges. Domain trust details, such as whether or not a domain is federated, allow authentication and authorization properties to apply between domains for the purpose of accessing shared resources.(Citation: Microsoft - Azure AD Federation) These trust objects may include accounts, credentials, and other authentication material applied to servers, tokens, and domains.\n\nManipulating the domain trusts may allow an adversary to escalate privileges and/or evade defenses by modifying settings to add objects which they control. For example, this may be used to forge [SAML Tokens](https://attack.mitre.org/techniques/T1606/002), without the need to compromise the signing certificate to forge new credentials. Instead, an adversary can manipulate domain trusts to add their own signing certificate.",
+                    "kill_chain_phases": [
+                        {
+                            "kill_chain_name": "mitre-attack",
+                            "phase_name": "defense-evasion"
+                        },
+                        {
+                            "kill_chain_name": "mitre-attack",
+                            "phase_name": "privilege-escalation"
+                        }
+                    ],
+                    "revoked": false,
+                    "external_references": [
+                        {
+                            "source_name": "mitre-attack",
+                            "url": "https://attack.mitre.org/techniques/T1484/002",
+                            "external_id": "T1484.002"
+                        },
+                        {
+                            "source_name": "Microsoft - Azure AD Federation",
+                            "description": "Microsoft. (2018, November 28). What is federation with Azure AD?. Retrieved December 30, 2020.",
+                            "url": "https://docs.microsoft.com/en-us/azure/active-directory/hybrid/whatis-fed"
+                        },
+                        {
+                            "source_name": "Microsoft - Azure Sentinel ADFSDomainTrustMods",
+                            "description": "Microsoft. (2020, December). Azure Sentinel Detections. Retrieved December 30, 2020.",
+                            "url": "https://github.com/Azure/Azure-Sentinel/blob/master/Detections/AuditLogs/ADFSDomainTrustMods.yaml"
+                        },
+                        {
+                            "source_name": "Sygnia Golden SAML",
+                            "description": "Sygnia. (2020, December). Detection and Hunting of Golden SAML Attack. Retrieved January 6, 2021.",
+                            "url": "https://www.sygnia.co/golden-saml-advisory"
+                        },
+                        {
+                            "source_name": "CISA SolarWinds Cloud Detection",
+                            "description": "CISA. (2021, January 8). Detecting Post-Compromise Threat Activity in Microsoft Cloud Environments. Retrieved January 8, 2021.",
+                            "url": "https://us-cert.cisa.gov/ncas/alerts/aa21-008a"
+                        },
+                        {
+                            "source_name": "Microsoft - Update or Repair Federated domain",
+                            "description": "Microsoft. (2020, September 14). Update or repair the settings of a federated domain in Office 365, Azure, or Intune. Retrieved December 30, 2020.",
+                            "url": "https://docs.microsoft.com/en-us/office365/troubleshoot/active-directory/update-federated-domain-office-365"
+                        }
+                    ],
+                    "object_marking_refs": [
+                        "marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168"
+                    ],
+                    "x_mitre_contributors": [
+                        "Blake Strom, Microsoft 365 Defender"
+                    ],
+                    "x_mitre_data_sources": [
+                        "Windows event logs",
+                        "PowerShell logs",
+                        "Azure activity logs"
+                    ],
+                    "x_mitre_detection": "Monitor for modifications to domain trust settings, such as when a user or application modifies the federation settings on the domain or updates domain authentication from Managed to Federated via ActionTypes <code>Set federation settings on domain</code> and <code>Set domain authentication</code>.(Citation: Microsoft - Azure Sentinel ADFSDomainTrustMods) This may also include monitoring for Event ID 307 which can be correlated to relevant Event ID 510 with the same Instance ID for change details.(Citation: Sygnia Golden SAML)(Citation: CISA SolarWinds Cloud Detection)\n\nMonitor for PowerShell commands such as: <code>Update-MSOLFederatedDomain \u2013DomainName: \"Federated Domain Name\"</code>, or <code>Update-MSOLFederatedDomain \u2013DomainName: \"Federated Domain Name\" \u2013supportmultipledomain</code>.(Citation: Microsoft - Update or Repair Federated domain)",
+                    "x_mitre_is_subtechnique": true,
+                    "x_mitre_permissions_required": [
+                        "Administrator"
+                    ],
+                    "x_mitre_platforms": [
+                        "Windows",
+                        "Azure AD"
+                    ],
+                    "x_mitre_version": "1.0"
+                },
+                {
+                    "type": "attack-pattern",
+                    "id": "attack-pattern--5d2be8b9-d24c-4e98-83bf-2f5f79477163",
+                    "created_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "created": "2020-12-28 21:50:59.844000+00:00",
+                    "modified": "2021-01-07 21:18:12.645000+00:00",
+                    "name": "Group Policy Modification",
+                    "description": "Adversaries may modify Group Policy Objects (GPOs) to subvert the intended discretionary access controls for a domain, usually with the intention of escalating privileges on the domain. Group policy allows for centralized management of user and computer settings in Active Directory (AD). GPOs are containers for group policy settings made up of files stored within a predicable network path <code>\\\\&lt;DOMAIN&gt;\\SYSVOL\\&lt;DOMAIN&gt;\\Policies\\</code>.(Citation: TechNet Group Policy Basics)(Citation: ADSecurity GPO Persistence 2016) \n\nLike other objects in AD, GPOs have access controls associated with them. By default all user accounts in the domain have permission to read GPOs. It is possible to delegate GPO access control permissions, e.g. write access, to specific users or groups in the domain.\n\nMalicious GPO modifications can be used to implement many other malicious behaviors such as [Scheduled Task/Job](https://attack.mitre.org/techniques/T1053), [Disable or Modify Tools](https://attack.mitre.org/techniques/T1562/001), [Ingress Tool Transfer](https://attack.mitre.org/techniques/T1105), [Create Account](https://attack.mitre.org/techniques/T1136), [Service Execution](https://attack.mitre.org/techniques/T1035),  and more.(Citation: ADSecurity GPO Persistence 2016)(Citation: Wald0 Guide to GPOs)(Citation: Harmj0y Abusing GPO Permissions)(Citation: Mandiant M Trends 2016)(Citation: Microsoft Hacking Team Breach) Since GPOs can control so many user and machine settings in the AD environment, there are a great number of potential attacks that can stem from this GPO abuse.(Citation: Wald0 Guide to GPOs)\n\nFor example, publicly available scripts such as <code>New-GPOImmediateTask</code> can be leveraged to automate the creation of a malicious [Scheduled Task/Job](https://attack.mitre.org/techniques/T1053) by modifying GPO settings, in this case modifying <code>&lt;GPO_PATH&gt;\\Machine\\Preferences\\ScheduledTasks\\ScheduledTasks.xml</code>.(Citation: Wald0 Guide to GPOs)(Citation: Harmj0y Abusing GPO Permissions) In some cases an adversary might modify specific user rights like SeEnableDelegationPrivilege, set in <code>&lt;GPO_PATH&gt;\\MACHINE\\Microsoft\\Windows NT\\SecEdit\\GptTmpl.inf</code>, to achieve a subtle AD backdoor with complete control of the domain because the user account under the adversary's control would then be able to modify GPOs.(Citation: Harmj0y SeEnableDelegationPrivilege Right)",
+                    "kill_chain_phases": [
+                        {
+                            "kill_chain_name": "mitre-attack",
+                            "phase_name": "defense-evasion"
+                        },
+                        {
+                            "kill_chain_name": "mitre-attack",
+                            "phase_name": "privilege-escalation"
+                        }
+                    ],
+                    "revoked": false,
+                    "external_references": [
+                        {
+                            "source_name": "mitre-attack",
+                            "url": "https://attack.mitre.org/techniques/T1484/001",
+                            "external_id": "T1484.001"
+                        },
+                        {
+                            "source_name": "TechNet Group Policy Basics",
+                            "description": "srachui. (2012, February 13). Group Policy Basics \u2013 Part 1: Understanding the Structure of a Group Policy Object. Retrieved March 5, 2019.",
+                            "url": "https://blogs.technet.microsoft.com/musings_of_a_technical_tam/2012/02/13/group-policy-basics-part-1-understanding-the-structure-of-a-group-policy-object/"
+                        },
+                        {
+                            "source_name": "ADSecurity GPO Persistence 2016",
+                            "description": "Metcalf, S. (2016, March 14). Sneaky Active Directory Persistence #17: Group Policy. Retrieved March 5, 2019.",
+                            "url": "https://adsecurity.org/?p=2716"
+                        },
+                        {
+                            "source_name": "Wald0 Guide to GPOs",
+                            "description": "Robbins, A. (2018, April 2). A Red Teamer\u2019s Guide to GPOs and OUs. Retrieved March 5, 2019.",
+                            "url": "https://wald0.com/?p=179"
+                        },
+                        {
+                            "source_name": "Harmj0y Abusing GPO Permissions",
+                            "description": "Schroeder, W. (2016, March 17). Abusing GPO Permissions. Retrieved March 5, 2019.",
+                            "url": "http://www.harmj0y.net/blog/redteaming/abusing-gpo-permissions/"
+                        },
+                        {
+                            "source_name": "Mandiant M Trends 2016",
+                            "description": "Mandiant. (2016, February 25). Mandiant M-Trends 2016. Retrieved March 5, 2019.",
+                            "url": "https://www.fireeye.com/content/dam/fireeye-www/current-threats/pdfs/rpt-mtrends-2016.pdf"
+                        },
+                        {
+                            "source_name": "Microsoft Hacking Team Breach",
+                            "description": "Microsoft Secure Team. (2016, June 1). Hacking Team Breach: A Cyber Jurassic Park. Retrieved March 5, 2019.",
+                            "url": "https://www.microsoft.com/security/blog/2016/06/01/hacking-team-breach-a-cyber-jurassic-park/"
+                        },
+                        {
+                            "source_name": "Harmj0y SeEnableDelegationPrivilege Right",
+                            "description": "Schroeder, W. (2017, January 10). The Most Dangerous User Right You (Probably) Have Never Heard Of. Retrieved March 5, 2019.",
+                            "url": "http://www.harmj0y.net/blog/activedirectory/the-most-dangerous-user-right-you-probably-have-never-heard-of/"
+                        }
+                    ],
+                    "object_marking_refs": [
+                        "marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168"
+                    ],
+                    "x_mitre_contributors": [
+                        "Itamar Mizrahi, Cymptom",
+                        "Tristan Bennett, Seamless Intelligence"
+                    ],
+                    "x_mitre_data_sources": [
+                        "Windows event logs"
+                    ],
+                    "x_mitre_detection": "It is possible to detect GPO modifications by monitoring directory service changes using Windows event logs. Several events may be logged for such GPO modifications, including:\n\n* Event ID 5136 - A directory service object was modified\n* Event ID 5137 - A directory service object was created\n* Event ID 5138 - A directory service object was undeleted\n* Event ID 5139 - A directory service object was moved\n* Event ID 5141 - A directory service object was deleted\n\n\nGPO abuse will often be accompanied by some other behavior such as [Scheduled Task/Job](https://attack.mitre.org/techniques/T1053), which will have events associated with it to detect. Subsequent permission value modifications, like those to SeEnableDelegationPrivilege, can also be searched for in events associated with privileges assigned to new logons (Event ID 4672) and assignment of user rights (Event ID 4704).",
+                    "x_mitre_is_subtechnique": true,
+                    "x_mitre_permissions_required": [
+                        "Administrator",
+                        "User"
+                    ],
+                    "x_mitre_platforms": [
+                        "Windows"
+                    ],
+                    "x_mitre_version": "1.0"
+                },
+                {
+                    "type": "attack-pattern",
+                    "id": "attack-pattern--94cb00a4-b295-4d06-aa2b-5653b9c1be9c",
+                    "created_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "created": "2020-12-17 02:13:46.247000+00:00",
+                    "modified": "2021-01-22 21:07:45.925000+00:00",
+                    "name": "Forge Web Credentials",
+                    "description": "Adversaries may forge credential materials that can be used to gain access to web applications or Internet services. Web applications and services (hosted in cloud SaaS environments or on-premise servers) often use session cookies, tokens, or other materials to authenticate and authorize user access.\n\nAdversaries may generate these credential materials in order to gain access to web resources. This differs from [Steal Web Session Cookie](https://attack.mitre.org/techniques/T1539), [Steal Application Access Token](https://attack.mitre.org/techniques/T1528), and other similar behaviors in that the credentials are new and forged by the adversary, rather than stolen or intercepted from legitimate users. The generation of web credentials often requires secret values, such as passwords, [Private Keys](https://attack.mitre.org/techniques/T1552/004), or other cryptographic seed values.(Citation: GitHub AWS-ADFS-Credential-Generator)\n\nOnce forged, adversaries may use these web credentials to access resources (ex: [Use Alternate Authentication Material](https://attack.mitre.org/techniques/T1550)), which may bypass multi-factor and other authentication protection mechanisms.(Citation: Pass The Cookie)(Citation: Unit 42 Mac Crypto Cookies January 2019)(Citation: Microsoft SolarWinds Customer Guidance)",
+                    "kill_chain_phases": [
+                        {
+                            "kill_chain_name": "mitre-attack",
+                            "phase_name": "credential-access"
+                        }
+                    ],
+                    "revoked": false,
+                    "external_references": [
+                        {
+                            "source_name": "mitre-attack",
+                            "url": "https://attack.mitre.org/techniques/T1606",
+                            "external_id": "T1606"
+                        },
+                        {
+                            "source_name": "GitHub AWS-ADFS-Credential-Generator",
+                            "description": "Damian Hickey. (2017, January 28). AWS-ADFS-Credential-Generator. Retrieved December 16, 2020.",
+                            "url": "https://github.com/damianh/aws-adfs-credential-generator"
+                        },
+                        {
+                            "source_name": "Pass The Cookie",
+                            "description": "Rehberger, J. (2018, December). Pivot to the Cloud using Pass the Cookie. Retrieved April 5, 2019.",
+                            "url": "https://wunderwuzzi23.github.io/blog/passthecookie.html"
+                        },
+                        {
+                            "source_name": "Unit 42 Mac Crypto Cookies January 2019",
+                            "description": "Chen, Y., Hu, W., Xu, Z., et. al. (2019, January 31). Mac Malware Steals Cryptocurrency Exchanges\u2019 Cookies. Retrieved October 14, 2019.",
+                            "url": "https://unit42.paloaltonetworks.com/mac-malware-steals-cryptocurrency-exchanges-cookies/"
+                        },
+                        {
+                            "source_name": "Microsoft SolarWinds Customer Guidance",
+                            "description": "MSRC. (2020, December 13). Customer Guidance on Recent Nation-State Cyber Attacks. Retrieved December 17, 2020.",
+                            "url": "https://msrc-blog.microsoft.com/2020/12/13/customer-guidance-on-recent-nation-state-cyber-attacks/"
+                        }
+                    ],
+                    "object_marking_refs": [
+                        "marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168"
+                    ],
+                    "x_mitre_data_sources": [
+                        "Web logs",
+                        "Authentication logs"
+                    ],
+                    "x_mitre_detection": "Monitor for anomalous authentication activity, such as logons or other user session activity associated with unknown accounts. Monitor for unexpected and abnormal access to resources, including access of websites and cloud-based applications by the same user in different locations or by different systems that do not match expected configurations.",
+                    "x_mitre_is_subtechnique": false,
+                    "x_mitre_platforms": [
+                        "SaaS",
+                        "Windows",
+                        "macOS",
+                        "Linux",
+                        "Azure AD",
+                        "Office 365"
+                    ],
+                    "x_mitre_version": "1.0"
+                },
+                {
+                    "type": "attack-pattern",
+                    "id": "attack-pattern--1f9c2bae-b441-4f66-a8af-b65946ee72f2",
+                    "created_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "created": "2020-12-17 15:24:12.240000+00:00",
+                    "modified": "2021-01-22 21:07:42.451000+00:00",
+                    "name": "SAML Tokens",
+                    "description": "An adversary may forge SAML tokens with any permissions claims and lifetimes if they possess a valid SAML token-signing certificate.(Citation: Microsoft SolarWinds Steps) The default lifetime of a SAML token is one hour, but the validity period can be specified in the <code>NotOnOrAfter</code> value of the <code>conditions ...</code> element in a token. This value can be changed using the <code>AccessTokenLifetime</code> in a <code>LifetimeTokenPolicy</code>.(Citation: Microsoft SAML Token Lifetimes) Forged SAML tokens enable adversaries to authenticate across services that use SAML 2.0 as an SSO (single sign-on) mechanism.(Citation: Cyberark Golden SAML)\n\nAn adversary may utilize [Private Keys](https://attack.mitre.org/techniques/T1552/004) to compromise an organization's token-signing certificate to create forged SAML tokens. If the adversary has sufficient permissions to establish a new federation trust with their own Active Directory Federation Services (AD FS) server, they may instead generate their own trusted token-signing certificate.(Citation: Microsoft SolarWinds Customer Guidance) This differs from [Steal Application Access Token](https://attack.mitre.org/techniques/T1528) and other similar behaviors in that the tokens are new and forged by the adversary, rather than stolen or intercepted from legitimate users.\n\nAn adversary may gain administrative Azure AD privileges if a SAML token is forged which claims to represent a highly privileged account. This may lead to [Use Alternate Authentication Material](https://attack.mitre.org/techniques/T1550), which may bypass multi-factor and other authentication protection mechanisms.(Citation: Microsoft SolarWinds Customer Guidance)",
+                    "kill_chain_phases": [
+                        {
+                            "kill_chain_name": "mitre-attack",
+                            "phase_name": "credential-access"
+                        }
+                    ],
+                    "revoked": false,
+                    "external_references": [
+                        {
+                            "source_name": "mitre-attack",
+                            "url": "https://attack.mitre.org/techniques/T1606/002",
+                            "external_id": "T1606.002"
+                        },
+                        {
+                            "source_name": "Microsoft SolarWinds Steps",
+                            "description": "Lambert, J. (2020, December 13). Important steps for customers to protect themselves from recent nation-state cyberattacks. Retrieved December 17, 2020.",
+                            "url": "https://blogs.microsoft.com/on-the-issues/2020/12/13/customers-protect-nation-state-cyberattacks/"
+                        },
+                        {
+                            "source_name": "Microsoft SAML Token Lifetimes",
+                            "description": "Microsoft. (2020, December 14). Configurable token lifetimes in Microsoft Identity Platform. Retrieved December 22, 2020.",
+                            "url": "https://docs.microsoft.com/en-us/azure/active-directory/develop/active-directory-configurable-token-lifetimes"
+                        },
+                        {
+                            "source_name": "Cyberark Golden SAML",
+                            "description": "Reiner, S. (2017, November 21). Golden SAML: Newly Discovered Attack Technique Forges Authentication to Cloud Apps. Retrieved December 17, 2020.",
+                            "url": "https://www.cyberark.com/resources/threat-research-blog/golden-saml-newly-discovered-attack-technique-forges-authentication-to-cloud-apps"
+                        },
+                        {
+                            "source_name": "Microsoft SolarWinds Customer Guidance",
+                            "description": "MSRC. (2020, December 13). Customer Guidance on Recent Nation-State Cyber Attacks. Retrieved December 17, 2020.",
+                            "url": "https://msrc-blog.microsoft.com/2020/12/13/customer-guidance-on-recent-nation-state-cyber-attacks/"
+                        },
+                        {
+                            "source_name": "Sygnia Golden SAML",
+                            "description": "Sygnia. (2020, December). Detection and Hunting of Golden SAML Attack. Retrieved January 6, 2021.",
+                            "url": "https://www.sygnia.co/golden-saml-advisory"
+                        }
+                    ],
+                    "object_marking_refs": [
+                        "marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168"
+                    ],
+                    "x_mitre_contributors": [
+                        "Blake Strom, Microsoft 365 Defender",
+                        "Oleg Kolesnikov, Securonix"
+                    ],
+                    "x_mitre_data_sources": [
+                        "Windows event logs",
+                        "Authentication logs"
+                    ],
+                    "x_mitre_detection": "This technique may be difficult to detect as SAML tokens are signed by a trusted certificate. The forging process may not be detectable since it is likely to happen outside of a defender's visibility, but subsequent usage of the forged token may be seen. Monitor for anomalous logins using SAML tokens created by a compromised or adversary generated token-signing certificate. These logins may occur on any on-premises resources as well as from any cloud environment that trusts the certificate.(Citation: Microsoft SolarWinds Customer Guidance) Search for logins to service providers using SAML SSO which do not have corresponding 4769, 1200, and 1202 events in the Domain.(Citation: Sygnia Golden SAML)\n\nConsider modifying SAML responses to include custom elements for each service provider. Monitor these custom elements in service provider access logs to detect any anomalous requests.(Citation: Sygnia Golden SAML)",
+                    "x_mitre_is_subtechnique": true,
+                    "x_mitre_permissions_required": [
+                        "Administrator"
+                    ],
+                    "x_mitre_platforms": [
+                        "Azure AD",
+                        "SaaS",
+                        "Windows",
+                        "Office 365"
+                    ],
+                    "x_mitre_version": "1.0"
+                },
+                {
+                    "type": "attack-pattern",
+                    "id": "attack-pattern--861b8fd2-57f3-4ee1-ab5d-c19c3b8c7a4a",
+                    "created_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "created": "2020-12-17 02:14:34.178000+00:00",
+                    "modified": "2021-01-11 20:31:36.404000+00:00",
+                    "name": "Web Cookies",
+                    "description": "Adversaries may forge web cookies that can be used to gain access to web applications or Internet services. Web applications and services (hosted in cloud SaaS environments or on-premise servers) often use session cookies to authenticate and authorize user access.\n\nAdversaries may generate these cookies in order to gain access to web resources. This differs from [Steal Web Session Cookie](https://attack.mitre.org/techniques/T1539) and other similar behaviors in that the cookies are new and forged by the adversary, rather than stolen or intercepted from legitimate users. Most common web applications have standardized and documented cookie values that can be generated using provided tools or interfaces.(Citation: Pass The Cookie) The generation of web cookies often requires secret values, such as passwords, [Private Keys](https://attack.mitre.org/techniques/T1552/004), or other cryptographic seed values.\n\nOnce forged, adversaries may use these web cookies to access resources ([Web Session Cookie](https://attack.mitre.org/techniques/T1550/004)), which may bypass multi-factor and other authentication protection mechanisms.(Citation: Volexity SolarWinds)(Citation: Pass The Cookie)(Citation: Unit 42 Mac Crypto Cookies January 2019)",
+                    "kill_chain_phases": [
+                        {
+                            "kill_chain_name": "mitre-attack",
+                            "phase_name": "credential-access"
+                        }
+                    ],
+                    "revoked": false,
+                    "external_references": [
+                        {
+                            "source_name": "mitre-attack",
+                            "url": "https://attack.mitre.org/techniques/T1606/001",
+                            "external_id": "T1606.001"
+                        },
+                        {
+                            "source_name": "Pass The Cookie",
+                            "description": "Rehberger, J. (2018, December). Pivot to the Cloud using Pass the Cookie. Retrieved April 5, 2019.",
+                            "url": "https://wunderwuzzi23.github.io/blog/passthecookie.html"
+                        },
+                        {
+                            "source_name": "Volexity SolarWinds",
+                            "description": "Cash, D. et al. (2020, December 14). Dark Halo Leverages SolarWinds Compromise to Breach Organizations. Retrieved December 29, 2020.",
+                            "url": "https://www.volexity.com/blog/2020/12/14/dark-halo-leverages-solarwinds-compromise-to-breach-organizations/"
+                        },
+                        {
+                            "source_name": "Unit 42 Mac Crypto Cookies January 2019",
+                            "description": "Chen, Y., Hu, W., Xu, Z., et. al. (2019, January 31). Mac Malware Steals Cryptocurrency Exchanges\u2019 Cookies. Retrieved October 14, 2019.",
+                            "url": "https://unit42.paloaltonetworks.com/mac-malware-steals-cryptocurrency-exchanges-cookies/"
+                        }
+                    ],
+                    "object_marking_refs": [
+                        "marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168"
+                    ],
+                    "x_mitre_data_sources": [
+                        "Web logs",
+                        "Authentication logs"
+                    ],
+                    "x_mitre_detection": "Monitor for anomalous authentication activity, such as logons or other user session activity associated with unknown accounts. Monitor for unexpected and abnormal access to resources, including access of websites and cloud-based applications by the same user in different locations or by different systems that do not match expected configurations.",
+                    "x_mitre_is_subtechnique": true,
+                    "x_mitre_platforms": [
+                        "Linux",
+                        "macOS",
+                        "Windows",
+                        "SaaS"
+                    ],
+                    "x_mitre_version": "1.0"
+                }
+            ],
+            "major_version_changes": [
+                {
+                    "type": "attack-pattern",
+                    "id": "attack-pattern--ebb42bbe-62d7-47d7-a55f-3b08b61d792d",
+                    "created_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "created": "2019-03-07 14:10:32.650000+00:00",
+                    "modified": "2021-01-11 19:48:37.680000+00:00",
+                    "name": "Domain Policy Modification",
+                    "description": "Adversaries may modify the configuration settings of a domain to evade defenses and/or escalate privileges in domain environments. Domains provide a centralized means of managing how computer resources (ex: computers, user accounts) can act, and interact with each other, on a network. The policy of the domain also includes configuration settings that may apply between domains in a multi-domain/forest environment. Modifications to domain settings may include altering domain Group Policy Objects (GPOs) or changing trust settings for domains, including federation trusts.\n\nWith sufficient permissions, adversaries can modify domain policy settings. Since domain configuration settings control many of the interactions within the Active Directory (AD) environment, there are a great number of potential attacks that can stem from this abuse. Examples of such abuse include modifying GPOs to push a malicious [Scheduled Task](https://attack.mitre.org/techniques/T1053/005) to computers throughout the domain environment(Citation: ADSecurity GPO Persistence 2016)(Citation: Wald0 Guide to GPOs)(Citation: Harmj0y Abusing GPO Permissions) or modifying domain trusts to include an adversary controlled domain where they can control access tokens that will subsequently be accepted by victim domain resources.(Citation: Microsoft - Customer Guidance on Recent Nation-State Cyber Attacks) Adversaries can also change configuration settings within the AD environment to implement a [Rogue Domain Controller](https://attack.mitre.org/techniques/T1207).\n\nAdversaries may temporarily modify domain policy, carry out a malicious action(s), and then revert the change to remove suspicious indicators.",
+                    "kill_chain_phases": [
+                        {
+                            "kill_chain_name": "mitre-attack",
+                            "phase_name": "defense-evasion"
+                        },
+                        {
+                            "kill_chain_name": "mitre-attack",
+                            "phase_name": "privilege-escalation"
+                        }
+                    ],
+                    "revoked": false,
+                    "external_references": [
+                        {
+                            "source_name": "mitre-attack",
+                            "url": "https://attack.mitre.org/techniques/T1484",
+                            "external_id": "T1484"
+                        },
+                        {
+                            "source_name": "ADSecurity GPO Persistence 2016",
+                            "description": "Metcalf, S. (2016, March 14). Sneaky Active Directory Persistence #17: Group Policy. Retrieved March 5, 2019.",
+                            "url": "https://adsecurity.org/?p=2716"
+                        },
+                        {
+                            "source_name": "Wald0 Guide to GPOs",
+                            "description": "Robbins, A. (2018, April 2). A Red Teamer\u2019s Guide to GPOs and OUs. Retrieved March 5, 2019.",
+                            "url": "https://wald0.com/?p=179"
+                        },
+                        {
+                            "source_name": "Harmj0y Abusing GPO Permissions",
+                            "description": "Schroeder, W. (2016, March 17). Abusing GPO Permissions. Retrieved March 5, 2019.",
+                            "url": "http://www.harmj0y.net/blog/redteaming/abusing-gpo-permissions/"
+                        },
+                        {
+                            "source_name": "Microsoft - Customer Guidance on Recent Nation-State Cyber Attacks",
+                            "description": "MSRC. (2020, December 13). Customer Guidance on Recent Nation-State Cyber Attacks. Retrieved December 30, 2020.",
+                            "url": "https://msrc-blog.microsoft.com/2020/12/13/customer-guidance-on-recent-nation-state-cyber-attacks/"
+                        },
+                        {
+                            "source_name": "Microsoft - Azure Sentinel ADFSDomainTrustMods",
+                            "description": "Microsoft. (2020, December). Azure Sentinel Detections. Retrieved December 30, 2020.",
+                            "url": "https://github.com/Azure/Azure-Sentinel/blob/master/Detections/AuditLogs/ADFSDomainTrustMods.yaml"
+                        },
+                        {
+                            "source_name": "Microsoft 365 Defender Solorigate",
+                            "description": "Microsoft 365 Defender Team. (2020, December 28). Using Microsoft 365 Defender to protect against Solorigate. Retrieved January 7, 2021.",
+                            "url": "https://www.microsoft.com/security/blog/2020/12/28/using-microsoft-365-defender-to-coordinate-protection-against-solorigate/"
+                        },
+                        {
+                            "source_name": "Sygnia Golden SAML",
+                            "description": "Sygnia. (2020, December). Detection and Hunting of Golden SAML Attack. Retrieved January 6, 2021.",
+                            "url": "https://www.sygnia.co/golden-saml-advisory"
+                        },
+                        {
+                            "source_name": "CISA SolarWinds Cloud Detection",
+                            "description": "CISA. (2021, January 8). Detecting Post-Compromise Threat Activity in Microsoft Cloud Environments. Retrieved January 8, 2021.",
+                            "url": "https://us-cert.cisa.gov/ncas/alerts/aa21-008a"
+                        },
+                        {
+                            "source_name": "Microsoft - Update or Repair Federated domain",
+                            "description": "Microsoft. (2020, September 14). Update or repair the settings of a federated domain in Office 365, Azure, or Intune. Retrieved December 30, 2020.",
+                            "url": "https://docs.microsoft.com/en-us/office365/troubleshoot/active-directory/update-federated-domain-office-365"
+                        }
+                    ],
+                    "object_marking_refs": [
+                        "marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168"
+                    ],
+                    "x_mitre_data_sources": [
+                        "PowerShell logs",
+                        "Process command-line parameters",
+                        "Process monitoring",
+                        "Azure activity logs",
+                        "Windows event logs"
+                    ],
+                    "x_mitre_defense_bypassed": [
+                        "System access controls",
+                        "File system access controls"
+                    ],
+                    "x_mitre_detection": "It may be possible to detect domain policy modifications using Windows event logs. Group policy modifications, for example, may be logged under a variety of Windows event IDs for modifying, creating, undeleting, moving, and deleting directory service objects (Event ID 5136, 5137, 5138, 5139, 5141 respectively). Monitor for modifications to domain trust settings, such as when a user or application modifies the federation settings on the domain or updates domain authentication from Managed to Federated via ActionTypes <code>Set federation settings on domain</code> and <code>Set domain authentication</code>.(Citation: Microsoft - Azure Sentinel ADFSDomainTrustMods)(Citation: Microsoft 365 Defender Solorigate) This may also include monitoring for Event ID 307 which can be correlated to relevant Event ID 510 with the same Instance ID for change details.(Citation: Sygnia Golden SAML)(Citation: CISA SolarWinds Cloud Detection)\n\nConsider monitoring for commands/cmdlets and command-line arguments that may be leveraged to modify domain policy settings.(Citation: Microsoft - Update or Repair Federated domain) Some domain policy modifications, such as changes to federation settings, are likely to be rare.(Citation: Microsoft 365 Defender Solorigate)",
+                    "x_mitre_is_subtechnique": false,
+                    "x_mitre_permissions_required": [
+                        "Administrator",
+                        "User"
+                    ],
+                    "x_mitre_platforms": [
+                        "Windows",
+                        "Azure AD"
+                    ],
+                    "x_mitre_version": "2.0",
+                    "detailed_diff": "{\"dictionary_item_removed\": {\"root['x_mitre_contributors']\": [\"Itamar Mizrahi, Cymptom\", \"Tristan Bennett, Seamless Intelligence\"]}, \"values_changed\": {\"root['modified']\": {\"new_value\": \"2021-01-11 19:48:37.680000+00:00\", \"old_value\": \"2020-03-26 21:17:41.231000+00:00\"}, \"root['name']\": {\"new_value\": \"Domain Policy Modification\", \"old_value\": \"Group Policy Modification\"}, \"root['description']\": {\"new_value\": \"Adversaries may modify the configuration settings of a domain to evade defenses and/or escalate privileges in domain environments. Domains provide a centralized means of managing how computer resources (ex: computers, user accounts) can act, and interact with each other, on a network. The policy of the domain also includes configuration settings that may apply between domains in a multi-domain/forest environment. Modifications to domain settings may include altering domain Group Policy Objects (GPOs) or changing trust settings for domains, including federation trusts.\\n\\nWith sufficient permissions, adversaries can modify domain policy settings. Since domain configuration settings control many of the interactions within the Active Directory (AD) environment, there are a great number of potential attacks that can stem from this abuse. Examples of such abuse include modifying GPOs to push a malicious [Scheduled Task](https://attack.mitre.org/techniques/T1053/005) to computers throughout the domain environment(Citation: ADSecurity GPO Persistence 2016)(Citation: Wald0 Guide to GPOs)(Citation: Harmj0y Abusing GPO Permissions) or modifying domain trusts to include an adversary controlled domain where they can control access tokens that will subsequently be accepted by victim domain resources.(Citation: Microsoft - Customer Guidance on Recent Nation-State Cyber Attacks) Adversaries can also change configuration settings within the AD environment to implement a [Rogue Domain Controller](https://attack.mitre.org/techniques/T1207).\\n\\nAdversaries may temporarily modify domain policy, carry out a malicious action(s), and then revert the change to remove suspicious indicators.\", \"old_value\": \"Adversaries may modify Group Policy Objects (GPOs) to subvert the intended discretionary access controls for a domain, usually with the intention of escalating privileges on the domain. Group policy allows for centralized management of user and computer settings in Active Directory (AD). GPOs are containers for group policy settings made up of files stored within a predicable network path <code>\\\\\\\\&lt;DOMAIN&gt;\\\\SYSVOL\\\\&lt;DOMAIN&gt;\\\\Policies\\\\</code>.(Citation: TechNet Group Policy Basics)(Citation: ADSecurity GPO Persistence 2016) \\n\\nLike other objects in AD, GPOs have access controls associated with them. By default all user accounts in the domain have permission to read GPOs. It is possible to delegate GPO access control permissions, e.g. write access, to specific users or groups in the domain.\\n\\nMalicious GPO modifications can be used to implement many other malicious behaviors such as [Scheduled Task/Job](https://attack.mitre.org/techniques/T1053), [Disable or Modify Tools](https://attack.mitre.org/techniques/T1562/001), [Ingress Tool Transfer](https://attack.mitre.org/techniques/T1105), [Create Account](https://attack.mitre.org/techniques/T1136), [Service Execution](https://attack.mitre.org/techniques/T1035),  and more.(Citation: ADSecurity GPO Persistence 2016)(Citation: Wald0 Guide to GPOs)(Citation: Harmj0y Abusing GPO Permissions)(Citation: Mandiant M Trends 2016)(Citation: Microsoft Hacking Team Breach) Since GPOs can control so many user and machine settings in the AD environment, there are a great number of potential attacks that can stem from this GPO abuse.(Citation: Wald0 Guide to GPOs)\\n\\nFor example, publicly available scripts such as <code>New-GPOImmediateTask</code> can be leveraged to automate the creation of a malicious [Scheduled Task/Job](https://attack.mitre.org/techniques/T1053) by modifying GPO settings, in this case modifying <code>&lt;GPO_PATH&gt;\\\\Machine\\\\Preferences\\\\ScheduledTasks\\\\ScheduledTasks.xml</code>.(Citation: Wald0 Guide to GPOs)(Citation: Harmj0y Abusing GPO Permissions) In some cases an adversary might modify specific user rights like SeEnableDelegationPrivilege, set in <code>&lt;GPO_PATH&gt;\\\\MACHINE\\\\Microsoft\\\\Windows NT\\\\SecEdit\\\\GptTmpl.inf</code>, to achieve a subtle AD backdoor with complete control of the domain because the user account under the adversary's control would then be able to modify GPOs.(Citation: Harmj0y SeEnableDelegationPrivilege Right)\\n\", \"diff\": \"--- \\n+++ \\n@@ -1,7 +1,5 @@\\n-Adversaries may modify Group Policy Objects (GPOs) to subvert the intended discretionary access controls for a domain, usually with the intention of escalating privileges on the domain. Group policy allows for centralized management of user and computer settings in Active Directory (AD). GPOs are containers for group policy settings made up of files stored within a predicable network path <code>\\\\\\\\&lt;DOMAIN&gt;\\\\SYSVOL\\\\&lt;DOMAIN&gt;\\\\Policies\\\\</code>.(Citation: TechNet Group Policy Basics)(Citation: ADSecurity GPO Persistence 2016) \\n+Adversaries may modify the configuration settings of a domain to evade defenses and/or escalate privileges in domain environments. Domains provide a centralized means of managing how computer resources (ex: computers, user accounts) can act, and interact with each other, on a network. The policy of the domain also includes configuration settings that may apply between domains in a multi-domain/forest environment. Modifications to domain settings may include altering domain Group Policy Objects (GPOs) or changing trust settings for domains, including federation trusts.\\n \\n-Like other objects in AD, GPOs have access controls associated with them. By default all user accounts in the domain have permission to read GPOs. It is possible to delegate GPO access control permissions, e.g. write access, to specific users or groups in the domain.\\n+With sufficient permissions, adversaries can modify domain policy settings. Since domain configuration settings control many of the interactions within the Active Directory (AD) environment, there are a great number of potential attacks that can stem from this abuse. Examples of such abuse include modifying GPOs to push a malicious [Scheduled Task](https://attack.mitre.org/techniques/T1053/005) to computers throughout the domain environment(Citation: ADSecurity GPO Persistence 2016)(Citation: Wald0 Guide to GPOs)(Citation: Harmj0y Abusing GPO Permissions) or modifying domain trusts to include an adversary controlled domain where they can control access tokens that will subsequently be accepted by victim domain resources.(Citation: Microsoft - Customer Guidance on Recent Nation-State Cyber Attacks) Adversaries can also change configuration settings within the AD environment to implement a [Rogue Domain Controller](https://attack.mitre.org/techniques/T1207).\\n \\n-Malicious GPO modifications can be used to implement many other malicious behaviors such as [Scheduled Task/Job](https://attack.mitre.org/techniques/T1053), [Disable or Modify Tools](https://attack.mitre.org/techniques/T1562/001), [Ingress Tool Transfer](https://attack.mitre.org/techniques/T1105), [Create Account](https://attack.mitre.org/techniques/T1136), [Service Execution](https://attack.mitre.org/techniques/T1035),  and more.(Citation: ADSecurity GPO Persistence 2016)(Citation: Wald0 Guide to GPOs)(Citation: Harmj0y Abusing GPO Permissions)(Citation: Mandiant M Trends 2016)(Citation: Microsoft Hacking Team Breach) Since GPOs can control so many user and machine settings in the AD environment, there are a great number of potential attacks that can stem from this GPO abuse.(Citation: Wald0 Guide to GPOs)\\n-\\n-For example, publicly available scripts such as <code>New-GPOImmediateTask</code> can be leveraged to automate the creation of a malicious [Scheduled Task/Job](https://attack.mitre.org/techniques/T1053) by modifying GPO settings, in this case modifying <code>&lt;GPO_PATH&gt;\\\\Machine\\\\Preferences\\\\ScheduledTasks\\\\ScheduledTasks.xml</code>.(Citation: Wald0 Guide to GPOs)(Citation: Harmj0y Abusing GPO Permissions) In some cases an adversary might modify specific user rights like SeEnableDelegationPrivilege, set in <code>&lt;GPO_PATH&gt;\\\\MACHINE\\\\Microsoft\\\\Windows NT\\\\SecEdit\\\\GptTmpl.inf</code>, to achieve a subtle AD backdoor with complete control of the domain because the user account under the adversary's control would then be able to modify GPOs.(Citation: Harmj0y SeEnableDelegationPrivilege Right)\\n+Adversaries may temporarily modify domain policy, carry out a malicious action(s), and then revert the change to remove suspicious indicators.\"}, \"root['external_references'][1]['source_name']\": {\"new_value\": \"ADSecurity GPO Persistence 2016\", \"old_value\": \"TechNet Group Policy Basics\"}, \"root['external_references'][1]['description']\": {\"new_value\": \"Metcalf, S. (2016, March 14). Sneaky Active Directory Persistence #17: Group Policy. Retrieved March 5, 2019.\", \"old_value\": \"srachui. (2012, February 13). Group Policy Basics \\u2013 Part 1: Understanding the Structure of a Group Policy Object. Retrieved March 5, 2019.\"}, \"root['external_references'][1]['url']\": {\"new_value\": \"https://adsecurity.org/?p=2716\", \"old_value\": \"https://blogs.technet.microsoft.com/musings_of_a_technical_tam/2012/02/13/group-policy-basics-part-1-understanding-the-structure-of-a-group-policy-object/\"}, \"root['external_references'][2]['source_name']\": {\"new_value\": \"Wald0 Guide to GPOs\", \"old_value\": \"ADSecurity GPO Persistence 2016\"}, \"root['external_references'][2]['description']\": {\"new_value\": \"Robbins, A. (2018, April 2). A Red Teamer\\u2019s Guide to GPOs and OUs. Retrieved March 5, 2019.\", \"old_value\": \"Metcalf, S. (2016, March 14). Sneaky Active Directory Persistence #17: Group Policy. Retrieved March 5, 2019.\"}, \"root['external_references'][2]['url']\": {\"new_value\": \"https://wald0.com/?p=179\", \"old_value\": \"https://adsecurity.org/?p=2716\"}, \"root['external_references'][3]['source_name']\": {\"new_value\": \"Harmj0y Abusing GPO Permissions\", \"old_value\": \"Wald0 Guide to GPOs\"}, \"root['external_references'][3]['description']\": {\"new_value\": \"Schroeder, W. (2016, March 17). Abusing GPO Permissions. Retrieved March 5, 2019.\", \"old_value\": \"Robbins, A. (2018, April 2). A Red Teamer\\u2019s Guide to GPOs and OUs. Retrieved March 5, 2019.\"}, \"root['external_references'][3]['url']\": {\"new_value\": \"http://www.harmj0y.net/blog/redteaming/abusing-gpo-permissions/\", \"old_value\": \"https://wald0.com/?p=179\"}, \"root['external_references'][4]['source_name']\": {\"new_value\": \"Microsoft - Customer Guidance on Recent Nation-State Cyber Attacks\", \"old_value\": \"Harmj0y Abusing GPO Permissions\"}, \"root['external_references'][4]['description']\": {\"new_value\": \"MSRC. (2020, December 13). Customer Guidance on Recent Nation-State Cyber Attacks. Retrieved December 30, 2020.\", \"old_value\": \"Schroeder, W. (2016, March 17). Abusing GPO Permissions. Retrieved March 5, 2019.\"}, \"root['external_references'][4]['url']\": {\"new_value\": \"https://msrc-blog.microsoft.com/2020/12/13/customer-guidance-on-recent-nation-state-cyber-attacks/\", \"old_value\": \"http://www.harmj0y.net/blog/redteaming/abusing-gpo-permissions/\"}, \"root['external_references'][5]['source_name']\": {\"new_value\": \"Microsoft - Azure Sentinel ADFSDomainTrustMods\", \"old_value\": \"Mandiant M Trends 2016\"}, \"root['external_references'][5]['description']\": {\"new_value\": \"Microsoft. (2020, December). Azure Sentinel Detections. Retrieved December 30, 2020.\", \"old_value\": \"Mandiant. (2016, February 25). Mandiant M-Trends 2016. Retrieved March 5, 2019.\"}, \"root['external_references'][5]['url']\": {\"new_value\": \"https://github.com/Azure/Azure-Sentinel/blob/master/Detections/AuditLogs/ADFSDomainTrustMods.yaml\", \"old_value\": \"https://www.fireeye.com/content/dam/fireeye-www/current-threats/pdfs/rpt-mtrends-2016.pdf\"}, \"root['external_references'][6]['source_name']\": {\"new_value\": \"Microsoft 365 Defender Solorigate\", \"old_value\": \"Microsoft Hacking Team Breach\"}, \"root['external_references'][6]['description']\": {\"new_value\": \"Microsoft 365 Defender Team. (2020, December 28). Using Microsoft 365 Defender to protect against Solorigate. Retrieved January 7, 2021.\", \"old_value\": \"Microsoft Secure Team. (2016, June 1). Hacking Team Breach: A Cyber Jurassic Park. Retrieved March 5, 2019.\"}, \"root['external_references'][6]['url']\": {\"new_value\": \"https://www.microsoft.com/security/blog/2020/12/28/using-microsoft-365-defender-to-coordinate-protection-against-solorigate/\", \"old_value\": \"https://www.microsoft.com/security/blog/2016/06/01/hacking-team-breach-a-cyber-jurassic-park/\"}, \"root['external_references'][7]['source_name']\": {\"new_value\": \"Sygnia Golden SAML\", \"old_value\": \"Harmj0y SeEnableDelegationPrivilege Right\"}, \"root['external_references'][7]['description']\": {\"new_value\": \"Sygnia. (2020, December). Detection and Hunting of Golden SAML Attack. Retrieved January 6, 2021.\", \"old_value\": \"Schroeder, W. (2017, January 10). The Most Dangerous User Right You (Probably) Have Never Heard Of. Retrieved March 5, 2019.\"}, \"root['external_references'][7]['url']\": {\"new_value\": \"https://www.sygnia.co/golden-saml-advisory\", \"old_value\": \"http://www.harmj0y.net/blog/activedirectory/the-most-dangerous-user-right-you-probably-have-never-heard-of/\"}, \"root['x_mitre_detection']\": {\"new_value\": \"It may be possible to detect domain policy modifications using Windows event logs. Group policy modifications, for example, may be logged under a variety of Windows event IDs for modifying, creating, undeleting, moving, and deleting directory service objects (Event ID 5136, 5137, 5138, 5139, 5141 respectively). Monitor for modifications to domain trust settings, such as when a user or application modifies the federation settings on the domain or updates domain authentication from Managed to Federated via ActionTypes <code>Set federation settings on domain</code> and <code>Set domain authentication</code>.(Citation: Microsoft - Azure Sentinel ADFSDomainTrustMods)(Citation: Microsoft 365 Defender Solorigate) This may also include monitoring for Event ID 307 which can be correlated to relevant Event ID 510 with the same Instance ID for change details.(Citation: Sygnia Golden SAML)(Citation: CISA SolarWinds Cloud Detection)\\n\\nConsider monitoring for commands/cmdlets and command-line arguments that may be leveraged to modify domain policy settings.(Citation: Microsoft - Update or Repair Federated domain) Some domain policy modifications, such as changes to federation settings, are likely to be rare.(Citation: Microsoft 365 Defender Solorigate)\", \"old_value\": \"It is possible to detect GPO modifications by monitoring directory service changes using Windows event logs. Several events may be logged for such GPO modifications, including:\\n\\n* Event ID 5136 - A directory service object was modified\\n* Event ID 5137 - A directory service object was created\\n* Event ID 5138 - A directory service object was undeleted\\n* Event ID 5139 - A directory service object was moved\\n* Event ID 5141 - A directory service object was deleted\\n\\n\\nGPO abuse will often be accompanied by some other behavior such as [Scheduled Task/Job](https://attack.mitre.org/techniques/T1053), which will have events associated with it to detect. Subsequent permission value modifications, like those to SeEnableDelegationPrivilege, can also be searched for in events associated with privileges assigned to new logons (Event ID 4672) and assignment of user rights (Event ID 4704). \", \"diff\": \"--- \\n+++ \\n@@ -1,10 +1,3 @@\\n-It is possible to detect GPO modifications by monitoring directory service changes using Windows event logs. Several events may be logged for such GPO modifications, including:\\n+It may be possible to detect domain policy modifications using Windows event logs. Group policy modifications, for example, may be logged under a variety of Windows event IDs for modifying, creating, undeleting, moving, and deleting directory service objects (Event ID 5136, 5137, 5138, 5139, 5141 respectively). Monitor for modifications to domain trust settings, such as when a user or application modifies the federation settings on the domain or updates domain authentication from Managed to Federated via ActionTypes <code>Set federation settings on domain</code> and <code>Set domain authentication</code>.(Citation: Microsoft - Azure Sentinel ADFSDomainTrustMods)(Citation: Microsoft 365 Defender Solorigate) This may also include monitoring for Event ID 307 which can be correlated to relevant Event ID 510 with the same Instance ID for change details.(Citation: Sygnia Golden SAML)(Citation: CISA SolarWinds Cloud Detection)\\n \\n-* Event ID 5136 - A directory service object was modified\\n-* Event ID 5137 - A directory service object was created\\n-* Event ID 5138 - A directory service object was undeleted\\n-* Event ID 5139 - A directory service object was moved\\n-* Event ID 5141 - A directory service object was deleted\\n-\\n-\\n-GPO abuse will often be accompanied by some other behavior such as [Scheduled Task/Job](https://attack.mitre.org/techniques/T1053), which will have events associated with it to detect. Subsequent permission value modifications, like those to SeEnableDelegationPrivilege, can also be searched for in events associated with privileges assigned to new logons (Event ID 4672) and assignment of user rights (Event ID 4704). \\n+Consider monitoring for commands/cmdlets and command-line arguments that may be leveraged to modify domain policy settings.(Citation: Microsoft - Update or Repair Federated domain) Some domain policy modifications, such as changes to federation settings, are likely to be rare.(Citation: Microsoft 365 Defender Solorigate)\"}, \"root['x_mitre_version']\": {\"new_value\": \"2.0\", \"old_value\": \"1.1\"}}, \"iterable_item_added\": {\"root['external_references'][8]\": {\"source_name\": \"CISA SolarWinds Cloud Detection\", \"description\": \"CISA. (2021, January 8). Detecting Post-Compromise Threat Activity in Microsoft Cloud Environments. Retrieved January 8, 2021.\", \"url\": \"https://us-cert.cisa.gov/ncas/alerts/aa21-008a\"}, \"root['external_references'][9]\": {\"source_name\": \"Microsoft - Update or Repair Federated domain\", \"description\": \"Microsoft. (2020, September 14). Update or repair the settings of a federated domain in Office 365, Azure, or Intune. Retrieved December 30, 2020.\", \"url\": \"https://docs.microsoft.com/en-us/office365/troubleshoot/active-directory/update-federated-domain-office-365\"}, \"root['x_mitre_data_sources'][0]\": \"PowerShell logs\", \"root['x_mitre_data_sources'][1]\": \"Process command-line parameters\", \"root['x_mitre_data_sources'][2]\": \"Process monitoring\", \"root['x_mitre_data_sources'][3]\": \"Azure activity logs\", \"root['x_mitre_platforms'][1]\": \"Azure AD\"}}",
+                    "previous_version": "1.1",
+                    "version_change": "1.1 \u2192 2.0",
+                    "description_change_table": "\n    <table class=\"diff\" id=\"difflib_chg_to4__top\"\n           cellspacing=\"0\" cellpadding=\"0\" rules=\"groups\" >\n        <colgroup></colgroup> <colgroup></colgroup> <colgroup></colgroup>\n        <colgroup></colgroup> <colgroup></colgroup> <colgroup></colgroup>\n        <thead><tr><th class=\"diff_next\"><br /></th><th colspan=\"2\" class=\"diff_header\">Old Description</th><th class=\"diff_next\"><br /></th><th colspan=\"2\" class=\"diff_header\">New Description</th></tr></thead>\n        <tbody>\n            <tr><td class=\"diff_next\" id=\"difflib_chg_to4__0\"><a href=\"#difflib_chg_to4__top\">t</a></td><td class=\"diff_header\" id=\"from4_1\">1</td><td nowrap=\"nowrap\"><span class=\"diff_sub\">Adversaries&nbsp;may&nbsp;modify&nbsp;Group&nbsp;Policy&nbsp;Objects&nbsp;(GPOs)&nbsp;to&nbsp;subver</span></td><td class=\"diff_next\"><a href=\"#difflib_chg_to4__top\">t</a></td><td class=\"diff_header\" id=\"to4_1\">1</td><td nowrap=\"nowrap\"><span class=\"diff_add\">Adversaries&nbsp;may&nbsp;modify&nbsp;the&nbsp;configuration&nbsp;settings&nbsp;of&nbsp;a&nbsp;domai</span></td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\"><span class=\"diff_sub\">t&nbsp;the&nbsp;intended&nbsp;discretionary&nbsp;access&nbsp;controls&nbsp;for&nbsp;a&nbsp;domain,&nbsp;u</span></td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\"><span class=\"diff_add\">n&nbsp;to&nbsp;evade&nbsp;defenses&nbsp;and/or&nbsp;escalate&nbsp;privileges&nbsp;in&nbsp;domain&nbsp;env</span></td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\"><span class=\"diff_sub\">sually&nbsp;with&nbsp;the&nbsp;intention&nbsp;of&nbsp;escalating&nbsp;privileges&nbsp;on&nbsp;the&nbsp;do</span></td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\"><span class=\"diff_add\">ironments.&nbsp;Domains&nbsp;provide&nbsp;a&nbsp;centralized&nbsp;means&nbsp;of&nbsp;managing&nbsp;h</span></td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\"><span class=\"diff_sub\">main.&nbsp;Group&nbsp;policy&nbsp;allows&nbsp;for&nbsp;centralized&nbsp;management&nbsp;of&nbsp;user</span></td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\"><span class=\"diff_add\">ow&nbsp;computer&nbsp;resources&nbsp;(ex:&nbsp;computers,&nbsp;user&nbsp;accounts)&nbsp;can&nbsp;act</span></td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\"><span class=\"diff_sub\">&nbsp;and&nbsp;computer&nbsp;settings&nbsp;in&nbsp;Active&nbsp;Directory&nbsp;(AD).&nbsp;GPOs&nbsp;are&nbsp;co</span></td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\"><span class=\"diff_add\">,&nbsp;and&nbsp;interact&nbsp;with&nbsp;each&nbsp;other,&nbsp;on&nbsp;a&nbsp;network.&nbsp;The&nbsp;policy&nbsp;of&nbsp;</span></td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\"><span class=\"diff_sub\">ntainers&nbsp;for&nbsp;group&nbsp;policy&nbsp;settings&nbsp;made&nbsp;up&nbsp;of&nbsp;files&nbsp;stored&nbsp;w</span></td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\"><span class=\"diff_add\">the&nbsp;domain&nbsp;also&nbsp;includes&nbsp;configuration&nbsp;settings&nbsp;that&nbsp;may&nbsp;app</span></td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\"><span class=\"diff_sub\">ithin&nbsp;a&nbsp;predicable&nbsp;network&nbsp;path&nbsp;&lt;code&gt;\\\\&amp;lt;DOMAIN&amp;gt;\\SYSVO</span></td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\"><span class=\"diff_add\">ly&nbsp;between&nbsp;domains&nbsp;in&nbsp;a&nbsp;multi-domain/forest&nbsp;environment.&nbsp;Mod</span></td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\"><span class=\"diff_sub\">L\\&amp;lt;DOMAIN&amp;gt;\\Policies\\&lt;/code&gt;.(Citation:&nbsp;TechNet&nbsp;Group&nbsp;P</span></td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\"><span class=\"diff_add\">ifications&nbsp;to&nbsp;domain&nbsp;settings&nbsp;may&nbsp;include&nbsp;altering&nbsp;domain&nbsp;Gr</span></td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\"><span class=\"diff_sub\">olicy&nbsp;Basics)(Citation:&nbsp;ADSecurity&nbsp;GPO&nbsp;Persistence&nbsp;2016)&nbsp;&nbsp;&nbsp;L</span></td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\"><span class=\"diff_add\">oup&nbsp;Policy&nbsp;Objects&nbsp;(GPOs)&nbsp;or&nbsp;changing&nbsp;trust&nbsp;settings&nbsp;for&nbsp;dom</span></td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\"><span class=\"diff_sub\">ike&nbsp;other&nbsp;objects&nbsp;in&nbsp;AD,&nbsp;GPOs&nbsp;have&nbsp;access&nbsp;controls&nbsp;associate</span></td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\"><span class=\"diff_add\">ains,&nbsp;including&nbsp;federation&nbsp;trusts.&nbsp;&nbsp;With&nbsp;sufficient&nbsp;permissi</span></td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\"><span class=\"diff_sub\">d&nbsp;with&nbsp;them.&nbsp;By&nbsp;default&nbsp;all&nbsp;user&nbsp;accounts&nbsp;in&nbsp;the&nbsp;domain&nbsp;have</span></td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\"><span class=\"diff_add\">ons,&nbsp;adversaries&nbsp;can&nbsp;modify&nbsp;domain&nbsp;policy&nbsp;settings.&nbsp;Since&nbsp;do</span></td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\"><span class=\"diff_sub\">&nbsp;permission&nbsp;to&nbsp;read&nbsp;GPOs.&nbsp;It&nbsp;is&nbsp;possible&nbsp;to&nbsp;delegate&nbsp;GPO&nbsp;acc</span></td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\"><span class=\"diff_add\">main&nbsp;configuration&nbsp;settings&nbsp;control&nbsp;many&nbsp;of&nbsp;the&nbsp;interactions</span></td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\"><span class=\"diff_sub\">ess&nbsp;control&nbsp;permissions,&nbsp;e.g.&nbsp;write&nbsp;access,&nbsp;to&nbsp;specific&nbsp;user</span></td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\"><span class=\"diff_add\">&nbsp;within&nbsp;the&nbsp;Active&nbsp;Directory&nbsp;(AD)&nbsp;environment,&nbsp;there&nbsp;are&nbsp;a&nbsp;g</span></td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\"><span class=\"diff_sub\">s&nbsp;or&nbsp;groups&nbsp;in&nbsp;the&nbsp;domain.&nbsp;&nbsp;Malicious&nbsp;GPO&nbsp;modifications&nbsp;can&nbsp;</span></td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\"><span class=\"diff_add\">reat&nbsp;number&nbsp;of&nbsp;potential&nbsp;attacks&nbsp;that&nbsp;can&nbsp;stem&nbsp;from&nbsp;this&nbsp;abu</span></td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\"><span class=\"diff_sub\">be&nbsp;used&nbsp;to&nbsp;implement&nbsp;many&nbsp;other&nbsp;malicious&nbsp;behaviors&nbsp;such&nbsp;as&nbsp;</span></td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\"><span class=\"diff_add\">se.&nbsp;Examples&nbsp;of&nbsp;such&nbsp;abuse&nbsp;include&nbsp;modifying&nbsp;GPOs&nbsp;to&nbsp;push&nbsp;a&nbsp;</span></td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\"><span class=\"diff_sub\">[Scheduled&nbsp;Task/Job](https://attack.mitre.org/techniques/T10</span></td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\"><span class=\"diff_add\">malicious&nbsp;[Scheduled&nbsp;Task](https://attack.mitre.org/techniqu</span></td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\"><span class=\"diff_sub\">53),&nbsp;[Disable&nbsp;or&nbsp;Modify&nbsp;Tools](https://attack.mitre.org/tech</span></td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\"><span class=\"diff_add\">es/T1053/005)&nbsp;to&nbsp;computers&nbsp;throughout&nbsp;the&nbsp;domain&nbsp;environment</span></td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\"><span class=\"diff_sub\">niques/T1562/001),&nbsp;[Ingress&nbsp;Tool&nbsp;Transfer](https://attack.mi</span></td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\"><span class=\"diff_add\">(Citation:&nbsp;ADSecurity&nbsp;GPO&nbsp;Persistence&nbsp;2016)(Citation:&nbsp;Wald0&nbsp;</span></td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\"><span class=\"diff_sub\">tre.org/techniques/T1105),&nbsp;[Create&nbsp;Account](https://attack.m</span></td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\"><span class=\"diff_add\">Guide&nbsp;to&nbsp;GPOs)(Citation:&nbsp;Harmj0y&nbsp;Abusing&nbsp;GPO&nbsp;Permissions)&nbsp;or</span></td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\"><span class=\"diff_sub\">itre.org/techniques/T1136),&nbsp;[Service&nbsp;Execution](https://atta</span></td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\"><span class=\"diff_add\">&nbsp;modifying&nbsp;domain&nbsp;trusts&nbsp;to&nbsp;include&nbsp;an&nbsp;adversary&nbsp;controlled&nbsp;</span></td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\"><span class=\"diff_sub\">ck.mitre.org/techniques/T1035),&nbsp;&nbsp;and&nbsp;more.(Citation:&nbsp;ADSecur</span></td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\"><span class=\"diff_add\">domain&nbsp;where&nbsp;they&nbsp;can&nbsp;control&nbsp;access&nbsp;tokens&nbsp;that&nbsp;will&nbsp;subseq</span></td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\"><span class=\"diff_sub\">ity&nbsp;GPO&nbsp;Persistence&nbsp;2016)(Citation:&nbsp;Wald0&nbsp;Guide&nbsp;to&nbsp;GPOs)(Cit</span></td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\"><span class=\"diff_add\">uently&nbsp;be&nbsp;accepted&nbsp;by&nbsp;victim&nbsp;domain&nbsp;resources.(Citation:&nbsp;Mic</span></td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\"><span class=\"diff_sub\">ation:&nbsp;Harmj0y&nbsp;Abusing&nbsp;GPO&nbsp;Permissions)(Citation:&nbsp;Mandiant&nbsp;M</span></td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\"><span class=\"diff_add\">rosoft&nbsp;-&nbsp;Customer&nbsp;Guidance&nbsp;on&nbsp;Recent&nbsp;Nation-State&nbsp;Cyber&nbsp;Atta</span></td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\"><span class=\"diff_sub\">&nbsp;Trends&nbsp;2016)(Citation:&nbsp;Microsoft&nbsp;Hacking&nbsp;Team&nbsp;Breach)&nbsp;Since</span></td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\"><span class=\"diff_add\">cks)&nbsp;Adversaries&nbsp;can&nbsp;also&nbsp;change&nbsp;configuration&nbsp;settings&nbsp;with</span></td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\"><span class=\"diff_sub\">&nbsp;GPOs&nbsp;can&nbsp;control&nbsp;so&nbsp;many&nbsp;user&nbsp;and&nbsp;machine&nbsp;settings&nbsp;in&nbsp;the&nbsp;A</span></td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\"><span class=\"diff_add\">in&nbsp;the&nbsp;AD&nbsp;environment&nbsp;to&nbsp;implement&nbsp;a&nbsp;[Rogue&nbsp;Domain&nbsp;Controlle</span></td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\"><span class=\"diff_sub\">D&nbsp;environment,&nbsp;there&nbsp;are&nbsp;a&nbsp;great&nbsp;number&nbsp;of&nbsp;potential&nbsp;attacks</span></td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\"><span class=\"diff_add\">r](https://attack.mitre.org/techniques/T1207).&nbsp;&nbsp;Adversaries&nbsp;</span></td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\"><span class=\"diff_sub\">&nbsp;that&nbsp;can&nbsp;stem&nbsp;from&nbsp;this&nbsp;GPO&nbsp;abuse.(Citation:&nbsp;Wald0&nbsp;Guide&nbsp;to</span></td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\"><span class=\"diff_add\">may&nbsp;temporarily&nbsp;modify&nbsp;domain&nbsp;policy,&nbsp;carry&nbsp;out&nbsp;a&nbsp;malicious&nbsp;</span></td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\"><span class=\"diff_sub\">&nbsp;GPOs)&nbsp;&nbsp;For&nbsp;example,&nbsp;publicly&nbsp;available&nbsp;scripts&nbsp;such&nbsp;as&nbsp;&lt;cod</span></td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\"><span class=\"diff_add\">action(s),&nbsp;and&nbsp;then&nbsp;revert&nbsp;the&nbsp;change&nbsp;to&nbsp;remove&nbsp;suspicious&nbsp;i</span></td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\"><span class=\"diff_sub\">e&gt;New-GPOImmediateTask&lt;/code&gt;&nbsp;can&nbsp;be&nbsp;leveraged&nbsp;to&nbsp;automate&nbsp;t</span></td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\"><span class=\"diff_add\">ndicators.</span></td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\"><span class=\"diff_sub\">he&nbsp;creation&nbsp;of&nbsp;a&nbsp;malicious&nbsp;[Scheduled&nbsp;Task/Job](https://atta</span></td><td class=\"diff_next\"></td><td class=\"diff_header\"></td><td nowrap=\"nowrap\">&nbsp;</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\"><span class=\"diff_sub\">ck.mitre.org/techniques/T1053)&nbsp;by&nbsp;modifying&nbsp;GPO&nbsp;settings,&nbsp;in</span></td><td class=\"diff_next\"></td><td class=\"diff_header\"></td><td nowrap=\"nowrap\">&nbsp;</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\"><span class=\"diff_sub\">&nbsp;this&nbsp;case&nbsp;modifying&nbsp;&lt;code&gt;&amp;lt;GPO_PATH&amp;gt;\\Machine\\Preferen</span></td><td class=\"diff_next\"></td><td class=\"diff_header\"></td><td nowrap=\"nowrap\">&nbsp;</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\"><span class=\"diff_sub\">ces\\ScheduledTasks\\ScheduledTasks.xml&lt;/code&gt;.(Citation:&nbsp;Wald</span></td><td class=\"diff_next\"></td><td class=\"diff_header\"></td><td nowrap=\"nowrap\">&nbsp;</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\"><span class=\"diff_sub\">0&nbsp;Guide&nbsp;to&nbsp;GPOs)(Citation:&nbsp;Harmj0y&nbsp;Abusing&nbsp;GPO&nbsp;Permissions)&nbsp;</span></td><td class=\"diff_next\"></td><td class=\"diff_header\"></td><td nowrap=\"nowrap\">&nbsp;</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\"><span class=\"diff_sub\">In&nbsp;some&nbsp;cases&nbsp;an&nbsp;adversary&nbsp;might&nbsp;modify&nbsp;specific&nbsp;user&nbsp;rights</span></td><td class=\"diff_next\"></td><td class=\"diff_header\"></td><td nowrap=\"nowrap\">&nbsp;</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\"><span class=\"diff_sub\">&nbsp;like&nbsp;SeEnableDelegationPrivilege,&nbsp;set&nbsp;in&nbsp;&lt;code&gt;&amp;lt;GPO_PATH</span></td><td class=\"diff_next\"></td><td class=\"diff_header\"></td><td nowrap=\"nowrap\">&nbsp;</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\"><span class=\"diff_sub\">&amp;gt;\\MACHINE\\Microsoft\\Windows&nbsp;NT\\SecEdit\\GptTmpl.inf&lt;/code&gt;</span></td><td class=\"diff_next\"></td><td class=\"diff_header\"></td><td nowrap=\"nowrap\">&nbsp;</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\"><span class=\"diff_sub\">,&nbsp;to&nbsp;achieve&nbsp;a&nbsp;subtle&nbsp;AD&nbsp;backdoor&nbsp;with&nbsp;complete&nbsp;control&nbsp;of&nbsp;t</span></td><td class=\"diff_next\"></td><td class=\"diff_header\"></td><td nowrap=\"nowrap\">&nbsp;</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\"><span class=\"diff_sub\">he&nbsp;domain&nbsp;because&nbsp;the&nbsp;user&nbsp;account&nbsp;under&nbsp;the&nbsp;adversary's&nbsp;con</span></td><td class=\"diff_next\"></td><td class=\"diff_header\"></td><td nowrap=\"nowrap\">&nbsp;</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\"><span class=\"diff_sub\">trol&nbsp;would&nbsp;then&nbsp;be&nbsp;able&nbsp;to&nbsp;modify&nbsp;GPOs.(Citation:&nbsp;Harmj0y&nbsp;Se</span></td><td class=\"diff_next\"></td><td class=\"diff_header\"></td><td nowrap=\"nowrap\">&nbsp;</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\"><span class=\"diff_sub\">EnableDelegationPrivilege&nbsp;Right)&nbsp;</span></td><td class=\"diff_next\"></td><td class=\"diff_header\"></td><td nowrap=\"nowrap\">&nbsp;</td></tr>\n        </tbody>\n    </table>",
+                    "changelog_mitigations": {
+                        "shared": [
+                            "M1018: User Account Management",
+                            "M1047: Audit"
+                        ],
+                        "new": [
+                            "M1026: Privileged Account Management"
+                        ],
+                        "dropped": [
+                            "T1484: Group Policy Modification Mitigation"
+                        ]
+                    },
+                    "changelog_detections": {
+                        "shared": [],
+                        "new": [],
+                        "dropped": []
+                    }
+                }
+            ],
+            "minor_version_changes": [
+                {
+                    "type": "attack-pattern",
+                    "id": "attack-pattern--8a2f40cf-8325-47f9-96e4-b1ca4c7389bd",
+                    "created_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "created": "2020-01-19 16:10:15.008000+00:00",
+                    "modified": "2020-12-18 14:57:07.625000+00:00",
+                    "name": "Additional Cloud Credentials",
+                    "description": "Adversaries may add adversary-controlled credentials to a cloud account to maintain persistent access to victim accounts and instances within the environment.\n\nAdversaries may add credentials for Service Principals and Applications in addition to existing legitimate credentials in Azure AD.(Citation: Microsoft SolarWinds Customer Guidance)(Citation: Blue Cloud of Death)(Citation: Blue Cloud of Death Video) These credentials include both x509 keys and passwords.(Citation: Microsoft SolarWinds Customer Guidance) With sufficient permissions, there are a variety of ways to add credentials including the Azure Portal, Azure command line interface, and Azure or Az PowerShell modules.(Citation: Demystifying Azure AD Service Principals)\n\nIn infrastructure-as-a-service (IaaS) environments, after gaining access through [Cloud Accounts](https://attack.mitre.org/techniques/T1078/004), adversaries may generate or import their own SSH keys using either the <code>CreateKeyPair</code> or <code>ImportKeyPair</code> API in AWS or the <code>gcloud compute os-login ssh-keys add</code> command in GCP.(Citation: GCP SSH Key Add) This allows persistent access to instances within the cloud environment without further usage of the compromised cloud accounts.(Citation: Expel IO Evil in AWS)(Citation: Expel Behind the Scenes)",
+                    "kill_chain_phases": [
+                        {
+                            "kill_chain_name": "mitre-attack",
+                            "phase_name": "persistence"
+                        }
+                    ],
+                    "revoked": false,
+                    "external_references": [
+                        {
+                            "source_name": "mitre-attack",
+                            "url": "https://attack.mitre.org/techniques/T1098/001",
+                            "external_id": "T1098.001"
+                        },
+                        {
+                            "source_name": "Microsoft SolarWinds Customer Guidance",
+                            "description": "MSRC. (2020, December 13). Customer Guidance on Recent Nation-State Cyber Attacks. Retrieved December 17, 2020.",
+                            "url": "https://msrc-blog.microsoft.com/2020/12/13/customer-guidance-on-recent-nation-state-cyber-attacks/"
+                        },
+                        {
+                            "source_name": "Blue Cloud of Death",
+                            "description": "Kunz, Bryce. (2018, May 11). Blue Cloud of Death: Red Teaming Azure. Retrieved October 23, 2019.",
+                            "url": "https://speakerdeck.com/tweekfawkes/blue-cloud-of-death-red-teaming-azure-1"
+                        },
+                        {
+                            "source_name": "Blue Cloud of Death Video",
+                            "description": "Kunz, Bruce. (2018, October 14). Blue Cloud of Death: Red Teaming Azure. Retrieved November 21, 2019.",
+                            "url": "https://www.youtube.com/watch?v=wQ1CuAPnrLM&feature=youtu.be&t=2815"
+                        },
+                        {
+                            "source_name": "Demystifying Azure AD Service Principals",
+                            "description": "Bellavance, Ned. (2019, July 16). Demystifying Azure AD Service Principals. Retrieved January 19, 2020.",
+                            "url": "https://nedinthecloud.com/2019/07/16/demystifying-azure-ad-service-principals/"
+                        },
+                        {
+                            "source_name": "GCP SSH Key Add",
+                            "description": "Google. (n.d.). gcloud compute os-login ssh-keys add. Retrieved October 1, 2020.",
+                            "url": "https://cloud.google.com/sdk/gcloud/reference/compute/os-login/ssh-keys/add"
+                        },
+                        {
+                            "source_name": "Expel IO Evil in AWS",
+                            "description": "A. Randazzo, B. Manahan and S. Lipton. (2020, April 28). Finding Evil in AWS. Retrieved June 25, 2020.",
+                            "url": "https://expel.io/blog/finding-evil-in-aws/"
+                        },
+                        {
+                            "source_name": "Expel Behind the Scenes",
+                            "description": "S. Lipton, L. Easterly, A. Randazzo and J. Hencinski. (2020, July 28). Behind the scenes in the Expel SOC: Alert-to-fix in AWS. Retrieved October 1, 2020.",
+                            "url": "https://expel.io/blog/behind-the-scenes-expel-soc-alert-aws/"
+                        }
+                    ],
+                    "object_marking_refs": [
+                        "marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168"
+                    ],
+                    "x_mitre_contributors": [
+                        "Expel",
+                        "Oleg Kolesnikov, Securonix",
+                        "Jannie Li, Microsoft Threat Intelligence\u202fCenter\u202f(MSTIC)"
+                    ],
+                    "x_mitre_data_sources": [
+                        "Stackdriver logs",
+                        "GCP audit logs",
+                        "AWS CloudTrail logs",
+                        "Azure activity logs"
+                    ],
+                    "x_mitre_detection": "Monitor Azure Activity Logs for Service Principal and Application modifications. Monitor for the usage of APIs that create or import SSH keys, particularly by unexpected users or accounts such as the root account.\n\nMonitor for use of credentials at unusual times or to unusual systems or services. This may also correlate with other suspicious activity.",
+                    "x_mitre_is_subtechnique": true,
+                    "x_mitre_permissions_required": [
+                        "Administrator",
+                        "User"
+                    ],
+                    "x_mitre_platforms": [
+                        "Azure AD",
+                        "Azure",
+                        "AWS",
+                        "GCP"
+                    ],
+                    "x_mitre_version": "2.1",
+                    "detailed_diff": "{\"values_changed\": {\"root['modified']\": {\"new_value\": \"2020-12-18 14:57:07.625000+00:00\", \"old_value\": \"2020-10-05 16:43:27.024000+00:00\"}, \"root['description']\": {\"new_value\": \"Adversaries may add adversary-controlled credentials to a cloud account to maintain persistent access to victim accounts and instances within the environment.\\n\\nAdversaries may add credentials for Service Principals and Applications in addition to existing legitimate credentials in Azure AD.(Citation: Microsoft SolarWinds Customer Guidance)(Citation: Blue Cloud of Death)(Citation: Blue Cloud of Death Video) These credentials include both x509 keys and passwords.(Citation: Microsoft SolarWinds Customer Guidance) With sufficient permissions, there are a variety of ways to add credentials including the Azure Portal, Azure command line interface, and Azure or Az PowerShell modules.(Citation: Demystifying Azure AD Service Principals)\\n\\nIn infrastructure-as-a-service (IaaS) environments, after gaining access through [Cloud Accounts](https://attack.mitre.org/techniques/T1078/004), adversaries may generate or import their own SSH keys using either the <code>CreateKeyPair</code> or <code>ImportKeyPair</code> API in AWS or the <code>gcloud compute os-login ssh-keys add</code> command in GCP.(Citation: GCP SSH Key Add) This allows persistent access to instances within the cloud environment without further usage of the compromised cloud accounts.(Citation: Expel IO Evil in AWS)(Citation: Expel Behind the Scenes)\", \"old_value\": \"Adversaries may add adversary-controlled credentials to a cloud account to maintain persistent access to victim accounts and instances within the environment.\\n\\nAdversaries may add credentials for Azure Service Principals in addition to existing legitimate credentials(Citation: Create Azure Service Principal) to victim Azure accounts.(Citation: Blue Cloud of Death)(Citation: Blue Cloud of Death Video) Azure Service Principals support both password and certificate credentials.(Citation: Why AAD Service Principals) With sufficient permissions, there are a variety of ways to add credentials including the Azure Portal, Azure command line interface, and Azure or Az [PowerShell](https://attack.mitre.org/techniques/T1059/001) modules.(Citation: Demystifying Azure AD Service Principals)\\n\\nAfter gaining access through [Cloud Accounts](https://attack.mitre.org/techniques/T1078/004), adversaries may generate or import their own SSH keys using either the <code>CreateKeyPair</code> or <code>ImportKeyPair</code> API in AWS or the <code>gcloud compute os-login ssh-keys add</code> command in GCP.(Citation: GCP SSH Key Add) This allows persistent access to instances within the cloud environment without further usage of the compromised cloud accounts.(Citation: Expel IO Evil in AWS)(Citation: Expel Behind the Scenes)\", \"diff\": \"--- \\n+++ \\n@@ -1,5 +1,5 @@\\n Adversaries may add adversary-controlled credentials to a cloud account to maintain persistent access to victim accounts and instances within the environment.\\n \\n-Adversaries may add credentials for Azure Service Principals in addition to existing legitimate credentials(Citation: Create Azure Service Principal) to victim Azure accounts.(Citation: Blue Cloud of Death)(Citation: Blue Cloud of Death Video) Azure Service Principals support both password and certificate credentials.(Citation: Why AAD Service Principals) With sufficient permissions, there are a variety of ways to add credentials including the Azure Portal, Azure command line interface, and Azure or Az [PowerShell](https://attack.mitre.org/techniques/T1059/001) modules.(Citation: Demystifying Azure AD Service Principals)\\n+Adversaries may add credentials for Service Principals and Applications in addition to existing legitimate credentials in Azure AD.(Citation: Microsoft SolarWinds Customer Guidance)(Citation: Blue Cloud of Death)(Citation: Blue Cloud of Death Video) These credentials include both x509 keys and passwords.(Citation: Microsoft SolarWinds Customer Guidance) With sufficient permissions, there are a variety of ways to add credentials including the Azure Portal, Azure command line interface, and Azure or Az PowerShell modules.(Citation: Demystifying Azure AD Service Principals)\\n \\n-After gaining access through [Cloud Accounts](https://attack.mitre.org/techniques/T1078/004), adversaries may generate or import their own SSH keys using either the <code>CreateKeyPair</code> or <code>ImportKeyPair</code> API in AWS or the <code>gcloud compute os-login ssh-keys add</code> command in GCP.(Citation: GCP SSH Key Add) This allows persistent access to instances within the cloud environment without further usage of the compromised cloud accounts.(Citation: Expel IO Evil in AWS)(Citation: Expel Behind the Scenes)\\n+In infrastructure-as-a-service (IaaS) environments, after gaining access through [Cloud Accounts](https://attack.mitre.org/techniques/T1078/004), adversaries may generate or import their own SSH keys using either the <code>CreateKeyPair</code> or <code>ImportKeyPair</code> API in AWS or the <code>gcloud compute os-login ssh-keys add</code> command in GCP.(Citation: GCP SSH Key Add) This allows persistent access to instances within the cloud environment without further usage of the compromised cloud accounts.(Citation: Expel IO Evil in AWS)(Citation: Expel Behind the Scenes)\"}, \"root['external_references'][1]['source_name']\": {\"new_value\": \"Microsoft SolarWinds Customer Guidance\", \"old_value\": \"Create Azure Service Principal\"}, \"root['external_references'][1]['description']\": {\"new_value\": \"MSRC. (2020, December 13). Customer Guidance on Recent Nation-State Cyber Attacks. Retrieved December 17, 2020.\", \"old_value\": \"Microsoft. (2020, January 8). Create an Azure service principal with Azure CLI. Retrieved January 19, 2020.\"}, \"root['external_references'][1]['url']\": {\"new_value\": \"https://msrc-blog.microsoft.com/2020/12/13/customer-guidance-on-recent-nation-state-cyber-attacks/\", \"old_value\": \"https://docs.microsoft.com/en-us/cli/azure/create-an-azure-service-principal-azure-cli?toc=%2Fazure%2Fazure-resource-manager%2Ftoc.json&view=azure-cli-latest\"}, \"root['external_references'][4]['source_name']\": {\"new_value\": \"Demystifying Azure AD Service Principals\", \"old_value\": \"Why AAD Service Principals\"}, \"root['external_references'][4]['description']\": {\"new_value\": \"Bellavance, Ned. (2019, July 16). Demystifying Azure AD Service Principals. Retrieved January 19, 2020.\", \"old_value\": \"Microsoft. (2019, September 23). Azure Superpowers Lab Manual. Retrieved January 19, 2020.\"}, \"root['external_references'][4]['url']\": {\"new_value\": \"https://nedinthecloud.com/2019/07/16/demystifying-azure-ad-service-principals/\", \"old_value\": \"https://github.com/microsoft/AzureSuperpowers/blob/master/docs/AzureSuperpowers.md#why-aad-service-principals\"}, \"root['external_references'][5]['source_name']\": {\"new_value\": \"GCP SSH Key Add\", \"old_value\": \"Demystifying Azure AD Service Principals\"}, \"root['external_references'][5]['description']\": {\"new_value\": \"Google. (n.d.). gcloud compute os-login ssh-keys add. Retrieved October 1, 2020.\", \"old_value\": \"Bellavance, Ned. (2019, July 16). Demystifying Azure AD Service Principals. Retrieved January 19, 2020.\"}, \"root['external_references'][5]['url']\": {\"new_value\": \"https://cloud.google.com/sdk/gcloud/reference/compute/os-login/ssh-keys/add\", \"old_value\": \"https://nedinthecloud.com/2019/07/16/demystifying-azure-ad-service-principals/\"}, \"root['external_references'][6]['source_name']\": {\"new_value\": \"Expel IO Evil in AWS\", \"old_value\": \"GCP SSH Key Add\"}, \"root['external_references'][6]['description']\": {\"new_value\": \"A. Randazzo, B. Manahan and S. Lipton. (2020, April 28). Finding Evil in AWS. Retrieved June 25, 2020.\", \"old_value\": \"Google. (n.d.). gcloud compute os-login ssh-keys add. Retrieved October 1, 2020.\"}, \"root['external_references'][6]['url']\": {\"new_value\": \"https://expel.io/blog/finding-evil-in-aws/\", \"old_value\": \"https://cloud.google.com/sdk/gcloud/reference/compute/os-login/ssh-keys/add\"}, \"root['external_references'][7]['source_name']\": {\"new_value\": \"Expel Behind the Scenes\", \"old_value\": \"Expel IO Evil in AWS\"}, \"root['external_references'][7]['description']\": {\"new_value\": \"S. Lipton, L. Easterly, A. Randazzo and J. Hencinski. (2020, July 28). Behind the scenes in the Expel SOC: Alert-to-fix in AWS. Retrieved October 1, 2020.\", \"old_value\": \"A. Randazzo, B. Manahan and S. Lipton. (2020, April 28). Finding Evil in AWS. Retrieved June 25, 2020.\"}, \"root['external_references'][7]['url']\": {\"new_value\": \"https://expel.io/blog/behind-the-scenes-expel-soc-alert-aws/\", \"old_value\": \"https://expel.io/blog/finding-evil-in-aws/\"}, \"root['x_mitre_detection']\": {\"new_value\": \"Monitor Azure Activity Logs for Service Principal and Application modifications. Monitor for the usage of APIs that create or import SSH keys, particularly by unexpected users or accounts such as the root account.\\n\\nMonitor for use of credentials at unusual times or to unusual systems or services. This may also correlate with other suspicious activity.\", \"old_value\": \"Monitor Azure Activity Logs for service principal modifications. Monitor for the usage of APIs that create or import SSH keys, particularly by unexpected users or accounts such as the root account.\\n\\nMonitor for use of credentials at unusual times or to unusual systems or services. This may also correlate with other suspicious activity.\", \"diff\": \"--- \\n+++ \\n@@ -1,3 +1,3 @@\\n-Monitor Azure Activity Logs for service principal modifications. Monitor for the usage of APIs that create or import SSH keys, particularly by unexpected users or accounts such as the root account.\\n+Monitor Azure Activity Logs for Service Principal and Application modifications. Monitor for the usage of APIs that create or import SSH keys, particularly by unexpected users or accounts such as the root account.\\n \\n Monitor for use of credentials at unusual times or to unusual systems or services. This may also correlate with other suspicious activity.\"}, \"root['x_mitre_version']\": {\"new_value\": \"2.1\", \"old_value\": \"2.0\"}}, \"iterable_item_removed\": {\"root['external_references'][8]\": {\"source_name\": \"Expel Behind the Scenes\", \"description\": \"S. Lipton, L. Easterly, A. Randazzo and J. Hencinski. (2020, July 28). Behind the scenes in the Expel SOC: Alert-to-fix in AWS. Retrieved October 1, 2020.\", \"url\": \"https://expel.io/blog/behind-the-scenes-expel-soc-alert-aws/\"}}}",
+                    "previous_version": "2.0",
+                    "version_change": "2.0 \u2192 2.1",
+                    "description_change_table": "\n    <table class=\"diff\" id=\"difflib_chg_to3__top\"\n           cellspacing=\"0\" cellpadding=\"0\" rules=\"groups\" >\n        <colgroup></colgroup> <colgroup></colgroup> <colgroup></colgroup>\n        <colgroup></colgroup> <colgroup></colgroup> <colgroup></colgroup>\n        <thead><tr><th class=\"diff_next\"><br /></th><th colspan=\"2\" class=\"diff_header\">Old Description</th><th class=\"diff_next\"><br /></th><th colspan=\"2\" class=\"diff_header\">New Description</th></tr></thead>\n        <tbody>\n            <tr><td class=\"diff_next\" id=\"difflib_chg_to3__0\"><a href=\"#difflib_chg_to3__top\">t</a></td><td class=\"diff_header\" id=\"from3_1\">1</td><td nowrap=\"nowrap\">Adversaries&nbsp;may&nbsp;add&nbsp;adversary-controlled&nbsp;credentials&nbsp;to&nbsp;a&nbsp;cl</td><td class=\"diff_next\"><a href=\"#difflib_chg_to3__top\">t</a></td><td class=\"diff_header\" id=\"to3_1\">1</td><td nowrap=\"nowrap\">Adversaries&nbsp;may&nbsp;add&nbsp;adversary-controlled&nbsp;credentials&nbsp;to&nbsp;a&nbsp;cl</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">oud&nbsp;account&nbsp;to&nbsp;maintain&nbsp;persistent&nbsp;access&nbsp;to&nbsp;victim&nbsp;accounts</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">oud&nbsp;account&nbsp;to&nbsp;maintain&nbsp;persistent&nbsp;access&nbsp;to&nbsp;victim&nbsp;accounts</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">&nbsp;and&nbsp;instances&nbsp;within&nbsp;the&nbsp;environment.&nbsp;&nbsp;Adversaries&nbsp;may&nbsp;add&nbsp;</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">&nbsp;and&nbsp;instances&nbsp;within&nbsp;the&nbsp;environment.&nbsp;&nbsp;Adversaries&nbsp;may&nbsp;add&nbsp;</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">credentials&nbsp;for&nbsp;Azure&nbsp;<span class=\"diff_chg\">Service&nbsp;Principals&nbsp;in&nbsp;addition&nbsp;to&nbsp;exis</span></td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">credentials&nbsp;for&nbsp;<span class=\"diff_add\">Service&nbsp;Principals&nbsp;and&nbsp;Applications&nbsp;in&nbsp;addit</span></td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\"><span class=\"diff_chg\">ting&nbsp;legitimate&nbsp;credentials(Citation:&nbsp;Create&nbsp;Azure&nbsp;Service&nbsp;P</span></td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\"><span class=\"diff_add\">ion&nbsp;to&nbsp;existing&nbsp;legitimate&nbsp;credentials&nbsp;in&nbsp;</span>Azure&nbsp;<span class=\"diff_chg\">AD</span>.(Citation</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\"><span class=\"diff_chg\">rincipal)&nbsp;to&nbsp;victim&nbsp;Azure&nbsp;accounts</span>.(Citation:&nbsp;<span class=\"diff_chg\">Blue&nbsp;Cloud&nbsp;</span>of<span class=\"diff_chg\">&nbsp;</span></td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">:&nbsp;<span class=\"diff_chg\">Micros</span>of<span class=\"diff_chg\">t&nbsp;SolarWinds&nbsp;Customer&nbsp;Guidance</span>)(Citation:&nbsp;Blue&nbsp;Clo</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\"><span class=\"diff_chg\">Death</span>)(Citation:&nbsp;Blue&nbsp;Cloud&nbsp;of&nbsp;Death&nbsp;Video)&nbsp;<span class=\"diff_chg\">Azure&nbsp;Service&nbsp;Pr</span></td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">ud&nbsp;of&nbsp;Death<span class=\"diff_add\">)(Citation:&nbsp;Blue&nbsp;Cloud&nbsp;of&nbsp;Death</span>&nbsp;Video)&nbsp;<span class=\"diff_chg\">These&nbsp;cred</span></td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\"><span class=\"diff_chg\">incipals&nbsp;support</span>&nbsp;both&nbsp;password<span class=\"diff_sub\">&nbsp;and&nbsp;certificate&nbsp;credential</span>s.(</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\"><span class=\"diff_chg\">entials&nbsp;include</span>&nbsp;both&nbsp;<span class=\"diff_add\">x509&nbsp;keys&nbsp;and&nbsp;</span>passwords.(Citation:&nbsp;<span class=\"diff_add\">Micr</span></td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">Citation:&nbsp;W<span class=\"diff_chg\">hy&nbsp;AAD&nbsp;Service&nbsp;Principals</span>)&nbsp;With&nbsp;sufficient&nbsp;permis</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\"><span class=\"diff_add\">osoft&nbsp;Solar</span>W<span class=\"diff_chg\">inds&nbsp;Customer&nbsp;Guidance</span>)&nbsp;With&nbsp;sufficient&nbsp;permissi</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">sions,&nbsp;there&nbsp;are&nbsp;a&nbsp;variety&nbsp;of&nbsp;ways&nbsp;to&nbsp;add&nbsp;credentials&nbsp;includ</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">ons,&nbsp;there&nbsp;are&nbsp;a&nbsp;variety&nbsp;of&nbsp;ways&nbsp;to&nbsp;add&nbsp;credentials&nbsp;includin</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">ing&nbsp;the&nbsp;Azure&nbsp;Portal,&nbsp;Azure&nbsp;command&nbsp;line&nbsp;interface,&nbsp;and&nbsp;Azur</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">g&nbsp;the&nbsp;Azure&nbsp;Portal,&nbsp;Azure&nbsp;command&nbsp;line&nbsp;interface,&nbsp;and&nbsp;Azure&nbsp;</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">e&nbsp;or&nbsp;Az&nbsp;<span class=\"diff_sub\">[</span>PowerShell<span class=\"diff_sub\">](https://attack.mitre.org/techniques/T10</span></td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">or&nbsp;Az&nbsp;PowerShell&nbsp;modules.(Citation:&nbsp;Demystifying&nbsp;Azure&nbsp;AD&nbsp;Se</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\"><span class=\"diff_sub\">59/001)</span>&nbsp;modules.(Citation:&nbsp;Demystifying&nbsp;Azure&nbsp;AD&nbsp;Service&nbsp;Pri</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">rvice&nbsp;Principals)&nbsp;&nbsp;<span class=\"diff_chg\">In&nbsp;in</span>f<span class=\"diff_chg\">rastructure-as-a-service&nbsp;(IaaS)&nbsp;env</span></td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">ncipals)&nbsp;&nbsp;<span class=\"diff_chg\">A</span>f<span class=\"diff_chg\">ter</span>&nbsp;gaining&nbsp;access&nbsp;through&nbsp;[Cloud&nbsp;Accounts](http</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\"><span class=\"diff_chg\">ironments,&nbsp;after</span>&nbsp;gaining&nbsp;access&nbsp;through&nbsp;[Cloud&nbsp;Accounts](htt</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">s://attack.mitre.org/techniques/T1078/004),&nbsp;adversaries&nbsp;may&nbsp;</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">ps://attack.mitre.org/techniques/T1078/004),&nbsp;adversaries&nbsp;may</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">generate&nbsp;or&nbsp;import&nbsp;their&nbsp;own&nbsp;SSH&nbsp;keys&nbsp;using&nbsp;either&nbsp;the&nbsp;&lt;code</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">&nbsp;generate&nbsp;or&nbsp;import&nbsp;their&nbsp;own&nbsp;SSH&nbsp;keys&nbsp;using&nbsp;either&nbsp;the&nbsp;&lt;cod</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">&gt;CreateKeyPair&lt;/code&gt;&nbsp;or&nbsp;&lt;code&gt;ImportKeyPair&lt;/code&gt;&nbsp;API&nbsp;in&nbsp;A</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">e&gt;CreateKeyPair&lt;/code&gt;&nbsp;or&nbsp;&lt;code&gt;ImportKeyPair&lt;/code&gt;&nbsp;API&nbsp;in&nbsp;</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">WS&nbsp;or&nbsp;the&nbsp;&lt;code&gt;gcloud&nbsp;compute&nbsp;os-login&nbsp;ssh-keys&nbsp;add&lt;/code&gt;&nbsp;</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">AWS&nbsp;or&nbsp;the&nbsp;&lt;code&gt;gcloud&nbsp;compute&nbsp;os-login&nbsp;ssh-keys&nbsp;add&lt;/code&gt;</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">command&nbsp;in&nbsp;GCP.(Citation:&nbsp;GCP&nbsp;SSH&nbsp;Key&nbsp;Add)&nbsp;This&nbsp;allows&nbsp;persi</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">&nbsp;command&nbsp;in&nbsp;GCP.(Citation:&nbsp;GCP&nbsp;SSH&nbsp;Key&nbsp;Add)&nbsp;This&nbsp;allows&nbsp;pers</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">stent&nbsp;access&nbsp;to&nbsp;instances&nbsp;within&nbsp;the&nbsp;cloud&nbsp;environment&nbsp;witho</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">istent&nbsp;access&nbsp;to&nbsp;instances&nbsp;within&nbsp;the&nbsp;cloud&nbsp;environment&nbsp;with</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">ut&nbsp;further&nbsp;usage&nbsp;of&nbsp;the&nbsp;compromised&nbsp;cloud&nbsp;accounts.(Citation</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">out&nbsp;further&nbsp;usage&nbsp;of&nbsp;the&nbsp;compromised&nbsp;cloud&nbsp;accounts.(Citatio</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">:&nbsp;Expel&nbsp;IO&nbsp;Evil&nbsp;in&nbsp;AWS)(Citation:&nbsp;Expel&nbsp;Behind&nbsp;the&nbsp;Scenes)</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">n:&nbsp;Expel&nbsp;IO&nbsp;Evil&nbsp;in&nbsp;AWS)(Citation:&nbsp;Expel&nbsp;Behind&nbsp;the&nbsp;Scenes)</td></tr>\n        </tbody>\n    </table>",
+                    "changelog_mitigations": {
+                        "shared": [
+                            "M1026: Privileged Account Management",
+                            "M1030: Network Segmentation",
+                            "M1032: Multi-factor Authentication"
+                        ],
+                        "new": [],
+                        "dropped": []
+                    },
+                    "changelog_detections": {
+                        "shared": [],
+                        "new": [],
+                        "dropped": []
+                    }
+                }
+            ],
+            "other_version_changes": [],
+            "patches": [],
+            "revocations": [],
+            "deprecations": [],
+            "deletions": []
+        },
+        "software": {
+            "additions": [
+                {
+                    "type": "tool",
+                    "id": "tool--f59508a6-3615-47c3-b493-6676e1a39a87",
+                    "created_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "created": "2020-12-28 18:35:50.244000+00:00",
+                    "modified": "2020-12-29 18:04:33.254000+00:00",
+                    "name": "AdFind",
+                    "description": "[AdFind](https://attack.mitre.org/software/S0552) is a free command-line query tool that can be used for gathering information from Active Directory.(Citation: Red Canary Hospital Thwarted Ryuk October 2020)(Citation: FireEye FIN6 Apr 2019)(Citation: FireEye Ryuk and Trickbot January 2019)",
+                    "revoked": false,
+                    "labels": [
+                        "tool"
+                    ],
+                    "external_references": [
+                        {
+                            "source_name": "mitre-attack",
+                            "url": "https://attack.mitre.org/software/S0552",
+                            "external_id": "S0552"
+                        },
+                        {
+                            "source_name": "Red Canary Hospital Thwarted Ryuk October 2020",
+                            "description": "Brian Donohue, Katie Nickels, Paul Michaud, Adina Bodkins, Taylor Chapman, Tony Lambert, Jeff Felling, Kyle Rainey, Mike Haag, Matt Graeber, Aaron Didier.. (2020, October 29). A Bazar start: How one hospital thwarted a Ryuk ransomware outbreak. Retrieved October 30, 2020.",
+                            "url": "https://redcanary.com/blog/how-one-hospital-thwarted-a-ryuk-ransomware-outbreak/ "
+                        },
+                        {
+                            "source_name": "FireEye FIN6 Apr 2019",
+                            "description": "McKeague, B. et al. (2019, April 5). Pick-Six: Intercepting a FIN6 Intrusion, an Actor Recently Tied to Ryuk and LockerGoga Ransomware. Retrieved April 17, 2019.",
+                            "url": "https://www.fireeye.com/blog/threat-research/2019/04/pick-six-intercepting-a-fin6-intrusion.html"
+                        },
+                        {
+                            "source_name": "FireEye Ryuk and Trickbot January 2019",
+                            "description": "Goody, K., et al (2019, January 11). A Nasty Trick: From Credential Theft Malware to Business Disruption. Retrieved May 12, 2020.",
+                            "url": "https://www.fireeye.com/blog/threat-research/2019/01/a-nasty-trick-from-credential-theft-malware-to-business-disruption.html"
+                        }
+                    ],
+                    "object_marking_refs": [
+                        "marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168"
+                    ],
+                    "x_mitre_aliases": [
+                        "AdFind"
+                    ],
+                    "x_mitre_platforms": [
+                        "Windows"
+                    ],
+                    "x_mitre_version": "1.0"
+                },
+                {
+                    "type": "tool",
+                    "id": "tool--066b057c-944e-4cfc-b654-e3dfba04b926",
+                    "created_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "created": "2020-10-28 12:51:29.358000+00:00",
+                    "modified": "2020-11-24 20:08:25.559000+00:00",
+                    "name": "BloodHound",
+                    "description": "[BloodHound](https://attack.mitre.org/software/S0521) is an Active Directory (AD) reconnaissance tool that can reveal hidden relationships and identify attack paths within an AD environment.(Citation: GitHub Bloodhound)(Citation: CrowdStrike BloodHound April 2018)(Citation: FoxIT Wocao December 2019)",
+                    "revoked": false,
+                    "labels": [
+                        "tool"
+                    ],
+                    "external_references": [
+                        {
+                            "source_name": "mitre-attack",
+                            "url": "https://attack.mitre.org/software/S0521",
+                            "external_id": "S0521"
+                        },
+                        {
+                            "source_name": "GitHub Bloodhound",
+                            "description": "Robbins, A., Vazarkar, R., and Schroeder, W. (2016, April 17). Bloodhound: Six Degrees of Domain Admin. Retrieved March 5, 2019.",
+                            "url": "https://github.com/BloodHoundAD/BloodHound"
+                        },
+                        {
+                            "source_name": "CrowdStrike BloodHound April 2018",
+                            "description": "Red Team Labs. (2018, April 24). Hidden Administrative Accounts: BloodHound to the Rescue. Retrieved October 28, 2020.",
+                            "url": "https://www.crowdstrike.com/blog/hidden-administrative-accounts-bloodhound-to-the-rescue/"
+                        },
+                        {
+                            "source_name": "FoxIT Wocao December 2019",
+                            "description": "Dantzig, M. v., Schamper, E. (2019, December 19). Operation Wocao: Shining a light on one of China\u2019s hidden hacking groups. Retrieved October 8, 2020.",
+                            "url": "https://resources.fox-it.com/rs/170-CAK-271/images/201912_Report_Operation_Wocao.pdf"
+                        }
+                    ],
+                    "object_marking_refs": [
+                        "marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168"
+                    ],
+                    "x_mitre_aliases": [
+                        "BloodHound"
+                    ],
+                    "x_mitre_platforms": [
+                        "Windows"
+                    ],
+                    "x_mitre_version": "1.0"
+                },
+                {
+                    "type": "malware",
+                    "id": "malware--4efc3e00-72f2-466a-ab7c-8a7dc6603b19",
+                    "created_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "created": "2021-01-19 19:43:27.828000+00:00",
+                    "modified": "2021-01-25 19:35:13.827000+00:00",
+                    "name": "Raindrop",
+                    "description": "[Raindrop](https://attack.mitre.org/software/S0565) is a loader used by [UNC2452](https://attack.mitre.org/groups/G0118) that was discovered on some victim machines during investigations related to the 2020 SolarWinds cyber intrusion. It was discovered in January 2021 and was likely used since at least May 2020.(Citation: Symantec RAINDROP January 2021)(Citation: Microsoft Deep Dive Solorigate January 2021)",
+                    "revoked": false,
+                    "labels": [
+                        "malware"
+                    ],
+                    "external_references": [
+                        {
+                            "source_name": "mitre-attack",
+                            "url": "https://attack.mitre.org/software/S0565",
+                            "external_id": "S0565"
+                        },
+                        {
+                            "source_name": "Raindrop",
+                            "description": "https://symantec-enterprise-blogs.security.com/blogs/threat-intelligence/solarwinds-raindrop-malware"
+                        },
+                        {
+                            "source_name": "Symantec RAINDROP January 2021",
+                            "description": "Symantec Threat Hunter Team. (2021, January 18). Raindrop: New Malware Discovered in SolarWinds Investigation. Retrieved January 19, 2021.",
+                            "url": "https://symantec-enterprise-blogs.security.com/blogs/threat-intelligence/solarwinds-raindrop-malware"
+                        },
+                        {
+                            "source_name": "Microsoft Deep Dive Solorigate January 2021",
+                            "description": "MSTIC, CDOC, 365 Defender Research Team. (2021, January 20). Deep dive into the Solorigate second-stage activation: From SUNBURST to TEARDROP and Raindrop . Retrieved January 22, 2021.",
+                            "url": "https://www.microsoft.com/security/blog/2021/01/20/deep-dive-into-the-solorigate-second-stage-activation-from-sunburst-to-teardrop-and-raindrop/"
+                        }
+                    ],
+                    "object_marking_refs": [
+                        "marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168"
+                    ],
+                    "x_mitre_aliases": [
+                        "Raindrop"
+                    ],
+                    "x_mitre_platforms": [
+                        "Windows"
+                    ],
+                    "x_mitre_version": "1.0"
+                },
+                {
+                    "type": "malware",
+                    "id": "malware--a8839c95-029f-44cf-8f3d-a3cf2039e927",
+                    "created_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "created": "2021-01-05 22:42:05.965000+00:00",
+                    "modified": "2021-01-25 17:27:10.483000+00:00",
+                    "name": "Sunburst",
+                    "description": "[Sunburst](https://attack.mitre.org/software/S0559) is a trojanized DLL designed to fit within the SolarWinds Orion software update framework. It was used by [UNC2452](https://attack.mitre.org/groups/G0118) since at least February 2020.(Citation: SolarWinds Sunburst Sunspot Update January 2021)(Citation: Microsoft Deep Dive Solorigate January 2021)",
+                    "revoked": false,
+                    "labels": [
+                        "malware"
+                    ],
+                    "external_references": [
+                        {
+                            "source_name": "mitre-attack",
+                            "url": "https://attack.mitre.org/software/S0559",
+                            "external_id": "S0559"
+                        },
+                        {
+                            "source_name": "Sunburst",
+                            "description": "(Citation: FireEye SUNBURST Backdoor December 2020)"
+                        },
+                        {
+                            "source_name": "SolarWinds Sunburst Sunspot Update January 2021",
+                            "description": "Sudhakar Ramakrishna . (2021, January 11). New Findings From Our Investigation of SUNBURST. Retrieved January 13, 2021.",
+                            "url": "https://orangematter.solarwinds.com/2021/01/11/new-findings-from-our-investigation-of-sunburst/"
+                        },
+                        {
+                            "source_name": "Microsoft Deep Dive Solorigate January 2021",
+                            "description": "MSTIC, CDOC, 365 Defender Research Team. (2021, January 20). Deep dive into the Solorigate second-stage activation: From SUNBURST to TEARDROP and Raindrop . Retrieved January 22, 2021.",
+                            "url": "https://www.microsoft.com/security/blog/2021/01/20/deep-dive-into-the-solorigate-second-stage-activation-from-sunburst-to-teardrop-and-raindrop/"
+                        },
+                        {
+                            "source_name": "FireEye SUNBURST Backdoor December 2020",
+                            "description": "FireEye. (2020, December 13). Highly Evasive Attacker Leverages SolarWinds Supply Chain to Compromise Multiple Global Victims With SUNBURST Backdoor. Retrieved January 4, 2021.",
+                            "url": "https://www.fireeye.com/blog/threat-research/2020/12/evasive-attacker-leverages-solarwinds-supply-chain-compromises-with-sunburst-backdoor.html"
+                        }
+                    ],
+                    "object_marking_refs": [
+                        "marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168"
+                    ],
+                    "x_mitre_aliases": [
+                        "Sunburst"
+                    ],
+                    "x_mitre_contributors": [
+                        "Matt Brenton, Zurich Insurance Group"
+                    ],
+                    "x_mitre_platforms": [
+                        "Windows"
+                    ],
+                    "x_mitre_version": "1.0"
+                },
+                {
+                    "type": "malware",
+                    "id": "malware--bf48e7f8-752c-4ce8-bf8f-748edacd8fa6",
+                    "created_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "created": "2021-01-12 16:14:28.845000+00:00",
+                    "modified": "2021-01-22 22:35:20.054000+00:00",
+                    "name": "Sunspot",
+                    "description": "[Sunspot](https://attack.mitre.org/software/S0562) is an implant that injected the [Sunburst](https://attack.mitre.org/software/S0559) backdoor into the SolarWinds Orion software update framework. It was used by [UNC2452](https://attack.mitre.org/groups/G0118) since at least February 2020.(Citation: CrowdStrike SUNSPOT Implant January 2021) ",
+                    "revoked": false,
+                    "labels": [
+                        "malware"
+                    ],
+                    "external_references": [
+                        {
+                            "source_name": "mitre-attack",
+                            "url": "https://attack.mitre.org/software/S0562",
+                            "external_id": "S0562"
+                        },
+                        {
+                            "source_name": "Sunspot",
+                            "description": "(Citation: CrowdStrike SUNSPOT Implant January 2021)"
+                        },
+                        {
+                            "source_name": "CrowdStrike SUNSPOT Implant January 2021",
+                            "description": "CrowdStrike Intelligence Team. (2021, January 11). SUNSPOT: An Implant in the Build Process. Retrieved January 11, 2021.",
+                            "url": "https://www.crowdstrike.com/blog/sunspot-malware-technical-analysis/"
+                        }
+                    ],
+                    "object_marking_refs": [
+                        "marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168"
+                    ],
+                    "x_mitre_aliases": [
+                        "Sunspot"
+                    ],
+                    "x_mitre_platforms": [
+                        "Windows"
+                    ],
+                    "x_mitre_version": "1.0"
+                },
+                {
+                    "type": "malware",
+                    "id": "malware--32f49626-87f4-4d6c-8f59-a0dca953fe26",
+                    "created_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "created": "2021-01-06 17:34:43.835000+00:00",
+                    "modified": "2021-01-25 20:20:16.776000+00:00",
+                    "name": "Teardrop",
+                    "description": "[Teardrop](https://attack.mitre.org/software/S0560) is a memory-only dropper that was discovered on some victim machines during investigations related to the 2020 SolarWinds cyber intrusion. It was likely used by [UNC2452](https://attack.mitre.org/groups/G0118) since at least May 2020.(Citation: FireEye SUNBURST Backdoor December 2020)(Citation: Microsoft Deep Dive Solorigate January 2021)",
+                    "revoked": false,
+                    "labels": [
+                        "malware"
+                    ],
+                    "external_references": [
+                        {
+                            "source_name": "mitre-attack",
+                            "url": "https://attack.mitre.org/software/S0560",
+                            "external_id": "S0560"
+                        },
+                        {
+                            "source_name": "FireEye SUNBURST Backdoor December 2020",
+                            "description": "FireEye. (2020, December 13). Highly Evasive Attacker Leverages SolarWinds Supply Chain to Compromise Multiple Global Victims With SUNBURST Backdoor. Retrieved January 4, 2021.",
+                            "url": "https://www.fireeye.com/blog/threat-research/2020/12/evasive-attacker-leverages-solarwinds-supply-chain-compromises-with-sunburst-backdoor.html"
+                        },
+                        {
+                            "source_name": "Microsoft Deep Dive Solorigate January 2021",
+                            "description": "MSTIC, CDOC, 365 Defender Research Team. (2021, January 20). Deep dive into the Solorigate second-stage activation: From SUNBURST to TEARDROP and Raindrop . Retrieved January 22, 2021.",
+                            "url": "https://www.microsoft.com/security/blog/2021/01/20/deep-dive-into-the-solorigate-second-stage-activation-from-sunburst-to-teardrop-and-raindrop/"
+                        }
+                    ],
+                    "object_marking_refs": [
+                        "marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168"
+                    ],
+                    "x_mitre_aliases": [
+                        "Teardrop"
+                    ],
+                    "x_mitre_platforms": [
+                        "Windows"
+                    ],
+                    "x_mitre_version": "1.0"
+                }
+            ],
+            "major_version_changes": [],
+            "minor_version_changes": [],
+            "other_version_changes": [],
+            "patches": [],
+            "revocations": [],
+            "deprecations": [],
+            "deletions": []
+        },
+        "groups": {
+            "additions": [
+                {
+                    "type": "intrusion-set",
+                    "id": "intrusion-set--dc5e2999-ca1a-47d4-8d12-a6984b138a1b",
+                    "created_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "created": "2021-01-05 15:34:11.066000+00:00",
+                    "modified": "2021-01-25 17:29:14.599000+00:00",
+                    "name": "UNC2452",
+                    "description": "[UNC2452](https://attack.mitre.org/groups/G0118) is a suspected Russian state-sponsored threat group responsible for the 2020 SolarWinds software supply chain intrusion.(Citation: FireEye SUNBURST Backdoor December 2020) Victims of this campaign include government, consulting, technology, telecom, and other organizations in North America, Europe, Asia, and the Middle East.(Citation: FireEye SUNBURST Backdoor December 2020) The group also compromised at least one think tank by late 2019.(Citation: Volexity SolarWinds)",
+                    "aliases": [
+                        "UNC2452",
+                        "Solorigate",
+                        "StellarParticle",
+                        "Dark Halo"
+                    ],
+                    "revoked": false,
+                    "external_references": [
+                        {
+                            "source_name": "mitre-attack",
+                            "url": "https://attack.mitre.org/groups/G0118",
+                            "external_id": "G0118"
+                        },
+                        {
+                            "source_name": "UNC2452",
+                            "description": "(Citation: FireEye SUNBURST Backdoor December 2020)"
+                        },
+                        {
+                            "source_name": "Solorigate",
+                            "description": "(Citation: Microsoft Analyzing Solorigate Dec 2020)"
+                        },
+                        {
+                            "source_name": "StellarParticle",
+                            "description": "(Citation: CrowdStrike SUNSPOT Implant January 2021)"
+                        },
+                        {
+                            "source_name": "Dark Halo",
+                            "description": "(Citation: Volexity SolarWinds)"
+                        },
+                        {
+                            "source_name": "FireEye SUNBURST Backdoor December 2020",
+                            "description": "FireEye. (2020, December 13). Highly Evasive Attacker Leverages SolarWinds Supply Chain to Compromise Multiple Global Victims With SUNBURST Backdoor. Retrieved January 4, 2021.",
+                            "url": "https://www.fireeye.com/blog/threat-research/2020/12/evasive-attacker-leverages-solarwinds-supply-chain-compromises-with-sunburst-backdoor.html"
+                        },
+                        {
+                            "source_name": "Volexity SolarWinds",
+                            "description": "Cash, D. et al. (2020, December 14). Dark Halo Leverages SolarWinds Compromise to Breach Organizations. Retrieved December 29, 2020.",
+                            "url": "https://www.volexity.com/blog/2020/12/14/dark-halo-leverages-solarwinds-compromise-to-breach-organizations/"
+                        },
+                        {
+                            "source_name": "Microsoft Analyzing Solorigate Dec 2020",
+                            "description": "MSTIC. (2020, December 18). Analyzing Solorigate, the compromised DLL file that started a sophisticated cyberattack, and how Microsoft Defender helps protect customers . Retrieved January 5, 2021.",
+                            "url": "https://www.microsoft.com/security/blog/2020/12/18/analyzing-solorigate-the-compromised-dll-file-that-started-a-sophisticated-cyberattack-and-how-microsoft-defender-helps-protect/"
+                        },
+                        {
+                            "source_name": "CrowdStrike SUNSPOT Implant January 2021",
+                            "description": "CrowdStrike Intelligence Team. (2021, January 11). SUNSPOT: An Implant in the Build Process. Retrieved January 11, 2021.",
+                            "url": "https://www.crowdstrike.com/blog/sunspot-malware-technical-analysis/"
+                        }
+                    ],
+                    "object_marking_refs": [
+                        "marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168"
+                    ],
+                    "x_mitre_contributors": [
+                        "Katie Nickels, Red Canary",
+                        "Matt Brenton, Zurich Insurance Group"
+                    ],
+                    "x_mitre_version": "1.0"
+                }
+            ],
+            "major_version_changes": [],
+            "minor_version_changes": [],
+            "other_version_changes": [],
+            "patches": [],
+            "revocations": [],
+            "deprecations": [],
+            "deletions": []
+        },
+        "campaigns": {
+            "additions": [],
+            "major_version_changes": [],
+            "minor_version_changes": [],
+            "other_version_changes": [],
+            "patches": [],
+            "revocations": [],
+            "deprecations": [],
+            "deletions": []
+        },
+        "mitigations": {
+            "additions": [],
+            "major_version_changes": [],
+            "minor_version_changes": [],
+            "other_version_changes": [],
+            "patches": [],
+            "revocations": [],
+            "deprecations": [],
+            "deletions": []
+        },
+        "datasources": {
+            "additions": [],
+            "major_version_changes": [],
+            "minor_version_changes": [],
+            "other_version_changes": [],
+            "patches": [],
+            "revocations": [],
+            "deprecations": [],
+            "deletions": []
+        },
+        "datacomponents": {
+            "additions": [],
+            "major_version_changes": [],
+            "minor_version_changes": [],
+            "other_version_changes": [],
+            "patches": [],
+            "revocations": [],
+            "deprecations": [],
+            "deletions": []
+        }
+    },
+    "mobile-attack": {
+        "techniques": {
+            "additions": [],
+            "major_version_changes": [],
+            "minor_version_changes": [],
+            "other_version_changes": [],
+            "patches": [],
+            "revocations": [],
+            "deprecations": [],
+            "deletions": []
+        },
+        "software": {
+            "additions": [],
+            "major_version_changes": [],
+            "minor_version_changes": [],
+            "other_version_changes": [],
+            "patches": [],
+            "revocations": [],
+            "deprecations": [],
+            "deletions": []
+        },
+        "groups": {
+            "additions": [],
+            "major_version_changes": [],
+            "minor_version_changes": [],
+            "other_version_changes": [],
+            "patches": [],
+            "revocations": [],
+            "deprecations": [],
+            "deletions": []
+        },
+        "campaigns": {
+            "additions": [],
+            "major_version_changes": [],
+            "minor_version_changes": [],
+            "other_version_changes": [],
+            "patches": [],
+            "revocations": [],
+            "deprecations": [],
+            "deletions": []
+        },
+        "mitigations": {
+            "additions": [],
+            "major_version_changes": [],
+            "minor_version_changes": [],
+            "other_version_changes": [],
+            "patches": [],
+            "revocations": [],
+            "deprecations": [],
+            "deletions": []
+        },
+        "datasources": {
+            "additions": [],
+            "major_version_changes": [],
+            "minor_version_changes": [],
+            "other_version_changes": [],
+            "patches": [],
+            "revocations": [],
+            "deprecations": [],
+            "deletions": []
+        },
+        "datacomponents": {
+            "additions": [],
+            "major_version_changes": [],
+            "minor_version_changes": [],
+            "other_version_changes": [],
+            "patches": [],
+            "revocations": [],
+            "deprecations": [],
+            "deletions": []
+        }
+    },
+    "ics-attack": {
+        "techniques": {
+            "additions": [],
+            "major_version_changes": [],
+            "minor_version_changes": [],
+            "other_version_changes": [],
+            "patches": [],
+            "revocations": [],
+            "deprecations": [],
+            "deletions": []
+        },
+        "software": {
+            "additions": [],
+            "major_version_changes": [],
+            "minor_version_changes": [],
+            "other_version_changes": [],
+            "patches": [],
+            "revocations": [],
+            "deprecations": [],
+            "deletions": []
+        },
+        "groups": {
+            "additions": [],
+            "major_version_changes": [],
+            "minor_version_changes": [],
+            "other_version_changes": [],
+            "patches": [],
+            "revocations": [],
+            "deprecations": [],
+            "deletions": []
+        },
+        "campaigns": {
+            "additions": [],
+            "major_version_changes": [],
+            "minor_version_changes": [],
+            "other_version_changes": [],
+            "patches": [],
+            "revocations": [],
+            "deprecations": [],
+            "deletions": []
+        },
+        "mitigations": {
+            "additions": [],
+            "major_version_changes": [],
+            "minor_version_changes": [],
+            "other_version_changes": [],
+            "patches": [],
+            "revocations": [],
+            "deprecations": [],
+            "deletions": []
+        },
+        "datasources": {
+            "additions": [],
+            "major_version_changes": [],
+            "minor_version_changes": [],
+            "other_version_changes": [],
+            "patches": [],
+            "revocations": [],
+            "deprecations": [],
+            "deletions": []
+        },
+        "datacomponents": {
+            "additions": [],
+            "major_version_changes": [],
+            "minor_version_changes": [],
+            "other_version_changes": [],
+            "patches": [],
+            "revocations": [],
+            "deprecations": [],
+            "deletions": []
+        }
+    },
+    "new-contributors": [
+        "Blake Strom, Microsoft 365 Defender",
+        "Itamar Mizrahi, Cymptom",
+        "Katie Nickels, Red Canary",
+        "Matt Brenton, Zurich Insurance Group",
+        "Oleg Kolesnikov, Securonix",
+        "Tristan Bennett, Seamless Intelligence"
+    ]
+}

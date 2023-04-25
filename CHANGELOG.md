@@ -1,5 +1,17 @@
 <!-- TOWNCRIER -->
 
+# v4.0.2 (2023-04-24)
+
+## Features
+
+* Release [ATT&CK content version 13.0](https://github.com/mitre/cti/releases/tag/ATT%26CK-v13.0).
+  See the release notes [here](https://attack.mitre.org/resources/updates/updates-april-2023/).
+
+## Misc
+
+* Center align the Contact page information. [#399](https://github.com/mitre-attack/attack-website/issues/399)
+* Update mitreattack-python to latest. [#400](https://github.com/mitre-attack/attack-website/issues/400)
+
 # v4.0.1 (2022-11-08)
 
 ## Features

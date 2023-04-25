@@ -6,9 +6,9 @@ Template: resources/update-post
 url: /resources/updates/updates-october-2020
 save_as: resources/updates/updates-october-2020/index.html
 
-| Version | Start Date | End Date | Data |
-|:--------|:-----------|:---------|:-----|
-| [ATT&CK v8](/versions/v8) | October 27, 2020 | April 28, 2021 | [v8.2 on MITRE/CTI](https://github.com/mitre/cti/releases/tag/ATT%26CK-v8.2) |
+| Version | Start Date | End Date | Data | Changelogs |
+|:--------|:-----------|:---------|:-----|:-----------|
+| [ATT&CK v8](/versions/v8) | October 27, 2020 | April 28, 2021 | [v8.0 on MITRE/CTI](https://github.com/mitre/cti/releases/tag/ATT%26CK-v8.0)<br />[v8.1 on MITRE/CTI](https://github.com/mitre/cti/releases/tag/ATT%26CK-v8.1)<br />[v8.2 on MITRE/CTI](https://github.com/mitre/cti/releases/tag/ATT%26CK-v8.2) | v7.2 - v8.0 [Details](/docs/changelogs/v7.2-v8.0/changelog-detailed.html) ([JSON](/docs/changelogs/v7.2-v8.0/changelog.json))<br />v8.0 - v8.1 [Details](/docs/changelogs/v8.0-v8.1/changelog-detailed.html) ([JSON](/docs/changelogs/v8.0-v8.1/changelog.json))<br />v8.1 - v8.2 [Details](/docs/changelogs/v8.1-v8.2/changelog-detailed.html) ([JSON](/docs/changelogs/v8.1-v8.2/changelog.json)) |
 
 The October 2020 (v8) ATT&CK release updates Techniques, Groups, and Software for both Enterprise and Mobile. The biggest changes are the deprecation of the PRE-ATT&CK domain, the addition of two new Tactics to replace [PRE-ATT&CK](/versions/v7/matrices/pre/), and the addition of the Network platform to Enterprise ATT&CK. 
 

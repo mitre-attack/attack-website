@@ -1,0 +1,1271 @@
+{
+    "enterprise-attack": {
+        "techniques": {
+            "additions": [],
+            "major_version_changes": [],
+            "minor_version_changes": [
+                {
+                    "type": "attack-pattern",
+                    "id": "attack-pattern--650c784b-7504-4df7-ab2c-4ea882384d1e",
+                    "created_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "created": "2020-02-11 19:08:51.677000+00:00",
+                    "modified": "2022-10-25 15:46:55.393000+00:00",
+                    "name": "LLMNR/NBT-NS Poisoning and SMB Relay",
+                    "description": "By responding to LLMNR/NBT-NS network traffic, adversaries may spoof an authoritative source for name resolution to force communication with an adversary controlled system. This activity may be used to collect or relay authentication materials. \n\nLink-Local Multicast Name Resolution (LLMNR) and NetBIOS Name Service (NBT-NS) are Microsoft Windows components that serve as alternate methods of host identification. LLMNR is based upon the Domain Name System (DNS) format and allows hosts on the same local link to perform name resolution for other hosts. NBT-NS identifies systems on a local network by their NetBIOS name. (Citation: Wikipedia LLMNR)(Citation: TechNet NetBIOS)\n\nAdversaries can spoof an authoritative source for name resolution on a victim network by responding to LLMNR (UDP 5355)/NBT-NS (UDP 137) traffic as if they know the identity of the requested host, effectively poisoning the service so that the victims will communicate with the adversary controlled system. If the requested host belongs to a resource that requires identification/authentication, the username and NTLMv2 hash will then be sent to the adversary controlled system. The adversary can then collect the hash information sent over the wire through tools that monitor the ports for traffic or through [Network Sniffing](https://attack.mitre.org/techniques/T1040) and crack the hashes offline through [Brute Force](https://attack.mitre.org/techniques/T1110) to obtain the plaintext passwords.\n\nIn some cases where an adversary has access to a system that is in the authentication path between systems or when automated scans that use credentials attempt to authenticate to an adversary controlled system, the NTLMv1/v2 hashes can be intercepted and relayed to access and execute code against a target system. The relay step can happen in conjunction with poisoning but may also be independent of it.(Citation: byt3bl33d3r NTLM Relaying)(Citation: Secure Ideas SMB Relay) Additionally, adversaries may encapsulate the NTLMv1/v2 hashes into various protocols, such as LDAP, SMB, MSSQL and HTTP, to expand and use multiple services with the valid NTLM response.\u00a0\n\nSeveral tools may be used to poison name services within local networks such as NBNSpoof, Metasploit, and [Responder](https://attack.mitre.org/software/S0174).(Citation: GitHub NBNSpoof)(Citation: Rapid7 LLMNR Spoofer)(Citation: GitHub Responder)",
+                    "kill_chain_phases": [
+                        {
+                            "kill_chain_name": "mitre-attack",
+                            "phase_name": "credential-access"
+                        },
+                        {
+                            "kill_chain_name": "mitre-attack",
+                            "phase_name": "collection"
+                        }
+                    ],
+                    "revoked": false,
+                    "external_references": [
+                        {
+                            "source_name": "mitre-attack",
+                            "url": "https://attack.mitre.org/techniques/T1557/001",
+                            "external_id": "T1557.001"
+                        },
+                        {
+                            "source_name": "Rapid7 LLMNR Spoofer",
+                            "description": "Francois, R. (n.d.). LLMNR Spoofer. Retrieved November 17, 2017.",
+                            "url": "https://www.rapid7.com/db/modules/auxiliary/spoof/llmnr/llmnr_response"
+                        },
+                        {
+                            "source_name": "GitHub Responder",
+                            "description": "Gaffie, L. (2016, August 25). Responder. Retrieved November 17, 2017.",
+                            "url": "https://github.com/SpiderLabs/Responder"
+                        },
+                        {
+                            "source_name": "Secure Ideas SMB Relay",
+                            "description": "Kuehn, E. (2018, April 11). Ever Run a Relay? Why SMB Relays Should Be On Your Mind. Retrieved February 7, 2019.",
+                            "url": "https://blog.secureideas.com/2018/04/ever-run-a-relay-why-smb-relays-should-be-on-your-mind.html"
+                        },
+                        {
+                            "source_name": "TechNet NetBIOS",
+                            "description": "Microsoft. (n.d.). NetBIOS Name Resolution. Retrieved November 17, 2017.",
+                            "url": "https://technet.microsoft.com/library/cc958811.aspx"
+                        },
+                        {
+                            "source_name": "GitHub NBNSpoof",
+                            "description": "Nomex. (2014, February 7). NBNSpoof. Retrieved November 17, 2017.",
+                            "url": "https://github.com/nomex/nbnspoof"
+                        },
+                        {
+                            "source_name": "GitHub Conveigh",
+                            "description": "Robertson, K. (2016, August 28). Conveigh. Retrieved November 17, 2017.",
+                            "url": "https://github.com/Kevin-Robertson/Conveigh"
+                        },
+                        {
+                            "source_name": "byt3bl33d3r NTLM Relaying",
+                            "description": "Salvati, M. (2017, June 2). Practical guide to NTLM Relaying in 2017 (A.K.A getting a foothold in under 5 minutes). Retrieved February 7, 2019.",
+                            "url": "https://byt3bl33d3r.github.io/practical-guide-to-ntlm-relaying-in-2017-aka-getting-a-foothold-in-under-5-minutes.html"
+                        },
+                        {
+                            "source_name": "Sternsecurity LLMNR-NBTNS",
+                            "description": "Sternstein, J. (2013, November). Local Network Attacks: LLMNR and NBT-NS Poisoning. Retrieved November 17, 2017.",
+                            "url": "https://www.sternsecurity.com/blog/local-network-attacks-llmnr-and-nbt-ns-poisoning"
+                        },
+                        {
+                            "source_name": "Wikipedia LLMNR",
+                            "description": "Wikipedia. (2016, July 7). Link-Local Multicast Name Resolution. Retrieved November 17, 2017.",
+                            "url": "https://en.wikipedia.org/wiki/Link-Local_Multicast_Name_Resolution"
+                        }
+                    ],
+                    "object_marking_refs": [
+                        "marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168"
+                    ],
+                    "x_mitre_attack_spec_version": "3.0.0",
+                    "x_mitre_contributors": [
+                        "Eric Kuehn, Secure Ideas",
+                        "Matthew Demaske, Adaptforward",
+                        "Andrew Allen, @whitehat_zero"
+                    ],
+                    "x_mitre_data_sources": [
+                        "Network Traffic: Network Traffic Content",
+                        "Windows Registry: Windows Registry Key Modification",
+                        "Network Traffic: Network Traffic Flow",
+                        "Service: Service Creation"
+                    ],
+                    "x_mitre_deprecated": false,
+                    "x_mitre_detection": "Monitor <code>HKLM\\Software\\Policies\\Microsoft\\Windows NT\\DNSClient</code> for changes to the \"EnableMulticast\" DWORD value. A value of \u201c0\u201d indicates LLMNR is disabled. (Citation: Sternsecurity LLMNR-NBTNS)\n\nMonitor for traffic on ports UDP 5355 and UDP 137 if LLMNR/NetBIOS is disabled by security policy.\n\nDeploy an LLMNR/NBT-NS spoofing detection tool.(Citation: GitHub Conveigh) Monitoring of Windows event logs for event IDs 4697 and 7045 may help in detecting successful relay techniques.(Citation: Secure Ideas SMB Relay)",
+                    "x_mitre_domains": [
+                        "enterprise-attack"
+                    ],
+                    "x_mitre_is_subtechnique": true,
+                    "x_mitre_modified_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "x_mitre_platforms": [
+                        "Windows"
+                    ],
+                    "x_mitre_version": "1.4",
+                    "detailed_diff": "{\"values_changed\": {\"root['modified']\": {\"new_value\": \"2022-10-25 15:46:55.393000+00:00\", \"old_value\": \"2022-10-18 20:13:48.423000+00:00\"}, \"root['description']\": {\"new_value\": \"By responding to LLMNR/NBT-NS network traffic, adversaries may spoof an authoritative source for name resolution to force communication with an adversary controlled system. This activity may be used to collect or relay authentication materials. \\n\\nLink-Local Multicast Name Resolution (LLMNR) and NetBIOS Name Service (NBT-NS) are Microsoft Windows components that serve as alternate methods of host identification. LLMNR is based upon the Domain Name System (DNS) format and allows hosts on the same local link to perform name resolution for other hosts. NBT-NS identifies systems on a local network by their NetBIOS name. (Citation: Wikipedia LLMNR)(Citation: TechNet NetBIOS)\\n\\nAdversaries can spoof an authoritative source for name resolution on a victim network by responding to LLMNR (UDP 5355)/NBT-NS (UDP 137) traffic as if they know the identity of the requested host, effectively poisoning the service so that the victims will communicate with the adversary controlled system. If the requested host belongs to a resource that requires identification/authentication, the username and NTLMv2 hash will then be sent to the adversary controlled system. The adversary can then collect the hash information sent over the wire through tools that monitor the ports for traffic or through [Network Sniffing](https://attack.mitre.org/techniques/T1040) and crack the hashes offline through [Brute Force](https://attack.mitre.org/techniques/T1110) to obtain the plaintext passwords.\\n\\nIn some cases where an adversary has access to a system that is in the authentication path between systems or when automated scans that use credentials attempt to authenticate to an adversary controlled system, the NTLMv1/v2 hashes can be intercepted and relayed to access and execute code against a target system. The relay step can happen in conjunction with poisoning but may also be independent of it.(Citation: byt3bl33d3r NTLM Relaying)(Citation: Secure Ideas SMB Relay) Additionally, adversaries may encapsulate the NTLMv1/v2 hashes into various protocols, such as LDAP, SMB, MSSQL and HTTP, to expand and use multiple services with the valid NTLM response.\\u00a0\\n\\nSeveral tools may be used to poison name services within local networks such as NBNSpoof, Metasploit, and [Responder](https://attack.mitre.org/software/S0174).(Citation: GitHub NBNSpoof)(Citation: Rapid7 LLMNR Spoofer)(Citation: GitHub Responder)\", \"old_value\": \"By responding to LLMNR/NBT-NS network traffic, adversaries may spoof an authoritative source for name resolution to force communication with an adversary controlled system. This activity may be used to collect or relay authentication materials. \\n\\nLink-Local Multicast Name Resolution (LLMNR) and NetBIOS Name Service (NBT-NS) are Microsoft Windows components that serve as alternate methods of host identification. LLMNR is based upon the Domain Name System (DNS) format and allows hosts on the same local link to perform name resolution for other hosts. NBT-NS identifies systems on a local network by their NetBIOS name. (Citation: Wikipedia LLMNR)(Citation: TechNet NetBIOS)\\n\\nAdversaries can spoof an authoritative source for name resolution on a victim network by responding to LLMNR (UDP 5355)/NBT-NS (UDP 137) traffic as if they know the identity of the requested host, effectively poisoning the service so that the victims will communicate with the adversary controlled system. If the requested host belongs to a resource that requires identification/authentication, the username and NTLMv2 hash will then be sent to the adversary controlled system. The adversary can then collect the hash information sent over the wire through tools that monitor the ports for traffic or through [Network Sniffing](https://attack.mitre.org/techniques/T1040) and crack the hashes offline through [Brute Force](https://attack.mitre.org/techniques/T1110) to obtain the plaintext passwords.\\n\\nIn some cases where an adversary has access to a system that is in the authentication path between systems or when automated scans that use credentials attempt to authenticate to an adversary controlled system, the NTLMv2 hashes can be intercepted and relayed to access and execute code against a target system. The relay step can happen in conjunction with poisoning but may also be independent of it.(Citation: byt3bl33d3r NTLM Relaying)(Citation: Secure Ideas SMB Relay) Additionally, adversaries may encapsulate the NTLMv1/v2 hashes into various protocols, such as LDAP, SMB, MSSQL and HTTP, to expand and use multiple services with the valid NTLM response.\\u00a0\\n\\nSeveral tools may be used to poison name services within local networks such as NBNSpoof, Metasploit, and [Responder](https://attack.mitre.org/software/S0174).(Citation: GitHub NBNSpoof)(Citation: Rapid7 LLMNR Spoofer)(Citation: GitHub Responder)\", \"diff\": \"--- \\n+++ \\n@@ -4,6 +4,6 @@\\n \\n Adversaries can spoof an authoritative source for name resolution on a victim network by responding to LLMNR (UDP 5355)/NBT-NS (UDP 137) traffic as if they know the identity of the requested host, effectively poisoning the service so that the victims will communicate with the adversary controlled system. If the requested host belongs to a resource that requires identification/authentication, the username and NTLMv2 hash will then be sent to the adversary controlled system. The adversary can then collect the hash information sent over the wire through tools that monitor the ports for traffic or through [Network Sniffing](https://attack.mitre.org/techniques/T1040) and crack the hashes offline through [Brute Force](https://attack.mitre.org/techniques/T1110) to obtain the plaintext passwords.\\n \\n-In some cases where an adversary has access to a system that is in the authentication path between systems or when automated scans that use credentials attempt to authenticate to an adversary controlled system, the NTLMv2 hashes can be intercepted and relayed to access and execute code against a target system. The relay step can happen in conjunction with poisoning but may also be independent of it.(Citation: byt3bl33d3r NTLM Relaying)(Citation: Secure Ideas SMB Relay) Additionally, adversaries may encapsulate the NTLMv1/v2 hashes into various protocols, such as LDAP, SMB, MSSQL and HTTP, to expand and use multiple services with the valid NTLM response.\\u00a0\\n+In some cases where an adversary has access to a system that is in the authentication path between systems or when automated scans that use credentials attempt to authenticate to an adversary controlled system, the NTLMv1/v2 hashes can be intercepted and relayed to access and execute code against a target system. The relay step can happen in conjunction with poisoning but may also be independent of it.(Citation: byt3bl33d3r NTLM Relaying)(Citation: Secure Ideas SMB Relay) Additionally, adversaries may encapsulate the NTLMv1/v2 hashes into various protocols, such as LDAP, SMB, MSSQL and HTTP, to expand and use multiple services with the valid NTLM response.\\u00a0\\n \\n Several tools may be used to poison name services within local networks such as NBNSpoof, Metasploit, and [Responder](https://attack.mitre.org/software/S0174).(Citation: GitHub NBNSpoof)(Citation: Rapid7 LLMNR Spoofer)(Citation: GitHub Responder)\"}, \"root['x_mitre_attack_spec_version']\": {\"new_value\": \"3.0.0\", \"old_value\": \"2.1.0\"}, \"root['x_mitre_data_sources'][0]\": {\"new_value\": \"Network Traffic: Network Traffic Content\", \"old_value\": \"Service: Service Creation\"}, \"root['x_mitre_data_sources'][3]\": {\"new_value\": \"Service: Service Creation\", \"old_value\": \"Network Traffic: Network Traffic Content\"}, \"root['x_mitre_version']\": {\"new_value\": \"1.4\", \"old_value\": \"1.3\"}}}",
+                    "previous_version": "1.3",
+                    "version_change": "1.3 \u2192 1.4",
+                    "description_change_table": "\n    <table class=\"diff\" id=\"difflib_chg_to862__top\"\n           cellspacing=\"0\" cellpadding=\"0\" rules=\"groups\" >\n        <colgroup></colgroup> <colgroup></colgroup> <colgroup></colgroup>\n        <colgroup></colgroup> <colgroup></colgroup> <colgroup></colgroup>\n        <thead><tr><th class=\"diff_next\"><br /></th><th colspan=\"2\" class=\"diff_header\">Old Description</th><th class=\"diff_next\"><br /></th><th colspan=\"2\" class=\"diff_header\">New Description</th></tr></thead>\n        <tbody>\n            <tr><td class=\"diff_next\" id=\"difflib_chg_to862__0\"><a href=\"#difflib_chg_to862__top\">t</a></td><td class=\"diff_header\" id=\"from862_1\">1</td><td nowrap=\"nowrap\">By&nbsp;responding&nbsp;to&nbsp;LLMNR/NBT-NS&nbsp;network&nbsp;traffic,&nbsp;adversaries&nbsp;m</td><td class=\"diff_next\"><a href=\"#difflib_chg_to862__top\">t</a></td><td class=\"diff_header\" id=\"to862_1\">1</td><td nowrap=\"nowrap\">By&nbsp;responding&nbsp;to&nbsp;LLMNR/NBT-NS&nbsp;network&nbsp;traffic,&nbsp;adversaries&nbsp;m</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">ay&nbsp;spoof&nbsp;an&nbsp;authoritative&nbsp;source&nbsp;for&nbsp;name&nbsp;resolution&nbsp;to&nbsp;forc</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">ay&nbsp;spoof&nbsp;an&nbsp;authoritative&nbsp;source&nbsp;for&nbsp;name&nbsp;resolution&nbsp;to&nbsp;forc</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">e&nbsp;communication&nbsp;with&nbsp;an&nbsp;adversary&nbsp;controlled&nbsp;system.&nbsp;This&nbsp;ac</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">e&nbsp;communication&nbsp;with&nbsp;an&nbsp;adversary&nbsp;controlled&nbsp;system.&nbsp;This&nbsp;ac</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">tivity&nbsp;may&nbsp;be&nbsp;used&nbsp;to&nbsp;collect&nbsp;or&nbsp;relay&nbsp;authentication&nbsp;materi</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">tivity&nbsp;may&nbsp;be&nbsp;used&nbsp;to&nbsp;collect&nbsp;or&nbsp;relay&nbsp;authentication&nbsp;materi</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">als.&nbsp;&nbsp;&nbsp;Link-Local&nbsp;Multicast&nbsp;Name&nbsp;Resolution&nbsp;(LLMNR)&nbsp;and&nbsp;NetB</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">als.&nbsp;&nbsp;&nbsp;Link-Local&nbsp;Multicast&nbsp;Name&nbsp;Resolution&nbsp;(LLMNR)&nbsp;and&nbsp;NetB</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">IOS&nbsp;Name&nbsp;Service&nbsp;(NBT-NS)&nbsp;are&nbsp;Microsoft&nbsp;Windows&nbsp;components&nbsp;t</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">IOS&nbsp;Name&nbsp;Service&nbsp;(NBT-NS)&nbsp;are&nbsp;Microsoft&nbsp;Windows&nbsp;components&nbsp;t</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">hat&nbsp;serve&nbsp;as&nbsp;alternate&nbsp;methods&nbsp;of&nbsp;host&nbsp;identification.&nbsp;LLMNR</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">hat&nbsp;serve&nbsp;as&nbsp;alternate&nbsp;methods&nbsp;of&nbsp;host&nbsp;identification.&nbsp;LLMNR</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">&nbsp;is&nbsp;based&nbsp;upon&nbsp;the&nbsp;Domain&nbsp;Name&nbsp;System&nbsp;(DNS)&nbsp;format&nbsp;and&nbsp;allow</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">&nbsp;is&nbsp;based&nbsp;upon&nbsp;the&nbsp;Domain&nbsp;Name&nbsp;System&nbsp;(DNS)&nbsp;format&nbsp;and&nbsp;allow</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">s&nbsp;hosts&nbsp;on&nbsp;the&nbsp;same&nbsp;local&nbsp;link&nbsp;to&nbsp;perform&nbsp;name&nbsp;resolution&nbsp;fo</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">s&nbsp;hosts&nbsp;on&nbsp;the&nbsp;same&nbsp;local&nbsp;link&nbsp;to&nbsp;perform&nbsp;name&nbsp;resolution&nbsp;fo</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">r&nbsp;other&nbsp;hosts.&nbsp;NBT-NS&nbsp;identifies&nbsp;systems&nbsp;on&nbsp;a&nbsp;local&nbsp;network&nbsp;</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">r&nbsp;other&nbsp;hosts.&nbsp;NBT-NS&nbsp;identifies&nbsp;systems&nbsp;on&nbsp;a&nbsp;local&nbsp;network&nbsp;</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">by&nbsp;their&nbsp;NetBIOS&nbsp;name.&nbsp;(Citation:&nbsp;Wikipedia&nbsp;LLMNR)(Citation:</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">by&nbsp;their&nbsp;NetBIOS&nbsp;name.&nbsp;(Citation:&nbsp;Wikipedia&nbsp;LLMNR)(Citation:</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">&nbsp;TechNet&nbsp;NetBIOS)&nbsp;&nbsp;Adversaries&nbsp;can&nbsp;spoof&nbsp;an&nbsp;authoritative&nbsp;so</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">&nbsp;TechNet&nbsp;NetBIOS)&nbsp;&nbsp;Adversaries&nbsp;can&nbsp;spoof&nbsp;an&nbsp;authoritative&nbsp;so</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">urce&nbsp;for&nbsp;name&nbsp;resolution&nbsp;on&nbsp;a&nbsp;victim&nbsp;network&nbsp;by&nbsp;responding&nbsp;t</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">urce&nbsp;for&nbsp;name&nbsp;resolution&nbsp;on&nbsp;a&nbsp;victim&nbsp;network&nbsp;by&nbsp;responding&nbsp;t</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">o&nbsp;LLMNR&nbsp;(UDP&nbsp;5355)/NBT-NS&nbsp;(UDP&nbsp;137)&nbsp;traffic&nbsp;as&nbsp;if&nbsp;they&nbsp;know&nbsp;</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">o&nbsp;LLMNR&nbsp;(UDP&nbsp;5355)/NBT-NS&nbsp;(UDP&nbsp;137)&nbsp;traffic&nbsp;as&nbsp;if&nbsp;they&nbsp;know&nbsp;</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">the&nbsp;identity&nbsp;of&nbsp;the&nbsp;requested&nbsp;host,&nbsp;effectively&nbsp;poisoning&nbsp;th</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">the&nbsp;identity&nbsp;of&nbsp;the&nbsp;requested&nbsp;host,&nbsp;effectively&nbsp;poisoning&nbsp;th</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">e&nbsp;service&nbsp;so&nbsp;that&nbsp;the&nbsp;victims&nbsp;will&nbsp;communicate&nbsp;with&nbsp;the&nbsp;adve</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">e&nbsp;service&nbsp;so&nbsp;that&nbsp;the&nbsp;victims&nbsp;will&nbsp;communicate&nbsp;with&nbsp;the&nbsp;adve</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">rsary&nbsp;controlled&nbsp;system.&nbsp;If&nbsp;the&nbsp;requested&nbsp;host&nbsp;belongs&nbsp;to&nbsp;a&nbsp;</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">rsary&nbsp;controlled&nbsp;system.&nbsp;If&nbsp;the&nbsp;requested&nbsp;host&nbsp;belongs&nbsp;to&nbsp;a&nbsp;</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">resource&nbsp;that&nbsp;requires&nbsp;identification/authentication,&nbsp;the&nbsp;us</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">resource&nbsp;that&nbsp;requires&nbsp;identification/authentication,&nbsp;the&nbsp;us</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">ername&nbsp;and&nbsp;NTLMv2&nbsp;hash&nbsp;will&nbsp;then&nbsp;be&nbsp;sent&nbsp;to&nbsp;the&nbsp;adversary&nbsp;co</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">ername&nbsp;and&nbsp;NTLMv2&nbsp;hash&nbsp;will&nbsp;then&nbsp;be&nbsp;sent&nbsp;to&nbsp;the&nbsp;adversary&nbsp;co</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">ntrolled&nbsp;system.&nbsp;The&nbsp;adversary&nbsp;can&nbsp;then&nbsp;collect&nbsp;the&nbsp;hash&nbsp;inf</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">ntrolled&nbsp;system.&nbsp;The&nbsp;adversary&nbsp;can&nbsp;then&nbsp;collect&nbsp;the&nbsp;hash&nbsp;inf</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">ormation&nbsp;sent&nbsp;over&nbsp;the&nbsp;wire&nbsp;through&nbsp;tools&nbsp;that&nbsp;monitor&nbsp;the&nbsp;p</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">ormation&nbsp;sent&nbsp;over&nbsp;the&nbsp;wire&nbsp;through&nbsp;tools&nbsp;that&nbsp;monitor&nbsp;the&nbsp;p</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">orts&nbsp;for&nbsp;traffic&nbsp;or&nbsp;through&nbsp;[Network&nbsp;Sniffing](https://attac</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">orts&nbsp;for&nbsp;traffic&nbsp;or&nbsp;through&nbsp;[Network&nbsp;Sniffing](https://attac</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">k.mitre.org/techniques/T1040)&nbsp;and&nbsp;crack&nbsp;the&nbsp;hashes&nbsp;offline&nbsp;t</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">k.mitre.org/techniques/T1040)&nbsp;and&nbsp;crack&nbsp;the&nbsp;hashes&nbsp;offline&nbsp;t</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">hrough&nbsp;[Brute&nbsp;Force](https://attack.mitre.org/techniques/T11</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">hrough&nbsp;[Brute&nbsp;Force](https://attack.mitre.org/techniques/T11</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">10)&nbsp;to&nbsp;obtain&nbsp;the&nbsp;plaintext&nbsp;passwords.&nbsp;&nbsp;In&nbsp;some&nbsp;cases&nbsp;where&nbsp;</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">10)&nbsp;to&nbsp;obtain&nbsp;the&nbsp;plaintext&nbsp;passwords.&nbsp;&nbsp;In&nbsp;some&nbsp;cases&nbsp;where&nbsp;</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">an&nbsp;adversary&nbsp;has&nbsp;access&nbsp;to&nbsp;a&nbsp;system&nbsp;that&nbsp;is&nbsp;in&nbsp;the&nbsp;authentic</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">an&nbsp;adversary&nbsp;has&nbsp;access&nbsp;to&nbsp;a&nbsp;system&nbsp;that&nbsp;is&nbsp;in&nbsp;the&nbsp;authentic</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">ation&nbsp;path&nbsp;between&nbsp;systems&nbsp;or&nbsp;when&nbsp;automated&nbsp;scans&nbsp;that&nbsp;use&nbsp;</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">ation&nbsp;path&nbsp;between&nbsp;systems&nbsp;or&nbsp;when&nbsp;automated&nbsp;scans&nbsp;that&nbsp;use&nbsp;</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">credentials&nbsp;attempt&nbsp;to&nbsp;authenticate&nbsp;to&nbsp;an&nbsp;adversary&nbsp;controll</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">credentials&nbsp;attempt&nbsp;to&nbsp;authenticate&nbsp;to&nbsp;an&nbsp;adversary&nbsp;controll</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">ed&nbsp;system,&nbsp;the&nbsp;NTLMv2&nbsp;hashes&nbsp;can&nbsp;be&nbsp;intercepted&nbsp;and&nbsp;relayed&nbsp;</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">ed&nbsp;system,&nbsp;the&nbsp;NTLMv<span class=\"diff_add\">1/v</span>2&nbsp;hashes&nbsp;can&nbsp;be&nbsp;intercepted&nbsp;and&nbsp;relay</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">to&nbsp;access&nbsp;and&nbsp;execute&nbsp;code&nbsp;against&nbsp;a&nbsp;target&nbsp;system.&nbsp;The&nbsp;rela</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">ed&nbsp;to&nbsp;access&nbsp;and&nbsp;execute&nbsp;code&nbsp;against&nbsp;a&nbsp;target&nbsp;system.&nbsp;The&nbsp;r</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">y&nbsp;step&nbsp;can&nbsp;happen&nbsp;in&nbsp;conjunction&nbsp;with&nbsp;poisoning&nbsp;but&nbsp;may&nbsp;also</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">elay&nbsp;step&nbsp;can&nbsp;happen&nbsp;in&nbsp;conjunction&nbsp;with&nbsp;poisoning&nbsp;but&nbsp;may&nbsp;a</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">&nbsp;be&nbsp;independent&nbsp;of&nbsp;it.(Citation:&nbsp;byt3bl33d3r&nbsp;NTLM&nbsp;Relaying)(</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">lso&nbsp;be&nbsp;independent&nbsp;of&nbsp;it.(Citation:&nbsp;byt3bl33d3r&nbsp;NTLM&nbsp;Relayin</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">Citation:&nbsp;Secure&nbsp;Ideas&nbsp;SMB&nbsp;Relay)&nbsp;Additionally,&nbsp;adversaries&nbsp;</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">g)(Citation:&nbsp;Secure&nbsp;Ideas&nbsp;SMB&nbsp;Relay)&nbsp;Additionally,&nbsp;adversari</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">may&nbsp;encapsulate&nbsp;the&nbsp;NTLMv1/v2&nbsp;hashes&nbsp;into&nbsp;various&nbsp;protocols,</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">es&nbsp;may&nbsp;encapsulate&nbsp;the&nbsp;NTLMv1/v2&nbsp;hashes&nbsp;into&nbsp;various&nbsp;protoco</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">&nbsp;such&nbsp;as&nbsp;LDAP,&nbsp;SMB,&nbsp;MSSQL&nbsp;and&nbsp;HTTP,&nbsp;to&nbsp;expand&nbsp;and&nbsp;use&nbsp;multip</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">ls,&nbsp;such&nbsp;as&nbsp;LDAP,&nbsp;SMB,&nbsp;MSSQL&nbsp;and&nbsp;HTTP,&nbsp;to&nbsp;expand&nbsp;and&nbsp;use&nbsp;mul</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">le&nbsp;services&nbsp;with&nbsp;the&nbsp;valid&nbsp;NTLM&nbsp;response.\u00a0&nbsp;&nbsp;Several&nbsp;tools&nbsp;ma</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">tiple&nbsp;services&nbsp;with&nbsp;the&nbsp;valid&nbsp;NTLM&nbsp;response.\u00a0&nbsp;&nbsp;Several&nbsp;tools</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">y&nbsp;be&nbsp;used&nbsp;to&nbsp;poison&nbsp;name&nbsp;services&nbsp;within&nbsp;local&nbsp;networks&nbsp;such</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">&nbsp;may&nbsp;be&nbsp;used&nbsp;to&nbsp;poison&nbsp;name&nbsp;services&nbsp;within&nbsp;local&nbsp;networks&nbsp;s</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">&nbsp;as&nbsp;NBNSpoof,&nbsp;Metasploit,&nbsp;and&nbsp;[Responder](https://attack.mit</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">uch&nbsp;as&nbsp;NBNSpoof,&nbsp;Metasploit,&nbsp;and&nbsp;[Responder](https://attack.</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">re.org/software/S0174).(Citation:&nbsp;GitHub&nbsp;NBNSpoof)(Citation:</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">mitre.org/software/S0174).(Citation:&nbsp;GitHub&nbsp;NBNSpoof)(Citati</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">&nbsp;Rapid7&nbsp;LLMNR&nbsp;Spoofer)(Citation:&nbsp;GitHub&nbsp;Responder)</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">on:&nbsp;Rapid7&nbsp;LLMNR&nbsp;Spoofer)(Citation:&nbsp;GitHub&nbsp;Responder)</td></tr>\n        </tbody>\n    </table>",
+                    "changelog_mitigations": {
+                        "shared": [
+                            "M1030: Network Segmentation",
+                            "M1031: Network Intrusion Prevention",
+                            "M1037: Filter Network Traffic",
+                            "M1042: Disable or Remove Feature or Program"
+                        ],
+                        "new": [],
+                        "dropped": []
+                    },
+                    "changelog_detections": {
+                        "shared": [
+                            "DS0019: Service (Service Creation)",
+                            "DS0024: Windows Registry (Windows Registry Key Modification)",
+                            "DS0029: Network Traffic (Network Traffic Content)",
+                            "DS0029: Network Traffic (Network Traffic Flow)"
+                        ],
+                        "new": [],
+                        "dropped": []
+                    }
+                },
+                {
+                    "type": "attack-pattern",
+                    "id": "attack-pattern--926d8cfd-1d0d-4da2-ab49-3ca10ec3f3b5",
+                    "created_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "created": "2022-05-27 14:06:05.130000+00:00",
+                    "modified": "2022-10-25 15:49:14.785000+00:00",
+                    "name": "Cloud Accounts",
+                    "description": "Adversaries may create accounts with cloud providers that can be used during targeting. Adversaries can use cloud accounts to further their operations, including leveraging cloud storage services such as Dropbox, MEGA, Microsoft OneDrive, or AWS S3 buckets for [Exfiltration to Cloud Storage](https://attack.mitre.org/techniques/T1567/002) or to [Upload Tool](https://attack.mitre.org/techniques/T1608/002)s. Cloud accounts can also be used in the acquisition of infrastructure, such as [Virtual Private Server](https://attack.mitre.org/techniques/T1583/003)s or [Serverless](https://attack.mitre.org/techniques/T1583/007) infrastructure. Establishing cloud accounts may allow adversaries to develop sophisticated capabilities without managing their own servers.(Citation: Awake Security C2 Cloud)\n\nCreating [Cloud Accounts](https://attack.mitre.org/techniques/T1585/003) may also require adversaries to establish [Email Accounts](https://attack.mitre.org/techniques/T1585/002) to register with the cloud provider. ",
+                    "kill_chain_phases": [
+                        {
+                            "kill_chain_name": "mitre-attack",
+                            "phase_name": "resource-development"
+                        }
+                    ],
+                    "revoked": false,
+                    "external_references": [
+                        {
+                            "source_name": "mitre-attack",
+                            "url": "https://attack.mitre.org/techniques/T1585/003",
+                            "external_id": "T1585.003"
+                        },
+                        {
+                            "source_name": "Awake Security C2 Cloud",
+                            "description": "Gary Golomb and Tory Kei. (n.d.). Threat Hunting Series: Detecting Command & Control in the Cloud. Retrieved May 27, 2022.",
+                            "url": "https://awakesecurity.com/blog/threat-hunting-series-detecting-command-control-in-the-cloud/"
+                        }
+                    ],
+                    "object_marking_refs": [
+                        "marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168"
+                    ],
+                    "x_mitre_attack_spec_version": "3.0.0",
+                    "x_mitre_contributors": [
+                        "Francesco Bigarella"
+                    ],
+                    "x_mitre_deprecated": false,
+                    "x_mitre_detection": "Much of this activity will take place outside the visibility of the target organization, making detection of this behavior difficult. Detection efforts may be focused on related stages of the adversary lifecycle, such as during exfiltration (ex: [Transfer Data to Cloud Account](https://attack.mitre.org/techniques/T1537)).",
+                    "x_mitre_domains": [
+                        "enterprise-attack"
+                    ],
+                    "x_mitre_is_subtechnique": true,
+                    "x_mitre_modified_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "x_mitre_platforms": [
+                        "PRE"
+                    ],
+                    "x_mitre_version": "1.1",
+                    "detailed_diff": "{\"values_changed\": {\"root['modified']\": {\"new_value\": \"2022-10-25 15:49:14.785000+00:00\", \"old_value\": \"2022-10-21 14:20:59.175000+00:00\"}, \"root['description']\": {\"new_value\": \"Adversaries may create accounts with cloud providers that can be used during targeting. Adversaries can use cloud accounts to further their operations, including leveraging cloud storage services such as Dropbox, MEGA, Microsoft OneDrive, or AWS S3 buckets for [Exfiltration to Cloud Storage](https://attack.mitre.org/techniques/T1567/002) or to [Upload Tool](https://attack.mitre.org/techniques/T1608/002)s. Cloud accounts can also be used in the acquisition of infrastructure, such as [Virtual Private Server](https://attack.mitre.org/techniques/T1583/003)s or [Serverless](https://attack.mitre.org/techniques/T1583/007) infrastructure. Establishing cloud accounts may allow adversaries to develop sophisticated capabilities without managing their own servers.(Citation: Awake Security C2 Cloud)\\n\\nCreating [Cloud Accounts](https://attack.mitre.org/techniques/T1585/003) may also require adversaries to establish [Email Accounts](https://attack.mitre.org/techniques/T1585/002) to register with the cloud provider. \", \"old_value\": \"Adversaries may create accounts with cloud providers that can be used during targeting. Adversaries can use cloud accounts to further their operations, including leveraging cloud storage services such as Dropbox, Microsoft OneDrive, or AWS S3 buckets for [Exfiltration to Cloud Storage](https://attack.mitre.org/techniques/T1567/002) or to [Upload Tool](https://attack.mitre.org/techniques/T1608/002)s. Cloud accounts can also be used in the acquisition of infrastructure, such as [Virtual Private Server](https://attack.mitre.org/techniques/T1583/003)s or [Serverless](https://attack.mitre.org/techniques/T1583/007) infrastructure. Establishing cloud accounts may allow adversaries to develop sophisticated capabilities without managing their own servers.(Citation: Awake Security C2 Cloud)\\n\\nCreating [Cloud Accounts](https://attack.mitre.org/techniques/T1585/003) may also require adversaries to establish [Email Accounts](https://attack.mitre.org/techniques/T1585/002) to register with the cloud provider. \", \"diff\": \"--- \\n+++ \\n@@ -1,3 +1,3 @@\\n-Adversaries may create accounts with cloud providers that can be used during targeting. Adversaries can use cloud accounts to further their operations, including leveraging cloud storage services such as Dropbox, Microsoft OneDrive, or AWS S3 buckets for [Exfiltration to Cloud Storage](https://attack.mitre.org/techniques/T1567/002) or to [Upload Tool](https://attack.mitre.org/techniques/T1608/002)s. Cloud accounts can also be used in the acquisition of infrastructure, such as [Virtual Private Server](https://attack.mitre.org/techniques/T1583/003)s or [Serverless](https://attack.mitre.org/techniques/T1583/007) infrastructure. Establishing cloud accounts may allow adversaries to develop sophisticated capabilities without managing their own servers.(Citation: Awake Security C2 Cloud)\\n+Adversaries may create accounts with cloud providers that can be used during targeting. Adversaries can use cloud accounts to further their operations, including leveraging cloud storage services such as Dropbox, MEGA, Microsoft OneDrive, or AWS S3 buckets for [Exfiltration to Cloud Storage](https://attack.mitre.org/techniques/T1567/002) or to [Upload Tool](https://attack.mitre.org/techniques/T1608/002)s. Cloud accounts can also be used in the acquisition of infrastructure, such as [Virtual Private Server](https://attack.mitre.org/techniques/T1583/003)s or [Serverless](https://attack.mitre.org/techniques/T1583/007) infrastructure. Establishing cloud accounts may allow adversaries to develop sophisticated capabilities without managing their own servers.(Citation: Awake Security C2 Cloud)\\n \\n Creating [Cloud Accounts](https://attack.mitre.org/techniques/T1585/003) may also require adversaries to establish [Email Accounts](https://attack.mitre.org/techniques/T1585/002) to register with the cloud provider. \"}, \"root['x_mitre_attack_spec_version']\": {\"new_value\": \"3.0.0\", \"old_value\": \"2.1.0\"}, \"root['x_mitre_version']\": {\"new_value\": \"1.1\", \"old_value\": \"1.0\"}}}",
+                    "previous_version": "1.0",
+                    "version_change": "1.0 \u2192 1.1",
+                    "description_change_table": "\n    <table class=\"diff\" id=\"difflib_chg_to861__top\"\n           cellspacing=\"0\" cellpadding=\"0\" rules=\"groups\" >\n        <colgroup></colgroup> <colgroup></colgroup> <colgroup></colgroup>\n        <colgroup></colgroup> <colgroup></colgroup> <colgroup></colgroup>\n        <thead><tr><th class=\"diff_next\"><br /></th><th colspan=\"2\" class=\"diff_header\">Old Description</th><th class=\"diff_next\"><br /></th><th colspan=\"2\" class=\"diff_header\">New Description</th></tr></thead>\n        <tbody>\n            <tr><td class=\"diff_next\" id=\"difflib_chg_to861__0\"><a href=\"#difflib_chg_to861__top\">t</a></td><td class=\"diff_header\" id=\"from861_1\">1</td><td nowrap=\"nowrap\">Adversaries&nbsp;may&nbsp;create&nbsp;accounts&nbsp;with&nbsp;cloud&nbsp;providers&nbsp;that&nbsp;ca</td><td class=\"diff_next\"><a href=\"#difflib_chg_to861__top\">t</a></td><td class=\"diff_header\" id=\"to861_1\">1</td><td nowrap=\"nowrap\">Adversaries&nbsp;may&nbsp;create&nbsp;accounts&nbsp;with&nbsp;cloud&nbsp;providers&nbsp;that&nbsp;ca</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">n&nbsp;be&nbsp;used&nbsp;during&nbsp;targeting.&nbsp;Adversaries&nbsp;can&nbsp;use&nbsp;cloud&nbsp;accoun</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">n&nbsp;be&nbsp;used&nbsp;during&nbsp;targeting.&nbsp;Adversaries&nbsp;can&nbsp;use&nbsp;cloud&nbsp;accoun</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">ts&nbsp;to&nbsp;further&nbsp;their&nbsp;operations,&nbsp;including&nbsp;leveraging&nbsp;cloud&nbsp;s</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">ts&nbsp;to&nbsp;further&nbsp;their&nbsp;operations,&nbsp;including&nbsp;leveraging&nbsp;cloud&nbsp;s</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">torage&nbsp;services&nbsp;such&nbsp;as&nbsp;Dropbox,&nbsp;Microsoft&nbsp;OneDrive,&nbsp;or&nbsp;AWS&nbsp;</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">torage&nbsp;services&nbsp;such&nbsp;as&nbsp;Dropbox,&nbsp;M<span class=\"diff_add\">EGA,&nbsp;M</span>icrosoft&nbsp;OneDrive,&nbsp;o</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">S3&nbsp;buckets&nbsp;for&nbsp;[Exfiltration&nbsp;to&nbsp;Cloud&nbsp;Storage](https://attac</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">r&nbsp;AWS&nbsp;S3&nbsp;buckets&nbsp;for&nbsp;[Exfiltration&nbsp;to&nbsp;Cloud&nbsp;Storage](https:/</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">k.mitre.org/techniques/T1567/002)&nbsp;or&nbsp;to&nbsp;[Upload&nbsp;Tool](https:</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">/attack.mitre.org/techniques/T1567/002)&nbsp;or&nbsp;to&nbsp;[Upload&nbsp;Tool](</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">//attack.mitre.org/techniques/T1608/002)s.&nbsp;Cloud&nbsp;accounts&nbsp;ca</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">https://attack.mitre.org/techniques/T1608/002)s.&nbsp;Cloud&nbsp;accou</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">n&nbsp;also&nbsp;be&nbsp;used&nbsp;in&nbsp;the&nbsp;acquisition&nbsp;of&nbsp;infrastructure,&nbsp;such&nbsp;as</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">nts&nbsp;can&nbsp;also&nbsp;be&nbsp;used&nbsp;in&nbsp;the&nbsp;acquisition&nbsp;of&nbsp;infrastructure,&nbsp;s</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">&nbsp;[Virtual&nbsp;Private&nbsp;Server](https://attack.mitre.org/technique</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">uch&nbsp;as&nbsp;[Virtual&nbsp;Private&nbsp;Server](https://attack.mitre.org/tec</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">s/T1583/003)s&nbsp;or&nbsp;[Serverless](https://attack.mitre.org/techn</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">hniques/T1583/003)s&nbsp;or&nbsp;[Serverless](https://attack.mitre.org</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">iques/T1583/007)&nbsp;infrastructure.&nbsp;Establishing&nbsp;cloud&nbsp;accounts</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">/techniques/T1583/007)&nbsp;infrastructure.&nbsp;Establishing&nbsp;cloud&nbsp;ac</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">&nbsp;may&nbsp;allow&nbsp;adversaries&nbsp;to&nbsp;develop&nbsp;sophisticated&nbsp;capabilities</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">counts&nbsp;may&nbsp;allow&nbsp;adversaries&nbsp;to&nbsp;develop&nbsp;sophisticated&nbsp;capabi</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">&nbsp;without&nbsp;managing&nbsp;their&nbsp;own&nbsp;servers.(Citation:&nbsp;Awake&nbsp;Securit</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">lities&nbsp;without&nbsp;managing&nbsp;their&nbsp;own&nbsp;servers.(Citation:&nbsp;Awake&nbsp;S</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">y&nbsp;C2&nbsp;Cloud)&nbsp;&nbsp;Creating&nbsp;[Cloud&nbsp;Accounts](https://attack.mitre.</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">ecurity&nbsp;C2&nbsp;Cloud)&nbsp;&nbsp;Creating&nbsp;[Cloud&nbsp;Accounts](https://attack.</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">org/techniques/T1585/003)&nbsp;may&nbsp;also&nbsp;require&nbsp;adversaries&nbsp;to&nbsp;es</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">mitre.org/techniques/T1585/003)&nbsp;may&nbsp;also&nbsp;require&nbsp;adversaries</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">tablish&nbsp;[Email&nbsp;Accounts](https://attack.mitre.org/techniques</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">&nbsp;to&nbsp;establish&nbsp;[Email&nbsp;Accounts](https://attack.mitre.org/tech</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">/T1585/002)&nbsp;to&nbsp;register&nbsp;with&nbsp;the&nbsp;cloud&nbsp;provider.&nbsp;</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">niques/T1585/002)&nbsp;to&nbsp;register&nbsp;with&nbsp;the&nbsp;cloud&nbsp;provider.&nbsp;</td></tr>\n        </tbody>\n    </table>",
+                    "changelog_mitigations": {
+                        "shared": [
+                            "M1056: Pre-compromise"
+                        ],
+                        "new": [],
+                        "dropped": []
+                    },
+                    "changelog_detections": {
+                        "shared": [],
+                        "new": [],
+                        "dropped": []
+                    }
+                }
+            ],
+            "other_version_changes": [],
+            "patches": [
+                {
+                    "type": "attack-pattern",
+                    "id": "attack-pattern--dd43c543-bb85-4a6f-aa6e-160d90d06a49",
+                    "created_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "created": "2017-05-31 21:31:23.195000+00:00",
+                    "modified": "2022-10-31 19:47:26.104000+00:00",
+                    "name": "Multi-Factor Authentication Interception",
+                    "description": "Adversaries may target multi-factor authentication (MFA) mechanisms, (I.e., smart cards, token generators, etc.) to gain access to credentials that can be used to access systems, services, and network resources. Use of MFA is recommended and provides a higher level of security than user names and passwords alone, but organizations should be aware of techniques that could be used to intercept and bypass these security mechanisms. \n\nIf a smart card is used for multi-factor authentication, then a keylogger will need to be used to obtain the password associated with a smart card during normal use. With both an inserted card and access to the smart card password, an adversary can connect to a network resource using the infected system to proxy the authentication with the inserted hardware token. (Citation: Mandiant M Trends 2011)\n\nAdversaries may also employ a keylogger to similarly target other hardware tokens, such as RSA SecurID. Capturing token input (including a user's personal identification code) may provide temporary access (i.e. replay the one-time passcode until the next value rollover) as well as possibly enabling adversaries to reliably predict future authentication values (given access to both the algorithm and any seed values used to generate appended temporary codes). (Citation: GCN RSA June 2011)\n\nOther methods of MFA may be intercepted and used by an adversary to authenticate. It is common for one-time codes to be sent via out-of-band communications (email, SMS). If the device and/or service is not secured, then it may be vulnerable to interception. Although primarily focused on by cyber criminals, these authentication mechanisms have been targeted by advanced actors. (Citation: Operation Emmental)",
+                    "kill_chain_phases": [
+                        {
+                            "kill_chain_name": "mitre-attack",
+                            "phase_name": "credential-access"
+                        }
+                    ],
+                    "revoked": false,
+                    "external_references": [
+                        {
+                            "source_name": "mitre-attack",
+                            "url": "https://attack.mitre.org/techniques/T1111",
+                            "external_id": "T1111"
+                        },
+                        {
+                            "source_name": "GCN RSA June 2011",
+                            "description": "Jackson, William. (2011, June 7). RSA confirms its tokens used in Lockheed hack. Retrieved September 24, 2018.",
+                            "url": "https://gcn.com/cybersecurity/2011/06/rsa-confirms-its-tokens-used-in-lockheed-hack/282818/"
+                        },
+                        {
+                            "source_name": "Mandiant M Trends 2011",
+                            "description": "Mandiant. (2011, January 27). Mandiant M-Trends 2011. Retrieved January 10, 2016.",
+                            "url": "https://dl.mandiant.com/EE/assets/PDF_MTrends_2011.pdf"
+                        },
+                        {
+                            "source_name": "Operation Emmental",
+                            "description": "Sancho, D., Hacquebord, F., Link, R. (2014, July 22). Finding Holes Operation Emmental. Retrieved February 9, 2016.",
+                            "url": "http://www.trendmicro.com/cloud-content/us/pdfs/security-intelligence/white-papers/wp-finding-holes-operation-emmental.pdf"
+                        }
+                    ],
+                    "object_marking_refs": [
+                        "marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168"
+                    ],
+                    "x_mitre_attack_spec_version": "3.0.0",
+                    "x_mitre_contributors": [
+                        "John Lambert, Microsoft Threat Intelligence Center"
+                    ],
+                    "x_mitre_data_sources": [
+                        "Process: OS API Execution",
+                        "Driver: Driver Load",
+                        "Windows Registry: Windows Registry Key Modification"
+                    ],
+                    "x_mitre_deprecated": false,
+                    "x_mitre_detection": "Detecting use of proxied smart card connections by an adversary may be difficult because it requires the token to be inserted into a system; thus it is more likely to be in use by a legitimate user and blend in with other network behavior.\n\nSimilar to [Input Capture](https://attack.mitre.org/techniques/T1056), keylogging activity can take various forms but can may be detected via installation of a driver, setting a hook, or usage of particular API calls associated with polling to intercept keystrokes.",
+                    "x_mitre_domains": [
+                        "enterprise-attack"
+                    ],
+                    "x_mitre_is_subtechnique": false,
+                    "x_mitre_modified_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "x_mitre_platforms": [
+                        "Linux",
+                        "Windows",
+                        "macOS"
+                    ],
+                    "x_mitre_system_requirements": [
+                        "Smart card Proxy: Use of smart cards for single or multifactor authentication to access to network resources. Attached smart card reader with card inserted.\n\nOut-of-band one-time code: Access to the device, service, or communications to intercept the one-time code.\n\nHardware token: Access to the seed and algorithm of generating one-time codes."
+                    ],
+                    "x_mitre_version": "2.0",
+                    "detailed_diff": "{\"dictionary_item_added\": {\"root['x_mitre_attack_spec_version']\": \"3.0.0\", \"root['x_mitre_deprecated']\": false}, \"dictionary_item_removed\": {\"root['x_mitre_permissions_required']\": [\"Administrator\", \"SYSTEM\"]}, \"values_changed\": {\"root['modified']\": {\"new_value\": \"2022-10-31 19:47:26.104000+00:00\", \"old_value\": \"2022-04-01 18:02:50.531000+00:00\"}, \"root['external_references'][1]['source_name']\": {\"new_value\": \"GCN RSA June 2011\", \"old_value\": \"Mandiant M Trends 2011\"}, \"root['external_references'][1]['description']\": {\"new_value\": \"Jackson, William. (2011, June 7). RSA confirms its tokens used in Lockheed hack. Retrieved September 24, 2018.\", \"old_value\": \"Mandiant. (2011, January 27). Mandiant M-Trends 2011. Retrieved January 10, 2016.\"}, \"root['external_references'][1]['url']\": {\"new_value\": \"https://gcn.com/cybersecurity/2011/06/rsa-confirms-its-tokens-used-in-lockheed-hack/282818/\", \"old_value\": \"https://dl.mandiant.com/EE/assets/PDF_MTrends_2011.pdf\"}, \"root['external_references'][2]['source_name']\": {\"new_value\": \"Mandiant M Trends 2011\", \"old_value\": \"GCN RSA June 2011\"}, \"root['external_references'][2]['description']\": {\"new_value\": \"Mandiant. (2011, January 27). Mandiant M-Trends 2011. Retrieved January 10, 2016.\", \"old_value\": \"Jackson, William. (2011, June 7). RSA confirms its tokens used in Lockheed hack. Retrieved September 24, 2018.\"}, \"root['external_references'][2]['url']\": {\"new_value\": \"https://dl.mandiant.com/EE/assets/PDF_MTrends_2011.pdf\", \"old_value\": \"https://gcn.com/articles/2011/06/07/rsa-confirms-tokens-used-to-hack-lockheed.aspx\"}, \"root['x_mitre_data_sources'][0]\": {\"new_value\": \"Process: OS API Execution\", \"old_value\": \"Windows Registry: Windows Registry Key Modification\"}, \"root['x_mitre_data_sources'][2]\": {\"new_value\": \"Windows Registry: Windows Registry Key Modification\", \"old_value\": \"Process: OS API Execution\"}}}",
+                    "previous_version": "2.0",
+                    "changelog_mitigations": {
+                        "shared": [
+                            "M1017: User Training",
+                            "T1111: Two-Factor Authentication Interception Mitigation"
+                        ],
+                        "new": [],
+                        "dropped": []
+                    },
+                    "changelog_detections": {
+                        "shared": [
+                            "DS0009: Process (OS API Execution)",
+                            "DS0024: Windows Registry (Windows Registry Key Modification)",
+                            "DS0027: Driver (Driver Load)"
+                        ],
+                        "new": [],
+                        "dropped": []
+                    }
+                },
+                {
+                    "type": "attack-pattern",
+                    "id": "attack-pattern--70910fbd-58dc-4c1c-8c48-814d11fcd022",
+                    "created_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "created": "2022-08-09 13:01:43.314000+00:00",
+                    "modified": "2022-10-26 18:01:20.520000+00:00",
+                    "name": "Code Repositories",
+                    "description": "Adversaries may search public code repositories for information about victims that can be used during targeting. Victims may store code in repositories on various third-party websites such as GitHub, GitLab, SourceForge, and BitBucket. Users typically interact with code repositories through a web application or command-line utilities such as git.  \n\nAdversaries may search various public code repositories for various information about a victim. Public code repositories can often be a source of various general information about victims, such as commonly used programming languages and libraries as well as the names of employees. Adversaries may also identify more sensitive data, including accidentally leaked credentials or API keys.(Citation: GitHub Cloud Service Credentials) Information from these sources may reveal opportunities for other forms of reconnaissance (ex: [Phishing for Information](https://attack.mitre.org/techniques/T1598)), establishing operational resources (ex: [Compromise Accounts](https://attack.mitre.org/techniques/T1586) or [Compromise Infrastructure](https://attack.mitre.org/techniques/T1584)), and/or initial access (ex: [Valid Accounts](https://attack.mitre.org/techniques/T1078) or [Phishing](https://attack.mitre.org/techniques/T1566)). \n\n**Note:** This is distinct from [Code Repositories](https://attack.mitre.org/techniques/T1213/003), which focuses on [Collection](https://attack.mitre.org/tactics/TA0009) from private and internally hosted code repositories. ",
+                    "kill_chain_phases": [
+                        {
+                            "kill_chain_name": "mitre-attack",
+                            "phase_name": "reconnaissance"
+                        }
+                    ],
+                    "revoked": false,
+                    "external_references": [
+                        {
+                            "source_name": "mitre-attack",
+                            "url": "https://attack.mitre.org/techniques/T1593/003",
+                            "external_id": "T1593.003"
+                        },
+                        {
+                            "source_name": "GitHub Cloud Service Credentials",
+                            "description": "Runa A. Sandvik. (2014, January 14). Attackers Scrape GitHub For Cloud Service Credentials, Hijack Account To Mine Virtual Currency. Retrieved August 9, 2022.",
+                            "url": "https://www.forbes.com/sites/runasandvik/2014/01/14/attackers-scrape-github-for-cloud-service-credentials-hijack-account-to-mine-virtual-currency/"
+                        }
+                    ],
+                    "object_marking_refs": [
+                        "marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168"
+                    ],
+                    "x_mitre_attack_spec_version": "3.0.0",
+                    "x_mitre_contributors": [
+                        "Matt Burrough, @mattburrough, Microsoft",
+                        "Vinayak Wadhwa, SAFE Security"
+                    ],
+                    "x_mitre_deprecated": false,
+                    "x_mitre_detection": "Much of this activity may have a very high occurrence and associated false positive rate, as well as potentially taking place outside the visibility of the target organization, making detection difficult for defenders. \n\nDetection efforts may be focused on related stages of the adversary lifecycle, such as during Initial Access.",
+                    "x_mitre_domains": [
+                        "enterprise-attack"
+                    ],
+                    "x_mitre_is_subtechnique": true,
+                    "x_mitre_modified_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "x_mitre_platforms": [
+                        "PRE"
+                    ],
+                    "x_mitre_version": "1.0",
+                    "detailed_diff": "{\"values_changed\": {\"root['modified']\": {\"new_value\": \"2022-10-26 18:01:20.520000+00:00\", \"old_value\": \"2022-10-21 13:57:35.259000+00:00\"}, \"root['x_mitre_attack_spec_version']\": {\"new_value\": \"3.0.0\", \"old_value\": \"2.1.0\"}, \"root['x_mitre_contributors'][0]\": {\"new_value\": \"Matt Burrough, @mattburrough, Microsoft\", \"old_value\": \"Vinayak Wadhwa, Lucideus\"}, \"root['x_mitre_contributors'][1]\": {\"new_value\": \"Vinayak Wadhwa, SAFE Security\", \"old_value\": \"Matt Burrough, @mattburrough, Microsoft\"}}}",
+                    "previous_version": "1.0",
+                    "changelog_mitigations": {
+                        "shared": [
+                            "M1013: Application Developer Guidance",
+                            "M1047: Audit"
+                        ],
+                        "new": [],
+                        "dropped": []
+                    },
+                    "changelog_detections": {
+                        "shared": [],
+                        "new": [],
+                        "dropped": []
+                    }
+                },
+                {
+                    "type": "attack-pattern",
+                    "id": "attack-pattern--e5d550f3-2202-4634-85f2-4a200a1d49b3",
+                    "created_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "created": "2022-09-30 21:14:12.284000+00:00",
+                    "modified": "2022-10-27 14:16:24.490000+00:00",
+                    "name": "SEO Poisoning",
+                    "description": "Adversaries may poison mechanisms that influence search engine optimization (SEO) to further lure staged capabilities towards potential victims. Search engines typically display results to users based on purchased ads as well as the site\u2019s ranking/score/reputation calculated by their web crawlers and algorithms.(Citation: Atlas SEO)(Citation: MalwareBytes SEO)\n\nTo help facilitate [Drive-by Compromise](https://attack.mitre.org/techniques/T1189), adversaries may stage content that explicitly manipulates SEO rankings in order to promote sites hosting their malicious payloads (such as [Drive-by Target](https://attack.mitre.org/techniques/T1608/004)) within search engines. Poisoning SEO rankings may involve various tricks, such as stuffing keywords (including in the form of hidden text) into compromised sites. These keywords could be related to the interests/browsing habits of the intended victim(s) as well as more broad, seasonably popular topics (e.g. elections, trending news).(Citation: ZScaler SEO)(Citation: Atlas SEO)\n\nAdversaries may also purchase or plant incoming links to staged capabilities in order to boost the site\u2019s calculated relevance and reputation.(Citation: MalwareBytes SEO)(Citation: DFIR Report Gootloader)\n\nSEO poisoning may also be combined with evasive redirects and other cloaking mechanisms (such as measuring mouse movements or serving content based on browser user agents, user language/localization settings, or HTTP headers) in order to feed SEO inputs while avoiding scrutiny from defenders.(Citation: ZScaler SEO)(Citation: Sophos Gootloader)",
+                    "kill_chain_phases": [
+                        {
+                            "kill_chain_name": "mitre-attack",
+                            "phase_name": "resource-development"
+                        }
+                    ],
+                    "revoked": false,
+                    "external_references": [
+                        {
+                            "source_name": "mitre-attack",
+                            "url": "https://attack.mitre.org/techniques/T1608/006",
+                            "external_id": "T1608.006"
+                        },
+                        {
+                            "source_name": "MalwareBytes SEO",
+                            "description": "Arntz, P. (2018, May 29). SEO poisoning: Is it worth it?. Retrieved September 30, 2022.",
+                            "url": "https://www.malwarebytes.com/blog/news/2018/05/seo-poisoning-is-it-worth-it"
+                        },
+                        {
+                            "source_name": "Atlas SEO",
+                            "description": "Atlas Cybersecurity. (2021, April 19). Threat Actors use Search-Engine-Optimization Tactics to Redirect Traffic and Install Malware. Retrieved September 30, 2022.",
+                            "url": "https://atlas-cybersecurity.com/cyber-threats/threat-actors-use-search-engine-optimization-tactics-to-redirect-traffic-and-install-malware/"
+                        },
+                        {
+                            "source_name": "Sophos Gootloader",
+                            "description": "Szappanos, G. & Brandt, A. (2021, March 1). \u201cGootloader\u201d expands its payload delivery options. Retrieved September 30, 2022.",
+                            "url": "https://news.sophos.com/en-us/2021/03/01/gootloader-expands-its-payload-delivery-options/"
+                        },
+                        {
+                            "source_name": "DFIR Report Gootloader",
+                            "description": "The DFIR Report. (2022, May 9). SEO Poisoning \u2013 A Gootloader Story. Retrieved September 30, 2022.",
+                            "url": "https://thedfirreport.com/2022/05/09/seo-poisoning-a-gootloader-story/"
+                        },
+                        {
+                            "source_name": "ZScaler SEO",
+                            "description": "Wang, J. (2018, October 17). Ubiquitous SEO Poisoning URLs. Retrieved September 30, 2022.",
+                            "url": "https://www.zscaler.com/blogs/security-research/ubiquitous-seo-poisoning-urls-0"
+                        }
+                    ],
+                    "object_marking_refs": [
+                        "marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168"
+                    ],
+                    "x_mitre_attack_spec_version": "3.0.0",
+                    "x_mitre_contributors": [
+                        "Goldstein Menachem",
+                        "Vijay Lalwani",
+                        "Will Thomas, Equinix Threat Analysis Center (ETAC)",
+                        "Will Jolliffe"
+                    ],
+                    "x_mitre_data_sources": [
+                        "Internet Scan: Response Content"
+                    ],
+                    "x_mitre_deprecated": false,
+                    "x_mitre_detection": "",
+                    "x_mitre_domains": [
+                        "enterprise-attack"
+                    ],
+                    "x_mitre_is_subtechnique": true,
+                    "x_mitre_modified_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "x_mitre_platforms": [
+                        "PRE"
+                    ],
+                    "x_mitre_version": "1.0",
+                    "detailed_diff": "{\"values_changed\": {\"root['modified']\": {\"new_value\": \"2022-10-27 14:16:24.490000+00:00\", \"old_value\": \"2022-10-21 17:53:05.462000+00:00\"}, \"root['x_mitre_attack_spec_version']\": {\"new_value\": \"3.0.0\", \"old_value\": \"2.1.0\"}}, \"iterable_item_added\": {\"root['x_mitre_contributors'][3]\": \"Will Jolliffe\"}}",
+                    "previous_version": "1.0",
+                    "changelog_mitigations": {
+                        "shared": [
+                            "M1056: Pre-compromise"
+                        ],
+                        "new": [],
+                        "dropped": []
+                    },
+                    "changelog_detections": {
+                        "shared": [
+                            "DS0035: Internet Scan (Response Content)"
+                        ],
+                        "new": [],
+                        "dropped": []
+                    }
+                }
+            ],
+            "revocations": [],
+            "deprecations": [],
+            "deletions": []
+        },
+        "software": {
+            "additions": [],
+            "major_version_changes": [],
+            "minor_version_changes": [],
+            "other_version_changes": [],
+            "patches": [
+                {
+                    "type": "malware",
+                    "id": "malware--5633ffd3-81ef-4f98-8f93-4896b03998f0",
+                    "created_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "created": "2022-08-11 22:31:31.468000+00:00",
+                    "modified": "2022-10-24 18:55:25.261000+00:00",
+                    "name": "DCSrv",
+                    "description": "[DCSrv](https://attack.mitre.org/software/S1033) is destructive malware that has been used by [Moses Staff](https://attack.mitre.org/groups/G1009) since at least  September 2021. Though [DCSrv](https://attack.mitre.org/software/S1033) has ransomware-like capabilities, [Moses Staff](https://attack.mitre.org/groups/G1009) does not demand ransom or offer a decryption key.(Citation: Checkpoint MosesStaff Nov 2021)",
+                    "revoked": false,
+                    "labels": [
+                        "malware"
+                    ],
+                    "external_references": [
+                        {
+                            "source_name": "mitre-attack",
+                            "url": "https://attack.mitre.org/software/S1033",
+                            "external_id": "S1033"
+                        },
+                        {
+                            "source_name": "Checkpoint MosesStaff Nov 2021",
+                            "description": "Checkpoint Research. (2021, November 15). Uncovering MosesStaff techniques: Ideology over Money. Retrieved August 11, 2022.",
+                            "url": "https://research.checkpoint.com/2021/mosesstaff-targeting-israeli-companies/"
+                        }
+                    ],
+                    "object_marking_refs": [
+                        "marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168"
+                    ],
+                    "x_mitre_aliases": [
+                        "DCSrv"
+                    ],
+                    "x_mitre_attack_spec_version": "3.0.0",
+                    "x_mitre_contributors": [
+                        "Hiroki Nagahama, NEC Corporation",
+                        "Pooja Natarajan, NEC Corporation India",
+                        "Manikantan Srinivasan, NEC Corporation India"
+                    ],
+                    "x_mitre_deprecated": false,
+                    "x_mitre_domains": [
+                        "enterprise-attack"
+                    ],
+                    "x_mitre_modified_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "x_mitre_platforms": [
+                        "Windows"
+                    ],
+                    "x_mitre_version": "1.0",
+                    "detailed_diff": "{\"values_changed\": {\"root['modified']\": {\"new_value\": \"2022-10-24 18:55:25.261000+00:00\", \"old_value\": \"2022-10-18 13:08:43.567000+00:00\"}, \"root['x_mitre_attack_spec_version']\": {\"new_value\": \"3.0.0\", \"old_value\": \"2.1.0\"}, \"root['x_mitre_contributors'][1]\": {\"new_value\": \"Pooja Natarajan, NEC Corporation India\", \"old_value\": \"Manikantan Srinivasan , NEC Corporation India\"}, \"root['x_mitre_contributors'][2]\": {\"new_value\": \"Manikantan Srinivasan, NEC Corporation India\", \"old_value\": \"Pooja Natarajan, NEC Corporation India\"}}}",
+                    "previous_version": "1.0"
+                },
+                {
+                    "type": "malware",
+                    "id": "malware--dff90475-9f72-41a6-84ed-1fbefd3874c0",
+                    "created_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "created": "2022-07-25 18:18:32.811000+00:00",
+                    "modified": "2022-10-24 18:54:09.655000+00:00",
+                    "name": "Heyoka Backdoor",
+                    "description": "[Heyoka Backdoor](https://attack.mitre.org/software/S1027) is a custom backdoor--based on the Heyoka open source exfiltration tool--that  has been used by [Aoqin Dragon](https://attack.mitre.org/groups/G1007) since at least 2013.(Citation: SentinelOne Aoqin Dragon June 2022)(Citation: Sourceforge Heyoka 2022) ",
+                    "revoked": false,
+                    "labels": [
+                        "malware"
+                    ],
+                    "external_references": [
+                        {
+                            "source_name": "mitre-attack",
+                            "url": "https://attack.mitre.org/software/S1027",
+                            "external_id": "S1027"
+                        },
+                        {
+                            "source_name": "SentinelOne Aoqin Dragon June 2022",
+                            "description": "Chen, Joey. (2022, June 9). Aoqin Dragon | Newly-Discovered Chinese-linked APT Has Been Quietly Spying On Organizations For 10 Years. Retrieved July 14, 2022.",
+                            "url": "https://www.sentinelone.com/labs/aoqin-dragon-newly-discovered-chinese-linked-apt-has-been-quietly-spying-on-organizations-for-10-years/"
+                        },
+                        {
+                            "source_name": "Sourceforge Heyoka 2022",
+                            "description": "Sourceforge. (n.d.). Heyoka POC Exfiltration Tool. Retrieved October 11, 2022.",
+                            "url": "https://heyoka.sourceforge.net/"
+                        }
+                    ],
+                    "object_marking_refs": [
+                        "marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168"
+                    ],
+                    "x_mitre_aliases": [
+                        "Heyoka Backdoor"
+                    ],
+                    "x_mitre_attack_spec_version": "3.0.0",
+                    "x_mitre_contributors": [
+                        "Hiroki Nagahama, NEC Corporation",
+                        "Pooja Natarajan, NEC Corporation India",
+                        "Manikantan Srinivasan, NEC Corporation India"
+                    ],
+                    "x_mitre_deprecated": false,
+                    "x_mitre_domains": [
+                        "enterprise-attack"
+                    ],
+                    "x_mitre_modified_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "x_mitre_platforms": [
+                        "Windows"
+                    ],
+                    "x_mitre_version": "1.0",
+                    "detailed_diff": "{\"values_changed\": {\"root['modified']\": {\"new_value\": \"2022-10-24 18:54:09.655000+00:00\", \"old_value\": \"2022-10-19 21:54:52.549000+00:00\"}, \"root['x_mitre_attack_spec_version']\": {\"new_value\": \"3.0.0\", \"old_value\": \"2.1.0\"}, \"root['x_mitre_contributors'][1]\": {\"new_value\": \"Pooja Natarajan, NEC Corporation India\", \"old_value\": \"Manikantan Srinivasan , NEC Corporation India\"}, \"root['x_mitre_contributors'][2]\": {\"new_value\": \"Manikantan Srinivasan, NEC Corporation India\", \"old_value\": \"Pooja Natarajan, NEC Corporation India\"}}}",
+                    "previous_version": "1.0"
+                },
+                {
+                    "type": "malware",
+                    "id": "malware--bdee9574-7479-4073-a7dc-e86d8acd073a",
+                    "created_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "created": "2022-05-06 01:29:34.860000+00:00",
+                    "modified": "2022-10-24 18:52:29.002000+00:00",
+                    "name": "MacMa",
+                    "description": "[MacMa](https://attack.mitre.org/software/S1016) is a macOS-based backdoor with a large set of functionalities to control and exfiltrate files from a compromised computer. [MacMa](https://attack.mitre.org/software/S1016) has been observed in the wild since November 2021.(Citation: ESET DazzleSpy Jan 2022)",
+                    "revoked": false,
+                    "labels": [
+                        "malware"
+                    ],
+                    "external_references": [
+                        {
+                            "source_name": "mitre-attack",
+                            "url": "https://attack.mitre.org/software/S1016",
+                            "external_id": "S1016"
+                        },
+                        {
+                            "source_name": "DazzleSpy",
+                            "description": "(Citation: ESET DazzleSpy Jan 2022)"
+                        },
+                        {
+                            "source_name": "OSX.CDDS",
+                            "description": "(Citation: Objective-See MacMa Nov 2021)"
+                        },
+                        {
+                            "source_name": "ESET DazzleSpy Jan 2022",
+                            "description": "M.L\u00e9veill\u00e9, M., Cherepanov, A.. (2022, January 25). Watering hole deploys new macOS malware, DazzleSpy, in Asia. Retrieved May 6, 2022.",
+                            "url": "https://www.welivesecurity.com/2022/01/25/watering-hole-deploys-new-macos-malware-dazzlespy-asia/"
+                        },
+                        {
+                            "source_name": "Objective-See MacMa Nov 2021",
+                            "description": "Wardle, P. (2021, November 11). OSX.CDDS (OSX.MacMa). Retrieved June 30, 2022.",
+                            "url": "https://objective-see.org/blog/blog_0x69.html"
+                        }
+                    ],
+                    "object_marking_refs": [
+                        "marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168"
+                    ],
+                    "x_mitre_aliases": [
+                        "MacMa",
+                        "OSX.CDDS",
+                        "DazzleSpy"
+                    ],
+                    "x_mitre_attack_spec_version": "3.0.0",
+                    "x_mitre_contributors": [
+                        "Pooja Natarajan, NEC Corporation India",
+                        "Hiroki Nagahama, NEC Corporation",
+                        "Manikantan Srinivasan, NEC Corporation India"
+                    ],
+                    "x_mitre_deprecated": false,
+                    "x_mitre_domains": [
+                        "enterprise-attack"
+                    ],
+                    "x_mitre_modified_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "x_mitre_platforms": [
+                        "macOS"
+                    ],
+                    "x_mitre_version": "1.0",
+                    "detailed_diff": "{\"values_changed\": {\"root['modified']\": {\"new_value\": \"2022-10-24 18:52:29.002000+00:00\", \"old_value\": \"2022-10-20 19:00:58.329000+00:00\"}, \"root['x_mitre_attack_spec_version']\": {\"new_value\": \"3.0.0\", \"old_value\": \"2.1.0\"}, \"root['x_mitre_contributors'][2]\": {\"new_value\": \"Manikantan Srinivasan, NEC Corporation India\", \"old_value\": \"Manikantan Srinivasan , NEC Corporation India\"}}}",
+                    "previous_version": "1.0"
+                },
+                {
+                    "type": "malware",
+                    "id": "malware--6fb36c6f-bb3d-4ed6-9471-cb9933e5c154",
+                    "created_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "created": "2022-07-25 17:00:15.045000+00:00",
+                    "modified": "2022-10-24 18:53:41.304000+00:00",
+                    "name": "Mongall",
+                    "description": "[Mongall](https://attack.mitre.org/software/S1026) is a backdoor that has been used since at least 2013, including by [Aoqin Dragon](https://attack.mitre.org/groups/G1007).(Citation: SentinelOne Aoqin Dragon June 2022)",
+                    "revoked": false,
+                    "labels": [
+                        "malware"
+                    ],
+                    "external_references": [
+                        {
+                            "source_name": "mitre-attack",
+                            "url": "https://attack.mitre.org/software/S1026",
+                            "external_id": "S1026"
+                        },
+                        {
+                            "source_name": "SentinelOne Aoqin Dragon June 2022",
+                            "description": "Chen, Joey. (2022, June 9). Aoqin Dragon | Newly-Discovered Chinese-linked APT Has Been Quietly Spying On Organizations For 10 Years. Retrieved July 14, 2022.",
+                            "url": "https://www.sentinelone.com/labs/aoqin-dragon-newly-discovered-chinese-linked-apt-has-been-quietly-spying-on-organizations-for-10-years/"
+                        }
+                    ],
+                    "object_marking_refs": [
+                        "marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168"
+                    ],
+                    "x_mitre_aliases": [
+                        "Mongall"
+                    ],
+                    "x_mitre_attack_spec_version": "3.0.0",
+                    "x_mitre_contributors": [
+                        "Hiroki Nagahama, NEC Corporation",
+                        "Pooja Natarajan, NEC Corporation India",
+                        "Manikantan Srinivasan, NEC Corporation India"
+                    ],
+                    "x_mitre_deprecated": false,
+                    "x_mitre_domains": [
+                        "enterprise-attack"
+                    ],
+                    "x_mitre_modified_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "x_mitre_platforms": [
+                        "Windows"
+                    ],
+                    "x_mitre_version": "1.0",
+                    "detailed_diff": "{\"values_changed\": {\"root['modified']\": {\"new_value\": \"2022-10-24 18:53:41.304000+00:00\", \"old_value\": \"2022-10-21 18:41:08.032000+00:00\"}, \"root['x_mitre_attack_spec_version']\": {\"new_value\": \"3.0.0\", \"old_value\": \"2.1.0\"}, \"root['x_mitre_contributors'][1]\": {\"new_value\": \"Pooja Natarajan, NEC Corporation India\", \"old_value\": \"Manikantan Srinivasan , NEC Corporation India\"}, \"root['x_mitre_contributors'][2]\": {\"new_value\": \"Manikantan Srinivasan, NEC Corporation India\", \"old_value\": \"Pooja Natarajan, NEC Corporation India\"}}}",
+                    "previous_version": "1.0"
+                },
+                {
+                    "type": "malware",
+                    "id": "malware--3a0f6128-0a01-421d-8eca-e57d8671b1f1",
+                    "created_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "created": "2022-08-09 18:21:24.739000+00:00",
+                    "modified": "2022-10-24 18:51:58.072000+00:00",
+                    "name": "PingPull",
+                    "description": "[PingPull](https://attack.mitre.org/software/S1031) is a remote access Trojan (RAT) written in Visual C++ that has been used by [GALLIUM](https://attack.mitre.org/groups/G0093) since at least June 2022. [PingPull](https://attack.mitre.org/software/S1031) has been used to target telecommunications companies, financial institutions, and government entities in Afghanistan, Australia, Belgium, Cambodia, Malaysia, Mozambique, the Philippines, Russia, and Vietnam.(Citation: Unit 42 PingPull Jun 2022)",
+                    "revoked": false,
+                    "labels": [
+                        "malware"
+                    ],
+                    "external_references": [
+                        {
+                            "source_name": "mitre-attack",
+                            "url": "https://attack.mitre.org/software/S1031",
+                            "external_id": "S1031"
+                        },
+                        {
+                            "source_name": "Unit 42 PingPull Jun 2022",
+                            "description": "Unit 42. (2022, June 13). GALLIUM Expands Targeting Across Telecommunications, Government and Finance Sectors With New PingPull Tool. Retrieved August 7, 2022.",
+                            "url": "https://unit42.paloaltonetworks.com/pingpull-gallium/"
+                        }
+                    ],
+                    "object_marking_refs": [
+                        "marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168"
+                    ],
+                    "x_mitre_aliases": [
+                        "PingPull"
+                    ],
+                    "x_mitre_attack_spec_version": "3.0.0",
+                    "x_mitre_contributors": [
+                        "Yoshihiro Kori, NEC Corporation",
+                        "Pooja Natarajan, NEC Corporation India",
+                        "Manikantan Srinivasan, NEC Corporation India"
+                    ],
+                    "x_mitre_deprecated": false,
+                    "x_mitre_domains": [
+                        "enterprise-attack"
+                    ],
+                    "x_mitre_modified_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "x_mitre_platforms": [
+                        "Windows"
+                    ],
+                    "x_mitre_version": "1.0",
+                    "detailed_diff": "{\"values_changed\": {\"root['modified']\": {\"new_value\": \"2022-10-24 18:51:58.072000+00:00\", \"old_value\": \"2022-10-21 20:13:44.744000+00:00\"}, \"root['x_mitre_attack_spec_version']\": {\"new_value\": \"3.0.0\", \"old_value\": \"2.1.0\"}, \"root['x_mitre_contributors'][2]\": {\"new_value\": \"Manikantan Srinivasan, NEC Corporation India\", \"old_value\": \"Manikanran Srinivasan, NEC Corporation India\"}}}",
+                    "previous_version": "1.0"
+                },
+                {
+                    "type": "tool",
+                    "id": "tool--ff6caf67-ea1f-4895-b80e-4bb0fc31c6db",
+                    "created_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "created": "2017-05-31 21:32:21.771000+00:00",
+                    "modified": "2022-11-01 18:29:13.666000+00:00",
+                    "name": "PsExec",
+                    "description": "[PsExec](https://attack.mitre.org/software/S0029) is a free Microsoft tool that can be used to execute a program on another computer. It is used by IT administrators and attackers.(Citation: Russinovich Sysinternals)(Citation: SANS PsExec)",
+                    "revoked": false,
+                    "labels": [
+                        "tool"
+                    ],
+                    "external_references": [
+                        {
+                            "source_name": "mitre-attack",
+                            "url": "https://attack.mitre.org/software/S0029",
+                            "external_id": "S0029"
+                        },
+                        {
+                            "source_name": "SANS PsExec",
+                            "description": "Pilkington, M. (2012, December 17). Protecting Privileged Domain Accounts: PsExec Deep-Dive. Retrieved August 17, 2016.",
+                            "url": "https://www.sans.org/blog/protecting-privileged-domain-accounts-psexec-deep-dive/"
+                        },
+                        {
+                            "source_name": "Russinovich Sysinternals",
+                            "description": "Russinovich, M. (2014, May 2). Windows Sysinternals PsExec v2.11. Retrieved May 13, 2015.",
+                            "url": "https://technet.microsoft.com/en-us/sysinternals/bb897553.aspx"
+                        }
+                    ],
+                    "object_marking_refs": [
+                        "marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168"
+                    ],
+                    "x_mitre_aliases": [
+                        "PsExec"
+                    ],
+                    "x_mitre_attack_spec_version": "3.0.0",
+                    "x_mitre_contributors": [
+                        "Janantha Marasinghe"
+                    ],
+                    "x_mitre_deprecated": false,
+                    "x_mitre_domains": [
+                        "enterprise-attack"
+                    ],
+                    "x_mitre_modified_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "x_mitre_platforms": [
+                        "Windows"
+                    ],
+                    "x_mitre_version": "1.3",
+                    "detailed_diff": "{\"values_changed\": {\"root['modified']\": {\"new_value\": \"2022-11-01 18:29:13.666000+00:00\", \"old_value\": \"2022-09-28 14:47:20.421000+00:00\"}, \"root['description']\": {\"new_value\": \"[PsExec](https://attack.mitre.org/software/S0029) is a free Microsoft tool that can be used to execute a program on another computer. It is used by IT administrators and attackers.(Citation: Russinovich Sysinternals)(Citation: SANS PsExec)\", \"old_value\": \"[PsExec](https://attack.mitre.org/software/S0029) is a free Microsoft tool that can be used to execute a program on another computer. It is used by IT administrators and attackers. (Citation: Russinovich Sysinternals) (Citation: SANS PsExec)\"}, \"root['external_references'][1]['description']\": {\"new_value\": \"Pilkington, M. (2012, December 17). Protecting Privileged Domain Accounts: PsExec Deep-Dive. Retrieved August 17, 2016.\", \"old_value\": \"Pilkington, M.. (2012, December 17). Protecting Privileged Domain Accounts: PsExec Deep-Dive. Retrieved August 17, 2016.\"}, \"root['external_references'][1]['url']\": {\"new_value\": \"https://www.sans.org/blog/protecting-privileged-domain-accounts-psexec-deep-dive/\", \"old_value\": \"https://digital-forensics.sans.org/blog/2012/12/17/protecting-privileged-domain-accounts-psexec-deep-dive\"}, \"root['x_mitre_attack_spec_version']\": {\"new_value\": \"3.0.0\", \"old_value\": \"2.1.0\"}}}",
+                    "previous_version": "1.3",
+                    "description_change_table": "\n    <table class=\"diff\" id=\"difflib_chg_to863__top\"\n           cellspacing=\"0\" cellpadding=\"0\" rules=\"groups\" >\n        <colgroup></colgroup> <colgroup></colgroup> <colgroup></colgroup>\n        <colgroup></colgroup> <colgroup></colgroup> <colgroup></colgroup>\n        <thead><tr><th class=\"diff_next\"><br /></th><th colspan=\"2\" class=\"diff_header\">Old Description</th><th class=\"diff_next\"><br /></th><th colspan=\"2\" class=\"diff_header\">New Description</th></tr></thead>\n        <tbody>\n            <tr><td class=\"diff_next\" id=\"difflib_chg_to863__0\"><a href=\"#difflib_chg_to863__top\">t</a></td><td class=\"diff_header\" id=\"from863_1\">1</td><td nowrap=\"nowrap\">[PsExec](https://attack.mitre.org/software/S0029)&nbsp;is&nbsp;a&nbsp;free&nbsp;</td><td class=\"diff_next\"><a href=\"#difflib_chg_to863__top\">t</a></td><td class=\"diff_header\" id=\"to863_1\">1</td><td nowrap=\"nowrap\">[PsExec](https://attack.mitre.org/software/S0029)&nbsp;is&nbsp;a&nbsp;free&nbsp;</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">Microsoft&nbsp;tool&nbsp;that&nbsp;can&nbsp;be&nbsp;used&nbsp;to&nbsp;execute&nbsp;a&nbsp;program&nbsp;on&nbsp;anot</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">Microsoft&nbsp;tool&nbsp;that&nbsp;can&nbsp;be&nbsp;used&nbsp;to&nbsp;execute&nbsp;a&nbsp;program&nbsp;on&nbsp;anot</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">her&nbsp;computer.&nbsp;It&nbsp;is&nbsp;used&nbsp;by&nbsp;IT&nbsp;administrators&nbsp;and&nbsp;attackers.</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">her&nbsp;computer.&nbsp;It&nbsp;is&nbsp;used&nbsp;by&nbsp;IT&nbsp;administrators&nbsp;and&nbsp;attackers.</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\"><span class=\"diff_sub\">&nbsp;</span>(Citation:&nbsp;Russinovich&nbsp;Sysinternals)<span class=\"diff_sub\">&nbsp;</span>(Citation:&nbsp;SANS&nbsp;PsExec</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">(Citation:&nbsp;Russinovich&nbsp;Sysinternals)(Citation:&nbsp;SANS&nbsp;PsExec)</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">)</td><td class=\"diff_next\"></td><td class=\"diff_header\"></td><td nowrap=\"nowrap\">&nbsp;</td></tr>\n        </tbody>\n    </table>"
+                },
+                {
+                    "type": "malware",
+                    "id": "malware--2ac41e8b-4865-4ced-839d-78e7852c47f3",
+                    "created_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "created": "2022-08-11 22:00:20.194000+00:00",
+                    "modified": "2022-10-24 18:54:58.048000+00:00",
+                    "name": "PyDCrypt",
+                    "description": "[PyDCrypt](https://attack.mitre.org/software/S1032) is malware written in Python designed to deliver [DCSrv](https://attack.mitre.org/software/S1033). It has been used by [Moses Staff](https://attack.mitre.org/groups/G1009) since at least September 2021, with each sample tailored for its intended victim organization.(Citation: Checkpoint MosesStaff Nov 2021)",
+                    "revoked": false,
+                    "labels": [
+                        "malware"
+                    ],
+                    "external_references": [
+                        {
+                            "source_name": "mitre-attack",
+                            "url": "https://attack.mitre.org/software/S1032",
+                            "external_id": "S1032"
+                        },
+                        {
+                            "source_name": "Checkpoint MosesStaff Nov 2021",
+                            "description": "Checkpoint Research. (2021, November 15). Uncovering MosesStaff techniques: Ideology over Money. Retrieved August 11, 2022.",
+                            "url": "https://research.checkpoint.com/2021/mosesstaff-targeting-israeli-companies/"
+                        }
+                    ],
+                    "object_marking_refs": [
+                        "marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168"
+                    ],
+                    "x_mitre_aliases": [
+                        "PyDCrypt"
+                    ],
+                    "x_mitre_attack_spec_version": "3.0.0",
+                    "x_mitre_contributors": [
+                        "Pooja Natarajan, NEC Corporation India",
+                        "Hiroki Nagahama, NEC Corporation",
+                        "Manikantan Srinivasan, NEC Corporation India"
+                    ],
+                    "x_mitre_deprecated": false,
+                    "x_mitre_domains": [
+                        "enterprise-attack"
+                    ],
+                    "x_mitre_modified_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "x_mitre_platforms": [
+                        "Windows"
+                    ],
+                    "x_mitre_version": "1.0",
+                    "detailed_diff": "{\"values_changed\": {\"root['modified']\": {\"new_value\": \"2022-10-24 18:54:58.048000+00:00\", \"old_value\": \"2022-10-18 13:10:21.905000+00:00\"}, \"root['x_mitre_attack_spec_version']\": {\"new_value\": \"3.0.0\", \"old_value\": \"2.1.0\"}, \"root['x_mitre_contributors'][2]\": {\"new_value\": \"Manikantan Srinivasan, NEC Corporation India\", \"old_value\": \"Manikantan Srinivasan , NEC Corporation India\"}}}",
+                    "previous_version": "1.0"
+                },
+                {
+                    "type": "malware",
+                    "id": "malware--49fee0b0-390e-4bde-97f8-97ed46bd19b7",
+                    "created_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "created": "2022-03-10 16:42:36.137000+00:00",
+                    "modified": "2022-10-24 18:47:53.298000+00:00",
+                    "name": "WhisperGate",
+                    "description": "[WhisperGate](https://attack.mitre.org/software/S0689) is a multi-stage wiper designed to look like ransomware that has been used in attacks against Ukraine since at least January 2022.(Citation: Cybereason WhisperGate February 2022)(Citation: Unit 42 WhisperGate January 2022)(Citation: Microsoft WhisperGate January 2022)",
+                    "revoked": false,
+                    "labels": [
+                        "malware"
+                    ],
+                    "external_references": [
+                        {
+                            "source_name": "mitre-attack",
+                            "url": "https://attack.mitre.org/software/S0689",
+                            "external_id": "S0689"
+                        },
+                        {
+                            "source_name": "Cybereason WhisperGate February 2022",
+                            "description": "Cybereason Nocturnus. (2022, February 15). Cybereason vs. WhisperGate and HermeticWiper. Retrieved March 10, 2022.",
+                            "url": "https://www.cybereason.com/blog/cybereason-vs.-whispergate-wiper"
+                        },
+                        {
+                            "source_name": "Unit 42 WhisperGate January 2022",
+                            "description": "Falcone, R. et al.. (2022, January 20). Threat Brief: Ongoing Russia and Ukraine Cyber Conflict. Retrieved March 10, 2022.",
+                            "url": "https://unit42.paloaltonetworks.com/ukraine-cyber-conflict-cve-2021-32648-whispergate/#whispergate-malware-family"
+                        },
+                        {
+                            "source_name": "Microsoft WhisperGate January 2022",
+                            "description": "MSTIC. (2022, January 15). Destructive malware targeting Ukrainian organizations. Retrieved March 10, 2022.",
+                            "url": "https://www.microsoft.com/security/blog/2022/01/15/destructive-malware-targeting-ukrainian-organizations/"
+                        }
+                    ],
+                    "object_marking_refs": [
+                        "marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168"
+                    ],
+                    "x_mitre_aliases": [
+                        "WhisperGate"
+                    ],
+                    "x_mitre_attack_spec_version": "3.0.0",
+                    "x_mitre_contributors": [
+                        "Phill Taylor, BT Security"
+                    ],
+                    "x_mitre_deprecated": false,
+                    "x_mitre_domains": [
+                        "enterprise-attack"
+                    ],
+                    "x_mitre_modified_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "x_mitre_platforms": [
+                        "Windows"
+                    ],
+                    "x_mitre_version": "1.0",
+                    "detailed_diff": "{\"values_changed\": {\"root['modified']\": {\"new_value\": \"2022-10-24 18:47:53.298000+00:00\", \"old_value\": \"2022-04-10 16:43:00.619000+00:00\"}, \"root['x_mitre_attack_spec_version']\": {\"new_value\": \"3.0.0\", \"old_value\": \"2.1.0\"}, \"root['x_mitre_contributors'][0]\": {\"new_value\": \"Phill Taylor, BT Security\", \"old_value\": \"Phil Taylor, BT Security\"}}}",
+                    "previous_version": "1.0"
+                }
+            ],
+            "revocations": [],
+            "deprecations": [],
+            "deletions": []
+        },
+        "groups": {
+            "additions": [],
+            "major_version_changes": [],
+            "minor_version_changes": [],
+            "other_version_changes": [],
+            "patches": [
+                {
+                    "type": "intrusion-set",
+                    "id": "intrusion-set--64d5f96a-f121-4d19-89f6-6709f5c49faa",
+                    "created_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "created": "2022-07-14 14:32:47.582000+00:00",
+                    "modified": "2022-10-24 18:50:40.179000+00:00",
+                    "name": "Aoqin Dragon",
+                    "description": "[Aoqin Dragon](https://attack.mitre.org/groups/G1007) is a suspected Chinese cyber espionage threat group that has been active since at least 2013. [Aoqin Dragon](https://attack.mitre.org/groups/G1007) has primarily targeted government, education, and telecommunication organizations in Australia, Cambodia, Hong Kong, Singapore, and Vietnam. Security researchers noted a potential association between [Aoqin Dragon](https://attack.mitre.org/groups/G1007) and UNC94, based on malware, infrastructure, and targets.(Citation: SentinelOne Aoqin Dragon June 2022)",
+                    "aliases": [
+                        "Aoqin Dragon"
+                    ],
+                    "revoked": false,
+                    "external_references": [
+                        {
+                            "source_name": "mitre-attack",
+                            "url": "https://attack.mitre.org/groups/G1007",
+                            "external_id": "G1007"
+                        },
+                        {
+                            "source_name": "SentinelOne Aoqin Dragon June 2022",
+                            "description": "Chen, Joey. (2022, June 9). Aoqin Dragon | Newly-Discovered Chinese-linked APT Has Been Quietly Spying On Organizations For 10 Years. Retrieved July 14, 2022.",
+                            "url": "https://www.sentinelone.com/labs/aoqin-dragon-newly-discovered-chinese-linked-apt-has-been-quietly-spying-on-organizations-for-10-years/"
+                        }
+                    ],
+                    "object_marking_refs": [
+                        "marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168"
+                    ],
+                    "x_mitre_attack_spec_version": "3.0.0",
+                    "x_mitre_contributors": [
+                        "Hiroki Nagahama, NEC Corporation",
+                        "Pooja Natarajan, NEC Corporation India",
+                        "Manikantan Srinivasan, NEC Corporation India"
+                    ],
+                    "x_mitre_deprecated": false,
+                    "x_mitre_domains": [
+                        "enterprise-attack"
+                    ],
+                    "x_mitre_modified_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "x_mitre_version": "1.0",
+                    "detailed_diff": "{\"values_changed\": {\"root['modified']\": {\"new_value\": \"2022-10-24 18:50:40.179000+00:00\", \"old_value\": \"2022-10-21 18:42:52.256000+00:00\"}, \"root['x_mitre_attack_spec_version']\": {\"new_value\": \"3.0.0\", \"old_value\": \"2.1.0\"}, \"root['x_mitre_contributors'][1]\": {\"new_value\": \"Pooja Natarajan, NEC Corporation India\", \"old_value\": \"Manikantan Srinivasan , NEC Corporation India\"}, \"root['x_mitre_contributors'][2]\": {\"new_value\": \"Manikantan Srinivasan, NEC Corporation India\", \"old_value\": \"Pooja Natarajan, NEC Corporation India\"}}}",
+                    "previous_version": "1.0"
+                },
+                {
+                    "type": "intrusion-set",
+                    "id": "intrusion-set--129f2f77-1ab2-4c35-bd5e-21260cee92af",
+                    "created_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "created": "2022-08-18 15:25:59.689000+00:00",
+                    "modified": "2022-10-24 18:48:18.917000+00:00",
+                    "name": "EXOTIC LILY",
+                    "description": "[EXOTIC LILY](https://attack.mitre.org/groups/G1011) is a financially motivated group that has been closely linked with [Wizard Spider](https://attack.mitre.org/groups/G0102) and the deployment of ransomware including [Conti](https://attack.mitre.org/software/S0575) and [Diavol](https://attack.mitre.org/software/S0659). [EXOTIC LILY](https://attack.mitre.org/groups/G1011) may be acting as an initial access broker for other malicious actors, and has targeted a wide range of industries including IT, cybersecurity, and healthcare since at least September 2021.(Citation: Google EXOTIC LILY March 2022)",
+                    "aliases": [
+                        "EXOTIC LILY"
+                    ],
+                    "revoked": false,
+                    "external_references": [
+                        {
+                            "source_name": "mitre-attack",
+                            "url": "https://attack.mitre.org/groups/G1011",
+                            "external_id": "G1011"
+                        },
+                        {
+                            "source_name": "Google EXOTIC LILY March 2022",
+                            "description": "Stolyarov, V. (2022, March 17). Exposing initial access broker with ties to Conti. Retrieved August 18, 2022.",
+                            "url": "https://blog.google/threat-analysis-group/exposing-initial-access-broker-ties-conti/"
+                        }
+                    ],
+                    "object_marking_refs": [
+                        "marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168"
+                    ],
+                    "x_mitre_attack_spec_version": "3.0.0",
+                    "x_mitre_contributors": [
+                        "Phill Taylor, BT Security"
+                    ],
+                    "x_mitre_deprecated": false,
+                    "x_mitre_domains": [
+                        "enterprise-attack"
+                    ],
+                    "x_mitre_modified_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "x_mitre_version": "1.0",
+                    "detailed_diff": "{\"values_changed\": {\"root['modified']\": {\"new_value\": \"2022-10-24 18:48:18.917000+00:00\", \"old_value\": \"2022-10-13 17:54:09.402000+00:00\"}, \"root['x_mitre_attack_spec_version']\": {\"new_value\": \"3.0.0\", \"old_value\": \"2.1.0\"}, \"root['x_mitre_contributors'][0]\": {\"new_value\": \"Phill Taylor, BT Security\", \"old_value\": \"Phil Taylor, BT Security\"}}}",
+                    "previous_version": "1.0"
+                },
+                {
+                    "type": "intrusion-set",
+                    "id": "intrusion-set--4c4a7846-45d5-4761-8eea-725fa989914c",
+                    "created_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "created": "2022-08-11 22:47:27.686000+00:00",
+                    "modified": "2022-10-24 18:50:12.653000+00:00",
+                    "name": "Moses Staff",
+                    "description": "[Moses Staff](https://attack.mitre.org/groups/G1009) is a suspected Iranian threat group that has primarily targeted Israeli companies since at least September 2021. [Moses Staff](https://attack.mitre.org/groups/G1009) openly stated their motivation in attacking Israeli companies is to cause damage by leaking stolen sensitive data and encrypting the victim's networks without a ransom demand.(Citation: Checkpoint MosesStaff Nov 2021) \n\nSecurity researchers assess [Moses Staff](https://attack.mitre.org/groups/G1009) is politically motivated, and has targeted government, finance, travel, energy, manufacturing, and utility companies outside of Israel as well, including those in Italy, India, Germany, Chile, Turkey, the UAE, and the US.(Citation: Cybereason StrifeWater Feb 2022)",
+                    "aliases": [
+                        "Moses Staff"
+                    ],
+                    "revoked": false,
+                    "external_references": [
+                        {
+                            "source_name": "mitre-attack",
+                            "url": "https://attack.mitre.org/groups/G1009",
+                            "external_id": "G1009"
+                        },
+                        {
+                            "source_name": "Checkpoint MosesStaff Nov 2021",
+                            "description": "Checkpoint Research. (2021, November 15). Uncovering MosesStaff techniques: Ideology over Money. Retrieved August 11, 2022.",
+                            "url": "https://research.checkpoint.com/2021/mosesstaff-targeting-israeli-companies/"
+                        },
+                        {
+                            "source_name": "Cybereason StrifeWater Feb 2022",
+                            "description": "Cybereason Nocturnus. (2022, February 1). StrifeWater RAT: Iranian APT Moses Staff Adds New Trojan to Ransomware Operations. Retrieved August 15, 2022.",
+                            "url": "https://www.cybereason.com/blog/research/strifewater-rat-iranian-apt-moses-staff-adds-new-trojan-to-ransomware-operations"
+                        }
+                    ],
+                    "object_marking_refs": [
+                        "marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168"
+                    ],
+                    "x_mitre_attack_spec_version": "3.0.0",
+                    "x_mitre_contributors": [
+                        "Hiroki Nagahama, NEC Corporation",
+                        "Pooja Natarajan, NEC Corporation India",
+                        "Manikantan Srinivasan, NEC Corporation India"
+                    ],
+                    "x_mitre_deprecated": false,
+                    "x_mitre_domains": [
+                        "enterprise-attack"
+                    ],
+                    "x_mitre_modified_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "x_mitre_version": "1.0",
+                    "detailed_diff": "{\"values_changed\": {\"root['modified']\": {\"new_value\": \"2022-10-24 18:50:12.653000+00:00\", \"old_value\": \"2022-10-18 13:09:11.486000+00:00\"}, \"root['x_mitre_attack_spec_version']\": {\"new_value\": \"3.0.0\", \"old_value\": \"2.1.0\"}, \"root['x_mitre_contributors'][1]\": {\"new_value\": \"Pooja Natarajan, NEC Corporation India\", \"old_value\": \"Manikantan Srinivasan , NEC Corporation India\"}, \"root['x_mitre_contributors'][2]\": {\"new_value\": \"Manikantan Srinivasan, NEC Corporation India\", \"old_value\": \"Pooja Natarajan, NEC Corporation India\"}}}",
+                    "previous_version": "1.0"
+                },
+                {
+                    "type": "intrusion-set",
+                    "id": "intrusion-set--03be849d-b5a2-4766-9dda-48976bae5710",
+                    "created_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "created": "2022-08-07 13:52:07.791000+00:00",
+                    "modified": "2022-10-24 18:51:09.213000+00:00",
+                    "name": "SideCopy",
+                    "description": "[SideCopy](https://attack.mitre.org/groups/G1008) is a Pakistani threat group that has primarily targeted South Asian countries, including Indian and Afghani government personnel, since at least 2019. [SideCopy](https://attack.mitre.org/groups/G1008)'s name comes from its infection chain that tries to mimic that of [Sidewinder](https://attack.mitre.org/groups/G0121), a suspected Indian threat group.(Citation: MalwareBytes SideCopy Dec 2021)",
+                    "aliases": [
+                        "SideCopy"
+                    ],
+                    "revoked": false,
+                    "external_references": [
+                        {
+                            "source_name": "mitre-attack",
+                            "url": "https://attack.mitre.org/groups/G1008",
+                            "external_id": "G1008"
+                        },
+                        {
+                            "source_name": "MalwareBytes SideCopy Dec 2021",
+                            "description": "Threat Intelligence Team. (2021, December 2). SideCopy APT: Connecting lures victims, payloads to infrastructure. Retrieved June 13, 2022.",
+                            "url": "https://www.malwarebytes.com/blog/news/2021/12/sidecopy-apt-connecting-lures-to-victims-payloads-to-infrastructure"
+                        }
+                    ],
+                    "object_marking_refs": [
+                        "marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168"
+                    ],
+                    "x_mitre_attack_spec_version": "3.0.0",
+                    "x_mitre_contributors": [
+                        "Pooja Natarajan, NEC Corporation India",
+                        "Hiroki Nagahama, NEC Corporation",
+                        "Manikantan Srinivasan, NEC Corporation India"
+                    ],
+                    "x_mitre_deprecated": false,
+                    "x_mitre_domains": [
+                        "enterprise-attack"
+                    ],
+                    "x_mitre_modified_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "x_mitre_version": "1.0",
+                    "detailed_diff": "{\"values_changed\": {\"root['modified']\": {\"new_value\": \"2022-10-24 18:51:09.213000+00:00\", \"old_value\": \"2022-10-20 18:29:03.956000+00:00\"}, \"root['x_mitre_attack_spec_version']\": {\"new_value\": \"3.0.0\", \"old_value\": \"2.1.0\"}, \"root['x_mitre_contributors'][2]\": {\"new_value\": \"Manikantan Srinivasan, NEC Corporation India\", \"old_value\": \"Manikantan Srinivasan , NEC Corporation India\"}}}",
+                    "previous_version": "1.0"
+                }
+            ],
+            "revocations": [],
+            "deprecations": [],
+            "deletions": []
+        },
+        "campaigns": {
+            "additions": [],
+            "major_version_changes": [],
+            "minor_version_changes": [],
+            "other_version_changes": [],
+            "patches": [],
+            "revocations": [],
+            "deprecations": [],
+            "deletions": []
+        },
+        "mitigations": {
+            "additions": [],
+            "major_version_changes": [],
+            "minor_version_changes": [],
+            "other_version_changes": [],
+            "patches": [],
+            "revocations": [],
+            "deprecations": [],
+            "deletions": []
+        },
+        "datasources": {
+            "additions": [],
+            "major_version_changes": [],
+            "minor_version_changes": [],
+            "other_version_changes": [],
+            "patches": [],
+            "revocations": [],
+            "deprecations": [],
+            "deletions": []
+        },
+        "datacomponents": {
+            "additions": [],
+            "major_version_changes": [],
+            "minor_version_changes": [],
+            "other_version_changes": [],
+            "patches": [],
+            "revocations": [],
+            "deprecations": [
+                {
+                    "modified": "2022-11-07T19:45:00.000Z",
+                    "name": "Container Metadata",
+                    "description": "Contextual data about a container and activity around it such as name, ID, image, or status",
+                    "x_mitre_data_source_ref": "x-mitre-data-source--072ec5a7-00ba-466f-9057-69751a22a967",
+                    "x_mitre_modified_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "x_mitre_deprecated": true,
+                    "x_mitre_version": "1.0",
+                    "x_mitre_attack_spec_version": "2.1.0",
+                    "type": "x-mitre-data-component",
+                    "id": "x-mitre-data-component--df508a43-65f5-453f-8b8f-4b5d64e60a21",
+                    "created": "2021-10-20T15:05:19.274Z",
+                    "created_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "object_marking_refs": [
+                        "marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168"
+                    ],
+                    "detailed_diff": "{\"dictionary_item_added\": {\"root['x_mitre_deprecated']\": true}, \"values_changed\": {\"root['modified']\": {\"new_value\": \"2022-11-07T19:45:00.000Z\", \"old_value\": \"2021-10-20T15:05:19.274Z\"}}}"
+                },
+                {
+                    "modified": "2022-11-07T19:45:00.000Z",
+                    "name": "Pod Metadata",
+                    "description": "Contextual data about a pod and activity around it such as name, ID, namespace, or status",
+                    "x_mitre_data_source_ref": "x-mitre-data-source--06bb1e05-533b-4de3-ae87-9b99910465cf",
+                    "x_mitre_modified_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "x_mitre_deprecated": true,
+                    "x_mitre_version": "1.0",
+                    "x_mitre_attack_spec_version": "2.1.0",
+                    "type": "x-mitre-data-component",
+                    "id": "x-mitre-data-component--c0edd522-0aef-46b3-8efa-2bd334ce4242",
+                    "created": "2021-10-20T15:05:19.272Z",
+                    "created_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "object_marking_refs": [
+                        "marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168"
+                    ],
+                    "detailed_diff": "{\"dictionary_item_added\": {\"root['x_mitre_deprecated']\": true}, \"values_changed\": {\"root['modified']\": {\"new_value\": \"2022-11-07T19:45:00.000Z\", \"old_value\": \"2021-10-20T15:05:19.272Z\"}}}"
+                }
+            ],
+            "deletions": []
+        }
+    },
+    "mobile-attack": {
+        "techniques": {
+            "additions": [],
+            "major_version_changes": [],
+            "minor_version_changes": [],
+            "other_version_changes": [],
+            "patches": [],
+            "revocations": [],
+            "deprecations": [],
+            "deletions": []
+        },
+        "software": {
+            "additions": [],
+            "major_version_changes": [],
+            "minor_version_changes": [],
+            "other_version_changes": [],
+            "patches": [],
+            "revocations": [],
+            "deprecations": [],
+            "deletions": []
+        },
+        "groups": {
+            "additions": [],
+            "major_version_changes": [],
+            "minor_version_changes": [],
+            "other_version_changes": [],
+            "patches": [],
+            "revocations": [],
+            "deprecations": [],
+            "deletions": []
+        },
+        "campaigns": {
+            "additions": [],
+            "major_version_changes": [],
+            "minor_version_changes": [],
+            "other_version_changes": [],
+            "patches": [],
+            "revocations": [],
+            "deprecations": [],
+            "deletions": []
+        },
+        "mitigations": {
+            "additions": [],
+            "major_version_changes": [],
+            "minor_version_changes": [],
+            "other_version_changes": [],
+            "patches": [],
+            "revocations": [],
+            "deprecations": [],
+            "deletions": []
+        },
+        "datasources": {
+            "additions": [],
+            "major_version_changes": [],
+            "minor_version_changes": [],
+            "other_version_changes": [],
+            "patches": [],
+            "revocations": [],
+            "deprecations": [],
+            "deletions": []
+        },
+        "datacomponents": {
+            "additions": [],
+            "major_version_changes": [],
+            "minor_version_changes": [],
+            "other_version_changes": [],
+            "patches": [],
+            "revocations": [],
+            "deprecations": [],
+            "deletions": []
+        }
+    },
+    "ics-attack": {
+        "techniques": {
+            "additions": [],
+            "major_version_changes": [],
+            "minor_version_changes": [],
+            "other_version_changes": [],
+            "patches": [],
+            "revocations": [],
+            "deprecations": [],
+            "deletions": []
+        },
+        "software": {
+            "additions": [],
+            "major_version_changes": [],
+            "minor_version_changes": [],
+            "other_version_changes": [],
+            "patches": [],
+            "revocations": [],
+            "deprecations": [],
+            "deletions": []
+        },
+        "groups": {
+            "additions": [],
+            "major_version_changes": [],
+            "minor_version_changes": [],
+            "other_version_changes": [],
+            "patches": [],
+            "revocations": [],
+            "deprecations": [],
+            "deletions": []
+        },
+        "campaigns": {
+            "additions": [],
+            "major_version_changes": [],
+            "minor_version_changes": [],
+            "other_version_changes": [],
+            "patches": [],
+            "revocations": [],
+            "deprecations": [],
+            "deletions": []
+        },
+        "mitigations": {
+            "additions": [],
+            "major_version_changes": [],
+            "minor_version_changes": [],
+            "other_version_changes": [],
+            "patches": [],
+            "revocations": [],
+            "deprecations": [],
+            "deletions": []
+        },
+        "datasources": {
+            "additions": [],
+            "major_version_changes": [],
+            "minor_version_changes": [],
+            "other_version_changes": [],
+            "patches": [],
+            "revocations": [],
+            "deprecations": [],
+            "deletions": []
+        },
+        "datacomponents": {
+            "additions": [],
+            "major_version_changes": [],
+            "minor_version_changes": [],
+            "other_version_changes": [],
+            "patches": [],
+            "revocations": [],
+            "deprecations": [],
+            "deletions": []
+        }
+    },
+    "new-contributors": [
+        "Manikantan Srinivasan, NEC Corporation India",
+        "Phill Taylor, BT Security",
+        "Vinayak Wadhwa, SAFE Security",
+        "Will Jolliffe"
+    ]
+}

@@ -162,7 +162,7 @@ def generate_group_md(group, side_menu_data, side_menu_mobile_view_data, notes):
             data["layers"].append(
                 {
                     "domain": layer["domain"],
-                    "filename": "-".join([data["attack_id"], layer["domain"], "layer"]) + ".json",
+                    "filename": layer["filename"],
                     "navigator_link": site_config.navigator_link,
                 }
             )
@@ -200,7 +200,6 @@ def get_groups_table_data(group_list):
 
     # Now the table on the right, which is made up of group data
     for group in group_list:
-
         attack_id = util.buildhelpers.get_attack_id(group)
 
         if attack_id:

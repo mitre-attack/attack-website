@@ -22,6 +22,8 @@ def citations_check():
             continue
         for filename in files:
             problems = []
+            if filename == "changelog-detailed.html":
+                continue
             if filename.endswith(".html"):
                 filepath = os.path.join(directory, filename)
                 with open(filepath, "r", encoding="utf8") as f_handle:

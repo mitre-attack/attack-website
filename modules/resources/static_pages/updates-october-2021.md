@@ -6,9 +6,9 @@ Template: resources/update-post
 url: /resources/updates/updates-october-2021
 save_as: resources/updates/updates-october-2021/index.html
 
-| Version | Start Date | End Date | Data |
-|:--------|:-----------|:---------|:-----|
-| [ATT&CK v10](/versions/v10) | October 21, 2021 | April 24, 2022 | [v10.1 on MITRE/CTI](https://github.com/mitre/cti/releases/tag/ATT%26CK-v10.1) |
+| Version | Start Date | End Date | Data | Changelogs |
+|:--------|:-----------|:---------|:-----|:-----------|
+| [ATT&CK v10](/versions/v10) | October 21, 2021 | April 24, 2022 | [v10.0 on MITRE/CTI](https://github.com/mitre/cti/releases/tag/ATT%26CK-v10.0)<br />[v10.1 on MITRE/CTI](https://github.com/mitre/cti/releases/tag/ATT%26CK-v10.1) | v9.0 - v10.0 [Details](/docs/changelogs/v9.0-v10.0/changelog-detailed.html) ([JSON](/docs/changelogs/v9.0-v10.0/changelog.json))<br />v10.0 - v10.1 [Details](/docs/changelogs/v10.0-v10.1/changelog-detailed.html) ([JSON](/docs/changelogs/v10.0-v10.1/changelog.json)) |
 
 The October 2021 (v10) ATT&CK release updates Techniques, Groups, and Software for Enterprise, Mobile, and ICS. The biggest change is the addition of a new set of [Data Source](/datasources/) and Data Component objects in Enterprise ATT&CK, complementing the ATT&CK Data Source name changes released in ATT&CK v9. An [accompanying blog post](https://medium.com/mitre-attack/introducing-attack-v10-7743870b37e3) describes these changes as well as improvements across ATT&CK's various domains and platforms.
 
