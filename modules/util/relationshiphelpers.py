@@ -1,4 +1,5 @@
 import json
+from collections import OrderedDict
 from itertools import chain
 
 from loguru import logger
@@ -21,7 +22,7 @@ def get_related(srcs, src_type, rel_type, target_type, reverse=False):
         reverse: build reverse mapping of target to source
     """
 
-    relationships = query_all(
+    relationships_with_dups = query_all(
         srcs,
         [
             Filter("type", "=", "relationship"),
@@ -30,12 +31,18 @@ def get_related(srcs, src_type, rel_type, target_type, reverse=False):
         ],
     )
 
+    relationships_dict = OrderedDict()
+    for relationship in relationships_with_dups:
+        if relationship["id"] not in relationships_dict:
+            relationships_dict[relationship["id"]] = relationship
+
+    relationships = relationships_dict.values()
+
     # stix_id => [ ids of objects with relationships with stix_id ]
     id_to_related = {}
 
     # build the dict
     for relationship in relationships:
-
         if relationship.get("x_mitre_deprecated"):
             continue
 
@@ -226,7 +233,7 @@ def campaigns_using_technique(srcs):
 
 def groups_attributed_to_campaign(srcs):
     """Return campaign_id => {group, relationship} for each group attributed to the campaign
-    
+
     srcs should be an array of memorystores for enterprise, mobile, and pre
     """
     return get_related(srcs, "campaign", "attributed-to", "intrusion-set")
@@ -234,7 +241,7 @@ def groups_attributed_to_campaign(srcs):
 
 def campaigns_attributed_to_group(srcs):
     """Return group_id => {campaign, relationship} for each campaign attributed to the group
-    
+
     srcs should be an array of memorystores for enterprise, mobile, and pre
     """
     return get_related(srcs, "campaign", "attributed-to", "intrusion-set", reverse=True)

@@ -19,8 +19,7 @@ def generate_redirections():
 
     # Generate redirections
     util.buildhelpers.generate_redirections(
-        redirections_filename=redirections_config.redirections_location,
-        redirect_md=site_config.redirect_md_index
+        redirections_filename=redirections_config.redirections_location, redirect_md=site_config.redirect_md_index
     )
 
     for domain in site_config.domains:
@@ -41,7 +40,6 @@ def generate_markdown_files(domain):
 
             if new_attack_id:
                 if obj.get("revoked"):
-
                     revoked_by_obj = util.stixhelpers.get_revoked_by(obj["id"], ms[domain])
 
                     if revoked_by_obj:
@@ -82,6 +80,7 @@ def generate_markdown_files(domain):
                     )
 
     generate_tactic_redirects(ms, domain)
+    generate_datasource_redirects(ms, domain)
 
 
 def generate_tactic_redirects(ms, domain):
@@ -90,17 +89,51 @@ def generate_tactic_redirects(ms, domain):
 
     data = {}
     for tactic in tactics:
-
         attack_id = util.buildhelpers.get_attack_id(tactic)
 
         if attack_id:
+            clean_tactic_name = tactic["name"].replace(" ", "_")
+            old_site_prefix = redirections_config.redirects_paths[domain]
+            redirect_title = f"{clean_tactic_name}-{domain}-{uuid.uuid1()}"
 
-            data["title"] = tactic["name"].replace(" ", "_") + "-" + domain + str(uuid.uuid1())
-            data["to"] = "/tactics/" + attack_id
-            data["from"] = redirections_config.redirects_paths[domain] + tactic["name"].replace(" ", "_")
+            data = {
+                "title": redirect_title,
+                "from": f"{old_site_prefix}{clean_tactic_name}",
+                "to": f"/tactics/{attack_id}",
+            }
 
         subs = site_config.redirect_md_index.substitute(data)
 
+        with open(
+            os.path.join(site_config.redirects_markdown_path, data["title"] + ".md"), "w", encoding="utf8"
+        ) as md_file:
+            md_file.write(subs)
+
+
+def generate_datasource_redirects(ms, domain):
+    """Responsible for generating data source redirects markdown."""
+    datasources = util.stixhelpers.get_all_of_type(ms[domain], ["x-mitre-data-source"])
+
+    data = {}
+    for ds in datasources:
+        ext_refs = ds.get("external_references")
+        if ext_refs:
+            i = util.buildhelpers.find_index_id(ext_refs)
+            if i != util.buildhelpers.util_config.NOT_FOUND:
+                attack_id = ext_refs[i]["external_id"]
+                invalid_url = "data-sources" in ext_refs[i]["url"]
+
+                if not invalid_url:
+                    continue  # skip this datasource
+
+                ds_redirect_title = f"{attack_id}-{uuid.uuid1()}"
+                data = {
+                    "title": ds_redirect_title,
+                    "from": f"data-sources/{attack_id}",
+                    "to": f"/datasources/{attack_id}",
+                }
+
+        subs = site_config.redirect_md_index.substitute(data)
         with open(
             os.path.join(site_config.redirects_markdown_path, data["title"] + ".md"), "w", encoding="utf8"
         ) as md_file:

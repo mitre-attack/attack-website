@@ -1,9 +1,6 @@
-import collections
+from collections.abc import Iterable
 import json
 import os
-import re
-
-import markdown
 
 from modules import util
 from modules.util import relationshipgetters as rsg
@@ -13,10 +10,7 @@ from .. import site_config
 
 
 def generate_datasources():
-    """Responsible for verifying data source directory and starting off
-    data source markdown generation
-    """
-
+    """Responsible for verifying data source directory and starting off data source markdown generation."""
     # Create content pages directory if does not already exist
     util.buildhelpers.create_content_pages_dir()
 
@@ -40,10 +34,7 @@ def generate_datasources():
 
 
 def generate_markdown_files():
-    """Responsible for generating datasource index page and getting shared data for
-    all datasources
-    """
-
+    """Responsible for generating datasource index page and getting shared data for all datasources."""
     has_datasource = False
 
     datasource_list = rsg.get_datasource_list()
@@ -85,8 +76,7 @@ def generate_markdown_files():
 
 
 def generate_datasource_md(datasource, side_menu_data, side_menu_mobile_view_data, notes):
-    """Responsible for generating markdown of all datasources"""
-
+    """Responsible for generating markdown of all datasources."""
     attack_id = util.buildhelpers.get_attack_id(datasource)
 
     if attack_id:
@@ -118,7 +108,7 @@ def generate_datasource_md(datasource, side_menu_data, side_menu_mobile_view_dat
         if datasource.get("x_mitre_version"):
             data["version"] = datasource["x_mitre_version"]
 
-        if isinstance(datasource.get("x_mitre_contributors"), collections.abc.Iterable):
+        if isinstance(datasource.get("x_mitre_contributors"), Iterable):
             data["contributors_list"] = datasource["x_mitre_contributors"]
 
         if datasource.get("description"):
@@ -153,10 +143,7 @@ def generate_datasource_md(datasource, side_menu_data, side_menu_mobile_view_dat
 
 
 def get_datasources_side_nav_data(datasources):
-    """Responsible for generating the links that are located on the
-    left side of individual data sources domain pages
-    """
-
+    """Responsible for generating the links that are located on the left side of individual data sources domain pages."""
     side_nav_data = []
 
     # Get data components of data source
@@ -183,11 +170,9 @@ def get_datasources_side_nav_data(datasources):
 
     # Loop through data sources
     for datasource in datasources:
-
         attack_id = util.buildhelpers.get_attack_id(datasource)
 
         if attack_id:
-
             domains_of_datasource = []
             datasource_data = {
                 "name": datasource["name"],
@@ -198,11 +183,10 @@ def get_datasources_side_nav_data(datasources):
 
             if datacomponent_of.get(datasource["id"]):
                 for datacomponent in datacomponent_of[datasource["id"]]:
-
                     if not datacomponent.get("x_mitre_deprecated") and not datacomponent.get("revoked"):
                         # get data component detections
                         techniques_of_datacomp = techniques_detected_by_datacomponent.get(datacomponent["id"])
-                        if techniques_of_datacomp: 
+                        if techniques_of_datacomp:
                             domains_of_datacomponent = get_domains_of_datacomponent(datacomponent)
                             # Add missing domains to data source
                             for domain in domains_of_datacomponent:
@@ -241,13 +225,11 @@ def get_datasources_side_nav_data(datasources):
 
 
 def get_datasources_table_data(datasource_list):
-    """Responsible for generating datasource table data for the datasource index page"""
-
+    """Responsible for generating datasource table data for the datasource index page."""
     datasources_table_data = []
 
     # Now the table on the right, which is made up of datasource data
     for datasource in datasource_list:
-
         attack_id = util.buildhelpers.get_attack_id(datasource)
 
         if attack_id:
@@ -273,11 +255,10 @@ def get_datasources_table_data(datasource_list):
 
 
 def get_datacomponents_data(datasource, reference_list):
-    """Given a data source and its reference list, get a list of data components of the
-    data source. Add techniques detected by data components. Check the reference list for citations, if not found
-    in list, add it.
-    """
+    """Given a data source and its reference list, get a list of data components of the data source.
 
+    Add techniques detected by data components. Check the reference list for citations, if not found in list, add it.
+    """
     datacomponents_data = []
 
     # Get data components of data source
@@ -292,13 +273,11 @@ def get_datacomponents_data(datasource, reference_list):
                 techniques_of_datacomp = techniques_detected_by_datacomponent.get(datacomponent["id"])
 
                 # skip if no detections
-                if not techniques_of_datacomp: continue
+                if not techniques_of_datacomp:
+                    continue
 
                 reference = False
-                datacomponent_data = {
-                    "name": datacomponent["name"],
-                    "descr": datacomponent["description"]
-                }
+                datacomponent_data = {"name": datacomponent["name"], "descr": datacomponent["description"]}
 
                 # update reference list
                 reference_list = util.buildhelpers.update_reference_list(reference_list, datacomponent)
@@ -310,7 +289,9 @@ def get_datacomponents_data(datasource, reference_list):
                 for technique_rel in techniques_of_datacomp:
                     # Do not add if technique is deprecated
                     if not technique_rel["object"].get("x_mitre_deprecated"):
-                        technique_list = util.buildhelpers.technique_used_helper(technique_list, technique_rel, reference_list)
+                        technique_list = util.buildhelpers.technique_used_helper(
+                            technique_list, technique_rel, reference_list
+                        )
 
                         # Get domain of technique
                         attack_id = util.buildhelpers.get_attack_id(technique_rel["object"])
