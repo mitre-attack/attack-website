@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*- #
 from __future__ import unicode_literals
+import os
 
 # Need to update path with current directory in order to
 # read file with custom jinja filters 
@@ -12,15 +13,15 @@ import custom_jinja_filters
 PLUGIN_PATHS = ['plugins']
 PLUGINS = ['assets']
 
-AUTHOR = 'MITRE'
-SITENAME = 'ATT&CK'
-SITEURL = ''
+AUTHOR = os.environ.get('PELICAN_AUTHOR', 'MITRE')
+SITENAME = os.environ.get('PELICAN_SITENAME', 'ATT&CK')
+SITEURL = os.environ.get('PELICAN_SITEURL', '')
 
 PATH = 'content'
 
-TIMEZONE = 'America/New_York'
+TIMEZONE = os.environ.get('PELICAN_TIMEZONE', 'America/New_York')
 
-DEFAULT_LANG = 'en'
+DEFAULT_LANG = os.environ.get('PELICAN_DEFAULT_LANG','en')
 
 THEME = 'attack-theme'
 

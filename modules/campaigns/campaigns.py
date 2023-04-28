@@ -25,6 +25,7 @@ def generate_campaigns():
     if not os.path.isdir(campaigns_config.campaign_markdown_path):
         os.mkdir(campaigns_config.campaign_markdown_path)
 
+    # TODO resolve infinite redirect loop when run locally. Needs further testing before code removal.
     # Generate redirections
     util.buildhelpers.generate_redirections(
         redirections_filename=campaigns_config.campaigns_redirection_location, redirect_md=site_config.redirect_md
@@ -58,7 +59,9 @@ def generate_markdown_files():
         group_by = 2
 
         notes = util.relationshipgetters.get_objects_using_notes()
-        side_menu_data = util.buildhelpers.get_side_menu_data("Campaigns", "/campaigns/", campaign_list_no_deprecated_revoked)
+        side_menu_data = util.buildhelpers.get_side_menu_data(
+            "Campaigns", "/campaigns/", campaign_list_no_deprecated_revoked
+        )
         data["side_menu_data"] = side_menu_data
 
         side_menu_mobile_view_data = util.buildhelpers.get_side_menu_mobile_view_data(
@@ -160,14 +163,18 @@ def generate_campaign_md(campaign, side_menu_data, side_menu_mobile_view_data, n
                 encoding="utf8",
             ) as layer_json:
                 subs = site_config.layer_md.substitute(
-                    {"attack_id": data["attack_id"], "path": "campaigns/" + data["attack_id"], "domain": layer["domain"]}
+                    {
+                        "attack_id": data["attack_id"],
+                        "path": "campaigns/" + data["attack_id"],
+                        "domain": layer["domain"],
+                    }
                 )
                 subs = subs + layer["layer"]
                 layer_json.write(subs)
             data["layers"].append(
                 {
                     "domain": layer["domain"],
-                    "filename": "-".join([data["attack_id"], layer["domain"], "layer"]) + ".json",
+                    "filename": layer["filename"],
                     "navigator_link": site_config.navigator_link,
                 }
             )
@@ -210,8 +217,8 @@ def get_campaigns_table_data(campaign_list):
             row = {
                 "id": attack_id,
                 "name": campaign["name"] if campaign.get("name") else attack_id,
-                "first_seen": campaign_dates["first_seen"] if campaign_dates.get("first_seen") else '',
-                "last_seen": campaign_dates["last_seen"] if campaign_dates.get("last_seen") else '',
+                "first_seen": campaign_dates["first_seen"] if campaign_dates.get("first_seen") else "",
+                "last_seen": campaign_dates["last_seen"] if campaign_dates.get("last_seen") else "",
             }
 
             if campaign.get("description"):
@@ -230,7 +237,7 @@ def get_campaigns_table_data(campaign_list):
 
 def get_group_table_data(campaign, reference_list):
     """Given a campaign, get the group table data."""
-    group_list = {} # group stix_id => {attack_id, name, description}
+    group_list = {}  # group stix_id => {attack_id, name, description}
     groups_attributed_to_campaign = util.relationshipgetters.get_groups_attributed_to_campaigns()
 
     if groups_attributed_to_campaign.get(campaign.get("id")):
@@ -238,10 +245,7 @@ def get_group_table_data(campaign, reference_list):
             group_id = group["object"]["id"]
             if group_id not in group_list:
                 attack_id = util.buildhelpers.get_attack_id(group["object"])
-                group_list[group_id] = {
-                    "id": attack_id,
-                    "name": group["object"]["name"]
-                }
+                group_list[group_id] = {"id": attack_id, "name": group["object"]["name"]}
 
                 if group["relationship"].get("description"):
                     group_list[group_id]["desc"] = group["relationship"]["description"]
@@ -249,14 +253,14 @@ def get_group_table_data(campaign, reference_list):
                     # update reference list
                     reference_list = util.buildhelpers.update_reference_list(reference_list, group["relationship"])
 
-
     group_data = [group_list[item] for item in group_list]
     group_data = sorted(group_data, key=lambda k: k["name"].lower())
     return group_data
 
+
 def get_techniques_used_by_campaign_data(campaign, reference_list):
     """Given a campaign and its reference list, get the techniques used by the campaign.
-    
+
     Check the reference list for citations, if not found in list, add it.
     """
     technique_list = {}
@@ -283,12 +287,12 @@ def get_techniques_used_by_campaign_data(campaign, reference_list):
 
 def get_software_table_data(campaign, reference_list):
     """Given a campaign, get software table data."""
-    software_list = {} # software stix_id => {attack_id, name, description}
+    software_list = {}  # software stix_id => {attack_id, name, description}
 
     # Creating map for tools/malware used by campaigns
     software_used_by_campaign = [
         util.relationshipgetters.get_tools_used_by_campaigns(),
-        util.relationshipgetters.get_malware_used_by_campaigns()
+        util.relationshipgetters.get_malware_used_by_campaigns(),
     ]
 
     for res in software_used_by_campaign:
@@ -297,16 +301,15 @@ def get_software_table_data(campaign, reference_list):
                 software_id = software["object"]["id"]
                 if software_id not in software_list:
                     attack_id = util.buildhelpers.get_attack_id(software["object"])
-                    software_list[software_id] = {
-                        "id": attack_id,
-                        "name": software["object"]["name"]
-                    }
+                    software_list[software_id] = {"id": attack_id, "name": software["object"]["name"]}
                     if software["relationship"].get("description"):
                         software_list[software_id]["desc"] = software["relationship"]["description"]
 
                         # update reference list
-                        reference_list = util.buildhelpers.update_reference_list(reference_list, software["relationship"])
-    
+                        reference_list = util.buildhelpers.update_reference_list(
+                            reference_list, software["relationship"]
+                        )
+
     software_data = [software_list[item] for item in software_list]
     software_data = sorted(software_data, key=lambda k: k["name"].lower())
     return software_data

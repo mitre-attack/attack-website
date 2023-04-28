@@ -132,7 +132,7 @@ def get_correct_link(path):
 
 def check_if_link_in_use(filepath, link):
     """Given a filepath and a link, check if the link is already linked by another page.
-    
+
     If not, verify that the link is not the same as the filepath and add it to the in use links map.
     """
     if not "previous" in link and not "versions" in link:
@@ -208,7 +208,6 @@ def internal_external_link_checker(filepath, html_str):
 
         # check if link has a dest
         for link in links:
-
             # Check if link is relative path
             is_relative = check_if_relative_link(link)
 
@@ -263,11 +262,9 @@ def internal_link_checker(filepath, html_str):
 
     # find all links
     for prefix in ["href", "src"]:
-
         links = re.findall(f"{prefix}\s?=\s?[\"']([{allowed_in_link}]+)[\"']", html_str)
         # check if link has a dest
         for link in links:
-
             # Check if link is relative path
             is_relative = check_if_relative_link(link)
 
@@ -314,13 +311,12 @@ def check_if_file_is_deprecated(filename):
 
 def check_unlinked_pages(filenames):
     """Given a list of filenames, check if they where linked from another page.
-    
+
     Add the files that are not linked to a list a return the list.
     """
     unlinked_pages = []
     for filename in filenames:
         if not "previous" in filename and not "versions" in filename:
-
             # Check if it is deprecated
             if check_if_file_is_deprecated(filename):
                 continue

@@ -37,8 +37,7 @@ def generate_mitigations():
         # Reads the STIX and creates a list of the ATT&CK mitigations
         mitigations[domain["name"]] = util.stixhelpers.get_mitigation_list(ms[domain["name"]])
         mitigations_with_deprecated[domain["name"]] = util.stixhelpers.get_mitigation_list(
-            src=ms[domain["name"]],
-            get_deprecated=True
+            src=ms[domain["name"]], get_deprecated=True
         )
 
     # Amount of characters per category
@@ -67,9 +66,10 @@ def generate_markdown_files(domain, mitigations, side_nav_data, side_nav_mobile_
     data = {}
 
     if mitigations:
-
         data["domain"] = domain.split("-")[0]
-        non_deprecated_mitigations = [mitigation for mitigation in mitigations if not mitigation.get("x_mitre_deprecated")]
+        non_deprecated_mitigations = [
+            mitigation for mitigation in mitigations if not mitigation.get("x_mitre_deprecated")
+        ]
         data["mitigation_list_len"] = str(len(non_deprecated_mitigations))
         data["side_menu_data"] = side_nav_data
         data["side_menu_mobile_view_data"] = side_nav_mobile_data
@@ -79,10 +79,7 @@ def generate_markdown_files(domain, mitigations, side_nav_data, side_nav_mobile_
         subs = mitigations_config.mitigation_domain_md.substitute(data)
         subs = subs + json.dumps(data)
 
-        mitigations_file = os.path.join(
-            mitigations_config.mitigation_markdown_path,
-            f"{data['domain']}-mitigations.md"
-        )
+        mitigations_file = os.path.join(mitigations_config.mitigation_markdown_path, f"{data['domain']}-mitigations.md")
         with open(mitigations_file, "w", encoding="utf8") as md_file:
             md_file.write(subs)
 
@@ -171,7 +168,7 @@ def generate_mitigation_md(mitigation, domain, side_menu_data, side_menu_mobile_
             data["layers"].append(
                 {
                     "domain": layer["domain"],
-                    "filename": "-".join([data["attack_id"], layer["domain"], "layer"]) + ".json",
+                    "filename": layer["filename"],
                     "navigator_link": site_config.navigator_link,
                 }
             )

@@ -21,7 +21,7 @@ def get_menu():
         ],
     }
 
-
+# TODO resolve infinite redirect loop when run locally. Needs further testing before code removal.
 def get_redirections():
     with open(tactics_config.tactics_redirection_location, "r", encoding="utf8") as json_redirections:
         return json.load(json_redirections)
@@ -29,4 +29,4 @@ def get_redirections():
 
 
 def run_module():
-    return (tactics.generate_tactics(), tactics_config.module_name)
+    return tactics.generate_tactics(), tactics_config.module_name
