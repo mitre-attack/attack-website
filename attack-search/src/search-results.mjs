@@ -1,11 +1,13 @@
-const Mutex = require('async-mutex').Mutex;
-const EventEmitter = require('events');
+// const Mutex = require('async-mutex').Mutex;
+// const EventEmitter = require('events');
+import { Mutex } from 'async-mutex';
+import { EventEmitter } from 'events';
 
 /**
  * Singleton class that manages the search results array.
  * @class SearchResults
  */
-module.exports = class SearchResults extends EventEmitter {
+export class SearchResults extends EventEmitter {
     /**
      * Creates a new instance of the `SearchResults` class or returns an existing instance.
      * @constructor
