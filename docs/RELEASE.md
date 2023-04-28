@@ -30,6 +30,7 @@ If you are only updating the banner and nothing else, follow these steps.
     * Update the website version number in `pyproject.toml`
     * Update any dependencies needed in `requirements.txt`.
     * If applicable, update the year in the following files:
+        * `attack-theme/templates/general/base-template.html`
         * `modules/website_build/static_pages/terms-of-use.md`
         * `NOTICE.txt`
         * `LICENSE.txt`

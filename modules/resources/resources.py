@@ -68,9 +68,7 @@ def generate_general_information():
         resources["presentations"], key=lambda p: datetime.strptime(p["date"], "%B %Y"), reverse=True
     )
     # get markdown
-    resources_content = resources_config.general_information_md + json.dumps(
-        {"presentations": presentations}
-    )
+    resources_content = resources_config.general_information_md + json.dumps({"presentations": presentations})
     # write markdown to file
     with open(
         os.path.join(site_config.resources_markdown_path, "general_information.md"), "w", encoding="utf8"
@@ -128,7 +126,6 @@ def generate_static_pages():
     static_pages_dir = os.path.join("modules", "resources", "static_pages")
 
     for static_page in os.listdir(static_pages_dir):
-
         with open(os.path.join(static_pages_dir, static_page), "r", encoding="utf8") as md:
             content = md.read()
 
@@ -163,7 +160,7 @@ def generate_working_with_attack():
         "tactics",
         "techniques",
         "datasources",
-        "campaigns"
+        "campaigns",
     ]
 
     # Verify if directories exists
@@ -175,7 +172,6 @@ def generate_working_with_attack():
         os.makedirs(docs_dir)
 
     for domain in site_config.domains:
-
         if domain["deprecated"]:
             continue
 

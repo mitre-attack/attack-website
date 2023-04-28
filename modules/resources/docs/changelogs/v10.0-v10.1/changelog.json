@@ -1,0 +1,2428 @@
+{
+    "enterprise-attack": {
+        "techniques": {
+            "additions": [],
+            "major_version_changes": [],
+            "minor_version_changes": [
+                {
+                    "type": "attack-pattern",
+                    "id": "attack-pattern--d10cbd34-42e3-45c0-84d2-535a09849584",
+                    "created_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "created": "2020-01-17 16:10:58.592000+00:00",
+                    "modified": "2021-11-03 20:11:51.687000+00:00",
+                    "name": "Launch Agent",
+                    "description": "Adversaries may create or modify launch agents to repeatedly execute malicious payloads as part of persistence. When a user logs in, a per-user launchd process is started which loads the parameters for each launch-on-demand user agent from the property list (.plist) file found in <code>/System/Library/LaunchAgents</code>, <code>/Library/LaunchAgents</code>, and <code>~/Library/LaunchAgents</code>.(Citation: AppleDocs Launch Agent Daemons)(Citation: OSX Keydnap malware) (Citation: Antiquated Mac Malware) Property list files use the <code>Label</code>, <code>ProgramArguments </code>, and <code>RunAtLoad</code> keys to identify the Launch Agent's name, executable location, and execution time.(Citation: OSX.Dok Malware) Launch Agents are often installed to perform updates to programs, launch user specified programs at login, or to conduct other developer tasks.\n\n Launch Agents can also be executed using the [Launchctl](https://attack.mitre.org/techniques/T1569/001) command.\n \nAdversaries may install a new Launch Agent that executes at login by placing a .plist file into the appropriate folders with the <code>RunAtLoad</code> or <code>KeepAlive</code> keys set to <code>true</code>.(Citation: Sofacy Komplex Trojan)(Citation: Methods of Mac Malware Persistence) The Launch Agent name may be disguised by using a name from the related operating system or benign software. Launch Agents are created with user level privileges and execute with user level permissions.(Citation: OSX Malware Detection)(Citation: OceanLotus for OS X) ",
+                    "kill_chain_phases": [
+                        {
+                            "kill_chain_name": "mitre-attack",
+                            "phase_name": "persistence"
+                        },
+                        {
+                            "kill_chain_name": "mitre-attack",
+                            "phase_name": "privilege-escalation"
+                        }
+                    ],
+                    "revoked": false,
+                    "external_references": [
+                        {
+                            "source_name": "mitre-attack",
+                            "url": "https://attack.mitre.org/techniques/T1543/001",
+                            "external_id": "T1543.001"
+                        },
+                        {
+                            "source_name": "AppleDocs Launch Agent Daemons",
+                            "description": "Apple. (n.d.). Creating Launch Daemons and Agents. Retrieved July 10, 2017.",
+                            "url": "https://developer.apple.com/library/content/documentation/MacOSX/Conceptual/BPSystemStartup/Chapters/CreatingLaunchdJobs.html"
+                        },
+                        {
+                            "source_name": "OSX Keydnap malware",
+                            "description": "Marc-Etienne M.Leveille. (2016, July 6). New OSX/Keydnap malware is hungry for credentials. Retrieved July 3, 2017.",
+                            "url": "https://www.welivesecurity.com/2016/07/06/new-osxkeydnap-malware-hungry-credentials/"
+                        },
+                        {
+                            "source_name": "Antiquated Mac Malware",
+                            "description": "Thomas Reed. (2017, January 18). New Mac backdoor using antiquated code. Retrieved July 5, 2017.",
+                            "url": "https://blog.malwarebytes.com/threat-analysis/2017/01/new-mac-backdoor-using-antiquated-code/"
+                        },
+                        {
+                            "source_name": "OSX.Dok Malware",
+                            "description": "Thomas Reed. (2017, July 7). New OSX.Dok malware intercepts web traffic. Retrieved July 10, 2017.",
+                            "url": "https://blog.malwarebytes.com/threat-analysis/2017/04/new-osx-dok-malware-intercepts-web-traffic/"
+                        },
+                        {
+                            "source_name": "Sofacy Komplex Trojan",
+                            "description": "Dani Creus, Tyler Halfpop, Robert Falcone. (2016, September 26). Sofacy's 'Komplex' OS X Trojan. Retrieved July 8, 2017.",
+                            "url": "https://researchcenter.paloaltonetworks.com/2016/09/unit42-sofacys-komplex-os-x-trojan/"
+                        },
+                        {
+                            "source_name": "Methods of Mac Malware Persistence",
+                            "description": "Patrick Wardle. (2014, September). Methods of Malware Persistence on Mac OS X. Retrieved July 5, 2017.",
+                            "url": "https://www.virusbulletin.com/uploads/pdf/conference/vb2014/VB2014-Wardle.pdf"
+                        },
+                        {
+                            "source_name": "OSX Malware Detection",
+                            "description": "Patrick Wardle. (2016, February 29). Let's Play Doctor: Practical OS X Malware Detection & Analysis. Retrieved July 10, 2017.",
+                            "url": "https://www.synack.com/wp-content/uploads/2016/03/RSA_OSX_Malware.pdf"
+                        },
+                        {
+                            "source_name": "OceanLotus for OS X",
+                            "description": "Eddie Lee. (2016, February 17). OceanLotus for OS X - an Application Bundle Pretending to be an Adobe Flash Update. Retrieved July 5, 2017.",
+                            "url": "https://www.alienvault.com/blogs/labs-research/oceanlotus-for-os-x-an-application-bundle-pretending-to-be-an-adobe-flash-update"
+                        }
+                    ],
+                    "object_marking_refs": [
+                        "marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168"
+                    ],
+                    "x_mitre_data_sources": [
+                        "File: File Creation",
+                        "File: File Modification",
+                        "Command: Command Execution",
+                        "Service: Service Creation",
+                        "Service: Service Modification"
+                    ],
+                    "x_mitre_detection": "Monitor Launch Agent creation through additional plist files and utilities such as Objective-See\u2019s  KnockKnock application. Launch Agents also require files on disk for persistence which can also be monitored via other file monitoring applications.\n\nEnsure Launch Agent's <code> ProgramArguments </code> key pointing to executables located in the <code>/tmp</code> or <code>/shared</code> folders are in alignment with enterprise policy. Ensure all Launch Agents with the <code>RunAtLoad</code> key set to <code>true</code> are in alignment with policy. ",
+                    "x_mitre_is_subtechnique": true,
+                    "x_mitre_permissions_required": [
+                        "Administrator",
+                        "User"
+                    ],
+                    "x_mitre_platforms": [
+                        "macOS"
+                    ],
+                    "x_mitre_version": "1.3",
+                    "detailed_diff": "{\"values_changed\": {\"root['modified']\": {\"new_value\": \"2021-11-03 20:11:51.687000+00:00\", \"old_value\": \"2021-10-15 07:41:40.262000+00:00\"}, \"root['x_mitre_version']\": {\"new_value\": \"1.3\", \"old_value\": \"1.2\"}}}",
+                    "previous_version": "1.2",
+                    "version_change": "1.2 \u2192 1.3",
+                    "changelog_mitigations": {
+                        "shared": [],
+                        "new": [],
+                        "dropped": [
+                            "M1018: User Account Management"
+                        ]
+                    },
+                    "changelog_detections": {
+                        "shared": [
+                            "DS0017: Command (Command Execution)",
+                            "DS0019: Service (Service Creation)",
+                            "DS0019: Service (Service Modification)",
+                            "DS0022: File (File Creation)",
+                            "DS0022: File (File Modification)"
+                        ],
+                        "new": [],
+                        "dropped": []
+                    }
+                }
+            ],
+            "other_version_changes": [],
+            "patches": [
+                {
+                    "type": "attack-pattern",
+                    "id": "attack-pattern--106c0cf6-bf73-4601-9aa8-0945c2715ec5",
+                    "created_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "created": "2020-01-10 16:03:18.865000+00:00",
+                    "modified": "2021-11-03 20:11:52.175000+00:00",
+                    "name": "Create or Modify System Process",
+                    "description": "Adversaries may create or modify system-level processes to repeatedly execute malicious payloads as part of persistence. When operating systems boot up, they can start processes that perform background system functions. On Windows and Linux, these system processes are referred to as services. (Citation: TechNet Services) On macOS, launchd processes known as [Launch Daemon](https://attack.mitre.org/techniques/T1543/004) and [Launch Agent](https://attack.mitre.org/techniques/T1543/001) are run to finish system initialization and load user specific parameters.(Citation: AppleDocs Launch Agent Daemons) \n\nAdversaries may install new services, daemons, or agents that can be configured to execute at startup or a repeatable interval in order to establish persistence. Similarly, adversaries may modify existing services, daemons, or agents to achieve the same effect.  \n\nServices, daemons, or agents may be created with administrator privileges but executed under root/SYSTEM privileges. Adversaries may leverage this functionality to create or modify system processes in order to escalate privileges. (Citation: OSX Malware Detection).  ",
+                    "kill_chain_phases": [
+                        {
+                            "kill_chain_name": "mitre-attack",
+                            "phase_name": "persistence"
+                        },
+                        {
+                            "kill_chain_name": "mitre-attack",
+                            "phase_name": "privilege-escalation"
+                        }
+                    ],
+                    "revoked": false,
+                    "external_references": [
+                        {
+                            "source_name": "mitre-attack",
+                            "url": "https://attack.mitre.org/techniques/T1543",
+                            "external_id": "T1543"
+                        },
+                        {
+                            "source_name": "TechNet Services",
+                            "description": "Microsoft. (n.d.). Services. Retrieved June 7, 2016.",
+                            "url": "https://technet.microsoft.com/en-us/library/cc772408.aspx"
+                        },
+                        {
+                            "source_name": "AppleDocs Launch Agent Daemons",
+                            "description": "Apple. (n.d.). Creating Launch Daemons and Agents. Retrieved July 10, 2017.",
+                            "url": "https://developer.apple.com/library/content/documentation/MacOSX/Conceptual/BPSystemStartup/Chapters/CreatingLaunchdJobs.html"
+                        },
+                        {
+                            "source_name": "OSX Malware Detection",
+                            "description": "Patrick Wardle. (2016, February 29). Let's Play Doctor: Practical OS X Malware Detection & Analysis. Retrieved July 10, 2017.",
+                            "url": "https://www.synack.com/wp-content/uploads/2016/03/RSA_OSX_Malware.pdf"
+                        }
+                    ],
+                    "object_marking_refs": [
+                        "marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168"
+                    ],
+                    "x_mitre_data_sources": [
+                        "Service: Service Creation",
+                        "Service: Service Modification",
+                        "Process: Process Creation",
+                        "Process: OS API Execution",
+                        "Command: Command Execution",
+                        "Windows Registry: Windows Registry Key Creation",
+                        "Windows Registry: Windows Registry Key Modification",
+                        "File: File Creation",
+                        "File: File Modification"
+                    ],
+                    "x_mitre_detection": "Monitor for changes to system processes that do not correlate with known software, patch cycles, etc., including by comparing results against a trusted system baseline. New, benign system processes may be created during installation of new software. Data and events should not be viewed in isolation, but as part of a chain of behavior that could lead to other activities, such as network connections made for Command and Control, learning details about the environment through Discovery, and Lateral Movement.  \n\nCommand-line invocation of tools capable of modifying services may be unusual, depending on how systems are typically used in a particular environment. Look for abnormal process call trees from known services and for execution of other commands that could relate to Discovery or other adversary techniques. \n\nMonitor for changes to files associated with system-level processes.",
+                    "x_mitre_is_subtechnique": false,
+                    "x_mitre_platforms": [
+                        "Windows",
+                        "macOS",
+                        "Linux"
+                    ],
+                    "x_mitre_version": "1.0",
+                    "detailed_diff": "{\"values_changed\": {\"root['modified']\": {\"new_value\": \"2021-11-03 20:11:52.175000+00:00\", \"old_value\": \"2021-10-15 07:41:41.496000+00:00\"}}}",
+                    "previous_version": "1.0",
+                    "changelog_mitigations": {
+                        "shared": [
+                            "M1018: User Account Management",
+                            "M1022: Restrict File and Directory Permissions",
+                            "M1033: Limit Software Installation",
+                            "M1047: Audit"
+                        ],
+                        "new": [],
+                        "dropped": []
+                    },
+                    "changelog_detections": {
+                        "shared": [
+                            "DS0009: Process (OS API Execution)",
+                            "DS0009: Process (Process Creation)",
+                            "DS0017: Command (Command Execution)",
+                            "DS0019: Service (Service Creation)",
+                            "DS0019: Service (Service Modification)",
+                            "DS0022: File (File Creation)",
+                            "DS0022: File (File Modification)",
+                            "DS0024: Windows Registry (Windows Registry Key Creation)",
+                            "DS0024: Windows Registry (Windows Registry Key Modification)"
+                        ],
+                        "new": [],
+                        "dropped": []
+                    }
+                },
+                {
+                    "type": "attack-pattern",
+                    "id": "attack-pattern--4933e63b-9b77-476e-ab29-761bc5b7d15a",
+                    "created_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "created": "2021-10-05 01:15:06.293000+00:00",
+                    "modified": "2021-11-01 18:09:09.670000+00:00",
+                    "name": "Reflective Code Loading",
+                    "description": "Adversaries may reflectively load code into a process in order to conceal the execution of malicious payloads. Reflective loading involves allocating then executing payloads directly within the memory of the process, vice creating a thread or process backed by a file path on disk. Reflectively loaded payloads may be compiled binaries, anonymous files (only present in RAM), or just snubs of fileless executable code (ex: position-independent shellcode).(Citation: Introducing Donut)(Citation: S1 Custom Shellcode Tool)(Citation: Stuart ELF Memory)(Citation: 00sec Droppers)(Citation: Mandiant BYOL)\n\nReflective code injection is very similar to [Process Injection](https://attack.mitre.org/techniques/T1055) except that the \u201cinjection\u201d loads code into the processes\u2019 own memory instead of that of a separate process. Reflective loading may evade process-based detections since the execution of the arbitrary code may be masked within a legitimate or otherwise benign process. Reflectively loading payloads directly into memory may also avoid creating files or other artifacts on disk, while also enabling malware to keep these payloads encrypted (or otherwise obfuscated) until execution.(Citation: Stuart ELF Memory)(Citation: 00sec Droppers)(Citation: Intezer ACBackdoor)(Citation: S1 Old Rat New Tricks)",
+                    "kill_chain_phases": [
+                        {
+                            "kill_chain_name": "mitre-attack",
+                            "phase_name": "defense-evasion"
+                        }
+                    ],
+                    "revoked": false,
+                    "external_references": [
+                        {
+                            "source_name": "mitre-attack",
+                            "url": "https://attack.mitre.org/techniques/T1620",
+                            "external_id": "T1620"
+                        },
+                        {
+                            "source_name": "Introducing Donut",
+                            "description": "The Wover. (2019, May 9). Donut - Injecting .NET Assemblies as Shellcode. Retrieved October 4, 2021.",
+                            "url": "https://thewover.github.io/Introducing-Donut/"
+                        },
+                        {
+                            "source_name": "S1 Custom Shellcode Tool",
+                            "description": "Bunce, D. (2019, October 31). Building A Custom Tool For Shellcode Analysis. Retrieved October 4, 2021.",
+                            "url": "https://www.sentinelone.com/blog/building-a-custom-tool-for-shellcode-analysis/"
+                        },
+                        {
+                            "source_name": "Stuart ELF Memory",
+                            "description": "Stuart. (2018, March 31). In-Memory-Only ELF Execution (Without tmpfs). Retrieved October 4, 2021.",
+                            "url": "https://magisterquis.github.io/2018/03/31/in-memory-only-elf-execution.html"
+                        },
+                        {
+                            "source_name": "00sec Droppers",
+                            "description": "0x00pico. (2017, September 25). Super-Stealthy Droppers. Retrieved October 4, 2021.",
+                            "url": "https://0x00sec.org/t/super-stealthy-droppers/3715"
+                        },
+                        {
+                            "source_name": "Mandiant BYOL",
+                            "description": "Kirk, N. (2018, June 18). Bring Your Own Land (BYOL) \u2013 A Novel Red Teaming Technique. Retrieved October 4, 2021.",
+                            "url": "https://www.mandiant.com/resources/bring-your-own-land-novel-red-teaming-technique"
+                        },
+                        {
+                            "source_name": "Intezer ACBackdoor",
+                            "description": "Sanmillan, I. (2019, November 18). ACBackdoor: Analysis of a New Multiplatform Backdoor. Retrieved October 4, 2021.",
+                            "url": "https://www.intezer.com/blog/research/acbackdoor-analysis-of-a-new-multiplatform-backdoor/"
+                        },
+                        {
+                            "source_name": "S1 Old Rat New Tricks",
+                            "description": "Landry, J. (2016, April 21). Teaching an old RAT new tricks. Retrieved October 4, 2021.",
+                            "url": "https://www.sentinelone.com/blog/teaching-an-old-rat-new-tricks/"
+                        },
+                        {
+                            "source_name": "MDSec Detecting DOTNET",
+                            "description": "MDSec Research. (n.d.). Detecting and Advancing In-Memory .NET Tradecraft. Retrieved October 4, 2021.",
+                            "url": "https://www.mdsec.co.uk/2020/06/detecting-and-advancing-in-memory-net-tradecraft/"
+                        }
+                    ],
+                    "object_marking_refs": [
+                        "marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168"
+                    ],
+                    "x_mitre_contributors": [
+                        "Jo\u00e3o Paulo de A. Filho, @Hug1nN__",
+                        "Joas Antonio dos Santos, @C0d3Cr4zy",
+                        "Shlomi Salem, SentinelOne",
+                        "Lior Ribak, SentinelOne",
+                        "Rex Guo, @Xiaofei_REX, Confluera"
+                    ],
+                    "x_mitre_data_sources": [
+                        "Script: Script Execution",
+                        "Process: OS API Execution",
+                        "Module: Module Load"
+                    ],
+                    "x_mitre_defense_bypassed": [
+                        "Application control",
+                        "Anti-virus"
+                    ],
+                    "x_mitre_detection": "Monitor for code artifacts associated with reflectively loading code, such as the abuse of .NET functions such as <code>Assembly.Load()</code> and [Native API](https://attack.mitre.org/techniques/T1106) functions such as <code>CreateThread()</code>, <code>memfd_create()</code>, <code>execve()</code>, and/or <code>execveat()</code>.(Citation: 00sec Droppers)(Citation: S1 Old Rat New Tricks)\n\nMonitor for artifacts of abnormal process execution. For example, a common signature related to reflective code loading on Windows is mechanisms related to the .NET Common Language Runtime (CLR) -- such as mscor.dll, mscoree.dll, and clr.dll -- loading into abnormal processes (such as notepad.exe). Similarly, AMSI / ETW traces can be used to identify signs of arbitrary code execution from within the memory of potentially compromised processes.(Citation: MDSec Detecting DOTNET)(Citation: Introducing Donut)\n\nAnalyze process behavior to determine if a process is performing actions it usually does not, such as opening network connections, reading files, or other suspicious actions that could relate to post-compromise behavior. ",
+                    "x_mitre_is_subtechnique": false,
+                    "x_mitre_permissions_required": [
+                        "User"
+                    ],
+                    "x_mitre_platforms": [
+                        "macOS",
+                        "Linux",
+                        "Windows"
+                    ],
+                    "x_mitre_version": "1.0",
+                    "detailed_diff": "{\"values_changed\": {\"root['modified']\": {\"new_value\": \"2021-11-01 18:09:09.670000+00:00\", \"old_value\": \"2021-10-17 15:13:55.615000+00:00\"}, \"root['x_mitre_contributors'][3]\": {\"new_value\": \"Lior Ribak, SentinelOne\", \"old_value\": \"Lior Ribak , SentinelOne\"}}}",
+                    "previous_version": "1.0",
+                    "changelog_mitigations": {
+                        "shared": [],
+                        "new": [],
+                        "dropped": []
+                    },
+                    "changelog_detections": {
+                        "shared": [
+                            "DS0009: Process (OS API Execution)",
+                            "DS0011: Module (Module Load)",
+                            "DS0012: Script (Script Execution)"
+                        ],
+                        "new": [],
+                        "dropped": []
+                    }
+                }
+            ],
+            "revocations": [],
+            "deprecations": [],
+            "deletions": []
+        },
+        "software": {
+            "additions": [],
+            "major_version_changes": [],
+            "minor_version_changes": [],
+            "other_version_changes": [],
+            "patches": [
+                {
+                    "type": "malware",
+                    "id": "malware--67fc172a-36fa-4a35-88eb-4ba730ed52a6",
+                    "created_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "created": "2017-05-31 21:32:15.994000+00:00",
+                    "modified": "2021-11-01 21:12:14.638000+00:00",
+                    "name": "BS2005",
+                    "description": "[BS2005](https://attack.mitre.org/software/S0014) is malware that was used by [Ke3chang](https://attack.mitre.org/groups/G0004) in spearphishing campaigns since at least 2011. (Citation: Mandiant Operation Ke3chang November 2014)",
+                    "revoked": false,
+                    "labels": [
+                        "malware"
+                    ],
+                    "external_references": [
+                        {
+                            "source_name": "mitre-attack",
+                            "url": "https://attack.mitre.org/software/S0014",
+                            "external_id": "S0014"
+                        },
+                        {
+                            "source_name": "Mandiant Operation Ke3chang November 2014",
+                            "description": "Villeneuve, N., Bennett, J. T., Moran, N., Haq, T., Scott, M., & Geers, K. (2014). OPERATION \u201cKE3CHANG\u201d: Targeted Attacks Against Ministries of Foreign Affairs. Retrieved November 12, 2014.",
+                            "url": "https://www.mandiant.com/resources/operation-ke3chang-targeted-attacks-against-ministries-of-foreign-affairs"
+                        }
+                    ],
+                    "object_marking_refs": [
+                        "marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168"
+                    ],
+                    "x_mitre_aliases": [
+                        "BS2005"
+                    ],
+                    "x_mitre_platforms": [
+                        "Windows"
+                    ],
+                    "x_mitre_version": "1.1",
+                    "detailed_diff": "{\"values_changed\": {\"root['modified']\": {\"new_value\": \"2021-11-01 21:12:14.638000+00:00\", \"old_value\": \"2020-03-30 15:02:35.427000+00:00\"}, \"root['description']\": {\"new_value\": \"[BS2005](https://attack.mitre.org/software/S0014) is malware that was used by [Ke3chang](https://attack.mitre.org/groups/G0004) in spearphishing campaigns since at least 2011. (Citation: Mandiant Operation Ke3chang November 2014)\", \"old_value\": \"[BS2005](https://attack.mitre.org/software/S0014) is malware that was used by [Ke3chang](https://attack.mitre.org/groups/G0004) in spearphishing campaigns since at least 2011. (Citation: Villeneuve et al 2014)\"}, \"root['external_references'][1]['source_name']\": {\"new_value\": \"Mandiant Operation Ke3chang November 2014\", \"old_value\": \"Villeneuve et al 2014\"}, \"root['external_references'][1]['url']\": {\"new_value\": \"https://www.mandiant.com/resources/operation-ke3chang-targeted-attacks-against-ministries-of-foreign-affairs\", \"old_value\": \"https://www.fireeye.com/content/dam/fireeye-www/global/en/current-threats/pdfs/wp-operation-ke3chang.pdf\"}}}",
+                    "previous_version": "1.1",
+                    "description_change_table": "\n    <table class=\"diff\" id=\"difflib_chg_to363__top\"\n           cellspacing=\"0\" cellpadding=\"0\" rules=\"groups\" >\n        <colgroup></colgroup> <colgroup></colgroup> <colgroup></colgroup>\n        <colgroup></colgroup> <colgroup></colgroup> <colgroup></colgroup>\n        <thead><tr><th class=\"diff_next\"><br /></th><th colspan=\"2\" class=\"diff_header\">Old Description</th><th class=\"diff_next\"><br /></th><th colspan=\"2\" class=\"diff_header\">New Description</th></tr></thead>\n        <tbody>\n            <tr><td class=\"diff_next\" id=\"difflib_chg_to363__0\"><a href=\"#difflib_chg_to363__top\">t</a></td><td class=\"diff_header\" id=\"from363_1\">1</td><td nowrap=\"nowrap\">[BS2005](https://attack.mitre.org/software/S0014)&nbsp;is&nbsp;malware</td><td class=\"diff_next\"><a href=\"#difflib_chg_to363__top\">t</a></td><td class=\"diff_header\" id=\"to363_1\">1</td><td nowrap=\"nowrap\">[BS2005](https://attack.mitre.org/software/S0014)&nbsp;is&nbsp;malware</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">&nbsp;that&nbsp;was&nbsp;used&nbsp;by&nbsp;[Ke3chang](https://attack.mitre.org/groups</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">&nbsp;that&nbsp;was&nbsp;used&nbsp;by&nbsp;[Ke3chang](https://attack.mitre.org/groups</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">/G0004)&nbsp;in&nbsp;spearphishing&nbsp;campaigns&nbsp;since&nbsp;at&nbsp;least&nbsp;2011.&nbsp;(Cit</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">/G0004)&nbsp;in&nbsp;spearphishing&nbsp;campaigns&nbsp;since&nbsp;at&nbsp;least&nbsp;2011.&nbsp;(Cit</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">ation:&nbsp;<span class=\"diff_chg\">Villeneu</span>ve<span class=\"diff_chg\">&nbsp;et&nbsp;al</span>&nbsp;2014)</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">ation:&nbsp;<span class=\"diff_chg\">Mandiant&nbsp;Operation&nbsp;Ke3chang&nbsp;No</span>ve<span class=\"diff_chg\">mber</span>&nbsp;2014)</td></tr>\n        </tbody>\n    </table>"
+                },
+                {
+                    "type": "malware",
+                    "id": "malware--9abdda30-08e0-4ab1-9cf0-d447654c6de9",
+                    "created_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "created": "2021-08-24 18:56:35.507000+00:00",
+                    "modified": "2021-10-25 17:16:21.187000+00:00",
+                    "name": "Kobalos",
+                    "description": "[Kobalos](https://attack.mitre.org/software/S0641) is a multi-platform backdoor that can be used against Linux, FreeBSD, and Solaris. [Kobalos](https://attack.mitre.org/software/S0641) has been deployed against high profile targets, including high-performance computers, academic servers, an endpoint security vendor, and a large internet service provider; it has been found in Europe, North America, and Asia. [Kobalos](https://attack.mitre.org/software/S0641) was first identified in late 2019.(Citation: ESET Kobalos Feb 2021)(Citation: ESET Kobalos Jan 2021)",
+                    "revoked": false,
+                    "labels": [
+                        "malware"
+                    ],
+                    "external_references": [
+                        {
+                            "source_name": "mitre-attack",
+                            "url": "https://attack.mitre.org/software/S0641",
+                            "external_id": "S0641"
+                        },
+                        {
+                            "source_name": "Kobalos",
+                            "description": "(Citation: ESET Kobalos Feb 2021)(Citation: ESET Kobalos Jan 2021)"
+                        },
+                        {
+                            "source_name": "ESET Kobalos Feb 2021",
+                            "description": "M.Leveille, M., Sanmillan, I. (2021, February 2). Kobalos \u2013 A complex Linux threat to high performance computing infrastructure. Retrieved August 24, 2021.",
+                            "url": "https://www.welivesecurity.com/2021/02/02/kobalos-complex-linux-threat-high-performance-computing-infrastructure/"
+                        },
+                        {
+                            "source_name": "ESET Kobalos Jan 2021",
+                            "description": "M.Leveille, M., Sanmillan, I. (2021, January). A WILD KOBALOS APPEARS Tricksy Linux malware goes after HPCs. Retrieved August 24, 2021.",
+                            "url": "https://www.welivesecurity.com/wp-content/uploads/2021/01/ESET_Kobalos.pdf"
+                        }
+                    ],
+                    "object_marking_refs": [
+                        "marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168"
+                    ],
+                    "x_mitre_aliases": [
+                        "Kobalos"
+                    ],
+                    "x_mitre_contributors": [
+                        "Manikantan Srinivasan, NEC Corporation India",
+                        "Pooja Natarajan, NEC Corporation India",
+                        "Hiroki Nagahama, NEC Corporation"
+                    ],
+                    "x_mitre_platforms": [
+                        "Linux"
+                    ],
+                    "x_mitre_version": "1.0",
+                    "detailed_diff": "{\"dictionary_item_added\": {\"root['x_mitre_contributors']\": [\"Manikantan Srinivasan, NEC Corporation India\", \"Pooja Natarajan, NEC Corporation India\", \"Hiroki Nagahama, NEC Corporation\"]}, \"values_changed\": {\"root['modified']\": {\"new_value\": \"2021-10-25 17:16:21.187000+00:00\", \"old_value\": \"2021-10-19 00:09:52.008000+00:00\"}}}",
+                    "previous_version": "1.0"
+                },
+                {
+                    "type": "malware",
+                    "id": "malware--532c6004-b1e8-415b-9516-f7c14ba783b1",
+                    "created_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "created": "2021-09-28 17:48:36.547000+00:00",
+                    "modified": "2021-10-25 14:24:59.957000+00:00",
+                    "name": "MarkiRAT",
+                    "description": "[MarkiRAT](https://attack.mitre.org/software/S0652) is a remote access Trojan (RAT) compiled with Visual Studio that has been used by [Ferocious Kitten](https://attack.mitre.org/groups/G0137) since at least 2015.(Citation: Kaspersky Ferocious Kitten Jun 2021)",
+                    "revoked": false,
+                    "labels": [
+                        "malware"
+                    ],
+                    "external_references": [
+                        {
+                            "source_name": "mitre-attack",
+                            "url": "https://attack.mitre.org/software/S0652",
+                            "external_id": "S0652"
+                        },
+                        {
+                            "source_name": "Kaspersky Ferocious Kitten Jun 2021",
+                            "description": "GReAT. (2021, June 16). Ferocious Kitten: 6 Years of Covert Surveillance in Iran. Retrieved September 22, 2021.",
+                            "url": "https://securelist.com/ferocious-kitten-6-years-of-covert-surveillance-in-iran/102806/"
+                        }
+                    ],
+                    "object_marking_refs": [
+                        "marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168"
+                    ],
+                    "x_mitre_aliases": [
+                        "MarkiRAT"
+                    ],
+                    "x_mitre_contributors": [
+                        "Pooja Natarajan, NEC Corporation India",
+                        "Manikantan Srinivasan, NEC Corporation India",
+                        "Hiroki Nagahama, NEC Corporation"
+                    ],
+                    "x_mitre_platforms": [
+                        "Windows"
+                    ],
+                    "x_mitre_version": "1.0",
+                    "detailed_diff": "{\"values_changed\": {\"root['modified']\": {\"new_value\": \"2021-10-25 14:24:59.957000+00:00\", \"old_value\": \"2021-10-15 17:18:54.363000+00:00\"}, \"root['x_mitre_contributors'][2]\": {\"new_value\": \"Hiroki Nagahama, NEC Corporation\", \"old_value\": \"Nagahama Hiroki, NEC Corporation\"}}}",
+                    "previous_version": "1.0"
+                }
+            ],
+            "revocations": [],
+            "deprecations": [
+                {
+                    "type": "malware",
+                    "id": "malware--93ae2edf-a598-4d2d-acd7-bcae0c021923",
+                    "created_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "created": "2021-01-11 21:27:41.573000+00:00",
+                    "modified": "2021-10-27 20:47:40.880000+00:00",
+                    "name": "TRITON",
+                    "description": "This entry was deprecated as it was inadvertently added to Enterprise; a similar Software entry was created for ATT&CK for ICS.\n\n[TRITON](https://attack.mitre.org/software/S0609) is an attack framework built to interact with Triconex Safety Instrumented System (SIS) controllers. [TRITON](https://attack.mitre.org/software/S0609) was deployed against at least one target in the Middle East. (Citation: FireEye TRITON 2017)(Citation: FireEye TRITON 2018)(Citation: Dragos TRISIS)(Citation: CISA HatMan)(Citation: FireEye TEMP.Veles 2018)",
+                    "revoked": false,
+                    "labels": [
+                        "malware"
+                    ],
+                    "external_references": [
+                        {
+                            "source_name": "mitre-attack",
+                            "url": "https://attack.mitre.org/software/S0609",
+                            "external_id": "S0609"
+                        },
+                        {
+                            "source_name": "FireEye TRITON 2017",
+                            "description": "Johnson, B, et. al. (2017, December 14). Attackers Deploy New ICS Attack Framework \"TRITON\" and Cause Operational Disruption to Critical Infrastructure. Retrieved January 6, 2021.",
+                            "url": "https://www.fireeye.com/blog/threat-research/2017/12/attackers-deploy-new-ics-attack-framework-triton.html"
+                        },
+                        {
+                            "source_name": "FireEye TRITON 2018",
+                            "description": "Miller, S. Reese, E. (2018, June 7). A Totally Tubular Treatise on TRITON and TriStation. Retrieved January 6, 2021.",
+                            "url": "https://www.fireeye.com/blog/threat-research/2018/06/totally-tubular-treatise-on-TRITON-and-tristation.html"
+                        },
+                        {
+                            "source_name": "Dragos TRISIS",
+                            "description": "Dragos. (2017, December 13). TRISIS Malware Analysis of Safety System Targeted Malware. Retrieved January 6, 2021.",
+                            "url": "https://www.dragos.com/wp-content/uploads/TRISIS-01.pdf"
+                        },
+                        {
+                            "source_name": "CISA HatMan",
+                            "description": "CISA. (2019, February 27). MAR-17-352-01 HatMan-Safety System Targeted Malware. Retrieved January 6, 2021.",
+                            "url": "https://us-cert.cisa.gov/sites/default/files/documents/MAR-17-352-01%20HatMan%20-%20Safety%20System%20Targeted%20Malware%20%28Update%20B%29.pdf"
+                        },
+                        {
+                            "source_name": "FireEye TEMP.Veles 2018",
+                            "description": "FireEye Intelligence . (2018, October 23). TRITON Attribution: Russian Government-Owned Lab Most Likely Built Custom Intrusion Tools for TRITON Attackers. Retrieved April 16, 2019.",
+                            "url": "https://www.fireeye.com/blog/threat-research/2018/10/triton-attribution-russian-government-owned-lab-most-likely-built-tools.html "
+                        }
+                    ],
+                    "object_marking_refs": [
+                        "marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168"
+                    ],
+                    "x_mitre_aliases": [
+                        "TRITON",
+                        "HatMan",
+                        "TRISIS"
+                    ],
+                    "x_mitre_deprecated": true,
+                    "x_mitre_platforms": [
+                        "Windows"
+                    ],
+                    "x_mitre_version": "1.0",
+                    "detailed_diff": "{\"dictionary_item_added\": {\"root['x_mitre_deprecated']\": true}, \"values_changed\": {\"root['modified']\": {\"new_value\": \"2021-10-27 20:47:40.880000+00:00\", \"old_value\": \"2021-05-04 19:10:43.045000+00:00\"}, \"root['description']\": {\"new_value\": \"This entry was deprecated as it was inadvertently added to Enterprise; a similar Software entry was created for ATT&CK for ICS.\\n\\n[TRITON](https://attack.mitre.org/software/S0609) is an attack framework built to interact with Triconex Safety Instrumented System (SIS) controllers. [TRITON](https://attack.mitre.org/software/S0609) was deployed against at least one target in the Middle East. (Citation: FireEye TRITON 2017)(Citation: FireEye TRITON 2018)(Citation: Dragos TRISIS)(Citation: CISA HatMan)(Citation: FireEye TEMP.Veles 2018)\", \"old_value\": \"[TRITON](https://attack.mitre.org/software/S0609) is an attack framework built to interact with Triconex Safety Instrumented System (SIS) controllers. [TRITON](https://attack.mitre.org/software/S0609) was deployed against at least one target in the Middle East. (Citation: FireEye TRITON 2017)(Citation: FireEye TRITON 2018)(Citation: Dragos TRISIS)(Citation: CISA HatMan)(Citation: FireEye TEMP.Veles 2018)\", \"diff\": \"--- \\n+++ \\n@@ -1 +1,3 @@\\n+This entry was deprecated as it was inadvertently added to Enterprise; a similar Software entry was created for ATT&CK for ICS.\\n+\\n [TRITON](https://attack.mitre.org/software/S0609) is an attack framework built to interact with Triconex Safety Instrumented System (SIS) controllers. [TRITON](https://attack.mitre.org/software/S0609) was deployed against at least one target in the Middle East. (Citation: FireEye TRITON 2017)(Citation: FireEye TRITON 2018)(Citation: Dragos TRISIS)(Citation: CISA HatMan)(Citation: FireEye TEMP.Veles 2018)\"}}}"
+                }
+            ],
+            "deletions": []
+        },
+        "groups": {
+            "additions": [],
+            "major_version_changes": [],
+            "minor_version_changes": [],
+            "other_version_changes": [],
+            "patches": [
+                {
+                    "type": "intrusion-set",
+                    "id": "intrusion-set--6566aac9-dad8-4332-ae73-20c23bad7f02",
+                    "created_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "created": "2021-09-28 17:41:12.950000+00:00",
+                    "modified": "2021-10-25 14:28:10.337000+00:00",
+                    "name": "Ferocious Kitten",
+                    "description": "[Ferocious Kitten](https://attack.mitre.org/groups/G0137) is a threat group that has primarily targeted Persian-speaking individuals in Iran since at least 2015.(Citation: Kaspersky Ferocious Kitten Jun 2021)",
+                    "aliases": [
+                        "Ferocious Kitten"
+                    ],
+                    "revoked": false,
+                    "external_references": [
+                        {
+                            "source_name": "mitre-attack",
+                            "url": "https://attack.mitre.org/groups/G0137",
+                            "external_id": "G0137"
+                        },
+                        {
+                            "source_name": "Kaspersky Ferocious Kitten Jun 2021",
+                            "description": "GReAT. (2021, June 16). Ferocious Kitten: 6 Years of Covert Surveillance in Iran. Retrieved September 22, 2021.",
+                            "url": "https://securelist.com/ferocious-kitten-6-years-of-covert-surveillance-in-iran/102806/"
+                        }
+                    ],
+                    "object_marking_refs": [
+                        "marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168"
+                    ],
+                    "x_mitre_contributors": [
+                        "Pooja Natarajan, NEC Corporation India",
+                        "Manikantan Srinivasan, NEC Corporation India",
+                        "Hiroki Nagahama, NEC Corporation"
+                    ],
+                    "x_mitre_version": "1.0",
+                    "detailed_diff": "{\"values_changed\": {\"root['modified']\": {\"new_value\": \"2021-10-25 14:28:10.337000+00:00\", \"old_value\": \"2021-10-15 16:47:52.864000+00:00\"}, \"root['x_mitre_contributors'][2]\": {\"new_value\": \"Hiroki Nagahama, NEC Corporation\", \"old_value\": \"Nagahama Hiroki, NEC Corporation\"}}}",
+                    "previous_version": "1.0"
+                },
+                {
+                    "type": "intrusion-set",
+                    "id": "intrusion-set--6713ab67-e25b-49cc-808d-2b36d4fbc35c",
+                    "created_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "created": "2017-05-31 21:31:47.177000+00:00",
+                    "modified": "2021-11-01 21:12:15.839000+00:00",
+                    "name": "Ke3chang",
+                    "description": "[Ke3chang](https://attack.mitre.org/groups/G0004) is a threat group attributed to actors operating out of China. [Ke3chang](https://attack.mitre.org/groups/G0004) has targeted several industries, including oil, government, military, and more.(Citation: Mandiant Operation Ke3chang November 2014)(Citation: NCC Group APT15 Alive and Strong)(Citation: APT15 Intezer June 2018)",
+                    "aliases": [
+                        "Ke3chang",
+                        "APT15",
+                        "Mirage",
+                        "Vixen Panda",
+                        "GREF",
+                        "Playful Dragon",
+                        "RoyalAPT"
+                    ],
+                    "revoked": false,
+                    "external_references": [
+                        {
+                            "source_name": "mitre-attack",
+                            "url": "https://attack.mitre.org/groups/G0004",
+                            "external_id": "G0004"
+                        },
+                        {
+                            "source_name": "Ke3chang",
+                            "description": "(Citation: Villeneuve et al 2014) (Citation: NCC Group APT15 Alive and Strong) (Citation: APT15 Intezer June 2018)"
+                        },
+                        {
+                            "source_name": "APT15",
+                            "description": "(Citation: NCC Group APT15 Alive and Strong)"
+                        },
+                        {
+                            "source_name": "Mirage",
+                            "description": "(Citation: NCC Group APT15 Alive and Strong)"
+                        },
+                        {
+                            "source_name": "Vixen Panda",
+                            "description": "(Citation: NCC Group APT15 Alive and Strong) (Citation: APT15 Intezer June 2018)"
+                        },
+                        {
+                            "source_name": "GREF",
+                            "description": "(Citation: NCC Group APT15 Alive and Strong)"
+                        },
+                        {
+                            "source_name": "Playful Dragon",
+                            "description": "(Citation: NCC Group APT15 Alive and Strong) (Citation: APT15 Intezer June 2018)"
+                        },
+                        {
+                            "source_name": "RoyalAPT",
+                            "description": "(Citation: APT15 Intezer June 2018)"
+                        },
+                        {
+                            "source_name": "Mandiant Operation Ke3chang November 2014",
+                            "description": "Villeneuve, N., Bennett, J. T., Moran, N., Haq, T., Scott, M., & Geers, K. (2014). OPERATION \u201cKE3CHANG\u201d: Targeted Attacks Against Ministries of Foreign Affairs. Retrieved November 12, 2014.",
+                            "url": "https://www.mandiant.com/resources/operation-ke3chang-targeted-attacks-against-ministries-of-foreign-affairs"
+                        },
+                        {
+                            "source_name": "NCC Group APT15 Alive and Strong",
+                            "description": "Smallridge, R. (2018, March 10). APT15 is alive and strong: An analysis of RoyalCli and RoyalDNS. Retrieved April 4, 2018.",
+                            "url": "https://research.nccgroup.com/2018/03/10/apt15-is-alive-and-strong-an-analysis-of-royalcli-and-royaldns/"
+                        },
+                        {
+                            "source_name": "APT15 Intezer June 2018",
+                            "description": "Rosenberg, J. (2018, June 14). MirageFox: APT15 Resurfaces With New Tools Based On Old Ones. Retrieved September 21, 2018.",
+                            "url": "https://www.intezer.com/miragefox-apt15-resurfaces-with-new-tools-based-on-old-ones/"
+                        }
+                    ],
+                    "object_marking_refs": [
+                        "marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168"
+                    ],
+                    "x_mitre_version": "1.4",
+                    "detailed_diff": "{\"values_changed\": {\"root['modified']\": {\"new_value\": \"2021-11-01 21:12:15.839000+00:00\", \"old_value\": \"2021-10-12 20:02:51.565000+00:00\"}, \"root['description']\": {\"new_value\": \"[Ke3chang](https://attack.mitre.org/groups/G0004) is a threat group attributed to actors operating out of China. [Ke3chang](https://attack.mitre.org/groups/G0004) has targeted several industries, including oil, government, military, and more.(Citation: Mandiant Operation Ke3chang November 2014)(Citation: NCC Group APT15 Alive and Strong)(Citation: APT15 Intezer June 2018)\", \"old_value\": \"[Ke3chang](https://attack.mitre.org/groups/G0004) is a threat group attributed to actors operating out of China. [Ke3chang](https://attack.mitre.org/groups/G0004) has targeted several industries, including oil, government, military, and more. (Citation: Villeneuve et al 2014) (Citation: NCC Group APT15 Alive and Strong) (Citation: APT15 Intezer June 2018)\"}, \"root['external_references'][8]['source_name']\": {\"new_value\": \"Mandiant Operation Ke3chang November 2014\", \"old_value\": \"Villeneuve et al 2014\"}, \"root['external_references'][8]['url']\": {\"new_value\": \"https://www.mandiant.com/resources/operation-ke3chang-targeted-attacks-against-ministries-of-foreign-affairs\", \"old_value\": \"https://www.fireeye.com/content/dam/fireeye-www/global/en/current-threats/pdfs/wp-operation-ke3chang.pdf\"}}}",
+                    "previous_version": "1.4",
+                    "description_change_table": "\n    <table class=\"diff\" id=\"difflib_chg_to364__top\"\n           cellspacing=\"0\" cellpadding=\"0\" rules=\"groups\" >\n        <colgroup></colgroup> <colgroup></colgroup> <colgroup></colgroup>\n        <colgroup></colgroup> <colgroup></colgroup> <colgroup></colgroup>\n        <thead><tr><th class=\"diff_next\"><br /></th><th colspan=\"2\" class=\"diff_header\">Old Description</th><th class=\"diff_next\"><br /></th><th colspan=\"2\" class=\"diff_header\">New Description</th></tr></thead>\n        <tbody>\n            <tr><td class=\"diff_next\" id=\"difflib_chg_to364__0\"><a href=\"#difflib_chg_to364__top\">t</a></td><td class=\"diff_header\" id=\"from364_1\">1</td><td nowrap=\"nowrap\">[Ke3chang](https://attack.mitre.org/groups/G0004)&nbsp;is&nbsp;a&nbsp;threa</td><td class=\"diff_next\"><a href=\"#difflib_chg_to364__top\">t</a></td><td class=\"diff_header\" id=\"to364_1\">1</td><td nowrap=\"nowrap\">[Ke3chang](https://attack.mitre.org/groups/G0004)&nbsp;is&nbsp;a&nbsp;threa</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">t&nbsp;group&nbsp;attributed&nbsp;to&nbsp;actors&nbsp;operating&nbsp;out&nbsp;of&nbsp;China.&nbsp;[Ke3cha</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">t&nbsp;group&nbsp;attributed&nbsp;to&nbsp;actors&nbsp;operating&nbsp;out&nbsp;of&nbsp;China.&nbsp;[Ke3cha</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">ng](https://attack.mitre.org/groups/G0004)&nbsp;has&nbsp;targeted&nbsp;seve</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">ng](https://attack.mitre.org/groups/G0004)&nbsp;has&nbsp;targeted&nbsp;seve</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">ral&nbsp;industries,&nbsp;including&nbsp;oil,&nbsp;government,&nbsp;military,&nbsp;and&nbsp;mor</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">ral&nbsp;industries,&nbsp;including&nbsp;oil,&nbsp;government,&nbsp;military,&nbsp;and&nbsp;mor</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">e.<span class=\"diff_chg\">&nbsp;(Citation:&nbsp;Villeneu</span>ve<span class=\"diff_chg\">&nbsp;et&nbsp;al</span>&nbsp;2014)<span class=\"diff_chg\">&nbsp;(Citation:</span>&nbsp;NCC&nbsp;Group&nbsp;AP</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">e.<span class=\"diff_chg\">(Citation:&nbsp;Mandiant&nbsp;Operation&nbsp;Ke3chang&nbsp;No</span>ve<span class=\"diff_chg\">mber</span>&nbsp;2014)<span class=\"diff_chg\">(Cita</span></td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">T15&nbsp;Alive&nbsp;and&nbsp;Strong)<span class=\"diff_chg\">&nbsp;(Citation:</span>&nbsp;APT15&nbsp;Intezer&nbsp;June&nbsp;2018)</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\"><span class=\"diff_chg\">tion:</span>&nbsp;NCC&nbsp;Group&nbsp;APT15&nbsp;Alive&nbsp;and&nbsp;Strong)<span class=\"diff_chg\">(Citation:</span>&nbsp;APT15&nbsp;Inte</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\"></td><td nowrap=\"nowrap\">&nbsp;</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">zer&nbsp;June&nbsp;2018)</td></tr>\n        </tbody>\n    </table>"
+                },
+                {
+                    "type": "intrusion-set",
+                    "id": "intrusion-set--5636b7b3-d99b-4edd-aa05-ee649c1d4ef1",
+                    "created_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "created": "2018-10-17 00:14:20.652000+00:00",
+                    "modified": "2021-10-26 22:29:09.327000+00:00",
+                    "name": "Orangeworm",
+                    "description": "[Orangeworm](https://attack.mitre.org/groups/G0071) is a group that has targeted organizations in the healthcare sector in the United States, Europe, and Asia since at least 2015, likely for the purpose of corporate espionage.(Citation: Symantec Orangeworm April 2018)",
+                    "aliases": [
+                        "Orangeworm"
+                    ],
+                    "revoked": false,
+                    "external_references": [
+                        {
+                            "source_name": "mitre-attack",
+                            "url": "https://attack.mitre.org/groups/G0071",
+                            "external_id": "G0071"
+                        },
+                        {
+                            "source_name": "Orangeworm",
+                            "description": "(Citation: Symantec Orangeworm April 2018)"
+                        },
+                        {
+                            "source_name": "Symantec Orangeworm April 2018",
+                            "description": "Symantec Security Response Attack Investigation Team. (2018, April 23). New Orangeworm attack group targets the healthcare sector in the U.S., Europe, and Asia. Retrieved May 8, 2018.",
+                            "url": "https://www.symantec.com/blogs/threat-intelligence/orangeworm-targets-healthcare-us-europe-asia"
+                        }
+                    ],
+                    "object_marking_refs": [
+                        "marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168"
+                    ],
+                    "x_mitre_contributors": [
+                        "Elger Vinicius S. Rodrigues, @elgervinicius, CYBINT Centre"
+                    ],
+                    "x_mitre_version": "1.1",
+                    "detailed_diff": "{\"values_changed\": {\"root['modified']\": {\"new_value\": \"2021-10-26 22:29:09.327000+00:00\", \"old_value\": \"2020-03-30 19:12:41.915000+00:00\"}, \"root['description']\": {\"new_value\": \"[Orangeworm](https://attack.mitre.org/groups/G0071) is a group that has targeted organizations in the healthcare sector in the United States, Europe, and Asia since at least 2015, likely for the purpose of corporate espionage.(Citation: Symantec Orangeworm April 2018)\", \"old_value\": \"[Orangeworm](https://attack.mitre.org/groups/G0071) is a group that has targeted organizations in the healthcare sector in the United States, Europe, and Asia since at least 2015, likely for the purpose of corporate espionage. (Citation: Symantec Orangeworm April 2018)\"}}}",
+                    "previous_version": "1.1",
+                    "description_change_table": "\n    <table class=\"diff\" id=\"difflib_chg_to365__top\"\n           cellspacing=\"0\" cellpadding=\"0\" rules=\"groups\" >\n        <colgroup></colgroup> <colgroup></colgroup> <colgroup></colgroup>\n        <colgroup></colgroup> <colgroup></colgroup> <colgroup></colgroup>\n        <thead><tr><th class=\"diff_next\"><br /></th><th colspan=\"2\" class=\"diff_header\">Old Description</th><th class=\"diff_next\"><br /></th><th colspan=\"2\" class=\"diff_header\">New Description</th></tr></thead>\n        <tbody>\n            <tr><td class=\"diff_next\" id=\"difflib_chg_to365__0\"><a href=\"#difflib_chg_to365__top\">t</a></td><td class=\"diff_header\" id=\"from365_1\">1</td><td nowrap=\"nowrap\">[Orangeworm](https://attack.mitre.org/groups/G0071)&nbsp;is&nbsp;a&nbsp;gro</td><td class=\"diff_next\"><a href=\"#difflib_chg_to365__top\">t</a></td><td class=\"diff_header\" id=\"to365_1\">1</td><td nowrap=\"nowrap\">[Orangeworm](https://attack.mitre.org/groups/G0071)&nbsp;is&nbsp;a&nbsp;gro</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">up&nbsp;that&nbsp;has&nbsp;targeted&nbsp;organizations&nbsp;in&nbsp;the&nbsp;healthcare&nbsp;sector&nbsp;</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">up&nbsp;that&nbsp;has&nbsp;targeted&nbsp;organizations&nbsp;in&nbsp;the&nbsp;healthcare&nbsp;sector&nbsp;</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">in&nbsp;the&nbsp;United&nbsp;States,&nbsp;Europe,&nbsp;and&nbsp;Asia&nbsp;since&nbsp;at&nbsp;least&nbsp;2015,&nbsp;</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">in&nbsp;the&nbsp;United&nbsp;States,&nbsp;Europe,&nbsp;and&nbsp;Asia&nbsp;since&nbsp;at&nbsp;least&nbsp;2015,&nbsp;</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">likely&nbsp;for&nbsp;the&nbsp;purpose&nbsp;of&nbsp;corporate&nbsp;espionage.<span class=\"diff_sub\">&nbsp;</span>(Citation:&nbsp;Sy</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">likely&nbsp;for&nbsp;the&nbsp;purpose&nbsp;of&nbsp;corporate&nbsp;espionage.(Citation:&nbsp;Sym</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">mantec&nbsp;Orangeworm&nbsp;April&nbsp;2018)</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">antec&nbsp;Orangeworm&nbsp;April&nbsp;2018)</td></tr>\n        </tbody>\n    </table>"
+                },
+                {
+                    "type": "intrusion-set",
+                    "id": "intrusion-set--17862c7d-9e60-48a0-b48e-da4dc4c3f6b0",
+                    "created_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "created": "2017-05-31 21:32:07.145000+00:00",
+                    "modified": "2021-11-02 21:07:07.755000+00:00",
+                    "name": "Patchwork",
+                    "description": "[Patchwork](https://attack.mitre.org/groups/G0040) is a cyberespionage group that was first observed in December 2015. While the group has not been definitively attributed, circumstantial evidence suggests the group may be a pro-Indian or Indian entity. [Patchwork](https://attack.mitre.org/groups/G0040) has been seen targeting industries related to diplomatic and government agencies. Much of the code used by this group was copied and pasted from online forums. [Patchwork](https://attack.mitre.org/groups/G0040) was also seen operating spearphishing campaigns targeting U.S. think tank groups in March and April of 2018. (Citation: Cymmetria Patchwork) (Citation: Symantec Patchwork) (Citation: TrendMicro Patchwork Dec 2017) (Citation: Volexity Patchwork June 2018)",
+                    "aliases": [
+                        "Patchwork",
+                        "Hangover Group",
+                        "Dropping Elephant",
+                        "Chinastrats",
+                        "MONSOON",
+                        "Operation Hangover"
+                    ],
+                    "revoked": false,
+                    "external_references": [
+                        {
+                            "source_name": "mitre-attack",
+                            "url": "https://attack.mitre.org/groups/G0040",
+                            "external_id": "G0040"
+                        },
+                        {
+                            "source_name": "Patchwork",
+                            "description": "(Citation: Cymmetria Patchwork) (Citation: Symantec Patchwork) (Citation: Securelist Dropping Elephant) (Citation: PaloAlto Patchwork Mar 2018) (Citation: Volexity Patchwork June 2018)"
+                        },
+                        {
+                            "source_name": "Hangover Group",
+                            "description": "Patchwork and the Hangover Group have both been referenced as aliases for the threat group associated with Operation Monsoon.(Citation: PaloAlto Patchwork Mar 2018)(Citation: Unit 42 BackConfig May 2020)(Citation: Forcepoint Monsoon)"
+                        },
+                        {
+                            "source_name": "Dropping Elephant",
+                            "description": "(Citation: Symantec Patchwork) (Citation: Securelist Dropping Elephant) (Citation: PaloAlto Patchwork Mar 2018) (Citation: Volexity Patchwork June 2018)"
+                        },
+                        {
+                            "source_name": "Chinastrats",
+                            "description": "(Citation: Securelist Dropping Elephant)"
+                        },
+                        {
+                            "source_name": "MONSOON",
+                            "description": "MONSOON is the name of an espionage campaign; we use it here to refer to the actor group behind the campaign. (Citation: Forcepoint Monsoon) (Citation: PaloAlto Patchwork Mar 2018)"
+                        },
+                        {
+                            "source_name": "Operation Hangover",
+                            "description": "It is believed that the actors behind Patchwork are the same actors behind Operation Hangover. (Citation: Forcepoint Monsoon) (Citation: Operation Hangover May 2013)"
+                        },
+                        {
+                            "source_name": "Cymmetria Patchwork",
+                            "description": "Cymmetria. (2016). Unveiling Patchwork - The Copy-Paste APT. Retrieved August 3, 2016.",
+                            "url": "https://web.archive.org/web/20180825085952/https://s3-us-west-2.amazonaws.com/cymmetria-blog/public/Unveiling_Patchwork.pdf"
+                        },
+                        {
+                            "source_name": "Symantec Patchwork",
+                            "description": "Hamada, J.. (2016, July 25). Patchwork cyberespionage group expands targets from governments to wide range of industries. Retrieved August 17, 2016.",
+                            "url": "http://www.symantec.com/connect/blogs/patchwork-cyberespionage-group-expands-targets-governments-wide-range-industries"
+                        },
+                        {
+                            "source_name": "TrendMicro Patchwork Dec 2017",
+                            "description": "Lunghi, D., et al. (2017, December). Untangling the Patchwork Cyberespionage Group. Retrieved July 10, 2018.",
+                            "url": "https://documents.trendmicro.com/assets/tech-brief-untangling-the-patchwork-cyberespionage-group.pdf"
+                        },
+                        {
+                            "source_name": "Volexity Patchwork June 2018",
+                            "description": "Meltzer, M, et al. (2018, June 07). Patchwork APT Group Targets US Think Tanks. Retrieved July 16, 2018.",
+                            "url": "https://www.volexity.com/blog/2018/06/07/patchwork-apt-group-targets-us-think-tanks/"
+                        },
+                        {
+                            "source_name": "Securelist Dropping Elephant",
+                            "description": "Kaspersky Lab's Global Research & Analysis Team. (2016, July 8). The Dropping Elephant \u2013 aggressive cyber-espionage in the Asian region. Retrieved August 3, 2016.",
+                            "url": "https://securelist.com/the-dropping-elephant-actor/75328/"
+                        },
+                        {
+                            "source_name": "PaloAlto Patchwork Mar 2018",
+                            "description": "Levene, B. et al.. (2018, March 7). Patchwork Continues to Deliver BADNEWS to the Indian Subcontinent. Retrieved March 31, 2018.",
+                            "url": "https://researchcenter.paloaltonetworks.com/2018/03/unit42-patchwork-continues-deliver-badnews-indian-subcontinent/"
+                        },
+                        {
+                            "source_name": "Unit 42 BackConfig May 2020",
+                            "description": "Hinchliffe, A. and Falcone, R. (2020, May 11). Updated BackConfig Malware Targeting Government and Military Organizations in South Asia. Retrieved June 17, 2020.",
+                            "url": "https://unit42.paloaltonetworks.com/updated-backconfig-malware-targeting-government-and-military-organizations/"
+                        },
+                        {
+                            "source_name": "Forcepoint Monsoon",
+                            "description": "Settle, A., et al. (2016, August 8). MONSOON - Analysis Of An APT Campaign. Retrieved September 22, 2016.",
+                            "url": "https://www.forcepoint.com/sites/default/files/resources/files/forcepoint-security-labs-monsoon-analysis-report.pdf"
+                        },
+                        {
+                            "source_name": "Operation Hangover May 2013",
+                            "description": "Fagerland, S., et al. (2013, May). Operation Hangover: Unveiling an Indian Cyberattack Infrastructure. Retrieved September 26, 2016.",
+                            "url": "http://enterprise-manage.norman.c.bitbit.net/resources/files/Unveiling_an_Indian_Cyberattack_Infrastructure.pdf"
+                        }
+                    ],
+                    "object_marking_refs": [
+                        "marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168"
+                    ],
+                    "x_mitre_version": "1.4",
+                    "detailed_diff": "{\"values_changed\": {\"root['modified']\": {\"new_value\": \"2021-11-02 21:07:07.755000+00:00\", \"old_value\": \"2021-10-12 21:55:09.686000+00:00\"}, \"root['external_references'][7]['url']\": {\"new_value\": \"https://web.archive.org/web/20180825085952/https://s3-us-west-2.amazonaws.com/cymmetria-blog/public/Unveiling_Patchwork.pdf\", \"old_value\": \"https://s3-us-west-2.amazonaws.com/cymmetria-blog/public/Unveiling_Patchwork.pdf\"}}}",
+                    "previous_version": "1.4"
+                },
+                {
+                    "type": "intrusion-set",
+                    "id": "intrusion-set--e44e0985-bc65-4a8f-b578-211c858128e3",
+                    "created_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "created": "2021-09-02 15:14:33.738000+00:00",
+                    "modified": "2021-10-25 17:19:00.720000+00:00",
+                    "name": "Transparent Tribe",
+                    "description": "[Transparent Tribe](https://attack.mitre.org/groups/G0134) is a suspected Pakistan-based threat group that has been active since at least 2013, primarily targeting diplomatic, defense, and research organizations in India and Afghanistan.(Citation: Proofpoint Operation Transparent Tribe March 2016)(Citation: Kaspersky Transparent Tribe August 2020)(Citation: Talos Transparent Tribe May 2021)",
+                    "aliases": [
+                        "Transparent Tribe",
+                        "COPPER FIELDSTONE",
+                        "APT36",
+                        "Mythic Leopard",
+                        "ProjectM"
+                    ],
+                    "revoked": false,
+                    "external_references": [
+                        {
+                            "source_name": "mitre-attack",
+                            "url": "https://attack.mitre.org/groups/G0134",
+                            "external_id": "G0134"
+                        },
+                        {
+                            "source_name": "COPPER FIELDSTONE",
+                            "description": "(Citation: Secureworks COPPER FIELDSTONE Profile)"
+                        },
+                        {
+                            "source_name": "APT36",
+                            "description": "(Citation: Talos Transparent Tribe May 2021)"
+                        },
+                        {
+                            "source_name": "Mythic Leopard",
+                            "description": "(Citation: Crowdstrike Mythic Leopard Profile)(Citation: Kaspersky Transparent Tribe August 2020)(Citation: Talos Transparent Tribe May 2021)"
+                        },
+                        {
+                            "source_name": "ProjectM",
+                            "description": "(Citation: Unit 42 ProjectM March 2016)(Citation: Kaspersky Transparent Tribe August 2020)"
+                        },
+                        {
+                            "source_name": "Proofpoint Operation Transparent Tribe March 2016",
+                            "description": "Huss, D. (2016, March 1). Operation Transparent Tribe. Retrieved June 8, 2016.",
+                            "url": "https://www.proofpoint.com/sites/default/files/proofpoint-operation-transparent-tribe-threat-insight-en.pdf"
+                        },
+                        {
+                            "source_name": "Kaspersky Transparent Tribe August 2020",
+                            "description": "Dedola, G. (2020, August 20). Transparent Tribe: Evolution analysis, part 1. Retrieved September 2, 2021.",
+                            "url": "https://securelist.com/transparent-tribe-part-1/98127/"
+                        },
+                        {
+                            "source_name": "Talos Transparent Tribe May 2021",
+                            "description": "Malhotra, A. et al. (2021, May 13). Transparent Tribe APT expands its Windows malware arsenal. Retrieved September 2, 2021.",
+                            "url": "https://blog.talosintelligence.com/2021/05/transparent-tribe-infra-and-targeting.html"
+                        },
+                        {
+                            "source_name": "Secureworks COPPER FIELDSTONE Profile",
+                            "description": "Secureworks. (n.d.). COPPER FIELDSTONE. Retrieved October 6, 2021.",
+                            "url": "https://www.secureworks.com/research/threat-profiles/copper-fieldstone"
+                        },
+                        {
+                            "source_name": "Crowdstrike Mythic Leopard Profile",
+                            "description": "Crowdstrike. (n.d.). Mythic Leopard. Retrieved October 6, 2021.",
+                            "url": "https://adversary.crowdstrike.com/en-US/adversary/mythic-leopard/"
+                        },
+                        {
+                            "source_name": "Unit 42 ProjectM March 2016",
+                            "description": "Falcone, R. and Conant S. (2016, March 25). ProjectM: Link Found Between Pakistani Actor and Operation Transparent Tribe. Retrieved September 2, 2021.",
+                            "url": "https://unit42.paloaltonetworks.com/unit42-projectm-link-found-between-pakistani-actor-and-operation-transparent-tribe/"
+                        }
+                    ],
+                    "object_marking_refs": [
+                        "marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168"
+                    ],
+                    "x_mitre_contributors": [
+                        "Manikantan Srinivasan, NEC Corporation India",
+                        "Pooja Natarajan, NEC Corporation India",
+                        "Hiroki Nagahama, NEC Corporation"
+                    ],
+                    "x_mitre_version": "1.0",
+                    "detailed_diff": "{\"dictionary_item_added\": {\"root['x_mitre_contributors']\": [\"Manikantan Srinivasan, NEC Corporation India\", \"Pooja Natarajan, NEC Corporation India\", \"Hiroki Nagahama, NEC Corporation\"]}, \"values_changed\": {\"root['modified']\": {\"new_value\": \"2021-10-25 17:19:00.720000+00:00\", \"old_value\": \"2021-10-15 19:27:15.500000+00:00\"}}}",
+                    "previous_version": "1.0"
+                },
+                {
+                    "type": "intrusion-set",
+                    "id": "intrusion-set--c5947e1c-1cbc-434c-94b8-27c7e3be0fff",
+                    "created_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "created": "2017-05-31 21:32:08.682000+00:00",
+                    "modified": "2021-11-05 15:59:50.451000+00:00",
+                    "name": "Winnti Group",
+                    "description": "[Winnti Group](https://attack.mitre.org/groups/G0044) is a threat group with Chinese origins that has been active since at least 2010. The group has heavily targeted the gaming industry, but it has also expanded the scope of its targeting. (Citation: Kaspersky Winnti April 2013) (Citation: Kaspersky Winnti June 2015) (Citation: Novetta Winnti April 2015) Some reporting suggests a number of other groups, including [Axiom](https://attack.mitre.org/groups/G0001), [APT17](https://attack.mitre.org/groups/G0025), and [Ke3chang](https://attack.mitre.org/groups/G0004), are closely linked to [Winnti Group](https://attack.mitre.org/groups/G0044). (Citation: 401 TRG Winnti Umbrella May 2018)",
+                    "aliases": [
+                        "Winnti Group",
+                        "Blackfly"
+                    ],
+                    "revoked": false,
+                    "external_references": [
+                        {
+                            "source_name": "mitre-attack",
+                            "url": "https://attack.mitre.org/groups/G0044",
+                            "external_id": "G0044"
+                        },
+                        {
+                            "source_name": "Winnti Group",
+                            "description": "(Citation: Kaspersky Winnti April 2013) (Citation: Kaspersky Winnti June 2015)"
+                        },
+                        {
+                            "source_name": "Blackfly",
+                            "description": "(Citation: Symantec Suckfly March 2016)"
+                        },
+                        {
+                            "source_name": "Kaspersky Winnti April 2013",
+                            "description": "Kaspersky Lab's Global Research and Analysis Team. (2013, April 11). Winnti. More than just a game. Retrieved February 8, 2017.",
+                            "url": "https://securelist.com/winnti-more-than-just-a-game/37029/"
+                        },
+                        {
+                            "source_name": "Kaspersky Winnti June 2015",
+                            "description": "Tarakanov, D. (2015, June 22). Games are over: Winnti is now targeting pharmaceutical companies. Retrieved January 14, 2016.",
+                            "url": "https://securelist.com/games-are-over/70991/"
+                        },
+                        {
+                            "source_name": "Novetta Winnti April 2015",
+                            "description": "Novetta Threat Research Group. (2015, April 7). Winnti Analysis. Retrieved February 8, 2017.",
+                            "url": "http://www.novetta.com/wp-content/uploads/2015/04/novetta_winntianalysis.pdf"
+                        },
+                        {
+                            "source_name": "401 TRG Winnti Umbrella May 2018",
+                            "description": "Hegel, T. (2018, May 3). Burning Umbrella: An Intelligence Report on the Winnti Umbrella and Associated State-Sponsored Attackers. Retrieved July 8, 2018.",
+                            "url": "https://401trg.github.io/pages/burning-umbrella.html"
+                        },
+                        {
+                            "source_name": "Symantec Suckfly March 2016",
+                            "description": "DiMaggio, J.. (2016, March 15). Suckfly: Revealing the secret life of your code signing certificates. Retrieved August 3, 2016.",
+                            "url": "http://www.symantec.com/connect/blogs/suckfly-revealing-secret-life-your-code-signing-certificates"
+                        }
+                    ],
+                    "object_marking_refs": [
+                        "marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168"
+                    ],
+                    "x_mitre_contributors": [
+                        "Edward Millington"
+                    ],
+                    "x_mitre_version": "1.1",
+                    "detailed_diff": "{\"values_changed\": {\"root['modified']\": {\"new_value\": \"2021-11-05 15:59:50.451000+00:00\", \"old_value\": \"2020-08-24 15:01:01.939000+00:00\"}, \"root['external_references'][6]['url']\": {\"new_value\": \"https://401trg.github.io/pages/burning-umbrella.html\", \"old_value\": \"https://401trg.com/burning-umbrella/\"}}}",
+                    "previous_version": "1.1"
+                }
+            ],
+            "revocations": [],
+            "deprecations": [],
+            "deletions": []
+        },
+        "campaigns": {
+            "additions": [],
+            "major_version_changes": [],
+            "minor_version_changes": [],
+            "other_version_changes": [],
+            "patches": [],
+            "revocations": [],
+            "deprecations": [],
+            "deletions": []
+        },
+        "mitigations": {
+            "additions": [],
+            "major_version_changes": [],
+            "minor_version_changes": [],
+            "other_version_changes": [],
+            "patches": [],
+            "revocations": [],
+            "deprecations": [],
+            "deletions": []
+        },
+        "datasources": {
+            "additions": [],
+            "major_version_changes": [],
+            "minor_version_changes": [],
+            "other_version_changes": [],
+            "patches": [
+                {
+                    "object_marking_refs": [
+                        "marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168"
+                    ],
+                    "modified": "2021-11-10T09:30:48.693951Z",
+                    "name": "Active Directory",
+                    "x_mitre_version": "1.0",
+                    "created_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "type": "x-mitre-data-source",
+                    "x_mitre_platforms": [
+                        "Windows",
+                        "Azure AD"
+                    ],
+                    "id": "x-mitre-data-source--d6188aac-17db-4861-845f-57c369f9b4c8",
+                    "description": "A database and set of services that allows administrators to manage permissions, access to network resources, and stored data objects (user, group, application, or devices)(Citation: Microsoft AD DS Getting Started)",
+                    "x_mitre_collection_layers": [
+                        "Host",
+                        "Cloud Control Plane"
+                    ],
+                    "x_mitre_contributors": [
+                        "Center for Threat-Informed Defense (CTID)"
+                    ],
+                    "created": "2021-10-20T15:05:19.274110Z",
+                    "external_references": [
+                        {
+                            "url": "https://attack.mitre.org/datasources/DS0026",
+                            "external_id": "DS0026",
+                            "source_name": "mitre-attack"
+                        },
+                        {
+                            "url": "https://docs.microsoft.com/en-us/windows-server/identity/ad-ds/ad-ds-getting-started",
+                            "description": "Foulds, I. et al. (2018, August 7). AD DS Getting Started. Retrieved September 23, 2021.",
+                            "source_name": "Microsoft AD DS Getting Started"
+                        }
+                    ],
+                    "detailed_diff": "{\"values_changed\": {\"root['modified']\": {\"new_value\": \"2021-11-10T09:30:48.693951Z\", \"old_value\": \"2021-10-20T15:05:19.274110Z\"}, \"root['x_mitre_contributors'][0]\": {\"new_value\": \"Center for Threat-Informed Defense (CTID)\", \"old_value\": \"CTID\"}}}",
+                    "previous_version": "1.0"
+                },
+                {
+                    "object_marking_refs": [
+                        "marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168"
+                    ],
+                    "modified": "2021-11-10T09:30:48.694425Z",
+                    "name": "Cloud Service",
+                    "x_mitre_version": "1.0",
+                    "created_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "type": "x-mitre-data-source",
+                    "x_mitre_platforms": [
+                        "IaaS",
+                        "SaaS",
+                        "Office 365",
+                        "Azure AD",
+                        "Google Workspace"
+                    ],
+                    "id": "x-mitre-data-source--b1ddede4-cafe-4955-ac4c-14b33ac3f647",
+                    "description": "Infrastructure, platforms, or software that are hosted on-premise or by third-party providers, made available to users through network connections and/or APIs(Citation: Amazon AWS)(Citation: Azure Products)",
+                    "x_mitre_collection_layers": [
+                        "Cloud Control Plane"
+                    ],
+                    "x_mitre_contributors": [
+                        "Center for Threat-Informed Defense (CTID)"
+                    ],
+                    "created": "2021-10-20T15:05:19.273990Z",
+                    "external_references": [
+                        {
+                            "url": "https://attack.mitre.org/datasources/DS0025",
+                            "external_id": "DS0025",
+                            "source_name": "mitre-attack"
+                        },
+                        {
+                            "url": "https://aws.amazon.com",
+                            "description": "Amazon. (n.d.). Start Building on AWS Today. Retrieved October 13, 2021.",
+                            "source_name": "Amazon AWS"
+                        },
+                        {
+                            "url": "https://azure.microsoft.com/en-us/services/",
+                            "description": "Microsoft. (n.d.). Azure products. Retrieved October 13, 2021.",
+                            "source_name": "Azure Products"
+                        }
+                    ],
+                    "detailed_diff": "{\"values_changed\": {\"root['modified']\": {\"new_value\": \"2021-11-10T09:30:48.694425Z\", \"old_value\": \"2021-10-20T15:05:19.273990Z\"}, \"root['x_mitre_contributors'][0]\": {\"new_value\": \"Center for Threat-Informed Defense (CTID)\", \"old_value\": \"CTID\"}}}",
+                    "previous_version": "1.0"
+                },
+                {
+                    "object_marking_refs": [
+                        "marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168"
+                    ],
+                    "modified": "2021-11-10T09:30:48.694594Z",
+                    "name": "Cloud Storage",
+                    "x_mitre_version": "1.0",
+                    "created_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "type": "x-mitre-data-source",
+                    "x_mitre_platforms": [
+                        "IaaS"
+                    ],
+                    "id": "x-mitre-data-source--2ce537a2-3b30-4374-9397-31d6460ec0bc",
+                    "description": "Data object storage infrastructure hosted on-premise or by third-party providers, made available to users through network connections and/or APIs(Citation: Amazon S3)(Citation: Azure Blob Storage)(Citation: Google Cloud Storage)",
+                    "x_mitre_collection_layers": [
+                        "Cloud Control Plane"
+                    ],
+                    "x_mitre_contributors": [
+                        "Center for Threat-Informed Defense (CTID)"
+                    ],
+                    "created": "2021-10-20T15:05:19.272382Z",
+                    "external_references": [
+                        {
+                            "url": "https://attack.mitre.org/datasources/DS0010",
+                            "external_id": "DS0010",
+                            "source_name": "mitre-attack"
+                        },
+                        {
+                            "url": "https://aws.amazon.com/s3/",
+                            "description": "Amazon. (n.d.). Amazon S3. Retrieved October 13, 2021.",
+                            "source_name": "Amazon S3"
+                        },
+                        {
+                            "url": "https://azure.microsoft.com/en-us/services/storage/blobs/",
+                            "description": "Microsoft. (n.d.). Azure Blob Storage. Retrieved October 13, 2021.",
+                            "source_name": "Azure Blob Storage"
+                        },
+                        {
+                            "url": "https://cloud.google.com/storage",
+                            "description": "Google. (n.d.). Cloud Storage. Retrieved October 13, 2021.",
+                            "source_name": "Google Cloud Storage"
+                        }
+                    ],
+                    "detailed_diff": "{\"values_changed\": {\"root['modified']\": {\"new_value\": \"2021-11-10T09:30:48.694594Z\", \"old_value\": \"2021-10-20T15:05:19.272382Z\"}, \"root['x_mitre_contributors'][0]\": {\"new_value\": \"Center for Threat-Informed Defense (CTID)\", \"old_value\": \"CTID\"}}}",
+                    "previous_version": "1.0"
+                },
+                {
+                    "object_marking_refs": [
+                        "marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168"
+                    ],
+                    "modified": "2021-11-10T09:30:48.694817Z",
+                    "name": "Cluster",
+                    "x_mitre_version": "1.0",
+                    "created_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "type": "x-mitre-data-source",
+                    "x_mitre_platforms": [
+                        "Containers"
+                    ],
+                    "id": "x-mitre-data-source--c3af32ff-65c5-4ea8-912a-fb4a85197239",
+                    "description": "A set of containerized computing resources that are managed together but have separate nodes to execute various tasks and/or applications(Citation: Kube Cluster Admin)(Citation: Kube Cluster Info)",
+                    "x_mitre_collection_layers": [
+                        "Container"
+                    ],
+                    "x_mitre_contributors": [
+                        "Center for Threat-Informed Defense (CTID)"
+                    ],
+                    "created": "2021-10-20T15:05:19.274720Z",
+                    "external_references": [
+                        {
+                            "url": "https://attack.mitre.org/datasources/DS0031",
+                            "external_id": "DS0031",
+                            "source_name": "mitre-attack"
+                        },
+                        {
+                            "url": "https://kubernetes.io/docs/concepts/cluster-administration/",
+                            "description": "kubernetes. (2021, January 16). Cluster Administration. Retrieved October 13, 2021.",
+                            "source_name": "Kube Cluster Admin"
+                        },
+                        {
+                            "url": "https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#cluster-info",
+                            "description": "kubernetes. (n.d.). cluster-info. Retrieved October 13, 2021.",
+                            "source_name": "Kube Cluster Info"
+                        }
+                    ],
+                    "detailed_diff": "{\"values_changed\": {\"root['modified']\": {\"new_value\": \"2021-11-10T09:30:48.694817Z\", \"old_value\": \"2021-10-20T15:05:19.274720Z\"}, \"root['x_mitre_contributors'][0]\": {\"new_value\": \"Center for Threat-Informed Defense (CTID)\", \"old_value\": \"CTID\"}}}",
+                    "previous_version": "1.0"
+                },
+                {
+                    "object_marking_refs": [
+                        "marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168"
+                    ],
+                    "modified": "2021-11-10T09:30:48.694901Z",
+                    "name": "Command",
+                    "x_mitre_version": "1.0",
+                    "created_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "type": "x-mitre-data-source",
+                    "x_mitre_platforms": [
+                        "Windows",
+                        "Linux",
+                        "macOS",
+                        "Network",
+                        "Containers"
+                    ],
+                    "id": "x-mitre-data-source--73691708-ffb5-4e29-906d-f485f6fa7089",
+                    "description": "A directive given to a computer program, acting as an interpreter of some kind, in order to perform a specific task(Citation: Confluence Linux Command  Line)(Citation: Audit OSX)",
+                    "x_mitre_collection_layers": [
+                        "Host",
+                        "Container"
+                    ],
+                    "x_mitre_contributors": [
+                        "Austin Clark",
+                        "Center for Threat-Informed Defense (CTID)"
+                    ],
+                    "created": "2021-10-20T15:05:19.273124Z",
+                    "external_references": [
+                        {
+                            "url": "https://attack.mitre.org/datasources/DS0017",
+                            "external_id": "DS0017",
+                            "source_name": "mitre-attack"
+                        },
+                        {
+                            "url": "https://confluence.atlassian.com/confkb/how-to-enable-command-line-audit-logging-in-linux-956166545.html",
+                            "description": "Confluence Support. (2021, September 8). How to enable command line audit logging in linux. Retrieved September 23, 2021.",
+                            "source_name": "Confluence Linux Command  Line"
+                        },
+                        {
+                            "url": "https://www.scip.ch/en/?labs.20150108",
+                            "description": "Gagliardi, R. (n.d.). Audit in a OS X System. Retrieved September 23, 2021.",
+                            "source_name": "Audit OSX"
+                        }
+                    ],
+                    "detailed_diff": "{\"values_changed\": {\"root['modified']\": {\"new_value\": \"2021-11-10T09:30:48.694901Z\", \"old_value\": \"2021-10-20T15:05:19.273124Z\"}, \"root['x_mitre_contributors'][1]\": {\"new_value\": \"Center for Threat-Informed Defense (CTID)\", \"old_value\": \"CTID\"}}}",
+                    "previous_version": "1.0"
+                },
+                {
+                    "object_marking_refs": [
+                        "marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168"
+                    ],
+                    "modified": "2021-11-10T09:30:48.694982Z",
+                    "name": "Container",
+                    "x_mitre_version": "1.0",
+                    "created_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "type": "x-mitre-data-source",
+                    "x_mitre_platforms": [
+                        "Containers"
+                    ],
+                    "id": "x-mitre-data-source--072ec5a7-00ba-466f-9057-69751a22a967",
+                    "description": "A standard unit of virtualized software that packages up code and all its dependencies so the application runs quickly and reliably from one computing environment to another(Citation: Docker Docs Container)",
+                    "x_mitre_collection_layers": [
+                        "Container"
+                    ],
+                    "x_mitre_contributors": [
+                        "Center for Threat-Informed Defense (CTID)"
+                    ],
+                    "created": "2021-10-20T15:05:19.274834Z",
+                    "external_references": [
+                        {
+                            "url": "https://attack.mitre.org/datasources/DS0032",
+                            "external_id": "DS0032",
+                            "source_name": "mitre-attack"
+                        },
+                        {
+                            "url": "https://docs.docker.com/engine/api/v1.41/#tag/Container",
+                            "description": "docker docs. (n.d.). Containers. Retrieved October 13, 2021.",
+                            "source_name": "Docker Docs Container"
+                        }
+                    ],
+                    "detailed_diff": "{\"values_changed\": {\"root['modified']\": {\"new_value\": \"2021-11-10T09:30:48.694982Z\", \"old_value\": \"2021-10-20T15:05:19.274834Z\"}, \"root['x_mitre_contributors'][0]\": {\"new_value\": \"Center for Threat-Informed Defense (CTID)\", \"old_value\": \"CTID\"}}}",
+                    "previous_version": "1.0"
+                },
+                {
+                    "object_marking_refs": [
+                        "marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168"
+                    ],
+                    "modified": "2021-11-10T09:30:48.695272Z",
+                    "name": "Drive",
+                    "x_mitre_version": "1.0",
+                    "created_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "type": "x-mitre-data-source",
+                    "x_mitre_platforms": [
+                        "Windows",
+                        "Linux",
+                        "macOS"
+                    ],
+                    "id": "x-mitre-data-source--61bbbf27-f7c3-46ba-a6bc-48ae76928065",
+                    "description": "A non-volatile data storage device (hard drive, floppy disk, USB flash drive) with at least one formatted partition, typically mounted to the file system and/or assigned a drive letter(Citation: Sysmon EID 9)",
+                    "x_mitre_collection_layers": [
+                        "Host"
+                    ],
+                    "x_mitre_contributors": [
+                        "Center for Threat-Informed Defense (CTID)"
+                    ],
+                    "created": "2021-10-20T15:05:19.272982Z",
+                    "external_references": [
+                        {
+                            "url": "https://attack.mitre.org/datasources/DS0016",
+                            "external_id": "DS0016",
+                            "source_name": "mitre-attack"
+                        },
+                        {
+                            "url": "https://docs.microsoft.com/sysinternals/downloads/sysmon#event-id-9-rawaccessread",
+                            "description": "Russinovich, R. & Garnier, T. (2021, August 18). Sysmon Event ID 9. Retrieved September 24, 2021.",
+                            "source_name": "Sysmon EID 9"
+                        }
+                    ],
+                    "detailed_diff": "{\"values_changed\": {\"root['modified']\": {\"new_value\": \"2021-11-10T09:30:48.695272Z\", \"old_value\": \"2021-10-20T15:05:19.272982Z\"}, \"root['x_mitre_contributors'][0]\": {\"new_value\": \"Center for Threat-Informed Defense (CTID)\", \"old_value\": \"CTID\"}}}",
+                    "previous_version": "1.0"
+                },
+                {
+                    "object_marking_refs": [
+                        "marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168"
+                    ],
+                    "modified": "2021-11-10T09:30:48.695431Z",
+                    "name": "Driver",
+                    "x_mitre_version": "1.0",
+                    "created_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "type": "x-mitre-data-source",
+                    "x_mitre_platforms": [
+                        "Linux",
+                        "macOS",
+                        "Windows"
+                    ],
+                    "id": "x-mitre-data-source--9ec8c0d7-6137-456f-b829-c5f8b96ba054",
+                    "description": "A computer program that operates or controls a particular type of device that is attached to a computer. Provides a software interface to hardware devices, enabling operating systems and other computer programs to access hardware functions without needing to know precise details about the hardware being used(Citation: IOKit Fundamentals)(Citation: Windows Getting Started Drivers)",
+                    "x_mitre_collection_layers": [
+                        "Host"
+                    ],
+                    "x_mitre_contributors": [
+                        "Center for Threat-Informed Defense (CTID)"
+                    ],
+                    "created": "2021-10-20T15:05:19.274252Z",
+                    "external_references": [
+                        {
+                            "url": "https://attack.mitre.org/datasources/DS0027",
+                            "external_id": "DS0027",
+                            "source_name": "mitre-attack"
+                        },
+                        {
+                            "url": "https://developer.apple.com/library/archive/documentation/DeviceDrivers/Conceptual/IOKitFundamentals/Features/Features.html",
+                            "description": "Apple. (2014, April 9). What Is the I/O Kit?. Retrieved September 24, 2021.",
+                            "source_name": "IOKit Fundamentals"
+                        },
+                        {
+                            "url": "https://docs.microsoft.com/en-us/windows-hardware/drivers/gettingstarted/user-mode-and-kernel-mode",
+                            "description": "Viviano, A. (2021, August 17). Getting started with Windows drivers: User mode and kernel mode. Retrieved September 24, 2021.",
+                            "source_name": "Windows Getting Started Drivers"
+                        }
+                    ],
+                    "detailed_diff": "{\"values_changed\": {\"root['modified']\": {\"new_value\": \"2021-11-10T09:30:48.695431Z\", \"old_value\": \"2021-10-20T15:05:19.274252Z\"}, \"root['x_mitre_contributors'][0]\": {\"new_value\": \"Center for Threat-Informed Defense (CTID)\", \"old_value\": \"CTID\"}}}",
+                    "previous_version": "1.0"
+                },
+                {
+                    "object_marking_refs": [
+                        "marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168"
+                    ],
+                    "modified": "2021-11-10T09:30:48.695560Z",
+                    "name": "File",
+                    "x_mitre_version": "1.0",
+                    "created_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "type": "x-mitre-data-source",
+                    "x_mitre_platforms": [
+                        "Windows",
+                        "Linux",
+                        "macOS",
+                        "Network"
+                    ],
+                    "id": "x-mitre-data-source--509ed41e-ca42-461e-9058-24602256daf9",
+                    "description": "A computer resource object, managed by the I/O system, for storing data (such as images, text, videos, computer programs, or any wide variety of other media)(Citation: Microsoft File Mgmt)",
+                    "x_mitre_collection_layers": [
+                        "Host"
+                    ],
+                    "x_mitre_contributors": [
+                        "Center for Threat-Informed Defense (CTID)"
+                    ],
+                    "created": "2021-10-20T15:05:19.273672Z",
+                    "external_references": [
+                        {
+                            "url": "https://attack.mitre.org/datasources/DS0022",
+                            "external_id": "DS0022",
+                            "source_name": "mitre-attack"
+                        },
+                        {
+                            "url": "https://docs.microsoft.com/en-us/windows/win32/fileio/file-management",
+                            "description": "Microsoft. (2018, May 31). File Management (Local File Systems). Retrieved September 28, 2021.",
+                            "source_name": "Microsoft File Mgmt"
+                        }
+                    ],
+                    "detailed_diff": "{\"values_changed\": {\"root['modified']\": {\"new_value\": \"2021-11-10T09:30:48.695560Z\", \"old_value\": \"2021-10-20T15:05:19.273672Z\"}, \"root['x_mitre_contributors'][0]\": {\"new_value\": \"Center for Threat-Informed Defense (CTID)\", \"old_value\": \"CTID\"}}}",
+                    "previous_version": "1.0"
+                },
+                {
+                    "object_marking_refs": [
+                        "marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168"
+                    ],
+                    "modified": "2021-11-10T09:30:48.695762Z",
+                    "name": "Firewall",
+                    "x_mitre_version": "1.0",
+                    "created_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "type": "x-mitre-data-source",
+                    "x_mitre_platforms": [
+                        "IaaS",
+                        "SaaS",
+                        "Office 365",
+                        "Azure AD",
+                        "Linux",
+                        "macOS",
+                        "Windows",
+                        "Google Workspace"
+                    ],
+                    "id": "x-mitre-data-source--f2f4f4bd-3455-400f-b2ee-104004df0f5b",
+                    "description": "A network security system, running locally on an endpoint or remotely as a service (ex: cloud environment), that monitors and controls incoming/outgoing network traffic based on predefined rules(Citation: AWS Sec Groups VPC)",
+                    "x_mitre_collection_layers": [
+                        "Cloud Control Plane",
+                        "Host"
+                    ],
+                    "x_mitre_contributors": [
+                        "Center for Threat-Informed Defense (CTID)"
+                    ],
+                    "created": "2021-10-20T15:05:19.273181Z",
+                    "external_references": [
+                        {
+                            "url": "https://attack.mitre.org/datasources/DS0018",
+                            "external_id": "DS0018",
+                            "source_name": "mitre-attack"
+                        },
+                        {
+                            "url": "https://docs.aws.amazon.com/vpc/latest/userguide/VPC_SecurityGroups.html",
+                            "description": "Amazon. (n.d.). Security groups for your VPC. Retrieved October 13, 2021.",
+                            "source_name": "AWS Sec Groups VPC"
+                        }
+                    ],
+                    "detailed_diff": "{\"values_changed\": {\"root['modified']\": {\"new_value\": \"2021-11-10T09:30:48.695762Z\", \"old_value\": \"2021-10-20T15:05:19.273181Z\"}, \"root['x_mitre_contributors'][0]\": {\"new_value\": \"Center for Threat-Informed Defense (CTID)\", \"old_value\": \"CTID\"}}}",
+                    "previous_version": "1.0"
+                },
+                {
+                    "object_marking_refs": [
+                        "marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168"
+                    ],
+                    "modified": "2021-11-10T09:30:48.695921Z",
+                    "name": "Firmware",
+                    "x_mitre_version": "1.0",
+                    "created_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "type": "x-mitre-data-source",
+                    "x_mitre_platforms": [
+                        "Windows",
+                        "Linux",
+                        "macOS"
+                    ],
+                    "id": "x-mitre-data-source--ca1cb239-ff6d-4f64-b9d7-41c8556a8b4f",
+                    "description": "Computer software that provides low-level control for the hardware and device(s) of a host, such as BIOS or UEFI/EFI",
+                    "x_mitre_collection_layers": [
+                        "Host"
+                    ],
+                    "x_mitre_contributors": [
+                        "Center for Threat-Informed Defense (CTID)"
+                    ],
+                    "created": "2021-10-20T15:05:19.265145Z",
+                    "external_references": [
+                        {
+                            "url": "https://attack.mitre.org/datasources/DS0001",
+                            "external_id": "DS0001",
+                            "source_name": "mitre-attack"
+                        }
+                    ],
+                    "detailed_diff": "{\"values_changed\": {\"root['modified']\": {\"new_value\": \"2021-11-10T09:30:48.695921Z\", \"old_value\": \"2021-10-20T15:05:19.265145Z\"}, \"root['x_mitre_contributors'][0]\": {\"new_value\": \"Center for Threat-Informed Defense (CTID)\", \"old_value\": \"CTID\"}}}",
+                    "previous_version": "1.0"
+                },
+                {
+                    "object_marking_refs": [
+                        "marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168"
+                    ],
+                    "modified": "2021-11-10T09:30:48.695999Z",
+                    "name": "Group",
+                    "x_mitre_version": "1.0",
+                    "created_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "type": "x-mitre-data-source",
+                    "x_mitre_platforms": [
+                        "Windows",
+                        "IaaS",
+                        "SaaS",
+                        "Office 365",
+                        "Azure AD",
+                        "Google Workspace"
+                    ],
+                    "id": "x-mitre-data-source--3c07684f-3794-4536-8f70-21efe700c0ec",
+                    "description": "A collection of multiple user accounts that share the same access rights to the computer and/or network resources and have common security rights(Citation: Amazon IAM Groups)",
+                    "x_mitre_collection_layers": [
+                        "Host",
+                        "Cloud Control Plane"
+                    ],
+                    "x_mitre_contributors": [
+                        "Center for Threat-Informed Defense (CTID)"
+                    ],
+                    "created": "2021-10-20T15:05:19.275275Z",
+                    "external_references": [
+                        {
+                            "url": "https://attack.mitre.org/datasources/DS0036",
+                            "external_id": "DS0036",
+                            "source_name": "mitre-attack"
+                        },
+                        {
+                            "url": "https://docs.aws.amazon.com/IAM/latest/UserGuide/id_groups.html",
+                            "description": "Amazon. (n.d.). IAM user groups. Retrieved October 13, 2021.",
+                            "source_name": "Amazon IAM Groups"
+                        }
+                    ],
+                    "detailed_diff": "{\"values_changed\": {\"root['modified']\": {\"new_value\": \"2021-11-10T09:30:48.695999Z\", \"old_value\": \"2021-10-20T15:05:19.275275Z\"}, \"root['x_mitre_contributors'][0]\": {\"new_value\": \"Center for Threat-Informed Defense (CTID)\", \"old_value\": \"CTID\"}}}",
+                    "previous_version": "1.0"
+                },
+                {
+                    "object_marking_refs": [
+                        "marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168"
+                    ],
+                    "modified": "2021-11-10T09:30:48.696179Z",
+                    "name": "Image",
+                    "x_mitre_version": "1.0",
+                    "created_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "type": "x-mitre-data-source",
+                    "x_mitre_platforms": [
+                        "IaaS"
+                    ],
+                    "id": "x-mitre-data-source--1ac0ca69-e07e-4b34-9061-e4588e146c52",
+                    "description": "A single file used to deploy a virtual machine/bootable disk into an on-premise or third-party cloud environment(Citation: Microsoft Image)(Citation: Amazon AMI)",
+                    "x_mitre_collection_layers": [
+                        "Cloud Control Plane"
+                    ],
+                    "x_mitre_contributors": [
+                        "Center for Threat-Informed Defense (CTID)"
+                    ],
+                    "created": "2021-10-20T15:05:19.271956Z",
+                    "external_references": [
+                        {
+                            "url": "https://attack.mitre.org/datasources/DS0007",
+                            "external_id": "DS0007",
+                            "source_name": "mitre-attack"
+                        },
+                        {
+                            "url": "https://docs.microsoft.com/en-us/azure/virtual-machines/windows/capture-image-resource",
+                            "description": "Microsoft. (2021, August 23). Create a managed image of a generalized VM in Azure. Retrieved October 13, 2021.",
+                            "source_name": "Microsoft Image"
+                        },
+                        {
+                            "url": "https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/AMIs.html",
+                            "description": "Amazon. (n.d.). Amazon Machine Images (AMI). Retrieved October 13, 2021.",
+                            "source_name": "Amazon AMI"
+                        }
+                    ],
+                    "detailed_diff": "{\"values_changed\": {\"root['modified']\": {\"new_value\": \"2021-11-10T09:30:48.696179Z\", \"old_value\": \"2021-10-20T15:05:19.271956Z\"}, \"root['x_mitre_contributors'][0]\": {\"new_value\": \"Center for Threat-Informed Defense (CTID)\", \"old_value\": \"CTID\"}}}",
+                    "previous_version": "1.0"
+                },
+                {
+                    "object_marking_refs": [
+                        "marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168"
+                    ],
+                    "modified": "2021-11-10T09:30:48.696693Z",
+                    "name": "Kernel",
+                    "x_mitre_version": "1.0",
+                    "created_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "type": "x-mitre-data-source",
+                    "x_mitre_platforms": [
+                        "Linux",
+                        "macOS"
+                    ],
+                    "id": "x-mitre-data-source--8765a845-dea1-4cd1-a56f-f54939b7ab9e",
+                    "description": "A computer program, at the core of a computer OS, that resides in memory and facilitates interactions between hardware and software components(Citation: STIG Audit Kernel Modules)(Citation: Init Man Page)",
+                    "x_mitre_collection_layers": [
+                        "Host"
+                    ],
+                    "x_mitre_contributors": [
+                        "Center for Threat-Informed Defense (CTID)"
+                    ],
+                    "created": "2021-10-20T15:05:19.272087Z",
+                    "external_references": [
+                        {
+                            "url": "https://attack.mitre.org/datasources/DS0008",
+                            "external_id": "DS0008",
+                            "source_name": "mitre-attack"
+                        },
+                        {
+                            "url": "https://www.stigviewer.com/stig/oracle_linux_5/2016-12-20/finding/V-22383",
+                            "description": "Unified Compliance Framework. (2016, December 20). The audit system must be configured to audit the loading and unloading of dynamic kernel modules.. Retrieved September 28, 2021.",
+                            "source_name": "STIG Audit Kernel Modules"
+                        },
+                        {
+                            "url": "https://man7.org/linux/man-pages/man2/init_module.2.html",
+                            "description": "Kerrisk, M. (2021, March 22). INIT_MODULE(2). Retrieved September 28, 2021.",
+                            "source_name": "Init Man Page"
+                        }
+                    ],
+                    "detailed_diff": "{\"values_changed\": {\"root['modified']\": {\"new_value\": \"2021-11-10T09:30:48.696693Z\", \"old_value\": \"2021-10-20T15:05:19.272087Z\"}, \"root['x_mitre_contributors'][0]\": {\"new_value\": \"Center for Threat-Informed Defense (CTID)\", \"old_value\": \"CTID\"}}}",
+                    "previous_version": "1.0"
+                },
+                {
+                    "object_marking_refs": [
+                        "marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168"
+                    ],
+                    "modified": "2021-11-10T09:30:48.696771Z",
+                    "name": "Logon Session",
+                    "x_mitre_version": "1.0",
+                    "created_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "type": "x-mitre-data-source",
+                    "x_mitre_platforms": [
+                        "Windows",
+                        "Linux",
+                        "macOS",
+                        "IaaS",
+                        "SaaS",
+                        "Office 365",
+                        "Azure AD",
+                        "Google Workspace"
+                    ],
+                    "id": "x-mitre-data-source--4358c631-e253-4557-86df-f687d0ef9891",
+                    "description": "Logon occurring on a system or resource (local, domain, or cloud) to which a user/device is gaining access after successful authentication and authorizaton(Citation: Microsoft Audit Logon Events)",
+                    "x_mitre_collection_layers": [
+                        "Host",
+                        "Network",
+                        "Cloud Control Plane"
+                    ],
+                    "x_mitre_contributors": [
+                        "Center for Threat-Informed Defense (CTID)"
+                    ],
+                    "created": "2021-10-20T15:05:19.274352Z",
+                    "external_references": [
+                        {
+                            "url": "https://attack.mitre.org/datasources/DS0028",
+                            "external_id": "DS0028",
+                            "source_name": "mitre-attack"
+                        },
+                        {
+                            "url": "https://docs.microsoft.com/en-us/windows/security/threat-protection/auditing/basic-audit-logon-events",
+                            "description": "Microsoft. (2021, September 6). Audit logon events. Retrieved September 28, 2021.",
+                            "source_name": "Microsoft Audit Logon Events"
+                        }
+                    ],
+                    "detailed_diff": "{\"values_changed\": {\"root['modified']\": {\"new_value\": \"2021-11-10T09:30:48.696771Z\", \"old_value\": \"2021-10-20T15:05:19.274352Z\"}, \"root['x_mitre_contributors'][0]\": {\"new_value\": \"Center for Threat-Informed Defense (CTID)\", \"old_value\": \"CTID\"}}}",
+                    "previous_version": "1.0"
+                },
+                {
+                    "object_marking_refs": [
+                        "marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168"
+                    ],
+                    "modified": "2021-11-10T09:30:48.697073Z",
+                    "name": "Module",
+                    "x_mitre_version": "1.0",
+                    "created_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "type": "x-mitre-data-source",
+                    "x_mitre_platforms": [
+                        "Windows",
+                        "Linux",
+                        "macOS"
+                    ],
+                    "id": "x-mitre-data-source--f424e4b4-a8a4-4c58-a4ae-4f53bfd08563",
+                    "description": "Executable files consisting of one or more shared classes and interfaces, such as portable executable (PE) format binaries/dynamic link libraries (DLL), executable and linkable format (ELF) binaries/shared libraries, and Mach-O format binaries/shared libraries(Citation: Microsoft LoadLibrary)(Citation: Microsoft Module Class)",
+                    "x_mitre_collection_layers": [
+                        "Host"
+                    ],
+                    "x_mitre_contributors": [
+                        "Center for Threat-Informed Defense (CTID)"
+                    ],
+                    "created": "2021-10-20T15:05:19.272552Z",
+                    "external_references": [
+                        {
+                            "url": "https://attack.mitre.org/datasources/DS0011",
+                            "external_id": "DS0011",
+                            "source_name": "mitre-attack"
+                        },
+                        {
+                            "url": "https://docs.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-loadlibrarya",
+                            "description": "Microsoft. (2018, December 5). LoadLibraryA function (libloaderapi.h). Retrieved September 28, 2021.",
+                            "source_name": "Microsoft LoadLibrary"
+                        },
+                        {
+                            "url": "https://docs.microsoft.com/en-us/dotnet/api/system.reflection.module",
+                            "description": "Microsoft. (n.d.). Module Class. Retrieved September 28, 2021.",
+                            "source_name": "Microsoft Module Class"
+                        }
+                    ],
+                    "detailed_diff": "{\"values_changed\": {\"root['modified']\": {\"new_value\": \"2021-11-10T09:30:48.697073Z\", \"old_value\": \"2021-10-20T15:05:19.272552Z\"}, \"root['x_mitre_contributors'][0]\": {\"new_value\": \"Center for Threat-Informed Defense (CTID)\", \"old_value\": \"CTID\"}}}",
+                    "previous_version": "1.0"
+                },
+                {
+                    "object_marking_refs": [
+                        "marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168"
+                    ],
+                    "modified": "2021-11-10T09:30:48.697149Z",
+                    "name": "Named Pipe",
+                    "x_mitre_version": "1.0",
+                    "created_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "type": "x-mitre-data-source",
+                    "x_mitre_platforms": [
+                        "Windows",
+                        "Linux",
+                        "macOS"
+                    ],
+                    "id": "x-mitre-data-source--221adcd5-cccf-44df-9be6-ef607a6e1c3c",
+                    "description": "Mechanisms that allow inter-process communication locally or over the network. A named pipe is usually found as a file and processes attach to it(Citation: Microsoft Named Pipes)",
+                    "x_mitre_collection_layers": [
+                        "Host"
+                    ],
+                    "x_mitre_contributors": [
+                        "Center for Threat-Informed Defense (CTID)"
+                    ],
+                    "created": "2021-10-20T15:05:19.273816Z",
+                    "external_references": [
+                        {
+                            "url": "https://attack.mitre.org/datasources/DS0023",
+                            "external_id": "DS0023",
+                            "source_name": "mitre-attack"
+                        },
+                        {
+                            "url": "https://docs.microsoft.com/en-us/windows/win32/ipc/named-pipes",
+                            "description": "Microsoft. (2018, May 31). Named Pipes. Retrieved September 28, 2021.",
+                            "source_name": "Microsoft Named Pipes"
+                        }
+                    ],
+                    "detailed_diff": "{\"values_changed\": {\"root['modified']\": {\"new_value\": \"2021-11-10T09:30:48.697149Z\", \"old_value\": \"2021-10-20T15:05:19.273816Z\"}, \"root['x_mitre_contributors'][0]\": {\"new_value\": \"Center for Threat-Informed Defense (CTID)\", \"old_value\": \"CTID\"}}}",
+                    "previous_version": "1.0"
+                },
+                {
+                    "object_marking_refs": [
+                        "marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168"
+                    ],
+                    "modified": "2021-11-10T09:30:48.697227Z",
+                    "name": "Network Share",
+                    "x_mitre_version": "1.0",
+                    "created_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "type": "x-mitre-data-source",
+                    "x_mitre_platforms": [
+                        "Windows",
+                        "Linux",
+                        "macOS"
+                    ],
+                    "id": "x-mitre-data-source--ba27545a-9c32-47ea-ba6a-cce50f1b326e",
+                    "description": "A storage resource (typically a folder or drive) made available from one host to others using network protocols, such as Server Message Block (SMB) or Network File System (NFS)(Citation: Microsoft NFS Overview)",
+                    "x_mitre_collection_layers": [
+                        "Host"
+                    ],
+                    "x_mitre_contributors": [
+                        "Center for Threat-Informed Defense (CTID)"
+                    ],
+                    "created": "2021-10-20T15:05:19.274950Z",
+                    "external_references": [
+                        {
+                            "url": "https://attack.mitre.org/datasources/DS0033",
+                            "external_id": "DS0033",
+                            "source_name": "mitre-attack"
+                        },
+                        {
+                            "url": "https://docs.microsoft.com/en-us/windows-server/storage/nfs/nfs-overview",
+                            "description": "Microsoft. (2018, July 9). Network File System overview. Retrieved September 28, 2021.",
+                            "source_name": "Microsoft NFS Overview"
+                        }
+                    ],
+                    "detailed_diff": "{\"values_changed\": {\"root['modified']\": {\"new_value\": \"2021-11-10T09:30:48.697227Z\", \"old_value\": \"2021-10-20T15:05:19.274950Z\"}, \"root['x_mitre_contributors'][0]\": {\"new_value\": \"Center for Threat-Informed Defense (CTID)\", \"old_value\": \"CTID\"}}}",
+                    "previous_version": "1.0"
+                },
+                {
+                    "object_marking_refs": [
+                        "marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168"
+                    ],
+                    "modified": "2021-11-10T09:30:48.697365Z",
+                    "name": "Network Traffic",
+                    "x_mitre_version": "1.0",
+                    "created_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "type": "x-mitre-data-source",
+                    "x_mitre_platforms": [
+                        "Windows",
+                        "Linux",
+                        "macOS",
+                        "IaaS"
+                    ],
+                    "id": "x-mitre-data-source--c000cd5c-bbb3-4606-af6f-6c6d9de0bbe3",
+                    "description": "Data transmitted across a network (ex: Web, DNS, Mail, File, etc.), that is either summarized (ex: Netflow) and/or captured as raw data in an analyzable format (ex: PCAP)",
+                    "x_mitre_collection_layers": [
+                        "Host",
+                        "Network",
+                        "Cloud Control Plane"
+                    ],
+                    "x_mitre_contributors": [
+                        "Center for Threat-Informed Defense (CTID)",
+                        "ExtraHop"
+                    ],
+                    "created": "2021-10-20T15:05:19.274446Z",
+                    "external_references": [
+                        {
+                            "url": "https://attack.mitre.org/datasources/DS0029",
+                            "external_id": "DS0029",
+                            "source_name": "mitre-attack"
+                        }
+                    ],
+                    "detailed_diff": "{\"values_changed\": {\"root['modified']\": {\"new_value\": \"2021-11-10T09:30:48.697365Z\", \"old_value\": \"2021-10-20T15:05:19.274446Z\"}, \"root['x_mitre_contributors'][0]\": {\"new_value\": \"Center for Threat-Informed Defense (CTID)\", \"old_value\": \"CTID\"}}}",
+                    "previous_version": "1.0"
+                },
+                {
+                    "object_marking_refs": [
+                        "marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168"
+                    ],
+                    "modified": "2021-11-10T09:30:48.697559Z",
+                    "name": "Pod",
+                    "x_mitre_version": "1.0",
+                    "created_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "type": "x-mitre-data-source",
+                    "x_mitre_platforms": [
+                        "Containers"
+                    ],
+                    "id": "x-mitre-data-source--06bb1e05-533b-4de3-ae87-9b99910465cf",
+                    "description": "A single unit of shared resources within a cluster, comprised of one or more containers(Citation: Kube Kubectl)(Citation: Kube Pod)",
+                    "x_mitre_collection_layers": [
+                        "Container"
+                    ],
+                    "x_mitre_contributors": [
+                        "Center for Threat-Informed Defense (CTID)"
+                    ],
+                    "created": "2021-10-20T15:05:19.272712Z",
+                    "external_references": [
+                        {
+                            "url": "https://attack.mitre.org/datasources/DS0014",
+                            "external_id": "DS0014",
+                            "source_name": "mitre-attack"
+                        },
+                        {
+                            "url": "https://kubernetes.io/docs/reference/kubectl/kubectl/",
+                            "description": "kubernetes. (n.d.). kubectl. Retrieved October 13, 2021.",
+                            "source_name": "Kube Kubectl"
+                        },
+                        {
+                            "url": "https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.19/#pod-v1-core",
+                            "description": "kubenetes. (n.d.). Pod v1 core. Retrieved October 13, 2021.",
+                            "source_name": "Kube Pod"
+                        }
+                    ],
+                    "detailed_diff": "{\"values_changed\": {\"root['modified']\": {\"new_value\": \"2021-11-10T09:30:48.697559Z\", \"old_value\": \"2021-10-20T15:05:19.272712Z\"}, \"root['x_mitre_contributors'][0]\": {\"new_value\": \"Center for Threat-Informed Defense (CTID)\", \"old_value\": \"CTID\"}}}",
+                    "previous_version": "1.0"
+                },
+                {
+                    "object_marking_refs": [
+                        "marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168"
+                    ],
+                    "modified": "2021-11-10T09:30:48.697770Z",
+                    "name": "Process",
+                    "x_mitre_version": "1.0",
+                    "created_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "type": "x-mitre-data-source",
+                    "x_mitre_platforms": [
+                        "Windows",
+                        "Linux",
+                        "macOS"
+                    ],
+                    "id": "x-mitre-data-source--e8b8ede7-337b-4c0c-8c32-5c7872c1ee22",
+                    "description": "Instances of computer programs that are being executed by at least one thread. Processes have memory space for process executables, loaded modules (DLLs or shared libraries), and allocated memory regions containing everything from user input to application-specific data structures(Citation: Microsoft Processes and Threads)",
+                    "x_mitre_collection_layers": [
+                        "Host"
+                    ],
+                    "x_mitre_contributors": [
+                        "Center for Threat-Informed Defense (CTID)"
+                    ],
+                    "created": "2021-10-20T15:05:19.272143Z",
+                    "external_references": [
+                        {
+                            "url": "https://attack.mitre.org/datasources/DS0009",
+                            "external_id": "DS0009",
+                            "source_name": "mitre-attack"
+                        },
+                        {
+                            "url": "https://docs.microsoft.com/en-us/windows/win32/procthread/processes-and-threads",
+                            "description": "Microsoft. (2018, May 31). Processes and Threads. Retrieved September 28, 2021.",
+                            "source_name": "Microsoft Processes and Threads"
+                        }
+                    ],
+                    "detailed_diff": "{\"values_changed\": {\"root['modified']\": {\"new_value\": \"2021-11-10T09:30:48.697770Z\", \"old_value\": \"2021-10-20T15:05:19.272143Z\"}, \"root['x_mitre_contributors'][0]\": {\"new_value\": \"Center for Threat-Informed Defense (CTID)\", \"old_value\": \"CTID\"}}}",
+                    "previous_version": "1.0"
+                },
+                {
+                    "object_marking_refs": [
+                        "marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168"
+                    ],
+                    "modified": "2021-11-10T09:30:48.697992Z",
+                    "name": "Scheduled Job",
+                    "x_mitre_version": "1.0",
+                    "created_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "type": "x-mitre-data-source",
+                    "x_mitre_platforms": [
+                        "Windows",
+                        "Linux",
+                        "macOS",
+                        "Containers"
+                    ],
+                    "id": "x-mitre-data-source--c9ddfb51-eb45-4e22-b614-44ac1caa7883",
+                    "description": "Automated tasks that can be executed at a specific time or on a recurring schedule running in the background (ex: Cron daemon, task scheduler, BITS)(Citation: Microsoft Tasks)",
+                    "x_mitre_collection_layers": [
+                        "Host",
+                        "Container"
+                    ],
+                    "x_mitre_contributors": [
+                        "Center for Threat-Informed Defense (CTID)"
+                    ],
+                    "created": "2021-10-20T15:05:19.271574Z",
+                    "external_references": [
+                        {
+                            "url": "https://attack.mitre.org/datasources/DS0003",
+                            "external_id": "DS0003",
+                            "source_name": "mitre-attack"
+                        },
+                        {
+                            "url": "https://docs.microsoft.com/en-us/windows/win32/taskschd/tasks",
+                            "description": "Microsoft. (2018, May 31). Tasks. Retrieved September 28, 2021.",
+                            "source_name": "Microsoft Tasks"
+                        }
+                    ],
+                    "detailed_diff": "{\"values_changed\": {\"root['modified']\": {\"new_value\": \"2021-11-10T09:30:48.697992Z\", \"old_value\": \"2021-10-20T15:05:19.271574Z\"}, \"root['x_mitre_contributors'][0]\": {\"new_value\": \"Center for Threat-Informed Defense (CTID)\", \"old_value\": \"CTID\"}}}",
+                    "previous_version": "1.0"
+                },
+                {
+                    "object_marking_refs": [
+                        "marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168"
+                    ],
+                    "modified": "2021-11-10T09:30:48.698144Z",
+                    "name": "Script",
+                    "x_mitre_version": "1.0",
+                    "created_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "type": "x-mitre-data-source",
+                    "x_mitre_platforms": [
+                        "Windows"
+                    ],
+                    "id": "x-mitre-data-source--12c1e727-7fa4-49b6-af81-366ed2ce231e",
+                    "description": "A file or stream containing a list of commands, allowing them to be launched in sequence(Citation: Microsoft PowerShell Logging)(Citation: FireEye PowerShell Logging)(Citation: Microsoft AMSI)",
+                    "x_mitre_collection_layers": [
+                        "Host"
+                    ],
+                    "x_mitre_contributors": [
+                        "Center for Threat-Informed Defense (CTID)"
+                    ],
+                    "created": "2021-10-20T15:05:19.272610Z",
+                    "external_references": [
+                        {
+                            "url": "https://attack.mitre.org/datasources/DS0012",
+                            "external_id": "DS0012",
+                            "source_name": "mitre-attack"
+                        },
+                        {
+                            "url": "https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_logging_windows?view=powershell-7",
+                            "description": "Microsoft. (2020, March 30). about_Logging_Windows. Retrieved September 28, 2021.",
+                            "source_name": "Microsoft PowerShell Logging"
+                        },
+                        {
+                            "url": "https://www.fireeye.com/blog/threat-research/2016/02/greater_visibilityt.html",
+                            "description": "Dunwoody, M. (2016, February 11). Greater Visibility Through PowerShell Logging. Retrieved September 28, 2021.",
+                            "source_name": "FireEye PowerShell Logging"
+                        },
+                        {
+                            "url": "https://docs.microsoft.com/en-us/windows/win32/amsi/antimalware-scan-interface-portal",
+                            "description": "Microsoft. (2019, April 19). Antimalware Scan Interface (AMSI). Retrieved September 28, 2021.",
+                            "source_name": "Microsoft AMSI"
+                        }
+                    ],
+                    "detailed_diff": "{\"values_changed\": {\"root['modified']\": {\"new_value\": \"2021-11-10T09:30:48.698144Z\", \"old_value\": \"2021-10-20T15:05:19.272610Z\"}, \"root['x_mitre_contributors'][0]\": {\"new_value\": \"Center for Threat-Informed Defense (CTID)\", \"old_value\": \"CTID\"}, \"root['external_references'][2]['description']\": {\"new_value\": \"Dunwoody, M. (2016, February 11). Greater Visibility Through PowerShell Logging. Retrieved September 28, 2021.\", \"old_value\": \"Dunwoody, M. (2016, February 11). https://www.fireeye.com/blog/threat-research/2016/02/greater_visibilityt.html. Retrieved September 28, 2021.\"}}}",
+                    "previous_version": "1.0"
+                },
+                {
+                    "object_marking_refs": [
+                        "marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168"
+                    ],
+                    "modified": "2021-11-10T09:30:48.698218Z",
+                    "name": "Sensor Health",
+                    "x_mitre_version": "1.0",
+                    "created_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "type": "x-mitre-data-source",
+                    "x_mitre_platforms": [
+                        "Windows",
+                        "Linux",
+                        "macOS"
+                    ],
+                    "id": "x-mitre-data-source--4523e7f3-8de2-4078-96f8-1227eb537159",
+                    "description": "Information from host telemetry providing insights about system status, errors, or other notable functional activity",
+                    "x_mitre_collection_layers": [
+                        "Host"
+                    ],
+                    "x_mitre_contributors": [
+                        "Center for Threat-Informed Defense (CTID)"
+                    ],
+                    "created": "2021-10-20T15:05:19.272664Z",
+                    "external_references": [
+                        {
+                            "url": "https://attack.mitre.org/datasources/DS0013",
+                            "external_id": "DS0013",
+                            "source_name": "mitre-attack"
+                        }
+                    ],
+                    "detailed_diff": "{\"values_changed\": {\"root['modified']\": {\"new_value\": \"2021-11-10T09:30:48.698218Z\", \"old_value\": \"2021-10-20T15:05:19.272664Z\"}, \"root['x_mitre_contributors'][0]\": {\"new_value\": \"Center for Threat-Informed Defense (CTID)\", \"old_value\": \"CTID\"}}}",
+                    "previous_version": "1.0"
+                },
+                {
+                    "object_marking_refs": [
+                        "marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168"
+                    ],
+                    "modified": "2021-11-10T09:30:48.698295Z",
+                    "name": "Service",
+                    "x_mitre_version": "1.0",
+                    "created_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "type": "x-mitre-data-source",
+                    "x_mitre_platforms": [
+                        "Windows",
+                        "Linux",
+                        "macOS"
+                    ],
+                    "id": "x-mitre-data-source--d710099e-df94-4be4-bf85-cabd30e912bb",
+                    "description": "A computer process that is configured to execute continuously in the background and perform system tasks, in some cases before any user has logged in(Citation: Microsoft Services)(Citation: Linux Services Run Levels)",
+                    "x_mitre_collection_layers": [
+                        "Host"
+                    ],
+                    "x_mitre_contributors": [
+                        "Center for Threat-Informed Defense (CTID)"
+                    ],
+                    "created": "2021-10-20T15:05:19.273300Z",
+                    "external_references": [
+                        {
+                            "url": "https://attack.mitre.org/datasources/DS0019",
+                            "external_id": "DS0019",
+                            "source_name": "mitre-attack"
+                        },
+                        {
+                            "url": "https://docs.microsoft.com/en-us/dotnet/framework/windows-services/introduction-to-windows-service-applications",
+                            "description": "Microsoft. (2017, March 30). Introduction to Windows Service Applications. Retrieved September 28, 2021.",
+                            "source_name": "Microsoft Services"
+                        },
+                        {
+                            "url": "https://www.linux.com/news/introduction-services-runlevels-and-rcd-scripts/",
+                            "description": "The Linux Foundation. (2006, January 11). An introduction to services, runlevels, and rc.d scripts. Retrieved September 28, 2021.",
+                            "source_name": "Linux Services Run Levels"
+                        }
+                    ],
+                    "detailed_diff": "{\"values_changed\": {\"root['modified']\": {\"new_value\": \"2021-11-10T09:30:48.698295Z\", \"old_value\": \"2021-10-20T15:05:19.273300Z\"}, \"root['x_mitre_contributors'][0]\": {\"new_value\": \"Center for Threat-Informed Defense (CTID)\", \"old_value\": \"CTID\"}}}",
+                    "previous_version": "1.0"
+                },
+                {
+                    "object_marking_refs": [
+                        "marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168"
+                    ],
+                    "modified": "2021-11-10T09:30:48.698426Z",
+                    "name": "Snapshot",
+                    "x_mitre_version": "1.0",
+                    "created_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "type": "x-mitre-data-source",
+                    "x_mitre_platforms": [
+                        "IaaS"
+                    ],
+                    "id": "x-mitre-data-source--6d7de3b7-283d-48f9-909c-60d123d9d768",
+                    "description": "A point-in-time copy of cloud volumes (files, settings, etc.) that can be created and/or deployed in cloud environments(Citation: Microsoft Snapshot)(Citation: Amazon Snapshots)",
+                    "x_mitre_collection_layers": [
+                        "Cloud Control Plane"
+                    ],
+                    "x_mitre_contributors": [
+                        "Center for Threat-Informed Defense (CTID)"
+                    ],
+                    "created": "2021-10-20T15:05:19.273471Z",
+                    "external_references": [
+                        {
+                            "url": "https://attack.mitre.org/datasources/DS0020",
+                            "external_id": "DS0020",
+                            "source_name": "mitre-attack"
+                        },
+                        {
+                            "url": "https://docs.microsoft.com/en-us/azure/virtual-machines/linux/snapshot-copy-managed-disk",
+                            "description": "Microsoft. (2021, September 16). Create a snapshot of a virtual hard disk. Retrieved October 13, 2021.",
+                            "source_name": "Microsoft Snapshot"
+                        },
+                        {
+                            "url": "https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/EBSSnapshots.html",
+                            "description": "Amazon. (n.d.). Amazon EBS snapshots. Retrieved October 13, 2021.",
+                            "source_name": "Amazon Snapshots"
+                        }
+                    ],
+                    "detailed_diff": "{\"values_changed\": {\"root['modified']\": {\"new_value\": \"2021-11-10T09:30:48.698426Z\", \"old_value\": \"2021-10-20T15:05:19.273471Z\"}, \"root['x_mitre_contributors'][0]\": {\"new_value\": \"Center for Threat-Informed Defense (CTID)\", \"old_value\": \"CTID\"}}}",
+                    "previous_version": "1.0"
+                },
+                {
+                    "object_marking_refs": [
+                        "marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168"
+                    ],
+                    "modified": "2021-11-10T09:30:48.698605Z",
+                    "name": "User Account",
+                    "x_mitre_version": "1.0",
+                    "created_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "type": "x-mitre-data-source",
+                    "x_mitre_platforms": [
+                        "Windows",
+                        "Linux",
+                        "macOS",
+                        "IaaS",
+                        "SaaS",
+                        "Office 365",
+                        "Azure AD",
+                        "Containers",
+                        "Google Workspace"
+                    ],
+                    "id": "x-mitre-data-source--0b4f86ed-f4ab-46a3-8ed1-175be1974da6",
+                    "description": "A profile representing a user, device, service, or application used to authenticate and access resources",
+                    "x_mitre_collection_layers": [
+                        "Host",
+                        "Cloud Control Plane",
+                        "Container"
+                    ],
+                    "x_mitre_contributors": [
+                        "Center for Threat-Informed Defense (CTID)"
+                    ],
+                    "created": "2021-10-20T15:05:19.271422Z",
+                    "external_references": [
+                        {
+                            "url": "https://attack.mitre.org/datasources/DS0002",
+                            "external_id": "DS0002",
+                            "source_name": "mitre-attack"
+                        }
+                    ],
+                    "detailed_diff": "{\"values_changed\": {\"root['modified']\": {\"new_value\": \"2021-11-10T09:30:48.698605Z\", \"old_value\": \"2021-10-20T15:05:19.271422Z\"}, \"root['x_mitre_contributors'][0]\": {\"new_value\": \"Center for Threat-Informed Defense (CTID)\", \"old_value\": \"CTID\"}}}",
+                    "previous_version": "1.0"
+                },
+                {
+                    "object_marking_refs": [
+                        "marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168"
+                    ],
+                    "modified": "2021-11-10T09:30:48.698797Z",
+                    "name": "Volume",
+                    "x_mitre_version": "1.0",
+                    "created_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "type": "x-mitre-data-source",
+                    "x_mitre_platforms": [
+                        "IaaS",
+                        "Windows",
+                        "Linux",
+                        "macOS"
+                    ],
+                    "id": "x-mitre-data-source--b0b6d26f-3747-4444-ac7a-239a6ff80cb5",
+                    "description": "Block object storage hosted on-premise or by third-party providers, typically made available to resources as virtualized hard drives(Citation: Amazon S3)(Citation: Azure Blob Storage)(Citation: Google Cloud Storage)",
+                    "x_mitre_collection_layers": [
+                        "Cloud Control Plane",
+                        "Host"
+                    ],
+                    "x_mitre_contributors": [
+                        "Center for Threat-Informed Defense (CTID)"
+                    ],
+                    "created": "2021-10-20T15:05:19.275065Z",
+                    "external_references": [
+                        {
+                            "url": "https://attack.mitre.org/datasources/DS0034",
+                            "external_id": "DS0034",
+                            "source_name": "mitre-attack"
+                        },
+                        {
+                            "url": "https://aws.amazon.com/s3/",
+                            "description": "Amazon. (n.d.). Amazon S3. Retrieved October 13, 2021.",
+                            "source_name": "Amazon S3"
+                        },
+                        {
+                            "url": "https://azure.microsoft.com/en-us/services/storage/blobs/",
+                            "description": "Microsoft. (n.d.). Azure Blob Storage. Retrieved October 13, 2021.",
+                            "source_name": "Azure Blob Storage"
+                        },
+                        {
+                            "url": "https://cloud.google.com/storage",
+                            "description": "Google. (n.d.). Cloud Storage. Retrieved October 13, 2021.",
+                            "source_name": "Google Cloud Storage"
+                        }
+                    ],
+                    "detailed_diff": "{\"values_changed\": {\"root['modified']\": {\"new_value\": \"2021-11-10T09:30:48.698797Z\", \"old_value\": \"2021-10-20T15:05:19.275065Z\"}, \"root['x_mitre_contributors'][0]\": {\"new_value\": \"Center for Threat-Informed Defense (CTID)\", \"old_value\": \"CTID\"}}}",
+                    "previous_version": "1.0"
+                },
+                {
+                    "object_marking_refs": [
+                        "marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168"
+                    ],
+                    "modified": "2021-11-10T09:30:48.699233Z",
+                    "name": "WMI",
+                    "x_mitre_version": "1.0",
+                    "created_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "type": "x-mitre-data-source",
+                    "x_mitre_platforms": [
+                        "Windows"
+                    ],
+                    "id": "x-mitre-data-source--2cd6cc81-d86e-4595-a4f0-43f5519f14e6",
+                    "description": "The infrastructure for management data and operations that enables local and remote management of Windows personal computers and servers(Citation: Microsoft WMI System Classes)(Citation: Microsoft WMI Architecture)",
+                    "x_mitre_collection_layers": [
+                        "Host"
+                    ],
+                    "x_mitre_contributors": [
+                        "Center for Threat-Informed Defense (CTID)"
+                    ],
+                    "created": "2021-10-20T15:05:19.271772Z",
+                    "external_references": [
+                        {
+                            "url": "https://attack.mitre.org/datasources/DS0005",
+                            "external_id": "DS0005",
+                            "source_name": "mitre-attack"
+                        },
+                        {
+                            "url": "https://docs.microsoft.com/en-us/windows/win32/wmisdk/wmi-system-classes",
+                            "description": "Microsoft. (2018, May 31). WMI System Classes. Retrieved September 29, 2021.",
+                            "source_name": "Microsoft WMI System Classes"
+                        },
+                        {
+                            "url": "https://docs.microsoft.com/en-us/windows/win32/wmisdk/wmi-architecture",
+                            "description": "Microsoft. (2018, May 31). WMI Architecture. Retrieved September 29, 2021.",
+                            "source_name": "Microsoft WMI Architecture"
+                        }
+                    ],
+                    "detailed_diff": "{\"values_changed\": {\"root['modified']\": {\"new_value\": \"2021-11-10T09:30:48.699233Z\", \"old_value\": \"2021-10-20T15:05:19.271772Z\"}, \"root['x_mitre_contributors'][0]\": {\"new_value\": \"Center for Threat-Informed Defense (CTID)\", \"old_value\": \"CTID\"}}}",
+                    "previous_version": "1.0"
+                }
+            ],
+            "revocations": [],
+            "deprecations": [],
+            "deletions": []
+        },
+        "datacomponents": {
+            "additions": [],
+            "major_version_changes": [],
+            "minor_version_changes": [],
+            "other_version_changes": [],
+            "patches": [],
+            "revocations": [],
+            "deprecations": [],
+            "deletions": []
+        }
+    },
+    "mobile-attack": {
+        "techniques": {
+            "additions": [],
+            "major_version_changes": [],
+            "minor_version_changes": [],
+            "other_version_changes": [],
+            "patches": [
+                {
+                    "type": "attack-pattern",
+                    "id": "attack-pattern--cde2cb84-455e-410c-8aa9-086f2788bcd2",
+                    "created_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "created": "2018-10-17 00:14:20.652000+00:00",
+                    "modified": "2021-11-01 18:29:08.293000+00:00",
+                    "name": "Install Insecure or Malicious Configuration",
+                    "description": "An adversary could attempt to install insecure or malicious configuration settings on the mobile device, through means such as phishing emails or text messages either directly containing the configuration settings as an attachment, or containing a web link to the configuration settings. The device user may be tricked into installing the configuration settings through social engineering techniques (Citation: Symantec-iOSProfile).\n\nFor example, an unwanted Certification Authority (CA) certificate could be placed in the device's trusted certificate store, increasing the device's susceptibility to adversary-in-the-middle network attacks seeking to eavesdrop on or manipulate the device's network communication ([Eavesdrop on Insecure Network Communication](https://attack.mitre.org/techniques/T1439) and [Manipulate Device Communication](https://attack.mitre.org/techniques/T1463)).\n\nOn iOS, malicious Configuration Profiles could contain unwanted Certification Authority (CA) certificates or other insecure settings such as unwanted proxy server or VPN settings to route the device's network traffic through an adversary's system. The device could also potentially be enrolled into a malicious Mobile Device Management (MDM) system (Citation: Talos-MDM).",
+                    "kill_chain_phases": [
+                        {
+                            "kill_chain_name": "mitre-mobile-attack",
+                            "phase_name": "defense-evasion"
+                        },
+                        {
+                            "kill_chain_name": "mitre-mobile-attack",
+                            "phase_name": "initial-access"
+                        }
+                    ],
+                    "revoked": false,
+                    "external_references": [
+                        {
+                            "source_name": "mitre-mobile-attack",
+                            "url": "https://attack.mitre.org/techniques/T1478",
+                            "external_id": "T1478"
+                        },
+                        {
+                            "source_name": "NIST Mobile Threat Catalogue",
+                            "url": "https://pages.nist.gov/mobile-threat-catalogue/stack-threats/STA-7.html",
+                            "external_id": "STA-7"
+                        },
+                        {
+                            "source_name": "Symantec-iOSProfile",
+                            "description": "Yair Amit. (2013, March 12). Malicious Profiles \u2013 The Sleeping Giant of iOS Security. Retrieved September 24, 2018.",
+                            "url": "https://www.symantec.com/connect/blogs/malicious-profiles-sleeping-giant-ios-security"
+                        },
+                        {
+                            "source_name": "Talos-MDM",
+                            "description": "Warren Mercer, Paul Rascagneres, Andrew Williams. (2018, July 12). Advanced Mobile Malware Campaign in India uses Malicious MDM. Retrieved September 24, 2018.",
+                            "url": "https://blog.talosintelligence.com/2018/07/Mobile-Malware-Campaign-uses-Malicious-MDM.html"
+                        }
+                    ],
+                    "object_marking_refs": [
+                        "marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168"
+                    ],
+                    "x_mitre_detection": "On Android, the user can view trusted CA certificates through the device settings and look for unexpected certificates. A mobile security product could similarly examine the trusted CA certificate store for anomalies.\n\nOn iOS, the user can view installed Configuration Profiles through the device settings and look for unexpected profiles. A Mobile Device Management (MDM) system could use the iOS MDM APIs to examine the list of installed Configuration Profiles for anomalies.",
+                    "x_mitre_is_subtechnique": false,
+                    "x_mitre_old_attack_id": "MOB-T1081",
+                    "x_mitre_platforms": [
+                        "Android",
+                        "iOS"
+                    ],
+                    "x_mitre_tactic_type": [
+                        "Post-Adversary Device Access"
+                    ],
+                    "x_mitre_version": "1.0",
+                    "detailed_diff": "{\"dictionary_item_added\": {\"root['x_mitre_is_subtechnique']\": false}, \"values_changed\": {\"root['modified']\": {\"new_value\": \"2021-11-01 18:29:08.293000+00:00\", \"old_value\": \"2018-10-17 00:14:20.652000+00:00\"}, \"root['description']\": {\"new_value\": \"An adversary could attempt to install insecure or malicious configuration settings on the mobile device, through means such as phishing emails or text messages either directly containing the configuration settings as an attachment, or containing a web link to the configuration settings. The device user may be tricked into installing the configuration settings through social engineering techniques (Citation: Symantec-iOSProfile).\\n\\nFor example, an unwanted Certification Authority (CA) certificate could be placed in the device's trusted certificate store, increasing the device's susceptibility to adversary-in-the-middle network attacks seeking to eavesdrop on or manipulate the device's network communication ([Eavesdrop on Insecure Network Communication](https://attack.mitre.org/techniques/T1439) and [Manipulate Device Communication](https://attack.mitre.org/techniques/T1463)).\\n\\nOn iOS, malicious Configuration Profiles could contain unwanted Certification Authority (CA) certificates or other insecure settings such as unwanted proxy server or VPN settings to route the device's network traffic through an adversary's system. The device could also potentially be enrolled into a malicious Mobile Device Management (MDM) system (Citation: Talos-MDM).\", \"old_value\": \"An adversary could attempt to install insecure or malicious configuration settings on the mobile device, through means such as phishing emails or text messages either directly containing the configuration settings as an attachment, or containing a web link to the configuration settings. The device user may be tricked into installing the configuration settings through social engineering techniques (Citation: Symantec-iOSProfile).\\n\\nFor example, an unwanted Certification Authority (CA) certificate could be placed in the device's trusted certificate store, increasing the device's susceptibility to man-in-the-middle network attacks seeking to eavesdrop on or manipulate the device's network communication ([Eavesdrop on Insecure Network Communication](https://attack.mitre.org/techniques/T1439) and [Manipulate Device Communication](https://attack.mitre.org/techniques/T1463)).\\n\\nOn iOS, malicious Configuration Profiles could contain unwanted Certification Authority (CA) certificates or other insecure settings such as unwanted proxy server or VPN settings to route the device's network traffic through an adversary's system. The device could also potentially be enrolled into a malicious Mobile Device Management (MDM) system (Citation: Talos-MDM).\", \"diff\": \"--- \\n+++ \\n@@ -1,5 +1,5 @@\\n An adversary could attempt to install insecure or malicious configuration settings on the mobile device, through means such as phishing emails or text messages either directly containing the configuration settings as an attachment, or containing a web link to the configuration settings. The device user may be tricked into installing the configuration settings through social engineering techniques (Citation: Symantec-iOSProfile).\\n \\n-For example, an unwanted Certification Authority (CA) certificate could be placed in the device's trusted certificate store, increasing the device's susceptibility to man-in-the-middle network attacks seeking to eavesdrop on or manipulate the device's network communication ([Eavesdrop on Insecure Network Communication](https://attack.mitre.org/techniques/T1439) and [Manipulate Device Communication](https://attack.mitre.org/techniques/T1463)).\\n+For example, an unwanted Certification Authority (CA) certificate could be placed in the device's trusted certificate store, increasing the device's susceptibility to adversary-in-the-middle network attacks seeking to eavesdrop on or manipulate the device's network communication ([Eavesdrop on Insecure Network Communication](https://attack.mitre.org/techniques/T1439) and [Manipulate Device Communication](https://attack.mitre.org/techniques/T1463)).\\n \\n On iOS, malicious Configuration Profiles could contain unwanted Certification Authority (CA) certificates or other insecure settings such as unwanted proxy server or VPN settings to route the device's network traffic through an adversary's system. The device could also potentially be enrolled into a malicious Mobile Device Management (MDM) system (Citation: Talos-MDM).\"}}}",
+                    "previous_version": "1.0",
+                    "description_change_table": "\n    <table class=\"diff\" id=\"difflib_chg_to366__top\"\n           cellspacing=\"0\" cellpadding=\"0\" rules=\"groups\" >\n        <colgroup></colgroup> <colgroup></colgroup> <colgroup></colgroup>\n        <colgroup></colgroup> <colgroup></colgroup> <colgroup></colgroup>\n        <thead><tr><th class=\"diff_next\"><br /></th><th colspan=\"2\" class=\"diff_header\">Old Description</th><th class=\"diff_next\"><br /></th><th colspan=\"2\" class=\"diff_header\">New Description</th></tr></thead>\n        <tbody>\n            <tr><td class=\"diff_next\" id=\"difflib_chg_to366__0\"><a href=\"#difflib_chg_to366__top\">t</a></td><td class=\"diff_header\" id=\"from366_1\">1</td><td nowrap=\"nowrap\">An&nbsp;adversary&nbsp;could&nbsp;attempt&nbsp;to&nbsp;install&nbsp;insecure&nbsp;or&nbsp;malicious&nbsp;</td><td class=\"diff_next\"><a href=\"#difflib_chg_to366__top\">t</a></td><td class=\"diff_header\" id=\"to366_1\">1</td><td nowrap=\"nowrap\">An&nbsp;adversary&nbsp;could&nbsp;attempt&nbsp;to&nbsp;install&nbsp;insecure&nbsp;or&nbsp;malicious&nbsp;</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">configuration&nbsp;settings&nbsp;on&nbsp;the&nbsp;mobile&nbsp;device,&nbsp;through&nbsp;means&nbsp;s</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">configuration&nbsp;settings&nbsp;on&nbsp;the&nbsp;mobile&nbsp;device,&nbsp;through&nbsp;means&nbsp;s</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">uch&nbsp;as&nbsp;phishing&nbsp;emails&nbsp;or&nbsp;text&nbsp;messages&nbsp;either&nbsp;directly&nbsp;cont</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">uch&nbsp;as&nbsp;phishing&nbsp;emails&nbsp;or&nbsp;text&nbsp;messages&nbsp;either&nbsp;directly&nbsp;cont</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">aining&nbsp;the&nbsp;configuration&nbsp;settings&nbsp;as&nbsp;an&nbsp;attachment,&nbsp;or&nbsp;conta</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">aining&nbsp;the&nbsp;configuration&nbsp;settings&nbsp;as&nbsp;an&nbsp;attachment,&nbsp;or&nbsp;conta</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">ining&nbsp;a&nbsp;web&nbsp;link&nbsp;to&nbsp;the&nbsp;configuration&nbsp;settings.&nbsp;The&nbsp;device&nbsp;u</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">ining&nbsp;a&nbsp;web&nbsp;link&nbsp;to&nbsp;the&nbsp;configuration&nbsp;settings.&nbsp;The&nbsp;device&nbsp;u</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">ser&nbsp;may&nbsp;be&nbsp;tricked&nbsp;into&nbsp;installing&nbsp;the&nbsp;configuration&nbsp;setting</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">ser&nbsp;may&nbsp;be&nbsp;tricked&nbsp;into&nbsp;installing&nbsp;the&nbsp;configuration&nbsp;setting</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">s&nbsp;through&nbsp;social&nbsp;engineering&nbsp;techniques&nbsp;(Citation:&nbsp;Symantec-</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">s&nbsp;through&nbsp;social&nbsp;engineering&nbsp;techniques&nbsp;(Citation:&nbsp;Symantec-</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">iOSProfile).&nbsp;&nbsp;For&nbsp;example,&nbsp;an&nbsp;unwanted&nbsp;Certification&nbsp;Authori</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">iOSProfile).&nbsp;&nbsp;For&nbsp;example,&nbsp;an&nbsp;unwanted&nbsp;Certification&nbsp;Authori</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">ty&nbsp;(CA)&nbsp;certificate&nbsp;could&nbsp;be&nbsp;placed&nbsp;in&nbsp;the&nbsp;device's&nbsp;trusted&nbsp;</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">ty&nbsp;(CA)&nbsp;certificate&nbsp;could&nbsp;be&nbsp;placed&nbsp;in&nbsp;the&nbsp;device's&nbsp;trusted&nbsp;</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">certificate&nbsp;store,&nbsp;increasing&nbsp;the&nbsp;device's&nbsp;susceptibility&nbsp;to</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">certificate&nbsp;store,&nbsp;increasing&nbsp;the&nbsp;device's&nbsp;susceptibility&nbsp;to</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">&nbsp;<span class=\"diff_chg\">man</span>-in-the-middle&nbsp;network&nbsp;attacks&nbsp;seeking&nbsp;to&nbsp;eavesdrop&nbsp;on&nbsp;o</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">&nbsp;<span class=\"diff_chg\">adversary</span>-in-the-middle&nbsp;network&nbsp;attacks&nbsp;seeking&nbsp;to&nbsp;eavesdro</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">r&nbsp;manipulate&nbsp;the&nbsp;device's&nbsp;network&nbsp;communication&nbsp;([Eavesdrop&nbsp;</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">p&nbsp;on&nbsp;or&nbsp;manipulate&nbsp;the&nbsp;device's&nbsp;network&nbsp;communication&nbsp;([Eave</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">on&nbsp;Insecure&nbsp;Network&nbsp;Communication](https://attack.mitre.org/</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">sdrop&nbsp;on&nbsp;Insecure&nbsp;Network&nbsp;Communication](https://attack.mitr</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">techniques/T1439)&nbsp;and&nbsp;[Manipulate&nbsp;Device&nbsp;Communication](http</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">e.org/techniques/T1439)&nbsp;and&nbsp;[Manipulate&nbsp;Device&nbsp;Communication</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">s://attack.mitre.org/techniques/T1463)).&nbsp;&nbsp;On&nbsp;iOS,&nbsp;malicious&nbsp;</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">](https://attack.mitre.org/techniques/T1463)).&nbsp;&nbsp;On&nbsp;iOS,&nbsp;mali</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">Configuration&nbsp;Profiles&nbsp;could&nbsp;contain&nbsp;unwanted&nbsp;Certification&nbsp;</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">cious&nbsp;Configuration&nbsp;Profiles&nbsp;could&nbsp;contain&nbsp;unwanted&nbsp;Certific</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">Authority&nbsp;(CA)&nbsp;certificates&nbsp;or&nbsp;other&nbsp;insecure&nbsp;settings&nbsp;such&nbsp;</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">ation&nbsp;Authority&nbsp;(CA)&nbsp;certificates&nbsp;or&nbsp;other&nbsp;insecure&nbsp;settings</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">as&nbsp;unwanted&nbsp;proxy&nbsp;server&nbsp;or&nbsp;VPN&nbsp;settings&nbsp;to&nbsp;route&nbsp;the&nbsp;device</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">&nbsp;such&nbsp;as&nbsp;unwanted&nbsp;proxy&nbsp;server&nbsp;or&nbsp;VPN&nbsp;settings&nbsp;to&nbsp;route&nbsp;the&nbsp;</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">'s&nbsp;network&nbsp;traffic&nbsp;through&nbsp;an&nbsp;adversary's&nbsp;system.&nbsp;The&nbsp;device</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">device's&nbsp;network&nbsp;traffic&nbsp;through&nbsp;an&nbsp;adversary's&nbsp;system.&nbsp;The&nbsp;</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">&nbsp;could&nbsp;also&nbsp;potentially&nbsp;be&nbsp;enrolled&nbsp;into&nbsp;a&nbsp;malicious&nbsp;Mobile&nbsp;</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">device&nbsp;could&nbsp;also&nbsp;potentially&nbsp;be&nbsp;enrolled&nbsp;into&nbsp;a&nbsp;malicious&nbsp;M</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">Device&nbsp;Management&nbsp;(MDM)&nbsp;system&nbsp;(Citation:&nbsp;Talos-MDM).</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">obile&nbsp;Device&nbsp;Management&nbsp;(MDM)&nbsp;system&nbsp;(Citation:&nbsp;Talos-MDM).</td></tr>\n        </tbody>\n    </table>",
+                    "changelog_mitigations": {
+                        "shared": [
+                            "M1006: Use Recent OS Version",
+                            "M1011: User Guidance"
+                        ],
+                        "new": [],
+                        "dropped": []
+                    },
+                    "changelog_detections": {
+                        "shared": [],
+                        "new": [],
+                        "dropped": []
+                    }
+                }
+            ],
+            "revocations": [],
+            "deprecations": [],
+            "deletions": []
+        },
+        "software": {
+            "additions": [],
+            "major_version_changes": [],
+            "minor_version_changes": [],
+            "other_version_changes": [],
+            "patches": [
+                {
+                    "type": "malware",
+                    "id": "malware--6a7aaab1-3e0a-48bb-ba66-bbf7665c0a65",
+                    "created_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "created": "2019-09-04 14:28:14.181000+00:00",
+                    "modified": "2021-11-01 18:30:41.998000+00:00",
+                    "name": "Monokle",
+                    "description": "[Monokle](https://attack.mitre.org/software/S0407) is targeted, sophisticated mobile surveillanceware. It is developed for Android, but there are some code artifacts that suggests an iOS version may be in development.(Citation: Lookout-Monokle)",
+                    "revoked": false,
+                    "labels": [
+                        "malware"
+                    ],
+                    "external_references": [
+                        {
+                            "source_name": "mitre-attack",
+                            "url": "https://attack.mitre.org/software/S0407",
+                            "external_id": "S0407"
+                        },
+                        {
+                            "source_name": "Lookout-Monokle",
+                            "description": "Bauer A., Kumar A., Hebeisen C., et al. (2019, July). Monokle: The Mobile Surveillance Tooling of the Special Technology Center. Retrieved September 4, 2019.",
+                            "url": "https://www.lookout.com/documents/threat-reports/lookout-discovers-monokle-threat-report.pdf"
+                        }
+                    ],
+                    "object_marking_refs": [
+                        "marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168"
+                    ],
+                    "x_mitre_aliases": [
+                        "Monokle"
+                    ],
+                    "x_mitre_contributors": [
+                        "J\u00f6rg Abraham, EclecticIQ"
+                    ],
+                    "x_mitre_platforms": [
+                        "Android"
+                    ],
+                    "x_mitre_version": "1.2",
+                    "detailed_diff": "{\"values_changed\": {\"root['modified']\": {\"new_value\": \"2021-11-01 18:30:41.998000+00:00\", \"old_value\": \"2021-09-24 14:52:40.927000+00:00\"}}}",
+                    "previous_version": "1.2"
+                }
+            ],
+            "revocations": [],
+            "deprecations": [],
+            "deletions": []
+        },
+        "groups": {
+            "additions": [],
+            "major_version_changes": [],
+            "minor_version_changes": [],
+            "other_version_changes": [],
+            "patches": [],
+            "revocations": [],
+            "deprecations": [],
+            "deletions": []
+        },
+        "campaigns": {
+            "additions": [],
+            "major_version_changes": [],
+            "minor_version_changes": [],
+            "other_version_changes": [],
+            "patches": [],
+            "revocations": [],
+            "deprecations": [],
+            "deletions": []
+        },
+        "mitigations": {
+            "additions": [],
+            "major_version_changes": [],
+            "minor_version_changes": [],
+            "other_version_changes": [],
+            "patches": [],
+            "revocations": [],
+            "deprecations": [],
+            "deletions": []
+        },
+        "datasources": {
+            "additions": [],
+            "major_version_changes": [],
+            "minor_version_changes": [],
+            "other_version_changes": [],
+            "patches": [],
+            "revocations": [],
+            "deprecations": [],
+            "deletions": []
+        },
+        "datacomponents": {
+            "additions": [],
+            "major_version_changes": [],
+            "minor_version_changes": [],
+            "other_version_changes": [],
+            "patches": [],
+            "revocations": [],
+            "deprecations": [],
+            "deletions": []
+        }
+    },
+    "ics-attack": {
+        "techniques": {
+            "additions": [],
+            "major_version_changes": [],
+            "minor_version_changes": [],
+            "other_version_changes": [],
+            "patches": [],
+            "revocations": [],
+            "deprecations": [],
+            "deletions": []
+        },
+        "software": {
+            "additions": [],
+            "major_version_changes": [],
+            "minor_version_changes": [],
+            "other_version_changes": [],
+            "patches": [],
+            "revocations": [],
+            "deprecations": [],
+            "deletions": []
+        },
+        "groups": {
+            "additions": [],
+            "major_version_changes": [],
+            "minor_version_changes": [],
+            "other_version_changes": [],
+            "patches": [],
+            "revocations": [],
+            "deprecations": [],
+            "deletions": []
+        },
+        "campaigns": {
+            "additions": [],
+            "major_version_changes": [],
+            "minor_version_changes": [],
+            "other_version_changes": [],
+            "patches": [],
+            "revocations": [],
+            "deprecations": [],
+            "deletions": []
+        },
+        "mitigations": {
+            "additions": [],
+            "major_version_changes": [],
+            "minor_version_changes": [],
+            "other_version_changes": [],
+            "patches": [],
+            "revocations": [],
+            "deprecations": [],
+            "deletions": []
+        },
+        "datasources": {
+            "additions": [],
+            "major_version_changes": [],
+            "minor_version_changes": [],
+            "other_version_changes": [],
+            "patches": [],
+            "revocations": [],
+            "deprecations": [],
+            "deletions": []
+        },
+        "datacomponents": {
+            "additions": [],
+            "major_version_changes": [],
+            "minor_version_changes": [],
+            "other_version_changes": [],
+            "patches": [],
+            "revocations": [],
+            "deprecations": [],
+            "deletions": []
+        }
+    },
+    "new-contributors": [
+        "Center for Threat-Informed Defense (CTID)",
+        "Hiroki Nagahama, NEC Corporation",
+        "Lior Ribak, SentinelOne",
+        "Manikantan Srinivasan, NEC Corporation India",
+        "Pooja Natarajan, NEC Corporation India"
+    ]
+}

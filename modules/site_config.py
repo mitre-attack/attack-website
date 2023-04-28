@@ -168,7 +168,7 @@ custom_alphabet += rest_of_alphabet
 # Constants used for generated layers
 # ----------------------------------------------------------------------------
 # usage:
-#     domain: "enterprise" or "mobile"
+#     domain: "enterprise", "mobile", "ics"
 #     path: the path to the object, e.g "software/S1001" or "groups/G2021"
 layer_md = Template(
     "Title: ${domain} Techniques\n"
@@ -176,6 +176,8 @@ layer_md = Template(
     "save_as: ${path}/${attack_id}-${domain}-layer.json\n"
     "json: "
 )
+layer_version = "4.4"
+navigator_version = "4.8.1"
 
 # Directory for test reports
 test_report_directory = "reports"
