@@ -1,4 +1,4 @@
-const { IndexedDBWrapper } = require("../src/indexed-db-wrapper");
+const { IndexedDbWrapper } = require("../src/db/indexed-db-wrapper.cjs");
 import 'fake-indexeddb/auto';
 
 // Mock the console.log function to prevent logs during testing
@@ -23,7 +23,7 @@ describe('IndexedDBWrapper', () => {
             test_search_index_table: '++id, title, content'
         };
 
-        testDb = new IndexedDBWrapper(dbName, schemas);
+        testDb = new IndexedDbWrapper(dbName, schemas);
         contentDb = testDb.getTableWrapper('test_content_table');
         flexsearchDb = testDb.getTableWrapper('test_search_index_table');
     });
