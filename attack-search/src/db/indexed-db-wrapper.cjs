@@ -70,7 +70,7 @@ class TableWrapper {
 
     /**
      * Retrieves data from the IndexedDB using the specified key.
-     * @param {string} key - The key to retrieve data from the IndexedDB.
+     * @param {string} id - The key to retrieve data from the IndexedDB.
      * @returns {Promise<Object>}
      */
     async get(id) {
@@ -94,7 +94,7 @@ class TableWrapper {
     }
 }
 
-class IndexedDBWrapper {
+class IndexedDbWrapper {
     constructor(dbName, schemas, version= 1) {
         this.dbName = dbName;
         this.version = version;
@@ -133,6 +133,7 @@ class IndexedDBWrapper {
 }
 
 module.exports = {
-    IndexedDBWrapper,
+    IndexedDbWrapper,
     TableWrapper
 }
+
