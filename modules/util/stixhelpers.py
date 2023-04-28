@@ -15,12 +15,7 @@ from . import relationshiphelpers as rsh
 
 def get_mitigation_list(src, get_deprecated=False):
     """Reads the STIX and returns a list of all mitigations in the STIX"""
-    mitigations = src.query(
-        [
-            stix2.Filter("type", "=", "course-of-action"),
-            stix2.Filter("revoked", "=", False)
-        ]
-    )
+    mitigations = src.query([stix2.Filter("type", "=", "course-of-action"), stix2.Filter("revoked", "=", False)])
 
     if not get_deprecated:
         # Filter out deprecated objects for mitigation pages
@@ -234,7 +229,6 @@ def datasource_of():
     datasource_of = {}
     for datacomponent in datacomponents:
         if not datasource_of.get(datacomponent["id"]):
-
             datasource = get_datasource_from_list(datacomponent["x_mitre_data_source_ref"])
 
             if datasource:
@@ -395,7 +389,6 @@ def get_stix_memory_stores():
     srcs = []
 
     for domain in site_config.domains:
-
         stix_filename = None
         # Download json from http or https
         if domain["location"].startswith("http"):

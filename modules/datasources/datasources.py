@@ -170,11 +170,9 @@ def get_datasources_side_nav_data(datasources):
 
     # Loop through data sources
     for datasource in datasources:
-
         attack_id = util.buildhelpers.get_attack_id(datasource)
 
         if attack_id:
-
             domains_of_datasource = []
             datasource_data = {
                 "name": datasource["name"],
@@ -185,7 +183,6 @@ def get_datasources_side_nav_data(datasources):
 
             if datacomponent_of.get(datasource["id"]):
                 for datacomponent in datacomponent_of[datasource["id"]]:
-
                     if not datacomponent.get("x_mitre_deprecated") and not datacomponent.get("revoked"):
                         # get data component detections
                         techniques_of_datacomp = techniques_detected_by_datacomponent.get(datacomponent["id"])
@@ -233,7 +230,6 @@ def get_datasources_table_data(datasource_list):
 
     # Now the table on the right, which is made up of datasource data
     for datasource in datasource_list:
-
         attack_id = util.buildhelpers.get_attack_id(datasource)
 
         if attack_id:

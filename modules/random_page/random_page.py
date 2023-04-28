@@ -15,7 +15,7 @@ def generate_json():
         "mitigations": "Mitigation",
         "groups": "Group",
         "software": "Software",
-        "campaigns": "Campaign"
+        "campaigns": "Campaign",
     }
     routes = {}
 

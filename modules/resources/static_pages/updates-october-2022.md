@@ -6,9 +6,9 @@ Template: resources/update-post
 url: /resources/updates/updates-october-2022
 save_as: resources/updates/updates-october-2022/index.html
 
-| Version | Start Date | End Date | Data |
-|:--------|:-----------|:---------|:-----|
-| [ATT&CK v12](/versions/v12) | October 25, 2022 |This is the current version of ATT&CK | [v12.1 on MITRE/CTI](https://github.com/mitre/cti/releases/tag/ATT%26CK-v12.1) |
+| Version | Start Date | End Date | Data | Changelogs |
+|:--------|:-----------|:---------|:-----|:-----------|
+| [ATT&CK v12](/versions/v12) | October 25, 2022 | April 24, 2023 | [v12.0 on MITRE/CTI](https://github.com/mitre/cti/releases/tag/ATT%26CK-v12.0)<br />[v12.1 on MITRE/CTI](https://github.com/mitre/cti/releases/tag/ATT%26CK-v12.1) | 11.3 - 12.0 [Details](/docs/changelogs/v11.3-v12.0/changelog-detailed.html) ([JSON](/docs/changelogs/v11.3-v12.0/changelog.json))<br />12.0 - 12.1 [Details](/docs/changelogs/v12.0-v12.1/changelog-detailed.html) ([JSON](/docs/changelogs/v12.0-v12.1/changelog.json)) |
 
 The October 2022 (v12) ATT&CK release updates Techniques, Groups, and Software for Enterprise, Mobile, and ICS. The biggest changes in ATT&CK v12 are the addition of detections to ATT&CK for ICS, and the introduction of Campaigns.
 
