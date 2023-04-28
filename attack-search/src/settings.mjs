@@ -11,7 +11,15 @@ const searchFilePaths = [
     "tactics.json",
     "techniques.json"
 ]
-module.exports = {
+
+const MessageType = {
+    SEARCH: 'search',
+    SEARCH_RESULTS: 'search-results',
+    ERROR: 'error'
+}
+
+export {
     baseURL,
-    searchFilePaths
+    searchFilePaths,
+    MessageType
 }
