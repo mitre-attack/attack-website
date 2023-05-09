@@ -1,31 +1,47 @@
+/**
+ * Check if the "layout-options" dropdown-toggle button element exists, then load the saved layout.
+ */
 if (document.getElementById("layout-options")) {
-    load_saved_layout();
+    loadSavedLayout();
 }
 
-function matrix_toggle_technique(tactic_id, technique_id) {
-    var joined = tactic_id + "--" + technique_id;
+/**
+ * Toggle the visibility and expansion of a matrix technique's subtechniques.
+ * @param {string} tacticId - The tactic ID.
+ * @param {string} techniqueId - The technique ID.
+ */
+function toggleMatrixSubtechniques(tacticId, techniqueId) {
+    const joined = tacticId + "--" + techniqueId;
     $(".subtechniques--" + joined).toggleClass("hidden");
     $(".sidebar--" + joined).toggleClass("expanded");
 }
 
-// set the state of the given technique
-// state must be "open" or "closed"
-// if tour is true, affects the sub-technique tour technique, ignoring the technique and tactic params
-function setMatrixCellState(tactic_id, technique_id, state) {
-    if (state == "open") {
-        var joined = tour? 'tour' : tactic_id + "--" + technique_id;
-        $(".subtechniques--" + joined).removeClass("hidden");
-        $(".sidebar--" + joined).addClass("expanded");
-    } else if (state == "closed") {
-        var joined = tour? 'tour' : tactic_id + "--" + technique_id;
-        $(".subtechniques--" + joined).addClass("hidden");
-        $(".sidebar--" + joined).removeClass("expanded");
+/**
+ * Set the state of the given technique.
+ * @param {string} tacticId - The tactic ID.
+ * @param {string} techniqueId - The technique ID.
+ * @param {string} state - State must be "open" or "closed".
+ * @param {boolean} tour - If true, affects the sub-technique tour technique, ignoring the technique and tactic params.
+ */
+function setMatrixCellState(tacticId, techniqueId, state, tour = false) {
+    const joined = tour ? 'tour' : tacticId + "--" + techniqueId;
+    const subtechniques = $(".subtechniques--" + joined);
+    const sidebar = $(".sidebar--" + joined);
+
+    if (state === "open") {
+        subtechniques.removeClass("hidden");
+        sidebar.addClass("expanded");
+    } else if (state === "closed") {
+        subtechniques.addClass("hidden");
+        sidebar.removeClass("expanded");
     }
 }
 
-//open or close all techniques with sub-techniques
-//param is boolean, if true opens all, if false closes all
-function matrix_toggle_all(visible) {
+/**
+ * Open or close all techniques with sub-techniques.
+ * @param {boolean} visible - If true, opens all techniques. If false, closes all techniques.
+ */
+function toggleAllMatrixSubtechniques(visible) {
     if (visible) {
         $(".sidebar").addClass("expanded");
         $(".subtechniques-container").removeClass("hidden");
@@ -35,65 +51,101 @@ function matrix_toggle_all(visible) {
     }
 }
 
-// switch tabs to the given matrix, param is either "flat" or "side"
+/**
+ * Switch tabs to the given matrix.
+ * @param {string} whichMatrix - Either "flat" or "side".
+ */
 function showMatrix(whichMatrix) {
-    if (whichMatrix == "flat") show_flat_matrix();
-    if (whichMatrix == "side") show_side_matrix();
+    if (whichMatrix === "flat") {
+        showFlatMatrix();
+    }
+    if (whichMatrix === "side") {
+        showSideMatrix();
+    }
 }
 
-function show_side_matrix() {
+/**
+ * Display the side matrix layout and save the layout.
+ */
+function showSideMatrix() {
     $(".layout-button.side").addClass("active");
     $(".layout-button.flat").removeClass("active");
 
     $(".matrix-type.side").removeClass("d-none");
     $(".matrix-type.flat").addClass("d-none");
 
-    layoutOptions = document.getElementById("layout-options");
+    const layoutOptions = document.getElementById("layout-options");
     layoutOptions.setAttribute("data-selected_layout", "side");
     layoutOptions.innerHTML = "layout: side";
-    save_layout();
+    saveLayout();
 }
 
-function show_flat_matrix() {
+/**
+ * Display the flat matrix layout and save the layout.
+ */
+function showFlatMatrix() {
     $(".layout-button.flat").addClass("active");
     $(".layout-button.side").removeClass("active");
 
     $(".matrix-type.flat").removeClass("d-none");
     $(".matrix-type.side").addClass("d-none");
 
-    layoutOptions = document.getElementById("layout-options");
+    const layoutOptions = document.getElementById("layout-options");
     layoutOptions.setAttribute("data-selected_layout", "flat");
     layoutOptions.innerHTML = "layout: flat";
-    save_layout();
+    saveLayout();
 }
 
+
+/**
+ * Compute the scroll markers.
+ */
 function computeScrollMarkers() {
-    let beginning = $(this).scrollLeft() == 0; //is the scroll at the left side?
-    //is the scroll at the right side? 
-    let scrollPosition = ($(this).scrollLeft() + $(this).width()); //the right side of the scroll viewport
-    let scrollEnd = $(this).find(".matrix").width(); // the right side of the scrollABLE area
-    let end = Math.abs(scrollPosition - scrollEnd) < 5; //are they roughly the same?
-    let leftIndicator = $(this).parent().find(".scroll-indicator.left")
-    let rightIndicator = $(this).parent().find(".scroll-indicator.right")
-    if (!beginning) leftIndicator.addClass("show");
-    else            leftIndicator.removeClass("show");
-    if (!end)       rightIndicator.addClass("show");
-    else            rightIndicator.removeClass("show");
-}
+    const beginning = $(this).scrollLeft() === 0;
+    const scrollPosition = $(this).scrollLeft() + $(this).width();
+    const scrollEnd = $(this).find(".matrix").width();
+    const end = Math.abs(scrollPosition - scrollEnd) < 5;
+    const leftIndicator = $(this).parent().find(".scroll-indicator.left");
+    const rightIndicator = $(this).parent().find(".scroll-indicator.right");
 
-function load_saved_layout() {
-    let saved_layout = localStorage.getItem("saved_layout");
-    if (saved_layout == "flat") {
-        show_flat_matrix();
+    if (!beginning) {
+        leftIndicator.addClass("show");
+    } else {
+        leftIndicator.removeClass("show");
+    }
+
+    if (!end) {
+        rightIndicator.addClass("show");
+    } else {
+        rightIndicator.removeClass("show");
     }
 }
 
-function save_layout() {
-    let saved_layout = document.getElementById("layout-options").getAttribute("data-selected_layout");
-    localStorage.setItem("saved_layout", saved_layout);
+/**
+ * Load the saved layout from local storage and display it.
+ */
+function loadSavedLayout() {
+    const savedLayout = localStorage.getItem("saved_layout");
+    if (savedLayout === "flat") {
+        showFlatMatrix();
+    }
 }
 
-$(".matrix-scroll-box").scroll(computeScrollMarkers); //respond to scrolling in matrix scroll boxes
-function initScrollMarkers() { $(".matrix-scroll-box").each(computeScrollMarkers); } 
-initScrollMarkers(); //initial state for scroll markers
-$(window).resize(initScrollMarkers); //respond to page resize
+/**
+ * Save the currently selected layout to local storage.
+ */
+function saveLayout() {
+    const savedLayout = document.getElementById("layout-options").getAttribute("data-selected_layout");
+    localStorage.setItem("saved_layout", savedLayout);
+}
+
+// Respond to scrolling in matrix scroll boxes
+$(".matrix-scroll-box").scroll(computeScrollMarkers);
+
+// Initialize the scroll markers
+function initScrollMarkers() {
+    $(".matrix-scroll-box").each(computeScrollMarkers);
+}
+
+initScrollMarkers(); // Initial state for scroll markers
+$(window).resize(initScrollMarkers); // Respond to page resize
