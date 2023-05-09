@@ -8,7 +8,7 @@ save_as: resources/updates/updates-april-2023/index.html
 
 | Version | Start Date | End Date | Data | Changelogs |
 |:--------|:-----------|:---------|:-----|:-----------|
-| [ATT&CK v13](/versions/v13) | April 25, 2023 | This is the current version of ATT&CK | [v13.0 on MITRE/CTI](https://github.com/mitre/cti/releases/tag/ATT%26CK-v13.0) | v12.1 - v13.0 [Details](/docs/changelogs/v12.1-v13.0/changelog-detailed.html) ([JSON](/docs/changelogs/v12.1-v13.0/changelog.json)) |
+| [ATT&CK v13](/versions/v13) | April 25, 2023 | This is the current version of ATT&CK | [v13.0 on MITRE/CTI](https://github.com/mitre/cti/releases/tag/ATT%26CK-v13.0)<br />[v13.1 on MITRE/CTI](https://github.com/mitre/cti/releases/tag/ATT%26CK-v13.1) | v12.1 - v13.0 [Details](/docs/changelogs/v12.1-v13.0/changelog-detailed.html) ([JSON](/docs/changelogs/v12.1-v13.0/changelog.json))<br />v13.0 - v13.1 [Details](/docs/changelogs/v13.0-v13.1/changelog-detailed.html) ([JSON](/docs/changelogs/v13.0-v13.1/changelog.json)) |
 
 The April 2023 (v13) ATT&CK release updates Techniques, Groups, Campaigns and Software for Enterprise, Mobile, and ICS. The biggest changes in ATT&CK v13 are the addition of detailed detection guidance to some Techniques in ATT&CK for Enterprise, Mobile Data Sources, and two new types of changelogs to help identify more precisely what has changed in ATT&CK. An [accompanying blog post](https://medium.com/mitre-attack/attack-v13-enters-the-room-5cef174c32ff) describes these changes as well as improvements across ATT&CK's various domains and platforms.
 
