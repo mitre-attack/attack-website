@@ -1,5 +1,12 @@
 <!-- TOWNCRIER -->
 
+# v4.0.3 (2023-05-09)
+
+## Features
+
+* Release ATT&CK content version 13.1.
+  See detailed changes [here](https://github.com/mitre/cti/releases/tag/ATT%26CK-v13.1).
+
 # v4.0.2 (2023-04-27)
 
 ## Features
