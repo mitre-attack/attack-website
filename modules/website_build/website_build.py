@@ -105,6 +105,9 @@ def generate_base_html():
         banner_message = site_config.args.banner
     website_build_config.base_page_data["BANNER_MESSAGE"] = banner_message
 
+    logger.debug(f"{banner_enabled=}")
+    logger.debug(f"{banner_message=}")
+
     if site_config.args.attack_brand:
         if website_build_config.base_page_data["BANNER_MESSAGE"].startswith("This is a custom instance"):
             website_build_config.base_page_data["BANNER_ENABLED"] = False
