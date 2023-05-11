@@ -162,6 +162,7 @@ def generate_group_md(group, side_menu_data, side_menu_mobile_view_data, notes):
             data["layers"].append(
                 {
                     "domain": layer["domain"],
+                    "name": layer["name"],
                     "filename": layer["filename"],
                     "navigator_link": site_config.navigator_link,
                 }

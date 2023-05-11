@@ -725,19 +725,22 @@ def get_navigator_layers(name, attack_id, obj_type, version, techniques_used, in
     layers = []
     if enterprise_layer["techniques"]:
         layers.append({
-            "domain": domain_name_map["enterprise-attack"],
+            "domain": "enterprise",
+            "name": domain_name_map["enterprise-attack"],
             "filename": f"{attack_id}-enterprise-layer.json",
             "layer": json.dumps(enterprise_layer)
         })
     if mobile_layer["techniques"]:
         layers.append({
-            "domain": domain_name_map["mobile-attack"],
+            "domain": "mobile",
+            "name": domain_name_map["mobile-attack"],
             "filename": f"{attack_id}-mobile-layer.json",
             "layer": json.dumps(mobile_layer)
         })
     if ics_layer["techniques"]:
         layers.append({
-            "domain": domain_name_map["ics-attack"],
+            "domain": "ics",
+            "name": domain_name_map["ics-attack"],
             "filename": f"{attack_id}-ics-layer.json",
             "layer": json.dumps(ics_layer)
         })
