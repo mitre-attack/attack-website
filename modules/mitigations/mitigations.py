@@ -168,6 +168,7 @@ def generate_mitigation_md(mitigation, domain, side_menu_data, side_menu_mobile_
             data["layers"].append(
                 {
                     "domain": layer["domain"],
+                    "name": layer["name"],
                     "filename": layer["filename"],
                     "navigator_link": site_config.navigator_link,
                 }

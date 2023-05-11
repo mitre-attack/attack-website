@@ -174,6 +174,7 @@ def generate_campaign_md(campaign, side_menu_data, side_menu_mobile_view_data, n
             data["layers"].append(
                 {
                     "domain": layer["domain"],
+                    "name": layer["name"],
                     "filename": layer["filename"],
                     "navigator_link": site_config.navigator_link,
                 }
