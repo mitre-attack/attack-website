@@ -41,7 +41,7 @@ function setMatrixCellState(tacticId, techniqueId, state, tour = false) {
  * Open or close all techniques with sub-techniques.
  * @param {boolean} visible - If true, opens all techniques. If false, closes all techniques.
  */
-function toggleAllMatrixSubtechniques(visible) {
+function toggleAllMatrixSubTechniques(visible) {
     if (visible) {
         $(".sidebar").addClass("expanded");
         $(".subtechniques-container").removeClass("hidden");
