@@ -6,11 +6,11 @@ if (document.getElementById("layout-options")) {
 }
 
 /**
- * Toggle the visibility and expansion of a technique within the matrix.
+ * Toggle the visibility and expansion of a matrix technique's subtechniques.
  * @param {string} tacticId - The tactic ID.
  * @param {string} techniqueId - The technique ID.
  */
-function toggleMatrixTechniques(tacticId, techniqueId) {
+function toggleMatrixSubtechniques(tacticId, techniqueId) {
     const joined = tacticId + "--" + techniqueId;
     $(".subtechniques--" + joined).toggleClass("hidden");
     $(".sidebar--" + joined).toggleClass("expanded");
