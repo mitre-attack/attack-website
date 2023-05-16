@@ -48,20 +48,21 @@ jobs:
           GOOGLE_ANALYTICS: ${{ secrets.GOOGLE_ANALYTICS }}
           GOOGLE_SITE_VERIFICATION: ${{ secrets.GOOGLE_SITE_VERIFICATION }}
 
-      - name: Build ATT&CK Search module
+      - name: Remove STIX directory
+        run: rm -rf output/stix/
+
+      - name: Build ATT&CK Search module    
         run: |
           cd attack-search
           npm ci
           npm run build
-          npm run copy
-
-      - name: Remove STIX directory
-        run: rm -rf output/stix/
-
-      # - name: Deploy
-      #   uses: peaceiris/actions-gh-pages@v3
-      #   if: ${{ github.ref == 'refs/heads/master' }}
-      #   with:
-      #     github_token: ${{ secrets.GITHUB_TOKEN }}
-      #     publish_dir: ./output
-      #     cname: attack.mitre.org
+          cp dist/search_bundle.js ../output/theme/scripts/
+          cd ..
+    
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        if: ${{ github.ref == 'refs/heads/master' }}
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./output
+          cname: attack.mitre.org
