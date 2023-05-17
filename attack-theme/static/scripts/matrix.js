@@ -10,7 +10,7 @@ if (document.getElementById("layout-options")) {
  * @param {string} tacticId - The tactic ID.
  * @param {string} techniqueId - The technique ID.
  */
-function toggleMatrixSubtechniques(tacticId, techniqueId) {
+function toggleMatrixSubTechniques(tacticId, techniqueId) {
     const joined = tacticId + "--" + techniqueId;
     $(".subtechniques--" + joined).toggleClass("hidden");
     $(".sidebar--" + joined).toggleClass("expanded");
