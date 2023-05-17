@@ -36,13 +36,13 @@ Before starting the Docker container, you need to build the static web content l
 1. From the `/test` directory, build the Docker image:
 
     ```shell
-    docker build -t test_environment .
+    docker build -t attack-website-test .
     ```
 
 2. Run the Docker container:
 
     ```shell
-    docker run -p 80:80 -v $(pwd)/../output:/workspace test_environment
+    docker run -p 80:80 -v $(pwd)/../output:/workspace attack-website-test
     ```
 
     This will start a Docker container with the image you built, forward port 80 from the container to your host machine, and mount the "output" directory from your local workspace to the "/workspace" directory inside the container. This allows Nginx to serve the static web content you built.

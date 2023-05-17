@@ -13,46 +13,81 @@ If you find errors or typos in the site content, please let us know by sending a
 
 _See [CONTRIBUTING.md](/CONTRIBUTING.md) for more information on making contributions to the ATT&CK website._
 
-## Requirements
+## Prerequisites
 
-- [python](https://www.python.org/) 3.6 or greater
+- Docker
+- Node.js and npm (for local build)
+- Python 3 and pip (for local build)
 
-## Install and Build
+## Workflow 1: Build and Run Using Docker
 
-### Install requirements
+1. Build the Docker image:
 
-1. Create a virtual environment: 
-    - macOS and Linux: `python3 -m venv env`
-    - Windows: `py -m venv env`
-2. Activate the virtual environment: 
-    - macOS and Linux: `source env/bin/activate`
-    - Windows: `env/Scripts/activate.bat`
-3. Install requirement packages: `pip3 install -r requirements.txt`
+    ```
+    docker build -t attack_website .
+    ```
 
-### Build and serve the local site
+2. Run the Docker container:
 
-1. Update ATT&CK markdown from the STIX content, and generate the output HTML from the markdown: `python3 update-attack.py`. _Note: `update-attack.py`, has many optional command line arguments which affect the behavior of the build. Run `python3 update-attack.py -h` for a list of arguments and an explanation of their functionality._
-2. Serve the HTML to `localhost:8000`: 
-    1. Ensure you are in the root of the repository, e.g. `path/to/attack-website`
-    2. `pelican -l`
+    ```
+    docker run -p 80:80 attack_website
+    ```
 
-### (Optional) Build the search module
-1. Install Node.js. This is required in order to compile the search service webpack bundle.
-2. Generate the search service webpack bundle to enable search functionality:
-   ```shell
-   cd attack-search/
-   npm install # installs all third-party dependencies
-   npm run build # generates the webpack bundle
-   npm run copy # copies the resultant bundle to the Pelican server output directory
-   ```
+   This will start a Docker container with the image you built and forward port 80 from the container to your host machine.
 
-### Installing, building, and serving the site via Docker 
+3. Now, you should be able to view the website by opening a web browser and navigating to `http://localhost`.
 
-1. Build the docker image:
-    - `docker build -t <your_preferred_image_name> .`
-2. Run a docker container:
-    - `docker run --name <your_preferred_container_name> -d -p <your_preferred_port>:80 <image_name_from_build_command>`
-3. View the site on your preferred localhost port
+## Workflow 2: Build Locally and Serve Using Docker
+
+1. Ensure you have Node.js, npm, Python 3, and pip installed on your local machine.
+
+2. Build the static web content locally. The web application is composed of two modules: the Pelican content, and the ATT&CK search module.
+
+    - Build the Pelican content by running the following command from the root of the project:
+
+        ```
+        python3 update-attack.py --attack-brand --extras --no-test-exitstatus
+        ```
+
+      The static web content will be written to a folder called "output".
+
+    - Build the search module by running the following commands:
+
+        ```
+        cd attack-search
+        npm ci
+        npm run build
+        cp dist/search_bundle.js ../output/theme/scripts/
+        cd ..
+        ```
+
+3. Build the Docker image for the test environment:
+
+    ```
+    cd test
+    docker build -t attack-website-test .
+    ```
+
+4. Run the Docker container for the test environment:
+
+    ```
+    docker run -p 80:80 -v $(pwd)/../output:/workspace attack-website-test
+    ```
+
+   This will start a Docker container with the test environment image, forward port 80 from the container to your host machine, and mount the "output" directory from your local workspace to the "/workspace" directory inside the container. This allows Nginx to serve the static web content you built.
+
+   Please see [test/README.md](./test/README.md) for further usage details on the test environment image.
+
+5. Now, you should be able to view the website by opening a web browser and navigating to `http://localhost`.
+
+Please note that Workflow 1 is the preferred method as it closely emulates our production environment. Workflow 2 is recommended for those who prefer or need to build the website locally before testing it.
+
+## Disclaimer: Do Not Use Pelican's Built-in Web Server
+
+It is important to avoid using Pelican's built-in web server for serving the website. This is because Pelican uses a different set of rules for path matching compared to Nginx, which is used in our production environment. As a result, the behavior of the built-in server may differ from the production environment, potentially leading to discrepancies and overlooked issues.
+
+To ensure that your testing environment is as close as possible to the production environment, we recommend using the workflows outlined in this README. Both workflows leverage Nginx, which more closely emulate the behavior of the production environment, improving your ability to catch potential issues before they reach production.
+
 
 ## Related MITRE Work
 #### ATT&CK STIX Data
