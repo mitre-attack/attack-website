@@ -162,7 +162,11 @@ searchInput.on('input', (e) => {
   console.log(`Executing search on input: ${e.target.value}`);
   debounce.debounce(() => {
     console.log(`debounce callback: ${e.target.value}`);
-    search(e.target.value);
+    search(e.target.value).catch(
+      function errorValue(result) {
+          console.log(result);
+      }
+  );
   });
 });
 
@@ -194,5 +198,9 @@ if (typeof String.prototype.endsWith !== 'function') {
 console.debug('search module is loaded.');
 
 // Initialize the search service when the module loads
-initializeSearchService();
+initializeSearchService().catch(
+  function errorValue(result) {
+      console.log(result);
+  }
+);
 

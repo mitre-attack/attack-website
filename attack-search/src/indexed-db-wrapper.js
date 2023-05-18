@@ -64,7 +64,11 @@ class TableWrapper {
             };
 
             // Start processing the data array by inserting the first chunk
-            putChunk(0);
+            putChunk(0).catch(
+                function errorValue(result) {
+                    console.log(result);
+                }
+            );
         });
     }
 
