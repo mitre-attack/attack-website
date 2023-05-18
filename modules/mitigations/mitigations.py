@@ -124,7 +124,6 @@ def generate_mitigation_md(mitigation, domain, side_menu_data, side_menu_mobile_
 
         if mitigation.get("description"):
             data["descr"] = mitigation["description"]
-            data["descr"] = data["descr"]
 
         if mitigation.get("x_mitre_deprecated"):
             data["deprecated"] = True
