@@ -99,8 +99,8 @@ In essence, use Workflow 1 if you need a comprehensive solution that handles bot
 
 Please note that Workflow 1 is the preferred method as it closely emulates our production environment. Workflow 2 is recommended for those who prefer or need to build the website locally before testing it.
 
-## Disclaimer: Do Not Use Pelican's Built-in Web Server
+## Disclaimer re: Pelican's Built-in Web Server
 
-It is important to avoid using Pelican's built-in web server for serving the website. This is because Pelican uses a different set of rules for path matching compared to Nginx, which is used in our production environment. As a result, the behavior of the built-in server may differ from the production environment, potentially leading to discrepancies and overlooked issues.
+We advise that you avoid using Pelican's built-in web server for serving the website. Pelican uses a different set of rules for path matching compared to Nginx, which is used in our production environment. As a result, the behavior of the built-in server may differ from the production environment, potentially leading to discrepancies and overlooked issues.
 
 To ensure that your testing environment is as close as possible to the production environment, we recommend using the workflows outlined in this guide. Both workflows leverage Nginx, which more closely emulate the behavior of the production environment, improving your ability to catch potential issues before they reach production.
