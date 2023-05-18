@@ -1,93 +1,22 @@
 # MITRE ATT&CK&reg; Website
 
-### See the live site at [attack.mitre.org](https://attack.mitre.org)!
-
 This repository contains the source code used to generate the MITRE ATT&CK&reg; website as seen at `attack.mitre.org`. The source code is flexible to allow users to generate the site with custom content.
 
-## Usage
-The [Install and Run](#Install-and-Build) section below explains how to set up a local version of the site. You can also visit the live site at [attack.mitre.org](https://attack.mitre.org). If you want to extend the style, content or functionality of this site, please see our [Customizing the ATT&CK Website](/CUSTOMIZING.md) document for tips and tricks.
+## Visit the Site
 
-Use our [Github Issue Tracker](https://github.com/mitre-attack/attack-website/issues) to let us know of any bugs or other issues you encounter. We also encourage pull requests if you've extended the site in a cool way and want to share back to the community!
+You can view the live site at [attack.mitre.org](https://attack.mitre.org)!
 
-If you find errors or typos in the site content, please let us know by sending an email to attack@mitre.org with the subject **Website Content Error**, and make sure to include both a description of the error and the URL at which it can be found. 
+## Reporting Issues
 
-_See [CONTRIBUTING.md](/CONTRIBUTING.md) for more information on making contributions to the ATT&CK website._
+If you encounter any bugs or other issues, please use our [Github Issue Tracker](https://github.com/mitre-attack/attack-website/issues). 
 
-## Prerequisites
+If you find errors or typos in the site content, let us know by sending an email to attack@mitre.org with the subject **Website Content Error**. Include a description of the error and the URL at which it can be found. 
 
-- Docker
-- Node.js and npm (for local build)
-- Python 3 and pip (for local build)
+## Development
 
-## Workflow 1: Build and Run Using Docker
+For developers interested in extending the style, content, or functionality of this site, check out our `DEVELOPMENT.md` file. It includes instructions on setting up a local version of the site, and workflows for building and running the site using Docker or locally.
 
-1. Build the Docker image:
-
-    ```
-    docker build -t attack_website .
-    ```
-
-2. Run the Docker container:
-
-    ```
-    docker run -p 80:80 attack_website
-    ```
-
-   This will start a Docker container with the image you built and forward port 80 from the container to your host machine.
-
-3. Now, you should be able to view the website by opening a web browser and navigating to `http://localhost`.
-
-## Workflow 2: Build Locally and Serve Using Docker
-
-1. Ensure you have Node.js, npm, Python 3, and pip installed on your local machine.
-
-2. Build the static web content locally. The web application is composed of two modules: the Pelican content, and the ATT&CK search module.
-
-    - Build the Pelican content by running the following command from the root of the project:
-
-        ```
-        python3 update-attack.py --attack-brand --extras --no-test-exitstatus
-        ```
-
-      The static web content will be written to a folder called "output".
-
-    - Build the search module by running the following commands:
-
-        ```
-        cd attack-search
-        npm ci
-        npm run build
-        cp dist/search_bundle.js ../output/theme/scripts/
-        cd ..
-        ```
-
-3. Build the Docker image for the test environment:
-
-    ```
-    cd test
-    docker build -t attack-website-test .
-    ```
-
-4. Run the Docker container for the test environment:
-
-    ```
-    docker run -p 80:80 -v $(pwd)/../output:/workspace attack-website-test
-    ```
-
-   This will start a Docker container with the test environment image, forward port 80 from the container to your host machine, and mount the "output" directory from your local workspace to the "/workspace" directory inside the container. This allows Nginx to serve the static web content you built.
-
-   Please see [test/README.md](./test/README.md) for further usage details on the test environment image.
-
-5. Now, you should be able to view the website by opening a web browser and navigating to `http://localhost`.
-
-Please note that Workflow 1 is the preferred method as it closely emulates our production environment. Workflow 2 is recommended for those who prefer or need to build the website locally before testing it.
-
-## Disclaimer: Do Not Use Pelican's Built-in Web Server
-
-It is important to avoid using Pelican's built-in web server for serving the website. This is because Pelican uses a different set of rules for path matching compared to Nginx, which is used in our production environment. As a result, the behavior of the built-in server may differ from the production environment, potentially leading to discrepancies and overlooked issues.
-
-To ensure that your testing environment is as close as possible to the production environment, we recommend using the workflows outlined in this README. Both workflows leverage Nginx, which more closely emulate the behavior of the production environment, improving your ability to catch potential issues before they reach production.
-
+We also have a `test/README.md` file for our testing environment, and a `docs/RELEASE.md` file for the release process.
 
 ## Related MITRE Work
 #### ATT&CK STIX Data
