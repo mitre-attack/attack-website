@@ -1,145 +1,101 @@
-let domains = ['enterprise', 'ics', 'mobile']; //initial domains
+/**
+ * Initial domains.
+ * @type {string[]}
+ */
+const domains = ['enterprise', 'ics', 'mobile'];
 
-// On page load
-addEventListener('DOMContentLoaded', (event) => {
-    if (!sessionStorage.getItem('filter')) {
-        var removeDomains = [];
-        for (i in domains) {
-            var switchID = "#" + domains[i] + "Switch";
-            if ($(switchID).length == 0 ) {
-                removeDomains.push(domains[i]);
-            }
-        }
+/**
+ * On DOMContentLoaded event, show or hide elements based on saved filter
+ * and update sessionStorage with the available domains.
+ */
+addEventListener('DOMContentLoaded', () => {
+    // Get saved filter from sessionStorage or set to domains
+    const savedFilter = sessionStorage.getItem('filter');
+    const includedDomains = savedFilter ? savedFilter.split(',') : domains;
 
-        // remove domains that do not have a switch
-        for (i in removeDomains) {
-            index = domains.indexOf(removeDomains[i]);
-            if (index != -1) {
-                domains.splice(index, 1);
-            }
-        }
+    // Filter domains without associated switch
+    const removeDomains = domains.filter(domain => $(`#${domain}Switch`).length === 0);
 
-        sessionStorage.setItem('filter', domains);
-    }
+    // Update domains by removing domains without a switch
+    const updatedDomains = domains.filter(domain => !removeDomains.includes(domain));
+    sessionStorage.setItem('filter', updatedDomains);
 
-    includedDomains = sessionStorage.getItem('filter').split(',');
-    for (i in domains) {
-        index = includedDomains.indexOf(domains[i]);
-        var domainClass = '.' + domains[i];
-        if (index != -1) {
-            var switchID = "#" + domains[i] + "Switch";
-            if ($(switchID).length > 0 ) {
-                $(switchID)[0].checked = true; // toggle on
-                $(domainClass).show();         // show domain
-            }
-        }
-        else {
-            // Hide only if other domains are not enabled
-            var objectsOfDomainClass = $(domainClass);
+    // Show or hide elements based on the includedDomains
+    updatedDomains.forEach(domain => {
+        const switchID = `#${domain}Switch`;
+        const domainClass = `.${domain}`;
+
+        if (includedDomains.includes(domain)) {
+            $(switchID).prop('checked', true); // Set switch to checked state
+            $(domainClass).show();             // Show elements with the domain class
+        } else {
+            const objectsOfDomainClass = $(domainClass);
+
+            // Hide elements only if none of their classes are included in the includedDomains
             if (objectsOfDomainClass.length > 0) {
-                for (i in objectsOfDomainClass) {
-                    var classList = objectsOfDomainClass[i].classList;
-                    var hide = true;
-                    if (classList) {
-                        for (let j = 0; j < classList.length; j++ ) {
-                            if (includedDomains.includes(classList[j])) {
-                                hide = false;
-                            }
-                        }
-                        if (hide) $(objectsOfDomainClass[i]).hide(); // hide
-                    }
-                }
-            }
-        }
+          objectsOfDomainClass.each((_, obj) => {
+              const { classList } = obj;
+              if (Array.from(classList).every(cls => !includedDomains.includes(cls))) {
+                  $(obj).hide(); // Hide elements with the domain class
+              }
+        });
+      }
     }
+  });
 });
 
-// filter all objects with class from switch click
-// switch id must contain the domain for it to work. e.g., 
-// Switch ID2 is optional switch in case all other switched have been disabled
-function filterTables(switchID, switchID2) {
-    if (switchID.length > 1)
-        switchID = switchID[0];
+/**
+ * Toggle the visibility of elements with a specific domain class based on switch state.
+ * Update sessionStorage with the current filter.
+ *
+ * @param {HTMLElement} switchID - The switch DOM element (checkbox) that triggers the filter.
+ * @param {HTMLElement} fallbackSwitchID - An optional switch DOM element (checkbox) to be checked when all other switches are unchecked.
+ */
+function filterTables(switchID, fallbackSwitchID) {
+    const domain = switchID.id.split("Switch")[0];
+    const domainClass = `.${domain}`;
 
-    var domain = switchID.id.split("Switch")[0];
-    var domainClass = '.' + domain;
-
-    // Get current selected domains
-    var includedDomains = sessionStorage.getItem('filter');
-    if (!includedDomains) includedDomains = [];
-    else includedDomains = includedDomains.split(",");
+    const includedDomains = sessionStorage.getItem('filter').split(",");
 
     if (switchID.checked) {
         $(domainClass).show();
-        index = includedDomains.indexOf(domain);
-        if (index == -1) {
-            includedDomains.push(domain);
-        }
-    }
-    else {
-        // Find index in storage and remove from includedDomains
-        index = includedDomains.indexOf(domain);
-        if (index != -1) {
-            includedDomains.splice(index, 1);
-        }
+      if (!includedDomains.includes(domain)) {
+          includedDomains.push(domain);
+      }
+  } else {
+      includedDomains.splice(includedDomains.indexOf(domain), 1);
 
-        // Hide only if other domains are not enabled
-        var objectsOfDomainClass = $(domainClass);
-        if (objectsOfDomainClass.length > 0) {
-            for (i in objectsOfDomainClass) {
-                var classList = objectsOfDomainClass[i].classList;
-                var hide = true;
-                if (classList) {
-                    for (let j = 0; j < classList.length; j++ ) {
-                        if (includedDomains.includes(classList[j])) {
-                            hide = false;
-                        }
-                    }
-                    if (hide) $(objectsOfDomainClass[i]).hide(); // hide
-                }
+      const objectsOfDomainClass = $(domainClass);
+      if (objectsOfDomainClass.length > 0) {
+        objectsOfDomainClass.each((_, obj) => {
+            const { classList } = obj;
+            if (Array.from(classList).every(cls => !includedDomains.includes(cls))) {
+                $(obj).hide();
             }
-        }
-
-        if (switchID2.length > 1) switchID2 = switchID2[0];
-
-        // Set switch 2 to checked if all other domains have been unchecked
-        if (includedDomains.length == 0) {
-            var domain2 = switchID2.id.split("Switch")[0];
-            var id2 = '.' + domain2;
-            switchID2.checked = true;
-            $(id2).show();
-            // Add to includedDomains
-            index = includedDomains.indexOf(domain2);
-            if (index == -1) {
-                includedDomains.push(domain2);
-            }
-        }
+      });
     }
 
-    // Determine if any of the associated techniques are visible
-    var techniqueObjects = $('.technique');
-    var techniquesVisible = false;
-    for (let techniqueObject of techniqueObjects) {
-        var display = techniqueObject.style.display;
-        if (display.length === 0) {
-            techniquesVisible = true;
-        }
-    }
+      // Check switchID2 and show elements with its domain class when all other switches are unchecked
+      if (includedDomains.length === 0) {
+          const domain2 = fallbackSwitchID.id.split("Switch")[0];
+          const id2 = `.${domain2}`;
+          fallbackSwitchID.checked = true;
+          $(id2).show();
+          includedDomains.push(domain2);
+      }
+  }
 
-    // Only show the message if all the associated techniques are hidden
-    var messageObjects = $('.no-techniques-in-data-source-message');
-    if (messageObjects.length > 0) {
-        for (i in messageObjects) {
-            if (messageObjects[i].style) {
-                if (techniquesVisible) {
-                    messageObjects[i].style.display = "none";
-                } else {
-                    messageObjects[i].style.display = "";
-                }
-            }
-        }
-    }
+    // Check if at least one technique is visible
+    const techniquesVisible = $('.technique').toArray().some(technique => technique.style.display.length === 0);
 
-    // Update session storage
+    // Show or hide the message based on the visibility of the techniques
+    const messageObjects = $('.no-techniques-in-data-source-message');
+    messageObjects.each((_, obj) => {
+        if (obj.style) {
+            obj.style.display = techniquesVisible ? "none" : "";
+        }
+  });
+
+    // Update sessionStorage with the current filter
     sessionStorage.setItem('filter', includedDomains);
 }

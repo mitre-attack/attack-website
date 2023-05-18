@@ -17,18 +17,18 @@
                 <div class="btn-group" role="group">
                     <button class="btn btn-default dropdown-toggle" id="layout-options" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-selected_layout="side">layout: side</button>
                     <div class="dropdown-menu" aria-labelledby="layout-options">
-                        <a class="dropdown-item layout-button side active" href="#" onclick="show_side_matrix()">
+                        <a class="dropdown-item layout-button side active" href="#" onclick="showSideMatrix()">
                             side
                         </a>
-                        <a class="dropdown-item layout-button flat" href="#" onclick="show_flat_matrix(); {% if not isIndex %} tour_layout_clicked() {% endif %} ">
+                        <a class="dropdown-item layout-button flat" href="#" onclick="showFlatMatrix(); {% if not isIndex %} tour_layout_clicked() {% endif %} ">
                             flat
                         </a>
                 </div>
                 </div>
             </div>
             <div class="btn-group mr-2" role="group">
-                <button type="button" class="btn btn-default" onclick="matrix_toggle_all(true)">show sub-techniques</button>
-                <button type="button" class="btn btn-default" onclick="matrix_toggle_all(false)">hide sub-techniques</button>
+                <button type="button" class="btn btn-default" onclick="toggleAllMatrixSubTechniques(true)">show sub-techniques</button>
+                <button type="button" class="btn btn-default" onclick="toggleAllMatrixSubTechniques(false)">hide sub-techniques</button>
             </div>
             <!-- no help button on index page -->
             {% if not isIndex %}
@@ -129,7 +129,7 @@
                             {% set tour_technique = technique.id == tour.technique and tactic.id == tour.tactic and not isIndex %}
                             <table class="supertechnique"{% if tour_technique %} id="tour-flat-technique" {% endif %}>
                                 <tr>
-                                    <td class="sidebar technique sidebar--{{tactic.id}}--{{technique.id}}{% if tour_technique %} sidebar--tour{% endif %}" onclick="matrix_toggle_technique('{{tactic.id}}', '{{technique.id}}');{% if tour_technique %} tour_technique_clicked();{% endif %}">
+                                    <td class="sidebar technique sidebar--{{tactic.id}}--{{technique.id}}{% if tour_technique %} sidebar--tour{% endif %}" onclick="toggleMatrixSubTechniques('{{tactic.id}}', '{{technique.id}}');{% if tour_technique %} tour_technique_clicked();{% endif %}">
                                         <div class="handle"> = </div>
                                     </td>
                                     <td class="technique">
@@ -200,7 +200,7 @@
                                     {% endif %}
                                 </td>
                                 {% if technique.subtechniques | length > 0 %}
-                                <td class="sidebar sidebar--{{tactic.id}}--{{technique.id}}{% if tour_technique %} sidebar--tour{% endif %}" onclick="matrix_toggle_technique('{{tactic.id}}', '{{technique.id}}');{% if tour_technique %} tour_technique_clicked();{% endif %}">
+                                <td class="sidebar sidebar--{{tactic.id}}--{{technique.id}}{% if tour_technique %} sidebar--tour{% endif %}" onclick="toggleMatrixSubTechniques('{{tactic.id}}', '{{technique.id}}');{% if tour_technique %} tour_technique_clicked();{% endif %}">
                                     <div class="angle top">
                                         <svg width="12px" height="12px">
                                             <path d="M0 12H12V0Z"/>
