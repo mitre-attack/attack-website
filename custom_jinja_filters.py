@@ -27,6 +27,8 @@ reference_marker_template_no_url = (
 # Pelican settings global variable
 pelican_settings = {}
 
+const INDEX_HTML = "index.html"
+
 pelican_settings_f = os.path.join(site_config.data_directory, "pelican_settings.json")
 with open(pelican_settings_f, "r", encoding="utf8") as json_f:
     pelican_settings = json.load(json_f)
@@ -44,7 +46,7 @@ def escape_spaces(word):
 
 def clean_path(path):
     """Remove index.html from end of a path, add / if not at beginning."""
-    path = path.split("index.html")[0]
+    path = path.split(INDEX_HTML)[0]
     if not path.startswith("/"):
         path = "/" + path
     if not path.endswith("/"):
@@ -197,6 +199,6 @@ def permalink(link):
             )
             current_version_permalink = "/versions/" + current_version_permalink
     # remove index.html from the end
-    link = link.split("index.html")[0] if link.endswith("index.html") else link
+    link = link.split(INDEX_HTML)[0] if link.endswith(INDEX_HTML) else link
     # strip index.html from path
     return current_version_permalink + "/" + link

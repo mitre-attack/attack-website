@@ -126,7 +126,6 @@ module.exports = class SearchService {
    */
   async backupSearchIndex() {
 
-    const keys = [];
     let processedKeys = 0;
 
     // totalKeys(x) = (3 * #searchFields) + 3
@@ -409,8 +408,7 @@ module.exports = class SearchService {
     const positions = [];
 
     this.currentQuery.words.forEach((searchWord) => {
-      let currMatches;
-      while ((currMatches = searchWord.regex.exec(preview)) !== null) {
+      while ((searchWord.regex.exec(preview)) !== null) {
         positions.push({
           index: searchWord.regex.lastIndex,
           word: searchWord.word,
@@ -429,7 +427,6 @@ module.exports = class SearchService {
 
     const allWords = new Set(this.currentQuery.words.map((word) => word.word));
 
-    const pos = 0;
     const best = {
       min: 0,
       max: 0,
@@ -438,7 +435,6 @@ module.exports = class SearchService {
     };
     for (let i = 0; i < positions.length; i++) {
       const position = positions[i];
-      const {word} = position;
       const {index} = position;
 
       // find out how far we have to go from this position to find all words
