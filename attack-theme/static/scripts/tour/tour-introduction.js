@@ -1,5 +1,5 @@
 //is the user doing a tour of the entire site, or just this module?
-isSiteTour = window.location.href.includes("?tour=true");
+var isSiteTour = window.location.href.includes("?tour=true");
 
 let tour = new Tour({
     storage: false, //no resuming tour if the page is reloaded.

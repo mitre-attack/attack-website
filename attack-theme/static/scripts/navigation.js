@@ -13,7 +13,7 @@ $(document).ready(function () {
         // directory
         
         let is_found = false;
-        for (i = 0; i < current_modules.length; i++) {
+        for (var i = 0; i < current_modules.length; i++) {
             if ((document.referrer.includes(current_modules[i]))) {
                 is_found = true;
             }
