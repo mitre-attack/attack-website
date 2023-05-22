@@ -197,7 +197,7 @@ if (typeof String.prototype.endsWith !== 'function') {
 // Log that search module is loaded
 console.debug('search module is loaded.');
 
-// Initialize the search service when the module loads
+// Initialize the search service when the module loads, with catch() 
 initializeSearchService().catch(
   function errorValue(result) {
       console.log(result);
