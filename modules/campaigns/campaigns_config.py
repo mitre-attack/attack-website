@@ -8,7 +8,7 @@ campaign_markdown_path = "content/pages/campaigns/"
 
 # String template for campaign index page
 campaign_index_md = (
-    "Title: Campaign overview\n" + "Template: campaigns/campaigns-index\n" + "save_as: campaigns/index.html\n" "data: "
+    "Title: Campaign overview\n" + "Template: campaigns/campaigns-index\n" + "save_as: campaigns/index.html\n" + "data: "
 )
 
 # String template for campaign page
