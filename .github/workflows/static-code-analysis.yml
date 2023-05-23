@@ -1,0 +1,32 @@
+name: Code Quality Analysis
+on:
+  push:
+    branches:
+      - master
+      - develop
+      - sonarcloud-fixes
+  pull_request:
+    types: [opened, synchronize, reopened]
+jobs:
+  sonarcloud:
+    name: SonarCloud
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+      
+        # Used to set sonar.projectVersion in sonar-project.properties to the latest release
+      - name: Get latest release
+        id: latest_release
+        uses: InsonusK/get-latest-release@v1.0.1 # https://github.com/InsonusK/get-latest-release
+        with:
+          myToken: ${{ secrets.GITHUB_TOKEN }} # Required Token to github repository to get access to hidden releases (draft releases)
+          view_top: 10 # Numbers of releases which will be searched.
+
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_PROJECT_VERSION: ${{ steps.last_release.outputs.id }}
