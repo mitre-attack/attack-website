@@ -464,9 +464,9 @@ def download_stix_file(url, download_dir, filepath):
         password = site_config.WORKBENCH_API_KEY
         auth = (user, password)
 
-    counter = 0
+    number_of_tries = 0
 
-    while counter < 3:
+    while number_of_tries < 3:
         response = requests.get(url, verify=False, proxies=proxyDict, auth=auth)
         if response.status_code == 200:
             stix_json = response.json()
@@ -475,10 +475,10 @@ def download_stix_file(url, download_dir, filepath):
             break
         elif response.status_code == 404:
             exit(f"\n{url} stix bundle was not found")
-        if counter == 3:
+        if number_of_tries == 3:
             exit(f"\n{url} stix bundle download was unsuccessful")
         else:
-            counter += 1
+            number_of_tries += 1
 
 
 def get_url_from_stix(stix_object, is_subtechnique=False):
