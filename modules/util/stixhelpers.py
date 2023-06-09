@@ -6,6 +6,7 @@ import requests
 import stix2
 import urllib3
 from loguru import logger
+from requests.adapters import HTTPAdapter, Retry
 
 from modules import site_config
 
@@ -464,7 +465,11 @@ def download_stix_file(url, download_dir, filepath):
         password = site_config.WORKBENCH_API_KEY
         auth = (user, password)
 
-    response = requests.get(url, verify=False, proxies=proxyDict, auth=auth)
+    s = requests.Session()
+    retries = Retry(total=10, backoff_factor=0.1, status_forcelist=[500, 502, 503, 504])
+    s.mount("http", HTTPAdapter(max_retries=retries))
+    response = s.get(url, verify=False, proxies=proxyDict, auth=auth)
+
     if response.status_code == 200:
         stix_json = response.json()
         with open(filepath, "w") as json_file:
