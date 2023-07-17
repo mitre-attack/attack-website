@@ -2,17 +2,20 @@
 
 The sections below explains how to build and run the website locally using Docker & Nginx. If you want to extend the style, content or functionality of this site, please see our [Customizing the ATT&CK Website](/CUSTOMIZING.md) document for tips and tricks.
 
+* Use **Workflow 1** if you need a comprehensive solution that handles both building and serving the website
+* Use **Workflow 2** if you're developing and need to quickly test changes without the overhead of the full Docker build process
+
 Use our [Github Issue Tracker](https://github.com/mitre-attack/attack-website/issues) to let us know of any bugs or other issues you encounter. We also encourage pull requests if you've extended the site in a cool way and want to share back to the community!
 
-If you find errors or typos in the site content, please let us know by sending an email to attack@mitre.org with the subject **Website Content Error**, and make sure to include both a description of the error and the URL at which it can be found. 
+If you find errors or typos in the site content, please let us know by sending an email to <attack@mitre.org> with the subject **Website Content Error**, and make sure to include both a description of the error and the URL at which it can be found.
 
 _See [CONTRIBUTING.md](/CONTRIBUTING.md) for more information on making contributions to the ATT&CK website._
 
 ## Prerequisites
 
-- Docker
-- Node.js and npm (for local build)
-- Python 3 and pip (for local build)
+* Docker
+* Node.js and npm (for local build)
+* Python 3 and pip (for local build)
 
 ## Workflow 1: Build and Run Using Docker
 
@@ -30,13 +33,13 @@ This approach is especially suitable if you need to have an isolated and reprodu
 
 1. Build the Docker image:
 
-    ```
+    ```shell
     docker build -t attack_website .
     ```
 
 2. Run the Docker container:
 
-    ```
+    ```shell
     docker run -p 80:80 attack_website
     ```
 
@@ -52,25 +55,23 @@ In this workflow, the Dockerfile is much simpler and serves a single purpose: to
 
 The main advantage of this approach is that you can modify the website's source files, run the build process locally, and then refresh your browser to see the changes without having to rebuild the Docker image. This can greatly accelerate the feedback loop when you're making frequent changes to the site.
 
-In essence, use Workflow 1 if you need a comprehensive solution that handles both building and serving the website, and Workflow 2 if you're developing and need to quickly test changes without the overhead of the full Docker build process.
-
 ### Steps
 
 1. Ensure you have Node.js, npm, Python 3, and pip installed on your local machine.
 
 2. Build the static web content locally. The web application is composed of two modules: the Pelican content, and the ATT&CK search module.
 
-    - Build the Pelican content by running the following command from the root of the project:
+    * Build the Pelican content by running the following command from the root of the project:
 
-        ```
+        ```shell
         python3 update-attack.py --attack-brand --extras --no-test-exitstatus
         ```
 
       The static web content will be written to a folder called "output".
 
-    - Build the search module by running the following commands:
+    * Build the search module by running the following commands:
 
-        ```
+        ```shell
         cd attack-search
         npm ci
         npm run build
@@ -80,14 +81,14 @@ In essence, use Workflow 1 if you need a comprehensive solution that handles bot
 
 3. Build the Docker image for the test environment:
 
-    ```
+    ```shell
     cd test
     docker build -t attack-website-test .
     ```
 
 4. Run the Docker container for the test environment:
 
-    ```
+    ```shell
     docker run -p 80:80 -v $(pwd)/../output:/workspace attack-website-test
     ```
 
@@ -97,10 +98,14 @@ In essence, use Workflow 1 if you need a comprehensive solution that handles bot
 
 5. Now, you should be able to view the website by opening a web browser and navigating to `http://localhost`.
 
-Please note that Workflow 1 is the preferred method as it closely emulates our production environment. Workflow 2 is recommended for those who prefer or need to build the website locally before testing it.
+Please note that Workflow 1 is the preferred method as it closely emulates our production environment.
+Workflow 2 is recommended for those who prefer or need to build the website locally before testing it.
 
 ## Disclaimer re: Pelican's Built-in Web Server
 
-We advise that you avoid using Pelican's built-in web server for serving the website. Pelican uses a different set of rules for path matching compared to Nginx, which is used in our production environment. As a result, the behavior of the built-in server may differ from the production environment, potentially leading to discrepancies and overlooked issues.
+We advise that you avoid using Pelican's built-in web server for serving the website.
+Pelican uses a different set of rules for path matching compared to Nginx, which is used in our production environment.
+As a result, the behavior of the built-in server may differ from the production environment, potentially leading to discrepancies and overlooked issues.
 
-To ensure that your testing environment is as close as possible to the production environment, we recommend using the workflows outlined in this guide. Both workflows leverage Nginx, which more closely emulate the behavior of the production environment, improving your ability to catch potential issues before they reach production.
+To ensure that your testing environment is as close as possible to the production environment, we recommend using the workflows outlined in this guide.
+Both workflows leverage Nginx, which more closely emulate the behavior of the production environment, improving your ability to catch potential issues before they reach production.

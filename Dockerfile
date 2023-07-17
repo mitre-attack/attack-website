@@ -16,7 +16,7 @@ RUN cd attack-search && \
     npm run build
 
 # Use the official Python image as the base image
-FROM python:3.10-slim-bullseye
+FROM python:3.10-slim-bullseye as python-build
 
 ENV DEBIAN_FRONTEND noninteractive
 ENV LANG en_US.UTF-8

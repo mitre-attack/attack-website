@@ -1,17 +1,21 @@
 # Test Environment
 
-This directory contains a Docker-based testing environment for the ATT&CK website. The purpose of this environment is to closely emulate the production GitHub Pages environment, using Nginx to serve the static web content. This allows developers to catch and fix issues before pushing to GitHub Pages, thereby increasing development efficiency and reducing potential errors in the production environment.
+This directory contains a Docker-based testing environment for the ATT&CK website.
+The purpose of this environment is to closely emulate the production GitHub Pages environment, using Nginx to serve the static web content.
+This allows developers to catch and fix issues before pushing to GitHub Pages, thereby increasing development efficiency and reducing potential errors in the production environment.
 
 ## Prerequisites
 
 Ensure you have the following installed on your local system:
+
 - Docker
 - Node.js and npm
 - Python 3 and pip
 
 ## Building the Web Application
 
-Before starting the Docker container, you need to build the static web content locally. The web application is composed of two modules: the Pelican content, and the ATT&CK search module.
+Before starting the Docker container, you need to build the static web content locally.
+The web application is composed of two modules: the Pelican content, and the ATT&CK search module.
 
 1. Generate the static web pages (i.e., the Pelican content) by running the following command from the root of the project:
 
