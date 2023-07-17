@@ -16,7 +16,7 @@ RUN cd attack-search && \
     npm run build
 
 # Use the official Python image as the base image
-FROM python:3.10-slim-bullseye
+FROM python:3.10-slim-bullseye as python-build
 
 ENV DEBIAN_FRONTEND noninteractive
 ENV LANG en_US.UTF-8
@@ -45,6 +45,12 @@ RUN python3 update-attack.py --no-test-exitstatus
 # Copy the search service webpack bundle from the node-build stage
 COPY --from=node-build /app/attack-search/dist/search_bundle.js output/theme/scripts/search_bundle.js
 
+# Nginx stage
+FROM nginx:stable-alpine as production-stage
+
+COPY --from=python-build /home/attackuser/attack-website/output /var/www/html
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
 # Label metadata
 LABEL name="attack-website" \
     description="Dockerfile for the ATT&CK Website" \
@@ -54,6 +60,6 @@ LABEL name="attack-website" \
     vendor="MITRE ATT&CK" \
     maintainer="attack@mitre.org"
 
-WORKDIR /home/attackuser/attack-website
+EXPOSE 80
 
-CMD ["pelican", "--listen", "--bind", "0.0.0.0", "--port", "80"]
+CMD ["nginx", "-g", "daemon off;"]
