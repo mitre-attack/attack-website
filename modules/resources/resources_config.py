@@ -1,6 +1,29 @@
 import os
 
 from modules import site_config
+import modules
+from modules import site_config, util
+from datetime import datetime
+
+def generate_updates_list():
+    """Reads markdown files from the static pages directory and copies them into the markdown directory."""
+    static_pages_dir = os.path.join("modules", "resources", "static_pages")
+    data = []
+    updates_names = []
+    for static_page in os.listdir(static_pages_dir):
+        with open(os.path.join(static_pages_dir, static_page), "r", encoding="utf8") as md:
+            content = md.read()
+
+            if static_page.startswith("updates-"):
+                temp_string = static_page.replace('.md','')
+                temp_string = temp_string.split('-')
+                temp_string = temp_string[1].capitalize() + ' ' + temp_string[2]
+                data.append(temp_string)
+                temp_string = static_page.replace('.md','')
+                updates_names.append("/resources/updates/" + temp_string)
+    data.sort(key=lambda date: datetime.strptime(date, "%B %Y"), reverse=True)
+    updates_names.sort(key=lambda date: datetime.strptime(date, "/resources/updates/updates-%B-%Y"), reverse=True)
+    return(data, updates_names)
 
 module_name = "Resources"
 priority = 8
@@ -85,6 +108,12 @@ resources_navigation = {
         "children": [],
         },
         {
+        "name": "Updates",
+        "id": "updates",
+        "path": "/resources/updates/",
+        "children": [],
+        },
+        {
         "name": "Related Projects",
         "id": "related-projects",
         "path": "/resources/related-projects/",
@@ -92,3 +121,13 @@ resources_navigation = {
         }
         ]
     }
+
+test, yy = generate_updates_list()
+temp_dict = {}
+for i in range(len(test)):
+    temp_dict["name"] = test[i]
+    temp_dict["path"] = yy[i]
+    temp_dict["children"] = []
+    resources_navigation["children"][5]["children"].append(temp_dict.copy())
+    temp_dict = {}
+
