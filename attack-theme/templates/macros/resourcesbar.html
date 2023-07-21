@@ -1,5 +1,5 @@
 <!--
-Create sidenav content via recursive datastructure.
+Create resources sidebar content via recursive datastructure.
 params:
     root: a node of the following format:
           {
@@ -21,24 +21,12 @@ Notes:
 {% macro sidenav(root, output_file, filter=False) %}
 <div class="sidenav-wrapper">
     <div class="heading" id="v-home-tab" aria-selected="false">{{root.name | upper}}</div>
-    {% if filter %}
-    <div class="checkbox-div" id="v-home-tab" aria-selected="false">
-        <div class="custom-control custom-switch">
-            <input type="checkbox" class="custom-control-input" id="enterpriseSwitch" onchange="filterTables(enterpriseSwitch, icsSwitch)">
-            <label class="custom-control-label" for="enterpriseSwitch">Enterprise</label>
-        </div>
-        <div class="custom-control custom-switch">
-            <input type="checkbox" class="custom-control-input" id="mobileSwitch" onchange="filterTables(mobileSwitch, enterpriseSwitch)">
-            <label class="custom-control-label" for="mobileSwitch">Mobile</label>
-        </div>
-        <div class="custom-control custom-switch">
-            <input type="checkbox" class="custom-control-input" id="icsSwitch" onchange="filterTables(icsSwitch, enterpriseSwitch)">
-            <label class="custom-control-label" for="icsSwitch">ICS</label>
-        </div>
-    </div>
-    {% endif %}
     <div class="sidenav-list">
         {# "overview" link as first item in list if root.path exists #}
+        {% if root.path %}
+            {{sidenav_helper("0", {"name": "Overview", "id": "0", "path": root.path, "children": []}, output_file)}}
+        {% endif %}
+        
         {% for child in root.children %}
             {{sidenav_helper(child.id, child, output_file)}}
         {% endfor %}

@@ -52,14 +52,25 @@ training_navigation = {
 }
 
 resources_navigation = {
-    "name": "Resources",
-    "id": "resources",
-    "path": "/resources/",
-    "children": [
-    {"name": "Getting Information",
-    "id": "getting-info",
-    "path": "/resources/",
-    "children": [],
+        "name": "Resources",
+        "id": "resources",
+        "path": "/resources/",
+        "children": [
+        {"name": "General Information",
+        "id": "general-info",
+        "path": "/resources/",
+        "children": []
+        },
+        {"name": "Getting Started",
+        "id": "getting-started",
+        "path": "/resources/getting-started",
+        "children": [] 
+        },
+        {
+        "name": "Training",
+        "id": "training",
+        "path": "/resources/training/",
+        "children": [{"name": "CTI Training", "id": "cti", "path": "/resources/training/cti/", "children": []}],
+        }
+        ]
     }
-    ]
-}

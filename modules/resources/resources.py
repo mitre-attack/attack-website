@@ -59,9 +59,11 @@ def copy_docs(module_docs_path):
 def generate_general_information():
     """Responsible for compiling resources json into resources markdown files for rendering on the HMTL."""
     logger.info("Generating general information")
-    # load presentations list
     data = {}
+
+    # Side navigation for training
     data["menu"] = resources_config.resources_navigation
+    # load presentations list
 
     with open(os.path.join(site_config.data_directory, "resources.json"), "r", encoding="utf8") as f:
         resources = json.load(f)
@@ -71,7 +73,7 @@ def generate_general_information():
         resources["presentations"], key=lambda p: datetime.strptime(p["date"], "%B %Y"), reverse=True
     )
     # get markdown
-    resources_content = resources_config.general_information_md + json.dumps({"presentations": presentations, "menu": resources["menu"]})
+    resources_content = resources_config.general_information_md + json.dumps({"presentations": presentations, "menu": data["menu"]})
     # write markdown to file
     with open(
         os.path.join(site_config.resources_markdown_path, "general_information.md"), "w", encoding="utf8"
@@ -100,7 +102,6 @@ def generate_training_pages():
     # write markdown to file
     with open(os.path.join(site_config.resources_markdown_path, "training_cti.md"), "w", encoding="utf8") as md_file:
         md_file.write(training_cti_md)
-
 
 def generate_attackcon_page():
     """Responsible for compiling ATT&CKcon json into attackcon markdown file for rendering on the HTML."""
@@ -192,8 +193,13 @@ def generate_working_with_attack():
             output_dir=docs_dir,
             stix_file=stix_filename,
         )
-
-    files_json = {"excel_files": []}
+        
+    with open(os.path.join(site_config.data_directory, "resources.json"), "r", encoding="utf8") as f:
+        resources = json.load(f)
+    data = {}
+    # Side navigation for training
+    data["menu"] = resources_config.resources_navigation
+    files_json = {"excel_files": [], "menu": data["menu"]}
     for excel_dir in excel_dirs:
         excel_json = {"label": f"{excel_dir}.xlsx", "url": f"/docs/{excel_dir}/{excel_dir}.xlsx", "children": []}
         for file_type in files_types:
@@ -204,6 +210,8 @@ def generate_working_with_attack():
             if os.path.exists(site_config.web_directory + child_json["url"]):
                 excel_json["children"].append(child_json)
         files_json["excel_files"].append(excel_json)
+
+    
 
     working_with_attack_content = resources_config.working_with_attack_md + json.dumps(files_json)
     # write markdown to file
