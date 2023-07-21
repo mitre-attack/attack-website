@@ -61,7 +61,7 @@ def generate_general_information():
     logger.info("Generating general information")
     data = {}
 
-    # Side navigation for training
+    # Side navigation for resources
     data["menu"] = resources_config.resources_navigation
     # load presentations list
 
@@ -85,7 +85,7 @@ def generate_training_pages():
     logger.info("Generating training pages")
     data = {}
 
-    # Side navigation for training
+    # Side navigation for resources
     data["menu"] = resources_config.resources_navigation
 
     # Training Overview
@@ -127,6 +127,10 @@ def generate_static_pages():
     """Reads markdown files from the static pages directory and copies them into the markdown directory."""
     logger.info("Generating static pages")
     static_pages_dir = os.path.join("modules", "resources", "static_pages")
+    data = {}
+
+    # Side navigation for resources
+    data["menu"] = resources_config.resources_navigation
 
     for static_page in os.listdir(static_pages_dir):
         with open(os.path.join(static_pages_dir, static_page), "r", encoding="utf8") as md:
@@ -143,7 +147,11 @@ def generate_static_pages():
                     os.path.join(site_config.resources_markdown_path, static_page), "w", encoding="utf8"
                 ) as md_file:
                     logger.debug(f"{md.name} >>> {md_file.name}")
-                    md_file.write(content)
+                    if static_page.startswith("getting-started") or static_page.startswith("related-projects"):
+                        static_md = content + json.dumps(data)
+                    else:
+                        static_md = content
+                    md_file.write(static_md)
 
 
 def generate_working_with_attack():
@@ -196,7 +204,7 @@ def generate_working_with_attack():
     with open(os.path.join(site_config.data_directory, "resources.json"), "r", encoding="utf8") as f:
         resources = json.load(f)
     data = {}
-    # Side navigation for training
+    # Side navigation for resources
     data["menu"] = resources_config.resources_navigation
     files_json = {"excel_files": [], "menu": data["menu"]}
     for excel_dir in excel_dirs:

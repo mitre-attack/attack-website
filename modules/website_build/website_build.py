@@ -8,7 +8,7 @@ from string import Template
 from loguru import logger
 
 import modules
-from modules import matrices, site_config, util
+from modules import matrices, site_config, util, resources
 
 from . import website_build_config
 
@@ -225,6 +225,11 @@ def reset_override_colors():
 def generate_faq_page():
     """Responsible for compiling faq json into faq markdown file for rendering on the HMTL."""
     logger.info("Generating FAQ page")
+    data = {}
+
+    # Side navigation for resources
+    data["menu"] = resources.resources_config.resources_navigation
+
     # load faq data from json
     with open(os.path.join(site_config.data_directory, "faq.json"), "r", encoding="utf8") as f:
         faqdata = json.load(f)
@@ -232,9 +237,8 @@ def generate_faq_page():
     for i, section in enumerate(faqdata["sections"]):
         for j, item in enumerate(section["questions"]):
             item["id"] = f"faq-{i}-{j}"
-
     # get markdown
-    faq_content = website_build_config.faq_md + json.dumps(faqdata)
+    faq_content = website_build_config.faq_md + json.dumps({"sections": faqdata["sections"], "menu": data["menu"]})
     # write markdown to file
     with open(os.path.join(site_config.resources_markdown_path, "faq.md"), "w", encoding="utf8") as md_file:
         md_file.write(faq_content)

@@ -77,6 +77,18 @@ resources_navigation = {
         "id": "working-with-attack",
         "path": "/resources/working-with-attack/",
         "children": [],
+        },
+        {
+        "name": "FAQ",
+        "id": "faq",
+        "path": "/resources/faq/",
+        "children": [],
+        },
+        {
+        "name": "Related Projects",
+        "id": "related-projects",
+        "path": "/resources/related-projects/",
+        "children": [],
         }
         ]
     }
