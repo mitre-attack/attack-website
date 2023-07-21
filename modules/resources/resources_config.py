@@ -50,3 +50,16 @@ training_navigation = {
     "path": "/resources/training/",
     "children": [{"name": "CTI Training", "id": "cti", "path": "/resources/training/cti/", "children": []}],
 }
+
+resources_navigation = {
+    "name": "Resources",
+    "id": "resources",
+    "path": "/resources/",
+    "children": [
+    {"name": "Getting Information",
+    "id": "getting-info",
+    "path": "/resources/",
+    "children": [],
+    }
+    ]
+}

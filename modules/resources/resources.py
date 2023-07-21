@@ -60,6 +60,9 @@ def generate_general_information():
     """Responsible for compiling resources json into resources markdown files for rendering on the HMTL."""
     logger.info("Generating general information")
     # load presentations list
+    data = {}
+    data["menu"] = resources_config.resources_navigation
+
     with open(os.path.join(site_config.data_directory, "resources.json"), "r", encoding="utf8") as f:
         resources = json.load(f)
 
@@ -68,7 +71,7 @@ def generate_general_information():
         resources["presentations"], key=lambda p: datetime.strptime(p["date"], "%B %Y"), reverse=True
     )
     # get markdown
-    resources_content = resources_config.general_information_md + json.dumps({"presentations": presentations})
+    resources_content = resources_config.general_information_md + json.dumps({"presentations": presentations, "menu": resources["menu"]})
     # write markdown to file
     with open(
         os.path.join(site_config.resources_markdown_path, "general_information.md"), "w", encoding="utf8"
@@ -82,7 +85,7 @@ def generate_training_pages():
     data = {}
 
     # Side navigation for training
-    data["menu"] = resources_config.training_navigation
+    data["menu"] = resources_config.resources_navigation
 
     # Training Overview
     training_md = resources_config.training_md + json.dumps(data)
