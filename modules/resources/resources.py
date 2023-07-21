@@ -80,7 +80,6 @@ def generate_general_information():
     ) as md_file:
         md_file.write(resources_content)
 
-
 def generate_training_pages():
     """Responsible for generating the markdown pages of the training pages."""
     logger.info("Generating training pages")

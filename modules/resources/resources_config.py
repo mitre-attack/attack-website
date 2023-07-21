@@ -71,6 +71,12 @@ resources_navigation = {
         "id": "training",
         "path": "/resources/training/",
         "children": [{"name": "CTI Training", "id": "cti", "path": "/resources/training/cti/", "children": []}],
+        },
+        {
+        "name": "Working with ATT&CK",
+        "id": "working-with-attack",
+        "path": "/resources/working-with-attack/",
+        "children": [],
         }
         ]
     }
