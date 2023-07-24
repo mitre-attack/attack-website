@@ -77,7 +77,6 @@ training_navigation = {
 resources_navigation = {
         "name": "Resources",
         "id": "resources",
-        "path": "/resources/",
         "children": [
         {"name": "General Information",
         "id": "general-info",
@@ -99,31 +98,31 @@ resources_navigation = {
         "name": "ATT&CKcon",
         "id": "attackcon",
         "path": "/resources/attackcon/",
-        "children": [],
+        "children": []
         },
         {
         "name": "Working with ATT&CK",
         "id": "working-with-attack",
         "path": "/resources/working-with-attack/",
-        "children": [],
+        "children": []
         },
         {
         "name": "FAQ",
         "id": "faq",
         "path": "/resources/faq/",
-        "children": [],
+        "children": []
         },
         {
         "name": "Updates",
         "id": "updates",
         "path": "/resources/updates/",
-        "children": [],
+        "children": []
         },
         {
         "name": "Related Projects",
         "id": "related-projects",
         "path": "/resources/related-projects/",
-        "children": [],
+        "children": []
         }
         ]
     }
@@ -134,6 +133,6 @@ for i in range(len(test)):
     temp_dict["name"] = test[i]
     temp_dict["path"] = yy[i]
     temp_dict["children"] = []
-    resources_navigation["children"][5]["children"].append(temp_dict.copy())
+    resources_navigation["children"][6]["children"].append(temp_dict.copy())
     temp_dict = {}
 
