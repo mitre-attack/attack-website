@@ -476,7 +476,7 @@ def get_technique_side_nav_data(techniques, tactics):
                         if child["id"]:
                             child["name"] = subtechnique["object"]["name"]
                             sub_number = child["id"].split(".")[1]
-                            child["path"] = "/techniques/{}/{}/".format(technique["id"], sub_number)
+                            child["path"] = "/techniques/{}.{}/".format(technique["id"], sub_number)
                             child["children"] = []
                             technique_row["children"].append(child)
 
@@ -550,7 +550,7 @@ def get_subtechniques(technique):
                 sub_data["name"] = subtechnique["object"]["name"]
                 sub_number = sub_data["id"].split(".")[1]
                 attack_id = util.buildhelpers.get_attack_id(technique)
-                sub_data["path"] = f"/techniques/{attack_id}/{sub_number}/"
+                sub_data["path"] = f"/techniques/{attack_id}.{sub_number}/"
                 subtechs.append(sub_data)
 
     return sorted(subtechs, key=lambda k: k["id"])

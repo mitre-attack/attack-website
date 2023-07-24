@@ -39,6 +39,6 @@ techniques_redirection_location = "modules/techniques/techniques_redirections.js
 sub_technique_md = Template(
     "Title: ${name}-${domain}\n"
     "Template: techniques/technique\n"
-    "save_as: techniques/${parent_id}/${sub_number}/index.html\n"
+    "save_as: techniques/${parent_id}.${sub_number}/index.html\n"
     "data: "
 )
