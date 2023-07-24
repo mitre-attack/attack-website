@@ -1,12 +1,18 @@
-{% extends "general/base.html" %}
+{% extends "general/two-column.html" %} 
 {% set active_page = "attackcon" -%}
 {% set title = "MITRE ATT&CKcon | MITRE ATT&CK&reg;" -%}
 {% set conventions = page.data | from_json %}
+{% import 'macros/navigation.html' as navigation %}
 
-{% block content %}
-{{ super () }}
+{% block innerleft %}
+<div id="v-tab" role="tablist" aria-orientation="vertical" class="h-100">
+    {{ navigation.sidenav(conventions.menu, output_file) }} 
+</div>
+{% endblock %}
 
-<div class="container-fluid">
+{% block innerright %}
+<!--stopindex-->
+<div class="px-3">
     <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="/">Home</a></li>
             <li class="breadcrumb-item"><a href="/resources">Resources</a></li>
@@ -16,7 +22,7 @@
 
 <div class="pt-3 container">
     <ul class="nav nav-tabs" role="tablist" id="years">
-        {% for con in conventions %}
+        {% for con in conventions.conventions %}
         {% set conID = "-".join(con.date.split(' ')) %}
         {% set active = conID == 'March-2022' %}
         <li class="nav-item">
@@ -25,7 +31,7 @@
         {% endfor %}
     </ul>
     <div class="tab-content attackcons p-4 mb-3">
-        {% for con in conventions %}
+        {% for con in conventions.conventions %}
         {% set conID = "-".join(con.date.split(' ')) %}
         {% set active = conID == 'March-2022' %}
         <div class="uniform-block tab-pane fade{% if active %} show active{% endif %}" id="{{conID}}-body" role="tabpanel" aria-labelledby="{{conID}}-tab">
@@ -123,6 +129,9 @@
 
 {% endblock %}
 
+<!--startindex-->
 {% block scripts %}
 {{ super() }}
-{% endblock %}   
+<!--SCRIPTS-->
+<script src="/theme/scripts/navigation.js"></script>
+{% endblock %}

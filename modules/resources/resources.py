@@ -105,13 +105,18 @@ def generate_training_pages():
 def generate_attackcon_page():
     """Responsible for compiling ATT&CKcon json into attackcon markdown file for rendering on the HTML."""
     logger.info("Generating ATT&CKcon page")
+    data = {}
+
+    # Side navigation for resources
+    data["menu"] = resources_config.resources_navigation
+
     # load ATT&CKcon data
     with open(os.path.join(site_config.data_directory, "attackcon.json"), "r", encoding="utf8") as f:
         attackcon = json.load(f)
+        
+    attackcon["conventions"] = sorted(attackcon["conventions"], key=lambda a: datetime.strptime(a["date"], "%B %Y"), reverse=True)
 
-    attackcon = sorted(attackcon, key=lambda a: datetime.strptime(a["date"], "%B %Y"), reverse=True)
-
-    attackcon_content = resources_config.attackcon_md + json.dumps(attackcon)
+    attackcon_content = resources_config.attackcon_md + json.dumps({"conventions": attackcon["conventions"], "menu": data["menu"]})
     # write markdown to file
     with open(os.path.join(site_config.resources_markdown_path, "attackcon.md"), "w", encoding="utf8") as md_file:
         md_file.write(attackcon_content)
