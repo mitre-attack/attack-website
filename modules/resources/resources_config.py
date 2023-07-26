@@ -147,4 +147,3 @@ for i in range(len(test)):
     temp_dict["children"] = []
     res_nav["children"][5]["children"].append(temp_dict.copy())
     temp_dict = {}
-print(res_nav)
