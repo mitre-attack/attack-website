@@ -102,40 +102,49 @@ def set_subdirectory(subdirectory_str):
     web_directory = os.path.join(web_directory, subdirectory)
 
 def generate_updates_list():
-    """Reads markdown files from the static pages directory and copies them into the markdown directory."""
+    """Creates a list of markdown files from the static pages resources directory."""
     static_pages_dir = os.path.join("modules", "resources", "static_pages")
-    data = []
-    updates_names = []
+    updates_name = []
+    updates_path = []
     for static_page in os.listdir(static_pages_dir):
         with open(os.path.join(static_pages_dir, static_page), "r", encoding="utf8") as md:
             content = md.read()
-
             if static_page.startswith("updates-"):
                 temp_string = static_page.replace('.md','')
                 temp_string = temp_string.split('-')
                 temp_string = temp_string[1].capitalize() + ' ' + temp_string[2]
-                data.append(temp_string)
+                updates_name.append(temp_string)
                 temp_string = static_page.replace('.md','')
-                updates_names.append("/resources/updates/" + temp_string)
-    data.sort(key=lambda date: datetime.strptime(date, "%B %Y"), reverse=True)
-    updates_names.sort(key=lambda date: datetime.strptime(date, "/resources/updates/updates-%B-%Y"), reverse=True)
-    return(data, updates_names)
+                updates_path.append("/resources/updates/" + temp_string)
+    updates_name.sort(key=lambda date: datetime.strptime(date, "%B %Y"), reverse=True)
+    updates_path.sort(key=lambda date: datetime.strptime(date, "/resources/updates/updates-%B-%Y"), reverse=True)
+    return(updates_name, updates_path)
 
+# Navigation list for resources (this is the list before adding the updates)
 with open("data/resources_navigation.json", "r", encoding="utf8") as i:
     res_nav = json.load(i)
-test, yy = generate_updates_list()
+
+# Add the updates as children to the Updates section
+updates_name, updates_path = generate_updates_list()
+updates_index = 0
+for i in range(len(res_nav["children"])):
+    if res_nav["children"][i]["name"] == "Updates":
+        updates_index = i
+
 temp_dict = {}
-for i in range(len(test)):
-    temp_dict["name"] = test[i]
-    temp_dict["path"] = yy[i]
+for i in range(len(updates_name)):
+    temp_dict["name"] = updates_name[i]
+    temp_dict["path"] = updates_path[i]
     temp_dict["children"] = []
-    res_nav["children"][5]["children"].append(temp_dict.copy())
+    res_nav["children"][updates_index]["children"].append(temp_dict.copy())
     temp_dict = {}
-    
-with open("data/temper_test.json", "w", encoding="utf8") as i:
+
+# Create the complete resources navigation list
+with open("data/resources_navigation_list.json", "w", encoding="utf8") as i:
     i.write(json.dumps(res_nav))
 
-with open("data/temper_test.json", "r", encoding="utf8") as i:
+# Set the resource nav variable to the json data. This is then used in website build
+with open("data/resources_navigation_list.json", "r", encoding="utf8") as i:
     resource_nav = json.load(i)
 
 # Location of html templates

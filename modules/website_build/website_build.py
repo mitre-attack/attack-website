@@ -249,17 +249,12 @@ def generate_changelog_page():
     for rendering on the HTML
     """
     logger.info("Generating Changelog page")
-    data = {}
-
-    # Side navigation for resources
-    data["menu"] = resources.resources_config.resources_navigation
-    
     current_changelog = None
     # Read local changelog
     with open("CHANGELOG.md", "r", encoding="utf8") as f:
         current_changelog = f.read()
 
-    changelog_md = website_build_config.changelog_md + json.dumps(data) + "\n" + current_changelog
+    changelog_md = website_build_config.changelog_md + current_changelog
 
     with open(os.path.join(site_config.resources_markdown_path, "changelog.md"), "w", encoding="utf8") as md_file:
         md_file.write(changelog_md)
