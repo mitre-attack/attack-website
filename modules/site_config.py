@@ -5,6 +5,7 @@ from string import Template
 from dotenv import load_dotenv
 
 import modules
+from datetime import datetime
 
 load_dotenv()
 
@@ -100,6 +101,42 @@ def set_subdirectory(subdirectory_str):
     # Add subdirectory to web directory
     web_directory = os.path.join(web_directory, subdirectory)
 
+def generate_updates_list():
+    """Reads markdown files from the static pages directory and copies them into the markdown directory."""
+    static_pages_dir = os.path.join("modules", "resources", "static_pages")
+    data = []
+    updates_names = []
+    for static_page in os.listdir(static_pages_dir):
+        with open(os.path.join(static_pages_dir, static_page), "r", encoding="utf8") as md:
+            content = md.read()
+
+            if static_page.startswith("updates-"):
+                temp_string = static_page.replace('.md','')
+                temp_string = temp_string.split('-')
+                temp_string = temp_string[1].capitalize() + ' ' + temp_string[2]
+                data.append(temp_string)
+                temp_string = static_page.replace('.md','')
+                updates_names.append("/resources/updates/" + temp_string)
+    data.sort(key=lambda date: datetime.strptime(date, "%B %Y"), reverse=True)
+    updates_names.sort(key=lambda date: datetime.strptime(date, "/resources/updates/updates-%B-%Y"), reverse=True)
+    return(data, updates_names)
+
+with open("data/resources_navigation.json", "r", encoding="utf8") as i:
+    res_nav = json.load(i)
+test, yy = generate_updates_list()
+temp_dict = {}
+for i in range(len(test)):
+    temp_dict["name"] = test[i]
+    temp_dict["path"] = yy[i]
+    temp_dict["children"] = []
+    res_nav["children"][5]["children"].append(temp_dict.copy())
+    temp_dict = {}
+print(res_nav)
+with open("data/temper_test.json", "w", encoding="utf8") as i:
+    i.write(json.dumps(res_nav))
+
+with open("data/temper_test.json", "r", encoding="utf8") as i:
+    resource_nav = json.load(i)
 
 # Location of html templates
 templates_directory = "attack-theme/templates/"

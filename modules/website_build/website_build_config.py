@@ -29,6 +29,7 @@ base_page_data = {
     "LOGO_FOOTER": "/theme/images/mitrelogowhiteontrans.gif",
     "logo_landingpage": "/theme/images/ATT&CK_red.png",
     "NAVIGATION_MENU": modules.menu_ptr,
+    "RESOURCE_NAV": site_config.resource_nav,
 }
 
 # config for the matrix shown on the index page
@@ -71,4 +72,4 @@ faq_md = (
 )
 
 # CHANGELOG md
-changelog_md = "Title: Changelog\n" "Template: website_build/changelog\n" "save_as: resources/changelog.html\n\n"
+changelog_md = "Title: Changelog\n" "Template: website_build/changelog\n" "save_as: resources/changelog.html\n" "data: "

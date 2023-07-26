@@ -1,4 +1,5 @@
 import os
+import json 
 
 from modules import site_config
 import modules
@@ -136,3 +137,14 @@ for i in range(len(test)):
     resources_navigation["children"][6]["children"].append(temp_dict.copy())
     temp_dict = {}
 
+with open("data/resources_navigation.json", "r", encoding="utf8") as i:
+    res_nav = json.load(i)
+test, yy = generate_updates_list()
+temp_dict = {}
+for i in range(len(test)):
+    temp_dict["name"] = test[i]
+    temp_dict["path"] = yy[i]
+    temp_dict["children"] = []
+    res_nav["children"][5]["children"].append(temp_dict.copy())
+    temp_dict = {}
+print(res_nav)
