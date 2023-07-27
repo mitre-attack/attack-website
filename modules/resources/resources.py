@@ -102,11 +102,16 @@ def generate_attackcon_page():
         attackcon = json.load(f)
         
     attackcon = sorted(attackcon, key=lambda a: datetime.strptime(a["date"], "%B %Y"), reverse=True)
-
+    
     attackcon_content = resources_config.attackcon_md + json.dumps(attackcon)
     # write markdown to file
     with open(os.path.join(site_config.resources_markdown_path, "attackcon.md"), "w", encoding="utf8") as md_file:
         md_file.write(attackcon_content)
+    for i in range(len(resources_config.attackcon_list)):
+        attackcon_content = resources_config.attackcon_list[i] + json.dumps(attackcon[i])
+        f_name = "attackcon-" + attackcon[i]["date"].lower().replace(' ','-') + ".md"
+        with open(os.path.join(site_config.resources_markdown_path, f_name), "w", encoding="utf8") as md_file:
+            md_file.write(attackcon_content)
 
 
 def check_menu_versions_module():

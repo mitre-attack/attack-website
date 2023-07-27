@@ -23,7 +23,7 @@ def get_menu():
                 "children": [],
             },
             {"display_name": "Training", "url": "/resources/training/", "external_link": False, "children": []},
-            {"display_name": "ATT&CKcon", "url": "/resources/attackcon/", "external_link": False, "children": []},
+            {"display_name": "ATT&CKcon", "url": "/resources/attackcon/march-2022", "external_link": False, "children": []},
             {
                 "display_name": "Working with ATT&CK",
                 "url": "/resources/working-with-attack/",

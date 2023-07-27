@@ -85,6 +85,9 @@ parent_web_directory = "output"
 # Declare as empty string
 subdirectory = ""
 
+# directory for data used in site builds
+data_directory = "data"
+
 
 def set_subdirectory(subdirectory_str):
     """Method to globally set the subdirectory"""
@@ -102,7 +105,7 @@ def set_subdirectory(subdirectory_str):
     web_directory = os.path.join(web_directory, subdirectory)
 
 def generate_updates_list():
-    """Creates a list of markdown files from the static pages resources directory."""
+    """Creates a list of markdown update files from the static pages resources directory."""
     static_pages_dir = os.path.join("modules", "resources", "static_pages")
     updates_dict = {}
     updates_name = []
@@ -142,6 +145,45 @@ for i in range(len(updates_dict_list["updates_name"])):
     res_nav["children"][updates_index]["children"].append(temp_dict.copy())
     temp_dict = {}
 
+def generate_attackcon_list():
+    """Creates a list of attackcon files."""
+    attackcon_md = []
+    attackcon_name = []
+    attackcon_path = []
+    attackcon_dict = {}
+    with open(os.path.join(data_directory, "attackcon.json"), "r", encoding="utf8") as f:
+        attackcon = json.load(f)
+    attackcon = sorted(attackcon, key=lambda a: datetime.strptime(a["date"], "%B %Y"), reverse=True)
+    for i in range(len(attackcon)):
+        attackcon_name.append(attackcon[i]["title"])
+        title = "Title: " + attackcon[i]["title"] + "\n"
+        name = attackcon[i]["date"].lower().replace(' ','-')
+        template = "Template: general/attackcon-overview\n"
+        attackcon_path.append("/resources/attackcon/" + name)
+        save_as = "save_as: resources/attackcon/" + name + "/index.html\n"
+        data = "data: "
+        content = title + template + save_as + data
+        attackcon_md.append(content)
+    attackcon_dict["attackcon_name"] = attackcon_name
+    attackcon_dict["attackcon_path"] = attackcon_path
+    attackcon_dict["attackcon_md"] = attackcon_md
+    return attackcon_dict
+
+# Add the updates as children to the AttackCon section
+attackcon_dict_list = generate_attackcon_list()
+attackcon_index = 0
+temp_dict = {}
+for i in range(len(res_nav["children"])):
+    if res_nav["children"][i]["name"] == "ATT&CKcon":
+        attackcon_index = i
+
+for i in range(len(attackcon_dict_list["attackcon_name"])):
+    temp_dict["name"] = attackcon_dict_list["attackcon_name"][i]
+    temp_dict["path"] = attackcon_dict_list["attackcon_path"][i]
+    temp_dict["children"] = []
+    res_nav["children"][attackcon_index]["children"].append(temp_dict.copy())
+    temp_dict = {}
+
 # Create the complete resources navigation list
 with open("data/resources_navigation_list.json", "w", encoding="utf8") as i:
     i.write(json.dumps(res_nav))
@@ -158,8 +200,6 @@ javascript_path = "attack-theme/static/scripts/"
 # Static style pelican files directory
 static_style_dir = os.path.join("attack-theme", "static", "style/")
 
-# directory for data used in site builds
-data_directory = "data"
 
 # Link to instance of the ATT&CK Navigator; change for to a custom location
 navigator_link = "https://mitre-attack.github.io/attack-navigator/"

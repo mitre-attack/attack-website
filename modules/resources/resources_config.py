@@ -45,3 +45,5 @@ working_with_attack_md = (
     "save_as: resources/working-with-attack/index.html\n"
     "data: "
 )
+
+attackcon_list = site_config.attackcon_dict_list["attackcon_md"]
