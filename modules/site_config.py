@@ -104,6 +104,7 @@ def set_subdirectory(subdirectory_str):
 def generate_updates_list():
     """Creates a list of markdown files from the static pages resources directory."""
     static_pages_dir = os.path.join("modules", "resources", "static_pages")
+    updates_dict = {}
     updates_name = []
     updates_path = []
     for static_page in os.listdir(static_pages_dir):
@@ -118,23 +119,25 @@ def generate_updates_list():
                 updates_path.append("/resources/updates/" + temp_string)
     updates_name.sort(key=lambda date: datetime.strptime(date, "%B %Y"), reverse=True)
     updates_path.sort(key=lambda date: datetime.strptime(date, "/resources/updates/updates-%B-%Y"), reverse=True)
-    return(updates_name, updates_path)
+    updates_dict["updates_name"] = updates_name
+    updates_dict["updates_path"] = updates_path
+    return(updates_dict)
 
 # Navigation list for resources (this is the list before adding the updates)
 with open("data/resources_navigation.json", "r", encoding="utf8") as i:
     res_nav = json.load(i)
 
 # Add the updates as children to the Updates section
-updates_name, updates_path = generate_updates_list()
+updates_dict_list = generate_updates_list()
 updates_index = 0
 for i in range(len(res_nav["children"])):
     if res_nav["children"][i]["name"] == "Updates":
         updates_index = i
 
 temp_dict = {}
-for i in range(len(updates_name)):
-    temp_dict["name"] = updates_name[i]
-    temp_dict["path"] = updates_path[i]
+for i in range(len(updates_dict_list["updates_name"])):
+    temp_dict["name"] = updates_dict_list["updates_name"][i]
+    temp_dict["path"] = updates_dict_list["updates_path"][i]
     temp_dict["children"] = []
     res_nav["children"][updates_index]["children"].append(temp_dict.copy())
     temp_dict = {}
