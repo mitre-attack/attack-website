@@ -59,11 +59,6 @@ def copy_docs(module_docs_path):
 def generate_general_information():
     """Responsible for compiling resources json into resources markdown files for rendering on the HMTL."""
     logger.info("Generating general information")
-    data = {}
-
-    # Side navigation for resources
-    data["menu"] = resources_config.resources_navigation
-    # load presentations list
 
     with open(os.path.join(site_config.data_directory, "resources.json"), "r", encoding="utf8") as f:
         resources = json.load(f)
@@ -73,7 +68,7 @@ def generate_general_information():
         resources["presentations"], key=lambda p: datetime.strptime(p["date"], "%B %Y"), reverse=True
     )
     # get markdown
-    resources_content = resources_config.general_information_md + json.dumps({"presentations": presentations, "menu": data["menu"]})
+    resources_content = resources_config.general_information_md + json.dumps({"presentations": presentations})
     # write markdown to file
     with open(
         os.path.join(site_config.resources_markdown_path, "general_information.md"), "w", encoding="utf8"
@@ -83,20 +78,16 @@ def generate_general_information():
 def generate_training_pages():
     """Responsible for generating the markdown pages of the training pages."""
     logger.info("Generating training pages")
-    data = {}
-
-    # Side navigation for resources
-    data["menu"] = resources_config.resources_navigation
 
     # Training Overview
-    training_md = resources_config.training_md + json.dumps(data)
+    training_md = resources_config.training_md
 
     # write markdown to file
     with open(os.path.join(site_config.resources_markdown_path, "training.md"), "w", encoding="utf8") as md_file:
         md_file.write(training_md)
 
     # CTI training
-    training_cti_md = resources_config.training_cti_md + json.dumps(data)
+    training_cti_md = resources_config.training_cti_md
 
     # write markdown to file
     with open(os.path.join(site_config.resources_markdown_path, "training_cti.md"), "w", encoding="utf8") as md_file:
@@ -105,18 +96,14 @@ def generate_training_pages():
 def generate_attackcon_page():
     """Responsible for compiling ATT&CKcon json into attackcon markdown file for rendering on the HTML."""
     logger.info("Generating ATT&CKcon page")
-    data = {}
-
-    # Side navigation for resources
-    data["menu"] = resources_config.resources_navigation
 
     # load ATT&CKcon data
     with open(os.path.join(site_config.data_directory, "attackcon.json"), "r", encoding="utf8") as f:
         attackcon = json.load(f)
         
-    attackcon["conventions"] = sorted(attackcon["conventions"], key=lambda a: datetime.strptime(a["date"], "%B %Y"), reverse=True)
+    attackcon = sorted(attackcon, key=lambda a: datetime.strptime(a["date"], "%B %Y"), reverse=True)
 
-    attackcon_content = resources_config.attackcon_md + json.dumps({"conventions": attackcon["conventions"], "menu": data["menu"]})
+    attackcon_content = resources_config.attackcon_md + json.dumps(attackcon)
     # write markdown to file
     with open(os.path.join(site_config.resources_markdown_path, "attackcon.md"), "w", encoding="utf8") as md_file:
         md_file.write(attackcon_content)
@@ -132,10 +119,6 @@ def generate_static_pages():
     """Reads markdown files from the static pages directory and copies them into the markdown directory."""
     logger.info("Generating static pages")
     static_pages_dir = os.path.join("modules", "resources", "static_pages")
-    data = {}
-
-    # Side navigation for resources
-    data["menu"] = resources_config.resources_navigation
 
     for static_page in os.listdir(static_pages_dir):
         with open(os.path.join(static_pages_dir, static_page), "r", encoding="utf8") as md:
@@ -152,11 +135,7 @@ def generate_static_pages():
                     os.path.join(site_config.resources_markdown_path, static_page), "w", encoding="utf8"
                 ) as md_file:
                     logger.debug(f"{md.name} >>> {md_file.name}")
-                    if static_page.startswith("getting-started") or static_page.startswith("related-projects"):
-                        static_md = content + json.dumps(data)
-                    else:
-                        static_md = content
-                    md_file.write(static_md)
+                    md_file.write(content)
 
 
 def generate_working_with_attack():
@@ -208,10 +187,7 @@ def generate_working_with_attack():
         
     with open(os.path.join(site_config.data_directory, "resources.json"), "r", encoding="utf8") as f:
         resources = json.load(f)
-    data = {}
-    # Side navigation for resources
-    data["menu"] = resources_config.resources_navigation
-    files_json = {"excel_files": [], "menu": data["menu"]}
+    files_json = {"excel_files": []}
     for excel_dir in excel_dirs:
         excel_json = {"label": f"{excel_dir}.xlsx", "url": f"/docs/{excel_dir}/{excel_dir}.xlsx", "children": []}
         for file_type in files_types:

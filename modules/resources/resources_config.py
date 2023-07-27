@@ -49,14 +49,13 @@ attackcon_md = (
 )
 # Training md
 training_md = (
-    "Title: ATT&CK Training\n" "Template: resources/training\n" "save_as: resources/training/index.html\n" "data: "
+    "Title: ATT&CK Training\n" "Template: resources/training\n" "save_as: resources/training/index.html\n"
 )
 
 training_cti_md = (
     "Title: ATT&CK For CTI Training\n"
     "Template: resources/training-cti\n"
     "save_as: resources/training/cti/index.html\n"
-    "data: "
 )
 
 # Excel files / working with ATT&CK
