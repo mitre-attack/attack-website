@@ -59,7 +59,7 @@ def copy_docs(module_docs_path):
 def generate_general_information():
     """Responsible for compiling resources json into resources markdown files for rendering on the HMTL."""
     logger.info("Generating general information")
-
+    # load presentations list
     with open(os.path.join(site_config.data_directory, "resources.json"), "r", encoding="utf8") as f:
         resources = json.load(f)
 
@@ -185,8 +185,6 @@ def generate_working_with_attack():
             stix_file=stix_filename,
         )
         
-    with open(os.path.join(site_config.data_directory, "resources.json"), "r", encoding="utf8") as f:
-        resources = json.load(f)
     files_json = {"excel_files": []}
     for excel_dir in excel_dirs:
         excel_json = {"label": f"{excel_dir}.xlsx", "url": f"/docs/{excel_dir}/{excel_dir}.xlsx", "children": []}

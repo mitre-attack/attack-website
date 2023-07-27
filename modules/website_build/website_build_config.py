@@ -72,4 +72,4 @@ faq_md = (
 )
 
 # CHANGELOG md
-changelog_md = "Title: Changelog\n" "Template: website_build/changelog\n" "save_as: resources/changelog.html\n" "data: "
+changelog_md = "Title: Changelog\n" "Template: website_build/changelog\n" "save_as: resources/changelog.html\n\n"
