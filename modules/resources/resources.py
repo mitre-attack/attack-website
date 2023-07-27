@@ -103,7 +103,7 @@ def generate_attackcon_page():
         
     attackcon = sorted(attackcon, key=lambda a: datetime.strptime(a["date"], "%B %Y"), reverse=True)
     
-    attackcon_content = resources_config.attackcon_md + json.dumps(attackcon)
+    attackcon_content = resources_config.attackcon_md + json.dumps(attackcon[0])
     # write markdown to file
     with open(os.path.join(site_config.resources_markdown_path, "attackcon.md"), "w", encoding="utf8") as md_file:
         md_file.write(attackcon_content)
