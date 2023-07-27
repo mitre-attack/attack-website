@@ -22,13 +22,13 @@ if attack_version.startswith("v"):
 # Domains for stix objects
 STIX_LOCATION_ENTERPRISE = os.getenv(
     "STIX_LOCATION_ENTERPRISE",
-    "https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json",
+    "https://raw.githubusercontent.com/mitre-attack/attack-stix-data/master/enterprise-attack/enterprise-attack.json",
 )
 STIX_LOCATION_MOBILE = os.getenv(
-    "STIX_LOCATION_MOBILE", "https://raw.githubusercontent.com/mitre/cti/master/mobile-attack/mobile-attack.json"
+    "STIX_LOCATION_MOBILE", "https://raw.githubusercontent.com/mitre-attack/attack-stix-data/master/mobile-attack/mobile-attack.json"
 )
 STIX_LOCATION_ICS = os.getenv(
-    "STIX_LOCATION_ICS", "https://raw.githubusercontent.com/mitre/cti/master/ics-attack/ics-attack.json"
+    "STIX_LOCATION_ICS", "https://raw.githubusercontent.com/mitre-attack/attack-stix-data/master/ics-attack/ics-attack.json"
 )
 STIX_LOCATION_PRE = os.getenv(
     "STIX_LOCATION_PRE", "https://raw.githubusercontent.com/mitre/cti/master/pre-attack/pre-attack.json"
