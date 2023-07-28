@@ -119,14 +119,14 @@ def generate_updates_list():
                 temp_string = temp_string[1].capitalize() + ' ' + temp_string[2]
                 updates_name.append(temp_string)
                 temp_string = static_page.replace('.md','')
-                updates_path.append("/resources/updates/" + temp_string)
+                updates_path.append("/resources/updates/" + temp_string + "/")
     updates_name.sort(key=lambda date: datetime.strptime(date, "%B %Y"), reverse=True)
-    updates_path.sort(key=lambda date: datetime.strptime(date, "/resources/updates/updates-%B-%Y"), reverse=True)
+    updates_path.sort(key=lambda date: datetime.strptime(date, "/resources/updates/updates-%B-%Y/"), reverse=True)
     updates_dict["updates_name"] = updates_name
     updates_dict["updates_path"] = updates_path
     return(updates_dict)
 
-# Navigation list for resources (this is the list before adding the updates)
+# Navigation list for resources (this is the list before adding the updates and attackcon)
 with open("data/resources_navigation.json", "r", encoding="utf8") as i:
     res_nav = json.load(i)
 
@@ -159,7 +159,7 @@ def generate_attackcon_list():
         title = "Title: " + attackcon[i]["title"] + "\n"
         name = attackcon[i]["date"].lower().replace(' ','-')
         template = "Template: general/attackcon-overview\n"
-        attackcon_path.append("/resources/attackcon/" + name)
+        attackcon_path.append("/resources/attackcon/" + name + "/")
         save_as = "save_as: resources/attackcon/" + name + "/index.html\n"
         data = "data: "
         content = title + template + save_as + data
@@ -169,7 +169,7 @@ def generate_attackcon_list():
     attackcon_dict["attackcon_md"] = attackcon_md
     return attackcon_dict
 
-# Add the updates as children to the AttackCon section
+# Add attackcons as children to the AttackCon section
 attackcon_dict_list = generate_attackcon_list()
 attackcon_index = 0
 temp_dict = {}
