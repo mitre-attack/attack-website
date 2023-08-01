@@ -238,6 +238,11 @@ def generate_faq_page():
     # write markdown to file
     with open(os.path.join(site_config.resources_markdown_path, "faq.md"), "w", encoding="utf8") as md_file:
         md_file.write(faq_content)
+    for i in range(len(website_build_config.faq_list)):
+        faq_content = website_build_config.faq_list[i] + json.dumps(faqdata["sections"][i])
+        f_name = "faq-" + faqdata["sections"][i]["name"].lower().replace(' ','-') + ".md"
+        with open(os.path.join(site_config.resources_markdown_path, f_name), "w", encoding="utf8") as md_file:
+            md_file.write(faq_content)
 
 
 def generate_changelog_page():
