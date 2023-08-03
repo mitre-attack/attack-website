@@ -33,6 +33,7 @@ def generate_resources():
     generate_working_with_attack()
     generate_general_information()
     generate_training_pages()
+    generate_brand_page()
     generate_attackcon_page()
     check_menu_versions_module()
     generate_static_pages()
@@ -92,6 +93,18 @@ def generate_training_pages():
     # write markdown to file
     with open(os.path.join(site_config.resources_markdown_path, "training_cti.md"), "w", encoding="utf8") as md_file:
         md_file.write(training_cti_md)
+
+def generate_brand_page():
+    """Responsible for generating the markdown pages of the training pages."""
+    logger.info("Generating brand")
+
+    # Training Overview
+    brand_md = resources_config.brand_md
+
+    # write markdown to file
+    with open(os.path.join(site_config.resources_markdown_path, "brand.md"), "w", encoding="utf8") as md_file:
+        md_file.write(brand_md)
+
 
 def generate_attackcon_page():
     """Responsible for compiling ATT&CKcon json into attackcon markdown file for rendering on the HTML."""

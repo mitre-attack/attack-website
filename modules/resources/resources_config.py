@@ -38,6 +38,11 @@ training_cti_md = (
     "save_as: resources/training/cti/index.html\n"
 )
 
+# Brand md
+brand_md = (
+    "Title: Brand\n" "Template: resources/brand\n" "save_as: resources/brand/index.html\n" "data: "
+)
+
 # Excel files / working with ATT&CK
 working_with_attack_md = (
     "Title: Working with ATT&CK\n"
