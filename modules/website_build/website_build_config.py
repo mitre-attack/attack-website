@@ -68,7 +68,7 @@ website_build_templates_path = "modules/website_build/templates/"
 
 # FAQ md
 faq_md = (
-    "Title: Frequently Asked Questions\n" "Template: website_build/faq\n" "save_as: resources/faq/index.html\n" "data: "
+    "Title: Frequently Asked Questions\n" "Template: general/faq-overview\n" "save_as: resources/faq/index.html\n" "data: "
 )
 
 # CHANGELOG md

@@ -234,7 +234,7 @@ def generate_faq_page():
         for j, item in enumerate(section["questions"]):
             item["id"] = f"faq-{i}-{j}"
     # get markdown
-    faq_content = website_build_config.faq_md + json.dumps(faqdata)
+    faq_content = website_build_config.faq_md + json.dumps(faqdata["sections"][0])
     # write markdown to file
     with open(os.path.join(site_config.resources_markdown_path, "faq.md"), "w", encoding="utf8") as md_file:
         md_file.write(faq_content)
