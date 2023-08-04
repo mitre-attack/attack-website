@@ -35,6 +35,7 @@ def generate_resources():
     generate_training_pages()
     generate_attackcon_page()
     check_menu_versions_module()
+    # TODO: add create_update_page() here
     generate_static_pages()
 
 
