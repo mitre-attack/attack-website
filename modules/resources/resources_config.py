@@ -1,10 +1,4 @@
-import os
-import json 
-
 from modules import site_config
-import modules
-from modules import site_config, util
-from datetime import datetime
 
 module_name = "Resources"
 priority = 8
@@ -28,9 +22,7 @@ attackcon_md = (
     "Title: ATT&CKcon\n" "Template: general/attackcon-overview\n" "save_as: resources/attackcon/index.html\n" "data: "
 )
 # Training md
-training_md = (
-    "Title: ATT&CK Training\n" "Template: resources/training\n" "save_as: resources/training/index.html\n"
-)
+training_md = "Title: ATT&CK Training\n" "Template: resources/training\n" "save_as: resources/training/index.html\n"
 
 training_cti_md = (
     "Title: ATT&CK For CTI Training\n"
@@ -39,9 +31,7 @@ training_cti_md = (
 )
 
 # Brand md
-brand_md = (
-    "Title: Brand\n" "Template: resources/brand\n" "save_as: resources/brand/index.html\n" "data: "
-)
+brand_md = "Title: Brand\n" "Template: resources/brand\n" "save_as: resources/brand/index.html\n" "data: "
 
 # Excel files / working with ATT&CK
 working_with_attack_md = (
