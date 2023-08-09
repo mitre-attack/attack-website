@@ -76,6 +76,7 @@ def generate_general_information():
     ) as md_file:
         md_file.write(resources_content)
 
+
 def generate_training_pages():
     """Responsible for generating the markdown pages of the training pages."""
     logger.info("Generating training pages")
@@ -93,6 +94,7 @@ def generate_training_pages():
     # write markdown to file
     with open(os.path.join(site_config.resources_markdown_path, "training_cti.md"), "w", encoding="utf8") as md_file:
         md_file.write(training_cti_md)
+
 
 def generate_brand_page():
     """Responsible for generating the markdown pages of the training pages."""
@@ -113,16 +115,16 @@ def generate_attackcon_page():
     # load ATT&CKcon data
     with open(os.path.join(site_config.data_directory, "attackcon.json"), "r", encoding="utf8") as f:
         attackcon = json.load(f)
-        
+
     attackcon = sorted(attackcon, key=lambda a: datetime.strptime(a["date"], "%B %Y"), reverse=True)
-    
+
     attackcon_content = resources_config.attackcon_md + json.dumps(attackcon[0])
     # write markdown to file
     with open(os.path.join(site_config.resources_markdown_path, "attackcon.md"), "w", encoding="utf8") as md_file:
         md_file.write(attackcon_content)
     for i in range(len(resources_config.attackcon_list)):
         attackcon_content = resources_config.attackcon_list[i] + json.dumps(attackcon[i])
-        f_name = "attackcon-" + attackcon[i]["date"].lower().replace(' ','-') + ".md"
+        f_name = "attackcon-" + attackcon[i]["date"].lower().replace(" ", "-") + ".md"
         with open(os.path.join(site_config.resources_markdown_path, f_name), "w", encoding="utf8") as md_file:
             md_file.write(attackcon_content)
 
@@ -202,7 +204,7 @@ def generate_working_with_attack():
             output_dir=docs_dir,
             stix_file=stix_filename,
         )
-        
+
     files_json = {"excel_files": []}
     for excel_dir in excel_dirs:
         excel_json = {"label": f"{excel_dir}.xlsx", "url": f"/docs/{excel_dir}/{excel_dir}.xlsx", "children": []}
@@ -214,8 +216,6 @@ def generate_working_with_attack():
             if os.path.exists(site_config.web_directory + child_json["url"]):
                 excel_json["children"].append(child_json)
         files_json["excel_files"].append(excel_json)
-
-    
 
     working_with_attack_content = resources_config.working_with_attack_md + json.dumps(files_json)
     # write markdown to file
