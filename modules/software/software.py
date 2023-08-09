@@ -38,14 +38,11 @@ def generate_software():
 def generate_markdown_files():
     """Responsible for generating the shared data for all software and kicking off markdown generation."""
     data = {}
-
     has_software = False
 
     # Amount of characters per category
     group_by = 2
-
     software_list = util.relationshipgetters.get_software_list()
-
     software_list_no_deprecated_revoked = util.buildhelpers.filter_deprecated_revoked(software_list)
 
     if software_list_no_deprecated_revoked:
@@ -53,23 +50,20 @@ def generate_markdown_files():
 
     if has_software:
         data["software_list_len"] = str(len(software_list_no_deprecated_revoked))
-
         notes = util.relationshipgetters.get_objects_using_notes()
 
         side_menu_data = util.buildhelpers.get_side_menu_data(
             "software", "/software/", software_list_no_deprecated_revoked
         )
-        data["side_menu_data"] = side_menu_data
-
         side_menu_mobile_view_data = util.buildhelpers.get_side_menu_mobile_view_data(
             "software", "/software/", software_list_no_deprecated_revoked, group_by
         )
-        data["side_menu_mobile_view_data"] = side_menu_mobile_view_data
 
+        data["side_menu_data"] = side_menu_data
+        data["side_menu_mobile_view_data"] = side_menu_mobile_view_data
         data["software_table"] = get_software_table_data(software_list_no_deprecated_revoked)
 
         subs = software_config.software_index_md + json.dumps(data)
-
         with open(os.path.join(software_config.software_markdown_path, "overview.md"), "w", encoding="utf8") as md_file:
             md_file.write(subs)
 
