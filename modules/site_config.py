@@ -128,13 +128,13 @@ def generate_updates_list():
 
 # Navigation list for resources (this is the list before adding the updates and attackcon)
 with open("data/resources_navigation.json", "r", encoding="utf8") as i:
-    res_nav = json.load(i)
+    resource_nav = json.load(i)
 
 # Add the updates as children to the Updates section
 updates_dict_list = generate_updates_list()
 updates_index = 0
-for i in range(len(res_nav["children"])):
-    if res_nav["children"][i]["name"] == "Updates":
+for i in range(len(resource_nav["children"])):
+    if resource_nav["children"][i]["name"] == "Updates":
         updates_index = i
 
 temp_dict = {}
@@ -142,7 +142,7 @@ for i in range(len(updates_dict_list["updates_name"])):
     temp_dict["name"] = updates_dict_list["updates_name"][i]
     temp_dict["path"] = updates_dict_list["updates_path"][i]
     temp_dict["children"] = []
-    res_nav["children"][updates_index]["children"].append(temp_dict.copy())
+    resource_nav["children"][updates_index]["children"].append(temp_dict.copy())
     temp_dict = {}
 
 def generate_attackcon_list():
@@ -173,15 +173,15 @@ def generate_attackcon_list():
 attackcon_dict_list = generate_attackcon_list()
 attackcon_index = 0
 temp_dict = {}
-for i in range(len(res_nav["children"])):
-    if res_nav["children"][i]["name"] == "ATT&CKcon":
+for i in range(len(resource_nav["children"])):
+    if resource_nav["children"][i]["name"] == "ATT&CKcon":
         attackcon_index = i
 
 for i in range(len(attackcon_dict_list["attackcon_name"])):
     temp_dict["name"] = attackcon_dict_list["attackcon_name"][i]
     temp_dict["path"] = attackcon_dict_list["attackcon_path"][i]
     temp_dict["children"] = []
-    res_nav["children"][attackcon_index]["children"].append(temp_dict.copy())
+    resource_nav["children"][attackcon_index]["children"].append(temp_dict.copy())
     temp_dict = {}
 
 def generate_faq_list():
@@ -216,24 +216,16 @@ faq_dict_list = generate_faq_list()
 # Add attackcons as children to the AttackCon section
 faq_index = 0
 temp_dict = {}
-for i in range(len(res_nav["children"])):
-    if res_nav["children"][i]["name"] == "FAQ":
+for i in range(len(resource_nav["children"])):
+    if resource_nav["children"][i]["name"] == "FAQ":
         faq_index = i
 
 for i in range(len(faq_dict_list["faq_name"])):
     temp_dict["name"] = faq_dict_list["faq_name"][i]
     temp_dict["path"] = faq_dict_list["faq_path"][i]
     temp_dict["children"] = []
-    res_nav["children"][faq_index]["children"].append(temp_dict.copy())
+    resource_nav["children"][faq_index]["children"].append(temp_dict.copy())
     temp_dict = {}
-
-# Create the complete resources navigation list
-with open("data/resources_navigation_list.json", "w", encoding="utf8") as i:
-    i.write(json.dumps(res_nav))
-
-# Set the resource nav variable to the json data. This is then used in website build
-with open("data/resources_navigation_list.json", "r", encoding="utf8") as i:
-    resource_nav = json.load(i)
 
 # Location of html templates
 templates_directory = "attack-theme/templates/"
