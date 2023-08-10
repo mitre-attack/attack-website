@@ -112,18 +112,52 @@ def generate_attackcon_page():
     """Responsible for compiling ATT&CKcon json into attackcon markdown file for rendering on the HTML."""
     logger.info("Generating ATT&CKcon page")
 
-    # load ATT&CKcon data
+    attackcon_md = []
+    attackcon_name = []
+    attackcon_path = []
+    attackcon_dict_list = {}
+     # load ATT&CKcon data
     with open(os.path.join(site_config.data_directory, "attackcon.json"), "r", encoding="utf8") as f:
         attackcon = json.load(f)
-
     attackcon = sorted(attackcon, key=lambda a: datetime.strptime(a["date"], "%B %Y"), reverse=True)
 
+    # Below code used to get a list of all attackcon children
+    for i in range(len(attackcon)):
+        attackcon_name.append(attackcon[i]["title"])
+        title = "Title: " + attackcon[i]["title"] + "\n"
+        name = attackcon[i]["date"].lower().replace(' ','-')
+        template = "Template: general/attackcon-overview\n"
+        attackcon_path.append("/resources/attackcon/" + name + "/")
+        save_as = "save_as: resources/attackcon/" + name + "/index.html\n"
+        data = "data: "
+        content = title + template + save_as + data
+        attackcon_md.append(content)
+    attackcon_dict_list["attackcon_name"] = attackcon_name
+    attackcon_dict_list["attackcon_path"] = attackcon_path
+    attackcon_dict_list["attackcon_md"] = attackcon_md
+    attackcon_list = attackcon_dict_list["attackcon_md"]
+
+    # Below code used to add the attackcon children to the resources sidebar
+    attackcon_index = 0
+    temp_dict = {}
+    for i in range(len(site_config.resource_nav["children"])):
+        if site_config.resource_nav["children"][i]["name"] == "ATT&CKcon":
+            attackcon_index = i
+
+    for i in range(len(attackcon_dict_list["attackcon_name"])):
+        temp_dict["name"] = attackcon_dict_list["attackcon_name"][i]
+        temp_dict["path"] = attackcon_dict_list["attackcon_path"][i]
+        temp_dict["children"] = []
+        site_config.resource_nav["children"][attackcon_index]["children"].append(temp_dict.copy())
+        temp_dict = {}
+
     attackcon_content = resources_config.attackcon_md + json.dumps(attackcon[0])
+
     # write markdown to file
     with open(os.path.join(site_config.resources_markdown_path, "attackcon.md"), "w", encoding="utf8") as md_file:
         md_file.write(attackcon_content)
-    for i in range(len(resources_config.attackcon_list)):
-        attackcon_content = resources_config.attackcon_list[i] + json.dumps(attackcon[i])
+    for i in range(len(attackcon_list)):
+        attackcon_content = attackcon_list[i] + json.dumps(attackcon[i])
         f_name = "attackcon-" + attackcon[i]["date"].lower().replace(" ", "-") + ".md"
         with open(os.path.join(site_config.resources_markdown_path, f_name), "w", encoding="utf8") as md_file:
             md_file.write(attackcon_content)
@@ -139,6 +173,39 @@ def generate_static_pages():
     """Reads markdown files from the static pages directory and copies them into the markdown directory."""
     logger.info("Generating static pages")
     static_pages_dir = os.path.join("modules", "resources", "static_pages")
+
+    # Below code used to get a list of all updates children
+    updates_dict_list = {}
+    updates_name = []
+    updates_path = []
+    for static_page in os.listdir(static_pages_dir):
+        with open(os.path.join(static_pages_dir, static_page), "r", encoding="utf8") as md:
+            content = md.read()
+            if static_page.startswith("updates-"):
+                temp_string = static_page.replace('.md','')
+                temp_string = temp_string.split('-')
+                temp_string = temp_string[1].capitalize() + ' ' + temp_string[2]
+                updates_name.append(temp_string)
+                temp_string = static_page.replace('.md','')
+                updates_path.append("/resources/updates/" + temp_string + "/")
+    updates_name.sort(key=lambda date: datetime.strptime(date, "%B %Y"), reverse=True)
+    updates_path.sort(key=lambda date: datetime.strptime(date, "/resources/updates/updates-%B-%Y/"), reverse=True)
+    updates_dict_list["updates_name"] = updates_name
+    updates_dict_list["updates_path"] = updates_path
+
+    # Below code used to add the updates children to the resources sidebar
+    updates_index = 0
+    temp_dict = {}
+    for i in range(len(site_config.resource_nav["children"])):
+        if site_config.resource_nav["children"][i]["name"] == "Updates":
+            updates_index = i
+
+    for i in range(len(updates_dict_list["updates_name"])):
+        temp_dict["name"] = updates_dict_list["updates_name"][i]
+        temp_dict["path"] = updates_dict_list["updates_path"][i]
+        temp_dict["children"] = []
+        site_config.resource_nav["children"][updates_index]["children"].append(temp_dict.copy())
+        temp_dict = {}
 
     for static_page in os.listdir(static_pages_dir):
         with open(os.path.join(static_pages_dir, static_page), "r", encoding="utf8") as md:
