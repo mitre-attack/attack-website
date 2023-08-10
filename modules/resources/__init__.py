@@ -44,6 +44,12 @@ def get_menu():
                 "external_link": False,
                 "children": [],
             },
+            {
+                "display_name": "Brand Guide",
+                "url": "/resources/brand/",
+                "external_link": False,
+                "children": [],
+            },
         ],
     }
 

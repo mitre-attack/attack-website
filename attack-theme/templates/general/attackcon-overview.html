@@ -1,7 +1,7 @@
 {% extends "general/two-column.html" %} 
-{% set active_page = "attackcon" -%}
-{% set title = "MITRE ATT&CKcon | MITRE ATT&CK&reg;" -%}
-{% set conventions = page.data | from_json %}
+{% set active_page = "resources" -%}
+{% set title = "MITRE ATT&CKcon - " + page.title + " | MITRE ATT&CK&reg;" -%}
+{% set con = page.data | from_json %}
 {% import 'macros/navigation.html' as navigation %}
 
 {% block innerleft %}
@@ -11,31 +11,17 @@
 {% endblock %}
 
 {% block innerright %}
-<!--stopindex-->
-<div class="px-3">
+{{ super () }}
     <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="/">Home</a></li>
             <li class="breadcrumb-item"><a href="/resources">Resources</a></li>
-            <li class="breadcrumb-item">ATT&CKcon</li>
-    </ol>
-</div>
+            <li class="breadcrumb-item"><a href="/resources/attackcon">ATT&CKcon</a></li>
+            <li class="breadcrumb-item">{{ con.title }}</a></li>
+        </ol>
 
-<div class="pt-3 container">
-    <ul class="nav nav-tabs" role="tablist" id="years">
-        {% for con in conventions %}
-        {% set conID = "-".join(con.date.split(' ')) %}
-        {% set active = conID == 'March-2022' %}
-        <li class="nav-item">
-            <a class="nav-link{% if active %} active{% endif %}" id="{{conID}}-tab" data-toggle="tab" href="#{{conID}}-body" role="tab" aria-controls="{{conID}}-body" aria-selected="true">{{con.title}}</a>
-        </li>
-        {% endfor %}
-    </ul>
     <div class="tab-content attackcons p-4 mb-3">
-        {% for con in conventions %}
         {% set conID = "-".join(con.date.split(' ')) %}
-        {% set active = conID == 'March-2022' %}
-        <div class="uniform-block tab-pane fade{% if active %} show active{% endif %}" id="{{conID}}-body" role="tabpanel" aria-labelledby="{{conID}}-tab">
-            
+        <div class="container pb-3 uniform-block">
             {% if "banner_img" in con %}
             <p>
                 <img src="{{ con.banner_img }}" width="100%">
@@ -49,7 +35,7 @@
             <p><a target="_blank" href="{{con.blogpost}}">Click here to read our blog post about {{con.title}}! <img src="/theme/images/external-site-dark.jpeg" alt="External site" class="external-icon"></a></p>
             {% endif %}
 
-            <div class="presentations card-block">
+            <div class="presentations card-block" id="presentations">
                 <h2>Presentations</h2>
                 {% for presentation in con.presentations %}
                 {% set isPanel = "moderator" in presentation %}
@@ -123,9 +109,7 @@
             </div>
             {% endif %}
         </div>
-        {% endfor %}
-    </div>
-</div>
+        </div>
 
 {% endblock %}
 

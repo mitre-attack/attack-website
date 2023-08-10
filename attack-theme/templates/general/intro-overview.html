@@ -1,10 +1,16 @@
-{% extends "general/base.html" %}
+{% extends "general/two-column.html" %}
 {% set active_page = "resources" -%}
 {% set title = page.title + " | MITRE ATT&CK&reg;" -%} 
-{% block content %} 
-    {{ super () }}
-    <div class="col container">
-        <div class="container-fluid">
+{% import 'macros/navigation.html' as navigation %}
+
+{% block innerleft %}
+<div id="v-tab" role="tablist" aria-orientation="vertical" class="h-100">
+    {{navigation.sidenav(RESOURCE_NAV, output_file)}} 
+</div>
+{% endblock %}
+
+{% block innerright %}
+{{ super () }}
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="/">Home</a></li>
                 <li class="breadcrumb-item"><a href="/resources/">Resources</a></li>
@@ -14,7 +20,10 @@
                 <h1 class="blog-post-title mb-4">{{ page.title }}</h1>
                     {{ page.content }}
             </div>
-        </div>
-    </div>
-{% endblock %} {% block scripts %} {{ super () }}
-<script src="/theme/scripts/tables.js"></script>{% endblock %}
+{% endblock %}
+
+{% block scripts %}
+{{ super () }}
+<script src="/theme/scripts/tables.js"></script>
+<script src="/theme/scripts/navigation.js"></script>
+{% endblock %}

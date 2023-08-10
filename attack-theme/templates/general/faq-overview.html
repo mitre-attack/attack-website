@@ -1,6 +1,6 @@
 {% extends "general/two-column.html" %} 
 {% set active_page = "resources" -%}
-{% set title = "FAQ | MITRE ATT&CK&reg;" -%} 
+{% set title = "FAQ - " + page.title + " | MITRE ATT&CK&reg;" -%} 
 {% set parsed = page.data | from_json %}
 {% import 'macros/navigation.html' as navigation %}
 
@@ -22,25 +22,41 @@
 <div class="container pb-3 uniform-block">
     <h1 class="text-center">Frequently Asked Questions</h1>
     <div class="card-block faq">
-        {% for section in parsed.sections %}
         <div class="clearfix pb-3">
-            <h2>{{section.name}}</h2>
+            <h2>{{parsed.name}}</h2>
             <div>
-                {% for qa in section.questions %}
-                <div class="card w-100{%if loop.index > 1%} mt-1{% endif %}">
-                    <div class="card-header collapsed" id="{{qa.id}}-header" data-toggle="collapse" data-target="#{{qa.id}}-body" aria-expanded="false" aria-controls="{{qa.id}}-body">
-                        <h5 class="mb-0">{{qa.question}}</h5>
-                    </div>
-                    <div id="{{qa.id}}-body" class="collapse" aria-labelledby="{{qa.id}}-header">
-                        <div class="card-body">
-                            {{qa.answer}}
-                        </div>
-                    </div>
-                </div>
+                <h3>Table of Contents</h3>
+                <ol>
+                <h5>
+                {% for qa in parsed.questions %}
+                
+                <li>
+                    <a href="#{{qa.id}}-header">{{qa.question}}</a>
+                </li>
                 {% endfor %}
+            </h5>
+            </ol>
+            <hr color="black">
+            </div>
+            <div>
+                <ol>
+                {% for qa in parsed.questions %}
+                <div>
+                    <div class="card-title" id="{{qa.id}}-header">
+                    <li>
+                        {{qa.question}}
+                    </li>
+                    </div>
+                    <div class="card-data">
+                        {{qa.answer}}
+                    </div>
+                    <hr>
+                
+            </div>
+                {% endfor %}
+            </ol>
             </div>
         </div>
-        {% endfor %}
     </div>
 </div>
 {% endblock %}
