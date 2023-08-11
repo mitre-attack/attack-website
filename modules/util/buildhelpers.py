@@ -543,7 +543,6 @@ def technique_used_helper(technique_list, technique, reference_list, inherited=F
                 # If parent technique not already in list, add to list
                 # Parent technique will be marked as not used until it is seen
                 if parent_id not in technique_list:
-                    technique_list[parent_id] = {}
                     technique_list[parent_id] = parent_technique_used_helper(parent_id)
 
                 # Check if sub-technique is already in list
