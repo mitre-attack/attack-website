@@ -30,7 +30,6 @@ def generate_website():
         website_build_config.module_name, website_build_config.website_build_templates_path
     )
     generate_javascript_settings()
-    generate_faq_page()
     generate_base_html()
     generate_index_page()
     generate_static_pages()
@@ -71,12 +70,9 @@ def generate_javascript_settings():
             web_dir = web_dir + "/"
 
         js_data = website_build_config.js_dir_settings.substitute({"web_directory": web_dir})
-
         build_uuid = str(uuid.uuid4())
         js_build_uuid = website_build_config.js_build_uuid.substitute({"build_uuid": build_uuid})
-
         js_data += js_build_uuid
-
         js_f.write(js_data)
 
         # Add trailing data
@@ -220,64 +216,6 @@ def reset_override_colors():
 
         with open(colors_scss_f, "w", encoding="utf8") as colors_f:
             colors_f.write(temp_file)
-
-
-def generate_faq_page():
-    """Responsible for compiling faq json into faq markdown file for rendering on the HMTL."""
-    logger.info("Generating FAQ page")
-
-    # load faq data from json
-    with open(os.path.join(site_config.data_directory, "faq.json"), "r", encoding="utf8") as f:
-        faqdata = json.load(f)
-
-    # Below code used to get a list of all faq children
-    faq_md = []
-    faq_name = []
-    faq_path = []
-    faq_dict_list = {}
-    for i in range(len(faqdata["sections"])):
-        faq_name.append(faqdata["sections"][i]["name"])
-        title = "Title: " + faqdata["sections"][i]["name"] + "\n"
-        name = faqdata["sections"][i]["name"].lower().replace(' ','-').replace("&", "a")
-        template = "Template: general/faq-overview\n"
-        faq_path.append("/resources/faq/" + name + "/")
-        save_as = "save_as: resources/faq/" + name + "/index.html\n"
-        data = "data: "
-        content = title + template + save_as + data
-        faq_md.append(content)
-    faq_dict_list["faq_name"] = faq_name
-    faq_dict_list["faq_path"] = faq_path
-    faq_dict_list["faq_md"] = faq_md
-
-    # Below code used to add the updates children to the resources sidebar
-    faq_index = 0
-    temp_dict = {}
-    for i in range(len(site_config.resource_nav["children"])):
-        if site_config.resource_nav["children"][i]["name"] == "FAQ":
-            faq_index = i
-
-    for i in range(len(faq_dict_list["faq_name"])):
-        temp_dict["name"] = faq_dict_list["faq_name"][i]
-        temp_dict["path"] = faq_dict_list["faq_path"][i]
-        temp_dict["children"] = []
-        site_config.resource_nav["children"][faq_index]["children"].append(temp_dict.copy())
-        temp_dict = {}
-
-    # add unique IDs
-    for i, section in enumerate(faqdata["sections"]):
-        for j, item in enumerate(section["questions"]):
-            item["id"] = f"faq-{i}-{j}"
-    # get markdown
-    faq_content = website_build_config.faq_md + json.dumps(faqdata["sections"][0])
-    # write markdown to file
-    faq_list = faq_dict_list["faq_md"]
-    with open(os.path.join(site_config.resources_markdown_path, "faq.md"), "w", encoding="utf8") as md_file:
-        md_file.write(faq_content)
-    for i in range(len(faq_list)):
-        faq_content = faq_list[i] + json.dumps(faqdata["sections"][i])
-        f_name = "faq-" + faqdata["sections"][i]["name"].lower().replace(' ','-') + ".md"
-        with open(os.path.join(site_config.resources_markdown_path, f_name), "w", encoding="utf8") as md_file:
-            md_file.write(faq_content)
 
 
 def generate_changelog_page():

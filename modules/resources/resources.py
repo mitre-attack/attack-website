@@ -27,6 +27,16 @@ def generate_resources():
     if not os.path.isdir(resources_config.updates_markdown_path):
         os.mkdir(resources_config.updates_markdown_path)
 
+    # Verify if versions module is in the running pool, if not remove it.
+    build_versions_module = False
+    for module_info in modules.run_ptr:
+        if module_info["module_name"] == "versions":
+            build_versions_module = True
+    if not build_versions_module:
+        for i, child in enumerate(site_config.resource_nav["children"]):
+            if site_config.resource_nav["children"][i]["id"] == "versions":
+                del site_config.resource_nav["children"][i]
+
     # Move templates to templates directory
     util.buildhelpers.move_templates(resources_config.module_name, resources_config.resources_templates_path)
     copy_docs(module_docs_path=resources_config.docs_path)
@@ -35,7 +45,7 @@ def generate_resources():
     generate_training_pages()
     generate_brand_page()
     generate_attackcon_page()
-    check_menu_versions_module()
+    generate_faq_page()
     generate_static_pages()
 
 
@@ -116,7 +126,7 @@ def generate_attackcon_page():
     attackcon_name = []
     attackcon_path = []
     attackcon_dict_list = {}
-     # load ATT&CKcon data
+    # load ATT&CKcon data
     with open(os.path.join(site_config.data_directory, "attackcon.json"), "r", encoding="utf8") as f:
         attackcon = json.load(f)
     attackcon = sorted(attackcon, key=lambda a: datetime.strptime(a["date"], "%B %Y"), reverse=True)
@@ -163,10 +173,62 @@ def generate_attackcon_page():
             md_file.write(attackcon_content)
 
 
-def check_menu_versions_module():
-    """Verify if versions module is in the running pool, if not remove from submenu."""
-    if not [key["module_name"] for key in modules.run_ptr if key["module_name"] == "versions"]:
-        util.buildhelpers.remove_element_from_sub_menu(resources_config.module_name, "Versions of ATT&CK")
+def generate_faq_page():
+    """Responsible for compiling faq json into faq markdown file for rendering on the HMTL."""
+    logger.info("Generating FAQ page")
+
+    # load faq data from json
+    with open(os.path.join(site_config.data_directory, "faq.json"), "r", encoding="utf8") as f:
+        faqdata = json.load(f)
+
+    # Below code used to get a list of all faq children
+    faq_md = []
+    faq_name = []
+    faq_path = []
+    faq_dict_list = {}
+    for i in range(len(faqdata["sections"])):
+        faq_name.append(faqdata["sections"][i]["name"])
+        title = "Title: " + faqdata["sections"][i]["name"] + "\n"
+        name = faqdata["sections"][i]["name"].lower().replace(' ','-').replace("&", "a")
+        template = "Template: general/faq-overview\n"
+        faq_path.append("/resources/faq/" + name + "/")
+        save_as = "save_as: resources/faq/" + name + "/index.html\n"
+        data = "data: "
+        content = title + template + save_as + data
+        faq_md.append(content)
+    faq_dict_list["faq_name"] = faq_name
+    faq_dict_list["faq_path"] = faq_path
+    faq_dict_list["faq_md"] = faq_md
+
+    # Below code used to add the updates children to the resources sidebar
+    faq_index = 0
+    temp_dict = {}
+    for i in range(len(site_config.resource_nav["children"])):
+        if site_config.resource_nav["children"][i]["name"] == "FAQ":
+            faq_index = i
+
+    for i in range(len(faq_dict_list["faq_name"])):
+        temp_dict["name"] = faq_dict_list["faq_name"][i]
+        temp_dict["path"] = faq_dict_list["faq_path"][i]
+        temp_dict["children"] = []
+        site_config.resource_nav["children"][faq_index]["children"].append(temp_dict.copy())
+        temp_dict = {}
+
+    # add unique IDs
+    for i, section in enumerate(faqdata["sections"]):
+        for j, item in enumerate(section["questions"]):
+            item["id"] = f"faq-{i}-{j}"
+    # get markdown
+    faq_content = resources_config.faq_md + json.dumps(faqdata["sections"][0])
+    # write markdown to file
+    faq_list = faq_dict_list["faq_md"]
+    with open(os.path.join(site_config.resources_markdown_path, "faq.md"), "w", encoding="utf8") as md_file:
+        md_file.write(faq_content)
+    for i in range(len(faq_list)):
+        faq_content = faq_list[i] + json.dumps(faqdata["sections"][i])
+        f_name = "faq-" + faqdata["sections"][i]["name"].lower().replace(' ','-') + ".md"
+        with open(os.path.join(site_config.resources_markdown_path, f_name), "w", encoding="utf8") as md_file:
+            md_file.write(faq_content)
 
 
 def generate_static_pages():

@@ -22,7 +22,6 @@
 
 * Configure Sonarcloud to track project metrics better. [#431](https://github.com/mitre-attack/attack-website/issues/431)
 
-
 # v4.0.3 (2023-05-09)
 
 ## Features

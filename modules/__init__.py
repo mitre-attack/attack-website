@@ -14,6 +14,7 @@ def sort_menu_by_priority():
 def sort_run_ptr_by_priority():
     global run_ptr
     run_ptr = sorted(run_ptr, key=lambda k: k["priority"])
+    print(f"Building website using the following modules in this order: {[pointer_info['module_name'] for pointer_info in run_ptr]}")
 
 
 def check_redirections(redirections_list):

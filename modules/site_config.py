@@ -5,7 +5,6 @@ from string import Template
 from dotenv import load_dotenv
 
 import modules
-from datetime import datetime
 
 load_dotenv()
 
@@ -90,8 +89,7 @@ data_directory = "data"
 
 
 def set_subdirectory(subdirectory_str):
-    """Method to globally set the subdirectory"""
-
+    """Globally set the subdirectory."""
     global subdirectory
     global web_directory
 
@@ -103,6 +101,7 @@ def set_subdirectory(subdirectory_str):
 
     # Add subdirectory to web directory
     web_directory = os.path.join(web_directory, subdirectory)
+
 
 # Navigation list for resources (this is the list before adding the updates and attackcon)
 with open("data/resources_navigation.json", "r", encoding="utf8") as i:
