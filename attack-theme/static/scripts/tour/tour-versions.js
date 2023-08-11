@@ -1,5 +1,5 @@
 //is the user doing a tour of the entire site, or just this module?
-isSiteTour = window.location.href.includes("?tour=true");
+let isSiteTour = window.location.href.includes("?tour=true");
 
 let lastStepReached = false;
 

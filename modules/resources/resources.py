@@ -27,14 +27,25 @@ def generate_resources():
     if not os.path.isdir(resources_config.updates_markdown_path):
         os.mkdir(resources_config.updates_markdown_path)
 
+    # Verify if versions module is in the running pool, if not remove it.
+    build_versions_module = False
+    for module_info in modules.run_ptr:
+        if module_info["module_name"] == "versions":
+            build_versions_module = True
+    if not build_versions_module:
+        for i, child in enumerate(site_config.resource_nav["children"]):
+            if site_config.resource_nav["children"][i]["id"] == "versions":
+                del site_config.resource_nav["children"][i]
+
     # Move templates to templates directory
     util.buildhelpers.move_templates(resources_config.module_name, resources_config.resources_templates_path)
     copy_docs(module_docs_path=resources_config.docs_path)
     generate_working_with_attack()
     generate_general_information()
     generate_training_pages()
+    generate_brand_page()
     generate_attackcon_page()
-    check_menu_versions_module()
+    generate_faq_page()
     generate_static_pages()
 
 
@@ -79,51 +90,187 @@ def generate_general_information():
 def generate_training_pages():
     """Responsible for generating the markdown pages of the training pages."""
     logger.info("Generating training pages")
-    data = {}
-
-    # Side navigation for training
-    data["menu"] = resources_config.training_navigation
 
     # Training Overview
-    training_md = resources_config.training_md + json.dumps(data)
+    training_md = resources_config.training_md
 
     # write markdown to file
     with open(os.path.join(site_config.resources_markdown_path, "training.md"), "w", encoding="utf8") as md_file:
         md_file.write(training_md)
 
     # CTI training
-    training_cti_md = resources_config.training_cti_md + json.dumps(data)
+    training_cti_md = resources_config.training_cti_md
 
     # write markdown to file
     with open(os.path.join(site_config.resources_markdown_path, "training_cti.md"), "w", encoding="utf8") as md_file:
         md_file.write(training_cti_md)
 
 
+def generate_brand_page():
+    """Responsible for generating the markdown pages of the training pages."""
+    logger.info("Generating brand")
+
+    # Training Overview
+    brand_md = resources_config.brand_md
+
+    # write markdown to file
+    with open(os.path.join(site_config.resources_markdown_path, "brand.md"), "w", encoding="utf8") as md_file:
+        md_file.write(brand_md)
+
+
 def generate_attackcon_page():
     """Responsible for compiling ATT&CKcon json into attackcon markdown file for rendering on the HTML."""
     logger.info("Generating ATT&CKcon page")
+
+    attackcon_md = []
+    attackcon_name = []
+    attackcon_path = []
+    attackcon_dict_list = {}
     # load ATT&CKcon data
     with open(os.path.join(site_config.data_directory, "attackcon.json"), "r", encoding="utf8") as f:
         attackcon = json.load(f)
-
     attackcon = sorted(attackcon, key=lambda a: datetime.strptime(a["date"], "%B %Y"), reverse=True)
 
-    attackcon_content = resources_config.attackcon_md + json.dumps(attackcon)
+    # Below code used to get a list of all attackcon children
+    for i in range(len(attackcon)):
+        attackcon_name.append(attackcon[i]["title"])
+        title = "Title: " + attackcon[i]["title"] + "\n"
+        name = attackcon[i]["date"].lower().replace(" ", "-")
+        template = "Template: general/attackcon-overview\n"
+        attackcon_path.append("/resources/attackcon/" + name + "/")
+        save_as = "save_as: resources/attackcon/" + name + "/index.html\n"
+        data = "data: "
+        content = title + template + save_as + data
+        attackcon_md.append(content)
+    attackcon_dict_list["attackcon_name"] = attackcon_name
+    attackcon_dict_list["attackcon_path"] = attackcon_path
+    attackcon_dict_list["attackcon_md"] = attackcon_md
+    attackcon_list = attackcon_dict_list["attackcon_md"]
+
+    # Below code used to add the attackcon children to the resources sidebar
+    attackcon_index = 0
+    temp_dict = {}
+    for i in range(len(site_config.resource_nav["children"])):
+        if site_config.resource_nav["children"][i]["name"] == "ATT&CKcon":
+            attackcon_index = i
+
+    for i in range(len(attackcon_dict_list["attackcon_name"])):
+        temp_dict["name"] = attackcon_dict_list["attackcon_name"][i]
+        temp_dict["path"] = attackcon_dict_list["attackcon_path"][i]
+        temp_dict["children"] = []
+        site_config.resource_nav["children"][attackcon_index]["children"].append(temp_dict.copy())
+        temp_dict = {}
+
+    attackcon_content = resources_config.attackcon_md + json.dumps(attackcon[0])
+
     # write markdown to file
     with open(os.path.join(site_config.resources_markdown_path, "attackcon.md"), "w", encoding="utf8") as md_file:
         md_file.write(attackcon_content)
+    for i in range(len(attackcon_list)):
+        attackcon_content = attackcon_list[i] + json.dumps(attackcon[i])
+        f_name = "attackcon-" + attackcon[i]["date"].lower().replace(" ", "-") + ".md"
+        with open(os.path.join(site_config.resources_markdown_path, f_name), "w", encoding="utf8") as md_file:
+            md_file.write(attackcon_content)
 
 
-def check_menu_versions_module():
-    """Verify if versions module is in the running pool, if not remove from submenu."""
-    if not [key["module_name"] for key in modules.run_ptr if key["module_name"] == "versions"]:
-        util.buildhelpers.remove_element_from_sub_menu(resources_config.module_name, "Versions of ATT&CK")
+def generate_faq_page():
+    """Responsible for compiling faq json into faq markdown file for rendering on the HMTL."""
+    logger.info("Generating FAQ page")
+
+    # load faq data from json
+    with open(os.path.join(site_config.data_directory, "faq.json"), "r", encoding="utf8") as f:
+        faqdata = json.load(f)
+
+    # Below code used to get a list of all faq children
+    faq_md = []
+    faq_name = []
+    faq_path = []
+    faq_dict_list = {}
+    for i in range(len(faqdata["sections"])):
+        faq_name.append(faqdata["sections"][i]["name"])
+        title = "Title: " + faqdata["sections"][i]["name"] + "\n"
+        name = faqdata["sections"][i]["name"].lower().replace(" ", "-").replace("&", "a")
+        template = "Template: general/faq-overview\n"
+        faq_path.append("/resources/faq/" + name + "/")
+        save_as = "save_as: resources/faq/" + name + "/index.html\n"
+        data = "data: "
+        content = title + template + save_as + data
+        faq_md.append(content)
+    faq_dict_list["faq_name"] = faq_name
+    faq_dict_list["faq_path"] = faq_path
+    faq_dict_list["faq_md"] = faq_md
+
+    # Below code used to add the updates children to the resources sidebar
+    faq_index = 0
+    temp_dict = {}
+    for i in range(len(site_config.resource_nav["children"])):
+        if site_config.resource_nav["children"][i]["name"] == "FAQ":
+            faq_index = i
+
+    for i in range(len(faq_dict_list["faq_name"])):
+        temp_dict["name"] = faq_dict_list["faq_name"][i]
+        temp_dict["path"] = faq_dict_list["faq_path"][i]
+        temp_dict["children"] = []
+        site_config.resource_nav["children"][faq_index]["children"].append(temp_dict.copy())
+        temp_dict = {}
+
+    # add unique IDs
+    for i, section in enumerate(faqdata["sections"]):
+        for j, item in enumerate(section["questions"]):
+            item["id"] = f"faq-{i}-{j}"
+    # get markdown
+    faq_content = resources_config.faq_md + json.dumps(faqdata["sections"][0])
+    # write markdown to file
+    faq_list = faq_dict_list["faq_md"]
+    with open(os.path.join(site_config.resources_markdown_path, "faq.md"), "w", encoding="utf8") as md_file:
+        md_file.write(faq_content)
+    for i in range(len(faq_list)):
+        faq_content = faq_list[i] + json.dumps(faqdata["sections"][i])
+        f_name = "faq-" + faqdata["sections"][i]["name"].lower().replace(" ", "-") + ".md"
+        with open(os.path.join(site_config.resources_markdown_path, f_name), "w", encoding="utf8") as md_file:
+            md_file.write(faq_content)
 
 
 def generate_static_pages():
     """Reads markdown files from the static pages directory and copies them into the markdown directory."""
     logger.info("Generating static pages")
     static_pages_dir = os.path.join("modules", "resources", "static_pages")
+
+    if not [key["module_name"] for key in modules.run_ptr if key["module_name"] == "versions"]:
+        util.buildhelpers.remove_element_from_sub_menu(resources_config.module_name, "Versions of ATT&CK")
+
+    # Below code used to get a list of all updates children
+    updates_dict_list = {}
+    updates_name = []
+    updates_path = []
+    for static_page in os.listdir(static_pages_dir):
+        with open(os.path.join(static_pages_dir, static_page), "r", encoding="utf8") as md:
+            content = md.read()
+            if static_page.startswith("updates-"):
+                temp_string = static_page.replace(".md", "")
+                temp_string = temp_string.split("-")
+                temp_string = temp_string[1].capitalize() + " " + temp_string[2]
+                updates_name.append(temp_string)
+                temp_string = static_page.replace(".md", "")
+                updates_path.append("/resources/updates/" + temp_string + "/")
+    updates_name.sort(key=lambda date: datetime.strptime(date, "%B %Y"), reverse=True)
+    updates_path.sort(key=lambda date: datetime.strptime(date, "/resources/updates/updates-%B-%Y/"), reverse=True)
+    updates_dict_list["updates_name"] = updates_name
+    updates_dict_list["updates_path"] = updates_path
+
+    # Below code used to add the updates children to the resources sidebar
+    updates_index = 0
+    temp_dict = {}
+    for i in range(len(site_config.resource_nav["children"])):
+        if site_config.resource_nav["children"][i]["name"] == "Updates":
+            updates_index = i
+
+    for i in range(len(updates_dict_list["updates_name"])):
+        temp_dict["name"] = updates_dict_list["updates_name"][i]
+        temp_dict["path"] = updates_dict_list["updates_path"][i]
+        temp_dict["children"] = []
+        site_config.resource_nav["children"][updates_index]["children"].append(temp_dict.copy())
+        temp_dict = {}
 
     for static_page in os.listdir(static_pages_dir):
         with open(os.path.join(static_pages_dir, static_page), "r", encoding="utf8") as md:

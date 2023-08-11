@@ -8,7 +8,7 @@ from string import Template
 from loguru import logger
 
 import modules
-from modules import matrices, site_config, util
+from modules import matrices, site_config, util, resources
 
 from . import website_build_config
 
@@ -33,7 +33,6 @@ def generate_website():
     generate_base_html()
     generate_index_page()
     generate_static_pages()
-    generate_faq_page()
     generate_changelog_page()
     store_pelican_settings()
     override_colors()
@@ -71,12 +70,9 @@ def generate_javascript_settings():
             web_dir = web_dir + "/"
 
         js_data = website_build_config.js_dir_settings.substitute({"web_directory": web_dir})
-
         build_uuid = str(uuid.uuid4())
         js_build_uuid = website_build_config.js_build_uuid.substitute({"build_uuid": build_uuid})
-
         js_data += js_build_uuid
-
         js_f.write(js_data)
 
         # Add trailing data
@@ -220,24 +216,6 @@ def reset_override_colors():
 
         with open(colors_scss_f, "w", encoding="utf8") as colors_f:
             colors_f.write(temp_file)
-
-
-def generate_faq_page():
-    """Responsible for compiling faq json into faq markdown file for rendering on the HMTL."""
-    logger.info("Generating FAQ page")
-    # load faq data from json
-    with open(os.path.join(site_config.data_directory, "faq.json"), "r", encoding="utf8") as f:
-        faqdata = json.load(f)
-    # add unique IDs
-    for i, section in enumerate(faqdata["sections"]):
-        for j, item in enumerate(section["questions"]):
-            item["id"] = f"faq-{i}-{j}"
-
-    # get markdown
-    faq_content = website_build_config.faq_md + json.dumps(faqdata)
-    # write markdown to file
-    with open(os.path.join(site_config.resources_markdown_path, "faq.md"), "w", encoding="utf8") as md_file:
-        md_file.write(faq_content)
 
 
 def generate_changelog_page():

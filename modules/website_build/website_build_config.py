@@ -29,6 +29,7 @@ base_page_data = {
     "LOGO_FOOTER": "/theme/images/mitrelogowhiteontrans.gif",
     "logo_landingpage": "/theme/images/ATT&CK_red.png",
     "NAVIGATION_MENU": modules.menu_ptr,
+    "RESOURCE_NAV": site_config.resource_nav,
 }
 
 # config for the matrix shown on the index page
@@ -64,11 +65,6 @@ js_build_uuid = Template('var build_uuid = "${build_uuid}";\n')
 
 # Path for templates
 website_build_templates_path = "modules/website_build/templates/"
-
-# FAQ md
-faq_md = (
-    "Title: Frequently Asked Questions\n" "Template: website_build/faq\n" "save_as: resources/faq/index.html\n" "data: "
-)
 
 # CHANGELOG md
 changelog_md = "Title: Changelog\n" "Template: website_build/changelog\n" "save_as: resources/changelog.html\n\n"
