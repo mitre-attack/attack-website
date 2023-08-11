@@ -236,6 +236,9 @@ def generate_static_pages():
     logger.info("Generating static pages")
     static_pages_dir = os.path.join("modules", "resources", "static_pages")
 
+    if not [key["module_name"] for key in modules.run_ptr if key["module_name"] == "versions"]:
+        util.buildhelpers.remove_element_from_sub_menu(resources_config.module_name, "Versions of ATT&CK")
+        
     # Below code used to get a list of all updates children
     updates_dict_list = {}
     updates_name = []
