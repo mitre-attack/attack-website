@@ -8,7 +8,7 @@ $(document).ready(function () {
         success: function (data) {
             json_data = data;
 
-            for (route of Object.keys(json_data)) {
+            for (let route of Object.keys(json_data)) {
                 all_pages = all_pages.concat(json_data[route]);
             }
         }
