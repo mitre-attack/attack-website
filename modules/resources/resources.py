@@ -135,7 +135,7 @@ def generate_attackcon_page():
     for i in range(len(attackcon)):
         attackcon_name.append(attackcon[i]["title"])
         title = "Title: " + attackcon[i]["title"] + "\n"
-        name = attackcon[i]["date"].lower().replace(' ','-')
+        name = attackcon[i]["date"].lower().replace(" ", "-")
         template = "Template: general/attackcon-overview\n"
         attackcon_path.append("/resources/attackcon/" + name + "/")
         save_as = "save_as: resources/attackcon/" + name + "/index.html\n"
@@ -189,7 +189,7 @@ def generate_faq_page():
     for i in range(len(faqdata["sections"])):
         faq_name.append(faqdata["sections"][i]["name"])
         title = "Title: " + faqdata["sections"][i]["name"] + "\n"
-        name = faqdata["sections"][i]["name"].lower().replace(' ','-').replace("&", "a")
+        name = faqdata["sections"][i]["name"].lower().replace(" ", "-").replace("&", "a")
         template = "Template: general/faq-overview\n"
         faq_path.append("/resources/faq/" + name + "/")
         save_as = "save_as: resources/faq/" + name + "/index.html\n"
@@ -226,7 +226,7 @@ def generate_faq_page():
         md_file.write(faq_content)
     for i in range(len(faq_list)):
         faq_content = faq_list[i] + json.dumps(faqdata["sections"][i])
-        f_name = "faq-" + faqdata["sections"][i]["name"].lower().replace(' ','-') + ".md"
+        f_name = "faq-" + faqdata["sections"][i]["name"].lower().replace(" ", "-") + ".md"
         with open(os.path.join(site_config.resources_markdown_path, f_name), "w", encoding="utf8") as md_file:
             md_file.write(faq_content)
 
@@ -238,7 +238,7 @@ def generate_static_pages():
 
     if not [key["module_name"] for key in modules.run_ptr if key["module_name"] == "versions"]:
         util.buildhelpers.remove_element_from_sub_menu(resources_config.module_name, "Versions of ATT&CK")
-        
+
     # Below code used to get a list of all updates children
     updates_dict_list = {}
     updates_name = []
@@ -247,11 +247,11 @@ def generate_static_pages():
         with open(os.path.join(static_pages_dir, static_page), "r", encoding="utf8") as md:
             content = md.read()
             if static_page.startswith("updates-"):
-                temp_string = static_page.replace('.md','')
-                temp_string = temp_string.split('-')
-                temp_string = temp_string[1].capitalize() + ' ' + temp_string[2]
+                temp_string = static_page.replace(".md", "")
+                temp_string = temp_string.split("-")
+                temp_string = temp_string[1].capitalize() + " " + temp_string[2]
                 updates_name.append(temp_string)
-                temp_string = static_page.replace('.md','')
+                temp_string = static_page.replace(".md", "")
                 updates_path.append("/resources/updates/" + temp_string + "/")
     updates_name.sort(key=lambda date: datetime.strptime(date, "%B %Y"), reverse=True)
     updates_path.sort(key=lambda date: datetime.strptime(date, "/resources/updates/updates-%B-%Y/"), reverse=True)
