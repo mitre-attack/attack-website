@@ -1,5 +1,5 @@
 //is the user doing a tour of the entire site, or just this module?
-isSiteTour = window.location.href.includes("?tour=true");
+let isSiteTour = window.location.href.includes("?tour=true");
 
 function close_example() {
     setMatrixCellState(null, null, "closed", tour)
@@ -15,7 +15,7 @@ function tour_layout_clicked() {
     if (tour.getCurrentStepIndex() == 3) tour.next();
 }
 
-tourSteps = [
+let tourSteps = [
         {
         orphan: true,
         backdrop: false,
