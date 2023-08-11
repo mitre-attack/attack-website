@@ -1,1 +1,0 @@
-Update the resource pages to have a sidebar.

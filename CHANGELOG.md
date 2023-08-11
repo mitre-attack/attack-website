@@ -1,4 +1,27 @@
+
 <!-- TOWNCRIER -->
+
+# v4.0.4 (2023-08-11)
+
+## Features
+
+* Sidebar is now resizable. [#349](https://github.com/mitre-attack/attack-website/issues/349)
+* Update the resource pages to have a sidebar. [#441](https://github.com/mitre-attack/attack-website/issues/441)
+* Add a page for the ATT&CK brand guide. [#445](https://github.com/mitre-attack/attack-website/issues/445)
+* Clean up the FAQ and ATT&CKcon pages in the Resources section to split them into more readable pages. [#446](https://github.com/mitre-attack/attack-website/issues/446)
+
+## Bugfixes
+
+* Minor adjustment to print layout to not show scrollbars anymore. [#403](https://github.com/mitre-attack/attack-website/issues/403)
+
+## Improved Documentation
+
+* Update README and developer documentation on how to set up local environment using Docker. [#427](https://github.com/mitre-attack/attack-website/issues/427)
+
+## Misc
+
+* Configure Sonarcloud to track project metrics better. [#431](https://github.com/mitre-attack/attack-website/issues/431)
+
 
 # v4.0.3 (2023-05-09)
 
