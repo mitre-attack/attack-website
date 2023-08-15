@@ -99,6 +99,10 @@ def get_attack_id(object):
 
     return None
 
+def get_domain_name(object):
+    """Given an object, return domains."""
+    return object.get("x_mitre_domains")
+
 
 def update_reference_list(reference_list, obj):
     """Given a reference list and an object, update the reference list with the external references found in the object."""
