@@ -93,7 +93,7 @@ def linkbyid_check():
             source = stix_object["source_ref"]
             target = stix_object["target_ref"]
 
-            if source.startswith("x-mitre-data-component"):
+            if source.startswith("x-mitre-contents"):
                 source_attack_id = data_component_stix_id_to_datasource_attack_id[source]
             else:
                 source_attack_id = stix_id_to_attack_id[source]
