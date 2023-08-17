@@ -1,8 +1,10 @@
 var resizer = document.querySelector(".resizer");
 var sidebar = document.querySelector(".sidebar");
-$(document).ready(function (){
-resizeSidebar( resizer, sidebar );
-});
+
+if(resizer!=null) {
+  resizeSidebar( resizer, sidebar );
+}
+
 
 
 function resizeSidebar( resizer, sidebar ) {
@@ -21,6 +23,7 @@ function resizeSidebar_mousemoveHandler( event ) {
   var dx = event.clientX - x;
   var newsidebarWidth = w + dx;
   sidebar.style.width = `${ newsidebarWidth }px`;
+  localStorage.setItem("sidebarWidth", sidebar.style.width);
 }
 
 function resizeSidebar_mouseupHandler() {
