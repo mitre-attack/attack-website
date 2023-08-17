@@ -98,6 +98,7 @@ def get_attack_id(object):
             return external_references[index]["external_id"]
 
     return None
+    
 
 def get_domain_name(object):
     """Given an object, return domains."""

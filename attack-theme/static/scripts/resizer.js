@@ -5,8 +5,6 @@ if(resizer!=null) {
   resizeSidebar( resizer, sidebar );
 }
 
-
-
 function resizeSidebar( resizer, sidebar ) {
 var x = 0;
 var w = 0;
