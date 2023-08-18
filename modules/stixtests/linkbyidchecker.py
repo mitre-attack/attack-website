@@ -111,8 +111,10 @@ def linkbyid_check():
                 source_attack_id = data_component_stix_id_to_datasource_attack_id[source]
             else:
                 source_attack_id = stix_id_to_attack_id[source]
+                print(source_attack_id)
 
             target_attack_id = stix_id_to_attack_id[target]
+            print(target_attack_id)
 
             url = util.stixhelpers.get_url_from_stix(
                 stix_object=stix_id_to_stix_object[source], is_subtechnique=is_subtechnique
