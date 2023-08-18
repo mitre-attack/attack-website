@@ -47,7 +47,7 @@ def linkbyid_check():
         _id = stix_object["id"]
 
         if _id == "campaign--b03d5112-e23a-4ac8-add0-be7502d24eff":
-            print(stix_id)
+            print(_id)
 
         stix_id_to_stix_object[_id] = stix_object
         
@@ -87,7 +87,7 @@ def linkbyid_check():
     for stix_object in all_stix_objects:
         _id = stix_object.get("id")
         if _id == "campaign--b03d5112-e23a-4ac8-add0-be7502d24eff":
-            print(stix_id)
+            print(_id)
         name = stix_object.get("name")
         description = stix_object.get("description")
         external_references = stix_object.get("external_references")
