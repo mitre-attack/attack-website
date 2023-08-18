@@ -46,7 +46,11 @@ def linkbyid_check():
     for stix_object in all_stix_objects:
         _id = stix_object["id"]
 
+        if _id == "campaign--b03d5112-e23a-4ac8-add0-be7502d24eff":
+            print(stix_id)
+
         stix_id_to_stix_object[_id] = stix_object
+        
 
         external_references = stix_object.get("external_references")
         if isinstance(stix_object, stix_types_that_should_have_attack_ids) or _id.startswith(
@@ -60,9 +64,6 @@ def linkbyid_check():
                         print(attack_id)
 
                     stix_id = _id
-
-                    if stix_id == "campaign--b03d5112-e23a-4ac8-add0-be7502d24eff":
-                        print(stix_id)
 
                     all_attack_ids.append(attack_id)
                     stix_id_to_attack_id[stix_id] = attack_id
@@ -85,6 +86,8 @@ def linkbyid_check():
     link_by_id_warnings = []
     for stix_object in all_stix_objects:
         _id = stix_object.get("id")
+        if _id == "campaign--b03d5112-e23a-4ac8-add0-be7502d24eff":
+            print(stix_id)
         name = stix_object.get("name")
         description = stix_object.get("description")
         external_references = stix_object.get("external_references")
