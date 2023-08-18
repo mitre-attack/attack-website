@@ -55,6 +55,7 @@ def linkbyid_check():
             if external_references:
                 if "external_id" in external_references[0]:
                     attack_id = external_references[0]["external_id"]
+                    print(attack_id)
                     stix_id = _id
 
                     all_attack_ids.append(attack_id)
@@ -87,6 +88,7 @@ def linkbyid_check():
         if external_references:
             if "external_id" in external_references[0]:
                 attack_id = external_references[0]["external_id"]
+                print(attack_id)
 
         pretty_name = ""
         if isinstance(stix_object, stix2.v21.sro.Relationship):
