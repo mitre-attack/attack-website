@@ -56,9 +56,10 @@ def linkbyid_check():
             if external_references:
                 if "external_id" in external_references[0]:
                     attack_id = external_references[0]["external_id"]
-                    
-                    # if attack_id == "C0014":
-                    #     print("first time " + attack_id)
+                    if stix_id == "campaign--b03d5112-e23a-4ac8-add0-be7502d24eff":
+                         print("stix id: " + stix_id)
+                    if attack_id == "C0014":
+                         print("first time " + attack_id)
 
                     stix_id = _id
 
