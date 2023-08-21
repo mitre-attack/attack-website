@@ -57,17 +57,17 @@ def linkbyid_check():
                 if "external_id" in external_references[0]:
                     attack_id = external_references[0]["external_id"]
                     
-                    if attack_id == "C0014":
-                        print("first time " + attack_id)
+                    # if attack_id == "C0014":
+                    #     print("first time " + attack_id)
 
                     stix_id = _id
 
                     all_attack_ids.append(attack_id)
                     stix_id_to_attack_id[stix_id] = attack_id
-                    if stix_id == "campaign--b03d5112-e23a-4ac8-add0-be7502d24eff":
-                        print("stix id: " + stix_id)
-                    if stix_id_to_attack_id[stix_id] == "C0014":
-                        print("linked attack id: " + stix_id_to_attack_id[stix_id])
+                    # if stix_id == "campaign--b03d5112-e23a-4ac8-add0-be7502d24eff":
+                    #     print("stix id: " + stix_id)
+                    # if stix_id_to_attack_id[stix_id] == "C0014":
+                    #     print("linked attack id: " + stix_id_to_attack_id[stix_id])
             else:
                 logger.error(f"STIX object does not have an expected ATT&CK ID: {_id}")
 
@@ -106,16 +106,18 @@ def linkbyid_check():
             source = stix_object["source_ref"]
             target = stix_object["target_ref"]
 
-            print(stix_object["id"])
-        
-            if source.startswith("x-mitre-data-component"):
-                source_attack_id = data_component_stix_id_to_datasource_attack_id[source]
-            else:
-                source_attack_id = stix_id_to_attack_id[source]
-                print(source_attack_id)
+            # print(stix_object["id"])
+            try:
+                if source.startswith("x-mitre-data-component"):
+                    source_attack_id = data_component_stix_id_to_datasource_attack_id[source]
+                else:
+                    source_attack_id = stix_id_to_attack_id[source]
+                    # print(source_attack_id)
 
-            target_attack_id = stix_id_to_attack_id[target]
-            print(target_attack_id)
+                target_attack_id = stix_id_to_attack_id[target]
+                # print(target_attack_id)
+            except KeyError:
+                continue
 
             url = util.stixhelpers.get_url_from_stix(
                 stix_object=stix_id_to_stix_object[source], is_subtechnique=is_subtechnique
