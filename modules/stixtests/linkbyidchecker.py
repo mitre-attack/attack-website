@@ -67,9 +67,10 @@ def linkbyid_check():
 
                     all_attack_ids.append(attack_id)
                     stix_id_to_attack_id[stix_id] = attack_id
-
-                    print("stix id: " + stix_id)
-                    print("linked attack id: " + stix_id_to_attack_id[stix_id])
+                    if stix_id == "campaign--b03d5112-e23a-4ac8-add0-be7502d24eff":
+                        print("stix id: " + stix_id)
+                    if stix_id_to_attack_id[stix_id] == "C0014":
+                        print("linked attack id: " + stix_id_to_attack_id[stix_id])
             else:
                 logger.error(f"STIX object does not have an expected ATT&CK ID: {_id}")
 
