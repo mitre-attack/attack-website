@@ -46,9 +46,6 @@ def linkbyid_check():
     for stix_object in all_stix_objects:
         _id = stix_object["id"]
 
-        if _id == "campaign--b03d5112-e23a-4ac8-add0-be7502d24eff":
-            print(_id)
-
         stix_id_to_stix_object[_id] = stix_object
         
 
@@ -61,7 +58,7 @@ def linkbyid_check():
                     attack_id = external_references[0]["external_id"]
                     
                     if attack_id == "C0014":
-                        print(attack_id)
+                        print("first time " + attack_id)
 
                     stix_id = _id
 
@@ -102,7 +99,7 @@ def linkbyid_check():
             if "external_id" in external_references[0]:
                 attack_id = external_references[0]["external_id"]
                 if attack_id == "C0014":
-                    print(attack_id)
+                    print("second time " + attack_id)
 
         pretty_name = ""
         if isinstance(stix_object, stix2.v21.sro.Relationship):
