@@ -67,6 +67,9 @@ def linkbyid_check():
 
                     all_attack_ids.append(attack_id)
                     stix_id_to_attack_id[stix_id] = attack_id
+
+                    print("stix id: " + stix_id)
+                    print("linked attack id: " + stix_id_to_attack_id[stix_id])
             else:
                 logger.error(f"STIX object does not have an expected ATT&CK ID: {_id}")
 
@@ -106,17 +109,15 @@ def linkbyid_check():
             target = stix_object["target_ref"]
 
             print(stix_object["id"])
-            try:
-                if source.startswith("x-mitre-data-component"):
-                    source_attack_id = data_component_stix_id_to_datasource_attack_id[source]
-                else:
-                    source_attack_id = stix_id_to_attack_id[source]
-                    print(source_attack_id)
+        
+            if source.startswith("x-mitre-data-component"):
+                source_attack_id = data_component_stix_id_to_datasource_attack_id[source]
+            else:
+                source_attack_id = stix_id_to_attack_id[source]
+                print(source_attack_id)
 
-                target_attack_id = stix_id_to_attack_id[target]
-                print(target_attack_id)
-            except KeyError:
-                continue
+            target_attack_id = stix_id_to_attack_id[target]
+            print(target_attack_id)
 
             url = util.stixhelpers.get_url_from_stix(
                 stix_object=stix_id_to_stix_object[source], is_subtechnique=is_subtechnique
