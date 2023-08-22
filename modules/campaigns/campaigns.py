@@ -63,12 +63,6 @@ def generate_markdown_files():
             "Campaigns", "/campaigns/", campaign_list_no_deprecated_revoked
         )
         data["side_menu_data"] = side_menu_data
-
-        side_menu_mobile_view_data = util.buildhelpers.get_side_menu_mobile_view_data(
-            "campaigns", "/campaigns/", campaign_list_no_deprecated_revoked, group_by
-        )
-        data["side_menu_mobile_view_data"] = side_menu_mobile_view_data
-
         data["campaigns_table"] = get_campaigns_table_data(campaign_list_no_deprecated_revoked)
         data["campaigns_list_len"] = str(len(campaign_list_no_deprecated_revoked))
 
@@ -81,12 +75,12 @@ def generate_markdown_files():
 
         # Create the markdown for the enterprise campaigns in the STIX
         for campaign in campaign_list:
-            generate_campaign_md(campaign, side_menu_data, side_menu_mobile_view_data, notes)
+            generate_campaign_md(campaign, side_menu_data, notes)
 
     return has_campaign
 
 
-def generate_campaign_md(campaign, side_menu_data, side_menu_mobile_view_data, notes):
+def generate_campaign_md(campaign, side_menu_data, notes):
     """Responsible for generating markdown of all campaigns."""
 
     attack_id = util.buildhelpers.get_attack_id(campaign)
@@ -97,7 +91,6 @@ def generate_campaign_md(campaign, side_menu_data, side_menu_mobile_view_data, n
         data["attack_id"] = attack_id
 
         data["side_menu_data"] = side_menu_data
-        data["side_menu_mobile_view_data"] = side_menu_mobile_view_data
         data["notes"] = notes.get(campaign["id"])
 
         # External references

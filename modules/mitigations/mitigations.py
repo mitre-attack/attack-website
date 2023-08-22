@@ -45,13 +45,11 @@ def generate_mitigations():
 
     notes = util.relationshipgetters.get_objects_using_notes()
     side_nav_data = util.buildhelpers.get_side_nav_domains_data("mitigations", mitigations)
-    side_nav_mobile_data = util.buildhelpers.get_side_nav_domains_mobile_view_data("mitigations", mitigations, group_by)
-
     for domain in site_config.domains:
         if domain["deprecated"]:
             continue
         check_if_generated = generate_markdown_files(
-            domain["name"], mitigations_with_deprecated[domain["name"]], side_nav_data, side_nav_mobile_data, notes
+            domain["name"], mitigations_with_deprecated[domain["name"]], side_nav_data, notes
         )
         if not mitigation_generated:
             if check_if_generated:
@@ -61,7 +59,7 @@ def generate_mitigations():
         util.buildhelpers.remove_module_from_menu(mitigations_config.module_name)
 
 
-def generate_markdown_files(domain, mitigations, side_nav_data, side_nav_mobile_data, notes):
+def generate_markdown_files(domain, mitigations, side_nav_data, notes):
     """Responsible for generating shared data between all mitigation pages and begins mitigation markdown generation."""
     data = {}
 
@@ -72,7 +70,6 @@ def generate_markdown_files(domain, mitigations, side_nav_data, side_nav_mobile_
         ]
         data["mitigation_list_len"] = str(len(non_deprecated_mitigations))
         data["side_menu_data"] = side_nav_data
-        data["side_menu_mobile_view_data"] = side_nav_mobile_data
 
         data["mitigation_table"] = get_mitigation_table_data(non_deprecated_mitigations)
 
@@ -85,7 +82,7 @@ def generate_markdown_files(domain, mitigations, side_nav_data, side_nav_mobile_
 
         # Generates the markdown files to be used for page generation
         for mitigation in mitigations:
-            generate_mitigation_md(mitigation, domain, side_nav_data, side_nav_mobile_data, notes)
+            generate_mitigation_md(mitigation, domain, side_nav_data, notes)
 
         return True
 
@@ -93,7 +90,7 @@ def generate_markdown_files(domain, mitigations, side_nav_data, side_nav_mobile_
         return False
 
 
-def generate_mitigation_md(mitigation, domain, side_menu_data, side_menu_mobile_data, notes):
+def generate_mitigation_md(mitigation, domain, side_menu_data, notes):
     """Generates the markdown for the given mitigation"""
     attack_id = util.buildhelpers.get_attack_id(mitigation)
 
@@ -104,7 +101,6 @@ def generate_mitigation_md(mitigation, domain, side_menu_data, side_menu_mobile_
 
         data["domain"] = domain.split("-")[0]
         data["side_menu_data"] = side_menu_data
-        data["side_menu_mobile_view_data"] = side_menu_mobile_data
         data["name"] = mitigation["name"]
         data["notes"] = notes.get(mitigation["id"])
 
