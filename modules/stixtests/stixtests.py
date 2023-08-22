@@ -56,9 +56,9 @@ def run_tests():
             # TODO: implement this once this GitHub issue is resolved
             # https://github.com/oasis-open/cti-stix-validator/issues/192
 
-            error_file = f"{site_config.test_report_directory}/{stix_filename}-stix-errors.txt"
-            with open(error_file, "w") as error_f:
-                error_f.write(results)
+            # error_file = f"{site_config.test_report_directory}/{stix_filename}-stix-errors.txt"
+            # with open(error_file, "w") as error_f:
+            #     error_f.write(results)
 
     #################
     # Check LinkByIds
