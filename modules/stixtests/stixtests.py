@@ -30,35 +30,35 @@ def run_tests():
     # using this to download STIX if needed
     util.relationshipgetters.get_ms()
 
-    # options = stix2validator.ValidationOptions(version="2.0", disabled=["all"])
-    # for domain in site_config.domains:
-    #     if domain["deprecated"]:
-    #         logger.debug(f"Skipping validation for {domain['name']} because it is deprecated")
-    #         continue
+    options = stix2validator.ValidationOptions(version="2.1", disabled=["all"])
+    for domain in site_config.domains:
+        if domain["deprecated"]:
+            logger.debug(f"Skipping validation for {domain['name']} because it is deprecated")
+            continue
 
-    #     # TODO: refactor this to use a function rather than copy/paste from modules/util/stixhelpers.py
-    #     # this can be used because it was called previously in modules/util/stixhelpers.py to download the file
-    #     if domain["location"].startswith("http"):
-    #         download_dir = Path(f"{site_config.web_directory}/stix")
-    #         stix_filename = f"{download_dir}/{domain['name']}.json"
-    #     else:
-    #         stix_filename = domain["location"]
+        # TODO: refactor this to use a function rather than copy/paste from modules/util/stixhelpers.py
+        # this can be used because it was called previously in modules/util/stixhelpers.py to download the file
+        if domain["location"].startswith("http"):
+            download_dir = Path(f"{site_config.web_directory}/stix")
+            stix_filename = f"{download_dir}/{domain['name']}.json"
+        else:
+            stix_filename = domain["location"]
 
-    #     logger.info(f"Validating STIX for domain: {domain['name']}")
-    #     results = stix2validator.validate_file(fn=stix_filename, options=options)
-    #     if results.is_valid:
-    #         logger.info(f"File {stix_filename} is valid")
-    #     else:
-    #         logger.error(f"File {stix_filename} is invalid:")
+        logger.info(f"Validating STIX for domain: {domain['name']}")
+        results = stix2validator.validate_file(fn=stix_filename, options=options)
+        if results.is_valid:
+            logger.info(f"File {stix_filename} is valid")
+        else:
+            logger.error(f"File {stix_filename} is invalid:")
 
-    #         stix2validator.print_results(results)
+            stix2validator.print_results(results)
 
-            # TODO: implement this once this GitHub issue is resolved
-            # https://github.com/oasis-open/cti-stix-validator/issues/192
+            TODO: implement this once this GitHub issue is resolved
+            https://github.com/oasis-open/cti-stix-validator/issues/192
 
-            # error_file = f"{site_config.test_report_directory}/{stix_filename}-stix-errors.txt"
-            # with open(error_file, "w") as error_f:
-            #     error_f.write(results)
+            error_file = f"{site_config.test_report_directory}/{stix_filename}-stix-errors.txt"
+            with open(error_file, "w") as error_f:
+                error_f.write(results)
 
     #################
     # Check LinkByIds
