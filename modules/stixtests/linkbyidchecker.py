@@ -79,6 +79,9 @@ def linkbyid_check():
         if _id.startswith("x-mitre-data-component"):
             all_data_components.append(stix_object)
 
+    print(stix_id_to_attack_id.keys())
+    print(stix_id_to_attack_id.values())
+
     data_component_stix_id_to_datasource_attack_id = {}
     for data_component in all_data_components:
         data_source_stix_id = data_component["x_mitre_data_source_ref"]
