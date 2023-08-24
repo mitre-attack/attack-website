@@ -61,7 +61,8 @@ def linkbyid_check():
 
                     stix_id = _id
 
-                    print(attack_id)
+                    if attack_id == "C0014":
+                        print("hooray!")
 
                     if stix_id == "campaign--b03d5112-e23a-4ac8-add0-be7502d24eff":
                         print(stix_id)
