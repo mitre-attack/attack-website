@@ -81,9 +81,13 @@ def linkbyid_check():
 
     if "campaign--b03d5112-e23a-4ac8-add0-be7502d24eff" in stix_id_to_attack_id.keys():
         print("Hooray!")
+    else:
+        print("Not")
     
     if "C0014" in stix_id_to_attack_id.values():
         print("Hooray 2!")
+    else:
+        print("Not 2")
 
     data_component_stix_id_to_datasource_attack_id = {}
     for data_component in all_data_components:
