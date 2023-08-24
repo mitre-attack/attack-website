@@ -1,0 +1,1 @@
+The sidebar is now collapsable and displayed properly in mobile view
