@@ -48,8 +48,8 @@ def linkbyid_check():
 
         stix_id_to_stix_object[_id] = stix_object
         
-        if _id == "campaign--b03d5112-e23a-4ac8-add0-be7502d24eff":
-            print(stix_id)
+        # if _id == "campaign--b03d5112-e23a-4ac8-add0-be7502d24eff":
+        #     print(stix_id)
 
         external_references = stix_object.get("external_references")
         if isinstance(stix_object, stix_types_that_should_have_attack_ids) or _id.startswith(
@@ -61,11 +61,11 @@ def linkbyid_check():
 
                     stix_id = _id
 
-                    if attack_id == "C0014":
-                        print("hooray!")
+                    # if attack_id == "C0014":
+                    #     print("hooray!")
 
-                    if stix_id == "campaign--b03d5112-e23a-4ac8-add0-be7502d24eff":
-                        print(stix_id)
+                    # if stix_id == "campaign--b03d5112-e23a-4ac8-add0-be7502d24eff":
+                    #     print(stix_id)
 
                     all_attack_ids.append(attack_id)
                     stix_id_to_attack_id[stix_id] = attack_id
@@ -79,8 +79,11 @@ def linkbyid_check():
         if _id.startswith("x-mitre-data-component"):
             all_data_components.append(stix_object)
 
-    print(stix_id_to_attack_id.keys())
-    print(stix_id_to_attack_id.values())
+    if "campaign--b03d5112-e23a-4ac8-add0-be7502d24eff" in stix_id_to_attack_id.keys():
+        print("Hooray!")
+    
+    if "C0014" in stix_id_to_attack_id.values():
+        print("Hooray 2!")
 
     data_component_stix_id_to_datasource_attack_id = {}
     for data_component in all_data_components:
