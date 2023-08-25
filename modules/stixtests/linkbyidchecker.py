@@ -44,7 +44,8 @@ def linkbyid_check():
     stix_id_to_stix_object = {}
     all_data_components = []
     for stix_object in all_stix_objects:
-        print(stix_object["id"])
+        if "campaign" in stix_object["id"]:
+            print(stix_object["id"])
         _id = stix_object["id"]
 
         stix_id_to_stix_object[_id] = stix_object
