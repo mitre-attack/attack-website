@@ -60,7 +60,7 @@ def linkbyid_check():
 
                     stix_id = _id
 
-                    if "campaign" in stix_object["id"]:
+                    if "campaign" in _id:
                         print(attack_id)
 
                     # if attack_id == "C0014":
