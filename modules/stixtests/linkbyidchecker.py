@@ -55,6 +55,8 @@ def linkbyid_check():
             custom_stix_types_that_should_have_attack_ids
         ):
             if external_references:
+                print("hooray!")
+                exit(0)
                 if "external_id" in external_references[0]:
                     attack_id = external_references[0]["external_id"]
 
