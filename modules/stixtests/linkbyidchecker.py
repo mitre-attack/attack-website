@@ -56,7 +56,7 @@ def linkbyid_check():
         ):
             if external_references:
                 if "external_id" in external_references[0]:
-                print("hooray!")
+                    print("hooray!")
                     exit(0)
                     attack_id = external_references[0]["external_id"]
 
