@@ -57,3 +57,17 @@ function showIcs() {
     domainOptions.innerHTML = "Domain: ICS";
     filter_rows();
 }
+
+function sortTable(col_no) {
+    var table = document.getElementById("ds-table");
+    rows = table.rows;
+      for (let i = 1; i <= (rows.length - 1); i++) {
+        for (let j = 1; j <= (rows.length - i - 1); j++) {
+            var x = rows[j].getElementsByTagName("TD")[col_no];
+            var y = rows[j + 1].getElementsByTagName("TD")[col_no];
+            if(x.innerText.toLowerCase() > y.innerText.toLowerCase()){
+                rows[j].parentNode.insertBefore(rows[j + 1], rows[j]);
+            }
+        }
+  }
+}
