@@ -22,11 +22,11 @@ def linkbyid_check():
 
     stix_types_that_should_have_attack_ids = (
         # STIX 2.0
-        # stix2.v20.sdo.AttackPattern,
-        # stix2.v20.sdo.CourseOfAction,
-        # stix2.v20.sdo.IntrusionSet,
-        # stix2.v20.sdo.Malware,
-        # stix2.v20.sdo.Tool,
+        stix2.v20.sdo.AttackPattern,
+        stix2.v20.sdo.CourseOfAction,
+        stix2.v20.sdo.IntrusionSet,
+        stix2.v20.sdo.Malware,
+        stix2.v20.sdo.Tool,
         # STIX 2.1
         stix2.v21.sdo.AttackPattern,
         stix2.v21.sdo.CourseOfAction,
@@ -131,9 +131,8 @@ def linkbyid_check():
                 source_attack_id = stix_id_to_attack_id[source]
                     # print(source_attack_id)
 
-                target_attack_id = stix_id_to_attack_id[target]
+            target_attack_id = stix_id_to_attack_id[target]
                 # print(target_attack_id)
-
 
             url = util.stixhelpers.get_url_from_stix(
                 stix_object=stix_id_to_stix_object[source], is_subtechnique=is_subtechnique
