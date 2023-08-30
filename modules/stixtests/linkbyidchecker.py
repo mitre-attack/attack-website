@@ -44,8 +44,8 @@ def linkbyid_check():
     stix_id_to_stix_object = {}
     all_data_components = []
     for stix_object in all_stix_objects:
-        if "campaign" in stix_object["id"]:
-            print(stix_object["id"])
+        # if "campaign" in stix_object["id"]:
+        #     print(stix_object["id"])
         _id = stix_object["id"]
 
         stix_id_to_stix_object[_id] = stix_object
@@ -60,8 +60,8 @@ def linkbyid_check():
 
                     stix_id = _id
 
-                    if "C" in attack_id:
-                        print(attack_id)
+                    # if "C" in attack_id:
+                    #     print(attack_id)
 
                     # if attack_id == "C0014":
                     #     print("hooray!")
@@ -77,6 +77,8 @@ def linkbyid_check():
                     #     print("linked attack id: " + stix_id_to_attack_id[stix_id])
             else:
                 logger.error(f"STIX object does not have an expected ATT&CK ID: {_id}")
+                if _id == "campaign--b03d5112-e23a-4ac8-add0-be7502d24eff":
+                    print("bleh")
 
         if _id.startswith("x-mitre-data-component"):
             all_data_components.append(stix_object)
