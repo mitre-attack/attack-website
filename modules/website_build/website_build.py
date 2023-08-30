@@ -2,7 +2,7 @@ import json
 import os
 import shutil
 import subprocess
-import uuid
+import hashlib
 from string import Template
 
 from loguru import logger
@@ -43,6 +43,25 @@ def generate_website():
     remove_unwanted_output()
 
 
+def generate_uuid_from_seeds(content_version, website_version):
+    """
+    Generate a UUID based on the given content_version and website_version.
+    
+    Args:
+    - content_version (str): Semantic version of the content without a leading 'v'.
+    - website_version (str): Semantic version of the website with a leading 'v'.
+
+    Returns:
+    - str: A UUID generated based on the two versions.
+    """
+    # Combine and hash the values
+    seed = f"{content_version}-{website_version}".encode('utf-8')
+    hashed_seed = hashlib.md5(seed).hexdigest()
+
+    # Convert the first 32 characters of the hash to a UUID format
+    return '-'.join([hashed_seed[i:i+length] for i, length in zip([0, 8, 12, 16, 20], [8, 4, 4, 4, 12])])
+
+
 def generate_javascript_settings():
     """Creates javascript settings file that will be used to other javascript files"""
     logger.info("Generating JavaScript settings.js")
@@ -70,7 +89,13 @@ def generate_javascript_settings():
             web_dir = web_dir + "/"
 
         js_data = website_build_config.js_dir_settings.substitute({"web_directory": web_dir})
-        build_uuid = str(uuid.uuid4())
+
+        # Use the content and website versions as a seed for the build UUID to ensure that the UUID is idempotent.
+        CONTENT_VERSION = website_build_config.base_page_data['CONTENT_VERSION']
+        WEBSITE_VERSION = website_build_config.base_page_data['WEBSITE_VERSION']
+
+        build_uuid = generate_uuid_from_seeds(CONTENT_VERSION, WEBSITE_VERSION)
+
         js_build_uuid = website_build_config.js_build_uuid.substitute({"build_uuid": build_uuid})
         js_data += js_build_uuid
         js_f.write(js_data)
