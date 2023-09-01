@@ -65,11 +65,6 @@ def generate_markdown_files():
         side_menu_data = util.buildhelpers.get_side_menu_data("Groups", "/groups/", group_list_no_deprecated_revoked)
         data["side_menu_data"] = side_menu_data
 
-        side_menu_mobile_view_data = util.buildhelpers.get_side_menu_mobile_view_data(
-            "groups", "/groups/", group_list_no_deprecated_revoked, group_by
-        )
-        data["side_menu_mobile_view_data"] = side_menu_mobile_view_data
-
         data["groups_table"] = get_groups_table_data(group_list_no_deprecated_revoked)
         data["groups_list_len"] = str(len(group_list_no_deprecated_revoked))
 
@@ -80,12 +75,12 @@ def generate_markdown_files():
 
         # Create the markdown for the enterprise groups in the STIX
         for group in group_list:
-            generate_group_md(group, side_menu_data, side_menu_mobile_view_data, notes)
+            generate_group_md(group, side_menu_data, notes)
 
     return has_group
 
 
-def generate_group_md(group, side_menu_data, side_menu_mobile_view_data, notes):
+def generate_group_md(group, side_menu_data, notes):
     """Responsible for generating markdown of all groups"""
 
     attack_id = util.buildhelpers.get_attack_id(group)
@@ -94,9 +89,7 @@ def generate_group_md(group, side_menu_data, side_menu_mobile_view_data, notes):
         data = {}
 
         data["attack_id"] = attack_id
-
         data["side_menu_data"] = side_menu_data
-        data["side_menu_mobile_view_data"] = side_menu_mobile_view_data
         data["notes"] = notes.get(group["id"])
 
         # External references
