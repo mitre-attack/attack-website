@@ -8,6 +8,10 @@ $(document).ready(function () {
     // jumping from one domain to another. E.g. techniques to matrices
     let current_modules = window.location.pathname.split("/");
 
+    var sidebar = document.querySelector(".sidebar");
+    var sidebarSize = localStorage.getItem('sidebarWidth');
+    sidebar.style.width = sidebarSize;
+
     if (document.referrer) {
         // Loop through the modules in case page is hosted from different 
         // directory
