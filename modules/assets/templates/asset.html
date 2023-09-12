@@ -124,6 +124,30 @@
                             </div>
                         </div>
 
+                        {% if parsed.related_assets_table %}
+                            <h2 class="pt-3" id="relatedAssets">Related Assets</h2>
+                            <table class="table table-bordered table-alternate mt-2" aria-describedby="related-assets-table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Name</th>
+                                        <th scope="col">Sector</th>
+                                        <th scope="col">Description</th>
+                                    </tr>
+                                </thead>
+                                <tbody> 
+                                    {% for related_asset in parsed.related_assets_table %}
+                                    <tr>
+                                        <td>{{ related_asset.name }}</td>
+                                        <td>{{ related_asset.sector }}</td>
+                                        <td>
+                                            {{ clean_output.stixToHTML(related_asset.descr, parsed.citations) }}
+                                        </td>
+                                    </tr>
+                                    {% endfor %} 
+                                </tbody>
+                            </table>
+                        {% endif %}
+
                         {% if parsed.technique_table_data %}
                             {{ navigator.layer_links(parsed.attack_id, "assets", parsed.layers) }}
                             {{ techniques_used.techniques_used(parsed.technique_table_data, "Techniques", true, "Targets", parsed.citations) }}

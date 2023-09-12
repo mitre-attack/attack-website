@@ -159,7 +159,8 @@ def generate_asset_md(asset, side_menu_data, notes):
             }
         )
 
-    # TODO: related assets
+    if asset.get("x_mitre_related_assets"):
+        data["related_assets_table"] = get_related_asset_data(asset["x_mitre_related_assets"])
 
     data["citations"] = reference_list
     data["versioning_feature"] = site_config.check_versions_module()
@@ -204,6 +205,21 @@ def get_assets_table_data(asset_list):
         assets_table_data.append(row)
 
     return assets_table_data
+
+
+def get_related_asset_data(related_assets):
+    if not related_assets: return []
+
+    related_asset_data = []
+    for related_asset in related_assets:
+        row = {
+            "name": related_asset["name"], # required
+            "sector": related_asset["related_asset_sector"], # required
+        }
+        if related_asset.get("description"):
+            row["descr"] = related_asset["description"]
+        related_asset_data.append(row)
+    return related_asset_data
 
 
 def get_techniques_targeted_by_asset_data(asset, reference_list):
