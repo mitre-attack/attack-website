@@ -8,12 +8,12 @@ asset_markdown_path = "content/pages/assets/"
 
 # String template for asset index page
 asset_index_md = (
-    "Title: Asset overview\n" "Template: assets/assets-index\n" "save_as: assets/index.html\n" "data: "
+    "Title: Asset overview\nTemplate: assets/assets-index\nsave_as: assets/index.html\ndata: "
 )
 
 # String template for asset page
 asset_md = Template(
-    "Title: ${name}\n" "Template: assets/asset\n" "save_as: assets/${attack_id}/index.html\n" "data: "
+    "Title: ${name}\nTemplate: assets/asset\nsave_as: assets/${attack_id}/index.html\ndata: "
 )
 
 # Path for templates
