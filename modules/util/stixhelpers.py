@@ -400,7 +400,7 @@ def get_stix_memory_stores():
 
         if os.path.exists(stix_filename):
             logger.info(f"Loading STIX file from: {stix_filename}")
-            ms[domain["name"]] = stix2.MemoryStore(stix_data=None, allow_custom=True, version="2.1")
+            ms[domain["name"]] = stix2.MemoryStore(stix_data=None, allow_custom=True, version="2.0")
             ms[domain["name"]].load_from_file(stix_filename)
         else:
             exit(f"\n{stix_filename} file does not exist.")
