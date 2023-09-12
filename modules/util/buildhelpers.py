@@ -507,17 +507,17 @@ domain_name_map = {
 }
 
 
-def get_navigator_layers(name, attack_id, obj_type, version, techniques_used, inheritance=False):
+def get_navigator_layers(name, attack_id, obj_type, rel_type, version, techniques_used, inheritance=False):
     """Generate the Enterprise, Mobile, and ICS Navigator JSON layers for the given object."""
 
     # Generate Enterprise base layer
-    enterprise_layer = build_base_layer("enterprise-attack", name, obj_type, attack_id, version, inheritance)
+    enterprise_layer = build_base_layer("enterprise-attack", name, obj_type, rel_type, attack_id, version, inheritance)
 
     # Generate Mobile base layer
-    mobile_layer = build_base_layer("mobile-attack", name, obj_type, attack_id, version, inheritance)
+    mobile_layer = build_base_layer("mobile-attack", name, obj_type, rel_type, attack_id, version, inheritance)
 
     # Generate ICS base layer
-    ics_layer = build_base_layer("ics-attack", name, obj_type, attack_id, version, inheritance)
+    ics_layer = build_base_layer("ics-attack", name, obj_type, rel_type, attack_id, version, inheritance)
 
     # Add technique data to layer
     for technique in techniques_used:
@@ -584,12 +584,12 @@ def get_navigator_layers(name, attack_id, obj_type, version, techniques_used, in
     return layers
 
 
-def build_base_layer(domain, object_name, object_type, attack_id, version, inheritance=False):
+def build_base_layer(domain, object_name, object_type, rel_type, attack_id, version, inheritance=False):
     """Build the base Navigator layer for the given object."""
     layer = {}
 
     # Layer description
-    layer["description"] = f"{domain_name_map[domain]} techniques used by {object_name}, ATT&CK {object_type} {attack_id}"
+    layer["description"] = f"{domain_name_map[domain]} techniques {rel_type} {object_name}, ATT&CK {object_type} {attack_id}"
     if version:
         # Add object version number if it exists
         layer["description"] += f" (v{version})"
@@ -616,14 +616,14 @@ def build_base_layer(domain, object_name, object_type, attack_id, version, inher
 
     # Layer legend
     layer["legendItems"] = [
-        {"label": f"used by {object_name}", "color": colorMap[1]}
+        {"label": f"{rel_type} {object_name}", "color": colorMap[1]}
     ]
 
     # Add campaign inheritance to legend, if applicable
     if inheritance:
         layer["legendItems"].extend([
-            {"label": f"used by a campaign attributed to {object_name}", "color": colorMap[2]},
-            {"label": f"used by {object_name} and used by a campaign attributed to {object_name}", "color": colorMap[3]}
+            {"label": f"{rel_type} a campaign attributed to {object_name}", "color": colorMap[2]},
+            {"label": f"{rel_type} {object_name} and {rel_type} a campaign attributed to {object_name}", "color": colorMap[3]}
         ])
 
     return layer

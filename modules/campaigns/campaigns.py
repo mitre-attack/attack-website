@@ -141,6 +141,7 @@ def generate_campaign_md(campaign, side_menu_data, notes):
             data["name"],
             data["attack_id"],
             "campaign",
+            "used by",
             data["version"] if "version" in data else None,
             data["technique_table_data"],
         )

@@ -127,6 +127,7 @@ def generate_asset_md(asset, side_menu_data, notes):
         data["name"],
         data["attack_id"],
         "asset",
+        "targeted by",
         data["version"] if "version" in data else None,
         data["technique_table_data"],
     )
