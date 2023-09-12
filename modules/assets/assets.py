@@ -104,7 +104,9 @@ def generate_asset_md(asset, side_menu_data, notes):
         asset["x_mitre_platforms"].sort()
         data["platforms"] = ", ".join(asset["x_mitre_platforms"])
 
-    # TODO: x_mitre_sectors
+    if asset.get("x_mitre_sectors"):
+        asset["x_mitre_sectors"].sort()
+        data["sectors"] = ", ".join(asset["x_mitre_sectors"])
 
     # Get initial reference list
     reference_list = {"current_number": 0}
