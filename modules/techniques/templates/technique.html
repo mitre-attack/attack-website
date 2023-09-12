@@ -369,6 +369,35 @@
                                 </tbody>
                             </table>
                         {% endif %}
+                        {% if parsed.assets_table %}
+                            <h2 class="pt-3" id ="assets">Assets</h2>
+                            <table class="table table-bordered table-alternate mt-2" aria-describedby="asset-table">
+                                <thead>
+                                    <tr> 
+                                        <th scope="col">ID</th>
+                                        <th scope="col">Asset</th>
+                                        <th scope="col">Description</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for asset in parsed.assets_table %}
+                                        <tr>
+                                            <td>
+                                                <a href="/assets/{{asset.id}}"> {{asset.id}} </a>
+                                            </td>
+                                            <td>
+                                                <a href="/assets/{{asset.id}}"> {{asset.name}} </a>
+                                            </td>
+                                            <td>
+                                                {% if asset.descr %}
+                                                    {{clean_output.stixToHTML(asset.descr, parsed.citations)}}
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        {% endif %}
                         {% if parsed.domain != 'pre' %}
                             <h2 class="pt-3" id ="mitigations">Mitigations</h2>
                             {% if parsed.mitigation_table %}
