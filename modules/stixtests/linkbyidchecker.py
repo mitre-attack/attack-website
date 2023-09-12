@@ -21,12 +21,12 @@ def linkbyid_check():
         all_stix_objects.extend(stix_objects_in_domain)
 
     stix_types_that_should_have_attack_ids = (
-        # STIX 2.0
-        # stix2.v20.sdo.AttackPattern,
-        # stix2.v20.sdo.CourseOfAction,
-        # stix2.v20.sdo.IntrusionSet,
-        # stix2.v20.sdo.Malware,
-        # stix2.v20.sdo.Tool,
+        STIX 2.0
+        stix2.v20.sdo.AttackPattern,
+        stix2.v20.sdo.CourseOfAction,
+        stix2.v20.sdo.IntrusionSet,
+        stix2.v20.sdo.Malware,
+        stix2.v20.sdo.Tool,
         # STIX 2.1
         stix2.v21.sdo.AttackPattern,
         stix2.v21.sdo.CourseOfAction,
@@ -56,6 +56,8 @@ def linkbyid_check():
         ):
             if external_references:
                 if "external_id" in external_references[0]:
+                    print("hooray!")
+                    exit(0)
                     attack_id = external_references[0]["external_id"]
 
                     stix_id = _id
