@@ -34,7 +34,7 @@ resizer.addEventListener("mousedown", resizeSidebar_mousedownHandler);
 }
 
 //This code is for creating a collapsable sidebar for the mobile view
-const mediaQuery = window.matchMedia('(max-width: 47.9875rem)')
+var mediaQuery = window.matchMedia('(max-width: 47.9875rem)')
 
 function mobileSidenav(e) {
   if (e.matches) {

@@ -32,6 +32,10 @@ base_page_data = {
     "RESOURCE_NAV": site_config.resource_nav,
 }
 
+sidebar_page_data = {
+    "RESOURCE_NAV": site_config.resource_nav,
+}
+
 # config for the matrix shown on the index page
 index_matrix = {
     "name": "ATT&CK Matrix for Enterprise",
