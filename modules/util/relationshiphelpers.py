@@ -248,15 +248,15 @@ def campaigns_attributed_to_group(srcs):
 
 
 # technique:asset
-def techniques_targeted_by_assets(srcs):
-    """Return asset_id => {technique, relationship} for each technique targeted by the asset.
+def techniques_targeting_assets(srcs):
+    """Return asset_id => {technique, relationship} for each technique targeting the asset.
 
     srcs should be an array of memorystores for enterprise, mobile, and pre
     """
     return get_related(srcs, "attack-pattern", "targets", "x-mitre-asset", reverse=True)
 
-def assets_targeting_techniques(srcs):
-    """Return technique_id => {asset, relationship} for each asset targeting the technique.
+def assets_targeted_by_techniques(srcs):
+    """Return technique_id => {asset, relationship} for each asset targeted by the technique.
 
     srcs should be an array of memorystores for enterprise, mobile, and pre
     """

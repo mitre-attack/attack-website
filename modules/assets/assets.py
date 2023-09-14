@@ -120,7 +120,7 @@ def generate_asset_md(asset, side_menu_data, notes):
         data["deprecated"] = True
 
     # Get technique data for technique table
-    data["technique_table_data"] = get_techniques_targeted_by_asset_data(asset, reference_list)
+    data["technique_table_data"] = get_techniques_targeting_asset_data(asset, reference_list)
 
     # Get navigator layers for this asset
     layers = util.buildhelpers.get_navigator_layers(
@@ -223,15 +223,15 @@ def get_related_asset_data(related_assets):
     return related_asset_data
 
 
-def get_techniques_targeted_by_asset_data(asset, reference_list):
-    """Given an asset and its reference list, get the techniques targeted by the asset.
+def get_techniques_targeting_asset_data(asset, reference_list):
+    """Given an asset and its reference list, get the techniques targeting the asset.
         Check the reference list for citations, if not found in list, add it.
     """
     technique_list = {}
-    techniques_targeted_by_assets = util.relationshipgetters.get_techniques_targeted_by_assets()
+    techniques_targeting_assets = util.relationshipgetters.get_techniques_targeting_assets()
 
-    if techniques_targeted_by_assets.get(asset.get("id")):
-        for technique in techniques_targeted_by_assets[asset["id"]]:
+    if techniques_targeting_assets.get(asset.get("id")):
+        for technique in techniques_targeting_assets[asset["id"]]:
             # Do not add if technique is deprecated
             if not technique["object"].get("x_mitre_deprecated"):
                 technique_list = util.buildhelpers.technique_used_helper(technique_list, technique, reference_list)

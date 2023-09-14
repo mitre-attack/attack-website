@@ -379,17 +379,17 @@ def get_mitigations_table_data(technique, reference_list):
 
 
 def get_assets_table_data(technique, reference_list):
-    """Given a technique a reference list, find assets that target the
+    """Given a technique a reference list, find assets that are targeted by the
     technique and return list with asset data. Also modifies the
     reference list if it finds a reference that is not on the list
     """
     asset_data = []
 
     # Check if technique has assets
-    assets_targeting_techniques = util.relationshipgetters.get_assets_targeting_techniques().get(technique["id"])
-    if assets_targeting_techniques:
+    assets_targeted_by_techniques = util.relationshipgetters.get_assets_targeted_by_techniques().get(technique["id"])
+    if assets_targeted_by_techniques:
         # Iterate through technique assets
-        for asset in assets_targeting_techniques:
+        for asset in assets_targeted_by_techniques:
             # Do not add deprecated assets to table
             if not asset["object"].get("x_mitre_deprecated"):
                 attack_id = util.buildhelpers.get_attack_id(asset["object"])
