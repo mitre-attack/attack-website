@@ -30,7 +30,6 @@ def generate_software():
 
     # Generates the markdown files to be used for page generation and verifies if a software was generated
     software_generated = generate_markdown_files()
-
     if not software_generated:
         util.buildhelpers.remove_module_from_menu(software_config.module_name)
 
@@ -55,6 +54,7 @@ def generate_markdown_files():
         side_menu_data = util.buildhelpers.get_side_menu_data(
             "software", "/software/", software_list_no_deprecated_revoked
         )
+        generate_sidebar_software(side_menu_data)
     
         data["side_menu_data"] = side_menu_data
         data["software_table"] = get_software_table_data(software_list_no_deprecated_revoked)
@@ -350,3 +350,16 @@ def get_campaign_table_data(software, reference_list):
     campaign_data = [campaign_list[item] for item in campaign_list]
     campaign_data = sorted(campaign_data, key=lambda k: k["name"].lower())
     return campaign_data
+
+def generate_sidebar_software(side_menu_data):
+    """Responsible for generating the sidebar for the software pages."""
+    logger.info("Generating software sidebar")
+    data = {}
+    data["menu"] = side_menu_data
+
+    # Sidebar Overview
+    sidebar_software_md = software_config.sidebar_software_md + json.dumps(data)
+
+    # write markdown to file
+    with open(os.path.join(software_config.software_markdown_path, "sidebar_software.md"), "w", encoding="utf8") as md_file:
+        md_file.write(sidebar_software_md)

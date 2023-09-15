@@ -614,12 +614,12 @@ def get_datasources_and_components_of_technique(technique, reference_list):
     return datasource_and_components, show_descriptions
 
 def generate_sidebar_techniques(side_nav_data):
-    """Responsible for generating the markdown pages of the training pages."""
+    """Responsible for generating the sidebar for the technique pages."""
     logger.info("Generating technique sidebar")
     data = {}
     data["menu"] = side_nav_data
 
-    # Training Overview
+    # Sidebar Overview
     sidebar_techniques_md = techniques_config.sidebar_techniques_md + json.dumps(data)
 
     # write markdown to file

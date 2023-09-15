@@ -155,19 +155,6 @@ def generate_sidebar_html():
         with open(os.path.join(website_build_config.template_dir, "sidebar-resources.html"), "w", encoding="utf8") as sidebar_template_f:
             sidebar_template_f.write(subs)
 
-        with open(
-            os.path.join(website_build_config.template_dir, "sidebar-techniques-template.html"), "r", encoding="utf8"
-        ) as sidebar_template_f:
-            sidebar_template = sidebar_template_f.read()
-            sidebar_template = Template(sidebar_template)
-            print(sidebar_template)
-            subs = sidebar_template.substitute(website_build_config.base_page_data)
-            print("boo")
-            print(subs)
-    
-        with open(os.path.join(website_build_config.template_dir, "sidebar-techniques.html"), "w", encoding="utf8") as sidebar_template_f:
-            sidebar_template_f.write(subs)
-
 
 def generate_index_page():
     """Responsible for creating the landing page"""

@@ -358,10 +358,10 @@ def generate_working_with_attack():
         md_file.write(working_with_attack_content)
 
 def generate_sidebar_resources():
-    """Responsible for generating the markdown pages of the resources sidebar."""
-    logger.info("Generating sidebar")
+    """Responsible for generating the sidebar for the resource pages."""
+    logger.info("Generating resource sidebar")
 
-    # Training Overview
+    # Sidebar Overview
     sidebar_resources_md = resources_config.sidebar_resources_md
 
     # write markdown to file
