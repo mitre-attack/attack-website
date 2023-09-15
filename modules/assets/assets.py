@@ -11,9 +11,7 @@ from .. import site_config
 
 
 def generate_assets():
-    """
-    Responsible for verifying asset directory and starting off asset markdown generation.
-    """
+    """Responsible for verifying asset directory and starting off asset markdown generation."""
     # Create content pages directory if does not already exist
     util.buildhelpers.create_content_pages_dir()
 
