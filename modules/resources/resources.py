@@ -47,7 +47,7 @@ def generate_resources():
     generate_attackcon_page()
     generate_faq_page()
     generate_static_pages()
-    generate_sidebar_check()
+    generate_sidebar_resources()
 
 
 def copy_docs(module_docs_path):
@@ -357,13 +357,13 @@ def generate_working_with_attack():
     ) as md_file:
         md_file.write(working_with_attack_content)
 
-def generate_sidebar_check():
-    """Responsible for generating the markdown pages of the training pages."""
+def generate_sidebar_resources():
+    """Responsible for generating the markdown pages of the resources sidebar."""
     logger.info("Generating sidebar")
 
     # Training Overview
-    sidebar_check_md = resources_config.sidebar_check_md
+    sidebar_resources_md = resources_config.sidebar_resources_md
 
     # write markdown to file
-    with open(os.path.join(site_config.resources_markdown_path, "sidebar_check.md"), "w", encoding="utf8") as md_file:
-        md_file.write(sidebar_check_md)
+    with open(os.path.join(site_config.resources_markdown_path, "sidebar_resources.md"), "w", encoding="utf8") as md_file:
+        md_file.write(sidebar_resources_md)

@@ -43,9 +43,9 @@ sub_technique_md = Template(
     "data: "
 )
 
-sidebar_technique_md = (
+sidebar_techniques_md = (
     "Title: Techniques Sidebar\n"
-    "Template: general/sidebar-technique-work \n"
-    "save_as: techniques/sidebar-check/index.html\n"
+    "Template: general/sidebar-techniques \n"
+    "save_as: techniques/sidebar-techniques/index.html\n"
     "data: "
 )

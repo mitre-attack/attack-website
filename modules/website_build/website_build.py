@@ -144,23 +144,23 @@ def generate_base_html():
         base_template_f.write(subs)
     
     with open(
-        os.path.join(website_build_config.template_dir, "sidebar-test.html"), "r", encoding="utf8"
+        os.path.join(website_build_config.template_dir, "sidebar-resources-template.html"), "r", encoding="utf8"
     ) as sidebar_template_f:
         sidebar_template = sidebar_template_f.read()
         sidebar_template = Template(sidebar_template)
         subs = sidebar_template.substitute(website_build_config.sidebar_page_data)
     
-    with open(os.path.join(website_build_config.template_dir, "sidebar-work.html"), "w", encoding="utf8") as sidebar_template_f:
+    with open(os.path.join(website_build_config.template_dir, "sidebar-resources.html"), "w", encoding="utf8") as sidebar_template_f:
         sidebar_template_f.write(subs)
 
     with open(
-        os.path.join(website_build_config.template_dir, "sidebar-technique.html"), "r", encoding="utf8"
+        os.path.join(website_build_config.template_dir, "sidebar-techniques-template.html"), "r", encoding="utf8"
     ) as sidebar_template_f:
         sidebar_template = sidebar_template_f.read()
         sidebar_template = Template(sidebar_template)
         subs = sidebar_template.substitute(website_build_config.base_page_data)
     
-    with open(os.path.join(website_build_config.template_dir, "sidebar-technique-work.html"), "w", encoding="utf8") as sidebar_template_f:
+    with open(os.path.join(website_build_config.template_dir, "sidebar-techniques.html"), "w", encoding="utf8") as sidebar_template_f:
         sidebar_template_f.write(subs)
 
 

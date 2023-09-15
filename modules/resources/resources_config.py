@@ -46,8 +46,8 @@ working_with_attack_md = (
     "data: "
 )
 
-sidebar_check_md = (
+sidebar_resources_md = (
     "Title: Resources Sidebar\n"
-    "Template: general/sidebar-work \n"
-    "save_as: resources/sidebar-check/index.html\n"
+    "Template: general/sidebar-resources \n"
+    "save_as: resources/sidebar-resources/index.html\n"
 )

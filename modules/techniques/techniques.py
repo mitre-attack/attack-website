@@ -58,7 +58,7 @@ def generate_techniques():
         if not technique_generated:
             if check_if_generated:
                 technique_generated = True
-    generate_sidebar_technique(side_nav_data)
+    generate_sidebar_techniques(side_nav_data)
     if not technique_generated:
         util.buildhelpers.remove_module_from_menu(techniques_config.module_name)
 
@@ -613,15 +613,15 @@ def get_datasources_and_components_of_technique(technique, reference_list):
 
     return datasource_and_components, show_descriptions
 
-def generate_sidebar_technique(side_nav_data):
+def generate_sidebar_techniques(side_nav_data):
     """Responsible for generating the markdown pages of the training pages."""
     logger.info("Generating technique sidebar")
     data = {}
     data["menu"] = side_nav_data
 
     # Training Overview
-    sidebar_check_md = techniques_config.sidebar_technique_md + json.dumps(data)
+    sidebar_techniques_md = techniques_config.sidebar_techniques_md + json.dumps(data)
 
     # write markdown to file
-    with open(os.path.join(techniques_config.techniques_markdown_path, "sidebar_check.md"), "w", encoding="utf8") as md_file:
-        md_file.write(sidebar_check_md)
+    with open(os.path.join(techniques_config.techniques_markdown_path, "sidebar_techniques.md"), "w", encoding="utf8") as md_file:
+        md_file.write(sidebar_techniques_md)
