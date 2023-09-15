@@ -32,3 +32,10 @@ mitigation_md = Template(
     "save_as: mitigations/${attack_id}/index.html\n"
     "data: "
 )
+
+sidebar_mitigations_md = (
+    "Title: Mitigations Sidebar\n"
+    "Template: general/sidebar-template \n"
+    "save_as: mitigations/sidebar-mitigations/index.html\n"
+    "data: "
+)

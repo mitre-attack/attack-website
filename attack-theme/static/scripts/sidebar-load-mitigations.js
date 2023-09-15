@@ -1,4 +1,4 @@
-$("#sidebars").load("/techniques/sidebar-techniques", function() {
+$("#sidebars").load("/mitigations/sidebar-mitigations", function() {
         var navElements = document.querySelectorAll('.sidenav-head > a');
         var winlocation;
         navElements.forEach(function(element){
@@ -26,4 +26,4 @@ $("#sidebars").load("/techniques/sidebar-techniques", function() {
         });
     
         mediaQuery.addEventListener('change', mobileSidenav)
-    });
+});
