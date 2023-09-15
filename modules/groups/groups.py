@@ -4,6 +4,8 @@ import os
 
 from modules import util
 
+from loguru import logger
+
 from . import groups_config
 from .. import site_config
 
@@ -77,6 +79,7 @@ def generate_markdown_files():
         for group in group_list:
             generate_group_md(group, side_menu_data, notes)
 
+        generate_sidebar_groups(side_menu_data)
     return has_group
 
 
@@ -435,3 +438,16 @@ def update_software_list(pairings, software_list, reference_list, reference, id)
 
                                 software_list[software_stix_id]["techniques"].append(tech_data)
     return software_list, reference
+
+def generate_sidebar_groups(side_menu_data):
+    """Responsible for generating the sidebar for the groups pages."""
+    logger.info("Generating groups sidebar")
+    data = {}
+    data["menu"] = side_menu_data
+
+    # Sidebar Overview
+    sidebar_groups_md = groups_config.sidebar_groups_md + json.dumps(data)
+
+    # write markdown to file
+    with open(os.path.join(groups_config.group_markdown_path, "sidebar_groups.md"), "w", encoding="utf8") as md_file:
+        md_file.write(sidebar_groups_md)
