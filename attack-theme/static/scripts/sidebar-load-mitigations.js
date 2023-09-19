@@ -23,6 +23,9 @@ $("#sidebars").load("/mitigations/sidebar-mitigations", function() {
         }
         $(document).ready(function() {
             mobileSidenav(mediaQuery)
+            let sidenav = $(".sidenav-list");
+            let sidenav_active_elements = $(".sidenav .active");
+            sidenav_active_elements[0].scrollIntoView({ block: 'nearest', inline: 'start' })
         });
     
         mediaQuery.addEventListener('change', mobileSidenav)

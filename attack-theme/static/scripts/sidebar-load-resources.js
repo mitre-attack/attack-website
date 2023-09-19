@@ -30,7 +30,7 @@ $("#sidebars").load(mod_entry, function() {
         mobileSidenav(mediaQuery)
         let sidenav = $(".sidenav-list");
         let sidenav_active_elements = $(".sidenav .active");
-        sidenav_active_elements[0].scrollIntoView({ behavior: "smooth", block: "center" })
+        sidenav_active_elements[0].scrollIntoView({ block: 'nearest', inline: 'start' })
     });
 
     mediaQuery.addEventListener('change', mobileSidenav)
