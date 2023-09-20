@@ -806,10 +806,10 @@ ATT&CK for Mobile does not support data sources
 * Harshal Tupsamudre, Qualys
 * Hiroki Nagahama, NEC Corporation
 * Isif Ibrahima, Mandiant
+* Jack Burns, HubSpot
 * James_inthe_box, Me
 * Jan Petrov, Citi
 * Jannie Li, Microsoft Threat Intelligence Center (MSTIC)
-* Jen Burns, HubSpot
 * Jeremy Galloway
 * Joas Antonio dos Santos, @C0d3Cr4zy, Inmetrics
 * John Page (aka hyp3rlinx), ApparitionSec
