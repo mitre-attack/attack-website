@@ -11,22 +11,21 @@ $("#sidebars").load("/groups/sidebar-groups", function() {
     if(element.href == winlocation){
         $(element.parentNode).addClass("active")
     }});
+    
+    //This code is for creating a collapsable sidebar for the mobile view
     var mediaQuery = window.matchMedia('(max-width: 47.9875rem)')
-
     function mobileSidenav(e) {
-    if (e.matches) {
-      $('#sidebar-collapse').collapse('hide')
-    }
-    else{
-      $('#sidebar-collapse').collapse('show')
-    }
+        if (e.matches) {
+            $('#sidebar-collapse').collapse('hide')
+        }
+        else{
+            $('#sidebar-collapse').collapse('show')
+        }
     }
     $(document).ready(function() {
         mobileSidenav(mediaQuery)
-        let sidenav = $(".sidenav-list");
         let sidenav_active_elements = $(".sidenav .active");
         sidenav_active_elements[0].scrollIntoView({ block: 'nearest', inline: 'start' })
     });
-
     mediaQuery.addEventListener('change', mobileSidenav)
 });
