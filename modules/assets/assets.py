@@ -213,8 +213,10 @@ def get_related_asset_data(related_assets):
     for related_asset in related_assets:
         row = {
             "name": related_asset["name"], # required
-            "sector": related_asset["related_asset_sector"], # required
         }
+        if related_asset.get("related_asset_sectors"):
+            related_asset["related_asset_sectors"].sort()
+            row["sectors"] = ", ".join(related_asset["related_asset_sectors"])
         if related_asset.get("description"):
             row["descr"] = related_asset["description"]
         related_asset_data.append(row)
