@@ -12,23 +12,19 @@ $("#sidebars").load(mod_entry, function() {
     }
     if(element.href == winlocation){
         $(element.parentNode).addClass("active")
-        var parentElement = $(element.parentNode);
-        var elementID = document.getElementById(parentElement[0].id)
-        elementID.scrollIntoView({ behavior: "smooth", block: "center" })
     }});
     var mediaQuery = window.matchMedia('(max-width: 47.9875rem)')
 
     function mobileSidenav(e) {
     if (e.matches) {
-      $('#sidenav-list').collapse('hide')
+      $('#sidebar-collapse').collapse('hide')
     }
     else{
-      $('#sidenav-list').collapse('show')
+      $('#sidebar-collapse').collapse('show')
     }
     }
     $(document).ready(function() {
         mobileSidenav(mediaQuery)
-        let sidenav = $(".sidenav-list");
         let sidenav_active_elements = $(".sidenav .active");
         sidenav_active_elements[0].scrollIntoView({ block: 'nearest', inline: 'start' })
     });
