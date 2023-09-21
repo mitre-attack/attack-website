@@ -29,7 +29,7 @@ module_choices = [
     "subdirectory",
     "tests",
 ]
-extras = ["resources", "versions", "contribute", "blog", "stixtests"]
+extras = ["resources", "versions", "blog", "stixtests", "benefactors"]
 test_choices = ["size", "links", "external_links", "citations"]
 
 
@@ -229,7 +229,7 @@ if __name__ == "__main__":
         ptr["run_module"]()
         end_time = time.time()
         util.buildhelpers.print_end(ptr["module_name"], start_time, end_time)
-
+    
     # Print end of module
     update_end = time.time()
     util.buildhelpers.print_end("TOTAL Update Time", update_start, update_end)

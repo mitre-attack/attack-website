@@ -1,19 +1,29 @@
-{% extends "general/base.html" %}
+{% extends "general/two-column.html" %} 
 {% set active_page = "resources" -%}
 {% set title = "Contribute | MITRE ATT&CK&reg;" -%}
 {% set parsed = page.data | from_json %}
+{% import 'macros/navigation.html' as navigation %}
 
-{% block content %} {{ super () }}
-<div class="container">
-    <div class="container-fluid">
-        <ol class="breadcrumb">
+{% block innerleft %}
+<div id="v-tab" role="tablist" aria-orientation="vertical" class="h-100">
+    {{navigation.sidenav(RESOURCE_NAV, output_file)}}  
+</div>
+{% endblock %}
+
+{% block innerright %}
+<div class="px-3">
+    <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="/">Home</a></li>
-            <li class="breadcrumb-item"><a href="/resources/">Resources</a></li>
+            <li class="breadcrumb-item"><a href="/resources">Resources</a></li>
             <li class="breadcrumb-item">Contribute</li>
-        </ol>
+    </ol>
+</div>
         
-        <div class="blog-post p-3">
-            <h1 class="blog-post-title mb-4">Contribute</h1>
+<div class="container pb-3 uniform-block">
+    <div class="card-block">
+        <div class="clearfix pb-3">
+            <div class="clearfix pb-3">
+                <h2>Contribute</h2>
                 <p>
                     You can help contribute to ATT&amp;CK.
                 </p>
@@ -113,7 +123,7 @@
                         </p>
                         <p class="examples-p mr-0 ml-0">
                             <span class="example-fields">Description:</span> Component Object Model (COM) servers
-                             associated with Graphics Interchange Format (JIF) image viewers can be abused to corrupt arbitrary memory banks. Adversaries may leverage this opportunity to modify, mux, and maliciously annoy (MMA) read-only memory (ROM) regularly accessed during normal system operations.
+                                associated with Graphics Interchange Format (JIF) image viewers can be abused to corrupt arbitrary memory banks. Adversaries may leverage this opportunity to modify, mux, and maliciously annoy (MMA) read-only memory (ROM) regularly accessed during normal system operations.
                         </p>
                         <p class="examples-p mr-0 ml-0">
                             <span class="example-fields">Detection:</span> Monitor the JIF viewers for muxing 
@@ -121,14 +131,14 @@
                         </p>
                         <p class="examples-p mr-0 ml-0">
                             <span class="example-fields">Mitigation:</span> Configure the Registry key
-                             HKLM\SYSTEM\ControlSet\001\Control\WindowsJIFControl\ to 0 to disable MMA access
-                             if not needed within the environment.
+                                HKLM\SYSTEM\ControlSet\001\Control\WindowsJIFControl\ to 0 to disable MMA access
+                                if not needed within the environment.
                         </p>
                         <p class="examples-p mr-0 ml-0">
                             <span class="example-fields">Adversary Use:</span> Here is a publicly-available
-                             reference about FUZZYSNUGGLYDUCK using this technique: 
-                             (www[.]awesomeThreatReports[.]org/FUZZYSNUGGLYDUCK_NOMS _ON_ROM_VIA_COM). 
-                             Additionally, our red team uses this in our operations.
+                                reference about FUZZYSNUGGLYDUCK using this technique: 
+                                (www[.]awesomeThreatReports[.]org/FUZZYSNUGGLYDUCK_NOMS _ON_ROM_VIA_COM). 
+                                Additionally, our red team uses this in our operations.
                         </p>
                         <p class="examples-p mr-0 ml-0">
                             <span class="example-fields">Additional References:</span> Here is a reference
@@ -252,8 +262,12 @@
                 <p>
                     Thanks to those who have contributed to ATT&amp;CK!
                 </p>
+            </div>
         </div>
     </div>
 </div>
-{% endblock %} {% block scripts %} {{ super () }}
-<script src="/theme/scripts/tables.js"></script>{% endblock %}
+{% endblock %} 
+{% block scripts %} {{ super () }}
+<script src="/theme/scripts/tables.js"></script>
+<script src="/theme/scripts/navigation.js"></script>
+{% endblock %}

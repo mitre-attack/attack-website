@@ -48,7 +48,7 @@
     <div class="dropdown-menu {% if last %} dropdown-menu-right {% endif %}" aria-labelledby="navbarDropdown">
         {% for child in element.children %}
             {% if child.children %}
-                {{has_child(child)}}
+                {{child_has_child(child)}}
             {% elif child.external_link %}
                 {{external_link(child)}}
             {% else %}
@@ -57,4 +57,19 @@
         {% endfor %}
     </div>
 
+{% endmacro %}
+
+{% macro child_has_child(element) %}
+
+<div class="dropright">
+<a class="dropdown-item dropdown-toggle" href="{{ element.url }}" id="navbarDropdown" role="button"
+    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <b>{{ element.display_name }}</b>
+    </a>
+    <div class="dropdown-menu {% if last %} dropdown-menu-right {% endif %}" aria-labelledby="navbarDropdown">
+        {% for child in element.children %}
+            <a class="dropdown-item" href="{{child.url}}">{{ child.display_name }}</a>
+        {% endfor %}
+    </div>
+</div>
 {% endmacro %}
