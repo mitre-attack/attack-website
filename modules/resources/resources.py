@@ -3,6 +3,7 @@ import os
 import shutil
 from datetime import datetime
 from pathlib import Path
+import math
 
 from loguru import logger
 from mitreattack.attackToExcel import attackToExcel
@@ -37,11 +38,21 @@ def generate_resources():
             if site_config.resource_nav["children"][i]["id"] == "versions":
                 del site_config.resource_nav["children"][i]
 
+    build_benefactors_module = False
+    for module_info in modules.run_ptr:
+        if module_info["module_name"] == "benefactors":
+            build_benefactors_module = True
+    if not build_benefactors_module:
+        for i, child in enumerate(site_config.resource_nav["children"]):
+            if site_config.resource_nav["children"][i]["id"] == "benefactors":
+                del site_config.resource_nav["children"][i]
+
     # Move templates to templates directory
     util.buildhelpers.move_templates(resources_config.module_name, resources_config.resources_templates_path)
     copy_docs(module_docs_path=resources_config.docs_path)
     generate_working_with_attack()
     generate_general_information()
+    generate_contribute_page()
     generate_training_pages()
     generate_brand_page()
     generate_attackcon_page()
@@ -356,3 +367,43 @@ def generate_working_with_attack():
         os.path.join(site_config.resources_markdown_path, "working_with_attack.md"), "w", encoding="utf8"
     ) as md_file:
         md_file.write(working_with_attack_content)
+
+def generate_contribute_page():
+    """Responsible for generating the markdown pages of the contribute pages."""
+    logger.info("Generating contributing page")
+
+    # Generate redirections
+    util.buildhelpers.generate_redirections(
+        redirections_filename=resources_config.contribute_redirection_location, redirect_md=site_config.redirect_md
+    )
+
+    ms = util.relationshipgetters.get_ms()
+    contributors = util.stixhelpers.get_contributors(ms)
+
+    data = {}
+
+    data["contributors"] = []
+
+    contributors_first_col = []
+    contributors_second_col = []
+
+    half = math.ceil((len(contributors)) / 2)
+    list_size = len(contributors)
+
+    for index in range(0, half):
+        contributors_first_col.append(contributors[index])
+
+    for index in range(half, list_size):
+        contributors_second_col.append(contributors[index])
+
+    data["contributors"].append(contributors_first_col)
+    data["contributors"].append(contributors_second_col)
+
+    subs = resources_config.contribute_md + json.dumps(data)
+
+    # Open markdown file for the contribute page
+    with open(
+        os.path.join(site_config.resources_markdown_path, "contribute.md"), "w", encoding="utf8"
+    ) as md_file:
+        md_file.write(subs)
+
