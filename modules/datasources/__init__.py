@@ -24,6 +24,7 @@ def get_menu():
             {"display_name": "Groups", "url": "/groups", "external_link": False, "children": []},
             {"display_name": "Software", "url": "/software", "external_link": False, "children": []},
             {"display_name": "Campaigns", "url": "/datasources", "external_link": False, "children": []},
+            {"display_name": "Assets", "url": "/assets", "external_link": False, "children": [] },
         ],
     }
 
