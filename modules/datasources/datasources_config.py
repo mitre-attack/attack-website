@@ -2,7 +2,7 @@ from string import Template
 
 module_name = "Data Sources"
 module_name_no_spaces = "datasources"
-module_tab_name = "Defenses and CTI"
+module_tab_name = "Defenses"
 
 priority = 4.1
 

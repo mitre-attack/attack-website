@@ -21,11 +21,8 @@ def get_menu():
                 {"display_name": "Mobile", "url": "/mitigations/mobile/", "external_link": False, "children": []},
                 {"display_name": "ICS", "url": "/mitigations/ics/", "external_link": False, "children": []},
             ]},
-            {"display_name": "Groups", "url": "/groups", "external_link": False, "children": []},
-            {"display_name": "Software", "url": "/software", "external_link": False, "children": []},
-            {"display_name": "Campaigns", "url": "/campaigns", "external_link": False, "children": []},
-            {"display_name": "Assets", "url": "/assets", "external_link": False, "children": [] },
-        ],
+            {"display_name": "Assets", "url": "/assets", "external_link": False, "children": [] }
+        ]
     }
 
 
