@@ -319,6 +319,7 @@ def generate_working_with_attack():
         "techniques",
         "datasources",
         "campaigns",
+        "assets"
     ]
 
     # Verify if directories exists

@@ -22,6 +22,7 @@ module_choices = [
     "tactics",
     "techniques",
     "campaigns",
+    "assets",
     "tour",
     "website_build",
     "random_page",

@@ -168,6 +168,7 @@ def generate_index_page():
         "groups": "Group",
         "software": "Software",
         "campaigns": "Campaign",
+        "assets": "Asset",
     }
     routes = {}
 

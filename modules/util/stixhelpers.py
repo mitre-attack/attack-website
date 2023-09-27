@@ -359,6 +359,9 @@ def grab_resources(ms):
     # Generates list of campaigns
     campaign_list = get_domain_resources(["campaign"])
 
+    # Generates list of assets
+    asset_list = get_domain_resources(["x-mitre-asset"])
+
     # Generates list of relationships
     rel_list = []
     for domain in site_config.domains:
@@ -377,6 +380,7 @@ def grab_resources(ms):
         "techniques": tech_list,
         "mitigations": coa_list,
         "campaigns": campaign_list,
+        "assets": asset_list
     }
     return resources
 
@@ -430,6 +434,7 @@ def get_contributors(ms):
             "x-mitre-data-component",
             "x-mitre-data-source",
             "x-mitre-tactic",
+            "x-mitre-asset",
         ]
         src = ms[domain["name"]]
         obj_list = []

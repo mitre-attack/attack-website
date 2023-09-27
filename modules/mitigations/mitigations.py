@@ -137,6 +137,7 @@ def generate_mitigation_md(mitigation, domain, side_menu_data, notes):
             data["name"],
             data["attack_id"],
             "mitigation",
+            "mitigated by",
             data["version"] if "version" in data else None,
             data["techniques_addressed_data"],
         )

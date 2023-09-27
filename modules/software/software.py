@@ -129,6 +129,7 @@ def generate_software_md(software, side_menu_data, notes):
             data["name"],
             data["attack_id"],
             "software",
+            "used by",
             data["version"] if "version" in data else None,
             data["technique_table_data"],
         )
