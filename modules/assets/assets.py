@@ -22,7 +22,6 @@ def generate_assets():
     if not os.path.isdir(assets_config.asset_markdown_path):
         os.mkdir(assets_config.asset_markdown_path)
 
-    # TODO resolve infinite redirect loop when run locally. Needs further testing before code removal.
     # Generate redirections
     util.buildhelpers.generate_redirections(
         redirections_filename=assets_config.assets_redirection_location, redirect_md=site_config.redirect_md
