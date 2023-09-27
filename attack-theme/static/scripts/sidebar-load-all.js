@@ -1,4 +1,6 @@
-$("#sidebars").load("/campaigns/sidebar-campaigns", function() {
+let mod_name = window.location.pathname.split("/")
+let mod_entry = "/" + mod_name[1] + "/sidebar-" + mod_name[1]
+$("#sidebars").load(mod_entry, function() {
     var navElements = document.querySelectorAll('.sidenav-head > a');
     var winlocation;
     navElements.forEach(function(element){
@@ -8,10 +10,13 @@ $("#sidebars").load("/campaigns/sidebar-campaigns", function() {
     else{
         winlocation = window.location.href
     }
+    if(!element.href.endsWith("/")){
+        element.href = element.href + "/";
+    }
     if(element.href == winlocation){
         $(element.parentNode).addClass("active")
     }});
-    
+
     //This code is for creating a collapsable sidebar for the mobile view
     var mediaQuery = window.matchMedia('(max-width: 47.9875rem)')
     function mobileSidenav(e) {
@@ -27,5 +32,6 @@ $("#sidebars").load("/campaigns/sidebar-campaigns", function() {
         let sidenav_active_elements = $(".sidenav .active");
         sidenav_active_elements[0].scrollIntoView({ block: 'nearest', inline: 'start' })
     });
+
     mediaQuery.addEventListener('change', mobileSidenav)
 });
