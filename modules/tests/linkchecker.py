@@ -433,7 +433,8 @@ def check_links(external_links=False):
         if unlinked_pages:
             f.write("Pages listed were not linked from another page\n\n")
             for page in unlinked_pages:
-                f.write(page + "\n")
+                if 'sidebar' not in page: #remove the sidebar html pages from unlinked pages
+                    f.write(page + "\n")
         else:
             f.write("No unlinked pages found\n")
 
