@@ -71,7 +71,6 @@ $(document).ready(function () {
     $(".sidenav-head").click(function () {
         localStorage.setItem("need_update", true);
         localStorage.setItem("new_active_id", $(this).attr('id'));
-        $(this).addClass("active");
     });
 
     // If this method is called, then the user has clicked on a link in the subtechniques dropdown table.
