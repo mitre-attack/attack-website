@@ -135,6 +135,7 @@ def generate_group_md(group, side_menu_data, notes):
             data["name"],
             data["attack_id"],
             "group",
+            "used by",
             data["version"] if "version" in data else None,
             data["technique_table_data"],
             inheritance,  # extend legend to include color coding for inherited techniques, if applicable

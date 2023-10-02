@@ -1,5 +1,8 @@
 let mod_name = window.location.pathname.split("/")
 let mod_entry = "/" + mod_name[1] + "/sidebar-" + mod_name[1]
+if (mod_name.includes('contact')){
+    mod_entry = "/" + "resources/sidebar-resources"
+}
 $("#sidebars").load(mod_entry, function() {
     var navElements = document.querySelectorAll('.sidenav-head > a');
     var winlocation;

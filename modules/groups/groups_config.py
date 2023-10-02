@@ -1,6 +1,7 @@
 from string import Template
 
 module_name = "Groups"
+module_tab_name = "CTI"
 priority = 6
 
 # Markdown path for groups

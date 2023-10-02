@@ -1,6 +1,16 @@
 
 <!-- TOWNCRIER -->
 
+# v4.0.5 (2023-09-01)
+
+## Features
+
+* The sidebar is now collapsable and displayed properly in mobile view [#450](https://github.com/mitre-attack/attack-website/issues/450)
+
+## Bugfixes
+
+* Changed the UUID generation logic to use CONTENT_VERSION and WEBSITE_VERSION as seeds for idempotent UUID creation. This prevents the creation of redundant IndexedDB tables. [#455](https://github.com/mitre-attack/attack-website/issues/455)
+
 # v4.0.4 (2023-08-11)
 
 ## Features
