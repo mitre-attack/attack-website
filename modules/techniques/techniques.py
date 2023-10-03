@@ -58,6 +58,7 @@ def generate_techniques():
         if not technique_generated and check_if_generated:
             technique_generated = True
 
+    generate_sidebar_techniques(side_nav_data)
     if not technique_generated:
         util.buildhelpers.remove_module_from_menu(techniques_config.module_name)
 
@@ -647,3 +648,16 @@ def get_datasources_and_components_of_technique(technique, reference_list):
         datasource_and_components = sorted(datasource_and_components, key=lambda k: k["name"].lower())
 
     return datasource_and_components, show_descriptions
+
+def generate_sidebar_techniques(side_nav_data):
+    """Responsible for generating the sidebar for the technique pages."""
+    logger.info("Generating technique sidebar")
+    data = {}
+    data["menu"] = side_nav_data
+
+    # Sidebar Overview
+    sidebar_techniques_md = techniques_config.sidebar_techniques_md + json.dumps(data)
+
+    # write markdown to file
+    with open(os.path.join(techniques_config.techniques_markdown_path, "sidebar_techniques.md"), "w", encoding="utf8") as md_file:
+        md_file.write(sidebar_techniques_md)

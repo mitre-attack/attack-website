@@ -50,3 +50,9 @@ working_with_attack_md = (
     "save_as: resources/working-with-attack/index.html\n"
     "data: "
 )
+
+sidebar_resources_md = (
+    "Title: Resources Sidebar\n"
+    "Template: general/sidebar-resources \n"
+    "save_as: resources/sidebar-resources/index.html\n"
+)

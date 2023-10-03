@@ -67,7 +67,7 @@ def generate_markdown_files():
         data["campaigns_list_len"] = str(len(campaign_list_no_deprecated_revoked))
 
         subs = campaigns_config.campaign_index_md + json.dumps(data)
-
+        generate_sidebar_campaigns(side_menu_data)
         with open(
             os.path.join(campaigns_config.campaign_markdown_path, "overview.md"), "w", encoding="utf8"
         ) as md_file:
@@ -308,3 +308,16 @@ def get_software_table_data(campaign, reference_list):
     software_data = [software_list[item] for item in software_list]
     software_data = sorted(software_data, key=lambda k: k["name"].lower())
     return software_data
+
+def generate_sidebar_campaigns(side_menu_data):
+    """Responsible for generating the sidebar for the campaigns pages."""
+    logger.info("Generating campaigns sidebar")
+    data = {}
+    data["menu"] = side_menu_data
+
+    # Sidebar Overview
+    sidebar_campaigns_md = campaigns_config.sidebar_campaigns_md + json.dumps(data)
+
+    # write markdown to file
+    with open(os.path.join(campaigns_config.campaign_markdown_path, "sidebar_campaigns.md"), "w", encoding="utf8") as md_file:
+        md_file.write(sidebar_campaigns_md)

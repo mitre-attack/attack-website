@@ -58,6 +58,7 @@ def generate_resources():
     generate_attackcon_page()
     generate_faq_page()
     generate_static_pages()
+    generate_sidebar_resources()
 
 
 def copy_docs(module_docs_path):
@@ -368,6 +369,17 @@ def generate_working_with_attack():
     ) as md_file:
         md_file.write(working_with_attack_content)
 
+def generate_sidebar_resources():
+    """Responsible for generating the sidebar for the resource pages."""
+    logger.info("Generating resource sidebar")
+
+    # Sidebar Overview
+    sidebar_resources_md = resources_config.sidebar_resources_md
+
+    # write markdown to file
+    with open(os.path.join(site_config.resources_markdown_path, "sidebar_resources.md"), "w", encoding="utf8") as md_file:
+        md_file.write(sidebar_resources_md)
+
 def generate_contribute_page():
     """Responsible for generating the markdown pages of the contribute pages."""
     logger.info("Generating contributing page")
@@ -406,4 +418,3 @@ def generate_contribute_page():
         os.path.join(site_config.resources_markdown_path, "contribute.md"), "w", encoding="utf8"
     ) as md_file:
         md_file.write(subs)
-
