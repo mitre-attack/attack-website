@@ -4,8 +4,8 @@ if (mod_name.includes('contact')){
     mod_entry = "/" + "resources/sidebar-resources"
 }
 $("#sidebars").load(mod_entry, function() {
-    var navElements = document.querySelectorAll('.sidenav-head > a');
-    var winlocation;
+    let navElements = document.querySelectorAll('.sidenav-head > a');
+    let winlocation;
     navElements.forEach(function(element){
     if(!window.location.href.endsWith("/")){
         winlocation = window.location.href + "/";
@@ -21,7 +21,7 @@ $("#sidebars").load(mod_entry, function() {
     }});
 
     //This code is for creating a collapsable sidebar for the mobile view
-    var mediaQuery = window.matchMedia('(max-width: 47.9875rem)')
+    let mediaQuery = window.matchMedia('(max-width: 47.9875rem)')
     function mobileSidenav(e) {
         if (e.matches) {
             $('#sidebar-collapse').collapse('hide')
@@ -32,8 +32,11 @@ $("#sidebars").load(mod_entry, function() {
     }
     $(document).ready(function() {
         mobileSidenav(mediaQuery)
+        let sidenav = $(".sidenav-list");
         let sidenav_active_elements = $(".sidenav .active");
-        sidenav_active_elements[0].scrollIntoView({ block: 'nearest', inline: 'start' })
+        if (sidenav_active_elements.length > 0) setTimeout(() => { //setTimeout gives bootstrap time to execute first
+            sidenav[0].scrollTop = sidenav_active_elements[0].offsetTop - 60;
+        });
     });
 
     mediaQuery.addEventListener('change', mobileSidenav)
