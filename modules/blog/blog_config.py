@@ -1,2 +1,2 @@
 module_name = "Blog"
-priority = 9
+priority = 10

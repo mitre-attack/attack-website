@@ -247,6 +247,21 @@ def campaigns_attributed_to_group(srcs):
     return get_related(srcs, "campaign", "attributed-to", "intrusion-set", reverse=True)
 
 
+# technique:asset
+def techniques_targeting_assets(srcs):
+    """Return asset_id => {technique, relationship} for each technique targeting the asset.
+
+    srcs should be an array of memorystores for enterprise, mobile, and pre
+    """
+    return get_related(srcs, "attack-pattern", "targets", "x-mitre-asset", reverse=True)
+
+def assets_targeted_by_techniques(srcs):
+    """Return technique_id => {asset, relationship} for each asset targeted by the technique.
+
+    srcs should be an array of memorystores for enterprise, mobile, and pre
+    """
+    return get_related(srcs, "attack-pattern", "targets", "x-mitre-asset")
+
 # technique:malware
 def techniques_used_by_malware(srcs):
     """Return malware => {technique, relationship} for each technique used by the malware.

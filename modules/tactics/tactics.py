@@ -46,6 +46,7 @@ def generate_tactics():
         tactics[domain["name"]] = util.stixhelpers.get_tactic_list(ms[domain["name"]], domain["name"])
 
     side_nav_data = util.buildhelpers.get_side_nav_domains_data("tactics", tactics)
+    generate_sidebar_tactics(side_nav_data)
 
     for domain in site_config.domains:
         deprecated = True if domain["deprecated"] else False
@@ -188,3 +189,17 @@ def get_techniques_of_tactic(tactic, techniques):
 
     techniques_list = sorted(techniques_list, key=lambda k: k["name"].lower())
     return techniques_list
+
+def generate_sidebar_tactics(side_nav_data):
+    """Responsible for generating the sidebar for the tactics pages."""
+    logger.info("Generating tactics sidebar")
+    data = {}
+    data["menu"] = side_nav_data
+
+    # Sidebar Overview
+    sidebar_tactics_md = tactics_config.sidebar_tactics_md + json.dumps(data)
+
+    # write markdown to file
+    with open(os.path.join(tactics_config.tactics_markdown_path, "sidebar_tactics.md"), "w", encoding="utf8") as md_file:
+        md_file.write(sidebar_tactics_md)
+

@@ -30,6 +30,13 @@ platform_md = Template(
     "data: "
 )
 
+sidebar_matrices_md = (
+    "Title: Matrices Sidebar\n"
+    "Template: general/sidebar-template \n"
+    "save_as: matrices/sidebar-matrices/index.html\n"
+    "data: "
+)
+
 # The tree of matricies on /matrices/
 matrices = [
     {

@@ -781,10 +781,10 @@ No changes
 * Isif Ibrahima
 * Itamar Mizrahi, Cymptom
 * Ivan Sinyakov
+* Jack Burns, HubSpot
 * Janantha Marasinghe
 * Jaron Bradley @jbradley89
 * Jeff Felling, Red Canary
-* Jen Burns, HubSpot
 * Joas Antonio dos Santos, @C0d3Cr4zy
 * Johann Rehberger
 * Jon Sheedy
