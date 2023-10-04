@@ -7,14 +7,19 @@ $("#sidebars").load(mod_entry, function() {
     let navElements = document.querySelectorAll('.sidenav-head > a');
     let winlocation;
     navElements.forEach(function(element){
-    if(!window.location.href.endsWith("/")){
-        winlocation = window.location.href + "/";
+    if(!element.href.includes('changelog.html')){
+        if(!window.location.href.endsWith("/")){
+            winlocation = window.location.href + "/";
+        }
+        else{
+            winlocation = window.location.href
+        }
+        if(!element.href.endsWith("/")){
+            element.href = element.href + "/";
+        }
     }
     else{
         winlocation = window.location.href
-    }
-    if(!element.href.endsWith("/")){
-        element.href = element.href + "/";
     }
     if(element.href == winlocation){
         $(element.parentNode).addClass("active")
@@ -35,7 +40,11 @@ $("#sidebars").load(mod_entry, function() {
         let sidenav = $(".sidenav-list");
         let sidenav_active_elements = $(".sidenav .active");
         if (sidenav_active_elements.length > 0) setTimeout(() => { //setTimeout gives bootstrap time to execute first
-            sidenav[0].scrollTop = sidenav_active_elements[0].offsetTop - 60;
+            let offsetValue = sidenav_active_elements[0].offsetTop;
+            if (offsetValue <= 0){
+                offsetValue = sidenav_active_elements[sidenav_active_elements.length - 1].offsetTop;
+            }
+            sidenav[0].scrollTop = offsetValue - 60;
         });
     });
 
