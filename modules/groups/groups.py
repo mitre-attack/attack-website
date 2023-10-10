@@ -199,11 +199,22 @@ def get_groups_table_data(group_list):
     # Now the table on the right, which is made up of group data
     for group in group_list:
         attack_id = util.buildhelpers.get_attack_id(group)
+        domain_list = util.buildhelpers.get_domain_name(group)
+        print(domain_list)
+        print("####")
 
         if attack_id:
             row = {}
 
             row["id"] = attack_id
+
+            for domain_idx in range(len(domain_list)):
+                domain_list[domain_idx] = domain_list[domain_idx].replace('-attack','')
+                if domain_list[domain_idx] == "ics":
+                    domain_list[domain_idx] = domain_list[domain_idx].upper()
+                else:
+                    domain_list[domain_idx] = domain_list[domain_idx].capitalize()
+            row["domains"] = domain_list
 
             if group.get("name"):
                 row["name"] = group["name"]
