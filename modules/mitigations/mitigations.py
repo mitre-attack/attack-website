@@ -54,7 +54,7 @@ def generate_mitigations():
         if not mitigation_generated:
             if check_if_generated:
                 mitigation_generated = True
-
+    generate_sidebar_mitigations(side_nav_data)
     if not mitigation_generated:
         util.buildhelpers.remove_module_from_menu(mitigations_config.module_name)
 
@@ -137,6 +137,7 @@ def generate_mitigation_md(mitigation, domain, side_menu_data, notes):
             data["name"],
             data["attack_id"],
             "mitigation",
+            "mitigated by",
             data["version"] if "version" in data else None,
             data["techniques_addressed_data"],
         )
@@ -230,3 +231,16 @@ def get_techniques_addressed_data(mitigation, reference_list):
         technique_data, key=lambda k: [site_config.custom_alphabet.index(c) for c in k["domain"].lower()]
     )
     return technique_data
+
+def generate_sidebar_mitigations(side_nav_data):
+    """Responsible for generating the sidebar for the mitigations pages."""
+    logger.info("Generating mitigations sidebar")
+    data = {}
+    data["menu"] = side_nav_data
+
+    # Sidebar Overview
+    sidebar_mitigations_md = mitigations_config.sidebar_mitigations_md + json.dumps(data)
+
+    # write markdown to file
+    with open(os.path.join(mitigations_config.mitigation_markdown_path, "sidebar_mitigations.md"), "w", encoding="utf8") as md_file:
+        md_file.write(sidebar_mitigations_md)

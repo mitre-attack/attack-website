@@ -28,3 +28,10 @@ tactic_overview_md = (
 )
 
 tactics_redirection_location = "modules/tactics/tactics_redirections.json"
+
+sidebar_tactics_md = (
+    "Title: Tactics Sidebar\n"
+    "Template: general/sidebar-template \n"
+    "save_as: tactics/sidebar-tactics/index.html\n"
+    "data: "
+)
