@@ -31,6 +31,7 @@ def generate_website():
     )
     generate_javascript_settings()
     generate_base_html()
+    generate_sidebar_html()
     generate_index_page()
     generate_static_pages()
     generate_changelog_page()
@@ -143,6 +144,17 @@ def generate_base_html():
     with open(os.path.join(website_build_config.template_dir, "base.html"), "w", encoding="utf8") as base_template_f:
         base_template_f.write(subs)
 
+def generate_sidebar_html():
+        with open(
+            os.path.join(website_build_config.template_dir, "sidebar-resources-template.html"), "r", encoding="utf8"
+        ) as sidebar_template_f:
+            sidebar_template = sidebar_template_f.read()
+            sidebar_template = Template(sidebar_template)
+            subs = sidebar_template.substitute(website_build_config.sidebar_page_data)
+    
+        with open(os.path.join(website_build_config.template_dir, "sidebar-resources.html"), "w", encoding="utf8") as sidebar_template_f:
+            sidebar_template_f.write(subs)
+
 
 def generate_index_page():
     """Responsible for creating the landing page"""
@@ -168,6 +180,7 @@ def generate_index_page():
         "groups": "Group",
         "software": "Software",
         "campaigns": "Campaign",
+        "assets": "Asset",
     }
     routes = {}
 

@@ -20,7 +20,7 @@ Notes:
 -->
 {% macro sidenav(root, output_file, filter=False) %}
 <div class="sidenav-wrapper">
-  <div class="heading" data-toggle="collapse" data-target="#sidebar-collapse" id="v-home-tab" aria-selected="false">{{root.name | upper}}
+  <div class="heading" data-toggle="collapse" data-target="#sidebar-collapse" id="v-home-tab" aria-expanded="true" aria-controls="#sidebar-collapse" aria-selected="false">{{root.name | upper}}
     <i class="fa fa-fw fa-chevron-down"></i>
     <i class="fa fa-fw fa-chevron-up"></i>
   </div>
@@ -41,8 +41,7 @@ Notes:
   </div>
   {% endif %}
   <br class="br-mobile">
-  <div class="collapse show" id="sidebar-collapse">
-  <div class="sidenav-list">
+  <div class="sidenav-list collapse show" id="sidebar-collapse" aria-labelledby="v-home-tab">
     {# "overview" link as first item in list if root.path exists #}
     {% if root.path %}
 {{ sidenav_helper("0", {"name": "Overview", "id": "0", "path": root.path, "children": []}, output_file) }}
@@ -51,7 +50,6 @@ Notes:
 {{ sidenav_helper(child.id, child, output_file) }}
     {% endfor %}
   </div>
-</div>
 </div>
 {% endmacro %}
 

@@ -34,6 +34,11 @@ training_cti_md = (
     "Template: resources/training-cti\n"
     "save_as: resources/training/cti/index.html\n"
 )
+contribute_md = (
+    "Title: Contribute\n" "Template: resources/contribute\n" "save_as: resources/contribute/index.html\n" "data: "
+)
+
+contribute_redirection_location = "modules/resources/contribute_redirections.json"
 
 # Brand md
 brand_md = "Title: Brand\n" "Template: resources/brand\n" "save_as: resources/brand/index.html\n" "data: "
@@ -44,4 +49,10 @@ working_with_attack_md = (
     "Template: resources/working-with-attack\n"
     "save_as: resources/working-with-attack/index.html\n"
     "data: "
+)
+
+sidebar_resources_md = (
+    "Title: Resources Sidebar\n"
+    "Template: general/sidebar-resources \n"
+    "save_as: resources/sidebar-resources/index.html\n"
 )

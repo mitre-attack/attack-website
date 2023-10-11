@@ -55,10 +55,10 @@ def generate_techniques():
         check_if_generated = generate_domain_markdown(
             domain["name"], techniques_no_sub, tactics, side_nav_data, notes, deprecated
         )
-        if not technique_generated:
-            if check_if_generated:
-                technique_generated = True
+        if not technique_generated and check_if_generated:
+            technique_generated = True
 
+    generate_sidebar_techniques(side_nav_data)
     if not technique_generated:
         util.buildhelpers.remove_module_from_menu(techniques_config.module_name)
 
@@ -220,6 +220,9 @@ def generate_data_for_md(technique_dict, technique, tactic_list, is_sub_techniqu
             # Get examples
             technique_dict["examples_table"] = get_examples_table_data(technique, reference_list)
 
+            # Get asset table
+            technique_dict["assets_table"] = get_assets_table_data(technique, reference_list)
+
             # Get technique version
             if technique.get("x_mitre_version"):
                 technique_dict["version"] = technique["x_mitre_version"]
@@ -357,24 +360,58 @@ def get_mitigations_table_data(technique, reference_list):
             # Do not add deprecated mitigation to table
             if not mitigation["object"].get("x_mitre_deprecated"):
                 attack_id = util.buildhelpers.get_attack_id(mitigation["object"])
-
                 # Only add if mitigation attack id is found
-                if attack_id:
-                    row = {}
-                    row["mid"] = attack_id
-                    row["name"] = mitigation["object"]["name"]
-                    if mitigation["relationship"].get("description"):
-                        # Get filtered description
-                        reference_list = util.buildhelpers.update_reference_list(
-                            reference_list, mitigation["relationship"]
-                        )
-                        row["descr"] = mitigation["relationship"]["description"]
+                if not attack_id: continue
+                row = {}
+                row["mid"] = attack_id
+                row["name"] = mitigation["object"]["name"]
+                if mitigation["relationship"].get("description"):
+                    # Get filtered description
+                    reference_list = util.buildhelpers.update_reference_list(
+                        reference_list, mitigation["relationship"]
+                    )
+                    row["descr"] = mitigation["relationship"]["description"]
 
-                    mitigation_data.append(row)
+                mitigation_data.append(row)
 
     if mitigation_data:
         mitigation_data = sorted(mitigation_data, key=lambda k: k["name"].lower())
     return mitigation_data
+
+
+def get_assets_table_data(technique, reference_list):
+    """Given a technique a reference list, find assets that are targeted by the
+    technique and return list with asset data. Also modifies the
+    reference list if it finds a reference that is not on the list
+    """
+    asset_data = []
+
+    # Check if technique has assets
+    assets_targeted_by_techniques = util.relationshipgetters.get_assets_targeted_by_techniques().get(technique["id"])
+    if assets_targeted_by_techniques:
+        # Iterate through technique assets
+        for asset in assets_targeted_by_techniques:
+            # Do not add deprecated assets to table
+            if not asset["object"].get("x_mitre_deprecated"):
+                attack_id = util.buildhelpers.get_attack_id(asset["object"])
+
+                # Only add if attack id is found
+                if not attack_id: continue
+                row = {}
+                row["id"] = attack_id
+                row["name"] = asset["object"]["name"]
+                if asset["relationship"].get("description"):
+                    # Get filtered description
+                    reference_list = util.buildhelpers.update_reference_list(
+                        reference_list, asset["relationship"]
+                    )
+                    row["descr"] = asset["relationship"]["description"]
+
+                asset_data.append(row)
+
+    if asset_data:
+        asset_data = sorted(asset_data, key=lambda k: k["name"].lower())
+    return asset_data
 
 
 def get_examples_table_data(technique, reference_list):
@@ -399,23 +436,23 @@ def get_examples_table_data(technique, reference_list):
                 attack_id = util.buildhelpers.get_attack_id(example["object"])
 
                 # Only add example data if the attack id is found
-                if attack_id:
-                    row = {}
+                if not attack_id: continue
+                row = {}
 
-                    row["id"] = attack_id
+                row["id"] = attack_id
 
-                    row["path"] = get_path_from_type(example["object"])
+                row["path"] = get_path_from_type(example["object"])
 
-                    row["name"] = example["object"]["name"]
+                row["name"] = example["object"]["name"]
 
-                    if example["relationship"].get("description"):
-                        # Get filtered description
-                        reference_list = util.buildhelpers.update_reference_list(
-                            reference_list, example["relationship"]
-                        )
-                        row["descr"] = example["relationship"]["description"]
+                if example["relationship"].get("description"):
+                    # Get filtered description
+                    reference_list = util.buildhelpers.update_reference_list(
+                        reference_list, example["relationship"]
+                    )
+                    row["descr"] = example["relationship"]["description"]
 
-                    example_data.append(row)
+                example_data.append(row)
 
     if example_data:
         example_data = sorted(example_data, key=lambda k: k["name"].lower())
@@ -507,20 +544,21 @@ def get_techniques_list(techniques):
         if not technique.get("revoked") and not technique.get("x_mitre_deprecated"):
             attack_id = util.buildhelpers.get_attack_id(technique)
 
-            if attack_id:
-                technique_dict = {}
-                technique_dict["id"] = attack_id
-                technique_dict["stix_id"] = technique["id"]
-                technique_dict["name"] = technique["name"]
-                technique_dict["description"] = technique["description"]
+            if not attack_id: continue
 
-                if technique.get("kill_chain_phases"):
-                    for elem in technique["kill_chain_phases"]:
-                        # Fill dict
-                        if elem["phase_name"] not in technique_list:
-                            technique_list[elem["phase_name"]] = []
+            technique_dict = {}
+            technique_dict["id"] = attack_id
+            technique_dict["stix_id"] = technique["id"]
+            technique_dict["name"] = technique["name"]
+            technique_dict["description"] = technique["description"]
 
-                        technique_list[elem["phase_name"]].append(technique_dict)
+            if technique.get("kill_chain_phases"):
+                for elem in technique["kill_chain_phases"]:
+                    # Fill dict
+                    if elem["phase_name"] not in technique_list:
+                        technique_list[elem["phase_name"]] = []
+
+                    technique_list[elem["phase_name"]].append(technique_dict)
 
     for key, __ in technique_list.items():
         technique_list[key] = sorted(technique_list[key], key=lambda k: k["name"].lower())
@@ -531,8 +569,6 @@ def get_techniques_list(techniques):
 def get_subtechniques(technique):
     """Given a technique, return the ID and name of the subtechnique."""
     subtechs = []
-    attack_id = util.buildhelpers.get_attack_id(technique)
-
     subtechniques_of = util.relationshipgetters.get_subtechniques_of()
 
     if technique["id"] in subtechniques_of:
@@ -612,3 +648,16 @@ def get_datasources_and_components_of_technique(technique, reference_list):
         datasource_and_components = sorted(datasource_and_components, key=lambda k: k["name"].lower())
 
     return datasource_and_components, show_descriptions
+
+def generate_sidebar_techniques(side_nav_data):
+    """Responsible for generating the sidebar for the technique pages."""
+    logger.info("Generating technique sidebar")
+    data = {}
+    data["menu"] = side_nav_data
+
+    # Sidebar Overview
+    sidebar_techniques_md = techniques_config.sidebar_techniques_md + json.dumps(data)
+
+    # write markdown to file
+    with open(os.path.join(techniques_config.techniques_markdown_path, "sidebar_techniques.md"), "w", encoding="utf8") as md_file:
+        md_file.write(sidebar_techniques_md)
