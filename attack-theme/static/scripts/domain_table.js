@@ -1,21 +1,30 @@
-function filter_rows() {
+function filter_row(selected) {
     col_index = 3
     const domainOptions = document.getElementById("domain-options");
-    filter_value = domainOptions.getAttribute("data-selected_domain");
+
 
     const rows = document.querySelectorAll("#ds-table tbody tr");
-    let count = 0
+    let count = 0;
     rows.forEach((row) => {
-        var display_row = true;
+        let row_count = 0
+        var row_visited = false;
         row_data = row.querySelector("td:nth-child(" + col_index + ")").innerHTML
-        if (row_data.indexOf(filter_value) == -1 && filter_value != "All") {
-            display_row = false;
+        for(let i = 0; i<selected.length; i++){
+            filter_value = selected[i];
+            var display_row = true;
+            if (row_data.indexOf(filter_value) == -1 && !row_visited) {
+                display_row = false;
+            }
+            if (display_row == true) {
+                row.style.display = "table-row";
+                row_visited = "true";
+                row_count = row_count + 1;
+            } else {
+                row.style.display = "none"
+            }
         }
-        if (display_row == true) {
-            row.style.display = "table-row"
-            count = count + 1
-        } else {
-            row.style.display = "none"
+        if(row_count > 0){
+            count = count + 1;
         }
     })
     filter_count = document.querySelector(".table-object-count")
@@ -23,51 +32,74 @@ function filter_rows() {
 }
 
 $(document).ready(function() {
-    filter_rows()
+    var arrow_up = document.getElementById("arrow-up-0");
+    var arrow_down = document.getElementById("arrow-down-0");
+    arrow_down.style.display = "inline-block";
+    arrow_up.style.display = "none";
+    arrow_up = document.getElementById("arrow-up-1");
+    arrow_down = document.getElementById("arrow-down-1");
+    arrow_down.style.display = "inline-block";
+    arrow_up.style.display = "none";
 });
   
-function showAllDomains() {
-    const domainOptions = document.getElementById("domain-options");
-    domainOptions.setAttribute("data-selected_domain", "All");
-    domainOptions.innerHTML = "Domain: All";
-    filter_rows();
-}
-
-
-function showEnterprise() {
-    const domainOptions = document.getElementById("domain-options");
-    domainOptions.setAttribute("data-selected_domain", "Enterprise");
-    domainOptions.innerHTML = "Domain: Enterprise";
-    filter_rows();
-}
-
-/**
- * Display the flat matrix domain and save the domain.
- */
-function showMobile() {
-    const domainOptions = document.getElementById("domain-options");
-    domainOptions.setAttribute("data-selected_domain", "Mobile");
-    domainOptions.innerHTML = "Domain: Mobile";
-    filter_rows();
-}
-
-function showIcs() {
-    const domainOptions = document.getElementById("domain-options");
-    domainOptions.setAttribute("data-selected_domain", "ICS");
-    domainOptions.innerHTML = "Domain: ICS";
-    filter_rows();
+function showtry() {
+    var selected = [];
+    if($("#filterMenu input:checked").length <= 0){
+        $('#filterMenu input:checkbox').each(function() {
+            selected.push($(this).attr('id'));
+            $(this).prop("checked", "true");
+        });
+    }
+    else{
+        $('#filterMenu input:checked').each(function() {
+            selected.push($(this).attr('id'));
+            
+        });
+    }
+    filter_row(selected);
 }
 
 function sortTable(col_no) {
     var table = document.getElementById("ds-table");
+    var dir = "asc";
+    var switching = true;
+    var switching_needed = false;
+    var arrow_up = document.getElementById("arrow-up-"+col_no);
+    var arrow_down = document.getElementById("arrow-down-"+col_no);
+    arrow_down.style.display = "inline-block";
+    arrow_up.style.display = "none";
     rows = table.rows;
-      for (let i = 1; i <= (rows.length - 1); i++) {
-        for (let j = 1; j <= (rows.length - i - 1); j++) {
-            var x = rows[j].getElementsByTagName("TD")[col_no];
-            var y = rows[j + 1].getElementsByTagName("TD")[col_no];
-            if(x.innerText.toLowerCase() > y.innerText.toLowerCase()){
-                rows[j].parentNode.insertBefore(rows[j + 1], rows[j]);
+    while (switching) {
+        switching = false;
+        if (dir == "desc"){
+        for (let i = 1; i <= (rows.length - 1); i++) {
+            for (let j = 1; j <= (rows.length - i - 1); j++) {
+                var x = rows[j].getElementsByTagName("TD")[col_no];
+                var y = rows[j + 1].getElementsByTagName("TD")[col_no];
+                
+                    if(x.innerText.toLowerCase() < y.innerText.toLowerCase()){
+                        rows[j].parentNode.insertBefore(rows[j + 1], rows[j]);
+                    }
+                }
+            }
+            arrow_up.style.display = "inline-block";
+            arrow_down.style.display = "none";
+        }
+        else{
+            for (let i = 1; i <= (rows.length - 1); i++) {
+                for (let j = 1; j <= (rows.length - i - 1); j++) {
+                    var x = rows[j].getElementsByTagName("TD")[col_no];
+                    var y = rows[j + 1].getElementsByTagName("TD")[col_no];
+                    if(x.innerText.toLowerCase() > y.innerText.toLowerCase()){
+                        rows[j].parentNode.insertBefore(rows[j + 1], rows[j]);
+                        switching_needed = true;
+                    }
+                }
             }
         }
-  }
+        if (dir == "asc" && !switching_needed) {
+            dir = "desc";
+            switching = true;
+        }
+    }
 }

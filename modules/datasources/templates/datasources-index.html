@@ -8,7 +8,7 @@
 {% block innerleft %}
 <!--stop-indexing-for-search-->
 <div id="v-tab" role="tablist" aria-orientation="vertical" class="h-100">
-        {{ navigation.sidenav(parsed.side_menu_data, output_file, true) }} 
+        {{ navigation.sidenav(parsed.side_menu_data, output_file) }} 
     </div>
 <!--start-indexing-for-search-->
 {% endblock %}
@@ -27,34 +27,35 @@
                     <div class="overflow-x-auto">
                         <h1>Data Sources</h1>
                         <p>Data sources represent the various subjects/topics of information that can be collected by sensors/logs. Data sources also include data components, which identify specific properties/values of a data source relevant to detecting a given ATT&CK technique or sub-technique.</p>
-                        <div class="domain-display">
-                                <button class="btn btn-default dropdown-toggle" id="domain-options" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-selected_domain="All">Domain: All</button>
-                                <div class="dropdown-menu" aria-labelledby="domain-options">
-                                    <a class="dropdown-item domain-button All" onclick="showAllDomains()">
-                                        All
-                                    </a>
-                                    <a class="dropdown-item domain-button Enterprise" onclick="showEnterprise()">
-                                        Enterprise
-                                    </a>
-                                    <a class="dropdown-item domain-button Mobile" onclick="showMobile();">
-                                        Mobile
-                                    </a>
-                                    <a class="dropdown-item domain-button ICS" onclick="showIcs();">
-                                        ICS
-                                    </a>
-                            </div>
-                    </div>
                         <h6 class="table-object-count"></h6>
                         <table class="table table-bordered table-alternate mt-2" id="ds-table">
                             <thead>
                                 <tr>
                                     <th scope="col" onclick="sortTable(0)">ID
-                                        <i class="fa fa-fw fa-chevron-down"></i>
+                                        <i id="arrow-down-0" class="fa fa-fw fa-chevron-down arrow-down-0"></i>
+                                        <i id="arrow-up-0" class="fa fa-fw fa-chevron-up arrow-up-0"></i>
                                     </th>
                                     <th scope="col" onclick="sortTable(1)">Name
-                                        <i class="fa fa-fw fa-chevron-down"></i>
+                                        <i id="arrow-down-1" class="fa fa-fw fa-chevron-down arrow-down-1"></i>
+                                        <i id="arrow-up-1" class="fa fa-fw fa-chevron-up arrow-up-1"></i>
                                     </th>
-                                    <th scope="col">Domain</th>
+                                    <th scope="col">Domain
+                                        <i class="fa fa-filter" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
+                                        <div id="filterMenu" class="dropdown-menu" aria-labelledby="domain-options">
+                                            <div class="custom-control custom-switch">
+                                                <input type="checkbox" checked="checked" class="custom-control-input" id="Enterprise" onchange="showtry()">
+                                                <label class="custom-control-label" for="Enterprise">Enterprise</label>
+                                              </div>
+                                              <div class="custom-control custom-switch">
+                                                <input type="checkbox" checked="checked" class="custom-control-input" id="Mobile" onchange="showtry()">
+                                                <label class="custom-control-label" for="Mobile">Mobile</label>
+                                              </div>
+                                              <div class="custom-control custom-switch">
+                                                <input type="checkbox" checked="checked" class="custom-control-input" id="ICS" onchange="showtry()">
+                                                <label class="custom-control-label" for="ICS">ICS</label>
+                                              </div>
+                                  </div>
+                                    </th>
                                     <th scope="col">Description</th>
                                 </tr>
                             </thead>
