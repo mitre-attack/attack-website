@@ -1,8 +1,5 @@
 function filter_row(selected) {
     col_index = 3
-    const domainOptions = document.getElementById("domain-options");
-
-
     const rows = document.querySelectorAll("#ds-table tbody tr");
     let count = 0;
     rows.forEach((row) => {
@@ -40,9 +37,10 @@ $(document).ready(function() {
     arrow_down = document.getElementById("arrow-down-1");
     arrow_down.style.display = "inline-block";
     arrow_up.style.display = "none";
+    showDomain();
 });
   
-function showtry() {
+function showDomain() {
     var selected = [];
     if($("#filterMenu input:checked").length <= 0){
         $('#filterMenu input:checkbox').each(function() {
@@ -61,22 +59,21 @@ function showtry() {
 
 function sortTable(col_no) {
     var table = document.getElementById("ds-table");
-    var dir = "asc";
-    var switching = true;
-    var switching_needed = false;
+    var direction = "asc";
+    var table_switching = true;
+    var asc_direction = false;
     var arrow_up = document.getElementById("arrow-up-"+col_no);
     var arrow_down = document.getElementById("arrow-down-"+col_no);
     arrow_down.style.display = "inline-block";
     arrow_up.style.display = "none";
     rows = table.rows;
-    while (switching) {
-        switching = false;
-        if (dir == "desc"){
-        for (let i = 1; i <= (rows.length - 1); i++) {
-            for (let j = 1; j <= (rows.length - i - 1); j++) {
-                var x = rows[j].getElementsByTagName("TD")[col_no];
-                var y = rows[j + 1].getElementsByTagName("TD")[col_no];
-                
+    while (table_switching) {
+        table_switching = false;
+        if (direction == "desc"){
+            for (let i = 1; i <= (rows.length - 1); i++) {
+                for (let j = 1; j <= (rows.length - i - 1); j++) {
+                    var x = rows[j].getElementsByTagName("TD")[col_no];
+                    var y = rows[j + 1].getElementsByTagName("TD")[col_no];
                     if(x.innerText.toLowerCase() < y.innerText.toLowerCase()){
                         rows[j].parentNode.insertBefore(rows[j + 1], rows[j]);
                     }
@@ -92,14 +89,14 @@ function sortTable(col_no) {
                     var y = rows[j + 1].getElementsByTagName("TD")[col_no];
                     if(x.innerText.toLowerCase() > y.innerText.toLowerCase()){
                         rows[j].parentNode.insertBefore(rows[j + 1], rows[j]);
-                        switching_needed = true;
+                        asc_direction = true;
                     }
                 }
             }
         }
-        if (dir == "asc" && !switching_needed) {
-            dir = "desc";
-            switching = true;
+        if (direction == "asc" && !asc_direction) {
+            direction = "desc";
+            table_switching = true;
         }
     }
 }
