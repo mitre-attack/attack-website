@@ -1,3 +1,4 @@
+// this function filters table rows based on the selection
 function filter_row(selected) {
     col_index = 3
     const rows = document.querySelectorAll("#ds-table tbody tr");
@@ -39,7 +40,8 @@ $(document).ready(function() {
     arrow_up.style.display = "none";
     showDomain();
 });
-  
+
+// this function determines which domain options were checked
 function showDomain() {
     var selected = [];
     if($("#filterMenu input:checked").length <= 0){
@@ -57,6 +59,7 @@ function showDomain() {
     filter_row(selected);
 }
 
+// this function sorts the table based on either ID or Name
 function sortTable(col_no) {
     var table = document.getElementById("ds-table");
     var direction = "asc";
