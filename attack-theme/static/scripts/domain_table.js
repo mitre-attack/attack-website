@@ -1,12 +1,12 @@
 // this function filters table rows based on the selection
 function filter_row(selected) {
-    var col_index = 3
+    let col_index = 3
     const rows = document.querySelectorAll("#ds-table tbody tr");
     let count = 0;
     rows.forEach((row) => {
         let row_count = 0
         let row_visited = false;
-        var row_data = row.querySelector("td:nth-child(" + col_index + ")").innerHTML
+        let row_data = row.querySelector("td:nth-child(" + col_index + ")").innerHTML
         for(let i = 0; i<selected.length; i++){
             let filter_value = selected[i];
             let display_row = true;
@@ -25,7 +25,7 @@ function filter_row(selected) {
             count = count + 1;
         }
     })
-    var filter_count = document.querySelector(".table-object-count")
+    let filter_count = document.querySelector(".table-object-count")
     filter_count.innerHTML = `Data Sources: ${count}`
 }
 
@@ -69,7 +69,7 @@ function sortTable(col_no) {
     let arrow_down = document.getElementById("arrow-down-"+col_no);
     arrow_down.style.display = "inline-block";
     arrow_up.style.display = "none";
-    var rows = table.rows;
+    let rows = table.rows;
     while (table_switching) {
         table_switching = false;
         if (direction == "desc"){
