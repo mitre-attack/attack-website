@@ -8,7 +8,7 @@
 {% block innerleft %}
 <!--stop-indexing-for-search-->
 <div id="v-tab" role="tablist" aria-orientation="vertical" class="h-100">
-        {{ navigation.sidenav(parsed.side_menu_data, output_file, true) }} 
+        {{ navigation.sidenav(parsed.side_menu_data, output_file) }} 
     </div>
 <!--start-indexing-for-search-->
 {% endblock %}
@@ -27,13 +27,35 @@
                     <div class="overflow-x-auto">
                         <h1>Data Sources</h1>
                         <p>Data sources represent the various subjects/topics of information that can be collected by sensors/logs. Data sources also include data components, which identify specific properties/values of a data source relevant to detecting a given ATT&CK technique or sub-technique.</p>
-                        <h6 class="table-object-count">Data Sources: {{ parsed.datasources_list_len }}</h6>
-                        <table class="table table-bordered table-alternate mt-2">
+                        <h6 class="table-object-count"></h6>
+                        <table class="table table-bordered table-alternate mt-2" id="ds-table">
                             <thead>
                                 <tr>
-                                    <th scope="col">ID</th>
-                                    <th scope="col">Name</th>
-                                    <th scope="col">Domain</th>
+                                    <th scope="col" onclick="sortTable(0)">ID
+                                        <i id="arrow-down-0" class="fa fa-fw fa-chevron-down arrow-down-0"></i>
+                                        <i id="arrow-up-0" class="fa fa-fw fa-chevron-up arrow-up-0"></i>
+                                    </th>
+                                    <th scope="col" onclick="sortTable(1)">Name
+                                        <i id="arrow-down-1" class="fa fa-fw fa-chevron-down arrow-down-1"></i>
+                                        <i id="arrow-up-1" class="fa fa-fw fa-chevron-up arrow-up-1"></i>
+                                    </th>
+                                    <th scope="col">Domain
+                                        <i class="fa fa-filter" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
+                                        <div id="filterMenu" class="dropdown-menu data-sources-menu" aria-labelledby="domain-options">
+                                            <div class="custom-control custom-switch dropdown-item">
+                                                <input type="checkbox" checked="checked" id="Enterprise" onchange="showDomain()">
+                                                <label for="Enterprise">Enterprise</label>
+                                              </div>
+                                              <div class="custom-control custom-switch dropdown-item">
+                                                <input type="checkbox" checked="checked" id="Mobile" onchange="showDomain()">
+                                                <label for="Mobile">Mobile</label>
+                                              </div>
+                                              <div class="custom-control custom-switch dropdown-item">
+                                                <input type="checkbox" checked="checked" id="ICS" onchange="showDomain()">
+                                                <label for="ICS">ICS</label>
+                                              </div>
+                                  </div>
+                                    </th>
                                     <th scope="col">Description</th>
                                 </tr>
                             </thead>
@@ -76,4 +98,5 @@
     <script src="/theme/scripts/filter/filter.js?{{ range(1, 9002) | random }}""></script>
     <script src="/theme/scripts/mobileview-datasources.js"></script>
     <script src="/theme/scripts/navigation.js"></script>
+    <script src="/theme/scripts/domain_table.js"></script>
 {% endblock %}
