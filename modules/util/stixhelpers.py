@@ -409,7 +409,7 @@ def get_stix_memory_stores():
         if domain["location"].startswith("http"):
             download_stix_file(url=domain["location"], download_dir=stix_output_dir, filepath=stix_filename)
         else:
-            shutil.copy(domain["location"], str(stix_output_dir))
+            shutil.copy(domain["location"], str(stix_filename))
 
         if os.path.exists(stix_filename):
             logger.info(f"Loading STIX file from: {stix_filename}")
