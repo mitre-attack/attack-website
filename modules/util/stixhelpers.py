@@ -408,7 +408,8 @@ def get_stix_memory_stores():
             ms[domain["name"]] = stix2.MemoryStore()
             ms[domain["name"]].load_from_file(stix_filename)
         else:
-            exit(f"\n{stix_filename} file does not exist.")
+            logger.error(f"\n{stix_filename} file does not exist.")
+            exit()
 
         if not domain["deprecated"]:
             srcs.append(ms[domain["name"]])
