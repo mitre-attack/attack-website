@@ -407,7 +407,7 @@ def get_stix_memory_stores():
         # Download json from http or https
         stix_filename = f"{stix_output_dir}/{domain['name']}.json"
         if domain["location"].startswith("http"):
-            download_stix_file(url=domain["location"], download_dir=stix_output_dir, filepath=stix_filename)
+            download_stix_file(url=domain["location"], filepath=stix_filename)
         else:
             shutil.copy(domain["location"], str(stix_filename))
 
