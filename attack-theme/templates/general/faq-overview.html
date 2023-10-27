@@ -1,6 +1,6 @@
 {% extends "general/two-column.html" %} 
 {% set active_page = "resources" -%}
-{% set title = "FAQ - " + page.title + " | MITRE ATT&CK&reg;" -%} 
+{% set title = "FAQ | MITRE ATT&CK&reg;" -%} 
 {% set parsed = page.data | from_json %}
 {% import 'macros/navigation.html' as navigation %}
 
@@ -17,44 +17,51 @@
             <li class="breadcrumb-item">FAQ</li>
     </ol>
 </div>
+
 <div class="container pb-3 uniform-block">
     <h1 class="text-center">Frequently Asked Questions</h1>
     <div class="card-block faq">
-        <div class="clearfix pb-3">
-            <h2>{{parsed.name}}</h2>
-            <div>
-                <h3>Table of Contents</h3>
-                <ol>
-                <h5>
-                {% for qa in parsed.questions %}
-                
-                <li>
-                    <a href="#{{qa.id}}-header">{{qa.question}}</a>
-                </li>
-                {% endfor %}
-            </h5>
-            </ol>
-            <hr color="black">
-            </div>
-            <div>
-                <ol>
-                {% for qa in parsed.questions %}
+        <h2>Table of Contents</h2>
+        <ol>
+            <div class="clearfix pb-3">
+                {% for section in parsed.sections %}
                 <div>
-                    <div class="card-title" id="{{qa.id}}-header">
-                    <li>
-                        {{qa.question}}
-                    </li>
-                    </div>
-                    <div class="card-data">
-                        {{qa.answer}}
-                    </div>
-                    <hr>
-                
-            </div>
+                    <h5>
+                        <li>
+                            {{section.name}}
+                            <ol type="i">
+                                {% for qa in section.questions %}
+                                <li>
+                                    <a href="#{{qa.id}}-header">{{qa.question}}</a>
+                                </li>
+                                {% endfor %}
+                            </ol>
+                        </li>
+                    </h5>
+                </div>
                 {% endfor %}
-            </ol>
+                <div>
+                    {% for section in parsed.sections %}
+                        <h2>{{section.name}}</h2>
+                        <ol>
+                            {% for qa in section.questions %}
+                                <div>
+                                    <div class="card-title" id="{{qa.id}}-header">
+                                        <li>
+                                            {{qa.question}}
+                                        </li>
+                                    </div>
+                                    <div class="card-data">
+                                        {{qa.answer}}
+                                    </div>
+                                    <hr>
+                            </div>
+                            {% endfor %}
+                        </ol>
+                    {% endfor %}
+                </div>
             </div>
-        </div>
+        </ol>
     </div>
 </div>
 {% endblock %}

@@ -24,6 +24,11 @@ attackcon_md = (
 # Training md
 training_md = "Title: ATT&CK Training\n" "Template: resources/training\n" "save_as: resources/training/index.html\n"
 
+# # FAQ md
+# faq_md = (
+#     "Title: Frequently Asked Questions\n" "Template: general/faq-overview\n" "save_as: resources/faq/index.html\n" "data: "
+# )
+
 # FAQ md
 faq_md = (
     "Title: Frequently Asked Questions\n" "Template: general/faq-overview\n" "save_as: resources/faq/index.html\n" "data: "
