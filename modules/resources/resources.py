@@ -1,9 +1,9 @@
 import json
+import math
 import os
 import shutil
 from datetime import datetime
 from pathlib import Path
-import math
 
 from loguru import logger
 from mitreattack.attackToExcel import attackToExcel
@@ -15,7 +15,7 @@ from . import resources_config
 
 
 def generate_resources():
-    """Responsible for generating the resources pages"""
+    """Responsible for generating the resources pages."""
     logger.info("Generating Resources")
     # Create content pages directory if does not already exist
     util.buildhelpers.create_content_pages_dir()
@@ -331,23 +331,18 @@ def generate_working_with_attack():
     if not os.path.isdir(docs_dir):
         os.makedirs(docs_dir)
 
+    ms = util.relationshipgetters.get_ms()
+
     for domain in site_config.domains:
         if domain["deprecated"]:
             continue
 
-        # TODO: refactor this to use a function rather than copy/paste from modules/util/stixhelpers.py
-        # this can be used because it was called previously in modules/util/stixhelpers.py to download the file
-        if domain["location"].startswith("http"):
-            download_dir = Path(f"{site_config.web_directory}/stix")
-            stix_filename = f"{download_dir}/{domain['name']}.json"
-        else:
-            stix_filename = domain["location"]
-
+        domain_name = domain["name"]
         attackToExcel.export(
-            domain=domain["name"],
+            domain=domain_name,
             version=site_config.full_attack_version,
             output_dir=docs_dir,
-            stix_file=stix_filename,
+            mem_store=ms[domain_name],
         )
 
     files_json = {"excel_files": []}
@@ -369,6 +364,7 @@ def generate_working_with_attack():
     ) as md_file:
         md_file.write(working_with_attack_content)
 
+
 def generate_sidebar_resources():
     """Responsible for generating the sidebar for the resource pages."""
     logger.info("Generating resource sidebar")
@@ -379,6 +375,7 @@ def generate_sidebar_resources():
     # write markdown to file
     with open(os.path.join(site_config.resources_markdown_path, "sidebar_resources.md"), "w", encoding="utf8") as md_file:
         md_file.write(sidebar_resources_md)
+
 
 def generate_contribute_page():
     """Responsible for generating the markdown pages of the contribute pages."""
