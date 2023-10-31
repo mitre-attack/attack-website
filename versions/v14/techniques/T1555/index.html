@@ -1,0 +1,1453 @@
+
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+            <script async src="https://www.googletagmanager.com/gtag/js?id=UA-62667723-1"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'UA-62667723-1');
+        </script>
+        <meta name="google-site-verification" content="2oJKLqNN62z6AOCb0A0IXGtbQuj-lev5YPAHFF_cbHQ"/>
+
+        <meta charset='utf-8'>
+        <meta name='viewport' content='width=device-width, initial-scale=1,shrink-to-fit=no'>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <link rel='shortcut icon' href="/versions/v14/theme/favicon.ico" type='image/x-icon'>
+        <title>Credentials from Password Stores, Technique T1555 - Enterprise | MITRE ATT&CK&reg;</title>
+        <!-- Bootstrap CSS -->
+        <link rel='stylesheet' href="/versions/v14/theme/style/bootstrap.min.css" />
+        <link rel='stylesheet' href="/versions/v14/theme/style/bootstrap-glyphicon.min.css" />
+        <link rel='stylesheet' href="/versions/v14/theme/style/bootstrap-tourist.css" />
+        <link rel='stylesheet' href="/versions/v14/theme/style/bootstrap-select.min.css" />
+        <link rel="stylesheet" type="text/css" href="/versions/v14/theme/style.min.css?d548d7ba">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+</head>
+
+<body>
+
+    <div class="container-fluid attack-website-wrapper d-flex flex-column h-100">
+        <div class="row sticky-top flex-grow-0 flex-shrink-1">
+            <!-- header elements -->
+            <header class="col px-0">
+    
+                    <nav class='navbar navbar-expand-lg navbar-dark position-static'>
+        <a class='navbar-brand' href="/versions/v14/"><img src="/versions/v14/theme/images/mitre_attack_logo.png" class="attack-logo"></a>
+        <button class='navbar-toggler' type='button' data-toggle='collapse' data-target='#navbarCollapse'
+                aria-controls='navbarCollapse' aria-expanded='false' aria-label='Toggle navigation'>
+                <span class='navbar-toggler-icon'></span>
+        </button>
+        <div class='collapse navbar-collapse' id='navbarCollapse'>
+            <ul class='nav nav-tabs ml-auto'>
+                        <li class="nav-item dropdown">
+                                
+    <a class="nav-link dropdown-toggle" href="/versions/v14/matrices/" id="navbarDropdown" role="button"
+    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <b>Matrices</b>
+    </a>
+    <div class="dropdown-menu " aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="/versions/v14/matrices/enterprise/">Enterprise</a>
+                <a class="dropdown-item" href="/versions/v14/matrices/mobile/">Mobile</a>
+                <a class="dropdown-item" href="/versions/v14/matrices/ics/">ICS</a>
+    </div>
+
+
+                        </li>
+                        <li class="nav-item dropdown">
+                                
+    <a class="nav-link dropdown-toggle" href="/versions/v14/tactics/" id="navbarDropdown" role="button"
+    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <b>Tactics</b>
+    </a>
+    <div class="dropdown-menu " aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="/versions/v14/tactics/enterprise/">Enterprise</a>
+                <a class="dropdown-item" href="/versions/v14/tactics/mobile/">Mobile</a>
+                <a class="dropdown-item" href="/versions/v14/tactics/ics/">ICS</a>
+    </div>
+
+
+                        </li>
+                        <li class="nav-item dropdown">
+                                
+    <a class="nav-link dropdown-toggle" href="/versions/v14/techniques/" id="navbarDropdown" role="button"
+    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <b>Techniques</b>
+    </a>
+    <div class="dropdown-menu " aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="/versions/v14/techniques/enterprise/">Enterprise</a>
+                <a class="dropdown-item" href="/versions/v14/techniques/mobile/">Mobile</a>
+                <a class="dropdown-item" href="/versions/v14/techniques/ics/">ICS</a>
+    </div>
+
+
+                        </li>
+                        <li class="nav-item dropdown">
+                                
+    <a class="nav-link dropdown-toggle" href="/versions/v14/datasources" id="navbarDropdown" role="button"
+    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <b>Defenses</b>
+    </a>
+    <div class="dropdown-menu " aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="/versions/v14/datasources">Data Sources</a>
+                
+<div class="dropright dropdown">
+<a class="dropdown-item dropdown-toggle" href="/versions/v14/mitigations/" id="navbarDropdown" role="button"
+    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <b>Mitigations</b>
+    </a>
+    <div class="dropdown-menu " aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="/versions/v14/mitigations/enterprise/">Enterprise</a>
+            <a class="dropdown-item" href="/versions/v14/mitigations/mobile/">Mobile</a>
+            <a class="dropdown-item" href="/versions/v14/mitigations/ics/">ICS</a>
+    </div>
+</div>
+
+                <a class="dropdown-item" href="/versions/v14/assets">Assets</a>
+    </div>
+
+
+                        </li>
+                        <li class="nav-item dropdown">
+                                
+    <a class="nav-link dropdown-toggle" href="/versions/v14/groups" id="navbarDropdown" role="button"
+    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <b>CTI</b>
+    </a>
+    <div class="dropdown-menu " aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="/versions/v14/groups">Groups</a>
+                <a class="dropdown-item" href="/versions/v14/software">Software</a>
+                <a class="dropdown-item" href="/versions/v14/campaigns">Campaigns</a>
+    </div>
+
+
+                        </li>
+                        <li class="nav-item dropdown">
+                                
+    <a class="nav-link dropdown-toggle" href="/versions/v14/resources/" id="navbarDropdown" role="button"
+    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <b>Resources</b>
+    </a>
+    <div class="dropdown-menu " aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="/versions/v14/resources/">General Information</a>
+                <a class="dropdown-item" href="/versions/v14/resources/getting-started/">Getting Started</a>
+                <a class="dropdown-item" href="/versions/v14/resources/contribute/">Contribute</a>
+                <a class="dropdown-item" href="/versions/v14/resources/training/">Training</a>
+                <a class="dropdown-item" href="/versions/v14/resources/attackcon/">ATT&CKcon</a>
+                <a class="dropdown-item" href="/versions/v14/resources/working-with-attack/">Working with ATT&CK</a>
+                <a class="dropdown-item" href="/versions/v14/resources/faq/">FAQ</a>
+                <a class="dropdown-item" href="/resources/updates/">Updates</a>
+                <a class="dropdown-item" href="/resources/versions/">Versions of ATT&CK</a>
+                <a class="dropdown-item" href="/versions/v14/resources/related-projects/">Related Projects</a>
+                <a class="dropdown-item" href="/versions/v14/resources/brand/">Brand Guide</a>
+    </div>
+
+
+                        </li>
+                        <li class="nav-item">
+                            <a href="/versions/v14/resources/benefactors/"  class="nav-link" ><b>Benefactors</b></a>
+                        </li>
+                        <li class="nav-item">
+                                <a href="https://medium.com/mitre-attack/" target="_blank" class="nav-link">
+        <b>Blog</b>&nbsp;
+        <img src="/versions/v14/theme/images/external-site.svg" alt="External site" class="external-icon" />
+    </a>
+
+                        </li>
+                        <li class="nav-item">
+                            <button id="search-button" class="btn search-button">Search <div id="search-icon" class="icon-button search-icon"></div></button>
+                        </li>
+            </ul>
+        </div>
+    </nav>
+
+            </header>
+        </div>
+        <div class="row flex-grow-0 flex-shrink-1">
+            <!-- banner elements -->
+            <div class="col px-0">
+                <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
+                <div class="container-fluid version-banner"><div class="icon-inline baseline mr-1"><img src="/versions/v14/theme/images/icon-warning-24px.svg"></div>Currently viewing <a href="https://github.com/mitre/cti/releases/tag/ATT%26CK-v14.0" target="_blank">ATT&CK v14.0</a> which is the current version of ATT&CK. <a href="/resources/versions/">Learn more about the versioning system</a> or <a href="/">see the live site</a>.</div>
+                    <div class="container-fluid d-none">
+                        ATT&CK v14 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v14-fa473603f86b'>blog post</a> or <a href='https://attack.mitre.org/resources/updates/updates-october-2023/'>release notes</a> for more information.
+                    </div>
+            </div>
+        </div>
+        <div class="row flex-grow-1 flex-shrink-0">
+            <!-- main content elements -->
+            <!--start-indexing-for-search-->
+
+ 
+     
+    <div class="sidebar nav sticky-top flex-column pr-0 pt-4 pb-3 pl-3" id="v-tab" role="tablist" aria-orientation="vertical">
+        <div class="resizer" id="resizer"></div>
+<!--stop-indexing-for-search-->
+<div id="sidebars"></div>
+<!--start-indexing-for-search-->
+    </div>
+
+    
+     
+    <div class="tab-content col-xl-9 col-lg-9 col-md-8 pt-4" id="v-tabContent">
+        <div class="tab-pane fade show active" id="v-attckmatrix" role="tabpanel" aria-labelledby="v-attckmatrix-tab">
+    
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/versions/v14/">Home</a></li>
+            <li class="breadcrumb-item"><a href="/versions/v14/techniques/enterprise">Techniques</a></li>
+            <li class="breadcrumb-item"><a href="/versions/v14/techniques/enterprise">Enterprise</a></li>
+        <li class="breadcrumb-item">Credentials from Password Stores</li>
+    </ol>
+    <div class="tab-pane fade show active" id="v-" role="tabpanel" aria-labelledby="v--tab"></div>
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="jumbotron jumbotron-fluid">
+                <div class="container-fluid">
+                    <h1 id="">
+                        Credentials from Password Stores
+                    </h1> 
+
+                        <div class="row">
+                            <div class="col-md-8">
+                                    <!--stop-indexing-for-search-->
+                                    <div class="card-block pb-2">
+                                        <div class="card">
+                                            <div class="card-header collapsed" id="subtechniques-card-header" data-toggle="collapse" data-target="#subtechniques-card-body" aria-expanded="false" aria-controls="subtechniques-card-body">
+                                                    <h5 class="mb-0" id ="sub-techniques">Sub-techniques (6)</h5>
+                                            </div>
+                                            <div id="subtechniques-card-body" class="card-body p-0 collapse" aria-labelledby="subtechniques-card-header">
+                                                <table class="table table-bordered">
+                                                    <thead>
+                                                        <tr>
+                                                            <th scope="col">ID</th>
+                                                            <th scope="col">Name</th>
+                                                        </tr>
+                                                    </thead> 
+                                                    <tbody>                                          
+                                                            <tr>
+                                                                    <td>
+                                                                        <a href="/versions/v14/techniques/T1555/001/" class="subtechnique-table-item" data-subtechnique_id="T1555.001"> T1555.001 </a>
+                                                                    </td>
+                                                                    <td>
+                                                                        <a href="/versions/v14/techniques/T1555/001/" class="subtechnique-table-item" data-subtechnique_id="T1555.001"> Keychain </a>
+                                                                    </td>
+                                                            </tr>
+                                                            <tr>
+                                                                    <td>
+                                                                        <a href="/versions/v14/techniques/T1555/002/" class="subtechnique-table-item" data-subtechnique_id="T1555.002"> T1555.002 </a>
+                                                                    </td>
+                                                                    <td>
+                                                                        <a href="/versions/v14/techniques/T1555/002/" class="subtechnique-table-item" data-subtechnique_id="T1555.002"> Securityd Memory </a>
+                                                                    </td>
+                                                            </tr>
+                                                            <tr>
+                                                                    <td>
+                                                                        <a href="/versions/v14/techniques/T1555/003/" class="subtechnique-table-item" data-subtechnique_id="T1555.003"> T1555.003 </a>
+                                                                    </td>
+                                                                    <td>
+                                                                        <a href="/versions/v14/techniques/T1555/003/" class="subtechnique-table-item" data-subtechnique_id="T1555.003"> Credentials from Web Browsers </a>
+                                                                    </td>
+                                                            </tr>
+                                                            <tr>
+                                                                    <td>
+                                                                        <a href="/versions/v14/techniques/T1555/004/" class="subtechnique-table-item" data-subtechnique_id="T1555.004"> T1555.004 </a>
+                                                                    </td>
+                                                                    <td>
+                                                                        <a href="/versions/v14/techniques/T1555/004/" class="subtechnique-table-item" data-subtechnique_id="T1555.004"> Windows Credential Manager </a>
+                                                                    </td>
+                                                            </tr>
+                                                            <tr>
+                                                                    <td>
+                                                                        <a href="/versions/v14/techniques/T1555/005/" class="subtechnique-table-item" data-subtechnique_id="T1555.005"> T1555.005 </a>
+                                                                    </td>
+                                                                    <td>
+                                                                        <a href="/versions/v14/techniques/T1555/005/" class="subtechnique-table-item" data-subtechnique_id="T1555.005"> Password Managers </a>
+                                                                    </td>
+                                                            </tr>
+                                                            <tr>
+                                                                    <td>
+                                                                        <a href="/versions/v14/techniques/T1555/006/" class="subtechnique-table-item" data-subtechnique_id="T1555.006"> T1555.006 </a>
+                                                                    </td>
+                                                                    <td>
+                                                                        <a href="/versions/v14/techniques/T1555/006/" class="subtechnique-table-item" data-subtechnique_id="T1555.006"> Cloud Secrets Management Stores </a>
+                                                                    </td>
+                                                            </tr>
+                               
+                                                    </tbody>                           
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--start-indexing-for-search-->
+   
+
+                                    <div class="description-body">
+                                                <p>Adversaries may search for common password storage locations to obtain user credentials. Passwords are stored in several places on a system, depending on the operating system or application holding the credentials. There are also specific applications and services that store passwords to make them easier for users to manage and maintain, such as password managers and cloud secrets vaults. Once credentials are obtained, they can be used to perform lateral movement and access restricted information.</p>
+
+                                    </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card">
+                                    <div class="card-body">
+                                            <div class="row card-data" id="card-id">
+                                                <div class="col-md-1 px-0 text-center"></div>
+                                                <div class="col-md-11 pl-0">
+                                                    <span class="h5 card-title">ID:&nbsp;</span>T1555
+                                                </div>
+                                            </div>
+                                        <!--stop-indexing-for-search-->
+                                        <div class="row card-data">
+                                            <div class="col-md-1 px-0 text-center"></div>
+                                            <div class="col-md-11 pl-0">
+                                                    <span class="h5 card-title">Sub-techniques:&nbsp;</span>
+                                                            <a href="/versions/v14/techniques/T1555/001">T1555.001</a>,                                                            <a href="/versions/v14/techniques/T1555/002">T1555.002</a>,                                                            <a href="/versions/v14/techniques/T1555/003">T1555.003</a>,                                                            <a href="/versions/v14/techniques/T1555/004">T1555.004</a>,                                                            <a href="/versions/v14/techniques/T1555/005">T1555.005</a>,                                                            <a href="/versions/v14/techniques/T1555/006">T1555.006</a>                                            </div>
+                                        </div>
+                                        <!--start-indexing-for-search-->
+                                            <div id="card-tactics" class="row card-data">
+                                                <div class="col-md-1 px-0 text-center">
+                                                    <span data-toggle="tooltip" data-placement="left" title="" data-test-ignore="true" data-original-title="The tactic objectives that the (sub-)technique can be used to accomplish">&#9432;</span>
+                                                </div>
+                                                <div class="col-md-11 pl-0">
+                                                    <span class="h5 card-title">Tactic:</span>
+                                                        <a href="/versions/v14/tactics/TA0006">Credential Access</a>                                                </div>
+                                            </div>
+                                            <div class="row card-data">
+                                                <div class="col-md-1 px-0 text-center">
+                                                    <span data-toggle="tooltip" data-placement="left" title="" data-test-ignore="true" data-original-title="The system an adversary is operating within; could be an operating system or application">&#9432;</span>
+                                                </div>
+                                                <div class="col-md-11 pl-0">
+                                                    <span class="h5 card-title">Platforms:&nbsp;</span>IaaS, Linux, Windows, macOS
+                                                </div>
+                                            </div>
+                                            <div class="row card-data">
+                                                <div class="col-md-1 px-0 text-center"></div>
+                                                <div class="col-md-11 pl-0">
+                                                    <span class="h5 card-title">Version:&nbsp;</span>1.1
+                                                </div>
+                                            </div>
+                                            <div class="row card-data">
+                                                <div class="col-md-1 px-0 text-center"></div>
+                                                <div class="col-md-11 pl-0">
+                                                    <span class="h5 card-title">Created:&nbsp;</span>11 February 2020
+                                                </div>
+                                            </div>
+                                            <div class="row card-data">
+                                                <div class="col-md-1 px-0 text-center"></div>
+                                                <div class="col-md-11 pl-0">
+                                                    <span class="h5 card-title">Last Modified:&nbsp;</span>30 September 2023
+                                                </div>
+                                            </div>
+                                    </div>
+                                </div>
+                                    <div class="text-center pt-2 version-button permalink">
+    <div class="live">
+        <a data-toggle="tooltip" 
+           data-placement="bottom" 
+           title="Permalink to this version of T1555" 
+           href="/versions/v14/techniques/T1555/" data-test-ignore="true">Version Permalink</a>
+    </div>
+    <div class="permalink">
+        <a data-toggle="tooltip" 
+           data-placement="bottom" 
+           title="Go to the live version of T1555" 
+           href="/techniques/T1555/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+    </div>
+</div>
+
+                            </div>
+                        </div>
+                            <h2 class="pt-3" id ="examples">Procedure Examples</h2>
+                            <div class="tables-mobile">
+                            <table class="table table-bordered table-alternate mt-2">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">ID</th>
+                                        <th scope="col">Name</th>
+                                        <th scope="col">Description</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v14/software/S0331"> S0331 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v14/software/S0331"> Agent Tesla </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v14/software/S0331">Agent Tesla</a> has the ability to steal credentials from FTP clients and wireless profiles.<span onclick=scrollToRef('scite-1') id="scite-ref-1-a" class="scite-citeref-number" data-reference="Malwarebytes Agent Tesla April 2020"><sup><a href="https://blog.malwarebytes.com/threat-analysis/2020/04/new-agenttesla-variant-steals-wifi-credentials/" target="_blank" data-hasqtip="0" aria-describedby="qtip-0">[1]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v14/groups/G0064"> G0064 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v14/groups/G0064"> APT33 </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v14/groups/G0064">APT33</a> has used a variety of publicly available tools like <a href="/versions/v14/software/S0349">LaZagne</a> to gather credentials.<span onclick=scrollToRef('scite-2') id="scite-ref-2-a" class="scite-citeref-number" data-reference="Symantec Elfin Mar 2019"><sup><a href="https://www.symantec.com/blogs/threat-intelligence/elfin-apt33-espionage" target="_blank" data-hasqtip="1" aria-describedby="qtip-1">[2]</a></sup></span><span onclick=scrollToRef('scite-3') id="scite-ref-3-a" class="scite-citeref-number" data-reference="FireEye APT33 Guardrail"><sup><a href="https://www.fireeye.com/blog/threat-research/2018/12/overruled-containing-a-potentially-destructive-adversary.html" target="_blank" data-hasqtip="2" aria-describedby="qtip-2">[3]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v14/groups/G0087"> G0087 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v14/groups/G0087"> APT39 </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v14/groups/G0087">APT39</a> has used the Smartftp Password Decryptor tool to decrypt FTP passwords.<span onclick=scrollToRef('scite-4') id="scite-ref-4-a" class="scite-citeref-number" data-reference="BitDefender Chafer May 2020"><sup><a href="https://www.bitdefender.com/blog/labs/iranian-chafer-apt-targeted-air-transportation-and-government-in-kuwait-and-saudi-arabia/" target="_blank" data-hasqtip="3" aria-describedby="qtip-3">[4]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v14/software/S0373"> S0373 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v14/software/S0373"> Astaroth </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v14/software/S0373">Astaroth</a> uses an external software known as NetPass to recover passwords. <span onclick=scrollToRef('scite-5') id="scite-ref-5-a" class="scite-citeref-number" data-reference="Cybereason Astaroth Feb 2019"><sup><a href="https://www.cybereason.com/blog/information-stealing-malware-targeting-brazil-full-research" target="_blank" data-hasqtip="4" aria-describedby="qtip-4">[5]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v14/software/S0484"> S0484 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v14/software/S0484"> Carberp </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v14/software/S0484">Carberp</a>'s passw.plug plugin can gather account information from multiple instant messaging, email, and social media services, as well as FTP, VNC, and VPN clients.<span onclick=scrollToRef('scite-6') id="scite-ref-6-a" class="scite-citeref-number" data-reference="Prevx Carberp March 2011"><sup><a href="http://pxnow.prevx.com/content/blog/carberp-a_modular_information_stealing_trojan.pdf" target="_blank" data-hasqtip="5" aria-describedby="qtip-5">[6]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v14/software/S0050"> S0050 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v14/software/S0050"> CosmicDuke </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v14/software/S0050">CosmicDuke</a> collects user credentials, including passwords, for various programs including popular instant messaging applications and email clients as well as WLAN keys.<span onclick=scrollToRef('scite-7') id="scite-ref-7-a" class="scite-citeref-number" data-reference="F-Secure The Dukes"><sup><a href="https://www.f-secure.com/documents/996508/1030745/dukes_whitepaper.pdf" target="_blank" data-hasqtip="6" aria-describedby="qtip-6">[7]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v14/groups/G0120"> G0120 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v14/groups/G0120"> Evilnum </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v14/groups/G0120">Evilnum</a> can collect email credentials from victims.<span onclick=scrollToRef('scite-8') id="scite-ref-8-a" class="scite-citeref-number" data-reference="ESET EvilNum July 2020"><sup><a href="https://www.welivesecurity.com/2020/07/09/more-evil-deep-look-evilnum-toolset/" target="_blank" data-hasqtip="7" aria-describedby="qtip-7">[8]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v14/groups/G0037"> G0037 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v14/groups/G0037"> FIN6 </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v14/groups/G0037">FIN6</a> has used the Stealer One credential stealer to target e-mail and file transfer utilities including FTP.<span onclick=scrollToRef('scite-9') id="scite-ref-9-a" class="scite-citeref-number" data-reference="Visa FIN6 Feb 2019"><sup><a href="https://usa.visa.com/dam/VCOM/global/support-legal/documents/fin6-cybercrime-group-expands-threat-To-ecommerce-merchants.pdf" target="_blank" data-hasqtip="8" aria-describedby="qtip-8">[9]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v14/groups/G1001"> G1001 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v14/groups/G1001"> HEXANE </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v14/groups/G1001">HEXANE</a> has run <code>cmdkey</code> on victim machines to identify stored credentials.<span onclick=scrollToRef('scite-10') id="scite-ref-10-a" class="scite-citeref-number" data-reference="Kaspersky Lyceum October 2021"><sup><a href="https://vblocalhost.com/uploads/VB2021-Kayal-etal.pdf" target="_blank" data-hasqtip="9" aria-describedby="qtip-9">[10]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v14/software/S0526"> S0526 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v14/software/S0526"> KGH_SPY </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v14/software/S0526">KGH_SPY</a> can collect credentials from WINSCP.<span onclick=scrollToRef('scite-11') id="scite-ref-11-a" class="scite-citeref-number" data-reference="Cybereason Kimsuky November 2020"><sup><a href="https://www.cybereason.com/blog/back-to-the-future-inside-the-kimsuky-kgh-spyware-suite" target="_blank" data-hasqtip="10" aria-describedby="qtip-10">[11]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v14/software/S0349"> S0349 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v14/software/S0349"> LaZagne </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v14/software/S0349">LaZagne</a> can obtain credentials from databases, mail, and WiFi across multiple platforms.<span onclick=scrollToRef('scite-12') id="scite-ref-12-a" class="scite-citeref-number" data-reference="GitHub LaZagne Dec 2018"><sup><a href="https://github.com/AlessandroZ/LaZagne" target="_blank" data-hasqtip="11" aria-describedby="qtip-11">[12]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v14/groups/G0077"> G0077 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v14/groups/G0077"> Leafminer </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v14/groups/G0077">Leafminer</a> used several tools for retrieving login and password information, including LaZagne.<span onclick=scrollToRef('scite-13') id="scite-ref-13-a" class="scite-citeref-number" data-reference="Symantec Leafminer July 2018"><sup><a href="https://www.symantec.com/blogs/threat-intelligence/leafminer-espionage-middle-east" target="_blank" data-hasqtip="12" aria-describedby="qtip-12">[13]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v14/software/S0447"> S0447 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v14/software/S0447"> Lokibot </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v14/software/S0447">Lokibot</a> has stolen credentials from multiple applications and data sources including Windows OS credentials, email clients, FTP, and SFTP clients.<span onclick=scrollToRef('scite-14') id="scite-ref-14-a" class="scite-citeref-number" data-reference="Infoblox Lokibot January 2019"><sup><a href="https://insights.infoblox.com/threat-intelligence-reports/threat-intelligence--22" target="_blank" data-hasqtip="13" aria-describedby="qtip-13">[14]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v14/software/S0167"> S0167 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v14/software/S0167"> Matryoshka </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v14/software/S0167">Matryoshka</a> is capable of stealing Outlook passwords.<span onclick=scrollToRef('scite-15') id="scite-ref-15-a" class="scite-citeref-number" data-reference="ClearSky Wilted Tulip July 2017"><sup><a href="http://www.clearskysec.com/wp-content/uploads/2017/07/Operation_Wilted_Tulip.pdf" target="_blank" data-hasqtip="14" aria-describedby="qtip-14">[15]</a></sup></span><span onclick=scrollToRef('scite-16') id="scite-ref-16-a" class="scite-citeref-number" data-reference="CopyKittens Nov 2015"><sup><a href="https://s3-eu-west-1.amazonaws.com/minervaresearchpublic/CopyKittens/CopyKittens.pdf" target="_blank" data-hasqtip="15" aria-describedby="qtip-15">[16]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v14/software/S0002"> S0002 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v14/software/S0002"> Mimikatz </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v14/software/S0002">Mimikatz</a> performs credential dumping to obtain account and password information useful in gaining access to additional systems and enterprise network resources. It contains functionality to acquire information about credentials in many ways, including from the credential vault and DPAPI.<span onclick=scrollToRef('scite-17') id="scite-ref-17-a" class="scite-citeref-number" data-reference="Deply Mimikatz"><sup><a href="https://github.com/gentilkiwi/mimikatz" target="_blank" data-hasqtip="16" aria-describedby="qtip-16">[17]</a></sup></span><span onclick=scrollToRef('scite-18') id="scite-ref-18-a" class="scite-citeref-number" data-reference="GitHub Mimikatz lsadump Module"><sup><a href="https://github.com/gentilkiwi/mimikatz/wiki/module-~-lsadump" target="_blank" data-hasqtip="17" aria-describedby="qtip-17">[18]</a></sup></span><span onclick=scrollToRef('scite-19') id="scite-ref-19-a" class="scite-citeref-number" data-reference="Directory Services Internals DPAPI Backup Keys Oct 2015"><sup><a href="https://www.dsinternals.com/en/retrieving-dpapi-backup-keys-from-active-directory/" target="_blank" data-hasqtip="18" aria-describedby="qtip-18">[19]</a></sup></span><span onclick=scrollToRef('scite-20') id="scite-ref-20-a" class="scite-citeref-number" data-reference="NCSC Joint Report Public Tools"><sup><a href="https://www.ncsc.gov.uk/report/joint-report-on-publicly-available-hacking-tools" target="_blank" data-hasqtip="19" aria-describedby="qtip-19">[20]</a></sup></span><span onclick=scrollToRef('scite-21') id="scite-ref-21-a" class="scite-citeref-number" data-reference="Cobalt Strike Manual 4.3 November 2020"><sup><a href="https://web.archive.org/web/20210708035426/https://www.cobaltstrike.com/downloads/csmanual43.pdf" target="_blank" data-hasqtip="20" aria-describedby="qtip-20">[21]</a></sup></span>  </p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v14/groups/G0069"> G0069 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v14/groups/G0069"> MuddyWater </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v14/groups/G0069">MuddyWater</a> has performed credential dumping with <a href="/versions/v14/software/S0349">LaZagne</a> and other tools, including by dumping passwords saved in victim email.<span onclick=scrollToRef('scite-22') id="scite-ref-22-a" class="scite-citeref-number" data-reference="Unit 42 MuddyWater Nov 2017"><sup><a href="https://researchcenter.paloaltonetworks.com/2017/11/unit42-muddying-the-water-targeted-attacks-in-the-middle-east/" target="_blank" data-hasqtip="21" aria-describedby="qtip-21">[22]</a></sup></span><span onclick=scrollToRef('scite-23') id="scite-ref-23-a" class="scite-citeref-number" data-reference="Symantec MuddyWater Dec 2018"><sup><a href="https://www.symantec.com/blogs/threat-intelligence/seedworm-espionage-group" target="_blank" data-hasqtip="22" aria-describedby="qtip-22">[23]</a></sup></span><span onclick=scrollToRef('scite-24') id="scite-ref-24-a" class="scite-citeref-number" data-reference="Trend Micro Muddy Water March 2021"><sup><a href="https://www.trendmicro.com/en_us/research/21/c/earth-vetala---muddywater-continues-to-target-organizations-in-t.html" target="_blank" data-hasqtip="23" aria-describedby="qtip-23">[24]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v14/software/S0198"> S0198 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v14/software/S0198"> NETWIRE </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v14/software/S0198">NETWIRE</a> can retrieve passwords from messaging and mail client applications.<span onclick=scrollToRef('scite-25') id="scite-ref-25-a" class="scite-citeref-number" data-reference="Red Canary NETWIRE January 2020"><sup><a href="https://redcanary.com/blog/netwire-remote-access-trojan-on-linux/" target="_blank" data-hasqtip="24" aria-describedby="qtip-24">[25]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v14/groups/G0049"> G0049 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v14/groups/G0049"> OilRig </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v14/groups/G0049">OilRig</a> has used credential dumping tools such as <a href="/versions/v14/software/S0349">LaZagne</a> to steal credentials to accounts logged into the compromised system and to Outlook Web Access.<span onclick=scrollToRef('scite-26') id="scite-ref-26-a" class="scite-citeref-number" data-reference="Unit42 OilRig Playbook 2023"><sup><a href="https://pan-unit42.github.io/playbook_viewer/?pb=evasive-serpens" target="_blank" data-hasqtip="25" aria-describedby="qtip-25">[26]</a></sup></span><span onclick=scrollToRef('scite-27') id="scite-ref-27-a" class="scite-citeref-number" data-reference="FireEye APT34 Webinar Dec 2017"><sup><a href="https://www.brighttalk.com/webcast/10703/296317/apt34-new-targeted-attack-in-the-middle-east" target="_blank" data-hasqtip="26" aria-describedby="qtip-26">[27]</a></sup></span><span onclick=scrollToRef('scite-28') id="scite-ref-28-a" class="scite-citeref-number" data-reference="FireEye APT35 2018"><sup><a href="https://www.fireeye.com/content/dam/collateral/en/mtrends-2018.pdf" target="_blank" data-hasqtip="27" aria-describedby="qtip-27">[28]</a></sup></span><span onclick=scrollToRef('scite-29') id="scite-ref-29-a" class="scite-citeref-number" data-reference="FireEye APT34 July 2019"><sup><a href="https://www.fireeye.com/blog/threat-research/2019/07/hard-pass-declining-apt34-invite-to-join-their-professional-network.html" target="_blank" data-hasqtip="28" aria-describedby="qtip-28">[29]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v14/software/S0138"> S0138 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v14/software/S0138"> OLDBAIT </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v14/software/S0138">OLDBAIT</a> collects credentials from several email clients.<span onclick=scrollToRef('scite-30') id="scite-ref-30-a" class="scite-citeref-number" data-reference="FireEye APT28"><sup><a href="https://web.archive.org/web/20151022204649/https://www.fireeye.com/content/dam/fireeye-www/global/en/current-threats/pdfs/rpt-apt28.pdf" target="_blank" data-hasqtip="29" aria-describedby="qtip-29">[30]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v14/software/S0048"> S0048 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v14/software/S0048"> PinchDuke </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v14/software/S0048">PinchDuke</a> steals credentials from compromised hosts. <a href="/versions/v14/software/S0048">PinchDuke</a>'s credential stealing functionality is believed to be based on the source code of the Pinch credential stealing malware (also known as LdPinch). Credentials targeted by <a href="/versions/v14/software/S0048">PinchDuke</a> include ones associated with many sources such as The Bat!, Yahoo!, Mail.ru, Passport.Net, Google Talk, and Microsoft Outlook.<span onclick=scrollToRef('scite-7') id="scite-ref-7-a" class="scite-citeref-number" data-reference="F-Secure The Dukes"><sup><a href="https://www.f-secure.com/documents/996508/1030745/dukes_whitepaper.pdf" target="_blank" data-hasqtip="6" aria-describedby="qtip-6">[7]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v14/software/S0435"> S0435 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v14/software/S0435"> PLEAD </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v14/software/S0435">PLEAD</a> has the ability to steal saved passwords from Microsoft Outlook.<span onclick=scrollToRef('scite-31') id="scite-ref-31-a" class="scite-citeref-number" data-reference="ESET PLEAD Malware July 2018"><sup><a href="https://www.welivesecurity.com/2018/07/09/certificates-stolen-taiwanese-tech-companies-plead-malware-campaign/" target="_blank" data-hasqtip="30" aria-describedby="qtip-30">[31]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v14/software/S0378"> S0378 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v14/software/S0378"> PoshC2 </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v14/software/S0378">PoshC2</a> can decrypt passwords stored in the RDCMan configuration file.<span onclick=scrollToRef('scite-32') id="scite-ref-32-a" class="scite-citeref-number" data-reference="SecureWorks August 2019"><sup><a href="https://www.secureworks.com/blog/lyceum-takes-center-stage-in-middle-east-campaign" target="_blank" data-hasqtip="31" aria-describedby="qtip-31">[32]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v14/software/S0113"> S0113 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v14/software/S0113"> Prikormka </a>
+                                            </td>
+                                            <td>
+                                                            <p>A module in <a href="/versions/v14/software/S0113">Prikormka</a> collects passwords stored in applications installed on the victim.<span onclick=scrollToRef('scite-33') id="scite-ref-33-a" class="scite-citeref-number" data-reference="ESET Operation Groundbait"><sup><a href="http://www.welivesecurity.com/wp-content/uploads/2016/05/Operation-Groundbait.pdf" target="_blank" data-hasqtip="32" aria-describedby="qtip-32">[33]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v14/software/S0192"> S0192 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v14/software/S0192"> Pupy </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v14/software/S0192">Pupy</a> can use Lazagne for harvesting credentials.<span onclick=scrollToRef('scite-34') id="scite-ref-34-a" class="scite-citeref-number" data-reference="GitHub Pupy"><sup><a href="https://github.com/n1nj4sec/pupy" target="_blank" data-hasqtip="33" aria-describedby="qtip-33">[34]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v14/software/S0262"> S0262 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v14/software/S0262"> QuasarRAT </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v14/software/S0262">QuasarRAT</a> can obtain passwords from common FTP clients.<span onclick=scrollToRef('scite-35') id="scite-ref-35-a" class="scite-citeref-number" data-reference="GitHub QuasarRAT"><sup><a href="https://github.com/quasar/QuasarRAT" target="_blank" data-hasqtip="34" aria-describedby="qtip-34">[35]</a></sup></span><span onclick=scrollToRef('scite-36') id="scite-ref-36-a" class="scite-citeref-number" data-reference="Volexity Patchwork June 2018"><sup><a href="https://www.volexity.com/blog/2018/06/07/patchwork-apt-group-targets-us-think-tanks/" target="_blank" data-hasqtip="35" aria-describedby="qtip-35">[36]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v14/campaigns/C0024"> C0024 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v14/campaigns/C0024"> SolarWinds Compromise </a>
+                                            </td>
+                                            <td>
+                                                            <p>During the <a href="https://attack.mitre.org/campaigns/C0024">SolarWinds Compromise</a>, <a href="/versions/v14/groups/G0016">APT29</a> used account credentials they obtained to attempt access to Group Managed Service Account (gMSA) passwords.<span onclick=scrollToRef('scite-37') id="scite-ref-37-a" class="scite-citeref-number" data-reference="Microsoft Deep Dive Solorigate January 2021"><sup><a href="https://www.microsoft.com/security/blog/2021/01/20/deep-dive-into-the-solorigate-second-stage-activation-from-sunburst-to-teardrop-and-raindrop/" target="_blank" data-hasqtip="36" aria-describedby="qtip-36">[37]</a></sup></span> </p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v14/groups/G0038"> G0038 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v14/groups/G0038"> Stealth Falcon </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v14/groups/G0038">Stealth Falcon</a> malware gathers passwords from multiple sources, including Windows Credential Vault and Outlook.<span onclick=scrollToRef('scite-38') id="scite-ref-38-a" class="scite-citeref-number" data-reference="Citizen Lab Stealth Falcon May 2016"><sup><a href="https://citizenlab.org/2016/05/stealth-falcon/" target="_blank" data-hasqtip="37" aria-describedby="qtip-37">[38]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v14/groups/G1017"> G1017 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v14/groups/G1017"> Volt Typhoon </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v14/groups/G1017">Volt Typhoon</a> has attempted to obtain credentials from OpenSSH, realvnc, and PuTTY.<span onclick=scrollToRef('scite-39') id="scite-ref-39-a" class="scite-citeref-number" data-reference="Joint Cybersecurity Advisory Volt Typhoon June 2023"><sup><a href="https://media.defense.gov/2023/May/24/2003229517/-1/-1/0/CSA_Living_off_the_Land.PDF" target="_blank" data-hasqtip="38" aria-describedby="qtip-38">[39]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                </tbody>
+                            </table>
+                            </div>
+                            <h2 class="pt-3" id ="mitigations">Mitigations</h2>
+                            <div class="tables-mobile">
+                                <table class="table table-bordered table-alternate mt-2">
+                                    <thead>
+                                        <tr> 
+                                            <th scope="col">ID</th>
+                                            <th scope="col">Mitigation</th>
+                                            <th scope="col">Description</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                            <tr>
+                                                <td>
+                                                    <a href="/versions/v14/mitigations/M1027"> M1027 </a>
+                                                </td>
+                                                <td>
+                                                    <a href="/versions/v14/mitigations/M1027"> Password Policies </a>
+                                                </td>
+                                                <td>
+                                                                <p>The password for the user's login keychain can be changed from the user's login password. This increases the complexity for an adversary because they need to know an additional password.</p><p>Organizations may consider weighing the risk of storing credentials in password stores and web browsers. If system, software, or web browser credential disclosure is a significant concern, technical controls, policy, and user training may be used to prevent storage of credentials in improper locations.</p>
+
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <a href="/versions/v14/mitigations/M1026"> M1026 </a>
+                                                </td>
+                                                <td>
+                                                    <a href="/versions/v14/mitigations/M1026"> Privileged Account Management </a>
+                                                </td>
+                                                <td>
+                                                                <p>Limit the number of accounts and services with permission to query information from password stores to only those required. Ensure that accounts and services with permissions to query password stores only have access to the secrets they require.</p>
+
+                                                </td>
+                                            </tr>
+                                    </tbody>
+                                </table>
+                                </div>
+                            <h2 class="pt-3" id="detection">Detection</h2>
+                                <div class="tables-mobile">
+<table class="table datasources-table table-bordered">
+    <thead>
+        <tr>
+            <th class="p-2" scope="col">ID</th>
+            <th class="p-2 nowrap" scope="col">Data Source</th>
+            <th class="p-2 nowrap" scope="col">Data Component</th>
+            <th class="p-2" scope="col">Detects</th>
+        </tr>
+    </thead>
+    <tbody>
+            <tr class="datasource" id="uses-DS0025">
+                <td>
+                    <a href="/versions/v14/datasources/DS0025">DS0025</a>
+                </td>
+                <td class="nowrap">
+                    <a href="/versions/v14/datasources/DS0025">Cloud Service</a>
+                </td>
+                <!-- Add first data component here -->
+                <td> 
+                    <a href="/datasources/DS0025/#Cloud%20Service%20Enumeration">Cloud Service Enumeration</a>
+                </td>
+                    <td>
+                                <p>Monitor for API calls and CLI commands that attempt to enumerate and fetch credential material from cloud secrets managers, such as <code>get-secret-value</code> in AWS, <code>gcloud secrets describe</code> in GCP, and <code>az key vault secret show</code> in Azure. Alert on any suspicious usages of these commands, such as an account or service generating an unusually high number of secret requests.</p>
+
+                    </td>
+            </tr>
+            <tr class="datasource" id="uses-DS0017">
+                <td>
+                    <a href="/versions/v14/datasources/DS0017">DS0017</a>
+                </td>
+                <td class="nowrap">
+                    <a href="/versions/v14/datasources/DS0017">Command</a>
+                </td>
+                <!-- Add first data component here -->
+                <td> 
+                    <a href="/datasources/DS0017/#Command%20Execution">Command Execution</a>
+                </td>
+                    <td>
+                                <p>Monitor executed commands and arguments that may search for common password storage locations to obtain user credentials.</p>
+
+                    </td>
+            </tr>
+            <tr class="datasource" id="uses-DS0022">
+                <td>
+                    <a href="/versions/v14/datasources/DS0022">DS0022</a>
+                </td>
+                <td class="nowrap">
+                    <a href="/versions/v14/datasources/DS0022">File</a>
+                </td>
+                <!-- Add first data component here -->
+                <td> 
+                    <a href="/datasources/DS0022/#File%20Access">File Access</a>
+                </td>
+                    <td>
+                                <p>Monitor for files being accessed that may search for common password storage locations to obtain user credentials.</p>
+
+                    </td>
+            </tr>
+            <tr class="datasource" id="uses-DS0009">
+                <td>
+                    <a href="/versions/v14/datasources/DS0009">DS0009</a>
+                </td>
+                <td class="nowrap">
+                    <a href="/versions/v14/datasources/DS0009">Process</a>
+                </td>
+                <!-- Add first data component here -->
+                <td> 
+                    <a href="/datasources/DS0009/#OS%20API%20Execution">OS API Execution</a>
+                </td>
+                    <td>
+                                <p>Monitor for API calls that may search for common password storage locations to obtain user credentials.</p>
+
+                    </td>
+            </tr>
+                    <tr class="datacomponent datasource" id="uses-DS0009-Process Access">
+                        <td></td>
+                        <td></td>
+                        <td>
+                            <a href="/datasources/DS0009/#Process%20Access">Process Access</a>
+                        </td>
+                            <td>
+                                        <p>Monitor for processes being accessed that may search for common password storage locations to obtain user credentials.</p>
+
+                            </td>
+                    </tr>
+                    <tr class="datacomponent datasource" id="uses-DS0009-Process Creation">
+                        <td></td>
+                        <td></td>
+                        <td>
+                            <a href="/datasources/DS0009/#Process%20Creation">Process Creation</a>
+                        </td>
+                            <td>
+                                        <p>Monitor newly executed processes that may search for common password storage locations to obtain user credentials.</p>
+
+                            </td>
+                    </tr>
+    </tbody>
+</table>
+</div>
+
+                
+                            <h2 class="pt-3" id="references">References</h2>
+
+        <div class="row">
+            <div class="col">
+                <ol>
+                            
+        <li>
+            <span  id="scite-1" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-1" href="https://blog.malwarebytes.com/threat-analysis/2020/04/new-agenttesla-variant-steals-wifi-credentials/" target="_blank">
+                        Jazi, H. (2020, April 16). New AgentTesla variant steals WiFi credentials. Retrieved May 19, 2020.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-2" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-2" href="https://www.symantec.com/blogs/threat-intelligence/elfin-apt33-espionage" target="_blank">
+                        Security Response attack Investigation Team. (2019, March 27). Elfin: Relentless Espionage Group Targets Multiple Organizations in Saudi Arabia and U.S.. Retrieved April 10, 2019.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-3" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-3" href="https://www.fireeye.com/blog/threat-research/2018/12/overruled-containing-a-potentially-destructive-adversary.html" target="_blank">
+                        Ackerman, G., et al. (2018, December 21). OVERRULED: Containing a Potentially Destructive Adversary. Retrieved January 17, 2019.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-4" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-4" href="https://www.bitdefender.com/blog/labs/iranian-chafer-apt-targeted-air-transportation-and-government-in-kuwait-and-saudi-arabia/" target="_blank">
+                        Rusu, B. (2020, May 21). Iranian Chafer APT Targeted Air Transportation and Government in Kuwait and Saudi Arabia. Retrieved May 22, 2020.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-5" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-5" href="https://www.cybereason.com/blog/information-stealing-malware-targeting-brazil-full-research" target="_blank">
+                        Salem, E. (2019, February 13). ASTAROTH MALWARE USES LEGITIMATE OS AND ANTIVIRUS PROCESSES TO STEAL PASSWORDS AND PERSONAL DATA. Retrieved April 17, 2019.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-6" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-6" href="http://pxnow.prevx.com/content/blog/carberp-a_modular_information_stealing_trojan.pdf" target="_blank">
+                        Giuliani, M., Allievi, A. (2011, February 28). Carberp - a modular information stealing trojan. Retrieved July 15, 2020.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-7" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-7" href="https://www.f-secure.com/documents/996508/1030745/dukes_whitepaper.pdf" target="_blank">
+                        F-Secure Labs. (2015, September 17). The Dukes: 7 years of Russian cyberespionage. Retrieved December 10, 2015.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-8" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-8" href="https://www.welivesecurity.com/2020/07/09/more-evil-deep-look-evilnum-toolset/" target="_blank">
+                        Porolli, M. (2020, July 9). More evil: A deep look at Evilnum and its toolset. Retrieved January 22, 2021.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-9" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-9" href="https://usa.visa.com/dam/VCOM/global/support-legal/documents/fin6-cybercrime-group-expands-threat-To-ecommerce-merchants.pdf" target="_blank">
+                        Visa Public. (2019, February). FIN6 Cybercrime Group Expands Threat to eCommerce Merchants. Retrieved September 16, 2019.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-10" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-10" href="https://vblocalhost.com/uploads/VB2021-Kayal-etal.pdf" target="_blank">
+                        Kayal, A. et al. (2021, October). LYCEUM REBORN: COUNTERINTELLIGENCE IN THE MIDDLE EAST. Retrieved June 14, 2022.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-11" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-11" href="https://www.cybereason.com/blog/back-to-the-future-inside-the-kimsuky-kgh-spyware-suite" target="_blank">
+                        Dahan, A. et al. (2020, November 2). Back to the Future: Inside the Kimsuky KGH Spyware Suite. Retrieved November 6, 2020.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-12" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-12" href="https://github.com/AlessandroZ/LaZagne" target="_blank">
+                        Zanni, A. (n.d.). The LaZagne Project !!!. Retrieved December 14, 2018.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-13" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-13" href="https://www.symantec.com/blogs/threat-intelligence/leafminer-espionage-middle-east" target="_blank">
+                        Symantec Security Response. (2018, July 25). Leafminer: New Espionage Campaigns Targeting Middle Eastern Regions. Retrieved August 28, 2018.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-14" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-14" href="https://insights.infoblox.com/threat-intelligence-reports/threat-intelligence--22" target="_blank">
+                        Hoang, M. (2019, January 31). Malicious Activity Report: Elements of  Lokibot Infostealer. Retrieved May 15, 2020.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-15" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-15" href="http://www.clearskysec.com/wp-content/uploads/2017/07/Operation_Wilted_Tulip.pdf" target="_blank">
+                        ClearSky Cyber Security and Trend Micro. (2017, July). Operation Wilted Tulip: Exposing a cyber espionage apparatus. Retrieved August 21, 2017.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-16" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-16" href="https://s3-eu-west-1.amazonaws.com/minervaresearchpublic/CopyKittens/CopyKittens.pdf" target="_blank">
+                        Minerva Labs LTD and ClearSky Cyber Security. (2015, November 23). CopyKittens Attack Group. Retrieved September 11, 2017.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-17" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-17" href="https://github.com/gentilkiwi/mimikatz" target="_blank">
+                        Deply, B. (n.d.). Mimikatz. Retrieved September 29, 2015.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-18" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-18" href="https://github.com/gentilkiwi/mimikatz/wiki/module-~-lsadump" target="_blank">
+                        Deply, B., Le Toux, V. (2016, June 5). module ~ lsadump. Retrieved August 7, 2017.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-19" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-19" href="https://www.dsinternals.com/en/retrieving-dpapi-backup-keys-from-active-directory/" target="_blank">
+                        Grafnetter, M. (2015, October 26). Retrieving DPAPI Backup Keys from Active Directory. Retrieved December 19, 2017.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-20" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-20" href="https://www.ncsc.gov.uk/report/joint-report-on-publicly-available-hacking-tools" target="_blank">
+                        The Australian Cyber Security Centre (ACSC), the Canadian Centre for Cyber Security (CCCS), the New Zealand National Cyber Security Centre (NZ NCSC), CERT New Zealand, the UK National Cyber Security Centre (UK NCSC) and the US National Cybersecurity and Communications Integration Center (NCCIC). (2018, October 11). Joint report on publicly available hacking tools. Retrieved March 11, 2019.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                </ol>
+            </div>
+            <div class="col">
+                    <ol start="21.0">
+                                
+        <li>
+            <span  id="scite-21" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-21" href="https://web.archive.org/web/20210708035426/https://www.cobaltstrike.com/downloads/csmanual43.pdf" target="_blank">
+                        Strategic Cyber LLC. (2020, November 5). Cobalt Strike: Advanced Threat Tactics for Penetration Testers. Retrieved April 13, 2021.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-22" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-22" href="https://researchcenter.paloaltonetworks.com/2017/11/unit42-muddying-the-water-targeted-attacks-in-the-middle-east/" target="_blank">
+                        Lancaster, T.. (2017, November 14). Muddying the Water: Targeted Attacks in the Middle East. Retrieved March 15, 2018.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-23" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-23" href="https://www.symantec.com/blogs/threat-intelligence/seedworm-espionage-group" target="_blank">
+                        Symantec DeepSight Adversary Intelligence Team. (2018, December 10). Seedworm: Group Compromises Government Agencies, Oil & Gas, NGOs, Telecoms, and IT Firms. Retrieved December 14, 2018.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-24" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-24" href="https://www.trendmicro.com/en_us/research/21/c/earth-vetala---muddywater-continues-to-target-organizations-in-t.html" target="_blank">
+                        Peretz, A. and Theck, E. (2021, March 5). Earth Vetala – MuddyWater Continues to Target Organizations in the Middle East. Retrieved March 18, 2021.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-25" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-25" href="https://redcanary.com/blog/netwire-remote-access-trojan-on-linux/" target="_blank">
+                        Lambert, T. (2020, January 29). Intro to Netwire. Retrieved January 7, 2021.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-26" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-26" href="https://pan-unit42.github.io/playbook_viewer/?pb=evasive-serpens" target="_blank">
+                        Unit42. (2016, May 1). Evasive Serpens Unit 42 Playbook Viewer. Retrieved February 6, 2023.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-27" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-27" href="https://www.brighttalk.com/webcast/10703/296317/apt34-new-targeted-attack-in-the-middle-east" target="_blank">
+                        Davis, S. and Caban, D. (2017, December 19). APT34 - New Targeted Attack in the Middle East. Retrieved December 20, 2017.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-28" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-28" href="https://www.fireeye.com/content/dam/collateral/en/mtrends-2018.pdf" target="_blank">
+                        Mandiant. (2018). Mandiant M-Trends 2018. Retrieved July 9, 2018.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-29" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-29" href="https://www.fireeye.com/blog/threat-research/2019/07/hard-pass-declining-apt34-invite-to-join-their-professional-network.html" target="_blank">
+                        Bromiley, M., et al.. (2019, July 18). Hard Pass: Declining APT34’s Invite to Join Their Professional Network. Retrieved August 26, 2019.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-30" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-30" href="https://web.archive.org/web/20151022204649/https://www.fireeye.com/content/dam/fireeye-www/global/en/current-threats/pdfs/rpt-apt28.pdf" target="_blank">
+                        FireEye. (2015). APT28: A WINDOW INTO RUSSIA’S CYBER ESPIONAGE OPERATIONS?. Retrieved August 19, 2015.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-31" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-31" href="https://www.welivesecurity.com/2018/07/09/certificates-stolen-taiwanese-tech-companies-plead-malware-campaign/" target="_blank">
+                        Cherepanov, A.. (2018, July 9). Certificates stolen from Taiwanese tech‑companies misused in Plead malware campaign. Retrieved May 6, 2020.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-32" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-32" href="https://www.secureworks.com/blog/lyceum-takes-center-stage-in-middle-east-campaign" target="_blank">
+                        SecureWorks 2019, August 27 LYCEUM Takes Center Stage in Middle East Campaign Retrieved. 2019/11/19 
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-33" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-33" href="http://www.welivesecurity.com/wp-content/uploads/2016/05/Operation-Groundbait.pdf" target="_blank">
+                        Cherepanov, A.. (2016, May 17). Operation Groundbait: Analysis of a surveillance toolkit. Retrieved May 18, 2016.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-34" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-34" href="https://github.com/n1nj4sec/pupy" target="_blank">
+                        Nicolas Verdier. (n.d.). Retrieved January 29, 2018.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-35" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-35" href="https://github.com/quasar/QuasarRAT" target="_blank">
+                        MaxXor. (n.d.). QuasarRAT. Retrieved July 10, 2018.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-36" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-36" href="https://www.volexity.com/blog/2018/06/07/patchwork-apt-group-targets-us-think-tanks/" target="_blank">
+                        Meltzer, M, et al. (2018, June 07). Patchwork APT Group Targets US Think Tanks. Retrieved July 16, 2018.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-37" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-37" href="https://www.microsoft.com/security/blog/2021/01/20/deep-dive-into-the-solorigate-second-stage-activation-from-sunburst-to-teardrop-and-raindrop/" target="_blank">
+                        MSTIC, CDOC, 365 Defender Research Team. (2021, January 20). Deep dive into the Solorigate second-stage activation: From SUNBURST to TEARDROP and Raindrop . Retrieved January 22, 2021.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-38" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-38" href="https://citizenlab.org/2016/05/stealth-falcon/" target="_blank">
+                        Marczak, B. and Scott-Railton, J.. (2016, May 29). Keep Calm and (Don’t) Enable Macros: A New Threat Actor Targets UAE Dissidents. Retrieved June 8, 2016.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-39" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-39" href="https://media.defense.gov/2023/May/24/2003229517/-1/-1/0/CSA_Living_off_the_Land.PDF" target="_blank">
+                        NSA et al. (2023, May 24). People's Republic of China State-Sponsored Cyber Actor Living off the Land to Evade Detection. Retrieved July 27, 2023.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+  
+                    </ol>
+            </div>             
+        </div>
+
+
+    
+                </div>
+            </div>
+        </div>
+    </div>
+    
+        </div>
+    </div>
+
+            <!--stop-indexing-for-search-->
+            <!-- search overlay for entire page -- not displayed inline -->
+            <div class="overlay search" id="search-overlay" style="display: none;">
+    <div class="overlay-inner">
+        <!-- text input for searching -->
+        <div class="search-header">
+            <div class="search-input">
+                <input type="text" id="search-input" placeholder="search">
+            </div>
+            <div class="search-icons">
+                <div class="search-parsing-icon spinner-border" style="display: none" id="search-parsing-icon"></div>
+                <div class="close-search-icon" id="close-search-icon">&times;</div>
+            </div>
+        </div>
+        <!-- results and controls for loading more results -->
+        <div id="search-body" class="search-body">
+            <div class="results" id="search-results">
+                <!-- content will be appended here on search -->
+            </div>
+            <div id="load-more-results" class="load-more-results">
+                <button class="btn btn-default" id="load-more-results-button">load more results</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+        </div>
+        <div class="row flex-grow-0 flex-shrink-1">
+            <!-- footer elements -->
+            <footer class="col footer p-3">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-4 col-sm-4 col-md-3">  
+                            <div class="footer-center-responsive my-auto">
+                                <a href="https://www.mitre.org" target="_blank" rel="noopener" aria-label="MITRE">
+                                    <img src="/versions/v14/theme/images/mitrelogowhiteontrans.gif" class="mitre-logo-wtrans">
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-2 col-sm-2 footer-responsive-break"></div>
+                        <div class="col-6 col-sm-6 text-center">  
+                            <p>
+                                 © 2015-2023, The MITRE Corporation. MITRE ATT&CK and ATT&CK are registered trademarks of The MITRE Corporation.
+                            </p>
+                            <div class="row">
+                    
+                                <div class="col text-right">
+                                    <small>
+                                        <a href="/versions/v14/resources/privacy" class="footer-link">Privacy Policy</a>
+                                    </small>
+                                </div>
+                                <div class="col text-center">
+                                    <small>
+                                        <a href="/versions/v14/resources/terms-of-use" class="footer-link">Terms of Use</a>
+                                    </small>
+                                </div>
+                                <div class="col  text-left ">
+                                    <small>
+                                        <a href="/versions/v14/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v14.0&#013;Website  v4.0.6">ATT&CK v14.0</a>
+                                    </small>
+                                </div>
+            
+                            </div>
+                        </div>
+                        <div class="w-100 p-2 footer-responsive-break"></div>
+                            <div class="col">
+                                <div class="footer-float-right-responsive-brand">
+                                    <div class="mb-1">
+                                        <a href="https://twitter.com/MITREattack" class="btn btn-primary w-100">
+                                            <!-- <i class="fa fa-twitter"></i> -->
+                                            <img src="/versions/v14/theme/images/twitter.png" class="mr-1 twitter-icon">
+                                            <b>@MITREattack</b>
+                                        </a>
+                                    </div>
+                                    <div class="">
+                                        <a href="/versions/v14/contact" class="btn btn-primary w-100">
+                                            Contact
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+
+<!--stopindex-->
+
+</div>
+    <!--SCRIPTS-->
+    <script src="/versions/v14/theme/scripts/jquery-3.5.1.min.js"></script>
+    <script src="/versions/v14/theme/scripts/popper.min.js"></script>
+    <script src="/versions/v14/theme/scripts/bootstrap-select.min.js"></script>
+    <script src="/versions/v14/theme/scripts/bootstrap.bundle.min.js"></script>
+    <script src="/versions/v14/theme/scripts/site.js?3730"></script>
+    <script src="/versions/v14/theme/scripts/settings.js?2436"></script>
+    <script src="/versions/v14/theme/scripts/search_bundle.js"></script>
+
+<!--SCRIPTS-->
+<script src="/versions/v14/theme/scripts/resizer.js"></script>
+
+<!--SCRIPTS-->
+<script src="/versions/v14/theme/scripts/bootstrap-tourist.js"></script>
+<script src="/versions/v14/theme/scripts/settings.js"></script>
+    <script src="/versions/v14/theme/scripts/tour/tour-techniques.js"></script>
+<script src="/versions/v14/theme/scripts/sidebar-load-all.js"></script>
+</body>
+</html>

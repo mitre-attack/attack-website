@@ -1,0 +1,720 @@
+
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+            <script async src="https://www.googletagmanager.com/gtag/js?id=UA-62667723-1"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'UA-62667723-1');
+        </script>
+        <meta name="google-site-verification" content="2oJKLqNN62z6AOCb0A0IXGtbQuj-lev5YPAHFF_cbHQ"/>
+
+        <meta charset='utf-8'>
+        <meta name='viewport' content='width=device-width, initial-scale=1,shrink-to-fit=no'>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <link rel='shortcut icon' href="/versions/v14/theme/favicon.ico" type='image/x-icon'>
+        <title>Network Connection Enumeration, Technique T0840 - ICS | MITRE ATT&CK&reg;</title>
+        <!-- Bootstrap CSS -->
+        <link rel='stylesheet' href="/versions/v14/theme/style/bootstrap.min.css" />
+        <link rel='stylesheet' href="/versions/v14/theme/style/bootstrap-glyphicon.min.css" />
+        <link rel='stylesheet' href="/versions/v14/theme/style/bootstrap-tourist.css" />
+        <link rel='stylesheet' href="/versions/v14/theme/style/bootstrap-select.min.css" />
+        <link rel="stylesheet" type="text/css" href="/versions/v14/theme/style.min.css?d548d7ba">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+</head>
+
+<body>
+
+    <div class="container-fluid attack-website-wrapper d-flex flex-column h-100">
+        <div class="row sticky-top flex-grow-0 flex-shrink-1">
+            <!-- header elements -->
+            <header class="col px-0">
+    
+                    <nav class='navbar navbar-expand-lg navbar-dark position-static'>
+        <a class='navbar-brand' href="/versions/v14/"><img src="/versions/v14/theme/images/mitre_attack_logo.png" class="attack-logo"></a>
+        <button class='navbar-toggler' type='button' data-toggle='collapse' data-target='#navbarCollapse'
+                aria-controls='navbarCollapse' aria-expanded='false' aria-label='Toggle navigation'>
+                <span class='navbar-toggler-icon'></span>
+        </button>
+        <div class='collapse navbar-collapse' id='navbarCollapse'>
+            <ul class='nav nav-tabs ml-auto'>
+                        <li class="nav-item dropdown">
+                                
+    <a class="nav-link dropdown-toggle" href="/versions/v14/matrices/" id="navbarDropdown" role="button"
+    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <b>Matrices</b>
+    </a>
+    <div class="dropdown-menu " aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="/versions/v14/matrices/enterprise/">Enterprise</a>
+                <a class="dropdown-item" href="/versions/v14/matrices/mobile/">Mobile</a>
+                <a class="dropdown-item" href="/versions/v14/matrices/ics/">ICS</a>
+    </div>
+
+
+                        </li>
+                        <li class="nav-item dropdown">
+                                
+    <a class="nav-link dropdown-toggle" href="/versions/v14/tactics/" id="navbarDropdown" role="button"
+    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <b>Tactics</b>
+    </a>
+    <div class="dropdown-menu " aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="/versions/v14/tactics/enterprise/">Enterprise</a>
+                <a class="dropdown-item" href="/versions/v14/tactics/mobile/">Mobile</a>
+                <a class="dropdown-item" href="/versions/v14/tactics/ics/">ICS</a>
+    </div>
+
+
+                        </li>
+                        <li class="nav-item dropdown">
+                                
+    <a class="nav-link dropdown-toggle" href="/versions/v14/techniques/" id="navbarDropdown" role="button"
+    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <b>Techniques</b>
+    </a>
+    <div class="dropdown-menu " aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="/versions/v14/techniques/enterprise/">Enterprise</a>
+                <a class="dropdown-item" href="/versions/v14/techniques/mobile/">Mobile</a>
+                <a class="dropdown-item" href="/versions/v14/techniques/ics/">ICS</a>
+    </div>
+
+
+                        </li>
+                        <li class="nav-item dropdown">
+                                
+    <a class="nav-link dropdown-toggle" href="/versions/v14/datasources" id="navbarDropdown" role="button"
+    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <b>Defenses</b>
+    </a>
+    <div class="dropdown-menu " aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="/versions/v14/datasources">Data Sources</a>
+                
+<div class="dropright dropdown">
+<a class="dropdown-item dropdown-toggle" href="/versions/v14/mitigations/" id="navbarDropdown" role="button"
+    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <b>Mitigations</b>
+    </a>
+    <div class="dropdown-menu " aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="/versions/v14/mitigations/enterprise/">Enterprise</a>
+            <a class="dropdown-item" href="/versions/v14/mitigations/mobile/">Mobile</a>
+            <a class="dropdown-item" href="/versions/v14/mitigations/ics/">ICS</a>
+    </div>
+</div>
+
+                <a class="dropdown-item" href="/versions/v14/assets">Assets</a>
+    </div>
+
+
+                        </li>
+                        <li class="nav-item dropdown">
+                                
+    <a class="nav-link dropdown-toggle" href="/versions/v14/groups" id="navbarDropdown" role="button"
+    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <b>CTI</b>
+    </a>
+    <div class="dropdown-menu " aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="/versions/v14/groups">Groups</a>
+                <a class="dropdown-item" href="/versions/v14/software">Software</a>
+                <a class="dropdown-item" href="/versions/v14/campaigns">Campaigns</a>
+    </div>
+
+
+                        </li>
+                        <li class="nav-item dropdown">
+                                
+    <a class="nav-link dropdown-toggle" href="/versions/v14/resources/" id="navbarDropdown" role="button"
+    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <b>Resources</b>
+    </a>
+    <div class="dropdown-menu " aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="/versions/v14/resources/">General Information</a>
+                <a class="dropdown-item" href="/versions/v14/resources/getting-started/">Getting Started</a>
+                <a class="dropdown-item" href="/versions/v14/resources/contribute/">Contribute</a>
+                <a class="dropdown-item" href="/versions/v14/resources/training/">Training</a>
+                <a class="dropdown-item" href="/versions/v14/resources/attackcon/">ATT&CKcon</a>
+                <a class="dropdown-item" href="/versions/v14/resources/working-with-attack/">Working with ATT&CK</a>
+                <a class="dropdown-item" href="/versions/v14/resources/faq/">FAQ</a>
+                <a class="dropdown-item" href="/resources/updates/">Updates</a>
+                <a class="dropdown-item" href="/resources/versions/">Versions of ATT&CK</a>
+                <a class="dropdown-item" href="/versions/v14/resources/related-projects/">Related Projects</a>
+                <a class="dropdown-item" href="/versions/v14/resources/brand/">Brand Guide</a>
+    </div>
+
+
+                        </li>
+                        <li class="nav-item">
+                            <a href="/versions/v14/resources/benefactors/"  class="nav-link" ><b>Benefactors</b></a>
+                        </li>
+                        <li class="nav-item">
+                                <a href="https://medium.com/mitre-attack/" target="_blank" class="nav-link">
+        <b>Blog</b>&nbsp;
+        <img src="/versions/v14/theme/images/external-site.svg" alt="External site" class="external-icon" />
+    </a>
+
+                        </li>
+                        <li class="nav-item">
+                            <button id="search-button" class="btn search-button">Search <div id="search-icon" class="icon-button search-icon"></div></button>
+                        </li>
+            </ul>
+        </div>
+    </nav>
+
+            </header>
+        </div>
+        <div class="row flex-grow-0 flex-shrink-1">
+            <!-- banner elements -->
+            <div class="col px-0">
+                <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
+                <div class="container-fluid version-banner"><div class="icon-inline baseline mr-1"><img src="/versions/v14/theme/images/icon-warning-24px.svg"></div>Currently viewing <a href="https://github.com/mitre/cti/releases/tag/ATT%26CK-v14.0" target="_blank">ATT&CK v14.0</a> which is the current version of ATT&CK. <a href="/resources/versions/">Learn more about the versioning system</a> or <a href="/">see the live site</a>.</div>
+                    <div class="container-fluid d-none">
+                        ATT&CK v14 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v14-fa473603f86b'>blog post</a> or <a href='https://attack.mitre.org/resources/updates/updates-october-2023/'>release notes</a> for more information.
+                    </div>
+            </div>
+        </div>
+        <div class="row flex-grow-1 flex-shrink-0">
+            <!-- main content elements -->
+            <!--start-indexing-for-search-->
+
+ 
+     
+    <div class="sidebar nav sticky-top flex-column pr-0 pt-4 pb-3 pl-3" id="v-tab" role="tablist" aria-orientation="vertical">
+        <div class="resizer" id="resizer"></div>
+<!--stop-indexing-for-search-->
+<div id="sidebars"></div>
+<!--start-indexing-for-search-->
+    </div>
+
+    
+     
+    <div class="tab-content col-xl-9 col-lg-9 col-md-8 pt-4" id="v-tabContent">
+        <div class="tab-pane fade show active" id="v-attckmatrix" role="tabpanel" aria-labelledby="v-attckmatrix-tab">
+    
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/versions/v14/">Home</a></li>
+            <li class="breadcrumb-item"><a href="/versions/v14/techniques/ics">Techniques</a></li>
+            <li class="breadcrumb-item"><a href="/versions/v14/techniques/ics">ICS</a></li>
+        <li class="breadcrumb-item">Network Connection Enumeration</li>
+    </ol>
+    <div class="tab-pane fade show active" id="v-" role="tabpanel" aria-labelledby="v--tab"></div>
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="jumbotron jumbotron-fluid">
+                <div class="container-fluid">
+                    <h1 id="">
+                        Network Connection Enumeration
+                    </h1> 
+
+                        <div class="row">
+                            <div class="col-md-8">
+   
+
+                                    <div class="description-body">
+                                                <p>Adversaries may perform network connection enumeration to discover information about device communication patterns. If an adversary can inspect the state of a network connection with tools, such as Netstat<span onclick=scrollToRef('scite-1') id="scite-ref-1-a" class="scite-citeref-number" data-reference="Netstat"><sup><a href="https://en.wikipedia.org/wiki/Netstat" target="_blank" data-hasqtip="0" aria-describedby="qtip-0">[1]</a></sup></span>, in conjunction with <a href="/versions/v14/techniques/T0857">System Firmware</a>, then they can determine the role of certain devices on the network  <span onclick=scrollToRef('scite-2') id="scite-ref-2-a" class="scite-citeref-number" data-reference="MITRE"><sup><a href="https://attack.mitre.org/wiki/Technique/T1049" target="_blank" data-hasqtip="1" aria-describedby="qtip-1">[2]</a></sup></span>. The adversary can also use <a href="/versions/v14/techniques/T0842">Network Sniffing</a> to watch network traffic for details about the source, destination, protocol, and content.</p>
+
+                                    </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card">
+                                    <div class="card-body">
+                                            <div class="row card-data" id="card-id">
+                                                <div class="col-md-1 px-0 text-center"></div>
+                                                <div class="col-md-11 pl-0">
+                                                    <span class="h5 card-title">ID:&nbsp;</span>T0840
+                                                </div>
+                                            </div>
+                                        <!--stop-indexing-for-search-->
+                                        <div class="row card-data">
+                                            <div class="col-md-1 px-0 text-center"></div>
+                                            <div class="col-md-11 pl-0">
+                                                    <span class="h5 card-title">Sub-techniques:&nbsp;</span>
+                                                        No sub-techniques
+                                            </div>
+                                        </div>
+                                        <!--start-indexing-for-search-->
+                                            <div id="card-tactics" class="row card-data">
+                                                <div class="col-md-1 px-0 text-center">
+                                                    <span data-toggle="tooltip" data-placement="left" title="" data-test-ignore="true" data-original-title="The tactic objectives that the (sub-)technique can be used to accomplish">&#9432;</span>
+                                                </div>
+                                                <div class="col-md-11 pl-0">
+                                                    <span class="h5 card-title">Tactic:</span>
+                                                        <a href="/versions/v14/tactics/TA0102">Discovery</a>                                                </div>
+                                            </div>
+                                            <div class="row card-data">
+                                                <div class="col-md-1 px-0 text-center">
+                                                    <span data-toggle="tooltip" data-placement="left" title="" data-test-ignore="true" data-original-title="The system an adversary is operating within; could be an operating system or application">&#9432;</span>
+                                                </div>
+                                                <div class="col-md-11 pl-0">
+                                                    <span class="h5 card-title">Platforms:&nbsp;</span>None
+                                                </div>
+                                            </div>
+                                            <div class="row card-data">
+                                                <div class="col-md-1 px-0 text-center"></div>
+                                                <div class="col-md-11 pl-0">
+                                                    <span class="h5 card-title">Version:&nbsp;</span>1.1
+                                                </div>
+                                            </div>
+                                            <div class="row card-data">
+                                                <div class="col-md-1 px-0 text-center"></div>
+                                                <div class="col-md-11 pl-0">
+                                                    <span class="h5 card-title">Created:&nbsp;</span>21 May 2020
+                                                </div>
+                                            </div>
+                                            <div class="row card-data">
+                                                <div class="col-md-1 px-0 text-center"></div>
+                                                <div class="col-md-11 pl-0">
+                                                    <span class="h5 card-title">Last Modified:&nbsp;</span>13 October 2023
+                                                </div>
+                                            </div>
+                                    </div>
+                                </div>
+                                    <div class="text-center pt-2 version-button permalink">
+    <div class="live">
+        <a data-toggle="tooltip" 
+           data-placement="bottom" 
+           title="Permalink to this version of T0840" 
+           href="/versions/v14/techniques/T0840/" data-test-ignore="true">Version Permalink</a>
+    </div>
+    <div class="permalink">
+        <a data-toggle="tooltip" 
+           data-placement="bottom" 
+           title="Go to the live version of T0840" 
+           href="/techniques/T0840/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+    </div>
+</div>
+
+                            </div>
+                        </div>
+                            <h2 class="pt-3" id ="examples">Procedure Examples</h2>
+                            <div class="tables-mobile">
+                            <table class="table table-bordered table-alternate mt-2">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">ID</th>
+                                        <th scope="col">Name</th>
+                                        <th scope="col">Description</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v14/software/S0605"> S0605 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v14/software/S0605"> EKANS </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v14/software/S0605">EKANS</a> performs a DNS lookup of an internal domain name associated with its target network to identify if it was deployed on the intended system. <span onclick=scrollToRef('scite-3') id="scite-ref-3-a" class="scite-citeref-number" data-reference="Ben Hunter and Fred Gutierrez July 2020"><sup><a href="https://www.fortinet.com/blog/threat-research/ekans-ransomware-targeting-ot-ics-systems" target="_blank" data-hasqtip="2" aria-describedby="qtip-2">[3]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v14/software/S0604"> S0604 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v14/software/S0604"> Industroyer </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v14/software/S0604">Industroyer</a> contains an IEC 61850 module that enumerates all connected network adapters to determine their TCP/IP subnet masks. <span onclick=scrollToRef('scite-4') id="scite-ref-4-a" class="scite-citeref-number" data-reference="Anton Cherepanov, ESET June 2017"><sup><a href="https://www.welivesecurity.com/wp-content/uploads/2017/06/Win32_Industroyer.pdf" target="_blank" data-hasqtip="3" aria-describedby="qtip-3">[4]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                </tbody>
+                            </table>
+                            </div>
+                            <h2 class="pt-3" id ="assets">Targeted Assets</h2>
+                            <table class="table table-bordered table-alternate mt-2" aria-describedby="asset-table">
+                                <thead>
+                                    <tr> 
+                                        <th scope="col">ID</th>
+                                        <th scope="col">Asset</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v14/assets/A0008"> A0008 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v14/assets/A0008"> Application Server </a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v14/assets/A0007"> A0007 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v14/assets/A0007"> Control Server </a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v14/assets/A0009"> A0009 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v14/assets/A0009"> Data Gateway </a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v14/assets/A0006"> A0006 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v14/assets/A0006"> Data Historian </a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v14/assets/A0002"> A0002 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v14/assets/A0002"> Human-Machine Interface (HMI) </a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v14/assets/A0005"> A0005 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v14/assets/A0005"> Intelligent Electronic Device (IED) </a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v14/assets/A0012"> A0012 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v14/assets/A0012"> Jump Host </a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v14/assets/A0003"> A0003 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v14/assets/A0003"> Programmable Logic Controller (PLC) </a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v14/assets/A0004"> A0004 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v14/assets/A0004"> Remote Terminal Unit (RTU) </a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v14/assets/A0010"> A0010 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v14/assets/A0010"> Safety Controller </a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v14/assets/A0011"> A0011 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v14/assets/A0011"> Virtual Private Network (VPN) Server </a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v14/assets/A0001"> A0001 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v14/assets/A0001"> Workstation </a>
+                                            </td>
+                                        </tr>
+                                </tbody>
+                            </table>
+                            <h2 class="pt-3" id ="mitigations">Mitigations</h2>
+                            <div class="tables-mobile">
+                                <table class="table table-bordered table-alternate mt-2">
+                                    <thead>
+                                        <tr> 
+                                            <th scope="col">ID</th>
+                                            <th scope="col">Mitigation</th>
+                                            <th scope="col">Description</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                            <tr>
+                                                <td>
+                                                    <a href="/versions/v14/mitigations/M0816"> M0816 </a>
+                                                </td>
+                                                <td>
+                                                    <a href="/versions/v14/mitigations/M0816"> Mitigation Limited or Not Effective </a>
+                                                </td>
+                                                <td>
+                                                                <p>Network connection enumeration is likely obtained by using common system tools (e.g., netstat, ipconfig).</p>
+
+                                                </td>
+                                            </tr>
+                                    </tbody>
+                                </table>
+                                </div>
+                            <h2 class="pt-3" id="detection">Detection</h2>
+                                <div class="tables-mobile">
+<table class="table datasources-table table-bordered">
+    <thead>
+        <tr>
+            <th class="p-2" scope="col">ID</th>
+            <th class="p-2 nowrap" scope="col">Data Source</th>
+            <th class="p-2 nowrap" scope="col">Data Component</th>
+            <th class="p-2" scope="col">Detects</th>
+        </tr>
+    </thead>
+    <tbody>
+            <tr class="datasource" id="uses-DS0017">
+                <td>
+                    <a href="/versions/v14/datasources/DS0017">DS0017</a>
+                </td>
+                <td class="nowrap">
+                    <a href="/versions/v14/datasources/DS0017">Command</a>
+                </td>
+                <!-- Add first data component here -->
+                <td> 
+                    <a href="/datasources/DS0017/#Command%20Execution">Command Execution</a>
+                </td>
+                    <td>
+                                <p>Monitor executed commands and arguments that may look for details about the network configuration and settings, such as IP and/or MAC addresses, of systems they access or through information discovery of remote systems. Also monitor executed commands and arguments that may attempt to get a listing of network connections to or from the compromised system they are currently accessing or from remote systems by querying for information over the network. Information may also be acquired through Windows system management tools such as <a href="/versions/v14/techniques/T1047">Windows Management Instrumentation</a> and <a href="/versions/v14/techniques/T1059/001">PowerShell</a>.</p>
+
+                    </td>
+            </tr>
+            <tr class="datasource" id="uses-DS0009">
+                <td>
+                    <a href="/versions/v14/datasources/DS0009">DS0009</a>
+                </td>
+                <td class="nowrap">
+                    <a href="/versions/v14/datasources/DS0009">Process</a>
+                </td>
+                <!-- Add first data component here -->
+                <td> 
+                    <a href="/datasources/DS0009/#OS%20API%20Execution">OS API Execution</a>
+                </td>
+                    <td>
+                                <p>Monitor for API calls (such as GetAdaptersInfo() and GetIpNetTable()) that may gather details about the network configuration and settings, such as IP and/or MAC addresses. Also monitor for API calls that may attempt to get a listing of network connections to or from the compromised system they are currently accessing or from remote systems by querying for information over the network. For added context on adversary procedures and background see <a href="/versions/v14/techniques/T1016">System Network Configuration Discovery</a> and <a href="/versions/v14/techniques/T1049">System Network Connections Discovery</a>.</p>
+
+                    </td>
+            </tr>
+                    <tr class="datacomponent datasource" id="uses-DS0009-Process Creation">
+                        <td></td>
+                        <td></td>
+                        <td>
+                            <a href="/datasources/DS0009/#Process%20Creation">Process Creation</a>
+                        </td>
+                            <td>
+                                        <p>Monitor for executed processes (such as ipconfig/ifconfig and arp) with arguments that may look for details about the network configuration and settings, such as IP and/or MAC addresses. Also monitor for executed processes that may attempt to get a listing of network connections to or from the compromised system they are currently accessing or from remote systems by querying for information over the network.</p>
+
+                            </td>
+                    </tr>
+            <tr class="datasource" id="uses-DS0012">
+                <td>
+                    <a href="/versions/v14/datasources/DS0012">DS0012</a>
+                </td>
+                <td class="nowrap">
+                    <a href="/versions/v14/datasources/DS0012">Script</a>
+                </td>
+                <!-- Add first data component here -->
+                <td> 
+                    <a href="/datasources/DS0012/#Script%20Execution">Script Execution</a>
+                </td>
+                    <td>
+                                <p>Monitor for any attempts to enable scripts running on a system would be considered suspicious. If scripts are not commonly used on a system, but enabled, scripts running out of cycle from patching or other administrator functions are suspicious. Scripts should be captured from the file system when possible to determine their actions and intent.</p>
+
+                    </td>
+            </tr>
+    </tbody>
+</table>
+</div>
+
+                
+                            <h2 class="pt-3" id="references">References</h2>
+
+        <div class="row">
+            <div class="col">
+                <ol>
+                            
+        <li>
+            <span  id="scite-1" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-1" href="https://en.wikipedia.org/wiki/Netstat" target="_blank">
+                        Wikipedia. (n.d.). Netstat. Retrieved May 23, 2022.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-2" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-2" href="https://attack.mitre.org/wiki/Technique/T1049" target="_blank">
+                        MITRE   System Network Connections Discovery Retrieved. 2018/05/31 
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                </ol>
+            </div>
+            <div class="col">
+                    <ol start="3.0">
+                                
+        <li>
+            <span  id="scite-3" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-3" href="https://www.fortinet.com/blog/threat-research/ekans-ransomware-targeting-ot-ics-systems" target="_blank">
+                        Ben Hunter and Fred Gutierrez 2020, July 01 EKANS Ransomware Targeting OT ICS Systems Retrieved. 2021/04/12 
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-4" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-4" href="https://www.welivesecurity.com/wp-content/uploads/2017/06/Win32_Industroyer.pdf" target="_blank">
+                        Anton Cherepanov, ESET 2017, June 12 Win32/Industroyer: A new threat for industrial control systems Retrieved. 2017/09/15 
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+  
+                    </ol>
+            </div>             
+        </div>
+
+
+    
+                </div>
+            </div>
+        </div>
+    </div>
+    
+        </div>
+    </div>
+
+            <!--stop-indexing-for-search-->
+            <!-- search overlay for entire page -- not displayed inline -->
+            <div class="overlay search" id="search-overlay" style="display: none;">
+    <div class="overlay-inner">
+        <!-- text input for searching -->
+        <div class="search-header">
+            <div class="search-input">
+                <input type="text" id="search-input" placeholder="search">
+            </div>
+            <div class="search-icons">
+                <div class="search-parsing-icon spinner-border" style="display: none" id="search-parsing-icon"></div>
+                <div class="close-search-icon" id="close-search-icon">&times;</div>
+            </div>
+        </div>
+        <!-- results and controls for loading more results -->
+        <div id="search-body" class="search-body">
+            <div class="results" id="search-results">
+                <!-- content will be appended here on search -->
+            </div>
+            <div id="load-more-results" class="load-more-results">
+                <button class="btn btn-default" id="load-more-results-button">load more results</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+        </div>
+        <div class="row flex-grow-0 flex-shrink-1">
+            <!-- footer elements -->
+            <footer class="col footer p-3">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-4 col-sm-4 col-md-3">  
+                            <div class="footer-center-responsive my-auto">
+                                <a href="https://www.mitre.org" target="_blank" rel="noopener" aria-label="MITRE">
+                                    <img src="/versions/v14/theme/images/mitrelogowhiteontrans.gif" class="mitre-logo-wtrans">
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-2 col-sm-2 footer-responsive-break"></div>
+                        <div class="col-6 col-sm-6 text-center">  
+                            <p>
+                                 © 2015-2023, The MITRE Corporation. MITRE ATT&CK and ATT&CK are registered trademarks of The MITRE Corporation.
+                            </p>
+                            <div class="row">
+                    
+                                <div class="col text-right">
+                                    <small>
+                                        <a href="/versions/v14/resources/privacy" class="footer-link">Privacy Policy</a>
+                                    </small>
+                                </div>
+                                <div class="col text-center">
+                                    <small>
+                                        <a href="/versions/v14/resources/terms-of-use" class="footer-link">Terms of Use</a>
+                                    </small>
+                                </div>
+                                <div class="col  text-left ">
+                                    <small>
+                                        <a href="/versions/v14/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v14.0&#013;Website  v4.0.6">ATT&CK v14.0</a>
+                                    </small>
+                                </div>
+            
+                            </div>
+                        </div>
+                        <div class="w-100 p-2 footer-responsive-break"></div>
+                            <div class="col">
+                                <div class="footer-float-right-responsive-brand">
+                                    <div class="mb-1">
+                                        <a href="https://twitter.com/MITREattack" class="btn btn-primary w-100">
+                                            <!-- <i class="fa fa-twitter"></i> -->
+                                            <img src="/versions/v14/theme/images/twitter.png" class="mr-1 twitter-icon">
+                                            <b>@MITREattack</b>
+                                        </a>
+                                    </div>
+                                    <div class="">
+                                        <a href="/versions/v14/contact" class="btn btn-primary w-100">
+                                            Contact
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+
+<!--stopindex-->
+
+</div>
+    <!--SCRIPTS-->
+    <script src="/versions/v14/theme/scripts/jquery-3.5.1.min.js"></script>
+    <script src="/versions/v14/theme/scripts/popper.min.js"></script>
+    <script src="/versions/v14/theme/scripts/bootstrap-select.min.js"></script>
+    <script src="/versions/v14/theme/scripts/bootstrap.bundle.min.js"></script>
+    <script src="/versions/v14/theme/scripts/site.js?4467"></script>
+    <script src="/versions/v14/theme/scripts/settings.js?2082"></script>
+    <script src="/versions/v14/theme/scripts/search_bundle.js"></script>
+
+<!--SCRIPTS-->
+<script src="/versions/v14/theme/scripts/resizer.js"></script>
+
+<!--SCRIPTS-->
+<script src="/versions/v14/theme/scripts/bootstrap-tourist.js"></script>
+<script src="/versions/v14/theme/scripts/settings.js"></script>
+    <script src="/versions/v14/theme/scripts/tour/tour-techniques.js"></script>
+<script src="/versions/v14/theme/scripts/sidebar-load-all.js"></script>
+</body>
+</html>

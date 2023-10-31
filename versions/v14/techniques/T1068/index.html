@@ -1,0 +1,1544 @@
+
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+            <script async src="https://www.googletagmanager.com/gtag/js?id=UA-62667723-1"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'UA-62667723-1');
+        </script>
+        <meta name="google-site-verification" content="2oJKLqNN62z6AOCb0A0IXGtbQuj-lev5YPAHFF_cbHQ"/>
+
+        <meta charset='utf-8'>
+        <meta name='viewport' content='width=device-width, initial-scale=1,shrink-to-fit=no'>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <link rel='shortcut icon' href="/versions/v14/theme/favicon.ico" type='image/x-icon'>
+        <title>Exploitation for Privilege Escalation, Technique T1068 - Enterprise | MITRE ATT&CK&reg;</title>
+        <!-- Bootstrap CSS -->
+        <link rel='stylesheet' href="/versions/v14/theme/style/bootstrap.min.css" />
+        <link rel='stylesheet' href="/versions/v14/theme/style/bootstrap-glyphicon.min.css" />
+        <link rel='stylesheet' href="/versions/v14/theme/style/bootstrap-tourist.css" />
+        <link rel='stylesheet' href="/versions/v14/theme/style/bootstrap-select.min.css" />
+        <link rel="stylesheet" type="text/css" href="/versions/v14/theme/style.min.css?d548d7ba">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+</head>
+
+<body>
+
+    <div class="container-fluid attack-website-wrapper d-flex flex-column h-100">
+        <div class="row sticky-top flex-grow-0 flex-shrink-1">
+            <!-- header elements -->
+            <header class="col px-0">
+    
+                    <nav class='navbar navbar-expand-lg navbar-dark position-static'>
+        <a class='navbar-brand' href="/versions/v14/"><img src="/versions/v14/theme/images/mitre_attack_logo.png" class="attack-logo"></a>
+        <button class='navbar-toggler' type='button' data-toggle='collapse' data-target='#navbarCollapse'
+                aria-controls='navbarCollapse' aria-expanded='false' aria-label='Toggle navigation'>
+                <span class='navbar-toggler-icon'></span>
+        </button>
+        <div class='collapse navbar-collapse' id='navbarCollapse'>
+            <ul class='nav nav-tabs ml-auto'>
+                        <li class="nav-item dropdown">
+                                
+    <a class="nav-link dropdown-toggle" href="/versions/v14/matrices/" id="navbarDropdown" role="button"
+    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <b>Matrices</b>
+    </a>
+    <div class="dropdown-menu " aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="/versions/v14/matrices/enterprise/">Enterprise</a>
+                <a class="dropdown-item" href="/versions/v14/matrices/mobile/">Mobile</a>
+                <a class="dropdown-item" href="/versions/v14/matrices/ics/">ICS</a>
+    </div>
+
+
+                        </li>
+                        <li class="nav-item dropdown">
+                                
+    <a class="nav-link dropdown-toggle" href="/versions/v14/tactics/" id="navbarDropdown" role="button"
+    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <b>Tactics</b>
+    </a>
+    <div class="dropdown-menu " aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="/versions/v14/tactics/enterprise/">Enterprise</a>
+                <a class="dropdown-item" href="/versions/v14/tactics/mobile/">Mobile</a>
+                <a class="dropdown-item" href="/versions/v14/tactics/ics/">ICS</a>
+    </div>
+
+
+                        </li>
+                        <li class="nav-item dropdown">
+                                
+    <a class="nav-link dropdown-toggle" href="/versions/v14/techniques/" id="navbarDropdown" role="button"
+    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <b>Techniques</b>
+    </a>
+    <div class="dropdown-menu " aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="/versions/v14/techniques/enterprise/">Enterprise</a>
+                <a class="dropdown-item" href="/versions/v14/techniques/mobile/">Mobile</a>
+                <a class="dropdown-item" href="/versions/v14/techniques/ics/">ICS</a>
+    </div>
+
+
+                        </li>
+                        <li class="nav-item dropdown">
+                                
+    <a class="nav-link dropdown-toggle" href="/versions/v14/datasources" id="navbarDropdown" role="button"
+    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <b>Defenses</b>
+    </a>
+    <div class="dropdown-menu " aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="/versions/v14/datasources">Data Sources</a>
+                
+<div class="dropright dropdown">
+<a class="dropdown-item dropdown-toggle" href="/versions/v14/mitigations/" id="navbarDropdown" role="button"
+    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <b>Mitigations</b>
+    </a>
+    <div class="dropdown-menu " aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="/versions/v14/mitigations/enterprise/">Enterprise</a>
+            <a class="dropdown-item" href="/versions/v14/mitigations/mobile/">Mobile</a>
+            <a class="dropdown-item" href="/versions/v14/mitigations/ics/">ICS</a>
+    </div>
+</div>
+
+                <a class="dropdown-item" href="/versions/v14/assets">Assets</a>
+    </div>
+
+
+                        </li>
+                        <li class="nav-item dropdown">
+                                
+    <a class="nav-link dropdown-toggle" href="/versions/v14/groups" id="navbarDropdown" role="button"
+    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <b>CTI</b>
+    </a>
+    <div class="dropdown-menu " aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="/versions/v14/groups">Groups</a>
+                <a class="dropdown-item" href="/versions/v14/software">Software</a>
+                <a class="dropdown-item" href="/versions/v14/campaigns">Campaigns</a>
+    </div>
+
+
+                        </li>
+                        <li class="nav-item dropdown">
+                                
+    <a class="nav-link dropdown-toggle" href="/versions/v14/resources/" id="navbarDropdown" role="button"
+    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <b>Resources</b>
+    </a>
+    <div class="dropdown-menu " aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="/versions/v14/resources/">General Information</a>
+                <a class="dropdown-item" href="/versions/v14/resources/getting-started/">Getting Started</a>
+                <a class="dropdown-item" href="/versions/v14/resources/contribute/">Contribute</a>
+                <a class="dropdown-item" href="/versions/v14/resources/training/">Training</a>
+                <a class="dropdown-item" href="/versions/v14/resources/attackcon/">ATT&CKcon</a>
+                <a class="dropdown-item" href="/versions/v14/resources/working-with-attack/">Working with ATT&CK</a>
+                <a class="dropdown-item" href="/versions/v14/resources/faq/">FAQ</a>
+                <a class="dropdown-item" href="/resources/updates/">Updates</a>
+                <a class="dropdown-item" href="/resources/versions/">Versions of ATT&CK</a>
+                <a class="dropdown-item" href="/versions/v14/resources/related-projects/">Related Projects</a>
+                <a class="dropdown-item" href="/versions/v14/resources/brand/">Brand Guide</a>
+    </div>
+
+
+                        </li>
+                        <li class="nav-item">
+                            <a href="/versions/v14/resources/benefactors/"  class="nav-link" ><b>Benefactors</b></a>
+                        </li>
+                        <li class="nav-item">
+                                <a href="https://medium.com/mitre-attack/" target="_blank" class="nav-link">
+        <b>Blog</b>&nbsp;
+        <img src="/versions/v14/theme/images/external-site.svg" alt="External site" class="external-icon" />
+    </a>
+
+                        </li>
+                        <li class="nav-item">
+                            <button id="search-button" class="btn search-button">Search <div id="search-icon" class="icon-button search-icon"></div></button>
+                        </li>
+            </ul>
+        </div>
+    </nav>
+
+            </header>
+        </div>
+        <div class="row flex-grow-0 flex-shrink-1">
+            <!-- banner elements -->
+            <div class="col px-0">
+                <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
+                <div class="container-fluid version-banner"><div class="icon-inline baseline mr-1"><img src="/versions/v14/theme/images/icon-warning-24px.svg"></div>Currently viewing <a href="https://github.com/mitre/cti/releases/tag/ATT%26CK-v14.0" target="_blank">ATT&CK v14.0</a> which is the current version of ATT&CK. <a href="/resources/versions/">Learn more about the versioning system</a> or <a href="/">see the live site</a>.</div>
+                    <div class="container-fluid d-none">
+                        ATT&CK v14 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v14-fa473603f86b'>blog post</a> or <a href='https://attack.mitre.org/resources/updates/updates-october-2023/'>release notes</a> for more information.
+                    </div>
+            </div>
+        </div>
+        <div class="row flex-grow-1 flex-shrink-0">
+            <!-- main content elements -->
+            <!--start-indexing-for-search-->
+
+ 
+     
+    <div class="sidebar nav sticky-top flex-column pr-0 pt-4 pb-3 pl-3" id="v-tab" role="tablist" aria-orientation="vertical">
+        <div class="resizer" id="resizer"></div>
+<!--stop-indexing-for-search-->
+<div id="sidebars"></div>
+<!--start-indexing-for-search-->
+    </div>
+
+    
+     
+    <div class="tab-content col-xl-9 col-lg-9 col-md-8 pt-4" id="v-tabContent">
+        <div class="tab-pane fade show active" id="v-attckmatrix" role="tabpanel" aria-labelledby="v-attckmatrix-tab">
+    
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/versions/v14/">Home</a></li>
+            <li class="breadcrumb-item"><a href="/versions/v14/techniques/enterprise">Techniques</a></li>
+            <li class="breadcrumb-item"><a href="/versions/v14/techniques/enterprise">Enterprise</a></li>
+        <li class="breadcrumb-item">Exploitation for Privilege Escalation</li>
+    </ol>
+    <div class="tab-pane fade show active" id="v-" role="tabpanel" aria-labelledby="v--tab"></div>
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="jumbotron jumbotron-fluid">
+                <div class="container-fluid">
+                    <h1 id="">
+                        Exploitation for Privilege Escalation
+                    </h1> 
+
+                        <div class="row">
+                            <div class="col-md-8">
+   
+
+                                    <div class="description-body">
+                                                <p>Adversaries may exploit software vulnerabilities in an attempt to elevate privileges. Exploitation of a software vulnerability occurs when an adversary takes advantage of a programming error in a program, service, or within the operating system software or kernel itself to execute adversary-controlled code. Security constructs such as permission levels will often hinder access to information and use of certain techniques, so adversaries will likely need to perform privilege escalation to include use of software exploitation to circumvent those restrictions.</p><p>When initially gaining access to a system, an adversary may be operating within a lower privileged process which will prevent them from accessing certain resources on the system. Vulnerabilities may exist, usually in operating system components and software commonly running at higher permissions, that can be exploited to gain higher levels of access on the system. This could enable someone to move from unprivileged or user level permissions to SYSTEM or root permissions depending on the component that is vulnerable. This could also enable an adversary to move from a virtualized environment, such as within a virtual machine or container, onto the underlying host. This may be a necessary step for an adversary compromising an endpoint system that has been properly configured and limits other privilege escalation methods.</p><p>Adversaries may bring a signed vulnerable driver onto a compromised machine so that they can exploit the vulnerability to execute code in kernel mode. This process is sometimes referred to as Bring Your Own Vulnerable Driver (BYOVD).<span onclick=scrollToRef('scite-1') id="scite-ref-1-a" class="scite-citeref-number" data-reference="ESET InvisiMole June 2020"><sup><a href="https://www.welivesecurity.com/wp-content/uploads/2020/06/ESET_InvisiMole.pdf" target="_blank" data-hasqtip="0" aria-describedby="qtip-0">[1]</a></sup></span><span onclick=scrollToRef('scite-2') id="scite-ref-2-a" class="scite-citeref-number" data-reference="Unit42 AcidBox June 2020"><sup><a href="https://unit42.paloaltonetworks.com/acidbox-rare-malware/" target="_blank" data-hasqtip="1" aria-describedby="qtip-1">[2]</a></sup></span> Adversaries may include the vulnerable driver with files delivered during Initial Access or download it to a compromised system via <a href="/versions/v14/techniques/T1105">Ingress Tool Transfer</a> or <a href="/versions/v14/techniques/T1570">Lateral Tool Transfer</a>.</p>
+
+                                    </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card">
+                                    <div class="card-body">
+                                            <div class="row card-data" id="card-id">
+                                                <div class="col-md-1 px-0 text-center"></div>
+                                                <div class="col-md-11 pl-0">
+                                                    <span class="h5 card-title">ID:&nbsp;</span>T1068
+                                                </div>
+                                            </div>
+                                        <!--stop-indexing-for-search-->
+                                        <div class="row card-data">
+                                            <div class="col-md-1 px-0 text-center"></div>
+                                            <div class="col-md-11 pl-0">
+                                                    <span class="h5 card-title">Sub-techniques:&nbsp;</span>
+                                                        No sub-techniques
+                                            </div>
+                                        </div>
+                                        <!--start-indexing-for-search-->
+                                            <div id="card-tactics" class="row card-data">
+                                                <div class="col-md-1 px-0 text-center">
+                                                    <span data-toggle="tooltip" data-placement="left" title="" data-test-ignore="true" data-original-title="The tactic objectives that the (sub-)technique can be used to accomplish">&#9432;</span>
+                                                </div>
+                                                <div class="col-md-11 pl-0">
+                                                    <span class="h5 card-title">Tactic:</span>
+                                                        <a href="/versions/v14/tactics/TA0004">Privilege Escalation</a>                                                </div>
+                                            </div>
+                                            <div class="row card-data">
+                                                <div class="col-md-1 px-0 text-center">
+                                                    <span data-toggle="tooltip" data-placement="left" title="" data-test-ignore="true" data-original-title="The system an adversary is operating within; could be an operating system or application">&#9432;</span>
+                                                </div>
+                                                <div class="col-md-11 pl-0">
+                                                    <span class="h5 card-title">Platforms:&nbsp;</span>Containers, Linux, Windows, macOS
+                                                </div>
+                                            </div>
+                                            <div class="row card-data">
+                                                <div class="col-md-1 px-0 text-center">
+                                                    <span data-toggle="tooltip" data-placement="left" title="" data-test-ignore="true" data-original-title="The lowest level of permissions the adversary is required to be operating within to perform the (sub-)technique on a system">&#9432;</span>
+                                                </div>
+                                                <div class="col-md-11 pl-0">
+                                                    <span class="h5 card-title">Permissions Required:&nbsp;</span>User
+                                                </div>
+                                            </div>
+                                            <div class="row card-data">
+                                                <div class="col-md-1 px-0 text-center">
+                                                    <span data-toggle="tooltip" data-placement="left" title="" data-test-ignore="true" data-original-title="The level of permissions the adversary will attain by performing the (sub-)technique">&#9432;</span>
+                                                </div>
+                                                <div class="col-md-11 pl-0">
+                                                    <span class="h5 card-title">Effective Permissions:&nbsp;</span>User
+                                                </div>
+                                            </div>
+                                            <div class="row card-data">
+                                                <div class="col-md-1 px-0 text-center"></div>
+                                                <div class="col-md-11 pl-0">
+                                                    <span class="h5 card-title">Contributors:&nbsp;</span>David Tayouri; Idan Revivo, @idanr86, Team Nautilus Aqua Security; Joas Antonio dos Santos, @C0d3Cr4zy, Inmetrics; Yaniv Agman, @AgmanYaniv, Team Nautilus Aqua Security
+                                                </div>
+                                            </div>
+                                            <div class="row card-data">
+                                                <div class="col-md-1 px-0 text-center"></div>
+                                                <div class="col-md-11 pl-0">
+                                                    <span class="h5 card-title">Version:&nbsp;</span>1.5
+                                                </div>
+                                            </div>
+                                            <div class="row card-data">
+                                                <div class="col-md-1 px-0 text-center"></div>
+                                                <div class="col-md-11 pl-0">
+                                                    <span class="h5 card-title">Created:&nbsp;</span>31 May 2017
+                                                </div>
+                                            </div>
+                                            <div class="row card-data">
+                                                <div class="col-md-1 px-0 text-center"></div>
+                                                <div class="col-md-11 pl-0">
+                                                    <span class="h5 card-title">Last Modified:&nbsp;</span>07 April 2023
+                                                </div>
+                                            </div>
+                                    </div>
+                                </div>
+                                    <div class="text-center pt-2 version-button permalink">
+    <div class="live">
+        <a data-toggle="tooltip" 
+           data-placement="bottom" 
+           title="Permalink to this version of T1068" 
+           href="/versions/v14/techniques/T1068/" data-test-ignore="true">Version Permalink</a>
+    </div>
+    <div class="permalink">
+        <a data-toggle="tooltip" 
+           data-placement="bottom" 
+           title="Go to the live version of T1068" 
+           href="/techniques/T1068/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+    </div>
+</div>
+
+                            </div>
+                        </div>
+                            <h2 class="pt-3" id ="examples">Procedure Examples</h2>
+                            <div class="tables-mobile">
+                            <table class="table table-bordered table-alternate mt-2">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">ID</th>
+                                        <th scope="col">Name</th>
+                                        <th scope="col">Description</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v14/groups/G0007"> G0007 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v14/groups/G0007"> APT28 </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v14/groups/G0007">APT28</a> has exploited CVE-2014-4076, CVE-2015-2387, CVE-2015-1701, CVE-2017-0263 to escalate privileges.<span onclick=scrollToRef('scite-3') id="scite-ref-3-a" class="scite-citeref-number" data-reference="Bitdefender APT28 Dec 2015"><sup><a href="https://download.bitdefender.com/resources/media/materials/white-papers/en/Bitdefender_In-depth_analysis_of_APT28%E2%80%93The_Political_Cyber-Espionage.pdf" target="_blank" data-hasqtip="2" aria-describedby="qtip-2">[3]</a></sup></span><span onclick=scrollToRef('scite-4') id="scite-ref-4-a" class="scite-citeref-number" data-reference="Microsoft SIR Vol 19"><sup><a href="http://download.microsoft.com/download/4/4/C/44CDEF0E-7924-4787-A56A-16261691ACE3/Microsoft_Security_Intelligence_Report_Volume_19_English.pdf" target="_blank" data-hasqtip="3" aria-describedby="qtip-3">[4]</a></sup></span><span onclick=scrollToRef('scite-5') id="scite-ref-5-a" class="scite-citeref-number" data-reference="Securelist Sofacy Feb 2018"><sup><a href="https://securelist.com/a-slice-of-2017-sofacy-activity/83930/" target="_blank" data-hasqtip="4" aria-describedby="qtip-4">[5]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v14/groups/G0016"> G0016 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v14/groups/G0016"> APT29 </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v14/groups/G0016">APT29</a> has exploited CVE-2021-36934 to escalate privileges on a compromised host.<span onclick=scrollToRef('scite-6') id="scite-ref-6-a" class="scite-citeref-number" data-reference="ESET T3 Threat Report 2021"><sup><a href="https://www.welivesecurity.com/wp-content/uploads/2022/02/eset_threat_report_t32021.pdf" target="_blank" data-hasqtip="5" aria-describedby="qtip-5">[6]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v14/groups/G0050"> G0050 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v14/groups/G0050"> APT32 </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v14/groups/G0050">APT32</a> has used CVE-2016-7255 to escalate privileges.<span onclick=scrollToRef('scite-7') id="scite-ref-7-a" class="scite-citeref-number" data-reference="FireEye APT32 May 2017"><sup><a href="https://www.fireeye.com/blog/threat-research/2017/05/cyber-espionage-apt32.html" target="_blank" data-hasqtip="6" aria-describedby="qtip-6">[7]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v14/groups/G0064"> G0064 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v14/groups/G0064"> APT33 </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v14/groups/G0064">APT33</a> has used a publicly available exploit for CVE-2017-0213 to escalate privileges on a local system.<span onclick=scrollToRef('scite-8') id="scite-ref-8-a" class="scite-citeref-number" data-reference="FireEye APT33 Guardrail"><sup><a href="https://www.fireeye.com/blog/threat-research/2018/12/overruled-containing-a-potentially-destructive-adversary.html" target="_blank" data-hasqtip="7" aria-describedby="qtip-7">[8]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v14/groups/G1002"> G1002 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v14/groups/G1002"> BITTER </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v14/groups/G1002">BITTER</a> has exploited CVE-2021-1732 for privilege escalation.<span onclick=scrollToRef('scite-9') id="scite-ref-9-a" class="scite-citeref-number" data-reference="DBAPPSecurity BITTER zero-day Feb 2021"><sup><a href="https://ti.dbappsecurity.com.cn/blog/articles/2021/02/10/windows-kernel-zero-day-exploit-is-used-by-bitter-apt-in-targeted-attack/" target="_blank" data-hasqtip="8" aria-describedby="qtip-8">[9]</a></sup></span><span onclick=scrollToRef('scite-10') id="scite-ref-10-a" class="scite-citeref-number" data-reference="Microsoft CVE-2021-1732 Feb 2021"><sup><a href="https://msrc.microsoft.com/update-guide/vulnerability/CVE-2021-1732" target="_blank" data-hasqtip="9" aria-describedby="qtip-9">[10]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v14/campaigns/C0017"> C0017 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v14/campaigns/C0017"> C0017 </a>
+                                            </td>
+                                            <td>
+                                                            <p>During <a href="https://attack.mitre.org/campaigns/C0017">C0017</a>, <a href="/versions/v14/groups/G0096">APT41</a> abused named pipe impersonation for privilege escalation.<span onclick=scrollToRef('scite-11') id="scite-ref-11-a" class="scite-citeref-number" data-reference="Mandiant APT41"><sup><a href="https://www.mandiant.com/resources/apt41-us-state-governments" target="_blank" data-hasqtip="10" aria-describedby="qtip-10">[11]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v14/software/S0484"> S0484 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v14/software/S0484"> Carberp </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v14/software/S0484">Carberp</a> has exploited multiple Windows vulnerabilities (CVE-2010-2743, CVE-2010-3338, CVE-2010-4398, CVE-2008-1084) and a .NET Runtime Optimization vulnerability for privilege escalation.<span onclick=scrollToRef('scite-12') id="scite-ref-12-a" class="scite-citeref-number" data-reference="ESET Carberp March 2012"><sup><a href="https://www.eset.com/fileadmin/eset/US/resources/docs/white-papers/white-papers-win-32-carberp.pdf" target="_blank" data-hasqtip="11" aria-describedby="qtip-11">[12]</a></sup></span><span onclick=scrollToRef('scite-13') id="scite-ref-13-a" class="scite-citeref-number" data-reference="Prevx Carberp March 2011"><sup><a href="http://pxnow.prevx.com/content/blog/carberp-a_modular_information_stealing_trojan.pdf" target="_blank" data-hasqtip="12" aria-describedby="qtip-12">[13]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v14/groups/G0080"> G0080 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v14/groups/G0080"> Cobalt Group </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v14/groups/G0080">Cobalt Group</a> has used exploits to increase their levels of rights and privileges.<span onclick=scrollToRef('scite-14') id="scite-ref-14-a" class="scite-citeref-number" data-reference="Group IB Cobalt Aug 2017"><sup><a href="https://www.group-ib.com/blog/cobalt" target="_blank" data-hasqtip="13" aria-describedby="qtip-13">[14]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v14/software/S0154"> S0154 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v14/software/S0154"> Cobalt Strike </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v14/software/S0154">Cobalt Strike</a> can exploit vulnerabilities such as MS14-058.<span onclick=scrollToRef('scite-15') id="scite-ref-15-a" class="scite-citeref-number" data-reference="Cobalt Strike TTPs Dec 2017"><sup><a href="https://www.cobaltstrike.com/downloads/reports/tacticstechniquesandprocedures.pdf" target="_blank" data-hasqtip="14" aria-describedby="qtip-14">[15]</a></sup></span><span onclick=scrollToRef('scite-16') id="scite-ref-16-a" class="scite-citeref-number" data-reference="Cobalt Strike Manual 4.3 November 2020"><sup><a href="https://web.archive.org/web/20210708035426/https://www.cobaltstrike.com/downloads/csmanual43.pdf" target="_blank" data-hasqtip="15" aria-describedby="qtip-15">[16]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v14/software/S0050"> S0050 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v14/software/S0050"> CosmicDuke </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v14/software/S0050">CosmicDuke</a> attempts to exploit privilege escalation vulnerabilities CVE-2010-0232 or CVE-2010-4398.<span onclick=scrollToRef('scite-17') id="scite-ref-17-a" class="scite-citeref-number" data-reference="F-Secure The Dukes"><sup><a href="https://www.f-secure.com/documents/996508/1030745/dukes_whitepaper.pdf" target="_blank" data-hasqtip="16" aria-describedby="qtip-16">[17]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v14/software/S0363"> S0363 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v14/software/S0363"> Empire </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v14/software/S0363">Empire</a> can exploit vulnerabilities such as MS16-032 and MS16-135.<span onclick=scrollToRef('scite-18') id="scite-ref-18-a" class="scite-citeref-number" data-reference="Github PowerShell Empire"><sup><a href="https://github.com/PowerShellEmpire/Empire" target="_blank" data-hasqtip="17" aria-describedby="qtip-17">[18]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v14/groups/G0037"> G0037 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v14/groups/G0037"> FIN6 </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v14/groups/G0037">FIN6</a> has used tools to exploit Windows vulnerabilities in order to escalate privileges. The tools targeted CVE-2013-3660, CVE-2011-2005, and CVE-2010-4398, all of which could allow local users to access kernel-level privileges.<span onclick=scrollToRef('scite-19') id="scite-ref-19-a" class="scite-citeref-number" data-reference="FireEye FIN6 April 2016"><sup><a href="https://www2.fireeye.com/rs/848-DID-242/images/rpt-fin6.pdf" target="_blank" data-hasqtip="18" aria-describedby="qtip-18">[19]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v14/groups/G0061"> G0061 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v14/groups/G0061"> FIN8 </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v14/groups/G0061">FIN8</a> has exploited the CVE-2016-0167 local vulnerability.<span onclick=scrollToRef('scite-20') id="scite-ref-20-a" class="scite-citeref-number" data-reference="FireEye Fin8 May 2016"><sup><a href="https://www.fireeye.com/blog/threat-research/2016/05/windows-zero-day-payment-cards.html" target="_blank" data-hasqtip="19" aria-describedby="qtip-19">[20]</a></sup></span><span onclick=scrollToRef('scite-21') id="scite-ref-21-a" class="scite-citeref-number" data-reference="FireEye Know Your Enemy FIN8 Aug 2016"><sup><a href="https://www2.fireeye.com/WBNR-Know-Your-Enemy-UNC622-Spear-Phishing.html" target="_blank" data-hasqtip="20" aria-describedby="qtip-20">[21]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v14/software/S0601"> S0601 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v14/software/S0601"> Hildegard </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v14/software/S0601">Hildegard</a> has used the BOtB tool which exploits CVE-2019-5736.<span onclick=scrollToRef('scite-22') id="scite-ref-22-a" class="scite-citeref-number" data-reference="Unit 42 Hildegard Malware"><sup><a href="https://unit42.paloaltonetworks.com/hildegard-malware-teamtnt/" target="_blank" data-hasqtip="21" aria-describedby="qtip-21">[22]</a></sup></span> </p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v14/software/S0260"> S0260 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v14/software/S0260"> InvisiMole </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v14/software/S0260">InvisiMole</a> has exploited CVE-2007-5633 vulnerability in the speedfan.sys driver to obtain kernel mode privileges.<span onclick=scrollToRef('scite-1') id="scite-ref-1-a" class="scite-citeref-number" data-reference="ESET InvisiMole June 2020"><sup><a href="https://www.welivesecurity.com/wp-content/uploads/2020/06/ESET_InvisiMole.pdf" target="_blank" data-hasqtip="0" aria-describedby="qtip-0">[1]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v14/software/S0044"> S0044 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v14/software/S0044"> JHUHUGIT </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v14/software/S0044">JHUHUGIT</a> has exploited CVE-2015-1701 and CVE-2015-2387 to escalate privileges.<span onclick=scrollToRef('scite-23') id="scite-ref-23-a" class="scite-citeref-number" data-reference="ESET Sednit Part 1"><sup><a href="http://www.welivesecurity.com/wp-content/uploads/2016/10/eset-sednit-part1.pdf" target="_blank" data-hasqtip="22" aria-describedby="qtip-22">[23]</a></sup></span><span onclick=scrollToRef('scite-24') id="scite-ref-24-a" class="scite-citeref-number" data-reference="ESET Sednit July 2015"><sup><a href="http://www.welivesecurity.com/2015/07/10/sednit-apt-group-meets-hacking-team/" target="_blank" data-hasqtip="23" aria-describedby="qtip-23">[24]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v14/groups/G1004"> G1004 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v14/groups/G1004"> LAPSUS$ </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v14/groups/G1004">LAPSUS$</a> has exploited unpatched vulnerabilities on internally accessible servers including JIRA, GitLab, and Confluence for privilege escalation.<span onclick=scrollToRef('scite-25') id="scite-ref-25-a" class="scite-citeref-number" data-reference="MSTIC DEV-0537 Mar 2022"><sup><a href="https://www.microsoft.com/security/blog/2022/03/22/dev-0537-criminal-actor-targeting-organizations-for-data-exfiltration-and-destruction/" target="_blank" data-hasqtip="24" aria-describedby="qtip-24">[25]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v14/groups/G1019"> G1019 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v14/groups/G1019"> MoustachedBouncer </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v14/groups/G1019">MoustachedBouncer</a> has exploited CVE-2021-1732 to execute malware components with elevated rights.<span onclick=scrollToRef('scite-26') id="scite-ref-26-a" class="scite-citeref-number" data-reference="MoustachedBouncer ESET August 2023"><sup><a href="https://www.welivesecurity.com/en/eset-research/moustachedbouncer-espionage-against-foreign-diplomats-in-belarus/" target="_blank" data-hasqtip="25" aria-describedby="qtip-25">[26]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v14/software/S0664"> S0664 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v14/software/S0664"> Pandora </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v14/software/S0664">Pandora</a> can use CVE-2017-15303 to bypass Windows Driver Signature Enforcement (DSE) protection and load its driver.<span onclick=scrollToRef('scite-27') id="scite-ref-27-a" class="scite-citeref-number" data-reference="Trend Micro Iron Tiger April 2021"><sup><a href="https://www.trendmicro.com/en_us/research/21/d/iron-tiger-apt-updates-toolkit-with-evolved-sysupdate-malware-va.html" target="_blank" data-hasqtip="26" aria-describedby="qtip-26">[27]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v14/groups/G0068"> G0068 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v14/groups/G0068"> PLATINUM </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v14/groups/G0068">PLATINUM</a> has leveraged a zero-day vulnerability to escalate privileges.<span onclick=scrollToRef('scite-28') id="scite-ref-28-a" class="scite-citeref-number" data-reference="Microsoft PLATINUM April 2016"><sup><a href="https://download.microsoft.com/download/2/2/5/225BFE3E-E1DE-4F5B-A77B-71200928D209/Platinum%20feature%20article%20-%20Targeted%20attacks%20in%20South%20and%20Southeast%20Asia%20April%202016.pdf" target="_blank" data-hasqtip="27" aria-describedby="qtip-27">[28]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v14/software/S0378"> S0378 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v14/software/S0378"> PoshC2 </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v14/software/S0378">PoshC2</a> contains modules for local privilege escalation exploits such as CVE-2016-9192 and CVE-2016-0099.<span onclick=scrollToRef('scite-29') id="scite-ref-29-a" class="scite-citeref-number" data-reference="GitHub PoshC2"><sup><a href="https://github.com/nettitude/PoshC2_Python" target="_blank" data-hasqtip="28" aria-describedby="qtip-28">[29]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v14/software/S0654"> S0654 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v14/software/S0654"> ProLock </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v14/software/S0654">ProLock</a> can use CVE-2019-0859 to escalate privileges on a compromised host.<span onclick=scrollToRef('scite-30') id="scite-ref-30-a" class="scite-citeref-number" data-reference="Group IB Ransomware September 2020"><sup><a href="https://groupib.pathfactory.com/ransomware-reports/prolock_wp" target="_blank" data-hasqtip="29" aria-describedby="qtip-29">[30]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v14/software/S0125"> S0125 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v14/software/S0125"> Remsec </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v14/software/S0125">Remsec</a> has a plugin to drop and execute vulnerable Outpost Sandbox or avast! Virtualization drivers in order to gain kernel mode privileges.<span onclick=scrollToRef('scite-31') id="scite-ref-31-a" class="scite-citeref-number" data-reference="Kaspersky ProjectSauron Technical Analysis"><sup><a href="https://securelist.com/files/2016/07/The-ProjectSauron-APT_Technical_Analysis_KL.pdf" target="_blank" data-hasqtip="30" aria-describedby="qtip-30">[31]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v14/groups/G1015"> G1015 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v14/groups/G1015"> Scattered Spider </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v14/groups/G1015">Scattered Spider</a> has deployed a malicious kernel driver through exploitation of CVE-2015-2291 in the Intel Ethernet diagnostics driver for Windows (iqvw64.sys).<span onclick=scrollToRef('scite-32') id="scite-ref-32-a" class="scite-citeref-number" data-reference="CrowdStrike Scattered Spider BYOVD January 2023"><sup><a href="https://www.crowdstrike.com/blog/scattered-spider-attempts-to-avoid-detection-with-bring-your-own-vulnerable-driver-tactic/" target="_blank" data-hasqtip="31" aria-describedby="qtip-31">[32]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v14/software/S0623"> S0623 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v14/software/S0623"> Siloscape </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v14/software/S0623">Siloscape</a> has leveraged a vulnerability in Windows containers to perform an <a href="/versions/v14/techniques/T1611">Escape to Host</a>.<span onclick=scrollToRef('scite-33') id="scite-ref-33-a" class="scite-citeref-number" data-reference="Unit 42 Siloscape Jun 2021"><sup><a href="https://unit42.paloaltonetworks.com/siloscape/" target="_blank" data-hasqtip="32" aria-describedby="qtip-32">[33]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v14/software/S0603"> S0603 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v14/software/S0603"> Stuxnet </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v14/software/S0603">Stuxnet</a> used MS10-073 and an undisclosed Task Scheduler vulnerability to escalate privileges on local Windows machines.<span onclick=scrollToRef('scite-34') id="scite-ref-34-a" class="scite-citeref-number" data-reference="Nicolas Falliere, Liam O Murchu, Eric Chien February 2011"><sup><a href="https://www.wired.com/images_blogs/threatlevel/2011/02/Symantec-Stuxnet-Update-Feb-2011.pdf" target="_blank" data-hasqtip="33" aria-describedby="qtip-33">[34]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v14/groups/G0027"> G0027 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v14/groups/G0027"> Threat Group-3390 </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v14/groups/G0027">Threat Group-3390</a> has used CVE-2014-6324 and CVE-2017-0213 to escalate privileges.<span onclick=scrollToRef('scite-35') id="scite-ref-35-a" class="scite-citeref-number" data-reference="SecureWorks BRONZE UNION June 2017"><sup><a href="https://www.secureworks.com/research/bronze-union" target="_blank" data-hasqtip="34" aria-describedby="qtip-34">[35]</a></sup></span><span onclick=scrollToRef('scite-36') id="scite-ref-36-a" class="scite-citeref-number" data-reference="Profero APT27 December 2020"><sup><a href="https://web.archive.org/web/20210104144857/https://shared-public-reports.s3-eu-west-1.amazonaws.com/APT27+turns+to+ransomware.pdf" target="_blank" data-hasqtip="35" aria-describedby="qtip-35">[36]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v14/groups/G0131"> G0131 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v14/groups/G0131"> Tonto Team </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v14/groups/G0131">Tonto Team</a> has exploited CVE-2019-0803 and MS16-032 to escalate privileges.<span onclick=scrollToRef('scite-37') id="scite-ref-37-a" class="scite-citeref-number" data-reference="TrendMicro Tonto Team October 2020"><sup><a href="https://vb2020.vblocalhost.com/uploads/VB2020-06.pdf" target="_blank" data-hasqtip="36" aria-describedby="qtip-36">[37]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v14/groups/G0010"> G0010 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v14/groups/G0010"> Turla </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v14/groups/G0010">Turla</a> has exploited vulnerabilities in the VBoxDrv.sys driver to obtain kernel mode privileges.<span onclick=scrollToRef('scite-2') id="scite-ref-2-a" class="scite-citeref-number" data-reference="Unit42 AcidBox June 2020"><sup><a href="https://unit42.paloaltonetworks.com/acidbox-rare-malware/" target="_blank" data-hasqtip="1" aria-describedby="qtip-1">[2]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v14/groups/G0107"> G0107 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v14/groups/G0107"> Whitefly </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v14/groups/G0107">Whitefly</a> has used an open-source tool to exploit a known Windows privilege escalation vulnerability (CVE-2016-0051) on unpatched computers.<span onclick=scrollToRef('scite-38') id="scite-ref-38-a" class="scite-citeref-number" data-reference="Symantec Whitefly March 2019"><sup><a href="https://symantec-enterprise-blogs.security.com/blogs/threat-intelligence/whitefly-espionage-singapore" target="_blank" data-hasqtip="37" aria-describedby="qtip-37">[38]</a></sup></span>    </p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v14/software/S0176"> S0176 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v14/software/S0176"> Wingbird </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v14/software/S0176">Wingbird</a> exploits CVE-2016-4117 to allow an executable to gain escalated privileges.<span onclick=scrollToRef('scite-39') id="scite-ref-39-a" class="scite-citeref-number" data-reference="Microsoft SIR Vol 21"><sup><a href="http://download.microsoft.com/download/E/B/0/EB0F50CC-989C-4B66-B7F6-68CD3DC90DE3/Microsoft_Security_Intelligence_Report_Volume_21_English.pdf" target="_blank" data-hasqtip="38" aria-describedby="qtip-38">[39]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v14/software/S0658"> S0658 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v14/software/S0658"> XCSSET </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v14/software/S0658">XCSSET</a> has used a zero-day exploit in the ssh launchdaemon to elevate privileges and bypass SIP.<span onclick=scrollToRef('scite-40') id="scite-ref-40-a" class="scite-citeref-number" data-reference="trendmicro xcsset xcode project 2020"><sup><a href="https://documents.trendmicro.com/assets/pdf/XCSSET_Technical_Brief.pdf" target="_blank" data-hasqtip="39" aria-describedby="qtip-39">[40]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v14/groups/G0128"> G0128 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v14/groups/G0128"> ZIRCONIUM </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v14/groups/G0128">ZIRCONIUM</a> has exploited CVE-2017-0005 for local privilege escalation.<span onclick=scrollToRef('scite-41') id="scite-ref-41-a" class="scite-citeref-number" data-reference="Check Point APT31 February 2021"><sup><a href="https://research.checkpoint.com/2021/the-story-of-jian/" target="_blank" data-hasqtip="40" aria-describedby="qtip-40">[41]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v14/software/S0672"> S0672 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v14/software/S0672"> Zox </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v14/software/S0672">Zox</a> has the ability to leverage local and remote exploits to escalate privileges.<span onclick=scrollToRef('scite-42') id="scite-ref-42-a" class="scite-citeref-number" data-reference="Novetta-Axiom"><sup><a href="https://web.archive.org/web/20230115144216/http://www.novetta.com/wp-content/uploads/2014/11/Executive_Summary-Final_1.pdf" target="_blank" data-hasqtip="41" aria-describedby="qtip-41">[42]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                </tbody>
+                            </table>
+                            </div>
+                            <h2 class="pt-3" id ="mitigations">Mitigations</h2>
+                            <div class="tables-mobile">
+                                <table class="table table-bordered table-alternate mt-2">
+                                    <thead>
+                                        <tr> 
+                                            <th scope="col">ID</th>
+                                            <th scope="col">Mitigation</th>
+                                            <th scope="col">Description</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                            <tr>
+                                                <td>
+                                                    <a href="/versions/v14/mitigations/M1048"> M1048 </a>
+                                                </td>
+                                                <td>
+                                                    <a href="/versions/v14/mitigations/M1048"> Application Isolation and Sandboxing </a>
+                                                </td>
+                                                <td>
+                                                                <p>Make it difficult for adversaries to advance their operation through exploitation of undiscovered or unpatched vulnerabilities by using sandboxing. Other types of virtualization and application microsegmentation may also mitigate the impact of some types of exploitation. Risks of additional exploits and weaknesses in these systems may still exist. <span onclick=scrollToRef('scite-43') id="scite-ref-43-a" class="scite-citeref-number" data-reference="Ars Technica Pwn2Own 2017 VM Escape"><sup><a href="https://arstechnica.com/information-technology/2017/03/hack-that-escapes-vm-by-exploiting-edge-browser-fetches-105000-at-pwn2own/" target="_blank" data-hasqtip="42" aria-describedby="qtip-42">[43]</a></sup></span></p>
+
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <a href="/versions/v14/mitigations/M1038"> M1038 </a>
+                                                </td>
+                                                <td>
+                                                    <a href="/versions/v14/mitigations/M1038"> Execution Prevention </a>
+                                                </td>
+                                                <td>
+                                                                <p>Consider blocking the execution of known vulnerable drivers that adversaries may exploit to execute code in kernel mode. Validate driver block rules in audit mode to ensure stability prior to production deployment.<span onclick=scrollToRef('scite-44') id="scite-ref-44-a" class="scite-citeref-number" data-reference="Microsoft Driver Block Rules"><sup><a href="https://docs.microsoft.com/en-us/windows/security/threat-protection/windows-defender-application-control/microsoft-recommended-driver-block-rules" target="_blank" data-hasqtip="43" aria-describedby="qtip-43">[44]</a></sup></span></p>
+
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <a href="/versions/v14/mitigations/M1050"> M1050 </a>
+                                                </td>
+                                                <td>
+                                                    <a href="/versions/v14/mitigations/M1050"> Exploit Protection </a>
+                                                </td>
+                                                <td>
+                                                                <p>Security applications that look for behavior used during exploitation such as Windows Defender Exploit Guard (WDEG) and the Enhanced Mitigation Experience Toolkit (EMET) can be used to mitigate some exploitation behavior. <span onclick=scrollToRef('scite-45') id="scite-ref-45-a" class="scite-citeref-number" data-reference="TechNet Moving Beyond EMET"><sup><a href="https://blogs.technet.microsoft.com/srd/2017/08/09/moving-beyond-emet-ii-windows-defender-exploit-guard/" target="_blank" data-hasqtip="44" aria-describedby="qtip-44">[45]</a></sup></span> Control flow integrity checking is another way to potentially identify and stop a software exploit from occurring. <span onclick=scrollToRef('scite-46') id="scite-ref-46-a" class="scite-citeref-number" data-reference="Wikipedia Control Flow Integrity"><sup><a href="https://en.wikipedia.org/wiki/Control-flow_integrity" target="_blank" data-hasqtip="45" aria-describedby="qtip-45">[46]</a></sup></span> Many of these protections depend on the architecture and target application binary for compatibility and may not work for software components targeted for privilege escalation.</p>
+
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <a href="/versions/v14/mitigations/M1019"> M1019 </a>
+                                                </td>
+                                                <td>
+                                                    <a href="/versions/v14/mitigations/M1019"> Threat Intelligence Program </a>
+                                                </td>
+                                                <td>
+                                                                <p>Develop a robust cyber threat intelligence capability to determine what types and levels of threat may use software exploits and 0-days against a particular organization.</p>
+
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <a href="/versions/v14/mitigations/M1051"> M1051 </a>
+                                                </td>
+                                                <td>
+                                                    <a href="/versions/v14/mitigations/M1051"> Update Software </a>
+                                                </td>
+                                                <td>
+                                                                <p>Update software regularly by employing patch management for internal enterprise endpoints and servers.</p>
+
+                                                </td>
+                                            </tr>
+                                    </tbody>
+                                </table>
+                                </div>
+                            <h2 class="pt-3" id="detection">Detection</h2>
+                                <div class="tables-mobile">
+<table class="table datasources-table table-bordered">
+    <thead>
+        <tr>
+            <th class="p-2" scope="col">ID</th>
+            <th class="p-2 nowrap" scope="col">Data Source</th>
+            <th class="p-2 nowrap" scope="col">Data Component</th>
+            <th class="p-2" scope="col">Detects</th>
+        </tr>
+    </thead>
+    <tbody>
+            <tr class="datasource" id="uses-DS0027">
+                <td>
+                    <a href="/versions/v14/datasources/DS0027">DS0027</a>
+                </td>
+                <td class="nowrap">
+                    <a href="/versions/v14/datasources/DS0027">Driver</a>
+                </td>
+                <!-- Add first data component here -->
+                <td> 
+                    <a href="/datasources/DS0027/#Driver%20Load">Driver Load</a>
+                </td>
+                    <td>
+                                <p>Detecting software exploitation may be difficult depending on the tools available. Software exploits may not always succeed or may cause the exploited process to become unstable or crash. Also look for behavior on the endpoint system that might indicate successful compromise, such as abnormal behavior of the processes. This could include suspicious files written to disk, evidence of <a href="/versions/v14/techniques/T1055">Process Injection</a> for attempts to hide execution or evidence of Discovery. Consider monitoring for the presence or loading (ex: Sysmon Event ID 6) of known vulnerable drivers that adversaries may drop and exploit to execute code in kernel mode.<span onclick=scrollToRef('scite-44') id="scite-ref-44-a" class="scite-citeref-number" data-reference="Microsoft Driver Block Rules"><sup><a href="https://docs.microsoft.com/en-us/windows/security/threat-protection/windows-defender-application-control/microsoft-recommended-driver-block-rules" target="_blank" data-hasqtip="43" aria-describedby="qtip-43">[44]</a></sup></span> Higher privileges are often necessary to perform additional actions such as some methods of <a href="/versions/v14/techniques/T1003">OS Credential Dumping</a>. Look for additional activity that may indicate an adversary has gained higher privileges.</p>
+
+                    </td>
+            </tr>
+            <tr class="datasource" id="uses-DS0009">
+                <td>
+                    <a href="/versions/v14/datasources/DS0009">DS0009</a>
+                </td>
+                <td class="nowrap">
+                    <a href="/versions/v14/datasources/DS0009">Process</a>
+                </td>
+                <!-- Add first data component here -->
+                <td> 
+                    <a href="/datasources/DS0009/#Process%20Creation">Process Creation</a>
+                </td>
+                    <td>
+                                <p>Monitor for newly executed processes that may exploit software vulnerabilities in an attempt to elevate privileges.</p><p>Note: Event IDs are for Sysmon (Event ID 1 - process create) and Windows Security Log (Event ID 4688 - a new process has been created). The Analytic is oriented around looking for an invocation of either spoolsv.exe or conhost.exe by a user, thus alerting us of any potentially malicious activity. A common way of escalating privileges in a system is by externally invoking and exploiting these executables, both of which are legitimate Windows applications. </p><h4> Analytic 1 - Unusual Child Process for spoolsv.exe or connhost.exe </h4><p><code> processes = filter processes where (  (event_id == "1" OR event_id == "4688") AND  (exe =="C:\Windows\System32\spoolsv.exe" OR    exe =="C:\Windows\System32\conhost.exe") AND   parent_image_path == "C:\Windows\System32\cmd.exe")</code></p>
+
+                    </td>
+            </tr>
+    </tbody>
+</table>
+</div>
+
+                
+                            <h2 class="pt-3" id="references">References</h2>
+
+        <div class="row">
+            <div class="col">
+                <ol>
+                            
+        <li>
+            <span  id="scite-1" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-1" href="https://www.welivesecurity.com/wp-content/uploads/2020/06/ESET_InvisiMole.pdf" target="_blank">
+                        Hromcova, Z. and Cherpanov, A. (2020, June). INVISIMOLE: THE HIDDEN PART OF THE STORY. Retrieved July 16, 2020.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-2" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-2" href="https://unit42.paloaltonetworks.com/acidbox-rare-malware/" target="_blank">
+                        Reichel, D. and Idrizovic, E. (2020, June 17). AcidBox: Rare Malware Repurposing Turla Group Exploit Targeted Russian Organizations. Retrieved March 16, 2021.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-3" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-3" href="https://download.bitdefender.com/resources/media/materials/white-papers/en/Bitdefender_In-depth_analysis_of_APT28%E2%80%93The_Political_Cyber-Espionage.pdf" target="_blank">
+                        Bitdefender. (2015, December). APT28 Under the Scope. Retrieved February 23, 2017.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-4" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-4" href="http://download.microsoft.com/download/4/4/C/44CDEF0E-7924-4787-A56A-16261691ACE3/Microsoft_Security_Intelligence_Report_Volume_19_English.pdf" target="_blank">
+                        Anthe, C. et al. (2015, October 19). Microsoft Security Intelligence Report Volume 19. Retrieved December 23, 2015.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-5" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-5" href="https://securelist.com/a-slice-of-2017-sofacy-activity/83930/" target="_blank">
+                        Kaspersky Lab's Global Research & Analysis Team. (2018, February 20). A Slice of 2017 Sofacy Activity. Retrieved November 27, 2018.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-6" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-6" href="https://www.welivesecurity.com/wp-content/uploads/2022/02/eset_threat_report_t32021.pdf" target="_blank">
+                        ESET. (2022, February). THREAT REPORT T3 2021. Retrieved February 10, 2022.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-7" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-7" href="https://www.fireeye.com/blog/threat-research/2017/05/cyber-espionage-apt32.html" target="_blank">
+                        Carr, N.. (2017, May 14). Cyber Espionage is Alive and Well: APT32 and the Threat to Global Corporations. Retrieved June 18, 2017.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-8" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-8" href="https://www.fireeye.com/blog/threat-research/2018/12/overruled-containing-a-potentially-destructive-adversary.html" target="_blank">
+                        Ackerman, G., et al. (2018, December 21). OVERRULED: Containing a Potentially Destructive Adversary. Retrieved January 17, 2019.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-9" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-9" href="https://ti.dbappsecurity.com.cn/blog/articles/2021/02/10/windows-kernel-zero-day-exploit-is-used-by-bitter-apt-in-targeted-attack/" target="_blank">
+                        JinQuan, MaDongZe, TuXiaoYi, and LiHao. (2021, February 10). Windows kernel zero-day exploit (CVE-2021-1732) is used by BITTER APT in targeted attack. Retrieved June 1, 2022.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-10" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-10" href="https://msrc.microsoft.com/update-guide/vulnerability/CVE-2021-1732" target="_blank">
+                        Microsoft. (2018, February 9). Windows Win32k Elevation of Privilege Vulnerability CVE-2021-1732. Retrieved June 1, 2022.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-11" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-11" href="https://www.mandiant.com/resources/apt41-us-state-governments" target="_blank">
+                        Rufus Brown, Van Ta, Douglas Bienstock, Geoff Ackerman, John Wolfram. (2022, March 8). Does This Look Infected? A Summary of APT41 Targeting U.S. State Governments. Retrieved July 8, 2022.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-12" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-12" href="https://www.eset.com/fileadmin/eset/US/resources/docs/white-papers/white-papers-win-32-carberp.pdf" target="_blank">
+                        Matrosov, A., Rodionov, E., Volkov, D., Harley, D. (2012, March 2). Win32/Carberp When You’re in a Black Hole, Stop Digging. Retrieved July 15, 2020.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-13" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-13" href="http://pxnow.prevx.com/content/blog/carberp-a_modular_information_stealing_trojan.pdf" target="_blank">
+                        Giuliani, M., Allievi, A. (2011, February 28). Carberp - a modular information stealing trojan. Retrieved July 15, 2020.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-14" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-14" href="https://www.group-ib.com/blog/cobalt" target="_blank">
+                        Matveeva, V. (2017, August 15). Secrets of Cobalt. Retrieved October 10, 2018.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-15" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-15" href="https://www.cobaltstrike.com/downloads/reports/tacticstechniquesandprocedures.pdf" target="_blank">
+                        Cobalt Strike. (2017, December 8). Tactics, Techniques, and Procedures. Retrieved December 20, 2017.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-16" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-16" href="https://web.archive.org/web/20210708035426/https://www.cobaltstrike.com/downloads/csmanual43.pdf" target="_blank">
+                        Strategic Cyber LLC. (2020, November 5). Cobalt Strike: Advanced Threat Tactics for Penetration Testers. Retrieved April 13, 2021.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-17" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-17" href="https://www.f-secure.com/documents/996508/1030745/dukes_whitepaper.pdf" target="_blank">
+                        F-Secure Labs. (2015, September 17). The Dukes: 7 years of Russian cyberespionage. Retrieved December 10, 2015.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-18" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-18" href="https://github.com/PowerShellEmpire/Empire" target="_blank">
+                        Schroeder, W., Warner, J., Nelson, M. (n.d.). Github PowerShellEmpire. Retrieved April 28, 2016.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-19" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-19" href="https://www2.fireeye.com/rs/848-DID-242/images/rpt-fin6.pdf" target="_blank">
+                        FireEye Threat Intelligence. (2016, April). Follow the Money: Dissecting the Operations of the Cyber Crime Group FIN6. Retrieved June 1, 2016.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-20" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-20" href="https://www.fireeye.com/blog/threat-research/2016/05/windows-zero-day-payment-cards.html" target="_blank">
+                        Kizhakkinan, D., et al. (2016, May 11). Threat Actor Leverages Windows Zero-day Exploit in Payment Card Data Attacks. Retrieved February 12, 2018.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-21" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-21" href="https://www2.fireeye.com/WBNR-Know-Your-Enemy-UNC622-Spear-Phishing.html" target="_blank">
+                        Elovitz, S. & Ahl, I. (2016, August 18). Know Your Enemy:  New Financially-Motivated & Spear-Phishing Group. Retrieved February 26, 2018.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-22" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-22" href="https://unit42.paloaltonetworks.com/hildegard-malware-teamtnt/" target="_blank">
+                        Chen, J. et al. (2021, February 3). Hildegard: New TeamTNT Cryptojacking Malware Targeting Kubernetes. Retrieved April 5, 2021.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-23" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-23" href="http://www.welivesecurity.com/wp-content/uploads/2016/10/eset-sednit-part1.pdf" target="_blank">
+                        ESET. (2016, October). En Route with Sednit - Part 1: Approaching the Target. Retrieved November 8, 2016.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                </ol>
+            </div>
+            <div class="col">
+                    <ol start="24.0">
+                                
+        <li>
+            <span  id="scite-24" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-24" href="http://www.welivesecurity.com/2015/07/10/sednit-apt-group-meets-hacking-team/" target="_blank">
+                        ESET Research. (2015, July 10). Sednit APT Group Meets Hacking Team. Retrieved March 1, 2017.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-25" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-25" href="https://www.microsoft.com/security/blog/2022/03/22/dev-0537-criminal-actor-targeting-organizations-for-data-exfiltration-and-destruction/" target="_blank">
+                        MSTIC, DART, M365 Defender. (2022, March 24). DEV-0537 Criminal Actor Targeting Organizations for Data Exfiltration and Destruction. Retrieved May 17, 2022.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-26" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-26" href="https://www.welivesecurity.com/en/eset-research/moustachedbouncer-espionage-against-foreign-diplomats-in-belarus/" target="_blank">
+                        Faou, M. (2023, August 10). MoustachedBouncer: Espionage against foreign diplomats in Belarus. Retrieved September 25, 2023.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-27" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-27" href="https://www.trendmicro.com/en_us/research/21/d/iron-tiger-apt-updates-toolkit-with-evolved-sysupdate-malware-va.html" target="_blank">
+                        Lunghi, D. and Lu, K. (2021, April 9). Iron Tiger APT Updates Toolkit With Evolved SysUpdate Malware. Retrieved November 12, 2021.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-28" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-28" href="https://download.microsoft.com/download/2/2/5/225BFE3E-E1DE-4F5B-A77B-71200928D209/Platinum%20feature%20article%20-%20Targeted%20attacks%20in%20South%20and%20Southeast%20Asia%20April%202016.pdf" target="_blank">
+                        Windows Defender Advanced Threat Hunting Team. (2016, April 29). PLATINUM: Targeted attacks in South and Southeast Asia. Retrieved February 15, 2018.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-29" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-29" href="https://github.com/nettitude/PoshC2_Python" target="_blank">
+                        Nettitude. (2018, July 23). Python Server for PoshC2. Retrieved April 23, 2019.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-30" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-30" href="https://groupib.pathfactory.com/ransomware-reports/prolock_wp" target="_blank">
+                        Group IB. (2020, September). LOCK LIKE  A PRO. Retrieved September 27, 2021.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-31" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-31" href="https://securelist.com/files/2016/07/The-ProjectSauron-APT_Technical_Analysis_KL.pdf" target="_blank">
+                        Kaspersky Lab's Global Research & Analysis Team. (2016, August 9). The ProjectSauron APT. Technical Analysis. Retrieved August 17, 2016.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-32" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-32" href="https://www.crowdstrike.com/blog/scattered-spider-attempts-to-avoid-detection-with-bring-your-own-vulnerable-driver-tactic/" target="_blank">
+                        CrowdStrike. (2023, January 10). SCATTERED SPIDER Exploits Windows Security Deficiencies with Bring-Your-Own-Vulnerable-Driver Tactic in Attempt to Bypass Endpoint Security. Retrieved July 5, 2023.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-33" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-33" href="https://unit42.paloaltonetworks.com/siloscape/" target="_blank">
+                        Prizmant, D. (2021, June 7). Siloscape: First Known Malware Targeting Windows Containers to Compromise Cloud Environments. Retrieved June 9, 2021.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-34" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-34" href="https://www.wired.com/images_blogs/threatlevel/2011/02/Symantec-Stuxnet-Update-Feb-2011.pdf" target="_blank">
+                        Nicolas Falliere, Liam O Murchu, Eric Chien 2011, February W32.Stuxnet Dossier (Version 1.4) Retrieved. 2017/09/22 
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-35" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-35" href="https://www.secureworks.com/research/bronze-union" target="_blank">
+                        Counter Threat Unit Research Team. (2017, June 27). BRONZE UNION Cyberespionage Persists Despite Disclosures. Retrieved July 13, 2017.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-36" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-36" href="https://web.archive.org/web/20210104144857/https://shared-public-reports.s3-eu-west-1.amazonaws.com/APT27+turns+to+ransomware.pdf" target="_blank">
+                        Global Threat Center, Intelligence Team. (2020, December). APT27 Turns to Ransomware. Retrieved November 12, 2021.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-37" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-37" href="https://vb2020.vblocalhost.com/uploads/VB2020-06.pdf" target="_blank">
+                        Daniel Lughi, Jaromir Horejsi. (2020, October 2). Tonto Team - Exploring the TTPs of an advanced threat actor operating a large infrastructure. Retrieved October 17, 2021.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-38" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-38" href="https://symantec-enterprise-blogs.security.com/blogs/threat-intelligence/whitefly-espionage-singapore" target="_blank">
+                        Symantec. (2019, March 6). Whitefly: Espionage Group has Singapore in Its Sights. Retrieved May 26, 2020.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-39" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-39" href="http://download.microsoft.com/download/E/B/0/EB0F50CC-989C-4B66-B7F6-68CD3DC90DE3/Microsoft_Security_Intelligence_Report_Volume_21_English.pdf" target="_blank">
+                        Anthe, C. et al. (2016, December 14). Microsoft Security Intelligence Report Volume 21. Retrieved November 27, 2017.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-40" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-40" href="https://documents.trendmicro.com/assets/pdf/XCSSET_Technical_Brief.pdf" target="_blank">
+                        Mac Threat Response, Mobile Research Team. (2020, August 13). The XCSSET Malware: Inserts Malicious Code Into Xcode Projects, Performs UXSS Backdoor Planting in Safari, and Leverages Two Zero-day Exploits. Retrieved October 5, 2021.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-41" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-41" href="https://research.checkpoint.com/2021/the-story-of-jian/" target="_blank">
+                        Itkin, E. and Cohen, I. (2021, February 22). The Story of Jian – How APT31 Stole and Used an Unknown Equation Group 0-Day. Retrieved March 24, 2021.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-42" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-42" href="https://web.archive.org/web/20230115144216/http://www.novetta.com/wp-content/uploads/2014/11/Executive_Summary-Final_1.pdf" target="_blank">
+                        Novetta. (n.d.). Operation SMN: Axiom Threat Actor Group Report. Retrieved November 12, 2014.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-43" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-43" href="https://arstechnica.com/information-technology/2017/03/hack-that-escapes-vm-by-exploiting-edge-browser-fetches-105000-at-pwn2own/" target="_blank">
+                        Goodin, D. (2017, March 17). Virtual machine escape fetches $105,000 at Pwn2Own hacking contest - updated. Retrieved March 12, 2018.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-44" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-44" href="https://docs.microsoft.com/en-us/windows/security/threat-protection/windows-defender-application-control/microsoft-recommended-driver-block-rules" target="_blank">
+                        Microsoft. (2020, October 15). Microsoft recommended driver block rules. Retrieved March 16, 2021.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-45" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-45" href="https://blogs.technet.microsoft.com/srd/2017/08/09/moving-beyond-emet-ii-windows-defender-exploit-guard/" target="_blank">
+                        Nunez, N. (2017, August 9). Moving Beyond EMET II – Windows Defender Exploit Guard. Retrieved March 12, 2018.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-46" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-46" href="https://en.wikipedia.org/wiki/Control-flow_integrity" target="_blank">
+                        Wikipedia. (2018, January 11). Control-flow integrity. Retrieved March 12, 2018.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+  
+                    </ol>
+            </div>             
+        </div>
+
+
+    
+                </div>
+            </div>
+        </div>
+    </div>
+    
+        </div>
+    </div>
+
+            <!--stop-indexing-for-search-->
+            <!-- search overlay for entire page -- not displayed inline -->
+            <div class="overlay search" id="search-overlay" style="display: none;">
+    <div class="overlay-inner">
+        <!-- text input for searching -->
+        <div class="search-header">
+            <div class="search-input">
+                <input type="text" id="search-input" placeholder="search">
+            </div>
+            <div class="search-icons">
+                <div class="search-parsing-icon spinner-border" style="display: none" id="search-parsing-icon"></div>
+                <div class="close-search-icon" id="close-search-icon">&times;</div>
+            </div>
+        </div>
+        <!-- results and controls for loading more results -->
+        <div id="search-body" class="search-body">
+            <div class="results" id="search-results">
+                <!-- content will be appended here on search -->
+            </div>
+            <div id="load-more-results" class="load-more-results">
+                <button class="btn btn-default" id="load-more-results-button">load more results</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+        </div>
+        <div class="row flex-grow-0 flex-shrink-1">
+            <!-- footer elements -->
+            <footer class="col footer p-3">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-4 col-sm-4 col-md-3">  
+                            <div class="footer-center-responsive my-auto">
+                                <a href="https://www.mitre.org" target="_blank" rel="noopener" aria-label="MITRE">
+                                    <img src="/versions/v14/theme/images/mitrelogowhiteontrans.gif" class="mitre-logo-wtrans">
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-2 col-sm-2 footer-responsive-break"></div>
+                        <div class="col-6 col-sm-6 text-center">  
+                            <p>
+                                 © 2015-2023, The MITRE Corporation. MITRE ATT&CK and ATT&CK are registered trademarks of The MITRE Corporation.
+                            </p>
+                            <div class="row">
+                    
+                                <div class="col text-right">
+                                    <small>
+                                        <a href="/versions/v14/resources/privacy" class="footer-link">Privacy Policy</a>
+                                    </small>
+                                </div>
+                                <div class="col text-center">
+                                    <small>
+                                        <a href="/versions/v14/resources/terms-of-use" class="footer-link">Terms of Use</a>
+                                    </small>
+                                </div>
+                                <div class="col  text-left ">
+                                    <small>
+                                        <a href="/versions/v14/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v14.0&#013;Website  v4.0.6">ATT&CK v14.0</a>
+                                    </small>
+                                </div>
+            
+                            </div>
+                        </div>
+                        <div class="w-100 p-2 footer-responsive-break"></div>
+                            <div class="col">
+                                <div class="footer-float-right-responsive-brand">
+                                    <div class="mb-1">
+                                        <a href="https://twitter.com/MITREattack" class="btn btn-primary w-100">
+                                            <!-- <i class="fa fa-twitter"></i> -->
+                                            <img src="/versions/v14/theme/images/twitter.png" class="mr-1 twitter-icon">
+                                            <b>@MITREattack</b>
+                                        </a>
+                                    </div>
+                                    <div class="">
+                                        <a href="/versions/v14/contact" class="btn btn-primary w-100">
+                                            Contact
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+
+<!--stopindex-->
+
+</div>
+    <!--SCRIPTS-->
+    <script src="/versions/v14/theme/scripts/jquery-3.5.1.min.js"></script>
+    <script src="/versions/v14/theme/scripts/popper.min.js"></script>
+    <script src="/versions/v14/theme/scripts/bootstrap-select.min.js"></script>
+    <script src="/versions/v14/theme/scripts/bootstrap.bundle.min.js"></script>
+    <script src="/versions/v14/theme/scripts/site.js?2138"></script>
+    <script src="/versions/v14/theme/scripts/settings.js?5955"></script>
+    <script src="/versions/v14/theme/scripts/search_bundle.js"></script>
+
+<!--SCRIPTS-->
+<script src="/versions/v14/theme/scripts/resizer.js"></script>
+
+<!--SCRIPTS-->
+<script src="/versions/v14/theme/scripts/bootstrap-tourist.js"></script>
+<script src="/versions/v14/theme/scripts/settings.js"></script>
+    <script src="/versions/v14/theme/scripts/tour/tour-techniques.js"></script>
+<script src="/versions/v14/theme/scripts/sidebar-load-all.js"></script>
+</body>
+</html>
