@@ -1,1 +1,0 @@
-Data sources table can now be sorted and filtered based on domains.
