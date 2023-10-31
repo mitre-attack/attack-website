@@ -27,7 +27,7 @@ def generate_matrices():
     notes = util.relationshipgetters.get_objects_using_notes()
 
     side_menu_data = util.buildhelpers.get_side_menu_matrices(matrices_config.matrices)
-
+    generate_sidebar_matrices(side_menu_data)
     matrix_generated = False
 
     for matrix in matrices_config.matrices:
@@ -259,3 +259,16 @@ def get_sub_matrices(matrix):
         )
 
     return data, has_subtechniques, tour_technique
+
+def generate_sidebar_matrices(side_menu_data):
+    """Responsible for generating the sidebar for the matrices pages."""
+    logger.info("Generating matrices sidebar")
+    data = {}
+    data["menu"] = side_menu_data
+
+    # Sidebar Overview
+    sidebar_matrices_md = matrices_config.sidebar_matrices_md + json.dumps(data)
+
+    # write markdown to file
+    with open(os.path.join(matrices_config.matrix_markdown_path, "sidebar_matrices.md"), "w", encoding="utf8") as md_file:
+        md_file.write(sidebar_matrices_md)

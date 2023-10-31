@@ -1,5 +1,10 @@
+# v4.0.6 (2023-10-31)
 
-<!-- TOWNCRIER -->
+## Features
+
+* Data sources table can now be sorted and filtered based on domains. [#454](https://github.com/mitre-attack/attack-website/issues/454)
+* Release [ATT&CK content version 14.0](https://github.com/mitre/cti/releases/tag/ATT%26CK-v14.0).
+  See the release notes [here](https://attack.mitre.org/resources/updates/updates-october-2023/).
 
 # v4.0.5 (2023-09-01)
 

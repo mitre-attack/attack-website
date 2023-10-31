@@ -22,6 +22,12 @@ def get_menu():
                 "external_link": False,
                 "children": [],
             },
+            {
+                "display_name": "Contribute",
+                "url": "/resources/contribute/",
+                "external_link": False,
+                "children": [],
+            },
             {"display_name": "Training", "url": "/resources/training/", "external_link": False, "children": []},
             {"display_name": "ATT&CKcon", "url": "/resources/attackcon/", "external_link": False, "children": []},
             {

@@ -1,4 +1,5 @@
 import json
+import math
 import os
 import shutil
 from datetime import datetime
@@ -14,7 +15,7 @@ from . import resources_config
 
 
 def generate_resources():
-    """Responsible for generating the resources pages"""
+    """Responsible for generating the resources pages."""
     logger.info("Generating Resources")
     # Create content pages directory if does not already exist
     util.buildhelpers.create_content_pages_dir()
@@ -37,16 +38,27 @@ def generate_resources():
             if site_config.resource_nav["children"][i]["id"] == "versions":
                 del site_config.resource_nav["children"][i]
 
+    build_benefactors_module = False
+    for module_info in modules.run_ptr:
+        if module_info["module_name"] == "benefactors":
+            build_benefactors_module = True
+    if not build_benefactors_module:
+        for i, child in enumerate(site_config.resource_nav["children"]):
+            if site_config.resource_nav["children"][i]["id"] == "benefactors":
+                del site_config.resource_nav["children"][i]
+
     # Move templates to templates directory
     util.buildhelpers.move_templates(resources_config.module_name, resources_config.resources_templates_path)
     copy_docs(module_docs_path=resources_config.docs_path)
     generate_working_with_attack()
     generate_general_information()
+    generate_contribute_page()
     generate_training_pages()
     generate_brand_page()
     generate_attackcon_page()
     generate_faq_page()
     generate_static_pages()
+    generate_sidebar_resources()
 
 
 def copy_docs(module_docs_path):
@@ -181,54 +193,16 @@ def generate_faq_page():
     with open(os.path.join(site_config.data_directory, "faq.json"), "r", encoding="utf8") as f:
         faqdata = json.load(f)
 
-    # Below code used to get a list of all faq children
-    faq_md = []
-    faq_name = []
-    faq_path = []
-    faq_dict_list = {}
-    for i in range(len(faqdata["sections"])):
-        faq_name.append(faqdata["sections"][i]["name"])
-        title = "Title: " + faqdata["sections"][i]["name"] + "\n"
-        name = faqdata["sections"][i]["name"].lower().replace(" ", "-").replace("&", "a")
-        template = "Template: general/faq-overview\n"
-        faq_path.append("/resources/faq/" + name + "/")
-        save_as = "save_as: resources/faq/" + name + "/index.html\n"
-        data = "data: "
-        content = title + template + save_as + data
-        faq_md.append(content)
-    faq_dict_list["faq_name"] = faq_name
-    faq_dict_list["faq_path"] = faq_path
-    faq_dict_list["faq_md"] = faq_md
-
-    # Below code used to add the updates children to the resources sidebar
-    faq_index = 0
-    temp_dict = {}
-    for i in range(len(site_config.resource_nav["children"])):
-        if site_config.resource_nav["children"][i]["name"] == "FAQ":
-            faq_index = i
-
-    for i in range(len(faq_dict_list["faq_name"])):
-        temp_dict["name"] = faq_dict_list["faq_name"][i]
-        temp_dict["path"] = faq_dict_list["faq_path"][i]
-        temp_dict["children"] = []
-        site_config.resource_nav["children"][faq_index]["children"].append(temp_dict.copy())
-        temp_dict = {}
-
     # add unique IDs
     for i, section in enumerate(faqdata["sections"]):
         for j, item in enumerate(section["questions"]):
             item["id"] = f"faq-{i}-{j}"
     # get markdown
-    faq_content = resources_config.faq_md + json.dumps(faqdata["sections"][0])
+    faq_content = resources_config.faq_md + json.dumps(faqdata)
+
     # write markdown to file
-    faq_list = faq_dict_list["faq_md"]
     with open(os.path.join(site_config.resources_markdown_path, "faq.md"), "w", encoding="utf8") as md_file:
         md_file.write(faq_content)
-    for i in range(len(faq_list)):
-        faq_content = faq_list[i] + json.dumps(faqdata["sections"][i])
-        f_name = "faq-" + faqdata["sections"][i]["name"].lower().replace(" ", "-") + ".md"
-        with open(os.path.join(site_config.resources_markdown_path, f_name), "w", encoding="utf8") as md_file:
-            md_file.write(faq_content)
 
 
 def generate_static_pages():
@@ -308,6 +282,7 @@ def generate_working_with_attack():
         "techniques",
         "datasources",
         "campaigns",
+        "assets"
     ]
 
     # Verify if directories exists
@@ -318,23 +293,18 @@ def generate_working_with_attack():
     if not os.path.isdir(docs_dir):
         os.makedirs(docs_dir)
 
+    ms = util.relationshipgetters.get_ms()
+
     for domain in site_config.domains:
         if domain["deprecated"]:
             continue
 
-        # TODO: refactor this to use a function rather than copy/paste from modules/util/stixhelpers.py
-        # this can be used because it was called previously in modules/util/stixhelpers.py to download the file
-        if domain["location"].startswith("http"):
-            download_dir = Path(f"{site_config.web_directory}/stix")
-            stix_filename = f"{download_dir}/{domain['name']}.json"
-        else:
-            stix_filename = domain["location"]
-
+        domain_name = domain["name"]
         attackToExcel.export(
-            domain=domain["name"],
+            domain=domain_name,
             version=site_config.full_attack_version,
             output_dir=docs_dir,
-            stix_file=stix_filename,
+            mem_store=ms[domain_name],
         )
 
     files_json = {"excel_files": []}
@@ -355,3 +325,55 @@ def generate_working_with_attack():
         os.path.join(site_config.resources_markdown_path, "working_with_attack.md"), "w", encoding="utf8"
     ) as md_file:
         md_file.write(working_with_attack_content)
+
+
+def generate_sidebar_resources():
+    """Responsible for generating the sidebar for the resource pages."""
+    logger.info("Generating resource sidebar")
+
+    # Sidebar Overview
+    sidebar_resources_md = resources_config.sidebar_resources_md
+
+    # write markdown to file
+    with open(os.path.join(site_config.resources_markdown_path, "sidebar_resources.md"), "w", encoding="utf8") as md_file:
+        md_file.write(sidebar_resources_md)
+
+
+def generate_contribute_page():
+    """Responsible for generating the markdown pages of the contribute pages."""
+    logger.info("Generating contributing page")
+
+    # Generate redirections
+    util.buildhelpers.generate_redirections(
+        redirections_filename=resources_config.contribute_redirection_location, redirect_md=site_config.redirect_md
+    )
+
+    ms = util.relationshipgetters.get_ms()
+    contributors = util.stixhelpers.get_contributors(ms)
+
+    data = {}
+
+    data["contributors"] = []
+
+    contributors_first_col = []
+    contributors_second_col = []
+
+    half = math.ceil((len(contributors)) / 2)
+    list_size = len(contributors)
+
+    for index in range(0, half):
+        contributors_first_col.append(contributors[index])
+
+    for index in range(half, list_size):
+        contributors_second_col.append(contributors[index])
+
+    data["contributors"].append(contributors_first_col)
+    data["contributors"].append(contributors_second_col)
+
+    subs = resources_config.contribute_md + json.dumps(data)
+
+    # Open markdown file for the contribute page
+    with open(
+        os.path.join(site_config.resources_markdown_path, "contribute.md"), "w", encoding="utf8"
+    ) as md_file:
+        md_file.write(subs)

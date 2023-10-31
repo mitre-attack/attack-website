@@ -1,6 +1,7 @@
 from string import Template
 
 module_name = "Groups"
+module_tab_name = "CTI"
 priority = 6
 
 # Markdown path for groups
@@ -16,3 +17,10 @@ group_md = Template("Title: ${name}\n" "Template: groups/group\n" "save_as: grou
 groups_templates_path = "modules/groups/templates/"
 
 groups_redirection_location = "modules/groups/groups_redirections.json"
+
+sidebar_groups_md = (
+    "Title: Groups Sidebar\n"
+    "Template: general/sidebar-template \n"
+    "save_as: groups/sidebar-groups/index.html\n"
+    "data: "
+)
