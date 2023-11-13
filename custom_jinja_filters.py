@@ -7,7 +7,7 @@ import markdown
 
 from modules import site_config
 
-# Template for HTML references inside of STIX data
+# Template for HTML references inside of STIX dat
 reference_marker_template = (
     "<span onclick=scrollToRef('scite-{}') "
     'id="scite-ref-{}-a" class="scite'
@@ -91,7 +91,8 @@ def get_html_citation(citations, citation_name):
     reference_html = ""
     if citation:
         ref_number = None
-
+        description = citation.get("description")
+        
         if citation.get("number"):
             ref_number = citation["number"]
         else:
@@ -100,10 +101,10 @@ def get_html_citation(citations, citation_name):
             citation["number"] = ref_number
 
         if not citation.get("url"):
-            reference_html = reference_marker_template_no_url.format(ref_number, ref_number, citation_name, citation_name, ref_number)
+            reference_html = reference_marker_template_no_url.format(ref_number, ref_number, citation_name, description, ref_number)
         else:
             reference_html = reference_marker_template.format(
-                ref_number, ref_number, citation_name, citation_name, citation["url"], ref_number - 1, ref_number - 1, ref_number
+                ref_number, ref_number, description, citation_name, citation["url"], ref_number - 1, ref_number - 1, ref_number
             )
 
     return reference_html
