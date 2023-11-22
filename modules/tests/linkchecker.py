@@ -230,7 +230,7 @@ def internal_external_link_checker(filepath, html_str):
                 # Consider status 404 and unreachable as broken.
                 # Unreachable will be triggered by the except clause
                 try:
-                    r = requests.head(link, headers=headers, verify=False, timeout=5)
+                    r = requests.head(link, headers=headers, timeout=5)
                     if r.status_code != 200:
                         links_list[link] = r.status_code
                         problems.append(f"[{r.status_code}] {link}")

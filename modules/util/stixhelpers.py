@@ -392,8 +392,6 @@ def grab_resources(ms):
 
 def get_stix_memory_stores():
     """Read the json files for each domain and create a dict that contains the memory stores for each domain."""
-    # suppress InsecureRequestWarning: Unverified HTTPS request is being made
-    urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
     ms = {}
     srcs = []
@@ -481,7 +479,7 @@ def download_stix_file(url, filepath):
     s = requests.Session()
     retries = Retry(total=10, backoff_factor=0.1, status_forcelist=[500, 502, 503, 504])
     s.mount("http", HTTPAdapter(max_retries=retries))
-    response = s.get(url, verify=False, proxies=proxyDict, auth=auth)
+    response = s.get(url, proxies=proxyDict, auth=auth)
 
     if response.status_code == 200:
         stix_json = response.json()
