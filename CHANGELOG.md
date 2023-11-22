@@ -1,3 +1,14 @@
+# v4.0.8 (2023-11-22)
+
+## Bugfixes
+
+* Add mobile datasources to excel output.
+
+## Misc
+
+* Updated Caldera description.
+* Enforce better SSL security practices when building the website.
+
 # v4.0.7 (2023-11-14)
 
 ## Features
