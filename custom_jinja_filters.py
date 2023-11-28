@@ -7,7 +7,7 @@ import markdown
 
 from modules import site_config
 
-# Template for HTML references inside of STIX dat
+# Template for HTML references inside of STIX data
 reference_marker_template = (
     "<span onclick=scrollToRef('scite-{}') "
     'id="scite-ref-{}-a" class="scite'
