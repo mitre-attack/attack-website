@@ -52,6 +52,7 @@ def generate_resources():
     copy_docs(module_docs_path=resources_config.docs_path)
     generate_working_with_attack()
     generate_general_information()
+    generate_presentation_archive()
     generate_contribute_page()
     generate_training_pages()
     generate_brand_page()
@@ -377,3 +378,22 @@ def generate_contribute_page():
         os.path.join(site_config.resources_markdown_path, "contribute.md"), "w", encoding="utf8"
     ) as md_file:
         md_file.write(subs)
+
+def generate_presentation_archive():
+    """Responsible for compiling resources json into resources markdown files for rendering on the HMTL."""
+    logger.info("Generating presentation archive")
+    # load presentations list
+    with open(os.path.join(site_config.data_directory, "resources.json"), "r", encoding="utf8") as f:
+        resources = json.load(f)
+
+    # get presentations in sorted date order
+    presentations = sorted(
+        resources["presentations"], key=lambda p: datetime.strptime(p["date"], "%B %Y"), reverse=True
+    )
+    # get markdown
+    resources_content = resources_config.presentation_archive_md + json.dumps({"presentations": presentations})
+    # write markdown to file
+    with open(
+        os.path.join(site_config.resources_markdown_path, "presenation_archive.md"), "w", encoding="utf8"
+    ) as md_file:
+        md_file.write(resources_content)

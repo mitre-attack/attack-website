@@ -1,0 +1,86 @@
+{% extends "general/two-column.html" %}
+{% set active_page = "resources" -%}
+{% set title = "Presentation Archive | MITRE ATT&CK&reg;" -%}
+{% set parsed = page.data | from_json %}
+{% import 'macros/navigation.html' as navigation %}
+
+{% block innerleft %}
+<div id="sidebars"></div>
+{% endblock %}
+
+{% block innerright %}
+<!--stopindex-->
+<div class="px-3">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="/">Home</a></li>
+    <li class="breadcrumb-item"><a href="/resources">Resources</a></li>
+    <li class="breadcrumb-item">Presentation Archive</li>
+  </ol>
+</div>
+<div class="container pb-3 uniform-block">
+  <div class="general-info">
+    <div class="clearfix pb-3">
+      <div class="clearfix pb-3">
+        <h2>Presentation Archive</h2>
+        <p>
+          Browse our archive of presentations by MITRE’s ATT&amp;CK team, covering various cybersecurity topics related to ATT&amp;CK. Presented at different conferences, these talks offer valuable insights and expertise from our team members.
+        </p>
+        {% for presentation in parsed.presentations %}
+        <div class="card w-100">
+          <div>
+              <div class="card-body">
+                <strong>
+                <div class="title">
+                  {{ presentation.name }}
+                </div>
+              </strong>
+                <p></p>
+                <div class="date">
+                  {{ presentation.date }}
+                </div>
+                <p></p>
+                <div class="timeline-card-body">
+                  {{ presentation.description }}
+                </div>
+                <p></p>
+                <div class="date">
+                <a href="{{ presentation.url }}">
+                <button type="button" class="slide-button">
+                  <span class="slide-button-text">
+                    <span>Recording</span>
+                  </span>
+                  <span class="slide-button-icon">
+                    <i class="fa fa-external-link"></i>
+                  </span>
+                </button>
+              </a>
+              {% if "slides" in presentation %}
+              <a href="{{ presentation.slides }}">
+                <button type="button" class="slide-button">
+                  <span class="slide-button-text">
+                    <span>Slide Deck</span>
+                  </span>
+                  <span class="slide-button-icon">
+                    <i class="fa fa-external-link"></i>
+                  </span>
+                </button>
+              </a>
+              {% endif %}
+            </div>
+              </div>
+          </div>
+        </div>
+        <br>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+<!--startindex-->
+{% block scripts %}
+{{ super() }}
+<!--SCRIPTS-->
+<script src="/theme/scripts/sidebar-load-all.js"></script>
+{% endblock %}
