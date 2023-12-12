@@ -1,4 +1,4 @@
-{% macro render_small(title, link, description, is_external, fa_icon=None) %}
+{% macro render_small(title, link, description, is_external, fa_icon=None, invert_icon=None) %}
 <div class="horizontal-card card">
     <div class="card-header no-background">
         <a class="partial-underline" href="{{link}}">
@@ -11,8 +11,13 @@
             {% endif %}
         </a>
         {% if fa_icon %}
-        <span class="card-title-icon">
-            <i class="fa-brands fa-xl {{fa_icon}}"></i>
+        <span class="card-title-icon fa-stack">
+            {% if invert_icon %}
+                <i class="fa-solid fa-circle fa-stack-2x"></i>
+                <i class="{{fa_icon}} fa-stack-1x fa-inverse"></i>
+            {% else %}
+                <i class="{{fa_icon}} fa-stack-2x"></i>
+            {% endif %}
         </span>
         {% endif %}
     </div>
