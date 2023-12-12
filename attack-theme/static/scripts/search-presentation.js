@@ -1,17 +1,25 @@
 function searchPresentation() {
     let count = 0;
-    let input, input_uppercase, cards, i, card_value;
+    let input, input_uppercase, cards, i, card_value, displayed;
+    displayed = true;
     input = document.getElementById("searchPresentation");
     input_uppercase = input.value.toUpperCase();
     cards = $(".card-presentation");
     if($("#filterMenu").length > 0){
+        displayed = false;
         filterMenu();
     }
     for (i = 0; i < cards.length; i++) {
         card_value = cards[i].innerText;
-        if (card_value.toUpperCase().indexOf(input_uppercase) > -1 && cards[i].style.display != "none") {
-            cards[i].style.display = "";
-            count = count + 1;
+        if (card_value.toUpperCase().indexOf(input_uppercase) > -1) {
+            if(cards[i].style.display != "none" && !displayed){
+                cards[i].style.display = "";
+                count = count + 1;
+            }
+            else if(displayed){
+                cards[i].style.display = "";
+                count = count + 1;
+            }
         } else {
             cards[i].style.display = "none";
         }
