@@ -20,9 +20,10 @@
 <div class="tab-content attackcons p-4 mb-3">
     {% set conID = "-".join(con.date.split(' ')) %}
     <div class="container pb-3 uniform-block">
+        {% set ifSponsor = "sponsors_img_list" in con %}
         {% if "banner_img" in con %}
         <p>
-            <img src="{{ con.banner_img }}" width="100%">
+            <img src="{{ con.banner_img }}" {% if ifSponsor %} width="90%" {% else %} width="100%" {% endif %}>
         </p>
         {% endif %}
 
@@ -35,14 +36,14 @@
         {% endif %}
         <br>
         <div class="attackcon-columns">
-            <div class="presentations card-block" id="presentations">
+            <div class="presentations card-block {% if ifSponsor %} card-attackcon {% endif %}" id="presentations">
                 <input type="text" class="searchPresentation" id="searchPresentation" onkeyup="searchPresentation()"
                     placeholder="Search Presentations">
                 <h5><strong>Presentations</strong></h5>
                 <h6 class="presentation-count"></h6>
                 {% for presentation in con.presentations %}
                 {% set isPanel = "moderator" in presentation %}
-                <div class="card w-100 card-presentation">
+                <div class="card card-presentation">
                     <div>
                         <div class="card-body">
                             <strong>
