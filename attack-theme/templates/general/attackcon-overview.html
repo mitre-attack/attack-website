@@ -1,4 +1,4 @@
-{% extends "general/two-column.html" %} 
+{% extends "general/two-column.html" %}
 {% set active_page = "resources" -%}
 {% set title = "MITRE ATT&CKcon - " + page.title + " | MITRE ATT&CK&reg;" -%}
 {% set con = page.data | from_json %}
@@ -10,114 +10,120 @@
 
 {% block innerright %}
 {{ super () }}
-    <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="/">Home</a></li>
-            <li class="breadcrumb-item"><a href="/resources">Resources</a></li>
-            <li class="breadcrumb-item"><a href="/resources/attackcon">ATT&CKcon</a></li>
-            <li class="breadcrumb-item">{{ con.title }}</a></li>
-        </ol>
+<ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="/">Home</a></li>
+    <li class="breadcrumb-item"><a href="/resources">Resources</a></li>
+    <li class="breadcrumb-item"><a href="/resources/attackcon">ATT&CKcon</a></li>
+    <li class="breadcrumb-item">{{ con.title }}</a></li>
+</ol>
 
-    <div class="tab-content attackcons p-4 mb-3">
-        {% set conID = "-".join(con.date.split(' ')) %}
-        <div class="container pb-3 uniform-block">
-            {% if "banner_img" in con %}
-            <p>
-                <img src="{{ con.banner_img }}" width="100%">
-            </p>
-            {% endif %}
+<div class="tab-content attackcons p-4 mb-3">
+    {% set conID = "-".join(con.date.split(' ')) %}
+    <div class="container pb-3 uniform-block">
+        {% if "banner_img" in con %}
+        <p>
+            <img src="{{ con.banner_img }}" width="100%">
+        </p>
+        {% endif %}
 
-            {% if "description" in con %}
-            <p>{{con.description}}</p>
-            {% endif %}
-            {% if "blogpost" in con %}
-            <p><a target="_blank" href="{{con.blogpost}}">Click here to read our blog post about {{con.title}}! <img src="/theme/images/external-site-dark.jpeg" alt="External site" class="external-icon"></a></p>
-            {% endif %}
-            <br>
+        {% if "description" in con %}
+        <p>{{con.description}}</p>
+        {% endif %}
+        {% if "blogpost" in con %}
+        <p><a target="_blank" href="{{con.blogpost}}">Click here to read our blog post about {{con.title}}! <img
+                    src="/theme/images/external-site-dark.jpeg" alt="External site" class="external-icon"></a></p>
+        {% endif %}
+        <br>
+        <div class="attackcon-columns">
             <div class="presentations card-block" id="presentations">
-                <input type="text" class="searchPresentation" id="searchPresentation" onkeyup="searchPresentation()" placeholder="Search Presentations">
+                <input type="text" class="searchPresentation" id="searchPresentation" onkeyup="searchPresentation()"
+                    placeholder="Search Presentations">
                 <h5><strong>Presentations</strong></h5>
                 <h6 class="presentation-count"></h6>
                 {% for presentation in con.presentations %}
                 {% set isPanel = "moderator" in presentation %}
-                    <div class="card w-100 card-presentation">
-                        <div>
-                            <div class="card-body">
-                                <strong>
-                                    <div class="title">
-                                        {{ presentation.title }}
-                                    </div>
-                                </strong>
-                                <p></p>
-                                <div class="date">
-                                    {% if not isPanel %}
-                                        {% for presenterGroup in presentation.presenters %}{% if loop.index > 1 %}; {% endif %}{{ " and ".join(presenterGroup.names)}}{% if "organization" in presenterGroup %}, {{presenterGroup.organization}}{% endif %}{% endfor %}
-                                    {% else %}
-                                        Moderated by {{presentation.moderator.name}}, {{presentation.moderator.organization}}
-                                    {% endif %}
+                <div class="card w-100 card-presentation">
+                    <div>
+                        <div class="card-body">
+                            <strong>
+                                <div class="title">
+                                    {{ presentation.title }}
                                 </div>
-                                <p></p>
-                                <div class="timeline-card-body">
-                                    {% if not isPanel %}
-                                        {{presentation.description}}
-                                    {% else %}
-                                        Panelists:
-                                        <ul>
-                                            {% for panelist in presentation.panelists %}
-                                            <li>
-                                                {{panelist}}
-                                            </li>
-                                            {% endfor %}
-                                        </ul>
-                                            {{presentation.moderator.name}} moderates a panel that discusses:</p>
-                                        <ul>
-                                            {% for topic in presentation.topics %}
-                                                <li>
-                                                    {{topic}}
-                                                </li>
-                                            {% endfor %}
-                                        </ul>
-                                    {% endif %}
-                                </div>
-                                <p></p>
-                                <div class="date">
-                                    {% if "video" in presentation %}
-                                        <a href="{{ presentation.video }}">
-                                            <button type="button" class="slide-button">
-                                                <span class="slide-button-text">
-                                                    <span>Recording</span>
-                                                </span>
-                                                <span class="slide-button-icon">
-                                                    <i class="fa fa-external-link"></i>
-                                                </span>
-                                            </button>
-                                        </a>
-                                    {% endif %}
-                                    {% if "slides" in presentation %}
-                                        <a href="{{ presentation.slides }}">
-                                            <button type="button" class="slide-button slide-button-secondary">
-                                                <span class="slide-button-text">
-                                                    <span>Slide Deck</span>
-                                                </span>
-                                                <span class="slide-button-icon">
-                                                <i class="fa fa-external-link"></i>
-                                                </span>
-                                            </button>
-                                        </a>
-                                    {% endif %}
-                                </div>
+                            </strong>
+                            <p></p>
+                            <div class="date">
+                                {% if not isPanel %}
+                                {% for presenterGroup in presentation.presenters %}{% if loop.index > 1 %}; {% endif
+                                %}{{ " and ".join(presenterGroup.names)}}{% if "organization" in presenterGroup %},
+                                {{presenterGroup.organization}}{% endif %}{% endfor %}
+                                {% else %}
+                                Moderated by {{presentation.moderator.name}}, {{presentation.moderator.organization}}
+                                {% endif %}
+                            </div>
+                            <p></p>
+                            <div class="timeline-card-body">
+                                {% if not isPanel %}
+                                {{presentation.description}}
+                                {% else %}
+                                Panelists:
+                                <ul>
+                                    {% for panelist in presentation.panelists %}
+                                    <li>
+                                        {{panelist}}
+                                    </li>
+                                    {% endfor %}
+                                </ul>
+                                {{presentation.moderator.name}} moderates a panel that discusses:</p>
+                                <ul>
+                                    {% for topic in presentation.topics %}
+                                    <li>
+                                        {{topic}}
+                                    </li>
+                                    {% endfor %}
+                                </ul>
+                                {% endif %}
+                            </div>
+                            <p></p>
+                            <div class="date">
+                                {% if "video" in presentation %}
+                                <a href="{{ presentation.video }}">
+                                    <button type="button" class="slide-button">
+                                        <span class="slide-button-text">
+                                            <span>Recording</span>
+                                        </span>
+                                        <span class="slide-button-icon">
+                                            <i class="fa fa-external-link"></i>
+                                        </span>
+                                    </button>
+                                </a>
+                                {% endif %}
+                                {% if "slides" in presentation %}
+                                <a href="{{ presentation.slides }}">
+                                    <button type="button" class="slide-button slide-button-secondary">
+                                        <span class="slide-button-text">
+                                            <span>Slide Deck</span>
+                                        </span>
+                                        <span class="slide-button-icon">
+                                            <i class="fa fa-external-link"></i>
+                                        </span>
+                                    </button>
+                                </a>
+                                {% endif %}
                             </div>
                         </div>
                     </div>
+                </div>
                 {% endfor %}
             </div>
-            {% if "sponsors_img" in con %}
+            <div class="sponsors">
+                {% if "sponsors_img" in con %}
                 <div>
-                    <h2>Sponsors</h2>
+                    <h5><strong>Sponsors</strong></h5>
                     <img src="{{ con.sponsors_img }}" width="100%">
                 </div>
-            {% elif "sponsors_img_list" in con %}
+                {% elif "sponsors_img_list" in con %}
                 <div>
-                    <h2>Sponsors</h2>
+                    <h5><strong>Sponsors</strong></h5>
                     <div class="sponsors-block">
                         {% for sponsor_img in con.sponsors_img_list %}
                         <div class="img-container">
@@ -126,9 +132,12 @@
                         {% endfor %}
                     </div>
                 </div>
-            {% endif %}
+                {% endif %}
+            </div>
         </div>
     </div>
+
+</div>
 {% endblock %}
 
 <!--startindex-->
