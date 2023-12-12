@@ -4,9 +4,12 @@ function searchPresentation() {
     input = document.getElementById("searchPresentation");
     input_uppercase = input.value.toUpperCase();
     cards = $(".card-presentation");
+    if($("#filterMenu").length > 0){
+        filterMenu();
+    }
     for (i = 0; i < cards.length; i++) {
         card_value = cards[i].innerText;
-        if (card_value.toUpperCase().indexOf(input_uppercase) > -1) {
+        if (card_value.toUpperCase().indexOf(input_uppercase) > -1 && cards[i].style.display != "none") {
             cards[i].style.display = "";
             count = count + 1;
         } else {
