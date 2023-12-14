@@ -1,8 +1,7 @@
 function searchPresentation() {
     let count = 0;
-    let input, input_uppercase, cards, i, card_value, displayed, card_display;
+    let input, input_uppercase, cards, i, card_value, displayed;
     displayed = true;
-    card_display = false;
     input = document.getElementById("searchPresentation");
     input_uppercase = input.value.toUpperCase();
     cards = $(".card-presentation");
@@ -13,16 +12,9 @@ function searchPresentation() {
     for (i = 0; i < cards.length; i++) {
         card_value = cards[i].innerText;
         if (card_value.toUpperCase().indexOf(input_uppercase) > -1) {
-            if(cards[i].style.display != "none" && !displayed){
-                card_display = true;
-            }
-            else if(displayed){
-                card_display = true;
-            }
-            if(card_display){
+            if((cards[i].style.display != "none" && !displayed) || displayed){
                 cards[i].style.display = "";
                 count = count + 1;
-                card_display = false;
             }
         } else {
             cards[i].style.display = "none";
@@ -125,7 +117,7 @@ function filterMenu() {
 }
 
 $(document).ready(function() {
-    cards = $(".card-presentation");
+    let cards = $(".card-presentation");
     let filter_count = document.querySelector(".presentation-count")
     filter_count.innerHTML = `${cards.length} of ${cards.length} Presentations`
 });
