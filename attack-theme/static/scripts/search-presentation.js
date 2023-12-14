@@ -1,7 +1,8 @@
 function searchPresentation() {
     let count = 0;
-    let input, input_uppercase, cards, i, card_value, displayed;
+    let input, input_uppercase, cards, i, card_value, displayed, card_display;
     displayed = true;
+    card_display = false;
     input = document.getElementById("searchPresentation");
     input_uppercase = input.value.toUpperCase();
     cards = $(".card-presentation");
@@ -13,12 +14,15 @@ function searchPresentation() {
         card_value = cards[i].innerText;
         if (card_value.toUpperCase().indexOf(input_uppercase) > -1) {
             if(cards[i].style.display != "none" && !displayed){
-                cards[i].style.display = "";
-                count = count + 1;
+                card_display = true;
             }
             else if(displayed){
+                card_display = true;
+            }
+            if(card_display){
                 cards[i].style.display = "";
                 count = count + 1;
+                card_display = false;
             }
         } else {
             cards[i].style.display = "none";
@@ -30,7 +34,7 @@ function searchPresentation() {
 
 function filter_all(selected) {
     let count = 0;
-    let cards, i, card_value;
+    let cards, i, card_value, dates;
     cards = $(".card-presentation");
     dates = $(".date");
     for (i = 0; i < cards.length; i++) {
@@ -112,11 +116,12 @@ function filterMenu() {
             }
         });
     }
-    cards = $(".card-presentation");
-    for (i = 0; i < cards.length; i++) {
+    let cards = $(".card-presentation");
+    for (let i = 0; i < cards.length; i++) {
         cards[i].style.display = "";
     }
-    filter_all(selected.reverse());
+    let selected_reversed = selected.toReversed()
+    filter_all(selected_reversed);
 }
 
 $(document).ready(function() {
