@@ -83,7 +83,7 @@ customize() {
 execute() {
     npx gulp compile
     ls assets/css/
-    yes | cp -rf assets/css/styles.css ../attack-theme/static/style/uswds.scss
+    yes | cp -rf assets/css/styles.css ../attack-theme/static/style/_uswds.scss
 }
 
 
