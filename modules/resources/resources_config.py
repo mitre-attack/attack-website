@@ -51,6 +51,13 @@ working_with_attack_md = (
     "data: "
 )
 
+presentation_archive_md = (
+    "Title: Presentation Archive\n"
+    "Template: resources/presentation-archive\n"
+    "save_as: resources/presentation-archive/index.html\n"
+    "data: "
+)
+
 sidebar_resources_md = (
     "Title: Resources Sidebar\n"
     "Template: general/sidebar-resources \n"
