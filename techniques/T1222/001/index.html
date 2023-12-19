@@ -19,11 +19,10 @@
         <title>File and Directory Permissions Modification: Windows File and Directory Permissions Modification, Sub-technique T1222.001 - Enterprise | MITRE ATT&CK&reg;</title>
         <!-- Bootstrap CSS -->
         <link rel='stylesheet' href='/theme/style/bootstrap.min.css' />
-        <link rel='stylesheet' href='/theme/style/bootstrap-glyphicon.min.css' />
         <link rel='stylesheet' href='/theme/style/bootstrap-tourist.css' />
         <link rel='stylesheet' href='/theme/style/bootstrap-select.min.css' />
-        <link rel="stylesheet" type="text/css" href="/theme/style.min.css?d548d7ba">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="/theme/style.min.css?dfd3be17">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
 </head>
 
@@ -253,7 +252,7 @@
    
 
                                     <div class="description-body">
-                                                <p>Adversaries may modify file or directory permissions/attributes to evade access control lists (ACLs) and access protected files.<span onclick=scrollToRef('scite-1') id="scite-ref-1-a" class="scite-citeref-number" data-reference="Hybrid Analysis Icacls1 June 2018"><sup><a href="https://www.hybrid-analysis.com/sample/ef0d2628823e8e0a0de3b08b8eacaf41cf284c086a948bdfd67f4e4373c14e4d?environmentId=100" target="_blank" data-hasqtip="0" aria-describedby="qtip-0">[1]</a></sup></span><span onclick=scrollToRef('scite-2') id="scite-ref-2-a" class="scite-citeref-number" data-reference="Hybrid Analysis Icacls2 May 2018"><sup><a href="https://www.hybrid-analysis.com/sample/22dab012c3e20e3d9291bce14a2bfc448036d3b966c6e78167f4626f5f9e38d6?environmentId=110" target="_blank" data-hasqtip="1" aria-describedby="qtip-1">[2]</a></sup></span> File and directory permissions are commonly managed by ACLs configured by the file or directory owner, or users with the appropriate permissions. File and directory ACL implementations vary by platform, but generally explicitly designate which users or groups can perform which actions (read, write, execute, etc.).</p><p>Windows implements file and directory ACLs as Discretionary Access Control Lists (DACLs).<span onclick=scrollToRef('scite-3') id="scite-ref-3-a" class="scite-citeref-number" data-reference="Microsoft DACL May 2018"><sup><a href="https://docs.microsoft.com/windows/desktop/secauthz/dacls-and-aces" target="_blank" data-hasqtip="2" aria-describedby="qtip-2">[3]</a></sup></span> Similar to a standard ACL, DACLs identifies the accounts that are allowed or denied access to a securable object. When an attempt is made to access a securable object, the system checks the access control entries in the DACL in order. If a matching entry is found, access to the object is granted. Otherwise, access is denied.<span onclick=scrollToRef('scite-4') id="scite-ref-4-a" class="scite-citeref-number" data-reference="Microsoft Access Control Lists May 2018"><sup><a href="https://docs.microsoft.com/en-us/windows/win32/secauthz/access-control-lists" target="_blank" data-hasqtip="3" aria-describedby="qtip-3">[4]</a></sup></span></p><p>Adversaries can interact with the DACLs using built-in Windows commands, such as <code>icacls</code>, <code>cacls</code>, <code>takeown</code>, and <code>attrib</code>, which can grant adversaries higher permissions on specific files and folders. Further, <a href="/techniques/T1059/001">PowerShell</a> provides cmdlets that can be used to retrieve or modify file and directory DACLs. Specific file and directory modifications may be a required step for many techniques, such as establishing Persistence via <a href="/techniques/T1546/008">Accessibility Features</a>, <a href="/techniques/T1037">Boot or Logon Initialization Scripts</a>, or tainting/hijacking other instrumental binary/configuration files via <a href="/techniques/T1574">Hijack Execution Flow</a>.</p>
+                                                <p>Adversaries may modify file or directory permissions/attributes to evade access control lists (ACLs) and access protected files.<span onclick=scrollToRef('scite-1') id="scite-ref-1-a" class="scite-citeref-number" title="Hybrid Analysis. (2018, June 12). c9b65b764985dfd7a11d3faf599c56b8.exe. Retrieved August 19, 2018."data-reference="Hybrid Analysis Icacls1 June 2018"><sup><a href="https://www.hybrid-analysis.com/sample/ef0d2628823e8e0a0de3b08b8eacaf41cf284c086a948bdfd67f4e4373c14e4d?environmentId=100" target="_blank" data-hasqtip="0" aria-describedby="qtip-0">[1]</a></sup></span><span onclick=scrollToRef('scite-2') id="scite-ref-2-a" class="scite-citeref-number" title="Hybrid Analysis. (2018, May 30). 2a8efbfadd798f6111340f7c1c956bee.dll. Retrieved August 19, 2018."data-reference="Hybrid Analysis Icacls2 May 2018"><sup><a href="https://www.hybrid-analysis.com/sample/22dab012c3e20e3d9291bce14a2bfc448036d3b966c6e78167f4626f5f9e38d6?environmentId=110" target="_blank" data-hasqtip="1" aria-describedby="qtip-1">[2]</a></sup></span> File and directory permissions are commonly managed by ACLs configured by the file or directory owner, or users with the appropriate permissions. File and directory ACL implementations vary by platform, but generally explicitly designate which users or groups can perform which actions (read, write, execute, etc.).</p><p>Windows implements file and directory ACLs as Discretionary Access Control Lists (DACLs).<span onclick=scrollToRef('scite-3') id="scite-ref-3-a" class="scite-citeref-number" title="Microsoft. (2018, May 30). DACLs and ACEs. Retrieved August 19, 2018."data-reference="Microsoft DACL May 2018"><sup><a href="https://docs.microsoft.com/windows/desktop/secauthz/dacls-and-aces" target="_blank" data-hasqtip="2" aria-describedby="qtip-2">[3]</a></sup></span> Similar to a standard ACL, DACLs identifies the accounts that are allowed or denied access to a securable object. When an attempt is made to access a securable object, the system checks the access control entries in the DACL in order. If a matching entry is found, access to the object is granted. Otherwise, access is denied.<span onclick=scrollToRef('scite-4') id="scite-ref-4-a" class="scite-citeref-number" title="M. Satran, M. Jacobs. (2018, May 30). Access Control Lists. Retrieved February 4, 2020."data-reference="Microsoft Access Control Lists May 2018"><sup><a href="https://docs.microsoft.com/en-us/windows/win32/secauthz/access-control-lists" target="_blank" data-hasqtip="3" aria-describedby="qtip-3">[4]</a></sup></span></p><p>Adversaries can interact with the DACLs using built-in Windows commands, such as <code>icacls</code>, <code>cacls</code>, <code>takeown</code>, and <code>attrib</code>, which can grant adversaries higher permissions on specific files and folders. Further, <a href="/techniques/T1059/001">PowerShell</a> provides cmdlets that can be used to retrieve or modify file and directory DACLs. Specific file and directory modifications may be a required step for many techniques, such as establishing Persistence via <a href="/techniques/T1546/008">Accessibility Features</a>, <a href="/techniques/T1037">Boot or Logon Initialization Scripts</a>, or tainting/hijacking other instrumental binary/configuration files via <a href="/techniques/T1574">Hijack Execution Flow</a>.</p>
 
                                     </div>
                             </div>
@@ -347,7 +346,7 @@
                                                 <a href="/software/S0570"> BitPaymer </a>
                                             </td>
                                             <td>
-                                                            <p><a href="/software/S0570">BitPaymer</a> can use <code>icacls /reset</code> and <code>takeown /F</code> to reset a targeted executable's permissions and then take ownership.<span onclick=scrollToRef('scite-5') id="scite-ref-5-a" class="scite-citeref-number" data-reference="Crowdstrike Indrik November 2018"><sup><a href="https://www.crowdstrike.com/blog/big-game-hunting-the-evolution-of-indrik-spider-from-dridex-wire-fraud-to-bitpaymer-targeted-ransomware/" target="_blank" data-hasqtip="4" aria-describedby="qtip-4">[5]</a></sup></span></p>
+                                                            <p><a href="/software/S0570">BitPaymer</a> can use <code>icacls /reset</code> and <code>takeown /F</code> to reset a targeted executable's permissions and then take ownership.<span onclick=scrollToRef('scite-5') id="scite-ref-5-a" class="scite-citeref-number" title="Frankoff, S., Hartley, B. (2018, November 14). Big Game Hunting: The Evolution of INDRIK SPIDER From Dridex Wire Fraud to BitPaymer Targeted Ransomware. Retrieved January 6, 2021."data-reference="Crowdstrike Indrik November 2018"><sup><a href="https://www.crowdstrike.com/blog/big-game-hunting-the-evolution-of-indrik-spider-from-dridex-wire-fraud-to-bitpaymer-targeted-ransomware/" target="_blank" data-hasqtip="4" aria-describedby="qtip-4">[5]</a></sup></span></p>
 
                                             </td>
                                         </tr>
@@ -359,7 +358,7 @@
                                                 <a href="/software/S1068"> BlackCat </a>
                                             </td>
                                             <td>
-                                                            <p><a href="/software/S1068">BlackCat</a> can use Windows commands such as <code>fsutil behavior set SymLinkEvaluation R2L:1</code> to redirect file system access to a different location after gaining access into compromised networks.<span onclick=scrollToRef('scite-6') id="scite-ref-6-a" class="scite-citeref-number" data-reference="Microsoft BlackCat Jun 2022"><sup><a href="https://www.microsoft.com/en-us/security/blog/2022/06/13/the-many-lives-of-blackcat-ransomware/" target="_blank" data-hasqtip="5" aria-describedby="qtip-5">[6]</a></sup></span></p>
+                                                            <p><a href="/software/S1068">BlackCat</a> can use Windows commands such as <code>fsutil behavior set SymLinkEvaluation R2L:1</code> to redirect file system access to a different location after gaining access into compromised networks.<span onclick=scrollToRef('scite-6') id="scite-ref-6-a" class="scite-citeref-number" title="Microsoft Defender Threat Intelligence. (2022, June 13). The many lives of BlackCat ransomware. Retrieved December 20, 2022."data-reference="Microsoft BlackCat Jun 2022"><sup><a href="https://www.microsoft.com/en-us/security/blog/2022/06/13/the-many-lives-of-blackcat-ransomware/" target="_blank" data-hasqtip="5" aria-describedby="qtip-5">[6]</a></sup></span></p>
 
                                             </td>
                                         </tr>
@@ -371,7 +370,7 @@
                                                 <a href="/software/S0693"> CaddyWiper </a>
                                             </td>
                                             <td>
-                                                            <p><a href="/software/S0693">CaddyWiper</a> can modify ACL entries to take ownership of files.<span onclick=scrollToRef('scite-7') id="scite-ref-7-a" class="scite-citeref-number" data-reference="Cisco CaddyWiper March 2022"><sup><a href="https://blog.talosintelligence.com/2022/03/threat-advisory-caddywiper.html" target="_blank" data-hasqtip="6" aria-describedby="qtip-6">[7]</a></sup></span></p>
+                                                            <p><a href="/software/S0693">CaddyWiper</a> can modify ACL entries to take ownership of files.<span onclick=scrollToRef('scite-7') id="scite-ref-7-a" class="scite-citeref-number" title="Malhotra, A. (2022, March 15). Threat Advisory: CaddyWiper. Retrieved March 23, 2022."data-reference="Cisco CaddyWiper March 2022"><sup><a href="https://blog.talosintelligence.com/2022/03/threat-advisory-caddywiper.html" target="_blank" data-hasqtip="6" aria-describedby="qtip-6">[7]</a></sup></span></p>
 
                                             </td>
                                         </tr>
@@ -383,7 +382,7 @@
                                                 <a href="/software/S0531"> Grandoreiro </a>
                                             </td>
                                             <td>
-                                                            <p><a href="/software/S0531">Grandoreiro</a> can modify the binary ACL to prevent security tools from running.<span onclick=scrollToRef('scite-8') id="scite-ref-8-a" class="scite-citeref-number" data-reference="ESET Grandoreiro April 2020"><sup><a href="https://www.welivesecurity.com/2020/04/28/grandoreiro-how-engorged-can-exe-get/" target="_blank" data-hasqtip="7" aria-describedby="qtip-7">[8]</a></sup></span></p>
+                                                            <p><a href="/software/S0531">Grandoreiro</a> can modify the binary ACL to prevent security tools from running.<span onclick=scrollToRef('scite-8') id="scite-ref-8-a" class="scite-citeref-number" title="ESET. (2020, April 28). Grandoreiro: How engorged can an EXE get?. Retrieved November 13, 2020."data-reference="ESET Grandoreiro April 2020"><sup><a href="https://www.welivesecurity.com/2020/04/28/grandoreiro-how-engorged-can-exe-get/" target="_blank" data-hasqtip="7" aria-describedby="qtip-7">[8]</a></sup></span></p>
 
                                             </td>
                                         </tr>
@@ -395,7 +394,7 @@
                                                 <a href="/software/S0201"> JPIN </a>
                                             </td>
                                             <td>
-                                                            <p><a href="/software/S0201">JPIN</a> can use the command-line utility cacls.exe to change file permissions.<span onclick=scrollToRef('scite-9') id="scite-ref-9-a" class="scite-citeref-number" data-reference="Microsoft PLATINUM April 2016"><sup><a href="https://download.microsoft.com/download/2/2/5/225BFE3E-E1DE-4F5B-A77B-71200928D209/Platinum%20feature%20article%20-%20Targeted%20attacks%20in%20South%20and%20Southeast%20Asia%20April%202016.pdf" target="_blank" data-hasqtip="8" aria-describedby="qtip-8">[9]</a></sup></span></p>
+                                                            <p><a href="/software/S0201">JPIN</a> can use the command-line utility cacls.exe to change file permissions.<span onclick=scrollToRef('scite-9') id="scite-ref-9-a" class="scite-citeref-number" title="Windows Defender Advanced Threat Hunting Team. (2016, April 29). PLATINUM: Targeted attacks in South and Southeast Asia. Retrieved February 15, 2018."data-reference="Microsoft PLATINUM April 2016"><sup><a href="https://download.microsoft.com/download/2/2/5/225BFE3E-E1DE-4F5B-A77B-71200928D209/Platinum%20feature%20article%20-%20Targeted%20attacks%20in%20South%20and%20Southeast%20Asia%20April%202016.pdf" target="_blank" data-hasqtip="8" aria-describedby="qtip-8">[9]</a></sup></span></p>
 
                                             </td>
                                         </tr>
@@ -407,7 +406,7 @@
                                                 <a href="/software/S0446"> Ryuk </a>
                                             </td>
                                             <td>
-                                                            <p><a href="/software/S0446">Ryuk</a> can launch <code>icacls <path> /grant Everyone:F /T /C /Q</code> to delete every access-based restrictions on files and directories.<span onclick=scrollToRef('scite-10') id="scite-ref-10-a" class="scite-citeref-number" data-reference="ANSSI RYUK RANSOMWARE"><sup><a href="https://www.cert.ssi.gouv.fr/uploads/CERTFR-2021-CTI-006.pdf" target="_blank" data-hasqtip="9" aria-describedby="qtip-9">[10]</a></sup></span></p>
+                                                            <p><a href="/software/S0446">Ryuk</a> can launch <code>icacls <path> /grant Everyone:F /T /C /Q</code> to delete every access-based restrictions on files and directories.<span onclick=scrollToRef('scite-10') id="scite-ref-10-a" class="scite-citeref-number" title="ANSSI. (2021, February 25). RYUK RANSOMWARE. Retrieved March 29, 2021."data-reference="ANSSI RYUK RANSOMWARE"><sup><a href="https://www.cert.ssi.gouv.fr/uploads/CERTFR-2021-CTI-006.pdf" target="_blank" data-hasqtip="9" aria-describedby="qtip-9">[10]</a></sup></span></p>
 
                                             </td>
                                         </tr>
@@ -419,7 +418,7 @@
                                                 <a href="/software/S0366"> WannaCry </a>
                                             </td>
                                             <td>
-                                                            <p><a href="/software/S0366">WannaCry</a> uses <code>attrib +h</code> and <code>icacls . /grant Everyone:F /T /C /Q</code> to make some of its files hidden and grant all users full access controls.<span onclick=scrollToRef('scite-11') id="scite-ref-11-a" class="scite-citeref-number" data-reference="LogRhythm WannaCry"><sup><a href="https://logrhythm.com/blog/a-technical-analysis-of-wannacry-ransomware/" target="_blank" data-hasqtip="10" aria-describedby="qtip-10">[11]</a></sup></span></p>
+                                                            <p><a href="/software/S0366">WannaCry</a> uses <code>attrib +h</code> and <code>icacls . /grant Everyone:F /T /C /Q</code> to make some of its files hidden and grant all users full access controls.<span onclick=scrollToRef('scite-11') id="scite-ref-11-a" class="scite-citeref-number" title="Noerenberg, E., Costis, A., and Quist, N. (2017, May 16). A Technical Analysis of WannaCry Ransomware. Retrieved March 25, 2019."data-reference="LogRhythm WannaCry"><sup><a href="https://logrhythm.com/blog/a-technical-analysis-of-wannacry-ransomware/" target="_blank" data-hasqtip="10" aria-describedby="qtip-10">[11]</a></sup></span></p>
 
                                             </td>
                                         </tr>
@@ -431,7 +430,7 @@
                                                 <a href="/software/S0612"> WastedLocker </a>
                                             </td>
                                             <td>
-                                                            <p><a href="/software/S0612">WastedLocker</a> has a command to take ownership of a file and reset the ACL permissions using the <code>takeown.exe /F filepath</code> command.<span onclick=scrollToRef('scite-12') id="scite-ref-12-a" class="scite-citeref-number" data-reference="NCC Group WastedLocker June 2020"><sup><a href="https://research.nccgroup.com/2020/06/23/wastedlocker-a-new-ransomware-variant-developed-by-the-evil-corp-group/" target="_blank" data-hasqtip="11" aria-describedby="qtip-11">[12]</a></sup></span> </p>
+                                                            <p><a href="/software/S0612">WastedLocker</a> has a command to take ownership of a file and reset the ACL permissions using the <code>takeown.exe /F filepath</code> command.<span onclick=scrollToRef('scite-12') id="scite-ref-12-a" class="scite-citeref-number" title="Antenucci, S., Pantazopoulos, N., Sandee, M. (2020, June 23). WastedLocker: A New Ransomware Variant Developed By The Evil Corp Group. Retrieved September 14, 2021."data-reference="NCC Group WastedLocker June 2020"><sup><a href="https://research.nccgroup.com/2020/06/23/wastedlocker-a-new-ransomware-variant-developed-by-the-evil-corp-group/" target="_blank" data-hasqtip="11" aria-describedby="qtip-11">[12]</a></sup></span> </p>
 
                                             </td>
                                         </tr>
@@ -443,7 +442,7 @@
                                                 <a href="/groups/G0102"> Wizard Spider </a>
                                             </td>
                                             <td>
-                                                            <p><a href="/groups/G0102">Wizard Spider</a> has used the icacls command to modify access control to backup servers, providing them with full control of all the system folders.<span onclick=scrollToRef('scite-13') id="scite-ref-13-a" class="scite-citeref-number" data-reference="Sophos New Ryuk Attack October 2020"><sup><a href="https://news.sophos.com/en-us/2020/10/14/inside-a-new-ryuk-ransomware-attack/" target="_blank" data-hasqtip="12" aria-describedby="qtip-12">[13]</a></sup></span></p>
+                                                            <p><a href="/groups/G0102">Wizard Spider</a> has used the icacls command to modify access control to backup servers, providing them with full control of all the system folders.<span onclick=scrollToRef('scite-13') id="scite-ref-13-a" class="scite-citeref-number" title="Sean Gallagher, Peter Mackenzie, Elida Leite, Syed Shahram, Bill Kearney, Anand Aijan, Sivagnanam Gn, Suraj Mundalik. (2020, October 14). They’re back: inside a new Ryuk ransomware attack. Retrieved October 14, 2020."data-reference="Sophos New Ryuk Attack October 2020"><sup><a href="https://news.sophos.com/en-us/2020/10/14/inside-a-new-ryuk-ransomware-attack/" target="_blank" data-hasqtip="12" aria-describedby="qtip-12">[13]</a></sup></span></p>
 
                                             </td>
                                         </tr>
@@ -818,8 +817,7 @@
                                 <div class="footer-float-right-responsive-brand">
                                     <div class="mb-1">
                                         <a href="https://twitter.com/MITREattack" class="btn btn-primary w-100">
-                                            <!-- <i class="fa fa-twitter"></i> -->
-                                            <img src="/theme/images/twitter.png" class="mr-1 twitter-icon">
+                                            <i class="fa-brands fa-twitter fa-lg"></i>
                                             <b>@MITREattack</b>
                                         </a>
                                     </div>
@@ -846,8 +844,8 @@
     <script src="/theme/scripts/popper.min.js"></script>
     <script src="/theme/scripts/bootstrap-select.min.js"></script>
     <script src="/theme/scripts/bootstrap.bundle.min.js"></script>
-    <script src="/theme/scripts/site.js?6635"></script>
-    <script src="/theme/scripts/settings.js?3801"></script>
+    <script src="/theme/scripts/site.js?1046"></script>
+    <script src="/theme/scripts/settings.js?2952"></script>
     <script src="/theme/scripts/search_bundle.js"></script>
 
 <!--SCRIPTS-->

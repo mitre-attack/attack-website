@@ -1,25 +1,36 @@
-let mod_name = window.location.pathname.split("/")
-let mod_entry = "/" + mod_name[1] + "/sidebar-" + mod_name[1]
+let mod_name = window.location.pathname.split("/");
+let mod_entry;
+if (mod_name.includes('versions') && mod_name.length > 4){
+    mod_entry = "/" + mod_name[3] + "/sidebar-" + mod_name[3]
+}
+else{
+    mod_entry = "/" + mod_name[1] + "/sidebar-" + mod_name[1]
+}
 if (mod_name.includes('contact')){
     mod_entry = "/" + "resources/sidebar-resources"
 }
 $("#sidebars").load(mod_entry, function() {
+    let old_winlocation = window.location.href;
+    if (mod_name.includes('versions')){
+        let v_number = mod_name[2];
+        old_winlocation = old_winlocation.replace('/versions/'+ v_number,'');
+    }
     let navElements = document.querySelectorAll('.sidenav-head > a');
     let winlocation;
     navElements.forEach(function(element){
     if(!element.href.includes('changelog.html')){
-        if(!window.location.href.endsWith("/")){
-            winlocation = window.location.href + "/";
+        if(!old_winlocation.endsWith("/")){
+            winlocation = old_winlocation + "/";
         }
         else{
-            winlocation = window.location.href
+            winlocation = old_winlocation
         }
         if(!element.href.endsWith("/")){
             element.href = element.href + "/";
         }
     }
     else{
-        winlocation = window.location.href
+        winlocation = old_winlocation
     }
     if(element.href == winlocation){
         $(element.parentNode).addClass("active")

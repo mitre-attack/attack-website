@@ -19,11 +19,10 @@
         <title>Boot or Logon Autostart Execution: Print Processors, Sub-technique T1547.012 - Enterprise | MITRE ATT&CK&reg;</title>
         <!-- Bootstrap CSS -->
         <link rel='stylesheet' href="/versions/v14/theme/style/bootstrap.min.css" />
-        <link rel='stylesheet' href="/versions/v14/theme/style/bootstrap-glyphicon.min.css" />
         <link rel='stylesheet' href="/versions/v14/theme/style/bootstrap-tourist.css" />
         <link rel='stylesheet' href="/versions/v14/theme/style/bootstrap-select.min.css" />
-        <link rel="stylesheet" type="text/css" href="/versions/v14/theme/style.min.css?d548d7ba">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="/versions/v14/theme/style.min.css?dfd3be17">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
 </head>
 
@@ -349,7 +348,7 @@
    
 
                                     <div class="description-body">
-                                                <p>Adversaries may abuse print processors to run malicious DLLs during system boot for persistence and/or privilege escalation. Print processors are DLLs that are loaded by the print spooler service, <code>spoolsv.exe</code>, during boot.<span onclick=scrollToRef('scite-1') id="scite-ref-1-a" class="scite-citeref-number" data-reference="Microsoft Intro Print Processors"><sup><a href="https://learn.microsoft.com/windows-hardware/drivers/print/introduction-to-print-processors" target="_blank" data-hasqtip="0" aria-describedby="qtip-0">[1]</a></sup></span></p><p>Adversaries may abuse the print spooler service by adding print processors that load malicious DLLs at startup. A print processor can be installed through the <code>AddPrintProcessor</code> API call with an account that has <code>SeLoadDriverPrivilege</code> enabled. Alternatively, a print processor can be registered to the print spooler service by adding the <code>HKLM\SYSTEM\[CurrentControlSet or ControlSet001]\Control\Print\Environments\[Windows architecture: e.g., Windows x64]\Print Processors\[user defined]\Driver</code> Registry key that points to the DLL.</p><p>For the malicious print processor to be correctly installed, the payload must be located in the dedicated system print-processor directory, that can be found with the <code>GetPrintProcessorDirectory</code> API call, or referenced via a relative path from this directory.<span onclick=scrollToRef('scite-2') id="scite-ref-2-a" class="scite-citeref-number" data-reference="Microsoft AddPrintProcessor May 2018"><sup><a href="https://docs.microsoft.com/en-us/windows/win32/printdocs/addprintprocessor" target="_blank" data-hasqtip="1" aria-describedby="qtip-1">[2]</a></sup></span> After the print processors are installed, the print spooler service, which starts during boot, must be restarted in order for them to run.<span onclick=scrollToRef('scite-3') id="scite-ref-3-a" class="scite-citeref-number" data-reference="ESET PipeMon May 2020"><sup><a href="https://www.welivesecurity.com/2020/05/21/no-game-over-winnti-group/" target="_blank" data-hasqtip="2" aria-describedby="qtip-2">[3]</a></sup></span></p><p>The print spooler service runs under SYSTEM level permissions, therefore print processors installed by an adversary may run under elevated privileges.</p>
+                                                <p>Adversaries may abuse print processors to run malicious DLLs during system boot for persistence and/or privilege escalation. Print processors are DLLs that are loaded by the print spooler service, <code>spoolsv.exe</code>, during boot.<span onclick=scrollToRef('scite-1') id="scite-ref-1-a" class="scite-citeref-number" title="Microsoft. (2023, June 26). Introduction to print processors. Retrieved September 27, 2023."data-reference="Microsoft Intro Print Processors"><sup><a href="https://learn.microsoft.com/windows-hardware/drivers/print/introduction-to-print-processors" target="_blank" data-hasqtip="0" aria-describedby="qtip-0">[1]</a></sup></span></p><p>Adversaries may abuse the print spooler service by adding print processors that load malicious DLLs at startup. A print processor can be installed through the <code>AddPrintProcessor</code> API call with an account that has <code>SeLoadDriverPrivilege</code> enabled. Alternatively, a print processor can be registered to the print spooler service by adding the <code>HKLM\SYSTEM\[CurrentControlSet or ControlSet001]\Control\Print\Environments\[Windows architecture: e.g., Windows x64]\Print Processors\[user defined]\Driver</code> Registry key that points to the DLL.</p><p>For the malicious print processor to be correctly installed, the payload must be located in the dedicated system print-processor directory, that can be found with the <code>GetPrintProcessorDirectory</code> API call, or referenced via a relative path from this directory.<span onclick=scrollToRef('scite-2') id="scite-ref-2-a" class="scite-citeref-number" title="Microsoft. (2018, May 31). AddPrintProcessor function. Retrieved October 5, 2020."data-reference="Microsoft AddPrintProcessor May 2018"><sup><a href="https://docs.microsoft.com/en-us/windows/win32/printdocs/addprintprocessor" target="_blank" data-hasqtip="1" aria-describedby="qtip-1">[2]</a></sup></span> After the print processors are installed, the print spooler service, which starts during boot, must be restarted in order for them to run.<span onclick=scrollToRef('scite-3') id="scite-ref-3-a" class="scite-citeref-number" title="Tartare, M. et al. (2020, May 21). No "Game over" for the Winnti Group. Retrieved August 24, 2020."data-reference="ESET PipeMon May 2020"><sup><a href="https://www.welivesecurity.com/2020/05/21/no-game-over-winnti-group/" target="_blank" data-hasqtip="2" aria-describedby="qtip-2">[3]</a></sup></span></p><p>The print spooler service runs under SYSTEM level permissions, therefore print processors installed by an adversary may run under elevated privileges.</p>
 
                                     </div>
                             </div>
@@ -457,7 +456,7 @@
                                                 <a href="/versions/v14/groups/G1006"> Earth Lusca </a>
                                             </td>
                                             <td>
-                                                            <p><a href="/versions/v14/groups/G1006">Earth Lusca</a> has added the Registry key <code>HKLM\SYSTEM\ControlSet001\Control\Print\Environments\Windows x64\Print Processors\UDPrint" /v Driver /d "spool.dll /f</code> to load malware as a Print Processor.<span onclick=scrollToRef('scite-4') id="scite-ref-4-a" class="scite-citeref-number" data-reference="TrendMicro EarthLusca 2022"><sup><a href="https://www.trendmicro.com/content/dam/trendmicro/global/en/research/22/a/earth-lusca-employs-sophisticated-infrastructure-varied-tools-and-techniques/technical-brief-delving-deep-an-analysis-of-earth-lusca-operations.pdf" target="_blank" data-hasqtip="3" aria-describedby="qtip-3">[4]</a></sup></span></p>
+                                                            <p><a href="/versions/v14/groups/G1006">Earth Lusca</a> has added the Registry key <code>HKLM\SYSTEM\ControlSet001\Control\Print\Environments\Windows x64\Print Processors\UDPrint" /v Driver /d "spool.dll /f</code> to load malware as a Print Processor.<span onclick=scrollToRef('scite-4') id="scite-ref-4-a" class="scite-citeref-number" title="Chen, J., et al. (2022). Delving Deep: An Analysis of Earth Lusca’s Operations. Retrieved July 1, 2022."data-reference="TrendMicro EarthLusca 2022"><sup><a href="https://www.trendmicro.com/content/dam/trendmicro/global/en/research/22/a/earth-lusca-employs-sophisticated-infrastructure-varied-tools-and-techniques/technical-brief-delving-deep-an-analysis-of-earth-lusca-operations.pdf" target="_blank" data-hasqtip="3" aria-describedby="qtip-3">[4]</a></sup></span></p>
 
                                             </td>
                                         </tr>
@@ -469,7 +468,7 @@
                                                 <a href="/versions/v14/software/S0666"> Gelsemium </a>
                                             </td>
                                             <td>
-                                                            <p><a href="/versions/v14/software/S0666">Gelsemium</a> can drop itself in <code>C:\Windows\System32\spool\prtprocs\x64\winprint.dll</code> to be loaded automatically by the spoolsv Windows service.<span onclick=scrollToRef('scite-5') id="scite-ref-5-a" class="scite-citeref-number" data-reference="ESET Gelsemium June 2021"><sup><a href="https://www.welivesecurity.com/wp-content/uploads/2021/06/eset_gelsemium.pdf" target="_blank" data-hasqtip="4" aria-describedby="qtip-4">[5]</a></sup></span></p>
+                                                            <p><a href="/versions/v14/software/S0666">Gelsemium</a> can drop itself in <code>C:\Windows\System32\spool\prtprocs\x64\winprint.dll</code> to be loaded automatically by the spoolsv Windows service.<span onclick=scrollToRef('scite-5') id="scite-ref-5-a" class="scite-citeref-number" title="Dupuy, T. and Faou, M. (2021, June). Gelsemium. Retrieved November 30, 2021."data-reference="ESET Gelsemium June 2021"><sup><a href="https://www.welivesecurity.com/wp-content/uploads/2021/06/eset_gelsemium.pdf" target="_blank" data-hasqtip="4" aria-describedby="qtip-4">[5]</a></sup></span></p>
 
                                             </td>
                                         </tr>
@@ -481,7 +480,7 @@
                                                 <a href="/versions/v14/software/S0501"> PipeMon </a>
                                             </td>
                                             <td>
-                                                            <p>The <a href="/versions/v14/software/S0501">PipeMon</a> installer has modified the Registry key <code>HKLM\SYSTEM\CurrentControlSet\Control\Print\Environments\Windows x64\Print Processors</code> to install <a href="/versions/v14/software/S0501">PipeMon</a> as a Print Processor.<span onclick=scrollToRef('scite-3') id="scite-ref-3-a" class="scite-citeref-number" data-reference="ESET PipeMon May 2020"><sup><a href="https://www.welivesecurity.com/2020/05/21/no-game-over-winnti-group/" target="_blank" data-hasqtip="2" aria-describedby="qtip-2">[3]</a></sup></span></p>
+                                                            <p>The <a href="/versions/v14/software/S0501">PipeMon</a> installer has modified the Registry key <code>HKLM\SYSTEM\CurrentControlSet\Control\Print\Environments\Windows x64\Print Processors</code> to install <a href="/versions/v14/software/S0501">PipeMon</a> as a Print Processor.<span onclick=scrollToRef('scite-3') id="scite-ref-3-a" class="scite-citeref-number" title="Tartare, M. et al. (2020, May 21). No "Game over" for the Winnti Group. Retrieved August 24, 2020."data-reference="ESET PipeMon May 2020"><sup><a href="https://www.welivesecurity.com/2020/05/21/no-game-over-winnti-group/" target="_blank" data-hasqtip="2" aria-describedby="qtip-2">[3]</a></sup></span></p>
 
                                             </td>
                                         </tr>
@@ -764,8 +763,7 @@
                                 <div class="footer-float-right-responsive-brand">
                                     <div class="mb-1">
                                         <a href="https://twitter.com/MITREattack" class="btn btn-primary w-100">
-                                            <!-- <i class="fa fa-twitter"></i> -->
-                                            <img src="/versions/v14/theme/images/twitter.png" class="mr-1 twitter-icon">
+                                            <i class="fa-brands fa-twitter fa-lg"></i>
                                             <b>@MITREattack</b>
                                         </a>
                                     </div>
@@ -792,8 +790,8 @@
     <script src="/versions/v14/theme/scripts/popper.min.js"></script>
     <script src="/versions/v14/theme/scripts/bootstrap-select.min.js"></script>
     <script src="/versions/v14/theme/scripts/bootstrap.bundle.min.js"></script>
-    <script src="/versions/v14/theme/scripts/site.js?4831"></script>
-    <script src="/versions/v14/theme/scripts/settings.js?4409"></script>
+    <script src="/versions/v14/theme/scripts/site.js?2760"></script>
+    <script src="/versions/v14/theme/scripts/settings.js?8508"></script>
     <script src="/versions/v14/theme/scripts/search_bundle.js"></script>
 
 <!--SCRIPTS-->
