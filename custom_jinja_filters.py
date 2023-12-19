@@ -12,6 +12,7 @@ reference_marker_template = (
     "<span onclick=scrollToRef('scite-{}') "
     'id="scite-ref-{}-a" class="scite'
     '-citeref-number" '
+    'title="{}"'
     'data-reference="{}"><sup><a href="{}" '
     'target="_blank" data-hasqtip="{}" '
     'aria-describedby="qtip-{}">[{}]</a></sup></span>'
@@ -20,7 +21,8 @@ reference_marker_template_no_url = (
     "<span onclick=scrollToRef('scite-{}') "
     'id="scite-ref-{}-a" '
     'class="scite-citeref-number" '
-    'data-reference="{}">'
+    'data-reference="{}"'
+    'title="{}">'
     "<sup>[{}]</sup></span>"
 )
 
@@ -89,7 +91,8 @@ def get_html_citation(citations, citation_name):
     reference_html = ""
     if citation:
         ref_number = None
-
+        description = citation.get("description")
+        
         if citation.get("number"):
             ref_number = citation["number"]
         else:
@@ -98,10 +101,10 @@ def get_html_citation(citations, citation_name):
             citation["number"] = ref_number
 
         if not citation.get("url"):
-            reference_html = reference_marker_template_no_url.format(ref_number, ref_number, citation_name, ref_number)
+            reference_html = reference_marker_template_no_url.format(ref_number, ref_number, citation_name, description, ref_number)
         else:
             reference_html = reference_marker_template.format(
-                ref_number, ref_number, citation_name, citation["url"], ref_number - 1, ref_number - 1, ref_number
+                ref_number, ref_number, description, citation_name, citation["url"], ref_number - 1, ref_number - 1, ref_number
             )
 
     return reference_html
