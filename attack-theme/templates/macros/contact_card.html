@@ -1,26 +1,33 @@
-{% macro render(title, link, description, fa_icon=None, invert_icon=None, buttons=None) %}
+{% macro render(title, link, description, fa_icon=None, invert_icon=None, buttons=None, card_new=None) %}
 <div class="contact-card card">
-    <div class="card-header no-background">
-        <a class="partial-underline" href="{{link}}">
+    {% if card_new %}
+        <div class="card-header background">
             <span class="contact-card-title hover-line">{{title}}</span>
             &nbsp;&nbsp;
-            {% if fa_icon %}
-            <i class="fa-solid fa-up-right-from-square"></i>
-            {% else %}
-            <i class="fa-solid fa-arrow-right"></i>
-            {% endif %}
-        </a>
+        </div>
+    {% else %}
+        <div class="card-header no-background">
+            <a class="partial-underline" href="{{link}}">
+                <span class="contact-card-title hover-line">{{title}}</span>
+                &nbsp;&nbsp;
+                {% if fa_icon %}
+                <i class="fa-solid fa-up-right-from-square"></i>
+                {% else %}
+                <i class="fa-solid fa-arrow-right"></i>
+                {% endif %}
+            </a>
         {% if fa_icon %}
-        <span class="card-title-icon fa-stack">
-            {% if invert_icon %}
-                <i class="fa-solid fa-circle fa-stack-2x"></i>
-                <i class="{{fa_icon}} fa-stack-1x fa-inverse"></i>
-            {% else %}
-                <i class="{{fa_icon}} fa-stack-2x"></i>
-            {% endif %}
-        </span>
+            <span class="card-title-icon fa-stack">
+                {% if invert_icon %}
+                    <i class="fa-solid fa-circle fa-stack-2x"></i>
+                    <i class="{{fa_icon}} fa-stack-1x fa-inverse"></i>
+                {% else %}
+                    <i class="{{fa_icon}} fa-stack-2x"></i>
+                {% endif %}
+            </span>
         {% endif %}
-    </div>
+        </div>
+    {% endif %}
     <div class="card-body">
         <p>
             {{description}}
