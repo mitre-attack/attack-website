@@ -59,6 +59,7 @@ def generate_resources():
     generate_attackcon_page()
     generate_faq_page()
     generate_static_pages()
+    generate_use_case_page()
     generate_sidebar_resources()
 
 
@@ -397,3 +398,38 @@ def generate_presentation_archive():
         os.path.join(site_config.resources_markdown_path, "presenation_archive.md"), "w", encoding="utf8"
     ) as md_file:
         md_file.write(resources_content)
+
+def generate_use_case_page():
+    """Responsible for compiling use cases json into use cases markdown file for rendering on the HMTL."""
+    logger.info("Generating getting started pages")
+
+    # load use case data from json
+    with open(os.path.join(site_config.data_directory, "use_cases.json"), "r", encoding="utf8") as f:
+        use_case_data = json.load(f)
+
+    # Below code used to get a list of all use_case children
+    use_case_md = []
+    use_case_name = []
+    use_case_path = []
+    use_case_dict_list = {}
+    for i in range(len(use_case_data)):
+        use_case_name.append(use_case_data[i]["title"])
+        title = "Title: " + use_case_data[i]["title"] + "\n"
+        name = use_case_data[i]["title"].lower().replace(' ','-').replace("&", "a")
+        template = "Template: resources/use-cases\n"
+        use_case_path.append("/resources/getting-started/" + name + "/")
+        save_as = "save_as: resources/getting-started/" + name + "/index.html\n"
+        data = "data: "
+        content = title + template + save_as + data
+        use_case_md.append(content)
+    use_case_dict_list["use_case_name"] = use_case_name
+    use_case_dict_list["use_case_path"] = use_case_path
+    use_case_dict_list["use_case_md"] = use_case_md
+
+    # write markdown to file
+    use_case_list = use_case_dict_list["use_case_md"]
+    for i in range(len(use_case_list)):
+        use_case_content = use_case_list[i] + json.dumps(use_case_data[i])
+        f_name = "use-case-" + use_case_data[i]["title"].lower().replace(' ','-') + ".md"
+        with open(os.path.join(site_config.resources_markdown_path, f_name), "w", encoding="utf8") as md_file:
+            md_file.write(use_case_content)
