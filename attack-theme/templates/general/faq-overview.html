@@ -12,57 +12,49 @@
 <!--stopindex-->
 <div class="px-3">
     <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="/">Home</a></li>
-            <li class="breadcrumb-item"><a href="/resources">Resources</a></li>
-            <li class="breadcrumb-item">FAQ</li>
+        <li class="breadcrumb-item"><a href="/">Home</a></li>
+        <li class="breadcrumb-item"><a href="/resources">Resources</a></li>
+        <li class="breadcrumb-item">Frequently Asked Questions</li>
     </ol>
 </div>
 
-<div class="container pb-3 uniform-block">
+<div class="faq container pb-3 uniform-block">
     <div class="getting-started">
-        <div class="clearfix pb-3">
-            <h1 class="text-center">Frequently Asked Questions</h1>
-            <h2>Table of Contents</h2>
-            <div class="clearfix">
-                <ol class="nestedlist">
+        <h2>Frequently Asked Questions</h2>
+
+        <div class="card card-filter jump-to-section">
+            <div class="card-body">
+                Jump to Section
+                <ul>
                     {% for section in parsed.sections %}
-                    <div>
-                        <h5>
-                            <li class="nestedlist-item">
-                                {{section.name}}
-                                <ol class="nestedlist">
-                                    {% for qa in section.questions %}
-                                    <li class="nestedlist-item">
-                                        <a href="#{{qa.id}}-header">{{qa.question}}</a>
-                                    </li>
-                                    {% endfor %}
-                                </ol>
-                            </li>
-                        </h5>
-                    </div>
+                    <li>
+                        <a href="#{{section.id}}">{{section.name}}</a>
+                    </li>
                     {% endfor %}
-                </ol>
+                </ul>
             </div>
-            <div>
-                {% for section in parsed.sections %}
-                    <h2>{{section.name}}</h2>
-                    <ol>
-                        {% for qa in section.questions %}
-                            <div>
-                                <div class="card-title" id="{{qa.id}}-header">
-                                    <li>
-                                        {{qa.question}}
-                                    </li>
-                                </div>
-                                <div class="card-data">
-                                    {{qa.answer}}
-                                </div>
-                                <hr>
+        </div>
+
+        <div class="getting-started-content">
+            {% for section in parsed.sections %}
+                <div class="faq-section" id="{{section.id}}">
+                    <h4><strong>{{section.name}}</strong></h4>
+                    {% if section.relevant_links %}
+                    <div class="relevant-links">
+                        <span>
+                            <strong>Relevant Links:</strong>
+                            {% for link in section.relevant_links %}<span class="faq-link"><a href="{{link.url}}">{{link.label}}</a></span>{% endfor %}
+                        </span>
+                    </div>
+                    {% endif %}
+                    {% for qa in section.questions %}
+                        <div class="faq-question">
+                            <h5><strong>{{qa.question}}</strong></h5>
+                            <p>{{qa.answer}}</p>
                         </div>
-                        {% endfor %}
-                    </ol>
-                {% endfor %}
-            </div>
+                    {% endfor %}
+                </div>
+            {% endfor %}
         </div>
     </div>
 </div>
