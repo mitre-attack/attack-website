@@ -45,20 +45,20 @@ def run_tests():
             stix_filename = domain["location"]
 
         logger.info(f"Validating STIX for domain: {domain['name']}")
-        # results = stix2validator.validate_file(fn=stix_filename, options=options)
-        # if results.is_valid:
-        #     logger.info(f"File {stix_filename} is valid")
-        # else:
-        #     logger.error(f"File {stix_filename} is invalid:")
+        results = stix2validator.validate_file(fn=stix_filename, options=options)
+        if results.is_valid:
+            logger.info(f"File {stix_filename} is valid")
+        else:
+            logger.error(f"File {stix_filename} is invalid:")
 
-        #     stix2validator.print_results(results)
+            stix2validator.print_results(results)
 
-            # TODO: implement this once this GitHub issue is resolved
-            # https://github.com/oasis-open/cti-stix-validator/issues/192
+            TODO: implement this once this GitHub issue is resolved
+            https://github.com/oasis-open/cti-stix-validator/issues/192
 
-            # error_file = f"{site_config.test_report_directory}/{stix_filename}-stix-errors.txt"
-            # with open(error_file, "w") as error_f:
-            #     error_f.write(results)
+            error_file = f"{site_config.test_report_directory}/{stix_filename}-stix-errors.txt"
+            with open(error_file, "w") as error_f:
+                error_f.write(results)
 
     #################
     # Check LinkByIds
