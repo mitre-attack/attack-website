@@ -38,6 +38,10 @@ contribute_md = (
     "Title: Contribute\n" "Template: resources/contribute\n" "save_as: resources/contribute/index.html\n" "data: "
 )
 
+updates_md = (
+    "Title: Version History\n" "Template: resources/updates-index\n" "save_as: resources/updates/index.html\n" "data: "
+)
+
 contribute_redirection_location = "modules/resources/contribute_redirections.json"
 
 # Brand md

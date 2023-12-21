@@ -1,7 +1,7 @@
-{% extends "general/two-column.html" %}
+{% extends "general/two-column.html" %} 
 {% set active_page = "resources" -%}
-{% set title = "Updates | MITRE ATT&CK&reg;" -%}
-{% set found = {'found': True} -%}
+{% set title = "Version History | MITRE ATT&CK&reg;" -%}
+{% set version_history = page.data | from_json %}
 {% import 'macros/navigation.html' as navigation %}
 
 {% block innerleft %}
@@ -14,12 +14,56 @@
         <li class="breadcrumb-item"><a href="/resources/">Resources</a></li>
         <li class="breadcrumb-item">Updates</li>
     </ol>
-    {% if articles %}
-        <div class="blog-post p-3">
-            <h1 class="blog-post-title mb-4">{{ (articles|selectattr('template', 'equalto', 'resources/update-post')|first).title }}</h1>
-            {{ (articles|selectattr('template', 'equalto', 'resources/update-post')|first).content }}
+
+    <div class="version-history pb-3">
+        <div class="getting-started">
+            <h2 class="col-md-8 px-2">Version History</h2>
+
+            <div class="col-md-8 px-2">
+                {% if version_history.current %}
+                <h5><strong>Current Version</strong></h5>
+                <div class="card my-4 p-2 flex-row align-items-center">
+                    <div class="col order-first">
+                        <span><strong>ATT&amp;CK {{version_history.current.name}}</strong></span>
+                        <p class="text-label card-data">
+                            {{version_history.current.date_start}} - current
+                        </p>
+                    </div>
+                    <div class="col-md-6 button-group">
+                        <button type="button" class="slide-button slide-button-secondary">
+                            Release Notes
+                        </button>
+                        <button type="button" class="slide-button">
+                            {{version_history.current.name}} Website
+                        </button>
+                    </div>
+                </div>
+                {% endif %}
+
+                <h5><strong>Most Recent Versions</strong></h5>
+                {% for i in range(1, 5) %}
+                    {% set version = version_history.previous[i] %}
+                    <div class="card my-4 p-2 flex-row align-items-center">
+                        <div class="col order-first">
+                            <span><strong>ATT&amp;CK {{version.name}}</strong></span>
+                            <p class="text-label card-data">
+                                {{version.date_start}} - {{version.date_end}}
+                            </p>
+                        </div>
+                        <div class="col-md-6 button-group">
+                            <button type="button" class="slide-button slide-button-secondary">
+                                Release Notes
+                            </button>
+                            <button type="button" class="slide-button">
+                                {{version.name}} Website
+                            </button>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
         </div>
-    {% endif %}
+    </div>
+    
 {% endblock %}
 
 {% block scripts %}
