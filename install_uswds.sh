@@ -1,5 +1,13 @@
 #!/bin/bash
 
+#'''
+#
+# SCRIPT TO COMPILE USWDS INTO THE ATT&CK THEME
+# USED FOR TESTING PURPOSES ONLY
+#
+#'''
+
+
 CUSTOM_ATTR=(
     '$theme-checkbox-border-radius: "md",'
     '$theme-button-font-family: "body",'
