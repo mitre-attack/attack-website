@@ -11,6 +11,7 @@ techniques_used_by_malware = {}
 techniques_used_by_tools = {}
 techniques_used_by_groups = {}
 techniques_used_by_campaigns = {}
+techniques_targeting_assets = {}
 techniques_detected_by_datacomponent = {}
 groups_using_tool = {}
 groups_using_malware = {}
@@ -20,6 +21,7 @@ datacomponents_detecting_technique = {}
 tools_using_technique = {}
 malware_using_technique = {}
 groups_using_technique = {}
+assets_targeted_by_techniques = {}
 campaigns_using_technique = {}
 campaigns_using_tool = {}
 campaigns_using_malware = {}
@@ -44,6 +46,7 @@ datasource_list = []
 datacomponent_list = []
 mitigation_list = []
 campaign_list = []
+asset_list = []
 
 technique_to_domain = {}
 
@@ -129,6 +132,25 @@ def get_techniques_used_by_campaigns():
 
     return techniques_used_by_campaigns
 
+
+def get_techniques_targeting_assets():
+    """techniques targeting assets getter"""
+    global techniques_targeting_assets
+
+    if not techniques_targeting_assets:
+        techniques_targeting_assets = rsh.techniques_targeting_assets(get_srcs())
+
+    return techniques_targeting_assets
+
+
+def get_assets_targeted_by_techniques():
+    """assets targeted by techniques getter"""
+    global assets_targeted_by_techniques
+
+    if not assets_targeted_by_techniques:
+        assets_targeted_by_techniques = rsh.assets_targeted_by_techniques(get_srcs())
+
+    return assets_targeted_by_techniques
 
 def get_techniques_detected_by_datacomponent():
     global techniques_detected_by_datacomponent
@@ -430,6 +452,15 @@ def get_campaign_list():
         campaign_list = get_resources()["campaigns"]
 
     return campaign_list
+
+def get_asset_list():
+    """asset list getter"""
+    global asset_list
+
+    if not asset_list:
+        asset_list = get_resources()["assets"]
+
+    return asset_list
 
 
 def get_technique_to_domain():

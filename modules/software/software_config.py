@@ -22,3 +22,10 @@ software_md = Template("Title: ${name}\n"
                        "data: ")
 
 software_redirection_location = "modules/software/software_redirections.json"
+
+sidebar_software_md = (
+    "Title: Software Sidebar\n"
+    "Template: general/sidebar-template \n"
+    "save_as: software/sidebar-software/index.html\n"
+    "data: "
+)

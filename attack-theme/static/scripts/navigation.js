@@ -8,12 +8,16 @@ $(document).ready(function () {
     // jumping from one domain to another. E.g. techniques to matrices
     let current_modules = window.location.pathname.split("/");
 
+    var sidebar = document.querySelector(".sidebar");
+    var sidebarSize = localStorage.getItem('sidebarWidth');
+    sidebar.style.width = sidebarSize;
+
     if (document.referrer) {
         // Loop through the modules in case page is hosted from different 
         // directory
         
         let is_found = false;
-        for (i = 0; i < current_modules.length; i++) {
+        for (let i = 0; i < current_modules.length; i++) {
             if ((document.referrer.includes(current_modules[i]))) {
                 is_found = true;
             }
@@ -43,7 +47,7 @@ $(document).ready(function () {
     // Open necessary panes
     $(".expand-button").each(function () {
         let tree = "";
-        for (i = 0; i < active_id.length; i++) {
+        for (let i = 0; i < active_id.length; i++) {
             tree += active_id[i] + "-";
             if ($(this).attr('id') === tree+"header") {
                 $(this).addClass("notransition");
@@ -54,7 +58,7 @@ $(document).ready(function () {
 
     $(".sidenav-body.collapse").each(function () {
         let tree = "";
-        for (i = 0; i < active_id.length; i++) {
+        for (let i = 0; i < active_id.length; i++) {
             tree += active_id[i] + "-";
             if ($(this).attr('id') === tree+"body") {
                 $(this).addClass("show");

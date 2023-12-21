@@ -1,11 +1,13 @@
 import json
 import os
+import shutil
 from pathlib import Path
 
 import requests
 import stix2
 import urllib3
 from loguru import logger
+from requests.adapters import HTTPAdapter, Retry
 
 from modules import site_config
 
@@ -14,18 +16,18 @@ from . import relationshiphelpers as rsh
 
 
 def get_mitigation_list(src, get_deprecated=False):
-    """Reads the STIX and returns a list of all mitigations in the STIX"""
+    """Read the STIX and return a list of all mitigations in the STIX."""
     mitigations = src.query([stix2.Filter("type", "=", "course-of-action"), stix2.Filter("revoked", "=", False)])
 
     if not get_deprecated:
         # Filter out deprecated objects for mitigation pages
-        mitigations = [x for x in mitigations if not hasattr(x, "x_mitre_deprecated") or x.x_mitre_deprecated == False]
+        mitigations = [x for x in mitigations if not hasattr(x, "x_mitre_deprecated") or x.x_mitre_deprecated is False]
 
     return sorted(mitigations, key=lambda k: k["name"].lower())
 
 
 def get_matrices(src, domain):
-    """Reads the STIX and returns a list of all matrices in the STIX"""
+    """Read the STIX and return a list of all matrices in the STIX."""
     stix_matrices = src.query(
         [
             stix2.Filter("type", "=", "x-mitre-matrix"),
@@ -47,14 +49,14 @@ def get_matrices(src, domain):
 
 
 def get_datasources(srcs):
-    """Reads the STIX and returns a list of data sources in the STIX"""
+    """Read the STIX and return a list of data sources in the STIX."""
     datasources = rsh.query_all(srcs, [stix2.Filter("type", "=", "x-mitre-data-source")])
 
     resultUsedIds = []
     results = []
     # Filter out duplicates
     for datasource in datasources:
-        if not datasource["id"] in resultUsedIds:
+        if datasource["id"] not in resultUsedIds:
             results.append(datasource)
             resultUsedIds.append(datasource["id"])
 
@@ -62,14 +64,14 @@ def get_datasources(srcs):
 
 
 def get_datacomponents(srcs):
-    """Reads the STIX and returns a list of data components in the STIX"""
+    """Read the STIX and return a list of data components in the STIX."""
     datacomponents = rsh.query_all(srcs, [stix2.Filter("type", "=", "x-mitre-data-component")])
 
     resultUsedIds = []
     results = []
     # Filter out duplicates
     for datacomponent in datacomponents:
-        if not datacomponent["id"] in resultUsedIds:
+        if datacomponent["id"] not in resultUsedIds:
             results.append(datacomponent)
             resultUsedIds.append(datacomponent["id"])
 
@@ -77,7 +79,7 @@ def get_datacomponents(srcs):
 
 
 def get_tactic_list(src, domain, matrix_id=None):
-    """Reads the STIX and returns a list of all tactics in the STIX"""
+    """Read the STIX and return a list of all tactics in the STIX."""
     tactics = []
     matrices = src.query(
         [
@@ -104,7 +106,10 @@ def get_tactic_list(src, domain, matrix_id=None):
 
 
 def get_all_of_type(src, types):
-    """Reads the STIX and returns a list of all of a particular type of object in the STIX, removes duplicate STIX and ATT&CK IDs."""
+    """Read the STIX and return a list of all of a particular type of object in the STIX.
+
+    Removes duplicate STIX and ATT&CK IDs.
+    """
     stix_objs = {}
     attack_id_objs = {}
 
@@ -121,7 +126,7 @@ def get_all_of_type(src, types):
 
 
 def get_techniques(src, domain):
-    """Reads the STIX and returns a list of all techniques in the STIX by given domain."""
+    """Read the STIX and return a list of all techniques in the STIX by given domain."""
     tech_list = src.query([stix2.Filter("type", "=", "attack-pattern"), stix2.Filter("revoked", "=", False)])
     # Filter out by domain
     tech_list = [x for x in tech_list if not hasattr(x, "x_mitre_domains") or domain in x.get("x_mitre_domains")]
@@ -223,7 +228,7 @@ def get_datasource_from_list(datasource_stix_id):
 
 
 def datasource_of():
-    """Builds map from data component STIX ID to data source STIX object."""
+    """Build map from data component STIX ID to data source STIX object."""
     datacomponents = relationshipgetters.get_datacomponent_list()
 
     datasource_of = {}
@@ -238,7 +243,8 @@ def datasource_of():
 
 
 def add_replace_or_ignore(stix_objs, attack_id_objs, obj_in_question):
-    """Add if object does not already exist
+    """Add if object does not already exist.
+
     Replace object if exist depending on deprecation status or modified date
     Ignore if object already exists but object in question is outdated
 
@@ -318,7 +324,7 @@ def add_replace_or_ignore(stix_objs, attack_id_objs, obj_in_question):
 
 
 def grab_resources(ms):
-    """Returns a dict that contains lists for the software, group, technique and mitigation objects."""
+    """Return a dict that contains lists for the software, group, technique and mitigation objects."""
 
     def get_domain_resources(types):
         # Track objects by STIX ID
@@ -358,6 +364,9 @@ def grab_resources(ms):
     # Generates list of campaigns
     campaign_list = get_domain_resources(["campaign"])
 
+    # Generates list of assets
+    asset_list = get_domain_resources(["x-mitre-asset"])
+
     # Generates list of relationships
     rel_list = []
     for domain in site_config.domains:
@@ -376,34 +385,37 @@ def grab_resources(ms):
         "techniques": tech_list,
         "mitigations": coa_list,
         "campaigns": campaign_list,
+        "assets": asset_list,
     }
     return resources
 
 
 def get_stix_memory_stores():
-    """This function reads the json files for each domain and creates a dict that contains the memory stores for each domain."""
-    # suppress InsecureRequestWarning: Unverified HTTPS request is being made
-    urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+    """Read the json files for each domain and create a dict that contains the memory stores for each domain."""
 
     ms = {}
     srcs = []
 
+    stix_output_dir = Path(f"{site_config.web_directory}/stix")
+    stix_output_dir.mkdir(parents=True, exist_ok=True)
+
     for domain in site_config.domains:
         stix_filename = None
+
         # Download json from http or https
+        stix_filename = f"{stix_output_dir}/{domain['name']}.json"
         if domain["location"].startswith("http"):
-            download_dir = Path(f"{site_config.web_directory}/stix")
-            stix_filename = f"{download_dir}/{domain['name']}.json"
-            download_stix_file(url=domain["location"], download_dir=download_dir, filepath=stix_filename)
+            download_stix_file(url=domain["location"], filepath=stix_filename)
         else:
-            stix_filename = domain["location"]
+            shutil.copy(domain["location"], str(stix_filename))
 
         if os.path.exists(stix_filename):
             logger.info(f"Loading STIX file from: {stix_filename}")
             ms[domain["name"]] = stix2.MemoryStore(stix_data=None, allow_custom=True, version="2.1")
             ms[domain["name"]].load_from_file(stix_filename)
         else:
-            exit(f"\n{stix_filename} file does not exist.")
+            logger.error(f"\n{stix_filename} file does not exist.")
+            exit()
 
         if not domain["deprecated"]:
             srcs.append(ms[domain["name"]])
@@ -412,7 +424,7 @@ def get_stix_memory_stores():
 
 
 def get_contributors(ms):
-    """Gets all contributors in the STIX content"""
+    """Get all contributors in the STIX content."""
     # contributors not in STIX are stored here:
     contributors = ["Craig Aitchison", "Elly Searle, CrowdStrike — contributed to tactic definitions"]
 
@@ -429,6 +441,7 @@ def get_contributors(ms):
             "x-mitre-data-component",
             "x-mitre-data-source",
             "x-mitre-tactic",
+            "x-mitre-asset",
         ]
         src = ms[domain["name"]]
         obj_list = []
@@ -443,10 +456,9 @@ def get_contributors(ms):
     return sorted(contributors, key=lambda k: k.lower())
 
 
-def download_stix_file(url, download_dir, filepath):
+def download_stix_file(url, filepath):
     """Download a STIX file to disk."""
     logger.info(f"Downloading {url} --> {filepath}")
-    download_dir.mkdir(parents=True, exist_ok=True)
 
     # Set proxy
     proxy = ""
@@ -464,7 +476,11 @@ def download_stix_file(url, download_dir, filepath):
         password = site_config.WORKBENCH_API_KEY
         auth = (user, password)
 
-    response = requests.get(url, verify=False, proxies=proxyDict, auth=auth)
+    s = requests.Session()
+    retries = Retry(total=10, backoff_factor=0.1, status_forcelist=[500, 502, 503, 504])
+    s.mount("http", HTTPAdapter(max_retries=retries))
+    response = s.get(url, proxies=proxyDict, auth=auth)
+
     if response.status_code == 200:
         stix_json = response.json()
         with open(filepath, "w") as json_file:

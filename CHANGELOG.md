@@ -1,4 +1,59 @@
-<!-- TOWNCRIER -->
+# v4.0.8 (2023-11-22)
+
+## Bugfixes
+
+* Add mobile datasources to excel output.
+
+## Misc
+
+* Updated Caldera description.
+* Enforce better SSL security practices when building the website.
+
+# v4.0.7 (2023-11-14)
+
+## Features
+
+* Release ATT&CK content version 14.1.
+  See detailed changes [here](https://github.com/mitre/cti/releases/tag/ATT%26CK-v14.1).
+
+# v4.0.6 (2023-10-31)
+
+## Features
+
+* Data sources table can now be sorted and filtered based on domains. [#454](https://github.com/mitre-attack/attack-website/issues/454)
+* Release [ATT&CK content version 14.0](https://github.com/mitre/cti/releases/tag/ATT%26CK-v14.0).
+  See the release notes [here](https://attack.mitre.org/resources/updates/updates-october-2023/).
+
+# v4.0.5 (2023-09-01)
+
+## Features
+
+* The sidebar is now collapsable and displayed properly in mobile view [#450](https://github.com/mitre-attack/attack-website/issues/450)
+
+## Bugfixes
+
+* Changed the UUID generation logic to use CONTENT_VERSION and WEBSITE_VERSION as seeds for idempotent UUID creation. This prevents the creation of redundant IndexedDB tables. [#455](https://github.com/mitre-attack/attack-website/issues/455)
+
+# v4.0.4 (2023-08-11)
+
+## Features
+
+* Sidebar is now resizable. [#349](https://github.com/mitre-attack/attack-website/issues/349)
+* Update the resource pages to have a sidebar. [#441](https://github.com/mitre-attack/attack-website/issues/441)
+* Add a page for the ATT&CK brand guide. [#445](https://github.com/mitre-attack/attack-website/issues/445)
+* Clean up the FAQ and ATT&CKcon pages in the Resources section to split them into more readable pages. [#446](https://github.com/mitre-attack/attack-website/issues/446)
+
+## Bugfixes
+
+* Minor adjustment to print layout to not show scrollbars anymore. [#403](https://github.com/mitre-attack/attack-website/issues/403)
+
+## Improved Documentation
+
+* Update README and developer documentation on how to set up local environment using Docker. [#427](https://github.com/mitre-attack/attack-website/issues/427)
+
+## Misc
+
+* Configure Sonarcloud to track project metrics better. [#431](https://github.com/mitre-attack/attack-website/issues/431)
 
 # v4.0.3 (2023-05-09)
 

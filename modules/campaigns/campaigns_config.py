@@ -20,3 +20,10 @@ campaign_md = Template(
 campaigns_templates_path = "modules/campaigns/templates/"
 
 campaigns_redirection_location = "modules/campaigns/campaigns_redirections.json"
+
+sidebar_campaigns_md = (
+    "Title: Campaigns Sidebar\n"
+    "Template: general/sidebar-template \n"
+    "save_as: campaigns/sidebar-campaigns/index.html\n"
+    "data: "
+)

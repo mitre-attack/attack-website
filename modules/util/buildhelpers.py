@@ -100,6 +100,11 @@ def get_attack_id(object):
     return None
 
 
+def get_domain_name(object):
+    """Given an object, return domains."""
+    return object.get("x_mitre_domains")
+
+
 def update_reference_list(reference_list, obj):
     """Given a reference list and an object, update the reference list with the external references found in the object."""
     if obj.get("external_references"):
@@ -289,101 +294,6 @@ def get_side_nav_domains_data(side_nav_title, elements_list):
     }
 
 
-def get_side_nav_domains_mobile_view_data(side_nav_title, elements_list, amount_per_row):
-    """Given a title, an elements list and the amount of elements per row, get the data for the side navigation on a mobile view."""
-
-    def get_element_data(element):
-        """Given an element, return the formatted JSON."""
-        return {
-            "name": element["name"],
-            "id": uuid.uuid4().hex,
-            "path": "/{}/{}/".format(side_nav_title, attack_id),
-            "children": [],
-        }
-
-    def check_children(category_list, domain_list):
-        """Given a category list, check if there is no children and update list. Ignore if is digits or other."""
-        for cat in category_list:
-            if not cat["children"]:
-                if cat["name"].startswith("1"):
-                    continue
-                elif cat["name"].startswith("Other"):
-                    continue
-                else:
-                    # Add empty child
-                    child = {"name": "No {}".format(side_nav_title), "id": "empty", "path": None, "children": []}
-                    cat["children"].append(child)
-            domain_data["children"].append(cat)
-
-        return domain_data
-
-    def get_category_list():
-        """Get an empty category list."""
-        caterogories_content = []
-        for cat in categories:
-            pane = {"name": cat, "id": uuid.uuid4().hex, "path": None, "children": []}
-            caterogories_content.append(pane)
-
-        return caterogories_content
-
-    categories_map = {char: math.ceil((i + 1) / amount_per_row) for i, char in enumerate(string.ascii_uppercase)}
-    categories = list(
-        map(
-            lambda cat: cat[0] + "-" + cat[-1],
-            [
-                string.ascii_uppercase[i : i + amount_per_row]
-                for i in range(0, len(string.ascii_uppercase), amount_per_row)
-            ],
-        )
-    )
-    categories = ["1-9"] + categories + ["Other"]
-
-    elements_data = []
-
-    for domain in site_config.domains:
-        if domain["deprecated"]:
-            continue
-        if elements_list[domain["name"]]:
-            caterogy_list = get_category_list()
-
-            domain_data = {
-                "name": domain["alias"],
-                "id": domain["alias"],
-                "path": "/{}/{}/".format(side_nav_title, domain["name"].split("-")[0]),
-                "children": [],
-            }
-
-            for element in elements_list[domain["name"]]:
-                attack_id = get_attack_id(element)
-                if attack_id:
-                    child = get_element_data(element)
-
-                    # Get first character and find in map
-                    element_char = element["name"][0]
-
-                    if element_char.isdigit():
-                        element_cat_index = 0
-                    elif element_char.isalpha():
-                        element_cat_index = categories_map[element_char.upper()]
-                    else:
-                        element_cat_index = len(categories) - 1
-
-                    # Add child to pane
-                    caterogy_list[element_cat_index]["children"].append(child)
-
-            domain_data = check_children(caterogy_list, domain_data)
-
-            elements_data.append(domain_data)
-
-    # return side menu
-    return {
-        "name": side_nav_title,
-        "id": side_nav_title,
-        "path": None,  # root level doesn't get a path
-        "children": elements_data,
-    }
-
-
 def get_side_menu_data(side_nav_title, path_prefix, elements_list, domain=None):
     """Responsible for generating the links that are located on the left side of pages for desktop clients."""
 
@@ -409,79 +319,6 @@ def get_side_menu_data(side_nav_title, path_prefix, elements_list, domain=None):
         "id": side_nav_title,
         "path": path_prefix,  # root level doesn't get a path
         "children": elements_data,
-    }
-
-
-def get_side_menu_mobile_view_data(side_nav_title, path_prefix, elements_list, amount_per_row, domain=None):
-    """Responsible for generating the links that are located on the left side of pages for mobile devices."""
-    categories_map = {char: math.ceil((i + 1) / amount_per_row) for i, char in enumerate(string.ascii_uppercase)}
-    categories = list(
-        map(
-            lambda cat: cat[0] + "-" + cat[-1],
-            [
-                string.ascii_uppercase[i : i + amount_per_row]
-                for i in range(0, len(string.ascii_uppercase), amount_per_row)
-            ],
-        )
-    )
-    categories = ["1-9"] + categories + ["Other"]
-
-    mobile_side_table_data = []
-
-    caterogories_content = []
-    for cat in categories:
-        pane = {"name": cat, "id": uuid.uuid4().hex, "path": None, "children": []}
-        caterogories_content.append(pane)
-
-    for element in elements_list:
-        # Fill rows for each category
-        attack_id = get_attack_id(element)
-
-        if attack_id:
-            child = {
-                "name": element["name"],
-                "id": uuid.uuid4().hex,
-                "path": path_prefix + attack_id + "/",
-                "children": [],
-            }
-
-            # Get first character and find in map
-            element_char = element["name"][0]
-
-            if element_char.isdigit():
-                element_cat_index = 0
-            elif element_char.isalpha():
-                element_cat_index = categories_map[element_char.upper()]
-            else:
-                element_cat_index = len(categories) - 1
-
-            # Add child to pane
-            caterogories_content[element_cat_index]["children"].append(child)
-
-    # Add categories to mobile side navigation
-    # Remove "1-9" and "Other" categories if empty
-    # Add "No [Type]" to empty object, side_nav_title will hold the type of the page
-
-    for cat in caterogories_content:
-        if not cat["children"]:
-            if cat["name"].startswith("1"):
-                continue
-            elif cat["name"].startswith("Other"):
-                continue
-            else:
-                # Add empty child
-                child = {"name": "No {}".format(side_nav_title), "id": "empty", "path": None, "children": []}
-                cat["children"].append(child)
-        mobile_side_table_data.append(cat)
-
-    if domain:
-        path_prefix += domain + "/"
-    # return side menu
-    return {
-        "name": side_nav_title,
-        "id": side_nav_title,
-        "path": path_prefix,  # root level doesn't get a path
-        "children": mobile_side_table_data,
     }
 
 
@@ -543,7 +380,6 @@ def technique_used_helper(technique_list, technique, reference_list, inherited=F
                 # If parent technique not already in list, add to list
                 # Parent technique will be marked as not used until it is seen
                 if parent_id not in technique_list:
-                    technique_list[parent_id] = {}
                     technique_list[parent_id] = parent_technique_used_helper(parent_id)
 
                 # Check if sub-technique is already in list
@@ -671,17 +507,17 @@ domain_name_map = {
 }
 
 
-def get_navigator_layers(name, attack_id, obj_type, version, techniques_used, inheritance=False):
+def get_navigator_layers(name, attack_id, obj_type, rel_type, version, techniques_used, inheritance=False):
     """Generate the Enterprise, Mobile, and ICS Navigator JSON layers for the given object."""
 
     # Generate Enterprise base layer
-    enterprise_layer = build_base_layer("enterprise-attack", name, obj_type, attack_id, version, inheritance)
+    enterprise_layer = build_base_layer("enterprise-attack", name, obj_type, rel_type, attack_id, version, inheritance)
 
     # Generate Mobile base layer
-    mobile_layer = build_base_layer("mobile-attack", name, obj_type, attack_id, version, inheritance)
+    mobile_layer = build_base_layer("mobile-attack", name, obj_type, rel_type, attack_id, version, inheritance)
 
     # Generate ICS base layer
-    ics_layer = build_base_layer("ics-attack", name, obj_type, attack_id, version, inheritance)
+    ics_layer = build_base_layer("ics-attack", name, obj_type, rel_type, attack_id, version, inheritance)
 
     # Add technique data to layer
     for technique in techniques_used:
@@ -748,12 +584,12 @@ def get_navigator_layers(name, attack_id, obj_type, version, techniques_used, in
     return layers
 
 
-def build_base_layer(domain, object_name, object_type, attack_id, version, inheritance=False):
+def build_base_layer(domain, object_name, object_type, rel_type, attack_id, version, inheritance=False):
     """Build the base Navigator layer for the given object."""
     layer = {}
 
     # Layer description
-    layer["description"] = f"{domain_name_map[domain]} techniques used by {object_name}, ATT&CK {object_type} {attack_id}"
+    layer["description"] = f"{domain_name_map[domain]} techniques {rel_type} {object_name}, ATT&CK {object_type} {attack_id}"
     if version:
         # Add object version number if it exists
         layer["description"] += f" (v{version})"
@@ -780,14 +616,14 @@ def build_base_layer(domain, object_name, object_type, attack_id, version, inher
 
     # Layer legend
     layer["legendItems"] = [
-        {"label": f"used by {object_name}", "color": colorMap[1]}
+        {"label": f"{rel_type} {object_name}", "color": colorMap[1]}
     ]
 
     # Add campaign inheritance to legend, if applicable
     if inheritance:
         layer["legendItems"].extend([
-            {"label": f"used by a campaign attributed to {object_name}", "color": colorMap[2]},
-            {"label": f"used by {object_name} and used by a campaign attributed to {object_name}", "color": colorMap[3]}
+            {"label": f"{rel_type} a campaign attributed to {object_name}", "color": colorMap[2]},
+            {"label": f"{rel_type} {object_name} and {rel_type} a campaign attributed to {object_name}", "color": colorMap[3]}
         ])
 
     return layer

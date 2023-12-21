@@ -42,3 +42,10 @@ sub_technique_md = Template(
     "save_as: techniques/${parent_id}/${sub_number}/index.html\n"
     "data: "
 )
+
+sidebar_techniques_md = (
+    "Title: Techniques Sidebar\n"
+    "Template: general/sidebar-template \n"
+    "save_as: techniques/sidebar-techniques/index.html\n"
+    "data: "
+)

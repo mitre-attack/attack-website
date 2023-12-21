@@ -38,6 +38,8 @@ def generate_index():
 
             if path.startswith("/mitigations/"):
                 file_type = "mitigations"
+            elif path.startswith("/assets/"):
+                file_type = "assets"
             elif path.startswith("/matrices/"):
                 file_type = "matrices"
             elif path.startswith("/groups/"):

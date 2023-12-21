@@ -119,8 +119,39 @@
         font-size: rem(1.3);
         color: on-color-deemphasis(body);
         letter-spacing: to-rem(3);
+        pointer-events: none;
+        @media screen and (max-width: 47.9875rem) {
+            pointer-events: all;
+        }
     }
 
+    .heading.collapsed .fa-chevron-up,
+    .heading .fa-chevron-down {
+        display: none;
+    }
+
+    .heading.collapsed .fa-chevron-down,
+    .heading .fa-chevron-up {
+        display: inline-block;
+    }
+
+    i.fa-solid {
+        visibility: hidden;
+        display: none;
+        @media screen and (max-width: 47.9875rem) {
+            visibility: visible;
+            display: contents;
+        }
+    }
+
+    .br-mobile {
+        display: none;
+        @media screen and (max-width: 47.9875rem) {
+            display: inline-block;
+        }
+    }
+
+    
     // dropdown of the button in the side navigation. This button is in MATRICES, TACTICS, TECHNIQUES, MITIGATIONS, GROUPS, and SOFTWARE
     .heading-dropdown {
         font-size: rem(0.9);
@@ -146,6 +177,7 @@
             letter-spacing: to-rem(1);
         }
     }
+
     /******/
 
     // list items
@@ -175,56 +207,44 @@
             }
         }
     }
-
-    /* Side navigation collapse */
-    // don't show collapsed side navigation (desktop view)
-    .side-nav-mobile-view {
-        display: none;
-    }
-
-    // show side navigation in desktop view
-    .side-nav-desktop-view {
-        display: block;
-    }
-
-    // side navigation collapsed view for phones and small tablets
-    @media screen and (max-width: 47.9875rem) {
-        // show collapsed side navigation (mobile view)
-        .side-nav-mobile-view {
-            display: block;
-        }
-
-        // don't show side navigation in desktop view
-        .side-nav-desktop-view {
-            display: none;
-        }
-    }
-    /******/
 }
 /******/
+
+.resizer {
+    width: 2px;
+    top: 0;
+    right: 0;
+    cursor: col-resize;
+    height: 100%;
+    position: absolute;
+    background-color: #dfdfdf;
+ }
+
+ .data-sources-menu {
+    padding-top: 15px;
+ }
 
 .sidebar.nav {
     // max-height: 60vh;
     overflow-y: auto;
     z-index: 0; //behind the header
-    max-width: fit-content;
+    min-width: min-content;
+    max-width: 20vw;
 
     // Remove overflow and sticky position for mobile view
     @media screen and (max-width: 47.9875rem) {
         position: static;
-    }
-    .side-nav-mobile-view {
-        .sidenav-wrapper {
-            .sidenav-list {
-                overflow-y: visible;
-            }
-        }
+        min-width: fit-content;
     }
 
     .sidenav-wrapper {
+        @media screen and (max-width: 47.9875rem) {	
+            display: block;
+        }
         height: 100%;
         display: flex;
         flex-direction: column;
+        padding-right: 5px;
         .heading {
             border-bottom: 1px solid color-alternate(body);
             flex: 0 1 0;
@@ -278,5 +298,35 @@
                 }
             }
         }
+    }
+}
+
+
+//Hides the navbar when the user tries to print out a page so that the page looks clean and only the relevant information is displayed
+
+@media print {
+    .nav {
+        visibility: hidden;
+        display:none;
+    }
+    .sidenav {
+        visibility: hidden;
+        display:none;
+    }
+    .sidebar.nav {
+        visibility: hidden;
+        display:none;
+    }
+    .sidenav-wrapper {
+        visibility: hidden;
+        display:none;
+    }
+    .side-nav-desktop-view {
+        visibility: hidden;
+        display:none;
+    }
+    .navbar {
+        visibility: hidden;
+        display:none;
     }
 }
