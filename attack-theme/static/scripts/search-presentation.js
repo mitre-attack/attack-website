@@ -1,6 +1,6 @@
 function searchPresentation() {
     let count = 0;
-    let input, input_uppercase, cards, i, card_value, displayed;
+    let input, input_uppercase, cards, card_value, displayed;
     displayed = true;
     input = document.getElementById("searchPresentation");
     input_uppercase = input.value.toUpperCase();
@@ -9,15 +9,15 @@ function searchPresentation() {
         displayed = false;
         filterMenu();
     }
-    for (i = 0; i < cards.length; i++) {
-        card_value = cards[i].innerText;
+    for (let card of cards) {
+        card_value = card.innerText;
         if (card_value.toUpperCase().indexOf(input_uppercase) > -1) {
-            if((cards[i].style.display != "none" && !displayed) || displayed){
-                cards[i].style.display = "";
+            if((card.style.display != "none" && !displayed) || displayed){
+                card.style.display = "";
                 count = count + 1;
             }
         } else {
-            cards[i].style.display = "none";
+            card.style.display = "none";
         }
     }
     let filter_count = document.querySelector(".presentation-count")
@@ -32,8 +32,8 @@ function filter_all(selected) {
     for (i = 0; i < cards.length; i++) {
         card_value = cards[i].innerText;
         let row_count = 0
-        for(let j = 0; j<selected.length; j++){
-            let filter_value = selected[j];
+        for(let filters of selected){
+            let filter_value = filters;
             if (card_value.indexOf(filter_value) > -1 && cards[i].style.display != "none") {
                 if(selected[selected.length - 1].includes("year")){
                     let filter_date = filter_date_helper(dates[i])
@@ -65,14 +65,14 @@ function filter_date_helper(input_date) {
     let date_list = document.getElementsByName('dates');
     year = currentDate.getFullYear();
     date_year = input_date.innerText.split(" ")[1];
-    for (let j = 0; j < date_list.length; j++) {
-        if (date_list[j].checked){
-            if(date_list[j].id.includes("Current")){
+    for (let date_value of date_list) {
+        if (date_value.checked){
+            if(date_value.id.includes("Current")){
                 if(year-date_year == 0){
                     filter_date = true;
                 }
             }
-            else if(date_list[j].id.includes("3")){
+            else if(date_value.id.includes("3")){
                 if(year-date_year == 3){
                     filter_date = true;
                 }
@@ -109,8 +109,8 @@ function filterMenu() {
         });
     }
     let cards = $(".card-presentation");
-    for (let i = 0; i < cards.length; i++) {
-        cards[i].style.display = "";
+    for (let card of cards) {
+        card.style.display = "";
     }
     let selected_reversed = selected.toReversed()
     filter_all(selected_reversed);

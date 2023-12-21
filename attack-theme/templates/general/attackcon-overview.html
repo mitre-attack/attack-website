@@ -23,27 +23,29 @@
         {% set ifSponsor = "sponsors_img_list" in con %}
         {% if "banner_img" in con %}
         <p>
-            <img src="{{ con.banner_img }}" {% if ifSponsor %} width="90%" {% else %} width="100%" {% endif %}>
+            <img src="{{ con.banner_img }}" alt="ATT&CKCon Banner" {% if ifSponsor %} width="90%" {% else %} width="100%" {% endif %}>
         </p>
         {% endif %}
 
         {% if "description" in con %}
-        <p>{{con.description}}</p>
+        <div {% if ifSponsor %} class="p-description" {% endif %}>
+            <p>{{con.description}}</p>
+        </div>
         {% endif %}
         {% if "blogpost" in con %}
-        <p><a target="_blank" href="{{con.blogpost}}">Click here to read our blog post about {{con.title}}! <img
+        <p><a target="_blank" rel="noopener" href="{{con.blogpost}}">Click here to read our blog post about {{con.title}}! <img
                     src="/theme/images/external-site-dark.jpeg" alt="External site" class="external-icon"></a></p>
         {% endif %}
         <br>
         <div class="attackcon-columns">
-            <div class="presentations card-block {% if ifSponsor %} card-attackcon {% endif %}" id="presentations">
+            <div class="presentations card-block" id="presentations">
                 <input type="text" class="page-search" id="searchPresentation" onkeyup="searchPresentation()"
                     placeholder="Search Presentations">
                 <h5><strong>Presentations</strong></h5>
                 <h6 class="presentation-count"></h6>
                 {% for presentation in con.presentations %}
                 {% set isPanel = "moderator" in presentation %}
-                <div class="card card-presentation">
+                <div class="card card-presentation card-attackcon">
                     <div>
                         <div class="card-body">
                             <strong>
