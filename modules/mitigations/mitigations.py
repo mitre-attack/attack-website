@@ -45,23 +45,21 @@ def generate_mitigations():
 
     notes = util.relationshipgetters.get_objects_using_notes()
     side_nav_data = util.buildhelpers.get_side_nav_domains_data("mitigations", mitigations)
-    side_nav_mobile_data = util.buildhelpers.get_side_nav_domains_mobile_view_data("mitigations", mitigations, group_by)
-
     for domain in site_config.domains:
         if domain["deprecated"]:
             continue
         check_if_generated = generate_markdown_files(
-            domain["name"], mitigations_with_deprecated[domain["name"]], side_nav_data, side_nav_mobile_data, notes
+            domain["name"], mitigations_with_deprecated[domain["name"]], side_nav_data, notes
         )
         if not mitigation_generated:
             if check_if_generated:
                 mitigation_generated = True
-
+    generate_sidebar_mitigations(side_nav_data)
     if not mitigation_generated:
         util.buildhelpers.remove_module_from_menu(mitigations_config.module_name)
 
 
-def generate_markdown_files(domain, mitigations, side_nav_data, side_nav_mobile_data, notes):
+def generate_markdown_files(domain, mitigations, side_nav_data, notes):
     """Responsible for generating shared data between all mitigation pages and begins mitigation markdown generation."""
     data = {}
 
@@ -72,7 +70,6 @@ def generate_markdown_files(domain, mitigations, side_nav_data, side_nav_mobile_
         ]
         data["mitigation_list_len"] = str(len(non_deprecated_mitigations))
         data["side_menu_data"] = side_nav_data
-        data["side_menu_mobile_view_data"] = side_nav_mobile_data
 
         data["mitigation_table"] = get_mitigation_table_data(non_deprecated_mitigations)
 
@@ -85,7 +82,7 @@ def generate_markdown_files(domain, mitigations, side_nav_data, side_nav_mobile_
 
         # Generates the markdown files to be used for page generation
         for mitigation in mitigations:
-            generate_mitigation_md(mitigation, domain, side_nav_data, side_nav_mobile_data, notes)
+            generate_mitigation_md(mitigation, domain, side_nav_data, notes)
 
         return True
 
@@ -93,7 +90,7 @@ def generate_markdown_files(domain, mitigations, side_nav_data, side_nav_mobile_
         return False
 
 
-def generate_mitigation_md(mitigation, domain, side_menu_data, side_menu_mobile_data, notes):
+def generate_mitigation_md(mitigation, domain, side_menu_data, notes):
     """Generates the markdown for the given mitigation"""
     attack_id = util.buildhelpers.get_attack_id(mitigation)
 
@@ -104,7 +101,6 @@ def generate_mitigation_md(mitigation, domain, side_menu_data, side_menu_mobile_
 
         data["domain"] = domain.split("-")[0]
         data["side_menu_data"] = side_menu_data
-        data["side_menu_mobile_view_data"] = side_menu_mobile_data
         data["name"] = mitigation["name"]
         data["notes"] = notes.get(mitigation["id"])
 
@@ -124,7 +120,6 @@ def generate_mitigation_md(mitigation, domain, side_menu_data, side_menu_mobile_
 
         if mitigation.get("description"):
             data["descr"] = mitigation["description"]
-            data["descr"] = data["descr"]
 
         if mitigation.get("x_mitre_deprecated"):
             data["deprecated"] = True
@@ -142,6 +137,7 @@ def generate_mitigation_md(mitigation, domain, side_menu_data, side_menu_mobile_
             data["name"],
             data["attack_id"],
             "mitigation",
+            "mitigated by",
             data["version"] if "version" in data else None,
             data["techniques_addressed_data"],
         )
@@ -235,3 +231,16 @@ def get_techniques_addressed_data(mitigation, reference_list):
         technique_data, key=lambda k: [site_config.custom_alphabet.index(c) for c in k["domain"].lower()]
     )
     return technique_data
+
+def generate_sidebar_mitigations(side_nav_data):
+    """Responsible for generating the sidebar for the mitigations pages."""
+    logger.info("Generating mitigations sidebar")
+    data = {}
+    data["menu"] = side_nav_data
+
+    # Sidebar Overview
+    sidebar_mitigations_md = mitigations_config.sidebar_mitigations_md + json.dumps(data)
+
+    # write markdown to file
+    with open(os.path.join(mitigations_config.mitigation_markdown_path, "sidebar_mitigations.md"), "w", encoding="utf8") as md_file:
+        md_file.write(sidebar_mitigations_md)

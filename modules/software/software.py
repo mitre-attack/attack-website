@@ -30,7 +30,6 @@ def generate_software():
 
     # Generates the markdown files to be used for page generation and verifies if a software was generated
     software_generated = generate_markdown_files()
-
     if not software_generated:
         util.buildhelpers.remove_module_from_menu(software_config.module_name)
 
@@ -38,14 +37,11 @@ def generate_software():
 def generate_markdown_files():
     """Responsible for generating the shared data for all software and kicking off markdown generation."""
     data = {}
-
     has_software = False
 
     # Amount of characters per category
     group_by = 2
-
     software_list = util.relationshipgetters.get_software_list()
-
     software_list_no_deprecated_revoked = util.buildhelpers.filter_deprecated_revoked(software_list)
 
     if software_list_no_deprecated_revoked:
@@ -53,34 +49,28 @@ def generate_markdown_files():
 
     if has_software:
         data["software_list_len"] = str(len(software_list_no_deprecated_revoked))
-
         notes = util.relationshipgetters.get_objects_using_notes()
 
         side_menu_data = util.buildhelpers.get_side_menu_data(
             "software", "/software/", software_list_no_deprecated_revoked
         )
+        generate_sidebar_software(side_menu_data)
+    
         data["side_menu_data"] = side_menu_data
-
-        side_menu_mobile_view_data = util.buildhelpers.get_side_menu_mobile_view_data(
-            "software", "/software/", software_list_no_deprecated_revoked, group_by
-        )
-        data["side_menu_mobile_view_data"] = side_menu_mobile_view_data
-
         data["software_table"] = get_software_table_data(software_list_no_deprecated_revoked)
 
         subs = software_config.software_index_md + json.dumps(data)
-
         with open(os.path.join(software_config.software_markdown_path, "overview.md"), "w", encoding="utf8") as md_file:
             md_file.write(subs)
 
         # Create the markdown for the enterprise groups in the stix
         for software in software_list:
-            generate_software_md(software, side_menu_data, side_menu_mobile_view_data, notes)
+            generate_software_md(software, side_menu_data, notes)
 
     return has_software
 
 
-def generate_software_md(software, side_menu_data, side_menu_mobile_view_data, notes):
+def generate_software_md(software, side_menu_data, notes):
     """Responsible for generating given software markdown"""
     attack_id = util.buildhelpers.get_attack_id(software)
 
@@ -91,7 +81,6 @@ def generate_software_md(software, side_menu_data, side_menu_mobile_view_data, n
         data["attack_id"] = attack_id
 
         data["side_menu_data"] = side_menu_data
-        data["side_menu_mobile_view_data"] = side_menu_mobile_view_data
         data["notes"] = notes.get(software["id"])
 
         dates = util.buildhelpers.get_created_and_modified_dates(software)
@@ -140,6 +129,7 @@ def generate_software_md(software, side_menu_data, side_menu_mobile_view_data, n
             data["name"],
             data["attack_id"],
             "software",
+            "used by",
             data["version"] if "version" in data else None,
             data["technique_table_data"],
         )
@@ -361,3 +351,16 @@ def get_campaign_table_data(software, reference_list):
     campaign_data = [campaign_list[item] for item in campaign_list]
     campaign_data = sorted(campaign_data, key=lambda k: k["name"].lower())
     return campaign_data
+
+def generate_sidebar_software(side_menu_data):
+    """Responsible for generating the sidebar for the software pages."""
+    logger.info("Generating software sidebar")
+    data = {}
+    data["menu"] = side_menu_data
+
+    # Sidebar Overview
+    sidebar_software_md = software_config.sidebar_software_md + json.dumps(data)
+
+    # write markdown to file
+    with open(os.path.join(software_config.software_markdown_path, "sidebar_software.md"), "w", encoding="utf8") as md_file:
+        md_file.write(sidebar_software_md)

@@ -84,10 +84,12 @@ parent_web_directory = "output"
 # Declare as empty string
 subdirectory = ""
 
+# directory for data used in site builds
+data_directory = "data"
+
 
 def set_subdirectory(subdirectory_str):
-    """Method to globally set the subdirectory"""
-
+    """Globally set the subdirectory."""
     global subdirectory
     global web_directory
 
@@ -101,6 +103,10 @@ def set_subdirectory(subdirectory_str):
     web_directory = os.path.join(web_directory, subdirectory)
 
 
+# Navigation list for resources (this is the list before adding the updates and attackcon)
+with open("data/resources_navigation.json", "r", encoding="utf8") as i:
+    resource_nav = json.load(i)
+
 # Location of html templates
 templates_directory = "attack-theme/templates/"
 
@@ -109,8 +115,6 @@ javascript_path = "attack-theme/static/scripts/"
 # Static style pelican files directory
 static_style_dir = os.path.join("attack-theme", "static", "style/")
 
-# directory for data used in site builds
-data_directory = "data"
 
 # Link to instance of the ATT&CK Navigator; change for to a custom location
 navigator_link = "https://mitre-attack.github.io/attack-navigator/"

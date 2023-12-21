@@ -52,12 +52,6 @@ def generate_markdown_files():
         notes = rsg.get_objects_using_notes()
         side_menu_data = get_datasources_side_nav_data(datasource_list_no_deprecated_revoked)
         data["side_menu_data"] = side_menu_data
-
-        side_menu_mobile_view_data = util.buildhelpers.get_side_menu_mobile_view_data(
-            datasources_config.module_name, "/datasources/", datasource_list_no_deprecated_revoked, group_by
-        )
-        data["side_menu_mobile_view_data"] = side_menu_mobile_view_data
-
         data["datasources_table"] = get_datasources_table_data(datasource_list_no_deprecated_revoked)
         data["datasources_list_len"] = str(len(datasource_list_no_deprecated_revoked))
 
@@ -70,12 +64,12 @@ def generate_markdown_files():
 
         # Create the markdown for the enterprise datasources in the STIX
         for datasource in datasource_list:
-            generate_datasource_md(datasource, side_menu_data, side_menu_mobile_view_data, notes)
+            generate_datasource_md(datasource, side_menu_data, notes)
 
     return has_datasource
 
 
-def generate_datasource_md(datasource, side_menu_data, side_menu_mobile_view_data, notes):
+def generate_datasource_md(datasource, side_menu_data, notes):
     """Responsible for generating markdown of all datasources."""
     attack_id = util.buildhelpers.get_attack_id(datasource)
 
@@ -85,7 +79,6 @@ def generate_datasource_md(datasource, side_menu_data, side_menu_mobile_view_dat
         data["attack_id"] = attack_id
 
         data["side_menu_data"] = side_menu_data
-        data["side_menu_mobile_view_data"] = side_menu_mobile_view_data
         data["notes"] = notes.get(datasource["id"])
 
         # Get initial reference list
@@ -231,11 +224,20 @@ def get_datasources_table_data(datasource_list):
     # Now the table on the right, which is made up of datasource data
     for datasource in datasource_list:
         attack_id = util.buildhelpers.get_attack_id(datasource)
+        domain_list = util.buildhelpers.get_domain_name(datasource)
 
         if attack_id:
             row = {}
 
             row["id"] = attack_id
+
+            for domain_idx in range(len(domain_list)):
+                domain_list[domain_idx] = domain_list[domain_idx].replace('-attack','')
+                if domain_list[domain_idx] == "ics":
+                    domain_list[domain_idx] = domain_list[domain_idx].upper()
+                else:
+                    domain_list[domain_idx] = domain_list[domain_idx].capitalize()
+            row["domains"] = domain_list
 
             if datasource.get("name"):
                 row["name"] = datasource["name"]

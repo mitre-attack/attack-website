@@ -86,6 +86,17 @@ If you are only updating the banner and nothing else, follow these steps.
 
 Consult these sections as needed for step 5 in the above list.
 
+* Create a detailed changelog for the release:
+  * Create a new folder: `modules/resources/docs/changelogs/v<previous-ATT&CK-version>-v<current-ATT&CK-version>`
+  * Create a detailed changelog using the mitreattack-python library's `diff_stix` command
+    * TODO: put specific `diff_stix` command here
+  * Manually modify the detailed changelog's href's at the top for links to the Navigator layers and changelog.json
+    * TODO: one day modify the script above to not need this edit anymore
+  * Put the following files from the `diff_stix` command into the folder created above
+    * `changelog-detailed.html`
+    * `changelog.json`
+    * Any ATT&CK Navigator layer files that were generated
+
 ### Major release
 
 * Update `data/versions.json`
@@ -111,7 +122,9 @@ Consult these sections as needed for step 5 in the above list.
   * Current: all information should reference the latest release
   * Previous: leave alone!
 * Update `modules/resources/static_pages/updates-<month>-<year>.md`
-  * Minor releases currently don't get their own update page, so update the last major release to point to the latest release version's URL
+  * Minor releases currently don't get their own update page, so make the following updates to the table at the top of the page:
+    * Under the Data column: Add a new entry for the latest tag, using `<br />` to separate them
+    * Under the Changelogs column: Add a new entry for the latest detailed changelog, for both HTML and JSON (also using `<br />` as a separator)
 * Update CHANGELOG.md
   * Add a bullet point to the Features section in the following format
 

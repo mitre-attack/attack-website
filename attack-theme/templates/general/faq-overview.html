@@ -1,0 +1,75 @@
+{% extends "general/two-column.html" %} 
+{% set active_page = "resources" -%}
+{% set title = "FAQ | MITRE ATT&CK&reg;" -%}
+{% set parsed = page.data | from_json %}
+{% import 'macros/navigation.html' as navigation %}
+
+{% block innerleft %}
+<div id="sidebars"></div>
+{% endblock %}
+
+{% block innerright %}
+<!--stopindex-->
+<div class="px-3">
+    <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">Home</a></li>
+            <li class="breadcrumb-item"><a href="/resources">Resources</a></li>
+            <li class="breadcrumb-item">FAQ</li>
+    </ol>
+</div>
+
+<div class="container pb-3 uniform-block">
+    <div class="getting-started">
+        <div class="clearfix pb-3">
+            <h1 class="text-center">Frequently Asked Questions</h1>
+            <h2>Table of Contents</h2>
+            <div class="clearfix">
+                <ol class="nestedlist">
+                    {% for section in parsed.sections %}
+                    <div>
+                        <h5>
+                            <li class="nestedlist-item">
+                                {{section.name}}
+                                <ol class="nestedlist">
+                                    {% for qa in section.questions %}
+                                    <li class="nestedlist-item">
+                                        <a href="#{{qa.id}}-header">{{qa.question}}</a>
+                                    </li>
+                                    {% endfor %}
+                                </ol>
+                            </li>
+                        </h5>
+                    </div>
+                    {% endfor %}
+                </ol>
+            </div>
+            <div>
+                {% for section in parsed.sections %}
+                    <h2>{{section.name}}</h2>
+                    <ol>
+                        {% for qa in section.questions %}
+                            <div>
+                                <div class="card-title" id="{{qa.id}}-header">
+                                    <li>
+                                        {{qa.question}}
+                                    </li>
+                                </div>
+                                <div class="card-data">
+                                    {{qa.answer}}
+                                </div>
+                                <hr>
+                        </div>
+                        {% endfor %}
+                    </ol>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+<!--startindex-->
+{% block scripts %}
+{{ super() }}
+<!--SCRIPTS-->
+<script src="/theme/scripts/sidebar-load-all.js"></script>
+{% endblock %}

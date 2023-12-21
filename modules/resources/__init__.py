@@ -22,6 +22,12 @@ def get_menu():
                 "external_link": False,
                 "children": [],
             },
+            {
+                "display_name": "Contribute",
+                "url": "/resources/contribute/",
+                "external_link": False,
+                "children": [],
+            },
             {"display_name": "Training", "url": "/resources/training/", "external_link": False, "children": []},
             {"display_name": "ATT&CKcon", "url": "/resources/attackcon/", "external_link": False, "children": []},
             {
@@ -41,6 +47,12 @@ def get_menu():
             {
                 "display_name": "Related Projects",
                 "url": "/resources/related-projects/",
+                "external_link": False,
+                "children": [],
+            },
+            {
+                "display_name": "Brand Guide",
+                "url": "/resources/brand/",
                 "external_link": False,
                 "children": [],
             },

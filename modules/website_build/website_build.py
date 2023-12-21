@@ -2,13 +2,13 @@ import json
 import os
 import shutil
 import subprocess
-import uuid
+import hashlib
 from string import Template
 
 from loguru import logger
 
 import modules
-from modules import matrices, site_config, util
+from modules import matrices, site_config, util, resources
 
 from . import website_build_config
 
@@ -31,9 +31,9 @@ def generate_website():
     )
     generate_javascript_settings()
     generate_base_html()
+    generate_sidebar_html()
     generate_index_page()
     generate_static_pages()
-    generate_faq_page()
     generate_changelog_page()
     store_pelican_settings()
     override_colors()
@@ -42,6 +42,25 @@ def generate_website():
     # this is nice to have if you want to run pelican manually later
     # remove_pelican_settings()
     remove_unwanted_output()
+
+
+def generate_uuid_from_seeds(content_version, website_version):
+    """
+    Generate a UUID based on the given content_version and website_version.
+    
+    Args:
+    - content_version (str): Semantic version of the content without a leading 'v'.
+    - website_version (str): Semantic version of the website with a leading 'v'.
+
+    Returns:
+    - str: A UUID generated based on the two versions.
+    """
+    # Combine and hash the values
+    seed = f"{content_version}-{website_version}".encode('utf-8')
+    hashed_seed = hashlib.md5(seed).hexdigest()
+
+    # Convert the first 32 characters of the hash to a UUID format
+    return '-'.join([hashed_seed[i:i+length] for i, length in zip([0, 8, 12, 16, 20], [8, 4, 4, 4, 12])])
 
 
 def generate_javascript_settings():
@@ -72,11 +91,14 @@ def generate_javascript_settings():
 
         js_data = website_build_config.js_dir_settings.substitute({"web_directory": web_dir})
 
-        build_uuid = str(uuid.uuid4())
+        # Use the content and website versions as a seed for the build UUID to ensure that the UUID is idempotent.
+        CONTENT_VERSION = website_build_config.base_page_data['CONTENT_VERSION']
+        WEBSITE_VERSION = website_build_config.base_page_data['WEBSITE_VERSION']
+
+        build_uuid = generate_uuid_from_seeds(CONTENT_VERSION, WEBSITE_VERSION)
+
         js_build_uuid = website_build_config.js_build_uuid.substitute({"build_uuid": build_uuid})
-
         js_data += js_build_uuid
-
         js_f.write(js_data)
 
         # Add trailing data
@@ -122,6 +144,17 @@ def generate_base_html():
     with open(os.path.join(website_build_config.template_dir, "base.html"), "w", encoding="utf8") as base_template_f:
         base_template_f.write(subs)
 
+def generate_sidebar_html():
+        with open(
+            os.path.join(website_build_config.template_dir, "sidebar-resources-template.html"), "r", encoding="utf8"
+        ) as sidebar_template_f:
+            sidebar_template = sidebar_template_f.read()
+            sidebar_template = Template(sidebar_template)
+            subs = sidebar_template.substitute(website_build_config.sidebar_page_data)
+    
+        with open(os.path.join(website_build_config.template_dir, "sidebar-resources.html"), "w", encoding="utf8") as sidebar_template_f:
+            sidebar_template_f.write(subs)
+
 
 def generate_index_page():
     """Responsible for creating the landing page"""
@@ -147,6 +180,7 @@ def generate_index_page():
         "groups": "Group",
         "software": "Software",
         "campaigns": "Campaign",
+        "assets": "Asset",
     }
     routes = {}
 
@@ -220,24 +254,6 @@ def reset_override_colors():
 
         with open(colors_scss_f, "w", encoding="utf8") as colors_f:
             colors_f.write(temp_file)
-
-
-def generate_faq_page():
-    """Responsible for compiling faq json into faq markdown file for rendering on the HMTL."""
-    logger.info("Generating FAQ page")
-    # load faq data from json
-    with open(os.path.join(site_config.data_directory, "faq.json"), "r", encoding="utf8") as f:
-        faqdata = json.load(f)
-    # add unique IDs
-    for i, section in enumerate(faqdata["sections"]):
-        for j, item in enumerate(section["questions"]):
-            item["id"] = f"faq-{i}-{j}"
-
-    # get markdown
-    faq_content = website_build_config.faq_md + json.dumps(faqdata)
-    # write markdown to file
-    with open(os.path.join(site_config.resources_markdown_path, "faq.md"), "w", encoding="utf8") as md_file:
-        md_file.write(faq_content)
 
 
 def generate_changelog_page():

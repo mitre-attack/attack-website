@@ -51,14 +51,20 @@ jobs:
       - name: Remove STIX directory
         run: rm -rf output/stix/
 
-      - name: Build ATT&CK Search module    
+      - name: Build ATT&CK Search module
         run: |
           cd attack-search
           npm ci
           npm run build
           cp dist/search_bundle.js ../output/theme/scripts/
           cd ..
-    
+
+      - name: Add BlueSky Identification
+        if: ${{ vars.BLUESKY_ID != '' }}
+        run: |
+          mkdir output/.well-known
+          echo "${{ vars.BLUESKY_ID }}" > output/.well-known/atproto-did
+
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         if: ${{ github.ref == 'refs/heads/master' }}

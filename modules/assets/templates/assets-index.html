@@ -1,0 +1,85 @@
+{% extends "general/two-column.html" %} 
+{% set title = "Assets | MITRE ATT&CK&reg;" %}
+{% set parsed = page.data | from_json %}
+{% set active_page = "assets" -%}
+{% import 'macros/navigation.html' as navigation %}
+{% import 'macros/clean_output.html' as clean_output %}
+
+{% block innerleft %}
+<!--stop-indexing-for-search-->
+<div id="v-tab" role="tablist" aria-orientation="vertical" class="h-100">
+        {{ navigation.sidenav(parsed.side_menu_data, output_file) }} 
+    </div>
+<!--start-indexing-for-search-->
+{% endblock %}
+
+{% block innerright %}
+    {{ super () }}
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/">Home</a></li>
+        <li class="breadcrumb-item">Assets</li>
+    </ol>
+    <div class="tab-pane fade show active" id="v-{{ pages.title }}" role="tabpanel" aria-labelledby="v-{{ pages.title }}-tab"></div>
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="jumbotron jumbotron-fluid">
+                <div class="container-fluid">
+                    <div class="overflow-x-auto">
+                        <h1>Assets</h1>
+                        <p>
+                            Assets represent the devices and systems commonly found within Industrial Control System environments. Each asset object includes a mapping of technique relationships that represent the adversary actions that may target the device based on its capability and function.
+                        </p>
+                        <p>
+                            Often, these devices have different names or sector specific terms as you look across the industry. To track these differences more accurately, we use the “Related Assets” field which associates these terms based on similar functions, architectural location, and exposure to similar adversary techniques. Each related asset includes a name, optional sector identifier, and a description to provide nuance to the asset page definition.
+                        </p>
+                        <p>
+                            Although originally represented under the platform field in ATT&amp;CK, Assets are distinctly separate from platforms. Platforms generally describe the operating system or application (i.e., Microsoft Windows) while Assets represent the device which includes considerations for hardware, software, architecture, and intended function. Assets may leverage platforms to describe a device’s commonly observed operating system.
+                        </p>
+                        <h6 class="table-object-count">Assets: {{ parsed.assets_list_len }}</h6>
+                        <table class="table table-bordered table-alternate mt-2" aria-describedby="assets-table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">ID</th>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Domain</th>
+                                    <th scope="col">Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for row in parsed.assets_table %}
+                                    <tr>
+                                        <td>
+                                            <a href="/assets/{{ row.id | upper }}"> {{ row.id | upper }} </a>
+                                        </td>
+                                        <td>
+                                            <a href="/assets/{{ row.id | upper }}"> {{ row.name }} </a>
+                                        </td>
+                                        <td>
+                                            {% for dom in row.domains %}
+                                                {{dom}}
+                                                <br>
+                                            {% endfor %}
+                                        </td>
+                                        <td>
+                                            {% if row.deprecated %}
+                                                <span style="color:red">****Deprecation Warning****</span>
+                                            {% endif %}
+                                            {{ clean_output.stixToHTML(row.descr) }}                                            
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    <!--SCRIPTS-->
+    <script src="/theme/scripts/navigation.js"></script>
+{% endblock %}

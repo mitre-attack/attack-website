@@ -6,7 +6,7 @@ import requests
 from loguru import logger
 
 from modules import site_config
-
+import modules
 from . import tests_config
 
 # STATIC PROPERTIES
@@ -230,7 +230,7 @@ def internal_external_link_checker(filepath, html_str):
                 # Consider status 404 and unreachable as broken.
                 # Unreachable will be triggered by the except clause
                 try:
-                    r = requests.head(link, headers=headers, verify=False, timeout=5)
+                    r = requests.head(link, headers=headers, timeout=5)
                     if r.status_code != 200:
                         links_list[link] = r.status_code
                         problems.append(f"[{r.status_code}] {link}")
@@ -433,7 +433,8 @@ def check_links(external_links=False):
         if unlinked_pages:
             f.write("Pages listed were not linked from another page\n\n")
             for page in unlinked_pages:
-                f.write(page + "\n")
+                if 'sidebar' not in page: #remove the sidebar html pages from unlinked pages
+                    f.write(page + "\n")
         else:
             f.write("No unlinked pages found\n")
 
@@ -441,12 +442,21 @@ def check_links(external_links=False):
     broken_count = 0
     with open(os.path.join(site_config.test_report_directory, tests_config.links_report_filename), "w") as f:
         f.write("Broken links report:\n\n")
+        build_versions_module = False
+        for module_info in modules.run_ptr:
+            if module_info["module_name"] == "versions":
+                build_versions_module = True
         if broken_pages:
             for page in broken_pages:
                 f.write(page["path"] + "\n")
                 for problem in page["problems"]:
-                    f.write("\t- " + problem + "\n")
-                    broken_count += 1
+                    if "versions" in problem:
+                        if build_versions_module:
+                            f.write("\t- " + problem + "\n")
+                            broken_count += 1
+                    else:
+                        f.write("\t- " + problem + "\n")
+                        broken_count += 1
         else:
             f.write("No broken links found\n")
 
