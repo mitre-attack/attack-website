@@ -59,7 +59,6 @@ def generate_resources():
     generate_attackcon_page()
     generate_faq_page()
     generate_static_pages()
-    generate_version_history()
     generate_use_case_page()
     generate_sidebar_resources()
 
@@ -206,14 +205,6 @@ def generate_faq_page():
     # write markdown to file
     with open(os.path.join(site_config.resources_markdown_path, "faq.md"), "w", encoding="utf8") as md_file:
         md_file.write(faq_content)
-
-def generate_version_history():
-    logger.info("Generating Version History")
-    with open("data/versions.json", "r", encoding="utf8") as f:
-        version_data = json.load(f)
-    version_content = resources_config.updates_md + json.dumps(version_data)
-    with open(os.path.join(site_config.resources_markdown_path, "updates.md"), "w", encoding="utf8") as md_file:
-        md_file.write(version_content)
 
 def generate_static_pages():
     """Reads markdown files from the static pages directory and copies them into the markdown directory."""
