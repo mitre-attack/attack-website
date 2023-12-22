@@ -206,7 +206,6 @@ def generate_faq_page():
     with open(os.path.join(site_config.resources_markdown_path, "faq.md"), "w", encoding="utf8") as md_file:
         md_file.write(faq_content)
 
-
 def generate_static_pages():
     """Reads markdown files from the static pages directory and copies them into the markdown directory."""
     logger.info("Generating static pages")
