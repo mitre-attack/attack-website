@@ -133,31 +133,18 @@
 <script src="/theme/scripts/sidebar-load-all.js"></script>
 
 <script>
-  // 
-  var mappings = [
-    {
-      support: "Support 1", sponsors: ["https://attack.mitre.org/theme/images/ATT&CK_red.png",
-        "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Mitre_Corporation_logo.svg/2560px-Mitre_Corporation_logo.svg.png",
-        "https://attack.mitre.org/theme/images/ATT&CK_red.png",
-        "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Mitre_Corporation_logo.svg/2560px-Mitre_Corporation_logo.svg.png",
-        "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Mitre_Corporation_logo.svg/2560px-Mitre_Corporation_logo.svg.png",],
-    },
-    {
-      support: "Support 2", sponsors: ["https://s3.amazonaws.com/digitalgov/uswds-logo_w200.png",
-        "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Mitre_Corporation_logo.svg/2560px-Mitre_Corporation_logo.svg.png",
-        "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Mitre_Corporation_logo.svg/2560px-Mitre_Corporation_logo.svg.png",
-        "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Mitre_Corporation_logo.svg/2560px-Mitre_Corporation_logo.svg.png",
-        "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Mitre_Corporation_logo.svg/2560px-Mitre_Corporation_logo.svg.png",],
-    },
-    {
-      support: "Support 3", sponsors:
-        ["https://s3.amazonaws.com/digitalgov/uswds-logo_w200.png",
-          "https://mitre-engenuity.org/wp-content/uploads/2022/05/MELogoNew.png",
-          "https://s3.amazonaws.com/digitalgov/uswds-logo_w200.png",
-          "https://mitre-engenuity.org/wp-content/uploads/2022/05/MELogoNew.png",
-          "https://s3.amazonaws.com/digitalgov/uswds-logo_w200.png"],
-    },
-  ]
+  // for each 5 logos there are the support level and 5 logos in an array
+  // var mappings = [
+  //   {
+  //     support: "Support 1", sponsors: ["https://attack.mitre.org/theme/images/ATT&CK_red.png",
+  //       "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Mitre_Corporation_logo.svg/2560px-Mitre_Corporation_logo.svg.png",
+  //       "https://attack.mitre.org/theme/images/ATT&CK_red.png",
+  //       "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Mitre_Corporation_logo.svg/2560px-Mitre_Corporation_logo.svg.png",
+  //       "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Mitre_Corporation_logo.svg/2560px-Mitre_Corporation_logo.svg.png",],
+  //   },
+  // ]
+
+  var mappings = [];
 
   var items = [
     document.getElementById("image-num-0"),
@@ -175,13 +162,17 @@
   var counter = 0;
   var row_counter = 0;
 
+  // Function to update the images and support level based on the current row in the mappings array
   function update() {
+    // unhide the box
     meta_box.style.display = "inherit";
+    // get number of columns
     var num_cols = mappings[row_counter].sponsors.length;
-    console.log(num_cols);
     for (var column_counter = 0; column_counter < num_cols; column_counter++) {
+      // update the image src 
       items[column_counter].src = mappings[row_counter].sponsors[column_counter];
     }
+    // bold support level
     support_level.innerHTML = "<b>" + mappings[row_counter].support + "</b>";
   }
 
@@ -190,7 +181,7 @@
     update();
   }
   function decrement_counter() {
-    row_counter = Math.abs(row_counter - 1) % num_rows;
+    row_counter = (row_counter + num_rows - 1) % num_rows;
     update();
   }
 
