@@ -18,8 +18,8 @@
 </ol>
 
 <div class="version-history pb-3">
-    <div class="getting-started">
-        <h2 class="col-md-9 px-2">Version History</h2>
+    <div class="getting-started col-md-10">
+        <h2>Version History</h2>
         <p>
             The overall ATT&CK catalog is versioned using a <code><span class="keyword">major.minor</span></code> version schema. 
             The bi-annual content releases listed on the <a href="/resources/updates/">updates pages</a> increment the major version number. 
@@ -28,102 +28,101 @@
         <p>
             Below are a list of versions of the ATT&CK website preserved for posterity, including a permalink to the current version of the site:
         </p>
-        <div class="col-md-9 px-2">
-            {% if version_history.current %}
-            <h5><strong>Current Version</strong></h5>
-            <div class="card my-4 p-2 flex-row align-items-center">
+
+        {% if version_history.current %}
+        <h5><strong>Current Version</strong></h5>
+        <div class="card my-4 p-3 flex-row align-items-center">
+            <div class="col order-first">
+                <span><strong>ATT&amp;CK {{version_history.current.name}}</strong></span>
+                <p class="text-label card-data">
+                    {{version_history.current.date_start}}&nbsp;&nbsp;-&nbsp;&nbsp;current
+                </p>
+            </div>
+            <div class="col-md-6 button-group">
+                <a class="button w-40" href="/resources/updates/{{version_history.current.changelog}}">
+                    <button type="button" class="slide-button slide-button-secondary">
+                        Release Notes
+                    </button>
+                </a>
+                <a class="button w-40" href="/versions/{{version_history.current.url}}">
+                    <button type="button" class="slide-button">
+                        {{version_history.current.name}} Website
+                    </button>
+                </a>
+            </div>
+        </div>
+        {% endif %}
+
+        <h5><strong>Most Recent Versions</strong></h5>
+        {% for i in range(0, 5) %}
+            {% set version = version_history.previous[i] %}
+            <div class="card my-4 p-3 flex-row align-items-center">
                 <div class="col order-first">
-                    <span><strong>ATT&amp;CK {{version_history.current.name}}</strong></span>
+                    <span><strong>ATT&amp;CK {{version.name}}</strong></span>
                     <p class="text-label card-data">
-                        {{version_history.current.date_start}}&nbsp;&nbsp;-&nbsp;&nbsp;current
+                        {{version.date_start}}&nbsp;&nbsp;-&nbsp;&nbsp;{{version.date_end}}
                     </p>
                 </div>
                 <div class="col-md-6 button-group">
-                    <a class="button w-40" href="/resources/updates/{{version_history.current.changelog}}">
+                    <a class="button w-40" href="/resources/updates/{{version.changelog}}">
                         <button type="button" class="slide-button slide-button-secondary">
                             Release Notes
                         </button>
                     </a>
-                    <a class="button w-40">
+                    <a class="button w-40" href="/versions/{{version.url}}">
                         <button type="button" class="slide-button">
-                            {{version_history.current.name}} Website
+                            {{version.name}} Website
                         </button>
                     </a>
                 </div>
             </div>
-            {% endif %}
+        {% endfor %}
 
-            <h5><strong>Most Recent Versions</strong></h5>
-            {% for i in range(1, 5) %}
-                {% set version = version_history.previous[i] %}
-                <div class="card my-4 p-2 flex-row align-items-center">
-                    <div class="col order-first">
-                        <span><strong>ATT&amp;CK {{version.name}}</strong></span>
-                        <p class="text-label card-data">
-                            {{version.date_start}}&nbsp;&nbsp;-&nbsp;&nbsp;{{version.date_end}}
-                        </p>
-                    </div>
-                    <div class="col-md-6 button-group">
-                        <a class="button w-40" href="/resources/updates/{{version.changelog}}">
-                            <button type="button" class="slide-button slide-button-secondary">
-                                Release Notes
-                            </button>
-                        </a>
-                        <a class="button w-40">
-                            <button type="button" class="slide-button">
-                                {{version.name}} Website
-                            </button>
-                        </a>
-                    </div>
+        <div class="card-block pb-3">
+            <div class="card">
+                <div class="card-header collapsed" id="older-versions-accordion"  data-toggle="collapse" data-target="#older-versions-body" aria-expanded="false" aria-controls="older-versions-body">
+                    <h5 class="mb-0"><strong>Older Versions</strong></h5>
                 </div>
-            {% endfor %}
-
-            <div class="card-block pb-3">
-                <div class="card">
-                    <div class="card-header collapsed" id="older-versions-accordion"  data-toggle="collapse" data-target="#older-versions-body" aria-expanded="false" aria-controls="older-versions-body">
-                        <h5 class="mb-0"><strong>Older Versions</strong></h5>
-                    </div>
-                    <div id="older-versions-body" class="collapse" aria-labelledby="holder-versions-accordion">
-                        <div class="card-body">
-                            <div class="container">
-                                {% for i in range(5, version_history.previous|length) %}
-                                {% set version = version_history.previous[i] %}
-                                <div class="row py-2 align-items-center">
-                                    <div class="col">
-                                        <span><strong>ATT&amp;CK {{version.name}}</strong></span>
-                                    </div>
-                                    <div class="col-5">
-                                        <p class="text-label card-data">
-                                            {{version.date_start}}&nbsp;&nbsp;-&nbsp;&nbsp;{{version.date_end}}
-                                        </p>
-                                    </div>
-                                    <div class="col">
-                                        <a href="">Release Notes</a>
-                                    </div>
-                                    <div class="col">
-                                        <a href="">{{version.name}} Website</a>
-                                    </div>
+                <div id="older-versions-body" class="collapse" aria-labelledby="holder-versions-accordion">
+                    <div class="card-body">
+                        <div class="container">
+                            {% for i in range(5, version_history.previous|length) %}
+                            {% set version = version_history.previous[i] %}
+                            <div class="row py-2 align-items-center">
+                                <div class="col">
+                                    <span><strong>ATT&amp;CK {{version.name}}</strong></span>
                                 </div>
-                                {% endfor %}
-                                {% for version in version_history.older %}
-                                <div class="row py-2 align-items-center">
-                                    <div class="col">
-                                        <span><strong>ATT&amp;CK {{version.name}}</strong></span>
-                                    </div>
-                                    <div class="col-5">
-                                        <p class="text-label card-data">
-                                            {{version.date_start}}&nbsp;&nbsp;-&nbsp;&nbsp;{{version.date_end}}
-                                        </p>
-                                    </div>
-                                    <div class="col">
-                                        <a href="/resources/updates/{{version.changelog}}">Release Notes</a>
-                                    </div>
-                                    <div class="col">
-                                        <span>No Website</span>
-                                    </div>
+                                <div class="col-5">
+                                    <p class="text-label card-data">
+                                        {{version.date_start}}&nbsp;&nbsp;-&nbsp;&nbsp;{{version.date_end}}
+                                    </p>
                                 </div>
-                                {% endfor %}
+                                <div class="col">
+                                    <a href="/resources/updates/{{version.changelog}}">Release Notes</a>
+                                </div>
+                                <div class="col">
+                                    <a href="/versions/{{version.url}}">{{version.name}} Website</a>
+                                </div>
                             </div>
+                            {% endfor %}
+                            {% for version in version_history.older %}
+                            <div class="row py-2 align-items-center">
+                                <div class="col">
+                                    <span><strong>ATT&amp;CK {{version.name}}</strong></span>
+                                </div>
+                                <div class="col-5">
+                                    <p class="text-label card-data">
+                                        {{version.date_start}}&nbsp;&nbsp;-&nbsp;&nbsp;{{version.date_end}}
+                                    </p>
+                                </div>
+                                <div class="col">
+                                    <a href="/resources/updates/{{version.changelog}}">Release Notes</a>
+                                </div>
+                                <div class="col">
+                                    <span>No Website</span>
+                                </div>
+                            </div>
+                            {% endfor %}
                         </div>
                     </div>
                 </div>
