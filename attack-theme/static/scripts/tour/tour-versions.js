@@ -7,34 +7,34 @@ let tourSteps = [
     {
         orphan: true,
         backdrop: false,
-        title: "Versions of ATT&CK",
+        title: "Version History",
         content: "Versions of the ATT&CK website are preserved on this page."
     },
     {
         element: "#version-column",
         placement: "top",
         backdrop: false,
-        title: "Versions of ATT&CK - Version",
+        title: "Version History - Version",
         content: "You can view the current and past versions of the website by clicking on the links under the \"Version\" column."
     },
     {
         element: "#data-column",
         placement: "top",
         backdrop: false,
-        title: "Versions of ATT&CK - Data",
+        title: "Version History - Data",
         content: "The STIX data for each version is found under the \"Data\" column."
     },
     {
         element: "#release-notes-column",
         placement: "top",
         backdrop: false,
-        title: "Versions of ATT&CK - Release Notes",
+        title: "Version History - Release Notes",
         content: "Each major release is accompanied with release notes that detail the changes."
     },
     {
         orphan: true,
         backdrop: false,
-        title: "Versions of ATT&CK",
+        title: "Version History",
         content: "All object pages now include a \"Version Permalink\". Future updates to ATT&CK won't affect the permalinked page. To return to the live version of the object, click the \"Live Version\" link."
     },
     {
