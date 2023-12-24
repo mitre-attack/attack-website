@@ -39,7 +39,7 @@ def get_menu():
             {"display_name": "FAQ", "url": "/resources/faq/", "external_link": False, "children": []},
             {"display_name": "Updates", "url": "/resources/updates/", "external_link": False, "children": []},
             {
-                "display_name": "Versions of ATT&CK",
+                "display_name": "Version History",
                 "url": "/resources/versions/",
                 "external_link": False,
                 "children": [],
