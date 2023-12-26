@@ -19,16 +19,10 @@
 </div>
 
 <div class="container pb-3 uniform-block">
-    <div class="general-info">
+    <div class="getting-started">
         <div class="clearfix pb-3">
-            <div class="clearfix pb-3">
-                <h2>Presentation Archive</h2>
-                <p>
-                    Browse our archive of presentations by MITRE’s ATT&amp;CK team, covering various cybersecurity topics related to ATT&amp;CK. Presented at different conferences, these talks offer valuable insights and expertise from our team members.
-                </p>
-                <input type="text" class="page-search" id="searchPresentation" onkeyup="searchPresentation()" placeholder="Search Presentations">
-                <h5><strong>Presentations</strong></h5>
-                <h6 class="presentation-count"></h6>
+            <div class="clearfix">
+                <h3>Presentation Archive</h3><br>
                 <div class="card card-filter">
                     <div class="card-body">
                         <strong>
@@ -40,8 +34,8 @@
                                 <label for="All-years">All years</label>
                             </div>
                             <div>
-                                <input type="radio" name="dates" id="Current-year" onchange="filterMenu()">
-                                <label for="Current-year">Current year</label>
+                                <input type="radio" name="dates" id="Last-1-year" onchange="filterMenu()">
+                                <label for="Last-1-year">Last 1 year</label>
                             </div>
                             <div>
                                 <input type="radio" name="dates" id="Last-3-years" onchange="filterMenu()">
@@ -61,45 +55,39 @@
                         </div>
                     </div>
                 </div>
-                {% for presentation in parsed.presentations %}
-                    <div class="card w-60 card-presentation">
-                        <div class="card-body">
-                            <strong>
-                                <div class="title">
-                                    {{ presentation.name }}
+                <div class="getting-started-content">
+                    <p>
+                        Browse our archive of presentations by MITRE’s ATT&amp;CK team, covering various cybersecurity topics related to ATT&amp;CK. Presented at different conferences, these talks offer valuable insights and expertise from our team members.
+                    </p>
+                    <input type="text" class="page-search" id="searchPresentation" onkeyup="searchPresentation()" placeholder="Search Presentations">
+                    <h5><strong>Presentations</strong></h5>
+                    <h6 class="presentation-count"></h6>
+                    {% for presentation in parsed.presentations %}
+                        <div class="card w-60 card-presentation">
+                            <div class="card-body">
+                                <strong>
+                                    <div class="title">
+                                        {{ presentation.name }}
+                                    </div>
+                                </strong>
+                                <p></p>
+                                <div>
+                                    {{ presentation.presenters }}
                                 </div>
-                            </strong>
-                            <p></p>
-                            <div>
-                                {{ presentation.presenters }}
-                            </div>
-                            <div class="date">
-                                {{ presentation.date }}
-                            </div>
-                            <p></p>
-                            <div class="timeline-card-body">
-                                {{ presentation.description }}
-                            </div>
-                            <p></p>
-                            <div class="material">
-                                <a href="{{ presentation.url }}">
-                                    <button type="button" class="slide-button">
-                                        <span class="slide-button-text">
-                                        <span>
-                                            Recording
-                                        </span>
-                                        </span>
-                                        <span class="slide-button-icon">
-                                            <i class="fa-solid fa-arrow-up-right-from-square"></i>
-                                        </span>
-                                    </button>
-                                </a>
-                                {% if "slides" in presentation %}
-                                    <a href="{{ presentation.slides }}">
-                                        <button type="button" class="slide-button slide-button-secondary">
+                                <div class="date">
+                                    {{ presentation.date }}
+                                </div>
+                                <p></p>
+                                <div class="timeline-card-body">
+                                    {{ presentation.description }}
+                                </div>
+                                <p></p>
+                                <div class="material">
+                                    <a href="{{ presentation.url }}">
+                                        <button type="button" class="slide-button">
                                             <span class="slide-button-text">
                                             <span>
-                                                Slide Deck
+                                                Recording
                                             </span>
                                             </span>
                                             <span class="slide-button-icon">
@@ -107,11 +95,25 @@
                                             </span>
                                         </button>
                                     </a>
-                                {% endif %}
+                                    {% if "slides" in presentation %}
+                                        <a href="{{ presentation.slides }}">
+                                            <button type="button" class="slide-button slide-button-secondary">
+                                                <span class="slide-button-text">
+                                                <span>
+                                                    Slide Deck
+                                                </span>
+                                                </span>
+                                                <span class="slide-button-icon">
+                                                    <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                                                </span>
+                                            </button>
+                                        </a>
+                                    {% endif %}
+                                </div>
                             </div>
                         </div>
-                    </div>
-                {% endfor %}
+                    {% endfor %}
+                </div>
             </div>
         </div>
     </div>

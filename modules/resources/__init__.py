@@ -17,7 +17,7 @@ def get_menu():
         "children": [
             {"display_name": "General Information", "url": "/resources/", "external_link": False, "children": []},
             {
-                "display_name": "Getting Started",
+                "display_name": "Get Started",
                 "url": "/resources/getting-started/",
                 "external_link": False,
                 "children": [],
@@ -51,7 +51,7 @@ def get_menu():
                 "children": [],
             },
             {
-                "display_name": "Brand Guide",
+                "display_name": "Legal & Branding",
                 "url": "/resources/brand/",
                 "external_link": False,
                 "children": [],

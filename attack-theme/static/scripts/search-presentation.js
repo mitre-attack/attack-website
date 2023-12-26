@@ -67,8 +67,8 @@ function filter_date_helper(input_date) {
     date_year = input_date.innerText.split(" ")[1];
     for (let date_value of date_list) {
         if (date_value.checked){
-            if(date_value.id.includes("Current")){
-                if(year-date_year == 0){
+            if(date_value.id.includes("1")){
+                if((year-date_year == 0) || (year-date_year == 1)){
                     filter_date = true;
                 }
             }
