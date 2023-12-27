@@ -322,7 +322,7 @@ It also fixes a few minor STIX abnormalities for ICS Techniques.
 * Release ATT&CK content version 8.2.
   See detailed changes [here](https://github.com/mitre/cti/releases/tag/ATT%26CK-v8.2).
 * Updated Navigator layers to version 4.1 so that users are no longer warned that they are out of date.
-* Updated introductory video on [getting started](https://attack.mitre.org/resources/getting-started/) page.
+* Updated introductory video on [getting started](https://attack.mitre.org/resources/) page.
 
 # No website version update (2020-11-12)
 

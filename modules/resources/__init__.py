@@ -18,7 +18,7 @@ def get_menu():
             {"display_name": "General Information", "url": "/resources/", "external_link": False, "children": []},
             {
                 "display_name": "Get Started",
-                "url": "/resources/getting-started/",
+                "url": "/resources/",
                 "external_link": False,
                 "children": [],
             },
