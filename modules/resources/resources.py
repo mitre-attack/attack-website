@@ -427,8 +427,8 @@ def generate_use_case_page():
         title = "Title: " + use_case_data[i]["title"] + "\n"
         name = use_case_data[i]["title"].lower().replace(' ','-').replace("&", "a")
         template = "Template: resources/use-cases\n"
-        use_case_path.append("/resources/getting-started/" + name + "/")
-        save_as = "save_as: resources/getting-started/" + name + "/index.html\n"
+        use_case_path.append("/resources/get-started/" + name + "/")
+        save_as = "save_as: resources/get-started/" + name + "/index.html\n"
         data = "data: "
         content = title + template + save_as + data
         use_case_md.append(content)
