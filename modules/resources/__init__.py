@@ -24,11 +24,11 @@ def get_menu():
             },
             {
                 "display_name": "Contribute",
-                "url": "/resources/contribute/",
+                "url": "/resources/engage-with-attack/contribute/",
                 "external_link": False,
                 "children": [],
             },
-            {"display_name": "Training", "url": "/resources/training/", "external_link": False, "children": []},
+            {"display_name": "Training", "url": "/resources/training/cti", "external_link": False, "children": []},
             {"display_name": "ATT&CKcon", "url": "/resources/attackcon/", "external_link": False, "children": []},
             {
                 "display_name": "Working with ATT&CK",

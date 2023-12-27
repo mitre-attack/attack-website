@@ -19,10 +19,11 @@ docs_path = "modules/resources/docs/"
 
 # ATT&CKcon md
 attackcon_md = (
-    "Title: ATT&CKcon\n" "Template: general/attackcon-overview\n" "save_as: resources/attackcon/index.html\n" "data: "
+    "Title: ATT&CKcon\n" "Template: general/attackcon-overview\n" "save_as: resources/learn-more-about-attack/attackcon/index.html\n" "data: "
 )
-# Training md
-training_md = "Title: ATT&CK Training\n" "Template: resources/training\n" "save_as: resources/training/index.html\n"
+
+# # Training md
+# training_md = "Title: ATT&CK Training\n" "Template: resources/training\n" "save_as: resources/training/index.html\n"
 
 # FAQ md
 faq_md = (
@@ -32,10 +33,10 @@ faq_md = (
 training_cti_md = (
     "Title: ATT&CK For CTI Training\n"
     "Template: resources/training-cti\n"
-    "save_as: resources/training/cti/index.html\n"
+    "save_as: resources/learn-more-about-attack/training/cti/index.html\n"
 )
 contribute_md = (
-    "Title: Contribute\n" "Template: resources/contribute\n" "save_as: resources/contribute/index.html\n" "data: "
+    "Title: Contribute\n" "Template: resources/contribute\n" "save_as: resources/engage-with-attack/contribute/index.html\n" "data: "
 )
 
 contribute_redirection_location = "modules/resources/contribute_redirections.json"
@@ -54,7 +55,7 @@ working_with_attack_md = (
 presentation_archive_md = (
     "Title: Presentation Archive\n"
     "Template: resources/presentation-archive\n"
-    "save_as: resources/presentation-archive/index.html\n"
+    "save_as: resources/learn-more-about-attack/presentation-archive/index.html\n"
     "data: "
 )
 

@@ -51,7 +51,7 @@ def generate_resources():
     util.buildhelpers.move_templates(resources_config.module_name, resources_config.resources_templates_path)
     copy_docs(module_docs_path=resources_config.docs_path)
     generate_working_with_attack()
-    generate_general_information()
+    #generate_general_information()
     generate_presentation_archive()
     generate_contribute_page()
     generate_training_pages()
@@ -105,12 +105,12 @@ def generate_training_pages():
     """Responsible for generating the markdown pages of the training pages."""
     logger.info("Generating training pages")
 
-    # Training Overview
-    training_md = resources_config.training_md
+    # # Training Overview
+    # training_md = resources_config.training_md
 
-    # write markdown to file
-    with open(os.path.join(site_config.resources_markdown_path, "training.md"), "w", encoding="utf8") as md_file:
-        md_file.write(training_md)
+    # # write markdown to file
+    # with open(os.path.join(site_config.resources_markdown_path, "training.md"), "w", encoding="utf8") as md_file:
+    #     md_file.write(training_md)
 
     # CTI training
     training_cti_md = resources_config.training_cti_md
@@ -151,8 +151,8 @@ def generate_attackcon_page():
         title = "Title: " + attackcon[i]["title"] + "\n"
         name = attackcon[i]["date"].lower().replace(" ", "-")
         template = "Template: general/attackcon-overview\n"
-        attackcon_path.append("/resources/attackcon/" + name + "/")
-        save_as = "save_as: resources/attackcon/" + name + "/index.html\n"
+        attackcon_path.append("/resources/learn-more-about-attack/attackcon/" + name + "/")
+        save_as = "save_as: resources/learn-more-about-attack/attackcon/" + name + "/index.html\n"
         data = "data: "
         content = title + template + save_as + data
         attackcon_md.append(content)
@@ -163,16 +163,27 @@ def generate_attackcon_page():
 
     # Below code used to add the attackcon children to the resources sidebar
     attackcon_index = 0
+    learnmore_index = 0
     temp_dict = {}
     for i in range(len(site_config.resource_nav["children"])):
-        if site_config.resource_nav["children"][i]["name"] == "ATT&CKcon":
-            attackcon_index = i
+        print("first i:")
+        print(i)
+        if site_config.resource_nav["children"][i]["name"] == "Learn More about ATT&CK":
+            print("in if")
+            for j in range(len(site_config.resource_nav["children"][i]["children"])):
+                print("in for for j")
+                print("j:")
+                print(j)
+                print(site_config.resource_nav["children"][i]["children"][j]["name"])
+                if site_config.resource_nav["children"][i]["children"][j]["name"] == "ATT&CKcon Presentations":
+                    learnmore_index = i
+                    attackcon_index = j
 
     for i in range(len(attackcon_dict_list["attackcon_name"])):
         temp_dict["name"] = attackcon_dict_list["attackcon_name"][i]
         temp_dict["path"] = attackcon_dict_list["attackcon_path"][i]
         temp_dict["children"] = []
-        site_config.resource_nav["children"][attackcon_index]["children"].append(temp_dict.copy())
+        site_config.resource_nav["children"][learnmore_index]["children"][attackcon_index]["children"].append(temp_dict.copy())
         temp_dict = {}
 
     attackcon_content = resources_config.attackcon_md + json.dumps(attackcon[0])
@@ -394,7 +405,7 @@ def generate_presentation_archive():
     resources_content = resources_config.presentation_archive_md + json.dumps({"presentations": presentations})
     # write markdown to file
     with open(
-        os.path.join(site_config.resources_markdown_path, "presenation_archive.md"), "w", encoding="utf8"
+        os.path.join(site_config.resources_markdown_path, "presentation_archive.md"), "w", encoding="utf8"
     ) as md_file:
         md_file.write(resources_content)
 
