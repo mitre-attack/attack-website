@@ -351,24 +351,47 @@ def generate_contribute_page():
     ms = util.relationshipgetters.get_ms()
     contributors = util.stixhelpers.get_contributors(ms)
 
+    page_count = 3
+    column_count = 3
+
+    # # Creates a list of pages broken down into A-E, F-N, O-Z(and misc)
+    # # pages = divide_list(contributors, page_count)
+    # pages = []
+    # for i in contributors:
+    #     match i[0]:
+    #         case "A" | "B" | "C" | "D" | "E":
+    #             pages[0].append(i)
+    #         case "F"|"G"|"H"|"I"|"J"|"K"|"L"|"M"|"N":
+    #             pages[1].append(i)
+    #         case _: # the rest of the letters and misc characters
+    #             pages[2].append(i)
+
+
     data = {}
 
-    data["contributors"] = []
+    data["contributors"] = [] 
 
     contributors_first_col = []
     contributors_second_col = []
+    contributors_third_col = []
 
-    half = math.ceil((len(contributors)) / 2)
-    list_size = len(contributors)
+    # half = math.ceil((len(contributors)) / 2)
+    # list_size = len(contributors)
 
-    for index in range(0, half):
+    third = math.ceil(len(contributors) / 3)
+
+    for index in range(0, third):
         contributors_first_col.append(contributors[index])
 
-    for index in range(half, list_size):
+    for index in range(third, 2 * third):
         contributors_second_col.append(contributors[index])
+
+    for index in range(2 * third, len(contributors)):
+        contributors_third_col.append(contributors[index])
 
     data["contributors"].append(contributors_first_col)
     data["contributors"].append(contributors_second_col)
+    data["contributors"].append(contributors_third_col)
 
     subs = resources_config.contribute_md + json.dumps(data)
 
