@@ -31,7 +31,7 @@ def get_menu():
             {"display_name": "Training", "url": "/resources/training/", "external_link": False, "children": []},
             {"display_name": "ATT&CKcon", "url": "/resources/attackcon/", "external_link": False, "children": []},
             {
-                "display_name": "Working with ATT&CK",
+                "display_name": "Access Data & Tools",
                 "url": "/resources/working-with-attack/",
                 "external_link": False,
                 "children": [],

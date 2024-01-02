@@ -266,8 +266,8 @@ def generate_static_pages():
 
 
 def generate_working_with_attack():
-    """Responsible for generating working with ATT&CK and creating excel files."""
-    logger.info("Generating Working with ATT&CK page")
+    """Responsible for generating Access Data & Tools and creating Excel files."""
+    logger.info("Generating Access Data & Tools page")
     excel_dirs = [
         f"enterprise-attack-{site_config.full_attack_version}",
         f"mobile-attack-{site_config.full_attack_version}",
