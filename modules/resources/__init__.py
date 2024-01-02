@@ -15,7 +15,6 @@ def get_menu():
         "external_link": False,
         "priority": resources_config.priority,
         "children": [
-            {"display_name": "General Information", "url": "/resources/", "external_link": False, "children": []},
             {
                 "display_name": "Get Started",
                 "url": "/resources/",
@@ -23,21 +22,18 @@ def get_menu():
                 "children": [],
             },
             {
-                "display_name": "Contribute",
-                "url": "/resources/engage-with-attack/contribute/",
-                "external_link": False,
-                "children": [],
-            },
-            {"display_name": "Training", "url": "/resources/training/cti", "external_link": False, "children": []},
-            {"display_name": "ATT&CKcon", "url": "/resources/attackcon/", "external_link": False, "children": []},
-            {
-                "display_name": "Working with ATT&CK",
-                "url": "/resources/working-with-attack/",
+                "display_name": "Learn More about ATT&CK",
+                "url": "/resources/learn-more-about-attack/presentation-archive/",
                 "external_link": False,
                 "children": [],
             },
             {"display_name": "FAQ", "url": "/resources/faq/", "external_link": False, "children": []},
-            {"display_name": "Updates", "url": "/resources/updates/", "external_link": False, "children": []},
+            {
+                "display_name": "Engage with ATT&CK",
+                "url": "/resources/engage-with-attack/contact/",
+                "external_link": False,
+                "children": [],
+            },
             {
                 "display_name": "Version History",
                 "url": "/resources/versions/",
@@ -45,14 +41,15 @@ def get_menu():
                 "children": [],
             },
             {
-                "display_name": "Related Projects",
-                "url": "/resources/related-projects/",
+                "display_name": "Legal & Branding",
+                "url": "/resources/brand/",
                 "external_link": False,
                 "children": [],
             },
+            {"display_name": "Updates", "url": "/resources/updates/", "external_link": False, "children": []},
             {
-                "display_name": "Legal & Branding",
-                "url": "/resources/brand/",
+                "display_name": "Related Projects",
+                "url": "/resources/related-projects/",
                 "external_link": False,
                 "children": [],
             },
