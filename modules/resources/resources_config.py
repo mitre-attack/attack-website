@@ -25,16 +25,18 @@ attackcon_md = (
 # Training md
 training_md = "Title: ATT&CK Training\n" "Template: resources/training\n" "save_as: resources/learn-more-about-attack/training/index.html\n"
 
-# FAQ md
-faq_md = (
-    "Title: Frequently Asked Questions\n" "Template: general/faq-overview\n" "save_as: resources/faq/index.html\n" "data: "
-)
-
 training_cti_md = (
     "Title: ATT&CK For CTI Training\n"
     "Template: resources/training-cti\n"
     "save_as: resources/learn-more-about-attack/training/cti/index.html\n"
 )
+
+# FAQ md
+faq_md = (
+    "Title: Frequently Asked Questions\n" "Template: general/faq-overview\n" "save_as: resources/faq/index.html\n" "data: "
+)
+
+# Contribute md
 contribute_md = (
     "Title: Contribute\n" "Template: resources/contribute\n" "save_as: resources/engage-with-attack/contribute/index.html\n" "data: "
 )
@@ -52,6 +54,7 @@ working_with_attack_md = (
     "data: "
 )
 
+# Presentation Archive md
 presentation_archive_md = (
     "Title: Presentation Archive\n"
     "Template: resources/presentation-archive\n"
@@ -59,6 +62,7 @@ presentation_archive_md = (
     "data: "
 )
 
+# Sidebar md
 sidebar_resources_md = (
     "Title: Resources Sidebar\n"
     "Template: general/sidebar-resources \n"
