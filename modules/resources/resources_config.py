@@ -6,11 +6,6 @@ priority = 8
 # markdown path for updates
 updates_markdown_path = "content/pages/updates/"
 
-# General information md
-general_information_md = (
-    "Title: General Information\n" "Template: resources/resources\n" "save_as: resources/index.html\n" "data: "
-)
-
 # Path for templates
 resources_templates_path = "modules/resources/templates/"
 
@@ -46,9 +41,9 @@ contribute_redirection_location = "modules/resources/contribute_redirections.jso
 # Brand md
 brand_md = "Title: Brand\n" "Template: resources/brand\n" "save_as: resources/brand/index.html\n" "data: "
 
-# Excel files / working with ATT&CK
+# Excel files / Access Data & Tools page
 working_with_attack_md = (
-    "Title: Working with ATT&CK\n"
+    "Title: Access Data & Tools\n"
     "Template: resources/working-with-attack\n"
     "save_as: resources/working-with-attack/index.html\n"
     "data: "

@@ -51,7 +51,6 @@ def generate_resources():
     util.buildhelpers.move_templates(resources_config.module_name, resources_config.resources_templates_path)
     copy_docs(module_docs_path=resources_config.docs_path)
     generate_working_with_attack()
-    #generate_general_information()
     generate_presentation_archive()
     generate_contribute_page()
     generate_training_pages()
@@ -79,26 +78,6 @@ def copy_docs(module_docs_path):
                 shutil.copytree(os.path.join(module_docs_path, doc), os.path.join(site_config.docs_dir, doc))
             else:
                 shutil.copyfile(os.path.join(module_docs_path, doc), os.path.join(site_config.docs_dir, doc))
-
-
-def generate_general_information():
-    """Responsible for compiling resources json into resources markdown files for rendering on the HMTL."""
-    logger.info("Generating general information")
-    # load presentations list
-    with open(os.path.join(site_config.data_directory, "resources.json"), "r", encoding="utf8") as f:
-        resources = json.load(f)
-
-    # get presentations in sorted date order
-    presentations = sorted(
-        resources["presentations"], key=lambda p: datetime.strptime(p["date"], "%B %Y"), reverse=True
-    )
-    # get markdown
-    resources_content = resources_config.general_information_md + json.dumps({"presentations": presentations})
-    # write markdown to file
-    with open(
-        os.path.join(site_config.resources_markdown_path, "general_information.md"), "w", encoding="utf8"
-    ) as md_file:
-        md_file.write(resources_content)
 
 
 def generate_training_pages():
@@ -277,8 +256,8 @@ def generate_static_pages():
 
 
 def generate_working_with_attack():
-    """Responsible for generating working with ATT&CK and creating excel files."""
-    logger.info("Generating Working with ATT&CK page")
+    """Responsible for generating Access Data & Tools and creating Excel files."""
+    logger.info("Generating Access Data & Tools page")
     excel_dirs = [
         f"enterprise-attack-{site_config.full_attack_version}",
         f"mobile-attack-{site_config.full_attack_version}",

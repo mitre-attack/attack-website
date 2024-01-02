@@ -173,7 +173,7 @@ a {
     border-color: color(active);
     color: #ffffff;
     background: color(active);
-    padding: 2px 16px;
+    padding: 4px 16px;
     a & { text-decoration: none !important; }
 }
 
@@ -182,7 +182,7 @@ a {
     color: color(active);
     background: #ffffff;
     border-color: color(active);
-    padding: 2px 16px;
+    padding: 4px 16px;
     a & { text-decoration: none !important; }
 }
 
@@ -547,7 +547,7 @@ code {
 .button-group {
     display: flex;
     justify-content: end;
-    a.button ~ a.button {
+    a.button + a.button {
         margin-left: 22px;
     }
     button {
@@ -586,11 +586,12 @@ code {
     color: on-color(body);
     background: rgba(on-color(body), 0.03);
     border-bottom-color: border-color(body);
-    a.partial-underline {
-        text-decoration: none;
-        .hover-line {
-            text-decoration: underline;
-        }
+}
+
+a.partial-underline {
+    text-decoration: none;
+    .hover-line {
+        text-decoration: underline;
     }
 }
 
@@ -602,16 +603,6 @@ code {
         &.button-group {
             display: flex;
             justify-content: center;
-
-            .card-button-container {
-                width: 100%;
-                display: flex;
-                justify-content: center;
-                a {
-                    width: 100%;
-                    margin: 0 8px;
-                }
-            }
         }
     }
     .card-footer-no-button {
@@ -642,23 +633,34 @@ code {
             background: on-color(active);
         }
     }
-    .card-button {
-        @extend .brand-button;
-        border: 0;
+}
+
+.card-button-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    a {
         width: 100%;
-        background: #0156b3;
-        padding: 2px 12px;
-        justify-content: center;
-        .card-button-text, .card-button-icon {
-            position: relative;
-            padding: 5px 5px;
-        }
-        .card-button-icon {
-            padding-left: 10px;
-        }
-        &:hover {
-            background: #062f4f;
-        }
+        margin: 0 8px;
+    }
+}
+
+.card-button {
+    @extend .brand-button;
+    border: 0;
+    width: 100%;
+    background: color(active);
+    padding: 2px 12px;
+    justify-content: center;
+    .card-button-text, .card-button-icon {
+        position: relative;
+        padding: 5px 5px;
+    }
+    .card-button-icon {
+        padding-left: 10px;
+    }
+    &:hover {
+        background: #062f4f;
     }
 }
 
@@ -720,7 +722,7 @@ code {
 
 .card-title-icon {
     float: right;
-    color: #0156b3;
+    color: color(active);
 }
 /******/
 
@@ -896,9 +898,7 @@ code {
         padding: 6px 0;
     }
     .relevant-links {
-        background: on-color(active);
         margin-bottom: 1rem;
-        padding: .5rem 1rem;
         border-radius: 3px;
         .faq-link ~ .faq-link::before {
             content: ', ';
@@ -1343,16 +1343,54 @@ div#sidebars {
 }
 
 .working-with-attack {
-    .file-list {
-        border: 3px solid border-color(body);
-        border-radius: 8px;
-        background: color(body);
-        margin: 10px;
-        padding: 10px;
-        ul {
-            margin-bottom: 0;
+    .row.panels {
+        margin: 0;
+        display: flex;
+        gap: 24px;
+    }
+    img {
+        border-radius: .75em;
+    }
+    img.scale {
+        object-fit: cover;
+        object-position: left top;
+        border-radius: unset !important;
+        border: 1px solid border-color(body);
+    }
+    .panel {
+        padding: 0;
+        border: 1px solid border-color(body);
+        border-radius: .75em;
+        max-width: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+    img + .panel-body {
+        border-top: 1px solid border-color(body);
+    }
+    .panel-body {
+        padding: 24px;
+        p {
+            margin: 24px 0;
+            overflow: auto;
+        }
+        &.fixed-height {
+            height: 35vh;
         }
     }
+    ul {
+        margin-bottom: 0;
+    }
+    .panel-buttons {
+        padding: 24px;
+        display: flex;
+        gap: 12px;
+    }
+}
+
+.tip-box {
+    background: #EAEAEA;
+    padding: 1rem;
 }
 
 .contact-center {

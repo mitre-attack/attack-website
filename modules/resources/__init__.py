@@ -27,6 +27,12 @@ def get_menu():
                 "external_link": False,
                 "children": [],
             },
+            {
+                "display_name": "Access Data & Tools",
+                "url": "/resources/working-with-attack/",
+                "external_link": False,
+                "children": [],
+            },
             {"display_name": "FAQ", "url": "/resources/faq/", "external_link": False, "children": []},
             {
                 "display_name": "Engage with ATT&CK",

@@ -1,3 +1,3 @@
 Title: Getting Started
-Template: resources/get-started
+Template: resources/resources
 save_as: resources/index.html
