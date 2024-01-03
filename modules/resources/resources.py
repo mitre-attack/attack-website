@@ -52,12 +52,14 @@ def generate_resources():
     copy_docs(module_docs_path=resources_config.docs_path)
     generate_working_with_attack()
     generate_general_information()
+    generate_presentation_archive()
     generate_contribute_page()
     generate_training_pages()
     generate_brand_page()
     generate_attackcon_page()
     generate_faq_page()
     generate_static_pages()
+    generate_use_case_page()
     generate_sidebar_resources()
 
 
@@ -204,14 +206,13 @@ def generate_faq_page():
     with open(os.path.join(site_config.resources_markdown_path, "faq.md"), "w", encoding="utf8") as md_file:
         md_file.write(faq_content)
 
-
 def generate_static_pages():
     """Reads markdown files from the static pages directory and copies them into the markdown directory."""
     logger.info("Generating static pages")
     static_pages_dir = os.path.join("modules", "resources", "static_pages")
 
     if not [key["module_name"] for key in modules.run_ptr if key["module_name"] == "versions"]:
-        util.buildhelpers.remove_element_from_sub_menu(resources_config.module_name, "Versions of ATT&CK")
+        util.buildhelpers.remove_element_from_sub_menu(resources_config.module_name, "Version History")
 
     # Below code used to get a list of all updates children
     updates_dict_list = {}
@@ -265,8 +266,8 @@ def generate_static_pages():
 
 
 def generate_working_with_attack():
-    """Responsible for generating working with ATT&CK and creating excel files."""
-    logger.info("Generating Working with ATT&CK page")
+    """Responsible for generating Access Data & Tools and creating Excel files."""
+    logger.info("Generating Access Data & Tools page")
     excel_dirs = [
         f"enterprise-attack-{site_config.full_attack_version}",
         f"mobile-attack-{site_config.full_attack_version}",
@@ -377,3 +378,57 @@ def generate_contribute_page():
         os.path.join(site_config.resources_markdown_path, "contribute.md"), "w", encoding="utf8"
     ) as md_file:
         md_file.write(subs)
+
+def generate_presentation_archive():
+    """Responsible for compiling resources json into resources markdown files for rendering on the HMTL."""
+    logger.info("Generating presentation archive")
+    # load presentations list
+    with open(os.path.join(site_config.data_directory, "resources.json"), "r", encoding="utf8") as f:
+        resources = json.load(f)
+
+    # get presentations in sorted date order
+    presentations = sorted(
+        resources["presentations"], key=lambda p: datetime.strptime(p["date"], "%B %Y"), reverse=True
+    )
+    # get markdown
+    resources_content = resources_config.presentation_archive_md + json.dumps({"presentations": presentations})
+    # write markdown to file
+    with open(
+        os.path.join(site_config.resources_markdown_path, "presenation_archive.md"), "w", encoding="utf8"
+    ) as md_file:
+        md_file.write(resources_content)
+
+def generate_use_case_page():
+    """Responsible for compiling use cases json into use cases markdown file for rendering on the HMTL."""
+    logger.info("Generating getting started pages")
+
+    # load use case data from json
+    with open(os.path.join(site_config.data_directory, "use_cases.json"), "r", encoding="utf8") as f:
+        use_case_data = json.load(f)
+
+    # Below code used to get a list of all use_case children
+    use_case_md = []
+    use_case_name = []
+    use_case_path = []
+    use_case_dict_list = {}
+    for i in range(len(use_case_data)):
+        use_case_name.append(use_case_data[i]["title"])
+        title = "Title: " + use_case_data[i]["title"] + "\n"
+        name = use_case_data[i]["title"].lower().replace(' ','-').replace("&", "a")
+        template = "Template: resources/use-cases\n"
+        use_case_path.append("/resources/getting-started/" + name + "/")
+        save_as = "save_as: resources/getting-started/" + name + "/index.html\n"
+        data = "data: "
+        content = title + template + save_as + data
+        use_case_md.append(content)
+    use_case_dict_list["use_case_name"] = use_case_name
+    use_case_dict_list["use_case_path"] = use_case_path
+    use_case_dict_list["use_case_md"] = use_case_md
+
+    # write markdown to file
+    use_case_list = use_case_dict_list["use_case_md"]
+    for i in range(len(use_case_list)):
+        use_case_content = use_case_list[i] + json.dumps(use_case_data[i])
+        f_name = "use-case-" + use_case_data[i]["title"].lower().replace(' ','-') + ".md"
+        with open(os.path.join(site_config.resources_markdown_path, f_name), "w", encoding="utf8") as md_file:
+            md_file.write(use_case_content)

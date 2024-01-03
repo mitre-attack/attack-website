@@ -43,11 +43,18 @@ contribute_redirection_location = "modules/resources/contribute_redirections.jso
 # Brand md
 brand_md = "Title: Brand\n" "Template: resources/brand\n" "save_as: resources/brand/index.html\n" "data: "
 
-# Excel files / working with ATT&CK
+# Excel files / Access Data & Tools page
 working_with_attack_md = (
-    "Title: Working with ATT&CK\n"
+    "Title: Access Data & Tools\n"
     "Template: resources/working-with-attack\n"
     "save_as: resources/working-with-attack/index.html\n"
+    "data: "
+)
+
+presentation_archive_md = (
+    "Title: Presentation Archive\n"
+    "Template: resources/presentation-archive\n"
+    "save_as: resources/presentation-archive/index.html\n"
     "data: "
 )
 
