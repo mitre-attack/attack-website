@@ -23,18 +23,6 @@ body {
     overflow-y: auto;
 }
 
-h1,
-h2,
-h3,
-h4,
-h5 {
-    @include font("Roboto-Light");
-}
-
-strong {
-    @include font("Roboto-Bold");
-}
-
 .jumbotron {
     padding: 0;
     background: color(body);
@@ -102,12 +90,6 @@ a {
     max-width: to-rem(1000);
 }
 
-.twitter-icon {
-    vertical-align: top;
-    width: to-rem(20);
-    height: to-rem(20);
-}
-
 .mitre-logo-wtrans {
     width: to-rem(144);
     height: to-rem(66);
@@ -167,7 +149,8 @@ a {
     display: inline-flex;
     align-items: center;
     padding: 0;
-
+    border-style: solid;
+    border-color: #c63e1f;
 }
 
 .brand-button-text {
@@ -183,6 +166,41 @@ a {
 
 .brand-button:hover {
     background: #B82200;
+}
+
+.slide-button {
+    @extend .brand-button;
+    border-color: #0156b3;
+    color: #ffffff;
+    background: #0156b3;
+    padding: 4px 16px;
+    a & { text-decoration: none !important; }
+}
+
+.slide-button-secondary {
+    @extend .brand-button;
+    color: #0156b3;
+    background: #ffffff;
+    border-color: #0156b3;
+    padding: 4px 16px;
+    a & { text-decoration: none !important; }
+}
+
+.slide-button-text {
+    position: relative;
+}
+
+.slide-button-icon {
+    position: relative;
+    padding-left: 8px;
+}
+
+.slide-button:hover {
+    background: #062f4f;
+}
+
+.slide-button-secondary:hover {
+    background: #dfdfdf;
 }
 
 // placeholder for base style of all navy colored buttons
@@ -221,14 +239,6 @@ a {
     h3 {
         font-size: rem(0.8);
     }
-}
-
-// Base style for section headers in Resources
-.uniform-block h2 {
-    text-align: center;
-    border-bottom: to-rem(1) solid on-color-emphasis(body); 
-    width: 100%;
-    margin: to-rem(25) 0;
 }
 /******/
 
@@ -521,15 +531,53 @@ pre {
     border-radius: 5px;
     padding: 1rem;
 }
+code {
+    color: #c63e1f;
+}
 /******/
 
 /*CARDS*/
-// cards are used in the General Information and Related Projects page, and in TACTICS, TECHNIQUES, MITIGATIONS, GROUPS, and SOFTWARE
+// cards are used in the General Information, Staying Informed, and Related Projects page, and in TACTICS, TECHNIQUES, MITIGATIONS, GROUPS, and SOFTWARE
 .card {
     background: color(body);
     color: on-color(body); 
     border-color: border-color(body);
 }
+
+.button-group {
+    display: flex;
+    justify-content: end;
+    a.button + a.button {
+        margin-left: 22px;
+    }
+    button {
+        justify-content: center;
+        width: 100%;
+    }
+    a.w-35 { width: 35%; }
+}
+
+.card-filter {
+    width: 20%;
+    top: 9.3rem;
+    float: right;
+    background: #eaeaea;
+}
+
+@media screen and (max-width: 90.62rem) {
+    .card-filter {
+        display: contents;
+    }
+}
+
+.card-presentation {
+    margin-bottom: 30px;
+}
+
+.card-attackcon {
+    width: 100%;
+}
+
 .card-data {
     margin-bottom: rem(0.2);
 }
@@ -538,6 +586,82 @@ pre {
     color: on-color(body);
     background: rgba(on-color(body), 0.03);
     border-bottom-color: border-color(body);
+}
+
+a.partial-underline {
+    text-decoration: none;
+    .hover-line {
+        text-decoration: underline;
+    }
+}
+
+.contact-card {
+    border-radius: .75em;
+    overflow: hidden;
+    .card-footer {
+        padding: 0 1.25rem 1.25rem;
+        &.button-group {
+            display: flex;
+            justify-content: center;
+        }
+    }
+    .card-footer-no-button {
+        padding: 0.5rem 0.5rem 0.5rem;
+        min-height: 4rem;
+        max-height: fit-content;
+    }
+    .card-header {
+		padding: 1.25rem 1.25rem 0;
+		&.background {
+            background: color(footer);
+            color: white;
+            padding: 0.75rem 0.75rem 0.5rem;
+        }
+	}
+    .card-header, .card-footer {
+        &.no-background {
+            background: color(body);
+            color: on-color(body);
+            border: unset;
+        }
+    }
+    .card-body {
+        p {
+            margin: 0;
+        }
+        &.background {
+            background: #eaeaea;
+        }
+    }
+}
+
+.card-button-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    a {
+        width: 100%;
+        margin: 0 8px;
+    }
+}
+
+.card-button {
+    @extend .brand-button;
+    border: 0;
+    width: 100%;
+    background: #0156b3;
+    padding: 2px 12px;
+    justify-content: center;
+    .card-button-text, .card-button-icon {
+        position: relative;
+        padding: 5px 5px;
+    }
+    .card-button-icon {
+        padding-left: 10px;
+    }
+    &:hover {
+        background: #062f4f;
+    }
 }
 
 .card-body {
@@ -588,7 +712,17 @@ pre {
 
 .card-title {
     font-size: rem(0.8);
-    color: on-color-emphasis(body); 
+    color: on-color-emphasis(body);
+}
+
+.contact-card-title {
+    font-size: 1.1rem;
+    font-weight: bold;
+}
+
+.card-title-icon {
+    float: right;
+    color: #0156b3;
 }
 /******/
 
@@ -744,7 +878,19 @@ pre {
 
 /*FAQ*/
 .faq {
-    line-height: rem(1.7);
+    .faq-section {
+        padding-bottom: 2rem;
+    }
+    .faq-question {
+        padding: 6px 0;
+    }
+    .relevant-links {
+        margin-bottom: 1rem;
+        border-radius: 3px;
+        .faq-link ~ .faq-link::before {
+            content: ', ';
+        }
+    }
 }
 /******/
 
@@ -783,6 +929,20 @@ pre {
         }
     }
 }
+
+.attackcon-columns {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+@media screen and (max-width: 47.9875rem) {
+    .attackcon-columns {
+        flex-direction: column;
+    }
+}
+
+/* Ensure the sponsors block is below and not affected by the top image */
 
 /*Card Blocks*/
 // container of groups of cards
@@ -837,6 +997,17 @@ pre {
       padding: 0 to-rem(15);
       margin-left: to-rem(15);
   }
+  .getting-started-content {
+        width:75%;
+	}
+	@media screen and (max-width: 90.62rem) {
+		.getting-started-content {
+			width:100%;
+		}
+	}
+  .getting-started-icon {
+      color: color(primary);
+	}
 
   .video-li {
       /* don't display the video in the list itself except in mobile layout */
@@ -856,6 +1027,13 @@ pre {
           display: list-item;
       }
   }
+}
+
+.jump-to-section{
+    position: -webkit-sticky;
+    position: sticky;
+    top: 14rem;
+	border-radius: 0.75em;
 }
 /******/
 
@@ -1072,20 +1250,38 @@ div#sidebars {
 /* attackcon page */
 .attackcons {
     border-top-width: 0px;
+    .sponsors{
+        flex: 1;
+        padding-left: 25px;
+    }
+	.p-description{
+		width: 90%;
+	}
     .sponsors-block {
-        background: #efefef;
+        background: #eaeaea;
         text-align: center;
         display: flex;
         justify-content: space-evenly;
         flex-wrap: wrap;
+        flex-direction: column;
+        width: 200%;
         .img-container {
             margin: 10px;
+            flex: 1 1 20%;
+            box-sizing: border-box;
             img { 
-                width: 80%;
+                width: 100%;
                 margin: auto;
+                height: auto;
             }
         }
     }
+	@media screen and (max-width: 47.9875rem) {
+		.sponsors-block {
+			width: 100%;
+            flex-direction: row;
+		}
+	}
 }
 /******/
 
@@ -1134,20 +1330,61 @@ div#sidebars {
 }
 
 .working-with-attack {
-    .file-list {
-        border: 3px solid border-color(body);
-        border-radius: 8px;
-        background: color(body);
-        margin: 10px;
-        padding: 10px;
-        ul {
-            margin-bottom: 0;
+    .row.panels {
+        margin: 0;
+        display: flex;
+        gap: 24px;
+    }
+    .row.excel-panels {
+        gap: 24px;
+    }
+    img {
+        border-radius: .75em;
+    }
+    img.scale {
+        object-fit: cover;
+        object-position: left top;
+        border-radius: unset !important;
+        border: 1px solid border-color(body);
+    }
+    .panel {
+        padding: 0;
+        border: 1px solid border-color(body);
+        border-radius: .75em;
+        max-width: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+    img + .panel-body {
+        border-top: 1px solid border-color(body);
+    }
+    .panel-body {
+        padding: 24px;
+        p {
+            margin: 24px 0;
+            overflow: auto;
         }
+        &.fixed-height {
+            height: 35vh;
+        }
+    }
+    ul {
+        margin-bottom: 0;
+    }
+    .panel-buttons {
+        padding: 24px;
+        display: flex;
+        gap: 12px;
     }
 }
 
+.tip-box {
+    background: #EAEAEA;
+    padding: 1rem;
+}
+
 .contact-center {
-    margin-block-start: 20vh;
+    margin: 0px 15px 15px 15px;
 }
 
 /*Card Blocks*/

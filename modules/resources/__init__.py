@@ -17,7 +17,7 @@ def get_menu():
         "children": [
             {"display_name": "General Information", "url": "/resources/", "external_link": False, "children": []},
             {
-                "display_name": "Getting Started",
+                "display_name": "Get Started",
                 "url": "/resources/getting-started/",
                 "external_link": False,
                 "children": [],
@@ -31,7 +31,7 @@ def get_menu():
             {"display_name": "Training", "url": "/resources/training/", "external_link": False, "children": []},
             {"display_name": "ATT&CKcon", "url": "/resources/attackcon/", "external_link": False, "children": []},
             {
-                "display_name": "Working with ATT&CK",
+                "display_name": "Access Data & Tools",
                 "url": "/resources/working-with-attack/",
                 "external_link": False,
                 "children": [],
@@ -39,7 +39,7 @@ def get_menu():
             {"display_name": "FAQ", "url": "/resources/faq/", "external_link": False, "children": []},
             {"display_name": "Updates", "url": "/resources/updates/", "external_link": False, "children": []},
             {
-                "display_name": "Versions of ATT&CK",
+                "display_name": "Version History",
                 "url": "/resources/versions/",
                 "external_link": False,
                 "children": [],
@@ -51,7 +51,7 @@ def get_menu():
                 "children": [],
             },
             {
-                "display_name": "Brand Guide",
+                "display_name": "Legal & Branding",
                 "url": "/resources/brand/",
                 "external_link": False,
                 "children": [],

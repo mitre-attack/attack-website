@@ -1,0 +1,48 @@
+{% extends "general/two-column.html" %} 
+{% set active_page = "resources" -%}
+{% set title = "Get Started - " + page.title + " | MITRE ATT&CK&reg;" -%} 
+{% set parsed = page.data | from_json %}
+{% import 'macros/navigation.html' as navigation %}
+
+{% block innerleft %}
+<div id="v-tab" role="tablist" aria-orientation="vertical" class="h-100">
+    {{navigation.sidenav(RESOURCE_NAV, output_file)}}  
+</div>
+{% endblock %}
+
+{% block innerright %}
+<!--stopindex-->
+<div class="px-3">
+    <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">Home</a></li>
+            <li class="breadcrumb-item"><a href="/resources">Resources</a></li>
+            <li class="breadcrumb-item"><a href="/resources/getting-started">Get Started</a></li>
+            <li class="breadcrumb-item">{{parsed.title}}</li>
+    </ol>
+</div>
+<div class="getting-started">
+    <div class="clearfix pb-3 px-3 getting-started-content">
+        <h1>{{parsed.title}}</h1>
+        <p></p>
+        <div>
+            {{parsed.description}}
+            <br><br>
+            {% for res in parsed.resources %}
+                <a href={{res.url}}>{{res.title}}   <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+                <br>
+                {{res.description}} {{res.date}}
+                <br><br>
+            {% endfor %}
+        </div>
+        <br>
+        <br>
+        <a href="/resources/getting-started"><i class="fa-solid fa-arrow-left"></i>   Return to Get Started</a>
+    </div>
+</div>
+{% endblock %}
+<!--startindex-->
+{% block scripts %}
+{{ super() }}
+<!--SCRIPTS-->
+<script src="/theme/scripts/navigation.js"></script>
+{% endblock %}

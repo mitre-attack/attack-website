@@ -2,6 +2,7 @@
 {% set active_page = "contact" -%}
 {% set title = "Contact | MITRE ATT&CK&reg;" %}
 {% import 'macros/navigation.html' as navigation %}
+{% import 'macros/contact_card.html' as contact_card %}
 
 {% block innerleft %}
 <div id="sidebars"></div>
@@ -9,15 +10,37 @@
 
 {% block innerright %}
 {{ super () }}
-<div class="row flex-grow-1 flex-shrink1 justify-content-center align-content-center contact-center">
-    <div class="text-center">
-        <img class="rounded mx-auto d-block pb-3" src="/theme/images/imac-icon.png" width="50">
-        <h2>Contact Us!</h2>
-        <p class="deemphasis">For questions/comments about Enterprise or Mobile ATT&amp;CK please contact us at <span class="font-weight-bold"><a href="mailto:attack@mitre.org">attack@mitre.org</a></span></p>
-        <p class="deemphasis">For the latest news <a href="https://twitter.com/MITREattack" target="_blank" rel="noopener" aria-label="Twitter"> follow us </a> on Twitter!</p>
-        <p class="deemphasis">For feedback or issues on the ATT&CK Navigator, please submit issues to the <a href="https://github.com/mitre-attack/attack-navigator" target="_blank">ATT&CK Navigator Git Repository</a></p>
-        <p class="deemphasis">For feedback or issues on the ATT&CK Website, please submit issues to the <a href="https://github.com/mitre-attack/attack-website/issues" target="_blank">ATT&CK Website Git Repository</a></p>
-        <p class="deemphasis">For learning how to submit contributions to ATT&CK, read our <a href="/resources/contribute">contribute</a> page</p>
+<div class="row flex-grow-1 flex-shrink1 align-content-center contact-center">
+    <div>
+      <ol class="breadcrumb" style="padding-left: 0px">
+        <li class="breadcrumb-item"><a href="/">Home</a></li>
+        <li class="breadcrumb-item"><a href="/resources">Resources</a></li>
+        <li class="breadcrumb-item"><a>Staying Informed</a></li>
+      </ol>
+    </div>
+    <div>
+      <div style="margin-bottom: 15px;">
+        <h1>Stay Informed</h1>
+        <p>We're creating a community of ATT&CK users who are passionate about ATT&CK and threat informed defense. Here's how you can find other community members, find out what they're doing with ATT&CK, and get involved.</p>
+        <div class="card-deck">
+          {{contact_card.render("Twitter", "https://twitter.com/MITREattack", "Follow us @MITREattack to hear about news, latest updates, and what community members are doing with ATT&CK.", "fa-brands fa-x-twitter", invert_icon=True)}}
+          {{contact_card.render("Medium", "https://medium.com/mitre-attack", "Check out our Medium blog for ATT&CK updates and information.", "fa-brands fa-medium", invert_icon=True)}}
+          {{contact_card.render("Slack", "mailto:attack@mitre.org", "Join the ATT&CK slack workspace! With over 3,000 members and 15 channels, find and start discussions with the community on all things ATT&CK. Email us at attack@mitre.org with the subject “Join slack” for an invitation link.", "fa-brands fa-slack", invert_icon=True)}}
+        </div>
+      </div>
+      <div>
+        <h2>Contact Us</h2>
+        <div class="card-deck">
+          {{contact_card.render("Email", "mailto:attack@mitre.org", "For questions and comments about Enterprise or Mobile ATT&CK, please contact us at attack@mitre.org", "fa-solid fa-envelope", invert_icon=True)}}
+          {{contact_card.render("GitHub", "https://github.com/mitre-attack/", "For feedback or issues on the ATT&CK Navigator or Website, please submit issues to the related git repository. ", "fa-brands fa-github", invert_icon=False,
+              buttons=[
+                  {"label": "ATT&CK", "url": "https://github.com/mitre-attack"}, 
+                  {"label": "MITRE CTI", "url": "https://github.com/mitre/cti"}
+              ])
+          }}
+          {{contact_card.render("Contribute", "https://github.com/mitre-attack/", "We rely on the community to help us improve ATT&CK. For learning how to submit contributions to ATT&CK, read our contribute page to learn how to reach out and what we’re looking for. ")}}
+        </div>
+      </div>
     </div>
 </div>
 {% endblock %}
