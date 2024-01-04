@@ -33,6 +33,7 @@ training_cti_md = (
     "Title: ATT&CK For CTI Training\n"
     "Template: resources/training-cti\n"
     "save_as: resources/training/cti/index.html\n"
+    "data: "
 )
 contribute_md = (
     "Title: Contribute\n" "Template: resources/contribute\n" "save_as: resources/contribute/index.html\n" "data: "
