@@ -11,6 +11,7 @@ if (mod_name.includes('contact')){
 }
 $("#sidebars").load(mod_entry, function() {
     let old_winlocation = window.location.href;
+    let active_elements = [];
     if (mod_name.includes('versions')){
         let v_number = mod_name[2];
         old_winlocation = old_winlocation.replace('/versions/'+ v_number,'');
@@ -33,8 +34,9 @@ $("#sidebars").load(mod_entry, function() {
         winlocation = old_winlocation
     }
     if(element.href == winlocation){
-        $(element.parentNode).addClass("active")
+        active_elements.push(element.parentNode);
     }});
+    $(active_elements[active_elements.length - 1]).addClass("active");
 
     //This code is for creating a collapsable sidebar for the mobile view
     let mediaQuery = window.matchMedia('(max-width: 47.9875rem)')
