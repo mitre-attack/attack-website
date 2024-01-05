@@ -11,124 +11,124 @@
 {% block innerright %}
 <!--stopindex-->
 <div class="px-3">
-    <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="/">Home</a></li>
-        <li class="breadcrumb-item"><a href="/resources">Resources</a></li>
-        <li class="breadcrumb-item">
-            <a href="/resources/training">ATT&CK Training</a>
-        </li>
-        <li class="breadcrumb-item">CTI Training</li>
-    </ol>
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="/">Home</a></li>
+    <li class="breadcrumb-item"><a href="/resources">Resources</a></li>
+    <li class="breadcrumb-item">
+      <a href="/resources/training">ATT&CK Training</a>
+    </li>
+    <li class="breadcrumb-item">CTI Training</li>
+  </ol>
 </div>
 
 <div class="container pb-3">
-    <div class="getting-started">
-        <div class="clearfix pb-3">
-            <div class="clearfix">
-                <div class="card card-filter jump-to-section">
-                    <div class="card-body">
-                        Jump to Section
-                        <ul>
-                        {% for training in parsed.trainings %}
-                        <li>
-                            <a href="#{{training.id}}">{{training.short_name}}</a>
-                        </li>
-                        {% endfor %}
-                        </ul>
-                    </div>
-                </div>
-                <div class="getting-started-content">
-                    <h1>CTI Trainings</h1>
-                    <p>
-                        The goal of this training is for students to understand the following:
-                    </p>
-                    <ul>
-                        <li>
-                            What ATT&CK is and why it’s useful for cyber threat intelligence
-                            (CTI)
-                        </li>
-                        <li>
-                            How to map to ATT&CK from both finished reporting and raw data
-                        </li>
-                        <li>
-                            Why it’s challenging to store ATT&CK-mapped data and what you should
-                            consider when doing that
-                        </li>
-                        <li>How to perform CTI analysis using ATT&CK-mapped data</li>
-                        <li>How to make defensive recommendations based on CTI analysis</li>
-                    </ul>
-                    <p>
-                        The modules below come with exercises intended to increase and test
-                        your understanding of ATT&CK techniques and applications. It is
-                        specified when are unguided (not walked through in the video or
-                        reports).
-                    </p>
-                    <h2>Modules</h2>
-                    {% for training in parsed.trainings %}
-                    <div class="anchor" id="{{training.id}}"></div>
-                    <div class="card w-60 card-training">
-                        <div class="card-body training-card-body">
-                            <div class="training-header">
-                                <div class="training-text-container">
-                                    <strong class="title">{{ training.name }}</strong>
-                                    <div class="date">{{ training.module }}</div>
-                                </div>
-                                <p></p>
-                                <div class="material">
-                                    <a href="{{ training.video }}">
-                                        <button type="button" class="slide-button">
-                                            <span class="slide-button-text">
-                                            <span> Video </span>
-                                            </span>
-                                            <span class="slide-button-icon">
-                                            <i class="fa fa-external-link"></i>
-                                            </span>
-                                        </button>
-                                    </a>
-                                    <a href="{{ training.slides }}">
-                                        <button type="button" class="slide-button slide-button-secondary">
-                                            <span class="slide-button-text">
-                                            <span> Slides </span>
-                                            </span>
-                                            <span class="slide-button-icon">
-                                            <i class="fa fa-external-link"></i>
-                                            </span>
-                                        </button>
-                                    </a>
-                                </div>
-                            </div>
-                            <p></p>
-                            {% for exercise in training.exercises %}
-                            <strong>{{ exercise.name }}</strong>
-                            <ul class="resource-links">
-                                <li>
-                                    Recommended Software:
-                                    <a href="{{ exercise.software.url }}">{{ exercise.software.version }}</a>
-                                </li>
-                            </ul>
-                            <div class="resources-container">
-                                {% for resource in exercise.resources %}
-                                <div class="resource">
-                                    <strong>{{ resource.name }}</strong>
-                                    {% for link in resource.links %}
-                                    <ul class="resource-links">
-                                        <li>
-                                            <a href="{{ link.url }}">{{ link.text }}</a>
-                                            {{ link.description }}
-                                        </li>
-                                    </ul>
-                                    {% endfor %}
-                                </div>
-                                {% endfor %}
-                            </div>
-                            {% endfor %}
-                        </div>
-                    </div>
-                    {% endfor %}
-                </div>
-            </div>
+  <div class="getting-started">
+    <div class="clearfix pb-3">
+      <div class="clearfix">
+        <div class="card card-filter jump-to-section">
+          <div class="card-body">
+            Jump to Section
+            <ul>
+              {% for training in parsed.cti_training.values() %}
+              <li>
+                <a href="#{{training.id}}">{{training.short_name}}</a>
+              </li>
+              {% endfor %}
+            </ul>
+          </div>
         </div>
+        <div class="getting-started-content">
+          <h1>CTI Trainings</h1>
+          <p>
+            The goal of this training is for students to understand the following:
+          </p>
+          <ul>
+            <li>
+              What ATT&CK is and why it’s useful for cyber threat intelligence
+              (CTI)
+            </li>
+            <li>
+              How to map to ATT&CK from both finished reporting and raw data
+            </li>
+            <li>
+              Why it’s challenging to store ATT&CK-mapped data and what you should
+              consider when doing that
+            </li>
+            <li>How to perform CTI analysis using ATT&CK-mapped data</li>
+            <li>How to make defensive recommendations based on CTI analysis</li>
+          </ul>
+          <p>
+            The modules below come with exercises intended to increase and test
+            your understanding of ATT&CK techniques and applications. It is
+            specified when are unguided (not walked through in the video or
+            reports).
+          </p>
+          <h2>Modules</h2>
+          {% for training in parsed.cti_training.values() %}
+          <div class="anchor" id="{{training.id}}"></div>
+          <div class="card w-60 card-training">
+            <div class="card-body training-card-body">
+              <div class="training-header">
+                <div class="training-text-container">
+                  <strong class="title">{{ training.name }}</strong>
+                  <div class="date">{{ training.module }}</div>
+                </div>
+                <p></p>
+                <div class="material">
+                  <a href="{{ training.video }}">
+                    <button type="button" class="slide-button">
+                      <span class="slide-button-text">
+                        <span> Video </span>
+                      </span>
+                      <span class="slide-button-icon">
+                        <i class="fa fa-external-link"></i>
+                      </span>
+                    </button>
+                  </a>
+                  <a href="{{ training.slides }}">
+                    <button type="button" class="slide-button slide-button-secondary">
+                      <span class="slide-button-text">
+                        <span> Slides </span>
+                      </span>
+                      <span class="slide-button-icon">
+                        <i class="fa fa-external-link"></i>
+                      </span>
+                    </button>
+                  </a>
+                </div>
+              </div>
+              <p></p>
+              {% for exercise in training.exercises %}
+              <strong>{{ exercise.name }}</strong>
+              <ul class="resource-links">
+                <li>
+                  Recommended Software:
+                  <a href="{{ exercise.software.url }}">{{ exercise.software.version }}</a>
+                </li>
+              </ul>
+              <div class="resources-container">
+                {% for resource in exercise.resources %}
+                <div class="resource">
+                  <strong>{{ resource.name }}</strong>
+                  {% for link in resource.links %}
+                  <ul class="resource-links">
+                    <li>
+                      <a href="{{ link.url }}">{{ link.text }}</a>
+                      {{ link.description }}
+                    </li>
+                  </ul>
+                  {% endfor %}
+                </div>
+                {% endfor %}
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
     </div>
+  </div>
 </div>
 
 <!--startindex-->
