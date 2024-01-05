@@ -34,6 +34,7 @@ If you are only updating the banner and nothing else, follow these steps.
         * `modules/website_build/static_pages/terms-of-use.md`
         * `NOTICE.txt`
         * `LICENSE.txt`
+        * `README.md`
 
 4. Use `towncrier` to update the `CHANGELOG`
 
