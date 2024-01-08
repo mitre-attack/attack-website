@@ -16,6 +16,9 @@ $("#sidebars").load(mod_entry, function() {
         let v_number = mod_name[2];
         old_winlocation = old_winlocation.replace('/versions/'+ v_number,'');
     }
+    if (old_winlocation.includes('tour')){
+        old_winlocation = old_winlocation.split('?')[0];
+    }
     let navElements = document.querySelectorAll('.sidenav-head > a');
     let winlocation;
     navElements.forEach(function(element){

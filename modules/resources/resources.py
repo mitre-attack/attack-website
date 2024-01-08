@@ -350,7 +350,7 @@ def generate_presentation_archive():
 
 def generate_use_case_page():
     """Responsible for compiling use cases json into use cases markdown file for rendering on the HMTL."""
-    logger.info("Generating getting started pages")
+    logger.info("Generating get started pages")
 
     # load use case data from json
     with open(os.path.join(site_config.data_directory, "use_cases.json"), "r", encoding="utf8") as f:
