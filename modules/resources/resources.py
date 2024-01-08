@@ -145,15 +145,8 @@ def generate_attackcon_page():
     learnmore_index = 0
     temp_dict = {}
     for i in range(len(site_config.resource_nav["children"])):
-        print("first i:")
-        print(i)
         if site_config.resource_nav["children"][i]["name"] == "Learn More about ATT&CK":
-            print("in if")
             for j in range(len(site_config.resource_nav["children"][i]["children"])):
-                print("in for for j")
-                print("j:")
-                print(j)
-                print(site_config.resource_nav["children"][i]["children"][j]["name"])
                 if site_config.resource_nav["children"][i]["children"][j]["name"] == "ATT&CKcon Presentations":
                     learnmore_index = i
                     attackcon_index = j
