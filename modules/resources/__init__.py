@@ -48,7 +48,7 @@ def get_menu():
             },
             {
                 "display_name": "Legal & Branding",
-                "url": "/resources/brand/",
+                "url": "/resources/legal-and-branding/",
                 "external_link": False,
                 "children": [],
             }

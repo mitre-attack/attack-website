@@ -3,8 +3,8 @@ Template: general/intro-overview
 Date: 2018
 Category: Cyber Threat Intelligence
 Authors: Blake Strom
-url: /resources/terms-of-use
-save_as: resources/terms-of-use/index.html
+url: /resources/legal-and-branding/terms-of-use
+save_as: resources/legal-and-branding/terms-of-use/index.html
 
 #### LICENSE
 

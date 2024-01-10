@@ -39,7 +39,7 @@ contribute_md = (
 contribute_redirection_location = "modules/resources/contribute_redirections.json"
 
 # Brand md
-brand_md = "Title: Brand\n" "Template: resources/brand\n" "save_as: resources/brand/index.html\n" "data: "
+brand_md = "Title: Legal & Branding\n" "Template: resources/legal-and-branding\n" "save_as: resources/legal-and-branding/index.html\n" "data: "
 
 # Excel files / Access Data & Tools page
 working_with_attack_md = (

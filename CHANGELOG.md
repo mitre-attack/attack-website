@@ -232,7 +232,7 @@ It also fixes a few minor STIX abnormalities for ICS Techniques.
 ## Features
 
 * Updated docs to clarify that both STIX 2.0 and STIX 2.1 input data is supported. See issue [#317](https://github.com/mitre-attack/attack-website/issues/317).
-* Updated [privacy policy](https://attack.mitre.org/resources/privacy/).
+* Updated [privacy policy](https://attack.mitre.org/resources/legal-and-branding/privacy/).
 
 ## Bugfixes
 
