@@ -24,6 +24,7 @@ training_cti_md = (
     "Title: ATT&CK For CTI Training\n"
     "Template: resources/training-cti\n"
     "save_as: resources/learn-more-about-attack/training/cti/index.html\n"
+    "data: "
 )
 
 # FAQ md

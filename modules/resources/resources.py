@@ -84,7 +84,11 @@ def generate_training_pages():
     """Responsible for generating the markdown pages of the training pages."""
     logger.info("Generating training pages")
 
-    # Training Overview
+    # load training data
+    with open(os.path.join(site_config.data_directory, "trainings.json"), "r", encoding="utf8") as f:
+        trainings = json.load(f)
+
+    # get markdown
     training_md = resources_config.training_md
 
     # write markdown to file
@@ -92,7 +96,7 @@ def generate_training_pages():
         md_file.write(training_md)
 
     # CTI training
-    training_cti_md = resources_config.training_cti_md
+    training_cti_md = resources_config.training_cti_md + json.dumps(trainings)
 
     # write markdown to file
     with open(os.path.join(site_config.resources_markdown_path, "training_cti.md"), "w", encoding="utf8") as md_file:
