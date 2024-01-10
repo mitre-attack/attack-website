@@ -45,8 +45,8 @@ brand_md = "Title: Legal & Branding\n" "Template: resources/legal-and-branding\n
 # Excel files / Access Data & Tools page
 working_with_attack_md = (
     "Title: Access Data & Tools\n"
-    "Template: resources/working-with-attack\n"
-    "save_as: resources/working-with-attack/index.html\n"
+    "Template: resources/access-data-and-tools\n"
+    "save_as: resources/access-data-and-tools/index.html\n"
     "data: "
 )
 

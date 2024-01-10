@@ -29,7 +29,7 @@ def get_menu():
             },
             {
                 "display_name": "Access Data & Tools",
-                "url": "/resources/working-with-attack/",
+                "url": "/resources/access-data-and-tools/",
                 "external_link": False,
                 "children": [],
             },
