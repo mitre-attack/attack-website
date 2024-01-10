@@ -37,9 +37,8 @@ $("#sidebars").load(mod_entry, function() {
         winlocation = old_winlocation
     }
     if(element.href == winlocation){
-        active_elements.push(element.parentNode);
+        $(element.parentNode).addClass("active");
     }});
-    $(active_elements[active_elements.length - 1]).addClass("active");
 
     //This code is for creating a collapsable sidebar for the mobile view
     let mediaQuery = window.matchMedia('(max-width: 47.9875rem)')
