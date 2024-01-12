@@ -68,12 +68,12 @@ function filter_date_helper(input_date) {
     for (let date_value of date_list) {
         if (date_value.checked){
             if(date_value.id.includes("1")){
-                if((year-date_year == 0) || (year-date_year == 1)){
+                if(year-date_year <= 1){
                     filter_date = true;
                 }
             }
             else if(date_value.id.includes("3")){
-                if(year-date_year == 3){
+                if(year-date_year <= 3){
                     filter_date = true;
                 }
             }

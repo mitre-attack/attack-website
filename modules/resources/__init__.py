@@ -15,35 +15,31 @@ def get_menu():
         "external_link": False,
         "priority": resources_config.priority,
         "children": [
-            {"display_name": "General Information", "url": "/resources/", "external_link": False, "children": []},
             {
                 "display_name": "Get Started",
-                "url": "/resources/getting-started/",
+                "url": "/resources/",
                 "external_link": False,
                 "children": [],
             },
             {
-                "display_name": "Learn More About ATTACK",
+                "display_name": "Learn More about ATT&CK",
                 "url": "/resources/learn-more-about-attack/",
                 "external_link": False,
                 "children": [],
             },
             {
-                "display_name": "Contribute",
-                "url": "/resources/contribute/",
-                "external_link": False,
-                "children": [],
-            },
-            {"display_name": "Training", "url": "/resources/training/", "external_link": False, "children": []},
-            {"display_name": "ATT&CKcon", "url": "/resources/attackcon/", "external_link": False, "children": []},
-            {
                 "display_name": "Access Data & Tools",
-                "url": "/resources/working-with-attack/",
+                "url": "/resources/access-data-and-tools/",
                 "external_link": False,
                 "children": [],
             },
             {"display_name": "FAQ", "url": "/resources/faq/", "external_link": False, "children": []},
-            {"display_name": "Updates", "url": "/resources/updates/", "external_link": False, "children": []},
+            {
+                "display_name": "Engage with ATT&CK",
+                "url": "/resources/engage-with-attack/contact/",
+                "external_link": False,
+                "children": [],
+            },
             {
                 "display_name": "Version History",
                 "url": "/resources/versions/",
@@ -51,17 +47,11 @@ def get_menu():
                 "children": [],
             },
             {
-                "display_name": "Related Projects",
-                "url": "/resources/related-projects/",
-                "external_link": False,
-                "children": [],
-            },
-            {
                 "display_name": "Legal & Branding",
-                "url": "/resources/brand/",
+                "url": "/resources/legal-and-branding/",
                 "external_link": False,
                 "children": [],
-            },
+            }
         ],
     }
 

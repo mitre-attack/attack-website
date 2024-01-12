@@ -67,4 +67,4 @@ limitations under the License.
 
 This project makes use of ATT&CK&reg;
 
-[ATT&CK Terms of Use](https://attack.mitre.org/resources/terms-of-use/)
+[ATT&CK Terms of Use](https://attack.mitre.org/resources/legal-and-branding/terms-of-use/)

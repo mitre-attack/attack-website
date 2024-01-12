@@ -41,7 +41,7 @@ let tourSteps = [
         orphan: true,
         backdrop: false,
         title: "End of tour",
-        content: "We hope you have enjoyed this tour of the sub-techniques features of the ATT&CK website. If you have any feedback or suggestions, please visit <a href='" + base_url + "/contact'>the contact page</a> to get in touch.",
+        content: "We hope you have enjoyed this tour of the sub-techniques features of the ATT&CK website. If you have any feedback or suggestions, please visit <a href='" + base_url + "/resources/engage-with-attack/contact'>the contact page</a> to get in touch.",
         onShow: function() {
             lastStepReached = true;
         },

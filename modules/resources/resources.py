@@ -51,7 +51,6 @@ def generate_resources():
     util.buildhelpers.move_templates(resources_config.module_name, resources_config.resources_templates_path)
     copy_docs(module_docs_path=resources_config.docs_path)
     generate_working_with_attack()
-    generate_general_information()
     generate_presentation_archive()
     generate_contribute_page()
     generate_training_pages()
@@ -79,26 +78,6 @@ def copy_docs(module_docs_path):
                 shutil.copytree(os.path.join(module_docs_path, doc), os.path.join(site_config.docs_dir, doc))
             else:
                 shutil.copyfile(os.path.join(module_docs_path, doc), os.path.join(site_config.docs_dir, doc))
-
-
-def generate_general_information():
-    """Responsible for compiling resources json into resources markdown files for rendering on the HMTL."""
-    logger.info("Generating general information")
-    # load presentations list
-    with open(os.path.join(site_config.data_directory, "resources.json"), "r", encoding="utf8") as f:
-        resources = json.load(f)
-
-    # get presentations in sorted date order
-    presentations = sorted(
-        resources["presentations"], key=lambda p: datetime.strptime(p["date"], "%B %Y"), reverse=True
-    )
-    # get markdown
-    resources_content = resources_config.general_information_md + json.dumps({"presentations": presentations})
-    # write markdown to file
-    with open(
-        os.path.join(site_config.resources_markdown_path, "general_information.md"), "w", encoding="utf8"
-    ) as md_file:
-        md_file.write(resources_content)
 
 
 def generate_training_pages():
@@ -155,8 +134,8 @@ def generate_attackcon_page():
         title = "Title: " + attackcon[i]["title"] + "\n"
         name = attackcon[i]["date"].lower().replace(" ", "-")
         template = "Template: general/attackcon-overview\n"
-        attackcon_path.append("/resources/attackcon/" + name + "/")
-        save_as = "save_as: resources/attackcon/" + name + "/index.html\n"
+        attackcon_path.append("/resources/learn-more-about-attack/attackcon/" + name + "/")
+        save_as = "save_as: resources/learn-more-about-attack/attackcon/" + name + "/index.html\n"
         data = "data: "
         content = title + template + save_as + data
         attackcon_md.append(content)
@@ -167,16 +146,20 @@ def generate_attackcon_page():
 
     # Below code used to add the attackcon children to the resources sidebar
     attackcon_index = 0
+    learnmore_index = 0
     temp_dict = {}
     for i in range(len(site_config.resource_nav["children"])):
-        if site_config.resource_nav["children"][i]["name"] == "ATT&CKcon":
-            attackcon_index = i
+        if site_config.resource_nav["children"][i]["name"] == "Learn More about ATT&CK":
+            for j in range(len(site_config.resource_nav["children"][i]["children"])):
+                if site_config.resource_nav["children"][i]["children"][j]["name"] == "ATT&CKcon Presentations":
+                    learnmore_index = i
+                    attackcon_index = j
 
     for i in range(len(attackcon_dict_list["attackcon_name"])):
         temp_dict["name"] = attackcon_dict_list["attackcon_name"][i]
         temp_dict["path"] = attackcon_dict_list["attackcon_path"][i]
         temp_dict["children"] = []
-        site_config.resource_nav["children"][attackcon_index]["children"].append(temp_dict.copy())
+        site_config.resource_nav["children"][learnmore_index]["children"][attackcon_index]["children"].append(temp_dict.copy())
         temp_dict = {}
 
     attackcon_content = resources_config.attackcon_md + json.dumps(attackcon[0])
@@ -217,39 +200,6 @@ def generate_static_pages():
 
     if not [key["module_name"] for key in modules.run_ptr if key["module_name"] == "versions"]:
         util.buildhelpers.remove_element_from_sub_menu(resources_config.module_name, "Version History")
-
-    # Below code used to get a list of all updates children
-    updates_dict_list = {}
-    updates_name = []
-    updates_path = []
-    for static_page in os.listdir(static_pages_dir):
-        with open(os.path.join(static_pages_dir, static_page), "r", encoding="utf8") as md:
-            content = md.read()
-            if static_page.startswith("updates-"):
-                temp_string = static_page.replace(".md", "")
-                temp_string = temp_string.split("-")
-                temp_string = temp_string[1].capitalize() + " " + temp_string[2]
-                updates_name.append(temp_string)
-                temp_string = static_page.replace(".md", "")
-                updates_path.append("/resources/updates/" + temp_string + "/")
-    updates_name.sort(key=lambda date: datetime.strptime(date, "%B %Y"), reverse=True)
-    updates_path.sort(key=lambda date: datetime.strptime(date, "/resources/updates/updates-%B-%Y/"), reverse=True)
-    updates_dict_list["updates_name"] = updates_name
-    updates_dict_list["updates_path"] = updates_path
-
-    # Below code used to add the updates children to the resources sidebar
-    updates_index = 0
-    temp_dict = {}
-    for i in range(len(site_config.resource_nav["children"])):
-        if site_config.resource_nav["children"][i]["name"] == "Updates":
-            updates_index = i
-
-    for i in range(len(updates_dict_list["updates_name"])):
-        temp_dict["name"] = updates_dict_list["updates_name"][i]
-        temp_dict["path"] = updates_dict_list["updates_path"][i]
-        temp_dict["children"] = []
-        site_config.resource_nav["children"][updates_index]["children"].append(temp_dict.copy())
-        temp_dict = {}
 
     for static_page in os.listdir(static_pages_dir):
         with open(os.path.join(static_pages_dir, static_page), "r", encoding="utf8") as md:
@@ -398,13 +348,13 @@ def generate_presentation_archive():
     resources_content = resources_config.presentation_archive_md + json.dumps({"presentations": presentations})
     # write markdown to file
     with open(
-        os.path.join(site_config.resources_markdown_path, "presenation_archive.md"), "w", encoding="utf8"
+        os.path.join(site_config.resources_markdown_path, "presentation_archive.md"), "w", encoding="utf8"
     ) as md_file:
         md_file.write(resources_content)
 
 def generate_use_case_page():
     """Responsible for compiling use cases json into use cases markdown file for rendering on the HMTL."""
-    logger.info("Generating getting started pages")
+    logger.info("Generating get started pages")
 
     # load use case data from json
     with open(os.path.join(site_config.data_directory, "use_cases.json"), "r", encoding="utf8") as f:
@@ -420,8 +370,8 @@ def generate_use_case_page():
         title = "Title: " + use_case_data[i]["title"] + "\n"
         name = use_case_data[i]["title"].lower().replace(' ','-').replace("&", "a")
         template = "Template: resources/use-cases\n"
-        use_case_path.append("/resources/getting-started/" + name + "/")
-        save_as = "save_as: resources/getting-started/" + name + "/index.html\n"
+        use_case_path.append("/resources/get-started/" + name + "/")
+        save_as = "save_as: resources/get-started/" + name + "/index.html\n"
         data = "data: "
         content = title + template + save_as + data
         use_case_md.append(content)
