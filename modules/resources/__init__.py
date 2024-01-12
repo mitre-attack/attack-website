@@ -23,6 +23,12 @@ def get_menu():
                 "children": [],
             },
             {
+                "display_name": "Learn More About ATTACK",
+                "url": "/resources/learn-more-about-attack/",
+                "external_link": False,
+                "children": [],
+            },
+            {
                 "display_name": "Contribute",
                 "url": "/resources/contribute/",
                 "external_link": False,
