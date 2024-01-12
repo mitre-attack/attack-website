@@ -11,7 +11,6 @@ if (mod_name.includes('contact')){
 }
 $("#sidebars").load(mod_entry, function() {
     let old_winlocation = window.location.href;
-    let active_elements = [];
     if (mod_name.includes('versions')){
         let v_number = mod_name[2];
         old_winlocation = old_winlocation.replace('/versions/'+ v_number,'');
