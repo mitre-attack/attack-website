@@ -14,11 +14,18 @@ docs_path = "modules/resources/docs/"
 
 # ATT&CKcon md
 attackcon_md = (
-    "Title: ATT&CKcon\n" "Template: general/attackcon-overview\n" "save_as: resources/learn-more-about-attack/attackcon/index.html\n" "data: "
+    "Title: ATT&CKcon\n"
+    "Template: general/attackcon-overview\n"
+    "save_as: resources/learn-more-about-attack/attackcon/index.html\n"
+    "data: "
 )
 
 # Training md
-training_md = "Title: ATT&CK Training\n" "Template: resources/training\n" "save_as: resources/learn-more-about-attack/training/index.html\n"
+training_md = (
+    "Title: ATT&CK Training\n"
+    "Template: resources/training\n"
+    "save_as: resources/learn-more-about-attack/training/index.html\n"
+)
 
 training_cti_md = (
     "Title: ATT&CK For CTI Training\n"
@@ -29,18 +36,29 @@ training_cti_md = (
 
 # FAQ md
 faq_md = (
-    "Title: Frequently Asked Questions\n" "Template: general/faq-overview\n" "save_as: resources/faq/index.html\n" "data: "
+    "Title: Frequently Asked Questions\n"
+    "Template: general/faq-overview\n"
+    "save_as: resources/faq/index.html\n"
+    "data: "
 )
 
 # Contribute md
 contribute_md = (
-    "Title: Contribute\n" "Template: resources/contribute\n" "save_as: resources/engage-with-attack/contribute/index.html\n" "data: "
+    "Title: Contribute\n"
+    "Template: resources/contribute\n"
+    "save_as: resources/engage-with-attack/contribute/index.html\n"
+    "data: "
 )
 
 contribute_redirection_location = "modules/resources/contribute_redirections.json"
 
 # Brand md
-brand_md = "Title: Legal & Branding\n" "Template: resources/legal-and-branding\n" "save_as: resources/legal-and-branding/index.html\n" "data: "
+brand_md = (
+    "Title: Legal & Branding\n"
+    "Template: resources/legal-and-branding\n"
+    "save_as: resources/legal-and-branding/index.html\n"
+    "data: "
+)
 
 # Excel files / Access Data & Tools page
 working_with_attack_md = (

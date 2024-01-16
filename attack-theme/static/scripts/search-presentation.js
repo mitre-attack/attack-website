@@ -24,27 +24,30 @@ function searchPresentation() {
     filter_count.innerHTML = `${count} of ${cards.length} Presentations`
 }
 
+function count_helper(card, selected, date, filter_value) {
+    if (card.innerText.indexOf(filter_value) > -1 && card.style.display != "none") {
+        if(selected[selected.length - 1].includes("year")){
+            let filter_date = filter_date_helper(date);
+            if (filter_date) {
+                return 1;
+            }
+        }
+        else{
+            return 1;
+        }
+    }
+    return 0;
+}
+
 function filter_all(selected) {
     let count = 0;
-    let cards, i, card_value, dates;
+    let cards, i, dates;
     cards = $(".card-presentation");
     dates = $(".date");
     for (i = 0; i < cards.length; i++) {
-        card_value = cards[i].innerText;
         let row_count = 0
         for(let filters of selected){
-            let filter_value = filters;
-            if (card_value.indexOf(filter_value) > -1 && cards[i].style.display != "none") {
-                if(selected[selected.length - 1].includes("year")){
-                    let filter_date = filter_date_helper(dates[i])
-                    if(filter_date){
-                        row_count = row_count + 1;
-                    }
-                }
-                else{
-                    row_count = row_count + 1;
-                }
-            }
+            row_count += count_helper(cards[i], selected, dates[i], filters);
         }
         if(row_count > 0){
             cards[i].style.display = "";
@@ -65,21 +68,22 @@ function filter_date_helper(input_date) {
     let date_list = document.getElementsByName('dates');
     year = currentDate.getFullYear();
     date_year = input_date.innerText.split(" ")[1];
+
     for (let date_value of date_list) {
-        if (date_value.checked){
-            if(date_value.id.includes("1")){
-                if(year-date_year <= 1){
-                    filter_date = true;
-                }
-            }
-            else if(date_value.id.includes("3")){
-                if(year-date_year <= 3){
-                    filter_date = true;
-                }
-            }
-            else{
+        if (!date_value.checked) continue;
+
+        if(date_value.id.includes("1")){
+            if(year-date_year <= 1){
                 filter_date = true;
             }
+        }
+        else if(date_value.id.includes("3")){
+            if(year-date_year <= 3){
+                filter_date = true;
+            }
+        }
+        else{
+            filter_date = true;
         }
     }
     return filter_date;
