@@ -40,7 +40,7 @@ $("#sidebars").load(mod_entry, function() {
     }});
 
     //This code is for creating a collapsable sidebar for the mobile view
-    let mediaQuery = window.matchMedia('(max-width: 47.9875rem)')
+    let mediaQuery = window.matchMedia('(max-width: 74.938rem)')
     function mobileSidenav(e) {
         if (e.matches) {
             $('#sidebar-collapse').collapse('hide')
