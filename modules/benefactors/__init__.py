@@ -11,7 +11,7 @@ def get_menu():
     return {
         "display_name": "Benefactors",
         "module_name": "Benefactors",
-        "url": "/resources/benefactors/",
+        "url": "/resources/engage-with-attack/benefactors/",
         "external_link": False,
         "priority": benefactors_config.priority,
         "children": [],

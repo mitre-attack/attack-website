@@ -1,0 +1,292 @@
+{% extends "general/two-column.html" %}
+{% set active_page = "resources" -%}
+{% set title = page.title + " | MITRE ATT&CK&reg;" -%}
+{% set parsed = page.data | from_json %}
+{% import 'macros/filetree.html' as filetree %}
+{% import 'macros/navigation.html' as navigation %}
+
+{% block innerleft %}
+<div id="sidebars"></div>
+{% endblock %}
+
+{% block innerright %}
+<!--stopindex-->
+<ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="/">Home</a></li>
+    <li class="breadcrumb-item"><a href="/resources">Resources</a></li>
+    <li class="breadcrumb-item">Access Data & Tools</li>
+</ol>
+
+<div class="container pb-3">
+    <div class="working-with-attack">
+        <h1>Access Data & Tools</h1>
+
+        <!-- tools -->
+        <div class="my-5">
+            <h2>Tools to Use with ATT&amp;CK</h2>
+            <p>
+                The following tools allow users to explore, access, visualize, and query ATT&amp;CK in different ways.
+            </p>
+            <div class="row panels d-flex my-4 g-24">
+                <!-- navigator -->
+                <div class="col-sm panel d-flex flex-column">
+                    <img class="w-100" src="/theme/images/navigator-example.png" alt="Navigator Example">
+                    <div class="panel-body p-4 fixed-height">
+                        <h3>ATT&amp;CK Navigator</h3>
+                        <p>
+                            The ATT&CK Navigator is a web-based tool for annotating and exploring ATT&CK matrices. It can be used to visualize defensive coverage, red/blue team planning, the frequency of detected techniques, and more. 
+                        </p>
+                    </div>
+                    <div class="g-12 d-flex flex-column px-4 pb-4">
+                        <a href="https://github.com/mitre-attack/attack-navigator/">
+                            <button type="button" class="slide-button">
+                                <span class="slide-button-text">
+                                    Visit Repository
+                                </span>
+                                <span class="slide-button-icon">
+                                    <i class="fa-solid fa-up-right-from-square fa-sm"></i>
+                                </span>
+                            </button>
+                        </a>
+                        <a href="https://mitre-attack.github.io/attack-navigator/">
+                            <button type="button" class="slide-button-secondary">
+                                <span class="slide-button-text">
+                                    Open Application
+                                </span>
+                                <span class="slide-button-icon">
+                                    <i class="fa-brands fa-github"></i>
+                                </span>
+                            </button>
+                        </a>
+                    </div>
+                </div>
+                <!-- workbench -->
+                <div class="col-sm panel d-flex flex-column">
+                    <img class="w-100" src="/theme/images/workbench-example.png" alt="Workbench Example">
+                    <div class="panel-body p-4 fixed-height">
+                        <h3>ATT&amp;CK Workbench</h3>
+                        <p>
+                            The ATT&CK Workbench is an application allowing users to explore, create, annotate, and share extensions of 
+                            the ATT&CK knowledge base.
+                        </p>
+                    </div>
+                    <div class="g-12 d-flex flex-column px-4 pb-4">
+                        <a href="https://github.com/center-for-threat-informed-defense/attack-workbench-frontend/">
+                            <button type="button" class="slide-button">
+                                <span class="slide-button-text">
+                                    Visit Repository
+                                </span>
+                                <span class="slide-button-icon">
+                                    <i class="fa-brands fa-github"></i>
+                                </span>
+                            </button>
+                        </a>
+                    </div>
+                </div>
+                <!-- python utilities-->
+                <div class="col-sm panel d-flex flex-column">
+                    <img class="w-100" src="/theme/images/mitreattack-python-example.png" alt="mitreattack-python Example">
+                    <div class="panel-body p-4 fixed-height">
+                        <h3>Python Utilities</h3>
+                        <p>
+                            ATT&CK provides a variety of Python tools for accessing, querying, and processing the ATT&CK dataset.
+                            These scripts can be useful utilities or serve as examples for how to work with ATT&CK programmatically.
+                        </p>
+                    </div>
+                    <div class="g-12 d-flex flex-column px-4 pb-4">
+                        <a href="https://github.com/mitre-attack/mitreattack-python/">
+                            <button type="button" class="slide-button">
+                                <span class="slide-button-text">
+                                    Visit Repository
+                                </span>
+                                <span class="slide-button-icon">
+                                    <i class="fa-brands fa-github"></i>
+                                </span>
+                            </button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- accessing attack data -->
+        <div class="my-5">
+            <h2>Accessing ATT&amp;CK Data</h2>
+
+            <!-- stix -->
+            <h3 class="mt-4">ATT&amp;CK in STIX</h3>
+            <div class="row my-4">
+                <div class="col-sm-8">
+                    <p>
+                        Structured Threat Information Expression (STIX&trade;) is a language and serialization format used to 
+                        exchange cyber threat intelligence (CTI). The ATT&CK dataset is available in STIX 2.0 and STIX 2.1. 
+                        Other presentations of this dataset, including the ATT&CK Navigator and this website, are built from 
+                        the STIX data. 
+                    </p>
+                    <p>
+                        STIX is a machine-readable format providing access to the ATT&CK knowledge base. It is the most granular 
+                        representation of the ATT&CK data, and all other representations are derived from the STIX dataset. 
+                    </p>
+                    <p>
+                        The ATT&CK STIX representation is most easily manipulated in Python using the 
+                        <a href="https://github.com/oasis-open/cti-python-stix2#installation">stix2 library</a>. 
+                        However, because STIX is represented in JSON, other programming languages can easily interact with 
+                        the raw content. 
+                    </p>
+                    <div class="tip-box">
+                        <p>
+                            <strong>Consider using ATT&CK in STIX if you:</strong>
+                        </p>
+                        <ul>
+                            <li>Have automated workflows that need to ingest ATT&CK data.</li>
+                            <li>Are a proficient Python user seeking to save time with automation or want to perform advanced queries.</li>
+                            <li>Want your workflows to keep up-to-date with the evolving knowledge base.</li>
+                            <li>Want to extend the ATT&CK dataset with custom content, and use this custom content with ATT&CK tools.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <img class="h-100 scale" src="/theme/images/mitre-cti.png" alt="MITRE CTI Example">
+                </div>
+            </div>
+            <div class="row panels d-flex my-4 g-24">
+                <div class="col-sm panel d-flex flex-column">
+                    <div class="panel-body p-4">
+                        <!-- stix 2.1 -->
+                        <h3>ATT&amp;CK in STIX 2.1</h3>
+                        <div class="d-flex flex-row mb-4 mt-3">
+                            <a href="https://github.com/mitre-attack/attack-stix-data/">
+                                <button type="button" class="slide-button">
+                                    <span class="slide-button-text">
+                                        Visit Repository
+                                    </span>
+                                    <span class="slide-button-icon">
+                                        <i class="fa-brands fa-github"></i>
+                                    </span>
+                                </button>
+                            </a>
+                        </div>
+
+                        <!-- stix 2.0 -->
+                        <h3>ATT&amp;CK in STIX 2.0</h3>
+                        <div class="d-flex flex-row mb-4 mt-3">
+                            <a href="https://github.com/mitre/cti/">
+                                <button type="button" class="slide-button">
+                                    <span class="slide-button-text">
+                                        Visit Repository
+                                    </span>
+                                    <span class="slide-button-icon">
+                                        <i class="fa-brands fa-github"></i>
+                                    </span>
+                                </button>
+                            </a>
+                        </div>
+                        <div>
+                            <a class="partial-underline" href="https://oasis-open.github.io/cti-documentation/stix/intro">
+                                <span class="hover-line">Learn more about STIX</span>
+                                &nbsp;&nbsp;
+                                <i class="fa-solid fa-up-right-from-square"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm panel d-flex flex-column">
+                    <div class="panel-body p-4">
+                        <!-- taxii -->
+                        <h3>TAXII</h3>
+                        <p>
+                            The ATT&amp;CK STIX data can also be accessed via the official ATT&amp;CK TAXII&trade; server. 
+                            Trusted Automated Exchange of Intelligence Information (TAXII) is an application protocol for 
+                            exchanging CTI over HTTPS. The ATT&amp;CK TAXII server provides API access to the ATT&amp;CK
+                            STIX knowledge base. 
+                        </p>
+                        <div class="d-flex flex-row mb-4 mt-3">
+                            <a href="https://github.com/mitre/cti/blob/master/USAGE.md#access-from-the-attck-taxii-server">
+                                <button type="button" class="slide-button">
+                                    <span class="slide-button-text">
+                                        Access TAXII Server
+                                    </span>
+                                    <span class="slide-button-icon">
+                                        <i class="fa-brands fa-github"></i>
+                                    </span>
+                                </button>
+                            </a>
+                        </div>
+                        <div>
+                            <a class="partial-underline" href="https://oasis-open.github.io/cti-documentation/taxii/intro.html">
+                                <span class="hover-line">Learn more about TAXII</span>
+                                &nbsp;&nbsp;
+                                <i class="fa-solid fa-up-right-from-square"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm"></div>
+            </div>
+    
+            <!-- excel -->
+            <h3 class="mt-5">ATT&amp;CK in Excel</h3>
+            <div class="row">
+                <div class="col-sm-8">
+                    <p>
+                        These spreadsheets are built from the STIX dataset and provide a more human-accessible view into the 
+                        knowledge base while also supporting rudimentary querying/filtering capabilities. 
+                    </p>
+                    <p>
+                        The Excel representation of the ATT&CK dataset below includes both master spreadsheets, containing all 
+                        object types, and individual spreadsheets for each object type. The individual type spreadsheets break 
+                        out relationships (e.g procedure examples connecting groups to techniques) into separate sheets by 
+                        relationship type, while the master spreadsheet includes all relationship types in a single sheet.
+                    </p>
+                    <p>
+                        A citations sheet can be used to look up the in-text citations which appear in some fields. For domains 
+                        that include multiple matrices, such as Mobile ATT&CK, each matrix gets its own named sheet. Unlike the 
+                        STIX dataset, objects that have been revoked or deprecated are not included in the spreadsheets. 
+                    </p>
+                    <div class="tip-box">
+                        <p>
+                            <strong>Consider using ATT&amp;CK in Excel if you:</strong>
+                        </p>
+                        <ul>
+                            <li>Want to quickly sort, filter and query the dataset in a familiar UI.</li>
+                            <li>Want to explore the contents of the dataset without having to navigate around the ATT&CK website.</li>
+                            <li>Are not comfortable enough in Python or other programming languages to work with the STIX representation.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <img class="h-100 scale" src="/theme/images/attack-in-excel.png" alt="Excel Example">
+                </div>
+            </div>
+
+            <!-- spreadsheets -->
+            <p class="mt-5">
+                <strong>Excel Spreadsheets representing the ATT&amp;CK dataset:</strong>
+            </p>
+            <div class="row panels mt-3 g-24">
+                {{filetree.filetree(parsed.excel_files)}}
+            </div>
+
+            <!-- converter -->
+            <div class="mt-5">
+                <a class="partial-underline" href="https://github.com/mitre-attack/mitreattack-python/tree/master/mitreattack/attackToExcel">
+                    <span class="hover-line"><strong>STIX to Excel Converter</strong></span>
+                    &nbsp;&nbsp;
+                    <i class="fa-solid fa-up-right-from-square"></i>
+                </a>
+                <p class="mt-2">
+                    This folder within the pip module contains an additional module for converting ATT&amp;CK STIX data 
+                    to Excel spreadsheets. It also provides a means to access ATT&amp;CK data as Pandas DataFrames for data analysis. 
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+<!--startindex-->
+{% block scripts %}
+{{ super() }}
+<!--SCRIPTS-->
+<script src="/theme/scripts/sidebar-load-all.js"></script>
+{% endblock %}

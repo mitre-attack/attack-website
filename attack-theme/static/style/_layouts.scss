@@ -23,18 +23,6 @@ body {
     overflow-y: auto;
 }
 
-h1,
-h2,
-h3,
-h4,
-h5 {
-    @include font("Roboto-Light");
-}
-
-strong {
-    @include font("Roboto-Bold");
-}
-
 .jumbotron {
     padding: 0;
     background: color(body);
@@ -149,34 +137,54 @@ a {
     }
 }
 
-.brand-button {
-    color: #ffffff;
+.website-button {
     font-size: 16px;
     border-radius: 5px;
     cursor: pointer;
     position: relative;
     overflow: hidden;
     font-family: Arial;
-    background: #c63e1f;
     display: inline-flex;
     align-items: center;
-    padding: 0;
-
+    border-style: solid;
 }
 
-.brand-button-text {
+.slide-button {
+    @extend .website-button;
+    border-color: color(active);
+    color: #ffffff;
+    background: color(active);
+    padding: 6px 16px;
+    a & { text-decoration: none !important; }
+}
+
+.slide-button-secondary {
+    @extend .website-button;
+    color: color(active);
+    background: #ffffff;
+    border-color: color(active);
+    padding: 6px 16px;
+    a & { text-decoration: none !important; }
+}
+
+.slide-button-text {
     position: relative;
-    padding: 10px 18px;
 }
 
-.brand-button-icon {
+.slide-button-icon {
     position: relative;
-    border-right: 1px solid rgba(255, 255, 255, 0.16);
-    padding: 10px 10px;
+    padding-left: 8px;
 }
 
-.brand-button:hover {
-    background: #B82200;
+.slide-button:hover {
+    background: color(secondary);
+    border-color: color(secondary);
+}
+
+.slide-button-secondary:hover {
+    background: on-color(active);
+    border-color: color(secondary);
+    color: color(secondary);
 }
 
 // placeholder for base style of all navy colored buttons
@@ -215,14 +223,6 @@ a {
     h3 {
         font-size: rem(0.8);
     }
-}
-
-// Base style for section headers in Resources
-.uniform-block h2 {
-    text-align: center;
-    border-bottom: to-rem(1) solid on-color-emphasis(body); 
-    width: 100%;
-    margin: to-rem(25) 0;
 }
 /******/
 
@@ -515,15 +515,53 @@ pre {
     border-radius: 5px;
     padding: 1rem;
 }
+code {
+    color: #c63e1f;
+}
 /******/
 
 /*CARDS*/
-// cards are used in the General Information and Related Projects page, and in TACTICS, TECHNIQUES, MITIGATIONS, GROUPS, and SOFTWARE
+// cards are used in the General Information, Staying Informed, and Related Projects page, and in TACTICS, TECHNIQUES, MITIGATIONS, GROUPS, and SOFTWARE
 .card {
     background: color(body);
     color: on-color(body); 
     border-color: border-color(body);
 }
+
+.button-group {
+    display: flex;
+    justify-content: end;
+    a.button + a.button {
+        margin-left: 22px;
+    }
+    button {
+        justify-content: center;
+        width: 100%;
+    }
+    a.w-40 { width: 40%; }
+}
+
+.card-filter {
+    width: 20%;
+    top: 9.3rem;
+    float: right;
+    background: on-color(active);
+}
+
+@media screen and (max-width: 90.62rem) {
+    .card-filter {
+        display: contents;
+    }
+}
+
+.card-presentation {
+    margin-bottom: 30px;
+}
+
+.card-attackcon {
+    width: 100%;
+}
+
 .card-data {
     margin-bottom: rem(0.2);
 }
@@ -532,6 +570,55 @@ pre {
     color: on-color(body);
     background: rgba(on-color(body), 0.03);
     border-bottom-color: border-color(body);
+}
+
+a.partial-underline {
+    text-decoration: none;
+    .hover-line {
+        text-decoration: underline;
+    }
+}
+
+.contact-card {
+    border-radius: .75em;
+    overflow: hidden;
+    .card-footer {
+        padding: 0 1.25rem 1.25rem;
+        &.button-group {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+    }
+    .card-footer-no-button {
+        padding: 0.5rem 1.25rem;
+        min-height: 4rem;
+        max-height: fit-content;
+    }
+    .card-header {
+		padding: 1.25rem 1.25rem 0;
+		&.background {
+            background: color(footer);
+            color: white;
+            padding-bottom: 1.25rem;
+        }
+	}
+    .card-header, .card-footer {
+        &.no-background {
+            background: color(body);
+            color: on-color(body);
+            border: unset;
+        }
+    }
+    .card-body {
+        p {
+            margin: 0;
+        }
+        &.background {
+            background: on-color(active);
+        }
+    }
 }
 
 .card-body {
@@ -582,7 +669,17 @@ pre {
 
 .card-title {
     font-size: rem(0.8);
-    color: on-color-emphasis(body); 
+    color: on-color-emphasis(body);
+}
+
+.contact-card-title {
+    font-size: 1.1rem;
+    font-weight: bold;
+}
+
+.card-title-icon {
+    float: right;
+    color: color(active);
 }
 /******/
 
@@ -608,7 +705,11 @@ pre {
 /*BREADCRUMBS*/
 .breadcrumb {
     font-size: 90%;
-    background-color: color(body); 
+    background-color: color(body);
+    max-width: 1140px;
+    padding: 0 15px;
+    margin-right: auto;
+    margin-left: auto;
 
     .breadcrumb-item + .breadcrumb-item::before {
         content: ">";
@@ -628,45 +729,6 @@ pre {
 .nestedlist-item::before {
     content: counters(item, ".") ". ";
     counter-increment: item;
-}
-
-/*CALLOUTS*/
-// callouts style in the Contribute page
-.bs-callout {
-    padding: 0 to-rem(20) to-rem(20) to-rem(20);
-    margin: to-rem(20) 0;
-    border: to-rem(1) solid border-color(body);
-    border-left-width: to-rem(5);
-    border-radius: to-rem(3);
-
-    p {
-        margin-left: to-rem(20);
-        margin-bottom: 0;
-    }
-
-    + .bs-callout {
-        margin-top: to-rem(-5);
-    }
-
-    $callouts: (
-        "primary": color(bootstrap-primary),  
-        "success": color(bootstrap-success),  
-        "danger": color(bootstrap-danger),    
-        "warning": color(bootstrap-warning),  
-        "info": color(bootstrap-info),        
-    );
-
-    @each $key, $val in $callouts {
-        &.bs-callout-#{$key} {
-            border-left-color: $val;
-
-            h5 {
-                color: $val;
-                margin-top: to-rem(15);
-                margin-bottom: to-rem(10);
-            }
-        }
-    }
 }
 
 .danger-card {
@@ -697,6 +759,21 @@ pre {
     @include font("Roboto-Regular");
 }
 
+.usa-card-group {
+    display: flex;
+    flex-direction: row;
+}
+
+.usa-card__header {
+    @include font("Roboto-Regular");
+    color: color(body);
+    background: color(secondary);
+    border-bottom-color: border-color(body);
+    border-radius: .3rem .3rem 0 0;
+    // border-radius: .75em .75em 0 0;
+}
+
+
 /*CONTRIBUTE Examples*/
 .new-examples {
     padding: to-rem(10) to-rem(10) 0 to-rem(10);
@@ -708,7 +785,7 @@ pre {
     }
 
     .example-container {
-        background-color: color-alternate(body);
+        // background-color: color-alternate(body);
         padding: to-rem(15);
 
         .examples-div {
@@ -744,6 +821,19 @@ pre {
 }
 /******/
 
+
+/*CONTRIBUTORS*/
+.scrollable-box {
+    width: 100%;
+    height: 500px; 
+    overflow: auto; 
+    // border: 1px solid black; /* just to show the box */
+    padding: to-rem(15);
+    background-color: color-alternate(body);
+    border-radius: to-rem(3);
+  }
+/******/
+
 /* No transition */
 .notransition:after {
   transition: none !important;
@@ -751,7 +841,19 @@ pre {
 
 /*FAQ*/
 .faq {
-    line-height: rem(1.7);
+    .faq-section {
+        padding-bottom: 2rem;
+    }
+    .faq-question {
+        padding: 6px 0;
+    }
+    .relevant-links {
+        margin-bottom: 1rem;
+        border-radius: 3px;
+        .faq-link ~ .faq-link::before {
+            content: ', ';
+        }
+    }
 }
 /******/
 
@@ -790,6 +892,20 @@ pre {
         }
     }
 }
+
+.attackcon-columns {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+@media screen and (max-width: 47.9875rem) {
+    .attackcon-columns {
+        flex-direction: column;
+    }
+}
+
+/* Ensure the sponsors block is below and not affected by the top image */
 
 /*Card Blocks*/
 // container of groups of cards
@@ -844,6 +960,17 @@ pre {
       padding: 0 to-rem(15);
       margin-left: to-rem(15);
   }
+  .getting-started-content {
+        width:75%;
+	}
+	@media screen and (max-width: 90.62rem) {
+		.getting-started-content {
+			width:100%;
+		}
+	}
+  .getting-started-icon {
+      color: color(primary);
+	}
 
   .video-li {
       /* don't display the video in the list itself except in mobile layout */
@@ -863,6 +990,14 @@ pre {
           display: list-item;
       }
   }
+}
+
+.jump-to-section{
+    position: -webkit-sticky;
+    position: sticky;
+    top: 14rem;
+    word-wrap: normal;
+	border-radius: 0.75em;
 }
 /******/
 
@@ -1037,7 +1172,7 @@ pre {
     }
 
     // collapsed view for phones and small tablets
-    @media screen and (max-width: 47.9875rem) {
+    @media screen and (max-width: 74.938rem) {
         // show collapsed side navigation (mobile view)
         .section-mobile-view {
             display: block;
@@ -1079,20 +1214,38 @@ div#sidebars {
 /* attackcon page */
 .attackcons {
     border-top-width: 0px;
+    .sponsors{
+        flex: 1;
+        padding-left: 25px;
+    }
+	.p-description{
+		width: 90%;
+	}
     .sponsors-block {
-        background: #efefef;
+        background: on-color(active);
         text-align: center;
         display: flex;
         justify-content: space-evenly;
         flex-wrap: wrap;
+        flex-direction: column;
+        width: 200%;
         .img-container {
             margin: 10px;
+            flex: 1 1 20%;
+            box-sizing: border-box;
             img { 
-                width: 80%;
+                width: 100%;
                 margin: auto;
+                height: auto;
             }
         }
     }
+	@media screen and (max-width: 47.9875rem) {
+		.sponsors-block {
+			width: 100%;
+            flex-direction: row;
+		}
+	}
 }
 /******/
 
@@ -1102,6 +1255,48 @@ div#sidebars {
         background: color-alternate(body);
     }
 }
+.card-training {
+    margin-bottom: 30px;
+    width: 100%;
+}
+.training-card-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: left;
+  }
+  .training-text-container {
+    flex: 1;
+    margin-right: 20px;
+  }
+  .training-header {
+    display: flex;
+    justify-content: space-between;
+  }
+  .resources-container {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    gap: 10px;
+  }
+  .resource {
+    flex: 1;
+    background-color: on-color(active);
+    padding: 10px;
+    box-sizing: border-box;
+  }
+  .resource-links {
+    list-style-type: none;
+    margin-top: 5px;
+    padding: 0px !important;
+    margin-left: 0px !important;
+  }
+  .resource-links li {
+    margin-bottom: 5px;
+  }
+  .resource-links a {
+    text-decoration: underline;
+  }
 /******/
 
 // Decorative panels used for working-with-attack page
@@ -1141,20 +1336,54 @@ div#sidebars {
 }
 
 .working-with-attack {
-    .file-list {
-        border: 3px solid border-color(body);
-        border-radius: 8px;
-        background: color(body);
-        margin: 10px;
-        padding: 10px;
-        ul {
-            margin-bottom: 0;
+    .g-24 { gap: 24px; }
+    .g-12 { gap: 12px; }
+    .row.panels {
+        margin: 0;
+    }
+    img {
+        border-radius: .75em;
+    }
+    img.scale {
+        object-fit: cover;
+        object-position: left top;
+        border-radius: unset !important;
+        border: 1px solid border-color(body);
+    }
+    .panel {
+        padding: 0;
+        border: 1px solid border-color(body);
+        border-radius: .75em;
+        max-width: 100%;
+    }
+    img + .panel-body {
+        border-top: 1px solid border-color(body);
+    }
+    .panel-body {
+        p {
+            margin: 24px 0;
+            overflow: scroll;
+        }
+        &.fixed-height {
+            height: 30vh;
+        }
+    }
+    ul {
+        margin-bottom: 0;
+    }
+    @media screen and (max-width: 61.938rem) {
+        .panel-body {
+            &.fixed-height {
+                min-height: 40vh;
+                max-height: fit-content;
+            }
         }
     }
 }
 
-.contact-center {
-    margin-block-start: 20vh;
+.tip-box {
+    background: on-color(active);
+    padding: 1rem;
 }
 
 /*Card Blocks*/
