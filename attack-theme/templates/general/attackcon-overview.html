@@ -13,13 +13,20 @@
 <ol class="breadcrumb">
     <li class="breadcrumb-item"><a href="/">Home</a></li>
     <li class="breadcrumb-item"><a href="/resources">Resources</a></li>
-    <li class="breadcrumb-item"><a href="/resources/attackcon">ATT&CKcon</a></li>
+    <li class="breadcrumb-item"><a href="/resources/learn-more-about-attack">Learn More about ATT&amp;CK</a></li>
+    <li class="breadcrumb-item"><a href="/resources/learn-more-about-attack/attackcon">ATT&CKcon</a></li>
     <li class="breadcrumb-item">{{ con.title }}</a></li>
 </ol>
 
-<div class="tab-content attackcons p-4 mb-3">
+<div class="tab-content attackcons mb-3">
     {% set conID = "-".join(con.date.split(' ')) %}
     <div class="container pb-3">
+        {% if "sponsors_img_list" in con %}
+            <h1>{{ con.title }} Presentations and Sponsors</h1>
+        {% else %}
+            <h1>{{ con.title }} Presentations</h1>
+        {% endif %}
+        
         {% set ifSponsor = "sponsors_img_list" in con %}
         {% if "banner_img" in con %}
         <p>
@@ -101,7 +108,7 @@
                                 </a>
                                 {% endif %}
                                 {% if "slides" in presentation %}
-                                <a href="{{ presentation.slides }}">
+                                <a class="my-2 ml-2" href="{{ presentation.slides }}">
                                     <button type="button" class="slide-button slide-button-secondary">
                                         <span class="slide-button-text">
                                             <span>Slide Deck</span>
@@ -119,12 +126,7 @@
                 {% endfor %}
             </div>
             <div class="sponsors">
-                {% if "sponsors_img" in con %}
-                <div>
-                    <h5><strong>Sponsors</strong></h5>
-                    <img src="{{ con.sponsors_img }}" width="100%">
-                </div>
-                {% elif "sponsors_img_list" in con %}
+                {% if "sponsors_img_list" in con %}
                 <div>
                     <h5><strong>Sponsors</strong></h5>
                     <div class="sponsors-block">
@@ -139,7 +141,6 @@
             </div>
         </div>
     </div>
-
 </div>
 {% endblock %}
 

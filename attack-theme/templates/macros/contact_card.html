@@ -1,9 +1,15 @@
-{% macro render(title, link, description, fa_icon=None, invert_icon=None, buttons=None, header_background=None, footer_description=None) %}
+{% macro render(title, link, description, fa_icon=None, invert_icon=None, buttons=None, header_background=None, footer_description=None, header_subtitle=None) %}
 <div class="contact-card card">
     {% if header_background %}
         <div class="card-header background">
-            <span class="contact-card-title hover-line">{{title}}</span>
-            &nbsp;&nbsp;
+            <span class="contact-card-title">
+                <h6 class="mb-0"><strong>{{title}}</strong></h6>
+            </span>
+            {% if header_subtitle %}
+            <div class="text-label mt-2">
+                {{header_subtitle}}
+            </div>
+            {% endif %}
         </div>
     {% else %}
         <div class="card-header no-background">
@@ -36,22 +42,20 @@
     {% if buttons %}
     <div class="card-footer no-background button-group">
         {% for button in buttons %}
-        <div class="card-button-container">
             <a href="{{button.url}}">
-                <button type="button" class="card-button">
-                    <span class="card-button-text">
+                <button type="button" class="slide-button">
+                    <span class="slide-button-text text-nowrap">
                         {{button.label}}
                     </span>
-                    <span class="card-button-icon">
+                    <span class="slide-button-icon">
                         <i class="fa-solid fa-up-right-from-square fa-sm"></i>
                     </span>
                 </button>
             </a>
-        </div>
         {% endfor %}
     </div>
     {% endif %}
-    {% if header_background %}
+    {% if footer_description %}
         <div class="card-footer card-footer-no-button d-flex align-items-center">
             {% if footer_description %}
                 {{footer_description}}

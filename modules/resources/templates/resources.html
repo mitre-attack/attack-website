@@ -1,8 +1,8 @@
 {% extends "general/two-column.html" %}
 {% set active_page = "resources" -%}
-{% set title = page.title + " | MITRE ATT&CK&reg;" -%}
-{% set parsed = page.data | from_json %}
+{% set title = "Get Started | MITRE ATT&CK&reg;" -%}
 {% import 'macros/navigation.html' as navigation %}
+{% import 'macros/contact_card.html' as contact_card %}
 
 {% block innerleft %}
 <div id="sidebars"></div>
@@ -10,144 +10,231 @@
 
 {% block innerright %}
 <!--stopindex-->
-<div class="px-3">
-  <ol class="breadcrumb">
-    <li class="breadcrumb-item"><a href="/">Home</a></li>
-    <li class="breadcrumb-item"><a href="/resources">Resources</a></li>
-    <li class="breadcrumb-item">General Information</li>
-  </ol>
-</div>
+
+<ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/">Home</a></li>
+        <li class="breadcrumb-item"><a href="/resources">Resources</a></li>
+        <li class="breadcrumb-item">Get Started</li>
+</ol>
 <div class="container pb-3">
-  <div class="general-info">
-    <div class="clearfix pb-3">
-
-      <div class="clearfix pb-3">
-        <h1>Papers</h1>
-        <p><strong>Philosophy Papers</strong>: These whitepapers provide an in-depth look at why we created these ATT&amp;CK domains, how we maintain and update them, and what the community commonly uses them for.</p>
-        <ul>
-          <li>
-            <p><a href="/docs/ATTACK_Design_and_Philosophy_March_2020.pdf">ATT&amp;CK Design and Philosophy</a> (pdf)</p>
-          </li>
-          <li>
-            <p>
-              <a href="/docs/ATTACK_for_ICS_Philosophy_March_2020.pdf">ATT&amp;CK for ICS extension</a> (pdf):
-              This document does not represent a comprehensive resource on MITRE ATT&CK.
-              For individuals already familiar with ATT&CK, this document can be viewed as an extension to the
-              ATT&CK Design and Philosophy whitepaper above that highlights unique, as well as some common, aspects of the design and philosophy of ATT&CK for ICS.
-            </p>
-          </li>
-        </ul>
-        <p><a href="https://www.mitre.org/sites/default/files/2023-08/16-3713-finding-cyber-threats-with-attack-based-analytics.pdf">Finding Cyber Threats with ATT&amp;CK-Based Analytics</a>: This paper presents a methodology for using ATT&amp;CK to build, test, and refine behavioral-based analytic detection capabilities using adversary emulation.</p>
-      </div>
-
-      <div class="clearfix pb-3">
-        <h1>Presentations</h1>
-        <ul class="timeline collapse presentations-timeline-collapse">
-        {% for presentation in parsed.presentations %}
-          <li class="timeline-card">
-            <div class="timeline-card-header">
-
-              <div class="title">
-                <a href="{{ presentation.url }}">{{ presentation.name }}</a>
-              </div>
-
-              <div class="date">
-                {{ presentation.date }}
-              </div>
-
+    <div class="getting-started">
+        <div class="clearfix pb-3">
+            <div class="clearfix">
+                <h1>Get Started</h1>
+                <div class="card card-filter jump-to-section">
+                    <div class="card-body">
+                        Jump to Section
+                        <ul>
+                            <li>
+                                <a href="#what-is-attack">What is ATT&amp;CK?</a>
+                            </li>
+                            <li>
+                                <a href="#use-attack">How can I use ATT&amp;CK?</a>
+                            </li>
+                            <li>
+                                <a href="#not-use-attack">How should I not use ATT&amp;CK?</a>
+                            </li>
+                            <li>
+                                <a href="#next-steps">Next Steps</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="getting-started-content">
+                    <div class="anchor" id="what-is-attack"></div>
+                    <div>
+                        <h2>What is ATT&amp;CK?</h2>
+                        <p>
+                            ATT&amp;CK is knowledge base of adversarial techniques based on real-world observations. ATT&amp;CK focuses on how adversaries interact with systems during an operation, reflecting the various phases of an adversary’s attack lifecycle and the platforms they are known to target.
+                        </p>
+                        <p>
+                            Read the <a href="https://medium.com/mitre-attack/att-ck-101-17074d3bc62">ATT&CK 101 Blog post</a> for more information on the basics of ATT&CK and check the short video below.
+                        </p>
+                        <div class="col video-col">
+                            <div class="embed-responsive embed-responsive-16by9">
+                                <iframe title="MITRE ATT&CK Framework" width="560" height="349" src="https://www.youtube.com/embed/Yxv1suJYMI8" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                            </div>
+                        </div>
+                        <br>
+                        <h3>Key Concepts</h3>
+                        <div class="row">
+                            <div class="col">
+                                ATT&CK is a model that attempts to systematically categorize adversary behavior. The main components of the model are:
+                                <ul>
+                                    <li>
+                                        <strong>Tactics</strong>, represents “why” or the reason an adversary is performing an action
+                                    </li>
+                                    <li>
+                                        <strong>Techniques</strong>, represents “how” adversaries achieve tactical goals by performing an action
+                                    </li>
+                                    <li>
+                                        <strong>Sub-techniques</strong>, a more specific or lower-level description of adversarial behavior
+                                    </li>
+                                    <li>
+                                        <strong>Procedures</strong>, specific implementation or in-the-wild use the adversary uses for techniques or sub-techniques
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="col">
+                                ATT&CK is organized in a series of technology domains, the ecosystem an adversary operates within. Currently, there are three <strong>technology</strong> domains:
+                                <ul>
+                                    <li>
+                                        <strong>Enterprise</strong>, representing traditional enterprise networks and cloud technologies
+                                    </li>
+                                    <li>
+                                        <strong>Mobile</strong> for mobile communication devices
+                                    </li>
+                                    <li>
+                                        <strong>ICS</strong> for industrial control systems
+                                    </li>
+                                </ul>
+                                Within each domain are <strong>platforms</strong>, which may be an operating system or application (e.g. Microsoft Windows). Techniques and sub-techniques can apply to multiple platforms.
+                            </div>
+                        </div>
+                        For more information on the principles behind ATT&amp;CK, its creation, and its ongoing maintenance, read the <a href="/docs/ATTACK_Design_and_Philosophy_March_2020.pdf">ATT&amp;CK Philosophy Paper</a>. For additional information focused on ATT&amp;CK for ICS, including the unique elements and commonalities with ATT&amp;CK, read the <a href="/docs/ATTACK_for_ICS_Philosophy_March_2020.pdf">ATT&amp;CK for ICS Extension</a>.
+                    </div>
+                    <br>
+                    <div class="anchor" id="use-attack">
+                        <p></p>
+                    </div>
+                    <div>
+                        <h2>How can I use ATT&amp;CK?</h2>
+                        The following four use cases are the most common way that users report applying ATT&CK to their work.
+                        <p></p>
+                        <div class="card-deck">
+                            {{contact_card.render("Detections and Analytics", "", "<strong>ATT&CK can help cyber defenders develop analytics that detect the techniques used by an adversary.</strong>
+                            <br><br><a href=\"https://medium.com/mitre-attack/getting-started-with-attack-detection-a8e49e4960d0\">Getting Started with ATT&amp;CK: Detection and Analytics Blog Post <i class=\"fa-solid fa-arrow-up-right-from-square\"></i></a><br>
+                            This blog post describes how you can get started using ATT&CK for detection and analytics at three different levels of sophistication. (June 2019)
+                            <br><br><a href=\"https://www.mitre.org/publications/technical-papers/finding-cyber-threats-with-attck-based-analytics\">Finding Cyber Threats with ATT&amp;CK-Based Analytics <i class=\"fa-solid fa-arrow-up-right-from-square\"></i></a><br>
+                            Presents a methodology for using ATT&CK to build, test, and refine behavioral-based analytic detection capabilities. (June 2017)
+                            <br><br><a href=\"https://www.youtube.com/watch?v=p7Hyd7d9k-c\">ATT&amp;CKing the Status Quo Presentation <i class=\"fa-solid fa-arrow-up-right-from-square\"></i></a><br>
+                            The latter part of this presentation provides an introduction to using ATT&CK to create analytics. <a href=\"https://www.slideshare.net/KatieNickels/bsideslv-2018-katie-nickels-and-john-wunder-attcking-the-status-quo\">Slides are also available</a>. (August 2018)",
+                            fa_icon=None, invert_icon=True, buttons=None, header_background=True,footer_description="<a href=\"/resources/get-started/detections-and-analytics\">View more resources about Detections and Analytics</a>")}}
+                            {{contact_card.render("Threat Intelligence ", "", "<strong>ATT&CK gives analysts a common language to structure, compare, and analyze threat intelligence.</strong>
+                            <br><br><a href=\"https://medium.com/mitre-attack/getting-started-with-attack-cti-4eb205be4b2f\">Getting Started with ATT&amp;CK: Threat Intelligence Blog Post <i class=\"fa-solid fa-arrow-up-right-from-square\"></i></a><br>
+                            This blog post describes how you can get started using ATT&CK for detection and analytics at three different levels of sophistication. (June 2019)
+                            <br><br><a href=\"https://www.slideshare.net/JamieWilliams130/attcking-your-adversaries-operationalizing-cyber-intelligence-in-your-own-environment-for-better-sleep-and-a-safer-tomorrow\">ATT&amp;CKing Your Adversaries Presentation <i class=\"fa-solid fa-arrow-up-right-from-square\"></i></a><br>
+                            This presentation covers how to use ATT&CK to take cyber threat intelligence and operationalize it into behaviors that can drive relevant detections. (August 2019)
+                            <br><br><a href=\"https://medium.com/mitre-attack/using-att-ck-to-advance-cyber-threat-intelligence-part-2-6f21fdba80c\">Blog posts on threat intelligence <i class=\"fa-solid fa-arrow-up-right-from-square\"></i></a><br>
+                            These blog posts explain the fundamentals of how to use ATT&CK for threat intelligence. (September 2018)>",
+                            fa_icon=None, invert_icon=True, buttons=None, header_background=True,footer_description="<a href=\"/resources/get-started/threat-intelligence\">View more resources about Threat Intelligence</a>")}}
+                        </div>
+                        <br>
+                        <div class="card-deck">
+                            {{contact_card.render("Adversary Emulation and Red Teaming", "", "<strong>ATT&CK provides a common language and framework that red teams can use to emulate specific threats and plan their operations.</strong>
+                            <br><br><a href=\"https://medium.com/mitre-attack/getting-started-with-attack-red-29f074ccf7e3\">Getting Started with ATT&amp;CK: Adversary Emulation and Red Teaming Blog Post <i class=\"fa-solid fa-arrow-up-right-from-square\"></i></a><br>
+                            This blog post describes how you can get started using ATT&CK for adversary emulation and red teaming at three different levels of sophistication. (July 2019)
+                            <br><br><a href=\"https://www.sans.org/presentations/do-it-yourself-att-ck-evaluations-to-improve-your-security-posture\">Do-It-Yourself ATT&amp;CK Evaluations to Improve Your Security Posture Presentation <i class=\"fa-solid fa-arrow-up-right-from-square\"></i></a><br>
+                            This presentation explains how defenders can improve their security posture through the use of adversary emulation by performing their very own ATT&CK Evaluations. (June 2019)
+                            <br><br><a href=\"https://www.x33fcon.com/slides/x33fcon19_ThreatbasedPurpleTeamming_JamieDaniel.pdf\">APT ATT&amp;CK - Threat-based Purple Teaming with ATT&amp;CK Continued Presentation <i class=\"fa-solid fa-arrow-up-right-from-square\"></i></a><br>
+                            This presentation covers how to use ATT&CK to take cyber threat intelligence and operationalize it into behaviors that can drive relevant detections. (May 2019)",
+                            fa_icon=None, invert_icon=True, buttons=None, header_background=True,footer_description="<a href=\"/resources/get-started/adversary-emulation-and-red-teaming\">View more resources about Adversary Emulation and Red Teaming</a>")}}
+                            {{contact_card.render("Assessment and Engineering", "", "<strong>ATT&CK can be used to assess your organization’s capabilities and drive engineering decisions like what tools or logging you should implement.</strong>
+                            <br><br><a href=\"https://medium.com/mitre-attack/getting-started-with-attack-assessment-cc0b01769cb4\">Getting Started with ATT&amp;CK: Assessments and Engineering Blog Post <i class=\"fa-solid fa-arrow-up-right-from-square\"></i></a><br>
+                            This blog post describes how you can get started using ATT&CK for assessments and engineering at three different levels of sophistication. (August 2019)
+                            <br><br><a href=\"https://www.youtube.com/watch?v=lMh9E8l1-ks\">Lessons Learned Applying ATT&amp;CK-Based SOC Assessments <i class=\"fa-solid fa-arrow-up-right-from-square\"></i></a><br>
+                            This keynote presentation discusses a process to gauge a SOC’s detective capabilities as they relate to ATT&CK, including MITRE’s practical experiences and lessons learned. (June 2019)
+                            <br><br><a href=\"https://www.mitre.org/publications/technical-papers/finding-cyber-threats-with-attck-based-analytics\">Finding Cyber Threats with ATT&CK-Based Analytics <i class=\"fa-solid fa-arrow-up-right-from-square\"></i></a><br>
+                            Presents a methodology for using ATT&CK to build, test, and refine behavioral-based analytic detection capabilities. (June 2017)",
+                            fa_icon=None, invert_icon=True, buttons=None, header_background=True,footer_description="<a href=\"/resources/get-started/assessment-and-engineering\">View more resources about Assessment and Engineering</a>")}}
+                        </div>
+                        <br>
+                        <p>
+                            Learn more about the Use Cases through the <a href="https://www.youtube.com/watch?v=bkfwMADar0M">Sp4rkcon Presentation: Putting MITRE ATT&amp;CK into Action with What You Have, Where You Are</a> and the <a href="https://www.mitre.org/sites/default/files/publications/mitre-getting-started-with-attack-october-2019.pdf">Getting Started with ATT&amp;CK eBook</a>.
+                            <br><br>
+                            For additional ATT&amp;CK topics and to explore presentations and training:
+                            <br><br>
+                            <!-- link to learn more page -->
+                            <a href="/resources/learn-more-about-attack/">
+                                <button type="button" class="slide-button">
+                                    <span class="slide-button-text">
+                                        <span>
+                                            Learn More About ATT&amp;CK
+                                        </span>
+                                    </span>
+                                </button>
+                            </a>
+                        </p>
+                    </div>
+                    <br>
+                    <div class="anchor" id="not-use-attack">
+                        <p></p>
+                    </div>
+                    <div>
+                        <h2>How should I <i>not</i> use ATT&amp;CK?</h2>
+                        ATT&amp;CK is just as much about the mindset and process of using it as much as it is the knowledge base itself. When it comes to information security, the threats we face, new technologies, and the adaptability of goal-based adversaries, we cannot consider filling out a checklist as “done”.
+                        <p></p>
+                        <div class="row">
+                            <div class="col-1 col-sm-1 col-md-1 d-flex justify-content-center align-items-center">
+                                <i class="fa-solid fa-bullseye fa-2x getting-started-icon"></i>
+                            </div>
+                            &nbsp;&nbsp;&nbsp;
+                            <div class="col">
+                                Don’t try to achieve 100% coverage. Every organization faces its own unique cyber threat. Not every tactic or technique will apply to everyone. Prioritize ones that are most relevant to you and ensure you are prepared for them.
+                            </div>
+                        </div>
+                        <p></p>
+                        <div class="row">
+                            <div class="col-1 col-sm-1 col-md-1 d-flex justify-content-center align-items-center">
+                                <i class="fa-solid fa-volume-high fa-2x getting-started-icon"></i>
+                            </div>
+                            &nbsp;&nbsp;&nbsp;
+                            <div class="col">
+                                Don’t shout “Bingo” when you have one technique. Just because you have identified a single way an adversary has done a technique, doesn’t mean it’s time to declare success and color a box green. Adversaries have multiple ways they can perform most techniques. Look for and understand other ways a technique may be accomplished.
+                            </div>
+                        </div>
+                        <p></p>
+                        <div class="row">
+                            <div class="col-1 col-sm-1 col-md-1 d-flex justify-content-center align-items-center">
+                                <i class="fa-solid fa-magnifying-glass fa-2x getting-started-icon"></i>
+                            </div>
+                            &nbsp;&nbsp;&nbsp;
+                            <div class="col">
+                                Don’t limit yourself to the matrix. Remember the ATT&CK matrix only documents observed real-world behaviors. Adversaries may have a series of other behaviors they use that have not been documented yet. To get a full picture of threats your organization faces, (1) Leverage your own intelligence sources, (2) create and document your own observed techniques, and (3) don’t limit yourselves to behaviors, a timely indicator can catch an adversary.
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="anchor" id="next-steps">
+                        <p></p>
+                    </div>
+                    <div>
+                        <h2>Next Steps</h2>
+                        <h3>ATT&amp;CK Navigator</h3>
+                        Use it to visualize defensive coverage, red/blue team planning, the frequency of detected techniques, and more. For more information on how to use Navigator, <a href="https://www.youtube.com/watch?v=pcclNdwG8Vs">ATT&amp;CK Navigator Use Case for Threat Intelligence</a>.
+                        <br>
+                        <br>
+                        <a href="https://mitre-attack.github.io/attack-navigator/">
+                            <button type="button" class="slide-button">
+                                <span class="slide-button-text">
+                                    <span>
+                                        Explore the Navigator Tool
+                                    </span>
+                                </span>
+                            </button>
+                        </a>
+                        <br>
+                        <br>
+                        <br>
+                        <h3>Community</h3>
+                        <!-- add link to staying informed page -->
+                        Stay informed on the latest updates and engage with the ATT&amp;CK Community through Medium, Slack, and Twitter.
+                        <br>
+                        <br>
+                        <a href="/resources/engage-with-attack/contact/">
+                            <button type="button" class="slide-button">
+                                <span class="slide-button-text">
+                                    <span>
+                                        Engage with the Community
+                                    </span>
+                                </span>
+                            </button>
+                        </a>
+                    </div>
+                </div>
             </div>
-            <div class="timeline-card-body">
-              {{ presentation.description }}
-            </div>
-          </li>
-        {% endfor %}
-        </ul>
-        <div class="showmore-btn collapse presentations-timeline-collapse">
-          <button class="btn btn-default" data-toggle="collapse" data-target=".presentations-timeline-collapse" role="button" aria-expanded="false" aria-controls="presentations-timeline">
-            show more
-          </button>
         </div>
-      </div>
-
-      <div class="clearfix pb-3">
-        <h1>Other ATT&CK Efforts</h1>
-        <div class="card-deck">
-
-          <div class="card">
-            <div class="card-header">
-              <a href="/resources/sightings">ATT&CK Sightings</a>
-            </div>
-            <div class="card-body">
-              Building a community around sharing observations of ATT&CK techniques in the wild.
-            </div>
-          </div>
-
-          <div class="card">
-            <div class="card-header">
-              <a href="/resources/adversary-emulation-plans">Adversary Emulation Plans</a>
-            </div>
-            <div class="card-body">
-              Plans that showcase the practical use of ATT&CK for offensive operators and defenders.
-            </div>
-          </div>
-
-          <div class="card">
-            <div class="card-header">
-              <a href="https://attackevals.mitre-engenuity.org/">ATT&CK Evaluations</a>
-            </div>
-            <div class="card-body">
-              Evaluations of cybersecurity products using an open methodology based on ATT&CK.
-            </div>
-          </div>
-
-        </div>
-      </div>
-
-      <div class="clearfix pb-3">
-        <h1>Graphics</h1>
-        <div class="card-deck graphics">
-
-          <div class="card">
-            <a href="/docs/attack_roadmap_2022_october.pdf" target="_blank" rel="noopener" aria-label="MITRE ATT&CK Roadmap"><img class="card-img-top" src="/theme/images/attack_roadmap_2022_october_preview.png" alt="Card image cap"></a>
-            <div class="card-header">
-              <a href="/docs/attack_roadmap_2022_october.pdf" target="_blank" rel="noopener" aria-label="MITRE ATT&CK Roadmap">MITRE ATT&CK Roadmap</a>
-              <p class="mb-0"><small>Last updated October 2022</small></p>
-            </div>
-          </div>
-
-          <div class="card">
-            <a href="/docs/attack_matrix_poster_2023_april.pdf" target="_blank" rel="noopener" aria-label="MITRE ATT&CK Matrix Poster"><img class="card-img-top" src="/theme/images/attack_matrix_2023_april_preview.png" alt="Card image cap"></a>
-            <div class="card-header">
-              <a href="/docs/attack_matrix_poster_2023_april.pdf" target="_blank" rel="noopener" aria-label="MITRE ATT&CK Matrix Poster">MITRE ATT&CK Matrix Poster</a>
-              <p class="mb-0"><small>Last updated April 2023</small></p>
-            </div>
-          </div>
-
-          <!-- <div class="card">
-            <a href="/docs/MITRE_ATTACK_Enterprise_11x17.pdf" target="_blank" rel="noopener" aria-label="MITRE ATT&CK Matrix Placemat"><img class="card-img-top" src="/theme/images/ATTACK_placemat_preview.png" alt="Card image cap"></a>
-            <div class="card-header">
-              <a href="/docs/MITRE_ATTACK_Enterprise_11x17.pdf" target="_blank" rel="noopener" aria-label="MITRE ATT&CK Matrix Placemat">MITRE ATT&CK Matrix Placemat</a>
-              <p class="mb-0"><small>Last updated October 2019</small></p>
-            </div>
-          </div> -->
-
-        </div>
-      </div>
-
-      <div class="clearfix">
-        <h1>Other Resources</h1>
-        <ul>
-          <li>
-            <a href="/resources/updates/">ATT&CK Update Log</a>: Recent changes to the ATT&CK content.
-          </li>
-          <li>
-            <a href="/resources/working-with-attack/">Access Data & Tools</a>: Tools we've developed for accessing and manipulating the ATT&CK content.
-          </li>
-        </ul>
-      </div>
-
     </div>
-  </div>
 </div>
 {% endblock %}
 

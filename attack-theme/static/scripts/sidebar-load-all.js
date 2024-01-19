@@ -15,6 +15,9 @@ $("#sidebars").load(mod_entry, function() {
         let v_number = mod_name[2];
         old_winlocation = old_winlocation.replace('/versions/'+ v_number,'');
     }
+    if (old_winlocation.includes('tour')){
+        old_winlocation = old_winlocation.split('?')[0];
+    }
     let navElements = document.querySelectorAll('.sidenav-head > a');
     let winlocation;
     navElements.forEach(function(element){
@@ -33,11 +36,11 @@ $("#sidebars").load(mod_entry, function() {
         winlocation = old_winlocation
     }
     if(element.href == winlocation){
-        $(element.parentNode).addClass("active")
+        $(element.parentNode).addClass("active");
     }});
 
     //This code is for creating a collapsable sidebar for the mobile view
-    let mediaQuery = window.matchMedia('(max-width: 47.9875rem)')
+    let mediaQuery = window.matchMedia('(max-width: 74.938rem)')
     function mobileSidenav(e) {
         if (e.matches) {
             $('#sidebar-collapse').collapse('hide')
