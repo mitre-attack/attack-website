@@ -245,7 +245,7 @@ It also fixes a few minor STIX abnormalities for ICS Techniques.
 * Improved usability of matrix side layout to better differentiate tactic columns. See issue [#273](https://github.com/mitre-attack/attack-website/issues/273).
 * Improved matrix layout selection to include layout in dropdown title. See issue [#277](https://github.com/mitre-attack/attack-website/issues/277).
 * Added links to tactics in the technique information card. See issue [#288](https://github.com/mitre-attack/attack-website/issues/288).
-* Updated the [working with ATT&CK](https://attack.mitre.org/resources/access-data-and-tools/) page to mention [ATT&CK Workbench](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend) and [STIX 2.1 support](https://github.com/mitre-attack/attack-stix-data).
+* Updated the [working with ATT&CK](https://attack.mitre.org/resources/attack-data-and-tools/) page to mention [ATT&CK Workbench](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend) and [STIX 2.1 support](https://github.com/mitre-attack/attack-stix-data).
 * Updated matrix poster to most recent version of ATT&CK.
 
 ## Bugfixes
@@ -275,7 +275,7 @@ It also fixes a few minor STIX abnormalities for ICS Techniques.
 
 ## Bugfixes
 
-* Added missing groups excel in the ATT&CK in Excel section of [Working with ATT&CK](https://attack.mitre.org/resources/access-data-and-tools/).
+* Added missing groups excel in the ATT&CK in Excel section of [Working with ATT&CK](https://attack.mitre.org/resources/attack-data-and-tools/).
 * Fixed CTI training ticket number 4473845 -> 473845. See issue [#296](https://github.com/mitre-attack/attack-website/issues/296).
 
 # v3.2.1 (2021-04-29)
@@ -302,7 +302,7 @@ It also fixes a few minor STIX abnormalities for ICS Techniques.
   * Added to fields on software pages: Associated Software, Type, and Platforms.
 * Added generation of Navigator layers for mitigations, and updated navigator layer version to 4.2. See issue [#234](https://github.com/mitre-attack/attack-website/issues/234).
 * Added ATT&CK IDs to Mitigations and Procedure Examples on technique pages, and software and group home pages. See issues [#235](https://github.com/mitre-attack/attack-website/issues/235) and [#236](https://github.com/mitre-attack/attack-website/issues/236).
-* Improved the [Working with ATT&CK](https://attack.mitre.org/resources/access-data-and-tools/) page with additional information about ATT&CK data and the tools with which it can be manipulated. The new page also includes generated Excel spreadsheets representing the ATT&CK knowledge base (see also [mitreattack-python](https://github.com/mitre-attack/mitreattack-python)'s attackToExcel converter). See issue [#142](https://github.com/mitre-attack/attack-website/issues/142).
+* Improved the [Working with ATT&CK](https://attack.mitre.org/resources/attack-data-and-tools/) page with additional information about ATT&CK data and the tools with which it can be manipulated. The new page also includes generated Excel spreadsheets representing the ATT&CK knowledge base (see also [mitreattack-python](https://github.com/mitre-attack/mitreattack-python)'s attackToExcel converter). See issue [#142](https://github.com/mitre-attack/attack-website/issues/142).
 * Data sources in technique cards are now hyperlinks to the [attack-datasources GitHub repository](https://github.com/mitre-attack/attack-datasources).
 
 ## Bugfixes

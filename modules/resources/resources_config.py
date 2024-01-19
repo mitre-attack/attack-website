@@ -62,9 +62,9 @@ brand_md = (
 
 # Excel files / Access Data & Tools page
 working_with_attack_md = (
-    "Title: Access Data & Tools\n"
-    "Template: resources/access-data-and-tools\n"
-    "save_as: resources/access-data-and-tools/index.html\n"
+    "Title: ATT&CK Data & Tools\n"
+    "Template: resources/attack-data-and-tools\n"
+    "save_as: resources/attack-data-and-tools/index.html\n"
     "data: "
 )
 

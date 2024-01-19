@@ -28,8 +28,8 @@ def get_menu():
                 "children": [],
             },
             {
-                "display_name": "Access Data & Tools",
-                "url": "/resources/access-data-and-tools/",
+                "display_name": "ATT&CK Data & Tools",
+                "url": "/resources/attack-data-and-tools/",
                 "external_link": False,
                 "children": [],
             },
