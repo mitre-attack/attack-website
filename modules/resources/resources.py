@@ -306,22 +306,6 @@ def generate_contribute_page():
     ms = util.relationshipgetters.get_ms()
     contributors = util.stixhelpers.get_contributors(ms)
 
-    page_count = 3
-    column_count = 3
-
-    # # Creates a list of pages broken down into A-E, F-N, O-Z(and misc)
-    # # pages = divide_list(contributors, page_count)
-    # pages = []
-    # for i in contributors:
-    #     match i[0]:
-    #         case "A" | "B" | "C" | "D" | "E":
-    #             pages[0].append(i)
-    #         case "F"|"G"|"H"|"I"|"J"|"K"|"L"|"M"|"N":
-    #             pages[1].append(i)
-    #         case _: # the rest of the letters and misc characters
-    #             pages[2].append(i)
-
-
     data = {}
 
     data["contributors"] = [] 
@@ -329,9 +313,6 @@ def generate_contribute_page():
     contributors_first_col = []
     contributors_second_col = []
     contributors_third_col = []
-
-    # half = math.ceil((len(contributors)) / 2)
-    # list_size = len(contributors)
 
     third = math.ceil(len(contributors) / 3)
 
