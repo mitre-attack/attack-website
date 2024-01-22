@@ -1,3 +1,10 @@
+# v4.1.0 (2024-01-22)
+
+## Bugfixes
+
+* Updated Benefactors page. [#477](https://github.com/mitre-attack/attack-website/issues/477)
+* Fixed offline hosting issue for Fontawesome fonts. [#488](https://github.com/mitre-attack/attack-website/issues/488)
+
 # v4.0.8 (2023-11-22)
 
 ## Bugfixes
@@ -232,7 +239,7 @@ It also fixes a few minor STIX abnormalities for ICS Techniques.
 ## Features
 
 * Updated docs to clarify that both STIX 2.0 and STIX 2.1 input data is supported. See issue [#317](https://github.com/mitre-attack/attack-website/issues/317).
-* Updated [privacy policy](https://attack.mitre.org/resources/privacy/).
+* Updated [privacy policy](https://attack.mitre.org/resources/legal-and-branding/privacy/).
 
 ## Bugfixes
 
@@ -245,7 +252,7 @@ It also fixes a few minor STIX abnormalities for ICS Techniques.
 * Improved usability of matrix side layout to better differentiate tactic columns. See issue [#273](https://github.com/mitre-attack/attack-website/issues/273).
 * Improved matrix layout selection to include layout in dropdown title. See issue [#277](https://github.com/mitre-attack/attack-website/issues/277).
 * Added links to tactics in the technique information card. See issue [#288](https://github.com/mitre-attack/attack-website/issues/288).
-* Updated the [working with ATT&CK](https://attack.mitre.org/resources/working-with-attack/) page to mention [ATT&CK Workbench](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend) and [STIX 2.1 support](https://github.com/mitre-attack/attack-stix-data).
+* Updated the [working with ATT&CK](https://attack.mitre.org/resources/attack-data-and-tools/) page to mention [ATT&CK Workbench](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend) and [STIX 2.1 support](https://github.com/mitre-attack/attack-stix-data).
 * Updated matrix poster to most recent version of ATT&CK.
 
 ## Bugfixes
@@ -275,7 +282,7 @@ It also fixes a few minor STIX abnormalities for ICS Techniques.
 
 ## Bugfixes
 
-* Added missing groups excel in the ATT&CK in Excel section of [Working with ATT&CK](https://attack.mitre.org/resources/working-with-attack/).
+* Added missing groups excel in the ATT&CK in Excel section of [Working with ATT&CK](https://attack.mitre.org/resources/attack-data-and-tools/).
 * Fixed CTI training ticket number 4473845 -> 473845. See issue [#296](https://github.com/mitre-attack/attack-website/issues/296).
 
 # v3.2.1 (2021-04-29)
@@ -302,7 +309,7 @@ It also fixes a few minor STIX abnormalities for ICS Techniques.
   * Added to fields on software pages: Associated Software, Type, and Platforms.
 * Added generation of Navigator layers for mitigations, and updated navigator layer version to 4.2. See issue [#234](https://github.com/mitre-attack/attack-website/issues/234).
 * Added ATT&CK IDs to Mitigations and Procedure Examples on technique pages, and software and group home pages. See issues [#235](https://github.com/mitre-attack/attack-website/issues/235) and [#236](https://github.com/mitre-attack/attack-website/issues/236).
-* Improved the [Working with ATT&CK](https://attack.mitre.org/resources/working-with-attack/) page with additional information about ATT&CK data and the tools with which it can be manipulated. The new page also includes generated Excel spreadsheets representing the ATT&CK knowledge base (see also [mitreattack-python](https://github.com/mitre-attack/mitreattack-python)'s attackToExcel converter). See issue [#142](https://github.com/mitre-attack/attack-website/issues/142).
+* Improved the [Working with ATT&CK](https://attack.mitre.org/resources/attack-data-and-tools/) page with additional information about ATT&CK data and the tools with which it can be manipulated. The new page also includes generated Excel spreadsheets representing the ATT&CK knowledge base (see also [mitreattack-python](https://github.com/mitre-attack/mitreattack-python)'s attackToExcel converter). See issue [#142](https://github.com/mitre-attack/attack-website/issues/142).
 * Data sources in technique cards are now hyperlinks to the [attack-datasources GitHub repository](https://github.com/mitre-attack/attack-datasources).
 
 ## Bugfixes
@@ -322,7 +329,7 @@ It also fixes a few minor STIX abnormalities for ICS Techniques.
 * Release ATT&CK content version 8.2.
   See detailed changes [here](https://github.com/mitre/cti/releases/tag/ATT%26CK-v8.2).
 * Updated Navigator layers to version 4.1 so that users are no longer warned that they are out of date.
-* Updated introductory video on [getting started](https://attack.mitre.org/resources/getting-started/) page.
+* Updated introductory video on [getting started](https://attack.mitre.org/resources/) page.
 
 # No website version update (2020-11-12)
 
@@ -376,7 +383,7 @@ It also fixes a few minor STIX abnormalities for ICS Techniques.
 
 ## Features
 
-* Added note on the [CTI training page](https://attack.mitre.org/resources/training/cti/) to indicate that ATT&CK v6 should be used instead of ATT&CK v7. See issue [#221](https://github.com/mitre-attack/attack-website/issues/221).
+* Added note on the [CTI training page](https://attack.mitre.org/resources/learn-more-about-attack/training/cti/) to indicate that ATT&CK v6 should be used instead of ATT&CK v7. See issue [#221](https://github.com/mitre-attack/attack-website/issues/221).
 
 # No website version update (2020-07-15)
 
@@ -449,7 +456,7 @@ It also fixes a few minor STIX abnormalities for ICS Techniques.
 * Added horizontal scroll indicators to matrices so that it's easier to tell when there's more to the left or right. See issue [#93](https://github.com/mitre-attack/attack-website/issues/93).
 * The website tour route is now generated dynamically, allowing the site to adapt the tour to custom STIX content. See issue [#110](https://github.com/mitre-attack/attack-website/issues/110).
 * Added Navigator layers to the changelog of the sub-techniques update. See issue [#126](https://github.com/mitre-attack/attack-website/issues/126).
-* Updated [contribute page](https://attack.mitre.org/resources/contribute). See issue [#162](https://github.com/mitre-attack/attack-website/issues/162).
+* Updated [contribute page](https://attack.mitre.org/resources/engage-with-attack/contribute). See issue [#162](https://github.com/mitre-attack/attack-website/issues/162).
 
 ## Bugfixes
 

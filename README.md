@@ -49,7 +49,7 @@ STIX is designed to improve many different capabilities, such as collaborative t
 
 ## Notice
 
-Copyright 2015-2023 The MITRE Corporation
+Copyright 2015-2024 The MITRE Corporation
 
 Approved for Public Release; Distribution Unlimited. Case Number 19-3504.
 
@@ -67,4 +67,4 @@ limitations under the License.
 
 This project makes use of ATT&CK&reg;
 
-[ATT&CK Terms of Use](https://attack.mitre.org/resources/terms-of-use/)
+[ATT&CK Terms of Use](https://attack.mitre.org/resources/legal-and-branding/terms-of-use/)

@@ -1,10 +1,16 @@
 {% macro filetree(tree) %}
-<ul>
-    {% for file in tree %}
-    <li>
-        <a href="{{file.url}}">{{file.label}}</a>
-        {% if "children" in file %} {{filetree(file.children)}} {% endif %}
-    </li>
-    {% endfor %}
- </ul>
+
+{% for file in tree %}
+    <div class="col-sm tip-box">
+        <div class="mb-2">
+            <a href="{{file.url}}"><strong>{{file.label}}</strong></a>
+        </div>
+        {% for child in file.children %}
+            <div>
+                <a href="{{child.url}}">{{child.label}}</a>
+            </div>
+        {% endfor %}
+    </div>
+{% endfor %}
+
 {% endmacro %}

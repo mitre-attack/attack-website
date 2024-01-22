@@ -15,47 +15,43 @@ def get_menu():
         "external_link": False,
         "priority": resources_config.priority,
         "children": [
-            {"display_name": "General Information", "url": "/resources/", "external_link": False, "children": []},
             {
-                "display_name": "Getting Started",
-                "url": "/resources/getting-started/",
+                "display_name": "Get Started",
+                "url": "/resources/",
                 "external_link": False,
                 "children": [],
             },
             {
-                "display_name": "Contribute",
-                "url": "/resources/contribute/",
+                "display_name": "Learn More about ATT&CK",
+                "url": "/resources/learn-more-about-attack/",
                 "external_link": False,
                 "children": [],
             },
-            {"display_name": "Training", "url": "/resources/training/", "external_link": False, "children": []},
-            {"display_name": "ATT&CKcon", "url": "/resources/attackcon/", "external_link": False, "children": []},
             {
-                "display_name": "Working with ATT&CK",
-                "url": "/resources/working-with-attack/",
+                "display_name": "ATT&CK Data & Tools",
+                "url": "/resources/attack-data-and-tools/",
                 "external_link": False,
                 "children": [],
             },
             {"display_name": "FAQ", "url": "/resources/faq/", "external_link": False, "children": []},
-            {"display_name": "Updates", "url": "/resources/updates/", "external_link": False, "children": []},
             {
-                "display_name": "Versions of ATT&CK",
+                "display_name": "Engage with ATT&CK",
+                "url": "/resources/engage-with-attack/contact/",
+                "external_link": False,
+                "children": [],
+            },
+            {
+                "display_name": "Version History",
                 "url": "/resources/versions/",
                 "external_link": False,
                 "children": [],
             },
             {
-                "display_name": "Related Projects",
-                "url": "/resources/related-projects/",
+                "display_name": "Legal & Branding",
+                "url": "/resources/legal-and-branding/",
                 "external_link": False,
                 "children": [],
-            },
-            {
-                "display_name": "Brand Guide",
-                "url": "/resources/brand/",
-                "external_link": False,
-                "children": [],
-            },
+            }
         ],
     }
 

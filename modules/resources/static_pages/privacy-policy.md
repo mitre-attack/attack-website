@@ -3,8 +3,8 @@ Template: general/intro-overview
 Date: 2021
 Category: Cyber Threat Intelligence
 Authors: Adam Pennington
-url: /resources/privacy
-save_as: resources/privacy/index.html
+url: /resources/legal-and-branding/policy
+save_as: resources/legal-and-branding/privacy/index.html
 
 **Effective Date: 1 July 2021**
 
