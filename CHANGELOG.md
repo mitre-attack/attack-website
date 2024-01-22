@@ -1,3 +1,10 @@
+# v4.1.0 (2024-01-22)
+
+## Bugfixes
+
+* Updated Benefactors page. [#477](https://github.com/mitre-attack/attack-website/issues/477)
+* Fixed offline hosting issue for Fontawesome fonts. [#488](https://github.com/mitre-attack/attack-website/issues/488)
+
 # v4.0.8 (2023-11-22)
 
 ## Bugfixes
