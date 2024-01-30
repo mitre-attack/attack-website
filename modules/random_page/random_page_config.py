@@ -1,2 +1,2 @@
 module_name = "random_page"
-priority = 20
+priority = 16.1
