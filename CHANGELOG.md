@@ -1,3 +1,14 @@
+# v4.1.0 (2024-02-05)
+
+## Misc
+
+* Added Lightning Talk YouTube links for ATT&CKCon 4.0
+
+## Bugfixes
+
+* Changed priority of random page module to be able to load pages from the random page button and dropdown
+* Fixed title and images on attack data and tools page
+
 # v4.1.0 (2024-01-22)
 
 ## Bugfixes
