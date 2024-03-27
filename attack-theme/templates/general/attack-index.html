@@ -1,6 +1,7 @@
 {% extends "general/base.html" %}
 
 {% import 'macros/matrix.html' as matrix_macros %}
+{% import 'macros/april_fools.html' as april_fools_macros %}
 
 {% set parsed = page.data | from_json %}
 
@@ -95,13 +96,17 @@
         </div>
     </div>
     <div class="container-fluid bg-alternate pt-5 pb-3">
+        <div style="text-align:center;">
+            <button onclick="toggleAprilFools()" style="background-color: #0b2338; color: white; padding: 14px 20px; border: none; cursor: pointer; width: 300px; opacity: 0.9; font-size: 20px; margin-top: 20px;">Preview ATT&CK v15</button>
+        </div>
         <div class="container text-center">
             <h2>{{parsed.matrix_name}}</h2>
             {% if parsed.matrix_descr %}<p class="mb-0">{{parsed.matrix_descr}}</p>{% endif %}
         </div>
-        <div class="center-controls">
-            {{matrix_macros.matrices(parsed.matrices, parsed.has_subtechniques, parsed.tour_technique, True)}}
+        <div id="matrix-enterprise" style="display:block;">
+            {{ matrix_macros.matrices(parsed.matrices, parsed.has_subtechniques, parsed.tour_technique, True) }}
         </div>
+        {{ april_fools_macros.april_fools() }}
     </div>
     <!--start-indexing-for-search-->
 {% endblock %}
