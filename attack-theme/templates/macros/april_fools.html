@@ -1,20 +1,25 @@
 {% macro april_fools() %}
 
-<div id="april-fools" style="display:block;" class="container-fluid bg-alternate pt-5 pb-3">
+<div id="april-fools" style="display:block; padding-right: 15px;
+padding-left: 15px;
+margin-right: auto;
+margin-left: auto;">
   <canvas id="board"></canvas>
 </div>
 
 <script type="application/javascript">
   function toggleAprilFools() {
-    var div1 = document.getElementById('matrix-section');
+    var div1 = document.getElementById('matrix-enterprise');
     var div2 = document.getElementById('april-fools');
-    
+    var btn = document.getElementById('game-toggle');
     if (div1.style.display === 'none') {
       div1.style.display = 'block';
       div2.style.display = 'none';
+      btn.innerHTML = 'Back to Game'
     } else {
       div1.style.display = 'none';
       div2.style.display = 'block';
+      btn.innerHTML = 'Back to Normal'
     }
   }
   </script>
@@ -27,7 +32,7 @@
   // const PADDLE_WIDTH = 700; //1000 for testing, 100 normal
   const PADDLE_WIDTH = 150; //1000 for testing, 100 normal
   const PADDLE_HEIGHT = 10;
-  const PADDLE_VELOCITY_X = 20;
+  const PADDLE_VELOCITY_X = 10;
   
   const BALL_WIDTH = 10;
   const BALL_HEIGHT = 10;
@@ -159,11 +164,11 @@
       this.presets = [
         {
           borderColor: "black",
-          textColor: "white",
+          textColor: "black",
           blockColor: "skyblue",
           blockTextColor: "black",
           paddleColor: "lightgreen",
-          ballColor: "white",
+          ballColor: "black",
           pauseMessageBoxColor: "red",
           pauseMessageTextColor: "white",
           gameOverMessageBoxColor: "red",
@@ -516,7 +521,7 @@
     };
   
     drawBall = () => {
-      this.board.context.fillStyle = "white";
+      this.board.context.fillStyle = "black";
       this.board.context.beginPath();
       this.board.context.arc(
         this.ball.x + this.ball.width / 2,
@@ -554,7 +559,7 @@
     };
   
     displayLives = () => {
-      this.board.context.fillStyle = "white";
+      this.board.context.fillStyle = "black";
       this.board.context.font = "20px sans-serif";
       this.board.context.fillText(
         "Lives: " + this.state.lives,
@@ -597,7 +602,7 @@
     displayGameHistory = () => {
       if (this.state.gameHistory.length > 0) {
         let topScores = this.state.gameHistory.sort((a, b) => b - a).slice(0, 5);
-        this.board.context.fillStyle = "white";
+        this.board.context.fillStyle = "black";
         this.board.context.font = "20px sans-serif";
         this.board.context.fillText(
           "Top 5 Scores:",
