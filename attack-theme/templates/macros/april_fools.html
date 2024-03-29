@@ -40,29 +40,31 @@ margin-bottom: 15px;">
   </script>
 
 <script type="application/javascript">
-  const BOARD_WIDTH = 1500;
-  const BOARD_HEIGHT = 900;
-  const BOARD_MAX_ROWS = 15;
+  const AGAME_DEFAULT_GAME_MODE = "Medium";
+
+  const AGAME_BOARD_WIDTH = 1500;
+  const AGAME_BOARD_HEIGHT = 900;
+  const AGAME_BOARD_MAX_ROWS = 15;
   
-  // const PADDLE_WIDTH = 700; //1000 for testing, 100 normal
-  const PADDLE_WIDTH = 150; //1000 for testing, 100 normal
-  const PADDLE_HEIGHT = 10;
-  const PADDLE_VELOCITY_X = 10;
+  // const APADDLE_WIDTH = 700; //1000 for testing, 100 normal
+  const AGAME_PADDLE_WIDTH = 200; //1000 for testing, 100 normal
+  const AGAME_PADDLE_HEIGHT = 20;
+  const AGAME_PADDLE_VELOCITY_X = 20;
   
-  const BALL_WIDTH = 10;
-  const BALL_HEIGHT = 10;
-  const BALL_VELOCITY_X = 10; //15 for testing, 3 normal
-  const BALL_VELOCITY_Y = 10; //10 for testing, 2 normal
+  const AGAME_BALL_WIDTH = 10;
+  const AGAME_BALL_HEIGHT = 10;
+  const AGAME_BALL_VELOCITY_X = 25; //15 for testing, 3 normal
+  const AGAME_BALL_VELOCITY_Y = 10; //10 for testing, 2 normal
   
-  const BLOCK_X_OFFSET = 10;
-  const BLOCK_Y_OFFSET = 45;
-  const MIN_BLOCK_HEIGHT = 35;
+  const AGAME_BLOCK_X_OFFSET = 10;
+  const AGAME_BLOCK_Y_OFFSET = 45;
+  const AGAME_MIN_BLOCK_HEIGHT = 35;
   
-  const SCORE_INCREMENT = 100;
-  const SCORE_BONUS = 10000;
+  const AGAME_SCORE_INCREMENT = 100;
+  const AGAME_SCORE_BONUS = 10000;
   
-  const MIN_FONT_SIZE = 6;
-  const MAX_FONT_SIZE = 20;
+  const AGAME_MIN_FONT_SIZE = 6;
+  const AGAME_MAX_FONT_SIZE = 20;
   
   class Board {
     constructor(width, height) {
@@ -76,6 +78,7 @@ margin-bottom: 15px;">
       let board = document.getElementById("board");
       board.style.left = this.padding + "px";
       board.style.top = this.padding + "px";
+      board.style.backgroundColor = game.theme.currentPreset.backgroundColor;
       board.height = this.height;
       board.width = this.width;
       this.context = board.getContext("2d");
@@ -83,14 +86,13 @@ margin-bottom: 15px;">
     }
   
     resizeBoard() {
-      let boardContainer = document.getElementById("april-fools");
-      this.width = boardContainer.clientWidth - 2 * this.padding;
-      this.height = boardContainer.clientHeight - 2 * this.padding;
+      this.width = window.innerWidth - 2 * this.padding;
+      this.height = window.innerHeight - 2 * this.padding;
       let board = document.getElementById("board");
       board.height = this.height;
       board.width = this.width;
     }
-    }
+  }
   
   class Paddle {
     constructor(width, height, velocityX) {
@@ -99,6 +101,19 @@ margin-bottom: 15px;">
       this.velocityX = velocityX;
       this.x = null;
       this.y = null;
+    }
+  
+    get left() {
+      return this.x;
+    }
+    get right() {
+      return this.x + this.width;
+    }
+    get top() {
+      return this.y;
+    }
+    get bottom() {
+      return this.y + this.height;
     }
   
     generatePaddleData(boardWidth, boardHeight) {
@@ -115,6 +130,19 @@ margin-bottom: 15px;">
       this.velocityY = velocityY;
       this.x = null;
       this.y = null;
+    }
+  
+    get left() {
+      return this.x;
+    }
+    get right() {
+      return this.x + this.width;
+    }
+    get top() {
+      return this.y;
+    }
+    get bottom() {
+      return this.y + this.height;
     }
   
     generateInitialBall(boardWidth, boardHeight) {
@@ -134,6 +162,18 @@ margin-bottom: 15px;">
       this.fontSize = fontSize;
       this.break = false;
     }
+    get left() {
+      return this.x;
+    }
+    get right() {
+      return this.x + this.width;
+    }
+    get top() {
+      return this.y;
+    }
+    get bottom() {
+      return this.y + this.height;
+    }
   }
   
   class GameState {
@@ -149,6 +189,9 @@ margin-bottom: 15px;">
       this.gameStarted = false;
       this.blockCount = 0;
       this.keyState = {};
+      this.minBallVelocityX = AGAME_BALL_VELOCITY_X * -1;
+      this.maxBallVelocityX = AGAME_BALL_VELOCITY_X;
+      this.difficulty = AGAME_DEFAULT_GAME_MODE;
     }
   }
   
@@ -158,7 +201,7 @@ margin-bottom: 15px;">
     }
     nextLevel() {
       this.currentLevel++;
-      game.state.score += SCORE_BONUS;
+      game.state.score += AGAME_SCORE_BONUS;
       game.attackMatrix = createAttackMatrix();
       game.createBlocks();
       game.theme.changeTheme(this.currentLevel);
@@ -166,11 +209,7 @@ margin-bottom: 15px;">
     displayLevel() {
       game.board.context.fillStyle = game.theme.textColor;
       game.board.context.font = "20px sans-serif";
-      game.board.context.fillText(
-        "Level: " + this.currentLevel,
-        game.board.width - 200,
-        25
-      );
+      game.board.context.fillText("Level: " + this.currentLevel, game.board.width - 200, 25);
     }
   }
   
@@ -178,27 +217,30 @@ margin-bottom: 15px;">
     constructor() {
       this.presets = [
         {
-          borderColor: "black",
-          textColor: "black",
-          blockColor: "skyblue",
+          title: "Default",
+          borderColor: "red",
+          backgroundColor: "#303030",
+          textColor: "white",
+          blockColor: "white",
           blockTextColor: "black",
-          paddleColor: "lightgreen",
-          ballColor: "black",
+          // paddleColor: "lightgreen",
+          paddleColor: "red",
+          ballColor: "white",
           pauseMessageBoxColor: "red",
           pauseMessageTextColor: "white",
           gameOverMessageBoxColor: "red",
           gameOverMessageTextColor: "white",
         },
-        // Add more presets here
       ];
       this.currentPreset = this.presets[0];
     }
     changeTheme(level) {
       this.currentPreset = this.presets[(level - 1) % this.presets.length];
+      console.log("Changed theme to: " + this.currentPreset.title);
     }
     applyTheme() {
-      game.board.context.canvas.style.borderColor =
-        this.currentPreset.borderColor;
+      game.board.context.canvas.style.borderColor = this.currentPreset.borderColor;
+      game.board.context.canvas.style.backgroundColor = this.currentPreset.backgroundColor;
       game.paddle.color = this.currentPreset.paddleColor;
       game.ball.color = this.currentPreset.ballColor;
       game.blocks.forEach((block) => {
@@ -208,22 +250,67 @@ margin-bottom: 15px;">
     }
   }
   
+  class Particle {
+    constructor(x, y) {
+      this.x = x;
+      this.y = y;
+      this.size = Math.random() * 5 + 1;
+      this.speedX = Math.random() * 3 - 1.5;
+      this.speedY = Math.random() * 3 - 1.5;
+    }
+    update() {
+      this.x += this.speedX;
+      this.y += this.speedY;
+      if (this.size > 0.1) this.size -= 0.1;
+    }
+    draw() {
+      game.board.context.fillStyle = 'orange';
+      game.board.context.strokeStyle = 'red';
+      game.board.context.lineWidth = 2;
+      game.board.context.beginPath();
+      game.board.context.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+      game.board.context.closePath();
+      game.board.context.fill();
+      game.board.context.stroke();
+    }
+  }
+  class ParticleSystem {
+    constructor() {
+      this.particles = [];
+    }
+    createExplosion(x, y, count) {
+      for(let i = 0; i < count; i++) {
+        this.particles.push(new Particle(x, y));
+      }
+    }
+    updateParticles() {
+      for(let i = 0; i < this.particles.length; i++) {
+        this.particles[i].update();
+        if(this.particles[i].size <= 0.1) {
+          this.particles.splice(i, 1);
+          i--;
+        }
+      }
+    }
+    drawParticles() {
+      for(let i = 0; i < this.particles.length; i++) {
+        this.particles[i].draw();
+      }
+    }
+  }
+  
   class Game {
     constructor() {
-      this.board = new Board(BOARD_WIDTH, BOARD_HEIGHT);
-      this.paddle = new Paddle(PADDLE_WIDTH, PADDLE_HEIGHT, PADDLE_VELOCITY_X);
-      this.ball = new Ball(
-        BALL_WIDTH,
-        BALL_HEIGHT,
-        BALL_VELOCITY_X,
-        BALL_VELOCITY_Y
-      );
+      this.board = new Board(AGAME_BOARD_WIDTH, AGAME_BOARD_HEIGHT);
+      this.paddle = new Paddle(AGAME_PADDLE_WIDTH, AGAME_PADDLE_HEIGHT, AGAME_PADDLE_VELOCITY_X);
+      this.ball = new Ball(AGAME_BALL_WIDTH, AGAME_BALL_HEIGHT, AGAME_BALL_VELOCITY_X, AGAME_BALL_VELOCITY_Y);
       this.level = new Level();
       this.theme = new Theme();
       this.state = new GameState();
       this.animationId = null;
       this.blocks = [];
       this.attackMatrix = null;
+      this.particleSystem = new ParticleSystem();
     }
   
     // Setup methods
@@ -280,21 +367,33 @@ margin-bottom: 15px;">
           this.state.keyState[e.code] = false;
         });
   
+        this.board.context.canvas.addEventListener("mousemove", (e) => {
+          if (!this.state.gamePaused) {
+            const rect = this.board.context.canvas.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            let newPaddleX = x - this.paddle.width / 2;
+            if (newPaddleX < 0) {
+              newPaddleX = 0;
+            } else if (newPaddleX > this.board.width - this.paddle.width) {
+              newPaddleX = this.board.width - this.paddle.width;
+            }
+            this.paddle.x = newPaddleX;
+          }
+        });
+  
         this.board.context.canvas.addEventListener("click", (e) => {
           if (!this.state.gameStarted) {
             const rect = this.board.context.canvas.getBoundingClientRect();
             const x = e.clientX - rect.left;
             const y = e.clientY - rect.top;
             this.buttons.forEach((button) => {
-              if (
-                x > button.x &&
-                x < button.x + button.width &&
-                y > button.y &&
-                y < button.y + button.height
-              ) {
+              if (x > button.x && x < button.x + button.width && y > button.y && y < button.y + button.height) {
                 this.ball.velocityX = button.velocity;
                 this.ball.velocityY = button.velocity;
-                this.handleSpaceKey(); // Add this line
+                this.state.minBallVelocityX = -button.velocity;
+                this.state.maxBallVelocityX = button.velocity;
+                this.state.difficulty = button.text;
+                this.startGame();
               }
             });
           }
@@ -316,7 +415,7 @@ margin-bottom: 15px;">
           y: buttonY,
           width: buttonWidth,
           height: buttonHeight,
-          velocity: 2,
+          velocity: 4.5,
         },
         {
           text: "Medium",
@@ -324,7 +423,7 @@ margin-bottom: 15px;">
           y: buttonY,
           width: buttonWidth,
           height: buttonHeight,
-          velocity: 6,
+          velocity: 7.5,
         },
         {
           text: "Hard",
@@ -332,26 +431,17 @@ margin-bottom: 15px;">
           y: buttonY,
           width: buttonWidth,
           height: buttonHeight,
-          velocity: 10,
+          velocity: 10.5,
         },
       ];
       this.buttons.forEach((button) => {
         this.board.context.fillStyle = "lightgray";
-        this.board.context.fillRect(
-          button.x,
-          button.y,
-          button.width,
-          button.height
-        );
+        this.board.context.fillRect(button.x, button.y, button.width, button.height);
         this.board.context.fillStyle = "black";
         this.board.context.font = "20px sans-serif";
         this.board.context.textAlign = "center";
         this.board.context.textBaseline = "middle";
-        this.board.context.fillText(
-          button.text,
-          button.x + button.width / 2,
-          button.y + button.height / 2
-        );
+        this.board.context.fillText(button.text, button.x + button.width / 2, button.y + button.height / 2);
       });
       this.board.context.textAlign = "start";
       this.board.context.textBaseline = "alphabetic";
@@ -380,6 +470,7 @@ margin-bottom: 15px;">
         // Update ball's position
         this.ball.x += this.ball.velocityX;
         this.ball.y += this.ball.velocityY;
+        this.particleSystem.updateParticles();
       }
       if (this.state.gameOver) {
         if (this.state.keyState["Space"]) {
@@ -398,8 +489,16 @@ margin-bottom: 15px;">
       this.displayScore();
       this.displayLives();
       this.level.displayLevel();
+      this.displayDifficulty();
       this.displayPauseMessage();
       this.displayGameOverMessage();
+      this.particleSystem.drawParticles();
+    };
+  
+    startGame = () => {
+      this.state.gameStarted = true;
+      this.state.gamePaused = false;
+      this.animationId = requestAnimationFrame(this.gameLoop);
     };
   
     // Block creation methods
@@ -407,13 +506,10 @@ margin-bottom: 15px;">
       this.blocks = [];
       this.state.blockCount = 0;
       let blockWidth = this.calculateBlockWidth();
-      let maxBlockHeight = Math.max(
-        ((this.board.height * 2) / 3 - BLOCK_Y_OFFSET) / this.blockRows - 10,
-        MIN_BLOCK_HEIGHT
-      );
+      let maxBlockHeight = Math.max(((this.board.height * 2) / 3 - AGAME_BLOCK_Y_OFFSET) / this.blockRows - 10, AGAME_MIN_BLOCK_HEIGHT);
   
       // Create the blocks with the maximum block height
-      for (let row = 0; row < Math.min(this.blockRows, BOARD_MAX_ROWS); row++) {
+      for (let row = 0; row < Math.min(this.blockRows, AGAME_BOARD_MAX_ROWS); row++) {
         for (let column = 0; column < this.blockColumns; column++) {
           let combinedWords = this.attackMatrix[row][column];
           if (combinedWords) {
@@ -423,14 +519,7 @@ margin-bottom: 15px;">
               fontSize = maxBlockHeight;
             }
             this.board.context.font = fontSize + "px sans-serif";
-            let newBlock = this.createBlockObject(
-              column,
-              row,
-              blockWidth,
-              maxBlockHeight,
-              wordsArray,
-              fontSize
-            );
+            let newBlock = this.createBlockObject(column, row, blockWidth, maxBlockHeight, wordsArray, fontSize);
             this.blocks.push(newBlock);
             this.state.blockCount++;
           }
@@ -446,16 +535,13 @@ margin-bottom: 15px;">
     };
   
     calculateBlockWidth = () => {
-      return (this.board.width - 2 * BLOCK_X_OFFSET) / this.blockColumns;
+      return (this.board.width - 2 * AGAME_BLOCK_X_OFFSET) / this.blockColumns;
     };
   
     splitWordsToFitBlock = (combinedWords, blockWidth) => {
       let wordsArray = [];
       let currentText = "";
-      let fontSize = this.calculateFontSize(
-        blockWidth,
-        combinedWords.split(" ").length
-      );
+      let fontSize = this.calculateFontSize(blockWidth, combinedWords.split(" ").length);
       this.board.context.font = fontSize + "px sans-serif";
       for (let word of combinedWords.split(" ")) {
         let testText = currentText === "" ? word : currentText + " " + word;
@@ -471,19 +557,12 @@ margin-bottom: 15px;">
       return wordsArray;
     };
   
-    createBlockObject = (
-      column,
-      row,
-      blockWidth,
-      blockHeight,
-      wordsArray,
-      fontSize
-    ) => {
+    createBlockObject = (column, row, blockWidth, blockHeight, wordsArray, fontSize) => {
       let newBlock = new Block(
         blockWidth,
         blockHeight,
-        BLOCK_X_OFFSET + column * blockWidth,
-        BLOCK_Y_OFFSET + row * blockHeight,
+        AGAME_BLOCK_X_OFFSET + column * blockWidth,
+        AGAME_BLOCK_Y_OFFSET + row * blockHeight,
         wordsArray,
         fontSize
       );
@@ -498,73 +577,58 @@ margin-bottom: 15px;">
     };
   
     drawPaddle = () => {
-      this.board.context.fillStyle = "lightgreen";
-      // Draw rounded rectangle for the paddle
-      let cornerRadius = 5;
+      // Set the fill style to a solid color
+      this.board.context.fillStyle = "darkgray";
+  
+      // Draw the main rectangle for the paddle
+      this.board.context.fillRect(this.paddle.x, this.paddle.y, this.paddle.width, this.paddle.height);
+  
+      // Draw horizontal lines across the paddle
+      this.board.context.strokeStyle = "black";
+      this.board.context.lineWidth = 1;
+      for (let y = this.paddle.y; y < this.paddle.y + this.paddle.height; y += 5) {
+        this.board.context.beginPath();
+        this.board.context.moveTo(this.paddle.x, y);
+        this.board.context.lineTo(this.paddle.x + this.paddle.width, y);
+        this.board.context.stroke();
+      }
+  
+      // Draw vertical lines at the edges of the paddle
+      this.board.context.strokeStyle = "gray";
+      this.board.context.lineWidth = 6;
       this.board.context.beginPath();
-      this.board.context.moveTo(this.paddle.x + cornerRadius, this.paddle.y);
-      this.board.context.arcTo(
-        this.paddle.x + this.paddle.width,
-        this.paddle.y,
-        this.paddle.x + this.paddle.width,
-        this.paddle.y + this.paddle.height,
-        cornerRadius
-      );
-      this.board.context.arcTo(
-        this.paddle.x + this.paddle.width,
-        this.paddle.y + this.paddle.height,
-        this.paddle.x,
-        this.paddle.y + this.paddle.height,
-        cornerRadius
-      );
-      this.board.context.arcTo(
-        this.paddle.x,
-        this.paddle.y + this.paddle.height,
-        this.paddle.x,
-        this.paddle.y,
-        cornerRadius
-      );
-      this.board.context.arcTo(
-        this.paddle.x,
-        this.paddle.y,
-        this.paddle.x + this.paddle.width,
-        this.paddle.y,
-        cornerRadius
-      );
-      this.board.context.closePath();
-      this.board.context.fill();
+      this.board.context.moveTo(this.paddle.x, this.paddle.y);
+      this.board.context.lineTo(this.paddle.x, this.paddle.y + this.paddle.height);
+      this.board.context.stroke();
+  
+      this.board.context.beginPath();
+      this.board.context.moveTo(this.paddle.x + this.paddle.width, this.paddle.y);
+      this.board.context.lineTo(this.paddle.x + this.paddle.width, this.paddle.y + this.paddle.height);
+      this.board.context.stroke();
     };
   
     drawBall = () => {
-      this.board.context.fillStyle = "black";
+      this.board.context.fillStyle = game.theme.currentPreset.ballColor;
       this.board.context.beginPath();
-      this.board.context.arc(
-        this.ball.x + this.ball.width / 2,
-        this.ball.y + this.ball.height / 2,
-        this.ball.width / 2,
-        0,
-        Math.PI * 2
-      );
+      this.board.context.arc(this.ball.x + this.ball.width / 2, this.ball.y + this.ball.height / 2, this.ball.width / 2, 0, Math.PI * 2);
       this.board.context.fill();
     };
   
     drawBlocks = () => {
       for (let block of this.blocks) {
         if (!block.break) {
-          this.board.context.fillStyle = "skyblue";
-          this.board.context.fillRect(
-            block.x,
-            block.y,
-            block.width,
-            block.height
-          ); // Draw block
+          this.board.context.fillStyle = game.theme.currentPreset.blockColor;
+          this.board.context.fillRect(block.x, block.y, block.width, block.height);
+          this.board.context.strokeStyle = "black";
+          this.board.context.lineWidth = 3;
+          this.board.context.strokeRect(block.x, block.y, block.width, block.height);
           this.drawBlockText(block);
         }
       }
     };
   
     drawBlockText = (block) => {
-      this.board.context.fillStyle = "black";
+      this.board.context.fillStyle = game.theme.currentPreset.blockTextColor;
       this.board.context.font = block.fontSize + "px sans-serif";
       let textY = block.textY;
       for (let word of block.wordsArray) {
@@ -573,18 +637,26 @@ margin-bottom: 15px;">
       }
     };
   
-    displayLives = () => {
-      this.board.context.fillStyle = "black";
+    displayDifficulty = () => {
+      this.board.context.fillStyle = this.state.gamePaused
+        ? game.theme.currentPreset.pauseMessageBoxColor
+        : game.theme.currentPreset.textColor;
       this.board.context.font = "20px sans-serif";
-      this.board.context.fillText(
-        "Lives: " + this.state.lives,
-        this.board.width - 100,
-        25
-      );
+      this.board.context.fillText("Difficulty: " + this.state.difficulty, this.board.width - 450, 25);
+    };
+  
+    displayLives = () => {
+      this.board.context.fillStyle = this.state.gamePaused
+        ? game.theme.currentPreset.pauseMessageBoxColor
+        : game.theme.currentPreset.textColor;
+      this.board.context.font = "20px sans-serif";
+      this.board.context.fillText("Lives: " + this.state.lives, this.board.width - 100, 25);
     };
   
     displayScore = () => {
-      this.board.context.fillStyle = this.state.gamePaused ? "red" : "white";
+      this.board.context.fillStyle = this.state.gamePaused
+        ? game.theme.currentPreset.pauseMessageBoxColor
+        : game.theme.currentPreset.textColor;
       this.board.context.font = "20px sans-serif";
       this.board.context.fillText(this.state.score, 10, 25);
     };
@@ -593,22 +665,10 @@ margin-bottom: 15px;">
       this.board.context.fillStyle = "red";
       this.board.context.font = "100px sans-serif";
       this.board.context.textAlign = "center";
-      this.board.context.fillText(
-        "&",
-        this.board.width / 2,
-        this.board.height / 2
-      );
+      this.board.context.fillText("&", this.board.width / 2, this.board.height / 2);
       this.board.context.font = "50px sans-serif";
-      this.board.context.fillText(
-        "v15",
-        this.board.width / 2,
-        this.board.height / 2 + 60
-      );
-      this.board.context.fillText(
-        "Press Space for a Sneak Preview",
-        this.board.width / 2,
-        this.board.height / 2 + 120
-      );
+      this.board.context.fillText("v15", this.board.width / 2, this.board.height / 2 + 60);
+      this.board.context.fillText("Press Space for a Sneak Preview", this.board.width / 2, this.board.height / 2 + 120);
       this.board.context.textAlign = "start";
       this.displayGameHistory();
       this.drawDifficultyButtons();
@@ -617,57 +677,32 @@ margin-bottom: 15px;">
     displayGameHistory = () => {
       if (this.state.gameHistory.length > 0) {
         let topScores = this.state.gameHistory.sort((a, b) => b - a).slice(0, 5);
-        this.board.context.fillStyle = "black";
+        this.board.context.fillStyle = "white";
         this.board.context.font = "20px sans-serif";
-        this.board.context.fillText(
-          "Top 5 Scores:",
-          this.board.width / 2,
-          this.board.height / 2 + 180
-        );
+        this.board.context.fillText("Top 5 Scores:", this.board.width / 2, this.board.height / 2 + 180);
         topScores.forEach((score, index) => {
-          this.board.context.fillText(
-            `${index + 1}. ${score}`,
-            this.board.width / 2,
-            this.board.height / 2 + 210 + index * 30
-          );
+          this.board.context.fillText(`${index + 1}. ${score}`, this.board.width / 2, this.board.height / 2 + 210 + index * 30);
         });
       }
     };
   
     displayMessage = (condition, mainText, subText) => {
       if (condition) {
-        this.board.context.fillStyle = "red";
+        this.board.context.fillStyle = game.theme.currentPreset.pauseMessageBoxColor;
         this.board.context.globalAlpha = 0.5;
-        this.board.context.fillRect(
-          this.board.width / 2 - 250,
-          this.board.height / 2 - 50,
-          500,
-          150
-        );
+        this.board.context.fillRect(this.board.width / 2 - 250, this.board.height / 2 - 50, 500, 150);
         this.board.context.globalAlpha = 1;
-        this.board.context.fillStyle = "white";
+        this.board.context.fillStyle = game.theme.currentPreset.pauseMessageTextColor;
         this.board.context.font = "40px sans-serif";
         this.board.context.textAlign = "center";
-        this.board.context.fillText(
-          mainText,
-          this.board.width / 2,
-          this.board.height / 2 + 10
-        );
-        this.board.context.fillText(
-          subText,
-          this.board.width / 2,
-          this.board.height / 2 + 60
-        );
+        this.board.context.fillText(mainText, this.board.width / 2, this.board.height / 2 + 10);
+        this.board.context.fillText(subText, this.board.width / 2, this.board.height / 2 + 60);
         this.board.context.textAlign = "start";
       }
     };
   
     displayGameOverMessage = () => {
-      this.displayMessage(
-        this.state.gameOver,
-        "GAME OVER",
-        "Press Space to Try Again"
-      );
+      this.displayMessage(this.state.gameOver, "GAME OVER", "Press Space to Try Again");
     };
   
     displayPauseMessage = () => {
@@ -689,29 +724,27 @@ margin-bottom: 15px;">
   
     // Collision detection methods
     checkCollision = (object1, object2) => {
-      return (
-        object1.x < object2.x + object2.width &&
-        object1.x + object1.width > object2.x &&
-        object1.y < object2.y + object2.height &&
-        object1.y + object1.height > object2.y
-      );
+      return object1.left < object2.right && object1.right > object2.left && object1.top < object2.bottom && object1.bottom > object2.top;
     };
   
     handleBallCollision = () => {
       if (this.checkCollision(this.ball, this.paddle)) {
-        // Check if ball hit the top side of the paddle
+        // Check if ball hit the paddle
         if (this.ball.y < this.paddle.y) {
-          this.ball.velocityY = Math.abs(this.ball.velocityY) * -1; // make sure velocity is negative
-  
-          // Calculate the left, middle, and right thirds of the paddle
-          let paddleLeftThird = this.paddle.x + this.paddle.width / 3;
-          let paddleRightThird = this.paddle.x + (2 * this.paddle.width) / 3;
-  
-          // Check if ball hit the left, middle, or right third of the paddle
-          if (this.ball.x < paddleLeftThird) {
-            this.ball.velocityX = Math.max(this.ball.velocityX - 1, -7);
-          } else if (this.ball.x > paddleRightThird) {
-            this.ball.velocityX = Math.min(this.ball.velocityX + 1, 7);
+          this.ball.velocityY = Math.abs(this.ball.velocityY) * -1;
+          // Calculate the four zones of the paddle
+          let paddleZone1 = this.paddle.x + this.paddle.width * 0.1;
+          let paddleZone2 = this.paddle.x + this.paddle.width * 0.5;
+          let paddleZone3 = this.paddle.x + this.paddle.width * 0.9;
+          // Check which zone the ball hit and adjust the X velocity accordingly
+          if (this.ball.x < paddleZone1) {
+            this.ball.velocityX = Math.max(this.ball.velocityX - 2, this.state.minBallVelocityX);
+          } else if (this.ball.x < paddleZone2) {
+            this.ball.velocityX = Math.max(this.ball.velocityX - 1, this.state.minBallVelocityX);
+          } else if (this.ball.x < paddleZone3) {
+            this.ball.velocityX = Math.min(this.ball.velocityX + 1, this.state.maxBallVelocityX);
+          } else {
+            this.ball.velocityX = Math.min(this.ball.velocityX + 2, this.state.maxBallVelocityX);
           }
         }
       }
@@ -719,35 +752,57 @@ margin-bottom: 15px;">
       for (let i = 0; i < this.blocks.length; i++) {
         let block = this.blocks[i];
         if (!block.break && this.checkCollision(this.ball, block)) {
-          // Check if ball hit the top, bottom, left or right of the block
-          if (this.ball.y < block.y) {
-            this.ball.velocityY = Math.abs(this.ball.velocityY) * -1; // make sure velocity is negative
-          } else if (this.ball.y > block.y + block.height) {
-            this.ball.velocityY = Math.abs(this.ball.velocityY); // make sure velocity is positive
-          } else if (this.ball.x < block.x) {
-            this.ball.velocityX = Math.abs(this.ball.velocityX) * -1; // make sure velocity is negative
-          } else if (this.ball.x > block.x + block.width) {
-            this.ball.velocityX = Math.abs(this.ball.velocityX); // make sure velocity is positive
-          }
           this.blockCollision(block);
         }
       }
     };
   
     blockCollision = (block) => {
-      block.break = true; // block is broken
-      this.ball.velocityY *= -1; // flip y direction up or down
-      this.state.score += SCORE_INCREMENT;
+      this.particleSystem.createExplosion(block.x + block.width / 2, block.y + block.height / 2, 50);
+      block.break = true;
+      let scoreIncrement = AGAME_SCORE_INCREMENT;
+      if (this.state.difficulty === "Medium") {
+        scoreIncrement *= 2;
+      } else if (this.state.difficulty === "Hard") {
+        scoreIncrement *= 3;
+      }
+      this.state.score += scoreIncrement;
       this.state.blockCount -= 1;
+      // Calculate the differences between the ball and block positions
+      let diffTop = Math.abs(this.ball.bottom - block.top);
+      let diffBottom = Math.abs(this.ball.top - block.bottom);
+      let diffLeft = Math.abs(this.ball.right - block.left);
+      let diffRight = Math.abs(this.ball.left - block.right);
+      // Find the smallest difference
+      let minDiff = Math.min(diffTop, diffBottom, diffLeft, diffRight);
+      // Reverse the appropriate velocity based on the smallest difference
+      switch (minDiff) {
+        // Ball hits top of block, goes up
+        case diffTop:
+          this.ball.velocityY = Math.abs(this.ball.velocityY) * -1;
+          break;
+  
+        // Ball hits bottom of block, goes down
+        case diffBottom:
+          this.ball.velocityY = Math.abs(this.ball.velocityY);
+          break;
+  
+        // Ball hits left of block, goes left
+        case diffLeft:
+          this.ball.velocityX = Math.abs(this.ball.velocityX) * -1;
+          break;
+  
+        // Ball hits right of block, goes right
+        case diffRight:
+          this.ball.velocityX = Math.abs(this.ball.velocityX);
+          break;
+      }
     };
   
     checkBallBounds = () => {
       if (this.ball.y <= 0) {
         this.ball.velocityY *= -1;
-      } else if (
-        this.ball.x <= 0 ||
-        this.ball.x + this.ball.width >= this.board.width
-      ) {
+      } else if (this.ball.x <= 0 || this.ball.x + this.ball.width >= this.board.width) {
         this.ball.velocityX *= -1;
       } else if (this.ball.y + this.ball.height >= this.board.height) {
         this.state.lives -= 1;
@@ -764,15 +819,12 @@ margin-bottom: 15px;">
     // Game state methods
     checkNextLevel = () => {
       if (this.state.blockCount == 0) {
-        // this.state.score += SCORE_BONUS;
-        // this.attackMatrix = createAttackMatrix();
-        // this.createBlocks();
         this.level.nextLevel();
       }
     };
   
     outOfBounds = (xPosition) => {
-      return xPosition < 0 || xPosition + this.paddle.width > this.board.width;
+      return xPosition < 0 || xPosition > this.board.width - this.paddle.width;
     };
   
     handleArrowLeftKey = () => {
@@ -780,6 +832,8 @@ margin-bottom: 15px;">
         const nextPaddleX = this.paddle.x - this.paddle.velocityX;
         if (!this.outOfBounds(nextPaddleX)) {
           this.paddle.x = nextPaddleX;
+        } else {
+          this.paddle.x = 0;
         }
       }
     };
@@ -789,17 +843,17 @@ margin-bottom: 15px;">
         const nextPaddleX = this.paddle.x + this.paddle.velocityX;
         if (!this.outOfBounds(nextPaddleX)) {
           this.paddle.x = nextPaddleX;
+        } else {
+          this.paddle.x = this.board.width - this.paddle.width;
         }
       }
     };
   
     handleSpaceKey = () => {
-      if (this.state.gameOver) {
+      if (!this.state.gameStarted) {
+        pass;
+      } else if (this.state.gameOver) {
         this.resetGame();
-      } else if (!this.state.gameStarted) {
-        this.state.gameStarted = true;
-        this.state.gamePaused = false;
-        this.animationId = requestAnimationFrame(this.gameLoop);
       } else if (!this.state.gamePaused) {
         this.state.gamePaused = true;
         cancelAnimationFrame(this.animationId);
@@ -823,7 +877,6 @@ margin-bottom: 15px;">
   window.onload = function () {
     game.setup();
   };
-  
 </script>
 
 <script type="application/javascript">
