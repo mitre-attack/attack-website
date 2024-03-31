@@ -1004,7 +1004,7 @@ class Game {
       const boxWidth = messageWidth + 20;
       const boxHeight = 30;
       const boxX = (this.board.width - boxWidth) / 2;
-      const boxY = this.board.height / 2 + 250 - boxHeight / 2;
+      const boxY = this.board.height / 2 - 250 - boxHeight / 2;
       // Draw the shaded box
       this.board.context.fillStyle = "rgba(0, 0, 0, 0.75)";
       this.board.context.fillRect(boxX, boxY, boxWidth, boxHeight);
@@ -1012,7 +1012,7 @@ class Game {
       this.board.context.fillStyle = "red";
       this.board.context.font = "20px sans-serif";
       this.board.context.textAlign = "center";
-      this.board.context.fillText(smallScreenMessage, this.board.width / 2, this.board.height / 2 + 255);
+      this.board.context.fillText(smallScreenMessage, this.board.width / 2, this.board.height / 2 - 245);
       this.board.context.textAlign = "start";
     }
   };
