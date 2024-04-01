@@ -1463,24 +1463,26 @@ class Game {
   }
 
   generateTwitterShareLink = (percentageComplete, isWin) => {
+    let attackhandle = "@mitreattack";
     let hashtag = isWin ? "#igotfullattackcoverage" : "#igotpartialattackcoverage";
     let randomSaying = isWin
       ? this.winSayings[Math.floor(Math.random() * this.winSayings.length)]
       : this.generateGameOverSaying(percentageComplete);
 
     const gameUrl = encodeURIComponent(document.location.href);
-    const text = encodeURIComponent(`${randomSaying} ${hashtag}`);
+    const text = encodeURIComponent(`${randomSaying} ${hashtag} ${attackhandle}`);
     return `https://twitter.com/intent/tweet?text=${text}&url=${gameUrl}`;
   };
 
   generateBlueskyShareLink = (percentageComplete, isWin) => {
+    let attackhandle = "@attack.mitre.org";
     let hashtag = isWin ? "#igotfullattackcoverage" : "#igotpartialattackcoverage";
     let randomSaying = isWin
       ? this.winSayings[Math.floor(Math.random() * this.winSayings.length)]
       : this.generateGameOverSaying(percentageComplete);
 
     const gameUrl = document.location.href;
-    const text = encodeURIComponent(`${randomSaying} ${hashtag}. Play the game here: ${gameUrl}`);
+    const text = encodeURIComponent(`${randomSaying} ${hashtag} ${attackhandle}. Play the game here: ${gameUrl}`);
     return `https://bsky.app/intent/compose?text=${text}`;
   };
 }
