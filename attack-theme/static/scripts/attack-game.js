@@ -486,26 +486,143 @@ class Game {
   setupEventListeners = () => {
     try {
       window.addEventListener("resize", this.handleResize);
+      this.setupKeyboardListeners();
+      this.setupMouseListeners();
+      this.setupTouchListeners();
+    } catch (error) {
+      console.error("Error setting up event listeners: ", error);
+    }
+  };
 
-      document.addEventListener("keydown", (e) => {
-        this.state.keyState[e.code] = true;
-        if (e.code === "ArrowLeft") {
-          this.handleArrowLeftKey();
-        } else if (e.code === "ArrowRight") {
-          this.handleArrowRightKey();
-        } else if (e.code === "Space") {
-          this.handleSpaceKey();
+  setupKeyboardListeners = () => {
+    document.addEventListener("keydown", (e) => {
+      this.state.keyState[e.code] = true;
+      if (e.code === "ArrowLeft") {
+        this.handleArrowLeftKey();
+      } else if (e.code === "ArrowRight") {
+        this.handleArrowRightKey();
+      } else if (e.code === "Space") {
+        this.handleSpaceKey();
+      }
+    });
+
+    document.addEventListener("keyup", (e) => {
+      this.state.keyState[e.code] = false;
+    });
+  };
+
+  setupMouseListeners = () => {
+    this.board.context.canvas.addEventListener("mousemove", (e) => {
+      if (!this.state.gamePaused) {
+        const rect = this.board.context.canvas.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        let newPaddleX = x - this.paddle.width / 2;
+        if (newPaddleX < 0) {
+          newPaddleX = 0;
+        } else if (newPaddleX > this.board.width - this.paddle.width) {
+          newPaddleX = this.board.width - this.paddle.width;
         }
-      });
+        this.paddle.x = newPaddleX;
+      }
+    });
 
-      document.addEventListener("keyup", (e) => {
-        this.state.keyState[e.code] = false;
-      });
+    this.board.context.canvas.addEventListener("click", (e) => {
+      if (!this.state.gameStarted) {
+        const rect = this.board.context.canvas.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        this.buttons.forEach((button) => {
+          if (x > button.x && x < button.x + button.width && y > button.y && y < button.y + button.height) {
+            this.setDifficulty(button.difficulty);
+            this.startGame();
+          }
+        });
+      } else if (this.state.gameOver) {
+        const rect = this.board.context.canvas.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        // Calculate the button dimensions and positions
+        const buttonWidth = 200;
+        const buttonHeight = 50;
+        const padding = 10;
+        const messageHeight = 64; // Assuming the message font size is 64px
+        const messageY = (this.board.height - messageHeight) / 2;
+        const buttonsY = messageY + messageHeight + padding;
+        const twitterButtonX = (this.board.width - buttonWidth) / 2;
+        const twitterButtonY = buttonsY;
+        const blueskyButtonX = (this.board.width - buttonWidth) / 2;
+        const blueskyButtonY = twitterButtonY + buttonHeight + padding;
+        const startOverButtonX = (this.board.width - buttonWidth) / 2;
+        const startOverButtonY = blueskyButtonY + buttonHeight + padding;
+        const percentageComplete = this.getPercentageComplete();
+        // Check if "Share on Twitter" button was clicked
+        if (x > twitterButtonX && x < twitterButtonX + buttonWidth && y > twitterButtonY && y < twitterButtonY + buttonHeight) {
+          window.open(this.generateTwitterShareLink(percentageComplete, false), "_blank");
+        }
+        // Check if "Share on Bluesky" button was clicked
+        if (x > blueskyButtonX && x < blueskyButtonX + buttonWidth && y > blueskyButtonY && y < blueskyButtonY + buttonHeight) {
+          window.open(this.generateBlueskyShareLink(percentageComplete, false), "_blank");
+        }
+        // Check if "Start Over" button was clicked
+        if (x > startOverButtonX && x < startOverButtonX + buttonWidth && y > startOverButtonY && y < startOverButtonY + buttonHeight) {
+          this.resetGame();
+        }
+      } else if (this.state.levelCompleted) {
+        const rect = this.board.context.canvas.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        // Calculate the button dimensions and positions
+        const buttonWidth = 200;
+        const buttonHeight = 50;
+        const padding = 10;
+        const messageHeight = 64; // Assuming the message font size is 64px
+        const messageY = (this.board.height - messageHeight) / 2;
+        const buttonsY = messageY + messageHeight + padding;
+        const twitterButtonX = (this.board.width - buttonWidth) / 2;
+        const twitterButtonY = buttonsY;
+        const blueskyButtonX = (this.board.width - buttonWidth) / 2;
+        const blueskyButtonY = twitterButtonY + buttonHeight + padding;
+        const nextLevelButtonX = (this.board.width - buttonWidth) / 2;
+        const nextLevelButtonY = blueskyButtonY + buttonHeight + padding;
+        // Check if "Share on Twitter" button was clicked
+        if (x > twitterButtonX && x < twitterButtonX + buttonWidth && y > twitterButtonY && y < twitterButtonY + buttonHeight) {
+          window.open(this.generateTwitterShareLink(100, true), "_blank");
+        }
+        // Check if "Share on Bluesky" button was clicked
+        if (x > blueskyButtonX && x < blueskyButtonX + buttonWidth && y > blueskyButtonY && y < blueskyButtonY + buttonHeight) {
+          window.open(this.generateBlueskyShareLink(100, true), "_blank");
+        }
+        // Check if "Next Level" button was clicked
+        if (x > nextLevelButtonX && x < nextLevelButtonX + buttonWidth && y > nextLevelButtonY && y < nextLevelButtonY + buttonHeight) {
+          this.state.levelCompleted = false;
+          this.level.nextLevel();
+          this.state.gamePaused = false;
+          cancelAnimationFrame(this.animationId);
+          this.animationId = requestAnimationFrame(this.gameLoop);
+        }
+        // Prevent the click event from advancing the level
+        return;
+      } else {
+        if (this.state.gamePaused) {
+          this.state.gamePaused = false;
+          cancelAnimationFrame(this.animationId);
+          this.animationId = requestAnimationFrame(this.gameLoop);
+        } else if (this.state.gameOver) {
+          this.resetGame();
+        }
+      }
+    });
 
-      this.board.context.canvas.addEventListener("mousemove", (e) => {
+    this.board.context.canvas.addEventListener("click", this.handleThemeChangeClick);
+  };
+
+  setupTouchListeners = () => {
+    this.board.context.canvas.addEventListener(
+      "touchmove",
+      (e) => {
         if (!this.state.gamePaused) {
           const rect = this.board.context.canvas.getBoundingClientRect();
-          const x = e.clientX - rect.left;
+          const x = e.touches[0].clientX - rect.left;
           let newPaddleX = x - this.paddle.width / 2;
           if (newPaddleX < 0) {
             newPaddleX = 0;
@@ -514,80 +631,10 @@ class Game {
           }
           this.paddle.x = newPaddleX;
         }
-      });
-
-      this.board.context.canvas.addEventListener("click", (e) => {
-        if (!this.state.gameStarted) {
-          const rect = this.board.context.canvas.getBoundingClientRect();
-          const x = e.clientX - rect.left;
-          const y = e.clientY - rect.top;
-          this.buttons.forEach((button) => {
-            if (x > button.x && x < button.x + button.width && y > button.y && y < button.y + button.height) {
-              this.setDifficulty(button.difficulty);
-              this.startGame();
-            }
-          });
-        } else if (this.state.levelCompleted) {
-          const rect = this.board.context.canvas.getBoundingClientRect();
-          const x = e.clientX - rect.left;
-          const y = e.clientY - rect.top;
-          // Calculate the button dimensions and positions
-          const buttonWidth = 200;
-          const buttonHeight = 50;
-          const padding = 10;
-          const messageHeight = 64; // Assuming the message font size is 64px
-          const messageY = (this.board.height - messageHeight) / 2;
-          const buttonsY = messageY + messageHeight + padding;
-          const twitterButtonX = (this.board.width - buttonWidth) / 2;
-          const twitterButtonY = buttonsY;
-          const nextLevelButtonX = (this.board.width - buttonWidth) / 2;
-          const nextLevelButtonY = twitterButtonY + buttonHeight + padding;
-          // Check if "Share on Twitter" button was clicked
-          if (x > twitterButtonX && x < twitterButtonX + buttonWidth && y > twitterButtonY && y < twitterButtonY + buttonHeight) {
-            window.open(this.generateTwitterShareLink(), "_blank");
-          }
-          // Check if "Next Level" button was clicked
-          if (x > nextLevelButtonX && x < nextLevelButtonX + buttonWidth && y > nextLevelButtonY && y < nextLevelButtonY + buttonHeight) {
-            this.state.levelCompleted = false;
-            this.level.nextLevel();
-            this.state.gamePaused = false;
-            cancelAnimationFrame(this.animationId);
-            this.animationId = requestAnimationFrame(this.gameLoop);
-          }
-          // Prevent the click event from advancing the level
-          return;
-        } else {
-          if (this.state.gamePaused) {
-            this.state.gamePaused = false;
-            cancelAnimationFrame(this.animationId);
-            this.animationId = requestAnimationFrame(this.gameLoop);
-          } else if (this.state.gameOver) {
-            this.resetGame();
-          }
-        }
-      });
-
-      this.board.context.canvas.addEventListener(
-        "touchmove",
-        (e) => {
-          if (!this.state.gamePaused) {
-            const rect = this.board.context.canvas.getBoundingClientRect();
-            const x = e.touches[0].clientX - rect.left;
-            let newPaddleX = x - this.paddle.width / 2;
-            if (newPaddleX < 0) {
-              newPaddleX = 0;
-            } else if (newPaddleX > this.board.width - this.paddle.width) {
-              newPaddleX = this.board.width - this.paddle.width;
-            }
-            this.paddle.x = newPaddleX;
-          }
-          e.preventDefault();
-        },
-        { passive: false }
-      );
-    } catch (error) {
-      console.error("Error setting up event listeners: ", error);
-    }
+        e.preventDefault();
+      },
+      { passive: false }
+    );
   };
 
   drawDifficultyButtons = () => {
@@ -649,14 +696,24 @@ class Game {
       this.board.context.font = "20px sans-serif";
       this.board.context.textAlign = "center";
       this.board.context.textBaseline = "middle";
-      this.board.context.fillText("Share on Twitter", twitterButtonX + buttonWidth / 2, twitterButtonY + buttonHeight / 2);
+      this.board.context.fillText("Share on X (Twitter)", twitterButtonX + buttonWidth / 2, twitterButtonY + buttonHeight / 2);
+
+      // Draw "Share on Bluesky" button
+      const blueskyButtonX = (this.board.width - buttonWidth) / 2;
+      const blueskyButtonY = twitterButtonY + buttonHeight + padding;
+      this.board.context.fillStyle = "#0070FF";
+      this.board.context.fillRect(blueskyButtonX, blueskyButtonY, buttonWidth, buttonHeight);
+      this.board.context.fillStyle = "white";
+      this.board.context.fillText("Share on Bluesky", blueskyButtonX + buttonWidth / 2, blueskyButtonY + buttonHeight / 2);
+
       // Draw "Next Level" button
       const nextLevelButtonX = (this.board.width - buttonWidth) / 2;
-      const nextLevelButtonY = twitterButtonY + buttonHeight + padding;
-      this.board.context.fillStyle = "#4CAF50"; // A nice green color
+      const nextLevelButtonY = blueskyButtonY + buttonHeight + padding;
+      this.board.context.fillStyle = "#4CAF50";
       this.board.context.fillRect(nextLevelButtonX, nextLevelButtonY, buttonWidth, buttonHeight);
       this.board.context.fillStyle = "white";
       this.board.context.fillText("Next Level", nextLevelButtonX + buttonWidth / 2, nextLevelButtonY + buttonHeight / 2);
+
       // Reset text alignment and baseline
       this.board.context.textAlign = "start";
       this.board.context.textBaseline = "alphabetic";
@@ -874,6 +931,14 @@ class Game {
     this.board.context.fillText("Lives: " + this.state.lives, this.board.width - 100, 25);
   };
 
+  getPercentageComplete = () => {
+    const totalBlocks = this.blocks.length;
+    const remainingBlocks = this.state.blockCount;
+    const blocksBroken = totalBlocks - remainingBlocks;
+    let percentageBroken = (blocksBroken / totalBlocks) * 100;
+    return percentageBroken.toFixed(0);
+  };
+
   displayScore = () => {
     const totalBlocks = this.blocks.length;
     const remainingBlocks = this.state.blockCount;
@@ -885,6 +950,10 @@ class Game {
       : game.theme.currentPreset.hudActiveTextColor;
     this.board.context.font = "20px sans-serif";
     this.board.context.fillText("MITRE Coverage: " + percentageBroken.toFixed(0) + "%", 10, 25);
+    if (!this.state.isSmallScreen) {
+      const percentageTextWidth = this.board.context.measureText("MITRE Coverage: " + percentageBroken.toFixed(0) + "%").width;
+      this.board.context.fillText("Score: " + this.state.score, 10 + percentageTextWidth + 20, 25); // 20 is the space between the two texts
+    }
   };
 
   splitMessageIntoLines = (message, maxWidth) => {
@@ -986,8 +1055,47 @@ class Game {
   };
 
   displayGameOverMessage = () => {
-    const message = "GAME OVER\nPress Space to Try Again";
+    const message = "GAME OVER";
     this.displayMessage(this.state.gameOver, message);
+    if (this.state.gameOver) {
+      this.drawGameOverButtons();
+    }
+  };
+
+  drawGameOverButtons = () => {
+    const buttonWidth = 200;
+    const buttonHeight = 50;
+    const padding = 10;
+    const messageHeight = 64; // Assuming the message font size is 64px
+    const messageY = (this.board.height - messageHeight) / 2;
+    const buttonsY = messageY + messageHeight + padding;
+    // Draw "Share on Twitter" button
+    const twitterButtonX = (this.board.width - buttonWidth) / 2;
+    const twitterButtonY = buttonsY;
+    this.board.context.fillStyle = "#1DA1F2";
+    this.board.context.fillRect(twitterButtonX, twitterButtonY, buttonWidth, buttonHeight);
+    this.board.context.fillStyle = "white";
+    this.board.context.font = "20px sans-serif";
+    this.board.context.textAlign = "center";
+    this.board.context.textBaseline = "middle";
+    this.board.context.fillText("Share on X (Twitter)", twitterButtonX + buttonWidth / 2, twitterButtonY + buttonHeight / 2);
+    // Draw "Share on Bluesky" button
+    const blueskyButtonX = (this.board.width - buttonWidth) / 2;
+    const blueskyButtonY = twitterButtonY + buttonHeight + padding;
+    this.board.context.fillStyle = "#0070FF";
+    this.board.context.fillRect(blueskyButtonX, blueskyButtonY, buttonWidth, buttonHeight);
+    this.board.context.fillStyle = "white";
+    this.board.context.fillText("Share on Bluesky", blueskyButtonX + buttonWidth / 2, blueskyButtonY + buttonHeight / 2);
+    // Draw "Start Over" button
+    const startOverButtonX = (this.board.width - buttonWidth) / 2;
+    const startOverButtonY = blueskyButtonY + buttonHeight + padding;
+    this.board.context.fillStyle = "#4CAF50";
+    this.board.context.fillRect(startOverButtonX, startOverButtonY, buttonWidth, buttonHeight);
+    this.board.context.fillStyle = "white";
+    this.board.context.fillText("Start Over", startOverButtonX + buttonWidth / 2, startOverButtonY + buttonHeight / 2);
+    // Reset text alignment and baseline
+    this.board.context.textAlign = "start";
+    this.board.context.textBaseline = "alphabetic";
   };
 
   displayStartScreen = () => {
@@ -998,6 +1106,27 @@ class Game {
     this.displayMessage(true, message);
     this.displayGameHistory();
     this.drawDifficultyButtons();
+
+    // Draw the theme change button
+    const buttonText = "Randomize!";
+    const buttonWidth = 150;
+    const buttonHeight = 50;
+    const padding = 20;
+    const buttonX = this.board.width - buttonWidth - padding;
+    const buttonY = padding;
+    const borderRadius = 15;
+    this.board.context.fillStyle = this.theme.currentPreset.blockColor;
+    this.roundRect(buttonX, buttonY, buttonWidth, buttonHeight, borderRadius, true, false);
+    // Add a border to the button
+    this.board.context.strokeStyle = this.theme.currentPreset.borderColor;
+    this.board.context.lineWidth = 5;
+    this.roundRect(buttonX, buttonY, buttonWidth, buttonHeight, borderRadius, false, true);
+    // Draw the button text
+    this.board.context.fillStyle = this.theme.currentPreset.blockTextColor;
+    this.board.context.font = "20px sans-serif";
+    this.board.context.textAlign = "center";
+    this.board.context.fillText(buttonText, buttonX + buttonWidth / 2, buttonY + buttonHeight / 2 + 5);
+    this.board.context.textAlign = "start";
     if (this.state.isSmallScreen) {
       const smallScreenMessage = "Best played on larger screens";
       const messageWidth = this.board.context.measureText(smallScreenMessage).width;
@@ -1026,6 +1155,40 @@ class Game {
     } else {
       this.setupGame();
       this.draw();
+    }
+  };
+
+  roundRect = (x, y, width, height, radius, fill, stroke) => {
+    if (typeof stroke === "undefined") {
+      stroke = true;
+    }
+    if (typeof radius === "undefined") {
+      radius = 5;
+    }
+    if (typeof radius === "number") {
+      radius = { tl: radius, tr: radius, br: radius, bl: radius };
+    } else {
+      var defaultRadius = { tl: 0, tr: 0, br: 0, bl: 0 };
+      for (var side in defaultRadius) {
+        radius[side] = radius[side] || defaultRadius[side];
+      }
+    }
+    this.board.context.beginPath();
+    this.board.context.moveTo(x + radius.tl, y);
+    this.board.context.lineTo(x + width - radius.tr, y);
+    this.board.context.quadraticCurveTo(x + width, y, x + width, y + radius.tr);
+    this.board.context.lineTo(x + width, y + height - radius.br);
+    this.board.context.quadraticCurveTo(x + width, y + height, x + width - radius.br, y + height);
+    this.board.context.lineTo(x + radius.bl, y + height);
+    this.board.context.quadraticCurveTo(x, y + height, x, y + height - radius.bl);
+    this.board.context.lineTo(x, y + radius.tl);
+    this.board.context.quadraticCurveTo(x, y, x + radius.tl, y);
+    this.board.context.closePath();
+    if (fill) {
+      this.board.context.fill();
+    }
+    if (stroke) {
+      this.board.context.stroke();
     }
   };
 
@@ -1194,6 +1357,23 @@ class Game {
     this.state.levelCompleted = false;
   };
 
+  handleThemeChangeClick = (e) => {
+    const rect = this.board.context.canvas.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const buttonWidth = 150;
+    const buttonHeight = 50;
+    const padding = 20;
+    const buttonX = this.board.width - buttonWidth - padding;
+    const buttonY = padding;
+    if (x > buttonX && x < buttonX + buttonWidth && y > buttonY && y < buttonY + buttonHeight) {
+      const randomLevel = Math.floor(Math.random() * this.theme.presets.length) + 1;
+      this.theme.changeTheme(randomLevel);
+      this.theme.applyTheme();
+      this.displayStartScreen();
+    }
+  };
+
   setDifficulty = (difficulty) => {
     this.ball.velocityX = difficulty.velocity;
     this.ball.velocityY = difficulty.velocity;
@@ -1208,55 +1388,100 @@ class Game {
     this.setupGame();
   };
 
-  generateTwitterShareLink = () => {
-    let hashtag = "#MITREgames";
-    let sayings = [
-      `100% MITRE coverage! Crushing those cyber threats like a boss! 😎 ${hashtag}`,
-      `100% MITRE coverage! I'm on a winning streak! 🔥 ${hashtag}`,
-      `100% MITRE coverage! I'm unstoppable! 🚀 ${hashtag}`,
-      `Achieved 100% MITRE coverage! Cyber threats, you're going down! 🔥 ${hashtag}`,
-      `Achieved 100% MITRE coverage! Cyber threats, you've met your match! 🎯 ${hashtag}`,
-      `Achieved 100% MITRE coverage! Cybersecurity, consider yourself conquered! 💪 ${hashtag}`,
-      `Achieved 100% MITRE coverage! Cybersecurity, consider yourself defeated! 💪 ${hashtag}`,
-      `Achieved 100% MITRE coverage! Cybersecurity, you've met your match! 🎯 ${hashtag}`,
-      `Achieved 100% MITRE coverage! That's how it's done! 🎯 ${hashtag}`,
-      `Just aced 100% MITRE coverage! I'm on a roll! 🚀 ${hashtag}`,
-      `Just aced 100% MITRE coverage! I'm on top of the world! 🌍 ${hashtag}`,
-      `Just aced 100% MITRE coverage! I'm unstoppable! 💪 ${hashtag}`,
-      `Just aced 100% MITRE coverage! Who's the cybersecurity champ now? 🏆 ${hashtag}`,
-      `Just hit 100% MITRE coverage! Can't stop, won't stop! 🎲 ${hashtag}`,
-      `Just hit 100% MITRE coverage! I'm a cybersecurity superhero! 🦸‍♂️ ${hashtag}`,
-      `Just hit 100% MITRE coverage! I'm a cybersecurity superstar! 🌟 ${hashtag}`,
-      `Just hit 100% MITRE coverage! I'm a cybersecurity wizard! 🧙‍♂️ ${hashtag}`,
-      `Just hit 100% MITRE coverage! I'm on fire! 🔥 ${hashtag}`,
-      `Just hit 100% MITRE coverage! I'm on top of my game! 🏆 ${hashtag}`,
-      `Just scored 100% MITRE coverage! Cybersecurity game strong! 💪 ${hashtag}`,
-      `Just smashed 100% MITRE coverage! Taking cybersecurity to the next level! 📈 ${hashtag}`,
-      `Nailed 100% MITRE coverage today! Can't touch this! 💪 ${hashtag}`,
-      `Nailed 100% MITRE coverage! Cybersecurity, consider yourself conquered! 💪 ${hashtag}`,
-      `Nailed 100% MITRE coverage! I'm a cybersecurity ninja! 🥷 ${hashtag}`,
-      `Nailed 100% MITRE coverage! I'm a game changer! 🎲 ${hashtag}`,
-      `Nailed 100% MITRE coverage! I'm a game changer! 🚀 ${hashtag}`,
-      `Scored 100% MITRE coverage! Cyber threats, beware! 🔥 ${hashtag}`,
-      `Scored 100% MITRE coverage! Cyber threats, you're going down! 🔥 ${hashtag}`,
-      `Scored 100% MITRE coverage! Cyber threats, you've met your match! 🎯 ${hashtag}`,
-      `Scored 100% MITRE coverage! Cybersecurity has got nothing on me! 🚀 ${hashtag}`,
-      `🎉 Just got 100% MITRE coverage! Feeling like a cybersecurity pro! 💻🔒 ${hashtag}`,
-      `🎊 Celebrating 100% MITRE coverage! Winning never felt so good! ${hashtag}`,
-      `💥 Boom! 100% MITRE coverage! Cyber threats, consider yourself defeated! ${hashtag}`,
-      `💥 Boom! 100% MITRE coverage! I'm a cybersecurity rockstar! 🎸 ${hashtag}`,
-      `💥 Boom! 100% MITRE coverage! I'm a cybersecurity superstar! 🌟 ${hashtag}`,
-      `💯% MITRE coverage achieved! I'm on a roll! 🎲 ${hashtag}`,
-      `💯% MITRE coverage! I'm on a winning streak! 🎲 ${hashtag}`,
-      `💯% MITRE coverage! I'm on top of my game! ${hashtag}`,
-      `💯% MITRE coverage! I'm on top of the world! 🌍 ${hashtag}`,
-      `🔥 Just hit 100% MITRE coverage! I'm on fire! ${hashtag}`,
-    ];
+  winSayings = [
+    `100% MITRE coverage! Crushing those cyber threats like a boss! 😎`,
+    `100% MITRE coverage! I'm on a winning streak! 🔥`,
+    `100% MITRE coverage! I'm unstoppable! 🚀`,
+    `Achieved 100% MITRE coverage! Cyber threats, you're going down! 🔥`,
+    `Achieved 100% MITRE coverage! Cyber threats, you've met your match! 🎯`,
+    `Achieved 100% MITRE coverage! Cybersecurity, consider yourself conquered! 💪`,
+    `Achieved 100% MITRE coverage! Cybersecurity, consider yourself defeated! 💪`,
+    `Achieved 100% MITRE coverage! Cybersecurity, you've met your match! 🎯`,
+    `Achieved 100% MITRE coverage! That's how it's done! 🎯`,
+    `Just aced 100% MITRE coverage! I'm on a roll! 🚀`,
+    `Just aced 100% MITRE coverage! I'm on top of the world! 🌍`,
+    `Just aced 100% MITRE coverage! I'm unstoppable! 💪`,
+    `Just aced 100% MITRE coverage! Who's the cybersecurity champ now? 🏆`,
+    `Just hit 100% MITRE coverage! Can't stop, won't stop! 🎲`,
+    `Just hit 100% MITRE coverage! I'm a cybersecurity superhero! 🦸‍♂️`,
+    `Just hit 100% MITRE coverage! I'm a cybersecurity superstar! 🌟`,
+    `Just hit 100% MITRE coverage! I'm a cybersecurity wizard! 🧙‍♂️`,
+    `Just hit 100% MITRE coverage! I'm on fire! 🔥`,
+    `Just hit 100% MITRE coverage! I'm on top of my game! 🏆`,
+    `Just scored 100% MITRE coverage! Cybersecurity game strong! 💪`,
+    `Just smashed 100% MITRE coverage! Taking cybersecurity to the next level! 📈`,
+    `Nailed 100% MITRE coverage today! Can't touch this! 💪`,
+    `Nailed 100% MITRE coverage! Cybersecurity, consider yourself conquered! 💪`,
+    `Nailed 100% MITRE coverage! I'm a cybersecurity ninja! 🥷`,
+    `Nailed 100% MITRE coverage! I'm a game changer! 🎲`,
+    `Nailed 100% MITRE coverage! I'm a game changer! 🚀`,
+    `Scored 100% MITRE coverage! Cyber threats, beware! 🔥`,
+    `Scored 100% MITRE coverage! Cyber threats, you're going down! 🔥`,
+    `Scored 100% MITRE coverage! Cyber threats, you've met your match! 🎯`,
+    `Scored 100% MITRE coverage! Cybersecurity has got nothing on me! 🚀`,
+    `🎉 Just got 100% MITRE coverage! Feeling like a cybersecurity pro! 💻🔒`,
+    `🎊 Celebrating 100% MITRE coverage! Winning never felt so good!`,
+    `💥 Boom! 100% MITRE coverage! Cyber threats, consider yourself defeated!`,
+    `💥 Boom! 100% MITRE coverage! I'm a cybersecurity rockstar! 🎸`,
+    `💥 Boom! 100% MITRE coverage! I'm a cybersecurity superstar! 🌟`,
+    `💯% MITRE coverage achieved! I'm on a roll! 🎲`,
+    `💯% MITRE coverage! I'm on a winning streak! 🎲`,
+    `💯% MITRE coverage! I'm on top of my game!`,
+    `💯% MITRE coverage! I'm on top of the world! 🌍`,
+    `🔥 Just hit 100% MITRE coverage! I'm on fire!`,
+  ];
 
-    let randomSaying = sayings[Math.floor(Math.random() * sayings.length)];
-    const text = encodeURIComponent(randomSaying);
-    const url = encodeURIComponent(document.location.href);
-    return `https://twitter.com/intent/tweet?text=${text}&url=${url}`;
+  verbs = ["achieved", "got", "managed", "managed to get", "reached", "scored"];
+  phrases = [
+    "I'm getting closer to 100%!",
+    "I'm not stopping until I get 100%!",
+    "I'm not there yet, but I'm making progress!",
+    "I'm not there yet, but I'm not giving up!",
+    "I'm on the path to 100%!",
+    "Not quite 100%, but I'll get there!",
+    "I'm getting closer to full coverage!",
+    "I'm making progress towards 100%!",
+    "Next time, I'm aiming for 100%!",
+    "I won't stop until I reach 100%!",
+    "I'm on my way to full coverage!",
+    "I'm not giving up until I reach 100%!",
+    "I'm determined to get 100% next time!",
+    "Not bad, but I can do better!",
+    "I'm on my way to 100%!",
+  ];
+  emojis = ["💪", "🚀", "🏃‍♂️", "📈", "🎯", "🧗‍♂️"];
+
+  getRandomElement(array) {
+    return array[Math.floor(Math.random() * array.length)];
+  }
+
+  generateGameOverSaying(percentageComplete) {
+    const verb = this.getRandomElement(this.verbs);
+    const phrase = this.getRandomElement(this.phrases);
+    const emoji = this.getRandomElement(this.emojis);
+    return `I ${verb} ${percentageComplete}% MITRE coverage. ${phrase} ${emoji}`;
+  }
+
+  generateTwitterShareLink = (percentageComplete, isWin) => {
+    let hashtag = isWin ? "#igotfullattackcoverage" : "#igotpartialattackcoverage";
+    let randomSaying = isWin
+      ? this.winSayings[Math.floor(Math.random() * this.winSayings.length)]
+      : this.generateGameOverSaying(percentageComplete);
+
+    const gameUrl = encodeURIComponent(document.location.href);
+    const text = encodeURIComponent(`${randomSaying} ${hashtag}`);
+    return `https://twitter.com/intent/tweet?text=${text}&url=${gameUrl}`;
+  };
+
+  generateBlueskyShareLink = (percentageComplete, isWin) => {
+    let hashtag = isWin ? "#igotfullattackcoverage" : "#igotpartialattackcoverage";
+    let randomSaying = isWin
+      ? this.winSayings[Math.floor(Math.random() * this.winSayings.length)]
+      : this.generateGameOverSaying(percentageComplete);
+
+    const gameUrl = document.location.href;
+    const text = encodeURIComponent(`${randomSaying} ${hashtag}. Play the game here: ${gameUrl}`);
+    return `https://bsky.app/intent/compose?text=${text}`;
   };
 }
 
