@@ -224,7 +224,7 @@ def get_datasources_table_data(datasource_list):
     # Now the table on the right, which is made up of datasource data
     for datasource in datasource_list:
         attack_id = util.buildhelpers.get_attack_id(datasource)
-        domain_list = util.buildhelpers.get_domain_name(datasource)
+        domain_list = get_datasources_domain(datasource)
 
         if attack_id:
             row = {}
@@ -322,3 +322,48 @@ def get_datacomponents_data(datasource, reference_list):
     datacomponents_data = sorted(datacomponents_data, key=lambda k: k["name"].lower())
 
     return datacomponents_data
+
+
+def get_domains_of_datacomponent(datacomponent, techniques_detected_by_datacomponent, technique_to_domain):
+        """Retrives domains of given data component"""
+        domains_of_datacomponent = []
+
+        # get data components to techniques mapping to find domains
+        techniques_of_datacomp = techniques_detected_by_datacomponent.get(datacomponent["id"])
+        if techniques_of_datacomp:
+            technique_list = {}
+            for technique_rel in techniques_of_datacomp:
+                attack_id = util.buildhelpers.get_attack_id(technique_rel["object"])
+                if attack_id:
+                    domain = technique_to_domain[attack_id].split("-")[0]
+                    if not domain in domains_of_datacomponent:
+                        domains_of_datacomponent.append(domain)
+
+        return domains_of_datacomponent
+
+def get_datasources_domain(datasource):
+    """Responsible for generating the list of domains for the datasources and datacomponents."""
+
+    # Get data components of data source
+    datacomponent_of = rsg.get_datacomponent_of()
+    technique_to_domain = rsg.get_technique_to_domain()
+    techniques_detected_by_datacomponent = rsg.get_techniques_detected_by_datacomponent()
+
+    # Loop through data sources
+    attack_id = util.buildhelpers.get_attack_id(datasource)
+
+    if attack_id:
+        domains_of_datasource = []
+        if datacomponent_of.get(datasource["id"]):
+            for datacomponent in datacomponent_of[datasource["id"]]:
+                if not datacomponent.get("x_mitre_deprecated") and not datacomponent.get("revoked"):
+                    # get data component detections
+                    techniques_of_datacomp = techniques_detected_by_datacomponent.get(datacomponent["id"])
+                    if techniques_of_datacomp:
+                        domains_of_datacomponent = get_domains_of_datacomponent(datacomponent, techniques_detected_by_datacomponent, technique_to_domain)
+                        # Add missing domains to data source
+                        for domain in domains_of_datacomponent:
+                            if not domain in domains_of_datasource:
+                                domains_of_datasource.append(domain)
+
+    return domains_of_datasource
