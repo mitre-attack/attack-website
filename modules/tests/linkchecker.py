@@ -331,6 +331,9 @@ def check_unlinked_pages(filenames):
             if filename.endswith("/404.html"):
                 continue
 
+            if "sidebar" in filename:
+                continue
+
             # e.g: contacts.html -> contacts/index.html
             to_index_path = filename
             if filename.endswith(".html") and not filename.endswith("index.html"):
@@ -349,7 +352,6 @@ def check_unlinked_pages(filenames):
                 and not in_use_links.get(from_index_path)
             ):
                 unlinked_pages.append(filename)
-
     return unlinked_pages
 
 
@@ -433,8 +435,7 @@ def check_links(external_links=False):
         if unlinked_pages:
             f.write("Pages listed were not linked from another page\n\n")
             for page in unlinked_pages:
-                if 'sidebar' not in page: #remove the sidebar html pages from unlinked pages
-                    f.write(page + "\n")
+                f.write(page + "\n")
         else:
             f.write("No unlinked pages found\n")
 

@@ -1,4 +1,4 @@
-{% macro render(title, link, description, fa_icon=None, invert_icon=None, buttons=None, header_background=None, footer_description=None, header_subtitle=None, card_modal=None) %}
+{% macro render(title, link, description, fa_icon=None, invert_icon=None, buttons=None, header_background=None, footer_description=None, header_subtitle=None) %}
 <div class="contact-card card">
     {% if header_background %}
         <div class="card-header background">
@@ -42,8 +42,9 @@
     {% if buttons %}
     <div class="card-footer no-background button-group">
         {% for button in buttons %}
-            <a href="{{button.url}}" {% if card_modal %} aria-controls="{{card_modal}}" {% endif %}>
-                <button type="button" class="slide-button" {% if card_modal %} data-toggle="modal" data-target="#{{card_modal}}" {% endif %}>
+        {% set isCardModal = "card_modal" in button %}
+            <a href="{{button.url}}" {% if isCardModal %} aria-controls="{{button.card_modal}}" {% endif %}>
+                <button type="button" class="slide-button" {% if isCardModal %} data-toggle="modal" data-target="#{{button.card_modal}}" {% endif %}>
                     <span class="slide-button-text text-nowrap">
                         {{button.label}}
                     </span>
