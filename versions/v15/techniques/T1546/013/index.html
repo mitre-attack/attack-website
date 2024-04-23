@@ -1,0 +1,784 @@
+
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+            <script async src="https://www.googletagmanager.com/gtag/js?id=UA-62667723-1"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'UA-62667723-1');
+        </script>
+        <meta name="google-site-verification" content="2oJKLqNN62z6AOCb0A0IXGtbQuj-lev5YPAHFF_cbHQ"/>
+
+        <meta charset='utf-8'>
+        <meta name='viewport' content='width=device-width, initial-scale=1,shrink-to-fit=no'>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <link rel='shortcut icon' href="/versions/v15/theme/favicon.ico" type='image/x-icon'>
+        <title>Event Triggered Execution: PowerShell Profile, Sub-technique T1546.013 - Enterprise | MITRE ATT&CK&reg;</title>
+        <!-- USWDS CSS -->
+        <!-- Bootstrap CSS -->
+        <link rel='stylesheet' href="/versions/v15/theme/style/bootstrap.min.css" />
+        <link rel='stylesheet' href="/versions/v15/theme/style/bootstrap-tourist.css" />
+        <link rel='stylesheet' href="/versions/v15/theme/style/bootstrap-select.min.css" />
+        <!-- Fontawesome CSS -->
+        <link rel="stylesheet" href="/versions/v15/theme/style/fontawesome-6.5.1/css/fontawesome.min.css"/>
+        <link rel="stylesheet" href="/versions/v15/theme/style/fontawesome-6.5.1/css/brands.min.css"/>
+        <link rel="stylesheet" href="/versions/v15/theme/style/fontawesome-6.5.1/css/solid.min.css"/>
+        <link rel="stylesheet" type="text/css" href="/versions/v15/theme/style.min.css?9dc07e69">
+
+</head>
+
+<body>
+
+    <div class="container-fluid attack-website-wrapper d-flex flex-column h-100">
+        <div class="row sticky-top flex-grow-0 flex-shrink-1">
+            <!-- header elements -->
+            <header class="col px-0">
+                    <nav class='navbar navbar-expand-lg navbar-dark position-static'>
+        <a class='navbar-brand' href="/versions/v15/"><img src="/versions/v15/theme/images/mitre_attack_logo.png" class="attack-logo"></a>
+        <button class='navbar-toggler' type='button' data-toggle='collapse' data-target='#navbarCollapse'
+                aria-controls='navbarCollapse' aria-expanded='false' aria-label='Toggle navigation'>
+                <span class='navbar-toggler-icon'></span>
+        </button>
+        <div class='collapse navbar-collapse' id='navbarCollapse'>
+            <ul class='nav nav-tabs ml-auto'>
+                        <li class="nav-item dropdown">
+                                
+    <a class="nav-link dropdown-toggle" href="/versions/v15/matrices/" id="navbarDropdown" role="button"
+    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <b>Matrices</b>
+    </a>
+    <div class="dropdown-menu " aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="/versions/v15/matrices/enterprise/">Enterprise</a>
+                <a class="dropdown-item" href="/versions/v15/matrices/mobile/">Mobile</a>
+                <a class="dropdown-item" href="/versions/v15/matrices/ics/">ICS</a>
+    </div>
+
+
+                        </li>
+                        <li class="nav-item dropdown">
+                                
+    <a class="nav-link dropdown-toggle" href="/versions/v15/tactics/" id="navbarDropdown" role="button"
+    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <b>Tactics</b>
+    </a>
+    <div class="dropdown-menu " aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="/versions/v15/tactics/enterprise/">Enterprise</a>
+                <a class="dropdown-item" href="/versions/v15/tactics/mobile/">Mobile</a>
+                <a class="dropdown-item" href="/versions/v15/tactics/ics/">ICS</a>
+    </div>
+
+
+                        </li>
+                        <li class="nav-item dropdown">
+                                
+    <a class="nav-link dropdown-toggle" href="/versions/v15/techniques/" id="navbarDropdown" role="button"
+    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <b>Techniques</b>
+    </a>
+    <div class="dropdown-menu " aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="/versions/v15/techniques/enterprise/">Enterprise</a>
+                <a class="dropdown-item" href="/versions/v15/techniques/mobile/">Mobile</a>
+                <a class="dropdown-item" href="/versions/v15/techniques/ics/">ICS</a>
+    </div>
+
+
+                        </li>
+                        <li class="nav-item dropdown">
+                                
+    <a class="nav-link dropdown-toggle" href="/versions/v15/datasources" id="navbarDropdown" role="button"
+    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <b>Defenses</b>
+    </a>
+    <div class="dropdown-menu " aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="/versions/v15/datasources">Data Sources</a>
+                
+<div class="dropright dropdown">
+<a class="dropdown-item dropdown-toggle" href="/versions/v15/mitigations/" id="navbarDropdown" role="button"
+    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <b>Mitigations</b>
+    </a>
+    <div class="dropdown-menu " aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="/versions/v15/mitigations/enterprise/">Enterprise</a>
+            <a class="dropdown-item" href="/versions/v15/mitigations/mobile/">Mobile</a>
+            <a class="dropdown-item" href="/versions/v15/mitigations/ics/">ICS</a>
+    </div>
+</div>
+
+                <a class="dropdown-item" href="/versions/v15/assets">Assets</a>
+    </div>
+
+
+                        </li>
+                        <li class="nav-item dropdown">
+                                
+    <a class="nav-link dropdown-toggle" href="/versions/v15/groups" id="navbarDropdown" role="button"
+    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <b>CTI</b>
+    </a>
+    <div class="dropdown-menu " aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="/versions/v15/groups">Groups</a>
+                <a class="dropdown-item" href="/versions/v15/software">Software</a>
+                <a class="dropdown-item" href="/versions/v15/campaigns">Campaigns</a>
+    </div>
+
+
+                        </li>
+                        <li class="nav-item dropdown">
+                                
+    <a class="nav-link dropdown-toggle" href="/versions/v15/resources/" id="navbarDropdown" role="button"
+    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <b>Resources</b>
+    </a>
+    <div class="dropdown-menu " aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="/versions/v15/resources/">Get Started</a>
+                <a class="dropdown-item" href="/versions/v15/resources/learn-more-about-attack/">Learn More about ATT&CK</a>
+                <a class="dropdown-item" href="/versions/v15/resources/attack-data-and-tools/">ATT&CK Data & Tools</a>
+                <a class="dropdown-item" href="/versions/v15/resources/faq/">FAQ</a>
+                <a class="dropdown-item" href="/versions/v15/resources/engage-with-attack/contact/">Engage with ATT&CK</a>
+                <a class="dropdown-item" href="/resources/versions/">Version History</a>
+                <a class="dropdown-item" href="/versions/v15/resources/legal-and-branding/">Legal & Branding</a>
+    </div>
+
+
+                        </li>
+                        <li class="nav-item">
+                            <a href="/versions/v15/resources/engage-with-attack/benefactors/"  class="nav-link" ><b>Benefactors</b></a>
+                        </li>
+                        <li class="nav-item">
+                                <a href="https://medium.com/mitre-attack/" target="_blank" class="nav-link">
+        <b>Blog</b>&nbsp;
+        <img src="/versions/v15/theme/images/external-site.svg" alt="External site" class="external-icon" />
+    </a>
+
+                        </li>
+                        <li class="nav-item">
+                            <button id="search-button" class="btn search-button">Search <div id="search-icon" class="icon-button search-icon"></div></button>
+                        </li>
+            </ul>
+        </div>
+    </nav>
+
+            </header>
+        </div>
+        <div class="row flex-grow-0 flex-shrink-1">
+            <!-- banner elements -->
+            <div class="col px-0">
+                <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
+                <div class="container-fluid version-banner"><div class="icon-inline baseline mr-1"><img src="/versions/v15/theme/images/icon-warning-24px.svg"></div>Currently viewing <a href="https://github.com/mitre/cti/releases/tag/ATT%26CK-v15.0" target="_blank">ATT&CK v15.0</a> which is the current version of ATT&CK. <a href="/resources/versions/">Learn more about the versioning system</a> or <a href="/">see the live site</a>.</div>
+                    <div class="container-fluid d-none">
+                        ATT&CK v15 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v15-26685f300acc'>blog post</a> or <a href='https://attack.mitre.org/resources/updates/updates-april-2024/'>release notes</a> for more information.
+                    </div>
+            </div>
+        </div>
+        <div class="row flex-grow-1 flex-shrink-0">
+            <!-- main content elements -->
+            <!--start-indexing-for-search-->
+
+ 
+     
+    <div class="sidebar nav sticky-top flex-column pr-0 pt-4 pb-3 pl-3" id="v-tab" role="tablist" aria-orientation="vertical">
+        <div class="resizer" id="resizer"></div>
+<!--stop-indexing-for-search-->
+<div id="sidebars"></div>
+<!--start-indexing-for-search-->
+    </div>
+
+    
+     
+    <div class="tab-content col-xl-9 pt-4" id="v-tabContent">
+        <div class="tab-pane fade show active" id="v-attckmatrix" role="tabpanel" aria-labelledby="v-attckmatrix-tab">
+    
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/versions/v15/">Home</a></li>
+            <li class="breadcrumb-item"><a href="/versions/v15/techniques/enterprise">Techniques</a></li>
+            <li class="breadcrumb-item"><a href="/versions/v15/techniques/enterprise">Enterprise</a></li>
+            <li class="breadcrumb-item"><a href="/versions/v15/techniques/T1546">Event Triggered Execution</a></li>
+        <li class="breadcrumb-item">PowerShell Profile</li>
+    </ol>
+    <div class="tab-pane fade show active" id="v-" role="tabpanel" aria-labelledby="v--tab"></div>
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="jumbotron jumbotron-fluid">
+                <div class="container-fluid">
+                    <h1 id="">
+                            <span id="subtechnique-parent-name">Event Triggered Execution:</span>
+                        PowerShell Profile
+                    </h1> 
+
+                        <div class="row">
+                            <div class="col-md-8">
+                                    <!--stop-indexing-for-search-->
+                                    <div class="card-block pb-2">
+                                        <div class="card">
+                                            <div class="card-header collapsed" id="subtechniques-card-header" data-toggle="collapse" data-target="#subtechniques-card-body" aria-expanded="false" aria-controls="subtechniques-card-body">
+                                                    <h5 class="mb-0" id ="sub-techniques">Other sub-techniques of Event Triggered Execution (16)</h5>
+                                            </div>
+                                            <div id="subtechniques-card-body" class="card-body p-0 collapse" aria-labelledby="subtechniques-card-header">
+                                                <table class="table table-bordered">
+                                                    <thead>
+                                                        <tr>
+                                                            <th scope="col">ID</th>
+                                                            <th scope="col">Name</th>
+                                                        </tr>
+                                                    </thead> 
+                                                    <tbody>                                          
+                                                            <tr>
+                                                                    <td>
+                                                                        <a href="/versions/v15/techniques/T1546/001/" class="subtechnique-table-item" data-subtechnique_id="T1546.001"> T1546.001 </a>
+                                                                    </td>
+                                                                    <td>
+                                                                        <a href="/versions/v15/techniques/T1546/001/" class="subtechnique-table-item" data-subtechnique_id="T1546.001"> Change Default File Association </a>
+                                                                    </td>
+                                                            </tr>
+                                                            <tr>
+                                                                    <td>
+                                                                        <a href="/versions/v15/techniques/T1546/002/" class="subtechnique-table-item" data-subtechnique_id="T1546.002"> T1546.002 </a>
+                                                                    </td>
+                                                                    <td>
+                                                                        <a href="/versions/v15/techniques/T1546/002/" class="subtechnique-table-item" data-subtechnique_id="T1546.002"> Screensaver </a>
+                                                                    </td>
+                                                            </tr>
+                                                            <tr>
+                                                                    <td>
+                                                                        <a href="/versions/v15/techniques/T1546/003/" class="subtechnique-table-item" data-subtechnique_id="T1546.003"> T1546.003 </a>
+                                                                    </td>
+                                                                    <td>
+                                                                        <a href="/versions/v15/techniques/T1546/003/" class="subtechnique-table-item" data-subtechnique_id="T1546.003"> Windows Management Instrumentation Event Subscription </a>
+                                                                    </td>
+                                                            </tr>
+                                                            <tr>
+                                                                    <td>
+                                                                        <a href="/versions/v15/techniques/T1546/004/" class="subtechnique-table-item" data-subtechnique_id="T1546.004"> T1546.004 </a>
+                                                                    </td>
+                                                                    <td>
+                                                                        <a href="/versions/v15/techniques/T1546/004/" class="subtechnique-table-item" data-subtechnique_id="T1546.004"> Unix Shell Configuration Modification </a>
+                                                                    </td>
+                                                            </tr>
+                                                            <tr>
+                                                                    <td>
+                                                                        <a href="/versions/v15/techniques/T1546/005/" class="subtechnique-table-item" data-subtechnique_id="T1546.005"> T1546.005 </a>
+                                                                    </td>
+                                                                    <td>
+                                                                        <a href="/versions/v15/techniques/T1546/005/" class="subtechnique-table-item" data-subtechnique_id="T1546.005"> Trap </a>
+                                                                    </td>
+                                                            </tr>
+                                                            <tr>
+                                                                    <td>
+                                                                        <a href="/versions/v15/techniques/T1546/006/" class="subtechnique-table-item" data-subtechnique_id="T1546.006"> T1546.006 </a>
+                                                                    </td>
+                                                                    <td>
+                                                                        <a href="/versions/v15/techniques/T1546/006/" class="subtechnique-table-item" data-subtechnique_id="T1546.006"> LC_LOAD_DYLIB Addition </a>
+                                                                    </td>
+                                                            </tr>
+                                                            <tr>
+                                                                    <td>
+                                                                        <a href="/versions/v15/techniques/T1546/007/" class="subtechnique-table-item" data-subtechnique_id="T1546.007"> T1546.007 </a>
+                                                                    </td>
+                                                                    <td>
+                                                                        <a href="/versions/v15/techniques/T1546/007/" class="subtechnique-table-item" data-subtechnique_id="T1546.007"> Netsh Helper DLL </a>
+                                                                    </td>
+                                                            </tr>
+                                                            <tr>
+                                                                    <td>
+                                                                        <a href="/versions/v15/techniques/T1546/008/" class="subtechnique-table-item" data-subtechnique_id="T1546.008"> T1546.008 </a>
+                                                                    </td>
+                                                                    <td>
+                                                                        <a href="/versions/v15/techniques/T1546/008/" class="subtechnique-table-item" data-subtechnique_id="T1546.008"> Accessibility Features </a>
+                                                                    </td>
+                                                            </tr>
+                                                            <tr>
+                                                                    <td>
+                                                                        <a href="/versions/v15/techniques/T1546/009/" class="subtechnique-table-item" data-subtechnique_id="T1546.009"> T1546.009 </a>
+                                                                    </td>
+                                                                    <td>
+                                                                        <a href="/versions/v15/techniques/T1546/009/" class="subtechnique-table-item" data-subtechnique_id="T1546.009"> AppCert DLLs </a>
+                                                                    </td>
+                                                            </tr>
+                                                            <tr>
+                                                                    <td>
+                                                                        <a href="/versions/v15/techniques/T1546/010/" class="subtechnique-table-item" data-subtechnique_id="T1546.010"> T1546.010 </a>
+                                                                    </td>
+                                                                    <td>
+                                                                        <a href="/versions/v15/techniques/T1546/010/" class="subtechnique-table-item" data-subtechnique_id="T1546.010"> AppInit DLLs </a>
+                                                                    </td>
+                                                            </tr>
+                                                            <tr>
+                                                                    <td>
+                                                                        <a href="/versions/v15/techniques/T1546/011/" class="subtechnique-table-item" data-subtechnique_id="T1546.011"> T1546.011 </a>
+                                                                    </td>
+                                                                    <td>
+                                                                        <a href="/versions/v15/techniques/T1546/011/" class="subtechnique-table-item" data-subtechnique_id="T1546.011"> Application Shimming </a>
+                                                                    </td>
+                                                            </tr>
+                                                            <tr>
+                                                                    <td>
+                                                                        <a href="/versions/v15/techniques/T1546/012/" class="subtechnique-table-item" data-subtechnique_id="T1546.012"> T1546.012 </a>
+                                                                    </td>
+                                                                    <td>
+                                                                        <a href="/versions/v15/techniques/T1546/012/" class="subtechnique-table-item" data-subtechnique_id="T1546.012"> Image File Execution Options Injection </a>
+                                                                    </td>
+                                                            </tr>
+                                                            <tr>
+                                                                    <td class="active">
+                                                                        T1546.013
+                                                                    </td>
+                                                                    <td class="active"> 
+                                                                        PowerShell Profile
+                                                                    </td>
+                                                            </tr>
+                                                            <tr>
+                                                                    <td>
+                                                                        <a href="/versions/v15/techniques/T1546/014/" class="subtechnique-table-item" data-subtechnique_id="T1546.014"> T1546.014 </a>
+                                                                    </td>
+                                                                    <td>
+                                                                        <a href="/versions/v15/techniques/T1546/014/" class="subtechnique-table-item" data-subtechnique_id="T1546.014"> Emond </a>
+                                                                    </td>
+                                                            </tr>
+                                                            <tr>
+                                                                    <td>
+                                                                        <a href="/versions/v15/techniques/T1546/015/" class="subtechnique-table-item" data-subtechnique_id="T1546.015"> T1546.015 </a>
+                                                                    </td>
+                                                                    <td>
+                                                                        <a href="/versions/v15/techniques/T1546/015/" class="subtechnique-table-item" data-subtechnique_id="T1546.015"> Component Object Model Hijacking </a>
+                                                                    </td>
+                                                            </tr>
+                                                            <tr>
+                                                                    <td>
+                                                                        <a href="/versions/v15/techniques/T1546/016/" class="subtechnique-table-item" data-subtechnique_id="T1546.016"> T1546.016 </a>
+                                                                    </td>
+                                                                    <td>
+                                                                        <a href="/versions/v15/techniques/T1546/016/" class="subtechnique-table-item" data-subtechnique_id="T1546.016"> Installer Packages </a>
+                                                                    </td>
+                                                            </tr>
+                               
+                                                    </tbody>                           
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--start-indexing-for-search-->
+   
+
+                                    <div class="description-body">
+                                                <p>Adversaries may gain persistence and elevate privileges by executing malicious content triggered by PowerShell profiles. A PowerShell profile  (<code>profile.ps1</code>) is a script that runs when <a href="/versions/v15/techniques/T1059/001">PowerShell</a> starts and can be used as a logon script to customize user environments.</p><p><a href="/versions/v15/techniques/T1059/001">PowerShell</a> supports several profiles depending on the user or host program. For example, there can be different profiles for <a href="/versions/v15/techniques/T1059/001">PowerShell</a> host programs such as the PowerShell console, PowerShell ISE or Visual Studio Code. An administrator can also configure a profile that applies to all users and host programs on the local computer. <span onclick=scrollToRef('scite-1') id="scite-ref-1-a" class="scite-citeref-number" title="Microsoft. (2017, November 29). About Profiles. Retrieved June 14, 2019."data-reference="Microsoft About Profiles"><sup><a href="https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_profiles?view=powershell-6" target="_blank" data-hasqtip="0" aria-describedby="qtip-0">[1]</a></sup></span> </p><p>Adversaries may modify these profiles to include arbitrary commands, functions, modules, and/or <a href="/versions/v15/techniques/T1059/001">PowerShell</a> drives to gain persistence. Every time a user opens a <a href="/versions/v15/techniques/T1059/001">PowerShell</a> session the modified script will be executed unless the <code>-NoProfile</code> flag is used when it is launched. <span onclick=scrollToRef('scite-2') id="scite-ref-2-a" class="scite-citeref-number" title="Faou, M. and Dumont R.. (2019, May 29). A dive into Turla PowerShell usage. Retrieved June 14, 2019."data-reference="ESET Turla PowerShell May 2019"><sup><a href="https://www.welivesecurity.com/2019/05/29/turla-powershell-usage/" target="_blank" data-hasqtip="1" aria-describedby="qtip-1">[2]</a></sup></span> </p><p>An adversary may also be able to escalate privileges if a script in a PowerShell profile is loaded and executed by an account with higher privileges, such as a domain administrator. <span onclick=scrollToRef('scite-3') id="scite-ref-3-a" class="scite-citeref-number" title="DeRyke, A.. (2019, June 7). Lab Notes: Persistence and Privilege Elevation using the Powershell Profile. Retrieved July 8, 2019."data-reference="Wits End and Shady PowerShell Profiles"><sup><a href="https://witsendandshady.blogspot.com/2019/06/lab-notes-persistence-and-privilege.html" target="_blank" data-hasqtip="2" aria-describedby="qtip-2">[3]</a></sup></span></p>
+
+                                    </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card">
+                                    <div class="card-body">
+                                            <div class="row card-data" id="card-id">
+                                                <div class="col-md-1 px-0 text-center"></div>
+                                                <div class="col-md-11 pl-0">
+                                                    <span class="h5 card-title">ID:&nbsp;</span>T1546.013
+                                                </div>
+                                            </div>
+                                        <!--stop-indexing-for-search-->
+                                        <div class="row card-data">
+                                            <div class="col-md-1 px-0 text-center"></div>
+                                            <div class="col-md-11 pl-0">
+                                                    <span class="h5 card-title">Sub-technique of:&nbsp;</span>
+                                                    <a href="/versions/v15/techniques/T1546">T1546</a>
+                                            </div>
+                                        </div>
+                                        <!--start-indexing-for-search-->
+                                            <div id="card-tactics" class="row card-data">
+                                                <div class="col-md-1 px-0 text-center">
+                                                    <span data-toggle="tooltip" data-placement="left" title="" data-test-ignore="true" data-original-title="The tactic objectives that the (sub-)technique can be used to accomplish">&#9432;</span>
+                                                </div>
+                                                <div class="col-md-11 pl-0">
+                                                    <span class="h5 card-title">Tactics:</span>
+                                                        <a href="/versions/v15/tactics/TA0004">Privilege Escalation</a>,                                                        <a href="/versions/v15/tactics/TA0003">Persistence</a>                                                </div>
+                                            </div>
+                                            <div class="row card-data">
+                                                <div class="col-md-1 px-0 text-center">
+                                                    <span data-toggle="tooltip" data-placement="left" title="" data-test-ignore="true" data-original-title="The system an adversary is operating within; could be an operating system or application">&#9432;</span>
+                                                </div>
+                                                <div class="col-md-11 pl-0">
+                                                    <span class="h5 card-title">Platforms:&nbsp;</span>Windows
+                                                </div>
+                                            </div>
+                                            <div class="row card-data">
+                                                <div class="col-md-1 px-0 text-center">
+                                                    <span data-toggle="tooltip" data-placement="left" title="" data-test-ignore="true" data-original-title="The lowest level of permissions the adversary is required to be operating within to perform the (sub-)technique on a system">&#9432;</span>
+                                                </div>
+                                                <div class="col-md-11 pl-0">
+                                                    <span class="h5 card-title">Permissions Required:&nbsp;</span>Administrator, User
+                                                </div>
+                                            </div>
+                                            <div class="row card-data">
+                                                <div class="col-md-1 px-0 text-center"></div>
+                                                <div class="col-md-11 pl-0">
+                                                    <span class="h5 card-title">Contributors:&nbsp;</span>Allen DeRyke, ICE; Matt Green, @mgreen27
+                                                </div>
+                                            </div>
+                                            <div class="row card-data">
+                                                <div class="col-md-1 px-0 text-center"></div>
+                                                <div class="col-md-11 pl-0">
+                                                    <span class="h5 card-title">Version:&nbsp;</span>1.1
+                                                </div>
+                                            </div>
+                                            <div class="row card-data">
+                                                <div class="col-md-1 px-0 text-center"></div>
+                                                <div class="col-md-11 pl-0">
+                                                    <span class="h5 card-title">Created:&nbsp;</span>24 January 2020
+                                                </div>
+                                            </div>
+                                            <div class="row card-data">
+                                                <div class="col-md-1 px-0 text-center"></div>
+                                                <div class="col-md-11 pl-0">
+                                                    <span class="h5 card-title">Last Modified:&nbsp;</span>20 October 2023
+                                                </div>
+                                            </div>
+                                    </div>
+                                </div>
+                                    <div class="text-center pt-2 version-button permalink">
+    <div class="live">
+        <a data-toggle="tooltip" 
+           data-placement="bottom" 
+           title="Permalink to this version of T1546.013" 
+           href="/versions/v15/techniques/T1546/013/" data-test-ignore="true">Version Permalink</a>
+    </div>
+    <div class="permalink">
+        <a data-toggle="tooltip" 
+           data-placement="bottom" 
+           title="Go to the live version of T1546.013" 
+           href="/techniques/T1546/013/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+    </div>
+</div>
+
+                            </div>
+                        </div>
+                            <h2 class="pt-3" id ="examples">Procedure Examples</h2>
+                            <div class="tables-mobile">
+                            <table class="table table-bordered table-alternate mt-2">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">ID</th>
+                                        <th scope="col">Name</th>
+                                        <th scope="col">Description</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v15/groups/G0010"> G0010 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v15/groups/G0010"> Turla </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v15/groups/G0010">Turla</a> has used PowerShell profiles to maintain persistence on an infected machine.<span onclick=scrollToRef('scite-2') id="scite-ref-2-a" class="scite-citeref-number" title="Faou, M. and Dumont R.. (2019, May 29). A dive into Turla PowerShell usage. Retrieved June 14, 2019."data-reference="ESET Turla PowerShell May 2019"><sup><a href="https://www.welivesecurity.com/2019/05/29/turla-powershell-usage/" target="_blank" data-hasqtip="1" aria-describedby="qtip-1">[2]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                </tbody>
+                            </table>
+                            </div>
+                            <h2 class="pt-3" id ="mitigations">Mitigations</h2>
+                            <div class="tables-mobile">
+                                <table class="table table-bordered table-alternate mt-2">
+                                    <thead>
+                                        <tr> 
+                                            <th scope="col">ID</th>
+                                            <th scope="col">Mitigation</th>
+                                            <th scope="col">Description</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                            <tr>
+                                                <td>
+                                                    <a href="/versions/v15/mitigations/M1045"> M1045 </a>
+                                                </td>
+                                                <td>
+                                                    <a href="/versions/v15/mitigations/M1045"> Code Signing </a>
+                                                </td>
+                                                <td>
+                                                                <p>Enforce execution of only signed PowerShell scripts. Sign profiles to avoid them from being modified.</p>
+
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <a href="/versions/v15/mitigations/M1022"> M1022 </a>
+                                                </td>
+                                                <td>
+                                                    <a href="/versions/v15/mitigations/M1022"> Restrict File and Directory Permissions </a>
+                                                </td>
+                                                <td>
+                                                                <p>Making PowerShell profiles immutable and only changeable by certain administrators will limit the ability for adversaries to easily create user level persistence.</p>
+
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <a href="/versions/v15/mitigations/M1054"> M1054 </a>
+                                                </td>
+                                                <td>
+                                                    <a href="/versions/v15/mitigations/M1054"> Software Configuration </a>
+                                                </td>
+                                                <td>
+                                                                <p>Avoid PowerShell profiles if not needed. Use the -No Profile flag with when executing PowerShell scripts remotely to prevent local profiles and scripts from being executed.</p>
+
+                                                </td>
+                                            </tr>
+                                    </tbody>
+                                </table>
+                                </div>
+                            <h2 class="pt-3" id="detection">Detection</h2>
+                                <div class="tables-mobile">
+<table class="table datasources-table table-bordered">
+    <thead>
+        <tr>
+            <th class="p-2" scope="col">ID</th>
+            <th class="p-2 nowrap" scope="col">Data Source</th>
+            <th class="p-2 nowrap" scope="col">Data Component</th>
+            <th class="p-2" scope="col">Detects</th>
+        </tr>
+    </thead>
+    <tbody>
+            <tr class="datasource" id="uses-DS0017">
+                <td>
+                    <a href="/versions/v15/datasources/DS0017">DS0017</a>
+                </td>
+                <td class="nowrap">
+                    <a href="/versions/v15/datasources/DS0017">Command</a>
+                </td>
+                <!-- Add first data component here -->
+                <td> 
+                    <a href="/datasources/DS0017/#Command%20Execution">Command Execution</a>
+                </td>
+                    <td>
+                                <p>Monitor abnormal PowerShell commands, unusual loading of PowerShell drives or modules.</p>
+
+                    </td>
+            </tr>
+            <tr class="datasource" id="uses-DS0022">
+                <td>
+                    <a href="/versions/v15/datasources/DS0022">DS0022</a>
+                </td>
+                <td class="nowrap">
+                    <a href="/versions/v15/datasources/DS0022">File</a>
+                </td>
+                <!-- Add first data component here -->
+                <td> 
+                    <a href="/datasources/DS0022/#File%20Creation">File Creation</a>
+                </td>
+                    <td>
+                                <p>Locations where <code>profile.ps1</code> can be stored should be monitored for new profiles. <span onclick=scrollToRef('scite-4') id="scite-ref-4-a" class="scite-citeref-number" title="Malware Archaeology. (2016, June). WINDOWS POWERSHELL LOGGING CHEAT SHEET - Win 7/Win 2008 or later. Retrieved June 24, 2016."data-reference="Malware Archaeology PowerShell Cheat Sheet"><sup><a href="http://www.malwarearchaeology.com/s/Windows-PowerShell-Logging-Cheat-Sheet-ver-June-2016-v2.pdf" target="_blank" data-hasqtip="3" aria-describedby="qtip-3">[4]</a></sup></span> Example profile locations include:* <code>$PsHome\Profile.ps1</code>* <code>$PsHome\Microsoft.{HostProgram}_profile.ps1</code>* <code>$Home\My Documents\PowerShell\Profile.ps1</code>* <code>$Home\My Documents\PowerShell\Microsoft.{HostProgram}_profile.ps1</code></p>
+
+                    </td>
+            </tr>
+                    <tr class="datacomponent datasource" id="uses-DS0022-File Modification">
+                        <td></td>
+                        <td></td>
+                        <td>
+                            <a href="/datasources/DS0022/#File%20Modification">File Modification</a>
+                        </td>
+                            <td>
+                                        <p>Locations where <code>profile.ps1</code> can be stored should be monitored for modifications. <span onclick=scrollToRef('scite-4') id="scite-ref-4-a" class="scite-citeref-number" title="Malware Archaeology. (2016, June). WINDOWS POWERSHELL LOGGING CHEAT SHEET - Win 7/Win 2008 or later. Retrieved June 24, 2016."data-reference="Malware Archaeology PowerShell Cheat Sheet"><sup><a href="http://www.malwarearchaeology.com/s/Windows-PowerShell-Logging-Cheat-Sheet-ver-June-2016-v2.pdf" target="_blank" data-hasqtip="3" aria-describedby="qtip-3">[4]</a></sup></span> Example profile locations include:* <code>$PsHome\Profile.ps1</code>* <code>$PsHome\Microsoft.{HostProgram}_profile.ps1</code>* <code>$Home\My Documents\PowerShell\Profile.ps1</code>* <code>$Home\My Documents\PowerShell\Microsoft.{HostProgram}_profile.ps1</code></p>
+
+                            </td>
+                    </tr>
+            <tr class="datasource" id="uses-DS0009">
+                <td>
+                    <a href="/versions/v15/datasources/DS0009">DS0009</a>
+                </td>
+                <td class="nowrap">
+                    <a href="/versions/v15/datasources/DS0009">Process</a>
+                </td>
+                <!-- Add first data component here -->
+                <td> 
+                    <a href="/datasources/DS0009/#Process%20Creation">Process Creation</a>
+                </td>
+                    <td>
+                                <p>Monitor newly executed processes that may gain persistence and elevate privileges by executing malicious content triggered by PowerShell profiles.</p>
+
+                    </td>
+            </tr>
+    </tbody>
+</table>
+</div>
+
+                
+                            <h2 class="pt-3" id="references">References</h2>
+
+        <div class="row">
+            <div class="col">
+                <ol>
+                            
+        <li>
+            <span  id="scite-1" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-1" href="https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_profiles?view=powershell-6" target="_blank">
+                        Microsoft. (2017, November 29). About Profiles. Retrieved June 14, 2019.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-2" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-2" href="https://www.welivesecurity.com/2019/05/29/turla-powershell-usage/" target="_blank">
+                        Faou, M. and Dumont R.. (2019, May 29). A dive into Turla PowerShell usage. Retrieved June 14, 2019.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                </ol>
+            </div>
+            <div class="col">
+                    <ol start="3.0">
+                                
+        <li>
+            <span  id="scite-3" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-3" href="https://witsendandshady.blogspot.com/2019/06/lab-notes-persistence-and-privilege.html" target="_blank">
+                        DeRyke, A.. (2019, June 7). Lab Notes: Persistence and Privilege Elevation using the Powershell Profile. Retrieved July 8, 2019.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-4" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-4" href="http://www.malwarearchaeology.com/s/Windows-PowerShell-Logging-Cheat-Sheet-ver-June-2016-v2.pdf" target="_blank">
+                        Malware Archaeology. (2016, June). WINDOWS POWERSHELL LOGGING CHEAT SHEET - Win 7/Win 2008 or later. Retrieved June 24, 2016.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+  
+                    </ol>
+            </div>             
+        </div>
+
+
+    
+                </div>
+            </div>
+        </div>
+    </div>
+    
+        </div>
+    </div>
+
+            <!--stop-indexing-for-search-->
+            <!-- search overlay for entire page -- not displayed inline -->
+            <div class="overlay search" id="search-overlay" style="display: none;">
+    <div class="overlay-inner">
+        <!-- text input for searching -->
+        <div class="search-header">
+            <div class="search-input">
+                <input type="text" id="search-input" placeholder="search">
+            </div>
+            <div class="search-icons">
+                <div class="search-parsing-icon spinner-border" style="display: none" id="search-parsing-icon"></div>
+                <div class="close-search-icon" id="close-search-icon">&times;</div>
+            </div>
+        </div>
+        <!-- results and controls for loading more results -->
+        <div id="search-body" class="search-body">
+            <div class="results" id="search-results">
+                <!-- content will be appended here on search -->
+            </div>
+            <div id="load-more-results" class="load-more-results">
+                <button class="btn btn-default" id="load-more-results-button">load more results</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+        </div>
+        <div class="row flex-grow-0 flex-shrink-1">
+            <!-- footer elements -->
+            <footer class="col footer">
+                <div class="container-fluid">
+                    <div class="row row-footer">
+                        <div class="col-2 col-sm-2 col-md-2">
+                            <div class="footer-center-responsive my-auto">
+                                <a href="https://www.mitre.org" target="_blank" rel="noopener" aria-label="MITRE">
+                                    <img src="/versions/v15/theme/images/mitrelogowhiteontrans.gif" class="mitre-logo-wtrans">
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-2 col-sm-2 footer-responsive-break"></div>
+                        <div class="footer-link-group">
+                            <div class="row row-footer">
+                                <div class="px-3 col-footer">
+                                    <u class="footer-link"><a href="/versions/v15/resources/engage-with-attack/contact" class="footer-link">Contact Us</a></u>
+                                </div>
+                                <div class="px-3 col-footer">
+                                    <u class="footer-link"><a href="/versions/v15/resources/legal-and-branding/terms-of-use" class="footer-link">Terms of Use</a></u>
+                                </div>
+                                    <div class="px-3 col-footer">
+                                        <u class="footer-link"><a href="/versions/v15/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
+                                    </div>
+                                <div class="px-3">
+                                    <u class="footer-link"><a href="/versions/v15/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v15.0&#013;Website  v4.1.2">Website Changelog</a></u>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <small class="px-3">
+                                    &copy;&nbsp;2015&nbsp;-&nbsp;2024, The MITRE Corporation. MITRE ATT&CK and ATT&CK are registered trademarks of The MITRE Corporation.
+                                </small>
+                            </div>
+                        </div>
+                        <div class="w-100 p-2 footer-responsive-break"></div>
+                            <div class="col pr-4">
+                                <div class="footer-float-right-responsive-brand">
+                                    <div class="row row-footer row-footer-icon">
+                                        <div class="mb-1">
+                                            <a href="https://twitter.com/MITREattack" class="btn btn-footer">
+                                                <i class="fa-brands fa-x-twitter fa-lg"></i>
+                                            </a>
+                                            <a href="https://github.com/mitre-attack" class="btn btn-footer">
+                                                <i class="fa-brands fa-github fa-lg"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+
+<!--stopindex-->
+
+</div>
+    <!--SCRIPTS-->
+    <script src="/versions/v15/theme/scripts/jquery-3.5.1.min.js"></script>
+    <script src="/versions/v15/theme/scripts/popper.min.js"></script>
+    <script src="/versions/v15/theme/scripts/bootstrap-select.min.js"></script>
+    <script src="/versions/v15/theme/scripts/bootstrap.bundle.min.js"></script>
+    <script src="/versions/v15/theme/scripts/site.js?7728"></script>
+    <script src="/versions/v15/theme/scripts/settings.js?6205"></script>
+    <script src="/versions/v15/theme/scripts/search_bundle.js"></script>
+
+<!--SCRIPTS-->
+<script src="/versions/v15/theme/scripts/resizer.js"></script>
+
+<!--SCRIPTS-->
+<script src="/versions/v15/theme/scripts/bootstrap-tourist.js"></script>
+<script src="/versions/v15/theme/scripts/settings.js"></script>
+    <script src="/versions/v15/theme/scripts/tour/tour-subtechniques.js"></script>
+<script src="/versions/v15/theme/scripts/sidebar-load-all.js"></script>
+</body>
+</html>

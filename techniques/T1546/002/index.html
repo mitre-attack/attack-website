@@ -26,7 +26,7 @@
         <link rel="stylesheet" href="/theme/style/fontawesome-6.5.1/css/fontawesome.min.css"/>
         <link rel="stylesheet" href="/theme/style/fontawesome-6.5.1/css/brands.min.css"/>
         <link rel="stylesheet" href="/theme/style/fontawesome-6.5.1/css/solid.min.css"/>
-        <link rel="stylesheet" type="text/css" href="/theme/style.min.css?fbd3eefa">
+        <link rel="stylesheet" type="text/css" href="/theme/style.min.css?9dc07e69">
 
 </head>
 
@@ -169,7 +169,7 @@
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
                     <div class="container-fluid banner-message">
-                        Thank you to Tidal Cyber and SOC Prime for becoming ATT&CK's first Benefactors. To join the cohort, or learn more about this program visit our <a href='https://attack.mitre.org/resources/engage-with-attack/benefactors/'>Benefactors page</a>.
+                        ATT&CK v15 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v15-26685f300acc'>blog post</a> or <a href='https://attack.mitre.org/resources/updates/updates-april-2024/'>release notes</a> for more information.
                     </div>
             </div>
         </div>
@@ -440,13 +440,13 @@
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Permalink to this version of T1546.002" 
-           href="/versions/v14/techniques/T1546/002/" data-test-ignore="true">Version Permalink</a>
+           href="/versions/v15/techniques/T1546/002/" data-test-ignore="true">Version Permalink</a>
     </div>
     <div class="permalink">
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Go to the live version of T1546.002" 
-           href="/versions/v14/techniques/T1546/002/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+           href="/versions/v15/techniques/T1546/002/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
     </div>
 </div>
 
@@ -540,7 +540,7 @@
                     <a href="/datasources/DS0017/#Command%20Execution">Command Execution</a>
                 </td>
                     <td>
-                                <p>Monitor executed commands and arguments of .scr files.</p><h4> Analytic 1 - Modify the HKCU\Control Panel\Desktop registry key </h4><p><code> suspicious_processes = filter processes where  (event_id == "1" OR event_id == "4688") AND  (ProcessCommandLine LIKE '%reg%' AND ProcessCommandLine LIKE '%add%' AND ProcessCommandLine LIKE '%HKCU\Control Panel\Desktop\%') </code></p>
+                                <p>Monitor executed commands and arguments of .scr files.</p>
 
                     </td>
             </tr>
@@ -556,7 +556,7 @@
                     <a href="/datasources/DS0022/#File%20Creation">File Creation</a>
                 </td>
                     <td>
-                                <p>Monitor newly constructed files that may establish persistence by executing malicious content triggered by user inactivity.</p><h4> Analytic 1 - Created on disk that are being used as Screensaver files </h4><p><code>screensaver_key_modification = filter ProcessGuid, ProcessFilePath, UserName, RegistryKeyPath, RegistryKeyValueData where  event_id == "13" AND  RegistryKeyPath LIKE '%Software\Policies\Microsoft\Windows\Control Panel\Desktop\SCRNSAVE.EXE%'</p><p>new_files = filter ProcessFilePath, UserName, FileName where event_id == "11"</p><p>suspicious_files = filter k.ProcessGuid, k.ProcessFilePath, k.UserName, k.RegistryKeypath, k.RegistryKeyValueData FROM screensaver_key_modification kINNER JOIN new_files fON k.RegistryKeyValueData = f.FileName </code></p>
+                                <p>Monitor newly constructed files that may establish persistence by executing malicious content triggered by user inactivity.</p><p>Analytic 1 - Created on disk that are being used as Screensaver files</p><p><code>(source="<em>WinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode="11") TargetObject="</em>\Software\Policies\Microsoft\Windows\Control Panel\Desktop\SCRNSAVE.EXE" </code></p>
 
                     </td>
             </tr>
@@ -583,7 +583,7 @@
                     <a href="/datasources/DS0009/#Process%20Creation">Process Creation</a>
                 </td>
                     <td>
-                                <p>Monitor newly executed processes that may establish persistence by executing malicious content triggered by user inactivity.</p><h4> Analytic 1 : New processes whose image files are being used as Screensaver files and make an outbound network connection to unknown IP address </h4><p><code>new_processes = filter ProcessGuid, ProcessFilePath, ProcessCommandLine, UserNameFROM ProcessCreationDataWHERE  event_id == "1"</p><p>new_network_connections = filter ProcessFilePath, DestinationIpFROM NetworkConnectionDataWHERE  event_id == "3"</p><p>screensaver_key_modification = filter ProcessGuid, ProcessFilePath, UserName, RegistryKeyPath, RegistryKeyValueData FROM KeyModificationDataWHERE  event_id == "13" AND  RegistryKeyPath LIKE '%Software\Policies\Microsoft\Windows\Control Panel\Desktop\SCRNSAVE.EXE%'</p><p>screensaver_processes = filter p.ProcessGuid, p.ProcessFilePath, p.UserNameFROM new_processes pINNER JOIN screensaver_key_modification kON p.ProcessFilePath = k.RegistryKeyValueData</p><p>suspicious_processes = filter p.ProcessGuid, p.ProcessFilePath, p.UserName, n.DestinationIpFROM new_network_connections nINNER JOIN screensaver_processes pON p.ProcessFilePath = n.ProcessFilePathWHERE  n.DestinationIP NOT IN ('KnownIp01','KnownIp02')</code></p>
+                                <p>Monitor newly executed processes that may establish persistence by executing malicious content triggered by user inactivity.</p><p>Analytic 1 - HKCU\Control Panel\Desktop registry key</p><p><code> (source="<em>WinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode="1") OR (source="</em>WinEventLog:Security" EventCode="4688") | where CommandLine LIKE "%reg%" AND CommandLine LIKE "%add%" AND CommandLine LIKE "%HKCU\Control Panel\Desktop\%"</code></p>
 
                     </td>
             </tr>
@@ -599,7 +599,7 @@
                     <a href="/datasources/DS0024/#Windows%20Registry%20Key%20Modification">Windows Registry Key Modification</a>
                 </td>
                     <td>
-                                <p>Monitor changes to screensaver configuration changes in the Registry that may not correlate with typical user behavior. Tools such as Sysinternals Autoruns can be used to detect changes to the screensaver binary path in the Registry. Default screen saver files are stored in C:\Windows\System32. Use these files as a reference when defining list of not suspicious screen saver files.</p><h4> Analytic 1 : Registry Edit from Screensaver </h4><p><code>scr_reg_events = filter processes where (  event_id == "13" AND  key="*\Software\Policies\Microsoft\Windows\Control Panel\Desktop\SCRNSAVE.EXE" AND  RegistryKeyValueData NOT IN ('PathToScreenSaverFile1','PathToScreenSaverFile2')) </code></p>
+                                <p>Monitor changes to screensaver configuration changes in the Registry that may not correlate with typical user behavior. Tools such as Sysinternals Autoruns can be used to detect changes to the screensaver binary path in the Registry. Default screen saver files are stored in C:\Windows\System32. Use these files as a reference when defining list of not suspicious screen saver files.</p><p>Analytic 1 - Registry Edit from Screensaver</p><p><code>source="<em>WinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode IN (13, 14) TargetObject="</em>\Software\Policies\Microsoft\Windows\Control Panel\Desktop\SCRNSAVE.EXE"</code></p>
 
                     </td>
             </tr>
@@ -720,7 +720,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v14.1&#013;Website  v4.1.1">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v15.0&#013;Website  v4.1.2">Website Changelog</a></u>
                                 </div>
                             </div>
                             <div class="row">
@@ -760,8 +760,8 @@
     <script src="/theme/scripts/popper.min.js"></script>
     <script src="/theme/scripts/bootstrap-select.min.js"></script>
     <script src="/theme/scripts/bootstrap.bundle.min.js"></script>
-    <script src="/theme/scripts/site.js?4207"></script>
-    <script src="/theme/scripts/settings.js?7872"></script>
+    <script src="/theme/scripts/site.js?178"></script>
+    <script src="/theme/scripts/settings.js?7648"></script>
     <script src="/theme/scripts/search_bundle.js"></script>
 
 <!--SCRIPTS-->

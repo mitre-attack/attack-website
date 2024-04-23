@@ -26,7 +26,7 @@
         <link rel="stylesheet" href="/theme/style/fontawesome-6.5.1/css/fontawesome.min.css"/>
         <link rel="stylesheet" href="/theme/style/fontawesome-6.5.1/css/brands.min.css"/>
         <link rel="stylesheet" href="/theme/style/fontawesome-6.5.1/css/solid.min.css"/>
-        <link rel="stylesheet" type="text/css" href="/theme/style.min.css?fbd3eefa">
+        <link rel="stylesheet" type="text/css" href="/theme/style.min.css?9dc07e69">
 
 </head>
 
@@ -169,7 +169,7 @@
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
                     <div class="container-fluid banner-message">
-                        Thank you to Tidal Cyber and SOC Prime for becoming ATT&CK's first Benefactors. To join the cohort, or learn more about this program visit our <a href='https://attack.mitre.org/resources/engage-with-attack/benefactors/'>Benefactors page</a>.
+                        ATT&CK v15 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v15-26685f300acc'>blog post</a> or <a href='https://attack.mitre.org/resources/updates/updates-april-2024/'>release notes</a> for more information.
                     </div>
             </div>
         </div>
@@ -402,7 +402,7 @@
                                             <div class="row card-data">
                                                 <div class="col-md-1 px-0 text-center"></div>
                                                 <div class="col-md-11 pl-0">
-                                                    <span class="h5 card-title">Version:&nbsp;</span>1.1
+                                                    <span class="h5 card-title">Version:&nbsp;</span>1.2
                                                 </div>
                                             </div>
                                             <div class="row card-data">
@@ -414,7 +414,7 @@
                                             <div class="row card-data">
                                                 <div class="col-md-1 px-0 text-center"></div>
                                                 <div class="col-md-11 pl-0">
-                                                    <span class="h5 card-title">Last Modified:&nbsp;</span>14 August 2023
+                                                    <span class="h5 card-title">Last Modified:&nbsp;</span>14 February 2024
                                                 </div>
                                             </div>
                                     </div>
@@ -424,13 +424,13 @@
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Permalink to this version of T1547.004" 
-           href="/versions/v14/techniques/T1547/004/" data-test-ignore="true">Version Permalink</a>
+           href="/versions/v15/techniques/T1547/004/" data-test-ignore="true">Version Permalink</a>
     </div>
     <div class="permalink">
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Go to the live version of T1547.004" 
-           href="/versions/v14/techniques/T1547/004/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+           href="/versions/v15/techniques/T1547/004/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
     </div>
 </div>
 
@@ -644,7 +644,7 @@
                     <a href="/datasources/DS0017/#Command%20Execution">Command Execution</a>
                 </td>
                     <td>
-                                <p>Monitor executed commands and arguments that may abuse features of Winlogon to execute DLLs and/or executables when a user logs in.</p><h4>Analytic 1 - Modification of the Winlogon Registry Key</h4><p><code>suspicious_processes = filter processes where (event_id == "1" OR event_id == "4688")   AND  (ProcessCommandLine LIKE '%Microsoft\Windows NT\CurrentVersion\Winlogon%' AND     (ProcessCommandLine LIKE '%Userinit%' OR ProcessCommandLine LIKE '%Shell%' OR ProcessCommandLine LIKE '%Notify%'))  AND  (ProcessCommandLine LIKE '%reg%' OR ProcessCommandLine LIKE '%add%' OR ProcessCommandLine LIKE '%/d%' OR   ProcessCommandLine LIKE '%Set-ItemProperty%' OR ProcessCommandLine LIKE '%New-ItemProperty%' ProcessCommandLine LIKE '%-value%')</code></p>
+                                <p>Monitor executed commands and arguments that may abuse features of Winlogon to execute DLLs and/or executables when a user logs in.</p>
 
                     </td>
             </tr>
@@ -664,6 +664,22 @@
 
                     </td>
             </tr>
+            <tr class="datasource" id="uses-DS0009">
+                <td>
+                    <a href="/datasources/DS0009">DS0009</a>
+                </td>
+                <td class="nowrap">
+                    <a href="/datasources/DS0009">Process</a>
+                </td>
+                <!-- Add first data component here -->
+                <td> 
+                    <a href="/datasources/DS0009/#Process%20Creation">Process Creation</a>
+                </td>
+                    <td>
+                                <p>Monitor for the execution of processes that may abuse features of Winlogon to execute DLLs and/or executables when a user logs in.</p><p>Analytic 1 - Modification of the Winlogon Registry Key</p><p><code>(source="<em>WinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode="1") OR (source="</em>WinEventLog:Security" EventCode="4688") | where  (CommandLine LIKE "%Microsoft\Windows NT\CurrentVersion\Winlogon%" AND (CommandLine LIKE "%Userinit%" OR CommandLine LIKE "%Shell%" OR CommandLine LIKE "%Notify%"))  AND  (CommandLine LIKE "%reg%" OR CommandLine LIKE "%add%" OR CommandLine LIKE "%/d%" OR  CommandLine LIKE "%Set-ItemProperty%" OR CommandLine LIKE "%New-ItemProperty%" CommandLine LIKE "%-value%")</code></p>
+
+                    </td>
+            </tr>
             <tr class="datasource" id="uses-DS0024">
                 <td>
                     <a href="/datasources/DS0024">DS0024</a>
@@ -676,7 +692,7 @@
                     <a href="/datasources/DS0024/#Windows%20Registry%20Key%20Modification">Windows Registry Key Modification</a>
                 </td>
                     <td>
-                                <p>Monitor for changes to Registry entries associated with Winlogon that do not correlate with known software, patch cycles, etc. Tools such as Sysinternals Autoruns may also be used to detect system changes that could be attempts at persistence, including listing current Winlogon helper values. <span onclick=scrollToRef('scite-18') id="scite-ref-18-a" class="scite-citeref-number" title="Russinovich, M. (2016, January 4). Autoruns for Windows v13.51. Retrieved June 6, 2016."data-reference="TechNet Autoruns"><sup><a href="https://technet.microsoft.com/en-us/sysinternals/bb963902" target="_blank" data-hasqtip="17" aria-describedby="qtip-17">[18]</a></sup></span></p><h4>Analytic 1 - Modification of the Winlogon Registry Key</h4><p><code>suspicious_processes = filter registry where event_id == "13" AND  (RegistryKeyPath LIKE '%Userinit%' OR RegistryKeyPath LIKE '%Shell%' OR RegistryKeyPath LIKE '%Notify%') </code></p>
+                                <p>Monitor for changes to Registry entries associated with Winlogon that do not correlate with known software, patch cycles, etc. Tools such as Sysinternals Autoruns may also be used to detect system changes that could be attempts at persistence, including listing current Winlogon helper values. <span onclick=scrollToRef('scite-18') id="scite-ref-18-a" class="scite-citeref-number" title="Russinovich, M. (2016, January 4). Autoruns for Windows v13.51. Retrieved June 6, 2016."data-reference="TechNet Autoruns"><sup><a href="https://technet.microsoft.com/en-us/sysinternals/bb963902" target="_blank" data-hasqtip="17" aria-describedby="qtip-17">[18]</a></sup></span></p><p>Analytic 1 - Registry Edit with Modification of Userinit, Shell or Notify</p><p><code>source="<em>WinEventLog:Security" EventCode="4657" (ObjectValueName="Userinit" OR ObjectValueName="Shell" OR ObjectValueName="Notify") OR source="</em>WinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode="13" (TargetObject="<em>Userinit" OR TargetObject="</em>Shell" OR TargetObject="*Notify")</code></p>
 
                     </td>
             </tr>
@@ -977,7 +993,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v14.1&#013;Website  v4.1.1">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v15.0&#013;Website  v4.1.2">Website Changelog</a></u>
                                 </div>
                             </div>
                             <div class="row">
@@ -1017,8 +1033,8 @@
     <script src="/theme/scripts/popper.min.js"></script>
     <script src="/theme/scripts/bootstrap-select.min.js"></script>
     <script src="/theme/scripts/bootstrap.bundle.min.js"></script>
-    <script src="/theme/scripts/site.js?2417"></script>
-    <script src="/theme/scripts/settings.js?3003"></script>
+    <script src="/theme/scripts/site.js?8757"></script>
+    <script src="/theme/scripts/settings.js?8763"></script>
     <script src="/theme/scripts/search_bundle.js"></script>
 
 <!--SCRIPTS-->

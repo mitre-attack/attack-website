@@ -1,0 +1,737 @@
+
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+            <script async src="https://www.googletagmanager.com/gtag/js?id=UA-62667723-1"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'UA-62667723-1');
+        </script>
+        <meta name="google-site-verification" content="2oJKLqNN62z6AOCb0A0IXGtbQuj-lev5YPAHFF_cbHQ"/>
+
+        <meta charset='utf-8'>
+        <meta name='viewport' content='width=device-width, initial-scale=1,shrink-to-fit=no'>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <link rel='shortcut icon' href="/versions/v15/theme/favicon.ico" type='image/x-icon'>
+        <title>Pre-OS Boot: TFTP Boot, Sub-technique T1542.005 - Enterprise | MITRE ATT&CK&reg;</title>
+        <!-- USWDS CSS -->
+        <!-- Bootstrap CSS -->
+        <link rel='stylesheet' href="/versions/v15/theme/style/bootstrap.min.css" />
+        <link rel='stylesheet' href="/versions/v15/theme/style/bootstrap-tourist.css" />
+        <link rel='stylesheet' href="/versions/v15/theme/style/bootstrap-select.min.css" />
+        <!-- Fontawesome CSS -->
+        <link rel="stylesheet" href="/versions/v15/theme/style/fontawesome-6.5.1/css/fontawesome.min.css"/>
+        <link rel="stylesheet" href="/versions/v15/theme/style/fontawesome-6.5.1/css/brands.min.css"/>
+        <link rel="stylesheet" href="/versions/v15/theme/style/fontawesome-6.5.1/css/solid.min.css"/>
+        <link rel="stylesheet" type="text/css" href="/versions/v15/theme/style.min.css?9dc07e69">
+
+</head>
+
+<body>
+
+    <div class="container-fluid attack-website-wrapper d-flex flex-column h-100">
+        <div class="row sticky-top flex-grow-0 flex-shrink-1">
+            <!-- header elements -->
+            <header class="col px-0">
+                    <nav class='navbar navbar-expand-lg navbar-dark position-static'>
+        <a class='navbar-brand' href="/versions/v15/"><img src="/versions/v15/theme/images/mitre_attack_logo.png" class="attack-logo"></a>
+        <button class='navbar-toggler' type='button' data-toggle='collapse' data-target='#navbarCollapse'
+                aria-controls='navbarCollapse' aria-expanded='false' aria-label='Toggle navigation'>
+                <span class='navbar-toggler-icon'></span>
+        </button>
+        <div class='collapse navbar-collapse' id='navbarCollapse'>
+            <ul class='nav nav-tabs ml-auto'>
+                        <li class="nav-item dropdown">
+                                
+    <a class="nav-link dropdown-toggle" href="/versions/v15/matrices/" id="navbarDropdown" role="button"
+    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <b>Matrices</b>
+    </a>
+    <div class="dropdown-menu " aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="/versions/v15/matrices/enterprise/">Enterprise</a>
+                <a class="dropdown-item" href="/versions/v15/matrices/mobile/">Mobile</a>
+                <a class="dropdown-item" href="/versions/v15/matrices/ics/">ICS</a>
+    </div>
+
+
+                        </li>
+                        <li class="nav-item dropdown">
+                                
+    <a class="nav-link dropdown-toggle" href="/versions/v15/tactics/" id="navbarDropdown" role="button"
+    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <b>Tactics</b>
+    </a>
+    <div class="dropdown-menu " aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="/versions/v15/tactics/enterprise/">Enterprise</a>
+                <a class="dropdown-item" href="/versions/v15/tactics/mobile/">Mobile</a>
+                <a class="dropdown-item" href="/versions/v15/tactics/ics/">ICS</a>
+    </div>
+
+
+                        </li>
+                        <li class="nav-item dropdown">
+                                
+    <a class="nav-link dropdown-toggle" href="/versions/v15/techniques/" id="navbarDropdown" role="button"
+    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <b>Techniques</b>
+    </a>
+    <div class="dropdown-menu " aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="/versions/v15/techniques/enterprise/">Enterprise</a>
+                <a class="dropdown-item" href="/versions/v15/techniques/mobile/">Mobile</a>
+                <a class="dropdown-item" href="/versions/v15/techniques/ics/">ICS</a>
+    </div>
+
+
+                        </li>
+                        <li class="nav-item dropdown">
+                                
+    <a class="nav-link dropdown-toggle" href="/versions/v15/datasources" id="navbarDropdown" role="button"
+    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <b>Defenses</b>
+    </a>
+    <div class="dropdown-menu " aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="/versions/v15/datasources">Data Sources</a>
+                
+<div class="dropright dropdown">
+<a class="dropdown-item dropdown-toggle" href="/versions/v15/mitigations/" id="navbarDropdown" role="button"
+    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <b>Mitigations</b>
+    </a>
+    <div class="dropdown-menu " aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="/versions/v15/mitigations/enterprise/">Enterprise</a>
+            <a class="dropdown-item" href="/versions/v15/mitigations/mobile/">Mobile</a>
+            <a class="dropdown-item" href="/versions/v15/mitigations/ics/">ICS</a>
+    </div>
+</div>
+
+                <a class="dropdown-item" href="/versions/v15/assets">Assets</a>
+    </div>
+
+
+                        </li>
+                        <li class="nav-item dropdown">
+                                
+    <a class="nav-link dropdown-toggle" href="/versions/v15/groups" id="navbarDropdown" role="button"
+    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <b>CTI</b>
+    </a>
+    <div class="dropdown-menu " aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="/versions/v15/groups">Groups</a>
+                <a class="dropdown-item" href="/versions/v15/software">Software</a>
+                <a class="dropdown-item" href="/versions/v15/campaigns">Campaigns</a>
+    </div>
+
+
+                        </li>
+                        <li class="nav-item dropdown">
+                                
+    <a class="nav-link dropdown-toggle" href="/versions/v15/resources/" id="navbarDropdown" role="button"
+    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <b>Resources</b>
+    </a>
+    <div class="dropdown-menu " aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="/versions/v15/resources/">Get Started</a>
+                <a class="dropdown-item" href="/versions/v15/resources/learn-more-about-attack/">Learn More about ATT&CK</a>
+                <a class="dropdown-item" href="/versions/v15/resources/attack-data-and-tools/">ATT&CK Data & Tools</a>
+                <a class="dropdown-item" href="/versions/v15/resources/faq/">FAQ</a>
+                <a class="dropdown-item" href="/versions/v15/resources/engage-with-attack/contact/">Engage with ATT&CK</a>
+                <a class="dropdown-item" href="/resources/versions/">Version History</a>
+                <a class="dropdown-item" href="/versions/v15/resources/legal-and-branding/">Legal & Branding</a>
+    </div>
+
+
+                        </li>
+                        <li class="nav-item">
+                            <a href="/versions/v15/resources/engage-with-attack/benefactors/"  class="nav-link" ><b>Benefactors</b></a>
+                        </li>
+                        <li class="nav-item">
+                                <a href="https://medium.com/mitre-attack/" target="_blank" class="nav-link">
+        <b>Blog</b>&nbsp;
+        <img src="/versions/v15/theme/images/external-site.svg" alt="External site" class="external-icon" />
+    </a>
+
+                        </li>
+                        <li class="nav-item">
+                            <button id="search-button" class="btn search-button">Search <div id="search-icon" class="icon-button search-icon"></div></button>
+                        </li>
+            </ul>
+        </div>
+    </nav>
+
+            </header>
+        </div>
+        <div class="row flex-grow-0 flex-shrink-1">
+            <!-- banner elements -->
+            <div class="col px-0">
+                <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
+                <div class="container-fluid version-banner"><div class="icon-inline baseline mr-1"><img src="/versions/v15/theme/images/icon-warning-24px.svg"></div>Currently viewing <a href="https://github.com/mitre/cti/releases/tag/ATT%26CK-v15.0" target="_blank">ATT&CK v15.0</a> which is the current version of ATT&CK. <a href="/resources/versions/">Learn more about the versioning system</a> or <a href="/">see the live site</a>.</div>
+                    <div class="container-fluid d-none">
+                        ATT&CK v15 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v15-26685f300acc'>blog post</a> or <a href='https://attack.mitre.org/resources/updates/updates-april-2024/'>release notes</a> for more information.
+                    </div>
+            </div>
+        </div>
+        <div class="row flex-grow-1 flex-shrink-0">
+            <!-- main content elements -->
+            <!--start-indexing-for-search-->
+
+ 
+     
+    <div class="sidebar nav sticky-top flex-column pr-0 pt-4 pb-3 pl-3" id="v-tab" role="tablist" aria-orientation="vertical">
+        <div class="resizer" id="resizer"></div>
+<!--stop-indexing-for-search-->
+<div id="sidebars"></div>
+<!--start-indexing-for-search-->
+    </div>
+
+    
+     
+    <div class="tab-content col-xl-9 pt-4" id="v-tabContent">
+        <div class="tab-pane fade show active" id="v-attckmatrix" role="tabpanel" aria-labelledby="v-attckmatrix-tab">
+    
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/versions/v15/">Home</a></li>
+            <li class="breadcrumb-item"><a href="/versions/v15/techniques/enterprise">Techniques</a></li>
+            <li class="breadcrumb-item"><a href="/versions/v15/techniques/enterprise">Enterprise</a></li>
+            <li class="breadcrumb-item"><a href="/versions/v15/techniques/T1542">Pre-OS Boot</a></li>
+        <li class="breadcrumb-item">TFTP Boot</li>
+    </ol>
+    <div class="tab-pane fade show active" id="v-" role="tabpanel" aria-labelledby="v--tab"></div>
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="jumbotron jumbotron-fluid">
+                <div class="container-fluid">
+                    <h1 id="">
+                            <span id="subtechnique-parent-name">Pre-OS Boot:</span>
+                        TFTP Boot
+                    </h1> 
+
+                        <div class="row">
+                            <div class="col-md-8">
+                                    <!--stop-indexing-for-search-->
+                                    <div class="card-block pb-2">
+                                        <div class="card">
+                                            <div class="card-header collapsed" id="subtechniques-card-header" data-toggle="collapse" data-target="#subtechniques-card-body" aria-expanded="false" aria-controls="subtechniques-card-body">
+                                                    <h5 class="mb-0" id ="sub-techniques">Other sub-techniques of Pre-OS Boot (5)</h5>
+                                            </div>
+                                            <div id="subtechniques-card-body" class="card-body p-0 collapse" aria-labelledby="subtechniques-card-header">
+                                                <table class="table table-bordered">
+                                                    <thead>
+                                                        <tr>
+                                                            <th scope="col">ID</th>
+                                                            <th scope="col">Name</th>
+                                                        </tr>
+                                                    </thead> 
+                                                    <tbody>                                          
+                                                            <tr>
+                                                                    <td>
+                                                                        <a href="/versions/v15/techniques/T1542/001/" class="subtechnique-table-item" data-subtechnique_id="T1542.001"> T1542.001 </a>
+                                                                    </td>
+                                                                    <td>
+                                                                        <a href="/versions/v15/techniques/T1542/001/" class="subtechnique-table-item" data-subtechnique_id="T1542.001"> System Firmware </a>
+                                                                    </td>
+                                                            </tr>
+                                                            <tr>
+                                                                    <td>
+                                                                        <a href="/versions/v15/techniques/T1542/002/" class="subtechnique-table-item" data-subtechnique_id="T1542.002"> T1542.002 </a>
+                                                                    </td>
+                                                                    <td>
+                                                                        <a href="/versions/v15/techniques/T1542/002/" class="subtechnique-table-item" data-subtechnique_id="T1542.002"> Component Firmware </a>
+                                                                    </td>
+                                                            </tr>
+                                                            <tr>
+                                                                    <td>
+                                                                        <a href="/versions/v15/techniques/T1542/003/" class="subtechnique-table-item" data-subtechnique_id="T1542.003"> T1542.003 </a>
+                                                                    </td>
+                                                                    <td>
+                                                                        <a href="/versions/v15/techniques/T1542/003/" class="subtechnique-table-item" data-subtechnique_id="T1542.003"> Bootkit </a>
+                                                                    </td>
+                                                            </tr>
+                                                            <tr>
+                                                                    <td>
+                                                                        <a href="/versions/v15/techniques/T1542/004/" class="subtechnique-table-item" data-subtechnique_id="T1542.004"> T1542.004 </a>
+                                                                    </td>
+                                                                    <td>
+                                                                        <a href="/versions/v15/techniques/T1542/004/" class="subtechnique-table-item" data-subtechnique_id="T1542.004"> ROMMONkit </a>
+                                                                    </td>
+                                                            </tr>
+                                                            <tr>
+                                                                    <td class="active">
+                                                                        T1542.005
+                                                                    </td>
+                                                                    <td class="active"> 
+                                                                        TFTP Boot
+                                                                    </td>
+                                                            </tr>
+                               
+                                                    </tbody>                           
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--start-indexing-for-search-->
+   
+
+                                    <div class="description-body">
+                                                <p>Adversaries may abuse netbooting to load an unauthorized network device operating system from a Trivial File Transfer Protocol (TFTP) server. TFTP boot (netbooting) is commonly used by network administrators to load configuration-controlled network device images from a centralized management server. Netbooting is one option in the boot sequence and can be used to centralize, manage, and control device images.</p><p>Adversaries may manipulate the configuration on the network device specifying use of a malicious TFTP server, which may be used in conjunction with <a href="/versions/v15/techniques/T1601">Modify System Image</a> to load a modified image on device startup or reset. The unauthorized image allows adversaries to modify device configuration, add malicious capabilities to the device, and introduce backdoors to maintain control of the network device while minimizing detection through use of a standard functionality. This technique is similar to <a href="/versions/v15/techniques/T1542/004">ROMMONkit</a> and may result in the network device running a modified image. <span onclick=scrollToRef('scite-1') id="scite-ref-1-a" class="scite-citeref-number" title="Omar Santos. (2020, October 19). Attackers Continue to Target Legacy Devices. Retrieved October 20, 2020."data-reference="Cisco Blog Legacy Device Attacks"><sup><a href="https://community.cisco.com/t5/security-blogs/attackers-continue-to-target-legacy-devices/ba-p/4169954" target="_blank" data-hasqtip="0" aria-describedby="qtip-0">[1]</a></sup></span></p>
+
+                                    </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card">
+                                    <div class="card-body">
+                                            <div class="row card-data" id="card-id">
+                                                <div class="col-md-1 px-0 text-center"></div>
+                                                <div class="col-md-11 pl-0">
+                                                    <span class="h5 card-title">ID:&nbsp;</span>T1542.005
+                                                </div>
+                                            </div>
+                                        <!--stop-indexing-for-search-->
+                                        <div class="row card-data">
+                                            <div class="col-md-1 px-0 text-center"></div>
+                                            <div class="col-md-11 pl-0">
+                                                    <span class="h5 card-title">Sub-technique of:&nbsp;</span>
+                                                    <a href="/versions/v15/techniques/T1542">T1542</a>
+                                            </div>
+                                        </div>
+                                        <!--start-indexing-for-search-->
+                                            <div id="card-tactics" class="row card-data">
+                                                <div class="col-md-1 px-0 text-center">
+                                                    <span data-toggle="tooltip" data-placement="left" title="" data-test-ignore="true" data-original-title="The tactic objectives that the (sub-)technique can be used to accomplish">&#9432;</span>
+                                                </div>
+                                                <div class="col-md-11 pl-0">
+                                                    <span class="h5 card-title">Tactics:</span>
+                                                        <a href="/versions/v15/tactics/TA0005">Defense Evasion</a>,                                                        <a href="/versions/v15/tactics/TA0003">Persistence</a>                                                </div>
+                                            </div>
+                                            <div class="row card-data">
+                                                <div class="col-md-1 px-0 text-center">
+                                                    <span data-toggle="tooltip" data-placement="left" title="" data-test-ignore="true" data-original-title="The system an adversary is operating within; could be an operating system or application">&#9432;</span>
+                                                </div>
+                                                <div class="col-md-11 pl-0">
+                                                    <span class="h5 card-title">Platforms:&nbsp;</span>Network
+                                                </div>
+                                            </div>
+                                            <div class="row card-data">
+                                                <div class="col-md-1 px-0 text-center">
+                                                    <span data-toggle="tooltip" data-placement="left" title="" data-test-ignore="true" data-original-title="The lowest level of permissions the adversary is required to be operating within to perform the (sub-)technique on a system">&#9432;</span>
+                                                </div>
+                                                <div class="col-md-11 pl-0">
+                                                    <span class="h5 card-title">Permissions Required:&nbsp;</span>Administrator
+                                                </div>
+                                            </div>
+                                            <div class="row card-data">
+                                                <div class="col-md-1 px-0 text-center"></div>
+                                                <div class="col-md-11 pl-0">
+                                                    <span class="h5 card-title">Version:&nbsp;</span>1.0
+                                                </div>
+                                            </div>
+                                            <div class="row card-data">
+                                                <div class="col-md-1 px-0 text-center"></div>
+                                                <div class="col-md-11 pl-0">
+                                                    <span class="h5 card-title">Created:&nbsp;</span>20 October 2020
+                                                </div>
+                                            </div>
+                                            <div class="row card-data">
+                                                <div class="col-md-1 px-0 text-center"></div>
+                                                <div class="col-md-11 pl-0">
+                                                    <span class="h5 card-title">Last Modified:&nbsp;</span>22 October 2020
+                                                </div>
+                                            </div>
+                                    </div>
+                                </div>
+                                    <div class="text-center pt-2 version-button permalink">
+    <div class="live">
+        <a data-toggle="tooltip" 
+           data-placement="bottom" 
+           title="Permalink to this version of T1542.005" 
+           href="/versions/v15/techniques/T1542/005/" data-test-ignore="true">Version Permalink</a>
+    </div>
+    <div class="permalink">
+        <a data-toggle="tooltip" 
+           data-placement="bottom" 
+           title="Go to the live version of T1542.005" 
+           href="/techniques/T1542/005/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+    </div>
+</div>
+
+                            </div>
+                        </div>
+                            <h2 class="pt-3" id ="mitigations">Mitigations</h2>
+                            <div class="tables-mobile">
+                                <table class="table table-bordered table-alternate mt-2">
+                                    <thead>
+                                        <tr> 
+                                            <th scope="col">ID</th>
+                                            <th scope="col">Mitigation</th>
+                                            <th scope="col">Description</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                            <tr>
+                                                <td>
+                                                    <a href="/versions/v15/mitigations/M1047"> M1047 </a>
+                                                </td>
+                                                <td>
+                                                    <a href="/versions/v15/mitigations/M1047"> Audit </a>
+                                                </td>
+                                                <td>
+                                                                <p>Periodically check the integrity of the running configuration and system image to ensure they have not been modified. <span onclick=scrollToRef('scite-2') id="scite-ref-2-a" class="scite-citeref-number" title="Cisco. (n.d.). Cisco IOS Software Integrity Assurance - Cisco IOS Image File Verification. Retrieved October 19, 2020."data-reference="Cisco IOS Software Integrity Assurance - Image File Verification"><sup><a href="https://tools.cisco.com/security/center/resources/integrity_assurance.html#7" target="_blank" data-hasqtip="1" aria-describedby="qtip-1">[2]</a></sup></span> <span onclick=scrollToRef('scite-3') id="scite-ref-3-a" class="scite-citeref-number" title="Cisco. (n.d.). Cisco IOS Software Integrity Assurance - Image File Integrity. Retrieved October 21, 2020."data-reference="Cisco IOS Software Integrity Assurance - Image File Integrity"><sup><a href="https://tools.cisco.com/security/center/resources/integrity_assurance.html#30" target="_blank" data-hasqtip="2" aria-describedby="qtip-2">[3]</a></sup></span> <span onclick=scrollToRef('scite-4') id="scite-ref-4-a" class="scite-citeref-number" title="Cisco. (n.d.). Cisco IOS Software Integrity Assurance - Change Control. Retrieved October 21, 2020."data-reference="Cisco IOS Software Integrity Assurance - Change Control"><sup><a href="https://tools.cisco.com/security/center/resources/integrity_assurance.html#31" target="_blank" data-hasqtip="3" aria-describedby="qtip-3">[4]</a></sup></span> </p>
+
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <a href="/versions/v15/mitigations/M1046"> M1046 </a>
+                                                </td>
+                                                <td>
+                                                    <a href="/versions/v15/mitigations/M1046"> Boot Integrity </a>
+                                                </td>
+                                                <td>
+                                                                <p>Enable secure boot features to validate the digital signature of the boot environment and system image using a special purpose hardware device. If the validation check fails, the device will fail to boot preventing loading of unauthorized software. <span onclick=scrollToRef('scite-5') id="scite-ref-5-a" class="scite-citeref-number" title="Cisco. (n.d.). Cisco IOS Software Integrity Assurance - Secure Boot. Retrieved October 19, 2020."data-reference="Cisco IOS Software Integrity Assurance - Secure Boot"><sup><a href="https://tools.cisco.com/security/center/resources/integrity_assurance.html#35" target="_blank" data-hasqtip="4" aria-describedby="qtip-4">[5]</a></sup></span> </p>
+
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <a href="/versions/v15/mitigations/M1035"> M1035 </a>
+                                                </td>
+                                                <td>
+                                                    <a href="/versions/v15/mitigations/M1035"> Limit Access to Resource Over Network </a>
+                                                </td>
+                                                <td>
+                                                                <p>Restrict use of protocols without encryption or authentication mechanisms. Limit access to administrative and management interfaces from untrusted network sources. </p>
+
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <a href="/versions/v15/mitigations/M1031"> M1031 </a>
+                                                </td>
+                                                <td>
+                                                    <a href="/versions/v15/mitigations/M1031"> Network Intrusion Prevention </a>
+                                                </td>
+                                                <td>
+                                                                <p>Network intrusion detection and prevention systems that use network signatures to identify traffic for specific protocols, such as TFTP, can be used to mitigate activity at the network level. Signatures are often for unique indicators within protocols and may be based on the specific technique used by a particular adversary or tool, and will likely be different across various network configurations. </p>
+
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <a href="/versions/v15/mitigations/M1028"> M1028 </a>
+                                                </td>
+                                                <td>
+                                                    <a href="/versions/v15/mitigations/M1028"> Operating System Configuration </a>
+                                                </td>
+                                                <td>
+                                                                <p>Follow vendor device hardening best practices to disable unnecessary and unused features and services, avoid using default configurations and passwords, and introduce logging and auditing for detection.</p>
+
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <a href="/versions/v15/mitigations/M1026"> M1026 </a>
+                                                </td>
+                                                <td>
+                                                    <a href="/versions/v15/mitigations/M1026"> Privileged Account Management </a>
+                                                </td>
+                                                <td>
+                                                                <p>Use of Authentication, Authorization, and Accounting (AAA) systems will limit actions administrators can perform and provide a history of user actions to detect unauthorized use and abuse. TACACS+ can keep control over which commands administrators are permitted to use through the configuration of authentication and command authorization. <span onclick=scrollToRef('scite-6') id="scite-ref-6-a" class="scite-citeref-number" title="Cisco. (n.d.). Cisco IOS Software Integrity Assurance - AAA. Retrieved October 19, 2020."data-reference="Cisco IOS Software Integrity Assurance - AAA"><sup><a href="https://tools.cisco.com/security/center/resources/integrity_assurance.html#38" target="_blank" data-hasqtip="5" aria-describedby="qtip-5">[6]</a></sup></span> <span onclick=scrollToRef('scite-7') id="scite-ref-7-a" class="scite-citeref-number" title="Cisco. (n.d.). Cisco IOS Software Integrity Assurance - TACACS. Retrieved October 19, 2020."data-reference="Cisco IOS Software Integrity Assurance - TACACS"><sup><a href="https://tools.cisco.com/security/center/resources/integrity_assurance.html#39" target="_blank" data-hasqtip="6" aria-describedby="qtip-6">[7]</a></sup></span></p>
+
+                                                </td>
+                                            </tr>
+                                    </tbody>
+                                </table>
+                                </div>
+                            <h2 class="pt-3" id="detection">Detection</h2>
+                                <div class="tables-mobile">
+<table class="table datasources-table table-bordered">
+    <thead>
+        <tr>
+            <th class="p-2" scope="col">ID</th>
+            <th class="p-2 nowrap" scope="col">Data Source</th>
+            <th class="p-2 nowrap" scope="col">Data Component</th>
+            <th class="p-2" scope="col">Detects</th>
+        </tr>
+    </thead>
+    <tbody>
+            <tr class="datasource" id="uses-DS0017">
+                <td>
+                    <a href="/versions/v15/datasources/DS0017">DS0017</a>
+                </td>
+                <td class="nowrap">
+                    <a href="/versions/v15/datasources/DS0017">Command</a>
+                </td>
+                <!-- Add first data component here -->
+                <td> 
+                    <a href="/datasources/DS0017/#Command%20Execution">Command Execution</a>
+                </td>
+                    <td>
+                                <p>Monitor executed commands and arguments in command history in either the console or as part of the running memory to determine if unauthorized or suspicious commands were used to modify device configuration.</p>
+
+                    </td>
+            </tr>
+            <tr class="datasource" id="uses-DS0001">
+                <td>
+                    <a href="/versions/v15/datasources/DS0001">DS0001</a>
+                </td>
+                <td class="nowrap">
+                    <a href="/versions/v15/datasources/DS0001">Firmware</a>
+                </td>
+                <!-- Add first data component here -->
+                <td> 
+                    <a href="/datasources/DS0001/#Firmware%20Modification">Firmware Modification</a>
+                </td>
+                    <td>
+                                <p>Monitor for changes to boot information including system uptime, image booted, and startup configuration to determine if results are consistent with expected behavior in the environment.  <span onclick=scrollToRef('scite-8') id="scite-ref-8-a" class="scite-citeref-number" title="Cisco. (n.d.). Cisco IOS Software Integrity Assurance - Boot Information. Retrieved October 21, 2020."data-reference="Cisco IOS Software Integrity Assurance - Boot Information"><sup><a href="https://tools.cisco.com/security/center/resources/integrity_assurance.html#26" target="_blank" data-hasqtip="7" aria-describedby="qtip-7">[8]</a></sup></span> Monitor unusual connections or connection attempts to the device that may specifically target TFTP or other file-sharing protocols.</p>
+
+                    </td>
+            </tr>
+            <tr class="datasource" id="uses-DS0029">
+                <td>
+                    <a href="/versions/v15/datasources/DS0029">DS0029</a>
+                </td>
+                <td class="nowrap">
+                    <a href="/versions/v15/datasources/DS0029">Network Traffic</a>
+                </td>
+                <!-- Add first data component here -->
+                <td> 
+                    <a href="/datasources/DS0029/#Network%20Connection%20Creation">Network Connection Creation</a>
+                </td>
+                    <td>
+                                <p>Monitor for newly constructed network device configuration and system image against a known-good version to discover unauthorized changes to system boot, startup configuration, or the running OS. <span onclick=scrollToRef('scite-5') id="scite-ref-5-a" class="scite-citeref-number" title="Cisco. (n.d.). Cisco IOS Software Integrity Assurance - Secure Boot. Retrieved October 19, 2020."data-reference="Cisco IOS Software Integrity Assurance - Secure Boot"><sup><a href="https://tools.cisco.com/security/center/resources/integrity_assurance.html#35" target="_blank" data-hasqtip="4" aria-describedby="qtip-4">[5]</a></sup></span> <span onclick=scrollToRef('scite-2') id="scite-ref-2-a" class="scite-citeref-number" title="Cisco. (n.d.). Cisco IOS Software Integrity Assurance - Cisco IOS Image File Verification. Retrieved October 19, 2020."data-reference="Cisco IOS Software Integrity Assurance - Image File Verification"><sup><a href="https://tools.cisco.com/security/center/resources/integrity_assurance.html#7" target="_blank" data-hasqtip="1" aria-describedby="qtip-1">[2]</a></sup></span> The same process can be accomplished through a comparison of the run-time memory, though this is non-trivial and may require assistance from the vendor.</p>
+
+                    </td>
+            </tr>
+    </tbody>
+</table>
+</div>
+
+                
+                            <h2 class="pt-3" id="references">References</h2>
+
+        <div class="row">
+            <div class="col">
+                <ol>
+                            
+        <li>
+            <span  id="scite-1" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-1" href="https://community.cisco.com/t5/security-blogs/attackers-continue-to-target-legacy-devices/ba-p/4169954" target="_blank">
+                        Omar Santos. (2020, October 19). Attackers Continue to Target Legacy Devices. Retrieved October 20, 2020.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-2" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-2" href="https://tools.cisco.com/security/center/resources/integrity_assurance.html#7" target="_blank">
+                        Cisco. (n.d.). Cisco IOS Software Integrity Assurance - Cisco IOS Image File Verification. Retrieved October 19, 2020.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-3" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-3" href="https://tools.cisco.com/security/center/resources/integrity_assurance.html#30" target="_blank">
+                        Cisco. (n.d.). Cisco IOS Software Integrity Assurance - Image File Integrity. Retrieved October 21, 2020.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-4" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-4" href="https://tools.cisco.com/security/center/resources/integrity_assurance.html#31" target="_blank">
+                        Cisco. (n.d.). Cisco IOS Software Integrity Assurance - Change Control. Retrieved October 21, 2020.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                </ol>
+            </div>
+            <div class="col">
+                    <ol start="5.0">
+                                
+        <li>
+            <span  id="scite-5" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-5" href="https://tools.cisco.com/security/center/resources/integrity_assurance.html#35" target="_blank">
+                        Cisco. (n.d.). Cisco IOS Software Integrity Assurance - Secure Boot. Retrieved October 19, 2020.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-6" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-6" href="https://tools.cisco.com/security/center/resources/integrity_assurance.html#38" target="_blank">
+                        Cisco. (n.d.). Cisco IOS Software Integrity Assurance - AAA. Retrieved October 19, 2020.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-7" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-7" href="https://tools.cisco.com/security/center/resources/integrity_assurance.html#39" target="_blank">
+                        Cisco. (n.d.). Cisco IOS Software Integrity Assurance - TACACS. Retrieved October 19, 2020.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-8" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-8" href="https://tools.cisco.com/security/center/resources/integrity_assurance.html#26" target="_blank">
+                        Cisco. (n.d.). Cisco IOS Software Integrity Assurance - Boot Information. Retrieved October 21, 2020.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+  
+                    </ol>
+            </div>             
+        </div>
+
+
+    
+                </div>
+            </div>
+        </div>
+    </div>
+    
+        </div>
+    </div>
+
+            <!--stop-indexing-for-search-->
+            <!-- search overlay for entire page -- not displayed inline -->
+            <div class="overlay search" id="search-overlay" style="display: none;">
+    <div class="overlay-inner">
+        <!-- text input for searching -->
+        <div class="search-header">
+            <div class="search-input">
+                <input type="text" id="search-input" placeholder="search">
+            </div>
+            <div class="search-icons">
+                <div class="search-parsing-icon spinner-border" style="display: none" id="search-parsing-icon"></div>
+                <div class="close-search-icon" id="close-search-icon">&times;</div>
+            </div>
+        </div>
+        <!-- results and controls for loading more results -->
+        <div id="search-body" class="search-body">
+            <div class="results" id="search-results">
+                <!-- content will be appended here on search -->
+            </div>
+            <div id="load-more-results" class="load-more-results">
+                <button class="btn btn-default" id="load-more-results-button">load more results</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+        </div>
+        <div class="row flex-grow-0 flex-shrink-1">
+            <!-- footer elements -->
+            <footer class="col footer">
+                <div class="container-fluid">
+                    <div class="row row-footer">
+                        <div class="col-2 col-sm-2 col-md-2">
+                            <div class="footer-center-responsive my-auto">
+                                <a href="https://www.mitre.org" target="_blank" rel="noopener" aria-label="MITRE">
+                                    <img src="/versions/v15/theme/images/mitrelogowhiteontrans.gif" class="mitre-logo-wtrans">
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-2 col-sm-2 footer-responsive-break"></div>
+                        <div class="footer-link-group">
+                            <div class="row row-footer">
+                                <div class="px-3 col-footer">
+                                    <u class="footer-link"><a href="/versions/v15/resources/engage-with-attack/contact" class="footer-link">Contact Us</a></u>
+                                </div>
+                                <div class="px-3 col-footer">
+                                    <u class="footer-link"><a href="/versions/v15/resources/legal-and-branding/terms-of-use" class="footer-link">Terms of Use</a></u>
+                                </div>
+                                    <div class="px-3 col-footer">
+                                        <u class="footer-link"><a href="/versions/v15/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
+                                    </div>
+                                <div class="px-3">
+                                    <u class="footer-link"><a href="/versions/v15/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v15.0&#013;Website  v4.1.2">Website Changelog</a></u>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <small class="px-3">
+                                    &copy;&nbsp;2015&nbsp;-&nbsp;2024, The MITRE Corporation. MITRE ATT&CK and ATT&CK are registered trademarks of The MITRE Corporation.
+                                </small>
+                            </div>
+                        </div>
+                        <div class="w-100 p-2 footer-responsive-break"></div>
+                            <div class="col pr-4">
+                                <div class="footer-float-right-responsive-brand">
+                                    <div class="row row-footer row-footer-icon">
+                                        <div class="mb-1">
+                                            <a href="https://twitter.com/MITREattack" class="btn btn-footer">
+                                                <i class="fa-brands fa-x-twitter fa-lg"></i>
+                                            </a>
+                                            <a href="https://github.com/mitre-attack" class="btn btn-footer">
+                                                <i class="fa-brands fa-github fa-lg"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+
+<!--stopindex-->
+
+</div>
+    <!--SCRIPTS-->
+    <script src="/versions/v15/theme/scripts/jquery-3.5.1.min.js"></script>
+    <script src="/versions/v15/theme/scripts/popper.min.js"></script>
+    <script src="/versions/v15/theme/scripts/bootstrap-select.min.js"></script>
+    <script src="/versions/v15/theme/scripts/bootstrap.bundle.min.js"></script>
+    <script src="/versions/v15/theme/scripts/site.js?2752"></script>
+    <script src="/versions/v15/theme/scripts/settings.js?5918"></script>
+    <script src="/versions/v15/theme/scripts/search_bundle.js"></script>
+
+<!--SCRIPTS-->
+<script src="/versions/v15/theme/scripts/resizer.js"></script>
+
+<!--SCRIPTS-->
+<script src="/versions/v15/theme/scripts/bootstrap-tourist.js"></script>
+<script src="/versions/v15/theme/scripts/settings.js"></script>
+    <script src="/versions/v15/theme/scripts/tour/tour-subtechniques.js"></script>
+<script src="/versions/v15/theme/scripts/sidebar-load-all.js"></script>
+</body>
+</html>

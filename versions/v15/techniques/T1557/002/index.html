@@ -1,0 +1,712 @@
+
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+            <script async src="https://www.googletagmanager.com/gtag/js?id=UA-62667723-1"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'UA-62667723-1');
+        </script>
+        <meta name="google-site-verification" content="2oJKLqNN62z6AOCb0A0IXGtbQuj-lev5YPAHFF_cbHQ"/>
+
+        <meta charset='utf-8'>
+        <meta name='viewport' content='width=device-width, initial-scale=1,shrink-to-fit=no'>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <link rel='shortcut icon' href="/versions/v15/theme/favicon.ico" type='image/x-icon'>
+        <title>Adversary-in-the-Middle: ARP Cache Poisoning, Sub-technique T1557.002 - Enterprise | MITRE ATT&CK&reg;</title>
+        <!-- USWDS CSS -->
+        <!-- Bootstrap CSS -->
+        <link rel='stylesheet' href="/versions/v15/theme/style/bootstrap.min.css" />
+        <link rel='stylesheet' href="/versions/v15/theme/style/bootstrap-tourist.css" />
+        <link rel='stylesheet' href="/versions/v15/theme/style/bootstrap-select.min.css" />
+        <!-- Fontawesome CSS -->
+        <link rel="stylesheet" href="/versions/v15/theme/style/fontawesome-6.5.1/css/fontawesome.min.css"/>
+        <link rel="stylesheet" href="/versions/v15/theme/style/fontawesome-6.5.1/css/brands.min.css"/>
+        <link rel="stylesheet" href="/versions/v15/theme/style/fontawesome-6.5.1/css/solid.min.css"/>
+        <link rel="stylesheet" type="text/css" href="/versions/v15/theme/style.min.css?9dc07e69">
+
+</head>
+
+<body>
+
+    <div class="container-fluid attack-website-wrapper d-flex flex-column h-100">
+        <div class="row sticky-top flex-grow-0 flex-shrink-1">
+            <!-- header elements -->
+            <header class="col px-0">
+                    <nav class='navbar navbar-expand-lg navbar-dark position-static'>
+        <a class='navbar-brand' href="/versions/v15/"><img src="/versions/v15/theme/images/mitre_attack_logo.png" class="attack-logo"></a>
+        <button class='navbar-toggler' type='button' data-toggle='collapse' data-target='#navbarCollapse'
+                aria-controls='navbarCollapse' aria-expanded='false' aria-label='Toggle navigation'>
+                <span class='navbar-toggler-icon'></span>
+        </button>
+        <div class='collapse navbar-collapse' id='navbarCollapse'>
+            <ul class='nav nav-tabs ml-auto'>
+                        <li class="nav-item dropdown">
+                                
+    <a class="nav-link dropdown-toggle" href="/versions/v15/matrices/" id="navbarDropdown" role="button"
+    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <b>Matrices</b>
+    </a>
+    <div class="dropdown-menu " aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="/versions/v15/matrices/enterprise/">Enterprise</a>
+                <a class="dropdown-item" href="/versions/v15/matrices/mobile/">Mobile</a>
+                <a class="dropdown-item" href="/versions/v15/matrices/ics/">ICS</a>
+    </div>
+
+
+                        </li>
+                        <li class="nav-item dropdown">
+                                
+    <a class="nav-link dropdown-toggle" href="/versions/v15/tactics/" id="navbarDropdown" role="button"
+    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <b>Tactics</b>
+    </a>
+    <div class="dropdown-menu " aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="/versions/v15/tactics/enterprise/">Enterprise</a>
+                <a class="dropdown-item" href="/versions/v15/tactics/mobile/">Mobile</a>
+                <a class="dropdown-item" href="/versions/v15/tactics/ics/">ICS</a>
+    </div>
+
+
+                        </li>
+                        <li class="nav-item dropdown">
+                                
+    <a class="nav-link dropdown-toggle" href="/versions/v15/techniques/" id="navbarDropdown" role="button"
+    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <b>Techniques</b>
+    </a>
+    <div class="dropdown-menu " aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="/versions/v15/techniques/enterprise/">Enterprise</a>
+                <a class="dropdown-item" href="/versions/v15/techniques/mobile/">Mobile</a>
+                <a class="dropdown-item" href="/versions/v15/techniques/ics/">ICS</a>
+    </div>
+
+
+                        </li>
+                        <li class="nav-item dropdown">
+                                
+    <a class="nav-link dropdown-toggle" href="/versions/v15/datasources" id="navbarDropdown" role="button"
+    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <b>Defenses</b>
+    </a>
+    <div class="dropdown-menu " aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="/versions/v15/datasources">Data Sources</a>
+                
+<div class="dropright dropdown">
+<a class="dropdown-item dropdown-toggle" href="/versions/v15/mitigations/" id="navbarDropdown" role="button"
+    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <b>Mitigations</b>
+    </a>
+    <div class="dropdown-menu " aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="/versions/v15/mitigations/enterprise/">Enterprise</a>
+            <a class="dropdown-item" href="/versions/v15/mitigations/mobile/">Mobile</a>
+            <a class="dropdown-item" href="/versions/v15/mitigations/ics/">ICS</a>
+    </div>
+</div>
+
+                <a class="dropdown-item" href="/versions/v15/assets">Assets</a>
+    </div>
+
+
+                        </li>
+                        <li class="nav-item dropdown">
+                                
+    <a class="nav-link dropdown-toggle" href="/versions/v15/groups" id="navbarDropdown" role="button"
+    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <b>CTI</b>
+    </a>
+    <div class="dropdown-menu " aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="/versions/v15/groups">Groups</a>
+                <a class="dropdown-item" href="/versions/v15/software">Software</a>
+                <a class="dropdown-item" href="/versions/v15/campaigns">Campaigns</a>
+    </div>
+
+
+                        </li>
+                        <li class="nav-item dropdown">
+                                
+    <a class="nav-link dropdown-toggle" href="/versions/v15/resources/" id="navbarDropdown" role="button"
+    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <b>Resources</b>
+    </a>
+    <div class="dropdown-menu " aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="/versions/v15/resources/">Get Started</a>
+                <a class="dropdown-item" href="/versions/v15/resources/learn-more-about-attack/">Learn More about ATT&CK</a>
+                <a class="dropdown-item" href="/versions/v15/resources/attack-data-and-tools/">ATT&CK Data & Tools</a>
+                <a class="dropdown-item" href="/versions/v15/resources/faq/">FAQ</a>
+                <a class="dropdown-item" href="/versions/v15/resources/engage-with-attack/contact/">Engage with ATT&CK</a>
+                <a class="dropdown-item" href="/resources/versions/">Version History</a>
+                <a class="dropdown-item" href="/versions/v15/resources/legal-and-branding/">Legal & Branding</a>
+    </div>
+
+
+                        </li>
+                        <li class="nav-item">
+                            <a href="/versions/v15/resources/engage-with-attack/benefactors/"  class="nav-link" ><b>Benefactors</b></a>
+                        </li>
+                        <li class="nav-item">
+                                <a href="https://medium.com/mitre-attack/" target="_blank" class="nav-link">
+        <b>Blog</b>&nbsp;
+        <img src="/versions/v15/theme/images/external-site.svg" alt="External site" class="external-icon" />
+    </a>
+
+                        </li>
+                        <li class="nav-item">
+                            <button id="search-button" class="btn search-button">Search <div id="search-icon" class="icon-button search-icon"></div></button>
+                        </li>
+            </ul>
+        </div>
+    </nav>
+
+            </header>
+        </div>
+        <div class="row flex-grow-0 flex-shrink-1">
+            <!-- banner elements -->
+            <div class="col px-0">
+                <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
+                <div class="container-fluid version-banner"><div class="icon-inline baseline mr-1"><img src="/versions/v15/theme/images/icon-warning-24px.svg"></div>Currently viewing <a href="https://github.com/mitre/cti/releases/tag/ATT%26CK-v15.0" target="_blank">ATT&CK v15.0</a> which is the current version of ATT&CK. <a href="/resources/versions/">Learn more about the versioning system</a> or <a href="/">see the live site</a>.</div>
+                    <div class="container-fluid d-none">
+                        ATT&CK v15 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v15-26685f300acc'>blog post</a> or <a href='https://attack.mitre.org/resources/updates/updates-april-2024/'>release notes</a> for more information.
+                    </div>
+            </div>
+        </div>
+        <div class="row flex-grow-1 flex-shrink-0">
+            <!-- main content elements -->
+            <!--start-indexing-for-search-->
+
+ 
+     
+    <div class="sidebar nav sticky-top flex-column pr-0 pt-4 pb-3 pl-3" id="v-tab" role="tablist" aria-orientation="vertical">
+        <div class="resizer" id="resizer"></div>
+<!--stop-indexing-for-search-->
+<div id="sidebars"></div>
+<!--start-indexing-for-search-->
+    </div>
+
+    
+     
+    <div class="tab-content col-xl-9 pt-4" id="v-tabContent">
+        <div class="tab-pane fade show active" id="v-attckmatrix" role="tabpanel" aria-labelledby="v-attckmatrix-tab">
+    
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/versions/v15/">Home</a></li>
+            <li class="breadcrumb-item"><a href="/versions/v15/techniques/enterprise">Techniques</a></li>
+            <li class="breadcrumb-item"><a href="/versions/v15/techniques/enterprise">Enterprise</a></li>
+            <li class="breadcrumb-item"><a href="/versions/v15/techniques/T1557">Adversary-in-the-Middle</a></li>
+        <li class="breadcrumb-item">ARP Cache Poisoning</li>
+    </ol>
+    <div class="tab-pane fade show active" id="v-" role="tabpanel" aria-labelledby="v--tab"></div>
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="jumbotron jumbotron-fluid">
+                <div class="container-fluid">
+                    <h1 id="">
+                            <span id="subtechnique-parent-name">Adversary-in-the-Middle:</span>
+                        ARP Cache Poisoning
+                    </h1> 
+
+                        <div class="row">
+                            <div class="col-md-8">
+                                    <!--stop-indexing-for-search-->
+                                    <div class="card-block pb-2">
+                                        <div class="card">
+                                            <div class="card-header collapsed" id="subtechniques-card-header" data-toggle="collapse" data-target="#subtechniques-card-body" aria-expanded="false" aria-controls="subtechniques-card-body">
+                                                    <h5 class="mb-0" id ="sub-techniques">Other sub-techniques of Adversary-in-the-Middle (3)</h5>
+                                            </div>
+                                            <div id="subtechniques-card-body" class="card-body p-0 collapse" aria-labelledby="subtechniques-card-header">
+                                                <table class="table table-bordered">
+                                                    <thead>
+                                                        <tr>
+                                                            <th scope="col">ID</th>
+                                                            <th scope="col">Name</th>
+                                                        </tr>
+                                                    </thead> 
+                                                    <tbody>                                          
+                                                            <tr>
+                                                                    <td>
+                                                                        <a href="/versions/v15/techniques/T1557/001/" class="subtechnique-table-item" data-subtechnique_id="T1557.001"> T1557.001 </a>
+                                                                    </td>
+                                                                    <td>
+                                                                        <a href="/versions/v15/techniques/T1557/001/" class="subtechnique-table-item" data-subtechnique_id="T1557.001"> LLMNR/NBT-NS Poisoning and SMB Relay </a>
+                                                                    </td>
+                                                            </tr>
+                                                            <tr>
+                                                                    <td class="active">
+                                                                        T1557.002
+                                                                    </td>
+                                                                    <td class="active"> 
+                                                                        ARP Cache Poisoning
+                                                                    </td>
+                                                            </tr>
+                                                            <tr>
+                                                                    <td>
+                                                                        <a href="/versions/v15/techniques/T1557/003/" class="subtechnique-table-item" data-subtechnique_id="T1557.003"> T1557.003 </a>
+                                                                    </td>
+                                                                    <td>
+                                                                        <a href="/versions/v15/techniques/T1557/003/" class="subtechnique-table-item" data-subtechnique_id="T1557.003"> DHCP Spoofing </a>
+                                                                    </td>
+                                                            </tr>
+                               
+                                                    </tbody>                           
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--start-indexing-for-search-->
+   
+
+                                    <div class="description-body">
+                                                <p>Adversaries may poison Address Resolution Protocol (ARP) caches to position themselves between the communication of two or more networked devices. This activity may be used to enable follow-on behaviors such as <a href="/versions/v15/techniques/T1040">Network Sniffing</a> or <a href="/versions/v15/techniques/T1565/002">Transmitted Data Manipulation</a>.</p><p>The ARP protocol is used to resolve IPv4 addresses to link layer addresses, such as a media access control (MAC) address.<span onclick=scrollToRef('scite-1') id="scite-ref-1-a" class="scite-citeref-number" title="Plummer, D. (1982, November). An Ethernet Address Resolution Protocol. Retrieved October 15, 2020."data-reference="RFC826 ARP"><sup><a href="https://tools.ietf.org/html/rfc826" target="_blank" data-hasqtip="0" aria-describedby="qtip-0">[1]</a></sup></span> Devices in a local network segment communicate with each other by using link layer addresses. If a networked device does not have the link layer address of a particular networked device, it may send out a broadcast ARP request to the local network to translate the IP address to a MAC address. The device with the associated IP address directly replies with its MAC address. The networked device that made the ARP request will then use as well as store that information in its ARP cache.</p><p>An adversary may passively wait for an ARP request to poison the ARP cache of the requesting device. The adversary may reply with their MAC address, thus deceiving the victim by making them believe that they are communicating with the intended networked device. For the adversary to poison the ARP cache, their reply must be faster than the one made by the legitimate IP address owner. Adversaries may also send a gratuitous ARP reply that maliciously announces the ownership of a particular IP address to all the devices in the local network segment.</p><p>The ARP protocol is stateless and does not require authentication. Therefore, devices may wrongly add or update the MAC address of the IP address in their ARP cache.<span onclick=scrollToRef('scite-2') id="scite-ref-2-a" class="scite-citeref-number" title="Siles, R. (2003, August). Real World ARP Spoofing. Retrieved October 15, 2020."data-reference="Sans ARP Spoofing Aug 2003"><sup><a href="https://pen-testing.sans.org/resources/papers/gcih/real-world-arp-spoofing-105411" target="_blank" data-hasqtip="1" aria-describedby="qtip-1">[2]</a></sup></span><span onclick=scrollToRef('scite-3') id="scite-ref-3-a" class="scite-citeref-number" title="Cylance. (2014, December). Operation Cleaver. Retrieved September 14, 2017."data-reference="Cylance Cleaver"><sup><a href="https://web.archive.org/web/20200302085133/https://www.cylance.com/content/dam/cylance/pages/operation-cleaver/Cylance_Operation_Cleaver_Report.pdf" target="_blank" data-hasqtip="2" aria-describedby="qtip-2">[3]</a></sup></span></p><p>Adversaries may use ARP cache poisoning as a means to intercept network traffic. This activity may be used to collect and/or relay data such as credentials, especially those sent over an insecure, unencrypted protocol.<span onclick=scrollToRef('scite-2') id="scite-ref-2-a" class="scite-citeref-number" title="Siles, R. (2003, August). Real World ARP Spoofing. Retrieved October 15, 2020."data-reference="Sans ARP Spoofing Aug 2003"><sup><a href="https://pen-testing.sans.org/resources/papers/gcih/real-world-arp-spoofing-105411" target="_blank" data-hasqtip="1" aria-describedby="qtip-1">[2]</a></sup></span></p>
+
+                                    </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card">
+                                    <div class="card-body">
+                                            <div class="row card-data" id="card-id">
+                                                <div class="col-md-1 px-0 text-center"></div>
+                                                <div class="col-md-11 pl-0">
+                                                    <span class="h5 card-title">ID:&nbsp;</span>T1557.002
+                                                </div>
+                                            </div>
+                                        <!--stop-indexing-for-search-->
+                                        <div class="row card-data">
+                                            <div class="col-md-1 px-0 text-center"></div>
+                                            <div class="col-md-11 pl-0">
+                                                    <span class="h5 card-title">Sub-technique of:&nbsp;</span>
+                                                    <a href="/versions/v15/techniques/T1557">T1557</a>
+                                            </div>
+                                        </div>
+                                        <!--start-indexing-for-search-->
+                                            <div id="card-tactics" class="row card-data">
+                                                <div class="col-md-1 px-0 text-center">
+                                                    <span data-toggle="tooltip" data-placement="left" title="" data-test-ignore="true" data-original-title="The tactic objectives that the (sub-)technique can be used to accomplish">&#9432;</span>
+                                                </div>
+                                                <div class="col-md-11 pl-0">
+                                                    <span class="h5 card-title">Tactics:</span>
+                                                        <a href="/versions/v15/tactics/TA0006">Credential Access</a>,                                                        <a href="/versions/v15/tactics/TA0009">Collection</a>                                                </div>
+                                            </div>
+                                            <div class="row card-data">
+                                                <div class="col-md-1 px-0 text-center">
+                                                    <span data-toggle="tooltip" data-placement="left" title="" data-test-ignore="true" data-original-title="The system an adversary is operating within; could be an operating system or application">&#9432;</span>
+                                                </div>
+                                                <div class="col-md-11 pl-0">
+                                                    <span class="h5 card-title">Platforms:&nbsp;</span>Linux, Windows, macOS
+                                                </div>
+                                            </div>
+                                            <div class="row card-data">
+                                                <div class="col-md-1 px-0 text-center"></div>
+                                                <div class="col-md-11 pl-0">
+                                                    <span class="h5 card-title">Contributors:&nbsp;</span>Jon Sternstein, Stern Security
+                                                </div>
+                                            </div>
+                                            <div class="row card-data">
+                                                <div class="col-md-1 px-0 text-center"></div>
+                                                <div class="col-md-11 pl-0">
+                                                    <span class="h5 card-title">Version:&nbsp;</span>1.1
+                                                </div>
+                                            </div>
+                                            <div class="row card-data">
+                                                <div class="col-md-1 px-0 text-center"></div>
+                                                <div class="col-md-11 pl-0">
+                                                    <span class="h5 card-title">Created:&nbsp;</span>15 October 2020
+                                                </div>
+                                            </div>
+                                            <div class="row card-data">
+                                                <div class="col-md-1 px-0 text-center"></div>
+                                                <div class="col-md-11 pl-0">
+                                                    <span class="h5 card-title">Last Modified:&nbsp;</span>22 July 2022
+                                                </div>
+                                            </div>
+                                    </div>
+                                </div>
+                                    <div class="text-center pt-2 version-button permalink">
+    <div class="live">
+        <a data-toggle="tooltip" 
+           data-placement="bottom" 
+           title="Permalink to this version of T1557.002" 
+           href="/versions/v15/techniques/T1557/002/" data-test-ignore="true">Version Permalink</a>
+    </div>
+    <div class="permalink">
+        <a data-toggle="tooltip" 
+           data-placement="bottom" 
+           title="Go to the live version of T1557.002" 
+           href="/techniques/T1557/002/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+    </div>
+</div>
+
+                            </div>
+                        </div>
+                            <h2 class="pt-3" id ="examples">Procedure Examples</h2>
+                            <div class="tables-mobile">
+                            <table class="table table-bordered table-alternate mt-2">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">ID</th>
+                                        <th scope="col">Name</th>
+                                        <th scope="col">Description</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v15/groups/G0003"> G0003 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v15/groups/G0003"> Cleaver </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v15/groups/G0003">Cleaver</a> has used custom tools to facilitate ARP cache poisoning.<span onclick=scrollToRef('scite-3') id="scite-ref-3-a" class="scite-citeref-number" title="Cylance. (2014, December). Operation Cleaver. Retrieved September 14, 2017."data-reference="Cylance Cleaver"><sup><a href="https://web.archive.org/web/20200302085133/https://www.cylance.com/content/dam/cylance/pages/operation-cleaver/Cylance_Operation_Cleaver_Report.pdf" target="_blank" data-hasqtip="2" aria-describedby="qtip-2">[3]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v15/groups/G1014"> G1014 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v15/groups/G1014"> LuminousMoth </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v15/groups/G1014">LuminousMoth</a> has used ARP spoofing to redirect a compromised machine to an actor-controlled website.<span onclick=scrollToRef('scite-4') id="scite-ref-4-a" class="scite-citeref-number" title="Botezatu, B and etl. (2021, July 21). LuminousMoth - PlugX, File Exfiltration and Persistence Revisited. Retrieved October 20, 2022."data-reference="Bitdefender LuminousMoth July 2021"><sup><a href="https://www.bitdefender.com/blog/labs/luminousmoth-plugx-file-exfiltration-and-persistence-revisited" target="_blank" data-hasqtip="3" aria-describedby="qtip-3">[4]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                </tbody>
+                            </table>
+                            </div>
+                            <h2 class="pt-3" id ="mitigations">Mitigations</h2>
+                            <div class="tables-mobile">
+                                <table class="table table-bordered table-alternate mt-2">
+                                    <thead>
+                                        <tr> 
+                                            <th scope="col">ID</th>
+                                            <th scope="col">Mitigation</th>
+                                            <th scope="col">Description</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                            <tr>
+                                                <td>
+                                                    <a href="/versions/v15/mitigations/M1042"> M1042 </a>
+                                                </td>
+                                                <td>
+                                                    <a href="/versions/v15/mitigations/M1042"> Disable or Remove Feature or Program </a>
+                                                </td>
+                                                <td>
+                                                                <p>Consider disabling updating the ARP cache on gratuitous ARP replies.</p>
+
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <a href="/versions/v15/mitigations/M1041"> M1041 </a>
+                                                </td>
+                                                <td>
+                                                    <a href="/versions/v15/mitigations/M1041"> Encrypt Sensitive Information </a>
+                                                </td>
+                                                <td>
+                                                                <p>Ensure that all wired and/or wireless traffic is encrypted appropriately. Use best practices for authentication protocols, such as Kerberos, and ensure web traffic that may contain credentials is protected by SSL/TLS.</p>
+
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <a href="/versions/v15/mitigations/M1037"> M1037 </a>
+                                                </td>
+                                                <td>
+                                                    <a href="/versions/v15/mitigations/M1037"> Filter Network Traffic </a>
+                                                </td>
+                                                <td>
+                                                                <p>Consider enabling DHCP Snooping and Dynamic ARP Inspection on switches to create mappings between IP addresses requested via DHCP and ARP tables and tie the values to a port on the switch that may block bogus traffic.<span onclick=scrollToRef('scite-5') id="scite-ref-5-a" class="scite-citeref-number" title="King, J., Lauerman, K. (2016, January 22). ARP Poisoning (Man-in-the-Middle) Attack and Mitigation Technique. Retrieved October 15, 2020."data-reference="Cisco ARP Poisoning Mitigation 2016"><sup><a href="https://www.cisco.com/c/en/us/products/collateral/switches/catalyst-6500-series-switches/white_paper_c11_603839.html" target="_blank" data-hasqtip="4" aria-describedby="qtip-4">[5]</a></sup></span><span onclick=scrollToRef('scite-6') id="scite-ref-6-a" class="scite-citeref-number" title="Juniper. (2020, September 23). Understanding and Using Dynamic ARP Inspection (DAI). Retrieved October 15, 2020."data-reference="Juniper DAI 2020"><sup><a href="https://www.juniper.net/documentation/en_US/junos/topics/task/configuration/understanding-and-using-dai.html" target="_blank" data-hasqtip="5" aria-describedby="qtip-5">[6]</a></sup></span></p>
+
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <a href="/versions/v15/mitigations/M1035"> M1035 </a>
+                                                </td>
+                                                <td>
+                                                    <a href="/versions/v15/mitigations/M1035"> Limit Access to Resource Over Network </a>
+                                                </td>
+                                                <td>
+                                                                <p>Create static ARP entries for networked devices. Implementing static ARP entries may be infeasible for large networks.</p>
+
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <a href="/versions/v15/mitigations/M1031"> M1031 </a>
+                                                </td>
+                                                <td>
+                                                    <a href="/versions/v15/mitigations/M1031"> Network Intrusion Prevention </a>
+                                                </td>
+                                                <td>
+                                                                <p>Network intrusion detection and prevention systems that can identify traffic patterns indicative of AiTM activity can be used to mitigate activity at the network level.</p>
+
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <a href="/versions/v15/mitigations/M1017"> M1017 </a>
+                                                </td>
+                                                <td>
+                                                    <a href="/versions/v15/mitigations/M1017"> User Training </a>
+                                                </td>
+                                                <td>
+                                                                <p>Train users to be suspicious about certificate errors. Adversaries may use their own certificates in an attempt to intercept HTTPS traffic. Certificate errors may arise when the application’s certificate does not match the one expected by the host.</p>
+
+                                                </td>
+                                            </tr>
+                                    </tbody>
+                                </table>
+                                </div>
+                            <h2 class="pt-3" id="detection">Detection</h2>
+                                <div class="tables-mobile">
+<table class="table datasources-table table-bordered">
+    <thead>
+        <tr>
+            <th class="p-2" scope="col">ID</th>
+            <th class="p-2 nowrap" scope="col">Data Source</th>
+            <th class="p-2 nowrap" scope="col">Data Component</th>
+            <th class="p-2" scope="col">Detects</th>
+        </tr>
+    </thead>
+    <tbody>
+            <tr class="datasource" id="uses-DS0029">
+                <td>
+                    <a href="/versions/v15/datasources/DS0029">DS0029</a>
+                </td>
+                <td class="nowrap">
+                    <a href="/versions/v15/datasources/DS0029">Network Traffic</a>
+                </td>
+                <!-- Add first data component here -->
+                <td> 
+                    <a href="/datasources/DS0029/#Network%20Traffic%20Content">Network Traffic Content</a>
+                </td>
+                    <td>
+                                <p>Monitor network traffic for unusual ARP traffic, gratuitous ARP replies may be suspicious. Consider collecting changes to ARP caches across endpoints for signs of ARP poisoning. For example, if multiple IP addresses map to a single MAC address, this could be an indicator that the ARP cache has been poisoned.</p>
+
+                    </td>
+            </tr>
+                    <tr class="datacomponent datasource" id="uses-DS0029-Network Traffic Flow">
+                        <td></td>
+                        <td></td>
+                        <td>
+                            <a href="/datasources/DS0029/#Network%20Traffic%20Flow">Network Traffic Flow</a>
+                        </td>
+                            <td>
+                                        <p>Monitor for network traffic originating from unknown/unexpected hardware devices. Local network traffic metadata (such as source MAC addressing) as well as usage of network management protocols such as DHCP may be helpful in identifying hardware.</p>
+
+                            </td>
+                    </tr>
+    </tbody>
+</table>
+</div>
+
+                
+                            <h2 class="pt-3" id="references">References</h2>
+
+        <div class="row">
+            <div class="col">
+                <ol>
+                            
+        <li>
+            <span  id="scite-1" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-1" href="https://tools.ietf.org/html/rfc826" target="_blank">
+                        Plummer, D. (1982, November). An Ethernet Address Resolution Protocol. Retrieved October 15, 2020.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-2" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-2" href="https://pen-testing.sans.org/resources/papers/gcih/real-world-arp-spoofing-105411" target="_blank">
+                        Siles, R. (2003, August). Real World ARP Spoofing. Retrieved October 15, 2020.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-3" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-3" href="https://web.archive.org/web/20200302085133/https://www.cylance.com/content/dam/cylance/pages/operation-cleaver/Cylance_Operation_Cleaver_Report.pdf" target="_blank">
+                        Cylance. (2014, December). Operation Cleaver. Retrieved September 14, 2017.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                </ol>
+            </div>
+            <div class="col">
+                    <ol start="4.0">
+                                
+        <li>
+            <span  id="scite-4" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-4" href="https://www.bitdefender.com/blog/labs/luminousmoth-plugx-file-exfiltration-and-persistence-revisited" target="_blank">
+                        Botezatu, B and etl. (2021, July 21). LuminousMoth - PlugX, File Exfiltration and Persistence Revisited. Retrieved October 20, 2022.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-5" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-5" href="https://www.cisco.com/c/en/us/products/collateral/switches/catalyst-6500-series-switches/white_paper_c11_603839.html" target="_blank">
+                        King, J., Lauerman, K. (2016, January 22). ARP Poisoning (Man-in-the-Middle) Attack and Mitigation Technique. Retrieved October 15, 2020.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-6" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-6" href="https://www.juniper.net/documentation/en_US/junos/topics/task/configuration/understanding-and-using-dai.html" target="_blank">
+                        Juniper. (2020, September 23). Understanding and Using Dynamic ARP Inspection (DAI). Retrieved October 15, 2020.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+  
+                    </ol>
+            </div>             
+        </div>
+
+
+    
+                </div>
+            </div>
+        </div>
+    </div>
+    
+        </div>
+    </div>
+
+            <!--stop-indexing-for-search-->
+            <!-- search overlay for entire page -- not displayed inline -->
+            <div class="overlay search" id="search-overlay" style="display: none;">
+    <div class="overlay-inner">
+        <!-- text input for searching -->
+        <div class="search-header">
+            <div class="search-input">
+                <input type="text" id="search-input" placeholder="search">
+            </div>
+            <div class="search-icons">
+                <div class="search-parsing-icon spinner-border" style="display: none" id="search-parsing-icon"></div>
+                <div class="close-search-icon" id="close-search-icon">&times;</div>
+            </div>
+        </div>
+        <!-- results and controls for loading more results -->
+        <div id="search-body" class="search-body">
+            <div class="results" id="search-results">
+                <!-- content will be appended here on search -->
+            </div>
+            <div id="load-more-results" class="load-more-results">
+                <button class="btn btn-default" id="load-more-results-button">load more results</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+        </div>
+        <div class="row flex-grow-0 flex-shrink-1">
+            <!-- footer elements -->
+            <footer class="col footer">
+                <div class="container-fluid">
+                    <div class="row row-footer">
+                        <div class="col-2 col-sm-2 col-md-2">
+                            <div class="footer-center-responsive my-auto">
+                                <a href="https://www.mitre.org" target="_blank" rel="noopener" aria-label="MITRE">
+                                    <img src="/versions/v15/theme/images/mitrelogowhiteontrans.gif" class="mitre-logo-wtrans">
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-2 col-sm-2 footer-responsive-break"></div>
+                        <div class="footer-link-group">
+                            <div class="row row-footer">
+                                <div class="px-3 col-footer">
+                                    <u class="footer-link"><a href="/versions/v15/resources/engage-with-attack/contact" class="footer-link">Contact Us</a></u>
+                                </div>
+                                <div class="px-3 col-footer">
+                                    <u class="footer-link"><a href="/versions/v15/resources/legal-and-branding/terms-of-use" class="footer-link">Terms of Use</a></u>
+                                </div>
+                                    <div class="px-3 col-footer">
+                                        <u class="footer-link"><a href="/versions/v15/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
+                                    </div>
+                                <div class="px-3">
+                                    <u class="footer-link"><a href="/versions/v15/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v15.0&#013;Website  v4.1.2">Website Changelog</a></u>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <small class="px-3">
+                                    &copy;&nbsp;2015&nbsp;-&nbsp;2024, The MITRE Corporation. MITRE ATT&CK and ATT&CK are registered trademarks of The MITRE Corporation.
+                                </small>
+                            </div>
+                        </div>
+                        <div class="w-100 p-2 footer-responsive-break"></div>
+                            <div class="col pr-4">
+                                <div class="footer-float-right-responsive-brand">
+                                    <div class="row row-footer row-footer-icon">
+                                        <div class="mb-1">
+                                            <a href="https://twitter.com/MITREattack" class="btn btn-footer">
+                                                <i class="fa-brands fa-x-twitter fa-lg"></i>
+                                            </a>
+                                            <a href="https://github.com/mitre-attack" class="btn btn-footer">
+                                                <i class="fa-brands fa-github fa-lg"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+
+<!--stopindex-->
+
+</div>
+    <!--SCRIPTS-->
+    <script src="/versions/v15/theme/scripts/jquery-3.5.1.min.js"></script>
+    <script src="/versions/v15/theme/scripts/popper.min.js"></script>
+    <script src="/versions/v15/theme/scripts/bootstrap-select.min.js"></script>
+    <script src="/versions/v15/theme/scripts/bootstrap.bundle.min.js"></script>
+    <script src="/versions/v15/theme/scripts/site.js?2539"></script>
+    <script src="/versions/v15/theme/scripts/settings.js?4965"></script>
+    <script src="/versions/v15/theme/scripts/search_bundle.js"></script>
+
+<!--SCRIPTS-->
+<script src="/versions/v15/theme/scripts/resizer.js"></script>
+
+<!--SCRIPTS-->
+<script src="/versions/v15/theme/scripts/bootstrap-tourist.js"></script>
+<script src="/versions/v15/theme/scripts/settings.js"></script>
+    <script src="/versions/v15/theme/scripts/tour/tour-subtechniques.js"></script>
+<script src="/versions/v15/theme/scripts/sidebar-load-all.js"></script>
+</body>
+</html>

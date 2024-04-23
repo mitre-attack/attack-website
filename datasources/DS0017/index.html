@@ -26,7 +26,7 @@
         <link rel="stylesheet" href="/theme/style/fontawesome-6.5.1/css/fontawesome.min.css"/>
         <link rel="stylesheet" href="/theme/style/fontawesome-6.5.1/css/brands.min.css"/>
         <link rel="stylesheet" href="/theme/style/fontawesome-6.5.1/css/solid.min.css"/>
-        <link rel="stylesheet" type="text/css" href="/theme/style.min.css?fbd3eefa">
+        <link rel="stylesheet" type="text/css" href="/theme/style.min.css?9dc07e69">
 
 </head>
 
@@ -169,7 +169,7 @@
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
                     <div class="container-fluid banner-message">
-                        Thank you to Tidal Cyber and SOC Prime for becoming ATT&CK's first Benefactors. To join the cohort, or learn more about this program visit our <a href='https://attack.mitre.org/resources/engage-with-attack/benefactors/'>Benefactors page</a>.
+                        ATT&CK v15 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v15-26685f300acc'>blog post</a> or <a href='https://attack.mitre.org/resources/updates/updates-april-2024/'>release notes</a> for more information.
                     </div>
             </div>
         </div>
@@ -286,6 +286,14 @@
     <div class="sidenav-head  mobile " id="DS0041-API Calls">
       <a href="/datasources/DS0041/#API%20Calls">
         API Calls
+      </a>
+    </div>
+</div>
+
+        <div class="sidenav">
+    <div class="sidenav-head  mobile " id="DS0041-Application Assets">
+      <a href="/datasources/DS0041/#Application%20Assets">
+        Application Assets
       </a>
     </div>
 </div>
@@ -1688,13 +1696,13 @@
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Permalink to this version of DS0017" 
-           href="/versions/v14/datasources/DS0017/" data-test-ignore="true">Version Permalink</a>
+           href="/versions/v15/datasources/DS0017/" data-test-ignore="true">Version Permalink</a>
     </div>
     <div class="permalink">
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Go to the live version of DS0017" 
-           href="/versions/v14/datasources/DS0017/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+           href="/versions/v15/datasources/DS0017/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
     </div>
 </div>
 
@@ -1795,6 +1803,20 @@
                         </td>
                         <td>
                                     <p>Monitor executed commands and arguments that may perform sudo caching and/or use the suoders file to elevate privileges, such as the <code>sudo</code> command.</p>
+
+                        </td>
+                    </tr>
+                    <tr class="sub technique enterprise" id="enterprise">
+                        <td></td>
+                        <td></td>
+                        <td>
+                            <a href="/techniques/T1548/006">.006</a>
+                        </td>
+                        <td>
+                            <a href="/techniques/T1548/006">TCC Manipulation</a>
+                        </td>
+                        <td>
+                                    <p>Monitor executed commands and arguments that may abuse or modify TCC mechanisms designed to control access to elevated privileges. macOS system logs may also indicate when <code>AuthorizationExecuteWithPrivileges</code> is being called.</p>
 
                         </td>
                     </tr>
@@ -1966,7 +1988,7 @@
                         <a href="/techniques/T1010">Application Window Discovery</a>
                     </td>
                     <td>
-                                <p>Monitor executed commands and arguments for actions that could be taken to gather system and network information. Information may also be acquired through Windows system management tools such as Windows Management Instrumentation and PowerShell.</p><p>Note: Commands can also be obtained from Payload event field for PowerShell event id 4103. For PowerShell Module logging event id 4103, enable logging for module Microsoft.PowerShell.Management.</p><h4> Analytic 1 - Suspicious Commands </h4><p><code> suspicious_commands = filter commands where event_id == "4103" AND  ((command_line LIKE '%Get-Process%' AND command_line_parameter LIKE '%mainWindowTitle%'))</code></p>
+                                <p>Monitor executed commands and arguments for actions that could be taken to gather system and network information. Information may also be acquired through Windows system management tools such as Windows Management Instrumentation and PowerShell.</p><p>Note: Commands can also be obtained from Payload event field for PowerShell event id 4103. For PowerShell Module logging event id 4103, enable logging for module Microsoft.PowerShell.Management.</p><p>Analytic 1 - Suspicious Commands</p><p><code>source=WinEventLog:"*Microsoft-Windows-PowerShell/Operational" EventCode="4103" | where CommandLine LIKE "%Get-Process%" AND CommandLine LIKE "%mainWindowTitle%"</code></p>
 
                     </td>
                 </tr>
@@ -2141,7 +2163,7 @@
                             <a href="/techniques/T1547/004">Winlogon Helper DLL</a>
                         </td>
                         <td>
-                                    <p>Monitor executed commands and arguments that may abuse features of Winlogon to execute DLLs and/or executables when a user logs in.</p><h4>Analytic 1 - Modification of the Winlogon Registry Key</h4><p><code>suspicious_processes = filter processes where (event_id == "1" OR event_id == "4688")   AND  (ProcessCommandLine LIKE '%Microsoft\Windows NT\CurrentVersion\Winlogon%' AND     (ProcessCommandLine LIKE '%Userinit%' OR ProcessCommandLine LIKE '%Shell%' OR ProcessCommandLine LIKE '%Notify%'))  AND  (ProcessCommandLine LIKE '%reg%' OR ProcessCommandLine LIKE '%add%' OR ProcessCommandLine LIKE '%/d%' OR   ProcessCommandLine LIKE '%Set-ItemProperty%' OR ProcessCommandLine LIKE '%New-ItemProperty%' ProcessCommandLine LIKE '%-value%')</code></p>
+                                    <p>Monitor executed commands and arguments that may abuse features of Winlogon to execute DLLs and/or executables when a user logs in.</p>
 
                         </td>
                     </tr>
@@ -2400,7 +2422,7 @@
                             <a href="/techniques/T1059/001">PowerShell</a>
                         </td>
                         <td>
-                                    <p>If proper execution policy is set, adversaries will likely be able to define their own execution policy if they obtain administrator or system access, either through the Registry or at the command line. This change in policy on a system may be a way to detect malicious use of PowerShell. If PowerShell is not used in an environment, then simply looking for PowerShell execution may detect malicious activity. It is also beneficial to turn on PowerShell logging to gain increased fidelity in what occurs during execution (which is applied to .NET invocations). <span onclick=scrollToRef('scite-15') id="scite-ref-15-a" class="scite-citeref-number" title="Malware Archaeology. (2016, June). WINDOWS POWERSHELL LOGGING CHEAT SHEET - Win 7/Win 2008 or later. Retrieved June 24, 2016."data-reference="Malware Archaeology PowerShell Cheat Sheet"><sup><a href="http://www.malwarearchaeology.com/s/Windows-PowerShell-Logging-Cheat-Sheet-ver-June-2016-v2.pdf" target="_blank" data-hasqtip="14" aria-describedby="qtip-14">[15]</a></sup></span> PowerShell 5.0 introduced enhanced logging capabilities, and some of those features have since been added to PowerShell 4.0. Earlier versions of PowerShell do not have many logging features.<span onclick=scrollToRef('scite-16') id="scite-ref-16-a" class="scite-citeref-number" title="Dunwoody, M. (2016, February 11). GREATER VISIBILITY THROUGH POWERSHELL LOGGING. Retrieved February 16, 2016."data-reference="FireEye PowerShell Logging 2016"><sup><a href="https://www.fireeye.com/blog/threat-research/2016/02/greater_visibilityt.html" target="_blank" data-hasqtip="15" aria-describedby="qtip-15">[16]</a></sup></span> An organization can gather PowerShell execution details in a data analytic platform to supplement it with other data.</p>
+                                    <p>If proper execution policy is set, adversaries will likely be able to define their own execution policy if they obtain administrator or system access, either through the Registry or at the command line. This change in policy on a system may be a way to detect malicious use of PowerShell. If PowerShell is not used in an environment, then simply looking for PowerShell execution may detect malicious activity. It is also beneficial to turn on PowerShell logging to gain increased fidelity in what occurs during execution (which is applied to .NET invocations). <span onclick=scrollToRef('scite-15') id="scite-ref-15-a" class="scite-citeref-number" title="Malware Archaeology. (2016, June). WINDOWS POWERSHELL LOGGING CHEAT SHEET - Win 7/Win 2008 or later. Retrieved June 24, 2016."data-reference="Malware Archaeology PowerShell Cheat Sheet"><sup><a href="http://www.malwarearchaeology.com/s/Windows-PowerShell-Logging-Cheat-Sheet-ver-June-2016-v2.pdf" target="_blank" data-hasqtip="14" aria-describedby="qtip-14">[15]</a></sup></span> PowerShell 5.0 introduced enhanced logging capabilities, and some of those features have since been added to PowerShell 4.0. Earlier versions of PowerShell do not have many logging features.<span onclick=scrollToRef('scite-16') id="scite-ref-16-a" class="scite-citeref-number" title="Dunwoody, M. (2016, February 11). GREATER VISIBILITY THROUGH POWERSHELL LOGGING. Retrieved February 16, 2016."data-reference="FireEye PowerShell Logging 2016"><sup><a href="https://www.fireeye.com/blog/threat-research/2016/02/greater_visibilityt.html" target="_blank" data-hasqtip="15" aria-describedby="qtip-15">[16]</a></sup></span> An organization can gather PowerShell execution details in a data analytic platform to supplement it with other data.</p><p>PowerShell can be used over WinRM to remotely run commands on a host. When a remote PowerShell session starts, svchost.exe executes wsmprovhost.exe</p><p>For this to work, certain registry keys must be set, and the WinRM service must be enabled. The PowerShell command Enter-PSSession -ComputerName \&lt;RemoteHost&gt; creates a remote PowerShell session.</p>
 
                         </td>
                     </tr>
@@ -2442,7 +2464,7 @@
                             <a href="/techniques/T1059/004">Unix Shell</a>
                         </td>
                         <td>
-                                    <p>Monitor executed commands and arguments that may abuse Unix shell commands and scripts for execution. Unix shell usage may be common on administrator, developer, or power user systems, depending on job function. If scripting is restricted for normal users, then any attempt to enable scripts running on a system would be considered suspicious. If scripts are not commonly used on a system, but enabled, scripts running out of cycle from patching or other administrator functions are suspicious. Scripts should be captured from the file system when possible to determine their actions and intent.</p>
+                                    <p>Monitor executed commands and arguments that may abuse Unix shell commands and scripts for execution. Unix shell usage may be common on administrator, developer, or power user systems, depending on job function. If scripting is restricted for normal users, then any attempt to enable scripts running on a system would be considered suspicious. If scripts are not commonly used on a system, but enabled, scripts running out of cycle from patching or other administrator functions are suspicious. Scripts should be captured from the file system when possible to determine their actions and intent.</p><p>Note: this analytic does not include an exhaustive list of potentially suspicious commands that could be executed through a shell interpreter. Instead, it is meant to serve as an example of types of commands that can warrant further investigation.</p><p>Analytic 1 - Unusual command execution </p><p><code> source="<em>Linux:</em>" CommandLine="<em>sh -c</em>" AND (CommandLine="<em>wget</em>" OR CommandLine="<em>curl</em>" OR CommandLine="<em>nc</em>" OR CommandLine="<em>perl</em>")</code></p>
 
                         </td>
                     </tr>
@@ -2513,6 +2535,20 @@
                         </td>
                         <td>
                                     <p>Consider reviewing command history in either host machines or cloud audit logs to determine if unauthorized or suspicious commands were executed.</p><p>Cloud API activity logging is typically enabled by default and may be reviewed in sources like the Microsoft Unified Audit Log, AWS CloudTrail, and GCP Admin Acitivty logs. Review these sources for history of executed API commands. Host logs may also be reviewed to capture CLI commands or PowerShell module usage to invoke Cloud API functions.</p>
+
+                        </td>
+                    </tr>
+                    <tr class="sub technique enterprise" id="enterprise">
+                        <td></td>
+                        <td></td>
+                        <td>
+                            <a href="/techniques/T1059/010">.010</a>
+                        </td>
+                        <td>
+                            <a href="/techniques/T1059/010">AutoHotKey & AutoIT</a>
+                        </td>
+                        <td>
+                                    <p>Monitor executed commands and arguments for abnormal usage of utilities and command-line arguments that may be used in support of malicious execution. Compare recent invocations of  <code>AutoIt3.exe</code> and <code>AutoHotkey.exe</code> with prior history of known good arguments to determine anomalous and potentially adversarial activity (ex: obfuscated and/or malicious commands).</p>
 
                         </td>
                     </tr>
@@ -2686,6 +2722,20 @@
                         </td>
                         <td>
                                     <p>Some legitimate LaunchDaemons point to unsigned code that could be exploited. For Launch Daemons with the <code>RunAtLoad</code> parameter set to true, ensure the <code>Program</code> parameter points to signed code or executables are in alignment with enterprise policy. Some parameters are interchangeable with others, such as <code>Program</code> and <code>ProgramArguments</code> parameters but one must be present. <span onclick=scrollToRef('scite-18') id="scite-ref-18-a" class="scite-citeref-number" title="Dennis German. (2020, November 20). launchd Keywords for plists. Retrieved October 7, 2021."data-reference="launchd Keywords for plists"><sup><a href="https://www.real-world-systems.com/docs/launchdPlist.1.html" target="_blank" data-hasqtip="17" aria-describedby="qtip-17">[18]</a></sup></span></p>
+
+                        </td>
+                    </tr>
+                    <tr class="sub technique enterprise" id="enterprise">
+                        <td></td>
+                        <td></td>
+                        <td>
+                            <a href="/techniques/T1543/005">.005</a>
+                        </td>
+                        <td>
+                            <a href="/techniques/T1543/005">Container Service</a>
+                        </td>
+                        <td>
+                                    <p>Monitor for suspicious uses of the docker or podman command, such as attempts to mount the root filesystem of the host. </p>
 
                         </td>
                     </tr>
@@ -3033,7 +3083,7 @@
                         <a href="/techniques/T1484">T1484</a>
                     </td>
                     <td>
-                        <a href="/techniques/T1484">Domain Policy Modification</a>
+                        <a href="/techniques/T1484">Domain or Tenant Policy Modification</a>
                     </td>
                     <td>
                                 <p>Monitor executed commands and arguments for modifications to domain trust settings, such as when a user or application modifies the federation settings on the domain or updates domain authentication from Managed to Federated via ActionTypes <code>Set federation settings on domain</code> and <code>Set domain authentication</code>.<span onclick=scrollToRef('scite-23') id="scite-ref-23-a" class="scite-citeref-number" title="Microsoft. (2020, December). Azure Sentinel Detections. Retrieved December 30, 2020."data-reference="Microsoft - Azure Sentinel ADFSDomainTrustMods"><sup><a href="https://github.com/Azure/Azure-Sentinel/blob/master/Detections/AuditLogs/ADFSDomainTrustMods.yaml" target="_blank" data-hasqtip="22" aria-describedby="qtip-22">[23]</a></sup></span><span onclick=scrollToRef('scite-24') id="scite-ref-24-a" class="scite-citeref-number" title="Microsoft 365 Defender Team. (2020, December 28). Using Microsoft 365 Defender to protect against Solorigate. Retrieved January 7, 2021."data-reference="Microsoft 365 Defender Solorigate"><sup><a href="https://www.microsoft.com/security/blog/2020/12/28/using-microsoft-365-defender-to-coordinate-protection-against-solorigate/" target="_blank" data-hasqtip="23" aria-describedby="qtip-23">[24]</a></sup></span></p>
@@ -3061,7 +3111,7 @@
                             <a href="/techniques/T1484/002">.002</a>
                         </td>
                         <td>
-                            <a href="/techniques/T1484/002">Domain Trust Modification</a>
+                            <a href="/techniques/T1484/002">Trust Modification</a>
                         </td>
                         <td>
                                     <p>Monitor executed commands and arguments that updates domain authentication from Managed to Federated via ActionTypes <code>Set federation settings on domain</code> and <code>Set domain authentication</code>.<span onclick=scrollToRef('scite-23') id="scite-ref-23-a" class="scite-citeref-number" title="Microsoft. (2020, December). Azure Sentinel Detections. Retrieved December 30, 2020."data-reference="Microsoft - Azure Sentinel ADFSDomainTrustMods"><sup><a href="https://github.com/Azure/Azure-Sentinel/blob/master/Detections/AuditLogs/ADFSDomainTrustMods.yaml" target="_blank" data-hasqtip="22" aria-describedby="qtip-22">[23]</a></sup></span> Monitor for PowerShell commands such as: <code>Update-MSOLFederatedDomain –DomainName: "Federated Domain Name"</code>, or <code>Update-MSOLFederatedDomain –DomainName: "Federated Domain Name" –supportmultipledomain</code>.<span onclick=scrollToRef('scite-25') id="scite-ref-25-a" class="scite-citeref-number" title="Microsoft. (2020, September 14). Update or repair the settings of a federated domain in Office 365, Azure, or Intune. Retrieved December 30, 2020."data-reference="Microsoft - Update or Repair Federated domain"><sup><a href="https://docs.microsoft.com/en-us/office365/troubleshoot/active-directory/update-federated-domain-office-365" target="_blank" data-hasqtip="24" aria-describedby="qtip-24">[25]</a></sup></span></p>
@@ -3179,7 +3229,7 @@
                             <a href="/techniques/T1546/002">Screensaver</a>
                         </td>
                         <td>
-                                    <p>Monitor executed commands and arguments of .scr files.</p><h4> Analytic 1 - Modify the HKCU\Control Panel\Desktop registry key </h4><p><code> suspicious_processes = filter processes where  (event_id == "1" OR event_id == "4688") AND  (ProcessCommandLine LIKE '%reg%' AND ProcessCommandLine LIKE '%add%' AND ProcessCommandLine LIKE '%HKCU\Control Panel\Desktop\%') </code></p>
+                                    <p>Monitor executed commands and arguments of .scr files.</p>
 
                         </td>
                     </tr>
@@ -3750,7 +3800,7 @@
                             <a href="/techniques/T1564/004">NTFS File Attributes</a>
                         </td>
                         <td>
-                                    <p>The Streams tool of Sysinternals can be used to uncover files with ADSs. The <code>dir /r</code> command can also be used to display ADSs. <span onclick=scrollToRef('scite-32') id="scite-ref-32-a" class="scite-citeref-number" title="Pravs. (2009, May 25). What you need to know about alternate data streams in windows? Is your Data secure? Can you restore that?. Retrieved March 21, 2018."data-reference="Symantec ADS May 2009"><sup><a href="https://www.symantec.com/connect/articles/what-you-need-know-about-alternate-data-streams-windows-your-data-secure-can-you-restore" target="_blank" data-hasqtip="31" aria-describedby="qtip-31">[32]</a></sup></span> Many PowerShell commands (such as Get-Item, Set-Item, Remove-Item, and Get-ChildItem) can also accept a <code>-stream</code> parameter to interact with ADSs. <span onclick=scrollToRef('scite-33') id="scite-ref-33-a" class="scite-citeref-number" title="Arntz, P. (2015, July 22). Introduction to Alternate Data Streams. Retrieved March 21, 2018."data-reference="MalwareBytes ADS July 2015"><sup><a href="https://blog.malwarebytes.com/101/2015/07/introduction-to-alternate-data-streams/" target="_blank" data-hasqtip="32" aria-describedby="qtip-32">[33]</a></sup></span> <span onclick=scrollToRef('scite-34') id="scite-ref-34-a" class="scite-citeref-number" title="Marlin, J. (2013, March 24). Alternate Data Streams in NTFS. Retrieved March 21, 2018."data-reference="Microsoft ADS Mar 2014"><sup><a href="https://blogs.technet.microsoft.com/askcore/2013/03/24/alternate-data-streams-in-ntfs/" target="_blank" data-hasqtip="33" aria-describedby="qtip-33">[34]</a></sup></span></p><h4>Analytic 1 - NTFS Alternate Data Stream Execution : System Utilities (Powershell)</h4><p><code>ads_processes = filter processes where (event_id = 1 exe = "C:\Windows\<em>\powershell.exe" AND command_line = "Invoke-CimMethod\s+-ClassName\s+Win32_Process\s+-MethodName\s+Create.</em>\b(\w+(.\w+)?):(\w+(.\w+)?)|-ep bypass\s+-\s+&lt;.<em>\b(\w+(.\w+)?):(\w+(.\w+)?)|-command.</em>Get-Content.<em>-Stream.</em>Set-Content.<em>start-process .</em>(\w+(.\w+)?)"</code></p><h4>Analytic 2 - NTFS Alternate Data Stream Execution : System Utilities (WMIC)</h4><p><code>ads_processes = filter processes where (event_id = 1 exe = "C:\Windows\<em>\wmic.exe" AND command_line = "process call create.</em>\"(\w+(.\w+)?):(\w+(.\w+)?)"<code></p><h4>Analytic 3 - NTFS Alternate Data Stream Execution : System Utilities (rundll32)</h4><p><code>ads_processes = filter processes where (event_id = 1 exe = "C:\Windows\<em>\rundll32.exe" AND command_line = "\"?(\w+(.\w+)?):(\w+(.\w+)?)?\"?,\w+\|(advpack.dll\|ieadvpack.dll),RegisterOCX\s+(\w+.\w+):(\w+(.\w+)?)\|(shdocvw.dll\|ieframe.dll),OpenURL.</em>(\w+.\w+):(\w+(.\w+)?)"</code></p><h4>Analytic 4 - NTFS Alternate Data Stream Execution : System Utilities (wscript/cscript)</h4><p><code>ads_processes = filter processes where (event_id = 1 exe = "C:\Windows\<em>\wscript.exe" OR exe = "C:\Windows\</em>\cscript.exe)" AND command_line = "(?&lt;!\/)\b\w+(.\w+)?:\w+(.\w+)?$"</code></p>
+                                    <p>The Streams tool of Sysinternals can be used to uncover files with ADSs. The <code>dir /r</code> command can also be used to display ADSs. <span onclick=scrollToRef('scite-32') id="scite-ref-32-a" class="scite-citeref-number" title="Pravs. (2009, May 25). What you need to know about alternate data streams in windows? Is your Data secure? Can you restore that?. Retrieved March 21, 2018."data-reference="Symantec ADS May 2009"><sup><a href="https://www.symantec.com/connect/articles/what-you-need-know-about-alternate-data-streams-windows-your-data-secure-can-you-restore" target="_blank" data-hasqtip="31" aria-describedby="qtip-31">[32]</a></sup></span> Many PowerShell commands (such as Get-Item, Set-Item, Remove-Item, and Get-ChildItem) can also accept a <code>-stream</code> parameter to interact with ADSs. <span onclick=scrollToRef('scite-33') id="scite-ref-33-a" class="scite-citeref-number" title="Arntz, P. (2015, July 22). Introduction to Alternate Data Streams. Retrieved March 21, 2018."data-reference="MalwareBytes ADS July 2015"><sup><a href="https://blog.malwarebytes.com/101/2015/07/introduction-to-alternate-data-streams/" target="_blank" data-hasqtip="32" aria-describedby="qtip-32">[33]</a></sup></span> <span onclick=scrollToRef('scite-34') id="scite-ref-34-a" class="scite-citeref-number" title="Marlin, J. (2013, March 24). Alternate Data Streams in NTFS. Retrieved March 21, 2018."data-reference="Microsoft ADS Mar 2014"><sup><a href="https://blogs.technet.microsoft.com/askcore/2013/03/24/alternate-data-streams-in-ntfs/" target="_blank" data-hasqtip="33" aria-describedby="qtip-33">[34]</a></sup></span></p>
 
                         </td>
                     </tr>
@@ -3948,7 +3998,7 @@
                             <a href="/techniques/T1562/006">Indicator Blocking</a>
                         </td>
                         <td>
-                                    <p>Monitor executed commands and arguments that may attempt to block indicators or events typically captured by sensors from being gathered and analyzed. Adversaries may attempt to evade system defenses by unloading minifilter drivers used by host-based sensors such as Sysmon through the use of the fltmc command-line utility. Accordingly, this analytic looks for command-line invocations of this utility when used to unload minifilter drivers.</p><h4>Analytic 1 - Indicator Blocking - Driver Unloaded</h4><p><code>fltmc_processes = filter processes where (exe = "fltmc.exe" AND command_line = "<em>unload</em>")</code></p>
+                                    <p>Monitor executed commands and arguments that may attempt to block indicators or events typically captured by sensors from being gathered and analyzed. Adversaries may attempt to evade system defenses by unloading minifilter drivers used by host-based sensors such as Sysmon through the use of the fltmc command-line utility. Accordingly, this analytic looks for command-line invocations of this utility when used to unload minifilter drivers.</p>
 
                         </td>
                     </tr>
@@ -4047,7 +4097,7 @@
                             <a href="/techniques/T1070/003">Clear Command History</a>
                         </td>
                         <td>
-                                    <p>Monitor executed commands and arguments for actions that could be taken to clear command history, such as <code>Clear-History</code> on Windows or <code>clear logging</code> / <code>clear history</code> via a Network Device CLI in AAA logs, or to disable writing command history, such as <code>history -c</code> in bash/zsh .</p><h4>Analytic 1 : Clear Powershell Console Command History </h4><p><code> suspicious_commands = filter ProcessId, ProcessFilePath, command_line where  (event_id == "1" OR event_id == "4688")   AND  (command_line LIKE '%rm (Get-PSReadlineOption).HistorySavePath%' OR   command_line LIKE '%del (Get-PSReadlineOption).HistorySavePath%' OR    command_line LIKE '%Set-PSReadlineOption –HistorySaveStyle SaveNothing%’ OR   command_line LIKE '%Remove-Item (Get-PSReadlineOption).HistorySavePath%' OR   (command_line LIKE '%del%' AND     command_line LIKE '%Microsoft\Windows\Powershell\PSReadline\ConsoleHost_history.txt%'))</code></p><h4> Analytic 2 : Powershell Commands </h4><p><code> suspicious_commands = filter CommandName, CommandType where   event_id == "4103" AND  (CommandName LIKE '%Clear-History%' OR   (CommandName LIKE '%Remove-Item%' AND CommandParameterValue LIKE '%ConsoleHost_history.text%')) </code></p>
+                                    <p>Monitor executed commands and arguments for actions that could be taken to clear command history, such as <code>Clear-History</code> on Windows or <code>clear logging</code> / <code>clear history</code> via a Network Device CLI in AAA logs, or to disable writing command history, such as <code>history -c</code> in bash/zsh .</p><p>Analytic 1 - Powershell Commands </p><p><code> (source="<em>WinEventLog:Microsoft-Windows-Powershell/Operational" EventCode="4103") (CommandLine="</em>Clear-History<em>" OR   (CommandLine="</em>Remove-Item<em>" AND CommandLine="</em>ConsoleHost_history.text*")) </code></p>
 
                         </td>
                     </tr>
@@ -4621,7 +4671,7 @@
                             <a href="/techniques/T1003/003">NTDS</a>
                         </td>
                         <td>
-                                    <p>Monitor executed commands and arguments that may attempt to access or create a copy of the Active Directory domain database in order to steal credential information, as well as obtain other information about domain members such as devices, users, and access rights. Look for command-lines that invoke attempts to access or copy the NTDS.dit.</p><p>Note: Events 4688 (Microsoft Windows Security Auditing) and 1 (Microsoft Windows Sysmon) provide context of commands and parameters being executed via creation of a new process. Event 800 (PowerShell) provides context of commands and parameters being executed via PowerShell. This detection is based on known Windows utilities commands and parameters that can be used to copy the ntds.dit file. It is recommended to keep the list of commands and parameters up to date.</p><h4> Analytic 1 - Command line attempt to access or create a copy of ntds.dit file</h4><p><code>suspicious_command = filter command_execution where ((event_id = "4688" OR event_id = "1" OR event_id = "800") AND ((command_line = "<em>ntds</em>" AND command_line = "<em>ntdsutil</em>" AND command_line = "<em>create</em>") OR (command_line = "<em><em>vssadmin" AND command_line = "</em>create</em>" AMD command_line = "<em>shadow</em>") OR (command_line = "<em>copy</em>" AND command_line = "<em>ntds.dit</em>")) </code></p>
+                                    <p>Monitor executed commands and arguments that may attempt to access or create a copy of the Active Directory domain database in order to steal credential information, as well as obtain other information about domain members such as devices, users, and access rights. Look for command-lines that invoke attempts to access or copy the NTDS.dit.</p><p>Note: Events 4688 (Microsoft Windows Security Auditing) and 1 (Microsoft Windows Sysmon) provide context of commands and parameters being executed via creation of a new process. Event 800 (PowerShell) provides context of commands and parameters being executed via PowerShell. This detection is based on known Windows utilities commands and parameters that can be used to copy the ntds.dit file. It is recommended to keep the list of commands and parameters up to date.</p><p>Analytic 1 - Command line attempt to access or create a copy of ntds.dit file</p><p><code>((source="WinEventLog:Microsoft-Windows-Powershell/Operational"  EventCode="800") AND((CommandLine LIKE "%ntds%" AND CommandLine LIKE "%ntdsutil%" AND CommandLine LIKE "%create%") OR (CommandLine LIKE "%vssadmin%" AND CommandLine LIKE "%create%" AND CommandLine LIKE "%shadow%") OR (CommandLine LIKE "%copy%" AND CommandLine LIKE "%ntds.dit%")))</code></p>
 
                         </td>
                     </tr>
@@ -4663,7 +4713,7 @@
                             <a href="/techniques/T1003/007">Proc Filesystem</a>
                         </td>
                         <td>
-                                    <p>Monitor executed commands and arguments that may gather credentials from information stored in the Proc filesystem or <code>/proc</code>.</p>
+                                    <p>Monitor executed commands and arguments that may gather credentials from information stored in the Proc filesystem or <code>/proc</code>. For instance, adversaries may use regex patterns to search for process memory that may be exfiltrated or searched for credentials.<span onclick=scrollToRef('scite-50') id="scite-ref-50-a" class="scite-citeref-number" title="Atomic Red Team. (2023, November). T1003.007 - OS Credential Dumping: Proc Filesystem. Retrieved March 28, 2024."data-reference="atomic-red proc file system"><sup><a href="https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1003.007/T1003.007.md" target="_blank" data-hasqtip="49" aria-describedby="qtip-49">[50]</a></sup></span><span onclick=scrollToRef('scite-51') id="scite-ref-51-a" class="scite-citeref-number" title="Gregal, Hunter. (2019, September 17). MimiPenguin 2.0. Retrieved March 28, 2024."data-reference="mimipenguin proc file"><sup><a href="https://github.com/huntergregal/mimipenguin/blob/master/mimipenguin.sh" target="_blank" data-hasqtip="50" aria-describedby="qtip-50">[51]</a></sup></span></p><p><code>grep -E "^[0-9a-f-]* r" /proc/"$pid"/maps | grep -E 'heap|stack' | cut -d' ' -f 1</code></p><p><code>grep -E "^[0-9a-f-]* r" /proc/"$PID"/maps | grep heap | cut -d' ' -f 1</code></p>
 
                         </td>
                     </tr>
@@ -4853,7 +4903,7 @@
                         <a href="/techniques/T1012">Query Registry</a>
                     </td>
                     <td>
-                                <p>Monitor executed commands and arguments for actions that may interact with the Windows Registry to gather information about the system, configuration, and installed software.</p><p>Note: For PowerShell Module logging event id 4103, enable logging for module Microsoft.PowerShell.Management. The New-PSDrive PowerShell cmdlet creates temporary and persistent drives that are mapped to or associated with a location in a data store, such a registry key (PSProvider "Registry"). The the Get-ChildItem gets the items in one or more specified locations. By using both, you can enumerate COM objects in one or more specified locations.</p><h4> Analytic 1 - Suspicious Commands </h4><p><code> suspicious_commands = filter command_line where  EventId == "4103" AND  (CommandName LIKE '%New-PSDrive%' AND        (CommandParameterValue LIKE ‘%Registry%’ OR        CommandParameterValue LIKE '%HKEY_CLASSES_ROOT%' OR        CommandParameterValue LIKE '%HKCR%')) </code></p>
+                                <p>Monitor executed commands and arguments for actions that may interact with the Windows Registry to gather information about the system, configuration, and installed software.</p><p>Note: For PowerShell Module logging event id 4103, enable logging for module Microsoft.PowerShell.Management. The New-PSDrive PowerShell cmdlet creates temporary and persistent drives that are mapped to or associated with a location in a data store, such a registry key (PSProvider "Registry"). The the Get-ChildItem gets the items in one or more specified locations. By using both, you can enumerate COM objects in one or more specified locations.</p><p>Analytic 1 - Suspicious Commands</p><p><code>(source="*WinEventLog:Microsoft-Windows-Powershell/Operational" EventCode="4103") | WHERE CommandLine LIKE "%New-PSDrive%" AND (CommandLine LIKE "%Registry%" OR CommandLine LIKE "%HKEY_CLASSES_ROOT%" OR CommandLine LIKE "%HKCR%")</code></p>
 
                     </td>
                 </tr>
@@ -4911,7 +4961,7 @@
                         <a href="/techniques/T1021">Remote Services</a>
                     </td>
                     <td>
-                                <p>Monitor executed commands and arguments that may use <a href="/techniques/T1078">Valid Accounts</a> to log into a service specifically designed to accept remote connections, such as telnet, SSH, and VNC. The adversary may then perform actions as the logged-on user.</p><p>Malicious actors may rename built-in commands or external tools, such as those provided by SysInternals, to better blend in with the environment. In those cases, the file path name is arbitrary and may blend in well with the background. If the arguments are closely inspected, it may be possible to infer what tools are running and understand what an adversary is doing. When any legitimate software shares the same command lines, it must be whitelisted according to the expected parameters.</p><p>Any tool of interest with commonly known command line usage can be detecting by command line analysis. Known substrings of command lines include</p><ul><li>PuTTY</li><li>port forwarding <code>-R * -pw</code></li><li>secure copy (scp) <code>-pw * * <em>@</em></code></li><li>mimikatz <code>sekurlsa::</code></li><li>RAR <code><em> -hp </em></code></li><li>Archive* a * Additionally, it may be useful to find IP addresses in the command line</li><li><code>\d{1,3}.\d{1,3}.\d{1,3}.\d{1,3}</code></li></ul><h4>Analytic 1 - Suspicious Arguments</h4><p><code>port_fwd = filter process where (command_line match "-R .<em> -pw")scp = filter process where (command_line match "-pw .</em> .<em> .</em>@.<em>"mimikatz = filter process where (command_line match "sekurlsa")rar = filter process where (command_line match " -hp ")archive = filter process where (command_line match ".</em> a .*")ip_addr = filter process where (command_line match \d{1,3}.\d{1,3}.\d{1,3}.\d{1,3})</code></p>
+                                <p>Monitor executed commands and arguments that may use <a href="/techniques/T1078">Valid Accounts</a> to log into a service specifically designed to accept remote connections, such as telnet, SSH, and VNC. The adversary may then perform actions as the logged-on user.</p>
 
                     </td>
                 </tr>
@@ -4925,7 +4975,7 @@
                             <a href="/techniques/T1021/002">SMB/Windows Admin Shares</a>
                         </td>
                         <td>
-                                    <p>Monitor executed commands and arguments that connect to remote shares, such as <a href="/software/S0039">Net</a>, on the command-line interface and Discovery techniques that could be used to find remotely accessible systems.<span onclick=scrollToRef('scite-50') id="scite-ref-50-a" class="scite-citeref-number" title="French, D. (2018, October 9). Detecting & Removing an Attacker’s WMI Persistence. Retrieved October 11, 2019."data-reference="Medium Detecting WMI Persistence"><sup><a href="https://medium.com/threatpunter/detecting-removing-wmi-persistence-60ccbb7dff96" target="_blank" data-hasqtip="49" aria-describedby="qtip-49">[50]</a></sup></span></p><p>Note: Event ID 4104 (from the Microsoft-Windows-Powershell/Operational log) captures Powershell script blocks, which can be analyzed and used to detect on potential connections and writing to remote shares. </p>
+                                    <p>Monitor executed commands and arguments that connect to remote shares, such as <a href="/software/S0039">Net</a>, on the command-line interface and Discovery techniques that could be used to find remotely accessible systems.<span onclick=scrollToRef('scite-52') id="scite-ref-52-a" class="scite-citeref-number" title="French, D. (2018, October 9). Detecting & Removing an Attacker’s WMI Persistence. Retrieved October 11, 2019."data-reference="Medium Detecting WMI Persistence"><sup><a href="https://medium.com/threatpunter/detecting-removing-wmi-persistence-60ccbb7dff96" target="_blank" data-hasqtip="51" aria-describedby="qtip-51">[52]</a></sup></span></p><p>Note: Event ID 4104 (from the Microsoft-Windows-Powershell/Operational log) captures Powershell script blocks, which can be analyzed and used to detect on potential connections and writing to remote shares. </p>
 
                         </td>
                     </tr>
@@ -4939,7 +4989,7 @@
                             <a href="/techniques/T1021/006">Windows Remote Management</a>
                         </td>
                         <td>
-                                    <p>Monitor executed commands and arguments that may invoke a WinRM script to correlate it with other related events.<span onclick=scrollToRef('scite-51') id="scite-ref-51-a" class="scite-citeref-number" title="French, D. (2018, September 30). Detecting Lateral Movement Using Sysmon and Splunk. Retrieved October 11, 2019."data-reference="Medium Detecting Lateral Movement"><sup><a href="https://medium.com/threatpunter/detecting-lateral-movement-using-sysmon-and-splunk-318d3be141bc" target="_blank" data-hasqtip="50" aria-describedby="qtip-50">[51]</a></sup></span></p>
+                                    <p>Monitor executed commands and arguments that may invoke a WinRM script to correlate it with other related events.<span onclick=scrollToRef('scite-53') id="scite-ref-53-a" class="scite-citeref-number" title="French, D. (2018, September 30). Detecting Lateral Movement Using Sysmon and Splunk. Retrieved October 11, 2019."data-reference="Medium Detecting Lateral Movement"><sup><a href="https://medium.com/threatpunter/detecting-lateral-movement-using-sysmon-and-splunk-318d3be141bc" target="_blank" data-hasqtip="52" aria-describedby="qtip-52">[53]</a></sup></span></p>
 
                         </td>
                     </tr>
@@ -5041,7 +5091,7 @@
                             <a href="/techniques/T1053/005">Scheduled Task</a>
                         </td>
                         <td>
-                                    <p>Monitor executed commands and arguments for actions that could be taken to gather tasks may also be created through Windows system management tools such as Windows Management Instrumentation and PowerShell, so additional logging may need to be configured to gather the appropriate data.</p><h4> Analytic 1 : New processes whose command line includes commands that create or modify scheduled tasks with a suspicious script, extension or user writable path </h4><p><code> suspicious_processes = filter ProcessId, ProcessFilePath, command_line, ProcessParentFilePath,ProcessParentCommandLine where  (EventId == "1" OR EventId == "4688") AND  command_line LIKE '%SCHTASKS%' AND  (command_line LIKE '%/CREATE%' OR command_line LIKE '%/CHANGE%') AND  (command_line LIKE '%.cmd%' OR command_line LIKE '%.ps1%' OR   command_line LIKE '%.vbs%' OR command_line LIKE '%.py%' OR   command_line LIKE '%.js%' OR command_line LIKE '%.exe%' OR   command_line LIKE '%.bat%' OR command_line LIKE '%javascript%' OR   command_line LIKE '%powershell%' OR command_line LIKE '%rundll32%' OR   command_line LIKE '%wmic%' OR command_line LIKE '%cmd%' OR   command_line LIKE '%cscript%' OR command_line LIKE '%wscript%' OR   command_line LIKE '%regsvr32%' OR command_line LIKE '%mshta%' OR   command_line LIKE '%bitsadmin%' OR command_line LIKE '%certutil%' OR   command_line LIKE '%msiexec%' OR command_line LIKE '%javaw%' OR   command_line LIKE '%[%]APPDATA[%]%' OR command_line LIKE '%\AppData\Roaming%' OR   command_line LIKE '%[%]PUBLIC[%]%' OR command_line LIKE '%C:\Users\Public%' OR   command_line LIKE '%[%]ProgramData[%]%' OR command_line LIKE '%C:\ProgramData%' OR   command_line LIKE '%[%]TEMP[%]%' OR command_line LIKE '%\AppData\Local\Temp%' OR   command_line LIKE '%\Windows\PLA\System%' OR command_line LIKE '%\tasks%' OR   command_line LIKE '%\Registration\CRMLog%' OR command_line LIKE '%\FxsTmp%' OR   command_line LIKE '%\spool\drivers\color%' OR command_line LIKE '%\tracing%' OR)</code></p>
+                                    <p>Monitor executed commands and arguments for actions that could be taken to gather tasks may also be created through Windows system management tools such as Windows Management Instrumentation and PowerShell, so additional logging may need to be configured to gather the appropriate data.</p>
 
                         </td>
                     </tr>
@@ -5119,7 +5169,7 @@
                                 <a href="/techniques/T1505">Server Software Component</a>: <a href="/techniques/T1505/004">IIS Components</a>
                             </td>
                             <td>
-                                        <p>Monitor execution and command-line arguments of <code>AppCmd.exe</code>, which may be abused to install malicious IIS modules.<span onclick=scrollToRef('scite-52') id="scite-ref-52-a" class="scite-citeref-number" title="Microsoft. (2007, November 24). IIS Modules Overview. Retrieved June 17, 2021."data-reference="Microsoft IIS Modules Overview 2007"><sup><a href="https://docs.microsoft.com/en-us/iis/get-started/introduction-to-iis/iis-modules-overview" target="_blank" data-hasqtip="51" aria-describedby="qtip-51">[52]</a></sup></span><span onclick=scrollToRef('scite-53') id="scite-ref-53-a" class="scite-citeref-number" title="Falcone, R. (2018, January 25). OilRig uses RGDoor IIS Backdoor on Targets in the Middle East. Retrieved July 6, 2018."data-reference="Unit 42 RGDoor Jan 2018"><sup><a href="https://researchcenter.paloaltonetworks.com/2018/01/unit42-oilrig-uses-rgdoor-iis-backdoor-targets-middle-east/" target="_blank" data-hasqtip="52" aria-describedby="qtip-52">[53]</a></sup></span><span onclick=scrollToRef('scite-54') id="scite-ref-54-a" class="scite-citeref-number" title="Hromcová, Z., Cherepanov, A. (2021). Anatomy of Native IIS Malware. Retrieved September 9, 2021."data-reference="ESET IIS Malware 2021"><sup><a href="https://i.blackhat.com/USA21/Wednesday-Handouts/us-21-Anatomy-Of-Native-Iis-Malware-wp.pdf" target="_blank" data-hasqtip="53" aria-describedby="qtip-53">[54]</a></sup></span></p>
+                                        <p>Monitor execution and command-line arguments of <code>AppCmd.exe</code>, which may be abused to install malicious IIS modules.<span onclick=scrollToRef('scite-54') id="scite-ref-54-a" class="scite-citeref-number" title="Microsoft. (2007, November 24). IIS Modules Overview. Retrieved June 17, 2021."data-reference="Microsoft IIS Modules Overview 2007"><sup><a href="https://docs.microsoft.com/en-us/iis/get-started/introduction-to-iis/iis-modules-overview" target="_blank" data-hasqtip="53" aria-describedby="qtip-53">[54]</a></sup></span><span onclick=scrollToRef('scite-55') id="scite-ref-55-a" class="scite-citeref-number" title="Falcone, R. (2018, January 25). OilRig uses RGDoor IIS Backdoor on Targets in the Middle East. Retrieved July 6, 2018."data-reference="Unit 42 RGDoor Jan 2018"><sup><a href="https://researchcenter.paloaltonetworks.com/2018/01/unit42-oilrig-uses-rgdoor-iis-backdoor-targets-middle-east/" target="_blank" data-hasqtip="54" aria-describedby="qtip-54">[55]</a></sup></span><span onclick=scrollToRef('scite-56') id="scite-ref-56-a" class="scite-citeref-number" title="Hromcová, Z., Cherepanov, A. (2021). Anatomy of Native IIS Malware. Retrieved September 9, 2021."data-reference="ESET IIS Malware 2021"><sup><a href="https://i.blackhat.com/USA21/Wednesday-Handouts/us-21-Anatomy-Of-Native-Iis-Malware-wp.pdf" target="_blank" data-hasqtip="55" aria-describedby="qtip-55">[56]</a></sup></span></p>
 
                             </td>
                         </tr>
@@ -5207,7 +5257,7 @@
                         <a href="/techniques/T1649">Steal or Forge Authentication Certificates</a>
                     </td>
                     <td>
-                                <p>Monitor for the execution of commands and other utilities abused to forge and/or steal certificates and related private keys.<span onclick=scrollToRef('scite-55') id="scite-ref-55-a" class="scite-citeref-number" title="Schroeder, W. & Christensen, L. (2021, June 22). Certified Pre-Owned - Abusing Active Directory Certificate Services. Retrieved August 2, 2022."data-reference="SpecterOps Certified Pre Owned"><sup><a href="https://web.archive.org/web/20220818094600/https://specterops.io/assets/resources/Certified_Pre-Owned.pdf" target="_blank" data-hasqtip="54" aria-describedby="qtip-54">[55]</a></sup></span></p>
+                                <p>Monitor for the execution of commands and other utilities abused to forge and/or steal certificates and related private keys.<span onclick=scrollToRef('scite-57') id="scite-ref-57-a" class="scite-citeref-number" title="Schroeder, W. & Christensen, L. (2021, June 22). Certified Pre-Owned - Abusing Active Directory Certificate Services. Retrieved August 2, 2022."data-reference="SpecterOps Certified Pre Owned"><sup><a href="https://web.archive.org/web/20220818094600/https://specterops.io/assets/resources/Certified_Pre-Owned.pdf" target="_blank" data-hasqtip="56" aria-describedby="qtip-56">[57]</a></sup></span></p>
 
                     </td>
                 </tr>
@@ -5265,7 +5315,7 @@
                             <a href="/techniques/T1553/004">Install Root Certificate</a>
                         </td>
                         <td>
-                                    <p>Monitor for commands, such as <code>security add-trusted-cert</code> (macOS) or <code>certutil -addstore</code> (Windows), that can be used to install root certificates. A system's root certificates are unlikely to change frequently. Monitor new certificates installed on a system that could be due to malicious activity. <span onclick=scrollToRef('scite-56') id="scite-ref-56-a" class="scite-citeref-number" title="Graeber, M. (2017, December 22). Code Signing Certificate Cloning Attacks and Defenses. Retrieved April 3, 2018."data-reference="SpectorOps Code Signing Dec 2017"><sup><a href="https://posts.specterops.io/code-signing-certificate-cloning-attacks-and-defenses-6f98657fc6ec" target="_blank" data-hasqtip="55" aria-describedby="qtip-55">[56]</a></sup></span> Check pre-installed certificates on new systems to ensure unnecessary or suspicious certificates are not present. Microsoft provides a list of trustworthy root certificates online and through <code>authroot.stl</code>. <span onclick=scrollToRef('scite-56') id="scite-ref-56-a" class="scite-citeref-number" title="Graeber, M. (2017, December 22). Code Signing Certificate Cloning Attacks and Defenses. Retrieved April 3, 2018."data-reference="SpectorOps Code Signing Dec 2017"><sup><a href="https://posts.specterops.io/code-signing-certificate-cloning-attacks-and-defenses-6f98657fc6ec" target="_blank" data-hasqtip="55" aria-describedby="qtip-55">[56]</a></sup></span> The Sysinternals Sigcheck utility can also be used (<code>sigcheck[64].exe -tuv</code>) to dump the contents of the certificate store and list valid certificates not rooted to the Microsoft Certificate Trust List. <span onclick=scrollToRef('scite-57') id="scite-ref-57-a" class="scite-citeref-number" title="Russinovich, M. et al.. (2017, May 22). Sigcheck. Retrieved April 3, 2018."data-reference="Microsoft Sigcheck May 2017"><sup><a href="https://docs.microsoft.com/sysinternals/downloads/sigcheck" target="_blank" data-hasqtip="56" aria-describedby="qtip-56">[57]</a></sup></span></p>
+                                    <p>Monitor for commands, such as <code>security add-trusted-cert</code> (macOS) or <code>certutil -addstore</code> (Windows), that can be used to install root certificates. A system's root certificates are unlikely to change frequently. Monitor new certificates installed on a system that could be due to malicious activity. <span onclick=scrollToRef('scite-58') id="scite-ref-58-a" class="scite-citeref-number" title="Graeber, M. (2017, December 22). Code Signing Certificate Cloning Attacks and Defenses. Retrieved April 3, 2018."data-reference="SpectorOps Code Signing Dec 2017"><sup><a href="https://posts.specterops.io/code-signing-certificate-cloning-attacks-and-defenses-6f98657fc6ec" target="_blank" data-hasqtip="57" aria-describedby="qtip-57">[58]</a></sup></span> Check pre-installed certificates on new systems to ensure unnecessary or suspicious certificates are not present. Microsoft provides a list of trustworthy root certificates online and through <code>authroot.stl</code>. <span onclick=scrollToRef('scite-58') id="scite-ref-58-a" class="scite-citeref-number" title="Graeber, M. (2017, December 22). Code Signing Certificate Cloning Attacks and Defenses. Retrieved April 3, 2018."data-reference="SpectorOps Code Signing Dec 2017"><sup><a href="https://posts.specterops.io/code-signing-certificate-cloning-attacks-and-defenses-6f98657fc6ec" target="_blank" data-hasqtip="57" aria-describedby="qtip-57">[58]</a></sup></span> The Sysinternals Sigcheck utility can also be used (<code>sigcheck[64].exe -tuv</code>) to dump the contents of the certificate store and list valid certificates not rooted to the Microsoft Certificate Trust List. <span onclick=scrollToRef('scite-59') id="scite-ref-59-a" class="scite-citeref-number" title="Russinovich, M. et al.. (2017, May 22). Sigcheck. Retrieved April 3, 2018."data-reference="Microsoft Sigcheck May 2017"><sup><a href="https://docs.microsoft.com/sysinternals/downloads/sigcheck" target="_blank" data-hasqtip="58" aria-describedby="qtip-58">[59]</a></sup></span></p>
 
                         </td>
                     </tr>
@@ -5279,7 +5329,7 @@
                             <a href="/techniques/T1553/006">Code Signing Policy Modification</a>
                         </td>
                         <td>
-                                    <p>Monitor for the execution of commands that could modify the code signing policy of a system, such as <code>bcdedit.exe -set TESTSIGNING ON</code>. <span onclick=scrollToRef('scite-58') id="scite-ref-58-a" class="scite-citeref-number" title="Microsoft. (2021, February 15). Enable Loading of Test Signed Drivers. Retrieved April 22, 2021."data-reference="Microsoft TESTSIGNING Feb 2021"><sup><a href="https://docs.microsoft.com/en-us/windows-hardware/drivers/install/the-testsigning-boot-configuration-option" target="_blank" data-hasqtip="57" aria-describedby="qtip-57">[58]</a></sup></span></p>
+                                    <p>Monitor for the execution of commands that could modify the code signing policy of a system, such as <code>bcdedit.exe -set TESTSIGNING ON</code>. <span onclick=scrollToRef('scite-60') id="scite-ref-60-a" class="scite-citeref-number" title="Microsoft. (2021, February 15). Enable Loading of Test Signed Drivers. Retrieved April 22, 2021."data-reference="Microsoft TESTSIGNING Feb 2021"><sup><a href="https://docs.microsoft.com/en-us/windows-hardware/drivers/install/the-testsigning-boot-configuration-option" target="_blank" data-hasqtip="59" aria-describedby="qtip-59">[60]</a></sup></span></p>
 
                         </td>
                     </tr>
@@ -5308,7 +5358,7 @@
                             <a href="/techniques/T1218/001">Compiled HTML File</a>
                         </td>
                         <td>
-                                    <p>Monitor executed commands and arguments that may forge SAML tokens with any permissions claims and lifetimes if they possess a valid SAML token-signing certificate.<span onclick=scrollToRef('scite-59') id="scite-ref-59-a" class="scite-citeref-number" title="Lambert, J. (2020, December 13). Important steps for customers to protect themselves from recent nation-state cyberattacks. Retrieved December 17, 2020."data-reference="Microsoft SolarWinds Steps"><sup><a href="https://blogs.microsoft.com/on-the-issues/2020/12/13/customers-protect-nation-state-cyberattacks/" target="_blank" data-hasqtip="58" aria-describedby="qtip-58">[59]</a></sup></span></p>
+                                    <p>Monitor executed commands and arguments that may forge SAML tokens with any permissions claims and lifetimes if they possess a valid SAML token-signing certificate.<span onclick=scrollToRef('scite-61') id="scite-ref-61-a" class="scite-citeref-number" title="Lambert, J. (2020, December 13). Important steps for customers to protect themselves from recent nation-state cyberattacks. Retrieved December 17, 2020."data-reference="Microsoft SolarWinds Steps"><sup><a href="https://blogs.microsoft.com/on-the-issues/2020/12/13/customers-protect-nation-state-cyberattacks/" target="_blank" data-hasqtip="60" aria-describedby="qtip-60">[61]</a></sup></span></p>
 
                         </td>
                     </tr>
@@ -5322,7 +5372,7 @@
                             <a href="/techniques/T1218/002">Control Panel</a>
                         </td>
                         <td>
-                                    <p>When executed from the command line or clicked, control.exe will execute the CPL file (ex: <code>control.exe file.cpl</code>) before <a href="/techniques/T1218/011">Rundll32</a> is used to call the CPL's API functions (ex: <code>rundll32.exe shell32.dll,Control_RunDLL file.cpl</code>). CPL files can be executed directly via the CPL API function with just the latter <a href="/techniques/T1218/011">Rundll32</a> command, which may bypass detections and/or execution filters for control.exe.<span onclick=scrollToRef('scite-60') id="scite-ref-60-a" class="scite-citeref-number" title="Mercês, F. (2014, January 27). CPL Malware - Malicious Control Panel Items. Retrieved January 18, 2018."data-reference="TrendMicro CPL Malware Jan 2014"><sup><a href="https://www.trendmicro.de/cloud-content/us/pdfs/security-intelligence/white-papers/wp-cpl-malware.pdf" target="_blank" data-hasqtip="59" aria-describedby="qtip-59">[60]</a></sup></span></p>
+                                    <p>When executed from the command line or clicked, control.exe will execute the CPL file (ex: <code>control.exe file.cpl</code>) before <a href="/techniques/T1218/011">Rundll32</a> is used to call the CPL's API functions (ex: <code>rundll32.exe shell32.dll,Control_RunDLL file.cpl</code>). CPL files can be executed directly via the CPL API function with just the latter <a href="/techniques/T1218/011">Rundll32</a> command, which may bypass detections and/or execution filters for control.exe.<span onclick=scrollToRef('scite-62') id="scite-ref-62-a" class="scite-citeref-number" title="Mercês, F. (2014, January 27). CPL Malware - Malicious Control Panel Items. Retrieved January 18, 2018."data-reference="TrendMicro CPL Malware Jan 2014"><sup><a href="https://www.trendmicro.de/cloud-content/us/pdfs/security-intelligence/white-papers/wp-cpl-malware.pdf" target="_blank" data-hasqtip="61" aria-describedby="qtip-61">[62]</a></sup></span></p>
 
                         </td>
                     </tr>
@@ -5420,7 +5470,7 @@
                             <a href="/techniques/T1218/010">Regsvr32</a>
                         </td>
                         <td>
-                                    <p>Command arguments used before and after the regsvr32.exe invocation may also be useful in determining the origin and purpose of the script or DLL being loaded. <span onclick=scrollToRef('scite-61') id="scite-ref-61-a" class="scite-citeref-number" title="Nolen, R. et al.. (2016, April 28). Threat Advisory: "Squiblydoo" Continues Trend of Attackers Using Native OS Tools to "Live off the Land". Retrieved April 9, 2018."data-reference="Carbon Black Squiblydoo Apr 2016"><sup><a href="https://www.carbonblack.com/2016/04/28/threat-advisory-squiblydoo-continues-trend-of-attackers-using-native-os-tools-to-live-off-the-land/" target="_blank" data-hasqtip="60" aria-describedby="qtip-60">[61]</a></sup></span></p>
+                                    <p>Command arguments used before and after the regsvr32.exe invocation may also be useful in determining the origin and purpose of the script or DLL being loaded. <span onclick=scrollToRef('scite-63') id="scite-ref-63-a" class="scite-citeref-number" title="Nolen, R. et al.. (2016, April 28). Threat Advisory: "Squiblydoo" Continues Trend of Attackers Using Native OS Tools to "Live off the Land". Retrieved April 9, 2018."data-reference="Carbon Black Squiblydoo Apr 2016"><sup><a href="https://www.carbonblack.com/2016/04/28/threat-advisory-squiblydoo-continues-trend-of-attackers-using-native-os-tools-to-live-off-the-land/" target="_blank" data-hasqtip="62" aria-describedby="qtip-62">[63]</a></sup></span></p>
 
                         </td>
                     </tr>
@@ -5480,6 +5530,35 @@
 
                         </td>
                     </tr>
+                    <tr class="sub technique enterprise" id="enterprise">
+                        <td></td>
+                        <td></td>
+                        <td>
+                            <a href="/techniques/T1218/015">.015</a>
+                        </td>
+                        <td>
+                            <a href="/techniques/T1218/015">Electron Applications</a>
+                        </td>
+                        <td>
+                                    <p>Monitor executed commands and arguments that may abuse Electron apps to execute malicious content. For example, analyze commands invoking <code>teams.exe</code> or <code>chrome.exe</code> to execute malicious or abnormal content.</p>
+
+                        </td>
+                    </tr>
+                <tr class="technique ics" id="ics">
+                    <td>
+                            ICS
+                    </td>
+                    <td colspan="2">
+                        <a href="/techniques/T0894">T0894</a>
+                    </td>
+                    <td>
+                        <a href="/techniques/T0894">System Binary Proxy Execution</a>
+                    </td>
+                    <td>
+                                <p>Monitor executed commands and associated arguments for application programs which support executing custom code, scripts, commands, or executables. </p>
+
+                    </td>
+                </tr>
                 <tr class="technique enterprise" id="enterprise">
                     <td>
                             Enterprise
@@ -5623,6 +5702,20 @@
                         </td>
                         <td>
                                     <p>Monitor executed commands and arguments for scripts like PubPrn.vbs that may be used to proxy execution of malicious files.</p>
+
+                        </td>
+                    </tr>
+                    <tr class="sub technique enterprise" id="enterprise">
+                        <td></td>
+                        <td></td>
+                        <td>
+                            <a href="/techniques/T1216/002">.002</a>
+                        </td>
+                        <td>
+                            <a href="/techniques/T1216/002">SyncAppvPublishingServer</a>
+                        </td>
+                        <td>
+                                    <p>Monitor executed commands and arguments for scripts like Syncappvpublishingserver.vbs that may be used to proxy execution of malicious files.</p>
 
                         </td>
                     </tr>
@@ -6357,11 +6450,7 @@
         </li>
 
 
-                </ol>
-            </div>
-            <div class="col">
-                    <ol start="32.0">
-                                
+                            
         <li>
             <span  id="scite-32" class="scite-citation">
                 <span class="scite-citation-text">
@@ -6373,6 +6462,10 @@
         </li>
 
 
+                </ol>
+            </div>
+            <div class="col">
+                    <ol start="33.0">
                                 
         <li>
             <span  id="scite-33" class="scite-citation">
@@ -6581,8 +6674,8 @@
         <li>
             <span  id="scite-50" class="scite-citation">
                 <span class="scite-citation-text">
-                    <a rel="nofollow" class="external text" name="scite-50" href="https://medium.com/threatpunter/detecting-removing-wmi-persistence-60ccbb7dff96" target="_blank">
-                        French, D. (2018, October 9). Detecting & Removing an Attacker’s WMI Persistence. Retrieved October 11, 2019.
+                    <a rel="nofollow" class="external text" name="scite-50" href="https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1003.007/T1003.007.md" target="_blank">
+                        Atomic Red Team. (2023, November). T1003.007 - OS Credential Dumping: Proc Filesystem. Retrieved March 28, 2024.
                     </a>
                 </span>
             </span>
@@ -6593,8 +6686,8 @@
         <li>
             <span  id="scite-51" class="scite-citation">
                 <span class="scite-citation-text">
-                    <a rel="nofollow" class="external text" name="scite-51" href="https://medium.com/threatpunter/detecting-lateral-movement-using-sysmon-and-splunk-318d3be141bc" target="_blank">
-                        French, D. (2018, September 30). Detecting Lateral Movement Using Sysmon and Splunk. Retrieved October 11, 2019.
+                    <a rel="nofollow" class="external text" name="scite-51" href="https://github.com/huntergregal/mimipenguin/blob/master/mimipenguin.sh" target="_blank">
+                        Gregal, Hunter. (2019, September 17). MimiPenguin 2.0. Retrieved March 28, 2024.
                     </a>
                 </span>
             </span>
@@ -6605,8 +6698,8 @@
         <li>
             <span  id="scite-52" class="scite-citation">
                 <span class="scite-citation-text">
-                    <a rel="nofollow" class="external text" name="scite-52" href="https://docs.microsoft.com/en-us/iis/get-started/introduction-to-iis/iis-modules-overview" target="_blank">
-                        Microsoft. (2007, November 24). IIS Modules Overview. Retrieved June 17, 2021.
+                    <a rel="nofollow" class="external text" name="scite-52" href="https://medium.com/threatpunter/detecting-removing-wmi-persistence-60ccbb7dff96" target="_blank">
+                        French, D. (2018, October 9). Detecting & Removing an Attacker’s WMI Persistence. Retrieved October 11, 2019.
                     </a>
                 </span>
             </span>
@@ -6617,8 +6710,8 @@
         <li>
             <span  id="scite-53" class="scite-citation">
                 <span class="scite-citation-text">
-                    <a rel="nofollow" class="external text" name="scite-53" href="https://researchcenter.paloaltonetworks.com/2018/01/unit42-oilrig-uses-rgdoor-iis-backdoor-targets-middle-east/" target="_blank">
-                        Falcone, R. (2018, January 25). OilRig uses RGDoor IIS Backdoor on Targets in the Middle East. Retrieved July 6, 2018.
+                    <a rel="nofollow" class="external text" name="scite-53" href="https://medium.com/threatpunter/detecting-lateral-movement-using-sysmon-and-splunk-318d3be141bc" target="_blank">
+                        French, D. (2018, September 30). Detecting Lateral Movement Using Sysmon and Splunk. Retrieved October 11, 2019.
                     </a>
                 </span>
             </span>
@@ -6629,8 +6722,8 @@
         <li>
             <span  id="scite-54" class="scite-citation">
                 <span class="scite-citation-text">
-                    <a rel="nofollow" class="external text" name="scite-54" href="https://i.blackhat.com/USA21/Wednesday-Handouts/us-21-Anatomy-Of-Native-Iis-Malware-wp.pdf" target="_blank">
-                        Hromcová, Z., Cherepanov, A. (2021). Anatomy of Native IIS Malware. Retrieved September 9, 2021.
+                    <a rel="nofollow" class="external text" name="scite-54" href="https://docs.microsoft.com/en-us/iis/get-started/introduction-to-iis/iis-modules-overview" target="_blank">
+                        Microsoft. (2007, November 24). IIS Modules Overview. Retrieved June 17, 2021.
                     </a>
                 </span>
             </span>
@@ -6641,8 +6734,8 @@
         <li>
             <span  id="scite-55" class="scite-citation">
                 <span class="scite-citation-text">
-                    <a rel="nofollow" class="external text" name="scite-55" href="https://web.archive.org/web/20220818094600/https://specterops.io/assets/resources/Certified_Pre-Owned.pdf" target="_blank">
-                        Schroeder, W. & Christensen, L. (2021, June 22). Certified Pre-Owned - Abusing Active Directory Certificate Services. Retrieved August 2, 2022.
+                    <a rel="nofollow" class="external text" name="scite-55" href="https://researchcenter.paloaltonetworks.com/2018/01/unit42-oilrig-uses-rgdoor-iis-backdoor-targets-middle-east/" target="_blank">
+                        Falcone, R. (2018, January 25). OilRig uses RGDoor IIS Backdoor on Targets in the Middle East. Retrieved July 6, 2018.
                     </a>
                 </span>
             </span>
@@ -6653,8 +6746,8 @@
         <li>
             <span  id="scite-56" class="scite-citation">
                 <span class="scite-citation-text">
-                    <a rel="nofollow" class="external text" name="scite-56" href="https://posts.specterops.io/code-signing-certificate-cloning-attacks-and-defenses-6f98657fc6ec" target="_blank">
-                        Graeber, M. (2017, December 22). Code Signing Certificate Cloning Attacks and Defenses. Retrieved April 3, 2018.
+                    <a rel="nofollow" class="external text" name="scite-56" href="https://i.blackhat.com/USA21/Wednesday-Handouts/us-21-Anatomy-Of-Native-Iis-Malware-wp.pdf" target="_blank">
+                        Hromcová, Z., Cherepanov, A. (2021). Anatomy of Native IIS Malware. Retrieved September 9, 2021.
                     </a>
                 </span>
             </span>
@@ -6665,8 +6758,8 @@
         <li>
             <span  id="scite-57" class="scite-citation">
                 <span class="scite-citation-text">
-                    <a rel="nofollow" class="external text" name="scite-57" href="https://docs.microsoft.com/sysinternals/downloads/sigcheck" target="_blank">
-                        Russinovich, M. et al.. (2017, May 22). Sigcheck. Retrieved April 3, 2018.
+                    <a rel="nofollow" class="external text" name="scite-57" href="https://web.archive.org/web/20220818094600/https://specterops.io/assets/resources/Certified_Pre-Owned.pdf" target="_blank">
+                        Schroeder, W. & Christensen, L. (2021, June 22). Certified Pre-Owned - Abusing Active Directory Certificate Services. Retrieved August 2, 2022.
                     </a>
                 </span>
             </span>
@@ -6677,8 +6770,8 @@
         <li>
             <span  id="scite-58" class="scite-citation">
                 <span class="scite-citation-text">
-                    <a rel="nofollow" class="external text" name="scite-58" href="https://docs.microsoft.com/en-us/windows-hardware/drivers/install/the-testsigning-boot-configuration-option" target="_blank">
-                        Microsoft. (2021, February 15). Enable Loading of Test Signed Drivers. Retrieved April 22, 2021.
+                    <a rel="nofollow" class="external text" name="scite-58" href="https://posts.specterops.io/code-signing-certificate-cloning-attacks-and-defenses-6f98657fc6ec" target="_blank">
+                        Graeber, M. (2017, December 22). Code Signing Certificate Cloning Attacks and Defenses. Retrieved April 3, 2018.
                     </a>
                 </span>
             </span>
@@ -6689,8 +6782,8 @@
         <li>
             <span  id="scite-59" class="scite-citation">
                 <span class="scite-citation-text">
-                    <a rel="nofollow" class="external text" name="scite-59" href="https://blogs.microsoft.com/on-the-issues/2020/12/13/customers-protect-nation-state-cyberattacks/" target="_blank">
-                        Lambert, J. (2020, December 13). Important steps for customers to protect themselves from recent nation-state cyberattacks. Retrieved December 17, 2020.
+                    <a rel="nofollow" class="external text" name="scite-59" href="https://docs.microsoft.com/sysinternals/downloads/sigcheck" target="_blank">
+                        Russinovich, M. et al.. (2017, May 22). Sigcheck. Retrieved April 3, 2018.
                     </a>
                 </span>
             </span>
@@ -6701,8 +6794,8 @@
         <li>
             <span  id="scite-60" class="scite-citation">
                 <span class="scite-citation-text">
-                    <a rel="nofollow" class="external text" name="scite-60" href="https://www.trendmicro.de/cloud-content/us/pdfs/security-intelligence/white-papers/wp-cpl-malware.pdf" target="_blank">
-                        Mercês, F. (2014, January 27). CPL Malware - Malicious Control Panel Items. Retrieved January 18, 2018.
+                    <a rel="nofollow" class="external text" name="scite-60" href="https://docs.microsoft.com/en-us/windows-hardware/drivers/install/the-testsigning-boot-configuration-option" target="_blank">
+                        Microsoft. (2021, February 15). Enable Loading of Test Signed Drivers. Retrieved April 22, 2021.
                     </a>
                 </span>
             </span>
@@ -6713,7 +6806,31 @@
         <li>
             <span  id="scite-61" class="scite-citation">
                 <span class="scite-citation-text">
-                    <a rel="nofollow" class="external text" name="scite-61" href="https://www.carbonblack.com/2016/04/28/threat-advisory-squiblydoo-continues-trend-of-attackers-using-native-os-tools-to-live-off-the-land/" target="_blank">
+                    <a rel="nofollow" class="external text" name="scite-61" href="https://blogs.microsoft.com/on-the-issues/2020/12/13/customers-protect-nation-state-cyberattacks/" target="_blank">
+                        Lambert, J. (2020, December 13). Important steps for customers to protect themselves from recent nation-state cyberattacks. Retrieved December 17, 2020.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-62" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-62" href="https://www.trendmicro.de/cloud-content/us/pdfs/security-intelligence/white-papers/wp-cpl-malware.pdf" target="_blank">
+                        Mercês, F. (2014, January 27). CPL Malware - Malicious Control Panel Items. Retrieved January 18, 2018.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-63" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-63" href="https://www.carbonblack.com/2016/04/28/threat-advisory-squiblydoo-continues-trend-of-attackers-using-native-os-tools-to-live-off-the-land/" target="_blank">
                         Nolen, R. et al.. (2016, April 28). Threat Advisory: “Squiblydoo” Continues Trend of Attackers Using Native OS Tools to “Live off the Land”. Retrieved April 9, 2018.
                     </a>
                 </span>
@@ -6786,7 +6903,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v14.1&#013;Website  v4.1.1">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v15.0&#013;Website  v4.1.2">Website Changelog</a></u>
                                 </div>
                             </div>
                             <div class="row">
@@ -6826,15 +6943,15 @@
     <script src="/theme/scripts/popper.min.js"></script>
     <script src="/theme/scripts/bootstrap-select.min.js"></script>
     <script src="/theme/scripts/bootstrap.bundle.min.js"></script>
-    <script src="/theme/scripts/site.js?2304"></script>
-    <script src="/theme/scripts/settings.js?8376"></script>
+    <script src="/theme/scripts/site.js?37"></script>
+    <script src="/theme/scripts/settings.js?7305"></script>
     <script src="/theme/scripts/search_bundle.js"></script>
 
 <!--SCRIPTS-->
 <script src="/theme/scripts/resizer.js"></script>
 
     <!--SCRIPTS-->
-    <script src="/theme/scripts/filter/filter.js?3047"></script>
+    <script src="/theme/scripts/filter/filter.js?8398"></script>
     <script src="/theme/scripts/navigation.js"></script>
     <script src="/theme/scripts/mobileview-datasources.js"></script>
     <script src="/theme/scripts/bootstrap-tourist.js"></script>

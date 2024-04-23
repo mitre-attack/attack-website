@@ -26,7 +26,7 @@
         <link rel="stylesheet" href="/theme/style/fontawesome-6.5.1/css/fontawesome.min.css"/>
         <link rel="stylesheet" href="/theme/style/fontawesome-6.5.1/css/brands.min.css"/>
         <link rel="stylesheet" href="/theme/style/fontawesome-6.5.1/css/solid.min.css"/>
-        <link rel="stylesheet" type="text/css" href="/theme/style.min.css?fbd3eefa">
+        <link rel="stylesheet" type="text/css" href="/theme/style.min.css?9dc07e69">
 
 </head>
 
@@ -169,7 +169,7 @@
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
                     <div class="container-fluid banner-message">
-                        Thank you to Tidal Cyber and SOC Prime for becoming ATT&CK's first Benefactors. To join the cohort, or learn more about this program visit our <a href='https://attack.mitre.org/resources/engage-with-attack/benefactors/'>Benefactors page</a>.
+                        ATT&CK v15 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v15-26685f300acc'>blog post</a> or <a href='https://attack.mitre.org/resources/updates/updates-april-2024/'>release notes</a> for more information.
                     </div>
             </div>
         </div>
@@ -376,13 +376,13 @@
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Permalink to this version of T1552.002" 
-           href="/versions/v14/techniques/T1552/002/" data-test-ignore="true">Version Permalink</a>
+           href="/versions/v15/techniques/T1552/002/" data-test-ignore="true">Version Permalink</a>
     </div>
     <div class="permalink">
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Go to the live version of T1552.002" 
-           href="/versions/v14/techniques/T1552/002/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+           href="/versions/v15/techniques/T1552/002/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
     </div>
 </div>
 
@@ -576,7 +576,7 @@
                     <a href="/datasources/DS0009/#Process%20Creation">Process Creation</a>
                 </td>
                     <td>
-                                <p>Monitor newly executed processes for applications that can be used to query the Registry, such as <a href="/software/S0075">Reg</a>, and collect command parameters that may indicate credentials are being searched. Correlate activity with related suspicious behavior that may indicate an active intrusion to reduce false positives.</p><p>Note: Pseudocode Event IDs are for Sysmon (Event ID 1 - process create) and Windows Security Log (Event ID 4688 - a new process has been created). The Analytic looks for command-line instances of searching the Windows Registry for insecurely stored credentials. This can be accomplished using the query functionality of the <a href="/software/S0075">Reg</a> system utility, by looking for keys and values that contain strings such as "password". In addition, adversaries may use toolkits such as <a href="/software/S0194">PowerSploit</a>  in order to dump credentials from various applications such as IIS. Accordingly, this analytic looks for invocations of reg.exe in this capacity as well as that of several PowerSploit modules with similar functionality.</p><h4>Analytic 1 - Credentials in Files & Registry</h4><p><code>processes = filter processes where (  (event_id == "1" OR event_id == "4688") AND  command_line == "<em>reg</em> query HKLM /f password /t REG_SZ /s<em>" OR  command_line == "reg</em> query HKCU /f password /t REG_SZ /s" OR  command_line == "<em>Get-UnattendedInstallFile</em>" OR  command_line == "<em>Get-Webconfig</em>" OR  command_line == "<em>Get-ApplicationHost</em>" OR  command_line == "<em>Get-SiteListPassword</em>" OR  command_line == "<em>Get-CachedGPPPassword</em>" OR  command_line == "<em>Get-RegistryAutoLogon</em>") </code></p>
+                                <p>Monitor newly executed processes for applications that can be used to query the Registry, such as <a href="/software/S0075">Reg</a>, and collect command parameters that may indicate credentials are being searched. Correlate activity with related suspicious behavior that may indicate an active intrusion to reduce false positives.</p><p>Note: Pseudocode Event IDs are for Sysmon (Event ID 1 - process create) and Windows Security Log (Event ID 4688 - a new process has been created). The Analytic looks for command-line instances of searching the Windows Registry for insecurely stored credentials. This can be accomplished using the query functionality of the <a href="/software/S0075">Reg</a> system utility, by looking for keys and values that contain strings such as "password". In addition, adversaries may use toolkits such as <a href="/software/S0194">PowerSploit</a>  in order to dump credentials from various applications such as IIS. Accordingly, this analytic looks for invocations of reg.exe in this capacity as well as that of several PowerSploit modules with similar functionality.</p><p>Analytic 1 - Credentials in Files &amp; Registry</p><p><code>(source="WinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode="1") OR (source="WinEventLog:Security" EventCode="4688")<br />CommandLine="<em>reg</em> query HKLM /f password /t REG_SZ /s<em>" ORCommandLine="reg</em> query HKCU /f password /t REG_SZ /s" ORCommandLine="<em>Get-UnattendedInstallFile</em>" ORCommandLine="<em>Get-Webconfig" ORCommandLine="</em>Get-ApplicationHost<em>" ORCommandLine="</em>Get-SiteListPassword<em>" ORCommandLine="</em>Get-CachedGPPPassword<em>" ORCommandLine="</em>Get-RegistryAutoLogon*" </code></p>
 
                     </td>
             </tr>
@@ -761,7 +761,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v14.1&#013;Website  v4.1.1">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v15.0&#013;Website  v4.1.2">Website Changelog</a></u>
                                 </div>
                             </div>
                             <div class="row">
@@ -801,8 +801,8 @@
     <script src="/theme/scripts/popper.min.js"></script>
     <script src="/theme/scripts/bootstrap-select.min.js"></script>
     <script src="/theme/scripts/bootstrap.bundle.min.js"></script>
-    <script src="/theme/scripts/site.js?8738"></script>
-    <script src="/theme/scripts/settings.js?7997"></script>
+    <script src="/theme/scripts/site.js?6267"></script>
+    <script src="/theme/scripts/settings.js?2091"></script>
     <script src="/theme/scripts/search_bundle.js"></script>
 
 <!--SCRIPTS-->

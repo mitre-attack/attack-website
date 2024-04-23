@@ -1,0 +1,342 @@
+@import "_layouts.scss";
+
+/*Navigation styling*/
+// base style for nav-links in the top navigation bar (across the web site)
+%ele-state {
+    border: to-rem(1) solid transparent;
+    border-top-left-radius: rem(-0.05);
+    border-top-right-radius: rem(-0.05);
+    text-decoration: underline;
+}
+
+/*Top NAVIGATION*/          // top navigation bar across the web site
+.navbar {
+    background-color: color(primary);
+    z-index: 1;
+
+    // ATT&CK brand in the top navigation bar
+    .navbar-brand {
+        font-size: rem(1.7);
+    }
+
+    .nav-tabs {
+        border-bottom: none;
+
+        // list items
+        .nav-link {
+            color: on-color(primary);
+            @include font("Roboto-Light");
+
+            &:focus {
+                color: on-color(primary);
+                @extend %ele-state;
+            }
+
+            &:hover:not(.active) {
+                color: on-color(primary);
+                background-color: transparent;
+                @extend %ele-state;
+            }
+
+            &.active {
+                color: on-color(primary);
+                background-color: color(primary);
+                @extend %ele-state;
+            }
+        }
+
+        .nav-item.show .nav-link {
+            color: on-color(primary);
+            background-color: color(primary);
+            border-color: transparent;
+        }
+    }
+    .search-button {
+        padding: .3rem to-rem(16);
+        font-size: 1rem;
+        border: to-rem(1) solid on-color(primary);
+        border-radius: .25rem;
+        color: on-color(primary);
+        line-height: to-rem(24);
+
+
+        opacity: 0.8;
+
+        &:not(:has(.error-icon)):hover { opacity: 1;}
+
+        .icon-button {
+            content: "";
+            width: to-rem(24);
+            height: to-rem(24);
+            background-repeat: no-repeat;
+            display: inline-block;
+            vertical-align: middle;
+            background-position: center;
+            z-index: 1;
+            transition: all 0.2s ease;
+        }
+
+        .search-icon {
+            cursor: pointer;
+            background-image: url("data:image/svg+xml;charset=utf8,%3Csvg fill='#{escape-color(on-color(primary))}' xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath d='M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z'/%3E%3Cpath d='M0 0h24v24H0z' fill='none'/%3E%3C/svg%3E");
+        }
+
+        .error-icon {
+            cursor: default;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg fill='#{escape-color(on-color(primary))}' xmlns='http://www.w3.org/2000/svg' height='24' viewBox='0 96 960 960' width='24'%3e%3cpath d='M479.982 776q14.018 0 23.518-9.482 9.5-9.483 9.5-23.5 0-14.018-9.482-23.518-9.483-9.5-23.5-9.5-14.018 0-23.518 9.482-9.5 9.483-9.5 23.5 0 14.018 9.482 23.518 9.483 9.5 23.5 9.5ZM453 623h60V370h-60v253Zm27.266 353q-82.734 0-155.5-31.5t-127.266-86q-54.5-54.5-86-127.341Q80 658.319 80 575.5q0-82.819 31.5-155.659Q143 347 197.5 293t127.341-85.5Q397.681 176 480.5 176q82.819 0 155.659 31.5Q709 239 763 293t85.5 127Q880 493 880 575.734q0 82.734-31.5 155.5T763 858.316q-54 54.316-127 86Q563 976 480.266 976Zm.234-60Q622 916 721 816.5t99-241Q820 434 721.188 335 622.375 236 480 236q-141 0-240.5 98.812Q140 433.625 140 576q0 141 99.5 240.5t241 99.5Zm-.5-340Z'/%3e%3c/svg%3e");
+        }
+    }
+}
+/******/
+
+.nav,
+.faq {
+
+    /*NAVIGATION Dropdown*/     // dropdowns in top navigation bar
+    .dropdown:hover > .dropdown-menu {
+        display: block;
+    }
+
+    .dropdown-menu {
+        background-color: color(primary);
+
+        .dropdown-item {
+            color: on-color(primary);
+
+            &:hover,
+            &:focus {
+                color: on-color(primary);
+                text-decoration: underline;
+                background-color: transparent;
+            }
+        }
+    }
+    /******/
+
+    /*Side NAVIGATION*/
+    // bold list name for MATRICES, TACTICS, TECHNIQUES, MITIGATIONS, GROUPS, and SOFTWARE
+    .heading {
+        font-size: rem(1.3);
+        color: on-color-deemphasis(body);
+        letter-spacing: to-rem(3);
+        pointer-events: none;
+        @media screen and (max-width: 74.938rem) {
+            pointer-events: all;
+        }
+    }
+
+    .heading.collapsed .fa-chevron-up,
+    .heading .fa-chevron-down {
+        display: none;
+    }
+
+    .heading.collapsed .fa-chevron-down,
+    .heading .fa-chevron-up {
+        display: inline-block;
+    }
+
+    i.fa-solid {
+        visibility: hidden;
+        display: none;
+        @media screen and (max-width: 74.938rem) {
+            visibility: visible;
+            display: contents;
+        }
+    }
+
+    .br-mobile {
+        display: none;
+        @media screen and (max-width: 74.938rem) {
+            display: inline-block;
+        }
+    }
+
+    
+    // dropdown of the button in the side navigation. This button is in MATRICES, TACTICS, TECHNIQUES, MITIGATIONS, GROUPS, and SOFTWARE
+    .heading-dropdown {
+        font-size: rem(0.9);
+        color: color(secondary);
+        letter-spacing: to-rem(3);
+    }
+
+    border-color: border-color(body) !important;
+
+    // smaller fon-size and letter spacin for phones and small tablets
+    @media screen and (max-width: 90.62rem) {
+        // bold list name for MATRICES, TACTICS, TECHNIQUES, MITIGATIONS, GROUPS, and SOFTWARE
+        .heading {
+            font-size: rem(0.9);
+            color: on-color-deemphasis(body);
+            letter-spacing: to-rem(3);
+        }
+
+        // dropdown of the button in the side navigation. This button is in MATRICES, TACTICS, TECHNIQUES, MITIGATIONS, GROUPS, and SOFTWARE
+        .heading-dropdown {
+            font-size: rem(0.7);
+            color: on-color(body);
+            letter-spacing: to-rem(1);
+        }
+    }
+
+    /******/
+
+    // list items
+    .nav-link {
+        font-size: rem(0.7);
+        padding: rem(0) rem(0.7);
+        color: on-color-deemphasis(body);
+
+        &.expand-title {
+            font-size: rem(0.8);
+            color: on-color(body);
+        }
+
+        &.side {
+            padding: rem(0) rem(0);
+            word-break: break-word;
+
+            &:hover {
+                background-color: color(primary);
+                color: on-color(primary);
+            }
+
+            &.active {
+                color: color(primary);
+                background-color: color-alternate(body);
+                border-right: to-rem(3) solid color(primary);
+            }
+        }
+    }
+}
+/******/
+
+.resizer {
+    width: 2px;
+    top: 0;
+    right: 0;
+    cursor: col-resize;
+    height: 100%;
+    position: absolute;
+    background-color: #dfdfdf;
+ }
+
+ .data-sources-menu {
+    padding-top: 15px;
+ }
+
+.sidebar.nav {
+    // max-height: 60vh;
+    overflow-y: auto;
+    z-index: 0; //behind the header
+    min-width: min-content;
+    max-width: 20vw;
+
+    // Remove overflow and sticky position for mobile view
+    @media screen and (max-width: 74.938rem) {
+        position: static;
+        min-width: fit-content;
+    }
+
+    .sidenav-wrapper {
+        @media screen and (max-width: 74.938rem) {
+            display: block;
+        }
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        padding-right: 5px;
+        padding-left: 1rem;
+        .heading {
+            border-bottom: 1px solid color-alternate(body);
+            flex: 0 1 0;
+        }
+        .checkbox-div {
+            border-bottom: 1px solid color-alternate(body);
+            flex: 0 1 0;
+        }
+        .sidenav-list {
+            flex: 1 0 0;
+            overflow-y: auto;
+            .sidenav {
+                width: 100%;
+                word-break: break-word;
+                font-size: rem(0.8);
+                .sidenav-head {
+                    display: flex;
+                    flex-direction: row;
+                    a, .expand-button { //any direct child
+                        cursor: pointer;
+                        color: black;
+                        &:hover {
+                            background: color-alternate(body);
+                        }
+                    }
+                    a, span {
+                        padding: rem(0);
+                        padding-left: 0px;
+                        display: inline-block;
+                        flex-grow: 1;
+                        height: 100%;
+                        &:hover {
+                            text-decoration: none; //disable underline
+                        }
+                    }
+                    .expand-button {
+                        padding: 5px;
+                        border-left: 1px solid color-alternate(body);
+                        display: inline-block;
+                        @include collapsible("after");
+                    }
+
+                    &.active { //current page
+                        &, &>a {
+                            color: color(active) !important;
+                            font-weight: bolder;
+                            background: on-color(active);
+                            font-family: "Roboto-Bold", sans-serif;
+                        }
+                        // background-color: color-alternate(body);
+                        // border-right: to-rem(3) solid color(primary);
+                    }
+
+                }
+                .sidenav-body {
+                    padding-left: 0.75rem;
+                }
+                .sidenav { //nested
+                    padding-left: to-rem(12);
+                }
+            }
+        }
+    }
+}
+
+
+//Hides the navbar when the user tries to print out a page so that the page looks clean and only the relevant information is displayed
+
+@media print {
+    .nav {
+        visibility: hidden;
+        display:none;
+    }
+    .sidenav {
+        visibility: hidden;
+        display:none;
+    }
+    .sidebar.nav {
+        visibility: hidden;
+        display:none;
+    }
+    .sidenav-wrapper {
+        visibility: hidden;
+        display:none;
+    }
+    .side-nav-desktop-view {
+        visibility: hidden;
+        display:none;
+    }
+    .navbar {
+        visibility: hidden;
+        display:none;
+    }
+}

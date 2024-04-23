@@ -1,0 +1,436 @@
+{
+    "enterprise-attack": {
+        "techniques": {
+            "additions": [],
+            "major_version_changes": [],
+            "minor_version_changes": [],
+            "other_version_changes": [],
+            "patches": [
+                {
+                    "type": "attack-pattern",
+                    "id": "attack-pattern--4a2975db-414e-4c0c-bd92-775987514b4b",
+                    "created_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "created": "2023-08-24 17:23:34.470000+00:00",
+                    "modified": "2023-11-06 20:14:51.609000+00:00",
+                    "name": "Ignore Process Interrupts",
+                    "description": "Adversaries may evade defensive mechanisms by executing commands that hide from process interrupt signals. Many operating systems use signals to deliver messages to control process behavior. Command interpreters often include specific commands/flags that ignore errors and other hangups, such as when the user of the active session logs off.(Citation: Linux Signal Man)  These interrupt signals may also be used by defensive tools and/or analysts to pause or terminate specified running processes. \n\nAdversaries may invoke processes using `nohup`, [PowerShell](https://attack.mitre.org/techniques/T1059/001) `-ErrorAction SilentlyContinue`, or similar commands that may be immune to hangups.(Citation: nohup Linux Man)(Citation: Microsoft PowerShell SilentlyContinue) This may enable malicious commands and malware to continue execution through system events that would otherwise terminate its execution, such as users logging off or the termination of its C2 network connection.\n\nHiding from process interrupt signals may allow malware to continue execution, but unlike [Trap](https://attack.mitre.org/techniques/T1546/005) this does not establish [Persistence](https://attack.mitre.org/tactics/TA0003) since the process will not be re-invoked once actually terminated.",
+                    "kill_chain_phases": [
+                        {
+                            "kill_chain_name": "mitre-attack",
+                            "phase_name": "defense-evasion"
+                        }
+                    ],
+                    "revoked": false,
+                    "external_references": [
+                        {
+                            "source_name": "mitre-attack",
+                            "url": "https://attack.mitre.org/techniques/T1564/011",
+                            "external_id": "T1564.011"
+                        },
+                        {
+                            "source_name": "Linux Signal Man",
+                            "description": "Linux man-pages. (2023, April 3). signal(7). Retrieved August 30, 2023.",
+                            "url": "https://man7.org/linux/man-pages/man7/signal.7.html"
+                        },
+                        {
+                            "source_name": "nohup Linux Man",
+                            "description": "Meyering, J. (n.d.). nohup(1). Retrieved August 30, 2023.",
+                            "url": "https://linux.die.net/man/1/nohup"
+                        },
+                        {
+                            "source_name": "Microsoft PowerShell SilentlyContinue",
+                            "description": "Microsoft. (2023, March 2). $DebugPreference. Retrieved August 30, 2023.",
+                            "url": "https://learn.microsoft.com/powershell/module/microsoft.powershell.core/about/about_preference_variables?view=powershell-7.3#debugpreference"
+                        }
+                    ],
+                    "object_marking_refs": [
+                        "marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168"
+                    ],
+                    "x_mitre_attack_spec_version": "3.2.0",
+                    "x_mitre_contributors": [
+                        "Viren Chaudhari, Qualys"
+                    ],
+                    "x_mitre_data_sources": [
+                        "Process: Process Creation",
+                        "Command: Command Execution"
+                    ],
+                    "x_mitre_deprecated": false,
+                    "x_mitre_detection": "",
+                    "x_mitre_domains": [
+                        "enterprise-attack"
+                    ],
+                    "x_mitre_is_subtechnique": true,
+                    "x_mitre_modified_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "x_mitre_platforms": [
+                        "Linux",
+                        "macOS",
+                        "Windows"
+                    ],
+                    "x_mitre_version": "1.0",
+                    "detailed_diff": "{\"dictionary_item_added\": {\"root['x_mitre_contributors']\": [\"Viren Chaudhari, Qualys\"]}, \"values_changed\": {\"root['modified']\": {\"new_value\": \"2023-11-06 20:14:51.609000+00:00\", \"old_value\": \"2023-09-06 20:17:26.167000+00:00\"}, \"root['x_mitre_attack_spec_version']\": {\"new_value\": \"3.2.0\", \"old_value\": \"3.1.0\"}}}",
+                    "previous_version": "1.0",
+                    "changelog_mitigations": {
+                        "shared": [],
+                        "new": [],
+                        "dropped": []
+                    },
+                    "changelog_detections": {
+                        "shared": [
+                            "DS0009: Process (Process Creation)",
+                            "DS0017: Command (Command Execution)"
+                        ],
+                        "new": [],
+                        "dropped": []
+                    }
+                }
+            ],
+            "revocations": [],
+            "deprecations": [],
+            "deletions": []
+        },
+        "software": {
+            "additions": [],
+            "major_version_changes": [],
+            "minor_version_changes": [
+                {
+                    "type": "malware",
+                    "id": "malware--edb24a93-1f7a-4bbf-a738-1397a14662c6",
+                    "created_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "created": "2019-04-17 13:46:38.565000+00:00",
+                    "modified": "2023-11-06 20:12:28.502000+00:00",
+                    "name": "Astaroth",
+                    "description": "[Astaroth](https://attack.mitre.org/software/S0373) is a Trojan and information stealer known to affect companies in Europe, Brazil, and throughout Latin America. It has been known publicly since at least late 2017. (Citation: Cybereason Astaroth Feb 2019)(Citation: Cofense Astaroth Sept 2018)(Citation: Securelist Brazilian Banking Malware July 2020)",
+                    "revoked": false,
+                    "labels": [
+                        "malware"
+                    ],
+                    "external_references": [
+                        {
+                            "source_name": "mitre-attack",
+                            "url": "https://attack.mitre.org/software/S0373",
+                            "external_id": "S0373"
+                        },
+                        {
+                            "source_name": "Guildma",
+                            "description": "(Citation: Securelist Brazilian Banking Malware July 2020)"
+                        },
+                        {
+                            "source_name": "Cofense Astaroth Sept 2018",
+                            "description": "Doaty, J., Garrett, P.. (2018, September 10). We\u2019re Seeing a Resurgence of the Demonic Astaroth WMIC Trojan. Retrieved April 17, 2019.",
+                            "url": "https://cofense.com/seeing-resurgence-demonic-astaroth-wmic-trojan/"
+                        },
+                        {
+                            "source_name": "Securelist Brazilian Banking Malware July 2020",
+                            "description": "GReAT. (2020, July 14). The Tetrade: Brazilian banking malware goes global. Retrieved November 9, 2020.",
+                            "url": "https://securelist.com/the-tetrade-brazilian-banking-malware/97779/"
+                        },
+                        {
+                            "source_name": "Cybereason Astaroth Feb 2019",
+                            "description": "Salem, E. (2019, February 13). ASTAROTH MALWARE USES LEGITIMATE OS AND ANTIVIRUS PROCESSES TO STEAL PASSWORDS AND PERSONAL DATA. Retrieved April 17, 2019.",
+                            "url": "https://www.cybereason.com/blog/information-stealing-malware-targeting-brazil-full-research"
+                        }
+                    ],
+                    "object_marking_refs": [
+                        "marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168"
+                    ],
+                    "x_mitre_aliases": [
+                        "Astaroth",
+                        "Guildma"
+                    ],
+                    "x_mitre_attack_spec_version": "3.2.0",
+                    "x_mitre_contributors": [
+                        "Carlos Borges, @huntingneo, CIP"
+                    ],
+                    "x_mitre_deprecated": false,
+                    "x_mitre_domains": [
+                        "enterprise-attack"
+                    ],
+                    "x_mitre_modified_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "x_mitre_platforms": [
+                        "Windows"
+                    ],
+                    "x_mitre_version": "2.2",
+                    "detailed_diff": "{\"values_changed\": {\"root['modified']\": {\"new_value\": \"2023-11-06 20:12:28.502000+00:00\", \"old_value\": \"2023-03-21 21:20:23.717000+00:00\"}, \"root['x_mitre_attack_spec_version']\": {\"new_value\": \"3.2.0\", \"old_value\": \"3.1.0\"}, \"root['x_mitre_version']\": {\"new_value\": \"2.2\", \"old_value\": \"2.1\"}}}",
+                    "previous_version": "2.1",
+                    "version_change": "2.1 \u2192 2.2"
+                }
+            ],
+            "other_version_changes": [],
+            "patches": [],
+            "revocations": [],
+            "deprecations": [],
+            "deletions": []
+        },
+        "groups": {
+            "additions": [],
+            "major_version_changes": [],
+            "minor_version_changes": [],
+            "other_version_changes": [],
+            "patches": [],
+            "revocations": [],
+            "deprecations": [],
+            "deletions": []
+        },
+        "campaigns": {
+            "additions": [],
+            "major_version_changes": [],
+            "minor_version_changes": [],
+            "other_version_changes": [],
+            "patches": [],
+            "revocations": [],
+            "deprecations": [],
+            "deletions": []
+        },
+        "assets": {
+            "additions": [],
+            "major_version_changes": [],
+            "minor_version_changes": [],
+            "other_version_changes": [],
+            "patches": [],
+            "revocations": [],
+            "deprecations": [],
+            "deletions": []
+        },
+        "mitigations": {
+            "additions": [],
+            "major_version_changes": [],
+            "minor_version_changes": [],
+            "other_version_changes": [],
+            "patches": [],
+            "revocations": [],
+            "deprecations": [],
+            "deletions": []
+        },
+        "datasources": {
+            "additions": [],
+            "major_version_changes": [],
+            "minor_version_changes": [],
+            "other_version_changes": [],
+            "patches": [],
+            "revocations": [],
+            "deprecations": [],
+            "deletions": []
+        },
+        "datacomponents": {
+            "additions": [],
+            "major_version_changes": [],
+            "minor_version_changes": [],
+            "other_version_changes": [],
+            "patches": [
+                {
+                    "modified": "2023-11-01T21:18:51.941Z",
+                    "name": "File Metadata",
+                    "description": "Contextual data about a file, which may include information such as name, the content (ex: signature, headers, or data/media), user/owner, permissions, etc.",
+                    "x_mitre_data_source_ref": "x-mitre-data-source--509ed41e-ca42-461e-9058-24602256daf9",
+                    "x_mitre_deprecated": false,
+                    "x_mitre_version": "1.0",
+                    "type": "x-mitre-data-component",
+                    "id": "x-mitre-data-component--639e87f3-acb6-448a-9645-258f20da4bc5",
+                    "created": "2021-10-20T15:05:19.273Z",
+                    "created_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "revoked": false,
+                    "object_marking_refs": [
+                        "marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168"
+                    ],
+                    "x_mitre_attack_spec_version": "3.2.0",
+                    "x_mitre_modified_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "detailed_diff": "{\"dictionary_item_added\": {\"root['x_mitre_deprecated']\": false, \"root['revoked']\": false}, \"values_changed\": {\"root['modified']\": {\"new_value\": \"2023-11-01T21:18:51.941Z\", \"old_value\": \"2021-10-20T15:05:19.273Z\"}, \"root['description']\": {\"new_value\": \"Contextual data about a file, which may include information such as name, the content (ex: signature, headers, or data/media), user/owner, permissions, etc.\", \"old_value\": \"Contextual data about a file, which may include information such as name, the content (ex: signature, headers, or data/media), user/ower, permissions, etc.\"}, \"root['x_mitre_attack_spec_version']\": {\"new_value\": \"3.2.0\", \"old_value\": \"2.1.0\"}}}",
+                    "previous_version": "1.0",
+                    "description_change_table": "\n    <table class=\"diff\" id=\"difflib_chg_to56__top\"\n           cellspacing=\"0\" cellpadding=\"0\" rules=\"groups\" >\n        <colgroup></colgroup> <colgroup></colgroup> <colgroup></colgroup>\n        <colgroup></colgroup> <colgroup></colgroup> <colgroup></colgroup>\n        <thead><tr><th class=\"diff_next\"><br /></th><th colspan=\"2\" class=\"diff_header\">Old Description</th><th class=\"diff_next\"><br /></th><th colspan=\"2\" class=\"diff_header\">New Description</th></tr></thead>\n        <tbody>\n            <tr><td class=\"diff_next\" id=\"difflib_chg_to56__0\"><a href=\"#difflib_chg_to56__top\">t</a></td><td class=\"diff_header\" id=\"from56_1\">1</td><td nowrap=\"nowrap\">Contextual&nbsp;data&nbsp;about&nbsp;a&nbsp;file,&nbsp;which&nbsp;may&nbsp;include&nbsp;information&nbsp;</td><td class=\"diff_next\"><a href=\"#difflib_chg_to56__top\">t</a></td><td class=\"diff_header\" id=\"to56_1\">1</td><td nowrap=\"nowrap\">Contextual&nbsp;data&nbsp;about&nbsp;a&nbsp;file,&nbsp;which&nbsp;may&nbsp;include&nbsp;information&nbsp;</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">such&nbsp;as&nbsp;name,&nbsp;the&nbsp;content&nbsp;(ex:&nbsp;signature,&nbsp;headers,&nbsp;or&nbsp;data/m</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">such&nbsp;as&nbsp;name,&nbsp;the&nbsp;content&nbsp;(ex:&nbsp;signature,&nbsp;headers,&nbsp;or&nbsp;data/m</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">edia),&nbsp;user/ower,&nbsp;permissions,&nbsp;etc.</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">edia),&nbsp;user/ow<span class=\"diff_add\">n</span>er,&nbsp;permissions,&nbsp;etc.</td></tr>\n        </tbody>\n    </table>"
+                }
+            ],
+            "revocations": [],
+            "deprecations": [],
+            "deletions": []
+        }
+    },
+    "mobile-attack": {
+        "techniques": {
+            "additions": [],
+            "major_version_changes": [],
+            "minor_version_changes": [],
+            "other_version_changes": [],
+            "patches": [],
+            "revocations": [],
+            "deprecations": [],
+            "deletions": []
+        },
+        "software": {
+            "additions": [],
+            "major_version_changes": [],
+            "minor_version_changes": [],
+            "other_version_changes": [],
+            "patches": [],
+            "revocations": [],
+            "deprecations": [],
+            "deletions": []
+        },
+        "groups": {
+            "additions": [],
+            "major_version_changes": [],
+            "minor_version_changes": [],
+            "other_version_changes": [],
+            "patches": [],
+            "revocations": [],
+            "deprecations": [],
+            "deletions": []
+        },
+        "campaigns": {
+            "additions": [],
+            "major_version_changes": [],
+            "minor_version_changes": [],
+            "other_version_changes": [],
+            "patches": [],
+            "revocations": [],
+            "deprecations": [],
+            "deletions": []
+        },
+        "assets": {
+            "additions": [],
+            "major_version_changes": [],
+            "minor_version_changes": [],
+            "other_version_changes": [],
+            "patches": [],
+            "revocations": [],
+            "deprecations": [],
+            "deletions": []
+        },
+        "mitigations": {
+            "additions": [],
+            "major_version_changes": [],
+            "minor_version_changes": [],
+            "other_version_changes": [],
+            "patches": [],
+            "revocations": [],
+            "deprecations": [],
+            "deletions": []
+        },
+        "datasources": {
+            "additions": [],
+            "major_version_changes": [],
+            "minor_version_changes": [],
+            "other_version_changes": [],
+            "patches": [],
+            "revocations": [],
+            "deprecations": [],
+            "deletions": []
+        },
+        "datacomponents": {
+            "additions": [],
+            "major_version_changes": [],
+            "minor_version_changes": [],
+            "other_version_changes": [],
+            "patches": [],
+            "revocations": [],
+            "deprecations": [],
+            "deletions": []
+        }
+    },
+    "ics-attack": {
+        "techniques": {
+            "additions": [],
+            "major_version_changes": [],
+            "minor_version_changes": [],
+            "other_version_changes": [],
+            "patches": [],
+            "revocations": [],
+            "deprecations": [],
+            "deletions": []
+        },
+        "software": {
+            "additions": [],
+            "major_version_changes": [],
+            "minor_version_changes": [],
+            "other_version_changes": [],
+            "patches": [],
+            "revocations": [],
+            "deprecations": [],
+            "deletions": []
+        },
+        "groups": {
+            "additions": [],
+            "major_version_changes": [],
+            "minor_version_changes": [],
+            "other_version_changes": [],
+            "patches": [],
+            "revocations": [],
+            "deprecations": [],
+            "deletions": []
+        },
+        "campaigns": {
+            "additions": [],
+            "major_version_changes": [],
+            "minor_version_changes": [],
+            "other_version_changes": [],
+            "patches": [],
+            "revocations": [],
+            "deprecations": [],
+            "deletions": []
+        },
+        "assets": {
+            "additions": [],
+            "major_version_changes": [],
+            "minor_version_changes": [],
+            "other_version_changes": [],
+            "patches": [],
+            "revocations": [],
+            "deprecations": [],
+            "deletions": []
+        },
+        "mitigations": {
+            "additions": [],
+            "major_version_changes": [],
+            "minor_version_changes": [],
+            "other_version_changes": [],
+            "patches": [],
+            "revocations": [],
+            "deprecations": [],
+            "deletions": []
+        },
+        "datasources": {
+            "additions": [],
+            "major_version_changes": [],
+            "minor_version_changes": [],
+            "other_version_changes": [],
+            "patches": [],
+            "revocations": [],
+            "deprecations": [],
+            "deletions": []
+        },
+        "datacomponents": {
+            "additions": [],
+            "major_version_changes": [],
+            "minor_version_changes": [],
+            "other_version_changes": [],
+            "patches": [
+                {
+                    "modified": "2023-11-01T21:18:51.941Z",
+                    "name": "File Metadata",
+                    "description": "Contextual data about a file, which may include information such as name, the content (ex: signature, headers, or data/media), user/owner, permissions, etc.",
+                    "x_mitre_data_source_ref": "x-mitre-data-source--509ed41e-ca42-461e-9058-24602256daf9",
+                    "x_mitre_deprecated": false,
+                    "x_mitre_version": "1.0",
+                    "type": "x-mitre-data-component",
+                    "id": "x-mitre-data-component--639e87f3-acb6-448a-9645-258f20da4bc5",
+                    "created": "2021-10-20T15:05:19.273Z",
+                    "created_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "revoked": false,
+                    "object_marking_refs": [
+                        "marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168"
+                    ],
+                    "x_mitre_attack_spec_version": "3.2.0",
+                    "x_mitre_modified_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "detailed_diff": "{\"dictionary_item_added\": {\"root['x_mitre_deprecated']\": false, \"root['revoked']\": false}, \"values_changed\": {\"root['modified']\": {\"new_value\": \"2023-11-01T21:18:51.941Z\", \"old_value\": \"2021-10-20T15:05:19.273Z\"}, \"root['description']\": {\"new_value\": \"Contextual data about a file, which may include information such as name, the content (ex: signature, headers, or data/media), user/owner, permissions, etc.\", \"old_value\": \"Contextual data about a file, which may include information such as name, the content (ex: signature, headers, or data/media), user/ower, permissions, etc.\"}, \"root['x_mitre_attack_spec_version']\": {\"new_value\": \"3.2.0\", \"old_value\": \"2.1.0\"}}}",
+                    "previous_version": "1.0",
+                    "description_change_table": "\n    <table class=\"diff\" id=\"difflib_chg_to57__top\"\n           cellspacing=\"0\" cellpadding=\"0\" rules=\"groups\" >\n        <colgroup></colgroup> <colgroup></colgroup> <colgroup></colgroup>\n        <colgroup></colgroup> <colgroup></colgroup> <colgroup></colgroup>\n        <thead><tr><th class=\"diff_next\"><br /></th><th colspan=\"2\" class=\"diff_header\">Old Description</th><th class=\"diff_next\"><br /></th><th colspan=\"2\" class=\"diff_header\">New Description</th></tr></thead>\n        <tbody>\n            <tr><td class=\"diff_next\" id=\"difflib_chg_to57__0\"><a href=\"#difflib_chg_to57__top\">t</a></td><td class=\"diff_header\" id=\"from57_1\">1</td><td nowrap=\"nowrap\">Contextual&nbsp;data&nbsp;about&nbsp;a&nbsp;file,&nbsp;which&nbsp;may&nbsp;include&nbsp;information&nbsp;</td><td class=\"diff_next\"><a href=\"#difflib_chg_to57__top\">t</a></td><td class=\"diff_header\" id=\"to57_1\">1</td><td nowrap=\"nowrap\">Contextual&nbsp;data&nbsp;about&nbsp;a&nbsp;file,&nbsp;which&nbsp;may&nbsp;include&nbsp;information&nbsp;</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">such&nbsp;as&nbsp;name,&nbsp;the&nbsp;content&nbsp;(ex:&nbsp;signature,&nbsp;headers,&nbsp;or&nbsp;data/m</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">such&nbsp;as&nbsp;name,&nbsp;the&nbsp;content&nbsp;(ex:&nbsp;signature,&nbsp;headers,&nbsp;or&nbsp;data/m</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">edia),&nbsp;user/ower,&nbsp;permissions,&nbsp;etc.</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">edia),&nbsp;user/ow<span class=\"diff_add\">n</span>er,&nbsp;permissions,&nbsp;etc.</td></tr>\n        </tbody>\n    </table>"
+                }
+            ],
+            "revocations": [],
+            "deprecations": [],
+            "deletions": []
+        }
+    },
+    "new-contributors": [
+        "Viren Chaudhari, Qualys"
+    ]
+}
