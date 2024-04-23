@@ -55,9 +55,6 @@ def generate_markdown_files():
     if has_campaign:
         data = {}
 
-        # Amount of characters per category
-        group_by = 2
-
         notes = util.relationshipgetters.get_objects_using_notes()
         side_menu_data = util.buildhelpers.get_side_menu_data(
             "Campaigns", "/campaigns/", campaign_list_no_deprecated_revoked
