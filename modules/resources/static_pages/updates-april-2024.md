@@ -8,7 +8,7 @@ save_as: resources/updates/updates-april-2024/index.html
 
 | Version | Start Date | End Date | Data | Changelogs |
 |:--------|:-----------|:---------|:-----|:-----------|
-| [ATT&CK v15](/versions/v15) | April 23, 2024 | Current version of ATT&CK | [v15.0 on MITRE/CTI](https://github.com/mitre/cti/releases/tag/ATT%26CK-v15.0) | v14.1 - v15.0 [Details](/docs/changelogs/v14.1-v15.0/changelog-detailed.html) ([JSON](/docs/changelogs/v14.1-v15.0/changelog.json)) |
+| [ATT&CK v15](/versions/v15) | April 23, 2024 | Current version of ATT&CK | [v15.0 on MITRE/CTI](https://github.com/mitre/cti/releases/tag/ATT%26CK-v15.0)<br />[v15.1 on MITRE/CTI](https://github.com/mitre/cti/releases/tag/ATT%26CK-v15.1) | v14.1 - v15.0 [Details](/docs/changelogs/v14.1-v15.0/changelog-detailed.html) ([JSON](/docs/changelogs/v14.1-v15.0/changelog.json))<br />v15.0 - v15.1 [Details](/docs/changelogs/v15.0-v15.1/changelog-detailed.html) ([JSON](/docs/changelogs/v15.0-v15.1/changelog.json)) |
 
 The April 2024 (v15) ATT&CK release updates Techniques, Groups, Campaigns and Software for Enterprise, Mobile, and ICS.
 
