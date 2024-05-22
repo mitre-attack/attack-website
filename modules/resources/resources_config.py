@@ -12,14 +12,6 @@ resources_templates_path = "modules/resources/templates/"
 # Path for docs
 docs_path = "modules/resources/docs/"
 
-# ATT&CKcon md
-attackcon_md = (
-    "Title: ATT&CKcon\n"
-    "Template: general/attackcon-overview\n"
-    "save_as: resources/learn-more-about-attack/attackcon/index.html\n"
-    "data: "
-)
-
 # Training md
 training_md = (
     "Title: ATT&CK Training\n"
@@ -50,7 +42,7 @@ contribute_md = (
     "data: "
 )
 
-contribute_redirection_location = "modules/resources/contribute_redirections.json"
+contribute_redirections_location = "modules/resources/contribute_redirections.json"
 
 # Brand md
 brand_md = (
