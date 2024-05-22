@@ -42,7 +42,7 @@ contribute_md = (
     "data: "
 )
 
-contribute_redirections_location = "modules/resources/contribute_redirections.json"
+resources_redirections_location = "modules/resources/resources_redirections.json"
 
 # Brand md
 brand_md = (
