@@ -8,12 +8,20 @@
 {% import 'macros/notes.html' as notes %}
 
 {% if parsed.domain == "mobile" %}
-    {% set title = "Matrix - Mobile | MITRE ATT&CK&reg;" -%}
-{% elif parsed.domain == "enterprise" %}
-    {% if parsed.platform %}
-        {% set title = "Matrix - Enterprise - " + parsed.platform + " | MITRE ATT&CK&reg;" -%}
+    {% if parsed.name == "Mobile" %}
+        {% set title = "Matrix - Mobile | MITRE ATT&CK&reg;" -%}
     {% else %}
+        {% set title = "Matrix - Mobile - " + parsed.name + " | MITRE ATT&CK&reg;" -%}
+    {% endif %}
+
+{% elif parsed.domain == "ics" %}
+    {% set title = "Matrix - ICS | MITRE ATT&CK&reg;" -%}
+
+{% elif parsed.domain == "enterprise" %}
+    {% if parsed.name == "Enterprise" %}
         {% set title = "Matrix - Enterprise | MITRE ATT&CK&reg;" -%}
+    {% else %}
+        {% set title = "Matrix - Enterprise - " + parsed.name + " | MITRE ATT&CK&reg;" -%}
     {% endif %}
 {% else %}
     {% set title = "Matrix | MITRE ATT&CK&reg;" -%}
@@ -39,19 +47,17 @@
         <div class="col-md-9">
             <ol class="breadcrumb mx-0 px-1">
                 <li class="breadcrumb-item"><a href="/">Home</a></li>
+                <li class="breadcrumb-item"><a href="/matrices/">Matrices</a></li>
                 {% if parsed.domain == 'enterprise' %}
-                    <li class="breadcrumb-item"><a href="/matrices/enterprise">Matrices</a></li>
+                    <li class="breadcrumb-item"><a href="/matrices/enterprise/">Enterprise</a></li>
                 {% elif parsed.domain == 'mobile' %}
-                    <li class="breadcrumb-item"><a href="/matrices/mobile">Matrices</a></li>
+                    <li class="breadcrumb-item"><a href="/matrices/mobile/">Mobile</a></li>
+                {% elif parsed.domain == 'ics' %}
+                    <li class="breadcrumb-item"><a href="/matrices/ics/">ICS</a></li>
                 {% else %}
                     <li class="breadcrumb-item"><a href="/matrices/">Matrices</a></li>
                 {% endif %}
-                {% if parsed.platform %}
-                    <li class="breadcrumb-item"><a href="/matrices/enterprise/">Enterprise</a></li>
-                    <li class="breadcrumb-item">{{parsed.platform}}</li>
-                {% else %}
-                    <li class="breadcrumb-item">{{parsed.name}}</li>
-                {% endif %}
+                <li class="breadcrumb-item">{{ parsed.name }}</li>
             </ol>
         </div>
     </div>
@@ -92,7 +98,7 @@
                     <div class="matrix-border col-md-3">
                         <div class="col py-2">
                             <!-- only show navigator link if it's defined in the config -->
-                            {% if parsed.navigator_link %} 
+                            {% if parsed.navigator_link %}
                                 <div class="row p-2">
                                     <a href="{{ parsed.navigator_link }}" target="_blank">View on the ATT&amp;CK<sup>&reg;</sup> Navigator <img src="/theme/images/external-site-dark.jpeg" width="10"></a>
                                 </div>
