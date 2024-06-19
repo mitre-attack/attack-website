@@ -1,12 +1,16 @@
+# v4.1.4 (2024-06-19)
+
+## Misc
+
+* Updated CTI Training to latest version
+* Updated banner related to ATT&CKcon 5.0
+
 # v4.1.3 (2024-05-02)
----------------------
 
 * Release ATT&CK content version 15.1.
   See detailed changes [here](https://github.com/mitre/cti/releases/tag/ATT%26CK-v15.1).
 
-
 # v4.1.2 (2024-04-23)
----------------------
 
 * Release [ATT&CK content version 15.0](https://github.com/mitre/cti/releases/tag/ATT%26CK-v15.0).
   See the release notes [here](https://attack.mitre.org/resources/updates/updates-april-2024/).
