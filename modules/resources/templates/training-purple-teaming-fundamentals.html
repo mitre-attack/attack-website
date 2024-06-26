@@ -1,0 +1,119 @@
+{% extends "general/two-column.html" %}
+{% set active_page = "resources" -%}
+{% set title = "Using ATT&CK for Purple Teaming | MITRE ATT&CK&reg;" -%}
+{% set parsed = page.data | from_json %}
+{% import 'macros/navigation.html' as navigation %}
+
+{% block innerleft %}
+<div id="sidebars"></div>
+{% endblock %}
+
+{% block innerright %}
+<!--stopindex-->
+<ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="/">Home</a></li>
+    <li class="breadcrumb-item"><a href="/resources">Resources</a></li>
+    <li class="breadcrumb-item"><a href="/resources/learn-more-about-attack">Learn More about ATT&amp;CK</a></li>
+    <li class="breadcrumb-item"><a href="/resources/learn-more-about-attack/training">Training</a></li>
+    <li class="breadcrumb-item">Purple Teaming Fundamentals Training</li>
+</ol>
+
+<div class="container-fluid pb-3">
+  <div class="getting-started">
+    <div class="clearfix pb-3">
+      <div class="clearfix">
+        <div class="card card-filter jump-to-section">
+          <div class="card-body">
+            Jump to Section
+            <ul>
+              {% for training in parsed.purple_teaming_fundamentals.values() %}
+              <li>
+                <a href="#{{training.id}}">{{training.short_name}}</a>
+              </li>
+              {% endfor %}
+            </ul>
+          </div>
+        </div>
+        <div class="getting-started-content">
+          <h1>Purple Teaming Fundamentals Training</h1>
+          <div class="mt-4">
+            <h2>Modules</h2>
+          </div>
+          {% for training in parsed.purple_teaming_fundamentals.values() %}
+          <div class="anchor" id="{{training.id}}"></div>
+          <div class="card w-60 card-training">
+            <div class="card-body training-card-body">
+              <div class="training-header">
+                <div class="training-text-container">
+                  <strong class="title">{{ training.name }}</strong>
+                  <div class="text-label">{{ training.module }}</div>
+                </div>
+                <div class="mt-3">
+                  <div class="resources-container">
+                    <a href="{{ training.video }}">
+                      <button type="button" class="slide-button">
+                        <span class="slide-button-text">
+                          <span> Video </span>
+                        </span>
+                        <span class="slide-button-icon">
+                          <i class="fa fa-external-link"></i>
+                        </span>
+                      </button>
+                    </a>
+                    {% if "slides" in training %}
+                      <a href="{{ training.slides }}">
+                        <button type="button" class="slide-button slide-button-secondary">
+                          <span class="slide-button-text">
+                            <span> Slides </span>
+                          </span>
+                          <span class="slide-button-icon">
+                            <i class="fa fa-external-link"></i>
+                          </span>
+                        </button>
+                      </a>
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+              {% for exercise in training.exercises %}
+              <div class="mt-3">
+                <strong>{{ exercise.name }}</strong>
+                <ul class="resource-links">
+                  <li>
+                    <p class="card-text border border-danger p-3 mb-2 rounded">
+                      <span class="font-weight-bold text-danger">Note:</span> This exercise is based on a previous version of ATT&amp;CK. We recommend using <a href="{{ exercise.software.url }}">{{ exercise.software.version }}</a> if you want to match the training.
+                    </p>
+                  </li>
+                </ul>
+                <div class="resources-container">
+                  {% for resource in exercise.resources %}
+                  <div class="resource">
+                    <strong>{{ resource.name }}</strong>
+                    {% for link in resource.links %}
+                    <ul class="resource-links">
+                      <li>
+                        <a href="{{ link.url }}">{{ link.text }}</a>
+                        {{ link.description }}
+                      </li>
+                    </ul>
+                    {% endfor %}
+                  </div>
+                  {% endfor %}
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--startindex-->
+{% endblock %} {% block scripts %} {{ super() }}
+<!--SCRIPTS-->
+<script src="/theme/scripts/sidebar-load-all.js"></script>
+{% endblock %}
+</div>
