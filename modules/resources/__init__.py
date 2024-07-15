@@ -28,6 +28,12 @@ def get_menu():
                 "children": [],
             },
             {
+                "display_name": "ATT&CKcon",
+                "url": "/resources/attackcon/",
+                "external_link": False,
+                "children": []
+            },
+            {
                 "display_name": "ATT&CK Data & Tools",
                 "url": "/resources/attack-data-and-tools/",
                 "external_link": False,
