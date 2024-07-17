@@ -1,6 +1,6 @@
 {% extends "general/two-column.html" %}
 {% set active_page = "resources" -%}
-{% set title = "CTI Training | MITRE ATT&CK&reg;" -%}
+{% set title = "ATT&CK Access Tokens Technical Primer Training | MITRE ATT&CK&reg;" -%}
 {% set parsed = page.data | from_json %}
 {% import 'macros/navigation.html' as navigation %}
 
@@ -15,7 +15,7 @@
     <li class="breadcrumb-item"><a href="/resources">Resources</a></li>
     <li class="breadcrumb-item"><a href="/resources/learn-more-about-attack">Learn More about ATT&amp;CK</a></li>
     <li class="breadcrumb-item"><a href="/resources/learn-more-about-attack/training">Training</a></li>
-    <li class="breadcrumb-item">CTI Training</li>
+    <li class="breadcrumb-item">ATT&CK Access Tokens Technical Primer</li>
 </ol>
 
 <div class="container-fluid pb-3">
@@ -26,7 +26,7 @@
           <div class="card-body">
             Jump to Section
             <ul>
-              {% for training in parsed.cti_training.values() %}
+              {% for training in parsed.access_tokens.values() %}
               <li>
                 <a href="#{{training.id}}">{{training.short_name}}</a>
               </li>
@@ -35,41 +35,11 @@
           </div>
         </div>
         <div class="getting-started-content">
-          <h1>CTI Training</h1>
-          <p>
-            The goal of this training is for students to understand the following:
-          </p>
-          <ul>
-            <li>
-              Why ATT&CK is useful for cyber threat intelligence
-              (CTI)
-            </li>
-            <li>
-              How to map to ATT&CK from both finished reporting and raw data
-            </li>
-            <li>
-              Why it’s challenging to store ATT&CK-mapped data and what you should
-              consider when doing that
-            </li>
-            <li>How to perform CTI analysis using ATT&CK-mapped data</li>
-            <li>How to make defensive recommendations based on CTI analysis</li>
-          </ul>
-          <p>
-            The training contains five modules that consist of videos and exercises that are linked below.
-            This training was designed to be completed in approximately 4 hours, and may be completed solo or as a team.
-            We recommend you view the video for each module, and when prompted, pause the video to access the exercise documents linked below and complete the exercises, then proceed with viewing the video to go over the exercise.
-            A copy of all slides from the training are <a href="/docs/training-cti/CTI%20Workshop%20Full%20Slides.pdf" target="_blank">here</a>.
-          </p>
-          <p class="card-text border border-danger p-3 mb-2 rounded">
-            <span class="font-weight-bold text-danger">Note:</span>This training assumes an existing knowledge of ATT&CK and its primary concepts. We recommend reviewing the content from our <a href="https://www.youtube.com/watch?v=THOGnEqoStQ&list=PLLGRmm150VfC6p5RMJDMe1ZgliqDfXhvd">ATT&CK Fundamentals Training</a> before taking this training.
-          </p>
-          <p class="card-text border border-danger p-3 mb-2 rounded">
-            <span class="font-weight-bold text-danger">Note:</span> The exercises in this training are based on a previous version of ATT&amp;CK. We suggest using <a href="https://attack.mitre.org/versions/v8/">ATT&amp;CK v8</a> and <a href="https://mitre-attack.github.io/attack-navigator/#bundleURL=https%3A%2F%2Fraw.githubusercontent.com%2Fmitre%2Fcti%2FATT%26CK-v8.2%2Fenterprise-attack%2Fenterprise-attack.json&version=8.2&domain=enterprise-attack">ATT&amp;CK Navigator with ATT&CK v8</a> if you want exercise results to exactly match the training.
-          </p>
+          <h1>ATT&CK Access Tokens Technical Primer Training</h1>
           <div class="mt-4">
             <h2>Modules</h2>
           </div>
-          {% for training in parsed.cti_training.values() %}
+          {% for training in parsed.access_tokens.values() %}
           <div class="anchor" id="{{training.id}}"></div>
           <div class="card w-60 card-training">
             <div class="card-body training-card-body">
@@ -90,19 +60,28 @@
                         </span>
                       </button>
                     </a>
-                    <a href="{{ training.slides }}">
-                      <button type="button" class="slide-button slide-button-secondary">
-                        <span class="slide-button-text">
-                          <span> Slides </span>
-                        </span>
-                        <span class="slide-button-icon">
-                          <i class="fa fa-external-link"></i>
-                        </span>
-                      </button>
-                    </a>
+                    {% if "slides" in training %}
+                      <a href="{{ training.slides }}">
+                        <button type="button" class="slide-button slide-button-secondary">
+                          <span class="slide-button-text">
+                            <span> Slides </span>
+                          </span>
+                          <span class="slide-button-icon">
+                            <i class="fa fa-external-link"></i>
+                          </span>
+                        </button>
+                      </a>
+                    {% endif %}
                   </div>
                 </div>
               </div>
+              <ul>
+              {% for lesson in training.lessons %}
+              <li>
+                <a href="{{ lesson.video }}">{{ lesson.name }}</a>
+              </li>
+              {% endfor %}
+              </ul>
               {% for exercise in training.exercises %}
               <div class="mt-3">
                 <strong>{{ exercise.name }}</strong>
