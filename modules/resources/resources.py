@@ -88,20 +88,24 @@ def generate_training_pages():
     with open(os.path.join(site_config.data_directory, "trainings.json"), "r", encoding="utf8") as f:
         trainings = json.load(f)
 
-    # get markdown
-    training_md = resources_config.training_md
+    # Define a dictionary of training pages and their corresponding markdown templates
+    training_pages = {
+        "training": resources_config.training_md,
+        "training_cti": resources_config.training_cti_md,
+        "training_purple_teaming_fundamentals": resources_config.training_purple_teaming_fundamentals_md,
+        "training_attack_fundamentals": resources_config.training_attack_fundamentals_md,
+        "training_adversary_emulation": resources_config.training_adversary_emulation_md,
+        "training_access_tokens": resources_config.training_access_tokens_md,
+        "training_soc_assessments": resources_config.training_soc_assessments_md,
+        "training_threat_hunting": resources_config.training_threat_hunting_md,
+        "training_detection_engineering": resources_config.training_detection_engineering_md,
+    }
 
-    # write markdown to file
-    with open(os.path.join(site_config.resources_markdown_path, "training.md"), "w", encoding="utf8") as md_file:
-        md_file.write(training_md)
-
-    # CTI training
-    training_cti_md = resources_config.training_cti_md + json.dumps(trainings)
-
-    # write markdown to file
-    with open(os.path.join(site_config.resources_markdown_path, "training_cti.md"), "w", encoding="utf8") as md_file:
-        md_file.write(training_cti_md)
-
+    # Generate markdown for each training page and write it to a file
+    for page_name, page_template in training_pages.items():
+        page_content = page_template + json.dumps(trainings)
+        with open(os.path.join(site_config.resources_markdown_path, f"{page_name}.md"), "w", encoding="utf8") as md_file:
+            md_file.write(page_content)
 
 def generate_brand_page():
     """Responsible for generating the markdown pages of the training pages."""
@@ -133,9 +137,9 @@ def generate_attackcon_page():
         attackcon_name.append(attackcon[i]["title"])
         title = "Title: " + attackcon[i]["title"] + "\n"
         name = attackcon[i]["date"].lower().replace(" ", "-")
-        template = "Template: general/attackcon-overview\n"
-        attackcon_path.append("/resources/learn-more-about-attack/attackcon/" + name + "/")
-        save_as = "save_as: resources/learn-more-about-attack/attackcon/" + name + "/index.html\n"
+        template = "Template: resources/attackcon-overview\n"
+        attackcon_path.append("/resources/attackcon/" + name + "/")
+        save_as = "save_as: resources/attackcon/" + name + "/index.html\n"
         data = "data: "
         content = title + template + save_as + data
         attackcon_md.append(content)
@@ -145,28 +149,19 @@ def generate_attackcon_page():
     attackcon_list = attackcon_dict_list["attackcon_md"]
 
     # Below code used to add the attackcon children to the resources sidebar
-    attackcon_index = 0
     learnmore_index = 0
     temp_dict = {}
     for i in range(len(site_config.resource_nav["children"])):
-        if site_config.resource_nav["children"][i]["name"] == "Learn More about ATT&CK":
-            for j in range(len(site_config.resource_nav["children"][i]["children"])):
-                if site_config.resource_nav["children"][i]["children"][j]["name"] == "ATT&CKcon Presentations":
-                    learnmore_index = i
-                    attackcon_index = j
+        if site_config.resource_nav["children"][i]["name"] == "ATT&CKcon":
+            attackcon_index = i
 
     for i in range(len(attackcon_dict_list["attackcon_name"])):
         temp_dict["name"] = attackcon_dict_list["attackcon_name"][i]
         temp_dict["path"] = attackcon_dict_list["attackcon_path"][i]
         temp_dict["children"] = []
-        site_config.resource_nav["children"][learnmore_index]["children"][attackcon_index]["children"].append(temp_dict.copy())
+        site_config.resource_nav["children"][attackcon_index]["children"].append(temp_dict.copy())
         temp_dict = {}
 
-    attackcon_content = resources_config.attackcon_md + json.dumps(attackcon[0])
-
-    # write markdown to file
-    with open(os.path.join(site_config.resources_markdown_path, "attackcon.md"), "w", encoding="utf8") as md_file:
-        md_file.write(attackcon_content)
     for i in range(len(attackcon_list)):
         attackcon_content = attackcon_list[i] + json.dumps(attackcon[i])
         f_name = "attackcon-" + attackcon[i]["date"].lower().replace(" ", "-") + ".md"
@@ -300,7 +295,7 @@ def generate_contribute_page():
 
     # Generate redirections
     util.buildhelpers.generate_redirections(
-        redirections_filename=resources_config.contribute_redirection_location, redirect_md=site_config.redirect_md
+        redirections_filename=resources_config.resources_redirections_location, redirect_md=site_config.redirect_md
     )
 
     ms = util.relationshipgetters.get_ms()

@@ -1,9 +1,16 @@
+# v4.1.5 (2024-07-18)
+
+## Misc
+
+* Added new ATT&CK trainings.
+* Moved sidebar headings around to add ATT&CKcon to be at the top level.
+
 # v4.1.4 (2024-06-19)
 
 ## Misc
 
-* Updated CTI Training to latest version
-* Updated banner related to ATT&CKcon 5.0
+* Updated CTI Training to latest version.
+* Updated banner related to ATT&CKcon 5.0.
 
 # v4.1.3 (2024-05-02)
 

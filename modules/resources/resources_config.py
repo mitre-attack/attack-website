@@ -12,14 +12,6 @@ resources_templates_path = "modules/resources/templates/"
 # Path for docs
 docs_path = "modules/resources/docs/"
 
-# ATT&CKcon md
-attackcon_md = (
-    "Title: ATT&CKcon\n"
-    "Template: general/attackcon-overview\n"
-    "save_as: resources/learn-more-about-attack/attackcon/index.html\n"
-    "data: "
-)
-
 # Training md
 training_md = (
     "Title: ATT&CK Training\n"
@@ -31,6 +23,55 @@ training_cti_md = (
     "Title: ATT&CK For CTI Training\n"
     "Template: resources/training-cti\n"
     "save_as: resources/learn-more-about-attack/training/cti/index.html\n"
+    "data: "
+)
+
+training_purple_teaming_fundamentals_md = (
+    "Title: ATT&CK For Purple Teaming Fundamentals Training\n"
+    "Template: resources/training-purple-teaming-fundamentals\n"
+    "save_as: resources/learn-more-about-attack/training/purple-teaming-fundamentals/index.html\n"
+    "data: "
+)
+
+training_attack_fundamentals_md = (
+    "Title: ATT&CK Fundamentals Training\n"
+    "Template: resources/training-attack-fundamentals\n"
+    "save_as: resources/learn-more-about-attack/training/attack-fundamentals/index.html\n"
+    "data: "
+)
+
+training_adversary_emulation_md = (
+    "Title: ATT&CK Adversary Emulation: T1134.001 (Token Impersonation and Theft)\n"
+    "Template: resources/training-adversary-emulation\n"
+    "save_as: resources/learn-more-about-attack/training/adversary-emulation/index.html\n"
+    "data: "
+)
+
+training_access_tokens_md = (
+    "Title: Access Tokens Technical Primer\n"
+    "Template: resources/training-access-tokens\n"
+    "save_as: resources/learn-more-about-attack/training/access-tokens/index.html\n"
+    "data: "
+)
+
+training_soc_assessments_md = (
+    "Title: Overview of ATT&CK Based SOC Assessments\n"
+    "Template: resources/training-soc-assessments\n"
+    "save_as: resources/learn-more-about-attack/training/soc-assessments/index.html\n"
+    "data: "
+)
+
+training_threat_hunting_md = (
+    "Title: TTP-Based Threat Hunting and Detection Engineering\n"
+    "Template: resources/training-threat-hunting\n"
+    "save_as: resources/learn-more-about-attack/training/threat-hunting/index.html\n"
+    "data: "
+)
+
+training_detection_engineering_md = (
+    "Title: ATT&CK Detection Engineering\n"
+    "Template: resources/training-detection-engineering\n"
+    "save_as: resources/learn-more-about-attack/training/detection-engineering/index.html\n"
     "data: "
 )
 
@@ -50,7 +91,7 @@ contribute_md = (
     "data: "
 )
 
-contribute_redirection_location = "modules/resources/contribute_redirections.json"
+resources_redirections_location = "modules/resources/resources_redirections.json"
 
 # Brand md
 brand_md = (
