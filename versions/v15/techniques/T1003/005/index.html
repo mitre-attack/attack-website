@@ -135,6 +135,7 @@
     <div class="dropdown-menu " aria-labelledby="navbarDropdown">
                 <a class="dropdown-item" href="/versions/v15/resources/">Get Started</a>
                 <a class="dropdown-item" href="/versions/v15/resources/learn-more-about-attack/">Learn More about ATT&CK</a>
+                <a class="dropdown-item" href="/versions/v15/resources/attackcon/">ATT&CKcon</a>
                 <a class="dropdown-item" href="/versions/v15/resources/attack-data-and-tools/">ATT&CK Data & Tools</a>
                 <a class="dropdown-item" href="/versions/v15/resources/faq/">FAQ</a>
                 <a class="dropdown-item" href="/versions/v15/resources/engage-with-attack/contact/">Engage with ATT&CK</a>
@@ -206,7 +207,7 @@
                     <h1 id="">
                             <span id="subtechnique-parent-name">OS Credential Dumping:</span>
                         Cached Domain Credentials
-                    </h1> 
+                    </h1>
 
                         <div class="row">
                             <div class="col-md-8">
@@ -223,8 +224,8 @@
                                                             <th scope="col">ID</th>
                                                             <th scope="col">Name</th>
                                                         </tr>
-                                                    </thead> 
-                                                    <tbody>                                          
+                                                    </thead>
+                                                    <tbody>
                                                             <tr>
                                                                     <td>
                                                                         <a href="/versions/v15/techniques/T1003/001/" class="subtechnique-table-item" data-subtechnique_id="T1003.001"> T1003.001 </a>
@@ -261,7 +262,7 @@
                                                                     <td class="active">
                                                                         T1003.005
                                                                     </td>
-                                                                    <td class="active"> 
+                                                                    <td class="active">
                                                                         Cached Domain Credentials
                                                                     </td>
                                                             </tr>
@@ -289,14 +290,12 @@
                                                                         <a href="/versions/v15/techniques/T1003/008/" class="subtechnique-table-item" data-subtechnique_id="T1003.008"> /etc/passwd and /etc/shadow </a>
                                                                     </td>
                                                             </tr>
-                               
-                                                    </tbody>                           
+                                                    </tbody>
                                                 </table>
                                             </div>
                                         </div>
                                     </div>
                                     <!--start-indexing-for-search-->
-   
 
                                     <div class="description-body">
                                                 <p>Adversaries may attempt to access cached domain credentials used to allow authentication to occur in the event a domain controller is unavailable.<span onclick=scrollToRef('scite-1') id="scite-ref-1-a" class="scite-citeref-number" title="Microsoft. (2016, August 21). Cached and Stored Credentials Technical Overview. Retrieved February 21, 2020."data-reference="Microsoft - Cached Creds"><sup><a href="https://docs.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2012-r2-and-2012/hh994565(v%3Dws.11)" target="_blank" data-hasqtip="0" aria-describedby="qtip-0">[1]</a></sup></span></p><p>On Windows Vista and newer, the hash format is DCC2 (Domain Cached Credentials version 2) hash, also known as MS-Cache v2 hash.<span onclick=scrollToRef('scite-2') id="scite-ref-2-a" class="scite-citeref-number" title="Eli Collins. (2016, November 25). Windows' Domain Cached Credentials v2. Retrieved February 21, 2020."data-reference="PassLib mscache"><sup><a href="https://passlib.readthedocs.io/en/stable/lib/passlib.hash.msdcc2.html" target="_blank" data-hasqtip="1" aria-describedby="qtip-1">[2]</a></sup></span> The number of default cached credentials varies and can be altered per system. This hash does not allow pass-the-hash style attacks, and instead requires <a href="/versions/v15/techniques/T1110/002">Password Cracking</a> to recover the plaintext password.<span onclick=scrollToRef('scite-3') id="scite-ref-3-a" class="scite-citeref-number" title="Mantvydas Baranauskas. (2019, November 16). Dumping and Cracking mscash - Cached Domain Credentials. Retrieved February 21, 2020."data-reference="ired mscache"><sup><a href="https://ired.team/offensive-security/credential-access-and-credential-dumping/dumping-and-cracking-mscash-cached-domain-credentials" target="_blank" data-hasqtip="2" aria-describedby="qtip-2">[3]</a></sup></span></p><p>On Linux systems, Active Directory credentials can be accessed through caches maintained by software like System Security Services Daemon (SSSD) or Quest Authentication Services (formerly VAS). Cached credential hashes are typically located at <code>/var/lib/sss/db/cache.[domain].ldb</code> for SSSD or <code>/var/opt/quest/vas/authcache/vas_auth.vdb</code> for Quest. Adversaries can use utilities, such as <code>tdbdump</code>, on these database files to dump the cached hashes and use <a href="/versions/v15/techniques/T1110/002">Password Cracking</a> to obtain the plaintext password.<span onclick=scrollToRef('scite-4') id="scite-ref-4-a" class="scite-citeref-number" title="Tim Wadhwa-Brown. (2018, November). Where 2 worlds collide Bringing Mimikatz et al to UNIX. Retrieved October 13, 2021."data-reference="Brining MimiKatz to Unix"><sup><a href="https://labs.portcullis.co.uk/download/eu-18-Wadhwa-Brown-Where-2-worlds-collide-Bringing-Mimikatz-et-al-to-UNIX.pdf" target="_blank" data-hasqtip="3" aria-describedby="qtip-3">[4]</a></sup></span> </p><p>With SYSTEM or sudo access, the tools/utilities such as <a href="/versions/v15/software/S0002">Mimikatz</a>, <a href="/versions/v15/software/S0075">Reg</a>, and secretsdump.py for Windows or Linikatz for Linux can be used to extract the cached credentials.<span onclick=scrollToRef('scite-4') id="scite-ref-4-a" class="scite-citeref-number" title="Tim Wadhwa-Brown. (2018, November). Where 2 worlds collide Bringing Mimikatz et al to UNIX. Retrieved October 13, 2021."data-reference="Brining MimiKatz to Unix"><sup><a href="https://labs.portcullis.co.uk/download/eu-18-Wadhwa-Brown-Where-2-worlds-collide-Bringing-Mimikatz-et-al-to-UNIX.pdf" target="_blank" data-hasqtip="3" aria-describedby="qtip-3">[4]</a></sup></span></p><p>Note: Cached credentials for Windows Vista are derived using PBKDF2.<span onclick=scrollToRef('scite-2') id="scite-ref-2-a" class="scite-citeref-number" title="Eli Collins. (2016, November 25). Windows' Domain Cached Credentials v2. Retrieved February 21, 2020."data-reference="PassLib mscache"><sup><a href="https://passlib.readthedocs.io/en/stable/lib/passlib.hash.msdcc2.html" target="_blank" data-hasqtip="1" aria-describedby="qtip-1">[2]</a></sup></span></p>
@@ -494,7 +493,7 @@
                             <div class="tables-mobile">
                                 <table class="table table-bordered table-alternate mt-2">
                                     <thead>
-                                        <tr> 
+                                        <tr>
                                             <th scope="col">ID</th>
                                             <th scope="col">Mitigation</th>
                                             <th scope="col">Description</th>
@@ -596,7 +595,7 @@
 </table>
 </div>
 
-                
+
                             <h2 class="pt-3" id="references">References</h2>
 
         <div class="row">
@@ -852,7 +851,6 @@
         </div>
 
 
-    
                 </div>
             </div>
         </div>
@@ -913,7 +911,7 @@
                                         <u class="footer-link"><a href="/versions/v15/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3">
-                                    <u class="footer-link"><a href="/versions/v15/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v15.1&#013;Website  v4.1.4">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/versions/v15/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v15.1&#013;Website  v4.1.5">Website Changelog</a></u>
                                 </div>
                             </div>
                             <div class="row">
@@ -953,8 +951,8 @@
     <script src="/versions/v15/theme/scripts/popper.min.js"></script>
     <script src="/versions/v15/theme/scripts/bootstrap-select.min.js"></script>
     <script src="/versions/v15/theme/scripts/bootstrap.bundle.min.js"></script>
-    <script src="/versions/v15/theme/scripts/site.js?1451"></script>
-    <script src="/versions/v15/theme/scripts/settings.js?8347"></script>
+    <script src="/versions/v15/theme/scripts/site.js?6211"></script>
+    <script src="/versions/v15/theme/scripts/settings.js?2115"></script>
     <script src="/versions/v15/theme/scripts/search_bundle.js"></script>
 
 <!--SCRIPTS-->

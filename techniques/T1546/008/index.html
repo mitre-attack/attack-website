@@ -135,6 +135,7 @@
     <div class="dropdown-menu " aria-labelledby="navbarDropdown">
                 <a class="dropdown-item" href="/resources/">Get Started</a>
                 <a class="dropdown-item" href="/resources/learn-more-about-attack/">Learn More about ATT&CK</a>
+                <a class="dropdown-item" href="/resources/attackcon/">ATT&CKcon</a>
                 <a class="dropdown-item" href="/resources/attack-data-and-tools/">ATT&CK Data & Tools</a>
                 <a class="dropdown-item" href="/resources/faq/">FAQ</a>
                 <a class="dropdown-item" href="/resources/engage-with-attack/contact/">Engage with ATT&CK</a>
@@ -206,7 +207,7 @@
                     <h1 id="">
                             <span id="subtechnique-parent-name">Event Triggered Execution:</span>
                         Accessibility Features
-                    </h1> 
+                    </h1>
 
                         <div class="row">
                             <div class="col-md-8">
@@ -223,8 +224,8 @@
                                                             <th scope="col">ID</th>
                                                             <th scope="col">Name</th>
                                                         </tr>
-                                                    </thead> 
-                                                    <tbody>                                          
+                                                    </thead>
+                                                    <tbody>
                                                             <tr>
                                                                     <td>
                                                                         <a href="/techniques/T1546/001/" class="subtechnique-table-item" data-subtechnique_id="T1546.001"> T1546.001 </a>
@@ -285,7 +286,7 @@
                                                                     <td class="active">
                                                                         T1546.008
                                                                     </td>
-                                                                    <td class="active"> 
+                                                                    <td class="active">
                                                                         Accessibility Features
                                                                     </td>
                                                             </tr>
@@ -353,14 +354,12 @@
                                                                         <a href="/techniques/T1546/016/" class="subtechnique-table-item" data-subtechnique_id="T1546.016"> Installer Packages </a>
                                                                     </td>
                                                             </tr>
-                               
-                                                    </tbody>                           
+                                                    </tbody>
                                                 </table>
                                             </div>
                                         </div>
                                     </div>
                                     <!--start-indexing-for-search-->
-   
 
                                     <div class="description-body">
                                                 <p>Adversaries may establish persistence and/or elevate privileges by executing malicious content triggered by accessibility features. Windows contains accessibility features that may be launched with a key combination before a user has logged in (ex: when the user is on the Windows logon screen). An adversary can modify the way these programs are launched to get a command prompt or backdoor without logging in to the system.</p><p>Two common accessibility programs are <code>C:\Windows\System32\sethc.exe</code>, launched when the shift key is pressed five times and <code>C:\Windows\System32\utilman.exe</code>, launched when the Windows + U key combination is pressed. The sethc.exe program is often referred to as "sticky keys", and has been used by adversaries for unauthenticated access through a remote desktop login screen. <span onclick=scrollToRef('scite-1') id="scite-ref-1-a" class="scite-citeref-number" title="Glyer, C., Kazanciyan, R. (2012, August 20). The "Hikit" Rootkit: Advanced and Persistent Attack Techniques (Part 1). Retrieved June 6, 2016."data-reference="FireEye Hikit Rootkit"><sup><a href="https://www.fireeye.com/blog/threat-research/2012/08/hikit-rootkit-advanced-persistent-attack-techniques-part-1.html" target="_blank" data-hasqtip="0" aria-describedby="qtip-0">[1]</a></sup></span></p><p>Depending on the version of Windows, an adversary may take advantage of these features in different ways. Common methods used by adversaries include replacing accessibility feature binaries or pointers/references to these binaries in the Registry. In newer versions of Windows, the replaced binary needs to be digitally signed for x64 systems, the binary must reside in <code>%systemdir%\</code>, and it must be protected by Windows File or Resource Protection (WFP/WRP). <span onclick=scrollToRef('scite-2') id="scite-ref-2-a" class="scite-citeref-number" title="Maldonado, D., McGuffin, T. (2016, August 6). Sticky Keys to the Kingdom. Retrieved July 5, 2017."data-reference="DEFCON2016 Sticky Keys"><sup><a href="https://www.slideshare.net/DennisMaldonado5/sticky-keys-to-the-kingdom" target="_blank" data-hasqtip="1" aria-describedby="qtip-1">[2]</a></sup></span> The <a href="/techniques/T1546/012">Image File Execution Options Injection</a> debugger method was likely discovered as a potential workaround because it does not require the corresponding accessibility feature binary to be replaced.</p><p>For simple binary replacement on Windows XP and later as well as and Windows Server 2003/R2 and later, for example, the program (e.g., <code>C:\Windows\System32\utilman.exe</code>) may be replaced with "cmd.exe" (or another program that provides backdoor access). Subsequently, pressing the appropriate key combination at the login screen while sitting at the keyboard or when connected over <a href="/techniques/T1021/001">Remote Desktop Protocol</a> will cause the replaced file to be executed with SYSTEM privileges. <span onclick=scrollToRef('scite-3') id="scite-ref-3-a" class="scite-citeref-number" title="Tilbury, C. (2014, August 28). Registry Analysis with CrowdResponse. Retrieved November 12, 2014."data-reference="Tilbury 2014"><sup><a href="http://blog.crowdstrike.com/registry-analysis-with-crowdresponse/" target="_blank" data-hasqtip="2" aria-describedby="qtip-2">[3]</a></sup></span></p><p>Other accessibility features exist that may also be leveraged in a similar fashion: <span onclick=scrollToRef('scite-2') id="scite-ref-2-a" class="scite-citeref-number" title="Maldonado, D., McGuffin, T. (2016, August 6). Sticky Keys to the Kingdom. Retrieved July 5, 2017."data-reference="DEFCON2016 Sticky Keys"><sup><a href="https://www.slideshare.net/DennisMaldonado5/sticky-keys-to-the-kingdom" target="_blank" data-hasqtip="1" aria-describedby="qtip-1">[2]</a></sup></span><span onclick=scrollToRef('scite-4') id="scite-ref-4-a" class="scite-citeref-number" title="Comi, G. (2019, October 19). Abusing Windows 10 Narrator's 'Feedback-Hub' URI for Fileless Persistence. Retrieved April 28, 2020."data-reference="Narrator Accessibility Abuse"><sup><a href="https://giuliocomi.blogspot.com/2019/10/abusing-windows-10-narrators-feedback.html" target="_blank" data-hasqtip="3" aria-describedby="qtip-3">[4]</a></sup></span></p><ul><li>On-Screen Keyboard: <code>C:\Windows\System32\osk.exe</code></li><li>Magnifier: <code>C:\Windows\System32\Magnify.exe</code></li><li>Narrator: <code>C:\Windows\System32\Narrator.exe</code></li><li>Display Switcher: <code>C:\Windows\System32\DisplaySwitch.exe</code></li><li>App Switcher: <code>C:\Windows\System32\AtBroker.exe</code></li></ul>
@@ -562,7 +561,7 @@
                             <div class="tables-mobile">
                                 <table class="table table-bordered table-alternate mt-2">
                                     <thead>
-                                        <tr> 
+                                        <tr>
                                             <th scope="col">ID</th>
                                             <th scope="col">Mitigation</th>
                                             <th scope="col">Description</th>
@@ -699,7 +698,7 @@
 </table>
 </div>
 
-                
+
                             <h2 class="pt-3" id="references">References</h2>
 
         <div class="row">
@@ -955,7 +954,6 @@
         </div>
 
 
-    
                 </div>
             </div>
         </div>
@@ -1016,7 +1014,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v15.1&#013;Website  v4.1.4">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v15.1&#013;Website  v4.1.5">Website Changelog</a></u>
                                 </div>
                             </div>
                             <div class="row">
@@ -1056,8 +1054,8 @@
     <script src="/theme/scripts/popper.min.js"></script>
     <script src="/theme/scripts/bootstrap-select.min.js"></script>
     <script src="/theme/scripts/bootstrap.bundle.min.js"></script>
-    <script src="/theme/scripts/site.js?4284"></script>
-    <script src="/theme/scripts/settings.js?3823"></script>
+    <script src="/theme/scripts/site.js?7022"></script>
+    <script src="/theme/scripts/settings.js?7728"></script>
     <script src="/theme/scripts/search_bundle.js"></script>
 
 <!--SCRIPTS-->

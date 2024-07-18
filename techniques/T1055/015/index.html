@@ -135,6 +135,7 @@
     <div class="dropdown-menu " aria-labelledby="navbarDropdown">
                 <a class="dropdown-item" href="/resources/">Get Started</a>
                 <a class="dropdown-item" href="/resources/learn-more-about-attack/">Learn More about ATT&CK</a>
+                <a class="dropdown-item" href="/resources/attackcon/">ATT&CKcon</a>
                 <a class="dropdown-item" href="/resources/attack-data-and-tools/">ATT&CK Data & Tools</a>
                 <a class="dropdown-item" href="/resources/faq/">FAQ</a>
                 <a class="dropdown-item" href="/resources/engage-with-attack/contact/">Engage with ATT&CK</a>
@@ -206,7 +207,7 @@
                     <h1 id="">
                             <span id="subtechnique-parent-name">Process Injection:</span>
                         ListPlanting
-                    </h1> 
+                    </h1>
 
                         <div class="row">
                             <div class="col-md-8">
@@ -223,8 +224,8 @@
                                                             <th scope="col">ID</th>
                                                             <th scope="col">Name</th>
                                                         </tr>
-                                                    </thead> 
-                                                    <tbody>                                          
+                                                    </thead>
+                                                    <tbody>
                                                             <tr>
                                                                     <td>
                                                                         <a href="/techniques/T1055/001/" class="subtechnique-table-item" data-subtechnique_id="T1055.001"> T1055.001 </a>
@@ -317,18 +318,16 @@
                                                                     <td class="active">
                                                                         T1055.015
                                                                     </td>
-                                                                    <td class="active"> 
+                                                                    <td class="active">
                                                                         ListPlanting
                                                                     </td>
                                                             </tr>
-                               
-                                                    </tbody>                           
+                                                    </tbody>
                                                 </table>
                                             </div>
                                         </div>
                                     </div>
                                     <!--start-indexing-for-search-->
-   
 
                                     <div class="description-body">
                                                 <p>Adversaries may abuse list-view controls to inject malicious code into hijacked processes in order to evade process-based defenses as well as possibly elevate privileges. ListPlanting is a method of executing arbitrary code in the address space of a separate live process. Code executed via ListPlanting may also evade detection from security products since the execution is masked under a legitimate process.</p><p>List-view controls are user interface windows used to display collections of items.<span onclick=scrollToRef('scite-1') id="scite-ref-1-a" class="scite-citeref-number" title="Microsoft. (2021, May 25). About List-View Controls. Retrieved January 4, 2022."data-reference="Microsoft List View Controls"><sup><a href="https://docs.microsoft.com/windows/win32/controls/list-view-controls-overview" target="_blank" data-hasqtip="0" aria-describedby="qtip-0">[1]</a></sup></span> Information about an application's list-view settings are stored within the process' memory in a <code>SysListView32</code> control.</p><p>ListPlanting (a form of message-passing "shatter attack") may be performed by copying code into the virtual address space of a process that uses a list-view control then using that code as a custom callback for sorting the listed items.<span onclick=scrollToRef('scite-2') id="scite-ref-2-a" class="scite-citeref-number" title="odzhan. (2019, April 25). Windows Process Injection: WordWarping, Hyphentension, AutoCourgette, Streamception, Oleum, ListPlanting, Treepoline. Retrieved November 15, 2021."data-reference="Modexp Windows Process Injection"><sup><a href="https://modexp.wordpress.com/2019/04/25/seven-window-injection-methods/" target="_blank" data-hasqtip="1" aria-describedby="qtip-1">[2]</a></sup></span> Adversaries must first copy code into the target process’ memory space, which can be performed various ways including by directly obtaining a handle to the <code>SysListView32</code> child of the victim process window (via Windows API calls such as <code>FindWindow</code> and/or <code>EnumWindows</code>) or other <a href="/techniques/T1055">Process Injection</a> methods.</p><p>Some variations of ListPlanting may allocate memory in the target process but then use window messages to copy the payload, to avoid the use of the highly monitored <code>WriteProcessMemory</code> function. For example, an adversary can use the <code>PostMessage</code> and/or <code>SendMessage</code> API functions to send <code>LVM_SETITEMPOSITION</code> and <code>LVM_GETITEMPOSITION</code> messages, effectively copying a payload 2 bytes at a time to the allocated memory.<span onclick=scrollToRef('scite-3') id="scite-ref-3-a" class="scite-citeref-number" title="Hromcova, Z. and Cherpanov, A. (2020, June). INVISIMOLE: THE HIDDEN PART OF THE STORY. Retrieved July 16, 2020."data-reference="ESET InvisiMole June 2020"><sup><a href="https://www.welivesecurity.com/wp-content/uploads/2020/06/ESET_InvisiMole.pdf" target="_blank" data-hasqtip="2" aria-describedby="qtip-2">[3]</a></sup></span> </p><p>Finally, the payload is triggered by sending the <code>LVM_SORTITEMS</code> message to the <code>SysListView32</code> child of the process window, with the payload within the newly allocated buffer passed and executed as the <code>ListView_SortItems</code> callback.</p>
@@ -450,7 +449,7 @@
                             <div class="tables-mobile">
                                 <table class="table table-bordered table-alternate mt-2">
                                     <thead>
-                                        <tr> 
+                                        <tr>
                                             <th scope="col">ID</th>
                                             <th scope="col">Mitigation</th>
                                             <th scope="col">Description</th>
@@ -515,7 +514,7 @@
 </table>
 </div>
 
-                
+
                             <h2 class="pt-3" id="references">References</h2>
 
         <div class="row">
@@ -567,7 +566,6 @@
         </div>
 
 
-    
                 </div>
             </div>
         </div>
@@ -628,7 +626,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v15.1&#013;Website  v4.1.4">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v15.1&#013;Website  v4.1.5">Website Changelog</a></u>
                                 </div>
                             </div>
                             <div class="row">
@@ -668,8 +666,8 @@
     <script src="/theme/scripts/popper.min.js"></script>
     <script src="/theme/scripts/bootstrap-select.min.js"></script>
     <script src="/theme/scripts/bootstrap.bundle.min.js"></script>
-    <script src="/theme/scripts/site.js?6175"></script>
-    <script src="/theme/scripts/settings.js?1279"></script>
+    <script src="/theme/scripts/site.js?7442"></script>
+    <script src="/theme/scripts/settings.js?476"></script>
     <script src="/theme/scripts/search_bundle.js"></script>
 
 <!--SCRIPTS-->

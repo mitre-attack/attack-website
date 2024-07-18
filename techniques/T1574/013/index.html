@@ -135,6 +135,7 @@
     <div class="dropdown-menu " aria-labelledby="navbarDropdown">
                 <a class="dropdown-item" href="/resources/">Get Started</a>
                 <a class="dropdown-item" href="/resources/learn-more-about-attack/">Learn More about ATT&CK</a>
+                <a class="dropdown-item" href="/resources/attackcon/">ATT&CKcon</a>
                 <a class="dropdown-item" href="/resources/attack-data-and-tools/">ATT&CK Data & Tools</a>
                 <a class="dropdown-item" href="/resources/faq/">FAQ</a>
                 <a class="dropdown-item" href="/resources/engage-with-attack/contact/">Engage with ATT&CK</a>
@@ -206,7 +207,7 @@
                     <h1 id="">
                             <span id="subtechnique-parent-name">Hijack Execution Flow:</span>
                         KernelCallbackTable
-                    </h1> 
+                    </h1>
 
                         <div class="row">
                             <div class="col-md-8">
@@ -223,8 +224,8 @@
                                                             <th scope="col">ID</th>
                                                             <th scope="col">Name</th>
                                                         </tr>
-                                                    </thead> 
-                                                    <tbody>                                          
+                                                    </thead>
+                                                    <tbody>
                                                             <tr>
                                                                     <td>
                                                                         <a href="/techniques/T1574/001/" class="subtechnique-table-item" data-subtechnique_id="T1574.001"> T1574.001 </a>
@@ -317,7 +318,7 @@
                                                                     <td class="active">
                                                                         T1574.013
                                                                     </td>
-                                                                    <td class="active"> 
+                                                                    <td class="active">
                                                                         KernelCallbackTable
                                                                     </td>
                                                             </tr>
@@ -329,14 +330,12 @@
                                                                         <a href="/techniques/T1574/014/" class="subtechnique-table-item" data-subtechnique_id="T1574.014"> AppDomainManager </a>
                                                                     </td>
                                                             </tr>
-                               
-                                                    </tbody>                           
+                                                    </tbody>
                                                 </table>
                                             </div>
                                         </div>
                                     </div>
                                     <!--start-indexing-for-search-->
-   
 
                                     <div class="description-body">
                                                 <p>Adversaries may abuse the <code>KernelCallbackTable</code> of a process to hijack its execution flow in order to run their own payloads.<span onclick=scrollToRef('scite-1') id="scite-ref-1-a" class="scite-citeref-number" title="Saini, A. and Hossein, J. (2022, January 27). North Korea’s Lazarus APT leverages Windows Update client, GitHub in latest campaign. Retrieved January 27, 2022."data-reference="Lazarus APT January 2022"><sup><a href="https://blog.malwarebytes.com/threat-intelligence/2022/01/north-koreas-lazarus-apt-leverages-windows-update-client-github-in-latest-campaign/" target="_blank" data-hasqtip="0" aria-describedby="qtip-0">[1]</a></sup></span><span onclick=scrollToRef('scite-2') id="scite-ref-2-a" class="scite-citeref-number" title="Microsoft Defender Security Research Team. (2018, March 1). FinFisher exposed: A researcher’s tale of defeating traps, tricks, and complex virtual machines. Retrieved January 27, 2022."data-reference="FinFisher exposed "><sup><a href="https://www.microsoft.com/security/blog/2018/03/01/finfisher-exposed-a-researchers-tale-of-defeating-traps-tricks-and-complex-virtual-machines/" target="_blank" data-hasqtip="1" aria-describedby="qtip-1">[2]</a></sup></span> The <code>KernelCallbackTable</code> can be found in the Process Environment Block (PEB) and is initialized to an array of graphic functions available to a GUI process once <code>user32.dll</code> is loaded.<span onclick=scrollToRef('scite-3') id="scite-ref-3-a" class="scite-citeref-number" title="odzhan. (2019, May 25). Windows Process Injection: KernelCallbackTable used by FinFisher / FinSpy. Retrieved February 4, 2022."data-reference="Windows Process Injection KernelCallbackTable"><sup><a href="https://modexp.wordpress.com/2019/05/25/windows-injection-finspy/" target="_blank" data-hasqtip="2" aria-describedby="qtip-2">[3]</a></sup></span></p><p>An adversary may hijack the execution flow of a process using the <code>KernelCallbackTable</code> by replacing an original callback function with a malicious payload. Modifying callback functions can be achieved in various ways involving related behaviors such as <a href="/techniques/T1620">Reflective Code Loading</a> or <a href="/techniques/T1055">Process Injection</a> into another process.</p><p>A pointer to the memory address of the <code>KernelCallbackTable</code> can be obtained by locating the PEB (ex: via a call to the <code>NtQueryInformationProcess()</code> <a href="/techniques/T1106">Native API</a> function).<span onclick=scrollToRef('scite-4') id="scite-ref-4-a" class="scite-citeref-number" title="Microsoft. (2021, November 23). NtQueryInformationProcess function (winternl.h). Retrieved February 4, 2022."data-reference="NtQueryInformationProcess"><sup><a href="https://docs.microsoft.com/en-us/windows/win32/api/winternl/nf-winternl-ntqueryinformationprocess" target="_blank" data-hasqtip="3" aria-describedby="qtip-3">[4]</a></sup></span> Once the pointer is located, the <code>KernelCallbackTable</code> can be duplicated, and a function in the table (e.g., <code>fnCOPYDATA</code>) set to the address of a malicious payload (ex: via <code>WriteProcessMemory()</code>). The PEB is then updated with the new address of the table. Once the tampered function is invoked, the malicious payload will be triggered.<span onclick=scrollToRef('scite-1') id="scite-ref-1-a" class="scite-citeref-number" title="Saini, A. and Hossein, J. (2022, January 27). North Korea’s Lazarus APT leverages Windows Update client, GitHub in latest campaign. Retrieved January 27, 2022."data-reference="Lazarus APT January 2022"><sup><a href="https://blog.malwarebytes.com/threat-intelligence/2022/01/north-koreas-lazarus-apt-leverages-windows-update-client-github-in-latest-campaign/" target="_blank" data-hasqtip="0" aria-describedby="qtip-0">[1]</a></sup></span></p><p>The tampered function is typically invoked using a Windows message. After the process is hijacked and malicious code is executed, the <code>KernelCallbackTable</code> may also be restored to its original state by the rest of the malicious payload.<span onclick=scrollToRef('scite-1') id="scite-ref-1-a" class="scite-citeref-number" title="Saini, A. and Hossein, J. (2022, January 27). North Korea’s Lazarus APT leverages Windows Update client, GitHub in latest campaign. Retrieved January 27, 2022."data-reference="Lazarus APT January 2022"><sup><a href="https://blog.malwarebytes.com/threat-intelligence/2022/01/north-koreas-lazarus-apt-leverages-windows-update-client-github-in-latest-campaign/" target="_blank" data-hasqtip="0" aria-describedby="qtip-0">[1]</a></sup></span> Use of the <code>KernelCallbackTable</code> to hijack execution flow may evade detection from security products since the execution can be masked under a legitimate process.</p>
@@ -456,7 +455,7 @@
                             <div class="tables-mobile">
                                 <table class="table table-bordered table-alternate mt-2">
                                     <thead>
-                                        <tr> 
+                                        <tr>
                                             <th scope="col">ID</th>
                                             <th scope="col">Mitigation</th>
                                             <th scope="col">Description</th>
@@ -510,7 +509,7 @@
 </table>
 </div>
 
-                
+
                             <h2 class="pt-3" id="references">References</h2>
 
         <div class="row">
@@ -586,7 +585,6 @@
         </div>
 
 
-    
                 </div>
             </div>
         </div>
@@ -647,7 +645,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v15.1&#013;Website  v4.1.4">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v15.1&#013;Website  v4.1.5">Website Changelog</a></u>
                                 </div>
                             </div>
                             <div class="row">
@@ -687,8 +685,8 @@
     <script src="/theme/scripts/popper.min.js"></script>
     <script src="/theme/scripts/bootstrap-select.min.js"></script>
     <script src="/theme/scripts/bootstrap.bundle.min.js"></script>
-    <script src="/theme/scripts/site.js?2094"></script>
-    <script src="/theme/scripts/settings.js?5025"></script>
+    <script src="/theme/scripts/site.js?5126"></script>
+    <script src="/theme/scripts/settings.js?1530"></script>
     <script src="/theme/scripts/search_bundle.js"></script>
 
 <!--SCRIPTS-->

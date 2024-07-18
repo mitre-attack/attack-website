@@ -135,6 +135,7 @@
     <div class="dropdown-menu " aria-labelledby="navbarDropdown">
                 <a class="dropdown-item" href="/resources/">Get Started</a>
                 <a class="dropdown-item" href="/resources/learn-more-about-attack/">Learn More about ATT&CK</a>
+                <a class="dropdown-item" href="/resources/attackcon/">ATT&CKcon</a>
                 <a class="dropdown-item" href="/resources/attack-data-and-tools/">ATT&CK Data & Tools</a>
                 <a class="dropdown-item" href="/resources/faq/">FAQ</a>
                 <a class="dropdown-item" href="/resources/engage-with-attack/contact/">Engage with ATT&CK</a>
@@ -206,7 +207,7 @@
                     <h1 id="">
                             <span id="subtechnique-parent-name">Scheduled Task/Job:</span>
                         Systemd Timers
-                    </h1> 
+                    </h1>
 
                         <div class="row">
                             <div class="col-md-8">
@@ -223,8 +224,8 @@
                                                             <th scope="col">ID</th>
                                                             <th scope="col">Name</th>
                                                         </tr>
-                                                    </thead> 
-                                                    <tbody>                                          
+                                                    </thead>
+                                                    <tbody>
                                                             <tr>
                                                                     <td>
                                                                         <a href="/techniques/T1053/002/" class="subtechnique-table-item" data-subtechnique_id="T1053.002"> T1053.002 </a>
@@ -253,7 +254,7 @@
                                                                     <td class="active">
                                                                         T1053.006
                                                                     </td>
-                                                                    <td class="active"> 
+                                                                    <td class="active">
                                                                         Systemd Timers
                                                                     </td>
                                                             </tr>
@@ -265,14 +266,12 @@
                                                                         <a href="/techniques/T1053/007/" class="subtechnique-table-item" data-subtechnique_id="T1053.007"> Container Orchestration Job </a>
                                                                     </td>
                                                             </tr>
-                               
-                                                    </tbody>                           
+                                                    </tbody>
                                                 </table>
                                             </div>
                                         </div>
                                     </div>
                                     <!--start-indexing-for-search-->
-   
 
                                     <div class="description-body">
                                                 <p>Adversaries may abuse systemd timers to perform task scheduling for initial or recurring execution of malicious code. Systemd timers are unit files with file extension <code>.timer</code> that control services. Timers can be set to run on a calendar event or after a time span relative to a starting point. They can be used as an alternative to <a href="/techniques/T1053/003">Cron</a> in Linux environments.<span onclick=scrollToRef('scite-1') id="scite-ref-1-a" class="scite-citeref-number" title="archlinux. (2020, August 11). systemd/Timers. Retrieved October 12, 2020."data-reference="archlinux Systemd Timers Aug 2020"><sup><a href="https://wiki.archlinux.org/index.php/Systemd/Timers" target="_blank" data-hasqtip="0" aria-describedby="qtip-0">[1]</a></sup></span> Systemd timers may be activated remotely via the <code>systemctl</code> command line utility, which operates over <a href="/techniques/T1021/004">SSH</a>.<span onclick=scrollToRef('scite-2') id="scite-ref-2-a" class="scite-citeref-number" title="Aaron Kili. (2018, January 16). How to Control Systemd Services on Remote Linux Server. Retrieved July 26, 2021."data-reference="Systemd Remote Control"><sup><a href="https://www.tecmint.com/control-systemd-services-on-remote-linux-server/" target="_blank" data-hasqtip="1" aria-describedby="qtip-1">[2]</a></sup></span></p><p>Each <code>.timer</code> file must have a corresponding <code>.service</code> file with the same name, e.g., <code>example.timer</code> and <code>example.service</code>. <code>.service</code> files are <a href="/techniques/T1543/002">Systemd Service</a> unit files that are managed by the systemd system and service manager.<span onclick=scrollToRef('scite-3') id="scite-ref-3-a" class="scite-citeref-number" title="Linux man-pages. (2014, January). systemd(1) - Linux manual page. Retrieved April 23, 2019."data-reference="Linux man-pages: systemd January 2014"><sup><a href="http://man7.org/linux/man-pages/man1/systemd.1.html" target="_blank" data-hasqtip="2" aria-describedby="qtip-2">[3]</a></sup></span> Privileged timers are written to <code>/etc/systemd/system/</code> and <code>/usr/lib/systemd/system</code> while user level are written to <code>~/.config/systemd/user/</code>.</p><p>An adversary may use systemd timers to execute malicious code at system startup or on a scheduled basis for persistence.<span onclick=scrollToRef('scite-4') id="scite-ref-4-a" class="scite-citeref-number" title="Catalin Cimpanu. (2018, July 10). Malware Found in Arch Linux AUR Package Repository. Retrieved April 23, 2019."data-reference="Arch Linux Package Systemd Compromise BleepingComputer 10JUL2018"><sup><a href="https://www.bleepingcomputer.com/news/security/malware-found-in-arch-linux-aur-package-repository/" target="_blank" data-hasqtip="3" aria-describedby="qtip-3">[4]</a></sup></span><span onclick=scrollToRef('scite-5') id="scite-ref-5-a" class="scite-citeref-number" title="Catalin Cimpanu. (2018, July 10). ~x file downloaded in public Arch package compromise. Retrieved April 23, 2019."data-reference="gist Arch package compromise 10JUL2018"><sup><a href="https://gist.github.com/campuscodi/74d0d2e35d8fd9499c76333ce027345a" target="_blank" data-hasqtip="4" aria-describedby="qtip-4">[5]</a></sup></span><span onclick=scrollToRef('scite-6') id="scite-ref-6-a" class="scite-citeref-number" title="Eli Schwartz. (2018, June 8). acroread package compromised. Retrieved April 23, 2019."data-reference="acroread package compromised Arch Linux Mail 8JUL2018"><sup><a href="https://lists.archlinux.org/pipermail/aur-general/2018-July/034153.html" target="_blank" data-hasqtip="5" aria-describedby="qtip-5">[6]</a></sup></span> Timers installed using privileged paths may be used to maintain root level persistence. Adversaries may also install user level timers to achieve user level persistence.<span onclick=scrollToRef('scite-7') id="scite-ref-7-a" class="scite-citeref-number" title="Hybrid Analysis. (2018, July 11). HybridAnalsysis of sample 28553b3a9d2ad4361d33d29ac4bf771d008e0073cec01b5561c6348a608f8dd7. Retrieved September 8, 2023."data-reference="Falcon Sandbox smp: 28553b3a9d"><sup><a href="https://www.hybrid-analysis.com/sample/28553b3a9d2ad4361d33d29ac4bf771d008e0073cec01b5561c6348a608f8dd7?environmentId=300" target="_blank" data-hasqtip="6" aria-describedby="qtip-6">[7]</a></sup></span></p>
@@ -376,7 +375,7 @@
                             <div class="tables-mobile">
                                 <table class="table table-bordered table-alternate mt-2">
                                     <thead>
-                                        <tr> 
+                                        <tr>
                                             <th scope="col">ID</th>
                                             <th scope="col">Mitigation</th>
                                             <th scope="col">Description</th>
@@ -502,7 +501,7 @@
 </table>
 </div>
 
-                
+
                             <h2 class="pt-3" id="references">References</h2>
 
         <div class="row">
@@ -602,7 +601,6 @@
         </div>
 
 
-    
                 </div>
             </div>
         </div>
@@ -663,7 +661,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v15.1&#013;Website  v4.1.4">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v15.1&#013;Website  v4.1.5">Website Changelog</a></u>
                                 </div>
                             </div>
                             <div class="row">
@@ -703,8 +701,8 @@
     <script src="/theme/scripts/popper.min.js"></script>
     <script src="/theme/scripts/bootstrap-select.min.js"></script>
     <script src="/theme/scripts/bootstrap.bundle.min.js"></script>
-    <script src="/theme/scripts/site.js?296"></script>
-    <script src="/theme/scripts/settings.js?6792"></script>
+    <script src="/theme/scripts/site.js?7075"></script>
+    <script src="/theme/scripts/settings.js?1919"></script>
     <script src="/theme/scripts/search_bundle.js"></script>
 
 <!--SCRIPTS-->

@@ -135,6 +135,7 @@
     <div class="dropdown-menu " aria-labelledby="navbarDropdown">
                 <a class="dropdown-item" href="/resources/">Get Started</a>
                 <a class="dropdown-item" href="/resources/learn-more-about-attack/">Learn More about ATT&CK</a>
+                <a class="dropdown-item" href="/resources/attackcon/">ATT&CKcon</a>
                 <a class="dropdown-item" href="/resources/attack-data-and-tools/">ATT&CK Data & Tools</a>
                 <a class="dropdown-item" href="/resources/faq/">FAQ</a>
                 <a class="dropdown-item" href="/resources/engage-with-attack/contact/">Engage with ATT&CK</a>
@@ -206,7 +207,7 @@
                     <h1 id="">
                             <span id="subtechnique-parent-name">Adversary-in-the-Middle:</span>
                         LLMNR/NBT-NS Poisoning and SMB Relay
-                    </h1> 
+                    </h1>
 
                         <div class="row">
                             <div class="col-md-8">
@@ -223,13 +224,13 @@
                                                             <th scope="col">ID</th>
                                                             <th scope="col">Name</th>
                                                         </tr>
-                                                    </thead> 
-                                                    <tbody>                                          
+                                                    </thead>
+                                                    <tbody>
                                                             <tr>
                                                                     <td class="active">
                                                                         T1557.001
                                                                     </td>
-                                                                    <td class="active"> 
+                                                                    <td class="active">
                                                                         LLMNR/NBT-NS Poisoning and SMB Relay
                                                                     </td>
                                                             </tr>
@@ -249,14 +250,12 @@
                                                                         <a href="/techniques/T1557/003/" class="subtechnique-table-item" data-subtechnique_id="T1557.003"> DHCP Spoofing </a>
                                                                     </td>
                                                             </tr>
-                               
-                                                    </tbody>                           
+                                                    </tbody>
                                                 </table>
                                             </div>
                                         </div>
                                     </div>
                                     <!--start-indexing-for-search-->
-   
 
                                     <div class="description-body">
                                                 <p>By responding to LLMNR/NBT-NS network traffic, adversaries may spoof an authoritative source for name resolution to force communication with an adversary controlled system. This activity may be used to collect or relay authentication materials. </p><p>Link-Local Multicast Name Resolution (LLMNR) and NetBIOS Name Service (NBT-NS) are Microsoft Windows components that serve as alternate methods of host identification. LLMNR is based upon the Domain Name System (DNS) format and allows hosts on the same local link to perform name resolution for other hosts. NBT-NS identifies systems on a local network by their NetBIOS name. <span onclick=scrollToRef('scite-1') id="scite-ref-1-a" class="scite-citeref-number" title="Wikipedia. (2016, July 7). Link-Local Multicast Name Resolution. Retrieved November 17, 2017."data-reference="Wikipedia LLMNR"><sup><a href="https://en.wikipedia.org/wiki/Link-Local_Multicast_Name_Resolution" target="_blank" data-hasqtip="0" aria-describedby="qtip-0">[1]</a></sup></span><span onclick=scrollToRef('scite-2') id="scite-ref-2-a" class="scite-citeref-number" title="Microsoft. (n.d.). NetBIOS Name Resolution. Retrieved November 17, 2017."data-reference="TechNet NetBIOS"><sup><a href="https://technet.microsoft.com/library/cc958811.aspx" target="_blank" data-hasqtip="1" aria-describedby="qtip-1">[2]</a></sup></span></p><p>Adversaries can spoof an authoritative source for name resolution on a victim network by responding to LLMNR (UDP 5355)/NBT-NS (UDP 137) traffic as if they know the identity of the requested host, effectively poisoning the service so that the victims will communicate with the adversary controlled system. If the requested host belongs to a resource that requires identification/authentication, the username and NTLMv2 hash will then be sent to the adversary controlled system. The adversary can then collect the hash information sent over the wire through tools that monitor the ports for traffic or through <a href="/techniques/T1040">Network Sniffing</a> and crack the hashes offline through <a href="/techniques/T1110">Brute Force</a> to obtain the plaintext passwords.</p><p>In some cases where an adversary has access to a system that is in the authentication path between systems or when automated scans that use credentials attempt to authenticate to an adversary controlled system, the NTLMv1/v2 hashes can be intercepted and relayed to access and execute code against a target system. The relay step can happen in conjunction with poisoning but may also be independent of it.<span onclick=scrollToRef('scite-3') id="scite-ref-3-a" class="scite-citeref-number" title="Salvati, M. (2017, June 2). Practical guide to NTLM Relaying in 2017 (A.K.A getting a foothold in under 5 minutes). Retrieved February 7, 2019."data-reference="byt3bl33d3r NTLM Relaying"><sup><a href="https://byt3bl33d3r.github.io/practical-guide-to-ntlm-relaying-in-2017-aka-getting-a-foothold-in-under-5-minutes.html" target="_blank" data-hasqtip="2" aria-describedby="qtip-2">[3]</a></sup></span><span onclick=scrollToRef('scite-4') id="scite-ref-4-a" class="scite-citeref-number" title="Kuehn, E. (2018, April 11). Ever Run a Relay? Why SMB Relays Should Be On Your Mind. Retrieved February 7, 2019."data-reference="Secure Ideas SMB Relay"><sup><a href="https://blog.secureideas.com/2018/04/ever-run-a-relay-why-smb-relays-should-be-on-your-mind.html" target="_blank" data-hasqtip="3" aria-describedby="qtip-3">[4]</a></sup></span> Additionally, adversaries may encapsulate the NTLMv1/v2 hashes into various protocols, such as LDAP, SMB, MSSQL and HTTP, to expand and use multiple services with the valid NTLM response. </p><p>Several tools may be used to poison name services within local networks such as NBNSpoof, Metasploit, and <a href="/software/S0174">Responder</a>.<span onclick=scrollToRef('scite-5') id="scite-ref-5-a" class="scite-citeref-number" title="Nomex. (2014, February 7). NBNSpoof. Retrieved November 17, 2017."data-reference="GitHub NBNSpoof"><sup><a href="https://github.com/nomex/nbnspoof" target="_blank" data-hasqtip="4" aria-describedby="qtip-4">[5]</a></sup></span><span onclick=scrollToRef('scite-6') id="scite-ref-6-a" class="scite-citeref-number" title="Francois, R. (n.d.). LLMNR Spoofer. Retrieved November 17, 2017."data-reference="Rapid7 LLMNR Spoofer"><sup><a href="https://www.rapid7.com/db/modules/auxiliary/spoof/llmnr/llmnr_response" target="_blank" data-hasqtip="5" aria-describedby="qtip-5">[6]</a></sup></span><span onclick=scrollToRef('scite-7') id="scite-ref-7-a" class="scite-citeref-number" title="Gaffie, L. (2016, August 25). Responder. Retrieved November 17, 2017."data-reference="GitHub Responder"><sup><a href="https://github.com/SpiderLabs/Responder" target="_blank" data-hasqtip="6" aria-describedby="qtip-6">[7]</a></sup></span></p>
@@ -442,7 +441,7 @@
                             <div class="tables-mobile">
                                 <table class="table table-bordered table-alternate mt-2">
                                     <thead>
-                                        <tr> 
+                                        <tr>
                                             <th scope="col">ID</th>
                                             <th scope="col">Mitigation</th>
                                             <th scope="col">Description</th>
@@ -575,7 +574,7 @@
 </table>
 </div>
 
-                
+
                             <h2 class="pt-3" id="references">References</h2>
 
         <div class="row">
@@ -795,7 +794,6 @@
         </div>
 
 
-    
                 </div>
             </div>
         </div>
@@ -856,7 +854,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v15.1&#013;Website  v4.1.4">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v15.1&#013;Website  v4.1.5">Website Changelog</a></u>
                                 </div>
                             </div>
                             <div class="row">
@@ -896,8 +894,8 @@
     <script src="/theme/scripts/popper.min.js"></script>
     <script src="/theme/scripts/bootstrap-select.min.js"></script>
     <script src="/theme/scripts/bootstrap.bundle.min.js"></script>
-    <script src="/theme/scripts/site.js?1387"></script>
-    <script src="/theme/scripts/settings.js?1010"></script>
+    <script src="/theme/scripts/site.js?2079"></script>
+    <script src="/theme/scripts/settings.js?404"></script>
     <script src="/theme/scripts/search_bundle.js"></script>
 
 <!--SCRIPTS-->

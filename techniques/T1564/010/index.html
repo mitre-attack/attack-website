@@ -135,6 +135,7 @@
     <div class="dropdown-menu " aria-labelledby="navbarDropdown">
                 <a class="dropdown-item" href="/resources/">Get Started</a>
                 <a class="dropdown-item" href="/resources/learn-more-about-attack/">Learn More about ATT&CK</a>
+                <a class="dropdown-item" href="/resources/attackcon/">ATT&CKcon</a>
                 <a class="dropdown-item" href="/resources/attack-data-and-tools/">ATT&CK Data & Tools</a>
                 <a class="dropdown-item" href="/resources/faq/">FAQ</a>
                 <a class="dropdown-item" href="/resources/engage-with-attack/contact/">Engage with ATT&CK</a>
@@ -206,7 +207,7 @@
                     <h1 id="">
                             <span id="subtechnique-parent-name">Hide Artifacts:</span>
                         Process Argument Spoofing
-                    </h1> 
+                    </h1>
 
                         <div class="row">
                             <div class="col-md-8">
@@ -223,8 +224,8 @@
                                                             <th scope="col">ID</th>
                                                             <th scope="col">Name</th>
                                                         </tr>
-                                                    </thead> 
-                                                    <tbody>                                          
+                                                    </thead>
+                                                    <tbody>
                                                             <tr>
                                                                     <td>
                                                                         <a href="/techniques/T1564/001/" class="subtechnique-table-item" data-subtechnique_id="T1564.001"> T1564.001 </a>
@@ -301,7 +302,7 @@
                                                                     <td class="active">
                                                                         T1564.010
                                                                     </td>
-                                                                    <td class="active"> 
+                                                                    <td class="active">
                                                                         Process Argument Spoofing
                                                                     </td>
                                                             </tr>
@@ -321,14 +322,12 @@
                                                                         <a href="/techniques/T1564/012/" class="subtechnique-table-item" data-subtechnique_id="T1564.012"> File/Path Exclusions </a>
                                                                     </td>
                                                             </tr>
-                               
-                                                    </tbody>                           
+                                                    </tbody>
                                                 </table>
                                             </div>
                                         </div>
                                     </div>
                                     <!--start-indexing-for-search-->
-   
 
                                     <div class="description-body">
                                                 <p>Adversaries may attempt to hide process command-line arguments by overwriting process memory. Process command-line arguments are stored in the process environment block (PEB), a data structure used by Windows to store various information about/used by a process. The PEB includes the process command-line arguments that are referenced when executing the process. When a process is created, defensive tools/sensors that monitor process creations may retrieve the process arguments from the PEB.<span onclick=scrollToRef('scite-1') id="scite-ref-1-a" class="scite-citeref-number" title="Microsoft. (2021, October 6). PEB structure (winternl.h). Retrieved November 19, 2021."data-reference="Microsoft PEB 2021"><sup><a href="https://docs.microsoft.com/en-us/windows/win32/api/winternl/ns-winternl-peb" target="_blank" data-hasqtip="0" aria-describedby="qtip-0">[1]</a></sup></span><span onclick=scrollToRef('scite-2') id="scite-ref-2-a" class="scite-citeref-number" title="Chester, A. (2019, January 28). How to Argue like Cobalt Strike. Retrieved November 19, 2021."data-reference="Xpn Argue Like Cobalt 2019"><sup><a href="https://blog.xpnsec.com/how-to-argue-like-cobalt-strike/" target="_blank" data-hasqtip="1" aria-describedby="qtip-1">[2]</a></sup></span></p><p>Adversaries may manipulate a process PEB to evade defenses. For example, <a href="/techniques/T1055/012">Process Hollowing</a> can be abused to spawn a process in a suspended state with benign arguments. After the process is spawned and the PEB is initialized (and process information is potentially logged by tools/sensors), adversaries may override the PEB to modify the command-line arguments (ex: using the <a href="/techniques/T1106">Native API</a> <code>WriteProcessMemory()</code> function) then resume process execution with malicious arguments.<span onclick=scrollToRef('scite-3') id="scite-ref-3-a" class="scite-citeref-number" title="Mudge, R. (2019, January 2). https://blog.cobaltstrike.com/2019/01/02/cobalt-strike-3-13-why-do-we-argue/. Retrieved November 19, 2021."data-reference="Cobalt Strike Arguments 2019"><sup><a href="https://blog.cobaltstrike.com/2019/01/02/cobalt-strike-3-13-why-do-we-argue/" target="_blank" data-hasqtip="2" aria-describedby="qtip-2">[3]</a></sup></span><span onclick=scrollToRef('scite-2') id="scite-ref-2-a" class="scite-citeref-number" title="Chester, A. (2019, January 28). How to Argue like Cobalt Strike. Retrieved November 19, 2021."data-reference="Xpn Argue Like Cobalt 2019"><sup><a href="https://blog.xpnsec.com/how-to-argue-like-cobalt-strike/" target="_blank" data-hasqtip="1" aria-describedby="qtip-1">[2]</a></sup></span><span onclick=scrollToRef('scite-4') id="scite-ref-4-a" class="scite-citeref-number" title="Daman, R. (2020, February 4). The return of the spoof part 2: Command line spoofing. Retrieved November 19, 2021."data-reference="Nviso Spoof Command Line 2020"><sup><a href="https://blog.nviso.eu/2020/02/04/the-return-of-the-spoof-part-2-command-line-spoofing/" target="_blank" data-hasqtip="3" aria-describedby="qtip-3">[4]</a></sup></span></p><p>Adversaries may also execute a process with malicious command-line arguments then patch the memory with benign arguments that may bypass subsequent process memory analysis.<span onclick=scrollToRef('scite-5') id="scite-ref-5-a" class="scite-citeref-number" title="McLellan, T.  and Moore, J. et al. (2021, April 29). UNC2447 SOMBRAT and FIVEHANDS Ransomware: A Sophisticated Financial Threat. Retrieved June 2, 2021."data-reference="FireEye FiveHands April 2021"><sup><a href="https://www.fireeye.com/blog/threat-research/2021/04/unc2447-sombrat-and-fivehands-ransomware-sophisticated-financial-threat.html" target="_blank" data-hasqtip="4" aria-describedby="qtip-4">[5]</a></sup></span></p><p>This behavior may also be combined with other tricks (such as <a href="/techniques/T1134/004">Parent PID Spoofing</a>) to manipulate or further evade process-based detections.</p>
@@ -489,7 +488,7 @@
 </table>
 </div>
 
-                
+
                             <h2 class="pt-3" id="references">References</h2>
 
         <div class="row">
@@ -589,7 +588,6 @@
         </div>
 
 
-    
                 </div>
             </div>
         </div>
@@ -650,7 +648,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v15.1&#013;Website  v4.1.4">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v15.1&#013;Website  v4.1.5">Website Changelog</a></u>
                                 </div>
                             </div>
                             <div class="row">
@@ -690,8 +688,8 @@
     <script src="/theme/scripts/popper.min.js"></script>
     <script src="/theme/scripts/bootstrap-select.min.js"></script>
     <script src="/theme/scripts/bootstrap.bundle.min.js"></script>
-    <script src="/theme/scripts/site.js?3348"></script>
-    <script src="/theme/scripts/settings.js?4795"></script>
+    <script src="/theme/scripts/site.js?3247"></script>
+    <script src="/theme/scripts/settings.js?150"></script>
     <script src="/theme/scripts/search_bundle.js"></script>
 
 <!--SCRIPTS-->

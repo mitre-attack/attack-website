@@ -135,6 +135,7 @@
     <div class="dropdown-menu " aria-labelledby="navbarDropdown">
                 <a class="dropdown-item" href="/resources/">Get Started</a>
                 <a class="dropdown-item" href="/resources/learn-more-about-attack/">Learn More about ATT&CK</a>
+                <a class="dropdown-item" href="/resources/attackcon/">ATT&CKcon</a>
                 <a class="dropdown-item" href="/resources/attack-data-and-tools/">ATT&CK Data & Tools</a>
                 <a class="dropdown-item" href="/resources/faq/">FAQ</a>
                 <a class="dropdown-item" href="/resources/engage-with-attack/contact/">Engage with ATT&CK</a>
@@ -206,7 +207,7 @@
                     <h1 id="">
                             <span id="subtechnique-parent-name">Modify System Image:</span>
                         Patch System Image
-                    </h1> 
+                    </h1>
 
                         <div class="row">
                             <div class="col-md-8">
@@ -223,13 +224,13 @@
                                                             <th scope="col">ID</th>
                                                             <th scope="col">Name</th>
                                                         </tr>
-                                                    </thead> 
-                                                    <tbody>                                          
+                                                    </thead>
+                                                    <tbody>
                                                             <tr>
                                                                     <td class="active">
                                                                         T1601.001
                                                                     </td>
-                                                                    <td class="active"> 
+                                                                    <td class="active">
                                                                         Patch System Image
                                                                     </td>
                                                             </tr>
@@ -241,14 +242,12 @@
                                                                         <a href="/techniques/T1601/002/" class="subtechnique-table-item" data-subtechnique_id="T1601.002"> Downgrade System Image </a>
                                                                     </td>
                                                             </tr>
-                               
-                                                    </tbody>                           
+                                                    </tbody>
                                                 </table>
                                             </div>
                                         </div>
                                     </div>
                                     <!--start-indexing-for-search-->
-   
 
                                     <div class="description-body">
                                                 <p>Adversaries may modify the operating system of a network device to introduce new capabilities or weaken existing defenses.<span onclick=scrollToRef('scite-1') id="scite-ref-1-a" class="scite-citeref-number" title="Sebastian 'topo' Muñiz. (2008, May). Killing the myth of Cisco IOS rootkits. Retrieved October 20, 2020."data-reference="Killing the myth of Cisco IOS rootkits"><sup><a href="https://drwho.virtadpt.net/images/killing_the_myth_of_cisco_ios_rootkits.pdf" target="_blank" data-hasqtip="0" aria-describedby="qtip-0">[1]</a></sup></span> <span onclick=scrollToRef('scite-2') id="scite-ref-2-a" class="scite-citeref-number" title="Ang Cui, Jatin Kataria, Salvatore J. Stolfo. (2011, August). Killing the myth of Cisco IOS diversity: recent advances in reliable shellcode design. Retrieved October 20, 2020."data-reference="Killing IOS diversity myth"><sup><a href="https://www.usenix.org/legacy/event/woot/tech/final_files/Cui.pdf" target="_blank" data-hasqtip="1" aria-describedby="qtip-1">[2]</a></sup></span> <span onclick=scrollToRef('scite-3') id="scite-ref-3-a" class="scite-citeref-number" title="George Nosenko. (2015). CISCO IOS SHELLCODE: ALL-IN-ONE. Retrieved October 21, 2020."data-reference="Cisco IOS Shellcode"><sup><a href="http://2015.zeronights.org/assets/files/05-Nosenko.pdf" target="_blank" data-hasqtip="2" aria-describedby="qtip-2">[3]</a></sup></span> <span onclick=scrollToRef('scite-4') id="scite-ref-4-a" class="scite-citeref-number" title="Felix 'FX' Lindner. (2008, February). Developments in Cisco IOS Forensics. Retrieved October 21, 2020."data-reference="Cisco IOS Forensics Developments"><sup><a href="https://www.recurity-labs.com/research/RecurityLabs_Developments_in_IOS_Forensics.pdf" target="_blank" data-hasqtip="3" aria-describedby="qtip-3">[4]</a></sup></span> <span onclick=scrollToRef('scite-5') id="scite-ref-5-a" class="scite-citeref-number" title="Graeme Neilson . (2009, August). Juniper Netscreen of the Dead. Retrieved October 20, 2020."data-reference="Juniper Netscreen of the Dead"><sup><a href="https://www.blackhat.com/presentations/bh-usa-09/NEILSON/BHUSA09-Neilson-NetscreenDead-SLIDES.pdf" target="_blank" data-hasqtip="4" aria-describedby="qtip-4">[5]</a></sup></span> Some network devices are built with a monolithic architecture, where the entire operating system and most of the functionality of the device is contained within a single file.  Adversaries may change this file in storage, to be loaded in a future boot, or in memory during runtime.</p><p>To change the operating system in storage, the adversary will typically use the standard procedures available to device operators. This may involve downloading a new file via typical protocols used on network devices, such as TFTP, FTP, SCP, or a console connection.  The original file may be overwritten, or a new file may be written alongside of it and the device reconfigured to boot to the compromised image.</p><p>To change the operating system in memory, the adversary typically can use one of two methods. In the first, the adversary would make use of native debug commands in the original, unaltered running operating system that allow them to directly modify the relevant memory addresses containing the running operating system.  This method typically requires administrative level access to the device.</p><p>In the second method for changing the operating system in memory, the adversary would make use of the boot loader. The boot loader is the first piece of software that loads when the device starts that, in turn, will launch the operating system.  Adversaries may use malicious code previously implanted in the boot loader, such as through the <a href="/techniques/T1542/004">ROMMONkit</a> method, to directly manipulate running operating system code in memory.  This malicious code in the bootloader provides the capability of direct memory manipulation to the adversary, allowing them to patch the live operating system during runtime.</p><p>By modifying the instructions stored in the system image file, adversaries may either weaken existing defenses or provision new capabilities that the device did not have before. Examples of existing defenses that can be impeded include encryption, via <a href="/techniques/T1600">Weaken Encryption</a>, authentication, via <a href="/techniques/T1556/004">Network Device Authentication</a>, and perimeter defenses, via <a href="/techniques/T1599">Network Boundary Bridging</a>.  Adding new capabilities for the adversary’s purpose include <a href="/techniques/T1056/001">Keylogging</a>, <a href="/techniques/T1090/003">Multi-hop Proxy</a>, and <a href="/techniques/T1205/001">Port Knocking</a>.</p><p>Adversaries may also compromise existing commands in the operating system to produce false output to mislead defenders.   When this method is used in conjunction with <a href="/techniques/T1601/002">Downgrade System Image</a>, one example of a compromised system command may include changing the output of the command that shows the version of the currently running operating system.  By patching the operating system, the adversary can change this command to instead display the original, higher revision number that they replaced through the system downgrade. </p><p>When the operating system is patched in storage, this can be achieved in either the resident storage (typically a form of flash memory, which is non-volatile) or via <a href="/techniques/T1542/005">TFTP Boot</a>. </p><p>When the technique is performed on the running operating system in memory and not on the stored copy, this technique will not survive across reboots.  However, live memory modification of the operating system can be combined with <a href="/techniques/T1542/004">ROMMONkit</a> to achieve persistence. </p>
@@ -364,7 +363,7 @@
                             <div class="tables-mobile">
                                 <table class="table table-bordered table-alternate mt-2">
                                     <thead>
-                                        <tr> 
+                                        <tr>
                                             <th scope="col">ID</th>
                                             <th scope="col">Mitigation</th>
                                             <th scope="col">Description</th>
@@ -478,7 +477,7 @@
 </table>
 </div>
 
-                
+
                             <h2 class="pt-3" id="references">References</h2>
 
         <div class="row">
@@ -638,7 +637,6 @@
         </div>
 
 
-    
                 </div>
             </div>
         </div>
@@ -699,7 +697,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v15.1&#013;Website  v4.1.4">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v15.1&#013;Website  v4.1.5">Website Changelog</a></u>
                                 </div>
                             </div>
                             <div class="row">
@@ -739,8 +737,8 @@
     <script src="/theme/scripts/popper.min.js"></script>
     <script src="/theme/scripts/bootstrap-select.min.js"></script>
     <script src="/theme/scripts/bootstrap.bundle.min.js"></script>
-    <script src="/theme/scripts/site.js?8901"></script>
-    <script src="/theme/scripts/settings.js?1016"></script>
+    <script src="/theme/scripts/site.js?6201"></script>
+    <script src="/theme/scripts/settings.js?7927"></script>
     <script src="/theme/scripts/search_bundle.js"></script>
 
 <!--SCRIPTS-->

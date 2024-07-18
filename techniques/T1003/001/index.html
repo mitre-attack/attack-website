@@ -135,6 +135,7 @@
     <div class="dropdown-menu " aria-labelledby="navbarDropdown">
                 <a class="dropdown-item" href="/resources/">Get Started</a>
                 <a class="dropdown-item" href="/resources/learn-more-about-attack/">Learn More about ATT&CK</a>
+                <a class="dropdown-item" href="/resources/attackcon/">ATT&CKcon</a>
                 <a class="dropdown-item" href="/resources/attack-data-and-tools/">ATT&CK Data & Tools</a>
                 <a class="dropdown-item" href="/resources/faq/">FAQ</a>
                 <a class="dropdown-item" href="/resources/engage-with-attack/contact/">Engage with ATT&CK</a>
@@ -206,7 +207,7 @@
                     <h1 id="">
                             <span id="subtechnique-parent-name">OS Credential Dumping:</span>
                         LSASS Memory
-                    </h1> 
+                    </h1>
 
                         <div class="row">
                             <div class="col-md-8">
@@ -223,13 +224,13 @@
                                                             <th scope="col">ID</th>
                                                             <th scope="col">Name</th>
                                                         </tr>
-                                                    </thead> 
-                                                    <tbody>                                          
+                                                    </thead>
+                                                    <tbody>
                                                             <tr>
                                                                     <td class="active">
                                                                         T1003.001
                                                                     </td>
-                                                                    <td class="active"> 
+                                                                    <td class="active">
                                                                         LSASS Memory
                                                                     </td>
                                                             </tr>
@@ -289,14 +290,12 @@
                                                                         <a href="/techniques/T1003/008/" class="subtechnique-table-item" data-subtechnique_id="T1003.008"> /etc/passwd and /etc/shadow </a>
                                                                     </td>
                                                             </tr>
-                               
-                                                    </tbody>                           
+                                                    </tbody>
                                                 </table>
                                             </div>
                                         </div>
                                     </div>
                                     <!--start-indexing-for-search-->
-   
 
                                     <div class="description-body">
                                                 <p>Adversaries may attempt to access credential material stored in the process memory of the Local Security Authority Subsystem Service (LSASS). After a user logs on, the system generates and stores a variety of credential materials in LSASS process memory. These credential materials can be harvested by an administrative user or SYSTEM and used to conduct <a href="https://attack.mitre.org/tactics/TA0008">Lateral Movement</a> using <a href="/techniques/T1550">Use Alternate Authentication Material</a>.</p><p>As well as in-memory techniques, the LSASS process memory can be dumped from the target host and analyzed on a local system.</p><p>For example, on the target host use procdump:</p><ul><li><code>procdump -ma lsass.exe lsass_dump</code></li></ul><p>Locally, mimikatz can be run using:</p><ul><li><code>sekurlsa::Minidump lsassdump.dmp</code></li><li><code>sekurlsa::logonPasswords</code></li></ul><p>Built-in Windows tools such as <code>comsvcs.dll</code> can also be used:</p><ul><li><code>rundll32.exe C:\Windows\System32\comsvcs.dll MiniDump PID  lsass.dmp full</code><span onclick=scrollToRef('scite-1') id="scite-ref-1-a" class="scite-citeref-number" title="Gruzweig, J. et al. (2021, March 2). Operation Exchange Marauder: Active Exploitation of Multiple Zero-Day Microsoft Exchange Vulnerabilities. Retrieved March 3, 2021."data-reference="Volexity Exchange Marauder March 2021"><sup><a href="https://www.volexity.com/blog/2021/03/02/active-exploitation-of-microsoft-exchange-zero-day-vulnerabilities/" target="_blank" data-hasqtip="0" aria-describedby="qtip-0">[1]</a></sup></span><span onclick=scrollToRef('scite-2') id="scite-ref-2-a" class="scite-citeref-number" title="Symantec. (2021, June 10). Attacks Against the Government Sector. Retrieved September 28, 2021."data-reference="Symantec Attacks Against Government Sector"><sup><a href="https://symantec.broadcom.com/hubfs/Attacks-Against-Government-Sector.pdf" target="_blank" data-hasqtip="1" aria-describedby="qtip-1">[2]</a></sup></span></li></ul><p>Similar to <a href="/techniques/T1546/012">Image File Execution Options Injection</a>, the silent process exit mechanism can be abused to create a memory dump of <code>lsass.exe</code> through Windows Error Reporting (<code>WerFault.exe</code>).<span onclick=scrollToRef('scite-3') id="scite-ref-3-a" class="scite-citeref-number" title="Gilboa, A. (2021, February 16). LSASS Memory Dumps are Stealthier than Ever Before - Part 2. Retrieved December 27, 2023."data-reference="Deep Instinct LSASS"><sup><a href="https://www.deepinstinct.com/blog/lsass-memory-dumps-are-stealthier-than-ever-before-part-2" target="_blank" data-hasqtip="2" aria-describedby="qtip-2">[3]</a></sup></span></p><p>Windows Security Support Provider (SSP) DLLs are loaded into LSASS process at system start. Once loaded into the LSA, SSP DLLs have access to encrypted and plaintext passwords that are stored in Windows, such as any logged-on user's Domain password or smart card PINs. The SSP configuration is stored in two Registry keys: <code>HKLM\SYSTEM\CurrentControlSet\Control\Lsa\Security Packages</code> and <code>HKLM\SYSTEM\CurrentControlSet\Control\Lsa\OSConfig\Security Packages</code>. An adversary may modify these Registry keys to add new SSPs, which will be loaded the next time the system boots, or when the AddSecurityPackage Windows API function is called.<span onclick=scrollToRef('scite-4') id="scite-ref-4-a" class="scite-citeref-number" title="Graeber, M. (2014, October). Analysis of Malicious Security Support Provider DLLs. Retrieved March 1, 2017."data-reference="Graeber 2014"><sup><a href="http://docplayer.net/20839173-Analysis-of-malicious-security-support-provider-dlls.html" target="_blank" data-hasqtip="3" aria-describedby="qtip-3">[4]</a></sup></span></p><p>The following SSPs can be used to access credentials:</p><ul><li>Msv: Interactive logons, batch logons, and service logons are done through the MSV authentication package.</li><li>Wdigest: The Digest Authentication protocol is designed for use with Hypertext Transfer Protocol (HTTP) and Simple Authentication Security Layer (SASL) exchanges.<span onclick=scrollToRef('scite-5') id="scite-ref-5-a" class="scite-citeref-number" title="Wilson, B. (2016, April 18). The Importance of KB2871997 and KB2928120 for Credential Protection. Retrieved April 11, 2018."data-reference="TechNet Blogs Credential Protection"><sup><a href="https://blogs.technet.microsoft.com/askpfeplat/2016/04/18/the-importance-of-kb2871997-and-kb2928120-for-credential-protection/" target="_blank" data-hasqtip="4" aria-describedby="qtip-4">[5]</a></sup></span></li><li>Kerberos: Preferred for mutual client-server domain authentication in Windows 2000 and later.</li><li>CredSSP:  Provides SSO and Network Level Authentication for Remote Desktop Services.<span onclick=scrollToRef('scite-5') id="scite-ref-5-a" class="scite-citeref-number" title="Wilson, B. (2016, April 18). The Importance of KB2871997 and KB2928120 for Credential Protection. Retrieved April 11, 2018."data-reference="TechNet Blogs Credential Protection"><sup><a href="https://blogs.technet.microsoft.com/askpfeplat/2016/04/18/the-importance-of-kb2871997-and-kb2928120-for-credential-protection/" target="_blank" data-hasqtip="4" aria-describedby="qtip-4">[5]</a></sup></span></li></ul>
@@ -1154,7 +1153,7 @@
                             <div class="tables-mobile">
                                 <table class="table table-bordered table-alternate mt-2">
                                     <thead>
-                                        <tr> 
+                                        <tr>
                                             <th scope="col">ID</th>
                                             <th scope="col">Mitigation</th>
                                             <th scope="col">Description</th>
@@ -1366,7 +1365,7 @@
 </table>
 </div>
 
-                
+
                             <h2 class="pt-3" id="references">References</h2>
 
         <div class="row">
@@ -2618,7 +2617,6 @@
         </div>
 
 
-    
                 </div>
             </div>
         </div>
@@ -2679,7 +2677,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v15.1&#013;Website  v4.1.4">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v15.1&#013;Website  v4.1.5">Website Changelog</a></u>
                                 </div>
                             </div>
                             <div class="row">
@@ -2719,8 +2717,8 @@
     <script src="/theme/scripts/popper.min.js"></script>
     <script src="/theme/scripts/bootstrap-select.min.js"></script>
     <script src="/theme/scripts/bootstrap.bundle.min.js"></script>
-    <script src="/theme/scripts/site.js?5622"></script>
-    <script src="/theme/scripts/settings.js?7009"></script>
+    <script src="/theme/scripts/site.js?7618"></script>
+    <script src="/theme/scripts/settings.js?4537"></script>
     <script src="/theme/scripts/search_bundle.js"></script>
 
 <!--SCRIPTS-->

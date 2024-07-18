@@ -135,6 +135,7 @@
     <div class="dropdown-menu " aria-labelledby="navbarDropdown">
                 <a class="dropdown-item" href="/versions/v15/resources/">Get Started</a>
                 <a class="dropdown-item" href="/versions/v15/resources/learn-more-about-attack/">Learn More about ATT&CK</a>
+                <a class="dropdown-item" href="/versions/v15/resources/attackcon/">ATT&CKcon</a>
                 <a class="dropdown-item" href="/versions/v15/resources/attack-data-and-tools/">ATT&CK Data & Tools</a>
                 <a class="dropdown-item" href="/versions/v15/resources/faq/">FAQ</a>
                 <a class="dropdown-item" href="/versions/v15/resources/engage-with-attack/contact/">Engage with ATT&CK</a>
@@ -206,7 +207,7 @@
                     <h1 id="">
                             <span id="subtechnique-parent-name">Credentials from Password Stores:</span>
                         Windows Credential Manager
-                    </h1> 
+                    </h1>
 
                         <div class="row">
                             <div class="col-md-8">
@@ -223,8 +224,8 @@
                                                             <th scope="col">ID</th>
                                                             <th scope="col">Name</th>
                                                         </tr>
-                                                    </thead> 
-                                                    <tbody>                                          
+                                                    </thead>
+                                                    <tbody>
                                                             <tr>
                                                                     <td>
                                                                         <a href="/versions/v15/techniques/T1555/001/" class="subtechnique-table-item" data-subtechnique_id="T1555.001"> T1555.001 </a>
@@ -253,7 +254,7 @@
                                                                     <td class="active">
                                                                         T1555.004
                                                                     </td>
-                                                                    <td class="active"> 
+                                                                    <td class="active">
                                                                         Windows Credential Manager
                                                                     </td>
                                                             </tr>
@@ -273,14 +274,12 @@
                                                                         <a href="/versions/v15/techniques/T1555/006/" class="subtechnique-table-item" data-subtechnique_id="T1555.006"> Cloud Secrets Management Stores </a>
                                                                     </td>
                                                             </tr>
-                               
-                                                    </tbody>                           
+                                                    </tbody>
                                                 </table>
                                             </div>
                                         </div>
                                     </div>
                                     <!--start-indexing-for-search-->
-   
 
                                     <div class="description-body">
                                                 <p>Adversaries may acquire credentials from the Windows Credential Manager. The Credential Manager stores credentials for signing into websites, applications, and/or devices that request authentication through NTLM or Kerberos in Credential Lockers (previously known as Windows Vaults).<span onclick=scrollToRef('scite-1') id="scite-ref-1-a" class="scite-citeref-number" title="Microsoft. (2016, August 31). Cached and Stored Credentials Technical Overview. Retrieved November 24, 2020."data-reference="Microsoft Credential Manager store"><sup><a href="https://docs.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2012-r2-and-2012/hh994565(v=ws.11)#credential-manager-store" target="_blank" data-hasqtip="0" aria-describedby="qtip-0">[1]</a></sup></span><span onclick=scrollToRef('scite-2') id="scite-ref-2-a" class="scite-citeref-number" title="Microsoft. (2013, October 23). Credential Locker Overview. Retrieved November 24, 2020."data-reference="Microsoft Credential Locker"><sup><a href="https://docs.microsoft.com/en-us/previous-versions/windows/it-pro/windows-8.1-and-8/jj554668(v=ws.11)?redirectedfrom=MSDN" target="_blank" data-hasqtip="1" aria-describedby="qtip-1">[2]</a></sup></span></p><p>The Windows Credential Manager separates website credentials from application or network credentials in two lockers. As part of <a href="/versions/v15/techniques/T1555/003">Credentials from Web Browsers</a>, Internet Explorer and Microsoft Edge website credentials are managed by the Credential Manager and are stored in the Web Credentials locker. Application and network credentials are stored in the Windows Credentials locker.</p><p>Credential Lockers store credentials in encrypted <code>.vcrd</code> files, located under <code>%Systemdrive%\Users\\[Username]\AppData\Local\Microsoft\\[Vault/Credentials]\</code>. The encryption key can be found in a file named <code>Policy.vpol</code>, typically located in the same folder as the credentials.<span onclick=scrollToRef('scite-3') id="scite-ref-3-a" class="scite-citeref-number" title="Passcape. (n.d.). Windows Password Recovery - Vault Explorer and Decoder. Retrieved November 24, 2020."data-reference="passcape Windows Vault"><sup><a href="https://www.passcape.com/windows_password_recovery_vault_explorer" target="_blank" data-hasqtip="2" aria-describedby="qtip-2">[3]</a></sup></span><span onclick=scrollToRef('scite-4') id="scite-ref-4-a" class="scite-citeref-number" title="Arntz, P. (2016, March 30). The Windows Vault . Retrieved November 23, 2020."data-reference="Malwarebytes The Windows Vault"><sup><a href="https://blog.malwarebytes.com/101/2016/01/the-windows-vaults/" target="_blank" data-hasqtip="3" aria-describedby="qtip-3">[4]</a></sup></span></p><p>Adversaries may list credentials managed by the Windows Credential Manager through several mechanisms. <code>vaultcmd.exe</code> is a native Windows executable that can be used to enumerate credentials stored in the Credential Locker through a command-line interface. Adversaries may also gather credentials by directly reading files located inside of the Credential Lockers. Windows APIs, such as <code>CredEnumerateA</code>, may also be absued to list credentials managed by the Credential Manager.<span onclick=scrollToRef('scite-5') id="scite-ref-5-a" class="scite-citeref-number" title="Microsoft. (2018, December 5). CredEnumarateA function (wincred.h). Retrieved November 24, 2020."data-reference="Microsoft CredEnumerate"><sup><a href="https://docs.microsoft.com/en-us/windows/win32/api/wincred/nf-wincred-credenumeratea" target="_blank" data-hasqtip="4" aria-describedby="qtip-4">[5]</a></sup></span><span onclick=scrollToRef('scite-6') id="scite-ref-6-a" class="scite-citeref-number" title="Delpy, B. (2017, December 12). howto ~ credential manager saved credentials. Retrieved November 23, 2020."data-reference="Delpy Mimikatz Crendential Manager"><sup><a href="https://github.com/gentilkiwi/mimikatz/wiki/howto-~-credential-manager-saved-credentials" target="_blank" data-hasqtip="5" aria-describedby="qtip-5">[6]</a></sup></span></p><p>Adversaries may also obtain credentials from credential backups. Credential backups and restorations may be performed by running <code>rundll32.exe keymgr.dll KRShowKeyMgr</code> then selecting the "Back up..." button on the "Stored User Names and Passwords" GUI.</p><p>Password recovery tools may also obtain plain text passwords from the Credential Manager.<span onclick=scrollToRef('scite-4') id="scite-ref-4-a" class="scite-citeref-number" title="Arntz, P. (2016, March 30). The Windows Vault . Retrieved November 23, 2020."data-reference="Malwarebytes The Windows Vault"><sup><a href="https://blog.malwarebytes.com/101/2016/01/the-windows-vaults/" target="_blank" data-hasqtip="3" aria-describedby="qtip-3">[4]</a></sup></span></p>
@@ -538,7 +537,7 @@
                             <div class="tables-mobile">
                                 <table class="table table-bordered table-alternate mt-2">
                                     <thead>
-                                        <tr> 
+                                        <tr>
                                             <th scope="col">ID</th>
                                             <th scope="col">Mitigation</th>
                                             <th scope="col">Description</th>
@@ -635,7 +634,7 @@
 </table>
 </div>
 
-                
+
                             <h2 class="pt-3" id="references">References</h2>
 
         <div class="row">
@@ -891,7 +890,6 @@
         </div>
 
 
-    
                 </div>
             </div>
         </div>
@@ -952,7 +950,7 @@
                                         <u class="footer-link"><a href="/versions/v15/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3">
-                                    <u class="footer-link"><a href="/versions/v15/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v15.1&#013;Website  v4.1.4">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/versions/v15/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v15.1&#013;Website  v4.1.5">Website Changelog</a></u>
                                 </div>
                             </div>
                             <div class="row">
@@ -992,8 +990,8 @@
     <script src="/versions/v15/theme/scripts/popper.min.js"></script>
     <script src="/versions/v15/theme/scripts/bootstrap-select.min.js"></script>
     <script src="/versions/v15/theme/scripts/bootstrap.bundle.min.js"></script>
-    <script src="/versions/v15/theme/scripts/site.js?4966"></script>
-    <script src="/versions/v15/theme/scripts/settings.js?4306"></script>
+    <script src="/versions/v15/theme/scripts/site.js?5935"></script>
+    <script src="/versions/v15/theme/scripts/settings.js?2939"></script>
     <script src="/versions/v15/theme/scripts/search_bundle.js"></script>
 
 <!--SCRIPTS-->

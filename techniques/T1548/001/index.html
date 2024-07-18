@@ -135,6 +135,7 @@
     <div class="dropdown-menu " aria-labelledby="navbarDropdown">
                 <a class="dropdown-item" href="/resources/">Get Started</a>
                 <a class="dropdown-item" href="/resources/learn-more-about-attack/">Learn More about ATT&CK</a>
+                <a class="dropdown-item" href="/resources/attackcon/">ATT&CKcon</a>
                 <a class="dropdown-item" href="/resources/attack-data-and-tools/">ATT&CK Data & Tools</a>
                 <a class="dropdown-item" href="/resources/faq/">FAQ</a>
                 <a class="dropdown-item" href="/resources/engage-with-attack/contact/">Engage with ATT&CK</a>
@@ -206,7 +207,7 @@
                     <h1 id="">
                             <span id="subtechnique-parent-name">Abuse Elevation Control Mechanism:</span>
                         Setuid and Setgid
-                    </h1> 
+                    </h1>
 
                         <div class="row">
                             <div class="col-md-8">
@@ -223,13 +224,13 @@
                                                             <th scope="col">ID</th>
                                                             <th scope="col">Name</th>
                                                         </tr>
-                                                    </thead> 
-                                                    <tbody>                                          
+                                                    </thead>
+                                                    <tbody>
                                                             <tr>
                                                                     <td class="active">
                                                                         T1548.001
                                                                     </td>
-                                                                    <td class="active"> 
+                                                                    <td class="active">
                                                                         Setuid and Setgid
                                                                     </td>
                                                             </tr>
@@ -273,14 +274,12 @@
                                                                         <a href="/techniques/T1548/006/" class="subtechnique-table-item" data-subtechnique_id="T1548.006"> TCC Manipulation </a>
                                                                     </td>
                                                             </tr>
-                               
-                                                    </tbody>                           
+                                                    </tbody>
                                                 </table>
                                             </div>
                                         </div>
                                     </div>
                                     <!--start-indexing-for-search-->
-   
 
                                     <div class="description-body">
                                                 <p>An adversary may abuse configurations where an application has the setuid or setgid bits set in order to get code running in a different (and possibly more privileged) user’s context. On Linux or macOS, when the setuid or setgid bits are set for an application binary, the application will run with the privileges of the owning user or group respectively.<span onclick=scrollToRef('scite-1') id="scite-ref-1-a" class="scite-citeref-number" title="Michael Kerrisk. (2017, September 15). Linux Programmer's Manual. Retrieved September 21, 2018."data-reference="setuid man page"><sup><a href="http://man7.org/linux/man-pages/man2/setuid.2.html" target="_blank" data-hasqtip="0" aria-describedby="qtip-0">[1]</a></sup></span> Normally an application is run in the current user’s context, regardless of which user or group owns the application. However, there are instances where programs need to be executed in an elevated context to function properly, but the user running them may not have the specific required privileges.</p><p>Instead of creating an entry in the sudoers file, which must be done by root, any user can specify the setuid or setgid flag to be set for their own applications (i.e. <a href="/techniques/T1222/002">Linux and Mac File and Directory Permissions Modification</a>). The <code>chmod</code> command can set these bits with bitmasking, <code>chmod 4777 [file]</code> or via shorthand naming, <code>chmod u+s [file]</code>. This will enable the setuid bit. To enable the setgid bit, <code>chmod 2775</code> and <code>chmod g+s</code> can be used.</p><p>Adversaries can use this mechanism on their own malware to make sure they're able to execute in elevated contexts in the future.<span onclick=scrollToRef('scite-2') id="scite-ref-2-a" class="scite-citeref-number" title="Marc-Etienne M.Leveille. (2016, July 6). New OSX/Keydnap malware is hungry for credentials. Retrieved July 3, 2017."data-reference="OSX Keydnap malware"><sup><a href="https://www.welivesecurity.com/2016/07/06/new-osxkeydnap-malware-hungry-credentials/" target="_blank" data-hasqtip="1" aria-describedby="qtip-1">[2]</a></sup></span> This abuse is often part of a "shell escape" or other actions to bypass an execution environment with restricted permissions.</p><p>Alternatively, adversaries may choose to find and target vulnerable binaries with the setuid or setgid bits already enabled (i.e. <a href="/techniques/T1083">File and Directory Discovery</a>). The setuid and setguid bits are indicated with an "s" instead of an "x" when viewing a file's attributes via <code>ls -l</code>. The <code>find</code> command can also be used to search for such files. For example, <code>find / -perm +4000 2&gt;/dev/null</code> can be used to find files with setuid set and <code>find / -perm +2000 2&gt;/dev/null</code> may be used for setgid. Binaries that have these bits set may then be abused by adversaries.<span onclick=scrollToRef('scite-3') id="scite-ref-3-a" class="scite-citeref-number" title="Emilio Pinna, Andrea Cardaci. (n.d.). GTFOBins. Retrieved January 28, 2022."data-reference="GTFOBins Suid"><sup><a href="https://gtfobins.github.io/#+suid" target="_blank" data-hasqtip="2" aria-describedby="qtip-2">[3]</a></sup></span></p>
@@ -408,7 +407,7 @@
                             <div class="tables-mobile">
                                 <table class="table table-bordered table-alternate mt-2">
                                     <thead>
-                                        <tr> 
+                                        <tr>
                                             <th scope="col">ID</th>
                                             <th scope="col">Mitigation</th>
                                             <th scope="col">Description</th>
@@ -489,7 +488,7 @@
 </table>
 </div>
 
-                
+
                             <h2 class="pt-3" id="references">References</h2>
 
         <div class="row">
@@ -553,7 +552,6 @@
         </div>
 
 
-    
                 </div>
             </div>
         </div>
@@ -614,7 +612,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v15.1&#013;Website  v4.1.4">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v15.1&#013;Website  v4.1.5">Website Changelog</a></u>
                                 </div>
                             </div>
                             <div class="row">
@@ -654,8 +652,8 @@
     <script src="/theme/scripts/popper.min.js"></script>
     <script src="/theme/scripts/bootstrap-select.min.js"></script>
     <script src="/theme/scripts/bootstrap.bundle.min.js"></script>
-    <script src="/theme/scripts/site.js?7678"></script>
-    <script src="/theme/scripts/settings.js?502"></script>
+    <script src="/theme/scripts/site.js?6042"></script>
+    <script src="/theme/scripts/settings.js?5718"></script>
     <script src="/theme/scripts/search_bundle.js"></script>
 
 <!--SCRIPTS-->

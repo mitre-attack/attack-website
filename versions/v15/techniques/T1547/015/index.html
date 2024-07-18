@@ -135,6 +135,7 @@
     <div class="dropdown-menu " aria-labelledby="navbarDropdown">
                 <a class="dropdown-item" href="/versions/v15/resources/">Get Started</a>
                 <a class="dropdown-item" href="/versions/v15/resources/learn-more-about-attack/">Learn More about ATT&CK</a>
+                <a class="dropdown-item" href="/versions/v15/resources/attackcon/">ATT&CKcon</a>
                 <a class="dropdown-item" href="/versions/v15/resources/attack-data-and-tools/">ATT&CK Data & Tools</a>
                 <a class="dropdown-item" href="/versions/v15/resources/faq/">FAQ</a>
                 <a class="dropdown-item" href="/versions/v15/resources/engage-with-attack/contact/">Engage with ATT&CK</a>
@@ -206,7 +207,7 @@
                     <h1 id="">
                             <span id="subtechnique-parent-name">Boot or Logon Autostart Execution:</span>
                         Login Items
-                    </h1> 
+                    </h1>
 
                         <div class="row">
                             <div class="col-md-8">
@@ -223,8 +224,8 @@
                                                             <th scope="col">ID</th>
                                                             <th scope="col">Name</th>
                                                         </tr>
-                                                    </thead> 
-                                                    <tbody>                                          
+                                                    </thead>
+                                                    <tbody>
                                                             <tr>
                                                                     <td>
                                                                         <a href="/versions/v15/techniques/T1547/001/" class="subtechnique-table-item" data-subtechnique_id="T1547.001"> T1547.001 </a>
@@ -333,18 +334,16 @@
                                                                     <td class="active">
                                                                         T1547.015
                                                                     </td>
-                                                                    <td class="active"> 
+                                                                    <td class="active">
                                                                         Login Items
                                                                     </td>
                                                             </tr>
-                               
-                                                    </tbody>                           
+                                                    </tbody>
                                                 </table>
                                             </div>
                                         </div>
                                     </div>
                                     <!--start-indexing-for-search-->
-   
 
                                     <div class="description-body">
                                                 <p>Adversaries may add login items to execute upon user login to gain persistence or escalate privileges. Login items are applications, documents, folders, or server connections that are automatically launched when a user logs in.<span onclick=scrollToRef('scite-1') id="scite-ref-1-a" class="scite-citeref-number" title="Apple. (n.d.). Open items automatically when you log in on Mac. Retrieved October 1, 2021."data-reference="Open Login Items Apple"><sup><a href="https://support.apple.com/guide/mac-help/open-items-automatically-when-you-log-in-mh15189/mac" target="_blank" data-hasqtip="0" aria-describedby="qtip-0">[1]</a></sup></span> Login items can be added via a shared file list or Service Management Framework.<span onclick=scrollToRef('scite-2') id="scite-ref-2-a" class="scite-citeref-number" title="Apple. (2016, September 13). Adding Login Items. Retrieved July 11, 2017."data-reference="Adding Login Items"><sup><a href="https://developer.apple.com/library/content/documentation/MacOSX/Conceptual/BPSystemStartup/Chapters/CreatingLoginItems.html" target="_blank" data-hasqtip="1" aria-describedby="qtip-1">[2]</a></sup></span> Shared file list login items can be set using scripting languages such as <a href="/versions/v15/techniques/T1059/002">AppleScript</a>, whereas the Service Management Framework uses the API call <code>SMLoginItemSetEnabled</code>.</p><p>Login items installed using the Service Management Framework leverage <code>launchd</code>, are not visible in the System Preferences, and can only be removed by the application that created them.<span onclick=scrollToRef('scite-2') id="scite-ref-2-a" class="scite-citeref-number" title="Apple. (2016, September 13). Adding Login Items. Retrieved July 11, 2017."data-reference="Adding Login Items"><sup><a href="https://developer.apple.com/library/content/documentation/MacOSX/Conceptual/BPSystemStartup/Chapters/CreatingLoginItems.html" target="_blank" data-hasqtip="1" aria-describedby="qtip-1">[2]</a></sup></span><span onclick=scrollToRef('scite-3') id="scite-ref-3-a" class="scite-citeref-number" title="Tim Schroeder. (2013, April 21). SMLoginItemSetEnabled Demystified. Retrieved October 5, 2021."data-reference="SMLoginItemSetEnabled Schroeder 2013"><sup><a href="https://blog.timschroeder.net/2013/04/21/smloginitemsetenabled-demystified/" target="_blank" data-hasqtip="2" aria-describedby="qtip-2">[3]</a></sup></span> Login items created using a shared file list are visible in System Preferences, can hide the application when it launches, and are executed through LaunchServices, not launchd, to open applications, documents, or URLs without using Finder.<span onclick=scrollToRef('scite-4') id="scite-ref-4-a" class="scite-citeref-number" title="Apple. (n.d.). Launch Services. Retrieved October 5, 2021."data-reference="Launch Services Apple Developer"><sup><a href="https://developer.apple.com/documentation/coreservices/launch_services" target="_blank" data-hasqtip="3" aria-describedby="qtip-3">[4]</a></sup></span> Users and applications use login items to configure their user environment to launch commonly used services or applications, such as email, chat, and music applications.</p><p>Adversaries can utilize <a href="/versions/v15/techniques/T1059/002">AppleScript</a> and <a href="/versions/v15/techniques/T1106">Native API</a> calls to create a login item to spawn malicious executables.<span onclick=scrollToRef('scite-5') id="scite-ref-5-a" class="scite-citeref-number" title="hoakley. (2018, May 22). Running at startup: when to use a Login Item or a LaunchAgent/LaunchDaemon. Retrieved October 5, 2021."data-reference="ELC Running at startup"><sup><a href="https://eclecticlight.co/2018/05/22/running-at-startup-when-to-use-a-login-item-or-a-launchagent-launchdaemon/" target="_blank" data-hasqtip="4" aria-describedby="qtip-4">[5]</a></sup></span> Prior to version 10.5 on macOS, adversaries can add login items by using <a href="/versions/v15/techniques/T1059/002">AppleScript</a> to send an Apple events to the "System Events" process, which has an AppleScript dictionary for manipulating login items.<span onclick=scrollToRef('scite-6') id="scite-ref-6-a" class="scite-citeref-number" title="Apple. (n.d.). Login Items AE. Retrieved October 4, 2021."data-reference="Login Items AE"><sup><a href="https://developer.apple.com/library/archive/samplecode/LoginItemsAE/Introduction/Intro.html#//apple_ref/doc/uid/DTS10003788" target="_blank" data-hasqtip="5" aria-describedby="qtip-5">[6]</a></sup></span> Adversaries can use a command such as <code>tell application "System Events" to make login item at end with properties /path/to/executable</code>.<span onclick=scrollToRef('scite-7') id="scite-ref-7-a" class="scite-citeref-number" title="hoakley. (2021, September 16). How to run an app or tool at startup. Retrieved October 5, 2021."data-reference="Startup Items Eclectic"><sup><a href="https://eclecticlight.co/2021/09/16/how-to-run-an-app-or-tool-at-startup/" target="_blank" data-hasqtip="6" aria-describedby="qtip-6">[7]</a></sup></span><span onclick=scrollToRef('scite-8') id="scite-ref-8-a" class="scite-citeref-number" title="fluffybunny. (2019, July 9). OSX.Dok Analysis. Retrieved October 4, 2021."data-reference="hexed osx.dok analysis 2019"><sup><a href="http://www.hexed.in/2019/07/osxdok-analysis.html" target="_blank" data-hasqtip="7" aria-describedby="qtip-7">[8]</a></sup></span><span onclick=scrollToRef('scite-9') id="scite-ref-9-a" class="scite-citeref-number" title="kaloprominat. (2013, July 30). macos: manage add list remove login items apple script. Retrieved October 5, 2021."data-reference="Add List Remove Login Items Apple Script"><sup><a href="https://gist.github.com/kaloprominat/6111584" target="_blank" data-hasqtip="8" aria-describedby="qtip-8">[9]</a></sup></span> This command adds the path of the malicious executable to the login item file list located in <code>~/Library/Application Support/com.apple.backgroundtaskmanagementagent/backgrounditems.btm</code>.<span onclick=scrollToRef('scite-7') id="scite-ref-7-a" class="scite-citeref-number" title="hoakley. (2021, September 16). How to run an app or tool at startup. Retrieved October 5, 2021."data-reference="Startup Items Eclectic"><sup><a href="https://eclecticlight.co/2021/09/16/how-to-run-an-app-or-tool-at-startup/" target="_blank" data-hasqtip="6" aria-describedby="qtip-6">[7]</a></sup></span> Adversaries can also use login items to launch executables that can be used to control the victim system remotely or as a means to gain privilege escalation by prompting for user credentials.<span onclick=scrollToRef('scite-10') id="scite-ref-10-a" class="scite-citeref-number" title="Patrick Wardle. (n.d.). Mac Malware of 2017. Retrieved September 21, 2018."data-reference="objsee mac malware 2017"><sup><a href="https://objective-see.com/blog/blog_0x25.html" target="_blank" data-hasqtip="9" aria-describedby="qtip-9">[10]</a></sup></span><span onclick=scrollToRef('scite-11') id="scite-ref-11-a" class="scite-citeref-number" title="Ofer Caspi. (2017, May 4). OSX Malware is Catching Up, and it wants to Read Your HTTPS Traffic. Retrieved October 5, 2021."data-reference="CheckPoint Dok"><sup><a href="https://blog.checkpoint.com/2017/04/27/osx-malware-catching-wants-read-https-traffic/" target="_blank" data-hasqtip="10" aria-describedby="qtip-10">[11]</a></sup></span><span onclick=scrollToRef('scite-12') id="scite-ref-12-a" class="scite-citeref-number" title="Patrick Wardle. (2019, June 20). Burned by Fire(fox). Retrieved October 1, 2021."data-reference="objsee netwire backdoor 2019"><sup><a href="https://objective-see.com/blog/blog_0x44.html" target="_blank" data-hasqtip="11" aria-describedby="qtip-11">[12]</a></sup></span></p>
@@ -544,7 +543,7 @@
 </table>
 </div>
 
-                
+
                             <h2 class="pt-3" id="references">References</h2>
 
         <div class="row">
@@ -764,7 +763,6 @@
         </div>
 
 
-    
                 </div>
             </div>
         </div>
@@ -825,7 +823,7 @@
                                         <u class="footer-link"><a href="/versions/v15/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3">
-                                    <u class="footer-link"><a href="/versions/v15/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v15.1&#013;Website  v4.1.4">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/versions/v15/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v15.1&#013;Website  v4.1.5">Website Changelog</a></u>
                                 </div>
                             </div>
                             <div class="row">
@@ -865,8 +863,8 @@
     <script src="/versions/v15/theme/scripts/popper.min.js"></script>
     <script src="/versions/v15/theme/scripts/bootstrap-select.min.js"></script>
     <script src="/versions/v15/theme/scripts/bootstrap.bundle.min.js"></script>
-    <script src="/versions/v15/theme/scripts/site.js?6447"></script>
-    <script src="/versions/v15/theme/scripts/settings.js?8466"></script>
+    <script src="/versions/v15/theme/scripts/site.js?6818"></script>
+    <script src="/versions/v15/theme/scripts/settings.js?4764"></script>
     <script src="/versions/v15/theme/scripts/search_bundle.js"></script>
 
 <!--SCRIPTS-->

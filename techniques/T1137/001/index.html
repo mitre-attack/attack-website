@@ -135,6 +135,7 @@
     <div class="dropdown-menu " aria-labelledby="navbarDropdown">
                 <a class="dropdown-item" href="/resources/">Get Started</a>
                 <a class="dropdown-item" href="/resources/learn-more-about-attack/">Learn More about ATT&CK</a>
+                <a class="dropdown-item" href="/resources/attackcon/">ATT&CKcon</a>
                 <a class="dropdown-item" href="/resources/attack-data-and-tools/">ATT&CK Data & Tools</a>
                 <a class="dropdown-item" href="/resources/faq/">FAQ</a>
                 <a class="dropdown-item" href="/resources/engage-with-attack/contact/">Engage with ATT&CK</a>
@@ -206,7 +207,7 @@
                     <h1 id="">
                             <span id="subtechnique-parent-name">Office Application Startup:</span>
                         Office Template Macros
-                    </h1> 
+                    </h1>
 
                         <div class="row">
                             <div class="col-md-8">
@@ -223,13 +224,13 @@
                                                             <th scope="col">ID</th>
                                                             <th scope="col">Name</th>
                                                         </tr>
-                                                    </thead> 
-                                                    <tbody>                                          
+                                                    </thead>
+                                                    <tbody>
                                                             <tr>
                                                                     <td class="active">
                                                                         T1137.001
                                                                     </td>
-                                                                    <td class="active"> 
+                                                                    <td class="active">
                                                                         Office Template Macros
                                                                     </td>
                                                             </tr>
@@ -273,14 +274,12 @@
                                                                         <a href="/techniques/T1137/006/" class="subtechnique-table-item" data-subtechnique_id="T1137.006"> Add-ins </a>
                                                                     </td>
                                                             </tr>
-                               
-                                                    </tbody>                           
+                                                    </tbody>
                                                 </table>
                                             </div>
                                         </div>
                                     </div>
                                     <!--start-indexing-for-search-->
-   
 
                                     <div class="description-body">
                                                 <p>Adversaries may abuse Microsoft Office templates to obtain persistence on a compromised system. Microsoft Office contains templates that are part of common Office applications and are used to customize styles. The base templates within the application are used each time an application starts. <span onclick=scrollToRef('scite-1') id="scite-ref-1-a" class="scite-citeref-number" title="Microsoft. (n.d.). Change the Normal template (Normal.dotm). Retrieved July 3, 2017."data-reference="Microsoft Change Normal Template"><sup><a href="https://support.office.com/article/Change-the-Normal-template-Normal-dotm-06de294b-d216-47f6-ab77-ccb5166f98ea" target="_blank" data-hasqtip="0" aria-describedby="qtip-0">[1]</a></sup></span></p><p>Office Visual Basic for Applications (VBA) macros <span onclick=scrollToRef('scite-2') id="scite-ref-2-a" class="scite-citeref-number" title="Austin, J. (2017, June 6). Getting Started with VBA in Office. Retrieved July 3, 2017."data-reference="MSDN VBA in Office"><sup><a href="https://msdn.microsoft.com/en-us/vba/office-shared-vba/articles/getting-started-with-vba-in-office" target="_blank" data-hasqtip="1" aria-describedby="qtip-1">[2]</a></sup></span> can be inserted into the base template and used to execute code when the respective Office application starts in order to obtain persistence. Examples for both Word and Excel have been discovered and published. By default, Word has a Normal.dotm template created that can be modified to include a malicious macro. Excel does not have a template file created by default, but one can be added that will automatically be loaded.<span onclick=scrollToRef('scite-3') id="scite-ref-3-a" class="scite-citeref-number" title="Nelson, M. (2014, January 23). Maintaining Access with normal.dotm. Retrieved July 3, 2017."data-reference="enigma0x3 normal.dotm"><sup><a href="https://enigma0x3.net/2014/01/23/maintaining-access-with-normal-dotm/comment-page-1/" target="_blank" data-hasqtip="2" aria-describedby="qtip-2">[3]</a></sup></span><span onclick=scrollToRef('scite-4') id="scite-ref-4-a" class="scite-citeref-number" title="Hexacorn. (2017, April 17). Beyond good ol’ Run key, Part 62. Retrieved July 3, 2017."data-reference="Hexacorn Office Template Macros"><sup><a href="http://www.hexacorn.com/blog/2017/04/19/beyond-good-ol-run-key-part-62/" target="_blank" data-hasqtip="3" aria-describedby="qtip-3">[4]</a></sup></span> Shared templates may also be stored and pulled from remote locations.<span onclick=scrollToRef('scite-5') id="scite-ref-5-a" class="scite-citeref-number" title="Shukrun, S. (2019, June 2). Office Templates and GlobalDotName - A Stealthy Office Persistence Technique. Retrieved August 26, 2019."data-reference="GlobalDotName Jun 2019"><sup><a href="https://www.221bluestreet.com/post/office-templates-and-globaldotname-a-stealthy-office-persistence-technique" target="_blank" data-hasqtip="4" aria-describedby="qtip-4">[5]</a></sup></span> </p><p>Word Normal.dotm location:<br><code>C:\Users\&lt;username&gt;\AppData\Roaming\Microsoft\Templates\Normal.dotm</code></p><p>Excel Personal.xlsb location:<br><code>C:\Users\&lt;username&gt;\AppData\Roaming\Microsoft\Excel\XLSTART\PERSONAL.XLSB</code></p><p>Adversaries may also change the location of the base template to point to their own by hijacking the application's search order, e.g. Word 2016 will first look for Normal.dotm under <code>C:\Program Files (x86)\Microsoft Office\root\Office16\</code>, or by modifying the GlobalDotName registry key. By modifying the GlobalDotName registry key an adversary can specify an arbitrary location, file name, and file extension to use for the template that will be loaded on application startup. To abuse GlobalDotName, adversaries may first need to register the template as a trusted document or place it in a trusted location.<span onclick=scrollToRef('scite-5') id="scite-ref-5-a" class="scite-citeref-number" title="Shukrun, S. (2019, June 2). Office Templates and GlobalDotName - A Stealthy Office Persistence Technique. Retrieved August 26, 2019."data-reference="GlobalDotName Jun 2019"><sup><a href="https://www.221bluestreet.com/post/office-templates-and-globaldotname-a-stealthy-office-persistence-technique" target="_blank" data-hasqtip="4" aria-describedby="qtip-4">[5]</a></sup></span> </p><p>An adversary may need to enable macros to execute unrestricted depending on the system or enterprise security policy on use of macros.</p>
@@ -420,7 +419,7 @@
                             <div class="tables-mobile">
                                 <table class="table table-bordered table-alternate mt-2">
                                     <thead>
-                                        <tr> 
+                                        <tr>
                                             <th scope="col">ID</th>
                                             <th scope="col">Mitigation</th>
                                             <th scope="col">Description</th>
@@ -556,7 +555,7 @@
 </table>
 </div>
 
-                
+
                             <h2 class="pt-3" id="references">References</h2>
 
         <div class="row">
@@ -716,7 +715,6 @@
         </div>
 
 
-    
                 </div>
             </div>
         </div>
@@ -777,7 +775,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v15.1&#013;Website  v4.1.4">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v15.1&#013;Website  v4.1.5">Website Changelog</a></u>
                                 </div>
                             </div>
                             <div class="row">
@@ -817,8 +815,8 @@
     <script src="/theme/scripts/popper.min.js"></script>
     <script src="/theme/scripts/bootstrap-select.min.js"></script>
     <script src="/theme/scripts/bootstrap.bundle.min.js"></script>
-    <script src="/theme/scripts/site.js?5461"></script>
-    <script src="/theme/scripts/settings.js?6902"></script>
+    <script src="/theme/scripts/site.js?1952"></script>
+    <script src="/theme/scripts/settings.js?7152"></script>
     <script src="/theme/scripts/search_bundle.js"></script>
 
 <!--SCRIPTS-->

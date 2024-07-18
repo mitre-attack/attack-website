@@ -135,6 +135,7 @@
     <div class="dropdown-menu " aria-labelledby="navbarDropdown">
                 <a class="dropdown-item" href="/resources/">Get Started</a>
                 <a class="dropdown-item" href="/resources/learn-more-about-attack/">Learn More about ATT&CK</a>
+                <a class="dropdown-item" href="/resources/attackcon/">ATT&CKcon</a>
                 <a class="dropdown-item" href="/resources/attack-data-and-tools/">ATT&CK Data & Tools</a>
                 <a class="dropdown-item" href="/resources/faq/">FAQ</a>
                 <a class="dropdown-item" href="/resources/engage-with-attack/contact/">Engage with ATT&CK</a>
@@ -206,7 +207,7 @@
                     <h1 id="">
                             <span id="subtechnique-parent-name">Steal or Forge Kerberos Tickets:</span>
                         AS-REP Roasting
-                    </h1> 
+                    </h1>
 
                         <div class="row">
                             <div class="col-md-8">
@@ -223,8 +224,8 @@
                                                             <th scope="col">ID</th>
                                                             <th scope="col">Name</th>
                                                         </tr>
-                                                    </thead> 
-                                                    <tbody>                                          
+                                                    </thead>
+                                                    <tbody>
                                                             <tr>
                                                                     <td>
                                                                         <a href="/techniques/T1558/001/" class="subtechnique-table-item" data-subtechnique_id="T1558.001"> T1558.001 </a>
@@ -253,18 +254,16 @@
                                                                     <td class="active">
                                                                         T1558.004
                                                                     </td>
-                                                                    <td class="active"> 
+                                                                    <td class="active">
                                                                         AS-REP Roasting
                                                                     </td>
                                                             </tr>
-                               
-                                                    </tbody>                           
+                                                    </tbody>
                                                 </table>
                                             </div>
                                         </div>
                                     </div>
                                     <!--start-indexing-for-search-->
-   
 
                                     <div class="description-body">
                                                 <p>Adversaries may reveal credentials of accounts that have disabled Kerberos preauthentication by <a href="/techniques/T1110/002">Password Cracking</a> Kerberos messages.<span onclick=scrollToRef('scite-1') id="scite-ref-1-a" class="scite-citeref-number" title="HarmJ0y. (2017, January 17). Roasting AS-REPs. Retrieved August 24, 2020."data-reference="Harmj0y Roasting AS-REPs Jan 2017"><sup><a href="http://www.harmj0y.net/blog/activedirectory/roasting-as-reps/" target="_blank" data-hasqtip="0" aria-describedby="qtip-0">[1]</a></sup></span> </p><p>Preauthentication offers protection against offline <a href="/techniques/T1110/002">Password Cracking</a>. When enabled, a user requesting access to a resource initiates communication with the Domain Controller (DC) by sending an Authentication Server Request (AS-REQ) message with a timestamp that is encrypted with the hash of their password. If and only if the DC is able to successfully decrypt the timestamp with the hash of the user’s password, it will then send an Authentication Server Response (AS-REP) message that contains the Ticket Granting Ticket (TGT) to the user. Part of the AS-REP message is signed with the user’s password.<span onclick=scrollToRef('scite-2') id="scite-ref-2-a" class="scite-citeref-number" title="Sanyal, M.. (2014, March 18). Kerberos Pre-Authentication: Why It Should Not Be Disabled. Retrieved August 25, 2020."data-reference="Microsoft Kerberos Preauth 2014"><sup><a href="https://social.technet.microsoft.com/wiki/contents/articles/23559.kerberos-pre-authentication-why-it-should-not-be-disabled.aspx" target="_blank" data-hasqtip="1" aria-describedby="qtip-1">[2]</a></sup></span></p><p>For each account found without preauthentication, an adversary may send an AS-REQ message without the encrypted timestamp and receive an AS-REP message with TGT data which may be encrypted with an insecure algorithm such as RC4. The recovered encrypted data may be vulnerable to offline <a href="/techniques/T1110/002">Password Cracking</a> attacks similarly to <a href="/techniques/T1558/003">Kerberoasting</a> and expose plaintext credentials. <span onclick=scrollToRef('scite-1') id="scite-ref-1-a" class="scite-citeref-number" title="HarmJ0y. (2017, January 17). Roasting AS-REPs. Retrieved August 24, 2020."data-reference="Harmj0y Roasting AS-REPs Jan 2017"><sup><a href="http://www.harmj0y.net/blog/activedirectory/roasting-as-reps/" target="_blank" data-hasqtip="0" aria-describedby="qtip-0">[1]</a></sup></span><span onclick=scrollToRef('scite-3') id="scite-ref-3-a" class="scite-citeref-number" title="Jeff Warren. (2019, June 27). Cracking Active Directory Passwords with AS-REP Roasting. Retrieved August 24, 2020."data-reference="Stealthbits Cracking AS-REP Roasting Jun 2019"><sup><a href="https://blog.stealthbits.com/cracking-active-directory-passwords-with-as-rep-roasting/" target="_blank" data-hasqtip="2" aria-describedby="qtip-2">[3]</a></sup></span> </p><p>An account registered to a domain, with or without special privileges, can be abused to list all domain accounts that have preauthentication disabled by utilizing Windows tools like <a href="/techniques/T1059/001">PowerShell</a> with an LDAP filter. Alternatively, the adversary may send an AS-REQ message for each user. If the DC responds without errors, the account does not require preauthentication and the AS-REP message will already contain the encrypted data. <span onclick=scrollToRef('scite-1') id="scite-ref-1-a" class="scite-citeref-number" title="HarmJ0y. (2017, January 17). Roasting AS-REPs. Retrieved August 24, 2020."data-reference="Harmj0y Roasting AS-REPs Jan 2017"><sup><a href="http://www.harmj0y.net/blog/activedirectory/roasting-as-reps/" target="_blank" data-hasqtip="0" aria-describedby="qtip-0">[1]</a></sup></span><span onclick=scrollToRef('scite-3') id="scite-ref-3-a" class="scite-citeref-number" title="Jeff Warren. (2019, June 27). Cracking Active Directory Passwords with AS-REP Roasting. Retrieved August 24, 2020."data-reference="Stealthbits Cracking AS-REP Roasting Jun 2019"><sup><a href="https://blog.stealthbits.com/cracking-active-directory-passwords-with-as-rep-roasting/" target="_blank" data-hasqtip="2" aria-describedby="qtip-2">[3]</a></sup></span></p><p>Cracked hashes may enable <a href="https://attack.mitre.org/tactics/TA0003">Persistence</a>, <a href="https://attack.mitre.org/tactics/TA0004">Privilege Escalation</a>, and <a href="https://attack.mitre.org/tactics/TA0008">Lateral Movement</a> via access to <a href="/techniques/T1078">Valid Accounts</a>.<span onclick=scrollToRef('scite-4') id="scite-ref-4-a" class="scite-citeref-number" title="Medin, T. (2014, November). Attacking Kerberos - Kicking the Guard Dog of Hades. Retrieved March 22, 2018."data-reference="SANS Attacking Kerberos Nov 2014"><sup><a href="https://redsiege.com/kerberoast-slides" target="_blank" data-hasqtip="3" aria-describedby="qtip-3">[4]</a></sup></span></p>
@@ -394,7 +393,7 @@
                             <div class="tables-mobile">
                                 <table class="table table-bordered table-alternate mt-2">
                                     <thead>
-                                        <tr> 
+                                        <tr>
                                             <th scope="col">ID</th>
                                             <th scope="col">Mitigation</th>
                                             <th scope="col">Description</th>
@@ -472,7 +471,7 @@
 </table>
 </div>
 
-                
+
                             <h2 class="pt-3" id="references">References</h2>
 
         <div class="row">
@@ -596,7 +595,6 @@
         </div>
 
 
-    
                 </div>
             </div>
         </div>
@@ -657,7 +655,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v15.1&#013;Website  v4.1.4">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v15.1&#013;Website  v4.1.5">Website Changelog</a></u>
                                 </div>
                             </div>
                             <div class="row">
@@ -697,8 +695,8 @@
     <script src="/theme/scripts/popper.min.js"></script>
     <script src="/theme/scripts/bootstrap-select.min.js"></script>
     <script src="/theme/scripts/bootstrap.bundle.min.js"></script>
-    <script src="/theme/scripts/site.js?4511"></script>
-    <script src="/theme/scripts/settings.js?7258"></script>
+    <script src="/theme/scripts/site.js?6339"></script>
+    <script src="/theme/scripts/settings.js?4977"></script>
     <script src="/theme/scripts/search_bundle.js"></script>
 
 <!--SCRIPTS-->

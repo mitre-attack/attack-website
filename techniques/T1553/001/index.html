@@ -135,6 +135,7 @@
     <div class="dropdown-menu " aria-labelledby="navbarDropdown">
                 <a class="dropdown-item" href="/resources/">Get Started</a>
                 <a class="dropdown-item" href="/resources/learn-more-about-attack/">Learn More about ATT&CK</a>
+                <a class="dropdown-item" href="/resources/attackcon/">ATT&CKcon</a>
                 <a class="dropdown-item" href="/resources/attack-data-and-tools/">ATT&CK Data & Tools</a>
                 <a class="dropdown-item" href="/resources/faq/">FAQ</a>
                 <a class="dropdown-item" href="/resources/engage-with-attack/contact/">Engage with ATT&CK</a>
@@ -206,7 +207,7 @@
                     <h1 id="">
                             <span id="subtechnique-parent-name">Subvert Trust Controls:</span>
                         Gatekeeper Bypass
-                    </h1> 
+                    </h1>
 
                         <div class="row">
                             <div class="col-md-8">
@@ -223,13 +224,13 @@
                                                             <th scope="col">ID</th>
                                                             <th scope="col">Name</th>
                                                         </tr>
-                                                    </thead> 
-                                                    <tbody>                                          
+                                                    </thead>
+                                                    <tbody>
                                                             <tr>
                                                                     <td class="active">
                                                                         T1553.001
                                                                     </td>
-                                                                    <td class="active"> 
+                                                                    <td class="active">
                                                                         Gatekeeper Bypass
                                                                     </td>
                                                             </tr>
@@ -273,14 +274,12 @@
                                                                         <a href="/techniques/T1553/006/" class="subtechnique-table-item" data-subtechnique_id="T1553.006"> Code Signing Policy Modification </a>
                                                                     </td>
                                                             </tr>
-                               
-                                                    </tbody>                           
+                                                    </tbody>
                                                 </table>
                                             </div>
                                         </div>
                                     </div>
                                     <!--start-indexing-for-search-->
-   
 
                                     <div class="description-body">
                                                 <p>Adversaries may modify file attributes and subvert Gatekeeper functionality to evade user prompts and execute untrusted programs. Gatekeeper is a set of technologies that act as layer of Apple’s security model to ensure only trusted applications are executed on a host. Gatekeeper was built on top of File Quarantine in Snow Leopard (10.6, 2009) and has grown to include Code Signing, security policy compliance, Notarization, and more. Gatekeeper also treats applications running for the first time differently than reopened applications.<span onclick=scrollToRef('scite-1') id="scite-ref-1-a" class="scite-citeref-number" title="hoakley. (2020, October 29). Quarantine and the quarantine flag. Retrieved September 13, 2021."data-reference="TheEclecticLightCompany Quarantine and the flag"><sup><a href="https://eclecticlight.co/2020/10/29/quarantine-and-the-quarantine-flag/" target="_blank" data-hasqtip="0" aria-describedby="qtip-0">[1]</a></sup></span><span onclick=scrollToRef('scite-2') id="scite-ref-2-a" class="scite-citeref-number" title="How Notarization Works. (2020, August 28). How notarization works. Retrieved September 13, 2021."data-reference="TheEclecticLightCompany apple notarization "><sup><a href="https://eclecticlight.co/2020/08/28/how-notarization-works/" target="_blank" data-hasqtip="1" aria-describedby="qtip-1">[2]</a></sup></span></p><p>Based on an opt-in system, when files are downloaded an extended attribute (xattr) called <code>com.apple.quarantine</code> (also known as a quarantine flag) can be set on the file by the application performing the download. Launch Services opens the application in a suspended state. For first run applications with the quarantine flag set, Gatekeeper executes the following functions:</p><ol><li><p>Checks extended attribute – Gatekeeper checks for the quarantine flag, then provides an alert prompt to the user to allow or deny execution.<span onclick=scrollToRef('scite-3') id="scite-ref-3-a" class="scite-citeref-number" title="Eddie Lee. (2016, February 17). OceanLotus for OS X - an Application Bundle Pretending to be an Adobe Flash Update. Retrieved July 5, 2017."data-reference="OceanLotus for OS X"><sup><a href="https://www.alienvault.com/blogs/labs-research/oceanlotus-for-os-x-an-application-bundle-pretending-to-be-an-adobe-flash-update" target="_blank" data-hasqtip="2" aria-describedby="qtip-2">[3]</a></sup></span><span onclick=scrollToRef('scite-4') id="scite-ref-4-a" class="scite-citeref-number" title="Phil Stokes. (2021, February 16). 20 Common Tools & Techniques Used by macOS Threat Actors & Malware. Retrieved August 23, 2021."data-reference="20 macOS Common Tools and Techniques"><sup><a href="https://labs.sentinelone.com/20-common-tools-techniques-used-by-macos-threat-actors-malware/" target="_blank" data-hasqtip="3" aria-describedby="qtip-3">[4]</a></sup></span></p></li><li><p>Checks System Policies - Gatekeeper checks the system security policy, allowing execution of apps downloaded from either just the App Store or the App Store and identified developers.</p></li><li><p>Code Signing – Gatekeeper checks for a valid code signature from an Apple Developer ID.</p></li><li><p>Notarization - Using the <code>api.apple-cloudkit.com</code> API, Gatekeeper reaches out to Apple servers to verify or pull down the notarization ticket and ensure the ticket is not revoked. Users can override notarization, which will result in a prompt of executing an "unauthorized app" and the security policy will be modified.</p></li></ol><p>Adversaries can subvert one or multiple security controls within Gatekeeper checks through logic errors (e.g. <a href="/techniques/T1211">Exploitation for Defense Evasion</a>), unchecked file types, and external libraries. For example, prior to macOS 13 Ventura, code signing and notarization checks were only conducted on first launch, allowing adversaries to write malicious executables to previously opened applications in order to bypass Gatekeeper security checks.<span onclick=scrollToRef('scite-5') id="scite-ref-5-a" class="scite-citeref-number" title="Csaba Fitzl. (2021, June 29). GateKeeper - Not a Bypass (Again). Retrieved September 22, 2021."data-reference="theevilbit gatekeeper bypass 2021"><sup><a href="https://theevilbit.github.io/posts/gatekeeper_not_a_bypass/" target="_blank" data-hasqtip="4" aria-describedby="qtip-4">[5]</a></sup></span><span onclick=scrollToRef('scite-6') id="scite-ref-6-a" class="scite-citeref-number" title="Brandon Dalton. (2022, August 9). A bundle of nerves: Tweaking macOS security controls to thwart application bundle manipulation. Retrieved September 27, 2022."data-reference="Application Bundle Manipulation Brandon Dalton"><sup><a href="https://redcanary.com/blog/mac-application-bundles/" target="_blank" data-hasqtip="5" aria-describedby="qtip-5">[6]</a></sup></span></p><p>Applications and files loaded onto the system from a USB flash drive, optical disk, external hard drive, from a drive shared over the local network, or using the curl command may not set the quarantine flag. Additionally, it is possible to avoid setting the quarantine flag using <a href="/techniques/T1189">Drive-by Compromise</a>.</p>
@@ -450,7 +449,7 @@
                             <div class="tables-mobile">
                                 <table class="table table-bordered table-alternate mt-2">
                                     <thead>
-                                        <tr> 
+                                        <tr>
                                             <th scope="col">ID</th>
                                             <th scope="col">Mitigation</th>
                                             <th scope="col">Description</th>
@@ -547,7 +546,7 @@
 </table>
 </div>
 
-                
+
                             <h2 class="pt-3" id="references">References</h2>
 
         <div class="row">
@@ -707,7 +706,6 @@
         </div>
 
 
-    
                 </div>
             </div>
         </div>
@@ -768,7 +766,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v15.1&#013;Website  v4.1.4">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v15.1&#013;Website  v4.1.5">Website Changelog</a></u>
                                 </div>
                             </div>
                             <div class="row">
@@ -808,8 +806,8 @@
     <script src="/theme/scripts/popper.min.js"></script>
     <script src="/theme/scripts/bootstrap-select.min.js"></script>
     <script src="/theme/scripts/bootstrap.bundle.min.js"></script>
-    <script src="/theme/scripts/site.js?8277"></script>
-    <script src="/theme/scripts/settings.js?5970"></script>
+    <script src="/theme/scripts/site.js?7591"></script>
+    <script src="/theme/scripts/settings.js?7630"></script>
     <script src="/theme/scripts/search_bundle.js"></script>
 
 <!--SCRIPTS-->

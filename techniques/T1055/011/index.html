@@ -135,6 +135,7 @@
     <div class="dropdown-menu " aria-labelledby="navbarDropdown">
                 <a class="dropdown-item" href="/resources/">Get Started</a>
                 <a class="dropdown-item" href="/resources/learn-more-about-attack/">Learn More about ATT&CK</a>
+                <a class="dropdown-item" href="/resources/attackcon/">ATT&CKcon</a>
                 <a class="dropdown-item" href="/resources/attack-data-and-tools/">ATT&CK Data & Tools</a>
                 <a class="dropdown-item" href="/resources/faq/">FAQ</a>
                 <a class="dropdown-item" href="/resources/engage-with-attack/contact/">Engage with ATT&CK</a>
@@ -206,7 +207,7 @@
                     <h1 id="">
                             <span id="subtechnique-parent-name">Process Injection:</span>
                         Extra Window Memory Injection
-                    </h1> 
+                    </h1>
 
                         <div class="row">
                             <div class="col-md-8">
@@ -223,8 +224,8 @@
                                                             <th scope="col">ID</th>
                                                             <th scope="col">Name</th>
                                                         </tr>
-                                                    </thead> 
-                                                    <tbody>                                          
+                                                    </thead>
+                                                    <tbody>
                                                             <tr>
                                                                     <td>
                                                                         <a href="/techniques/T1055/001/" class="subtechnique-table-item" data-subtechnique_id="T1055.001"> T1055.001 </a>
@@ -285,7 +286,7 @@
                                                                     <td class="active">
                                                                         T1055.011
                                                                     </td>
-                                                                    <td class="active"> 
+                                                                    <td class="active">
                                                                         Extra Window Memory Injection
                                                                     </td>
                                                             </tr>
@@ -321,14 +322,12 @@
                                                                         <a href="/techniques/T1055/015/" class="subtechnique-table-item" data-subtechnique_id="T1055.015"> ListPlanting </a>
                                                                     </td>
                                                             </tr>
-                               
-                                                    </tbody>                           
+                                                    </tbody>
                                                 </table>
                                             </div>
                                         </div>
                                     </div>
                                     <!--start-indexing-for-search-->
-   
 
                                     <div class="description-body">
                                                 <p>Adversaries may inject malicious code into process via Extra Window Memory (EWM) in order to evade process-based defenses as well as possibly elevate privileges. EWM injection is a method of executing arbitrary code in the address space of a separate live process. </p><p>Before creating a window, graphical Windows-based processes must prescribe to or register a windows class, which stipulate appearance and behavior (via windows procedures, which are functions that handle input/output of data).<span onclick=scrollToRef('scite-1') id="scite-ref-1-a" class="scite-citeref-number" title="Microsoft. (n.d.). About Window Classes. Retrieved December 16, 2017."data-reference="Microsoft Window Classes"><sup><a href="https://msdn.microsoft.com/library/windows/desktop/ms633574.aspx" target="_blank" data-hasqtip="0" aria-describedby="qtip-0">[1]</a></sup></span> Registration of new windows classes can include a request for up to 40 bytes of EWM to be appended to the allocated memory of each instance of that class. This EWM is intended to store data specific to that window and has specific application programming interface (API) functions to set and get its value. <span onclick=scrollToRef('scite-2') id="scite-ref-2-a" class="scite-citeref-number" title="Microsoft. (n.d.). GetWindowLong function. Retrieved December 16, 2017."data-reference="Microsoft GetWindowLong function"><sup><a href="https://msdn.microsoft.com/library/windows/desktop/ms633584.aspx" target="_blank" data-hasqtip="1" aria-describedby="qtip-1">[2]</a></sup></span> <span onclick=scrollToRef('scite-3') id="scite-ref-3-a" class="scite-citeref-number" title="Microsoft. (n.d.). SetWindowLong function. Retrieved December 16, 2017."data-reference="Microsoft SetWindowLong function"><sup><a href="https://msdn.microsoft.com/library/windows/desktop/ms633591.aspx" target="_blank" data-hasqtip="2" aria-describedby="qtip-2">[3]</a></sup></span></p><p>Although small, the EWM is large enough to store a 32-bit pointer and is often used to point to a windows procedure. Malware may possibly utilize this memory location in part of an attack chain that includes writing code to shared sections of the process’s memory, placing a pointer to the code in EWM, then invoking execution by returning execution control to the address in the process’s EWM.</p><p>Execution granted through EWM injection may allow access to both the target process's memory and possibly elevated privileges. Writing payloads to shared sections also avoids the use of highly monitored API calls such as <code>WriteProcessMemory</code> and <code>CreateRemoteThread</code>.<span onclick=scrollToRef('scite-4') id="scite-ref-4-a" class="scite-citeref-number" title="Hosseini, A. (2017, July 18). Ten Process Injection Techniques: A Technical Survey Of Common And Trending Process Injection Techniques. Retrieved December 7, 2017."data-reference="Elastic Process Injection July 2017"><sup><a href="https://www.endgame.com/blog/technical-blog/ten-process-injection-techniques-technical-survey-common-and-trending-process" target="_blank" data-hasqtip="3" aria-describedby="qtip-3">[4]</a></sup></span> More sophisticated malware samples may also potentially bypass protection mechanisms such as data execution prevention (DEP) by triggering a combination of windows procedures and other system functions that will rewrite the malicious payload inside an executable portion of the target process.  <span onclick=scrollToRef('scite-5') id="scite-ref-5-a" class="scite-citeref-number" title="MalwareTech. (2013, August 13). PowerLoader Injection – Something truly amazing. Retrieved December 16, 2017."data-reference="MalwareTech Power Loader Aug 2013"><sup><a href="https://www.malwaretech.com/2013/08/powerloader-injection-something-truly.html" target="_blank" data-hasqtip="4" aria-describedby="qtip-4">[5]</a></sup></span> <span onclick=scrollToRef('scite-6') id="scite-ref-6-a" class="scite-citeref-number" title="Matrosov, A. (2013, March 19). Gapz and Redyms droppers based on Power Loader code. Retrieved December 16, 2017."data-reference="WeLiveSecurity Gapz and Redyms Mar 2013"><sup><a href="https://www.welivesecurity.com/2013/03/19/gapz-and-redyms-droppers-based-on-power-loader-code/" target="_blank" data-hasqtip="5" aria-describedby="qtip-5">[6]</a></sup></span></p><p>Running code in the context of another process may allow access to the process's memory, system/network resources, and possibly elevated privileges. Execution via EWM injection may also evade detection from security products since the execution is masked under a legitimate process. </p>
@@ -456,7 +455,7 @@
                             <div class="tables-mobile">
                                 <table class="table table-bordered table-alternate mt-2">
                                     <thead>
-                                        <tr> 
+                                        <tr>
                                             <th scope="col">ID</th>
                                             <th scope="col">Mitigation</th>
                                             <th scope="col">Description</th>
@@ -510,7 +509,7 @@
 </table>
 </div>
 
-                
+
                             <h2 class="pt-3" id="references">References</h2>
 
         <div class="row">
@@ -622,7 +621,6 @@
         </div>
 
 
-    
                 </div>
             </div>
         </div>
@@ -683,7 +681,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v15.1&#013;Website  v4.1.4">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v15.1&#013;Website  v4.1.5">Website Changelog</a></u>
                                 </div>
                             </div>
                             <div class="row">
@@ -723,8 +721,8 @@
     <script src="/theme/scripts/popper.min.js"></script>
     <script src="/theme/scripts/bootstrap-select.min.js"></script>
     <script src="/theme/scripts/bootstrap.bundle.min.js"></script>
-    <script src="/theme/scripts/site.js?6938"></script>
-    <script src="/theme/scripts/settings.js?8396"></script>
+    <script src="/theme/scripts/site.js?7342"></script>
+    <script src="/theme/scripts/settings.js?1892"></script>
     <script src="/theme/scripts/search_bundle.js"></script>
 
 <!--SCRIPTS-->

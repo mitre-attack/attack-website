@@ -135,6 +135,7 @@
     <div class="dropdown-menu " aria-labelledby="navbarDropdown">
                 <a class="dropdown-item" href="/resources/">Get Started</a>
                 <a class="dropdown-item" href="/resources/learn-more-about-attack/">Learn More about ATT&CK</a>
+                <a class="dropdown-item" href="/resources/attackcon/">ATT&CKcon</a>
                 <a class="dropdown-item" href="/resources/attack-data-and-tools/">ATT&CK Data & Tools</a>
                 <a class="dropdown-item" href="/resources/faq/">FAQ</a>
                 <a class="dropdown-item" href="/resources/engage-with-attack/contact/">Engage with ATT&CK</a>
@@ -204,11 +205,10 @@
                 <div class="container-fluid">
                     <h1 id="">
                         Forced Authentication
-                    </h1> 
+                    </h1>
 
                         <div class="row">
                             <div class="col-md-8">
-   
 
                                     <div class="description-body">
                                                 <p>Adversaries may gather credential material by invoking or forcing a user to automatically provide authentication information through a mechanism in which they can intercept.</p><p>The Server Message Block (SMB) protocol is commonly used in Windows networks for authentication and communication between systems for access to resources and file sharing. When a Windows system attempts to connect to an SMB resource it will automatically attempt to authenticate and send credential information for the current user to the remote system. <span onclick=scrollToRef('scite-1') id="scite-ref-1-a" class="scite-citeref-number" title="Wikipedia. (2017, December 16). Server Message Block. Retrieved December 21, 2017."data-reference="Wikipedia Server Message Block"><sup><a href="https://en.wikipedia.org/wiki/Server_Message_Block" target="_blank" data-hasqtip="0" aria-describedby="qtip-0">[1]</a></sup></span> This behavior is typical in enterprise environments so that users do not need to enter credentials to access network resources.</p><p>Web Distributed Authoring and Versioning (WebDAV) is also typically used by Windows systems as a backup protocol when SMB is blocked or fails. WebDAV is an extension of HTTP and will typically operate over TCP ports 80 and 443. <span onclick=scrollToRef('scite-2') id="scite-ref-2-a" class="scite-citeref-number" title="Stevens, D. (2017, November 13). WebDAV Traffic To Malicious Sites. Retrieved December 21, 2017."data-reference="Didier Stevens WebDAV Traffic"><sup><a href="https://blog.didierstevens.com/2017/11/13/webdav-traffic-to-malicious-sites/" target="_blank" data-hasqtip="1" aria-describedby="qtip-1">[2]</a></sup></span> <span onclick=scrollToRef('scite-3') id="scite-ref-3-a" class="scite-citeref-number" title="Microsoft. (n.d.). Managing WebDAV Security (IIS 6.0). Retrieved December 21, 2017."data-reference="Microsoft Managing WebDAV Security"><sup><a href="https://www.microsoft.com/technet/prodtechnol/WindowsServer2003/Library/IIS/4beddb35-0cba-424c-8b9b-a5832ad8e208.mspx" target="_blank" data-hasqtip="2" aria-describedby="qtip-2">[3]</a></sup></span></p><p>Adversaries may take advantage of this behavior to gain access to user account hashes through forced SMB/WebDAV authentication. An adversary can send an attachment to a user through spearphishing that contains a resource link to an external server controlled by the adversary (i.e. <a href="/techniques/T1221">Template Injection</a>), or place a specially crafted file on navigation path for privileged accounts (e.g. .SCF file placed on desktop) or on a publicly accessible share to be accessed by victim(s). When the user's system accesses the untrusted resource it will attempt authentication and send information, including the user's hashed credentials, over SMB to the adversary controlled server. <span onclick=scrollToRef('scite-4') id="scite-ref-4-a" class="scite-citeref-number" title="Dunning, J. (2016, August 1). Hashjacking. Retrieved December 21, 2017."data-reference="GitHub Hashjacking"><sup><a href="https://github.com/hob0/hashjacking" target="_blank" data-hasqtip="3" aria-describedby="qtip-3">[4]</a></sup></span> With access to the credential hash, an adversary can perform off-line <a href="/techniques/T1110">Brute Force</a> cracking to gain access to plaintext credentials. <span onclick=scrollToRef('scite-5') id="scite-ref-5-a" class="scite-citeref-number" title="Cylance. (2015, April 13). Redirect to SMB. Retrieved December 21, 2017."data-reference="Cylance Redirect to SMB"><sup><a href="https://www.cylance.com/content/dam/cylance/pdfs/white_papers/RedirectToSMB.pdf" target="_blank" data-hasqtip="4" aria-describedby="qtip-4">[5]</a></sup></span></p><p>There are several different ways this can occur. <span onclick=scrollToRef('scite-6') id="scite-ref-6-a" class="scite-citeref-number" title="Osanda Malith Jayathissa. (2017, March 24). Places of Interest in Stealing NetNTLM Hashes. Retrieved January 26, 2018."data-reference="Osanda Stealing NetNTLM Hashes"><sup><a href="https://osandamalith.com/2017/03/24/places-of-interest-in-stealing-netntlm-hashes/" target="_blank" data-hasqtip="5" aria-describedby="qtip-5">[6]</a></sup></span> Some specifics from in-the-wild use include:</p><ul><li>A spearphishing attachment containing a document with a resource that is automatically loaded when the document is opened (i.e. <a href="/techniques/T1221">Template Injection</a>). The document can include, for example, a request similar to <code>file[:]//[remote address]/Normal.dotm</code> to trigger the SMB request. <span onclick=scrollToRef('scite-7') id="scite-ref-7-a" class="scite-citeref-number" title="US-CERT. (2017, October 20). Alert (TA17-293A): Advanced Persistent Threat Activity Targeting Energy and Other Critical Infrastructure Sectors. Retrieved November 2, 2017."data-reference="US-CERT APT Energy Oct 2017"><sup><a href="https://www.us-cert.gov/ncas/alerts/TA17-293A" target="_blank" data-hasqtip="6" aria-describedby="qtip-6">[7]</a></sup></span></li><li>A modified .LNK or .SCF file with the icon filename pointing to an external reference such as <code>\[remote address]\pic.png</code> that will force the system to load the resource when the icon is rendered to repeatedly gather credentials. <span onclick=scrollToRef('scite-7') id="scite-ref-7-a" class="scite-citeref-number" title="US-CERT. (2017, October 20). Alert (TA17-293A): Advanced Persistent Threat Activity Targeting Energy and Other Critical Infrastructure Sectors. Retrieved November 2, 2017."data-reference="US-CERT APT Energy Oct 2017"><sup><a href="https://www.us-cert.gov/ncas/alerts/TA17-293A" target="_blank" data-hasqtip="6" aria-describedby="qtip-6">[7]</a></sup></span></li></ul>
@@ -346,7 +346,7 @@
                             <div class="tables-mobile">
                                 <table class="table table-bordered table-alternate mt-2">
                                     <thead>
-                                        <tr> 
+                                        <tr>
                                             <th scope="col">ID</th>
                                             <th scope="col">Mitigation</th>
                                             <th scope="col">Description</th>
@@ -461,7 +461,7 @@
 </table>
 </div>
 
-                
+
                             <h2 class="pt-3" id="references">References</h2>
 
         <div class="row">
@@ -621,7 +621,6 @@
         </div>
 
 
-    
                 </div>
             </div>
         </div>
@@ -682,7 +681,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v15.1&#013;Website  v4.1.4">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v15.1&#013;Website  v4.1.5">Website Changelog</a></u>
                                 </div>
                             </div>
                             <div class="row">
@@ -722,8 +721,8 @@
     <script src="/theme/scripts/popper.min.js"></script>
     <script src="/theme/scripts/bootstrap-select.min.js"></script>
     <script src="/theme/scripts/bootstrap.bundle.min.js"></script>
-    <script src="/theme/scripts/site.js?5736"></script>
-    <script src="/theme/scripts/settings.js?8408"></script>
+    <script src="/theme/scripts/site.js?4186"></script>
+    <script src="/theme/scripts/settings.js?1253"></script>
     <script src="/theme/scripts/search_bundle.js"></script>
 
 <!--SCRIPTS-->

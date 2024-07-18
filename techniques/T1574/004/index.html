@@ -135,6 +135,7 @@
     <div class="dropdown-menu " aria-labelledby="navbarDropdown">
                 <a class="dropdown-item" href="/resources/">Get Started</a>
                 <a class="dropdown-item" href="/resources/learn-more-about-attack/">Learn More about ATT&CK</a>
+                <a class="dropdown-item" href="/resources/attackcon/">ATT&CKcon</a>
                 <a class="dropdown-item" href="/resources/attack-data-and-tools/">ATT&CK Data & Tools</a>
                 <a class="dropdown-item" href="/resources/faq/">FAQ</a>
                 <a class="dropdown-item" href="/resources/engage-with-attack/contact/">Engage with ATT&CK</a>
@@ -206,7 +207,7 @@
                     <h1 id="">
                             <span id="subtechnique-parent-name">Hijack Execution Flow:</span>
                         Dylib Hijacking
-                    </h1> 
+                    </h1>
 
                         <div class="row">
                             <div class="col-md-8">
@@ -223,8 +224,8 @@
                                                             <th scope="col">ID</th>
                                                             <th scope="col">Name</th>
                                                         </tr>
-                                                    </thead> 
-                                                    <tbody>                                          
+                                                    </thead>
+                                                    <tbody>
                                                             <tr>
                                                                     <td>
                                                                         <a href="/techniques/T1574/001/" class="subtechnique-table-item" data-subtechnique_id="T1574.001"> T1574.001 </a>
@@ -245,7 +246,7 @@
                                                                     <td class="active">
                                                                         T1574.004
                                                                     </td>
-                                                                    <td class="active"> 
+                                                                    <td class="active">
                                                                         Dylib Hijacking
                                                                     </td>
                                                             </tr>
@@ -329,14 +330,12 @@
                                                                         <a href="/techniques/T1574/014/" class="subtechnique-table-item" data-subtechnique_id="T1574.014"> AppDomainManager </a>
                                                                     </td>
                                                             </tr>
-                               
-                                                    </tbody>                           
+                                                    </tbody>
                                                 </table>
                                             </div>
                                         </div>
                                     </div>
                                     <!--start-indexing-for-search-->
-   
 
                                     <div class="description-body">
                                                 <p>Adversaries may execute their own payloads by placing a malicious dynamic library (dylib) with an expected name in a path a victim application searches at runtime. The dynamic loader will try to find the dylibs based on the sequential order of the search paths. Paths to dylibs may be prefixed with <code>@rpath</code>, which allows developers to use relative paths to specify an array of search paths used at runtime based on the location of the executable.  Additionally, if weak linking is used, such as the <code>LC_LOAD_WEAK_DYLIB</code> function, an application will still execute even if an expected dylib is not present. Weak linking enables developers to run an application on multiple macOS versions as new APIs are added.</p><p>Adversaries may gain execution by inserting malicious dylibs with the name of the missing dylib in the identified path.<span onclick=scrollToRef('scite-1') id="scite-ref-1-a" class="scite-citeref-number" title="Patrick Wardle. (2019, July 2). Getting Root with Benign AppStore Apps. Retrieved March 31, 2021."data-reference="Wardle Dylib Hijack Vulnerable Apps"><sup><a href="https://objective-see.com/blog/blog_0x46.html" target="_blank" data-hasqtip="0" aria-describedby="qtip-0">[1]</a></sup></span><span onclick=scrollToRef('scite-2') id="scite-ref-2-a" class="scite-citeref-number" title="Patrick Wardle. (2015, March 1). Dylib Hijacking on OS X. Retrieved March 29, 2021."data-reference="Wardle Dylib Hijacking OSX 2015"><sup><a href="https://www.virusbulletin.com/uploads/pdf/magazine/2015/vb201503-dylib-hijacking.pdf" target="_blank" data-hasqtip="1" aria-describedby="qtip-1">[2]</a></sup></span><span onclick=scrollToRef('scite-3') id="scite-ref-3-a" class="scite-citeref-number" title="Wardle, P., Ross, C. (2017, September 21). Empire Project Dylib Hijack Vulnerability Scanner. Retrieved April 1, 2021."data-reference="Github EmpireProject HijackScanner"><sup><a href="https://github.com/EmpireProject/Empire/blob/master/lib/modules/python/situational_awareness/host/osx/HijackScanner.py" target="_blank" data-hasqtip="2" aria-describedby="qtip-2">[3]</a></sup></span><span onclick=scrollToRef('scite-4') id="scite-ref-4-a" class="scite-citeref-number" title="Wardle, P., Ross, C. (2018, April 8). EmpireProject Create Dylib Hijacker. Retrieved April 1, 2021."data-reference="Github EmpireProject CreateHijacker Dylib"><sup><a href="https://github.com/EmpireProject/Empire/blob/08cbd274bef78243d7a8ed6443b8364acd1fc48b/lib/modules/python/persistence/osx/CreateHijacker.py" target="_blank" data-hasqtip="3" aria-describedby="qtip-3">[4]</a></sup></span> Dylibs are loaded into an application's address space allowing the malicious dylib to inherit the application's privilege level and resources. Based on the application, this could result in privilege escalation and uninhibited network access. This method may also evade detection from security products since the execution is masked under a legitimate process.<span onclick=scrollToRef('scite-5') id="scite-ref-5-a" class="scite-citeref-number" title="Patrick Wardle. (2015). Writing Bad @$$ Malware for OS X. Retrieved July 10, 2017."data-reference="Writing Bad Malware for OSX"><sup><a href="https://www.blackhat.com/docs/us-15/materials/us-15-Wardle-Writing-Bad-A-Malware-For-OS-X.pdf" target="_blank" data-hasqtip="4" aria-describedby="qtip-4">[5]</a></sup></span><span onclick=scrollToRef('scite-6') id="scite-ref-6-a" class="scite-citeref-number" title="Patrick Wardle. (2020, August 5). The Art of Mac Malware Volume 0x1: Analysis. Retrieved March 19, 2021."data-reference="wardle artofmalware volume1"><sup><a href="https://taomm.org/vol1/pdfs.html" target="_blank" data-hasqtip="5" aria-describedby="qtip-5">[6]</a></sup></span><span onclick=scrollToRef('scite-7') id="scite-ref-7-a" class="scite-citeref-number" title="Amanda Rousseau. (2020, April 4). MacOS Dylib Injection Workshop. Retrieved March 29, 2021."data-reference="MalwareUnicorn macOS Dylib Injection MachO"><sup><a href="https://malwareunicorn.org/workshops/macos_dylib_injection.html#5" target="_blank" data-hasqtip="6" aria-describedby="qtip-6">[7]</a></sup></span></p>
@@ -452,7 +451,7 @@
                             <div class="tables-mobile">
                                 <table class="table table-bordered table-alternate mt-2">
                                     <thead>
-                                        <tr> 
+                                        <tr>
                                             <th scope="col">ID</th>
                                             <th scope="col">Mitigation</th>
                                             <th scope="col">Description</th>
@@ -533,7 +532,7 @@
 </table>
 </div>
 
-                
+
                             <h2 class="pt-3" id="references">References</h2>
 
         <div class="row">
@@ -657,7 +656,6 @@
         </div>
 
 
-    
                 </div>
             </div>
         </div>
@@ -718,7 +716,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v15.1&#013;Website  v4.1.4">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v15.1&#013;Website  v4.1.5">Website Changelog</a></u>
                                 </div>
                             </div>
                             <div class="row">
@@ -758,8 +756,8 @@
     <script src="/theme/scripts/popper.min.js"></script>
     <script src="/theme/scripts/bootstrap-select.min.js"></script>
     <script src="/theme/scripts/bootstrap.bundle.min.js"></script>
-    <script src="/theme/scripts/site.js?699"></script>
-    <script src="/theme/scripts/settings.js?1737"></script>
+    <script src="/theme/scripts/site.js?4124"></script>
+    <script src="/theme/scripts/settings.js?1232"></script>
     <script src="/theme/scripts/search_bundle.js"></script>
 
 <!--SCRIPTS-->

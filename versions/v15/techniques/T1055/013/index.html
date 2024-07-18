@@ -135,6 +135,7 @@
     <div class="dropdown-menu " aria-labelledby="navbarDropdown">
                 <a class="dropdown-item" href="/versions/v15/resources/">Get Started</a>
                 <a class="dropdown-item" href="/versions/v15/resources/learn-more-about-attack/">Learn More about ATT&CK</a>
+                <a class="dropdown-item" href="/versions/v15/resources/attackcon/">ATT&CKcon</a>
                 <a class="dropdown-item" href="/versions/v15/resources/attack-data-and-tools/">ATT&CK Data & Tools</a>
                 <a class="dropdown-item" href="/versions/v15/resources/faq/">FAQ</a>
                 <a class="dropdown-item" href="/versions/v15/resources/engage-with-attack/contact/">Engage with ATT&CK</a>
@@ -206,7 +207,7 @@
                     <h1 id="">
                             <span id="subtechnique-parent-name">Process Injection:</span>
                         Process Doppelgänging
-                    </h1> 
+                    </h1>
 
                         <div class="row">
                             <div class="col-md-8">
@@ -223,8 +224,8 @@
                                                             <th scope="col">ID</th>
                                                             <th scope="col">Name</th>
                                                         </tr>
-                                                    </thead> 
-                                                    <tbody>                                          
+                                                    </thead>
+                                                    <tbody>
                                                             <tr>
                                                                     <td>
                                                                         <a href="/versions/v15/techniques/T1055/001/" class="subtechnique-table-item" data-subtechnique_id="T1055.001"> T1055.001 </a>
@@ -301,7 +302,7 @@
                                                                     <td class="active">
                                                                         T1055.013
                                                                     </td>
-                                                                    <td class="active"> 
+                                                                    <td class="active">
                                                                         Process Doppelgänging
                                                                     </td>
                                                             </tr>
@@ -321,14 +322,12 @@
                                                                         <a href="/versions/v15/techniques/T1055/015/" class="subtechnique-table-item" data-subtechnique_id="T1055.015"> ListPlanting </a>
                                                                     </td>
                                                             </tr>
-                               
-                                                    </tbody>                           
+                                                    </tbody>
                                                 </table>
                                             </div>
                                         </div>
                                     </div>
                                     <!--start-indexing-for-search-->
-   
 
                                     <div class="description-body">
                                                 <p>Adversaries may inject malicious code into process via process doppelgänging in order to evade process-based defenses as well as possibly elevate privileges. Process doppelgänging is a method of executing arbitrary code in the address space of a separate live process. </p><p>Windows Transactional NTFS (TxF) was introduced in Vista as a method to perform safe file operations. <span onclick=scrollToRef('scite-1') id="scite-ref-1-a" class="scite-citeref-number" title="Microsoft. (n.d.). Transactional NTFS (TxF). Retrieved December 20, 2017."data-reference="Microsoft TxF"><sup><a href="https://msdn.microsoft.com/library/windows/desktop/bb968806.aspx" target="_blank" data-hasqtip="0" aria-describedby="qtip-0">[1]</a></sup></span> To ensure data integrity, TxF enables only one transacted handle to write to a file at a given time. Until the write handle transaction is terminated, all other handles are isolated from the writer and may only read the committed version of the file that existed at the time the handle was opened. <span onclick=scrollToRef('scite-2') id="scite-ref-2-a" class="scite-citeref-number" title="Microsoft. (n.d.). Basic TxF Concepts. Retrieved December 20, 2017."data-reference="Microsoft Basic TxF Concepts"><sup><a href="https://msdn.microsoft.com/library/windows/desktop/dd979526.aspx" target="_blank" data-hasqtip="1" aria-describedby="qtip-1">[2]</a></sup></span> To avoid corruption, TxF performs an automatic rollback if the system or application fails during a write transaction. <span onclick=scrollToRef('scite-3') id="scite-ref-3-a" class="scite-citeref-number" title="Microsoft. (n.d.). When to Use Transactional NTFS. Retrieved December 20, 2017."data-reference="Microsoft Where to use TxF"><sup><a href="https://msdn.microsoft.com/library/windows/desktop/aa365738.aspx" target="_blank" data-hasqtip="2" aria-describedby="qtip-2">[3]</a></sup></span></p><p>Although deprecated, the TxF application programming interface (API) is still enabled as of Windows 10. <span onclick=scrollToRef('scite-4') id="scite-ref-4-a" class="scite-citeref-number" title="Liberman, T. & Kogan, E. (2017, December 7). Lost in Transaction: Process Doppelgänging. Retrieved December 20, 2017."data-reference="BlackHat Process Doppelgänging Dec 2017"><sup><a href="https://www.blackhat.com/docs/eu-17/materials/eu-17-Liberman-Lost-In-Transaction-Process-Doppelganging.pdf" target="_blank" data-hasqtip="3" aria-describedby="qtip-3">[4]</a></sup></span></p><p>Adversaries may abuse TxF to a perform a file-less variation of <a href="/versions/v15/techniques/T1055">Process Injection</a>. Similar to <a href="/versions/v15/techniques/T1055/012">Process Hollowing</a>, process doppelgänging involves replacing the memory of a legitimate process, enabling the veiled execution of malicious code that may evade defenses and detection. Process doppelgänging's use of TxF also avoids the use of highly-monitored API functions such as <code>NtUnmapViewOfSection</code>, <code>VirtualProtectEx</code>, and <code>SetThreadContext</code>. <span onclick=scrollToRef('scite-4') id="scite-ref-4-a" class="scite-citeref-number" title="Liberman, T. & Kogan, E. (2017, December 7). Lost in Transaction: Process Doppelgänging. Retrieved December 20, 2017."data-reference="BlackHat Process Doppelgänging Dec 2017"><sup><a href="https://www.blackhat.com/docs/eu-17/materials/eu-17-Liberman-Lost-In-Transaction-Process-Doppelganging.pdf" target="_blank" data-hasqtip="3" aria-describedby="qtip-3">[4]</a></sup></span></p><p>Process Doppelgänging is implemented in 4 steps <span onclick=scrollToRef('scite-4') id="scite-ref-4-a" class="scite-citeref-number" title="Liberman, T. & Kogan, E. (2017, December 7). Lost in Transaction: Process Doppelgänging. Retrieved December 20, 2017."data-reference="BlackHat Process Doppelgänging Dec 2017"><sup><a href="https://www.blackhat.com/docs/eu-17/materials/eu-17-Liberman-Lost-In-Transaction-Process-Doppelganging.pdf" target="_blank" data-hasqtip="3" aria-describedby="qtip-3">[4]</a></sup></span>:</p><ul><li>Transact – Create a TxF transaction using a legitimate executable then overwrite the file with malicious code. These changes will be isolated and only visible within the context of the transaction.</li><li>Load – Create a shared section of memory and load the malicious executable.</li><li>Rollback – Undo changes to original executable, effectively removing malicious code from the file system.</li><li>Animate – Create a process from the tainted section of memory and initiate execution.</li></ul><p>This behavior will likely not result in elevated privileges since the injected process was spawned from (and thus inherits the security context) of the injecting process. However, execution via process doppelgänging may evade detection from security products since the execution is masked under a legitimate process. </p>
@@ -476,7 +475,7 @@
                             <div class="tables-mobile">
                                 <table class="table table-bordered table-alternate mt-2">
                                     <thead>
-                                        <tr> 
+                                        <tr>
                                             <th scope="col">ID</th>
                                             <th scope="col">Mitigation</th>
                                             <th scope="col">Description</th>
@@ -546,7 +545,7 @@
 </table>
 </div>
 
-                
+
                             <h2 class="pt-3" id="references">References</h2>
 
         <div class="row">
@@ -694,7 +693,6 @@
         </div>
 
 
-    
                 </div>
             </div>
         </div>
@@ -755,7 +753,7 @@
                                         <u class="footer-link"><a href="/versions/v15/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3">
-                                    <u class="footer-link"><a href="/versions/v15/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v15.1&#013;Website  v4.1.4">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/versions/v15/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v15.1&#013;Website  v4.1.5">Website Changelog</a></u>
                                 </div>
                             </div>
                             <div class="row">
@@ -795,8 +793,8 @@
     <script src="/versions/v15/theme/scripts/popper.min.js"></script>
     <script src="/versions/v15/theme/scripts/bootstrap-select.min.js"></script>
     <script src="/versions/v15/theme/scripts/bootstrap.bundle.min.js"></script>
-    <script src="/versions/v15/theme/scripts/site.js?8988"></script>
-    <script src="/versions/v15/theme/scripts/settings.js?2679"></script>
+    <script src="/versions/v15/theme/scripts/site.js?7107"></script>
+    <script src="/versions/v15/theme/scripts/settings.js?29"></script>
     <script src="/versions/v15/theme/scripts/search_bundle.js"></script>
 
 <!--SCRIPTS-->
