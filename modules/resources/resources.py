@@ -87,71 +87,25 @@ def generate_training_pages():
     # load training data
     with open(os.path.join(site_config.data_directory, "trainings.json"), "r", encoding="utf8") as f:
         trainings = json.load(f)
-    print(trainings)
 
-    # get markdown
-    training_md = resources_config.training_md
+    # Define a dictionary of training pages and their corresponding markdown templates
+    training_pages = {
+        "training": resources_config.training_md,
+        "training_cti": resources_config.training_cti_md,
+        "training_purple_teaming_fundamentals": resources_config.training_purple_teaming_fundamentals_md,
+        "training_attack_fundamentals": resources_config.training_attack_fundamentals_md,
+        "training_adversary_emulation": resources_config.training_adversary_emulation_md,
+        "training_access_tokens": resources_config.training_access_tokens_md,
+        "training_soc_assessments": resources_config.training_soc_assessments_md,
+        "training_threat_hunting": resources_config.training_threat_hunting_md,
+        "training_detection_engineering": resources_config.training_detection_engineering_md,
+    }
 
-    # write markdown to file
-    with open(os.path.join(site_config.resources_markdown_path, "training.md"), "w", encoding="utf8") as md_file:
-        md_file.write(training_md)
-
-    # CTI training
-    training_cti_md = resources_config.training_cti_md + json.dumps(trainings)
-
-    # write markdown to file
-    with open(os.path.join(site_config.resources_markdown_path, "training_cti.md"), "w", encoding="utf8") as md_file:
-        md_file.write(training_cti_md)
-    
-    # Purple teaming fundamentals training
-    training_purple_teaming_fundamentals_md = resources_config.training_purple_teaming_fundamentals_md + json.dumps(trainings)
-
-    # write markdown to file
-    with open(os.path.join(site_config.resources_markdown_path, "training_purple_teaming_fundamentals.md"), "w", encoding="utf8") as md_file:
-        md_file.write(training_purple_teaming_fundamentals_md)
-
-    # ATT&CK fundamentals training
-    training_attack_fundamentals_md = resources_config.training_attack_fundamentals_md + json.dumps(trainings)
-
-    # write markdown to file
-    with open(os.path.join(site_config.resources_markdown_path, "training_attack_fundamentals.md"), "w", encoding="utf8") as md_file:
-        md_file.write(training_attack_fundamentals_md)
-
-    # ATT&CK adversary emulation training
-    training_adversary_emulation_md = resources_config.training_adversary_emulation_md + json.dumps(trainings)
-
-    # write markdown to file
-    with open(os.path.join(site_config.resources_markdown_path, "training_adversary_emulation.md"), "w", encoding="utf8") as md_file:
-        md_file.write(training_adversary_emulation_md)
-
-    # ATT&CK access tokens technical primer training
-    training_access_tokens_md = resources_config.training_access_tokens_md + json.dumps(trainings)
-
-    # write markdown to file
-    with open(os.path.join(site_config.resources_markdown_path, "training_access_tokens.md"), "w", encoding="utf8") as md_file:
-        md_file.write(training_access_tokens_md)
-
-    # ATT&CK soc assessments training
-    training_soc_assessments_md = resources_config.training_soc_assessments_md + json.dumps(trainings)
-
-    # write markdown to file
-    with open(os.path.join(site_config.resources_markdown_path, "training_soc_assessments.md"), "w", encoding="utf8") as md_file:
-        md_file.write(training_soc_assessments_md)
-
-    # ATT&CK threat hunting training
-    training_threat_hunting_md = resources_config.training_threat_hunting_md + json.dumps(trainings)
-
-    # write markdown to file
-    with open(os.path.join(site_config.resources_markdown_path, "training_threat_hunting.md"), "w", encoding="utf8") as md_file:
-        md_file.write(training_threat_hunting_md)
-
-    # ATT&CK detection engineering training
-    training_detection_engineering_md = resources_config.training_detection_engineering_md + json.dumps(trainings)
-
-    # write markdown to file
-    with open(os.path.join(site_config.resources_markdown_path, "training_detection_engineering.md"), "w", encoding="utf8") as md_file:
-        md_file.write(training_detection_engineering_md)
-
+    # Generate markdown for each training page and write it to a file
+    for page_name, page_template in training_pages.items():
+        page_content = page_template + json.dumps(trainings)
+        with open(os.path.join(site_config.resources_markdown_path, f"{page_name}.md"), "w", encoding="utf8") as md_file:
+            md_file.write(page_content)
 
 def generate_brand_page():
     """Responsible for generating the markdown pages of the training pages."""
