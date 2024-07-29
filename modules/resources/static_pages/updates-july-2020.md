@@ -30,7 +30,7 @@ save_as: resources/updates/updates-july-2020/index.html
         <h3>Techniques</h3>
         <p><strong>Enterprise</strong></p>
         <p>
-            View enterprise technique updates in the ATT&CK Navigator <a href="https://mitre-attack.github.io/attack-navigator/enterprise/#layerURL=https%3A%2F%2Fraw.githubusercontent.com%2Fmitre-attack%2Fattack-navigator%2Fmaster%2Flayers%2Fdata%2Fupdate_layers%2FJuly_2020%2FJuly_2020_enterprise_attack.json" target="_blank">here</a>.
+            View enterprise technique updates in the ATT&CK Navigator <a href="https://mitre-attack.github.io/attack-navigator/#layerURL=https%3A%2F%2Fraw.githubusercontent.com%2Fmitre-attack%2Fattack-website%2Fmaster%2Fmodules%2Fresources%2Fdocs%2Frelease-layers-archive%2FJuly_2020_enterprise_attack.json" target="_blank">here</a>.
         </p>
         <p>New Techniques:</p>
         <ul>
@@ -661,7 +661,7 @@ save_as: resources/updates/updates-july-2020/index.html
         </ul>
         <p><strong>Mobile</strong></p>
         <p>
-            View mobile technique updates in the ATT&CK Navigator <a href="https://mitre-attack.github.io/attack-navigator/mobile/#layerURL=https%3A%2F%2Fraw.githubusercontent.com%2Fmitre-attack%2Fattack-navigator%2Fmaster%2Flayers%2Fdata%2Fupdate_layers%2FJuly_2020%2FJuly_2020_mobile_attack.json" target="_blank">here</a>.
+            View mobile technique updates in the ATT&CK Navigator <a href="https://mitre-attack.github.io/attack-navigator/#layerURL=https%3A%2F%2Fraw.githubusercontent.com%2Fmitre-attack%2Fattack-website%2Fmaster%2Fmodules%2Fresources%2Fdocs%2Frelease-layers-archive%2FJuly_2020_mobile_attack.json" target="_blank">here</a>.
         </p>
         <p>New Techniques:</p>
         <ul>
@@ -1361,7 +1361,7 @@ save_as: resources/updates/updates-july-2020/index.html
         <h3>Techniques</h3>
         <p><strong>Enterprise</strong></p>
         <p>
-            View enterprise technique updates in the ATT&CK Navigator <a href="https://mitre-attack.github.io/attack-navigator/enterprise/#layerURL=https%3A%2F%2Fraw.githubusercontent.com%2Fmitre-attack%2Fattack-navigator%2Fmaster%2Flayers%2Fdata%2Fupdate_layers%2FJuly_2020%2FJuly_2020_enterprise_attack_beta.json" target="_blank">here</a>.
+            View enterprise technique updates in the ATT&CK Navigator <a href="https://mitre-attack.github.io/attack-navigator/#layerURL=https%3A%2F%2Fraw.githubusercontent.com%2Fmitre-attack%2Fattack-website%2Fmaster%2Fmodules%2Fresources%2Fdocs%2Frelease-layers-archive%2FJuly_2020_enterprise_attack_beta.json" target="_blank">here</a>.
         </p>
         <p>New Techniques:</p>
         <ul>
@@ -1579,7 +1579,7 @@ save_as: resources/updates/updates-july-2020/index.html
         No changes</p>
         <p><strong>Mobile</strong></p>
         <p>
-            View mobile technique updates in the ATT&CK Navigator <a href="https://mitre-attack.github.io/attack-navigator/mobile/#layerURL=https%3A%2F%2Fraw.githubusercontent.com%2Fmitre-attack%2Fattack-navigator%2Fmaster%2Flayers%2Fdata%2Fupdate_layers%2FJuly_2020%2FJuly_2020_mobile_attack_beta.json" target="_blank">here</a>.
+            View mobile technique updates in the ATT&CK Navigator <a href="https://mitre-attack.github.io/attack-navigator/#layerURL=https%3A%2F%2Fraw.githubusercontent.com%2Fmitre-attack%2Fattack-website%2Fmaster%2Fmodules%2Fresources%2Fdocs%2Frelease-layers-archive%2FJuly_2020_mobile_attack_beta.json" target="_blank">here</a>.
         </p>
         <p>New Techniques:</p>
         <ul>
