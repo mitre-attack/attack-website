@@ -61,7 +61,6 @@ def generate_resources():
     generate_use_case_page()
     generate_sidebar_resources()
 
-
 def copy_docs(module_docs_path):
     """Move module specific docs into the website's content directory for pelican."""
     logger.info("Copying files to docs directory")
@@ -79,6 +78,12 @@ def copy_docs(module_docs_path):
             else:
                 shutil.copyfile(os.path.join(module_docs_path, doc), os.path.join(site_config.docs_dir, doc))
 
+def extract_youtube_id(url):
+    if '=' in url and '&' in url:
+        start = url.find('=') + 1
+        end = url.find('&', start)
+        return url[start:end]
+    return url
 
 def generate_training_pages():
     """Responsible for generating the markdown pages of the training pages."""
@@ -87,6 +92,12 @@ def generate_training_pages():
     # load training data
     with open(os.path.join(site_config.data_directory, "trainings.json"), "r", encoding="utf8") as f:
         trainings = json.load(f)
+
+    for training_main in trainings:
+        for module in trainings[training_main]:
+            if "lessons" in trainings[training_main][module]:
+                for lesson_idx in range(len(trainings[training_main][module]["lessons"])):
+                    trainings[training_main][module]["lessons"][lesson_idx]["img"] = extract_youtube_id(trainings[training_main][module]["lessons"][lesson_idx]["youtube"])
 
     # Define a dictionary of training pages and their corresponding markdown templates
     training_pages = {

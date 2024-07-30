@@ -50,16 +50,18 @@
                 </div>
                 <div class="mt-3">
                   <div class="resources-container">
-                    <a href="{{ training.video }}">
-                      <button type="button" class="slide-button">
-                        <span class="slide-button-text">
-                          <span> Video </span>
-                        </span>
-                        <span class="slide-button-icon">
-                          <i class="fa fa-external-link"></i>
-                        </span>
-                      </button>
-                    </a>
+                    {% if "youtube" in training %}
+                      <a href="{{ training.youtube }}">
+                        <button type="button" class="slide-button">
+                          <span class="slide-button-text">
+                            <span> Video </span>
+                          </span>
+                          <span class="slide-button-icon">
+                            <i class="fa fa-external-link"></i>
+                          </span>
+                        </button>
+                      </a>
+                    {% endif %}
                     {% if "slides" in training %}
                       <a href="{{ training.slides }}">
                         <button type="button" class="slide-button slide-button-secondary">
@@ -75,13 +77,34 @@
                   </div>
                 </div>
               </div>
-              <ul>
-                {% for lesson in training.lessons %}
-                <li>
-                  <a href="{{ lesson.video }}">{{ lesson.name }}</a>
-                </li>
+              <br>
+              <div class="container">
+                {% for lesson_group in training.lessons|batch(3, fill_with=None) %}
+                  <div class="row">
+                    {% for lesson in lesson_group %}
+                      {% if lesson is not none %}
+                        <div class="col-lg-4">
+                          <div>
+                            <div>
+                              <ytd-thumbnail>
+                                <a rel="null" href="{{ lesson.youtube }}">
+                                  <yt-image alt="">
+                                    <img alt="" style="background-color: transparent;" class="yt-core-image" src="https://i.ytimg.com/vi/{{ lesson.img }}/hqdefault.jpg?sqp=-oaymwEcCNACELwBSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&amp;rs=AOn4CLDCKsqGUdr4h92XGZHYFBZtQjKwpg">
+                                  </yt-image>
+                                </a>
+                              </ytd-thumbnail>
+                            </div>
+                          </div>
+                          <div>
+                            <a href="{{ lesson.youtube }}">{{ lesson.name }}</a>
+                            <p>{{ lesson.description }}</p>
+                          </div>
+                        </div>
+                      {% endif %}
+                    {% endfor %}
+                  </div>
                 {% endfor %}
-                </ul>
+              </div>
               {% for exercise in training.exercises %}
               <div class="mt-3">
                 <strong>{{ exercise.name }}</strong>
