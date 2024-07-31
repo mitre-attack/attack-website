@@ -65,7 +65,7 @@ We shifted priorities a bit this year to this effort because of the overwhelming
 
 **Enterprise**
 
-View enterprise technique updates in the ATT&CK Navigator [here](https://mitre-attack.github.io/attack-navigator/enterprise/#layerURL=https%3A%2F%2Fraw.githubusercontent.com%2Fmitre-attack%2Fattack-navigator%2Fmaster%2Flayers%2Fdata%2Fupdate_layers%2FOctober_2019_Updates_Enterprise.json).
+View enterprise technique updates in the ATT&CK Navigator [here](https://mitre-attack.github.io/attack-navigator/#layerURL=https%3A%2F%2Fraw.githubusercontent.com%2Fmitre-attack%2Fattack-website%2Fmaster%2Fmodules%2Fresources%2Fdocs%2Frelease-layers-archive%2FOctober_2019_Updates_Enterprise.json).
 
 New Techniques:
 
@@ -348,7 +348,7 @@ No changes
 
 **Mobile**
 
-View mobile technique updates in the ATT&CK Navigator [here](https://mitre-attack.github.io/attack-navigator/mobile/#layerURL=https%3A%2F%2Fraw.githubusercontent.com%2Fmitre-attack%2Fattack-navigator%2Fmaster%2Flayers%2Fdata%2Fupdate_layers%2FOctober_2019_Updates_Mobile.json).
+View mobile technique updates in the ATT&CK Navigator [here](https://mitre-attack.github.io/attack-navigator/#layerURL=https%3A%2F%2Fraw.githubusercontent.com%2Fmitre-attack%2Fattack-website%2Fmaster%2Fmodules%2Fresources%2Fdocs%2Frelease-layers-archive%2FOctober_2019_Updates_Mobile.json).
 
 New Techniques:
 
