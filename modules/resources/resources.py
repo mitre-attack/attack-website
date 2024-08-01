@@ -13,6 +13,7 @@ from modules import site_config, util
 
 from . import resources_config
 
+import urllib.parse
 
 def generate_resources():
     """Responsible for generating the resources pages."""
@@ -78,12 +79,17 @@ def copy_docs(module_docs_path):
             else:
                 shutil.copyfile(os.path.join(module_docs_path, doc), os.path.join(site_config.docs_dir, doc))
 
-def extract_youtube_id(url):
+def extract_video_id(url):
     if '=' in url and '&' in url:
         start = url.find('=') + 1
         end = url.find('&', start)
         return url[start:end]
     return url
+
+def extract_playlist_id(url):
+    parsed_url = urllib.parse.urlparse(url)
+    query_params = urllib.parse.parse_qs(parsed_url.query)
+    return query_params.get('list', [None])[0]
 
 def generate_training_pages():
     """Responsible for generating the markdown pages of the training pages."""
@@ -96,8 +102,15 @@ def generate_training_pages():
     for training_main in trainings:
         for module in trainings[training_main]:
             if "lessons" in trainings[training_main][module]:
-                for lesson_idx in range(len(trainings[training_main][module]["lessons"])):
-                    trainings[training_main][module]["lessons"][lesson_idx]["img"] = extract_youtube_id(trainings[training_main][module]["lessons"][lesson_idx]["youtube"])
+                if trainings[training_main][module]["is_youtube"]:
+                    # if videos are in a playlist
+                    if "playlist" in trainings[training_main][module] and trainings[training_main][module]["playlist"] == True:
+                        trainings[training_main][module]["first_video_id"] = extract_video_id(trainings[training_main][module]["lessons"][0]["youtube"])
+                        trainings[training_main][module]["playlist_id"] = extract_playlist_id(trainings[training_main][module]["lessons"][0]["youtube"])
+                    # if videos are not in a playlist
+                    else:
+                        for lesson_idx in range(len(trainings[training_main][module]["lessons"])):
+                            trainings[training_main][module]["lessons"][lesson_idx]["video_id"] = extract_video_id(trainings[training_main][module]["lessons"][lesson_idx]["youtube"])
 
     # Define a dictionary of training pages and their corresponding markdown templates
     training_pages = {

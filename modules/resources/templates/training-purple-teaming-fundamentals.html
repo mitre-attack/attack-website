@@ -79,6 +79,15 @@
               </div>
               <br>
               <div class="container">
+                {% if "playlist" in training and training.playlist and "is_youtube" in training and training.is_youtube %}
+                <iframe class="iframe-width"
+                  src="https://www.youtube.com/embed/{{ training.first_video_id }}?list={{ training.playlist_id }}"
+                  frameborder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
+                <div>
+                  {{ training.description }}
+                </div>
+                {% else %}
                 {% for lesson_group in training.lessons|batch(3, fill_with=None) %}
                 <div class="row">
                   {% for lesson in lesson_group %}
@@ -89,7 +98,7 @@
                         <a rel="null" href="{{ lesson.youtube }}">
                           <yt-image alt="">
                             <img alt="" style="background-color: transparent;" class="yt-core-image"
-                              src="https://i.ytimg.com/vi/{{ lesson.img }}/sddefault.jpg?sqp=-oaymwEcCNACELwBSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&amp;rs=AOn4CLDCKsqGUdr4h92XGZHYFBZtQjKwpg">
+                              src="https://i.ytimg.com/vi/{{ lesson.video_id }}/sddefault.jpg?sqp=-oaymwEcCNACELwBSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&amp;rs=AOn4CLDCKsqGUdr4h92XGZHYFBZtQjKwpg">
                           </yt-image>
                         </a>
                       </ytd-thumbnail>
@@ -103,6 +112,7 @@
                   {% endfor %}
                 </div>
                 {% endfor %}
+                {% endif %}
               </div>
               {% for exercise in training.exercises %}
               <div class="mt-3">
