@@ -1,3 +1,10 @@
+# v4.1.6 (2024-08-15)
+
+## Docs
+
+* Add updated ATT&CK poster on Getting Started page.
+* Update training pages to have embedded YouTube player.
+
 # v4.1.5 (2024-07-18)
 
 ## Misc
