@@ -11,11 +11,11 @@
 {% block innerright %}
 <!--stopindex-->
 <ol class="breadcrumb">
-    <li class="breadcrumb-item"><a href="/">Home</a></li>
-    <li class="breadcrumb-item"><a href="/resources">Resources</a></li>
-    <li class="breadcrumb-item"><a href="/resources/learn-more-about-attack">Learn More about ATT&amp;CK</a></li>
-    <li class="breadcrumb-item"><a href="/resources/learn-more-about-attack/training">Training</a></li>
-    <li class="breadcrumb-item">TTP-Based Threat Hunting and Detection Engineering</li>
+  <li class="breadcrumb-item"><a href="/">Home</a></li>
+  <li class="breadcrumb-item"><a href="/resources">Resources</a></li>
+  <li class="breadcrumb-item"><a href="/resources/learn-more-about-attack">Learn More about ATT&amp;CK</a></li>
+  <li class="breadcrumb-item"><a href="/resources/learn-more-about-attack/training">Training</a></li>
+  <li class="breadcrumb-item">TTP-Based Threat Hunting and Detection Engineering</li>
 </ol>
 
 <div class="container-fluid pb-3">
@@ -50,7 +50,8 @@
                 </div>
                 <div class="mt-3">
                   <div class="resources-container">
-                    <a href="{{ training.video }}">
+                    {% if "youtube" in training %}
+                    <a href="{{ training.youtube }}">
                       <button type="button" class="slide-button">
                         <span class="slide-button-text">
                           <span> Video </span>
@@ -60,35 +61,66 @@
                         </span>
                       </button>
                     </a>
+                    {% endif %}
                     {% if "slides" in training %}
-                      <a href="{{ training.slides }}">
-                        <button type="button" class="slide-button slide-button-secondary">
-                          <span class="slide-button-text">
-                            <span> Slides </span>
-                          </span>
-                          <span class="slide-button-icon">
-                            <i class="fa fa-external-link"></i>
-                          </span>
-                        </button>
-                      </a>
+                    <a href="{{ training.slides }}">
+                      <button type="button" class="slide-button slide-button-secondary">
+                        <span class="slide-button-text">
+                          <span> Slides </span>
+                        </span>
+                        <span class="slide-button-icon">
+                          <i class="fa fa-external-link"></i>
+                        </span>
+                      </button>
+                    </a>
                     {% endif %}
                   </div>
                 </div>
               </div>
-              <ul>
-              {% for lesson in training.lessons %}
-              <li>
-                <a href="{{ lesson.video }}">{{ lesson.name }}</a>
-              </li>
-              {% endfor %}
-              </ul>
+              <br>
+              <div class="container">
+                {% if "playlist" in training and training.playlist and "is_youtube" in training and training.is_youtube %}
+                <iframe class="iframe-width" title="Threat Hunting YouTube playlist"
+                  src="https://www.youtube.com/embed/{{ training.first_video_id }}?list={{ training.playlist_id }}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
+                <div>
+                  {{ training.description }}
+                </div>
+                {% else %}
+                {% for lesson_group in training.lessons|batch(3, fill_with=None) %}
+                <div class="row">
+                  {% for lesson in lesson_group %}
+                  {% if lesson is not none %}
+                  <div class="col-lg-4">
+                    <div>
+                      <ytd-thumbnail>
+                        <a rel="null" href="{{ lesson.youtube }}">
+                          <yt-image alt="">
+                            <img alt="" style="background-color: transparent;" class="yt-core-image"
+                              src="https://i.ytimg.com/vi/{{ lesson.video_id }}/sddefault.jpg?sqp=-oaymwEcCNACELwBSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&amp;rs=AOn4CLDCKsqGUdr4h92XGZHYFBZtQjKwpg">
+                          </yt-image>
+                        </a>
+                      </ytd-thumbnail>
+                    </div>
+                    <div>
+                      <a href="{{ lesson.youtube }}">{{ lesson.name }}</a>
+                      <p>{{ lesson.description }}</p>
+                    </div>
+                  </div>
+                  {% endif %}
+                  {% endfor %}
+                </div>
+                {% endfor %}
+                {% endif %}
+              </div>
               {% for exercise in training.exercises %}
               <div class="mt-3">
                 <strong>{{ exercise.name }}</strong>
                 <ul class="resource-links">
                   <li>
                     <p class="card-text border border-danger p-3 mb-2 rounded">
-                      <span class="font-weight-bold text-danger">Note:</span> This exercise is based on a previous version of ATT&amp;CK. We recommend using <a href="{{ exercise.software.url }}">{{ exercise.software.version }}</a> if you want to match the training.
+                      <span class="font-weight-bold text-danger">Note:</span> This exercise is based on a previous
+                      version of ATT&amp;CK. We recommend using <a href="{{ exercise.software.url }}">{{
+                        exercise.software.version }}</a> if you want to match the training.
                     </p>
                   </li>
                 </ul>

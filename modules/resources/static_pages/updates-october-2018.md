@@ -116,7 +116,7 @@ Technique Changes:
 * [Extra Window Memory Injection](/techniques/T1181)
 * [Process Injection](/techniques/T1055)
 
-*You can view the new and changed enterprise techniques in the ATT&CK Navigator by checking out the layer file we made available [here](https://mitre-attack.github.io/attack-navigator/enterprise/#layerURL=https%3A%2F%2Fraw.githubusercontent.com%2Fmitre-attack%2Fattack-navigator%2Fmaster%2Flayers%2Fdata%2Fupdate_layers%2FOctober_2018_Updates_Enterprise.json). You can also check out a preview of the changes below! New techniques are green, and changed techniques are yellow.*
+*You can view the new and changed enterprise techniques in the ATT&CK Navigator by checking out the layer file we made available [here](https://mitre-attack.github.io/attack-navigator/#layerURL=https%3A%2F%2Fraw.githubusercontent.com%2Fmitre-attack%2Fattack-website%2Fmaster%2Fmodules%2Fresources%2Fdocs%2Frelease-layers-archive%2FOctober_2018_Updates_Enterprise.json). You can also check out a preview of the changes below! New techniques are green, and changed techniques are yellow.*
 
 ![ATT&CK Navigator - October 2018 Updates](/theme/images/October2018NavigatorLayer.png){ width=85% }
 
@@ -144,7 +144,7 @@ Updated Content:
  
 [User interface spoofing](/techniques/T1411)
 
-*You can view the new and changed mobile techniques in the ATT&CK Navigator by checking out the layer file we made available [here](https://mitre.github.io/attack-navigator/mobile/#layerURL=https%3A%2F%2Fraw.githubusercontent.com%2Fmitre%2Fattack-navigator%2Fmaster%2Flayers%2Fdata%2Fupdate_layers%2FOctober_2018_Updates_Mobile.json).*
+*You can view the new and changed mobile techniques in the ATT&CK Navigator by checking out the layer file we made available [here](https://mitre-attack.github.io/attack-navigator/#layerURL=https%3A%2F%2Fraw.githubusercontent.com%2Fmitre-attack%2Fattack-website%2Fmaster%2Fmodules%2Fresources%2Fdocs%2Frelease-layers-archive%2FOctober_2018_Updates_Mobile.json).*
  
 #### Groups
  
