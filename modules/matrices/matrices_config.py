@@ -91,7 +91,7 @@ matrices = [
                 "matrix": "enterprise-attack",
                 "platforms": [],
                 "path": "enterprise/linux",
-                "descr": "Below are the tactics and techniques representing the MITRE ATT&CK<sup>&reg;</sup> Linux platform. The techniques in the below matrix are known to target hosts running Linux operating systems.",
+                "descr": "Below are the tactics and techniques representing the MITRE ATT&CK<sup>&reg;</sup> Linux platform. The techniques below are known to target hosts running Linux operating systems.",
                 "subtypes": [],
             },
             {
@@ -108,7 +108,7 @@ matrices = [
                         "matrix": "enterprise-attack",
                         "path": "enterprise/cloud/officesuite",
                         "platforms": [],
-                        "descr": "Below are the tactics and techniques representing the MITRE ATT&CK<sup>&reg;</sup> Office Suite platform. The techniques in the below matrix are known to target cloud-based office application suites such as Microsoft 365 and Google Workspace. Office application suites are SaaS platforms that typically combine email, chat, document management, and automation functionality for use in a collaborative environment.",
+                        "descr": "Below are the tactics and techniques representing the MITRE ATT&CK<sup>&reg;</sup> Office Suite platform. The techniques below are known to target cloud-based office application suites such as Microsoft 365 and Google Workspace. Office application suites are SaaS platforms that typically combine email, chat, document management, and automation functionality for use in a collaborative environment.",
                         "subtypes": [],
                     },
                     {
@@ -174,8 +174,7 @@ matrices = [
                 "matrix": "mobile-attack",
                 "path": "mobile/android",
                 "platforms": [],
-                "descr": "Below are the tactics and techniques representing the MITRE ATT&CK<sup>&reg;</sup> Android platform. The techniques below are known to target mobile devices running Android operating systems."
-                "The Matrices cover techniques involving device access and network-based effects that can be used by adversaries without device access. ",
+                "descr": "Below are the tactics and techniques representing the MITRE ATT&CK<sup>&reg;</sup> Android platform. The techniques below are known to target mobile devices running Android operating systems.",
                 "subtypes": [],
             },
             {
