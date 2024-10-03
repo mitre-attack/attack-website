@@ -50,7 +50,7 @@ matrices = [
             "Linux",
             "PRE",
             "Office Suite",
-            "Identity Providers",
+            "Identity Provider",
             "SaaS",
             "IaaS",
             "Network",
@@ -99,7 +99,7 @@ matrices = [
                 "type": "local",
                 "matrix": "enterprise-attack",
                 "path": "enterprise/cloud",
-                "platforms": ["Office Suite", "Identity Providers", "SaaS", "IaaS"],
+                "platforms": ["Office Suite", "Identity Provider", "SaaS", "IaaS"],
                 "descr": "Below are the tactics and techniques representing the MITRE ATT&CK<sup>&reg;</sup> cloud platforms.",
                 "subtypes": [
                     {
@@ -112,12 +112,12 @@ matrices = [
                         "subtypes": [],
                     },
                     {
-                        "name": "Identity Providers",
+                        "name": "Identity Provider",
                         "type": "local",
                         "matrix": "enterprise-attack",
-                        "path": "enterprise/cloud/identityproviders",
+                        "path": "enterprise/cloud/identityprovider",
                         "platforms": [],
-                        "descr": "Below are the tactics and techniques representing the MITRE ATT&CK<sup>&reg;</sup> Identity Providers platform. The techniques below are known to target cloud-based identity-as-a-service (IDaaS) platforms such as Microsoft Entra ID and Okta. Identity providers are SaaS platforms that support identity management and single sign-on across multiple applications.",
+                        "descr": "Below are the tactics and techniques representing the MITRE ATT&CK<sup>&reg;</sup> Identity Provider platform. The techniques below are known to target cloud-based identity-as-a-service (IDaaS) platforms such as Microsoft Entra ID and Okta. Identity providers are SaaS platforms that support identity management and single sign-on across multiple applications.",
                         "subtypes": [],
                     },
                     {
@@ -213,7 +213,7 @@ platform_to_path = {
     "macOS": "enterprise/macos",
     "Linux": "enterprise/linux",
     "Office Suite": "enterprise/cloud/officesuite",
-    "Identity Providers": "enterprise/cloud/identityproviders",
+    "Identity Provider": "enterprise/cloud/identityprovider",
     "SaaS": "enterprise/cloud/saas",
     "IaaS": "enterprise/cloud/iaas",
     "Network": "enterprise/network",
