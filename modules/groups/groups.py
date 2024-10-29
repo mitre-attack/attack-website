@@ -1,20 +1,18 @@
-from collections.abc import Iterable
 import json
 import os
-
-from modules import util
+from collections.abc import Iterable
+from typing import List
 
 from loguru import logger
 
-from . import groups_config
+from modules import util
+
 from .. import site_config
+from . import groups_config
 
 
 def generate_groups():
-    """Responsible for verifying group directory and starting off
-    group markdown generation
-    """
-
+    """Responsible for verifying group directory and starting off group markdown generation."""
     # Create content pages directory if does not already exist
     util.buildhelpers.create_content_pages_dir()
 
@@ -44,10 +42,7 @@ def generate_groups():
 
 
 def generate_markdown_files():
-    """Responsible for generating group index page and getting shared data for
-    all groups
-    """
-
+    """Responsible for generating group index page and getting shared data for all groups."""
     has_group = False
 
     group_list = util.relationshipgetters.get_group_list()
@@ -59,9 +54,6 @@ def generate_markdown_files():
 
     if has_group:
         data = {}
-
-        # Amount of characters per category
-        group_by = 2
 
         notes = util.relationshipgetters.get_objects_using_notes()
         side_menu_data = util.buildhelpers.get_side_menu_data("Groups", "/groups/", group_list_no_deprecated_revoked)
@@ -84,8 +76,7 @@ def generate_markdown_files():
 
 
 def generate_group_md(group, side_menu_data, notes):
-    """Responsible for generating markdown of all groups"""
-
+    """Responsible for generating markdown of all groups."""
     attack_id = util.buildhelpers.get_attack_id(group)
 
     if attack_id:
@@ -132,13 +123,13 @@ def generate_group_md(group, side_menu_data, notes):
 
         # Get navigator layers for this group
         layers = util.buildhelpers.get_navigator_layers(
-            data["name"],
-            data["attack_id"],
-            "group",
-            "used by",
-            data["version"] if "version" in data else None,
-            data["technique_table_data"],
-            inheritance,  # extend legend to include color coding for inherited techniques, if applicable
+            name=data["name"],
+            attack_id=data["attack_id"],
+            obj_type="group",
+            rel_type="used by",
+            version=data["version"] if "version" in data else None,
+            techniques_used=data["technique_table_data"],
+            inheritance=inheritance,  # extend legend to include color coding for inherited techniques, if applicable
         )
 
         data["layers"] = []
@@ -166,13 +157,19 @@ def generate_group_md(group, side_menu_data, notes):
             )
 
         # get campaign data for campaign table
-        data["campaign_data"], data["add_campaign_ref"] = get_campaign_table_data(group, reference_list)
+        data["campaign_data"], data["add_campaign_ref"] = get_campaign_table_data(
+            group=group, reference_list=reference_list
+        )
 
         # Grab software data for Software table
-        data["software_data"], data["add_software_ref"] = get_software_table_data(group, reference_list)
+        data["software_data"], data["add_software_ref"] = get_software_table_data(
+            group=group, reference_list=reference_list
+        )
 
         if group.get("aliases"):
-            data["alias_descriptions"] = util.buildhelpers.get_alias_data(group["aliases"][1:], ext_ref)
+            data["alias_descriptions"] = util.buildhelpers.get_alias_data(
+                alias_list=group["aliases"][1:], ext_refs=ext_ref
+            )
 
         data["citations"] = reference_list
 
@@ -192,8 +189,7 @@ def generate_group_md(group, side_menu_data, notes):
 
 
 def get_groups_table_data(group_list):
-    """Responsible for generating group table data for the group index page"""
-
+    """Responsible for generating group table data for the group index page."""
     groups_table_data = []
 
     # Now the table on the right, which is made up of group data
@@ -223,9 +219,9 @@ def get_groups_table_data(group_list):
 
 
 def get_techniques_used_by_group_data(group, reference_list):
-    """Given a group and its reference list, get the techniques used by the
-    group. Check the reference list for citations, if not found
-    in list, add it.
+    """Given a group and its reference list, get the techniques used by the group.
+
+    Check the reference list for citations, if not found in list, add it.
     """
     technique_list = {}
 
@@ -304,7 +300,7 @@ def get_campaign_table_data(group, reference_list):
                     reference_list = util.buildhelpers.update_reference_list(reference_list, campaign["object"])
 
                 if campaign["relationship"].get("description"):
-                    if reference == False:
+                    if reference is False:
                         reference = True
 
                     campaign_list[campaign_id]["desc"] = campaign["relationship"]["description"]
@@ -344,7 +340,7 @@ def get_campaign_table_data(group, reference_list):
 
 
 def get_software_table_data(group, reference_list):
-    """Given a group, get software table data"""
+    """Given a group, get software table data."""
     software_list = {}
     reference = False
 
@@ -361,7 +357,11 @@ def get_software_table_data(group, reference_list):
     ]
     # get malware or tools used by group
     software_list, reference = update_software_list(
-        tools_and_malware, software_list, reference_list, reference, group.get("id")
+        pairings=tools_and_malware,
+        software_list=software_list,
+        reference_list=reference_list,
+        reference=reference,
+        id=group.get("id"),
     )
 
     # campaigns attributed to groups
@@ -384,7 +384,11 @@ def get_software_table_data(group, reference_list):
             campaign_id = campaign["object"]["id"]
             # get malware or tools used by campaigns
             software_list, reference = update_software_list(
-                software_used_by_campaigns, software_list, reference_list, reference, campaign_id
+                pairings=software_used_by_campaigns,
+                software_list=software_list,
+                reference_list=reference_list,
+                reference=reference,
+                id=campaign_id,
             )
 
     # Moving it to an array because jinja does not like to loop through dictionaries
@@ -400,12 +404,36 @@ def get_software_table_data(group, reference_list):
     return data, reference
 
 
-def update_software_list(pairings, software_list, reference_list, reference, id):
+def update_software_list(pairings: List, software_list: List, reference_list: List, reference: bool, id: str):
+    """Update the software list with the given pairings.
+
+    This function iterates through the given pairings and updates the software list with
+    the software that matches the given ID. It also updates the reference list with the
+    corresponding reference.
+
+    Parameters
+    ----------
+    pairings : List
+        A list of dictionaries that contain software and reference data.
+    software_list : List
+        The list of software to be updated.
+    reference_list : List
+        The list of references to be updated.
+    reference : bool
+        Whether the reference section should be included.
+    id : str
+        The ID of the software to be added to the software list.
+
+    Returns
+    -------
+    tuple
+        A tuple containing the updated software list and whether the reference section should be included.
+    """
     for pairing in pairings:
         if pairing["software"].get(id):
             for software in pairing["software"][id]:
                 software_stix_id = software["object"]["id"]
-                software_attack_id = util.buildhelpers.get_attack_id(software["object"])
+                software_attack_id = util.buildhelpers.get_attack_id(object=software["object"])
                 # check if software not in software_list dict
                 if software_stix_id not in software_list and software_attack_id:
                     software_list[software_stix_id] = {"id": software_attack_id, "name": software["object"]["name"]}
@@ -416,7 +444,7 @@ def update_software_list(pairings, software_list, reference_list, reference, id)
                         software_list[software_stix_id]["descr"] = software["relationship"]["description"]
                         # Update reference list
                         reference_list = util.buildhelpers.update_reference_list(
-                            reference_list, software["relationship"]
+                            reference_list=reference_list, obj=software["relationship"]
                         )
 
                     # Check if techniques exists, add techniques used by software
@@ -426,12 +454,12 @@ def update_software_list(pairings, software_list, reference_list, reference, id)
 
                         for technique in pairing["techniques"][software_stix_id]:
                             tech_data = {}
-                            t_id = util.buildhelpers.get_attack_id(technique["object"])
+                            t_id = util.buildhelpers.get_attack_id(object=technique["object"])
                             if t_id:
-                                if util.buildhelpers.is_sub_tid(t_id):
-                                    tech_data["parent_id"] = util.buildhelpers.get_parent_technique_id(t_id)
-                                    tech_data["id"] = util.buildhelpers.get_sub_technique_id(t_id)
-                                    tech_data["name"] = util.buildhelpers.get_technique_name(tech_data["parent_id"])
+                                if util.buildhelpers.is_sub_tid(sub_tid=t_id):
+                                    tech_data["parent_id"] = util.buildhelpers.get_parent_technique_id(sub_tid=t_id)
+                                    tech_data["id"] = util.buildhelpers.get_sub_technique_id(sub_tid=t_id)
+                                    tech_data["name"] = util.buildhelpers.get_technique_name(tid=tech_data["parent_id"])
                                     tech_data["sub_name"] = technique["object"]["name"]
                                 else:
                                     tech_data["id"] = t_id
@@ -439,6 +467,7 @@ def update_software_list(pairings, software_list, reference_list, reference, id)
 
                                 software_list[software_stix_id]["techniques"].append(tech_data)
     return software_list, reference
+
 
 def generate_sidebar_groups(side_menu_data):
     """Responsible for generating the sidebar for the groups pages."""
