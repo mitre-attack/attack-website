@@ -40,9 +40,6 @@ def generate_mitigations():
             src=ms[domain["name"]], get_deprecated=True
         )
 
-    # Amount of characters per category
-    group_by = 3
-
     notes = util.relationshipgetters.get_objects_using_notes()
     side_nav_data = util.buildhelpers.get_side_nav_domains_data("mitigations", mitigations)
     for domain in site_config.domains:
