@@ -39,8 +39,6 @@ def generate_markdown_files():
     data = {}
     has_software = False
 
-    # Amount of characters per category
-    group_by = 2
     software_list = util.relationshipgetters.get_software_list()
     software_list_no_deprecated_revoked = util.buildhelpers.filter_deprecated_revoked(software_list)
 
@@ -55,7 +53,7 @@ def generate_markdown_files():
             "software", "/software/", software_list_no_deprecated_revoked
         )
         generate_sidebar_software(side_menu_data)
-    
+
         data["side_menu_data"] = side_menu_data
         data["software_table"] = get_software_table_data(software_list_no_deprecated_revoked)
 
@@ -352,6 +350,7 @@ def get_campaign_table_data(software, reference_list):
     campaign_data = sorted(campaign_data, key=lambda k: k["name"].lower())
     return campaign_data
 
+
 def generate_sidebar_software(side_menu_data):
     """Responsible for generating the sidebar for the software pages."""
     logger.info("Generating software sidebar")
@@ -362,5 +361,7 @@ def generate_sidebar_software(side_menu_data):
     sidebar_software_md = software_config.sidebar_software_md + json.dumps(data)
 
     # write markdown to file
-    with open(os.path.join(software_config.software_markdown_path, "sidebar_software.md"), "w", encoding="utf8") as md_file:
+    with open(
+        os.path.join(software_config.software_markdown_path, "sidebar_software.md"), "w", encoding="utf8"
+    ) as md_file:
         md_file.write(sidebar_software_md)

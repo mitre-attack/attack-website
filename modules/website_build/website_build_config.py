@@ -42,13 +42,12 @@ index_matrix = {
     "descr": "",  # if specified, adds a subtitle to the index page matrix
     "matrix": "enterprise-attack",
     "platforms": [
-        "PRE",
         "Windows",
         "macOS",
         "Linux",
-        "Azure AD",
-        "Office 365",
-        "Google Workspace",
+        "PRE",
+        "Office Suite",
+        "Identity Providers",
         "SaaS",
         "IaaS",
         "Network",
