@@ -169,6 +169,9 @@
             <div class="col px-0">
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
+                    <div class="container-fluid banner-message">
+                        ATT&CK v16 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v16-561c76af94cf'>blog post</a> for more information.
+                    </div>
             </div>
         </div>
         <div class="row flex-grow-1 flex-shrink-0">
@@ -1652,7 +1655,7 @@
                                                     <span data-toggle="tooltip" data-placement="left" title="" data-test-ignore="true" data-original-title="The system an adversary is operating within; could be an operating system or application">&#9432;</span>
                                                 </div>
                                                 <div class="col-11 pl-0">
-                                                    <span class="h5 card-title">Platforms:&nbsp;</span>Azure AD, Google Workspace, IaaS, Office 365, SaaS
+                                                    <span class="h5 card-title">Platforms:&nbsp;</span>IaaS, Identity Provider, Office Suite, SaaS
                                                 </div>
                                             </div>
                                             <div class="row card-data">
@@ -1684,7 +1687,7 @@
                                             <div class="row card-data">
                                                 <div class="col-1 px-0 text-center"></div>
                                                 <div class="col-11 pl-0">
-                                                    <span class="h5 card-title">Last Modified:&nbsp;</span>30 March 2022
+                                                    <span class="h5 card-title">Last Modified:&nbsp;</span>14 October 2024
                                                 </div>
                                             </div>
                                     </div>
@@ -1694,13 +1697,13 @@
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Permalink to this version of DS0025" 
-           href="/versions/v15/datasources/DS0025/" data-test-ignore="true">Version Permalink</a>
+           href="/versions/v16/datasources/DS0025/" data-test-ignore="true">Version Permalink</a>
     </div>
     <div class="permalink">
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Go to the live version of DS0025" 
-           href="/versions/v15/datasources/DS0025/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+           href="/versions/v16/datasources/DS0025/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
     </div>
 </div>
 
@@ -1840,7 +1843,7 @@
                         <a href="/techniques/T1555">Credentials from Password Stores</a>
                     </td>
                     <td>
-                                <p>Monitor for API calls and CLI commands that attempt to enumerate and fetch credential material from cloud secrets managers, such as <code>get-secret-value</code> in AWS, <code>gcloud secrets describe</code> in GCP, and <code>az key vault secret show</code> in Azure. Alert on any suspicious usages of these commands, such as an account or service generating an unusually high number of secret requests.</p>
+                                <p>Monitor for API calls and CLI commands that attempt to enumerate and fetch credential material from cloud secrets managers, such as <code>get-secret-value</code> in AWS, <code>gcloud secrets describe</code> in GCP, and <code>az key vault secret show</code> in Azure. Alert on any suspicious usages of these commands, such as an account or service generating an unusually high number of secret requests.</p><p>Analytic 1 - High volume of secret requests from unusual accounts or services.</p><p><code> index=security sourcetype IN ("aws:cloudtrail", "azure:activity", "gcp:activity")(eventName IN ("ListAccessKeys", "GetLoginProfile", "ListSecrets", "GetSecretValue", "GetParametersByPath", "ListKeys") ORoperationName IN ("ListAccessKeys", "GetLoginProfile", "ListSecrets", "GetSecretValue", "GetParametersByPath", "ListKeys") ORprotoPayload.methodName IN ("ListAccessKeys", "GetLoginProfile", "ListSecrets", "GetSecretValue", "GetParametersByPath", "ListKeys"))</code></p>
 
                     </td>
                 </tr>
@@ -1854,7 +1857,7 @@
                             <a href="/techniques/T1555/006">Cloud Secrets Management Stores</a>
                         </td>
                         <td>
-                                    <p>Monitor for API calls and CLI commands that attempt to enumerate and fetch credential material from the secrets manager, such as <code>get-secret-value</code> in AWS, <code>gcloud secrets describe</code> in GCP, and <code>az key vault secret show</code> in Azure. Alert on any suspicious usages of these commands, such as an account or service generating an unusually high number of secret requests.</p>
+                                    <p>Monitor for API calls and CLI commands that attempt to enumerate and fetch credential material from the secrets manager, such as <code>get-secret-value</code> in AWS, <code>gcloud secrets describe</code> in GCP, and <code>az key vault secret show</code> in Azure. Alert on any suspicious usages of these commands, such as an account or service generating an unusually high number of secret requests.</p><p>Analytic 1 - High volume of secret requests from unusual accounts or services.</p><p><code> index=cloud_logs sourcetype IN ("aws:cloudtrail", "gcp:logging", "azure:activity")(eventName IN ("GetSecretValue", "gcloud secrets describe", "az key vault secret show"))| eval User=coalesce(userIdentity.arn, protoPayload.authenticationInfo.principalEmail, claims.user)| eval Service=coalesce(eventSource, protoPayload.serviceName, claims.aud)| eval AccountType=case(    match(User, "root|admin|superuser"), "High-Privilege",    match(User, "serviceaccount|svc|automation"), "Service-Account",    true(), "Standard-User")| eval Platform=case(    sourcetype=="aws:cloudtrail", "AWS",    sourcetype=="gcp:logging", "GCP",    sourcetype=="azure:activity", "Azure",    true(), "Unknown")| where AccountType != "High-Privilege"</code> </p><p>Analytic 2 - Cloud Service Enumeration </p><p><code>  index=cloud_logs sourcetype IN ("aws:cloudtrail", "gcp:logging", "azure:activity") | search (sourcetype="aws:cloudtrail" eventName="GetSecretValue"           OR sourcetype="gcp:pubsub:message" methodName="google.iam.credentials.v1.*"           OR sourcetype="azure:eventhub" operationName="Microsoft.KeyVault/vaults/secrets/read")</code></p>
 
                         </td>
                     </tr>
@@ -1911,6 +1914,59 @@
         </tr>
     </thead>
     <tbody>
+                <tr class="technique enterprise" id="enterprise">
+                    <td>
+                            Enterprise
+                    </td>
+                    <td colspan="2">
+                        <a href="/techniques/T1530">T1530</a>
+                    </td>
+                    <td>
+                        <a href="/techniques/T1530">Data from Cloud Storage</a>
+                    </td>
+                    <td>
+                                <p>Monitor M365 Audit logs for TeamsSessionStarted Operations against MicrosoftTeams workloads involving suspicious ClientIPs and suspect accounts (UserId).</p><p>Analytic 1 - Sessions initiated from unusual IP addresses, high volume of sessions from a single account, sessions at unusual times</p><p><code> "`index=""m365_audit_logs"" Operation=""TeamsSessionStarted""| stats count by UserId, ClientIP, CreationTime| where ClientIP!=""expected_ip"" OR UserId!=""expected_user""| sort by CreationTime"</code></p>
+
+                    </td>
+                </tr>
+                        <tr class="sub technique noparent enterprise" id="enterprise">
+                            <td>
+                                    Enterprise
+ 
+                            </td>
+                            <td>
+                                <a href="/techniques/T1213">T1213</a>
+                            </td>
+                            <td>
+                                <a href="/techniques/T1213/002">.002</a>
+                            </td>
+                            <td>
+                                <a href="/techniques/T1213">Data from Information Repositories</a>: <a href="/techniques/T1213/002">Sharepoint</a>
+                            </td>
+                            <td>
+                                        <p>Monitor M365 Audit logs for FileAccessed operations against Sharepoint workloads. Scrutinize event metadata such as client IP address, ObjectId, UserId, User Agent, and Authentication type.</p><p>Analytic 1 - Unusual file access patterns by users, anomalous IP addresses, or suspicious User Agents</p><p><code> index="m365_audit_logs" Operation="FileAccessed"| stats count by UserId, ClientIP, ObjectId, UserAgent, AuthenticationType| where UserId!="expected_user" OR ClientIP!="expected_ip" OR UserAgent!="expected_user_agent" OR AuthenticationType!="expected_auth_type"</code></p>
+
+                            </td>
+                        </tr>
+                        <tr class="sub technique noparent enterprise" id="enterprise">
+                            <td>
+                                    Enterprise
+ 
+                            </td>
+                            <td>
+                                <a href="/techniques/T1114">T1114</a>
+                            </td>
+                            <td>
+                                <a href="/techniques/T1114/003">.003</a>
+                            </td>
+                            <td>
+                                <a href="/techniques/T1114">Email Collection</a>: <a href="/techniques/T1114/003">Email Forwarding Rule</a>
+                            </td>
+                            <td>
+                                        <p>Monitor M365 Audit logs for AlertTriggered operations with rule name "Creation of forwarding/redirect rule." or for New-InboxRule operations against Exchange Workloads. Look for anomalous modification properties such as actor user ID. An example event can show the creation of an email forwarding rule for a victim user</p><p>Analytic 1 - Unauthorized email forwarding rule creation activities</p><p>Note: To detect unauthorized email forwarding rule creation activities in M365 Audit logs.</p><p><code> `index="m365_audit_logs" Operation="AlertTriggered" RuleName="Creation of forwarding/redirect rule"| stats count by Actor, TargetUser| where Actor!="expected_actor" AND TargetUser!="expected_target_user"</code></p><p>Analytic 2 - Unauthorized email forwarding rule creation activities</p><p><code> `index="m365_audit_logs" Operation="New-InboxRule"| stats count by UserId, Parameters.ForwardTo| where UserId!="expected_user" AND Parameters.ForwardTo!="expected_forwarding_address"</code></p>
+
+                            </td>
+                        </tr>
                 <tr class="technique enterprise" id="enterprise">
                     <td>
                             Enterprise
@@ -2004,7 +2060,7 @@
                             <a href="/techniques/T1562/008">Disable or Modify Cloud Logs</a>
                         </td>
                         <td>
-                                    <p>Monitor changes made to cloud services for unexpected modifications to settings and/or data </p>
+                                    <p>Monitor changes made to cloud services for unexpected modifications to settings and/or data.</p><p>Analytic 1 - Operations performed by unexpected initiators, frequent modifications, changes to critical resources</p><p><code> index="azure_activity_logs" OperationName="Create or update resource diagnostic setting"| stats count by InitiatorName, ResourceID, Status| where Status!="Succeeded" OR InitiatorName!="expected_initiator"| sort by Time</code></p>
 
                         </td>
                     </tr>
@@ -2019,7 +2075,7 @@
                         <a href="/techniques/T1556">Modify Authentication Process</a>
                     </td>
                     <td>
-                                <p>Monitor for changes made to conditional access policies used by SaaS identity providers and internal IaaS identity and access management systems.</p>
+                                <p>Monitor for changes made to conditional access policies used by SaaS identity providers and internal IaaS identity and access management systems.</p><p>Analytic 1 - Changes to access policies without corresponding change requests.</p><p><code>index=cloud_logs sourcetype IN ("azure:activity", "gsuite:reports:activity", "aws:cloudtrail", "office365:management", "saas_audit")(eventName IN ("UpdateServicePrincipal", "UpdateUser", "UpdateGroup", "UpdatePolicy", "UpdateRole", "PutRolePolicy", "AttachUserPolicy", "AttachGroupPolicy", "AttachRolePolicy", "ModifyAuthenticationMethod") OR protoPayload.methodName IN ("directory.users.update", "admin.directory.group.update", "admin.directory.roleAssignments.update", "Set-AzureADApplicationProxyConnector", "Update-PassThroughAuthentication") OR (eventName="Sign-in" AND targetResourceType="applicationProxyConnector")) </code></p>
 
                     </td>
                 </tr>
@@ -2052,10 +2108,54 @@
                                 <a href="/techniques/T1578">Modify Cloud Compute Infrastructure</a>: <a href="/techniques/T1578/005">Modify Cloud Compute Configurations</a>
                             </td>
                             <td>
-                                        <p>Monitor for quota increases across all regions, especially multiple quota increases in a short period of time or quota increases in unused regions. Monitor for changes to tenant-level settings such as subscriptions and enabled regions.<span onclick=scrollToRef('scite-6') id="scite-ref-6-a" class="scite-citeref-number" title="Microsoft Threat Intelligence. (2023, July 25). Cryptojacking: Understanding and defending against cloud compute resource abuse. Retrieved September 5, 2023."data-reference="Microsoft Cryptojacking 2023"><sup><a href="https://www.microsoft.com/en-us/security/blog/2023/07/25/cryptojacking-understanding-and-defending-against-cloud-compute-resource-abuse/" target="_blank" data-hasqtip="5" aria-describedby="qtip-5">[6]</a></sup></span></p>
+                                        <p>Monitor for quota increases across all regions, especially multiple quota increases in a short period of time or quota increases in unused regions. In Azure environments, monitor for changes to tenant-level settings such as enabled regions.<span onclick=scrollToRef('scite-6') id="scite-ref-6-a" class="scite-citeref-number" title="Microsoft Threat Intelligence. (2023, July 25). Cryptojacking: Understanding and defending against cloud compute resource abuse. Retrieved September 5, 2023."data-reference="Microsoft Cryptojacking 2023"><sup><a href="https://www.microsoft.com/en-us/security/blog/2023/07/25/cryptojacking-understanding-and-defending-against-cloud-compute-resource-abuse/" target="_blank" data-hasqtip="5" aria-describedby="qtip-5">[6]</a></sup></span></p>
 
                             </td>
                         </tr>
+                <tr class="technique enterprise" id="enterprise">
+                    <td>
+                            Enterprise
+                    </td>
+                    <td colspan="2">
+                        <a href="/techniques/T1666">T1666</a>
+                    </td>
+                    <td>
+                        <a href="/techniques/T1666">Modify Cloud Resource Hierarchy</a>
+                    </td>
+                    <td>
+                                <p>Monitor for changes to resource groups, such as creating new resource groups or leaving top-level management groups. In Azure environments, monitor for changes to subscriptions.<span onclick=scrollToRef('scite-6') id="scite-ref-6-a" class="scite-citeref-number" title="Microsoft Threat Intelligence. (2023, July 25). Cryptojacking: Understanding and defending against cloud compute resource abuse. Retrieved September 5, 2023."data-reference="Microsoft Cryptojacking 2023"><sup><a href="https://www.microsoft.com/en-us/security/blog/2023/07/25/cryptojacking-understanding-and-defending-against-cloud-compute-resource-abuse/" target="_blank" data-hasqtip="5" aria-describedby="qtip-5">[6]</a></sup></span> In AWS environments, monitor for API calls such as <code>CreateAccount</code> or <code>LeaveOrganization</code>.<span onclick=scrollToRef('scite-7') id="scite-ref-7-a" class="scite-citeref-number" title="Ben Fletcher and Steve de Vera. (2024, June). New tactics and techniques for proactive threat detection. Retrieved September 25, 2024."data-reference="AWS RE:Inforce Threat Detection 2024"><sup><a href="https://reinforce.awsevents.com/content/dam/reinforce/2024/slides/TDR432_New-tactics-and-techniques-for-proactive-threat-detection.pdf" target="_blank" data-hasqtip="6" aria-describedby="qtip-6">[7]</a></sup></span></p>
+
+                    </td>
+                </tr>
+                <tr class="technique enterprise" id="enterprise">
+                    <td>
+                            Enterprise
+                    </td>
+                    <td colspan="2">
+                        <a href="/techniques/T1496">T1496</a>
+                    </td>
+                    <td>
+                        <a href="/techniques/T1496">Resource Hijacking</a>
+                    </td>
+                    <td>
+                                <p>Monitor for changes to SaaS services, especially when quotas are raised or when new services are enabled.</p>
+
+                    </td>
+                </tr>
+                    <tr class="sub technique enterprise" id="enterprise">
+                        <td></td>
+                        <td></td>
+                        <td>
+                            <a href="/techniques/T1496/004">.004</a>
+                        </td>
+                        <td>
+                            <a href="/techniques/T1496/004">Cloud Service Hijacking</a>
+                        </td>
+                        <td>
+                                    <p>Monitor for changes to SaaS services, especially when quotas are raised or when new services are enabled. In AWS environments, watch for calls to Bedrock APIs like <code>PutUseCaseForModelAccess</code>, <code>PutFoundationModelEntitlement</code>, and <code>InvokeModel</code> and SES APIs like <code>UpdateAccountSendingEnabled</code>.<span onclick=scrollToRef('scite-8') id="scite-ref-8-a" class="scite-citeref-number" title="Lacework Labs. (2024, June 6). Detecting AI resource-hijacking with Composite Alerts. Retrieved September 25, 2024."data-reference="Lacework LLMJacking 2024"><sup><a href="https://www.lacework.com/blog/detecting-ai-resource-hijacking-with-composite-alerts" target="_blank" data-hasqtip="7" aria-describedby="qtip-7">[8]</a></sup></span><span onclick=scrollToRef('scite-9') id="scite-ref-9-a" class="scite-citeref-number" title="Nathan Eades. (2023, January 12). SES-pionage. Retrieved September 25, 2024."data-reference="Permiso SES Abuse 2023"><sup><a href="https://permiso.io/blog/s/aws-ses-pionage-detecting-ses-abuse/" target="_blank" data-hasqtip="8" aria-describedby="qtip-8">[9]</a></sup></span></p>
+
+                        </td>
+                    </tr>
                 <tr class="technique enterprise" id="enterprise">
                     <td>
                             Enterprise
@@ -2067,7 +2167,7 @@
                         <a href="/techniques/T1648">Serverless Execution</a>
                     </td>
                     <td>
-                                <p>Monitor the creation and modification of serverless resources such as functions and workflows.</p>
+                                <p>Monitor for unusual Serverless function modifications, such as adding roles to a function that allow unauthorized access or execution. </p><p>Analytic 1 - Tracks actions related to creating or modifying serverless functions</p><p><code>index=cloud_logs sourcetype=aws:iam OR sourcetype=azure:activity OR sourcetype=gcp:iam| search action IN ("iam:PassRole", "iam:CreateFunction", "iam:AddPermission", "iam:UpdateFunctionConfiguration") </code></p>
 
                     </td>
                 </tr>
@@ -2119,11 +2219,7 @@
         </li>
 
 
-                </ol>
-            </div>
-            <div class="col">
-                    <ol start="4.0">
-                                
+                            
         <li>
             <span  id="scite-4" class="scite-citation">
                 <span class="scite-citation-text">
@@ -2135,7 +2231,7 @@
         </li>
 
 
-                                
+                            
         <li>
             <span  id="scite-5" class="scite-citation">
                 <span class="scite-citation-text">
@@ -2147,12 +2243,52 @@
         </li>
 
 
+                </ol>
+            </div>
+            <div class="col">
+                    <ol start="6.0">
                                 
         <li>
             <span  id="scite-6" class="scite-citation">
                 <span class="scite-citation-text">
                     <a rel="nofollow" class="external text" name="scite-6" href="https://www.microsoft.com/en-us/security/blog/2023/07/25/cryptojacking-understanding-and-defending-against-cloud-compute-resource-abuse/" target="_blank">
                         Microsoft Threat Intelligence. (2023, July 25). Cryptojacking: Understanding and defending against cloud compute resource abuse. Retrieved September 5, 2023.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-7" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-7" href="https://reinforce.awsevents.com/content/dam/reinforce/2024/slides/TDR432_New-tactics-and-techniques-for-proactive-threat-detection.pdf" target="_blank">
+                        Ben Fletcher and Steve de Vera. (2024, June). New tactics and techniques for proactive threat detection. Retrieved September 25, 2024.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-8" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-8" href="https://www.lacework.com/blog/detecting-ai-resource-hijacking-with-composite-alerts" target="_blank">
+                        Lacework Labs. (2024, June 6). Detecting AI resource-hijacking with Composite Alerts. Retrieved September 25, 2024.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-9" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-9" href="https://permiso.io/blog/s/aws-ses-pionage-detecting-ses-abuse/" target="_blank">
+                        Nathan Eades. (2023, January 12). SES-pionage. Retrieved September 25, 2024.
                     </a>
                 </span>
             </span>
@@ -2224,7 +2360,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v15.1&#013;Website  v4.1.6">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v16.0&#013;Website  v4.2.0">Website Changelog</a></u>
                                 </div>
                             </div>
                             <div class="row">
@@ -2264,15 +2400,15 @@
     <script src="/theme/scripts/popper.min.js"></script>
     <script src="/theme/scripts/bootstrap-select.min.js"></script>
     <script src="/theme/scripts/bootstrap.bundle.min.js"></script>
-    <script src="/theme/scripts/site.js?2322"></script>
-    <script src="/theme/scripts/settings.js?344"></script>
+    <script src="/theme/scripts/site.js"></script>
+    <script src="/theme/scripts/settings.js"></script>
     <script src="/theme/scripts/search_bundle.js"></script>
 
 <!--SCRIPTS-->
 <script src="/theme/scripts/resizer.js"></script>
 
     <!--SCRIPTS-->
-    <script src="/theme/scripts/filter/filter.js?3050"></script>
+    <script src="/theme/scripts/filter/filter.js?5651"></script>
     <script src="/theme/scripts/navigation.js"></script>
     <script src="/theme/scripts/mobileview-datasources.js"></script>
     <script src="/theme/scripts/bootstrap-tourist.js"></script>

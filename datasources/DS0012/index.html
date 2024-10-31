@@ -169,6 +169,9 @@
             <div class="col px-0">
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
+                    <div class="container-fluid banner-message">
+                        ATT&CK v16 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v16-561c76af94cf'>blog post</a> for more information.
+                    </div>
             </div>
         </div>
         <div class="row flex-grow-1 flex-shrink-0">
@@ -1694,13 +1697,13 @@
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Permalink to this version of DS0012" 
-           href="/versions/v15/datasources/DS0012/" data-test-ignore="true">Version Permalink</a>
+           href="/versions/v16/datasources/DS0012/" data-test-ignore="true">Version Permalink</a>
     </div>
     <div class="permalink">
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Go to the live version of DS0012" 
-           href="/versions/v15/datasources/DS0012/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+           href="/versions/v16/datasources/DS0012/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
     </div>
 </div>
 
@@ -1846,7 +1849,7 @@
                         <a href="/techniques/T1651">Cloud Administration Command</a>
                     </td>
                     <td>
-                                <p>Monitor commands and scripts executed on virtual machines. In Azure, usage of Azure RunCommand can be identified via the Azure Activity Logs, and additional details on the result of  executed jobs are available in the <code>C:\Packages\Plugins\Microsoft.CPlat.Core.RunCommandWindows</code> directory on Windows virtual machines.<span onclick=scrollToRef('scite-4') id="scite-ref-4-a" class="scite-citeref-number" title="Adrien Bataille, Anders Vejlby, Jared Scott Wilson, and Nader Zaveri. (2021, December 14). Azure Run Command for Dummies. Retrieved March 13, 2023."data-reference="Mandiant Azure Run Command 2021"><sup><a href="https://www.mandiant.com/resources/blog/azure-run-command-dummies" target="_blank" data-hasqtip="3" aria-describedby="qtip-3">[4]</a></sup></span></p>
+                                <p>Monitor the execution of scripts within virtual machines, especially those initiated via cloud management services like Azure RunCommand. In Azure, usage of Azure RunCommand can be identified via the Azure Activity Logs, and additional details on the result of  executed jobs are available in the <code>C:\Packages\Plugins\Microsoft.CPlat.Core.RunCommandWindows</code> directory on Windows virtual machines.<span onclick=scrollToRef('scite-4') id="scite-ref-4-a" class="scite-citeref-number" title="Adrien Bataille, Anders Vejlby, Jared Scott Wilson, and Nader Zaveri. (2021, December 14). Azure Run Command for Dummies. Retrieved March 13, 2023."data-reference="Mandiant Azure Run Command 2021"><sup><a href="https://www.mandiant.com/resources/blog/azure-run-command-dummies" target="_blank" data-hasqtip="3" aria-describedby="qtip-3">[4]</a></sup></span></p><p>Analytic 1 - Unauthorized script execution</p><p><code> sourcetype=azure:activity| search script_name IN ("script.sh", "run.ps1", "start.cmd")| where script_name IN ("script.sh", "run.ps1", "start.cmd") AND user NOT IN ("known_admins")</code></p>
 
                     </td>
                 </tr>
@@ -1861,7 +1864,7 @@
                         <a href="/techniques/T1059">Command and Scripting Interpreter</a>
                     </td>
                     <td>
-                                <p>Monitor for any attempts to enable scripts running on a system would be considered suspicious. If scripts are not commonly used on a system, but enabled, scripts running out of cycle from patching or other administrator functions are suspicious. Scripts should be captured from the file system when possible to determine their actions and intent. </p>
+                                <p>Monitor for any attempts to enable scripts running on a system that would be considered suspicious. If scripts are not commonly used on a system, but enabled, scripts running out of cycle from patching or other administrator functions are suspicious. Scripts should be captured from the file system when possible to determine their actions and intent. </p><p>Analytic 1 - Look for attempts to enable scripts on the system.</p><p><code> index=windows (EventCode=1 OR EventCode=4688 OR EventCode=4103 OR EventCode=4104) (CommandLine="<em>script</em>")| search script_name IN ("<em>.ps1", "</em>.sh", "<em>.py", "</em>.rb", "<em>.js", "</em>.vbs")| eval suspicious_script=if(like(script_name, "%.sh") AND hour(_time) NOT BETWEEN 8 AND 18, "Yes", "No")| where suspicious_script="Yes"</code></p>
 
                     </td>
                 </tr>
@@ -1875,7 +1878,7 @@
                             <a href="/techniques/T1059/001">PowerShell</a>
                         </td>
                         <td>
-                                    <p>Monitor for any attempts to enable scripts running on a system would be considered suspicious. If scripts are not commonly used on a system, but enabled, scripts running out of cycle from patching or other administrator functions are suspicious. Scripts should be captured from the file system when possible to determine their actions and intent. </p><p>Analytic 1 - Script Block Logging Events</p><p><code> (source=WinEventLog:"Microsoft-Windows-PowerShell/Operational" EventID="4104" AND Image="powershell.exe" AND (CommandLine="-enc<em>" OR CommandLine="</em>-ep bypass<em>" OR CommandLine="</em>-noni*")<code></p>
+                                    <p>Monitor for any attempts to enable scripts running on a system that would be considered suspicious. If scripts are not commonly used on a system, but enabled, scripts running out of cycle from patching or other administrator functions are suspicious. Scripts should be captured from the file system when possible to determine their actions and intent. </p><p>Analytic 1 - Script Block Logging Events</p><p><code> (source=WinEventLog:"Microsoft-Windows-PowerShell/Operational" EventID="4104" AND Image="powershell.exe" AND (CommandLine="-enc<em>" OR CommandLine="</em>-ep bypass<em>" OR CommandLine="</em>-noni*")<code></p>
 
                         </td>
                     </tr>
@@ -1889,7 +1892,7 @@
                             <a href="/techniques/T1059/005">Visual Basic</a>
                         </td>
                         <td>
-                                    <p>Monitor for any attempts to enable scripts running on a system would be considered suspicious. If scripts are not commonly used on a system, but enabled, scripts running out of cycle from patching or other administrator functions are suspicious. Scripts should be captured from the file system when possible to determine their actions and intent. </p><p>Note: Be aware of VBScript execution from temporary or unusual file locations, which may indicate malicious activity.</p><p>Analytic 1 - Script Execution from Temporary Locations </p><p><code> (source=WinEventLog:"<em>Microsoft-Windows-PowerShell/Operational" EventID="4103") | WHERE CommandLine LIKE "</em>AppData<em>.vbs</em>" OR CommandLine LIKE "<em>AppData</em>.vbe<em>" OR CommandLine LIKE "</em>AppData<em>.vba</em>" </code></p>
+                                    <p>Monitor for any attempts to enable scripts running on a system that would be considered suspicious. If scripts are not commonly used on a system, but enabled, scripts running out of cycle from patching or other administrator functions are suspicious. Scripts should be captured from the file system when possible to determine their actions and intent. </p><p>Note: Be aware of VBScript execution from temporary or unusual file locations, which may indicate malicious activity.</p><p>Analytic 1 - Script Execution from Temporary Locations </p><p><code> (source=WinEventLog:"<em>Microsoft-Windows-PowerShell/Operational" EventID="4103") | WHERE CommandLine LIKE "</em>AppData<em>.vbs</em>" OR CommandLine LIKE "<em>AppData</em>.vbe<em>" OR CommandLine LIKE "</em>AppData<em>.vba</em>" </code></p>
 
                         </td>
                     </tr>
@@ -1903,7 +1906,21 @@
                             <a href="/techniques/T1059/007">JavaScript</a>
                         </td>
                         <td>
-                                    <p>Monitor for any attempts to enable scripts running on a system would be considered suspicious. If scripts are not commonly used on a system, but enabled, scripts running out of cycle from patching or other administrator functions are suspicious. Scripts should be captured from the file system when possible to determine their actions and intent. </p>
+                                    <p>Monitor for any attempts to enable scripts running on a system that would be considered suspicious. If scripts are not commonly used on a system, but enabled, scripts running out of cycle from patching or other administrator functions are suspicious. Scripts should be captured from the file system when possible to determine their actions and intent. </p>
+
+                        </td>
+                    </tr>
+                    <tr class="sub technique enterprise" id="enterprise">
+                        <td></td>
+                        <td></td>
+                        <td>
+                            <a href="/techniques/T1059/011">.011</a>
+                        </td>
+                        <td>
+                            <a href="/techniques/T1059/011">Lua</a>
+                        </td>
+                        <td>
+                                    <p>Monitor for any attempts to enable scripts running on a system that would be considered suspicious. If scripts are not commonly used on a system, but enabled, scripts running out of cycle from patching or other administrator functions are suspicious. Scripts should be captured from the file system when possible to determine their actions and intent.</p>
 
                         </td>
                     </tr>
@@ -2495,7 +2512,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v15.1&#013;Website  v4.1.6">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v16.0&#013;Website  v4.2.0">Website Changelog</a></u>
                                 </div>
                             </div>
                             <div class="row">
@@ -2535,15 +2552,15 @@
     <script src="/theme/scripts/popper.min.js"></script>
     <script src="/theme/scripts/bootstrap-select.min.js"></script>
     <script src="/theme/scripts/bootstrap.bundle.min.js"></script>
-    <script src="/theme/scripts/site.js?3476"></script>
-    <script src="/theme/scripts/settings.js?5616"></script>
+    <script src="/theme/scripts/site.js"></script>
+    <script src="/theme/scripts/settings.js"></script>
     <script src="/theme/scripts/search_bundle.js"></script>
 
 <!--SCRIPTS-->
 <script src="/theme/scripts/resizer.js"></script>
 
     <!--SCRIPTS-->
-    <script src="/theme/scripts/filter/filter.js?1252"></script>
+    <script src="/theme/scripts/filter/filter.js?3807"></script>
     <script src="/theme/scripts/navigation.js"></script>
     <script src="/theme/scripts/mobileview-datasources.js"></script>
     <script src="/theme/scripts/bootstrap-tourist.js"></script>

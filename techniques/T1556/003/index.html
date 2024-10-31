@@ -169,6 +169,9 @@
             <div class="col px-0">
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
+                    <div class="container-fluid banner-message">
+                        ATT&CK v16 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v16-561c76af94cf'>blog post</a> for more information.
+                    </div>
             </div>
         </div>
         <div class="row flex-grow-1 flex-shrink-0">
@@ -342,14 +345,6 @@
                                                 </div>
                                             </div>
                                             <div class="row card-data">
-                                                <div class="col-md-1 px-0 text-center">
-                                                    <span data-toggle="tooltip" data-placement="left" title="" data-test-ignore="true" data-original-title="The lowest level of permissions the adversary is required to be operating within to perform the (sub-)technique on a system">&#9432;</span>
-                                                </div>
-                                                <div class="col-md-11 pl-0">
-                                                    <span class="h5 card-title">Permissions Required:&nbsp;</span>root
-                                                </div>
-                                            </div>
-                                            <div class="row card-data">
                                                 <div class="col-md-1 px-0 text-center"></div>
                                                 <div class="col-md-11 pl-0">
                                                     <span class="h5 card-title">Contributors:&nbsp;</span>George Allen, VMware Carbon Black; Scott Knight, @sdotknight, VMware Carbon Black
@@ -358,7 +353,7 @@
                                             <div class="row card-data">
                                                 <div class="col-md-1 px-0 text-center"></div>
                                                 <div class="col-md-11 pl-0">
-                                                    <span class="h5 card-title">Version:&nbsp;</span>2.0
+                                                    <span class="h5 card-title">Version:&nbsp;</span>2.1
                                                 </div>
                                             </div>
                                             <div class="row card-data">
@@ -370,7 +365,7 @@
                                             <div class="row card-data">
                                                 <div class="col-md-1 px-0 text-center"></div>
                                                 <div class="col-md-11 pl-0">
-                                                    <span class="h5 card-title">Last Modified:&nbsp;</span>17 October 2021
+                                                    <span class="h5 card-title">Last Modified:&nbsp;</span>21 August 2024
                                                 </div>
                                             </div>
                                     </div>
@@ -380,13 +375,13 @@
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Permalink to this version of T1556.003" 
-           href="/versions/v15/techniques/T1556/003/" data-test-ignore="true">Version Permalink</a>
+           href="/versions/v16/techniques/T1556/003/" data-test-ignore="true">Version Permalink</a>
     </div>
     <div class="permalink">
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Go to the live version of T1556.003" 
-           href="/versions/v15/techniques/T1556/003/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+           href="/versions/v16/techniques/T1556/003/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
     </div>
 </div>
 
@@ -492,7 +487,7 @@
                     <a href="/datasources/DS0022/#File%20Modification">File Modification</a>
                 </td>
                     <td>
-                                <p>Monitor PAM configuration and module paths (ex: /etc/pam.d/) for changes. Use system-integrity tools such as AIDE and monitoring tools such as auditd to monitor PAM files.</p>
+                                <p>Monitor PAM configuration and module paths (ex: /etc/pam.d/) for changes. Use system-integrity tools such as AIDE and monitoring tools such as auditd to monitor PAM files.</p><p>Analytic 1 - Unauthorized changes to PAM configuration and module paths.</p><p><code>index=os sourcetype="linux_audit" OR sourcetype="auditd" (type="MODIFY" OR type="CREATE" OR type="DELETE") (file="/etc/pam.d/<em>" OR file="/usr/lib/security/</em>" OR file="/lib/security/*") </code></p>
 
                     </td>
             </tr>
@@ -508,7 +503,7 @@
                     <a href="/datasources/DS0028/#Logon%20Session%20Creation">Logon Session Creation</a>
                 </td>
                     <td>
-                                <p>Monitor for newly constructed logon behavior across systems that share accounts, either user, admin, or service accounts. Examples: one account logged into multiple systems simultaneously; multiple accounts logged into the same machine simultaneously; accounts logged in at odd times (ex: when the user is not present) or outside of business hours. Activity may be from interactive login sessions or process ownership from accounts being used to execute binaries on a remote system as a particular account. Correlate other security systems with login information (e.g., a user has an active login session but has not entered the building or does not have VPN access).</p>
+                                <p>Monitor for newly constructed logon behavior across systems that share accounts, either user, admin, or service accounts. Examples: one account logged into multiple systems simultaneously; multiple accounts logged into the same machine simultaneously; accounts logged in at odd times (ex: when the user is not present) or outside of business hours. Activity may be from interactive login sessions or process ownership from accounts being used to execute binaries on a remote system as a particular account. Correlate other security systems with login information (e.g., a user has an active login session but has not entered the building or does not have VPN access).</p><p>Analytic 1 - Unusual logon patterns and times.</p><p><code> index=linux_logs OR index=macos_logs(source="/var/log/secure" OR source="/var/log/auth.log" OR source="/var/log/system.log")("session opened" OR "session closed")| eval is_normal_hours=if(hour(_time) &gt;= 8 AND hour(_time) &lt;= 18, 1, 0)| search NOT [search index=linux_logs OR index=macos_logs (source="/etc/pam.d/*" OR source="/etc/passwd" OR source="/etc/shadow") action=modified | fields user]</code></p>
 
                     </td>
             </tr>
@@ -676,7 +671,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v15.1&#013;Website  v4.1.6">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v16.0&#013;Website  v4.2.0">Website Changelog</a></u>
                                 </div>
                             </div>
                             <div class="row">
@@ -716,8 +711,8 @@
     <script src="/theme/scripts/popper.min.js"></script>
     <script src="/theme/scripts/bootstrap-select.min.js"></script>
     <script src="/theme/scripts/bootstrap.bundle.min.js"></script>
-    <script src="/theme/scripts/site.js?8754"></script>
-    <script src="/theme/scripts/settings.js?1327"></script>
+    <script src="/theme/scripts/site.js"></script>
+    <script src="/theme/scripts/settings.js"></script>
     <script src="/theme/scripts/search_bundle.js"></script>
 
 <!--SCRIPTS-->

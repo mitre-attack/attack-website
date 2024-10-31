@@ -169,6 +169,9 @@
             <div class="col px-0">
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
+                    <div class="container-fluid banner-message">
+                        ATT&CK v16 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v16-561c76af94cf'>blog post</a> for more information.
+                    </div>
             </div>
         </div>
         <div class="row flex-grow-1 flex-shrink-0">
@@ -1694,13 +1697,13 @@
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Permalink to this version of DS0011" 
-           href="/versions/v15/datasources/DS0011/" data-test-ignore="true">Version Permalink</a>
+           href="/versions/v16/datasources/DS0011/" data-test-ignore="true">Version Permalink</a>
     </div>
     <div class="permalink">
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Go to the live version of DS0011" 
-           href="/versions/v15/datasources/DS0011/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+           href="/versions/v16/datasources/DS0011/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
     </div>
 </div>
 
@@ -1871,7 +1874,7 @@
                         <a href="/techniques/T1059">Command and Scripting Interpreter</a>
                     </td>
                     <td>
-                                <p>Monitor for events associated with scripting execution, such as the loading of modules associated with scripting languages (ex: JScript.dll or vbscript.dll).</p>
+                                <p>Monitor for events associated with scripting execution, such as the loading of modules associated with scripting languages (ex: JScript.dll or vbscript.dll).</p><p>Analytic 1 - Look for unusual module loads associated with scripting languages.</p><p><code> sourcetype=WinEventLog:Microsoft-Windows-Sysmon/Operational| search EventCode=7 ImageLoaded IN ("C:\Windows\System32\JScript.dll", "C:\Windows\System32\vbscript.dll", "System.Management.Automation.dll")</code></p>
 
                     </td>
                 </tr>
@@ -1885,7 +1888,7 @@
                             <a href="/techniques/T1059/001">PowerShell</a>
                         </td>
                         <td>
-                                    <p>Monitor for loading and/or execution of artifacts associated with PowerShell specific assemblies, such as System.Management.Automation.dll (especially to unusual process names/locations).<span onclick=scrollToRef('scite-7') id="scite-ref-7-a" class="scite-citeref-number" title="Warner, J.. (2015, January 6). Inexorable PowerShell – A Red Teamer’s Tale of Overcoming Simple AppLocker Policies. Retrieved December 8, 2018."data-reference="Sixdub PowerPick Jan 2016"><sup><a href="https://web.archive.org/web/20160327101330/http://www.sixdub.net/?p=367" target="_blank" data-hasqtip="6" aria-describedby="qtip-6">[7]</a></sup></span><span onclick=scrollToRef('scite-8') id="scite-ref-8-a" class="scite-citeref-number" title="Christensen, L.. (2015, December 28). The Evolution of Offensive PowerShell Invocation. Retrieved December 8, 2018."data-reference="SilentBreak Offensive PS Dec 2015"><sup><a href="https://web.archive.org/web/20190508170150/https://silentbreaksecurity.com/powershell-jobs-without-powershell-exe/" target="_blank" data-hasqtip="7" aria-describedby="qtip-7">[8]</a></sup></span></p><p>Analytic 1 - Processes loading PowerShell assemblies</p><p><code>source="*WinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode="7" | where ModulePath LIKE "%system.management.automation%" OR   FileDescription LIKE "%system.management.automation%"</code></p>
+                                    <p>Monitor for loading and/or execution of artifacts associated with PowerShell specific assemblies, such as System.Management.Automation.dll (especially to unusual process names/locations).<span onclick=scrollToRef('scite-7') id="scite-ref-7-a" class="scite-citeref-number" title="Warner, J.. (2015, January 6). Inexorable PowerShell – A Red Teamer’s Tale of Overcoming Simple AppLocker Policies. Retrieved December 8, 2018."data-reference="Sixdub PowerPick Jan 2016"><sup><a href="https://web.archive.org/web/20160327101330/http://www.sixdub.net/?p=367" target="_blank" data-hasqtip="6" aria-describedby="qtip-6">[7]</a></sup></span><span onclick=scrollToRef('scite-8') id="scite-ref-8-a" class="scite-citeref-number" title="Christensen, L.. (2015, December 28). The Evolution of Offensive PowerShell Invocation. Retrieved December 8, 2018."data-reference="SilentBreak Offensive PS Dec 2015"><sup><a href="https://web.archive.org/web/20190508170150/https://silentbreaksecurity.com/powershell-jobs-without-powershell-exe/" target="_blank" data-hasqtip="7" aria-describedby="qtip-7">[8]</a></sup></span></p><p>Analytic 1 - Processes loading PowerShell assemblies</p><p><code>sourcetype=WinEventLog:Microsoft-Windows-Sysmon/Operational| search EventCode=7 ImageLoaded IN ("C:\Windows\System32\System.Management.Automation.dll", "C:\Windows\System32\powershell.exe")</code></p>
 
                         </td>
                     </tr>
@@ -1899,7 +1902,7 @@
                             <a href="/techniques/T1059/005">Visual Basic</a>
                         </td>
                         <td>
-                                    <p>Monitor for the loading of modules associated with VB languages (ex: vbscript.dll).</p><p>Note: For Windows, Sysmon Event ID 7 (Image loaded) can be used to alert on the loading of DLL modules (e.g., vbscript.dll) associated with Visual Basic into processes. Due to the high frequency of image load operations, Event ID 7 can generate a large volume of events. Therefore, we recommend tuning the Sysmon configuration file to exclude common, benign image loads that may result in false positives. </p>
+                                    <p>Monitor for the loading of modules associated with VB languages (ex: vbscript.dll).</p><p>Note: For Windows, Sysmon Event ID 7 (Image loaded) can be used to alert on the loading of DLL modules (e.g., vbscript.dll) associated with Visual Basic into processes. Due to the high frequency of image load operations, Event ID 7 can generate a large volume of events. Therefore, we recommend tuning the Sysmon configuration file to exclude common, benign image loads that may result in false positives. This query focuses on monitoring the loading of specific VB-related modules such as <code>vbe6.dll</code>, <code>vbscript.dll</code>, and <code>vba7.dll</code>, which are commonly associated with VB script execution.</p><p>Analytic 1 - Look for unusual VB module loads.</p><p><code>sourcetype=windows_security OR sourcetype=wineventlog OR sourcetype=linux_secure OR sourcetype=macos_secure| search (module="vbe6.dll" OR module="vbscript.dll" OR module="vba7.dll")| eval suspicious_module=if(like(module, "vbe6.dll" OR "vbscript.dll" OR "vba7.dll"), "Yes", "No")| where suspicious_module="Yes" </code></p>
 
                         </td>
                     </tr>
@@ -2155,7 +2158,7 @@
                         <a href="/techniques/T1559">Inter-Process Communication</a>
                     </td>
                     <td>
-                                <p>Monitor DLL/PE file events, specifically creation of these binary files as well as the loading of DLLs into processes. Look for DLLs that are not recognized or not normally loaded into a process.</p>
+                                <p>Monitor for the loading of unusual modules or DLLs into processes. Specifically focus on modules that are not typically loaded or associated with IPC mechanisms.</p><p>Analytic 1 - Unrecognized DLLs.</p><p><code> sourcetype=Sysmon EventCode=7| search module_path != "/usr/lib/<em>" OR module_path != "/windows/system32/</em>" OR module_path != "/lib/*"| stats count by module_path process_name user| where module_path IN ("suspicious_modules.dll", "unknown.so")</code></p>
 
                     </td>
                 </tr>
@@ -2198,7 +2201,7 @@
                         <a href="/techniques/T1556">Modify Authentication Process</a>
                     </td>
                     <td>
-                                <p>Monitor for new, unfamiliar DLL files written to a domain controller and/or local computer. Password filters will also show up as an autorun and loaded DLL in lsass.exe.<span onclick=scrollToRef('scite-15') id="scite-ref-15-a" class="scite-citeref-number" title="Bialek, J. (2013, September 15). Intercepting Password Changes With Function Hooking. Retrieved November 21, 2017."data-reference="Clymb3r Function Hook Passwords Sept 2013"><sup><a href="https://clymb3r.wordpress.com/2013/09/15/intercepting-password-changes-with-function-hooking/" target="_blank" data-hasqtip="14" aria-describedby="qtip-14">[15]</a></sup></span> If AD FS is in use, monitor the AD FS server for the creation of DLLs as well as the loading of unrecognized or unsigned DLLs into the <code>Microsoft.IdentityServer.Servicehost</code> application.<span onclick=scrollToRef('scite-16') id="scite-ref-16-a" class="scite-citeref-number" title="Microsoft Threat Intelligence Center, Microsoft Detection and Response Team, Microsoft 365 Defender Research Team . (2022, August 24). MagicWeb: NOBELIUM’s post-compromise trick to authenticate as anyone. Retrieved September 28, 2022."data-reference="MagicWeb"><sup><a href="https://www.microsoft.com/security/blog/2022/08/24/magicweb-nobeliums-post-compromise-trick-to-authenticate-as-anyone/" target="_blank" data-hasqtip="15" aria-describedby="qtip-15">[16]</a></sup></span></p>
+                                <p>Monitor for new, unfamiliar DLL files written to a domain controller and/or local computer. Password filters will also show up as an autorun and loaded DLL in lsass.exe.<span onclick=scrollToRef('scite-15') id="scite-ref-15-a" class="scite-citeref-number" title="Bialek, J. (2013, September 15). Intercepting Password Changes With Function Hooking. Retrieved November 21, 2017."data-reference="Clymb3r Function Hook Passwords Sept 2013"><sup><a href="https://clymb3r.wordpress.com/2013/09/15/intercepting-password-changes-with-function-hooking/" target="_blank" data-hasqtip="14" aria-describedby="qtip-14">[15]</a></sup></span> If AD FS is in use, monitor the AD FS server for the creation of DLLs as well as the loading of unrecognized or unsigned DLLs into the <code>Microsoft.IdentityServer.Servicehost</code> application.<span onclick=scrollToRef('scite-16') id="scite-ref-16-a" class="scite-citeref-number" title="Microsoft Threat Intelligence Center, Microsoft Detection and Response Team, Microsoft 365 Defender Research Team . (2022, August 24). MagicWeb: NOBELIUM’s post-compromise trick to authenticate as anyone. Retrieved September 28, 2022."data-reference="MagicWeb"><sup><a href="https://www.microsoft.com/security/blog/2022/08/24/magicweb-nobeliums-post-compromise-trick-to-authenticate-as-anyone/" target="_blank" data-hasqtip="15" aria-describedby="qtip-15">[16]</a></sup></span></p><p>Analytic 1 - Unauthorized DLL loads in critical systems.</p><p><code>index=security sourcetype IN ("WinEventLog:Microsoft-Windows-Sysmon/Operational", "linux_secure", "macos_secure")(EventCode=7 OR EventCode=10 OR sourcetype="linux_secure" OR sourcetype="macos_secure")| eval ImageLoaded=coalesce(Image, file_path, target_file)| eval Process=coalesce(ProcessGuid, pid, process_id)| eval User=coalesce(User, user, user_name)| eval Platform=case(    sourcetype=="WinEventLog:Microsoft-Windows-Sysmon/Operational", "Windows",    sourcetype=="linux_secure", "Linux",    sourcetype=="macos_secure", "macOS",    true(), "Unknown")| search ImageLoaded IN (    "<em>\lsass.exe",    "</em>\services.exe",    "<em>\winlogon.exe",    "/usr/libexec/</em>",    "/usr/bin/<em>",    "/etc/pam.d/</em>",    "/Library/Preferences/com.apple.loginwindow.plist")| search ImageLoaded IN ("<em>\</em>.dll", "<em>/</em>.so", "<em>/</em>.dylib")| eval isSuspicious=if(match(ImageLoaded, ".<em>\(?!\")(lsass|services|winlogon).exe\.</em>\.dll$|/usr/libexec/.<em>\.so$|/usr/bin/.</em>\.so$|/etc/pam.d/.<em>\.so$|/Library/Preferences/com.apple.loginwindow.plist.</em>\.dylib$"), "Yes", "No")| where isSuspicious="Yes"| bin _time span=1m| stats count by _time, User, ImageLoaded, Process, Platform, host| where count &gt; 1| table _time, User, ImageLoaded, Process, Platform, host, count| sort -count &lt;/code </p>
 
                     </td>
                 </tr>
@@ -2212,7 +2215,7 @@
                             <a href="/techniques/T1556/002">Password Filter DLL</a>
                         </td>
                         <td>
-                                    <p>Monitor for new, unfamiliar DLL files written to a domain controller and/or local computer. Password filters will also show up as an autorun and loaded DLL in lsass.exe.<span onclick=scrollToRef('scite-15') id="scite-ref-15-a" class="scite-citeref-number" title="Bialek, J. (2013, September 15). Intercepting Password Changes With Function Hooking. Retrieved November 21, 2017."data-reference="Clymb3r Function Hook Passwords Sept 2013"><sup><a href="https://clymb3r.wordpress.com/2013/09/15/intercepting-password-changes-with-function-hooking/" target="_blank" data-hasqtip="14" aria-describedby="qtip-14">[15]</a></sup></span></p>
+                                    <p>Monitor for new, unfamiliar DLL files written to a domain controller and/or local computer. Password filters will also show up as an autorun and loaded DLL in lsass.exe.<span onclick=scrollToRef('scite-15') id="scite-ref-15-a" class="scite-citeref-number" title="Bialek, J. (2013, September 15). Intercepting Password Changes With Function Hooking. Retrieved November 21, 2017."data-reference="Clymb3r Function Hook Passwords Sept 2013"><sup><a href="https://clymb3r.wordpress.com/2013/09/15/intercepting-password-changes-with-function-hooking/" target="_blank" data-hasqtip="14" aria-describedby="qtip-14">[15]</a></sup></span></p><p>Analytic 1 - Unauthorized DLL loads in critical systems.</p><p><code>index=windows_logs sourcetype="XmlWinEventLog:Microsoft-Windows-Sysmon/Operational"| search EventCode=7 [search index=windows_logs EventCode=4688 (ProcessName="<em>lsass.exe" OR ProcessName="</em>winlogon.exe") | fields ProcessID]| eval dll_path=coalesce(ImageLoaded, Image)| search dll_path="<em>\System32\</em>" OR dll_path="<em>\SysWOW64\</em>"| rex field=dll_path ".*\(?<dll_name>[^\]+.dll)$" </code></p>
 
                         </td>
                     </tr>
@@ -2241,7 +2244,7 @@
                         <a href="/techniques/T1106">Native API</a>
                     </td>
                     <td>
-                                <p>Monitor DLL/PE file events, specifically creation of these binary files as well as the loading of DLLs into processes. Utilization of the Windows APIs may involve processes loading/accessing system DLLs associated with providing called functions (ex: ntdll.dll, kernel32.dll, advapi32.dll, user32.dll, and gdi32.dll). Monitoring for DLL loads, especially to abnormal/unusual or potentially malicious processes, may indicate abuse of the Windows API. Though noisy, this data can be combined with other indicators to identify adversary activity.</p>
+                                <p>Monitor DLL/PE file events, specifically creation of these binary files as well as the loading of DLLs into processes. Utilization of the Windows APIs may involve processes loading/accessing system DLLs associated with providing called functions (ex: ntdll.dll, kernel32.dll, advapi32.dll, user32.dll, and gdi32.dll). Monitoring for DLL loads, especially to abnormal/unusual or potentially malicious processes, may indicate abuse of the Windows API. Though noisy, this data can be combined with other indicators to identify adversary activity.</p><p>Analytic 1 - Look for unusual or abnormal DLL loads, processes loading DLLs not typically associated with them</p><p><code>sourcetype=Sysmon EventCode=7| stats count by module_name process_name user| where module_name IN ("ntdll.dll", "kernel32.dll", "advapi32.dll", "user32.dll", "gdi32.dll") </code></p>
 
                     </td>
                 </tr>
@@ -2450,7 +2453,7 @@
                         <a href="/techniques/T1129">Shared Modules</a>
                     </td>
                     <td>
-                                <p>Monitoring module loads may generate a significant amount of data and may not be directly useful for defense unless collected under specific circumstances, since benign use of shared modules load functions are common and may be difficult to distinguish from malicious behavior. Legitimate software will likely only need to load routine, bundled, or system modules such that deviation from known module loads may be suspicious</p><p>Limiting module loads to trusted directories, such as <code>%SystemRoot%</code> and <code>%ProgramFiles%</code> on Windows, may protect against module loads from unsafe paths.</p>
+                                <p>Monitor shared module loading, focusing on .dll, .so, and .dylib files, and look for suspicious paths or abnormal module loads that deviate from system norms.</p><p>Limiting module loads to trusted directories, such as <code>%SystemRoot%</code> and <code>%ProgramFiles%</code> on Windows, may protect against module loads from unsafe paths.</p>
 
                     </td>
                 </tr>
@@ -2550,7 +2553,7 @@
                             <a href="/techniques/T1218/010">Regsvr32</a>
                         </td>
                         <td>
-                                    <p>Monitor DLL/PE file events, specifically creation of these binary files as well as the loading of DLLs into processes. Look for DLLs that are not recognized or not normally loaded into a process.</p><p>Note: This looks for unsigned images that may be loaded by regsvr32, while attempting to eliminate false positives stemming from Windows/Program Files binaries.</p><p>Analytic 5 - Loading Unsigned Images </p><p><code>(source="<em>WinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode="7") (Image="C:\Windows\System32\regsvr32.exe" OR Image="C:\Windows\SysWOW64\regsvr32.exe") Signed=false ImageLoaded!="C:\Program Files</em>" ImageLoaded!="C:\Windows\*"|stats values(ComputerName) as "Computer Name" count(ImageLoaded) as ImageLoadedCount by ImageLoaded</code></p>
+                                    <p>Monitor DLL/PE file events, specifically creation of these binary files as well as the loading of DLLs into processes. Look for DLLs that are not recognized or not normally loaded into a process.</p><p>Note: This looks for unsigned images that may be loaded by regsvr32, while attempting to eliminate false positives stemming from Windows/Program Files binaries.</p><p>Analytic 5 - Loading Unsigned Images </p><p><code>(sourcetype=WinEventLog:Microsoft-Windows-Sysmon/Operational EventCode="7") (Image="C:\Windows\System32\regsvr32.exe" OR Image="C:\Windows\SysWOW64\regsvr32.exe") Signed=false ImageLoaded!="C:\Program Files<em>" ImageLoaded!="C:\Windows\</em>"|stats values(ComputerName) as "Computer Name" count(ImageLoaded) as ImageLoadedCount by ImageLoaded</code></p>
 
                         </td>
                     </tr>
@@ -2565,6 +2568,35 @@
                         </td>
                         <td>
                                     <p>Analyzing DLL exports and comparing to runtime arguments may be useful in uncovering obfuscated function calls. Static Portable Executable (PE) analysis tools can be used to examine and dump the exports of a particular DLL. </p>
+
+                        </td>
+                    </tr>
+                <tr class="technique enterprise" id="enterprise">
+                    <td>
+                            Enterprise
+                    </td>
+                    <td colspan="2">
+                        <a href="/techniques/T1127">T1127</a>
+                    </td>
+                    <td>
+                        <a href="/techniques/T1127">Trusted Developer Utilities Proxy Execution</a>
+                    </td>
+                    <td>
+                                <p>Monitor trusted developer utility activity with unsigned module loads.</p>
+
+                    </td>
+                </tr>
+                    <tr class="sub technique enterprise" id="enterprise">
+                        <td></td>
+                        <td></td>
+                        <td>
+                            <a href="/techniques/T1127/002">.002</a>
+                        </td>
+                        <td>
+                            <a href="/techniques/T1127/002">ClickOnce</a>
+                        </td>
+                        <td>
+                                    <p>Monitor dfsvc.exe child process activity with unsigned module loads, as well as activity associated with dfshim.dll. Compare with baseline of ClickOne activity to whitelist applications with valid business use-cases.<span onclick=scrollToRef('scite-22') id="scite-ref-22-a" class="scite-citeref-number" title="Nick Powers. (2023, June 7). Less SmartScreen More Caffeine: (Ab)Using ClickOnce for Trusted Code Execution. Retrieved September 9, 2024."data-reference="SpectorOps Medium ClickOnce"><sup><a href="https://posts.specterops.io/less-smartscreen-more-caffeine-ab-using-clickonce-for-trusted-code-execution-1446ea8051c5" target="_blank" data-hasqtip="21" aria-describedby="qtip-21">[22]</a></sup></span></p>
 
                         </td>
                     </tr>
@@ -2851,6 +2883,18 @@
         </li>
 
 
+                                
+        <li>
+            <span  id="scite-22" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-22" href="https://posts.specterops.io/less-smartscreen-more-caffeine-ab-using-clickonce-for-trusted-code-execution-1446ea8051c5" target="_blank">
+                        Nick Powers. (2023, June 7). Less SmartScreen More Caffeine: (Ab)Using ClickOnce for Trusted Code Execution. Retrieved September 9, 2024.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
   
                     </ol>
             </div>             
@@ -2916,7 +2960,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v15.1&#013;Website  v4.1.6">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v16.0&#013;Website  v4.2.0">Website Changelog</a></u>
                                 </div>
                             </div>
                             <div class="row">
@@ -2956,15 +3000,15 @@
     <script src="/theme/scripts/popper.min.js"></script>
     <script src="/theme/scripts/bootstrap-select.min.js"></script>
     <script src="/theme/scripts/bootstrap.bundle.min.js"></script>
-    <script src="/theme/scripts/site.js?5043"></script>
-    <script src="/theme/scripts/settings.js?6812"></script>
+    <script src="/theme/scripts/site.js"></script>
+    <script src="/theme/scripts/settings.js"></script>
     <script src="/theme/scripts/search_bundle.js"></script>
 
 <!--SCRIPTS-->
 <script src="/theme/scripts/resizer.js"></script>
 
     <!--SCRIPTS-->
-    <script src="/theme/scripts/filter/filter.js?6063"></script>
+    <script src="/theme/scripts/filter/filter.js?4419"></script>
     <script src="/theme/scripts/navigation.js"></script>
     <script src="/theme/scripts/mobileview-datasources.js"></script>
     <script src="/theme/scripts/bootstrap-tourist.js"></script>

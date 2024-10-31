@@ -169,6 +169,9 @@
             <div class="col px-0">
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
+                    <div class="container-fluid banner-message">
+                        ATT&CK v16 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v16-561c76af94cf'>blog post</a> for more information.
+                    </div>
             </div>
         </div>
         <div class="row flex-grow-1 flex-shrink-0">
@@ -1694,13 +1697,13 @@
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Permalink to this version of DS0029" 
-           href="/versions/v15/datasources/DS0029/" data-test-ignore="true">Version Permalink</a>
+           href="/versions/v16/datasources/DS0029/" data-test-ignore="true">Version Permalink</a>
     </div>
     <div class="permalink">
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Go to the live version of DS0029" 
-           href="/versions/v15/datasources/DS0029/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+           href="/versions/v16/datasources/DS0029/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
     </div>
 </div>
 
@@ -2328,7 +2331,7 @@
                             <a href="/techniques/T1021/001">Remote Desktop Protocol</a>
                         </td>
                         <td>
-                                    <p>Monitor for newly constructed network connections (typically over port 3389) that may use <a href="/techniques/T1078">Valid Accounts</a> to log into a computer using the Remote Desktop Protocol (RDP). The adversary may then perform actions as the logged-on user. Other factors, such as access patterns and activity that occurs after a remote login, may indicate suspicious or malicious behavior with RDP.</p>
+                                    <p>Monitor for newly constructed network connections (typically over port 3389) that may use <a href="/techniques/T1078">Valid Accounts</a> to log into a computer using the Remote Desktop Protocol (RDP). The adversary may then perform actions as the logged-on user. Other factors, such as access patterns and activity that occurs after a remote login, may indicate suspicious or malicious behavior with RDP.</p><p>Analytic 1 - Abnormal RDP Network Connections</p><p><code> sourcetype=zeek | search dest_port=3389 // Default RDP port| stats count by src_ip, dest_ip, dest_port| where src_ip!="trusted_ips" AND dest_ip!="internal_servers"</code></p>
 
                         </td>
                     </tr>
@@ -2342,7 +2345,7 @@
                             <a href="/techniques/T1021/002">SMB/Windows Admin Shares</a>
                         </td>
                         <td>
-                                    <p>Monitor for newly constructed network connections (typically over ports 139 or 445), especially those that are sent or received by abnormal or untrusted hosts. Correlate these network connections with remote login events and associated SMB-related activity such as file transfers and remote process execution.</p><p>Note: Event ID is for Zeek but can also be implemented in other Network Analysis Frameworks by parsing &amp; decoding captured SMB2 network traffic. Preference would be to detect smb2_write_response event (instead of smb2_write_request), because it would confirm the file was actually written to the remote destination. Unfortunately, Bro/Zeek does not have an event for that SMB message-type yet. From a network traffic capture standpoint, it’s important to capture the right traffic for this type of detection to function (e.g., all endpoint to endpoint if possible or workstation to server and workstation to workstation). As such, it is helpful to have a centralized server area where it is possible to monitor communications between servers and endpoints.</p><p>Analytic 1 and 2 are very similar, with the key difference being that Implementation 2 is intended to capture multiple attempts at lateral movement originating from the same host within a short time period (5 minutes).</p><ul><li><p>smb2_write_request, smb1_write_andx_response is indication of an SMB file write to a Windows Admin File Share: ADMIN$ or C$</p></li><li><p>smb2_tree_connect_request, smb1_tree_connect_andx_request is observed originating from the same host, regardless of write-attempts and regardless of whether or not any connection is successful —just connection attempts— within a specified period of time (REPEATS 5 TIMES WITHIN 5 MINUTES FROM SAME src_ip).</p></li></ul><p>From a network traffic capture standpoint, it’s important to capture the right traffic for this type of detection to function (e.g., all endpoint to endpoint if possible or workstation to server and workstation to workstation). As such, it is helpful to have a centralized server area where it is possible to monitor communications between servers and endpoints.The Service Control Manager (SCM) can be used to copy a file to the ADMIN$ share and execute it as a service. This can be detected by looking for incoming RPC network connections to the Service Control Manager, followed by services.exe spawning a child process.</p><p>Analytic 1 - Basic<code>source="*Zeek:SMB_Files" EventCode IN ("smb2_write_request", "smb1_write_andx_response", "smb2_tree_connect_request", "smb1_tree_connect_andx_request") AND (Path="ADMIN$" OR Path="C$")</code></p>
+                                    <p>Monitor for newly constructed network connections (typically over ports 139 or 445), especially those that are sent or received by abnormal or untrusted hosts. Correlate these network connections with remote login events and associated SMB-related activity such as file transfers and remote process execution.</p><p>Note: Event ID is for Zeek but can also be implemented in other Network Analysis Frameworks by parsing &amp; decoding captured SMB2 network traffic. Preference would be to detect smb2_write_response event (instead of smb2_write_request), because it would confirm the file was actually written to the remote destination. Unfortunately, Bro/Zeek does not have an event for that SMB message-type yet. From a network traffic capture standpoint, it’s important to capture the right traffic for this type of detection to function (e.g., all endpoint to endpoint if possible or workstation to server and workstation to workstation). As such, it is helpful to have a centralized server area where it is possible to monitor communications between servers and endpoints.</p><p>Analytic 1 and 2 are very similar, with the key difference being that Implementation 2 is intended to capture multiple attempts at lateral movement originating from the same host within a short time period (5 minutes).</p><ul><li><p>smb2_write_request, smb1_write_andx_response is indication of an SMB file write to a Windows Admin File Share: ADMIN$ or C$</p></li><li><p>smb2_tree_connect_request, smb1_tree_connect_andx_request is observed originating from the same host, regardless of write-attempts and regardless of whether or not any connection is successful —just connection attempts— within a specified period of time (REPEATS 5 TIMES WITHIN 5 MINUTES FROM SAME src_ip).</p></li></ul><p>From a network traffic capture standpoint, it’s important to capture the right traffic for this type of detection to function (e.g., all endpoint to endpoint if possible or workstation to server and workstation to workstation). As such, it is helpful to have a centralized server area where it is possible to monitor communications between servers and endpoints.The Service Control Manager (SCM) can be used to copy a file to the ADMIN$ share and execute it as a service. This can be detected by looking for incoming RPC network connections to the Service Control Manager, followed by services.exe spawning a child process.</p><p>Analytic 1 - Basic</p><p><code>sourcetype="Zeek:SMB_Files" EventCode IN ("smb2_write_request", "smb1_write_andx_response", "smb2_tree_connect_request", "smb1_tree_connect_andx_request") AND (Path="ADMIN$" OR Path="C$")</code></p>
 
                         </td>
                     </tr>
@@ -2447,6 +2450,34 @@
 
                     </td>
                 </tr>
+                    <tr class="sub technique enterprise" id="enterprise">
+                        <td></td>
+                        <td></td>
+                        <td>
+                            <a href="/techniques/T1496/001">.001</a>
+                        </td>
+                        <td>
+                            <a href="/techniques/T1496/001">Compute Hijacking</a>
+                        </td>
+                        <td>
+                                    <p>Monitor for newly constructed network connections that are sent or received by untrusted hosts. Look for connections to/from strange ports, as well as reputation of IPs and URLs related to cryptocurrency hosts. In AWS environments, configure GuardDuty to alert when EC2 instances query IP addresses associated with known cryptocurrency activity.<span onclick=scrollToRef('scite-3') id="scite-ref-3-a" class="scite-citeref-number" title="AWS. (n.d.). GuardDuty EC2 finding types. Retrieved September 25, 2024."data-reference="AWS GuardDuty EC2 finding types"><sup><a href="https://docs.aws.amazon.com/guardduty/latest/ug/guardduty_finding-types-ec2.html" target="_blank" data-hasqtip="2" aria-describedby="qtip-2">[3]</a></sup></span></p>
+
+                        </td>
+                    </tr>
+                    <tr class="sub technique enterprise" id="enterprise">
+                        <td></td>
+                        <td></td>
+                        <td>
+                            <a href="/techniques/T1496/002">.002</a>
+                        </td>
+                        <td>
+                            <a href="/techniques/T1496/002">Bandwidth Hijacking</a>
+                        </td>
+                        <td>
+                                    <p>Monitor for newly constructed network connections that are sent or received by untrusted hosts. Look for connections to/from strange ports. </p>
+
+                        </td>
+                    </tr>
                 <tr class="technique enterprise" id="enterprise">
                     <td>
                             Enterprise
@@ -2487,7 +2518,7 @@
                             <a href="/techniques/T1218/003">CMSTP</a>
                         </td>
                         <td>
-                                    <p>Monitor for newly constructed network connections that are sent or received by untrusted hosts, such as Sysmon Event 3 (Network connection) where Image contains CMSTP.exe and DestinationIP is external.</p><p>Note: Event IDs are for Sysmon (Event ID 1 - process create) and Windows Security Log (Event ID 4688 - a new process has been created). The Analytic looks for the creation of a new CMSTP.exe process which initiates a network connection to a non-local IP address. This is a specific implementation where CMSTP.exe can be leveraged to setup listeners that will receive and install malware from remote sources in a trusted fashion.</p><p>Analytic 1 - CMSTP</p><p><code>(source="*WinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode="3") Image="C:\Windows\System32\CMSTP.exe" | WHERE ((!cidrmatch("10.0.0.0/8", SourceIp) AND !cidrmatch("192.168.0.0/16", SourceIp) AND !cidrmatch("172.16.0.0/12", SourceIp))</code></p>
+                                    <p>Monitor for newly constructed network connections that are sent or received by untrusted hosts, such as Sysmon Event 3 (Network connection) where Image contains CMSTP.exe and DestinationIP is external.</p><p>Note: Event IDs are for Sysmon (Event ID 1 - process create) and Windows Security Log (Event ID 4688 - a new process has been created). The Analytic looks for the creation of a new CMSTP.exe process which initiates a network connection to a non-local IP address. This is a specific implementation where CMSTP.exe can be leveraged to setup listeners that will receive and install malware from remote sources in a trusted fashion.</p><p>Analytic 1 - CMSTP</p><p><code>(sourcetype=WinEventLog:Microsoft-Windows-Sysmon/Operational EventCode="3") Image="C:\Windows\System32\CMSTP.exe" | WHERE ((!cidrmatch("10.0.0.0/8", SourceIp) AND !cidrmatch("192.168.0.0/16", SourceIp) AND !cidrmatch("172.16.0.0/12", SourceIp))</code></p>
 
                         </td>
                     </tr>
@@ -2587,7 +2618,7 @@
                             <a href="/techniques/T1205/002">Socket Filters</a>
                         </td>
                         <td>
-                                    <p>Monitor recently started applications creating raw socket connections.<span onclick=scrollToRef('scite-3') id="scite-ref-3-a" class="scite-citeref-number" title="Jamie Harries. (2022, May 25). Hunting a Global Telecommunications Threat: DecisiveArchitect and Its Custom Implant JustForFun. Retrieved October 18, 2022."data-reference="crowdstrike bpf socket filters"><sup><a href="https://www.crowdstrike.com/blog/how-to-hunt-for-decisivearchitect-and-justforfun-implant/" target="_blank" data-hasqtip="2" aria-describedby="qtip-2">[3]</a></sup></span></p>
+                                    <p>Monitor recently started applications creating raw socket connections.<span onclick=scrollToRef('scite-4') id="scite-ref-4-a" class="scite-citeref-number" title="Jamie Harries. (2022, May 25). Hunting a Global Telecommunications Threat: DecisiveArchitect and Its Custom Implant JustForFun. Retrieved October 18, 2022."data-reference="crowdstrike bpf socket filters"><sup><a href="https://www.crowdstrike.com/blog/how-to-hunt-for-decisivearchitect-and-justforfun-implant/" target="_blank" data-hasqtip="3" aria-describedby="qtip-3">[4]</a></sup></span></p>
 
                         </td>
                     </tr>
@@ -2602,7 +2633,7 @@
                         <a href="/techniques/T1204">User Execution</a>
                     </td>
                     <td>
-                                <p>Monitor for newly constructed web-based network connections that are sent to malicious or suspicious destinations (e.g. destinations attributed to phishing campaigns). Consider correlation with process monitoring and command line to detect anomalous processes execution and command line arguments (e.g. monitor anomalies in use of files that do not normally initiate network connections or unusual connections initiated by regsvr32.exe, rundll.exe, .SCF, HTA, MSI, DLLs, or msiexec.exe).</p>
+                                <p>Monitor network traffic patterns associated with web-based user actions, such as clicking on phishing links or executing malware that tries to establish C2 communication.</p><p>Analytic 1 - Web-based network connections to suspicious destinations.</p><p><code>sourcetype=sysmon EventCode=3| search process_name IN ("winword.exe", "chrome.exe", "firefox.exe") | stats count by src_ip dest_ip dest_port process_name| where dest_ip NOT IN ("<known_good_ips>") </code></p>
 
                     </td>
                 </tr>
@@ -2616,7 +2647,7 @@
                             <a href="/techniques/T1204/001">Malicious Link</a>
                         </td>
                         <td>
-                                    <p>Monitor for newly constructed web-based network connections that are sent to malicious or suspicious destinations (e.g. destinations attributed to phishing campaigns). Consider correlation with process monitoring and command line to detect anomalous processes execution and command line arguments (e.g. monitor anomalies in use of files that do not normally initiate network connections or unusual connections initiated by regsvr32.exe, rundll.exe, .SCF, HTA, MSI, DLLs, or msiexec.exe).</p>
+                                    <p>Monitor for network connections to suspicious or external sites shortly after a user clicks on a link, especially if the URL is linked to phishing or malicious activities.</p><p>Analytic 1 - Web-based network connections to suspicious destinations.</p><p><code>sourcetype=network_connection| search process_name IN ("chrome.exe", "firefox.exe", "iexplore.exe", "msedge.exe") OR src_ip IN ("<suspicious_ips>")</code></p>
 
                         </td>
                     </tr>
@@ -2746,7 +2777,7 @@
                         <a href="/techniques/T1047">Windows Management Instrumentation</a>
                     </td>
                     <td>
-                                <p>Monitor network traffic for WMI connections for potential use to remotely edit configuration, start services, or query files. When remote WMI requests are over RPC it connects to a DCOM interface within the RPC group <code>netsvcs</code>. To detect this activity, a sensor is needed at the network level that can decode RPC traffic or on the host where the communication can be detected more natively, such as Event Tracing for Windows. Using wireshark/tshark decoders, the WMI interfaces can be extracted so that WMI activity over RPC can be detected. Although the description details how to detect remote WMI precisely, a decent estimate has been to look for the string RPCSS within the initial RPC connection on 135/tcp. It returns a superset of this activity, and will trigger on all DCOM-related services running within RPC, which is likely to also be activity that should be detected between hosts. More about RPCSS at : rpcss_dcom_interfaces.html</p><p>Look for instances of the WMI querying in network traffic, and find the cases where a process is launched immediately after a connection is seen. This essentially merges the request to start a remote process via WMI with the process execution. If other processes are spawned from wmiprvse.exe in this time frame, it is possible for race conditions to occur, and the wrong process may be merged. If this is the case, it may be useful to look deeper into the network traffic to see if the desired command can be extracted.</p><p>After the WMI connection has been initialized, a process can be remotely launched using the command: <code>wmic /node:"<hostname>" process call create "<command line>"</code>, which is detected in the third Detection Pseudocode. </p><p>This leaves artifacts at both a network (RPC) and process (command line) level. When <code>wmic.exe</code> (or the schtasks API) is used to remotely create processes, Windows uses RPC (135/tcp) to communicate with the the remote machine.</p><p>After RPC authenticates, the RPC endpoint mapper opens a high port connection, through which the schtasks Remote Procedure Call is actually implemented. With the right packet decoders, or by looking for certain byte streams in raw data, these functions can be identified.</p><p>When the command line is executed, it has the parent process of <code>C:\windows\system32\wbem\WmiPrvSE.exe</code>. This analytic looks for these two events happening in sequence, so that the network connection and target process are output.</p><p>Certain strings can be identifiers of the WMI by looking up the interface UUID for <code>IRemUnknown2</code> in different formats- UUID <code>00000143-0000-0000-c000-000000000046</code> (decoded)- Hex <code>43 01 00 00 00 00 00 00 c0 00 00 00 00 00 00 46</code> (raw)- ASCII <code>CF</code> (printable text only)</p><p>This identifier is present three times during the RPC request phase. Any sensor that has access to the byte code as raw, decoded, or ASCII could implement this analytic. The transfer syntax is- UUID <code>8a885d04-1ceb-11c9-9fe8-08002b104860</code> (decoded)- Hex <code>04 5d 88 8a eb 1c c9 11 9f e8 08 00 2b 10 48 60</code> (raw)- ASCII <code>`]+H``</code> (printable text only)</p><p>Thus, a great ASCII based signature is- <code><em>CF</em>]+H<em>CF</em>CF<em>host</em>"</code></p><p>Note: To detect WMI over RPC (using DCOM), a sensor needs to exist that has the insight into individual connections and can actually decode and make sense of RPC traffic. Specifically, WMI can be detected by looking at RPC traffic where the target interface matches that of WMI, which is IRemUnknown2. Look for instances of the WMI querying in network traffic, and find the cases where a process is launched immediately after a connection is seen. This essentially merges the request to start a remote process via WMI with the process execution. If other processes are spawned from wmiprvse.exe in this time frame, it is possible for race conditions to occur, and the wrong process may be merged. If this is the case, it may be useful to look deeper into the network traffic to see if the desired command can be extracted.</p><p>Analytic 1 - Remote WMI over RPC</p><p><code>source="*Zeek:RPC" dest_port="135" protocol_rpc_interface="IRemUnknown2"</code></p>
+                                <p>Monitor network traffic for WMI connections for potential use to remotely edit configuration, start services, or query files. When remote WMI requests are over RPC it connects to a DCOM interface within the RPC group <code>netsvcs</code>. To detect this activity, a sensor is needed at the network level that can decode RPC traffic or on the host where the communication can be detected more natively, such as Event Tracing for Windows. Using wireshark/tshark decoders, the WMI interfaces can be extracted so that WMI activity over RPC can be detected. Although the description details how to detect remote WMI precisely, a decent estimate has been to look for the string RPCSS within the initial RPC connection on 135/tcp. It returns a superset of this activity, and will trigger on all DCOM-related services running within RPC, which is likely to also be activity that should be detected between hosts. More about RPCSS at : rpcss_dcom_interfaces.html</p><p>Look for instances of the WMI querying in network traffic, and find the cases where a process is launched immediately after a connection is seen. This essentially merges the request to start a remote process via WMI with the process execution. If other processes are spawned from wmiprvse.exe in this time frame, it is possible for race conditions to occur, and the wrong process may be merged. If this is the case, it may be useful to look deeper into the network traffic to see if the desired command can be extracted.</p><p>After the WMI connection has been initialized, a process can be remotely launched using the command: <code>wmic /node:"<hostname>" process call create "<command line>"</code>, which is detected in the third Detection Pseudocode. </p><p>This leaves artifacts at both a network (RPC) and process (command line) level. When <code>wmic.exe</code> (or the schtasks API) is used to remotely create processes, Windows uses RPC (135/tcp) to communicate with the the remote machine.</p><p>After RPC authenticates, the RPC endpoint mapper opens a high port connection, through which the schtasks Remote Procedure Call is actually implemented. With the right packet decoders, or by looking for certain byte streams in raw data, these functions can be identified.</p><p>When the command line is executed, it has the parent process of <code>C:\windows\system32\wbem\WmiPrvSE.exe</code>. This analytic looks for these two events happening in sequence, so that the network connection and target process are output.</p><p>Certain strings can be identifiers of the WMI by looking up the interface UUID for <code>IRemUnknown2</code> in different formats- UUID <code>00000143-0000-0000-c000-000000000046</code> (decoded)- Hex <code>43 01 00 00 00 00 00 00 c0 00 00 00 00 00 00 46</code> (raw)- ASCII <code>CF</code> (printable text only)</p><p>This identifier is present three times during the RPC request phase. Any sensor that has access to the byte code as raw, decoded, or ASCII could implement this analytic. The transfer syntax is- UUID <code>8a885d04-1ceb-11c9-9fe8-08002b104860</code> (decoded)- Hex <code>04 5d 88 8a eb 1c c9 11 9f e8 08 00 2b 10 48 60</code> (raw)- ASCII <code>`]+H``</code> (printable text only)</p><p>Thus, a great ASCII based signature is- <code><em>CF</em>]+H<em>CF</em>CF<em>host</em>"</code></p><p>Note: To detect WMI over RPC (using DCOM), a sensor needs to exist that has the insight into individual connections and can actually decode and make sense of RPC traffic. Specifically, WMI can be detected by looking at RPC traffic where the target interface matches that of WMI, which is IRemUnknown2. Look for instances of the WMI querying in network traffic, and find the cases where a process is launched immediately after a connection is seen. This essentially merges the request to start a remote process via WMI with the process execution. If other processes are spawned from wmiprvse.exe in this time frame, it is possible for race conditions to occur, and the wrong process may be merged. If this is the case, it may be useful to look deeper into the network traffic to see if the desired command can be extracted.</p><p>Analytic 1 - Monitor for WMI over RPC (DCOM) connections. Look for the string RPCSS within the initial RPC connection on port 135/tcp.</p><p><code> index=windows_logs sourcetype=WinEventLog:Security OR sourcetype=WinEventLog:Microsoft-Windows-Sysmon/Operational OR sourcetype=WinEventLog:Microsoft-Windows-Security-Auditing| eval ProcessName=lower(ProcessName), CommandLine=lower(CommandLine)| search ProcessName IN ("wmic.exe", "powershell.exe", "wmiprvse.exe", "wmiadap.exe", "scrcons.exe", "wbemtool.exe")| search CommandLine IN ("<em>process call create</em>", "<em>win32_process</em>", "<em>win32_service</em>", "<em>shadowcopy delete</em>", "<em>network</em>")| search (sourcetype="WinEventLog:Security" EventCode=4688) OR (sourcetype="WinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode=1)| join ProcessName [ search index=windows_logs sourcetype=WinEventLog:Microsoft-Windows-Sysmon/Operational EventCode=3 | eval DestinationIp = coalesce(DestinationIp, dest_ip)| eval DestinationPort = coalesce(DestinationPort, dest_port)| search DestinationPort IN (135, 5985, 5986) ]| stats count by _time, ComputerName, User, ProcessName, CommandLine, DestinationIp, DestinationPort, dest, src_ip, dest_ip| eval alert_message="Suspicious WMI Network Connection Detected: " + ProcessName + " executed by " + User + " on " + ComputerName + " with command: " + CommandLine + " connecting to " + DestinationIp + ":" + DestinationPort| where NOT (User="SYSTEM" OR ProcessName="wmiprvse.exe" OR (src_ip="trusted_ip_range" AND DestinationIp="trusted_ip_range"))| table _time, ComputerName, User, ProcessName, CommandLine, DestinationIp, DestinationPort, src_ip, dest_ip, alert_message</code></p>
 
                     </td>
                 </tr>
@@ -2841,6 +2872,20 @@
                         <td></td>
                         <td></td>
                         <td>
+                            <a href="/techniques/T1595/001">.001</a>
+                        </td>
+                        <td>
+                            <a href="/techniques/T1595/001">Scanning IP Blocks</a>
+                        </td>
+                        <td>
+                                    <p>Monitoring the content of network traffic can help detect patterns associated with active scanning activities. This can include identifying repeated connection attempts, unusual scanning behaviors, or probing activity targeting multiple IP addresses across a network.</p>
+
+                        </td>
+                    </tr>
+                    <tr class="sub technique enterprise" id="enterprise">
+                        <td></td>
+                        <td></td>
+                        <td>
                             <a href="/techniques/T1595/002">.002</a>
                         </td>
                         <td>
@@ -2919,6 +2964,20 @@
                         </td>
                         <td>
                                     <p>Monitor network traffic for suspicious/malicious behavior involving DHCP, such as changes in DNS and/or gateway parameters. Additionally, monitor network traffic for rogue DHCPv6 activity.</p>
+
+                        </td>
+                    </tr>
+                    <tr class="sub technique enterprise" id="enterprise">
+                        <td></td>
+                        <td></td>
+                        <td>
+                            <a href="/techniques/T1557/004">.004</a>
+                        </td>
+                        <td>
+                            <a href="/techniques/T1557/004">Evil Twin</a>
+                        </td>
+                        <td>
+                                    <p>Monitor network traffic for suspicious/malicious behavior involving evil twin attacks. Intrusion prevention systems (WIDS) can identify traffic patterns indicative of activity associated with evil twins, rogue access points, and adversary-in-the-middle activity.</p>
 
                         </td>
                     </tr>
@@ -3005,6 +3064,20 @@
                         </td>
                         <td>
                                     <p>Monitor and analyze traffic patterns and packet inspection associated to protocol(s), leveraging SSL/TLS inspection for DNS over TLS (DoT) and DNS over HTTPS (DoH), that do not follow the expected protocol standards and traffic flows (e.g extraneous packets that do not belong to established flows, gratuitous or anomalous traffic patterns, anomalous syntax, or structure). Consider correlation with process monitoring and command line to detect anomalous processes execution and command line arguments associated to traffic patterns (e.g. monitor anomalies in use of files that do not normally initiate connections for respective protocol(s)).</p>
+
+                        </td>
+                    </tr>
+                    <tr class="sub technique enterprise" id="enterprise">
+                        <td></td>
+                        <td></td>
+                        <td>
+                            <a href="/techniques/T1071/005">.005</a>
+                        </td>
+                        <td>
+                            <a href="/techniques/T1071/005">Publish/Subscribe Protocols</a>
+                        </td>
+                        <td>
+                                    <p>Monitor and analyze traffic patterns and packet inspection associated to protocol(s), leveraging SSL/TLS inspection for encrypted traffic, that do not follow the expected protocol standards and traffic flows (e.g extraneous packets that do not belong to established flows, gratuitous or anomalous traffic patterns, anomalous syntax, or structure). Consider correlation with process monitoring and command line to detect anomalous processes execution and command line arguments associated to traffic patterns (e.g. monitor anomalies in use of files that do not normally initiate connections for respective protocol(s)).</p>
 
                         </td>
                     </tr>
@@ -3109,7 +3182,7 @@
                         <a href="/techniques/T0885">Commonly Used Port</a>
                     </td>
                     <td>
-                                <p>Monitor for mismatches between protocols and their expected ports (e.g., non-HTTP traffic on tcp:80). Analyze packet contents to detect communications that do not follow the expected protocol behavior for the port that is being used.<span onclick=scrollToRef('scite-4') id="scite-ref-4-a" class="scite-citeref-number" title="Gardiner, J.,  Cova, M., Nagaraja, S. (2014, February). Command & Control Understanding, Denying and Detecting. Retrieved April 20, 2016."data-reference="University of Birmingham C2"><sup><a href="https://arxiv.org/ftp/arxiv/papers/1408/1408.1136.pdf" target="_blank" data-hasqtip="3" aria-describedby="qtip-3">[4]</a></sup></span></p>
+                                <p>Monitor for mismatches between protocols and their expected ports (e.g., non-HTTP traffic on tcp:80). Analyze packet contents to detect communications that do not follow the expected protocol behavior for the port that is being used.<span onclick=scrollToRef('scite-5') id="scite-ref-5-a" class="scite-citeref-number" title="Gardiner, J.,  Cova, M., Nagaraja, S. (2014, February). Command & Control Understanding, Denying and Detecting. Retrieved April 20, 2016."data-reference="University of Birmingham C2"><sup><a href="https://arxiv.org/ftp/arxiv/papers/1408/1408.1136.pdf" target="_blank" data-hasqtip="4" aria-describedby="qtip-4">[5]</a></sup></span></p>
 
                     </td>
                 </tr>
@@ -3313,7 +3386,7 @@
                         <a href="/techniques/T1001">Data Obfuscation</a>
                     </td>
                     <td>
-                                <p>Monitor and analyze traffic patterns and packet inspection associated to protocol(s), leveraging SSL/TLS inspection for encrypted traffic, that do not follow the expected protocol standards and traffic flows (e.g extraneous packets that do not belong to established flows, gratuitous or anomalous traffic patterns, anomalous syntax, or structure). Consider correlation with process monitoring and command line to detect anomalous processes execution and command line arguments associated to traffic patterns (e.g. monitor anomalies in use of files that do not normally initiate connections for respective protocol(s)).</p>
+                                <p>Analyze network data for uncommon data flows (e.g., a client sending significantly more data than it receives from a server). Processes utilizing the network that do not normally have network communication or have never been seen before are suspicious. Analyze packet contents to detect communications that do not follow the expected protocol behavior for the port that is being used. <span onclick=scrollToRef('scite-5') id="scite-ref-5-a" class="scite-citeref-number" title="Gardiner, J.,  Cova, M., Nagaraja, S. (2014, February). Command & Control Understanding, Denying and Detecting. Retrieved April 20, 2016."data-reference="University of Birmingham C2"><sup><a href="https://arxiv.org/ftp/arxiv/papers/1408/1408.1136.pdf" target="_blank" data-hasqtip="4" aria-describedby="qtip-4">[5]</a></sup></span></p>
 
                     </td>
                 </tr>
@@ -3327,7 +3400,7 @@
                             <a href="/techniques/T1001/001">Junk Data</a>
                         </td>
                         <td>
-                                    <p>Monitor and analyze traffic patterns and packet inspection associated to protocol(s), leveraging SSL/TLS inspection for encrypted traffic, that do not follow the expected protocol standards and traffic flows (e.g extraneous packets that do not belong to established flows, gratuitous or anomalous traffic patterns, anomalous syntax, or structure). Consider correlation with process monitoring and command line to detect anomalous processes execution and command line arguments associated to traffic patterns (e.g. monitor anomalies in use of files that do not normally initiate connections for respective protocol(s)).</p>
+                                    <p>Analyze network data for uncommon data flows (e.g., a client sending significantly more data than it receives from a server). Processes utilizing the network that do not normally have network communication or have never been seen before are suspicious. Analyze packet contents to detect communications that do not follow the expected protocol behavior for the port that is being used.<span onclick=scrollToRef('scite-5') id="scite-ref-5-a" class="scite-citeref-number" title="Gardiner, J.,  Cova, M., Nagaraja, S. (2014, February). Command & Control Understanding, Denying and Detecting. Retrieved April 20, 2016."data-reference="University of Birmingham C2"><sup><a href="https://arxiv.org/ftp/arxiv/papers/1408/1408.1136.pdf" target="_blank" data-hasqtip="4" aria-describedby="qtip-4">[5]</a></sup></span></p>
 
                         </td>
                     </tr>
@@ -3341,7 +3414,7 @@
                             <a href="/techniques/T1001/002">Steganography</a>
                         </td>
                         <td>
-                                    <p>Monitor and analyze traffic patterns and packet inspection associated to protocol(s), leveraging SSL/TLS inspection for encrypted traffic, that do not follow the expected protocol standards and traffic flows (e.g extraneous packets that do not belong to established flows, gratuitous or anomalous traffic patterns, anomalous syntax, or structure).</p>
+                                    <p>Analyze network data for uncommon data flows (e.g., a client sending significantly more data than it receives from a server). Processes utilizing the network that do not normally have network communication or have never been seen before are suspicious. Analyze packet contents to detect communications that do not follow the expected protocol behavior for the port that is being used.<span onclick=scrollToRef('scite-5') id="scite-ref-5-a" class="scite-citeref-number" title="Gardiner, J.,  Cova, M., Nagaraja, S. (2014, February). Command & Control Understanding, Denying and Detecting. Retrieved April 20, 2016."data-reference="University of Birmingham C2"><sup><a href="https://arxiv.org/ftp/arxiv/papers/1408/1408.1136.pdf" target="_blank" data-hasqtip="4" aria-describedby="qtip-4">[5]</a></sup></span></p>
 
                         </td>
                     </tr>
@@ -3352,10 +3425,10 @@
                             <a href="/techniques/T1001/003">.003</a>
                         </td>
                         <td>
-                            <a href="/techniques/T1001/003">Protocol Impersonation</a>
+                            <a href="/techniques/T1001/003">Protocol or Service Impersonation</a>
                         </td>
                         <td>
-                                    <p>Monitor and analyze traffic patterns and packet inspection associated to protocol(s), leveraging SSL/TLS inspection for encrypted traffic, that do not follow the expected protocol standards and traffic flows (e.g extraneous packets that do not belong to established flows, gratuitous or anomalous traffic patterns, anomalous syntax, or structure). Consider correlation with process monitoring and command line to detect anomalous processes execution and command line arguments associated to traffic patterns (e.g. monitor anomalies in use of files that do not normally initiate connections for respective protocol(s)).</p>
+                                    <p>Analyze network data for uncommon data flows (e.g., a client sending significantly more data than it receives from a server). Processes utilizing the network that do not normally have network communication or have never been seen before are suspicious. Analyze packet contents to detect communications that do not follow the expected protocol behavior for the port that is being used.<span onclick=scrollToRef('scite-5') id="scite-ref-5-a" class="scite-citeref-number" title="Gardiner, J.,  Cova, M., Nagaraja, S. (2014, February). Command & Control Understanding, Denying and Detecting. Retrieved April 20, 2016."data-reference="University of Birmingham C2"><sup><a href="https://arxiv.org/ftp/arxiv/papers/1408/1408.1136.pdf" target="_blank" data-hasqtip="4" aria-describedby="qtip-4">[5]</a></sup></span></p>
 
                         </td>
                     </tr>
@@ -3877,7 +3950,7 @@
                         <a href="/techniques/T1190">Exploit Public-Facing Application</a>
                     </td>
                     <td>
-                                <p>Use deep packet inspection to look for artifacts of common exploit traffic, such as SQL injection strings or known payloads. For example, monitor for successively chained functions that adversaries commonly abuse (i.e. gadget chaining) through unsafe deserialization to exploit publicly facing applications for initial access.<span onclick=scrollToRef('scite-5') id="scite-ref-5-a" class="scite-citeref-number" title="Rahman, Alyssa. (2021, December 13). Now You Serial, Now You Don’t — Systematically Hunting for Deserialization Exploits. Retrieved November 28, 2023."data-reference="Now You Serial"><sup><a href="https://www.mandiant.com/resources/blog/hunting-deserialization-exploits" target="_blank" data-hasqtip="4" aria-describedby="qtip-4">[5]</a></sup></span> </p>
+                                <p>Use deep packet inspection to look for artifacts of common exploit traffic, such as SQL injection strings or known payloads. For example, monitor for successively chained functions that adversaries commonly abuse (i.e. gadget chaining) through unsafe deserialization to exploit publicly facing applications for initial access.<span onclick=scrollToRef('scite-6') id="scite-ref-6-a" class="scite-citeref-number" title="Rahman, Alyssa. (2021, December 13). Now You Serial, Now You Don’t — Systematically Hunting for Deserialization Exploits. Retrieved November 28, 2023."data-reference="Now You Serial"><sup><a href="https://www.mandiant.com/resources/blog/hunting-deserialization-exploits" target="_blank" data-hasqtip="5" aria-describedby="qtip-5">[6]</a></sup></span> In AWS environments, monitor VPC flow logs and/or Elastic Load Balancer (ELB) logs going to and from instances hosting externally accessible applications.</p>
 
                     </td>
                 </tr>
@@ -3967,7 +4040,7 @@
                         <a href="/techniques/T1187">Forced Authentication</a>
                     </td>
                     <td>
-                                <p>For internal traffic, monitor the workstation-to-workstation unusual (vs. baseline) SMB traffic. For many networks there should not be any, but it depends on how systems on the network are configured and where resources are located.</p>
+                                <p>For internal traffic, monitor the workstation-to-workstation unusual (vs. baseline) SMB traffic. For many networks there should not be any, but it depends on how systems on the network are configured and where resources are located.</p><p>Analytic 1 - Detection of NTLM hash traffic or other suspicious authentication traffic.</p><p><code> index=network sourcetype="stream:tcp" (dest_port=445 OR dest_port=80 OR dest_port=443) | eval Protocol=case(dest_port==445, "SMB", dest_port==80, "HTTP", dest_port==443, "HTTPS", true(), "Unknown")| search (command IN ("NTLMSSP_NEGOTIATE", "NTLMSSP_AUTH")) | eval SuspiciousAuth=case(    match(_raw, "NTLMSSP_NEGOTIATE"), "NTLM Negotiate",    match(_raw, "NTLMSSP_AUTH"), "NTLM Authentication",    true(), "Unknown")</code></p>
 
                     </td>
                 </tr>
@@ -4294,7 +4367,7 @@
                         <a href="/techniques/T1003">OS Credential Dumping</a>
                     </td>
                     <td>
-                                <p>Monitor and analyze traffic patterns and packet inspection associated to protocol(s) that do not follow the expected protocol standards and traffic flows (e.g extraneous packets that do not belong to established flows, gratuitous or anomalous traffic patterns, anomalous syntax, or structure). Consider correlation with process monitoring and command line to detect anomalous processes execution and command line arguments associated to traffic patterns (e.g. monitor anomalies in use of files that do not normally initiate connections for respective protocol(s)).</p>
+                                <p>Monitor for network protocols  <span onclick=scrollToRef('scite-7') id="scite-ref-7-a" class="scite-citeref-number" title="Microsoft. (2017, December 1). MS-DRSR Directory Replication Service (DRS) Remote Protocol. Retrieved December 4, 2017."data-reference="Microsoft DRSR Dec 2017"><sup><a href="https://msdn.microsoft.com/library/cc228086.aspx" target="_blank" data-hasqtip="6" aria-describedby="qtip-6">[7]</a></sup></span> <span onclick=scrollToRef('scite-8') id="scite-ref-8-a" class="scite-citeref-number" title="Microsoft. (2017, December 1). MS-NRPC - Netlogon Remote Protocol. Retrieved December 6, 2017."data-reference="Microsoft NRPC Dec 2017"><sup><a href="https://msdn.microsoft.com/library/cc237008.aspx" target="_blank" data-hasqtip="7" aria-describedby="qtip-7">[8]</a></sup></span> and other replication requests <span onclick=scrollToRef('scite-9') id="scite-ref-9-a" class="scite-citeref-number" title="Microsoft. (n.d.). MS-SAMR Security Account Manager (SAM) Remote Protocol (Client-to-Server) - Transport. Retrieved December 4, 2017."data-reference="Microsoft SAMR"><sup><a href="https://msdn.microsoft.com/library/cc245496.aspx" target="_blank" data-hasqtip="8" aria-describedby="qtip-8">[9]</a></sup></span> from IPs not associated with known domain controllers. <span onclick=scrollToRef('scite-10') id="scite-ref-10-a" class="scite-citeref-number" title="Metcalf, S. (2015, September 25). Mimikatz DCSync Usage, Exploitation, and Detection. Retrieved December 4, 2017."data-reference="AdSecurity DCSync Sept 2015"><sup><a href="https://adsecurity.org/?p=1729" target="_blank" data-hasqtip="9" aria-describedby="qtip-9">[10]</a></sup></span></p><p>Analytic 1 - Anomalous network traffic content related to credential managers </p><p><code>index=network sourcetype="stream:tcp" dest_port=389 NOT [| inputlookup known_dc_ip_addresses | fields ip]| eval SourceIP = src_ip, DestinationIP = dest_ip, Protocol = proto| search (content="LDAPSearchRequest") OR (content="LDAPModifyRequest") OR (content="bindRequest") OR (content="searchResEntry") OR (content="NTDS.dit")</code></p>
 
                     </td>
                 </tr>
@@ -4323,7 +4396,7 @@
                         <a href="/techniques/T1566">Phishing</a>
                     </td>
                     <td>
-                                <p>Monitor and analyze SSL/TLS traffic patterns and packet inspection associated to protocol(s) that do not follow the expected protocol standards and traffic flows (e.g extraneous packets that do not belong to established flows, gratuitous or anomalous traffic patterns, anomalous syntax, or structure). Consider correlation with process monitoring and command line to detect anomalous processes execution and command line arguments associated to traffic patterns (e.g. monitor anomalies in use of files that do not normally initiate connections for respective protocol(s)). Filtering based on DKIM+SPF or header analysis can help detect when the email sender is spoofed.<span onclick=scrollToRef('scite-6') id="scite-ref-6-a" class="scite-citeref-number" title="Microsoft. (2020, October 13). Anti-spoofing protection in EOP. Retrieved October 19, 2020."data-reference="Microsoft Anti Spoofing"><sup><a href="https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/anti-spoofing-protection?view=o365-worldwide" target="_blank" data-hasqtip="5" aria-describedby="qtip-5">[6]</a></sup></span><span onclick=scrollToRef('scite-7') id="scite-ref-7-a" class="scite-citeref-number" title="Australian Cyber Security Centre. (2012, December). Mitigating Spoofed Emails Using Sender Policy Framework. Retrieved October 19, 2020."data-reference="ACSC Email Spoofing"><sup><a href="https://www.cyber.gov.au/sites/default/files/2019-03/spoof_email_sender_policy_framework.pdf" target="_blank" data-hasqtip="6" aria-describedby="qtip-6">[7]</a></sup></span></p>
+                                <p>Monitor and analyze SSL/TLS traffic patterns and packet inspection associated to protocol(s) that do not follow the expected protocol standards and traffic flows (e.g extraneous packets that do not belong to established flows, gratuitous or anomalous traffic patterns, anomalous syntax, or structure). Consider correlation with process monitoring and command line to detect anomalous processes execution and command line arguments associated to traffic patterns (e.g. monitor anomalies in use of files that do not normally initiate connections for respective protocol(s)). Filtering based on DKIM+SPF or header analysis can help detect when the email sender is spoofed.<span onclick=scrollToRef('scite-11') id="scite-ref-11-a" class="scite-citeref-number" title="Microsoft. (2020, October 13). Anti-spoofing protection in EOP. Retrieved October 19, 2020."data-reference="Microsoft Anti Spoofing"><sup><a href="https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/anti-spoofing-protection?view=o365-worldwide" target="_blank" data-hasqtip="10" aria-describedby="qtip-10">[11]</a></sup></span><span onclick=scrollToRef('scite-12') id="scite-ref-12-a" class="scite-citeref-number" title="Australian Cyber Security Centre. (2012, December). Mitigating Spoofed Emails Using Sender Policy Framework. Retrieved October 19, 2020."data-reference="ACSC Email Spoofing"><sup><a href="https://web.archive.org/web/20210708014107/https://www.cyber.gov.au/sites/default/files/2019-03/spoof_email_sender_policy_framework.pdf" target="_blank" data-hasqtip="11" aria-describedby="qtip-11">[12]</a></sup></span></p>
 
                     </td>
                 </tr>
@@ -4337,7 +4410,7 @@
                             <a href="/techniques/T1566/001">Spearphishing Attachment</a>
                         </td>
                         <td>
-                                    <p>Monitor and analyze SSL/TLS traffic patterns and packet inspection associated to protocol(s) that do not follow the expected protocol standards and traffic flows (e.g extraneous packets that do not belong to established flows, gratuitous or anomalous traffic patterns, anomalous syntax, or structure). Consider correlation with process monitoring and command line to detect anomalous processes execution and command line arguments associated to traffic patterns (e.g. monitor anomalies in use of files that do not normally initiate connections for respective protocol(s)). Filtering based on DKIM+SPF or header analysis can help detect when the email sender is spoofed.<span onclick=scrollToRef('scite-6') id="scite-ref-6-a" class="scite-citeref-number" title="Microsoft. (2020, October 13). Anti-spoofing protection in EOP. Retrieved October 19, 2020."data-reference="Microsoft Anti Spoofing"><sup><a href="https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/anti-spoofing-protection?view=o365-worldwide" target="_blank" data-hasqtip="5" aria-describedby="qtip-5">[6]</a></sup></span><span onclick=scrollToRef('scite-7') id="scite-ref-7-a" class="scite-citeref-number" title="Australian Cyber Security Centre. (2012, December). Mitigating Spoofed Emails Using Sender Policy Framework. Retrieved October 19, 2020."data-reference="ACSC Email Spoofing"><sup><a href="https://www.cyber.gov.au/sites/default/files/2019-03/spoof_email_sender_policy_framework.pdf" target="_blank" data-hasqtip="6" aria-describedby="qtip-6">[7]</a></sup></span></p>
+                                    <p>Monitor and analyze SSL/TLS traffic patterns and packet inspection associated to protocol(s) that do not follow the expected protocol standards and traffic flows (e.g extraneous packets that do not belong to established flows, gratuitous or anomalous traffic patterns, anomalous syntax, or structure). Consider correlation with process monitoring and command line to detect anomalous processes execution and command line arguments associated to traffic patterns (e.g. monitor anomalies in use of files that do not normally initiate connections for respective protocol(s)). Filtering based on DKIM+SPF or header analysis can help detect when the email sender is spoofed.<span onclick=scrollToRef('scite-11') id="scite-ref-11-a" class="scite-citeref-number" title="Microsoft. (2020, October 13). Anti-spoofing protection in EOP. Retrieved October 19, 2020."data-reference="Microsoft Anti Spoofing"><sup><a href="https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/anti-spoofing-protection?view=o365-worldwide" target="_blank" data-hasqtip="10" aria-describedby="qtip-10">[11]</a></sup></span><span onclick=scrollToRef('scite-12') id="scite-ref-12-a" class="scite-citeref-number" title="Australian Cyber Security Centre. (2012, December). Mitigating Spoofed Emails Using Sender Policy Framework. Retrieved October 19, 2020."data-reference="ACSC Email Spoofing"><sup><a href="https://web.archive.org/web/20210708014107/https://www.cyber.gov.au/sites/default/files/2019-03/spoof_email_sender_policy_framework.pdf" target="_blank" data-hasqtip="11" aria-describedby="qtip-11">[12]</a></sup></span></p>
 
                         </td>
                     </tr>
@@ -4675,6 +4748,34 @@
 
                     </td>
                 </tr>
+                    <tr class="sub technique enterprise" id="enterprise">
+                        <td></td>
+                        <td></td>
+                        <td>
+                            <a href="/techniques/T1496/001">.001</a>
+                        </td>
+                        <td>
+                            <a href="/techniques/T1496/001">Compute Hijacking</a>
+                        </td>
+                        <td>
+                                    <p>Monitor network traffic content for resources of co-opted systems to complete resource-intensive tasks, which may impact system and/or hosted service availability.</p>
+
+                        </td>
+                    </tr>
+                    <tr class="sub technique enterprise" id="enterprise">
+                        <td></td>
+                        <td></td>
+                        <td>
+                            <a href="/techniques/T1496/002">.002</a>
+                        </td>
+                        <td>
+                            <a href="/techniques/T1496/002">Bandwidth Hijacking</a>
+                        </td>
+                        <td>
+                                    <p>Monitor network traffic content for strange or unusual patterns. </p>
+
+                        </td>
+                    </tr>
                 <tr class="technique enterprise" id="enterprise">
                     <td>
                             Enterprise
@@ -4686,7 +4787,7 @@
                         <a href="/techniques/T1207">Rogue Domain Controller</a>
                     </td>
                     <td>
-                                <p>Monitor and analyze network traffic associated with data replication (such as calls to DrsAddEntry, DrsReplicaAdd, and especially GetNCChanges) between DCs as well as to/from non DC hosts. <span onclick=scrollToRef('scite-8') id="scite-ref-8-a" class="scite-citeref-number" title="Spencer S. (2018, February 22). DCSYNCMonitor. Retrieved March 30, 2018."data-reference="GitHub DCSYNCMonitor"><sup><a href="https://github.com/shellster/DCSYNCMonitor" target="_blank" data-hasqtip="7" aria-describedby="qtip-7">[8]</a></sup></span><span onclick=scrollToRef('scite-9') id="scite-ref-9-a" class="scite-citeref-number" title="Delpy, B. & LE TOUX, V. (n.d.). DCShadow. Retrieved March 20, 2018."data-reference="DCShadow Blog"><sup><a href="https://www.dcshadow.com/" target="_blank" data-hasqtip="8" aria-describedby="qtip-8">[9]</a></sup></span> DC replication will naturally take place every 15 minutes but can be triggered by an adversary or by legitimate urgent changes (ex: passwords).</p>
+                                <p>Monitor and analyze network traffic associated with data replication (such as calls to DrsAddEntry, DrsReplicaAdd, and especially GetNCChanges) between DCs as well as to/from non DC hosts. <span onclick=scrollToRef('scite-13') id="scite-ref-13-a" class="scite-citeref-number" title="Spencer S. (2018, February 22). DCSYNCMonitor. Retrieved March 30, 2018."data-reference="GitHub DCSYNCMonitor"><sup><a href="https://github.com/shellster/DCSYNCMonitor" target="_blank" data-hasqtip="12" aria-describedby="qtip-12">[13]</a></sup></span><span onclick=scrollToRef('scite-14') id="scite-ref-14-a" class="scite-citeref-number" title="Delpy, B. & LE TOUX, V. (n.d.). DCShadow. Retrieved March 20, 2018."data-reference="DCShadow Blog"><sup><a href="https://www.dcshadow.com/" target="_blank" data-hasqtip="13" aria-describedby="qtip-13">[14]</a></sup></span> DC replication will naturally take place every 15 minutes but can be triggered by an adversary or by legitimate urgent changes (ex: passwords).</p>
 
                     </td>
                 </tr>
@@ -4716,7 +4817,7 @@
                         <a href="/techniques/T1505">Server Software Component</a>
                     </td>
                     <td>
-                                <p>Monitor and analyze traffic patterns and packet inspection associated to protocol(s), leveraging SSL/TLS inspection for encrypted traffic, that do not follow the expected protocol standards and traffic flows (e.g extraneous packets that do not belong to established flows, gratuitous or anomalous traffic patterns, anomalous syntax, or structure). Consider correlation with process monitoring and command line to detect anomalous processes execution and command line arguments associated to traffic patterns (e.g. monitor anomalies in use of files that do not normally initiate connections for respective protocol(s)). <span onclick=scrollToRef('scite-10') id="scite-ref-10-a" class="scite-citeref-number" title="US-CERT. (2015, November 13). Compromised Web Servers and Web Shells - Threat Awareness and Guidance. Retrieved June 8, 2016."data-reference="US-CERT Alert TA15-314A Web Shells"><sup><a href="https://www.us-cert.gov/ncas/alerts/TA15-314A" target="_blank" data-hasqtip="9" aria-describedby="qtip-9">[10]</a></sup></span></p>
+                                <p>Monitor and analyze traffic patterns and packet inspection associated to protocol(s), leveraging SSL/TLS inspection for encrypted traffic, that do not follow the expected protocol standards and traffic flows (e.g extraneous packets that do not belong to established flows, gratuitous or anomalous traffic patterns, anomalous syntax, or structure). Consider correlation with process monitoring and command line to detect anomalous processes execution and command line arguments associated to traffic patterns (e.g. monitor anomalies in use of files that do not normally initiate connections for respective protocol(s)). <span onclick=scrollToRef('scite-15') id="scite-ref-15-a" class="scite-citeref-number" title="US-CERT. (2015, November 13). Compromised Web Servers and Web Shells - Threat Awareness and Guidance. Retrieved June 8, 2016."data-reference="US-CERT Alert TA15-314A Web Shells"><sup><a href="https://www.us-cert.gov/ncas/alerts/TA15-314A" target="_blank" data-hasqtip="14" aria-describedby="qtip-14">[15]</a></sup></span></p>
 
                     </td>
                 </tr>
@@ -4835,7 +4936,7 @@
                         <a href="/techniques/T1205">Traffic Signaling</a>
                     </td>
                     <td>
-                                <p>Monitor and analyze network packet contents to detect application layer protocols, leveraging SSL/TLS inspection for encrypted traffic, that do not follow the expected protocol standards and traffic flows (e.g extraneous packets that do not belong to established flows, protocol port mismatch, anomalous syntax, or structure). Consider packet inspection for Wake-on-LAN magic packet consists of 6 bytes of <code>FF</code> followed by sixteen repetitions of the target system's IEEE address. Seeing this string anywhere in a packet's payload may be indicative of a Wake-on-LAN attempt.<span onclick=scrollToRef('scite-11') id="scite-ref-11-a" class="scite-citeref-number" title="Perry, David. (2020, August 11). WakeOnLAN (WOL). Retrieved February 17, 2021."data-reference="GitLab WakeOnLAN"><sup><a href="https://gitlab.com/wireshark/wireshark/-/wikis/WakeOnLAN" target="_blank" data-hasqtip="10" aria-describedby="qtip-10">[11]</a></sup></span></p>
+                                <p>Monitor and analyze network packet contents to detect application layer protocols, leveraging SSL/TLS inspection for encrypted traffic, that do not follow the expected protocol standards and traffic flows (e.g extraneous packets that do not belong to established flows, protocol port mismatch, anomalous syntax, or structure). Consider packet inspection for Wake-on-LAN magic packet consists of 6 bytes of <code>FF</code> followed by sixteen repetitions of the target system's IEEE address. Seeing this string anywhere in a packet's payload may be indicative of a Wake-on-LAN attempt.<span onclick=scrollToRef('scite-16') id="scite-ref-16-a" class="scite-citeref-number" title="Perry, David. (2020, August 11). WakeOnLAN (WOL). Retrieved February 17, 2021."data-reference="GitLab WakeOnLAN"><sup><a href="https://gitlab.com/wireshark/wireshark/-/wikis/WakeOnLAN" target="_blank" data-hasqtip="15" aria-describedby="qtip-15">[16]</a></sup></span></p>
 
                     </td>
                 </tr>
@@ -4909,7 +5010,7 @@
                             <a href="/techniques/T1204/001">Malicious Link</a>
                         </td>
                         <td>
-                                    <p>Monitor and analyze traffic patterns and packet inspection associated with web-based network connections that are sent to malicious or suspicious detinations (e.g. destinations attributed to phishing campaigns). Consider correlation with process monitoring and command line to detect anomalous processes execution and command line arguments (e.g. monitor anomalies in use of files that do not normally initiate network connections or unusual connections initiated by regsvr32.exe, rundll.exe, .SCF, HTA, MSI, DLLs, or msiexec.exe).</p>
+                                    <p>Inspect the content of the network traffic to look for signs of suspicious web traffic, such as phishing links or abnormal HTTP GET/POST requests.</p><p>Analytic 1 - Suspicious network traffic content</p><p><code> sourcetype=network_traffic_content| search http_method="GET" OR http_method="POST"| stats count by url domain http_method| where domain NOT IN ("<known_legit_domains>")</code></p>
 
                         </td>
                     </tr>
@@ -5123,6 +5224,20 @@
 
                         </td>
                     </tr>
+                    <tr class="sub technique enterprise" id="enterprise">
+                        <td></td>
+                        <td></td>
+                        <td>
+                            <a href="/techniques/T1557/004">.004</a>
+                        </td>
+                        <td>
+                            <a href="/techniques/T1557/004">Evil Twin</a>
+                        </td>
+                        <td>
+                                    <p>Monitor for network traffic originating from unknown/unexpected hardware devices. Local network traffic metadata (such as source MAC addressing), as well as usage of network management protocols such as enabling DHCP snooping, may be helpful in identifying rogue hardware.<span onclick=scrollToRef('scite-17') id="scite-ref-17-a" class="scite-citeref-number" title="Cisco. (n.d.). Configuring DHCP Snooping. Retrieved September 17, 2024."data-reference="cisco dhcp snooping"><sup><a href="https://www.cisco.com/en/US/docs/general/Test/dwerblo/broken_guide/snoodhcp.html#wp1120427" target="_blank" data-hasqtip="16" aria-describedby="qtip-16">[17]</a></sup></span>  Additionally, wireless pentesting hardware is often limited to older <code>802.11</code> protocols such as <code>802.11g</code> or <code>802.11a</code>.<span onclick=scrollToRef('scite-18') id="scite-ref-18-a" class="scite-citeref-number" title="Ryan, Gabriel. (2019, October 28). Modern Wireless Tradecraft Pt I — Basic Rogue AP Theory — Evil Twin and Karma Attacks. Retrieved September 17, 2024."data-reference="specter ops evil twin"><sup><a href="https://posts.specterops.io/modern-wireless-attacks-pt-i-basic-rogue-ap-theory-evil-twin-and-karma-attacks-35a8571550ee" target="_blank" data-hasqtip="17" aria-describedby="qtip-17">[18]</a></sup></span></p>
+
+                        </td>
+                    </tr>
                 <tr class="technique ics" id="ics">
                     <td>
                             ICS
@@ -5221,6 +5336,20 @@
                         </td>
                         <td>
                                     <p>Monitor for DNS traffic to/from known-bad or suspicious domains and analyze traffic flows that do not follow the expected protocol standards and traffic flows (e.g extraneous packets that do not belong to established flows, or gratuitous or anomalous traffic patterns). Consider correlation with process monitoring and command line to detect anomalous processes execution and command line arguments associated to traffic patterns (e.g. monitor anomalies in use of files that do not normally initiate connections for respective protocol(s)).</p>
+
+                        </td>
+                    </tr>
+                    <tr class="sub technique enterprise" id="enterprise">
+                        <td></td>
+                        <td></td>
+                        <td>
+                            <a href="/techniques/T1071/005">.005</a>
+                        </td>
+                        <td>
+                            <a href="/techniques/T1071/005">Publish/Subscribe Protocols</a>
+                        </td>
+                        <td>
+                                    <p>Monitor for traffic leveraging common publish/subscribe protocols to/from known-bad or suspicious domains and analyze traffic flows that do not follow the expected protocol standards and traffic flows (e.g extraneous packets that do not belong to established flows, or gratuitous or anomalous traffic patterns). Consider correlation with process monitoring and command line to detect anomalous processes execution and command line arguments associated to traffic patterns (e.g. monitor anomalies in use of files that do not normally initiate connections for respective protocol(s)).</p>
 
                         </td>
                     </tr>
@@ -5490,7 +5619,7 @@
                             <a href="/techniques/T1568/002">Domain Generation Algorithms</a>
                         </td>
                         <td>
-                                    <p>Detecting dynamically generated domains can be challenging due to the number of different DGA algorithms, constantly evolving malware families, and the increasing complexity of the algorithms. There is a myriad of approaches for detecting a pseudo-randomly generated domain name, including using frequency analysis, Markov chains, entropy, proportion of dictionary words, ratio of vowels to other characters, and more. <span onclick=scrollToRef('scite-12') id="scite-ref-12-a" class="scite-citeref-number" title="Jacobs, J. (2014, October 2). Building a DGA Classifier: Part 2, Feature Engineering. Retrieved February 18, 2019."data-reference="Data Driven Security DGA"><sup><a href="https://datadrivensecurity.info/blog/posts/2014/Oct/dga-part2/" target="_blank" data-hasqtip="11" aria-describedby="qtip-11">[12]</a></sup></span> CDN domains may trigger these detections due to the format of their domain names. In addition to detecting a DGA domain based on the name, another more general approach for detecting a suspicious domain is to check for recently registered names or for rarely visited domains.Machine learning approaches to detecting DGA domains have been developed and have seen success in applications. One approach is to use N-Gram methods to determine a randomness score for strings used in the domain name. If the randomness score is high, and the domains are not whitelisted (CDN, etc), then it may be determined if a domain is related to a legitimate host or DGA. <span onclick=scrollToRef('scite-13') id="scite-ref-13-a" class="scite-citeref-number" title="Chen, L., Wang, T.. (2017, May 5). Detecting Algorithmically Generated Domains Using Data Visualization and N-Grams Methods . Retrieved April 26, 2019."data-reference="Pace University Detecting DGA May 2017"><sup><a href="http://csis.pace.edu/~ctappert/srd2017/2017PDF/d4.pdf" target="_blank" data-hasqtip="12" aria-describedby="qtip-12">[13]</a></sup></span> Another approach is to use deep learning to classify domains as DGA-generated<span onclick=scrollToRef('scite-14') id="scite-ref-14-a" class="scite-citeref-number" title="Ahuja, A., Anderson, H., Grant, D., Woodbridge, J.. (2016, November 2). Predicting Domain Generation Algorithms with Long Short-Term Memory Networks. Retrieved April 26, 2019."data-reference="Elastic Predicting DGA"><sup><a href="https://arxiv.org/pdf/1611.00791.pdf" target="_blank" data-hasqtip="13" aria-describedby="qtip-13">[14]</a></sup></span>]</p>
+                                    <p>Detecting dynamically generated domains can be challenging due to the number of different DGA algorithms, constantly evolving malware families, and the increasing complexity of the algorithms. There is a myriad of approaches for detecting a pseudo-randomly generated domain name, including using frequency analysis, Markov chains, entropy, proportion of dictionary words, ratio of vowels to other characters, and more. <span onclick=scrollToRef('scite-19') id="scite-ref-19-a" class="scite-citeref-number" title="Jacobs, J. (2014, October 2). Building a DGA Classifier: Part 2, Feature Engineering. Retrieved February 18, 2019."data-reference="Data Driven Security DGA"><sup><a href="https://datadrivensecurity.info/blog/posts/2014/Oct/dga-part2/" target="_blank" data-hasqtip="18" aria-describedby="qtip-18">[19]</a></sup></span> CDN domains may trigger these detections due to the format of their domain names. In addition to detecting a DGA domain based on the name, another more general approach for detecting a suspicious domain is to check for recently registered names or for rarely visited domains.Machine learning approaches to detecting DGA domains have been developed and have seen success in applications. One approach is to use N-Gram methods to determine a randomness score for strings used in the domain name. If the randomness score is high, and the domains are not whitelisted (CDN, etc), then it may be determined if a domain is related to a legitimate host or DGA. <span onclick=scrollToRef('scite-20') id="scite-ref-20-a" class="scite-citeref-number" title="Chen, L., Wang, T.. (2017, May 5). Detecting Algorithmically Generated Domains Using Data Visualization and N-Grams Methods . Retrieved April 26, 2019."data-reference="Pace University Detecting DGA May 2017"><sup><a href="http://csis.pace.edu/~ctappert/srd2017/2017PDF/d4.pdf" target="_blank" data-hasqtip="19" aria-describedby="qtip-19">[20]</a></sup></span> Another approach is to use deep learning to classify domains as DGA-generated<span onclick=scrollToRef('scite-21') id="scite-ref-21-a" class="scite-citeref-number" title="Ahuja, A., Anderson, H., Grant, D., Woodbridge, J.. (2016, November 2). Predicting Domain Generation Algorithms with Long Short-Term Memory Networks. Retrieved April 26, 2019."data-reference="Elastic Predicting DGA"><sup><a href="https://arxiv.org/pdf/1611.00791.pdf" target="_blank" data-hasqtip="20" aria-describedby="qtip-20">[21]</a></sup></span>]</p>
 
                         </td>
                     </tr>
@@ -5742,6 +5871,21 @@
                             Enterprise
                     </td>
                     <td colspan="2">
+                        <a href="/techniques/T1203">T1203</a>
+                    </td>
+                    <td>
+                        <a href="/techniques/T1203">Exploitation for Client Execution</a>
+                    </td>
+                    <td>
+                                <p>Look for unusual outbound connections following abnormal process execution, as this could indicate an adversary has established a foothold and is initiating communication with C2 infrastructure.</p><p>Analytic 1 - monitors for network traffic generated by exploited processes</p><p><code> sourcetype=network_flow OR (sourcetype=Sysmon AND EventCode=3)| search process_name IN ("chrome.exe", "firefox.exe", "winword.exe", "excel.exe", "acrord32.exe", "flashplayer.exe")| stats count by src_ip dest_ip dest_port process_name| where dest_ip NOT IN ("<known_good_ips>")</code></p>
+
+                    </td>
+                </tr>
+                <tr class="technique enterprise" id="enterprise">
+                    <td>
+                            Enterprise
+                    </td>
+                    <td colspan="2">
                         <a href="/techniques/T1133">T1133</a>
                     </td>
                     <td>
@@ -5793,7 +5937,7 @@
                         <a href="/techniques/T1187">Forced Authentication</a>
                     </td>
                     <td>
-                                <p>Monitor for SMB traffic on TCP ports 139, 445 and UDP port 137 and WebDAV traffic attempting to exit the network to unknown external systems.If attempts are detected, then investigate endpoint data sources to find the root cause.</p>
+                                <p>Monitor for SMB traffic on TCP ports 139, 445 and UDP port 137 and WebDAV traffic attempting to exit the network to unknown external systems.If attempts are detected, then investigate endpoint data sources to find the root cause.</p><p>Analytic 1 - Unusual network traffic patterns indicative of forced authentication attempts.</p><p><code> index=network sourcetype="stream:tcp" (dest_port=445 OR dest_port=80 OR dest_port=443)| eval Protocol=case(dest_port==445, "SMB", dest_port==80, "HTTP", dest_port==443, "HTTPS", true(), "Unknown")| eval SuspiciousConn=if((Protocol="SMB" AND src_ip!=dest_ip AND (src_ip!="known_ip1" AND dest_ip!="known_ip2")), 1, 0)| where SuspiciousConn=1 </code></p>
 
                     </td>
                 </tr>
@@ -5902,7 +6046,7 @@
                                 <a href="/techniques/T1430">Location Tracking</a>: <a href="/techniques/T1430/002">Impersonate SS7 Nodes</a>
                             </td>
                             <td>
-                                        <p>Network carriers may be able to use firewalls, Intrusion Detection Systems (IDS), or Intrusion Prevention Systems (IPS) to detect and/or block SS7 exploitation.<span onclick=scrollToRef('scite-15') id="scite-ref-15-a" class="scite-citeref-number" title="Communications Security, Reliability, Interoperability Council (CSRIC). (2017, March). Working Group 10 Legacy Systems Risk Reductions Final Report. Retrieved May 24, 2017."data-reference="CSRIC5-WG10-FinalReport"><sup><a href="https://web.archive.org/web/20200330012714/https://www.fcc.gov/files/csric5-wg10-finalreport031517pdf" target="_blank" data-hasqtip="14" aria-describedby="qtip-14">[15]</a></sup></span> The CSRIC also suggests threat information sharing between telecommunications industry members.</p>
+                                        <p>Network carriers may be able to use firewalls, Intrusion Detection Systems (IDS), or Intrusion Prevention Systems (IPS) to detect and/or block SS7 exploitation.<span onclick=scrollToRef('scite-22') id="scite-ref-22-a" class="scite-citeref-number" title="Communications Security, Reliability, Interoperability Council (CSRIC). (2017, March). Working Group 10 Legacy Systems Risk Reductions Final Report. Retrieved May 24, 2017."data-reference="CSRIC5-WG10-FinalReport"><sup><a href="https://web.archive.org/web/20200330012714/https://www.fcc.gov/files/csric5-wg10-finalreport031517pdf" target="_blank" data-hasqtip="21" aria-describedby="qtip-21">[22]</a></sup></span> The CSRIC also suggests threat information sharing between telecommunications industry members.</p>
 
                             </td>
                         </tr>
@@ -6079,7 +6223,7 @@
                         <a href="/techniques/T1003">OS Credential Dumping</a>
                     </td>
                     <td>
-                                <p>Monitor network data for uncommon data flows. Processes utilizing the network that do not normally have network communication or have never been seen before are suspicious.</p>
+                                <p>Monitor network data for uncommon data flows. Processes utilizing the network that do not normally have network communication or have never been seen before are suspicious.</p><p>Analytic 1 - Unusual network communication patterns.</p><p><code> index=network sourcetype="stream:tcp" dest_port=389 NOT [| inputlookup known_dc_ip_addresses | fields ip] </code></p>
 
                     </td>
                 </tr>
@@ -6397,7 +6541,7 @@
                         <a href="/techniques/T1021">Remote Services</a>
                     </td>
                     <td>
-                                <p>Monitor network data for uncommon data flows that may be related to abuse of <a href="/techniques/T1078">Valid Accounts</a> to log into a service specifically designed to accept remote connections, such as RDP, telnet, SSH, and VNC.</p><p>Note: Network Analysis frameworks such as Zeek can be used to capture, decode, and alert on network service protocols such as SSH and RDP. #Protocol 6 = TCP #Protocol 17 = UDP</p><p>Analytic 1 - Suspicious Protocols<code>source="<em>Zeek:</em>" AND (port="636" AND protocol="6") OR (port="389" AND protocol="17")</code></p>
+                                <p>Monitor network data for uncommon data flows that may be related to abuse of <a href="/techniques/T1078">Valid Accounts</a> to log into a service specifically designed to accept remote connections, such as RDP, telnet, SSH, and VNC.</p><p>Note: Network Analysis frameworks such as Zeek can be used to capture, decode, and alert on network service protocols such as SSH and RDP.</p><p>Analytic 1 - Suspicious Protocols</p><p><code>sourcetype="netflow" | search dest_port=22 OR dest_port=3389 OR dest_port=5900 OR dest_port=3283  // SSH, RDP, VNC, ARD</code></p>
 
                     </td>
                 </tr>
@@ -6411,7 +6555,7 @@
                             <a href="/techniques/T1021/001">Remote Desktop Protocol</a>
                         </td>
                         <td>
-                                    <p>Monitor network traffic for uncommon data flows that may use <a href="/techniques/T1078">Valid Accounts</a> to log into a computer using the Remote Desktop Protocol (RDP).</p><p>The Remote Desktop Protocol (RDP), built in to Microsoft operating systems, allows a user to remotely log in to the desktop of another host. It allows for interactive access of the running windows, and forwards key presses, mouse clicks, etc. Network administrators, power users, and end-users may use RDP for day-to-day operations. From an adversary’s perspective, RDP provides a means to laterally move to a new host. Determining which RDP connections correspond to adversary activity can be a difficult problem in highly dynamic environments, but will be useful in identifying the scope of a compromise.Remote Desktop can be detected in several ways</p><ul><li>Network connections to port 3389/tcp (assuming use of the default port)</li><li>Packet capture analysis</li><li>Detecting network connections from <code>mstsc.exe</code></li><li>Execution of the process <code>rdpclip.exe</code></li><li>Runs as the clipboard manager on the RDP target if clipboard sharing is enabled</li></ul><p>Analytic 1</p><p><code>source="<em>Zeek:</em>" AND (port="3389") AND LogonType="10" </code></p>
+                                    <p>Monitor network traffic for uncommon data flows that may use <a href="/techniques/T1078">Valid Accounts</a> to log into a computer using the Remote Desktop Protocol (RDP).</p><p>The Remote Desktop Protocol (RDP), built in to Microsoft operating systems, allows a user to remotely log in to the desktop of another host. It allows for interactive access of the running windows, and forwards key presses, mouse clicks, etc. Network administrators, power users, and end-users may use RDP for day-to-day operations. From an adversary’s perspective, RDP provides a means to laterally move to a new host. Determining which RDP connections correspond to adversary activity can be a difficult problem in highly dynamic environments, but will be useful in identifying the scope of a compromise.Remote Desktop can be detected in several ways</p><ul><li>Network connections to port 3389/tcp (assuming use of the default port)</li><li>Packet capture analysis</li><li>Detecting network connections from <code>mstsc.exe</code></li><li>Execution of the process <code>rdpclip.exe</code></li><li>Runs as the clipboard manager on the RDP target if clipboard sharing is enabled</li></ul><p>Analytic 1 - Suspicious RDP</p><p><code><code> sourcetype=netflow LogonType="10"| search dest_port=3389 // Default RDP port| stats count by src_ip, dest_ip, dest_port| where src_ip!="trusted_ips" AND dest_ip!="internal_servers"</code></p>
 
                         </td>
                     </tr>
@@ -6425,7 +6569,7 @@
                             <a href="/techniques/T1021/002">SMB/Windows Admin Shares</a>
                         </td>
                         <td>
-                                    <p>Monitor network data for uncommon SMB data flows. Processes utilizing the network that do not normally have network communication or have never been seen before are suspicious. Network Analysis frameworks such as Zeek can be used to capture, decode, and alert on SMB network flows.</p><p>Notes:</p><ul><li>The logic for Implementation 1 is based around detecting on SMB write requests, which are often used by adversaries to move laterally to another host. Unlike SMB Reads, SMB Write requests typically require an additional level of access, resulting in less activity. Focusing on SMB Write activity narrows the field to looking at techniques associated with actively changing remote hosts, instead of passively reading files.</li><li>The logic for Implementation 2 is based around detection of new processes that were created from a file written to an SMB share.  First, a file is remotely written to a host via an SMB share; then, a variety of Execution techniques can be used to remotely establish execution of the file or script. To detect this behavior, look for files that are written to a host over SMB and then later run directly as a process or in the command line arguments. SMB File Writes and Remote Execution may happen normally in an environment, but the combination of the two behaviors is less frequent and more likely to indicate adversarial activity.</li></ul><p>Analytic 1 - SMB Write</p><p><code>source="*Zeek:SMB_Files" port="445" AND protocol="smb.write"</code></p>
+                                    <p>Monitor network data for uncommon SMB data flows. Processes utilizing the network that do not normally have network communication or have never been seen before are suspicious. Network Analysis frameworks such as Zeek can be used to capture, decode, and alert on SMB network flows.</p><p>Notes:</p><ul><li>The logic for Implementation 1 is based around detecting on SMB write requests, which are often used by adversaries to move laterally to another host. Unlike SMB Reads, SMB Write requests typically require an additional level of access, resulting in less activity. Focusing on SMB Write activity narrows the field to looking at techniques associated with actively changing remote hosts, instead of passively reading files.</li><li>The logic for Implementation 2 is based around detection of new processes that were created from a file written to an SMB share.  First, a file is remotely written to a host via an SMB share; then, a variety of Execution techniques can be used to remotely establish execution of the file or script. To detect this behavior, look for files that are written to a host over SMB and then later run directly as a process or in the command line arguments. SMB File Writes and Remote Execution may happen normally in an environment, but the combination of the two behaviors is less frequent and more likely to indicate adversarial activity.</li></ul><p>Analytic 1 - SMB Write</p><p><code>sourcetype="Zeek:SMB_Files" port="445" AND protocol="smb.write"</code></p>
 
                         </td>
                     </tr>
@@ -6503,6 +6647,34 @@
 
                     </td>
                 </tr>
+                    <tr class="sub technique enterprise" id="enterprise">
+                        <td></td>
+                        <td></td>
+                        <td>
+                            <a href="/techniques/T1496/001">.001</a>
+                        </td>
+                        <td>
+                            <a href="/techniques/T1496/001">Compute Hijacking</a>
+                        </td>
+                        <td>
+                                    <p>Monitor network data for uncommon data flows. Processes utilizing the network that do not normally have network communication or have never been seen before are suspicious.</p>
+
+                        </td>
+                    </tr>
+                    <tr class="sub technique enterprise" id="enterprise">
+                        <td></td>
+                        <td></td>
+                        <td>
+                            <a href="/techniques/T1496/002">.002</a>
+                        </td>
+                        <td>
+                            <a href="/techniques/T1496/002">Bandwidth Hijacking</a>
+                        </td>
+                        <td>
+                                    <p>Monitor network data for uncommon data flows. Processes utilizing the network that do not normally have network communication or have never been seen before are suspicious. </p>
+
+                        </td>
+                    </tr>
                 <tr class="technique ics" id="ics">
                     <td>
                             ICS
@@ -6533,7 +6705,7 @@
                                 <a href="/techniques/T1053">Scheduled Task/Job</a>: <a href="/techniques/T1053/002">At</a>
                             </td>
                             <td>
-                                        <p>Monitor network data for uncommon data flows. Processes utilizing the network that do not normally have network communication or have never been seen before are suspicious. When AT.exe is used to remotely schedule tasks, Windows uses named pipes over SMB to communicate with the API on the remote machine. After authentication over SMB, the Named Pipe <code>ATSVC</code> is opened, over which the JobAdd function is called. On the remote host, the job files are created by the Task Scheduler and follow the convention <code>C:\Windows\System32\AT<job\_id></code>.</p><p>This pipe activity could be discovered with a network decoder, such as that in wireshark, that can inspect SMB traffic to identify the use of pipes. It could also be detected by looking for raw packet capture streams or from a custom sensor on the host that hooks the appropriate API functions. If no network or API level of visibility is possible, this traffic may inferred by looking at SMB connections over 445/tcp followed by the creation of files matching the pattern <code>C:\Windows\System32\AT\&lt;job_id&gt;</code>.</p><p>To detect AT via network traffic, a sensor is needed that has the ability to extract and decode PCAP information. Specifically, it needs to properly decode SMB and the functions that are implemented over it via NamedPipes. If a sensor meets these criteria, then the PCAP data needs to search for instances of the command <code>JobAdd</code> over the pipe <code>ATSVC</code>, which is all implemented over Windows SMB 445/tcp.</p><p>Analytic 1 - Remotely Scheduled Tasks via AT</p><p><code>source="<em>Zeek:</em>" (dest_port=445 AND proto_info.pipe="ATSVC") AND (proto_info.function="JobAdd")</code></p>
+                                        <p>Monitor network data for uncommon data flows. Processes utilizing the network that do not normally have network communication or have never been seen before are suspicious. When AT.exe is used to remotely schedule tasks, Windows uses named pipes over SMB to communicate with the API on the remote machine. After authentication over SMB, the Named Pipe <code>ATSVC</code> is opened, over which the JobAdd function is called. On the remote host, the job files are created by the Task Scheduler and follow the convention <code>C:\Windows\System32\AT<job\_id></code>.</p><p>This pipe activity could be discovered with a network decoder, such as that in wireshark, that can inspect SMB traffic to identify the use of pipes. It could also be detected by looking for raw packet capture streams or from a custom sensor on the host that hooks the appropriate API functions. If no network or API level of visibility is possible, this traffic may inferred by looking at SMB connections over 445/tcp followed by the creation of files matching the pattern <code>C:\Windows\System32\AT\&lt;job_id&gt;</code>.</p><p>To detect AT via network traffic, a sensor is needed that has the ability to extract and decode PCAP information. Specifically, it needs to properly decode SMB and the functions that are implemented over it via NamedPipes. If a sensor meets these criteria, then the PCAP data needs to search for instances of the command <code>JobAdd</code> over the pipe <code>ATSVC</code>, which is all implemented over Windows SMB 445/tcp.</p><p>Analytic 1 - Remotely Scheduled Tasks via AT</p><p><code>index=network dest_port=445 protocol="smb" pipe="ATSVC" command="JobAdd"</code></p>
 
                             </td>
                         </tr>
@@ -6547,7 +6719,7 @@
                                 <a href="/techniques/T1053">Scheduled Task/Job</a>: <a href="/techniques/T1053/005">Scheduled Task</a>
                             </td>
                             <td>
-                                        <p>Monitor network data for uncommon data flows. Processes utilizing the network that do not normally have network communication or have never been seen before are suspicious. Look for RPC traffic after being mapped, which implies a destination port of at least 49152. If network inspection is available via packet captures or a NIDS, then traffic through the <code>ITaskSchedulerService</code> interface can be detected. Microsoft has a list of the possible methods that are implemented for the <code>ITaskSchedulerService</code> interface, which may be useful in differentiating read and query operations from creations and modifications.</p><p>When scheduled tasks are created remotely, Windows uses RPC (135/tcp) to communicate with the Task Scheduler on the remote machine. Once an RPC connection is established, the client communicates with the Scheduled Tasks endpoint, which runs within the service group netsvcs. With packet capture and the right packet decoders or byte-stream based signatures, remote invocations of these functions can be identified.Certain strings can be identifiers of the schtasks, by looking up the interface UUID of ITaskSchedulerService in different formats</p><ul><li>UUID <code>86d35949-83c9-4044-b424-db363231fd0c</code> (decoded)</li><li>Hex <code>49 59 d3 86 c9 83 44 40 b4 24 db 36 32 31 fd 0c</code> (raw)</li><li>ASCII <code>IYD@$621</code> (printable bytes only)</li></ul><p>This identifier is present three times during the RPC request phase. Any sensor that has access to the byte code as raw, decoded, or ASCII could implement an analytic.</p>
+                                        <p>Monitor network data for uncommon data flows. Processes utilizing the network that do not normally have network communication or have never been seen before are suspicious. Look for RPC traffic after being mapped, which implies a destination port of at least 49152. If network inspection is available via packet captures or a NIDS, then traffic through the <code>ITaskSchedulerService</code> interface can be detected. Microsoft has a list of the possible methods that are implemented for the <code>ITaskSchedulerService</code> interface, which may be useful in differentiating read and query operations from creations and modifications.</p><p>When scheduled tasks are created remotely, Windows uses RPC (135/tcp) to communicate with the Task Scheduler on the remote machine. Once an RPC connection is established, the client communicates with the Scheduled Tasks endpoint, which runs within the service group netsvcs. With packet capture and the right packet decoders or byte-stream based signatures, remote invocations of these functions can be identified.Certain strings can be identifiers of the schtasks, by looking up the interface UUID of ITaskSchedulerService in different formats</p><ul><li>UUID <code>86d35949-83c9-4044-b424-db363231fd0c</code> (decoded)</li><li>Hex <code>49 59 d3 86 c9 83 44 40 b4 24 db 36 32 31 fd 0c</code> (raw)</li><li>ASCII <code>IYD@$621</code> (printable bytes only)</li></ul><p>This identifier is present three times during the RPC request phase. Any sensor that has access to the byte code as raw, decoded, or ASCII could implement an analytic.</p><p>Analytic 1 - Look for RPC traffic with ITaskSchedulerService interface usage.</p><p><code>sourcetype=Netflow OR sourcetype=PacketCapture OR sourcetype=WinEventLog:Security EventCode=5156 | search (dest_port=135 OR dest_port=5985 OR dest_port=5986) AND (protocol="tcp" OR protocol="udp")  AND (Image="taskeng.exe" OR Image="schtasks.exe")| stats count by src_ip dest_ip dest_port| where count &gt; threshold </code></p>
 
                             </td>
                         </tr>                        
@@ -6786,7 +6958,7 @@
                         <a href="/techniques/T0860">Wireless Compromise</a>
                     </td>
                     <td>
-                                <p>New or irregular network traffic flows may indicate potentially unwanted devices or sessions on wireless networks. In Wi-Fi networks monitor for changes such as rogue access points or low signal strength, indicating a device is further away from the access point then expected and changes in the physical layer signal.<span onclick=scrollToRef('scite-16') id="scite-ref-16-a" class="scite-citeref-number" title="Koopmann, Lennart. (n.d.). Nzyme Alerts Introduction. Retrieved September 26, 2022."data-reference="Nzyme Alerts Intro"><sup><a href="https://www.nzyme.org/docs/alerts/intro" target="_blank" data-hasqtip="15" aria-describedby="qtip-15">[16]</a></sup></span> <span onclick=scrollToRef('scite-17') id="scite-ref-17-a" class="scite-citeref-number" title="Tomko, A.; Rieser, C; Buell, H.; Zeret, D.; Turner, W.. (2007, March). Wireless Intrusion Detection. Retrieved September 26, 2022."data-reference="Wireless Intrusion Detection"><sup><a href="https://apps.dtic.mil/sti/pdfs/ADA466332.pdf" target="_blank" data-hasqtip="16" aria-describedby="qtip-16">[17]</a></sup></span> Network traffic content will provide important context, such as hardware (e.g., MAC) addresses, user accounts, and types of messages sent.</p>
+                                <p>New or irregular network traffic flows may indicate potentially unwanted devices or sessions on wireless networks. In Wi-Fi networks monitor for changes such as rogue access points or low signal strength, indicating a device is further away from the access point then expected and changes in the physical layer signal.<span onclick=scrollToRef('scite-23') id="scite-ref-23-a" class="scite-citeref-number" title="Koopmann, Lennart. (n.d.). Nzyme Alerts Introduction. Retrieved September 26, 2022."data-reference="Nzyme Alerts Intro"><sup><a href="https://www.nzyme.org/docs/alerts/intro" target="_blank" data-hasqtip="22" aria-describedby="qtip-22">[23]</a></sup></span> <span onclick=scrollToRef('scite-24') id="scite-ref-24-a" class="scite-citeref-number" title="Tomko, A.; Rieser, C; Buell, H.; Zeret, D.; Turner, W.. (2007, March). Wireless Intrusion Detection. Retrieved September 26, 2022."data-reference="Wireless Intrusion Detection"><sup><a href="https://apps.dtic.mil/sti/pdfs/ADA466332.pdf" target="_blank" data-hasqtip="23" aria-describedby="qtip-23">[24]</a></sup></span> Network traffic content will provide important context, such as hardware (e.g., MAC) addresses, user accounts, and types of messages sent.</p>
 
                     </td>
                 </tr>
@@ -6801,7 +6973,7 @@
                         <a href="/techniques/T0887">Wireless Sniffing</a>
                     </td>
                     <td>
-                                <p>Purely passive network sniffing cannot be detected effectively. In cases where the adversary interacts with the wireless network (e.g., joining a Wi-Fi network) detection may be possible. Monitor for new or irregular network traffic flows which may indicate potentially unwanted devices or sessions on wireless networks.  In Wi-Fi networks monitor for changes such as rogue access points or low signal strength, indicating a device is further away from the access point then expected and changes in the physical layer signal.<span onclick=scrollToRef('scite-16') id="scite-ref-16-a" class="scite-citeref-number" title="Koopmann, Lennart. (n.d.). Nzyme Alerts Introduction. Retrieved September 26, 2022."data-reference="Nzyme Alerts Intro"><sup><a href="https://www.nzyme.org/docs/alerts/intro" target="_blank" data-hasqtip="15" aria-describedby="qtip-15">[16]</a></sup></span> <span onclick=scrollToRef('scite-17') id="scite-ref-17-a" class="scite-citeref-number" title="Tomko, A.; Rieser, C; Buell, H.; Zeret, D.; Turner, W.. (2007, March). Wireless Intrusion Detection. Retrieved September 26, 2022."data-reference="Wireless Intrusion Detection"><sup><a href="https://apps.dtic.mil/sti/pdfs/ADA466332.pdf" target="_blank" data-hasqtip="16" aria-describedby="qtip-16">[17]</a></sup></span>  Network traffic content will provide important context, such as hardware (e.g., MAC) addresses, user accounts, and types of messages sent.</p>
+                                <p>Purely passive network sniffing cannot be detected effectively. In cases where the adversary interacts with the wireless network (e.g., joining a Wi-Fi network) detection may be possible. Monitor for new or irregular network traffic flows which may indicate potentially unwanted devices or sessions on wireless networks.  In Wi-Fi networks monitor for changes such as rogue access points or low signal strength, indicating a device is further away from the access point then expected and changes in the physical layer signal.<span onclick=scrollToRef('scite-23') id="scite-ref-23-a" class="scite-citeref-number" title="Koopmann, Lennart. (n.d.). Nzyme Alerts Introduction. Retrieved September 26, 2022."data-reference="Nzyme Alerts Intro"><sup><a href="https://www.nzyme.org/docs/alerts/intro" target="_blank" data-hasqtip="22" aria-describedby="qtip-22">[23]</a></sup></span> <span onclick=scrollToRef('scite-24') id="scite-ref-24-a" class="scite-citeref-number" title="Tomko, A.; Rieser, C; Buell, H.; Zeret, D.; Turner, W.. (2007, March). Wireless Intrusion Detection. Retrieved September 26, 2022."data-reference="Wireless Intrusion Detection"><sup><a href="https://apps.dtic.mil/sti/pdfs/ADA466332.pdf" target="_blank" data-hasqtip="23" aria-describedby="qtip-23">[24]</a></sup></span>  Network traffic content will provide important context, such as hardware (e.g., MAC) addresses, user accounts, and types of messages sent.</p>
 
                     </td>
                 </tr>
@@ -6845,8 +7017,8 @@
         <li>
             <span  id="scite-3" class="scite-citation">
                 <span class="scite-citation-text">
-                    <a rel="nofollow" class="external text" name="scite-3" href="https://www.crowdstrike.com/blog/how-to-hunt-for-decisivearchitect-and-justforfun-implant/" target="_blank">
-                        Jamie Harries. (2022, May 25). Hunting a Global Telecommunications Threat: DecisiveArchitect and Its Custom Implant JustForFun. Retrieved October 18, 2022.
+                    <a rel="nofollow" class="external text" name="scite-3" href="https://docs.aws.amazon.com/guardduty/latest/ug/guardduty_finding-types-ec2.html" target="_blank">
+                        AWS. (n.d.). GuardDuty EC2 finding types. Retrieved September 25, 2024.
                     </a>
                 </span>
             </span>
@@ -6857,8 +7029,8 @@
         <li>
             <span  id="scite-4" class="scite-citation">
                 <span class="scite-citation-text">
-                    <a rel="nofollow" class="external text" name="scite-4" href="https://arxiv.org/ftp/arxiv/papers/1408/1408.1136.pdf" target="_blank">
-                        Gardiner, J.,  Cova, M., Nagaraja, S. (2014, February). Command & Control Understanding, Denying and Detecting. Retrieved April 20, 2016.
+                    <a rel="nofollow" class="external text" name="scite-4" href="https://www.crowdstrike.com/blog/how-to-hunt-for-decisivearchitect-and-justforfun-implant/" target="_blank">
+                        Jamie Harries. (2022, May 25). Hunting a Global Telecommunications Threat: DecisiveArchitect and Its Custom Implant JustForFun. Retrieved October 18, 2022.
                     </a>
                 </span>
             </span>
@@ -6869,8 +7041,8 @@
         <li>
             <span  id="scite-5" class="scite-citation">
                 <span class="scite-citation-text">
-                    <a rel="nofollow" class="external text" name="scite-5" href="https://www.mandiant.com/resources/blog/hunting-deserialization-exploits" target="_blank">
-                        Rahman, Alyssa. (2021, December 13). Now You Serial, Now You Don’t — Systematically Hunting for Deserialization Exploits. Retrieved November 28, 2023.
+                    <a rel="nofollow" class="external text" name="scite-5" href="https://arxiv.org/ftp/arxiv/papers/1408/1408.1136.pdf" target="_blank">
+                        Gardiner, J.,  Cova, M., Nagaraja, S. (2014, February). Command & Control Understanding, Denying and Detecting. Retrieved April 20, 2016.
                     </a>
                 </span>
             </span>
@@ -6881,8 +7053,8 @@
         <li>
             <span  id="scite-6" class="scite-citation">
                 <span class="scite-citation-text">
-                    <a rel="nofollow" class="external text" name="scite-6" href="https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/anti-spoofing-protection?view=o365-worldwide" target="_blank">
-                        Microsoft. (2020, October 13). Anti-spoofing protection in EOP. Retrieved October 19, 2020.
+                    <a rel="nofollow" class="external text" name="scite-6" href="https://www.mandiant.com/resources/blog/hunting-deserialization-exploits" target="_blank">
+                        Rahman, Alyssa. (2021, December 13). Now You Serial, Now You Don’t — Systematically Hunting for Deserialization Exploits. Retrieved November 28, 2023.
                     </a>
                 </span>
             </span>
@@ -6893,8 +7065,8 @@
         <li>
             <span  id="scite-7" class="scite-citation">
                 <span class="scite-citation-text">
-                    <a rel="nofollow" class="external text" name="scite-7" href="https://www.cyber.gov.au/sites/default/files/2019-03/spoof_email_sender_policy_framework.pdf" target="_blank">
-                        Australian Cyber Security Centre. (2012, December). Mitigating Spoofed Emails Using Sender Policy Framework. Retrieved October 19, 2020.
+                    <a rel="nofollow" class="external text" name="scite-7" href="https://msdn.microsoft.com/library/cc228086.aspx" target="_blank">
+                        Microsoft. (2017, December 1). MS-DRSR Directory Replication Service (DRS) Remote Protocol. Retrieved December 4, 2017.
                     </a>
                 </span>
             </span>
@@ -6905,8 +7077,8 @@
         <li>
             <span  id="scite-8" class="scite-citation">
                 <span class="scite-citation-text">
-                    <a rel="nofollow" class="external text" name="scite-8" href="https://github.com/shellster/DCSYNCMonitor" target="_blank">
-                        Spencer S. (2018, February 22). DCSYNCMonitor. Retrieved March 30, 2018.
+                    <a rel="nofollow" class="external text" name="scite-8" href="https://msdn.microsoft.com/library/cc237008.aspx" target="_blank">
+                        Microsoft. (2017, December 1). MS-NRPC - Netlogon Remote Protocol. Retrieved December 6, 2017.
                     </a>
                 </span>
             </span>
@@ -6917,8 +7089,44 @@
         <li>
             <span  id="scite-9" class="scite-citation">
                 <span class="scite-citation-text">
-                    <a rel="nofollow" class="external text" name="scite-9" href="https://www.dcshadow.com/" target="_blank">
-                        Delpy, B. & LE TOUX, V. (n.d.). DCShadow. Retrieved March 20, 2018.
+                    <a rel="nofollow" class="external text" name="scite-9" href="https://msdn.microsoft.com/library/cc245496.aspx" target="_blank">
+                        Microsoft. (n.d.). MS-SAMR Security Account Manager (SAM) Remote Protocol (Client-to-Server) - Transport. Retrieved December 4, 2017.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-10" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-10" href="https://adsecurity.org/?p=1729" target="_blank">
+                        Metcalf, S. (2015, September 25). Mimikatz DCSync Usage, Exploitation, and Detection. Retrieved December 4, 2017.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-11" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-11" href="https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/anti-spoofing-protection?view=o365-worldwide" target="_blank">
+                        Microsoft. (2020, October 13). Anti-spoofing protection in EOP. Retrieved October 19, 2020.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-12" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-12" href="https://web.archive.org/web/20210708014107/https://www.cyber.gov.au/sites/default/files/2019-03/spoof_email_sender_policy_framework.pdf" target="_blank">
+                        Australian Cyber Security Centre. (2012, December). Mitigating Spoofed Emails Using Sender Policy Framework. Retrieved October 19, 2020.
                     </a>
                 </span>
             </span>
@@ -6928,49 +7136,13 @@
                 </ol>
             </div>
             <div class="col">
-                    <ol start="10.0">
-                                
-        <li>
-            <span  id="scite-10" class="scite-citation">
-                <span class="scite-citation-text">
-                    <a rel="nofollow" class="external text" name="scite-10" href="https://www.us-cert.gov/ncas/alerts/TA15-314A" target="_blank">
-                        US-CERT. (2015, November 13). Compromised Web Servers and Web Shells - Threat Awareness and Guidance. Retrieved June 8, 2016.
-                    </a>
-                </span>
-            </span>
-        </li>
-
-
-                                
-        <li>
-            <span  id="scite-11" class="scite-citation">
-                <span class="scite-citation-text">
-                    <a rel="nofollow" class="external text" name="scite-11" href="https://gitlab.com/wireshark/wireshark/-/wikis/WakeOnLAN" target="_blank">
-                        Perry, David. (2020, August 11). WakeOnLAN (WOL). Retrieved February 17, 2021.
-                    </a>
-                </span>
-            </span>
-        </li>
-
-
-                                
-        <li>
-            <span  id="scite-12" class="scite-citation">
-                <span class="scite-citation-text">
-                    <a rel="nofollow" class="external text" name="scite-12" href="https://datadrivensecurity.info/blog/posts/2014/Oct/dga-part2/" target="_blank">
-                        Jacobs, J. (2014, October 2). Building a DGA Classifier: Part 2, Feature Engineering. Retrieved February 18, 2019.
-                    </a>
-                </span>
-            </span>
-        </li>
-
-
+                    <ol start="13.0">
                                 
         <li>
             <span  id="scite-13" class="scite-citation">
                 <span class="scite-citation-text">
-                    <a rel="nofollow" class="external text" name="scite-13" href="http://csis.pace.edu/~ctappert/srd2017/2017PDF/d4.pdf" target="_blank">
-                        Chen, L., Wang, T.. (2017, May 5). Detecting Algorithmically Generated Domains Using Data Visualization and N-Grams Methods . Retrieved April 26, 2019.
+                    <a rel="nofollow" class="external text" name="scite-13" href="https://github.com/shellster/DCSYNCMonitor" target="_blank">
+                        Spencer S. (2018, February 22). DCSYNCMonitor. Retrieved March 30, 2018.
                     </a>
                 </span>
             </span>
@@ -6981,8 +7153,8 @@
         <li>
             <span  id="scite-14" class="scite-citation">
                 <span class="scite-citation-text">
-                    <a rel="nofollow" class="external text" name="scite-14" href="https://arxiv.org/pdf/1611.00791.pdf" target="_blank">
-                        Ahuja, A., Anderson, H., Grant, D., Woodbridge, J.. (2016, November 2). Predicting Domain Generation Algorithms with Long Short-Term Memory Networks. Retrieved April 26, 2019.
+                    <a rel="nofollow" class="external text" name="scite-14" href="https://www.dcshadow.com/" target="_blank">
+                        Delpy, B. & LE TOUX, V. (n.d.). DCShadow. Retrieved March 20, 2018.
                     </a>
                 </span>
             </span>
@@ -6993,8 +7165,8 @@
         <li>
             <span  id="scite-15" class="scite-citation">
                 <span class="scite-citation-text">
-                    <a rel="nofollow" class="external text" name="scite-15" href="https://web.archive.org/web/20200330012714/https://www.fcc.gov/files/csric5-wg10-finalreport031517pdf" target="_blank">
-                        Communications Security, Reliability, Interoperability Council (CSRIC). (2017, March). Working Group 10 Legacy Systems Risk Reductions Final Report. Retrieved May 24, 2017.
+                    <a rel="nofollow" class="external text" name="scite-15" href="https://www.us-cert.gov/ncas/alerts/TA15-314A" target="_blank">
+                        US-CERT. (2015, November 13). Compromised Web Servers and Web Shells - Threat Awareness and Guidance. Retrieved June 8, 2016.
                     </a>
                 </span>
             </span>
@@ -7005,8 +7177,8 @@
         <li>
             <span  id="scite-16" class="scite-citation">
                 <span class="scite-citation-text">
-                    <a rel="nofollow" class="external text" name="scite-16" href="https://www.nzyme.org/docs/alerts/intro" target="_blank">
-                        Koopmann, Lennart. (n.d.). Nzyme Alerts Introduction. Retrieved September 26, 2022.
+                    <a rel="nofollow" class="external text" name="scite-16" href="https://gitlab.com/wireshark/wireshark/-/wikis/WakeOnLAN" target="_blank">
+                        Perry, David. (2020, August 11). WakeOnLAN (WOL). Retrieved February 17, 2021.
                     </a>
                 </span>
             </span>
@@ -7017,7 +7189,91 @@
         <li>
             <span  id="scite-17" class="scite-citation">
                 <span class="scite-citation-text">
-                    <a rel="nofollow" class="external text" name="scite-17" href="https://apps.dtic.mil/sti/pdfs/ADA466332.pdf" target="_blank">
+                    <a rel="nofollow" class="external text" name="scite-17" href="https://www.cisco.com/en/US/docs/general/Test/dwerblo/broken_guide/snoodhcp.html#wp1120427" target="_blank">
+                        Cisco. (n.d.). Configuring DHCP Snooping. Retrieved September 17, 2024.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-18" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-18" href="https://posts.specterops.io/modern-wireless-attacks-pt-i-basic-rogue-ap-theory-evil-twin-and-karma-attacks-35a8571550ee" target="_blank">
+                        Ryan, Gabriel. (2019, October 28). Modern Wireless Tradecraft Pt I — Basic Rogue AP Theory — Evil Twin and Karma Attacks. Retrieved September 17, 2024.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-19" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-19" href="https://datadrivensecurity.info/blog/posts/2014/Oct/dga-part2/" target="_blank">
+                        Jacobs, J. (2014, October 2). Building a DGA Classifier: Part 2, Feature Engineering. Retrieved February 18, 2019.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-20" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-20" href="http://csis.pace.edu/~ctappert/srd2017/2017PDF/d4.pdf" target="_blank">
+                        Chen, L., Wang, T.. (2017, May 5). Detecting Algorithmically Generated Domains Using Data Visualization and N-Grams Methods . Retrieved April 26, 2019.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-21" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-21" href="https://arxiv.org/pdf/1611.00791.pdf" target="_blank">
+                        Ahuja, A., Anderson, H., Grant, D., Woodbridge, J.. (2016, November 2). Predicting Domain Generation Algorithms with Long Short-Term Memory Networks. Retrieved April 26, 2019.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-22" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-22" href="https://web.archive.org/web/20200330012714/https://www.fcc.gov/files/csric5-wg10-finalreport031517pdf" target="_blank">
+                        Communications Security, Reliability, Interoperability Council (CSRIC). (2017, March). Working Group 10 Legacy Systems Risk Reductions Final Report. Retrieved May 24, 2017.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-23" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-23" href="https://www.nzyme.org/docs/alerts/intro" target="_blank">
+                        Koopmann, Lennart. (n.d.). Nzyme Alerts Introduction. Retrieved September 26, 2022.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-24" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-24" href="https://apps.dtic.mil/sti/pdfs/ADA466332.pdf" target="_blank">
                         Tomko, A.; Rieser, C; Buell, H.; Zeret, D.; Turner, W.. (2007, March). Wireless Intrusion Detection. Retrieved September 26, 2022.
                     </a>
                 </span>
@@ -7090,7 +7346,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v15.1&#013;Website  v4.1.6">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v16.0&#013;Website  v4.2.0">Website Changelog</a></u>
                                 </div>
                             </div>
                             <div class="row">
@@ -7130,15 +7386,15 @@
     <script src="/theme/scripts/popper.min.js"></script>
     <script src="/theme/scripts/bootstrap-select.min.js"></script>
     <script src="/theme/scripts/bootstrap.bundle.min.js"></script>
-    <script src="/theme/scripts/site.js?4794"></script>
-    <script src="/theme/scripts/settings.js?7840"></script>
+    <script src="/theme/scripts/site.js"></script>
+    <script src="/theme/scripts/settings.js"></script>
     <script src="/theme/scripts/search_bundle.js"></script>
 
 <!--SCRIPTS-->
 <script src="/theme/scripts/resizer.js"></script>
 
     <!--SCRIPTS-->
-    <script src="/theme/scripts/filter/filter.js?6281"></script>
+    <script src="/theme/scripts/filter/filter.js?3308"></script>
     <script src="/theme/scripts/navigation.js"></script>
     <script src="/theme/scripts/mobileview-datasources.js"></script>
     <script src="/theme/scripts/bootstrap-tourist.js"></script>

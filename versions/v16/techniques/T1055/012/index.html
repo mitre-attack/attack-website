@@ -1,0 +1,1750 @@
+
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+            <script async src="https://www.googletagmanager.com/gtag/js?id=UA-62667723-1"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'UA-62667723-1');
+        </script>
+        <meta name="google-site-verification" content="2oJKLqNN62z6AOCb0A0IXGtbQuj-lev5YPAHFF_cbHQ"/>
+
+        <meta charset='utf-8'>
+        <meta name='viewport' content='width=device-width, initial-scale=1,shrink-to-fit=no'>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <link rel='shortcut icon' href="/versions/v16/theme/favicon.ico" type='image/x-icon'>
+        <title>Process Injection: Process Hollowing, Sub-technique T1055.012 - Enterprise | MITRE ATT&CK&reg;</title>
+        <!-- USWDS CSS -->
+        <!-- Bootstrap CSS -->
+        <link rel='stylesheet' href="/versions/v16/theme/style/bootstrap.min.css" />
+        <link rel='stylesheet' href="/versions/v16/theme/style/bootstrap-tourist.css" />
+        <link rel='stylesheet' href="/versions/v16/theme/style/bootstrap-select.min.css" />
+        <!-- Fontawesome CSS -->
+        <link rel="stylesheet" href="/versions/v16/theme/style/fontawesome-6.5.1/css/fontawesome.min.css"/>
+        <link rel="stylesheet" href="/versions/v16/theme/style/fontawesome-6.5.1/css/brands.min.css"/>
+        <link rel="stylesheet" href="/versions/v16/theme/style/fontawesome-6.5.1/css/solid.min.css"/>
+        <link rel="stylesheet" type="text/css" href="/versions/v16/theme/style.min.css?6689c2db">
+
+</head>
+
+<body>
+
+    <div class="container-fluid attack-website-wrapper d-flex flex-column h-100">
+        <div class="row sticky-top flex-grow-0 flex-shrink-1">
+            <!-- header elements -->
+            <header class="col px-0">
+                    <nav class='navbar navbar-expand-lg navbar-dark position-static'>
+        <a class='navbar-brand' href="/versions/v16/"><img src="/versions/v16/theme/images/mitre_attack_logo.png" class="attack-logo"></a>
+        <button class='navbar-toggler' type='button' data-toggle='collapse' data-target='#navbarCollapse'
+                aria-controls='navbarCollapse' aria-expanded='false' aria-label='Toggle navigation'>
+                <span class='navbar-toggler-icon'></span>
+        </button>
+        <div class='collapse navbar-collapse' id='navbarCollapse'>
+            <ul class='nav nav-tabs ml-auto'>
+                        <li class="nav-item dropdown">
+                                
+    <a class="nav-link dropdown-toggle" href="/versions/v16/matrices/" id="navbarDropdown" role="button"
+    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <b>Matrices</b>
+    </a>
+    <div class="dropdown-menu " aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="/versions/v16/matrices/enterprise/">Enterprise</a>
+                <a class="dropdown-item" href="/versions/v16/matrices/mobile/">Mobile</a>
+                <a class="dropdown-item" href="/versions/v16/matrices/ics/">ICS</a>
+    </div>
+
+
+                        </li>
+                        <li class="nav-item dropdown">
+                                
+    <a class="nav-link dropdown-toggle" href="/versions/v16/tactics/" id="navbarDropdown" role="button"
+    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <b>Tactics</b>
+    </a>
+    <div class="dropdown-menu " aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="/versions/v16/tactics/enterprise/">Enterprise</a>
+                <a class="dropdown-item" href="/versions/v16/tactics/mobile/">Mobile</a>
+                <a class="dropdown-item" href="/versions/v16/tactics/ics/">ICS</a>
+    </div>
+
+
+                        </li>
+                        <li class="nav-item dropdown">
+                                
+    <a class="nav-link dropdown-toggle" href="/versions/v16/techniques/" id="navbarDropdown" role="button"
+    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <b>Techniques</b>
+    </a>
+    <div class="dropdown-menu " aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="/versions/v16/techniques/enterprise/">Enterprise</a>
+                <a class="dropdown-item" href="/versions/v16/techniques/mobile/">Mobile</a>
+                <a class="dropdown-item" href="/versions/v16/techniques/ics/">ICS</a>
+    </div>
+
+
+                        </li>
+                        <li class="nav-item dropdown">
+                                
+    <a class="nav-link dropdown-toggle" href="/versions/v16/datasources" id="navbarDropdown" role="button"
+    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <b>Defenses</b>
+    </a>
+    <div class="dropdown-menu " aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="/versions/v16/datasources">Data Sources</a>
+                
+<div class="dropright dropdown">
+<a class="dropdown-item dropdown-toggle" href="/versions/v16/mitigations/" id="navbarDropdown" role="button"
+    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <b>Mitigations</b>
+    </a>
+    <div class="dropdown-menu " aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="/versions/v16/mitigations/enterprise/">Enterprise</a>
+            <a class="dropdown-item" href="/versions/v16/mitigations/mobile/">Mobile</a>
+            <a class="dropdown-item" href="/versions/v16/mitigations/ics/">ICS</a>
+    </div>
+</div>
+
+                <a class="dropdown-item" href="/versions/v16/assets">Assets</a>
+    </div>
+
+
+                        </li>
+                        <li class="nav-item dropdown">
+                                
+    <a class="nav-link dropdown-toggle" href="/versions/v16/groups" id="navbarDropdown" role="button"
+    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <b>CTI</b>
+    </a>
+    <div class="dropdown-menu " aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="/versions/v16/groups">Groups</a>
+                <a class="dropdown-item" href="/versions/v16/software">Software</a>
+                <a class="dropdown-item" href="/versions/v16/campaigns">Campaigns</a>
+    </div>
+
+
+                        </li>
+                        <li class="nav-item dropdown">
+                                
+    <a class="nav-link dropdown-toggle" href="/versions/v16/resources/" id="navbarDropdown" role="button"
+    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <b>Resources</b>
+    </a>
+    <div class="dropdown-menu " aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="/versions/v16/resources/">Get Started</a>
+                <a class="dropdown-item" href="/versions/v16/resources/learn-more-about-attack/">Learn More about ATT&CK</a>
+                <a class="dropdown-item" href="/versions/v16/resources/attackcon/">ATT&CKcon</a>
+                <a class="dropdown-item" href="/versions/v16/resources/attack-data-and-tools/">ATT&CK Data & Tools</a>
+                <a class="dropdown-item" href="/versions/v16/resources/faq/">FAQ</a>
+                <a class="dropdown-item" href="/versions/v16/resources/engage-with-attack/contact/">Engage with ATT&CK</a>
+                <a class="dropdown-item" href="/resources/versions/">Version History</a>
+                <a class="dropdown-item" href="/versions/v16/resources/legal-and-branding/">Legal & Branding</a>
+    </div>
+
+
+                        </li>
+                        <li class="nav-item">
+                            <a href="/versions/v16/resources/engage-with-attack/benefactors/"  class="nav-link" ><b>Benefactors</b></a>
+                        </li>
+                        <li class="nav-item">
+                                <a href="https://medium.com/mitre-attack/" target="_blank" class="nav-link">
+        <b>Blog</b>&nbsp;
+        <img src="/versions/v16/theme/images/external-site.svg" alt="External site" class="external-icon" />
+    </a>
+
+                        </li>
+                        <li class="nav-item">
+                            <button id="search-button" class="btn search-button">Search <div id="search-icon" class="icon-button search-icon"></div></button>
+                        </li>
+            </ul>
+        </div>
+    </nav>
+
+            </header>
+        </div>
+        <div class="row flex-grow-0 flex-shrink-1">
+            <!-- banner elements -->
+            <div class="col px-0">
+                <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
+                <div class="container-fluid version-banner"><div class="icon-inline baseline mr-1"><img src="/versions/v16/theme/images/icon-warning-24px.svg"></div>Currently viewing <a href="https://github.com/mitre/cti/releases/tag/ATT%26CK-v16.0" target="_blank">ATT&CK v16.0</a> which is the current version of ATT&CK. <a href="/resources/versions/">Learn more about the versioning system</a> or <a href="/">see the live site</a>.</div>
+                    <div class="container-fluid d-none">
+                        ATT&CK v16 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v16-561c76af94cf'>blog post</a> for more information.
+                    </div>
+            </div>
+        </div>
+        <div class="row flex-grow-1 flex-shrink-0">
+            <!-- main content elements -->
+            <!--start-indexing-for-search-->
+
+ 
+     
+    <div class="sidebar nav sticky-top flex-column pr-0 pt-4 pb-3 pl-3" id="v-tab" role="tablist" aria-orientation="vertical">
+        <div class="resizer" id="resizer"></div>
+<!--stop-indexing-for-search-->
+<div id="sidebars"></div>
+<!--start-indexing-for-search-->
+    </div>
+
+    
+     
+    <div class="tab-content col-xl-9 pt-4" id="v-tabContent">
+        <div class="tab-pane fade show active" id="v-attckmatrix" role="tabpanel" aria-labelledby="v-attckmatrix-tab">
+    
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/versions/v16/">Home</a></li>
+            <li class="breadcrumb-item"><a href="/versions/v16/techniques/enterprise">Techniques</a></li>
+            <li class="breadcrumb-item"><a href="/versions/v16/techniques/enterprise">Enterprise</a></li>
+            <li class="breadcrumb-item"><a href="/versions/v16/techniques/T1055">Process Injection</a></li>
+        <li class="breadcrumb-item">Process Hollowing</li>
+    </ol>
+    <div class="tab-pane fade show active" id="v-" role="tabpanel" aria-labelledby="v--tab"></div>
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="jumbotron jumbotron-fluid">
+                <div class="container-fluid">
+                    <h1 id="">
+                            <span id="subtechnique-parent-name">Process Injection:</span>
+                        Process Hollowing
+                    </h1>
+
+                        <div class="row">
+                            <div class="col-md-8">
+                                    <!--stop-indexing-for-search-->
+                                    <div class="card-block pb-2">
+                                        <div class="card">
+                                            <div class="card-header collapsed" id="subtechniques-card-header" data-toggle="collapse" data-target="#subtechniques-card-body" aria-expanded="false" aria-controls="subtechniques-card-body">
+                                                    <h5 class="mb-0" id ="sub-techniques">Other sub-techniques of Process Injection (12)</h5>
+                                            </div>
+                                            <div id="subtechniques-card-body" class="card-body p-0 collapse" aria-labelledby="subtechniques-card-header">
+                                                <table class="table table-bordered">
+                                                    <thead>
+                                                        <tr>
+                                                            <th scope="col">ID</th>
+                                                            <th scope="col">Name</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                            <tr>
+                                                                    <td>
+                                                                        <a href="/versions/v16/techniques/T1055/001/" class="subtechnique-table-item" data-subtechnique_id="T1055.001"> T1055.001 </a>
+                                                                    </td>
+                                                                    <td>
+                                                                        <a href="/versions/v16/techniques/T1055/001/" class="subtechnique-table-item" data-subtechnique_id="T1055.001"> Dynamic-link Library Injection </a>
+                                                                    </td>
+                                                            </tr>
+                                                            <tr>
+                                                                    <td>
+                                                                        <a href="/versions/v16/techniques/T1055/002/" class="subtechnique-table-item" data-subtechnique_id="T1055.002"> T1055.002 </a>
+                                                                    </td>
+                                                                    <td>
+                                                                        <a href="/versions/v16/techniques/T1055/002/" class="subtechnique-table-item" data-subtechnique_id="T1055.002"> Portable Executable Injection </a>
+                                                                    </td>
+                                                            </tr>
+                                                            <tr>
+                                                                    <td>
+                                                                        <a href="/versions/v16/techniques/T1055/003/" class="subtechnique-table-item" data-subtechnique_id="T1055.003"> T1055.003 </a>
+                                                                    </td>
+                                                                    <td>
+                                                                        <a href="/versions/v16/techniques/T1055/003/" class="subtechnique-table-item" data-subtechnique_id="T1055.003"> Thread Execution Hijacking </a>
+                                                                    </td>
+                                                            </tr>
+                                                            <tr>
+                                                                    <td>
+                                                                        <a href="/versions/v16/techniques/T1055/004/" class="subtechnique-table-item" data-subtechnique_id="T1055.004"> T1055.004 </a>
+                                                                    </td>
+                                                                    <td>
+                                                                        <a href="/versions/v16/techniques/T1055/004/" class="subtechnique-table-item" data-subtechnique_id="T1055.004"> Asynchronous Procedure Call </a>
+                                                                    </td>
+                                                            </tr>
+                                                            <tr>
+                                                                    <td>
+                                                                        <a href="/versions/v16/techniques/T1055/005/" class="subtechnique-table-item" data-subtechnique_id="T1055.005"> T1055.005 </a>
+                                                                    </td>
+                                                                    <td>
+                                                                        <a href="/versions/v16/techniques/T1055/005/" class="subtechnique-table-item" data-subtechnique_id="T1055.005"> Thread Local Storage </a>
+                                                                    </td>
+                                                            </tr>
+                                                            <tr>
+                                                                    <td>
+                                                                        <a href="/versions/v16/techniques/T1055/008/" class="subtechnique-table-item" data-subtechnique_id="T1055.008"> T1055.008 </a>
+                                                                    </td>
+                                                                    <td>
+                                                                        <a href="/versions/v16/techniques/T1055/008/" class="subtechnique-table-item" data-subtechnique_id="T1055.008"> Ptrace System Calls </a>
+                                                                    </td>
+                                                            </tr>
+                                                            <tr>
+                                                                    <td>
+                                                                        <a href="/versions/v16/techniques/T1055/009/" class="subtechnique-table-item" data-subtechnique_id="T1055.009"> T1055.009 </a>
+                                                                    </td>
+                                                                    <td>
+                                                                        <a href="/versions/v16/techniques/T1055/009/" class="subtechnique-table-item" data-subtechnique_id="T1055.009"> Proc Memory </a>
+                                                                    </td>
+                                                            </tr>
+                                                            <tr>
+                                                                    <td>
+                                                                        <a href="/versions/v16/techniques/T1055/011/" class="subtechnique-table-item" data-subtechnique_id="T1055.011"> T1055.011 </a>
+                                                                    </td>
+                                                                    <td>
+                                                                        <a href="/versions/v16/techniques/T1055/011/" class="subtechnique-table-item" data-subtechnique_id="T1055.011"> Extra Window Memory Injection </a>
+                                                                    </td>
+                                                            </tr>
+                                                            <tr>
+                                                                    <td class="active">
+                                                                        T1055.012
+                                                                    </td>
+                                                                    <td class="active">
+                                                                        Process Hollowing
+                                                                    </td>
+                                                            </tr>
+                                                            <tr>
+                                                                    <td>
+                                                                        <a href="/versions/v16/techniques/T1055/013/" class="subtechnique-table-item" data-subtechnique_id="T1055.013"> T1055.013 </a>
+                                                                    </td>
+                                                                    <td>
+                                                                        <a href="/versions/v16/techniques/T1055/013/" class="subtechnique-table-item" data-subtechnique_id="T1055.013"> Process Doppelgänging </a>
+                                                                    </td>
+                                                            </tr>
+                                                            <tr>
+                                                                    <td>
+                                                                        <a href="/versions/v16/techniques/T1055/014/" class="subtechnique-table-item" data-subtechnique_id="T1055.014"> T1055.014 </a>
+                                                                    </td>
+                                                                    <td>
+                                                                        <a href="/versions/v16/techniques/T1055/014/" class="subtechnique-table-item" data-subtechnique_id="T1055.014"> VDSO Hijacking </a>
+                                                                    </td>
+                                                            </tr>
+                                                            <tr>
+                                                                    <td>
+                                                                        <a href="/versions/v16/techniques/T1055/015/" class="subtechnique-table-item" data-subtechnique_id="T1055.015"> T1055.015 </a>
+                                                                    </td>
+                                                                    <td>
+                                                                        <a href="/versions/v16/techniques/T1055/015/" class="subtechnique-table-item" data-subtechnique_id="T1055.015"> ListPlanting </a>
+                                                                    </td>
+                                                            </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--start-indexing-for-search-->
+
+                                    <div class="description-body">
+                                                <p>Adversaries may inject malicious code into suspended and hollowed processes in order to evade process-based defenses. Process hollowing is a method of executing arbitrary code in the address space of a separate live process.  </p><p>Process hollowing is commonly performed by creating a process in a suspended state then unmapping/hollowing its memory, which can then be replaced with malicious code. A victim process can be created with native Windows API calls such as <code>CreateProcess</code>, which includes a flag to suspend the processes primary thread. At this point the process can be unmapped using APIs calls such as <code>ZwUnmapViewOfSection</code> or <code>NtUnmapViewOfSection</code>  before being written to, realigned to the injected code, and resumed via <code>VirtualAllocEx</code>, <code>WriteProcessMemory</code>, <code>SetThreadContext</code>, then <code>ResumeThread</code> respectively.<span onclick=scrollToRef('scite-1') id="scite-ref-1-a" class="scite-citeref-number" title="Leitch, J. (n.d.). Process Hollowing. Retrieved September 12, 2024."data-reference="Leitch Hollowing"><sup><a href="https://new.dc414.org/wp-content/uploads/2011/01/Process-Hollowing.pdf" target="_blank" data-hasqtip="0" aria-describedby="qtip-0">[1]</a></sup></span><span onclick=scrollToRef('scite-2') id="scite-ref-2-a" class="scite-citeref-number" title="Hosseini, A. (2017, July 18). Ten Process Injection Techniques: A Technical Survey Of Common And Trending Process Injection Techniques. Retrieved December 7, 2017."data-reference="Elastic Process Injection July 2017"><sup><a href="https://www.endgame.com/blog/technical-blog/ten-process-injection-techniques-technical-survey-common-and-trending-process" target="_blank" data-hasqtip="1" aria-describedby="qtip-1">[2]</a></sup></span></p><p>This is very similar to <a href="/versions/v16/techniques/T1055/005">Thread Local Storage</a> but creates a new process rather than targeting an existing process. This behavior will likely not result in elevated privileges since the injected process was spawned from (and thus inherits the security context) of the injecting process. However, execution via process hollowing may also evade detection from security products since the execution is masked under a legitimate process. </p>
+
+                                    </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card">
+                                    <div class="card-body">
+                                            <div class="row card-data" id="card-id">
+                                                <div class="col-md-1 px-0 text-center"></div>
+                                                <div class="col-md-11 pl-0">
+                                                    <span class="h5 card-title">ID:&nbsp;</span>T1055.012
+                                                </div>
+                                            </div>
+                                        <!--stop-indexing-for-search-->
+                                        <div class="row card-data">
+                                            <div class="col-md-1 px-0 text-center"></div>
+                                            <div class="col-md-11 pl-0">
+                                                    <span class="h5 card-title">Sub-technique of:&nbsp;</span>
+                                                    <a href="/versions/v16/techniques/T1055">T1055</a>
+                                            </div>
+                                        </div>
+                                        <!--start-indexing-for-search-->
+                                            <div id="card-tactics" class="row card-data">
+                                                <div class="col-md-1 px-0 text-center">
+                                                    <span data-toggle="tooltip" data-placement="left" title="" data-test-ignore="true" data-original-title="The tactic objectives that the (sub-)technique can be used to accomplish">&#9432;</span>
+                                                </div>
+                                                <div class="col-md-11 pl-0">
+                                                    <span class="h5 card-title">Tactics:</span>
+                                                        <a href="/versions/v16/tactics/TA0005">Defense Evasion</a>,                                                        <a href="/versions/v16/tactics/TA0004">Privilege Escalation</a>                                                </div>
+                                            </div>
+                                            <div class="row card-data">
+                                                <div class="col-md-1 px-0 text-center">
+                                                    <span data-toggle="tooltip" data-placement="left" title="" data-test-ignore="true" data-original-title="The system an adversary is operating within; could be an operating system or application">&#9432;</span>
+                                                </div>
+                                                <div class="col-md-11 pl-0">
+                                                    <span class="h5 card-title">Platforms:&nbsp;</span>Windows
+                                                </div>
+                                            </div>
+                                            <div class="row card-data">
+                                                <div class="col-md-1 px-0 text-center">
+                                                    <span data-toggle="tooltip" data-placement="left" title="" data-test-ignore="true" data-original-title="The lowest level of permissions the adversary is required to be operating within to perform the (sub-)technique on a system">&#9432;</span>
+                                                </div>
+                                                <div class="col-md-11 pl-0">
+                                                    <span class="h5 card-title">Permissions Required:&nbsp;</span>User
+                                                </div>
+                                            </div>
+                                            <div class="row card-data">
+                                                <div class="col-md-1 px-0 text-center">
+                                                    <span data-toggle="tooltip" data-placement="left" title="" data-test-ignore="true" data-original-title="If the (sub-)technique can be used to bypass or evade a particular defensive tool, methodology, or process">&#9432;</span>
+                                                </div>
+                                                <div class="col-md-11 pl-0">
+                                                    <span class="h5 card-title">Defense Bypassed:&nbsp;</span>Anti-virus, Application control
+                                                </div>
+                                            </div>
+                                            <div class="row card-data">
+                                                <div class="col-md-1 px-0 text-center"></div>
+                                                <div class="col-md-11 pl-0">
+                                                    <span class="h5 card-title">Version:&nbsp;</span>1.3
+                                                </div>
+                                            </div>
+                                            <div class="row card-data">
+                                                <div class="col-md-1 px-0 text-center"></div>
+                                                <div class="col-md-11 pl-0">
+                                                    <span class="h5 card-title">Created:&nbsp;</span>14 January 2020
+                                                </div>
+                                            </div>
+                                            <div class="row card-data">
+                                                <div class="col-md-1 px-0 text-center"></div>
+                                                <div class="col-md-11 pl-0">
+                                                    <span class="h5 card-title">Last Modified:&nbsp;</span>12 September 2024
+                                                </div>
+                                            </div>
+                                    </div>
+                                </div>
+                                    <div class="text-center pt-2 version-button permalink">
+    <div class="live">
+        <a data-toggle="tooltip" 
+           data-placement="bottom" 
+           title="Permalink to this version of T1055.012" 
+           href="/versions/v16/techniques/T1055/012/" data-test-ignore="true">Version Permalink</a>
+    </div>
+    <div class="permalink">
+        <a data-toggle="tooltip" 
+           data-placement="bottom" 
+           title="Go to the live version of T1055.012" 
+           href="/techniques/T1055/012/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+    </div>
+</div>
+
+                            </div>
+                        </div>
+                            <h2 class="pt-3" id ="examples">Procedure Examples</h2>
+                            <div class="tables-mobile">
+                            <table class="table table-bordered table-alternate mt-2">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">ID</th>
+                                        <th scope="col">Name</th>
+                                        <th scope="col">Description</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v16/software/S0331"> S0331 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v16/software/S0331"> Agent Tesla </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v16/software/S0331">Agent Tesla</a> has used process hollowing to create and manipulate processes through sections of unmapped memory by reallocating that space with its malicious code.<span onclick=scrollToRef('scite-3') id="scite-ref-3-a" class="scite-citeref-number" title="Walter, J. (2020, August 10). Agent Tesla | Old RAT Uses New Tricks to Stay on Top. Retrieved December 11, 2020."data-reference="SentinelLabs Agent Tesla Aug 2020"><sup><a href="https://labs.sentinelone.com/agent-tesla-old-rat-uses-new-tricks-to-stay-on-top/" target="_blank" data-hasqtip="2" aria-describedby="qtip-2">[3]</a></sup></span> </p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v16/software/S0373"> S0373 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v16/software/S0373"> Astaroth </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v16/software/S0373">Astaroth</a> can create a new process in a suspended state from a targeted legitimate process in order to unmap its memory and replace it with malicious code.<span onclick=scrollToRef('scite-4') id="scite-ref-4-a" class="scite-citeref-number" title="Salem, E. (2019, February 13). ASTAROTH MALWARE USES LEGITIMATE OS AND ANTIVIRUS PROCESSES TO STEAL PASSWORDS AND PERSONAL DATA. Retrieved April 17, 2019."data-reference="Cybereason Astaroth Feb 2019"><sup><a href="https://www.cybereason.com/blog/information-stealing-malware-targeting-brazil-full-research" target="_blank" data-hasqtip="3" aria-describedby="qtip-3">[4]</a></sup></span><span onclick=scrollToRef('scite-5') id="scite-ref-5-a" class="scite-citeref-number" title="GReAT. (2020, July 14). The Tetrade: Brazilian banking malware goes global. Retrieved November 9, 2020."data-reference="Securelist Brazilian Banking Malware July 2020"><sup><a href="https://securelist.com/the-tetrade-brazilian-banking-malware/97779/" target="_blank" data-hasqtip="4" aria-describedby="qtip-4">[5]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v16/software/S0344"> S0344 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v16/software/S0344"> Azorult </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v16/software/S0344">Azorult</a> can decrypt the payload into memory, create a new suspended process of itself, then inject a decrypted payload to the new process and resume new process execution.<span onclick=scrollToRef('scite-6') id="scite-ref-6-a" class="scite-citeref-number" title="Yan, T., et al. (2018, November 21). New Wine in Old Bottle: New Azorult Variant Found in FindMyName Campaign using Fallout Exploit Kit. Retrieved November 29, 2018."data-reference="Unit42 Azorult Nov 2018"><sup><a href="https://researchcenter.paloaltonetworks.com/2018/11/unit42-new-wine-old-bottle-new-azorult-variant-found-findmyname-campaign-using-fallout-exploit-kit/" target="_blank" data-hasqtip="5" aria-describedby="qtip-5">[6]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v16/software/S0128"> S0128 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v16/software/S0128"> BADNEWS </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v16/software/S0128">BADNEWS</a> has a command to download an .exe and use process hollowing to inject it into a new process.<span onclick=scrollToRef('scite-7') id="scite-ref-7-a" class="scite-citeref-number" title="Settle, A., et al. (2016, August 8). MONSOON - Analysis Of An APT Campaign. Retrieved September 22, 2016."data-reference="Forcepoint Monsoon"><sup><a href="https://www.forcepoint.com/sites/default/files/resources/files/forcepoint-security-labs-monsoon-analysis-report.pdf" target="_blank" data-hasqtip="6" aria-describedby="qtip-6">[7]</a></sup></span><span onclick=scrollToRef('scite-8') id="scite-ref-8-a" class="scite-citeref-number" title="Lunghi, D., et al. (2017, December). Untangling the Patchwork Cyberespionage Group. Retrieved July 10, 2018."data-reference="TrendMicro Patchwork Dec 2017"><sup><a href="https://documents.trendmicro.com/assets/tech-brief-untangling-the-patchwork-cyberespionage-group.pdf" target="_blank" data-hasqtip="7" aria-describedby="qtip-7">[8]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v16/software/S0234"> S0234 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v16/software/S0234"> Bandook </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v16/software/S0234">Bandook</a> has been launched by starting iexplore.exe and replacing it with <a href="/versions/v16/software/S0234">Bandook</a>'s payload.<span onclick=scrollToRef('scite-9') id="scite-ref-9-a" class="scite-citeref-number" title="Blaich, A., et al. (2018, January 18). Dark Caracal: Cyber-espionage at a Global Scale. Retrieved April 11, 2018."data-reference="Lookout Dark Caracal Jan 2018"><sup><a href="https://info.lookout.com/rs/051-ESQ-475/images/Lookout_Dark-Caracal_srr_20180118_us_v.1.0.pdf" target="_blank" data-hasqtip="8" aria-describedby="qtip-8">[9]</a></sup></span><span onclick=scrollToRef('scite-10') id="scite-ref-10-a" class="scite-citeref-number" title="Galperin, E., Et al.. (2016, August). I Got a Letter From the Government the Other Day.... Retrieved April 25, 2018."data-reference="EFF Manul Aug 2016"><sup><a href="https://www.eff.org/files/2016/08/03/i-got-a-letter-from-the-government.pdf" target="_blank" data-hasqtip="9" aria-describedby="qtip-9">[10]</a></sup></span><span onclick=scrollToRef('scite-11') id="scite-ref-11-a" class="scite-citeref-number" title="Check Point. (2020, November 26). Bandook: Signed & Delivered. Retrieved May 31, 2021."data-reference="CheckPoint Bandook Nov 2020"><sup><a href="https://research.checkpoint.com/2020/bandook-signed-delivered/" target="_blank" data-hasqtip="10" aria-describedby="qtip-10">[11]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v16/software/S0534"> S0534 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v16/software/S0534"> Bazar </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v16/software/S0534">Bazar</a> can inject into a target process including Svchost, Explorer, and cmd using process hollowing.<span onclick=scrollToRef('scite-12') id="scite-ref-12-a" class="scite-citeref-number" title="Cybereason Nocturnus. (2020, July 16). A BAZAR OF TRICKS: FOLLOWING TEAM9’S DEVELOPMENT CYCLES. Retrieved November 18, 2020."data-reference="Cybereason Bazar July 2020"><sup><a href="https://www.cybereason.com/blog/a-bazar-of-tricks-following-team9s-development-cycles" target="_blank" data-hasqtip="11" aria-describedby="qtip-11">[12]</a></sup></span><span onclick=scrollToRef('scite-13') id="scite-ref-13-a" class="scite-citeref-number" title="Pantazopoulos, N. (2020, June 2). In-depth analysis of the new Team9 malware family. Retrieved December 1, 2020."data-reference="NCC Group Team9 June 2020"><sup><a href="https://research.nccgroup.com/2020/06/02/in-depth-analysis-of-the-new-team9-malware-family/" target="_blank" data-hasqtip="12" aria-describedby="qtip-12">[13]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v16/software/S0127"> S0127 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v16/software/S0127"> BBSRAT </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v16/software/S0127">BBSRAT</a> has been seen loaded into msiexec.exe through process hollowing to hide its execution.<span onclick=scrollToRef('scite-14') id="scite-ref-14-a" class="scite-citeref-number" title="Lee, B. Grunzweig, J. (2015, December 22). BBSRAT Attacks Targeting Russian Organizations Linked to Roaming Tiger. Retrieved August 19, 2016."data-reference="Palo Alto Networks BBSRAT"><sup><a href="http://researchcenter.paloaltonetworks.com/2015/12/bbsrat-attacks-targeting-russian-organizations-linked-to-roaming-tiger/" target="_blank" data-hasqtip="13" aria-describedby="qtip-13">[14]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v16/software/S0660"> S0660 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v16/software/S0660"> Clambling </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v16/software/S0660">Clambling</a> can execute binaries through process hollowing.<span onclick=scrollToRef('scite-15') id="scite-ref-15-a" class="scite-citeref-number" title="Lunghi, D. et al. (2020, February). Uncovering DRBControl. Retrieved November 12, 2021."data-reference="Trend Micro DRBControl February 2020"><sup><a href="https://documents.trendmicro.com/assets/white_papers/wp-uncovering-DRBcontrol.pdf" target="_blank" data-hasqtip="14" aria-describedby="qtip-14">[15]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v16/software/S0154"> S0154 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v16/software/S0154"> Cobalt Strike </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v16/software/S0154">Cobalt Strike</a> can use process hollowing for execution.<span onclick=scrollToRef('scite-16') id="scite-ref-16-a" class="scite-citeref-number" title="Cobalt Strike. (2017, December 8). Tactics, Techniques, and Procedures. Retrieved December 20, 2017."data-reference="Cobalt Strike TTPs Dec 2017"><sup><a href="https://www.cobaltstrike.com/downloads/reports/tacticstechniquesandprocedures.pdf" target="_blank" data-hasqtip="15" aria-describedby="qtip-15">[16]</a></sup></span><span onclick=scrollToRef('scite-17') id="scite-ref-17-a" class="scite-citeref-number" title="Strategic Cyber LLC. (2020, November 5). Cobalt Strike: Advanced Threat Tactics for Penetration Testers. Retrieved April 13, 2021."data-reference="Cobalt Strike Manual 4.3 November 2020"><sup><a href="https://web.archive.org/web/20210708035426/https://www.cobaltstrike.com/downloads/csmanual43.pdf" target="_blank" data-hasqtip="16" aria-describedby="qtip-16">[17]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v16/software/S1111"> S1111 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v16/software/S1111"> DarkGate </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v16/software/S1111">DarkGate</a> leverages process hollowing techniques to evade detection, such as decrypting the content of an encrypted PE file and injecting it into the process vbc.exe.<span onclick=scrollToRef('scite-18') id="scite-ref-18-a" class="scite-citeref-number" title="Adi Zeligson & Rotem Kerner. (2018, November 13). Enter The DarkGate - New Cryptocurrency Mining and Ransomware Campaign. Retrieved February 9, 2024."data-reference="Ensilo Darkgate 2018"><sup><a href="https://www.fortinet.com/blog/threat-research/enter-the-darkgate-new-cryptocurrency-mining-and-ransomware-campaign" target="_blank" data-hasqtip="17" aria-describedby="qtip-17">[18]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v16/software/S0354"> S0354 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v16/software/S0354"> Denis </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v16/software/S0354">Denis</a> performed process hollowing through the API calls CreateRemoteThread, ResumeThread, and Wow64SetThreadContext.<span onclick=scrollToRef('scite-19') id="scite-ref-19-a" class="scite-citeref-number" title="Dahan, A. (2017). Operation Cobalt Kitty. Retrieved December 27, 2018."data-reference="Cybereason Cobalt Kitty 2017"><sup><a href="https://cdn2.hubspot.net/hubfs/3354902/Cybereason%20Labs%20Analysis%20Operation%20Cobalt%20Kitty.pdf" target="_blank" data-hasqtip="18" aria-describedby="qtip-18">[19]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v16/software/S0567"> S0567 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v16/software/S0567"> Dtrack </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v16/software/S0567">Dtrack</a> has used process hollowing shellcode to target a predefined list of processes from <code>%SYSTEM32%</code>.<span onclick=scrollToRef('scite-20') id="scite-ref-20-a" class="scite-citeref-number" title="Konstantin Zykov. (2019, September 23). Hello! My name is Dtrack. Retrieved January 20, 2021."data-reference="Securelist Dtrack"><sup><a href="https://securelist.com/my-name-is-dtrack/93338/" target="_blank" data-hasqtip="19" aria-describedby="qtip-19">[20]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v16/software/S0038"> S0038 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v16/software/S0038"> Duqu </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v16/software/S0038">Duqu</a> is capable of loading executable code via process hollowing.<span onclick=scrollToRef('scite-21') id="scite-ref-21-a" class="scite-citeref-number" title="Symantec Security Response. (2011, November). W32.Duqu: The precursor to the next Stuxnet. Retrieved September 17, 2015."data-reference="Symantec W32.Duqu"><sup><a href="https://www.symantec.com/content/en/us/enterprise/media/security_response/whitepapers/w32_duqu_the_precursor_to_the_next_stuxnet.pdf" target="_blank" data-hasqtip="20" aria-describedby="qtip-20">[21]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v16/software/S0367"> S0367 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v16/software/S0367"> Emotet </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v16/software/S0367">Emotet</a> uses a copy of <code>certutil.exe</code> stored in a temporary directory for process hollowing, starting the program in a suspended state before loading malicious code.<span onclick=scrollToRef('scite-22') id="scite-ref-22-a" class="scite-citeref-number" title="Kenefick, I. (2023, March 13). Emotet Returns, Now Adopts Binary Padding for Evasion. Retrieved June 19, 2024."data-reference="emotet_trendmicro_mar2023"><sup><a href="https://www.trendmicro.com/en_us/research/23/c/emotet-returns-now-adopts-binary-padding-for-evasion.html" target="_blank" data-hasqtip="21" aria-describedby="qtip-21">[22]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v16/software/S1138"> S1138 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v16/software/S1138"> Gootloader </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v16/software/S1138">Gootloader</a> can inject its Delphi executable into ImagingDevices.exe using a process hollowing technique.<span onclick=scrollToRef('scite-23') id="scite-ref-23-a" class="scite-citeref-number" title="Szappanos, G. & Brandt, A. (2021, March 1). "Gootloader" expands its payload delivery options. Retrieved September 30, 2022."data-reference="Sophos Gootloader"><sup><a href="https://news.sophos.com/en-us/2021/03/01/gootloader-expands-its-payload-delivery-options/" target="_blank" data-hasqtip="22" aria-describedby="qtip-22">[23]</a></sup></span><span onclick=scrollToRef('scite-24') id="scite-ref-24-a" class="scite-citeref-number" title="Pirozzi, A. (2021, June 16). Gootloader: ‘Initial Access as a Service’ Platform Expands Its Search for High Value Targets. Retrieved May 28, 2024."data-reference="SentinelOne Gootloader June 2021"><sup><a href="https://www.sentinelone.com/labs/gootloader-initial-access-as-a-service-platform-expands-its-search-for-high-value-targets/" target="_blank" data-hasqtip="23" aria-describedby="qtip-23">[24]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v16/groups/G0078"> G0078 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v16/groups/G0078"> Gorgon Group </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v16/groups/G0078">Gorgon Group</a> malware can use process hollowing to inject one of its trojans into another process.<span onclick=scrollToRef('scite-25') id="scite-ref-25-a" class="scite-citeref-number" title="Falcone, R., et al. (2018, August 02). The Gorgon Group: Slithering Between Nation State and Cybercrime. Retrieved August 7, 2018."data-reference="Unit 42 Gorgon Group Aug 2018"><sup><a href="https://researchcenter.paloaltonetworks.com/2018/08/unit42-gorgon-group-slithering-nation-state-cybercrime/" target="_blank" data-hasqtip="24" aria-describedby="qtip-24">[25]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v16/software/S0483"> S0483 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v16/software/S0483"> IcedID </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v16/software/S0483">IcedID</a> can inject a <a href="/versions/v16/software/S0154">Cobalt Strike</a> beacon into cmd.exe via process hallowing.<span onclick=scrollToRef('scite-26') id="scite-ref-26-a" class="scite-citeref-number" title="DFIR. (2022, April 25). Quantum Ransomware. Retrieved July 26, 2024."data-reference="DFIR_Quantum_Ransomware"><sup><a href="https://thedfirreport.com/2022/04/25/quantum-ransomware/" target="_blank" data-hasqtip="25" aria-describedby="qtip-25">[26]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v16/software/S0189"> S0189 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v16/software/S0189"> ISMInjector </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v16/software/S0189">ISMInjector</a> hollows out a newly created process RegASM.exe and injects its payload into the hollowed process.<span onclick=scrollToRef('scite-27') id="scite-ref-27-a" class="scite-citeref-number" title="Falcone, R. and Lee, B. (2017, October 9). OilRig Group Steps Up Attacks with New Delivery Documents and New Injector Trojan. Retrieved January 8, 2018."data-reference="OilRig New Delivery Oct 2017"><sup><a href="https://researchcenter.paloaltonetworks.com/2017/10/unit42-oilrig-group-steps-attacks-new-delivery-documents-new-injector-trojan/" target="_blank" data-hasqtip="26" aria-describedby="qtip-26">[27]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v16/groups/G0094"> G0094 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v16/groups/G0094"> Kimsuky </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v16/groups/G0094">Kimsuky</a> has used a file injector DLL to spawn a benign process on the victim's system and inject the malicious payload into it via process hollowing.<span onclick=scrollToRef('scite-28') id="scite-ref-28-a" class="scite-citeref-number" title="An, J and Malhotra, A. (2021, November 10). North Korean attackers use malicious blogs to deliver malware to high-profile South Korean targets. Retrieved December 29, 2021."data-reference="Talos Kimsuky Nov 2021"><sup><a href="https://blog.talosintelligence.com/2021/11/kimsuky-abuses-blogs-delivers-malware.html" target="_blank" data-hasqtip="27" aria-describedby="qtip-27">[28]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v16/software/S0447"> S0447 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v16/software/S0447"> Lokibot </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v16/software/S0447">Lokibot</a> has used process hollowing to inject itself into legitimate Windows process.<span onclick=scrollToRef('scite-29') id="scite-ref-29-a" class="scite-citeref-number" title="Hoang, M. (2019, January 31). Malicious Activity Report: Elements of  Lokibot Infostealer. Retrieved May 15, 2020."data-reference="Infoblox Lokibot January 2019"><sup><a href="https://insights.infoblox.com/threat-intelligence-reports/threat-intelligence--22" target="_blank" data-hasqtip="28" aria-describedby="qtip-28">[29]</a></sup></span><span onclick=scrollToRef('scite-30') id="scite-ref-30-a" class="scite-citeref-number" title="Muhammad, I., Unterbrink, H.. (2021, January 6). A Deep Dive into Lokibot Infection Chain. Retrieved August 31, 2021."data-reference="Talos Lokibot Jan 2021"><sup><a href="https://blog.talosintelligence.com/2021/01/a-deep-dive-into-lokibot-infection-chain.html" target="_blank" data-hasqtip="29" aria-describedby="qtip-29">[30]</a></sup></span> </p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v16/groups/G0045"> G0045 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v16/groups/G0045"> menuPass </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v16/groups/G0045">menuPass</a> has used process hollowing in iexplore.exe to load the <a href="/versions/v16/software/S0153">RedLeaves</a> implant.<span onclick=scrollToRef('scite-31') id="scite-ref-31-a" class="scite-citeref-number" title="Accenture Security. (2018, April 23). Hogfish Redleaves Campaign. Retrieved July 2, 2018."data-reference="Accenture Hogfish April 2018"><sup><a href="http://web.archive.org/web/20220810112638/https:/www.accenture.com/t20180423T055005Z_w_/se-en/_acnmedia/PDF-76/Accenture-Hogfish-Threat-Analysis.pdf" target="_blank" data-hasqtip="30" aria-describedby="qtip-30">[31]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v16/software/S0198"> S0198 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v16/software/S0198"> NETWIRE </a>
+                                            </td>
+                                            <td>
+                                                            <p>The <a href="/versions/v16/software/S0198">NETWIRE</a> payload has been injected into benign Microsoft executables via process hollowing.<span onclick=scrollToRef('scite-32') id="scite-ref-32-a" class="scite-citeref-number" title="Maniath, S. and Kadam P. (2019, March 19). Dissecting a NETWIRE Phishing Campaign's Usage of Process Hollowing. Retrieved January 7, 2021."data-reference="FireEye NETWIRE March 2019"><sup><a href="https://www.mandiant.com/resources/blog/dissecting-netwire-phishing-campaigns-usage-process-hollowing" target="_blank" data-hasqtip="31" aria-describedby="qtip-31">[32]</a></sup></span><span onclick=scrollToRef('scite-33') id="scite-ref-33-a" class="scite-citeref-number" title="Lambert, T. (2020, January 29). Intro to Netwire. Retrieved January 7, 2021."data-reference="Red Canary NETWIRE January 2020"><sup><a href="https://redcanary.com/blog/netwire-remote-access-trojan-on-linux/" target="_blank" data-hasqtip="32" aria-describedby="qtip-32">[33]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v16/software/S0229"> S0229 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v16/software/S0229"> Orz </a>
+                                            </td>
+                                            <td>
+                                                            <p>Some <a href="/versions/v16/software/S0229">Orz</a> versions have an embedded DLL known as MockDll that uses process hollowing and <a href="/versions/v16/techniques/T1218/010">Regsvr32</a> to execute another payload.<span onclick=scrollToRef('scite-34') id="scite-ref-34-a" class="scite-citeref-number" title="Axel F, Pierre T. (2017, October 16). Leviathan: Espionage actor spearphishes maritime and defense targets. Retrieved February 15, 2018."data-reference="Proofpoint Leviathan Oct 2017"><sup><a href="https://www.proofpoint.com/us/threat-insight/post/leviathan-espionage-actor-spearphishes-maritime-and-defense-targets" target="_blank" data-hasqtip="33" aria-describedby="qtip-33">[34]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v16/groups/G0040"> G0040 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v16/groups/G0040"> Patchwork </a>
+                                            </td>
+                                            <td>
+                                                            <p>A <a href="/versions/v16/groups/G0040">Patchwork</a> payload uses process hollowing to hide the UAC bypass vulnerability exploitation inside svchost.exe.<span onclick=scrollToRef('scite-35') id="scite-ref-35-a" class="scite-citeref-number" title="Cymmetria. (2016). Unveiling Patchwork - The Copy-Paste APT. Retrieved August 3, 2016."data-reference="Cymmetria Patchwork"><sup><a href="https://web.archive.org/web/20180825085952/https://s3-us-west-2.amazonaws.com/cymmetria-blog/public/Unveiling_Patchwork.pdf" target="_blank" data-hasqtip="34" aria-describedby="qtip-34">[35]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v16/software/S0650"> S0650 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v16/software/S0650"> QakBot </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v16/software/S0650">QakBot</a> can use process hollowing to execute its main payload.<span onclick=scrollToRef('scite-36') id="scite-ref-36-a" class="scite-citeref-number" title="Morrow, D. (2021, April 15). The rise of QakBot. Retrieved September 27, 2021."data-reference="ATT QakBot April 2021"><sup><a href="https://cybersecurity.att.com/blogs/labs-research/the-rise-of-qakbot" target="_blank" data-hasqtip="35" aria-describedby="qtip-35">[36]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v16/software/S1130"> S1130 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v16/software/S1130"> Raspberry Robin </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v16/software/S1130">Raspberry Robin</a> will execute a legitimate process, then suspend it to inject code for a <a href="/versions/v16/software/S0183">Tor</a> client into the process, followed by resumption of the process to enable <a href="/versions/v16/software/S0183">Tor</a> client execution.<span onclick=scrollToRef('scite-37') id="scite-ref-37-a" class="scite-citeref-number" title="Christopher So. (2022, December 20). Raspberry Robin Malware Targets Telecom, Governments. Retrieved May 17, 2024."data-reference="TrendMicro RaspberryRobin 2022"><sup><a href="https://www.trendmicro.com/en_us/research/22/l/raspberry-robin-malware-targets-telecom-governments.html" target="_blank" data-hasqtip="36" aria-describedby="qtip-36">[37]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v16/software/S0662"> S0662 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v16/software/S0662"> RCSession </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v16/software/S0662">RCSession</a> can launch itself from a hollowed svchost.exe process.<span onclick=scrollToRef('scite-38') id="scite-ref-38-a" class="scite-citeref-number" title="Counter Threat Unit Research Team. (2019, December 29). BRONZE PRESIDENT Targets NGOs. Retrieved April 13, 2021."data-reference="Secureworks BRONZE PRESIDENT December 2019"><sup><a href="https://www.secureworks.com/research/bronze-president-targets-ngos" target="_blank" data-hasqtip="37" aria-describedby="qtip-37">[38]</a></sup></span><span onclick=scrollToRef('scite-15') id="scite-ref-15-a" class="scite-citeref-number" title="Lunghi, D. et al. (2020, February). Uncovering DRBControl. Retrieved November 12, 2021."data-reference="Trend Micro DRBControl February 2020"><sup><a href="https://documents.trendmicro.com/assets/white_papers/wp-uncovering-DRBcontrol.pdf" target="_blank" data-hasqtip="14" aria-describedby="qtip-14">[15]</a></sup></span><span onclick=scrollToRef('scite-39') id="scite-ref-39-a" class="scite-citeref-number" title="Global Threat Center, Intelligence Team. (2020, December). APT27 Turns to Ransomware. Retrieved November 12, 2021."data-reference="Profero APT27 December 2020"><sup><a href="https://web.archive.org/web/20210104144857/https://shared-public-reports.s3-eu-west-1.amazonaws.com/APT27+turns+to+ransomware.pdf" target="_blank" data-hasqtip="38" aria-describedby="qtip-38">[39]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v16/software/S1018"> S1018 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v16/software/S1018"> Saint Bot </a>
+                                            </td>
+                                            <td>
+                                                            <p>The <a href="/versions/v16/software/S1018">Saint Bot</a> loader has used API calls to spawn <code>MSBuild.exe</code> in a suspended state before injecting the decrypted <a href="/versions/v16/software/S1018">Saint Bot</a> binary into it.<span onclick=scrollToRef('scite-40') id="scite-ref-40-a" class="scite-citeref-number" title="Unit 42. (2022, February 25). Spear Phishing Attacks Target Organizations in Ukraine, Payloads Include the Document Stealer OutSteel and the Downloader SaintBot. Retrieved June 9, 2022."data-reference="Palo Alto Unit 42 OutSteel SaintBot February 2022 "><sup><a href="https://unit42.paloaltonetworks.com/ukraine-targeted-outsteel-saintbot/" target="_blank" data-hasqtip="39" aria-describedby="qtip-39">[40]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v16/software/S0226"> S0226 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v16/software/S0226"> Smoke Loader </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v16/software/S0226">Smoke Loader</a> spawns a new copy of c:\windows\syswow64\explorer.exe and then replaces the executable code in memory with malware.<span onclick=scrollToRef('scite-41') id="scite-ref-41-a" class="scite-citeref-number" title="Hasherezade. (2016, September 12). Smoke Loader – downloader with a smokescreen still alive. Retrieved March 20, 2018."data-reference="Malwarebytes SmokeLoader 2016"><sup><a href="https://blog.malwarebytes.com/threat-analysis/2016/08/smoke-loader-downloader-with-a-smokescreen-still-alive/" target="_blank" data-hasqtip="40" aria-describedby="qtip-40">[41]</a></sup></span><span onclick=scrollToRef('scite-42') id="scite-ref-42-a" class="scite-citeref-number" title="Windows Defender Research. (2018, March 7). Behavior monitoring combined with machine learning spoils a massive Dofoil coin mining campaign. Retrieved March 20, 2018."data-reference="Microsoft Dofoil 2018"><sup><a href="https://cloudblogs.microsoft.com/microsoftsecure/2018/03/07/behavior-monitoring-combined-with-machine-learning-spoils-a-massive-dofoil-coin-mining-campaign/" target="_blank" data-hasqtip="41" aria-describedby="qtip-41">[42]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v16/software/S1086"> S1086 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v16/software/S1086"> Snip3 </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v16/software/S1086">Snip3</a> can use RunPE to execute malicious payloads within a hollowed Windows process.<span onclick=scrollToRef('scite-43') id="scite-ref-43-a" class="scite-citeref-number" title="Lorber, N. (2021, May 7). Revealing the Snip3 Crypter, a Highly Evasive RAT Loader. Retrieved September 13, 2023."data-reference="Morphisec Snip3 May 2021"><sup><a href="https://blog.morphisec.com/revealing-the-snip3-crypter-a-highly-evasive-rat-loader" target="_blank" data-hasqtip="42" aria-describedby="qtip-42">[43]</a></sup></span><span onclick=scrollToRef('scite-44') id="scite-ref-44-a" class="scite-citeref-number" title="Jornet, A. (2021, December 23). Snip3, an investigation into malware. Retrieved September 19, 2023."data-reference="Telefonica Snip3 December 2021"><sup><a href="https://telefonicatech.com/blog/snip3-investigacion-malware" target="_blank" data-hasqtip="43" aria-describedby="qtip-43">[44]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v16/groups/G1018"> G1018 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v16/groups/G1018"> TA2541 </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v16/groups/G1018">TA2541</a> has used process hollowing to execute CyberGate malware.<span onclick=scrollToRef('scite-45') id="scite-ref-45-a" class="scite-citeref-number" title="Ventura, V. (2021, September 16). Operation Layover: How we tracked an attack on the aviation industry to five years of compromise. Retrieved September 15, 2023."data-reference="Cisco Operation Layover September 2021"><sup><a href="https://blog.talosintelligence.com/operation-layover-how-we-tracked-attack/" target="_blank" data-hasqtip="44" aria-describedby="qtip-44">[45]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v16/groups/G0027"> G0027 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v16/groups/G0027"> Threat Group-3390 </a>
+                                            </td>
+                                            <td>
+                                                            <p>A <a href="/versions/v16/groups/G0027">Threat Group-3390</a> tool can spawn <code>svchost.exe</code> and inject the payload into that process.<span onclick=scrollToRef('scite-46') id="scite-ref-46-a" class="scite-citeref-number" title="Pantazopoulos, N., Henry T. (2018, May 18). Emissary Panda – A potential new malicious tool. Retrieved June 25, 2018."data-reference="Nccgroup Emissary Panda May 2018"><sup><a href="https://research.nccgroup.com/2018/05/18/emissary-panda-a-potential-new-malicious-tool/" target="_blank" data-hasqtip="45" aria-describedby="qtip-45">[46]</a></sup></span><span onclick=scrollToRef('scite-47') id="scite-ref-47-a" class="scite-citeref-number" title="Legezo, D. (2018, June 13). LuckyMouse hits national data center to organize country-level waterholing campaign. Retrieved August 18, 2018."data-reference="Securelist LuckyMouse June 2018"><sup><a href="https://securelist.com/luckymouse-hits-national-data-center/86083/" target="_blank" data-hasqtip="46" aria-describedby="qtip-46">[47]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v16/software/S0266"> S0266 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v16/software/S0266"> TrickBot </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v16/software/S0266">TrickBot</a> injects into the svchost.exe process.<span onclick=scrollToRef('scite-48') id="scite-ref-48-a" class="scite-citeref-number" title="Salinas, M., Holguin, J. (2017, June). Evolution of Trickbot. Retrieved July 31, 2018."data-reference="S2 Grupo TrickBot June 2017"><sup><a href="https://www.securityartwork.es/wp-content/uploads/2017/07/Trickbot-report-S2-Grupo.pdf" target="_blank" data-hasqtip="47" aria-describedby="qtip-47">[48]</a></sup></span><span onclick=scrollToRef('scite-49') id="scite-ref-49-a" class="scite-citeref-number" title="Antazo, F. (2016, October 31). TSPY_TRICKLOAD.N. Retrieved September 14, 2018."data-reference="Trend Micro Totbrick Oct 2016"><sup><a href="https://www.trendmicro.com/vinfo/us/threat-encyclopedia/malware/tspy_trickload.n" target="_blank" data-hasqtip="48" aria-describedby="qtip-48">[49]</a></sup></span><span onclick=scrollToRef('scite-50') id="scite-ref-50-a" class="scite-citeref-number" title="Pornasdoro, A. (2017, October 12). Trojan:Win32/Totbrick. Retrieved September 14, 2018."data-reference="Microsoft Totbrick Oct 2017"><sup><a href="https://www.microsoft.com/en-us/wdsi/threats/malware-encyclopedia-description?Name=Trojan:Win32/Totbrick" target="_blank" data-hasqtip="49" aria-describedby="qtip-49">[50]</a></sup></span><span onclick=scrollToRef('scite-51') id="scite-ref-51-a" class="scite-citeref-number" title="Dahan, A. et al. (2019, December 11). DROPPING ANCHOR: FROM A TRICKBOT INFECTION TO THE DISCOVERY OF THE ANCHOR MALWARE. Retrieved September 10, 2020."data-reference="Cyberreason Anchor December 2019"><sup><a href="https://www.cybereason.com/blog/dropping-anchor-from-a-trickbot-infection-to-the-discovery-of-the-anchor-malware" target="_blank" data-hasqtip="50" aria-describedby="qtip-50">[51]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v16/software/S0386"> S0386 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v16/software/S0386"> Ursnif </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v16/software/S0386">Ursnif</a> has used process hollowing to inject into child processes.<span onclick=scrollToRef('scite-52') id="scite-ref-52-a" class="scite-citeref-number" title="Vaish, A. & Nemes, S. (2017, November 28). Newly Observed Ursnif Variant Employs Malicious TLS Callback Technique to Achieve Process Injection. Retrieved June 5, 2019."data-reference="FireEye Ursnif Nov 2017"><sup><a href="https://www.fireeye.com/blog/threat-research/2017/11/ursnif-variant-malicious-tls-callback-technique.html" target="_blank" data-hasqtip="51" aria-describedby="qtip-51">[52]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v16/software/S0689"> S0689 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v16/software/S0689"> WhisperGate </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v16/software/S0689">WhisperGate</a> has the ability to inject its fourth stage into a suspended process created by the legitimate Windows utility <code>InstallUtil.exe</code>.<span onclick=scrollToRef('scite-53') id="scite-ref-53-a" class="scite-citeref-number" title="Biasini, N. et al.. (2022, January 21). Ukraine Campaign Delivers Defacement and Wipers, in Continued Escalation. Retrieved March 14, 2022."data-reference="Cisco Ukraine Wipers January 2022"><sup><a href="https://blog.talosintelligence.com/2022/01/ukraine-campaign-delivers-defacement.html" target="_blank" data-hasqtip="52" aria-describedby="qtip-52">[53]</a></sup></span><span onclick=scrollToRef('scite-54') id="scite-ref-54-a" class="scite-citeref-number" title="Insikt Group. (2020, January 28). WhisperGate Malware Corrupts Computers in Ukraine. Retrieved September 16, 2024."data-reference="RecordedFuture WhisperGate Jan 2022"><sup><a href="https://www.recordedfuture.com/research/whispergate-malware-corrupts-computers-ukraine" target="_blank" data-hasqtip="53" aria-describedby="qtip-53">[54]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v16/software/S1065"> S1065 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v16/software/S1065"> Woody RAT </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v16/software/S1065">Woody RAT</a> can create a suspended notepad process and write shellcode to delete a file into the suspended process using <code>NtWriteVirtualMemory</code>.<span onclick=scrollToRef('scite-55') id="scite-ref-55-a" class="scite-citeref-number" title="MalwareBytes Threat Intelligence Team. (2022, August 3). Woody RAT: A new feature-rich malware spotted in the wild. Retrieved December 6, 2022."data-reference="MalwareBytes WoodyRAT Aug 2022"><sup><a href="https://www.malwarebytes.com/blog/threat-intelligence/2022/08/woody-rat-a-new-feature-rich-malware-spotted-in-the-wild" target="_blank" data-hasqtip="54" aria-describedby="qtip-54">[55]</a></sup></span> </p>
+
+                                            </td>
+                                        </tr>
+                                </tbody>
+                            </table>
+                            </div>
+                            <h2 class="pt-3" id ="mitigations">Mitigations</h2>
+                            <div class="tables-mobile">
+                                <table class="table table-bordered table-alternate mt-2">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">ID</th>
+                                            <th scope="col">Mitigation</th>
+                                            <th scope="col">Description</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                            <tr>
+                                                <td>
+                                                    <a href="/versions/v16/mitigations/M1040"> M1040 </a>
+                                                </td>
+                                                <td>
+                                                    <a href="/versions/v16/mitigations/M1040"> Behavior Prevention on Endpoint </a>
+                                                </td>
+                                                <td>
+                                                                <p>Some endpoint security solutions can be configured to block some types of process injection based on common sequences of behavior that occur during the injection process. </p>
+
+                                                </td>
+                                            </tr>
+                                    </tbody>
+                                </table>
+                                </div>
+                            <h2 class="pt-3" id="detection">Detection</h2>
+                                <div class="tables-mobile">
+<table class="table datasources-table table-bordered">
+    <thead>
+        <tr>
+            <th class="p-2" scope="col">ID</th>
+            <th class="p-2 nowrap" scope="col">Data Source</th>
+            <th class="p-2 nowrap" scope="col">Data Component</th>
+            <th class="p-2" scope="col">Detects</th>
+        </tr>
+    </thead>
+    <tbody>
+            <tr class="datasource" id="uses-DS0009">
+                <td>
+                    <a href="/versions/v16/datasources/DS0009">DS0009</a>
+                </td>
+                <td class="nowrap">
+                    <a href="/versions/v16/datasources/DS0009">Process</a>
+                </td>
+                <!-- Add first data component here -->
+                <td> 
+                    <a href="/datasources/DS0009/#OS%20API%20Execution">OS API Execution</a>
+                </td>
+                    <td>
+                                <p>Monitoring Windows API calls indicative of the various types of code injection may generate a significant amount of data and may not be directly useful for defense unless collected under specific circumstances for known bad sequences of calls, since benign use of API functions may be common and difficult to distinguish from malicious behavior. Windows API calls such as <code>CreateRemoteThread</code>, <code>SuspendThread</code>/<code>SetThreadContext</code>/<code>ResumeThread</code>, and those that can be used to modify memory within another process, such as <code>VirtualAllocEx</code>/<code>WriteProcessMemory</code>, may be used for this technique.<span onclick=scrollToRef('scite-2') id="scite-ref-2-a" class="scite-citeref-number" title="Hosseini, A. (2017, July 18). Ten Process Injection Techniques: A Technical Survey Of Common And Trending Process Injection Techniques. Retrieved December 7, 2017."data-reference="Elastic Process Injection July 2017"><sup><a href="https://www.endgame.com/blog/technical-blog/ten-process-injection-techniques-technical-survey-common-and-trending-process" target="_blank" data-hasqtip="1" aria-describedby="qtip-1">[2]</a></sup></span></p>
+
+                    </td>
+            </tr>
+                    <tr class="datacomponent datasource" id="uses-DS0009-Process Access">
+                        <td></td>
+                        <td></td>
+                        <td>
+                            <a href="/datasources/DS0009/#Process%20Access">Process Access</a>
+                        </td>
+                            <td>
+                                        <p>Monitor for processes being viewed that may inject malicious code into suspended and hollowed processes in order to evade process-based defenses.</p>
+
+                            </td>
+                    </tr>
+                    <tr class="datacomponent datasource" id="uses-DS0009-Process Creation">
+                        <td></td>
+                        <td></td>
+                        <td>
+                            <a href="/datasources/DS0009/#Process%20Creation">Process Creation</a>
+                        </td>
+                            <td>
+                                        <p>Monitor for newly executed processes that may inject malicious code into suspended and hollowed processes in order to evade process-based defenses. Adversaries may start legitimate processes and then use their memory space to run malicious code. This analytic looks for common Windows processes that have been abused this way in the past; when the processes are started for this purpose they may not have the standard parent that we would expect. This list is not exhaustive, and it is possible for cyber actors to avoid this discepency. These signatures only work if Sysmon reports the parent process, which may not always be the case if the parent dies before sysmon processes the event.</p><p>Analytic 1 - Processes Started From Irregular Parents</p><p><code>(source="<em>WinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode="1") OR (source="</em>WinEventLog:Security" EventCode="4688") AND ParentImage!="?" AND ParentImage!="C:\Program Files\SplunkUniversalForwarder\bin\splunk-regmon.exe" AND ParentImage!="C:\Program Files\SplunkUniversalForwarder\bin\splunk-powershell.exe" AND((Image="C:\Windows\System32\smss.exe" AND (ParentImage!="C:\Windows\System32\smss.exe" AND ParentImage!="System")) OR(Image="C:\Windows\System32\csrss.exe" AND (ParentImage!="C:\Windows\System32\smss.exe" AND ParentImage!="C:\Windows\System32\svchost.exe")) OR(Image="C:\Windows\System32\wininit.exe" AND ParentImage!="C:\Windows\System32\smss.exe") OR(Image="C:\Windows\System32\winlogon.exe" AND ParentImage!="C:\Windows\System32\smss.exe") OR(Image="C:\Windows\System32\lsass.exe" and ParentImage!="C:\Windows\System32\wininit.exe") OR(Image="C:\Windows\System32\LogonUI.exe" AND (ParentImage!="C:\Windows\System32\winlogon.exe" AND ParentImage!="C:\Windows\System32\wininit.exe")) OR(Image="C:\Windows\System32\services.exe" AND ParentImage!="C:\Windows\System32\wininit.exe") OR(Image="C:\Windows\System32\spoolsv.exe" AND ParentImage!="C:\Windows\System32\services.exe") OR(Image="C:\Windows\System32\taskhost.exe" AND (ParentImage!="C:\Windows\System32\services.exe" AND ParentImage!="C:\Windows\System32\svchost.exe")) OR(Image="C:\Windows\System32\taskhostw.exe" AND (ParentImage!="C:\Windows\System32\services.exe" AND ParentImage!="C:\Windows\System32\svchost.exe")) OR(Image="C:\Windows\System32\userinit.exe" AND (ParentImage!="C:\Windows\System32\dwm.exe" AND ParentImage!="C:\Windows\System32\winlogon.exe")))</code></p>
+
+                            </td>
+                    </tr>
+                    <tr class="datacomponent datasource" id="uses-DS0009-Process Modification">
+                        <td></td>
+                        <td></td>
+                        <td>
+                            <a href="/datasources/DS0009/#Process%20Modification">Process Modification</a>
+                        </td>
+                            <td>
+                                        <p>Monitor for changes made to processes that may inject malicious code into suspended and hollowed processes in order to evade process-based defenses.</p>
+
+                            </td>
+                    </tr>
+    </tbody>
+</table>
+</div>
+
+
+                            <h2 class="pt-3" id="references">References</h2>
+
+        <div class="row">
+            <div class="col">
+                <ol>
+                            
+        <li>
+            <span  id="scite-1" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-1" href="https://new.dc414.org/wp-content/uploads/2011/01/Process-Hollowing.pdf" target="_blank">
+                        Leitch, J. (n.d.). Process Hollowing. Retrieved September 12, 2024.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-2" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-2" href="https://www.endgame.com/blog/technical-blog/ten-process-injection-techniques-technical-survey-common-and-trending-process" target="_blank">
+                        Hosseini, A. (2017, July 18). Ten Process Injection Techniques: A Technical Survey Of Common And Trending Process Injection Techniques. Retrieved December 7, 2017.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-3" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-3" href="https://labs.sentinelone.com/agent-tesla-old-rat-uses-new-tricks-to-stay-on-top/" target="_blank">
+                        Walter, J. (2020, August 10). Agent Tesla | Old RAT Uses New Tricks to Stay on Top. Retrieved December 11, 2020.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-4" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-4" href="https://www.cybereason.com/blog/information-stealing-malware-targeting-brazil-full-research" target="_blank">
+                        Salem, E. (2019, February 13). ASTAROTH MALWARE USES LEGITIMATE OS AND ANTIVIRUS PROCESSES TO STEAL PASSWORDS AND PERSONAL DATA. Retrieved April 17, 2019.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-5" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-5" href="https://securelist.com/the-tetrade-brazilian-banking-malware/97779/" target="_blank">
+                        GReAT. (2020, July 14). The Tetrade: Brazilian banking malware goes global. Retrieved November 9, 2020.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-6" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-6" href="https://researchcenter.paloaltonetworks.com/2018/11/unit42-new-wine-old-bottle-new-azorult-variant-found-findmyname-campaign-using-fallout-exploit-kit/" target="_blank">
+                        Yan, T., et al. (2018, November 21). New Wine in Old Bottle: New Azorult Variant Found in FindMyName Campaign using Fallout Exploit Kit. Retrieved November 29, 2018.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-7" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-7" href="https://www.forcepoint.com/sites/default/files/resources/files/forcepoint-security-labs-monsoon-analysis-report.pdf" target="_blank">
+                        Settle, A., et al. (2016, August 8). MONSOON - Analysis Of An APT Campaign. Retrieved September 22, 2016.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-8" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-8" href="https://documents.trendmicro.com/assets/tech-brief-untangling-the-patchwork-cyberespionage-group.pdf" target="_blank">
+                        Lunghi, D., et al. (2017, December). Untangling the Patchwork Cyberespionage Group. Retrieved July 10, 2018.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-9" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-9" href="https://info.lookout.com/rs/051-ESQ-475/images/Lookout_Dark-Caracal_srr_20180118_us_v.1.0.pdf" target="_blank">
+                        Blaich, A., et al. (2018, January 18). Dark Caracal: Cyber-espionage at a Global Scale. Retrieved April 11, 2018.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-10" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-10" href="https://www.eff.org/files/2016/08/03/i-got-a-letter-from-the-government.pdf" target="_blank">
+                        Galperin, E., Et al.. (2016, August). I Got a Letter From the Government the Other Day.... Retrieved April 25, 2018.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-11" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-11" href="https://research.checkpoint.com/2020/bandook-signed-delivered/" target="_blank">
+                        Check Point. (2020, November 26). Bandook: Signed & Delivered. Retrieved May 31, 2021.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-12" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-12" href="https://www.cybereason.com/blog/a-bazar-of-tricks-following-team9s-development-cycles" target="_blank">
+                        Cybereason Nocturnus. (2020, July 16). A BAZAR OF TRICKS: FOLLOWING TEAM9’S DEVELOPMENT CYCLES. Retrieved November 18, 2020.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-13" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-13" href="https://research.nccgroup.com/2020/06/02/in-depth-analysis-of-the-new-team9-malware-family/" target="_blank">
+                        Pantazopoulos, N. (2020, June 2). In-depth analysis of the new Team9 malware family. Retrieved December 1, 2020.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-14" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-14" href="http://researchcenter.paloaltonetworks.com/2015/12/bbsrat-attacks-targeting-russian-organizations-linked-to-roaming-tiger/" target="_blank">
+                        Lee, B. Grunzweig, J. (2015, December 22). BBSRAT Attacks Targeting Russian Organizations Linked to Roaming Tiger. Retrieved August 19, 2016.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-15" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-15" href="https://documents.trendmicro.com/assets/white_papers/wp-uncovering-DRBcontrol.pdf" target="_blank">
+                        Lunghi, D. et al. (2020, February). Uncovering DRBControl. Retrieved November 12, 2021.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-16" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-16" href="https://www.cobaltstrike.com/downloads/reports/tacticstechniquesandprocedures.pdf" target="_blank">
+                        Cobalt Strike. (2017, December 8). Tactics, Techniques, and Procedures. Retrieved December 20, 2017.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-17" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-17" href="https://web.archive.org/web/20210708035426/https://www.cobaltstrike.com/downloads/csmanual43.pdf" target="_blank">
+                        Strategic Cyber LLC. (2020, November 5). Cobalt Strike: Advanced Threat Tactics for Penetration Testers. Retrieved April 13, 2021.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-18" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-18" href="https://www.fortinet.com/blog/threat-research/enter-the-darkgate-new-cryptocurrency-mining-and-ransomware-campaign" target="_blank">
+                        Adi Zeligson & Rotem Kerner. (2018, November 13). Enter The DarkGate - New Cryptocurrency Mining and Ransomware Campaign. Retrieved February 9, 2024.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-19" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-19" href="https://cdn2.hubspot.net/hubfs/3354902/Cybereason%20Labs%20Analysis%20Operation%20Cobalt%20Kitty.pdf" target="_blank">
+                        Dahan, A. (2017). Operation Cobalt Kitty. Retrieved December 27, 2018.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-20" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-20" href="https://securelist.com/my-name-is-dtrack/93338/" target="_blank">
+                        Konstantin Zykov. (2019, September 23). Hello! My name is Dtrack. Retrieved January 20, 2021.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-21" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-21" href="https://www.symantec.com/content/en/us/enterprise/media/security_response/whitepapers/w32_duqu_the_precursor_to_the_next_stuxnet.pdf" target="_blank">
+                        Symantec Security Response. (2011, November). W32.Duqu: The precursor to the next Stuxnet. Retrieved September 17, 2015.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-22" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-22" href="https://www.trendmicro.com/en_us/research/23/c/emotet-returns-now-adopts-binary-padding-for-evasion.html" target="_blank">
+                        Kenefick, I. (2023, March 13). Emotet Returns, Now Adopts Binary Padding for Evasion. Retrieved June 19, 2024.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-23" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-23" href="https://news.sophos.com/en-us/2021/03/01/gootloader-expands-its-payload-delivery-options/" target="_blank">
+                        Szappanos, G. & Brandt, A. (2021, March 1). “Gootloader” expands its payload delivery options. Retrieved September 30, 2022.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-24" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-24" href="https://www.sentinelone.com/labs/gootloader-initial-access-as-a-service-platform-expands-its-search-for-high-value-targets/" target="_blank">
+                        Pirozzi, A. (2021, June 16). Gootloader: ‘Initial Access as a Service’ Platform Expands Its Search for High Value Targets. Retrieved May 28, 2024.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-25" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-25" href="https://researchcenter.paloaltonetworks.com/2018/08/unit42-gorgon-group-slithering-nation-state-cybercrime/" target="_blank">
+                        Falcone, R., et al. (2018, August 02). The Gorgon Group: Slithering Between Nation State and Cybercrime. Retrieved August 7, 2018.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-26" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-26" href="https://thedfirreport.com/2022/04/25/quantum-ransomware/" target="_blank">
+                        DFIR. (2022, April 25). Quantum Ransomware. Retrieved July 26, 2024.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-27" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-27" href="https://researchcenter.paloaltonetworks.com/2017/10/unit42-oilrig-group-steps-attacks-new-delivery-documents-new-injector-trojan/" target="_blank">
+                        Falcone, R. and Lee, B. (2017, October 9). OilRig Group Steps Up Attacks with New Delivery Documents and New Injector Trojan. Retrieved January 8, 2018.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-28" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-28" href="https://blog.talosintelligence.com/2021/11/kimsuky-abuses-blogs-delivers-malware.html" target="_blank">
+                        An, J and Malhotra, A. (2021, November 10). North Korean attackers use malicious blogs to deliver malware to high-profile South Korean targets. Retrieved December 29, 2021.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                </ol>
+            </div>
+            <div class="col">
+                    <ol start="29.0">
+                                
+        <li>
+            <span  id="scite-29" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-29" href="https://insights.infoblox.com/threat-intelligence-reports/threat-intelligence--22" target="_blank">
+                        Hoang, M. (2019, January 31). Malicious Activity Report: Elements of  Lokibot Infostealer. Retrieved May 15, 2020.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-30" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-30" href="https://blog.talosintelligence.com/2021/01/a-deep-dive-into-lokibot-infection-chain.html" target="_blank">
+                        Muhammad, I., Unterbrink, H.. (2021, January 6). A Deep Dive into Lokibot Infection Chain. Retrieved August 31, 2021.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-31" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-31" href="http://web.archive.org/web/20220810112638/https:/www.accenture.com/t20180423T055005Z_w_/se-en/_acnmedia/PDF-76/Accenture-Hogfish-Threat-Analysis.pdf" target="_blank">
+                        Accenture Security. (2018, April 23). Hogfish Redleaves Campaign. Retrieved July 2, 2018.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-32" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-32" href="https://www.mandiant.com/resources/blog/dissecting-netwire-phishing-campaigns-usage-process-hollowing" target="_blank">
+                        Maniath, S. and Kadam P. (2019, March 19). Dissecting a NETWIRE Phishing Campaign's Usage of Process Hollowing. Retrieved January 7, 2021.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-33" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-33" href="https://redcanary.com/blog/netwire-remote-access-trojan-on-linux/" target="_blank">
+                        Lambert, T. (2020, January 29). Intro to Netwire. Retrieved January 7, 2021.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-34" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-34" href="https://www.proofpoint.com/us/threat-insight/post/leviathan-espionage-actor-spearphishes-maritime-and-defense-targets" target="_blank">
+                        Axel F, Pierre T. (2017, October 16). Leviathan: Espionage actor spearphishes maritime and defense targets. Retrieved February 15, 2018.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-35" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-35" href="https://web.archive.org/web/20180825085952/https://s3-us-west-2.amazonaws.com/cymmetria-blog/public/Unveiling_Patchwork.pdf" target="_blank">
+                        Cymmetria. (2016). Unveiling Patchwork - The Copy-Paste APT. Retrieved August 3, 2016.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-36" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-36" href="https://cybersecurity.att.com/blogs/labs-research/the-rise-of-qakbot" target="_blank">
+                        Morrow, D. (2021, April 15). The rise of QakBot. Retrieved September 27, 2021.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-37" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-37" href="https://www.trendmicro.com/en_us/research/22/l/raspberry-robin-malware-targets-telecom-governments.html" target="_blank">
+                        Christopher So. (2022, December 20). Raspberry Robin Malware Targets Telecom, Governments. Retrieved May 17, 2024.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-38" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-38" href="https://www.secureworks.com/research/bronze-president-targets-ngos" target="_blank">
+                        Counter Threat Unit Research Team. (2019, December 29). BRONZE PRESIDENT Targets NGOs. Retrieved April 13, 2021.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-39" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-39" href="https://web.archive.org/web/20210104144857/https://shared-public-reports.s3-eu-west-1.amazonaws.com/APT27+turns+to+ransomware.pdf" target="_blank">
+                        Global Threat Center, Intelligence Team. (2020, December). APT27 Turns to Ransomware. Retrieved November 12, 2021.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-40" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-40" href="https://unit42.paloaltonetworks.com/ukraine-targeted-outsteel-saintbot/" target="_blank">
+                        Unit 42. (2022, February 25). Spear Phishing Attacks Target Organizations in Ukraine, Payloads Include the Document Stealer OutSteel and the Downloader SaintBot. Retrieved June 9, 2022.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-41" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-41" href="https://blog.malwarebytes.com/threat-analysis/2016/08/smoke-loader-downloader-with-a-smokescreen-still-alive/" target="_blank">
+                        Hasherezade. (2016, September 12). Smoke Loader – downloader with a smokescreen still alive. Retrieved March 20, 2018.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-42" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-42" href="https://cloudblogs.microsoft.com/microsoftsecure/2018/03/07/behavior-monitoring-combined-with-machine-learning-spoils-a-massive-dofoil-coin-mining-campaign/" target="_blank">
+                        Windows Defender Research. (2018, March 7). Behavior monitoring combined with machine learning spoils a massive Dofoil coin mining campaign. Retrieved March 20, 2018.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-43" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-43" href="https://blog.morphisec.com/revealing-the-snip3-crypter-a-highly-evasive-rat-loader" target="_blank">
+                        Lorber, N. (2021, May 7). Revealing the Snip3 Crypter, a Highly Evasive RAT Loader. Retrieved September 13, 2023.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-44" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-44" href="https://telefonicatech.com/blog/snip3-investigacion-malware" target="_blank">
+                        Jornet, A. (2021, December 23). Snip3, an investigation into malware. Retrieved September 19, 2023.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-45" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-45" href="https://blog.talosintelligence.com/operation-layover-how-we-tracked-attack/" target="_blank">
+                        Ventura, V. (2021, September 16). Operation Layover: How we tracked an attack on the aviation industry to five years of compromise. Retrieved September 15, 2023.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-46" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-46" href="https://research.nccgroup.com/2018/05/18/emissary-panda-a-potential-new-malicious-tool/" target="_blank">
+                        Pantazopoulos, N., Henry T. (2018, May 18). Emissary Panda – A potential new malicious tool. Retrieved June 25, 2018.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-47" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-47" href="https://securelist.com/luckymouse-hits-national-data-center/86083/" target="_blank">
+                        Legezo, D. (2018, June 13). LuckyMouse hits national data center to organize country-level waterholing campaign. Retrieved August 18, 2018.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-48" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-48" href="https://www.securityartwork.es/wp-content/uploads/2017/07/Trickbot-report-S2-Grupo.pdf" target="_blank">
+                        Salinas, M., Holguin, J. (2017, June). Evolution of Trickbot. Retrieved July 31, 2018.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-49" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-49" href="https://www.trendmicro.com/vinfo/us/threat-encyclopedia/malware/tspy_trickload.n" target="_blank">
+                        Antazo, F. (2016, October 31). TSPY_TRICKLOAD.N. Retrieved September 14, 2018.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-50" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-50" href="https://www.microsoft.com/en-us/wdsi/threats/malware-encyclopedia-description?Name=Trojan:Win32/Totbrick" target="_blank">
+                        Pornasdoro, A. (2017, October 12). Trojan:Win32/Totbrick. Retrieved September 14, 2018.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-51" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-51" href="https://www.cybereason.com/blog/dropping-anchor-from-a-trickbot-infection-to-the-discovery-of-the-anchor-malware" target="_blank">
+                        Dahan, A. et al. (2019, December 11). DROPPING ANCHOR: FROM A TRICKBOT INFECTION TO THE DISCOVERY OF THE ANCHOR MALWARE. Retrieved September 10, 2020.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-52" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-52" href="https://www.fireeye.com/blog/threat-research/2017/11/ursnif-variant-malicious-tls-callback-technique.html" target="_blank">
+                        Vaish, A. & Nemes, S. (2017, November 28). Newly Observed Ursnif Variant Employs Malicious TLS Callback Technique to Achieve Process Injection. Retrieved June 5, 2019.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-53" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-53" href="https://blog.talosintelligence.com/2022/01/ukraine-campaign-delivers-defacement.html" target="_blank">
+                        Biasini, N. et al.. (2022, January 21). Ukraine Campaign Delivers Defacement and Wipers, in Continued Escalation. Retrieved March 14, 2022.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-54" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-54" href="https://www.recordedfuture.com/research/whispergate-malware-corrupts-computers-ukraine" target="_blank">
+                        Insikt Group. (2020, January 28). WhisperGate Malware Corrupts Computers in Ukraine. Retrieved September 16, 2024.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-55" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-55" href="https://www.malwarebytes.com/blog/threat-intelligence/2022/08/woody-rat-a-new-feature-rich-malware-spotted-in-the-wild" target="_blank">
+                        MalwareBytes Threat Intelligence Team. (2022, August 3). Woody RAT: A new feature-rich malware spotted in the wild. Retrieved December 6, 2022.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+  
+                    </ol>
+            </div>             
+        </div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+    
+        </div>
+    </div>
+
+            <!--stop-indexing-for-search-->
+            <!-- search overlay for entire page -- not displayed inline -->
+            <div class="overlay search" id="search-overlay" style="display: none;">
+    <div class="overlay-inner">
+        <!-- text input for searching -->
+        <div class="search-header">
+            <div class="search-input">
+                <input type="text" id="search-input" placeholder="search">
+            </div>
+            <div class="search-icons">
+                <div class="search-parsing-icon spinner-border" style="display: none" id="search-parsing-icon"></div>
+                <div class="close-search-icon" id="close-search-icon">&times;</div>
+            </div>
+        </div>
+        <!-- results and controls for loading more results -->
+        <div id="search-body" class="search-body">
+            <div class="results" id="search-results">
+                <!-- content will be appended here on search -->
+            </div>
+            <div id="load-more-results" class="load-more-results">
+                <button class="btn btn-default" id="load-more-results-button">load more results</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+        </div>
+        <div class="row flex-grow-0 flex-shrink-1">
+            <!-- footer elements -->
+            <footer class="col footer">
+                <div class="container-fluid">
+                    <div class="row row-footer">
+                        <div class="col-2 col-sm-2 col-md-2">
+                            <div class="footer-center-responsive my-auto">
+                                <a href="https://www.mitre.org" target="_blank" rel="noopener" aria-label="MITRE">
+                                    <img src="/versions/v16/theme/images/mitrelogowhiteontrans.gif" class="mitre-logo-wtrans">
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-2 col-sm-2 footer-responsive-break"></div>
+                        <div class="footer-link-group">
+                            <div class="row row-footer">
+                                <div class="px-3 col-footer">
+                                    <u class="footer-link"><a href="/versions/v16/resources/engage-with-attack/contact" class="footer-link">Contact Us</a></u>
+                                </div>
+                                <div class="px-3 col-footer">
+                                    <u class="footer-link"><a href="/versions/v16/resources/legal-and-branding/terms-of-use" class="footer-link">Terms of Use</a></u>
+                                </div>
+                                    <div class="px-3 col-footer">
+                                        <u class="footer-link"><a href="/versions/v16/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
+                                    </div>
+                                <div class="px-3">
+                                    <u class="footer-link"><a href="/versions/v16/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v16.0&#013;Website  v4.2.0">Website Changelog</a></u>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <small class="px-3">
+                                    &copy;&nbsp;2015&nbsp;-&nbsp;2024, The MITRE Corporation. MITRE ATT&CK and ATT&CK are registered trademarks of The MITRE Corporation.
+                                </small>
+                            </div>
+                        </div>
+                        <div class="w-100 p-2 footer-responsive-break"></div>
+                            <div class="col pr-4">
+                                <div class="footer-float-right-responsive-brand">
+                                    <div class="row row-footer row-footer-icon">
+                                        <div class="mb-1">
+                                            <a href="https://twitter.com/MITREattack" class="btn btn-footer">
+                                                <i class="fa-brands fa-x-twitter fa-lg"></i>
+                                            </a>
+                                            <a href="https://github.com/mitre-attack" class="btn btn-footer">
+                                                <i class="fa-brands fa-github fa-lg"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+
+<!--stopindex-->
+
+</div>
+    <!--SCRIPTS-->
+    <script src="/versions/v16/theme/scripts/jquery-3.5.1.min.js"></script>
+    <script src="/versions/v16/theme/scripts/popper.min.js"></script>
+    <script src="/versions/v16/theme/scripts/bootstrap-select.min.js"></script>
+    <script src="/versions/v16/theme/scripts/bootstrap.bundle.min.js"></script>
+    <script src="/versions/v16/theme/scripts/site.js"></script>
+    <script src="/versions/v16/theme/scripts/settings.js"></script>
+    <script src="/versions/v16/theme/scripts/search_bundle.js"></script>
+
+<!--SCRIPTS-->
+<script src="/versions/v16/theme/scripts/resizer.js"></script>
+
+<!--SCRIPTS-->
+<script src="/versions/v16/theme/scripts/bootstrap-tourist.js"></script>
+<script src="/versions/v16/theme/scripts/settings.js"></script>
+    <script src="/versions/v16/theme/scripts/tour/tour-subtechniques.js"></script>
+<script src="/versions/v16/theme/scripts/sidebar-load-all.js"></script>
+</body>
+</html>

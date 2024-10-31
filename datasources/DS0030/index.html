@@ -169,6 +169,9 @@
             <div class="col px-0">
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
+                    <div class="container-fluid banner-message">
+                        ATT&CK v16 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v16-561c76af94cf'>blog post</a> for more information.
+                    </div>
             </div>
         </div>
         <div class="row flex-grow-1 flex-shrink-0">
@@ -1688,13 +1691,13 @@
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Permalink to this version of DS0030" 
-           href="/versions/v15/datasources/DS0030/" data-test-ignore="true">Version Permalink</a>
+           href="/versions/v16/datasources/DS0030/" data-test-ignore="true">Version Permalink</a>
     </div>
     <div class="permalink">
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Go to the live version of DS0030" 
-           href="/versions/v15/datasources/DS0030/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+           href="/versions/v16/datasources/DS0030/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
     </div>
 </div>
 
@@ -1766,7 +1769,7 @@
                             <a href="/techniques/T1578/002">Create Cloud Instance</a>
                         </td>
                         <td>
-                                    <p>The creation of a new instance or VM is a common part of operations within many cloud environments. Events should then not be viewed in isolation, but as part of a chain of behavior that could lead to other activities. For example, the creation of an instance by a new user account or the unexpected creation of one or more snapshots followed by the creation of an instance may indicate suspicious activity.In AWS, CloudTrail logs capture the creation of an instance in the RunInstances event, and in Azure the creation of a VM may be captured in Azure activity logs.<span onclick=scrollToRef('scite-3') id="scite-ref-3-a" class="scite-citeref-number" title="Amazon. (n.d.). Search CloudTrail logs for API calls to EC2 Instances. Retrieved June 17, 2020."data-reference="AWS CloudTrail Search"><sup><a href="https://aws.amazon.com/premiumsupport/knowledge-center/cloudtrail-search-api-calls/" target="_blank" data-hasqtip="2" aria-describedby="qtip-2">[3]</a></sup></span> <span onclick=scrollToRef('scite-4') id="scite-ref-4-a" class="scite-citeref-number" title="Microsoft. (n.d.). View Azure activity logs. Retrieved June 17, 2020."data-reference="Azure Activity Logs"><sup><a href="https://docs.microsoft.com/en-us/azure/azure-resource-manager/management/view-activity-logs" target="_blank" data-hasqtip="3" aria-describedby="qtip-3">[4]</a></sup></span> Google's Admin Activity audit logs within their Cloud Audit logs can be used to detect the usage of gcloud compute instances create to create a VM.<span onclick=scrollToRef('scite-5') id="scite-ref-5-a" class="scite-citeref-number" title="Google. (n.d.). Audit Logs. Retrieved June 1, 2020."data-reference="Cloud Audit Logs"><sup><a href="https://cloud.google.com/logging/docs/audit#admin-activity" target="_blank" data-hasqtip="4" aria-describedby="qtip-4">[5]</a></sup></span></p>
+                                    <p>The creation of a new instance or VM is a common part of operations within many cloud environments. Events should then not be viewed in isolation, but as part of a chain of behavior that could lead to other activities. For example, the creation of an instance by a new user account or the unexpected creation of one or more snapshots followed by the creation of an instance may indicate suspicious activity.</p><p>In AWS, CloudTrail logs capture the creation of an instance in the RunInstances event, and in Azure the creation of a VM may be captured in Azure activity logs.<span onclick=scrollToRef('scite-3') id="scite-ref-3-a" class="scite-citeref-number" title="Amazon. (n.d.). Search CloudTrail logs for API calls to EC2 Instances. Retrieved June 17, 2020."data-reference="AWS CloudTrail Search"><sup><a href="https://aws.amazon.com/premiumsupport/knowledge-center/cloudtrail-search-api-calls/" target="_blank" data-hasqtip="2" aria-describedby="qtip-2">[3]</a></sup></span> <span onclick=scrollToRef('scite-4') id="scite-ref-4-a" class="scite-citeref-number" title="Microsoft. (n.d.). View Azure activity logs. Retrieved June 17, 2020."data-reference="Azure Activity Logs"><sup><a href="https://docs.microsoft.com/en-us/azure/azure-resource-manager/management/view-activity-logs" target="_blank" data-hasqtip="3" aria-describedby="qtip-3">[4]</a></sup></span> Google's Admin Activity audit logs within their Cloud Audit logs can be used to detect the usage of gcloud compute instances create to create a VM.<span onclick=scrollToRef('scite-5') id="scite-ref-5-a" class="scite-citeref-number" title="Google. (n.d.). Audit Logs. Retrieved June 1, 2020."data-reference="Cloud Audit Logs"><sup><a href="https://cloud.google.com/logging/docs/audit#admin-activity" target="_blank" data-hasqtip="4" aria-describedby="qtip-4">[5]</a></sup></span></p><p>Analytic 1 - Operations performed by unexpected initiators, unusual resource names, frequent modifications</p><p><code> index="azure_activity_logs" (OperationName="Create or Update Virtual Machine" OR OperationName="Create or Update Virtual Machine Extension")| stats count by InitiatorName, Resource| where Resource LIKE "Microsoft.Compute/virtualMachines*" AND (Status!="Succeeded" OR InitiatorName!="expected_initiator")| sort by Time</code> </p>
 
                         </td>
                     </tr>
@@ -1863,7 +1866,7 @@
                         <a href="/techniques/T1485">Data Destruction</a>
                     </td>
                     <td>
-                                <p>Monitor for unexpected deletion of an instance (ex: instance.delete within GCP Audit Logs)</p>
+                                <p>Monitor for unexpected deletion of a virtual machine or database instance (ex: <code>instance.delete</code> within GCP Audit Logs, <code>DeleteDBInstance</code> in AWS)</p>
 
                     </td>
                 </tr>
@@ -1892,7 +1895,7 @@
                             <a href="/techniques/T1578/003">Delete Cloud Instance</a>
                         </td>
                         <td>
-                                    <p>The deletion of a new instance or virtual machine is a common part of operations within many cloud environments. Events should then not be viewed in isolation, but as part of a chain of behavior that could lead to other activities. For example, detecting a sequence of events such as the creation of an instance, mounting of a snapshot to that instance, and deletion of that instance by a new user account may indicate suspicious activity.</p><p>In AWS, CloudTrail logs capture the deletion of an instance in the TerminateInstances event, and in Azure the deletion of a VM may be captured in Azure activity logs.<span onclick=scrollToRef('scite-3') id="scite-ref-3-a" class="scite-citeref-number" title="Amazon. (n.d.). Search CloudTrail logs for API calls to EC2 Instances. Retrieved June 17, 2020."data-reference="AWS CloudTrail Search"><sup><a href="https://aws.amazon.com/premiumsupport/knowledge-center/cloudtrail-search-api-calls/" target="_blank" data-hasqtip="2" aria-describedby="qtip-2">[3]</a></sup></span> <span onclick=scrollToRef('scite-4') id="scite-ref-4-a" class="scite-citeref-number" title="Microsoft. (n.d.). View Azure activity logs. Retrieved June 17, 2020."data-reference="Azure Activity Logs"><sup><a href="https://docs.microsoft.com/en-us/azure/azure-resource-manager/management/view-activity-logs" target="_blank" data-hasqtip="3" aria-describedby="qtip-3">[4]</a></sup></span> Google's Admin Activity audit logs within their Cloud Audit logs can be used to detect the usage of gcloud compute instances delete to delete a VM.<span onclick=scrollToRef('scite-5') id="scite-ref-5-a" class="scite-citeref-number" title="Google. (n.d.). Audit Logs. Retrieved June 1, 2020."data-reference="Cloud Audit Logs"><sup><a href="https://cloud.google.com/logging/docs/audit#admin-activity" target="_blank" data-hasqtip="4" aria-describedby="qtip-4">[5]</a></sup></span></p>
+                                    <p>The deletion of a new instance or virtual machine is a common part of operations within many cloud environments. Events should then not be viewed in isolation, but as part of a chain of behavior that could lead to other activities. For example, detecting a sequence of events such as the creation of an instance, mounting of a snapshot to that instance, and deletion of that instance by a new user account may indicate suspicious activity.</p><p>In AWS, CloudTrail logs capture the deletion of an instance in the TerminateInstances event, and in Azure the deletion of a VM may be captured in Azure activity logs.<span onclick=scrollToRef('scite-3') id="scite-ref-3-a" class="scite-citeref-number" title="Amazon. (n.d.). Search CloudTrail logs for API calls to EC2 Instances. Retrieved June 17, 2020."data-reference="AWS CloudTrail Search"><sup><a href="https://aws.amazon.com/premiumsupport/knowledge-center/cloudtrail-search-api-calls/" target="_blank" data-hasqtip="2" aria-describedby="qtip-2">[3]</a></sup></span> <span onclick=scrollToRef('scite-4') id="scite-ref-4-a" class="scite-citeref-number" title="Microsoft. (n.d.). View Azure activity logs. Retrieved June 17, 2020."data-reference="Azure Activity Logs"><sup><a href="https://docs.microsoft.com/en-us/azure/azure-resource-manager/management/view-activity-logs" target="_blank" data-hasqtip="3" aria-describedby="qtip-3">[4]</a></sup></span> Google's Admin Activity audit logs within their Cloud Audit logs can be used to detect the usage of gcloud compute instances delete to delete a VM.<span onclick=scrollToRef('scite-5') id="scite-ref-5-a" class="scite-citeref-number" title="Google. (n.d.). Audit Logs. Retrieved June 1, 2020."data-reference="Cloud Audit Logs"><sup><a href="https://cloud.google.com/logging/docs/audit#admin-activity" target="_blank" data-hasqtip="4" aria-describedby="qtip-4">[5]</a></sup></span></p><p>Analytic 1 - Operations performed by unexpected initiators, unusual resource names, frequent deletions</p><p><code>index="azure_activity_logs" (OperationName="Delete Virtual Machine" OR OperationName="Delete Disk" OR OperationName="Delete Role Assignment")| stats count by InitiatorName, Resource| where Resource LIKE "Microsoft.Compute/virtualMachines*" AND (Status!="Succeeded" OR InitiatorName!="expected_initiator")| sort by Time </code></p>
 
                         </td>
                     </tr>
@@ -2430,7 +2433,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v15.1&#013;Website  v4.1.6">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v16.0&#013;Website  v4.2.0">Website Changelog</a></u>
                                 </div>
                             </div>
                             <div class="row">
@@ -2470,15 +2473,15 @@
     <script src="/theme/scripts/popper.min.js"></script>
     <script src="/theme/scripts/bootstrap-select.min.js"></script>
     <script src="/theme/scripts/bootstrap.bundle.min.js"></script>
-    <script src="/theme/scripts/site.js?4106"></script>
-    <script src="/theme/scripts/settings.js?8520"></script>
+    <script src="/theme/scripts/site.js"></script>
+    <script src="/theme/scripts/settings.js"></script>
     <script src="/theme/scripts/search_bundle.js"></script>
 
 <!--SCRIPTS-->
 <script src="/theme/scripts/resizer.js"></script>
 
     <!--SCRIPTS-->
-    <script src="/theme/scripts/filter/filter.js?2230"></script>
+    <script src="/theme/scripts/filter/filter.js?876"></script>
     <script src="/theme/scripts/navigation.js"></script>
     <script src="/theme/scripts/mobileview-datasources.js"></script>
     <script src="/theme/scripts/bootstrap-tourist.js"></script>

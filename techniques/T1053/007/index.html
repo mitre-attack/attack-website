@@ -169,6 +169,9 @@
             <div class="col px-0">
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
+                    <div class="container-fluid banner-message">
+                        ATT&CK v16 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v16-561c76af94cf'>blog post</a> for more information.
+                    </div>
             </div>
         </div>
         <div class="row flex-grow-1 flex-shrink-0">
@@ -346,7 +349,7 @@
                                             <div class="row card-data">
                                                 <div class="col-md-1 px-0 text-center"></div>
                                                 <div class="col-md-11 pl-0">
-                                                    <span class="h5 card-title">Last Modified:&nbsp;</span>15 April 2023
+                                                    <span class="h5 card-title">Last Modified:&nbsp;</span>15 October 2024
                                                 </div>
                                             </div>
                                     </div>
@@ -356,13 +359,13 @@
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Permalink to this version of T1053.007" 
-           href="/versions/v15/techniques/T1053/007/" data-test-ignore="true">Version Permalink</a>
+           href="/versions/v16/techniques/T1053/007/" data-test-ignore="true">Version Permalink</a>
     </div>
     <div class="permalink">
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Go to the live version of T1053.007" 
-           href="/versions/v15/techniques/T1053/007/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+           href="/versions/v16/techniques/T1053/007/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
     </div>
 </div>
 
@@ -430,7 +433,7 @@
                     <a href="/datasources/DS0032/#Container%20Creation">Container Creation</a>
                 </td>
                     <td>
-                                <p>Monitor for newly constructed containers</p>
+                                <p>Monitor for container creation events within Kubernetes clusters. This helps track when new containers are being deployed, especially by jobs that could have been scheduled by adversaries.</p><p>Analytic 1 - Look for new container creation events with unusual parameters.</p><p><code>  sourcetype=kubernetes:container_creation | stats count by container_name namespace pod_name container_id image_name| where NOT [search index=container_baseline container_name=* earliest=-30d@d latest=now() | table container_name]</code> </p>
 
                     </td>
             </tr>
@@ -446,7 +449,7 @@
                     <a href="/datasources/DS0022/#File%20Creation">File Creation</a>
                 </td>
                     <td>
-                                <p>Monitor for newly constructed files by using the logging agents on Kubernetes nodes and retrieve logs from sidecar proxies for application and resource pods to monitor malicious container orchestration job deployments.</p>
+                                <p>Monitor for newly constructed files by using the logging agents on Kubernetes nodes and retrieve logs from sidecar proxies for application and resource pods to monitor malicious container orchestration job deployments.</p><p>Note: This query monitors for .yaml configuration files that are used to define jobs and container behaviors within Kubernetes. Changes or creations of these files should be closely watched.</p><p>Analytic 1 - Look for new file creation events with unusual parameters.</p><p><code> sourcetype=kubernetes:file_creation file_path="/etc/kubernetes/manifests/*.yaml"</code></p>
 
                     </td>
             </tr>
@@ -462,7 +465,7 @@
                     <a href="/datasources/DS0003/#Scheduled%20Job%20Creation">Scheduled Job Creation</a>
                 </td>
                     <td>
-                                <p>Monitor for the anomalous creation of scheduled jobs in container orchestration environments.</p>
+                                <p>Monitor for Kubernetes CronJob or Job creation using Kubernetes API or CLI commands.</p><p>Note: This query tracks job creation using kubectl commands or Kubernetes API calls to create or apply CronJobs. It filters out legitimate job creation based on a baseline and identifies unusual CronJob creation or usage.</p><p>Analytic 1 - Look for new container job creation events with unusual parameters.</p><p><code> sourcetype=kubernetes:job_creation (command="kubectl create cronjob<em>" OR command="kubectl apply -f </em>.yaml" OR api_call="BatchV1.CronJob.create")</code></p><p>Note: This query monitors Kubernetes events for job creation, start, and completion. These events are useful for tracking the actual execution of scheduled tasks in the cluster.Analytic 2 - Monitoring Kubernetes Events for Job Execution</p><p><code>sourcetype=kubernetes:event type="Normal" (reason="SuccessfulCreate" OR reason="Started" OR reason="Completed") </code></p>
 
                     </td>
             </tr>
@@ -594,7 +597,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v15.1&#013;Website  v4.1.6">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v16.0&#013;Website  v4.2.0">Website Changelog</a></u>
                                 </div>
                             </div>
                             <div class="row">
@@ -634,8 +637,8 @@
     <script src="/theme/scripts/popper.min.js"></script>
     <script src="/theme/scripts/bootstrap-select.min.js"></script>
     <script src="/theme/scripts/bootstrap.bundle.min.js"></script>
-    <script src="/theme/scripts/site.js?5323"></script>
-    <script src="/theme/scripts/settings.js?2480"></script>
+    <script src="/theme/scripts/site.js"></script>
+    <script src="/theme/scripts/settings.js"></script>
     <script src="/theme/scripts/search_bundle.js"></script>
 
 <!--SCRIPTS-->

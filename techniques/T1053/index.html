@@ -169,6 +169,9 @@
             <div class="col px-0">
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
+                    <div class="container-fluid banner-message">
+                        ATT&CK v16 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v16-561c76af94cf'>blog post</a> for more information.
+                    </div>
             </div>
         </div>
         <div class="row flex-grow-1 flex-shrink-0">
@@ -351,7 +354,7 @@
                                             <div class="row card-data">
                                                 <div class="col-md-1 px-0 text-center"></div>
                                                 <div class="col-md-11 pl-0">
-                                                    <span class="h5 card-title">Last Modified:&nbsp;</span>01 March 2024
+                                                    <span class="h5 card-title">Last Modified:&nbsp;</span>15 October 2024
                                                 </div>
                                             </div>
                                     </div>
@@ -361,13 +364,13 @@
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Permalink to this version of T1053" 
-           href="/versions/v15/techniques/T1053/" data-test-ignore="true">Version Permalink</a>
+           href="/versions/v16/techniques/T1053/" data-test-ignore="true">Version Permalink</a>
     </div>
     <div class="permalink">
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Go to the live version of T1053" 
-           href="/versions/v15/techniques/T1053/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+           href="/versions/v16/techniques/T1053/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
     </div>
 </div>
 
@@ -545,7 +548,7 @@
                     <a href="/datasources/DS0017/#Command%20Execution">Command Execution</a>
                 </td>
                     <td>
-                                <p>Monitor executed commands and arguments that may abuse task scheduling functionality to facilitate initial or recurring execution of malicious code.</p>
+                                <p>Monitor executed commands and arguments that may abuse task scheduling functionality to facilitate initial or recurring execution of malicious code.</p><p>Analytic 1 - Look for task scheduling commands being executed with unusual parameters.</p><p><code>index=security (sourcetype="WinEventLog:Security" OR sourcetype="linux_secure" OR sourcetype="macos_secure" OR sourcetype="container_logs")| eval CommandLine = coalesce(CommandLine, process)| where (sourcetype="WinEventLog:Security" AND EventCode IN (4697, 4702, 4698)) OR       (sourcetype="linux_secure" AND CommandLine LIKE "%cron%" OR CommandLine LIKE "%at%") OR       (sourcetype="macos_secure" AND CommandLine LIKE "%launchctl%" OR CommandLine LIKE "%cron%") OR       (sourcetype="container_logs" AND (CommandLine LIKE "%cron%" OR CommandLine LIKE "%at%"))| where (sourcetype="WinEventLog:Security" AND (CommandLine LIKE "%/create%" OR CommandLine LIKE "%/delete%" OR CommandLine LIKE "%/change%")) OR       (sourcetype="linux_secure" AND (CommandLine LIKE "%-f%" OR CommandLine LIKE "%-m%" OR CommandLine LIKE "%--env%")) OR       (sourcetype="macos_secure" AND (CommandLine LIKE "%/Library/LaunchDaemons%" OR CommandLine LIKE "%/Library/LaunchAgents%" OR CommandLine LIKE "%/System/Library/LaunchDaemons%" OR CommandLine LIKE "%/System/Library/LaunchAgents%")) OR       (sourcetype="container_logs" AND (CommandLine LIKE "%-f%" OR CommandLine LIKE "%--schedule%" OR CommandLine LIKE "%--env%")) </code></p>
 
                     </td>
             </tr>
@@ -561,7 +564,7 @@
                     <a href="/datasources/DS0032/#Container%20Creation">Container Creation</a>
                 </td>
                     <td>
-                                <p>Monitor for newly constructed containers that may abuse task scheduling functionality to facilitate initial or recurring execution of malicious code.</p>
+                                <p>Monitor for newly constructed containers that may abuse task scheduling functionality to facilitate initial or recurring execution of malicious code.</p><p>Analytic 1 - Look for new container creation events with unusual parameters.</p><p><code>index=container_logs sourcetype="docker_events" OR sourcetype="kubernetes_events"| eval event_action=coalesce(action, status)| where (event_action="create" OR event_action="start")| search event_type="container"| search (parameters="<em>--privileged</em>" OR parameters="<em>--cap-add=</em>" OR parameters="<em>--volume=</em>" OR parameters="<em>--network=host</em>" OR parameters="<em>--device</em>") </code></p>
 
                     </td>
             </tr>
@@ -577,7 +580,7 @@
                     <a href="/datasources/DS0022/#File%20Creation">File Creation</a>
                 </td>
                     <td>
-                                <p>Monitor newly constructed files that may abuse task scheduling functionality to facilitate initial or recurring execution of malicious code.</p>
+                                <p>Monitor newly constructed files that may abuse task scheduling functionality to facilitate initial or recurring execution of malicious code.</p><p>Analytic 1 - Look for new task files with unusual parameters.</p><p><code> index=security_logs OR index=system_logs(sourcetype="docker_events" OR sourcetype="kubernetes_events" OR sourcetype="wineventlog:security" OR sourcetype="linux_secure" OR sourcetype="syslog" OR sourcetype="file_monitoring")| eval platform=case(    sourcetype=="docker_events" OR sourcetype=="kubernetes_events", "Containers",    sourcetype=="wineventlog:security", "Windows",    sourcetype=="linux_secure" OR sourcetype=="syslog", "Linux",    sourcetype=="mac_os_events", "macOS")| search (    (platform="Containers" AND (event_type="file_create" AND (file_path="<em>/etc/cron.d/</em>" OR file_path="<em>/etc/systemd/system/</em>"))) OR    (platform="Windows" AND EventCode=4663 AND (ObjectName="C:\Windows\System32\Tasks\<em>" OR ObjectName="C:\Windows\Tasks\</em>")) OR    (platform="Linux" AND (file_path="/etc/cron.d/<em>" OR file_path="/etc/systemd/system/</em>")) OR    (platform="macOS" AND (file_path="/Library/LaunchDaemons/<em>" OR file_path="/Library/LaunchAgents/</em>")))</code></p>
 
                     </td>
             </tr>
@@ -588,7 +591,7 @@
                             <a href="/datasources/DS0022/#File%20Modification">File Modification</a>
                         </td>
                             <td>
-                                        <p>Monitor for changes made to files that may abuse task scheduling functionality to facilitate initial or recurring execution of malicious code.</p>
+                                        <p>Monitor for changes made to files that may abuse task scheduling functionality to facilitate initial or recurring execution of malicious code.</p><p>Analytic 1 - Look for task file modifications with unusual parameters.</p><p><code>index=security_logs OR index=system_logs(sourcetype="docker_events" OR sourcetype="kubernetes_events" OR sourcetype="wineventlog:security" OR sourcetype="linux_secure" OR sourcetype="syslog" OR sourcetype="file_monitoring")| eval platform=case(    sourcetype=="docker_events" OR sourcetype=="kubernetes_events", "Containers",    sourcetype=="wineventlog:security", "Windows",    sourcetype=="linux_secure" OR sourcetype=="syslog", "Linux",    sourcetype=="mac_os_events", "macOS")| search (    (platform="Containers" AND (event_type="file_modify" AND (file_path="<em>/etc/cron.d/</em>" OR file_path="<em>/etc/systemd/system/</em>" OR file_path="/etc/crontab"))) OR    (platform="Windows" AND EventCode=4663 AND (ObjectName="C:\Windows\System32\Tasks\<em>" OR ObjectName="C:\Windows\Tasks\</em>")) OR    (platform="Linux" AND (file_path="/etc/cron.d/<em>" OR file_path="/etc/systemd/system/</em>" OR file_path="/etc/crontab")) OR    (platform="macOS" AND (file_path="/Library/LaunchDaemons/<em>" OR file_path="/Library/LaunchAgents/</em>"))) </code></p>
 
                             </td>
                     </tr>
@@ -604,7 +607,7 @@
                     <a href="/datasources/DS0009/#Process%20Creation">Process Creation</a>
                 </td>
                     <td>
-                                <p>Monitor for newly executed processes that may abuse task scheduling functionality to facilitate initial or recurring execution of malicious code.</p>
+                                <p>Monitor for newly executed processes that may abuse task scheduling functionality to facilitate initial or recurring execution of malicious code.</p><p>Note: Below is the relevant Events and SourcesWindows:</p><ul><li>Sysmon Event ID 1: Process creation, particularly for schtasks.exe, at.exe, Taskeng.exe, crontab, etc.</li><li>Windows Event Log EventCode 4688: Process creation that might involve task scheduling.</li><li>Windows Task Scheduler Logs: Task creation, modification, or deletion.</li></ul><p>Linux/macOS:</p><ul><li>Auditd logs: Monitoring for cron job creation or modifications.</li><li>Syslog: Logs related to cron jobs or scheduled tasks.</li><li>File integrity monitoring (FIM): For changes to /etc/cron<em>, /var/spool/cron/</em>, or user-specific cron jobs.</li></ul><p>Containers:- Container logs: Detection of scheduled tasks or cron jobs within container environments.</p><p>Analytic 1 - Look for task execution with unusual parameters.</p><p><code>(sourcetype="WinEventLog:Microsoft-Windows-Sysmon/Operational" OR sourcetype="WinEventLog:Security" OR sourcetype="linux_auditd" OR sourcetype="syslog") | where Image IN ("schtasks.exe", "at.exe", "Taskeng.exe", "cron", "crontab", "systemd-timers")</code></p>
 
                     </td>
             </tr>
@@ -620,7 +623,7 @@
                     <a href="/datasources/DS0003/#Scheduled%20Job%20Creation">Scheduled Job Creation</a>
                 </td>
                     <td>
-                                <p>Monitor newly constructed scheduled jobs that may abuse task scheduling functionality to facilitate initial or recurring execution of malicious code.</p><p>On Windows systems, security event ID 4698 (A scheduled task was created) provides information on newly created scheduled tasks. It includes the TaskContent field, which contains an XML blob that captures key information on the scheduled task including the command to be executed.</p><p>Analytic 1 - Scheduled Task Execution</p><p><code> source="<em>WinEventLog:Security" EventCode="4698" | WHERE UserName LIKE "</em>\SYSTEM<em>" AND (TaskContent LIKE suspicious_parameter OR TaskContent LIKE "</em>powershell.exe*")</code></p>
+                                <p>Monitor newly constructed scheduled jobs that may abuse task scheduling functionality to facilitate initial or recurring execution of malicious code.</p><p>On Windows systems, security event ID 4698 (A scheduled task was created) provides information on newly created scheduled tasks. It includes the TaskContent field, which contains an XML blob that captures key information on the scheduled task including the command to be executed.</p><p>Analytic 1 - Scheduled Task Execution</p><p><code> source="*WinEventLog:Security" EventCode="4698" | where NOT (TaskName IN ("\Microsoft\Windows\UpdateOrchestrator\Reboot", "\Microsoft\Windows\Defrag\ScheduledDefrag"))| search TaskContent="powershell.exe" OR TaskContent="cmd.exe"</code></p>
 
                     </td>
             </tr>
@@ -824,7 +827,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v15.1&#013;Website  v4.1.6">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v16.0&#013;Website  v4.2.0">Website Changelog</a></u>
                                 </div>
                             </div>
                             <div class="row">
@@ -864,8 +867,8 @@
     <script src="/theme/scripts/popper.min.js"></script>
     <script src="/theme/scripts/bootstrap-select.min.js"></script>
     <script src="/theme/scripts/bootstrap.bundle.min.js"></script>
-    <script src="/theme/scripts/site.js?5753"></script>
-    <script src="/theme/scripts/settings.js?7873"></script>
+    <script src="/theme/scripts/site.js"></script>
+    <script src="/theme/scripts/settings.js"></script>
     <script src="/theme/scripts/search_bundle.js"></script>
 
 <!--SCRIPTS-->

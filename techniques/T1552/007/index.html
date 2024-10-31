@@ -169,6 +169,9 @@
             <div class="col px-0">
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
+                    <div class="container-fluid banner-message">
+                        ATT&CK v16 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v16-561c76af94cf'>blog post</a> for more information.
+                    </div>
             </div>
         </div>
         <div class="row flex-grow-1 flex-shrink-0">
@@ -354,7 +357,7 @@
                                             <div class="row card-data">
                                                 <div class="col-md-1 px-0 text-center"></div>
                                                 <div class="col-md-11 pl-0">
-                                                    <span class="h5 card-title">Last Modified:&nbsp;</span>15 April 2023
+                                                    <span class="h5 card-title">Last Modified:&nbsp;</span>15 October 2024
                                                 </div>
                                             </div>
                                     </div>
@@ -364,13 +367,13 @@
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Permalink to this version of T1552.007" 
-           href="/versions/v15/techniques/T1552/007/" data-test-ignore="true">Version Permalink</a>
+           href="/versions/v16/techniques/T1552/007/" data-test-ignore="true">Version Permalink</a>
     </div>
     <div class="permalink">
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Go to the live version of T1552.007" 
-           href="/versions/v15/techniques/T1552/007/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+           href="/versions/v16/techniques/T1552/007/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
     </div>
 </div>
 
@@ -488,7 +491,7 @@
                     <a href="/datasources/DS0017/#Command%20Execution">Command Execution</a>
                 </td>
                     <td>
-                                <p>Establish centralized logging for the activity of container and Kubernetes cluster components. Monitor logs for actions that could be taken to gather credentials to container and cloud infrastructure, including the use of discovery API calls by new or unexpected users and APIs that access Docker logs.</p>
+                                <p>Establish centralized logging for the activity of container and Kubernetes cluster components. Monitor logs for actions that could be taken to gather credentials to container and cloud infrastructure, including the use of discovery API calls by new or unexpected users and APIs that access Docker logs.</p><p>Analytic 1 - Unexpected API calls or access to Docker logs indicating credential access.</p><p><code> index=containers sourcetype IN ("docker:events", "kubernetes:api", "kubernetes:container") | search Command IN ("docker logs", "kubectl get secrets", "kubectl describe secret", "kubectl exec", "curl http[:]//169.254.169[.]254/latest/meta-data/iam/security-credentials/", "aws iam list-access-keys", "az ad sp list")</code></p>
 
                     </td>
             </tr>
@@ -504,7 +507,7 @@
                     <a href="/datasources/DS0002/#User%20Account%20Authentication">User Account Authentication</a>
                 </td>
                     <td>
-                                <p>It may be possible to detect adversary use of credentials they have obtained such as in <a href="/techniques/T1078">Valid Accounts</a>.</p>
+                                <p>It may be possible to detect adversary use of credentials they have obtained such as in <a href="/techniques/T1078">Valid Accounts</a>.</p><p>Analytic 1 - Failed or unusual logon attempts using compromised credentials.</p><p><code> (index=containers sourcetype="docker:events" action="create" container_name="<em>" user!="root") OR(index=containers sourcetype="kubernetes:api" verb IN ("create", "patch", "delete") objectRef.resource IN ("pods", "secrets") user.username!="system:serviceaccount:</em>")</code></p>
 
                     </td>
             </tr>
@@ -720,7 +723,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v15.1&#013;Website  v4.1.6">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v16.0&#013;Website  v4.2.0">Website Changelog</a></u>
                                 </div>
                             </div>
                             <div class="row">
@@ -760,8 +763,8 @@
     <script src="/theme/scripts/popper.min.js"></script>
     <script src="/theme/scripts/bootstrap-select.min.js"></script>
     <script src="/theme/scripts/bootstrap.bundle.min.js"></script>
-    <script src="/theme/scripts/site.js?4646"></script>
-    <script src="/theme/scripts/settings.js?5817"></script>
+    <script src="/theme/scripts/site.js"></script>
+    <script src="/theme/scripts/settings.js"></script>
     <script src="/theme/scripts/search_bundle.js"></script>
 
 <!--SCRIPTS-->

@@ -169,6 +169,9 @@
             <div class="col px-0">
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
+                    <div class="container-fluid banner-message">
+                        ATT&CK v16 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v16-561c76af94cf'>blog post</a> for more information.
+                    </div>
             </div>
         </div>
         <div class="row flex-grow-1 flex-shrink-0">
@@ -1652,7 +1655,7 @@
                                                     <span data-toggle="tooltip" data-placement="left" title="" data-test-ignore="true" data-original-title="The system an adversary is operating within; could be an operating system or application">&#9432;</span>
                                                 </div>
                                                 <div class="col-11 pl-0">
-                                                    <span class="h5 card-title">Platforms:&nbsp;</span>Azure AD, Google Workspace, IaaS, Linux, Office 365, SaaS, Windows, macOS
+                                                    <span class="h5 card-title">Platforms:&nbsp;</span>IaaS, Identity Provider, Linux, Office Suite, SaaS, Windows, macOS
                                                 </div>
                                             </div>
                                             <div class="row card-data">
@@ -1684,7 +1687,7 @@
                                             <div class="row card-data">
                                                 <div class="col-1 px-0 text-center"></div>
                                                 <div class="col-11 pl-0">
-                                                    <span class="h5 card-title">Last Modified:&nbsp;</span>07 December 2022
+                                                    <span class="h5 card-title">Last Modified:&nbsp;</span>14 October 2024
                                                 </div>
                                             </div>
                                     </div>
@@ -1694,13 +1697,13 @@
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Permalink to this version of DS0028" 
-           href="/versions/v15/datasources/DS0028/" data-test-ignore="true">Version Permalink</a>
+           href="/versions/v16/datasources/DS0028/" data-test-ignore="true">Version Permalink</a>
     </div>
     <div class="permalink">
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Go to the live version of DS0028" 
-           href="/versions/v15/datasources/DS0028/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+           href="/versions/v16/datasources/DS0028/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
     </div>
 </div>
 
@@ -1773,7 +1776,22 @@
                         <a href="/techniques/T1538">Cloud Service Dashboard</a>
                     </td>
                     <td>
-                                <p>Monitor for newly constructed logon behavior across cloud service management consoles.<span onclick=scrollToRef('scite-2') id="scite-ref-2-a" class="scite-citeref-number" title="Pany, D. & Hanley, C. (2023, May 3). Cloudy with a Chance of Bad Logs: Cloud Platform Log Configurations to Consider in Investigations. Retrieved October 16, 2023."data-reference="Mandiant Cloudy Logs 2023"><sup><a href="https://www.mandiant.com/resources/blog/cloud-bad-log-configurations" target="_blank" data-hasqtip="1" aria-describedby="qtip-1">[2]</a></sup></span></p>
+                                <p>Monitor for newly constructed logon behavior across cloud service management consoles.<span onclick=scrollToRef('scite-2') id="scite-ref-2-a" class="scite-citeref-number" title="Pany, D. & Hanley, C. (2023, May 3). Cloudy with a Chance of Bad Logs: Cloud Platform Log Configurations to Consider in Investigations. Retrieved October 16, 2023."data-reference="Mandiant Cloudy Logs 2023"><sup><a href="https://www.mandiant.com/resources/blog/cloud-bad-log-configurations" target="_blank" data-hasqtip="1" aria-describedby="qtip-1">[2]</a></sup></span> In AWS environments, look for the <code>ConsoleLogin</code> sign-in event. </p>
+
+                    </td>
+                </tr>
+                <tr class="technique enterprise" id="enterprise">
+                    <td>
+                            Enterprise
+                    </td>
+                    <td colspan="2">
+                        <a href="/techniques/T1526">T1526</a>
+                    </td>
+                    <td>
+                        <a href="/techniques/T1526">Cloud Service Discovery</a>
+                    </td>
+                    <td>
+                                <p>Monitor for newly constructed logon behavior that may attempt to enumerate the cloud services running on a system after gaining access. Look for suspicious Applications and accounts authenticating to the Windows Azure Service Management API using User Agents values attributed to scripting utilities such as python or Powershell. </p><p>Analytic 1 - Applications or accounts with unusual User Agents, anomalous IP addresses, unexpected locations, and usernames</p><p><code> index="azure_ad_signin_logs" Resource="Windows Azure Service Management API" AND (UserAgent="python" OR UserAgent="PowerShell")| stats count by UserAgent, UserID, IPAddress, Location| where IPAddress!="expected_ip" OR Location!="expected_location"the new </code></p>
 
                     </td>
                 </tr>
@@ -1788,7 +1806,7 @@
                         <a href="/techniques/T1213">Data from Information Repositories</a>
                     </td>
                     <td>
-                                <p>Monitor for newly constructed logon behavior within Microsoft's SharePoint can be configured to report access to certain pages and documents. <span onclick=scrollToRef('scite-3') id="scite-ref-3-a" class="scite-citeref-number" title="Microsoft. (2017, July 19). Configure audit settings for a site collection. Retrieved April 4, 2018."data-reference="Microsoft SharePoint Logging"><sup><a href="https://support.office.com/en-us/article/configure-audit-settings-for-a-site-collection-a9920c97-38c0-44f2-8bcb-4cf1e2ae22d2" target="_blank" data-hasqtip="2" aria-describedby="qtip-2">[3]</a></sup></span> Sharepoint audit logging can also be configured to report when a user shares a resource. <span onclick=scrollToRef('scite-4') id="scite-ref-4-a" class="scite-citeref-number" title="Microsoft. (n.d.). Sharepoint Sharing Events. Retrieved October 8, 2021."data-reference="Sharepoint Sharing Events"><sup><a href="https://docs.microsoft.com/en-us/microsoft-365/compliance/use-sharing-auditing?view=o365-worldwide#sharepoint-sharing-events" target="_blank" data-hasqtip="3" aria-describedby="qtip-3">[4]</a></sup></span>The user access logging within Atlassian's Confluence can also be configured to report access to certain pages and documents through AccessLogFilter. <span onclick=scrollToRef('scite-5') id="scite-ref-5-a" class="scite-citeref-number" title="Atlassian. (2018, January 9). How to Enable User Access Logging. Retrieved April 4, 2018."data-reference="Atlassian Confluence Logging"><sup><a href="https://confluence.atlassian.com/confkb/how-to-enable-user-access-logging-182943.html" target="_blank" data-hasqtip="4" aria-describedby="qtip-4">[5]</a></sup></span> Additional log storage and analysis infrastructure will likely be required for more robust detection capabilities.</p>
+                                <p>Monitor for newly constructed logon behavior within Microsoft's SharePoint can be configured to report access to certain pages and documents. <span onclick=scrollToRef('scite-3') id="scite-ref-3-a" class="scite-citeref-number" title="Microsoft. (2017, July 19). Configure audit settings for a site collection. Retrieved April 4, 2018."data-reference="Microsoft SharePoint Logging"><sup><a href="https://support.office.com/en-us/article/configure-audit-settings-for-a-site-collection-a9920c97-38c0-44f2-8bcb-4cf1e2ae22d2" target="_blank" data-hasqtip="2" aria-describedby="qtip-2">[3]</a></sup></span> Sharepoint audit logging can also be configured to report when a user shares a resource. <span onclick=scrollToRef('scite-4') id="scite-ref-4-a" class="scite-citeref-number" title="Microsoft. (n.d.). Sharepoint Sharing Events. Retrieved October 8, 2021."data-reference="Sharepoint Sharing Events"><sup><a href="https://docs.microsoft.com/en-us/microsoft-365/compliance/use-sharing-auditing?view=o365-worldwide#sharepoint-sharing-events" target="_blank" data-hasqtip="3" aria-describedby="qtip-3">[4]</a></sup></span> The user access logging within Atlassian's Confluence can also be configured to report access to certain pages and documents through AccessLogFilter. <span onclick=scrollToRef('scite-5') id="scite-ref-5-a" class="scite-citeref-number" title="Atlassian. (2018, January 9). How to Enable User Access Logging. Retrieved April 4, 2018."data-reference="Atlassian Confluence Logging"><sup><a href="https://confluence.atlassian.com/confkb/how-to-enable-user-access-logging-182943.html" target="_blank" data-hasqtip="4" aria-describedby="qtip-4">[5]</a></sup></span> In AWS environments, GuardDuty can be configured to report suspicious login activity in services such as RDS.<span onclick=scrollToRef('scite-6') id="scite-ref-6-a" class="scite-citeref-number" title="AWS. (n.d.). GuardDuty RDS Protection. Retrieved September 24, 2024."data-reference="AWS GuardDuty RDS Protection"><sup><a href="https://docs.aws.amazon.com/guardduty/latest/ug/rds-protection.html" target="_blank" data-hasqtip="5" aria-describedby="qtip-5">[6]</a></sup></span> Additional log storage and analysis infrastructure will likely be required for more robust detection capabilities. </p>
 
                     </td>
                 </tr>
@@ -1816,7 +1834,7 @@
                             <a href="/techniques/T1213/002">Sharepoint</a>
                         </td>
                         <td>
-                                    <p>Monitor for newly constructed logon behavior across Microsoft's SharePoint which can be configured to report access to certain pages and documents. <span onclick=scrollToRef('scite-3') id="scite-ref-3-a" class="scite-citeref-number" title="Microsoft. (2017, July 19). Configure audit settings for a site collection. Retrieved April 4, 2018."data-reference="Microsoft SharePoint Logging"><sup><a href="https://support.office.com/en-us/article/configure-audit-settings-for-a-site-collection-a9920c97-38c0-44f2-8bcb-4cf1e2ae22d2" target="_blank" data-hasqtip="2" aria-describedby="qtip-2">[3]</a></sup></span> As information repositories generally have a considerably large user base, detection of malicious use can be non-trivial.</p>
+                                    <p>Monitor for newly constructed logon behavior across Microsoft's SharePoint which can be configured to report access to certain pages and documents. <span onclick=scrollToRef('scite-3') id="scite-ref-3-a" class="scite-citeref-number" title="Microsoft. (2017, July 19). Configure audit settings for a site collection. Retrieved April 4, 2018."data-reference="Microsoft SharePoint Logging"><sup><a href="https://support.office.com/en-us/article/configure-audit-settings-for-a-site-collection-a9920c97-38c0-44f2-8bcb-4cf1e2ae22d2" target="_blank" data-hasqtip="2" aria-describedby="qtip-2">[3]</a></sup></span> As information repositories generally have a considerably large user base, detection of malicious use can be non-trivial.</p><p>Analytic 1 - Suspicious actor IPs, unusual user agents (e.g., malware, scripting interpreters like PowerShell, Python), anomalous login times</p><p><code> index="azure_ad_signin_logs" Resource="Office 365 SharePoint Online" AND (UserAgent="PowerShell" OR UserAgent="Mozilla")| stats count by UserAgent, UserID, IPAddress, Location| where IPAddress!="expected_ip" OR Location!="expected_location"</code></p>
 
                         </td>
                     </tr>
@@ -1831,6 +1849,20 @@
                         </td>
                         <td>
                                     <p>Monitor for newly constructed logon behavior across code repositories (e.g. Github) which can be configured to report access to certain pages and documents.</p>
+
+                        </td>
+                    </tr>
+                    <tr class="sub technique enterprise" id="enterprise">
+                        <td></td>
+                        <td></td>
+                        <td>
+                            <a href="/techniques/T1213/004">.004</a>
+                        </td>
+                        <td>
+                            <a href="/techniques/T1213/004">Customer Relationship Management Software</a>
+                        </td>
+                        <td>
+                                    <p>Monitor for newly constructed logon behavior across the CRM software which can be configured to report access to certain information. As information repositories generally have a considerably large user base, detection of malicious use can be non-trivial. </p>
 
                         </td>
                     </tr>
@@ -1889,7 +1921,7 @@
                             <a href="/techniques/T1114/002">Remote Email Collection</a>
                         </td>
                         <td>
-                                    <p>Monitor for unusual login activity from unknown or abnormal locations, especially for privileged accounts (ex: Exchange administrator account).</p>
+                                    <p>Monitor for unusual login activity from unknown or abnormal locations, especially for privileged accounts (ex: Exchange administrator account).</p><p>Analytic 1 - Suspicious actor IPs, unusual user agents (e.g., malware, scripting interpreters like PowerShell, Python), anomalous login times</p><p>Note: To detect suspicious logon session creation activities related to remote email collection.</p><p><code> index="azure_ad_signin_logs" Resource="Office 365 Exchange Online" AND (UserAgent="PowerShell" OR UserAgent="AADInternals")| stats count by UserAgent, UserID, IPAddress, Location| where IPAddress!="expected_ip" OR Location!="expected_location"</code></p>
 
                         </td>
                     </tr>
@@ -1904,7 +1936,7 @@
                         <a href="/techniques/T1606">Forge Web Credentials</a>
                     </td>
                     <td>
-                                <p>Monitor for anomalous authentication activity, such as logons or other user session activity associated with unknown accounts and/or using SAML tokens which do not have corresponding 4769 and 1200 events in the domain.<span onclick=scrollToRef('scite-6') id="scite-ref-6-a" class="scite-citeref-number" title="Sygnia. (2020, December). Detection and Hunting of Golden SAML Attack. Retrieved January 6, 2021."data-reference="Sygnia Golden SAML"><sup><a href="https://www.sygnia.co/golden-saml-advisory" target="_blank" data-hasqtip="5" aria-describedby="qtip-5">[6]</a></sup></span>. Monitor for unexpected and abnormal access to resources, including access of websites and cloud-based applications by the same user in different locations or by different systems that do not match expected configurations. These logins may occur on any on-premises resources as well as from any cloud environment that trusts the credentials.<span onclick=scrollToRef('scite-7') id="scite-ref-7-a" class="scite-citeref-number" title="MSRC. (2020, December 13). Customer Guidance on Recent Nation-State Cyber Attacks. Retrieved December 17, 2020."data-reference="Microsoft SolarWinds Customer Guidance"><sup><a href="https://msrc-blog.microsoft.com/2020/12/13/customer-guidance-on-recent-nation-state-cyber-attacks/" target="_blank" data-hasqtip="6" aria-describedby="qtip-6">[7]</a></sup></span></p>
+                                <p>Monitor for anomalous authentication activity, such as logons or other user session activity associated with unknown accounts and/or using SAML tokens which do not have corresponding 4769 and 1200 events in the domain.<span onclick=scrollToRef('scite-7') id="scite-ref-7-a" class="scite-citeref-number" title="Sygnia. (2020, December). Detection and Hunting of Golden SAML Attack. Retrieved January 6, 2021."data-reference="Sygnia Golden SAML"><sup><a href="https://www.sygnia.co/golden-saml-advisory" target="_blank" data-hasqtip="6" aria-describedby="qtip-6">[7]</a></sup></span>. Monitor for unexpected and abnormal access to resources, including access of websites and cloud-based applications by the same user in different locations or by different systems that do not match expected configurations. These logins may occur on any on-premises resources as well as from any cloud environment that trusts the credentials.<span onclick=scrollToRef('scite-8') id="scite-ref-8-a" class="scite-citeref-number" title="MSRC. (2020, December 13). Customer Guidance on Recent Nation-State Cyber Attacks. Retrieved December 17, 2020."data-reference="Microsoft SolarWinds Customer Guidance"><sup><a href="https://msrc-blog.microsoft.com/2020/12/13/customer-guidance-on-recent-nation-state-cyber-attacks/" target="_blank" data-hasqtip="7" aria-describedby="qtip-7">[8]</a></sup></span></p>
 
                     </td>
                 </tr>
@@ -1932,7 +1964,7 @@
                             <a href="/techniques/T1606/002">SAML Tokens</a>
                         </td>
                         <td>
-                                    <p>Monitor for logins using SAML tokens which do not have corresponding 4769 and 1200 events in the domain.<span onclick=scrollToRef('scite-6') id="scite-ref-6-a" class="scite-citeref-number" title="Sygnia. (2020, December). Detection and Hunting of Golden SAML Attack. Retrieved January 6, 2021."data-reference="Sygnia Golden SAML"><sup><a href="https://www.sygnia.co/golden-saml-advisory" target="_blank" data-hasqtip="5" aria-describedby="qtip-5">[6]</a></sup></span> These logins may occur on any on-premises resources as well as from any cloud environment that trusts the certificate.<span onclick=scrollToRef('scite-7') id="scite-ref-7-a" class="scite-citeref-number" title="MSRC. (2020, December 13). Customer Guidance on Recent Nation-State Cyber Attacks. Retrieved December 17, 2020."data-reference="Microsoft SolarWinds Customer Guidance"><sup><a href="https://msrc-blog.microsoft.com/2020/12/13/customer-guidance-on-recent-nation-state-cyber-attacks/" target="_blank" data-hasqtip="6" aria-describedby="qtip-6">[7]</a></sup></span></p>
+                                    <p>Monitor for logins using SAML tokens which do not have corresponding 4769 and 1200 events in the domain.<span onclick=scrollToRef('scite-7') id="scite-ref-7-a" class="scite-citeref-number" title="Sygnia. (2020, December). Detection and Hunting of Golden SAML Attack. Retrieved January 6, 2021."data-reference="Sygnia Golden SAML"><sup><a href="https://www.sygnia.co/golden-saml-advisory" target="_blank" data-hasqtip="6" aria-describedby="qtip-6">[7]</a></sup></span> These logins may occur on any on-premises resources as well as from any cloud environment that trusts the certificate.<span onclick=scrollToRef('scite-8') id="scite-ref-8-a" class="scite-citeref-number" title="MSRC. (2020, December 13). Customer Guidance on Recent Nation-State Cyber Attacks. Retrieved December 17, 2020."data-reference="Microsoft SolarWinds Customer Guidance"><sup><a href="https://msrc-blog.microsoft.com/2020/12/13/customer-guidance-on-recent-nation-state-cyber-attacks/" target="_blank" data-hasqtip="7" aria-describedby="qtip-7">[8]</a></sup></span></p>
 
                         </td>
                     </tr>
@@ -1977,7 +2009,7 @@
                         <a href="/techniques/T1556">Modify Authentication Process</a>
                     </td>
                     <td>
-                                <p>Monitor for newly constructed logon behavior across systems that share accounts, either user, admin, or service accounts. Examples: one account logged into multiple systems simultaneously; multiple accounts logged into the same machine simultaneously; accounts logged in at odd times (ex: when the user is not present) or outside of business hours. Activity may be from interactive login sessions or process ownership from accounts being used to execute binaries on a remote system as a particular account. Correlate other security systems with login information (e.g., a user has an active login session but has not entered the building or does not have VPN access). Configure robust, consistent account activity audit policies across the enterprise and with externally accessible services.<span onclick=scrollToRef('scite-8') id="scite-ref-8-a" class="scite-citeref-number" title="Microsoft. (2016, April 15). Audit Policy Recommendations. Retrieved June 3, 2016."data-reference="TechNet Audit Policy"><sup><a href="https://technet.microsoft.com/en-us/library/dn487457.aspx" target="_blank" data-hasqtip="7" aria-describedby="qtip-7">[8]</a></sup></span> </p>
+                                <p>Monitor for newly constructed logon behavior across systems that share accounts, either user, admin, or service accounts. Examples: one account logged into multiple systems simultaneously; multiple accounts logged into the same machine simultaneously; accounts logged in at odd times (ex: when the user is not present) or outside of business hours. Activity may be from interactive login sessions or process ownership from accounts being used to execute binaries on a remote system as a particular account. Correlate other security systems with login information (e.g., a user has an active login session but has not entered the building or does not have VPN access). Configure robust, consistent account activity audit policies across the enterprise and with externally accessible services.<span onclick=scrollToRef('scite-9') id="scite-ref-9-a" class="scite-citeref-number" title="Microsoft. (2016, April 15). Audit Policy Recommendations. Retrieved June 3, 2016."data-reference="TechNet Audit Policy"><sup><a href="https://technet.microsoft.com/en-us/library/dn487457.aspx" target="_blank" data-hasqtip="8" aria-describedby="qtip-8">[9]</a></sup></span> </p><p>Analytic 1 - Unusual logon patterns and times.</p><p><code> index=security sourcetype IN ("WinEventLog:Security", "linux_secure", "macos_secure")(EventCode=4624 OR EventCode=4625 OR EventCode=4768 OR EventCode=4769 OR EventCode=4776 OR EventCode=4778 OR EventCode=4779 OR EventCode=5379 OR EventCode=22)| eval LogonType=case(    EventCode==4624, "Logon",    EventCode==4625, "Failed Logon",    EventCode IN (4768, 4769), "Kerberos",    EventCode==4776, "NTLM",    EventCode==4778, "Session Reconnected",    EventCode==4779, "Session Disconnected",    EventCode==5379, "Login Attempt",    EventCode==22, "Interactive Logon",    true(), "Other")| eval User=coalesce(user, UserName, Account_Name, user_name)| eval System=coalesce(ComputerName, host)| eval Platform=case(    sourcetype=="WinEventLog:Security", "Windows",    sourcetype=="linux_secure", "Linux",    sourcetype=="macos_secure", "macOS",    true(), "Unknown")| where (date_wday!="saturday" AND date_wday!="sunday") AND (date_hour&lt;9 OR date_hour&gt;17)| bin _time span=1m| stats earliest(_time) as first_time, latest(_time) as last_time, count by User, System, LogonType, Platform| eval duration=last_time-first_time| where (LogonType="Logon" AND duration&lt;60 AND count &gt; 1) OR (LogonType="Failed Logon" AND count &gt; 5)| eval isOddTime=if(date_hour&lt;9 OR date_hour&gt;17, "Yes", "No")| eval isMultipleSystems=if(count&gt;1, "Yes", "No")| table first_time, last_time, duration, User, System, LogonType, Platform, count, isOddTime, isMultipleSystems| sort -count</code> </p>
 
                     </td>
                 </tr>
@@ -1991,7 +2023,7 @@
                             <a href="/techniques/T1556/001">Domain Controller Authentication</a>
                         </td>
                         <td>
-                                    <p>Monitor for newly constructed logon behavior across systems that share accounts, either user, admin, or service accounts. Examples: one account logged into multiple systems simultaneously; multiple accounts logged into the same machine simultaneously; accounts logged in at odd times (ex: when the user is not present) or outside of business hours. Activity may be from interactive login sessions or process ownership from accounts being used to execute binaries on a remote system as a particular account. Correlate other security systems with login information (e.g., a user has an active login session but has not entered the building or does not have VPN access). Configure robust, consistent account activity audit policies across the enterprise and with externally accessible services.<span onclick=scrollToRef('scite-8') id="scite-ref-8-a" class="scite-citeref-number" title="Microsoft. (2016, April 15). Audit Policy Recommendations. Retrieved June 3, 2016."data-reference="TechNet Audit Policy"><sup><a href="https://technet.microsoft.com/en-us/library/dn487457.aspx" target="_blank" data-hasqtip="7" aria-describedby="qtip-7">[8]</a></sup></span></p>
+                                    <p>Monitor for newly constructed logon behavior across systems that share accounts, either user, admin, or service accounts. Examples: one account logged into multiple systems simultaneously; multiple accounts logged into the same machine simultaneously; accounts logged in at odd times (ex: when the user is not present) or outside of business hours. Activity may be from interactive login sessions or process ownership from accounts being used to execute binaries on a remote system as a particular account. Correlate other security systems with login information (e.g., a user has an active login session but has not entered the building or does not have VPN access). Configure robust, consistent account activity audit policies across the enterprise and with externally accessible services.<span onclick=scrollToRef('scite-9') id="scite-ref-9-a" class="scite-citeref-number" title="Microsoft. (2016, April 15). Audit Policy Recommendations. Retrieved June 3, 2016."data-reference="TechNet Audit Policy"><sup><a href="https://technet.microsoft.com/en-us/library/dn487457.aspx" target="_blank" data-hasqtip="8" aria-describedby="qtip-8">[9]</a></sup></span></p><p>Analytic 1 - Unusual logon patterns and times.</p><p><code>index=windows sourcetype="WinEventLog:Security" (    (EventCode=4624 OR EventCode=4768) AND    Logon_Type=3 AND    NOT [search index=windows sourcetype="WinEventLog:Security" EventCode=4768 | stats count by Account_Name | where count &lt; 10 | fields Account_Name]) </code></p>
 
                         </td>
                     </tr>
@@ -2005,7 +2037,7 @@
                             <a href="/techniques/T1556/003">Pluggable Authentication Modules</a>
                         </td>
                         <td>
-                                    <p>Monitor for newly constructed logon behavior across systems that share accounts, either user, admin, or service accounts. Examples: one account logged into multiple systems simultaneously; multiple accounts logged into the same machine simultaneously; accounts logged in at odd times (ex: when the user is not present) or outside of business hours. Activity may be from interactive login sessions or process ownership from accounts being used to execute binaries on a remote system as a particular account. Correlate other security systems with login information (e.g., a user has an active login session but has not entered the building or does not have VPN access).</p>
+                                    <p>Monitor for newly constructed logon behavior across systems that share accounts, either user, admin, or service accounts. Examples: one account logged into multiple systems simultaneously; multiple accounts logged into the same machine simultaneously; accounts logged in at odd times (ex: when the user is not present) or outside of business hours. Activity may be from interactive login sessions or process ownership from accounts being used to execute binaries on a remote system as a particular account. Correlate other security systems with login information (e.g., a user has an active login session but has not entered the building or does not have VPN access).</p><p>Analytic 1 - Unusual logon patterns and times.</p><p><code> index=linux_logs OR index=macos_logs(source="/var/log/secure" OR source="/var/log/auth.log" OR source="/var/log/system.log")("session opened" OR "session closed")| eval is_normal_hours=if(hour(_time) &gt;= 8 AND hour(_time) &lt;= 18, 1, 0)| search NOT [search index=linux_logs OR index=macos_logs (source="/etc/pam.d/*" OR source="/etc/passwd" OR source="/etc/shadow") action=modified | fields user]</code></p>
 
                         </td>
                     </tr>
@@ -2019,7 +2051,7 @@
                             <a href="/techniques/T1556/006">Multi-Factor Authentication</a>
                         </td>
                         <td>
-                                    <p>Monitor for logon sessions for user accounts and devices that did not require MFA for authentication.</p>
+                                    <p>Monitor for logon sessions for user accounts and devices that did not require MFA for authentication.</p><p>Analytic 1 - Successful logons without MFA.</p><p><code>index=security sourcetype="azure:eventhub" OR sourcetype="o365:management:activity" OR sourcetype="gsuite:reports:admin" OR sourcetype="linux_secure" OR sourcetype="WinEventLog:Security" (EventID="4624" OR EventID="4648" OR EventID="AuthenticationSuccess" OR EventCode IN ("4104", "552", "1200") OR EventName="UserLoggedIn" OR action="login_success")| eval MFA_used = case(    isnotnull('AdditionalProperties.MFARequired') AND AdditionalProperties.MFARequired="true", "MFA",    isnotnull('AdditionalProperties.MFAStatus') AND AdditionalProperties.MFAStatus="success", "MFA",    isnotnull('AdditionalProperties.MFA') AND AdditionalProperties.MFA="success", "MFA",    isnotnull('AuthenticationMethod') AND AuthenticationMethod IN ("MFA", "TOTP", "U2F", "Push Notification"), "MFA",    isnotnull('MultiFactorUsed') AND MultiFactorUsed="Yes", "MFA",    1==1, "No MFA")| search MFA_used="No MFA" </code></p>
 
                         </td>
                     </tr>
@@ -2033,7 +2065,7 @@
                             <a href="/techniques/T1556/007">Hybrid Identity</a>
                         </td>
                         <td>
-                                    <p>Monitor for discrepancies in authentication to cloud services, such as PTA sign-ins recorded in Azure AD that lack corresponding events in AD.<span onclick=scrollToRef('scite-9') id="scite-ref-9-a" class="scite-citeref-number" title="Dr. Nestori Syynimaa. (2022, September 20). Exploiting Azure AD PTA vulnerabilities: Creating backdoor and harvesting credentials. Retrieved September 28, 2022."data-reference="Azure AD PTA Vulnerabilities"><sup><a href="https://o365blog.com/post/pta/" target="_blank" data-hasqtip="8" aria-describedby="qtip-8">[9]</a></sup></span></p>
+                                    <p>Monitor for discrepancies in authentication to cloud services, such as PTA sign-ins recorded in Entra ID that lack corresponding events in AD.<span onclick=scrollToRef('scite-10') id="scite-ref-10-a" class="scite-citeref-number" title="Dr. Nestori Syynimaa. (2022, September 20). Exploiting Azure AD PTA vulnerabilities: Creating backdoor and harvesting credentials. Retrieved September 28, 2022."data-reference="Azure AD PTA Vulnerabilities"><sup><a href="https://o365blog.com/post/pta/" target="_blank" data-hasqtip="9" aria-describedby="qtip-9">[10]</a></sup></span></p>
 
                         </td>
                     </tr>
@@ -2067,7 +2099,7 @@
                                 <a href="/techniques/T1003">OS Credential Dumping</a>: <a href="/techniques/T1003/001">LSASS Memory</a>
                             </td>
                             <td>
-                                        <p>Monitor for newly constructed logon behavior from credentials being accessed by process memory of the LSASS. For example, detect behaviors of Secretsdump against a system, not being a Domain Controller. </p>
+                                        <p>Monitor for newly constructed logon behavior from credentials being accessed by process memory of the LSASS. For example, detect behaviors of Secretsdump against a system, not being a Domain Controller. </p><p>Analytic 1 - Unusual logon sessions from LSASS memory access.</p><p><code> index=security sourcetype="WinEventLog:Security" EventCode=4624 TargetUserName="*"| eval LogonType=case(Logon_Type=="2", "Interactive", Logon_Type=="3", "Network", Logon_Type=="4", "Batch", Logon_Type=="5", "Service", Logon_Type=="7", "Unlock", Logon_Type=="8", "NetworkCleartext", Logon_Type=="9", "NewCredentials", Logon_Type=="10", "RemoteInteractive", Logon_Type=="11", "CachedInteractive")| where LogonType IN ("Interactive", "RemoteInteractive", "NetworkCleartext") </code></p>
 
                             </td>
                         </tr>
@@ -2125,7 +2157,7 @@
                         <a href="/techniques/T1021">Remote Services</a>
                     </td>
                     <td>
-                                <p>Monitor for user accounts logged into systems they would not normally access or abnormal access patterns, such as multiple systems over a relatively short period of time. Correlate use of login activity related to remote services with unusual behavior or other malicious or suspicious activity. Adversaries will likely need to learn about an environment and the relationships between systems through Discovery techniques prior to attempting Lateral Movement. For example, in macOS you can review logs for "screensharingd" and "Authentication" event messages. <span onclick=scrollToRef('scite-10') id="scite-ref-10-a" class="scite-citeref-number" title="Dan Borges. (2019, July 21). MacOS Red Teaming 206: ARD (Apple Remote Desktop Protocol). Retrieved September 10, 2021."data-reference="Lockboxx ARD 2019"><sup><a href="http://lockboxx.blogspot.com/2019/07/macos-red-teaming-206-ard-apple-remote.html" target="_blank" data-hasqtip="9" aria-describedby="qtip-9">[10]</a></sup></span><span onclick=scrollToRef('scite-11') id="scite-ref-11-a" class="scite-citeref-number" title="Sarah Edwards. (2020, April 30). Analysis of Apple Unified Logs: Quarantine Edition [Entry 6] – Working From Home? Remote Logins. Retrieved August 19, 2021."data-reference="Apple Unified Log Analysis Remote Login and Screen Sharing"><sup><a href="https://sarah-edwards-xzkc.squarespace.com/blog/2020/4/30/analysis-of-apple-unified-logs-quarantine-edition-entry-6-working-from-home-remote-logins" target="_blank" data-hasqtip="10" aria-describedby="qtip-10">[11]</a></sup></span></p><p>Note: When using Security event id 4624, %$ means user names that do not end with $ character. Usually, computer accounts or local system accounts names end with the $ character. When using Security event 4624, UserName and UserLogonId correspond to TargetUserName and TargetLogonId respectively. When using Security event 4624, LogonType 3 corresponds to a Network Logon</p><p>Analytic 1 - New services being created under network logon sessions by non-system users<code>(source="<em>WinEventLog:Security" EventCode="4624") AND LogonType="3" AND UserName NOT '</em>$' | rename UserLogonId AS LogonID| join type=inner LogonID[| search (source="*WinEventLog:Security" EventCode="4697") | rename UserLogonId as LogonID]</code></p>
+                                <p>Monitor for user accounts logged into systems they would not normally access or abnormal access patterns, such as multiple systems over a relatively short period of time. Correlate use of login activity related to remote services with unusual behavior or other malicious or suspicious activity. Adversaries will likely need to learn about an environment and the relationships between systems through Discovery techniques prior to attempting Lateral Movement. For example, in macOS you can review logs for "screensharingd" and "Authentication" event messages. <span onclick=scrollToRef('scite-11') id="scite-ref-11-a" class="scite-citeref-number" title="Dan Borges. (2019, July 21). MacOS Red Teaming 206: ARD (Apple Remote Desktop Protocol). Retrieved September 10, 2021."data-reference="Lockboxx ARD 2019"><sup><a href="http://lockboxx.blogspot.com/2019/07/macos-red-teaming-206-ard-apple-remote.html" target="_blank" data-hasqtip="10" aria-describedby="qtip-10">[11]</a></sup></span><span onclick=scrollToRef('scite-12') id="scite-ref-12-a" class="scite-citeref-number" title="Sarah Edwards. (2020, April 30). Analysis of Apple Unified Logs: Quarantine Edition [Entry 6] – Working From Home? Remote Logins. Retrieved August 19, 2021."data-reference="Apple Unified Log Analysis Remote Login and Screen Sharing"><sup><a href="https://sarah-edwards-xzkc.squarespace.com/blog/2020/4/30/analysis-of-apple-unified-logs-quarantine-edition-entry-6-working-from-home-remote-logins" target="_blank" data-hasqtip="11" aria-describedby="qtip-11">[12]</a></sup></span></p><p>Note: When using Security event id 4624, %$ means user names that do not end with $ character. Usually, computer accounts or local system accounts names end with the $ character. When using Security event 4624, UserName and UserLogonId correspond to TargetUserName and TargetLogonId respectively. When using Security event 4624, LogonType 3 corresponds to a Network Logon</p><p>Analytic 1 - New services being created under network logon sessions by non-system users<code>(sourcetype="WinEventLog:Security" EventCode IN (4624, 4648, 4625)) AND LogonType="3" AND UserName NOT '<em>$' | rename UserLogonId AS LogonID| join type=inner LogonID[| search (source="</em>WinEventLog:Security" EventCode="4697") | rename UserLogonId as LogonID]</code></p>
 
                     </td>
                 </tr>
@@ -2139,7 +2171,7 @@
                             <a href="/techniques/T1021/001">Remote Desktop Protocol</a>
                         </td>
                         <td>
-                                    <p>Monitor for user accounts logged into systems associated with RDP (ex: Windows EID 4624 Logon Type 10). Other factors, such as access patterns (ex: multiple systems over a relatively short period of time) and activity that occurs after a remote login, may indicate suspicious or malicious behavior with RDP.</p><p>Monitoring logon and logoff events for hosts on the network is very important for situational awareness. This information can be used as an indicator of unusual activity as well as to corroborate activity seen elsewhere.</p><p>Could be applied to a number of different types of monitoring depending on what information is desired. Some use cases include monitoring for all remote connections and building login timelines for users. Logon events are Windows Event Code 4624 for Windows Vista and above, 518 for pre-Vista. Logoff events are 4634 for Windows Vista and above, 538 for pre-Vista.</p><p>Note: This analytic looks for user logon events and filters out the top 30 account names to reduce the occurrence of noisy service accounts and the like. It is meant as a starting point for situational awareness around such events. This is liable to be quite noisy and will need tweaking, especially in terms of the number of top users filtered out.</p><p>Analytic 1</p><p><code>source="*WinEventLog:Security" EventCode IN (4624, 4634, 4647, 4778)|search user NOT IN top limit=30</code></p>
+                                    <p>Monitor for user accounts logged into systems associated with RDP (ex: Windows EID 4624 Logon Type 10). Other factors, such as access patterns (ex: multiple systems over a relatively short period of time) and activity that occurs after a remote login, may indicate suspicious or malicious behavior with RDP.</p><p>Monitoring logon and logoff events for hosts on the network is very important for situational awareness. This information can be used as an indicator of unusual activity as well as to corroborate activity seen elsewhere.</p><p>Could be applied to a number of different types of monitoring depending on what information is desired. Some use cases include monitoring for all remote connections and building login timelines for users. Logon events are Windows Event Code 4624 for Windows Vista and above, 518 for pre-Vista. Logoff events are 4634 for Windows Vista and above, 538 for pre-Vista.</p><p>Note: This analytic looks for user logon events and filters out the top 30 account names to reduce the occurrence of noisy service accounts and the like. It is meant as a starting point for situational awareness around such events. This is liable to be quite noisy and will need tweaking, especially in terms of the number of top users filtered out.</p><p>Analytic 1</p><p><code>sourcetype="WinEventLog:Security" EventCode IN (4624, 4634, 4647, 4778, 4779)| search LogonType=10 // RDP Interactive Logon| eval is_suspicious=if((user!="expected_users") AND (dest_ip!="expected_servers"), "True", "False")| where is_suspicious="True"</code></p>
 
                         </td>
                     </tr>
@@ -2153,7 +2185,7 @@
                             <a href="/techniques/T1021/002">SMB/Windows Admin Shares</a>
                         </td>
                         <td>
-                                    <p>Monitor for logon behavior (ex: EID 4624 Logon Type 3) using <a href="/techniques/T1078">Valid Accounts</a> to interact with a remote network share using Server Message Block (SMB). The adversary may then perform actions as the logged-on user. Ensure that proper logging of accounts used to log into systems is turned on and centrally collected. Windows logging is able to collect success/failure for accounts that may be used to move laterally and can be collected using tools such as Windows Event Forwarding. <span onclick=scrollToRef('scite-12') id="scite-ref-12-a" class="scite-citeref-number" title="Payne, J. (2015, November 26). Tracking Lateral Movement Part One - Special Groups and Specific Service Accounts. Retrieved February 1, 2016."data-reference="Lateral Movement Payne"><sup><a href="https://docs.microsoft.com/en-us/archive/blogs/jepayne/tracking-lateral-movement-part-one-special-groups-and-specific-service-accounts" target="_blank" data-hasqtip="11" aria-describedby="qtip-11">[12]</a></sup></span><span onclick=scrollToRef('scite-13') id="scite-ref-13-a" class="scite-citeref-number" title="Payne, J. (2015, November 23). Monitoring what matters - Windows Event Forwarding for everyone (even if you already have a SIEM.). Retrieved February 1, 2016."data-reference="Windows Event Forwarding Payne"><sup><a href="https://docs.microsoft.com/en-us/archive/blogs/jepayne/monitoring-what-matters-windows-event-forwarding-for-everyone-even-if-you-already-have-a-siem" target="_blank" data-hasqtip="12" aria-describedby="qtip-12">[13]</a></sup></span></p>
+                                    <p>Monitor for logon behavior (ex: EID 4624 Logon Type 3) using <a href="/techniques/T1078">Valid Accounts</a> to interact with a remote network share using Server Message Block (SMB). The adversary may then perform actions as the logged-on user. Ensure that proper logging of accounts used to log into systems is turned on and centrally collected. Windows logging is able to collect success/failure for accounts that may be used to move laterally and can be collected using tools such as Windows Event Forwarding. <span onclick=scrollToRef('scite-13') id="scite-ref-13-a" class="scite-citeref-number" title="Payne, J. (2015, November 26). Tracking Lateral Movement Part One - Special Groups and Specific Service Accounts. Retrieved February 1, 2016."data-reference="Lateral Movement Payne"><sup><a href="https://docs.microsoft.com/en-us/archive/blogs/jepayne/tracking-lateral-movement-part-one-special-groups-and-specific-service-accounts" target="_blank" data-hasqtip="12" aria-describedby="qtip-12">[13]</a></sup></span><span onclick=scrollToRef('scite-14') id="scite-ref-14-a" class="scite-citeref-number" title="Payne, J. (2015, November 23). Monitoring what matters - Windows Event Forwarding for everyone (even if you already have a SIEM.). Retrieved February 1, 2016."data-reference="Windows Event Forwarding Payne"><sup><a href="https://docs.microsoft.com/en-us/archive/blogs/jepayne/monitoring-what-matters-windows-event-forwarding-for-everyone-even-if-you-already-have-a-siem" target="_blank" data-hasqtip="13" aria-describedby="qtip-13">[14]</a></sup></span></p>
 
                         </td>
                     </tr>
@@ -2181,7 +2213,7 @@
                             <a href="/techniques/T1021/005">VNC</a>
                         </td>
                         <td>
-                                    <p>Monitor for user accounts logged into systems that may use <a href="/techniques/T1078">Valid Accounts</a> to remotely control machines using Virtual Network Computing (VNC). For example, on macOS systems <code>log show --predicate 'process = "screensharingd" and eventMessage contains "Authentication:"'</code> can be used to review incoming VNC connection attempts for suspicious activity.<span onclick=scrollToRef('scite-11') id="scite-ref-11-a" class="scite-citeref-number" title="Sarah Edwards. (2020, April 30). Analysis of Apple Unified Logs: Quarantine Edition [Entry 6] – Working From Home? Remote Logins. Retrieved August 19, 2021."data-reference="Apple Unified Log Analysis Remote Login and Screen Sharing"><sup><a href="https://sarah-edwards-xzkc.squarespace.com/blog/2020/4/30/analysis-of-apple-unified-logs-quarantine-edition-entry-6-working-from-home-remote-logins" target="_blank" data-hasqtip="10" aria-describedby="qtip-10">[11]</a></sup></span> </p>
+                                    <p>Monitor for user accounts logged into systems that may use <a href="/techniques/T1078">Valid Accounts</a> to remotely control machines using Virtual Network Computing (VNC). For example, on macOS systems <code>log show --predicate 'process = "screensharingd" and eventMessage contains "Authentication:"'</code> can be used to review incoming VNC connection attempts for suspicious activity.<span onclick=scrollToRef('scite-12') id="scite-ref-12-a" class="scite-citeref-number" title="Sarah Edwards. (2020, April 30). Analysis of Apple Unified Logs: Quarantine Edition [Entry 6] – Working From Home? Remote Logins. Retrieved August 19, 2021."data-reference="Apple Unified Log Analysis Remote Login and Screen Sharing"><sup><a href="https://sarah-edwards-xzkc.squarespace.com/blog/2020/4/30/analysis-of-apple-unified-logs-quarantine-edition-entry-6-working-from-home-remote-logins" target="_blank" data-hasqtip="11" aria-describedby="qtip-11">[12]</a></sup></span> </p>
 
                         </td>
                     </tr>
@@ -2209,7 +2241,7 @@
                             <a href="/techniques/T1021/007">Cloud Services</a>
                         </td>
                         <td>
-                                    <p>Monitor for newly constructed logon behavior to cloud services. For example, in Azure AD, consider using Identity Protection to monitor for suspicious login behaviors to cloud resources. <span onclick=scrollToRef('scite-14') id="scite-ref-14-a" class="scite-citeref-number" title="Microsoft. (2022, August 26). Protecting Microsoft 365 from on-premises attacks. Retrieved February 21, 2023."data-reference="Protecting Microsoft 365 From On-Premises Attacks"><sup><a href="https://learn.microsoft.com/en-us/azure/active-directory/fundamentals/protect-m365-from-on-premises-attacks" target="_blank" data-hasqtip="13" aria-describedby="qtip-13">[14]</a></sup></span></p>
+                                    <p>Monitor for newly constructed logon behavior to cloud services. For example, in Azure AD, consider using Identity Protection to monitor for suspicious login behaviors to cloud resources. <span onclick=scrollToRef('scite-15') id="scite-ref-15-a" class="scite-citeref-number" title="Microsoft. (2022, August 26). Protecting Microsoft 365 from on-premises attacks. Retrieved February 21, 2023."data-reference="Protecting Microsoft 365 From On-Premises Attacks"><sup><a href="https://learn.microsoft.com/en-us/azure/active-directory/fundamentals/protect-m365-from-on-premises-attacks" target="_blank" data-hasqtip="14" aria-describedby="qtip-14">[15]</a></sup></span></p>
 
                         </td>
                     </tr>
@@ -2253,7 +2285,7 @@
                         <a href="/techniques/T1649">Steal or Forge Authentication Certificates</a>
                     </td>
                     <td>
-                                <p>Monitor certificate-based authentication events, such as EID 4768 when an AD CS certificate is used for Kerberos authentication (especially those that don’t correspond to legitimately issued certificates) or when Secure Channel (<code>Schannel</code>, associated with SSL/TLS) is highlighted as the <code>Logon Process</code> associated with an EID 4624 logon event.<span onclick=scrollToRef('scite-15') id="scite-ref-15-a" class="scite-citeref-number" title="Schroeder, W. & Christensen, L. (2021, June 22). Certified Pre-Owned - Abusing Active Directory Certificate Services. Retrieved August 2, 2022."data-reference="SpecterOps Certified Pre Owned"><sup><a href="https://web.archive.org/web/20220818094600/https://specterops.io/assets/resources/Certified_Pre-Owned.pdf" target="_blank" data-hasqtip="14" aria-describedby="qtip-14">[15]</a></sup></span></p>
+                                <p>Monitor certificate-based authentication events, such as EID 4768 when an AD CS certificate is used for Kerberos authentication (especially those that don’t correspond to legitimately issued certificates) or when Secure Channel (<code>Schannel</code>, associated with SSL/TLS) is highlighted as the <code>Logon Process</code> associated with an EID 4624 logon event.<span onclick=scrollToRef('scite-16') id="scite-ref-16-a" class="scite-citeref-number" title="Schroeder, W. & Christensen, L. (2021, June 22). Certified Pre-Owned - Abusing Active Directory Certificate Services. Retrieved August 2, 2022."data-reference="SpecterOps Certified Pre Owned"><sup><a href="https://web.archive.org/web/20220818094600/https://specterops.io/assets/resources/Certified_Pre-Owned.pdf" target="_blank" data-hasqtip="15" aria-describedby="qtip-15">[16]</a></sup></span></p>
 
                     </td>
                 </tr>
@@ -2297,7 +2329,7 @@
                             <a href="/techniques/T1550/002">Pass the Hash</a>
                         </td>
                         <td>
-                                    <p>Monitor newly created logons and credentials used in events and review for discrepancies. Unusual remote logins that correlate with other suspicious activity (such as writing and executing binaries) may indicate malicious activity.</p><p>Note: Analytic Event ID is for Windows Security Log (Event ID 4624 - An account was successfully logged on). The successful use of Pass the Hash for lateral movement between workstations would trigger Event ID 4624, with an event level of Information, from the Windows Security log. This event would show an account logon with a LogonType of 3 using NTLM authentication, a logon that is not a domain logon, and the user account not being the ANONYMOUS LOGON account.</p><p>Analytic 1 - Successful Local Account Login</p><p><code>(source="*WinEventLog:Security" EventCode="4624") TargetUser= "ANONYMOUS LOGON" AND AuthenticationPackageName="NTLM"</code></p>
+                                    <p>Monitor newly created logons and credentials used in events and review for discrepancies. Unusual remote logins that correlate with other suspicious activity (such as writing and executing binaries) may indicate malicious activity.</p><p>Note: Analytic Event ID is for Windows Security Log (Event ID 4624 - An account was successfully logged on). The successful use of Pass the Hash for lateral movement between workstations would trigger Event ID 4624, with an event level of Information, from the Windows Security log. This event would show an account logon with a LogonType of 3 using NTLM authentication, a logon that is not a domain logon, and the user account not being the ANONYMOUS LOGON account.</p><p>Analytic 1 - Successful Local Account Login</p><p><code>(sourcetype="WinEventLog:Security" EventCode="4624") LogonType=3 AND AuthenticationPackageName="NTLM" AND TargetUser != "ANONYMOUS LOGON"</code></p>
 
                         </td>
                     </tr>
@@ -2499,7 +2531,7 @@
                                 <a href="/techniques/T1606">Forge Web Credentials</a>: <a href="/techniques/T1606/002">SAML Tokens</a>
                             </td>
                             <td>
-                                        <p>Consider modifying SAML responses to include custom elements for each service provider. Monitor these custom elements in service provider access logs to detect any anomalous requests.<span onclick=scrollToRef('scite-6') id="scite-ref-6-a" class="scite-citeref-number" title="Sygnia. (2020, December). Detection and Hunting of Golden SAML Attack. Retrieved January 6, 2021."data-reference="Sygnia Golden SAML"><sup><a href="https://www.sygnia.co/golden-saml-advisory" target="_blank" data-hasqtip="5" aria-describedby="qtip-5">[6]</a></sup></span></p>
+                                        <p>Consider modifying SAML responses to include custom elements for each service provider. Monitor these custom elements in service provider access logs to detect any anomalous requests.<span onclick=scrollToRef('scite-7') id="scite-ref-7-a" class="scite-citeref-number" title="Sygnia. (2020, December). Detection and Hunting of Golden SAML Attack. Retrieved January 6, 2021."data-reference="Sygnia Golden SAML"><sup><a href="https://www.sygnia.co/golden-saml-advisory" target="_blank" data-hasqtip="6" aria-describedby="qtip-6">[7]</a></sup></span></p>
 
                             </td>
                         </tr>
@@ -2548,7 +2580,7 @@
                                 <a href="/techniques/T1021">Remote Services</a>: <a href="/techniques/T1021/001">Remote Desktop Protocol</a>
                             </td>
                             <td>
-                                        <p>Monitor authentication logs and analyze for unusual access patterns. A remote desktop logon, through RDP, may be typical of a system administrator or IT support, but only from select workstations. Monitoring remote desktop logons and comparing to known/approved originating systems can detect lateral movement of an adversary.</p><p>Analytic 1</p><p><code>source="<em>WinEventLog:Security" EventCode="4624" AND LogonType="10" AND AuthenticationPackageName="Negotiate" AND TargetUserName="Admin</em>")</code></p>
+                                        <p>Monitor authentication logs and analyze for unusual access patterns. A remote desktop logon, through RDP, may be typical of a system administrator or IT support, but only from select workstations. Monitoring remote desktop logons and comparing to known/approved originating systems can detect lateral movement of an adversary.</p><p>Analytic 1</p><p><code>sourcetype="WinEventLog:Security" EventCode="4624" AND LogonType="10" AND AuthenticationPackageName="Negotiate" AND TargetUserName="Admin*")</code></p>
 
                             </td>
                         </tr>
@@ -2563,7 +2595,7 @@
                         <a href="/techniques/T1558">Steal or Forge Kerberos Tickets</a>
                     </td>
                     <td>
-                                <p>Enable Audit Kerberos Service Ticket Operations to log Kerberos TGS service ticket requests. Particularly investigate irregular patterns of activity (ex: accounts making numerous requests, Event ID 4769, within a small time frame, especially if they also request RC4 encryption [Type 0x17]).<span onclick=scrollToRef('scite-16') id="scite-ref-16-a" class="scite-citeref-number" title="Bani, M. (2018, February 23). Detecting Kerberoasting activity using Azure Security Center. Retrieved March 23, 2018."data-reference="Microsoft Detecting Kerberoasting Feb 2018"><sup><a href="https://blogs.technet.microsoft.com/motiba/2018/02/23/detecting-kerberoasting-activity-using-azure-security-center/" target="_blank" data-hasqtip="15" aria-describedby="qtip-15">[16]</a></sup></span> <span onclick=scrollToRef('scite-17') id="scite-ref-17-a" class="scite-citeref-number" title="Metcalf, S. (2015, December 31). Cracking Kerberos TGS Tickets Using Kerberoast – Exploiting Kerberos to Compromise the Active Directory Domain. Retrieved March 22, 2018."data-reference="AdSecurity Cracking Kerberos Dec 2015"><sup><a href="https://adsecurity.org/?p=2293" target="_blank" data-hasqtip="16" aria-describedby="qtip-16">[17]</a></sup></span></p>
+                                <p>Enable Audit Kerberos Service Ticket Operations to log Kerberos TGS service ticket requests. Particularly investigate irregular patterns of activity (ex: accounts making numerous requests, Event ID 4769, within a small time frame, especially if they also request RC4 encryption [Type 0x17]).<span onclick=scrollToRef('scite-17') id="scite-ref-17-a" class="scite-citeref-number" title="Bani, M. (2018, February 23). Detecting Kerberoasting activity using Azure Security Center. Retrieved March 23, 2018."data-reference="Microsoft Detecting Kerberoasting Feb 2018"><sup><a href="https://blogs.technet.microsoft.com/motiba/2018/02/23/detecting-kerberoasting-activity-using-azure-security-center/" target="_blank" data-hasqtip="16" aria-describedby="qtip-16">[17]</a></sup></span> <span onclick=scrollToRef('scite-18') id="scite-ref-18-a" class="scite-citeref-number" title="Metcalf, S. (2015, December 31). Cracking Kerberos TGS Tickets Using Kerberoast – Exploiting Kerberos to Compromise the Active Directory Domain. Retrieved March 22, 2018."data-reference="AdSecurity Cracking Kerberos Dec 2015"><sup><a href="https://adsecurity.org/?p=2293" target="_blank" data-hasqtip="17" aria-describedby="qtip-17">[18]</a></sup></span></p>
 
                     </td>
                 </tr>
@@ -2758,8 +2790,8 @@
         <li>
             <span  id="scite-6" class="scite-citation">
                 <span class="scite-citation-text">
-                    <a rel="nofollow" class="external text" name="scite-6" href="https://www.sygnia.co/golden-saml-advisory" target="_blank">
-                        Sygnia. (2020, December). Detection and Hunting of Golden SAML Attack. Retrieved January 6, 2021.
+                    <a rel="nofollow" class="external text" name="scite-6" href="https://docs.aws.amazon.com/guardduty/latest/ug/rds-protection.html" target="_blank">
+                        AWS. (n.d.). GuardDuty RDS Protection. Retrieved September 24, 2024.
                     </a>
                 </span>
             </span>
@@ -2770,8 +2802,8 @@
         <li>
             <span  id="scite-7" class="scite-citation">
                 <span class="scite-citation-text">
-                    <a rel="nofollow" class="external text" name="scite-7" href="https://msrc-blog.microsoft.com/2020/12/13/customer-guidance-on-recent-nation-state-cyber-attacks/" target="_blank">
-                        MSRC. (2020, December 13). Customer Guidance on Recent Nation-State Cyber Attacks. Retrieved December 17, 2020.
+                    <a rel="nofollow" class="external text" name="scite-7" href="https://www.sygnia.co/golden-saml-advisory" target="_blank">
+                        Sygnia. (2020, December). Detection and Hunting of Golden SAML Attack. Retrieved January 6, 2021.
                     </a>
                 </span>
             </span>
@@ -2782,8 +2814,8 @@
         <li>
             <span  id="scite-8" class="scite-citation">
                 <span class="scite-citation-text">
-                    <a rel="nofollow" class="external text" name="scite-8" href="https://technet.microsoft.com/en-us/library/dn487457.aspx" target="_blank">
-                        Microsoft. (2016, April 15). Audit Policy Recommendations. Retrieved June 3, 2016.
+                    <a rel="nofollow" class="external text" name="scite-8" href="https://msrc-blog.microsoft.com/2020/12/13/customer-guidance-on-recent-nation-state-cyber-attacks/" target="_blank">
+                        MSRC. (2020, December 13). Customer Guidance on Recent Nation-State Cyber Attacks. Retrieved December 17, 2020.
                     </a>
                 </span>
             </span>
@@ -2794,8 +2826,8 @@
         <li>
             <span  id="scite-9" class="scite-citation">
                 <span class="scite-citation-text">
-                    <a rel="nofollow" class="external text" name="scite-9" href="https://o365blog.com/post/pta/" target="_blank">
-                        Dr. Nestori Syynimaa. (2022, September 20). Exploiting Azure AD PTA vulnerabilities: Creating backdoor and harvesting credentials. Retrieved September 28, 2022.
+                    <a rel="nofollow" class="external text" name="scite-9" href="https://technet.microsoft.com/en-us/library/dn487457.aspx" target="_blank">
+                        Microsoft. (2016, April 15). Audit Policy Recommendations. Retrieved June 3, 2016.
                     </a>
                 </span>
             </span>
@@ -2810,8 +2842,8 @@
         <li>
             <span  id="scite-10" class="scite-citation">
                 <span class="scite-citation-text">
-                    <a rel="nofollow" class="external text" name="scite-10" href="http://lockboxx.blogspot.com/2019/07/macos-red-teaming-206-ard-apple-remote.html" target="_blank">
-                        Dan Borges. (2019, July 21). MacOS Red Teaming 206: ARD (Apple Remote Desktop Protocol). Retrieved September 10, 2021.
+                    <a rel="nofollow" class="external text" name="scite-10" href="https://o365blog.com/post/pta/" target="_blank">
+                        Dr. Nestori Syynimaa. (2022, September 20). Exploiting Azure AD PTA vulnerabilities: Creating backdoor and harvesting credentials. Retrieved September 28, 2022.
                     </a>
                 </span>
             </span>
@@ -2822,8 +2854,8 @@
         <li>
             <span  id="scite-11" class="scite-citation">
                 <span class="scite-citation-text">
-                    <a rel="nofollow" class="external text" name="scite-11" href="https://sarah-edwards-xzkc.squarespace.com/blog/2020/4/30/analysis-of-apple-unified-logs-quarantine-edition-entry-6-working-from-home-remote-logins" target="_blank">
-                        Sarah Edwards. (2020, April 30). Analysis of Apple Unified Logs: Quarantine Edition [Entry 6] – Working From Home? Remote Logins. Retrieved August 19, 2021.
+                    <a rel="nofollow" class="external text" name="scite-11" href="http://lockboxx.blogspot.com/2019/07/macos-red-teaming-206-ard-apple-remote.html" target="_blank">
+                        Dan Borges. (2019, July 21). MacOS Red Teaming 206: ARD (Apple Remote Desktop Protocol). Retrieved September 10, 2021.
                     </a>
                 </span>
             </span>
@@ -2834,8 +2866,8 @@
         <li>
             <span  id="scite-12" class="scite-citation">
                 <span class="scite-citation-text">
-                    <a rel="nofollow" class="external text" name="scite-12" href="https://docs.microsoft.com/en-us/archive/blogs/jepayne/tracking-lateral-movement-part-one-special-groups-and-specific-service-accounts" target="_blank">
-                        Payne, J. (2015, November 26). Tracking Lateral Movement Part One - Special Groups and Specific Service Accounts. Retrieved February 1, 2016.
+                    <a rel="nofollow" class="external text" name="scite-12" href="https://sarah-edwards-xzkc.squarespace.com/blog/2020/4/30/analysis-of-apple-unified-logs-quarantine-edition-entry-6-working-from-home-remote-logins" target="_blank">
+                        Sarah Edwards. (2020, April 30). Analysis of Apple Unified Logs: Quarantine Edition [Entry 6] – Working From Home? Remote Logins. Retrieved August 19, 2021.
                     </a>
                 </span>
             </span>
@@ -2846,8 +2878,8 @@
         <li>
             <span  id="scite-13" class="scite-citation">
                 <span class="scite-citation-text">
-                    <a rel="nofollow" class="external text" name="scite-13" href="https://docs.microsoft.com/en-us/archive/blogs/jepayne/monitoring-what-matters-windows-event-forwarding-for-everyone-even-if-you-already-have-a-siem" target="_blank">
-                        Payne, J. (2015, November 23). Monitoring what matters - Windows Event Forwarding for everyone (even if you already have a SIEM.). Retrieved February 1, 2016.
+                    <a rel="nofollow" class="external text" name="scite-13" href="https://docs.microsoft.com/en-us/archive/blogs/jepayne/tracking-lateral-movement-part-one-special-groups-and-specific-service-accounts" target="_blank">
+                        Payne, J. (2015, November 26). Tracking Lateral Movement Part One - Special Groups and Specific Service Accounts. Retrieved February 1, 2016.
                     </a>
                 </span>
             </span>
@@ -2858,8 +2890,8 @@
         <li>
             <span  id="scite-14" class="scite-citation">
                 <span class="scite-citation-text">
-                    <a rel="nofollow" class="external text" name="scite-14" href="https://learn.microsoft.com/en-us/azure/active-directory/fundamentals/protect-m365-from-on-premises-attacks" target="_blank">
-                        Microsoft. (2022, August 26). Protecting Microsoft 365 from on-premises attacks. Retrieved February 21, 2023.
+                    <a rel="nofollow" class="external text" name="scite-14" href="https://docs.microsoft.com/en-us/archive/blogs/jepayne/monitoring-what-matters-windows-event-forwarding-for-everyone-even-if-you-already-have-a-siem" target="_blank">
+                        Payne, J. (2015, November 23). Monitoring what matters - Windows Event Forwarding for everyone (even if you already have a SIEM.). Retrieved February 1, 2016.
                     </a>
                 </span>
             </span>
@@ -2870,8 +2902,8 @@
         <li>
             <span  id="scite-15" class="scite-citation">
                 <span class="scite-citation-text">
-                    <a rel="nofollow" class="external text" name="scite-15" href="https://web.archive.org/web/20220818094600/https://specterops.io/assets/resources/Certified_Pre-Owned.pdf" target="_blank">
-                        Schroeder, W. & Christensen, L. (2021, June 22). Certified Pre-Owned - Abusing Active Directory Certificate Services. Retrieved August 2, 2022.
+                    <a rel="nofollow" class="external text" name="scite-15" href="https://learn.microsoft.com/en-us/azure/active-directory/fundamentals/protect-m365-from-on-premises-attacks" target="_blank">
+                        Microsoft. (2022, August 26). Protecting Microsoft 365 from on-premises attacks. Retrieved February 21, 2023.
                     </a>
                 </span>
             </span>
@@ -2882,8 +2914,8 @@
         <li>
             <span  id="scite-16" class="scite-citation">
                 <span class="scite-citation-text">
-                    <a rel="nofollow" class="external text" name="scite-16" href="https://blogs.technet.microsoft.com/motiba/2018/02/23/detecting-kerberoasting-activity-using-azure-security-center/" target="_blank">
-                        Bani, M. (2018, February 23). Detecting Kerberoasting activity using Azure Security Center. Retrieved March 23, 2018.
+                    <a rel="nofollow" class="external text" name="scite-16" href="https://web.archive.org/web/20220818094600/https://specterops.io/assets/resources/Certified_Pre-Owned.pdf" target="_blank">
+                        Schroeder, W. & Christensen, L. (2021, June 22). Certified Pre-Owned - Abusing Active Directory Certificate Services. Retrieved August 2, 2022.
                     </a>
                 </span>
             </span>
@@ -2894,7 +2926,19 @@
         <li>
             <span  id="scite-17" class="scite-citation">
                 <span class="scite-citation-text">
-                    <a rel="nofollow" class="external text" name="scite-17" href="https://adsecurity.org/?p=2293" target="_blank">
+                    <a rel="nofollow" class="external text" name="scite-17" href="https://blogs.technet.microsoft.com/motiba/2018/02/23/detecting-kerberoasting-activity-using-azure-security-center/" target="_blank">
+                        Bani, M. (2018, February 23). Detecting Kerberoasting activity using Azure Security Center. Retrieved March 23, 2018.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-18" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-18" href="https://adsecurity.org/?p=2293" target="_blank">
                         Metcalf, S. (2015, December 31). Cracking Kerberos TGS Tickets Using Kerberoast – Exploiting Kerberos to Compromise the Active Directory Domain. Retrieved March 22, 2018.
                     </a>
                 </span>
@@ -2967,7 +3011,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v15.1&#013;Website  v4.1.6">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v16.0&#013;Website  v4.2.0">Website Changelog</a></u>
                                 </div>
                             </div>
                             <div class="row">
@@ -3007,15 +3051,15 @@
     <script src="/theme/scripts/popper.min.js"></script>
     <script src="/theme/scripts/bootstrap-select.min.js"></script>
     <script src="/theme/scripts/bootstrap.bundle.min.js"></script>
-    <script src="/theme/scripts/site.js?8647"></script>
-    <script src="/theme/scripts/settings.js?624"></script>
+    <script src="/theme/scripts/site.js"></script>
+    <script src="/theme/scripts/settings.js"></script>
     <script src="/theme/scripts/search_bundle.js"></script>
 
 <!--SCRIPTS-->
 <script src="/theme/scripts/resizer.js"></script>
 
     <!--SCRIPTS-->
-    <script src="/theme/scripts/filter/filter.js?1977"></script>
+    <script src="/theme/scripts/filter/filter.js?3532"></script>
     <script src="/theme/scripts/navigation.js"></script>
     <script src="/theme/scripts/mobileview-datasources.js"></script>
     <script src="/theme/scripts/bootstrap-tourist.js"></script>

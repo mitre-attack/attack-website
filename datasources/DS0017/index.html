@@ -169,6 +169,9 @@
             <div class="col px-0">
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
+                    <div class="container-fluid banner-message">
+                        ATT&CK v16 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v16-561c76af94cf'>blog post</a> for more information.
+                    </div>
             </div>
         </div>
         <div class="row flex-grow-1 flex-shrink-0">
@@ -1694,13 +1697,13 @@
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Permalink to this version of DS0017" 
-           href="/versions/v15/datasources/DS0017/" data-test-ignore="true">Version Permalink</a>
+           href="/versions/v16/datasources/DS0017/" data-test-ignore="true">Version Permalink</a>
     </div>
     <div class="permalink">
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Go to the live version of DS0017" 
-           href="/versions/v15/datasources/DS0017/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+           href="/versions/v16/datasources/DS0017/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
     </div>
 </div>
 
@@ -1800,7 +1803,7 @@
                             <a href="/techniques/T1548/003">Sudo and Sudo Caching</a>
                         </td>
                         <td>
-                                    <p>Monitor executed commands and arguments that may perform sudo caching and/or use the suoders file to elevate privileges, such as the <code>sudo</code> command.</p>
+                                    <p>Monitor executed commands and arguments that may perform sudo caching and/or use the sudoers file to elevate privileges, such as the <code>sudo</code> command.</p>
 
                         </td>
                     </tr>
@@ -1986,7 +1989,7 @@
                         <a href="/techniques/T1010">Application Window Discovery</a>
                     </td>
                     <td>
-                                <p>Monitor executed commands and arguments for actions that could be taken to gather system and network information. Information may also be acquired through Windows system management tools such as Windows Management Instrumentation and PowerShell.</p><p>Note: Commands can also be obtained from Payload event field for PowerShell event id 4103. For PowerShell Module logging event id 4103, enable logging for module Microsoft.PowerShell.Management.</p><p>Analytic 1 - Suspicious Commands</p><p><code>source=WinEventLog:"*Microsoft-Windows-PowerShell/Operational" EventCode="4103" | where CommandLine LIKE "%Get-Process%" AND CommandLine LIKE "%mainWindowTitle%"</code></p>
+                                <p>Monitor executed commands and arguments for actions that could be taken to gather system and network information. Information may also be acquired through Windows system management tools such as Windows Management Instrumentation and PowerShell.</p><p>Note: Commands can also be obtained from Payload event field for PowerShell event id 4103. For PowerShell Module logging event id 4103, enable logging for module Microsoft.PowerShell.Management.</p><p>Analytic 1 - Suspicious Commands</p><p><code>sourcetype="WinEventLog:Microsoft-Windows-PowerShell/Operational" EventCode="4103" | where CommandLine LIKE "%Get-Process%" AND CommandLine LIKE "%mainWindowTitle%"</code></p>
 
                     </td>
                 </tr>
@@ -2189,7 +2192,7 @@
                             <a href="/techniques/T1547/006">Kernel Modules and Extensions</a>
                         </td>
                         <td>
-                                    <p>Loading, unloading, and manipulating modules on Linux systems can be detected by monitoring for the following commands: <code>modprobe</code>, <code>insmod</code>, <code>lsmod</code>, <code>rmmod</code>, or <code>modinfo</code> <span onclick=scrollToRef('scite-7') id="scite-ref-7-a" class="scite-citeref-number" title="Henderson, B. (2006, September 24). How To Insert And Remove LKMs. Retrieved April 9, 2018."data-reference="Linux Loadable Kernel Module Insert and Remove LKMs"><sup><a href="http://tldp.org/HOWTO/Module-HOWTO/x197.html" target="_blank" data-hasqtip="6" aria-describedby="qtip-6">[7]</a></sup></span> Adversaries may run commands on the target system before loading a malicious module in order to ensure that it is properly compiled. <span onclick=scrollToRef('scite-8') id="scite-ref-8-a" class="scite-citeref-number" title="Chuvakin, A. (2003, February). An Overview of Rootkits. Retrieved April 6, 2018."data-reference="iDefense Rootkit Overview"><sup><a href="http://www.megasecurity.org/papers/Rootkits.pdf" target="_blank" data-hasqtip="7" aria-describedby="qtip-7">[8]</a></sup></span> Adversaries may also execute commands to identify the exact version of the running Linux kernel and/or download multiple versions of the same .ko (kernel object) files to use the one appropriate for the running system.<span onclick=scrollToRef('scite-9') id="scite-ref-9-a" class="scite-citeref-number" title="Remillano, A., Urbanec, J. (2019, September 19). Skidmap Linux Malware Uses Rootkit Capabilities to Hide Cryptocurrency-Mining Payload. Retrieved June 4, 2020."data-reference="Trend Micro Skidmap"><sup><a href="https://blog.trendmicro.com/trendlabs-security-intelligence/skidmap-linux-malware-uses-rootkit-capabilities-to-hide-cryptocurrency-mining-payload/" target="_blank" data-hasqtip="8" aria-describedby="qtip-8">[9]</a></sup></span> Many LKMs require Linux headers (specific to the target kernel) in order to compile properly. These are typically obtained through the operating systems package manager and installed like a normal package.</p><p>On macOS, monitor for execution of <code>kextload</code> commands and user installed kernel extensions performing abnormal and/or potentially malicious activity (such as creating network connections). Monitor for new rows added in the <code>kext_policy</code> table. KextPolicy stores a list of user approved (non Apple) kernel extensions and a partial history of loaded kernel modules in a SQLite database, <code>/var/db/SystemPolicyConfiguration/KextPolicy</code>.<span onclick=scrollToRef('scite-10') id="scite-ref-10-a" class="scite-citeref-number" title="Pikeralpha. (2017, August 29). User Approved Kernel Extension Loading…. Retrieved September 23, 2021."data-reference="User Approved Kernel Extension Pike’s"><sup><a href="https://pikeralpha.wordpress.com/2017/08/29/user-approved-kernel-extension-loading/" target="_blank" data-hasqtip="9" aria-describedby="qtip-9">[10]</a></sup></span><span onclick=scrollToRef('scite-11') id="scite-ref-11-a" class="scite-citeref-number" title="Richard Purves. (2017, November 9). MDM and the Kextpocalypse . Retrieved September 23, 2021."data-reference="Purves Kextpocalypse 2"><sup><a href="https://richard-purves.com/2017/11/09/mdm-and-the-kextpocalypse-2/" target="_blank" data-hasqtip="10" aria-describedby="qtip-10">[11]</a></sup></span><span onclick=scrollToRef('scite-12') id="scite-ref-12-a" class="scite-citeref-number" title="Apple. (2019, May 3). Configuration Profile Reference. Retrieved September 23, 2021."data-reference="Apple Developer Configuration Profile"><sup><a href="https://developer.apple.com/business/documentation/Configuration-Profile-Reference.pdf" target="_blank" data-hasqtip="11" aria-describedby="qtip-11">[12]</a></sup></span></p>
+                                    <p>Loading, unloading, and manipulating modules on Linux systems can be detected by monitoring for the following commands: <code>modprobe</code>, <code>insmod</code>, <code>lsmod</code>, <code>rmmod</code>, or <code>modinfo</code> <span onclick=scrollToRef('scite-7') id="scite-ref-7-a" class="scite-citeref-number" title="Henderson, B. (2006, September 24). How To Insert And Remove LKMs. Retrieved April 9, 2018."data-reference="Linux Loadable Kernel Module Insert and Remove LKMs"><sup><a href="http://tldp.org/HOWTO/Module-HOWTO/x197.html" target="_blank" data-hasqtip="6" aria-describedby="qtip-6">[7]</a></sup></span> Adversaries may run commands on the target system before loading a malicious module in order to ensure that it is properly compiled. <span onclick=scrollToRef('scite-8') id="scite-ref-8-a" class="scite-citeref-number" title="Chuvakin, A. (2003, February). An Overview of Rootkits. Retrieved September 12, 2024."data-reference="iDefense Rootkit Overview"><sup><a href="https://www.megasecurity.org/papers/Rootkits.pdf" target="_blank" data-hasqtip="7" aria-describedby="qtip-7">[8]</a></sup></span> Adversaries may also execute commands to identify the exact version of the running Linux kernel and/or download multiple versions of the same .ko (kernel object) files to use the one appropriate for the running system.<span onclick=scrollToRef('scite-9') id="scite-ref-9-a" class="scite-citeref-number" title="Remillano, A., Urbanec, J. (2019, September 19). Skidmap Linux Malware Uses Rootkit Capabilities to Hide Cryptocurrency-Mining Payload. Retrieved June 4, 2020."data-reference="Trend Micro Skidmap"><sup><a href="https://blog.trendmicro.com/trendlabs-security-intelligence/skidmap-linux-malware-uses-rootkit-capabilities-to-hide-cryptocurrency-mining-payload/" target="_blank" data-hasqtip="8" aria-describedby="qtip-8">[9]</a></sup></span> Many LKMs require Linux headers (specific to the target kernel) in order to compile properly. These are typically obtained through the operating systems package manager and installed like a normal package.</p><p>On macOS, monitor for execution of <code>kextload</code> commands and user installed kernel extensions performing abnormal and/or potentially malicious activity (such as creating network connections). Monitor for new rows added in the <code>kext_policy</code> table. KextPolicy stores a list of user approved (non Apple) kernel extensions and a partial history of loaded kernel modules in a SQLite database, <code>/var/db/SystemPolicyConfiguration/KextPolicy</code>.<span onclick=scrollToRef('scite-10') id="scite-ref-10-a" class="scite-citeref-number" title="Pikeralpha. (2017, August 29). User Approved Kernel Extension Loading…. Retrieved September 23, 2021."data-reference="User Approved Kernel Extension Pike’s"><sup><a href="https://pikeralpha.wordpress.com/2017/08/29/user-approved-kernel-extension-loading/" target="_blank" data-hasqtip="9" aria-describedby="qtip-9">[10]</a></sup></span><span onclick=scrollToRef('scite-11') id="scite-ref-11-a" class="scite-citeref-number" title="Richard Purves. (2017, November 9). MDM and the Kextpocalypse . Retrieved September 23, 2021."data-reference="Purves Kextpocalypse 2"><sup><a href="https://richard-purves.com/2017/11/09/mdm-and-the-kextpocalypse-2/" target="_blank" data-hasqtip="10" aria-describedby="qtip-10">[11]</a></sup></span><span onclick=scrollToRef('scite-12') id="scite-ref-12-a" class="scite-citeref-number" title="Apple. (2019, May 3). Configuration Profile Reference. Retrieved September 23, 2021."data-reference="Apple Developer Configuration Profile"><sup><a href="https://developer.apple.com/business/documentation/Configuration-Profile-Reference.pdf" target="_blank" data-hasqtip="11" aria-describedby="qtip-11">[12]</a></sup></span></p>
 
                         </td>
                     </tr>
@@ -2361,7 +2364,7 @@
                         <a href="/techniques/T1110">Brute Force</a>
                     </td>
                     <td>
-                                <p>Monitor executed commands and arguments that may use brute force techniques to gain access to accounts when passwords are unknown or when password hashes are obtained.</p>
+                                <p>Monitor executed commands and arguments that may use brute force techniques to gain access to accounts when passwords are unknown or when password hashes are obtained.</p><p>Analytic 1 - Command-line tools used for brute force attacks.</p><p><code> (index=security sourcetype="Powershell" EventCode=4104) OR(index=os sourcetype="linux_secure" (cmdline IN ("<em>hydra</em>", "<em>medusa</em>", "<em>ncrack</em>", "<em>patator</em>", "<em>john</em>", "<em>hashcat</em>", "<em>rcrack</em>", "<em>w3af</em>", "<em>aircrack-ng</em>"))) OR (index=os sourcetype="macos_secure" (cmdline IN ("<em>hydra</em>", "<em>medusa</em>", "<em>ncrack</em>", "<em>patator</em>", "<em>john</em>", "<em>hashcat</em>", "<em>rcrack</em>", "<em>w3af</em>", "<em>aircrack-ng</em>"))) | where match(CommandLine, "(?i)(hydra|medusa|ncrack|patator|john|hashcat|rcrack|w3af|aircrack-ng)") </code></p>
 
                     </td>
                 </tr>
@@ -2391,7 +2394,7 @@
                         <a href="/techniques/T1651">Cloud Administration Command</a>
                     </td>
                     <td>
-                                <p>Monitor commands and scripts executed on virtual machines. In Azure, usage of Azure RunCommand can be identified via the Azure Activity Logs, and additional details on the result of  executed jobs are available in the <code>C:\Packages\Plugins\Microsoft.CPlat.Core.RunCommandWindows</code> directory on Windows virtual machines.<span onclick=scrollToRef('scite-14') id="scite-ref-14-a" class="scite-citeref-number" title="Adrien Bataille, Anders Vejlby, Jared Scott Wilson, and Nader Zaveri. (2021, December 14). Azure Run Command for Dummies. Retrieved March 13, 2023."data-reference="Mandiant Azure Run Command 2021"><sup><a href="https://www.mandiant.com/resources/blog/azure-run-command-dummies" target="_blank" data-hasqtip="13" aria-describedby="qtip-13">[14]</a></sup></span></p>
+                                <p>Monitor for suspicious command executions via cloud management services like AWS System Manager or Azure RunCommand. In Azure, usage of Azure RunCommand can be identified via the Azure Activity Logs, and additional details on the result of  executed jobs are available in the <code>C:\Packages\Plugins\Microsoft.CPlat.Core.RunCommandWindows</code> directory on Windows virtual machines.<span onclick=scrollToRef('scite-14') id="scite-ref-14-a" class="scite-citeref-number" title="Adrien Bataille, Anders Vejlby, Jared Scott Wilson, and Nader Zaveri. (2021, December 14). Azure Run Command for Dummies. Retrieved March 13, 2023."data-reference="Mandiant Azure Run Command 2021"><sup><a href="https://www.mandiant.com/resources/blog/azure-run-command-dummies" target="_blank" data-hasqtip="13" aria-describedby="qtip-13">[14]</a></sup></span></p><p>Analytic 1 - Abnormal or unauthorized execution of commands/scripts on VMs</p><p><code> index=cloud_logs sourcetype=aws:ssm OR sourcetype=azure:activity| search action IN ("RunCommand", "StartSSMCommand", "ExecuteCommand")</code></p>
 
                     </td>
                 </tr>
@@ -2406,7 +2409,7 @@
                         <a href="/techniques/T1059">Command and Scripting Interpreter</a>
                     </td>
                     <td>
-                                <p>Monitor command-line arguments for script execution and subsequent behavior. Actions may be related to network and system information Discovery, Collection, or other scriptable post-compromise behaviors and could be used as indicators of detection leading back to the source script. Scripts are likely to perform actions with various effects on a system that may generate events, depending on the types of monitoring used. </p>
+                                <p>Monitor command-line arguments for script execution and subsequent behavior. Actions may be related to network and system information Discovery, Collection, or other scriptable post-compromise behaviors and could be used as indicators of detection leading back to the source script. Scripts are likely to perform actions with various effects on a system that may generate events, depending on the types of monitoring used. </p><p>Analytic 1 - Suspicious script execution</p><p><code> (sourcetype=WinEventLog:Security OR OR sourcetype=sysmon OR sourcetype=linux_secure OR sourcetype=linux_audit OR sourcetype=mac_os_log OR sourcetype=azure:audit OR sourcetype=o365:audit)| search Image IN ("bash", "sh", "cmd", "powershell", "python", "java", "perl", "ruby", "node", "osascript", "wmic")| eval suspicious_cmds=if(like(command_line, "%Invoke-Obfuscation%") OR like(command_line, "%-EncodedCommand%") OR like(command_line, "%IEX%") OR like(command_line, "%wget%") OR like(command_line, "%curl%"), "Yes", "No")</code></p>
 
                     </td>
                 </tr>
@@ -2420,7 +2423,7 @@
                             <a href="/techniques/T1059/001">PowerShell</a>
                         </td>
                         <td>
-                                    <p>If proper execution policy is set, adversaries will likely be able to define their own execution policy if they obtain administrator or system access, either through the Registry or at the command line. This change in policy on a system may be a way to detect malicious use of PowerShell. If PowerShell is not used in an environment, then simply looking for PowerShell execution may detect malicious activity. It is also beneficial to turn on PowerShell logging to gain increased fidelity in what occurs during execution (which is applied to .NET invocations). <span onclick=scrollToRef('scite-15') id="scite-ref-15-a" class="scite-citeref-number" title="Malware Archaeology. (2016, June). WINDOWS POWERSHELL LOGGING CHEAT SHEET - Win 7/Win 2008 or later. Retrieved June 24, 2016."data-reference="Malware Archaeology PowerShell Cheat Sheet"><sup><a href="http://www.malwarearchaeology.com/s/Windows-PowerShell-Logging-Cheat-Sheet-ver-June-2016-v2.pdf" target="_blank" data-hasqtip="14" aria-describedby="qtip-14">[15]</a></sup></span> PowerShell 5.0 introduced enhanced logging capabilities, and some of those features have since been added to PowerShell 4.0. Earlier versions of PowerShell do not have many logging features.<span onclick=scrollToRef('scite-16') id="scite-ref-16-a" class="scite-citeref-number" title="Dunwoody, M. (2016, February 11). GREATER VISIBILITY THROUGH POWERSHELL LOGGING. Retrieved February 16, 2016."data-reference="FireEye PowerShell Logging 2016"><sup><a href="https://www.fireeye.com/blog/threat-research/2016/02/greater_visibilityt.html" target="_blank" data-hasqtip="15" aria-describedby="qtip-15">[16]</a></sup></span> An organization can gather PowerShell execution details in a data analytic platform to supplement it with other data.</p><p>PowerShell can be used over WinRM to remotely run commands on a host. When a remote PowerShell session starts, svchost.exe executes wsmprovhost.exe</p><p>For this to work, certain registry keys must be set, and the WinRM service must be enabled. The PowerShell command Enter-PSSession -ComputerName \&lt;RemoteHost&gt; creates a remote PowerShell session.</p>
+                                    <p>If proper execution policy is set, adversaries will likely be able to define their own execution policy if they obtain administrator or system access, either through the Registry or at the command line. This change in policy on a system may be a way to detect malicious use of PowerShell. If PowerShell is not used in an environment, then simply looking for PowerShell execution may detect malicious activity. It is also beneficial to turn on PowerShell logging to gain increased fidelity in what occurs during execution (which is applied to .NET invocations). <span onclick=scrollToRef('scite-15') id="scite-ref-15-a" class="scite-citeref-number" title="Malware Archaeology. (2016, June). WINDOWS POWERSHELL LOGGING CHEAT SHEET - Win 7/Win 2008 or later. Retrieved June 24, 2016."data-reference="Malware Archaeology PowerShell Cheat Sheet"><sup><a href="http://www.malwarearchaeology.com/s/Windows-PowerShell-Logging-Cheat-Sheet-ver-June-2016-v2.pdf" target="_blank" data-hasqtip="14" aria-describedby="qtip-14">[15]</a></sup></span> PowerShell 5.0 introduced enhanced logging capabilities, and some of those features have since been added to PowerShell 4.0. Earlier versions of PowerShell do not have many logging features.<span onclick=scrollToRef('scite-16') id="scite-ref-16-a" class="scite-citeref-number" title="Dunwoody, M. (2016, February 11). GREATER VISIBILITY THROUGH POWERSHELL LOGGING. Retrieved February 16, 2016."data-reference="FireEye PowerShell Logging 2016"><sup><a href="https://www.fireeye.com/blog/threat-research/2016/02/greater_visibilityt.html" target="_blank" data-hasqtip="15" aria-describedby="qtip-15">[16]</a></sup></span> An organization can gather PowerShell execution details in a data analytic platform to supplement it with other data.</p><p>PowerShell can be used over WinRM to remotely run commands on a host. When a remote PowerShell session starts, svchost.exe executes wsmprovhost.exe</p><p>For this to work, certain registry keys must be set, and the WinRM service must be enabled. The PowerShell command Enter-PSSession -ComputerName \&lt;RemoteHost&gt; creates a remote PowerShell session.</p><p>Analytic 1 - Look for unusual PowerShell execution.</p><p><code> sourcetype=WinEventLog:Microsoft-Windows-PowerShell/Operational| search EventCode=4104| eval suspicious_cmds=if(like(Message, "%-EncodedCommand%") OR like(Message, "%Invoke-Expression%") OR like(Message, "%IEX%") OR like(Message, "%DownloadFile%"), "Yes", "No")| where suspicious_cmds="Yes"</code></p>
 
                         </td>
                     </tr>
@@ -2434,7 +2437,7 @@
                             <a href="/techniques/T1059/002">AppleScript</a>
                         </td>
                         <td>
-                                    <p>Monitor executed commands and arguments that may abuse AppleScript for execution. Scripts are likely to perform actions with various effects on a system that may generate events, depending on the types of monitoring used.  Actions may be related to network and system information <a href="https://attack.mitre.org/tactics/TA0007">Discovery</a>, <a href="https://attack.mitre.org/tactics/TA0009">Collection</a>, or other scriptable post-compromise behaviors and could be used as indicators of detection leading back to the source script.</p>
+                                    <p>Monitor executed commands and arguments that may abuse AppleScript for execution. Scripts are likely to perform actions with various effects on a system that may generate events, depending on the types of monitoring used.  Actions may be related to network and system information <a href="https://attack.mitre.org/tactics/TA0007">Discovery</a>, <a href="https://attack.mitre.org/tactics/TA0009">Collection</a>, or other scriptable post-compromise behaviors and could be used as indicators of detection leading back to the source script.</p><p>Analytic 1 - Look for unusual execution of AppleScript.</p><p><code>sourcetype=macOS:Process| search process_name="osascript"| eval suspicious_cmd=if(like(command_line, "%-e%") OR like(command_line, "%path/to/script%"), "Yes", "No")| where suspicious_cmd="Yes" </code></p>
 
                         </td>
                     </tr>
@@ -2448,7 +2451,7 @@
                             <a href="/techniques/T1059/003">Windows Command Shell</a>
                         </td>
                         <td>
-                                    <p>Monitor executed commands and arguments that may abuse the Windows command shell for execution. Usage of the Windows command shell may be common on administrator, developer, or power user systems depending on job function. If scripting is restricted for normal users, then any attempt to enable scripts running on a system would be considered suspicious. If scripts are not commonly used on a system, but enabled, scripts running out of cycle from patching or other administrator functions are suspicious. Scripts should be captured from the file system when possible to determine their actions and intent.</p>
+                                    <p>Monitor executed commands and arguments that may abuse the Windows command shell for execution. Usage of the Windows command shell may be common on administrator, developer, or power user systems depending on job function. If scripting is restricted for normal users, then any attempt to enable scripts running on a system would be considered suspicious. If scripts are not commonly used on a system, but enabled, scripts running out of cycle from patching or other administrator functions are suspicious. Scripts should be captured from the file system when possible to determine their actions and intent.</p><p>Analytic 1 - Look for unusual command shell execution.</p><p><code> sourcetype=WinEventLog:Security| search (EventCode=4688 OR EventCode=4689) process_name="cmd.exe"| eval suspicious_cmd=if(like(command_line, "%/c%") OR like(command_line, "%.bat%") OR like(command_line, "%.cmd%"), "Yes", "No")| where suspicious_cmd="Yes"</code></p>
 
                         </td>
                     </tr>
@@ -2462,7 +2465,7 @@
                             <a href="/techniques/T1059/004">Unix Shell</a>
                         </td>
                         <td>
-                                    <p>Monitor executed commands and arguments that may abuse Unix shell commands and scripts for execution. Unix shell usage may be common on administrator, developer, or power user systems, depending on job function. If scripting is restricted for normal users, then any attempt to enable scripts running on a system would be considered suspicious. If scripts are not commonly used on a system, but enabled, scripts running out of cycle from patching or other administrator functions are suspicious. Scripts should be captured from the file system when possible to determine their actions and intent.</p><p>Note: this analytic does not include an exhaustive list of potentially suspicious commands that could be executed through a shell interpreter. Instead, it is meant to serve as an example of types of commands that can warrant further investigation.</p><p>Analytic 1 - Unusual command execution </p><p><code> source="<em>Linux:</em>" CommandLine="<em>sh -c</em>" AND (CommandLine="<em>wget</em>" OR CommandLine="<em>curl</em>" OR CommandLine="<em>nc</em>" OR CommandLine="<em>perl</em>")</code></p>
+                                    <p>Monitor executed commands and arguments that may abuse Unix shell commands and scripts for execution. Unix shell usage may be common on administrator, developer, or power user systems, depending on job function. If scripting is restricted for normal users, then any attempt to enable scripts running on a system would be considered suspicious. If scripts are not commonly used on a system, but enabled, scripts running out of cycle from patching or other administrator functions are suspicious. Scripts should be captured from the file system when possible to determine their actions and intent.</p><p>Note: this analytic does not include an exhaustive list of potentially suspicious commands that could be executed through a shell interpreter. Instead, it is meant to serve as an example of types of commands that can warrant further investigation.</p><p>Analytic 1 - Unusual command execution </p><p><code> sourcetype="linux_logs" CommandLine="<em>sh -c</em>" AND (CommandLine="<em>wget</em>" OR CommandLine="<em>curl</em>" OR CommandLine="<em>nc</em>" OR CommandLine="<em>perl</em>")</code></p>
 
                         </td>
                     </tr>
@@ -2476,7 +2479,7 @@
                             <a href="/techniques/T1059/005">Visual Basic</a>
                         </td>
                         <td>
-                                    <p>Monitor executed commands and arguments that may abuse Visual Basic (VB) for execution.</p>
+                                    <p>Monitor executed commands and arguments that may abuse Visual Basic (VB) for execution.</p><p>Analytic 1 - Look for unusual VB execution.</p><p><code>sourcetype=wineventlog OR sourcetype=linux_secure OR sourcetype=macos_secure| search (command="cscript.exe" OR command="wscript.exe" OR command=".vbs" OR command=".vba" OR command=".vbe")| eval suspicious_cmd=if(like(command_line, "%.vbs" OR "%.vba" OR "%.vbe"), "Yes", "No")| where suspicious_cmd="Yes" </code></p>
 
                         </td>
                     </tr>
@@ -2490,7 +2493,7 @@
                             <a href="/techniques/T1059/006">Python</a>
                         </td>
                         <td>
-                                    <p>Monitor systems for abnormal Python usage and python.exe behavior, which could be an indicator of malicious activity. Understanding standard usage patterns is important to avoid a high number of false positives. If scripting is restricted for normal users, then any attempts to enable scripts running on a system would be considered suspicious. If scripts are not commonly used on a system, but enabled, scripts running out of cycle from patching or other administrator functions are suspicious. Scripts should be captured from the file system when possible to determine their actions and intent. Scripts are likely to perform actions with various effects on a system that may generate events, depending on the types of monitoring used. Monitor executed commands and arguments that may abuse Python commands and scripts for execution.</p>
+                                    <p>Monitor systems for abnormal Python usage and python.exe behavior, which could be an indicator of malicious activity. Understanding standard usage patterns is important to avoid a high number of false positives. If scripting is restricted for normal users, then any attempts to enable scripts running on a system would be considered suspicious. If scripts are not commonly used on a system, but enabled, scripts running out of cycle from patching or other administrator functions are suspicious. Scripts should be captured from the file system when possible to determine their actions and intent. Scripts are likely to perform actions with various effects on a system that may generate events, depending on the types of monitoring used. Monitor executed commands and arguments that may abuse Python commands and scripts for execution.</p><p>Analytic 1 - Look for unusual Python execution.</p><p><code>OR sourcetype=wineventlog:security OR sourcetype=sysmonEventCode=4688 OR EventCode=1 | search (process_name="python.exe" OR process_name="python3" OR process_name="python")| eval suspicious_script=if(match(command_line, ".<em> -c .</em>|.<em>exec.</em>|.<em>import os.</em>|.<em>eval.</em>|.<em>base64.</em>"), "True", "False")| where suspicious_script="True"| table _time, user, host, command_line, process_name, parent_process </code> </p>
 
                         </td>
                     </tr>
@@ -2532,7 +2535,7 @@
                             <a href="/techniques/T1059/009">Cloud API</a>
                         </td>
                         <td>
-                                    <p>Consider reviewing command history in either host machines or cloud audit logs to determine if unauthorized or suspicious commands were executed.</p><p>Cloud API activity logging is typically enabled by default and may be reviewed in sources like the Microsoft Unified Audit Log, AWS CloudTrail, and GCP Admin Acitivty logs. Review these sources for history of executed API commands. Host logs may also be reviewed to capture CLI commands or PowerShell module usage to invoke Cloud API functions.</p>
+                                    <p>Consider reviewing command history in either host machines or cloud audit logs to determine if unauthorized or suspicious commands were executed.</p><p>Cloud API activity logging is typically enabled by default and may be reviewed in sources like the Microsoft Unified Audit Log, AWS CloudTrail, and GCP Admin Activty logs. Review these sources for history of executed API commands. Host logs may also be reviewed to capture CLI commands or PowerShell module usage to invoke Cloud API functions.</p>
 
                         </td>
                     </tr>
@@ -2547,6 +2550,20 @@
                         </td>
                         <td>
                                     <p>Monitor executed commands and arguments for abnormal usage of utilities and command-line arguments that may be used in support of malicious execution. Compare recent invocations of  <code>AutoIt3.exe</code> and <code>AutoHotkey.exe</code> with prior history of known good arguments to determine anomalous and potentially adversarial activity (ex: obfuscated and/or malicious commands).</p>
+
+                        </td>
+                    </tr>
+                    <tr class="sub technique enterprise" id="enterprise">
+                        <td></td>
+                        <td></td>
+                        <td>
+                            <a href="/techniques/T1059/011">.011</a>
+                        </td>
+                        <td>
+                            <a href="/techniques/T1059/011">Lua</a>
+                        </td>
+                        <td>
+                                    <p>Monitor command-line arguments for script execution and subsequent behavior. Actions may be related to network and system information Discovery, Collection, or other scriptable post-compromise behaviors such as using <code><code>os.execute</code></code> to execute operating system commands.</p>
 
                         </td>
                     </tr>
@@ -2605,7 +2622,7 @@
                         <a href="/techniques/T1609">Container Administration Command</a>
                     </td>
                     <td>
-                                <p>Monitor commands and arguments executed by container services. In Docker, the daemon log provides insight into events at the daemon and container service level. Kubernetes system component logs may also detect activities running in and out of containers in the cluster.</p>
+                                <p>Monitor command execution within containers to detect suspicious activity. Commands executed via Docker (<code>docker exec</code>) or Kubernetes (<code>kubectl exec</code>) should be captured along with relevant metadata.</p><p>Analytic 1 -  Unusual command executions in container services</p><p><code>sourcetype=docker:daemon OR sourcetype=kubernetes:apiserver| search command IN ("docker exec", "kubectl exec")</code></p>
 
                     </td>
                 </tr>
@@ -2748,7 +2765,7 @@
                         <a href="/techniques/T1555">Credentials from Password Stores</a>
                     </td>
                     <td>
-                                <p>Monitor executed commands and arguments that may search for common password storage locations to obtain user credentials.</p>
+                                <p>Monitor executed commands and arguments that may search for common password storage locations to obtain user credentials.</p><p>Analytic 1 - Commands indicating credential searches.</p><p><code> (index=os sourcetype IN ("Powershell", "linux_secure", "macos_secure") CommandLine IN ("<em>findstr</em> /si password", "<em>findstr</em> /si pass", "<em>grep</em> -r password", "<em>grep</em> -r pass", "<em>grep</em> -r secret", "<em>security</em> find-generic-password", "<em>security</em> find-internet-password", "<em>security</em> dump-keychain", "<em>gsettings</em> get org.gnome.crypto.cache", "<em>cat</em> /etc/shadow", "<em>strings</em> /etc/shadow", "<em>ls -al</em> ~/.ssh/known_hosts", "<em>ssh-add</em> -L"))</code></p>
 
                     </td>
                 </tr>
@@ -2762,7 +2779,7 @@
                             <a href="/techniques/T1555/001">Keychain</a>
                         </td>
                         <td>
-                                    <p>Monitor executed commands with arguments that may be used to collect Keychain data from a system to acquire credentials.</p>
+                                    <p>Monitor executed commands with arguments that may be used to collect Keychain data from a system to acquire credentials.</p><p>Analytic 1 - Commands indicating credential searches in Keychain.</p><p><code> index=security sourcetype="macos_secure"(event_type="process" AND (command IN ("security dump-keychain", "security find-generic-password", "security find-internet-password", "security unlock-keychain") OR  command IN ("<em>security</em> dump-keychain<em>", "</em>security<em> find-generic-password</em>", "<em>security</em> find-internet-password<em>", "</em>security<em> unlock-keychain</em>")))</code></p>
 
                         </td>
                     </tr>
@@ -2776,7 +2793,7 @@
                             <a href="/techniques/T1555/002">Securityd Memory</a>
                         </td>
                         <td>
-                                    <p>Monitor executed commands and arguments that may obtain root access (allowing them to read securityd’s memory), then they can scan through memory to find the correct sequence of keys in relatively few tries to decrypt the user’s logon keychain.</p>
+                                    <p>Monitor executed commands and arguments that may obtain root access (allowing them to read securityd’s memory), then they can scan through memory to find the correct sequence of keys in relatively few tries to decrypt the user’s logon keychain.</p><p>Analytic 1 - Commands indicating attempts to read securityd’s memory.</p><p><code> index=security sourcetype IN ("linux_secure", "macos_secure") event_type="process"(CommandLine IN ("<em>gcore</em>", "<em>dbxutil</em>", "<em>vmmap</em>", "<em>gdb</em>", "<em>lldb</em>", "<em>memdump</em>", "<em>strings</em>", "<em>cat /proc/</em>/maps<em>", "</em>grep /proc/<em>/maps</em>") OR CommandLine IN ("<em>security find-generic-password</em>", "<em>security find-internet-password</em>", "<em>security dump-keychain</em>"))</code></p>
 
                         </td>
                     </tr>
@@ -2790,7 +2807,7 @@
                             <a href="/techniques/T1555/003">Credentials from Web Browsers</a>
                         </td>
                         <td>
-                                    <p>Monitor executed commands and arguments that may acquire credentials from web browsers by reading files specific to the target browser.<span onclick=scrollToRef('scite-19') id="scite-ref-19-a" class="scite-citeref-number" title="Mercer, W. and Rascagneres, P. (2018, February 12). Olympic Destroyer Takes Aim At Winter Olympics. Retrieved March 14, 2019."data-reference="Talos Olympic Destroyer 2018"><sup><a href="https://blog.talosintelligence.com/2018/02/olympic-destroyer.html" target="_blank" data-hasqtip="18" aria-describedby="qtip-18">[19]</a></sup></span></p>
+                                    <p>Monitor executed commands and arguments that may acquire credentials from web browsers by reading files specific to the target browser.<span onclick=scrollToRef('scite-19') id="scite-ref-19-a" class="scite-citeref-number" title="Mercer, W. and Rascagneres, P. (2018, February 12). Olympic Destroyer Takes Aim At Winter Olympics. Retrieved March 14, 2019."data-reference="Talos Olympic Destroyer 2018"><sup><a href="https://blog.talosintelligence.com/2018/02/olympic-destroyer.html" target="_blank" data-hasqtip="18" aria-describedby="qtip-18">[19]</a></sup></span></p><p>Analytic 1 - Commands indicating credential searches in web browsers.</p><p><code> index=security sourcetype IN ("WinEventLog:Microsoft-Windows-Sysmon/Operational", "linux_secure", "macos_secure") event_type="process"(CommandLine IN ("<em>sqlite3</em> <em>logins</em>", "<em>CryptUnprotectData</em>", "<em>security find-internet-password</em>", "<em>sqlcipher</em> <em>logins</em>", "<em>strings</em> <em>Login Data</em>", "<em>cat</em> <em>Login Data</em>", "<em>cat</em> <em>logins.json</em>", "<em>sqlite3</em> <em>signons.sqlite</em>"))</code></p>
 
                         </td>
                     </tr>
@@ -2804,7 +2821,7 @@
                             <a href="/techniques/T1555/004">Windows Credential Manager</a>
                         </td>
                         <td>
-                                    <p>Monitor executed commands and arguments for suspicious activity listing credentials from the Windows Credentials locker (e.g. <code>vaultcmd /listcreds:"Windows Credentials"</code>).<span onclick=scrollToRef('scite-20') id="scite-ref-20-a" class="scite-citeref-number" title="Arntz, P. (2016, March 30). The Windows Vault . Retrieved November 23, 2020."data-reference="Malwarebytes The Windows Vault"><sup><a href="https://blog.malwarebytes.com/101/2016/01/the-windows-vaults/" target="_blank" data-hasqtip="19" aria-describedby="qtip-19">[20]</a></sup></span></p>
+                                    <p>Monitor executed commands and arguments for suspicious activity listing credentials from the Windows Credentials locker (e.g. <code>vaultcmd /listcreds:"Windows Credentials"</code>).<span onclick=scrollToRef('scite-20') id="scite-ref-20-a" class="scite-citeref-number" title="Arntz, P. (2016, March 30). The Windows Vault . Retrieved November 23, 2020."data-reference="Malwarebytes The Windows Vault"><sup><a href="https://blog.malwarebytes.com/101/2016/01/the-windows-vaults/" target="_blank" data-hasqtip="19" aria-describedby="qtip-19">[20]</a></sup></span></p><p>Analytic 1 - Commands indicating credential searches in Windows Credential Manager.</p><p><code> index=security sourcetype="Powershell" EventCode=4104(CommandLine IN ("<em>vaultcmd.exe</em>", "<em>rundll32.exe keymgr.dll KRShowKeyMgr</em>"))</code></p>
 
                         </td>
                     </tr>
@@ -2818,7 +2835,7 @@
                             <a href="/techniques/T1555/005">Password Managers</a>
                         </td>
                         <td>
-                                    <p>Monitor executed commands and arguments that may acquire user credentials from third-party password managers. <span onclick=scrollToRef('scite-21') id="scite-ref-21-a" class="scite-citeref-number" title="ise. (2019, February 19). Password Managers: Under the Hood of Secrets Management. Retrieved January 22, 2021."data-reference="ise Password Manager February 2019"><sup><a href="https://www.ise.io/casestudies/password-manager-hacking/" target="_blank" data-hasqtip="20" aria-describedby="qtip-20">[21]</a></sup></span></p>
+                                    <p>Monitor executed commands and arguments that may acquire user credentials from third-party password managers. <span onclick=scrollToRef('scite-21') id="scite-ref-21-a" class="scite-citeref-number" title="ise. (2019, February 19). Password Managers: Under the Hood of Secrets Management. Retrieved January 22, 2021."data-reference="ise Password Manager February 2019"><sup><a href="https://www.ise.io/casestudies/password-manager-hacking/" target="_blank" data-hasqtip="20" aria-describedby="qtip-20">[21]</a></sup></span></p><p>Analytic 1 - Commands indicating credential searches in password managers.</p><p><code> index=security sourcetype IN ("linux_secure", "macos_secure")(CommandLine IN ("<em>keepass</em>", "<em>lastpass</em>", "<em>1password</em>", "<em>bitwarden</em>", "<em>dashlane</em>", "<em>passwordsafe</em>", "<em>login</em>", "<em>vault</em>"))</code></p>
 
                         </td>
                     </tr>
@@ -4131,6 +4148,20 @@
                         <td></td>
                         <td></td>
                         <td>
+                            <a href="/techniques/T1070/006">.006</a>
+                        </td>
+                        <td>
+                            <a href="/techniques/T1070/006">Timestomp</a>
+                        </td>
+                        <td>
+                                    <p>Monitor executed commands and arguments for actions that could be taken to alter generated artifacts on a host system (e.g., <code>Timestomp.exe</code> and <code>SetMace.exe</code>).</p>
+
+                        </td>
+                    </tr>
+                    <tr class="sub technique enterprise" id="enterprise">
+                        <td></td>
+                        <td></td>
+                        <td>
                             <a href="/techniques/T1070/007">.007</a>
                         </td>
                         <td>
@@ -4304,7 +4335,7 @@
                         <a href="/techniques/T1036">Masquerading</a>
                     </td>
                     <td>
-                                <p>Monitor executed commands and arguments that may attempt to manipulate features of their artifacts to make them appear legitimate or benign to users and/or security tools. <span onclick=scrollToRef('scite-44') id="scite-ref-44-a" class="scite-citeref-number" title="Carr, N.. (2018, October 25). Nick Carr Status Update Masquerading. Retrieved April 22, 2019."data-reference="Twitter ItsReallyNick Masquerading Update"><sup><a href="https://twitter.com/ItsReallyNick/status/1055321652777619457" target="_blank" data-hasqtip="43" aria-describedby="qtip-43">[44]</a></sup></span></p><p>Note: For Windows, Event ID 4104 (from the Microsoft-Windows-Powershell/Operational log) captures Powershell script blocks, which can be analyzed and used to detect on potential Masquerading. </p>
+                                <p>Monitor executed commands and arguments that may attempt to manipulate features of their artifacts to make them appear legitimate or benign to users and/or security tools. <span onclick=scrollToRef('scite-44') id="scite-ref-44-a" class="scite-citeref-number" title="Carr, N.. (2018, October 25). Nick Carr Status Update Masquerading. Retrieved September 12, 2024."data-reference="Twitter ItsReallyNick Masquerading Update"><sup><a href="https://x.com/ItsReallyNick/status/1055321652777619457" target="_blank" data-hasqtip="43" aria-describedby="qtip-43">[44]</a></sup></span></p><p>Note: For Windows, Event ID 4104 (from the Microsoft-Windows-Powershell/Operational log) captures Powershell script blocks, which can be analyzed and used to detect on potential Masquerading. </p>
 
                     </td>
                 </tr>
@@ -4361,7 +4392,7 @@
                         <a href="/techniques/T0849">Masquerading</a>
                     </td>
                     <td>
-                                <p>Monitor executed commands and arguments that may attempt to manipulate features of their artifacts to make them appear legitimate or benign to users and/or security tools.<span onclick=scrollToRef('scite-44') id="scite-ref-44-a" class="scite-citeref-number" title="Carr, N.. (2018, October 25). Nick Carr Status Update Masquerading. Retrieved April 22, 2019."data-reference="Twitter ItsReallyNick Masquerading Update"><sup><a href="https://twitter.com/ItsReallyNick/status/1055321652777619457" target="_blank" data-hasqtip="43" aria-describedby="qtip-43">[44]</a></sup></span></p>
+                                <p>Monitor executed commands and arguments that may attempt to manipulate features of their artifacts to make them appear legitimate or benign to users and/or security tools.<span onclick=scrollToRef('scite-44') id="scite-ref-44-a" class="scite-citeref-number" title="Carr, N.. (2018, October 25). Nick Carr Status Update Masquerading. Retrieved September 12, 2024."data-reference="Twitter ItsReallyNick Masquerading Update"><sup><a href="https://x.com/ItsReallyNick/status/1055321652777619457" target="_blank" data-hasqtip="43" aria-describedby="qtip-43">[44]</a></sup></span></p>
 
                     </td>
                 </tr>
@@ -4380,7 +4411,7 @@
                                 <a href="/techniques/T1556">Modify Authentication Process</a>: <a href="/techniques/T1556/005">Reversible Encryption</a>
                             </td>
                             <td>
-                                        <p>Monitor command-line usage for <code>-AllowReversiblePasswordEncryption $true</code> or other actions that could be related to malicious tampering of user settings (i.e. <a href="/techniques/T1484/001">Group Policy Modification</a>). </p>
+                                        <p>Monitor command-line usage for <code>-AllowReversiblePasswordEncryption $true</code> or other actions that could be related to malicious tampering of user settings (i.e. <a href="/techniques/T1484/001">Group Policy Modification</a>). </p><p>Analytic 1 - Command-line actions indicating changes to encryption settings.</p><p><code> index=security (sourcetype="WinEventLog:Security" OR sourcetype="powershell")(EventCode=4688 OR EventCode=4104) commandline="<em>set-aduser</em>" commandline="<em>allowreversiblepasswordencryption</em>"         | table _time, Process_ID, User, CommandLine</code></p>
 
                             </td>
                         </tr>
@@ -4455,7 +4486,7 @@
                         <a href="/techniques/T1040">Network Sniffing</a>
                     </td>
                     <td>
-                                <p>Monitor executed commands and arguments for actions that aid in sniffing network traffic to capture information about an environment, including authentication material passed over the network</p>
+                                <p>Monitor executed commands and arguments for actions that aid in sniffing network traffic to capture information about an environment, including authentication material passed over the network.</p><p>Analytic 1 - Unexpected command execution of network sniffing tools.</p><p><code> index=security (sourcetype="Powershell" EventCode=4104) | eval CommandLine=coalesce(Command_Line, CommandLine)| where ExecutingProcess IN ("<em>tshark.exe", "</em>windump.exe", "<em>tcpdump.exe", "</em>wprui.exe", "*wpr.exe")</code></p>
 
                     </td>
                 </tr>
@@ -4627,7 +4658,7 @@
                         <a href="/techniques/T1003">OS Credential Dumping</a>
                     </td>
                     <td>
-                                <p>Monitor executed commands and arguments that may attempt to dump credentials to obtain account login and credential material, normally in the form of a hash or a clear text password, from the operating system and software. Look for command-lines that invoke AuditD or the Security Accounts Manager (SAM). Remote access tools may contain built-in features or incorporate existing tools like <a href="/software/S0002">Mimikatz</a>. <a href="/techniques/T1059/001">PowerShell</a> scripts also exist that contain credential dumping functionality, such as PowerSploit's Invoke-Mimikatz module, <span onclick=scrollToRef('scite-48') id="scite-ref-48-a" class="scite-citeref-number" title="PowerSploit. (n.d.). Retrieved December 4, 2014."data-reference="Powersploit"><sup><a href="https://github.com/mattifestation/PowerSploit" target="_blank" data-hasqtip="47" aria-describedby="qtip-47">[48]</a></sup></span> which may require additional logging features to be configured in the operating system to collect necessary information for analysis.</p>
+                                <p>Monitor executed commands and arguments that may attempt to dump credentials using tools like <a href="/software/S0002">Mimikatz</a>, ProcDump, NTDSUtil, or accessing /proc, /etc/passwd, and /etc/shadow. </p><p>Analytic 1 - Suspicious command execution involving credential dumping tools.<code>(index=security sourcetype="WinEventLog:Security" EventCode=4688 Image IN ("<em>mimikatz.exe", "</em>procdump.exe", "<em>ntdsutil.exe", "</em>powershell.exe") CommandLine IN ("<em>Invoke-Mimikatz</em>", "<em>Invoke-CachedCredentials</em>", "<em>Invoke-LSADump</em>", "<em>Invoke-SAMDump</em>"))OR(index=security sourcetype="linux_secure" Command IN ("cat /etc/passwd", "cat /etc/shadow", "grep -E '^[0-9a-f-]<em> r' /proc/</em>/maps"))OR(index=security sourcetype="macOS:UnifiedLog" process IN ("cat", "grep") message IN ("/etc/passwd", "/etc/shadow", "/var/db/shadow/hash/*", "/private/etc/master.passwd"))</code></p>
 
                     </td>
                 </tr>
@@ -4641,7 +4672,7 @@
                             <a href="/techniques/T1003/001">LSASS Memory</a>
                         </td>
                         <td>
-                                    <p>Monitor executed commands and arguments that may attempt to access credential material stored in the process memory of the Local Security Authority Subsystem Service (LSASS). Remote access tools may contain built-in features or incorporate existing tools like Mimikatz. PowerShell scripts also exist that contain credential dumping functionality, such as PowerSploit's Invoke-Mimikatz module,<span onclick=scrollToRef('scite-48') id="scite-ref-48-a" class="scite-citeref-number" title="PowerSploit. (n.d.). Retrieved December 4, 2014."data-reference="Powersploit"><sup><a href="https://github.com/mattifestation/PowerSploit" target="_blank" data-hasqtip="47" aria-describedby="qtip-47">[48]</a></sup></span> which may require additional logging features to be configured in the operating system to collect necessary information for analysis.</p><p>Note: Event ID 4104 from the "Microsoft-Windows-PowerShell/Operational" log captures Powershell script blocks, whose contents can be further analyzed to determine if they’re performing LSASS dumping.</p>
+                                    <p>Monitor executed commands and arguments that may attempt to access credential material stored in the process memory of the Local Security Authority Subsystem Service (LSASS). Remote access tools may contain built-in features or incorporate existing tools like Mimikatz. PowerShell scripts also exist that contain credential dumping functionality, such as PowerSploit's Invoke-Mimikatz module,<span onclick=scrollToRef('scite-48') id="scite-ref-48-a" class="scite-citeref-number" title="PowerSploit. (n.d.). Retrieved December 4, 2014."data-reference="Powersploit"><sup><a href="https://github.com/mattifestation/PowerSploit" target="_blank" data-hasqtip="47" aria-describedby="qtip-47">[48]</a></sup></span> which may require additional logging features to be configured in the operating system to collect necessary information for analysis.</p><p>Note: Event ID 4104 from the "Microsoft-Windows-PowerShell/Operational" log captures Powershell script blocks, whose contents can be further analyzed to determine if they’re performing LSASS dumping.</p><p>Analytic 1 - Unauthorized command execution of LSASS memory.</p><p><code> index=security sourcetype="Powershell" EventCode=4104Image="<em>powershell.exe" CommandLine IN ("</em>Invoke-Mimikatz<em>", "</em>procdump.exe<em> -ma lsass", "</em>rundll32.exe<em> comsvcs.dll, MiniDump", "</em>taskmgr.exe* /dump") </code></p>
 
                         </td>
                     </tr>
@@ -4655,7 +4686,7 @@
                             <a href="/techniques/T1003/002">Security Account Manager</a>
                         </td>
                         <td>
-                                    <p>Monitor executed commands and arguments that may attempt to extract credential material from the Security Account Manager (SAM) database either through in-memory techniques or through the Windows Registry where the SAM database is stored.</p>
+                                    <p>Monitor executed commands and arguments that may attempt to extract credential material from the Security Account Manager (SAM) database either through in-memory techniques or through the Windows Registry where the SAM database is stored.</p><p>Analytic 1 - Unauthorized attempts to dump SAM database through command execution.</p><p><code> index=security sourcetype="Powershell" EventCode=4104 Image="<em>powershell.exe" CommandLine IN ("</em>Invoke-Mimikatz<em>", "</em>Invoke-SAMDump<em>", "</em>reg save hklm\sam<em>", "</em>reg.exe save hklm\sam*")</code></p>
 
                         </td>
                     </tr>
@@ -4669,7 +4700,7 @@
                             <a href="/techniques/T1003/003">NTDS</a>
                         </td>
                         <td>
-                                    <p>Monitor executed commands and arguments that may attempt to access or create a copy of the Active Directory domain database in order to steal credential information, as well as obtain other information about domain members such as devices, users, and access rights. Look for command-lines that invoke attempts to access or copy the NTDS.dit.</p><p>Note: Events 4688 (Microsoft Windows Security Auditing) and 1 (Microsoft Windows Sysmon) provide context of commands and parameters being executed via creation of a new process. Event 800 (PowerShell) provides context of commands and parameters being executed via PowerShell. This detection is based on known Windows utilities commands and parameters that can be used to copy the ntds.dit file. It is recommended to keep the list of commands and parameters up to date.</p><p>Analytic 1 - Command line attempt to access or create a copy of ntds.dit file</p><p><code>((source="WinEventLog:Microsoft-Windows-Powershell/Operational"  EventCode="800") AND((CommandLine LIKE "%ntds%" AND CommandLine LIKE "%ntdsutil%" AND CommandLine LIKE "%create%") OR (CommandLine LIKE "%vssadmin%" AND CommandLine LIKE "%create%" AND CommandLine LIKE "%shadow%") OR (CommandLine LIKE "%copy%" AND CommandLine LIKE "%ntds.dit%")))</code></p>
+                                    <p>Monitor executed commands and arguments that may attempt to access or create a copy of the Active Directory domain database in order to steal credential information, as well as obtain other information about domain members such as devices, users, and access rights. Look for command-lines that invoke attempts to access or copy the NTDS.dit.</p><p>Note: Events 4688 (Microsoft Windows Security Auditing) and 1 (Microsoft Windows Sysmon) provide context of commands and parameters being executed via creation of a new process. Event 800 (PowerShell) provides context of commands and parameters being executed via PowerShell. This detection is based on known Windows utilities commands and parameters that can be used to copy the ntds.dit file. It is recommended to keep the list of commands and parameters up to date.</p><p>Analytic 1 - Command line attempt to access or create a copy of ntds.dit file</p><p><code>((sourcetype="WinEventLog:Microsoft-Windows-Powershell/Operational"  EventCode="800") AND((CommandLine LIKE "%ntds%" AND CommandLine LIKE "%ntdsutil%" AND CommandLine LIKE "%create%") OR (CommandLine LIKE "%vssadmin%" AND CommandLine LIKE "%create%" AND CommandLine LIKE "%shadow%") OR (CommandLine LIKE "%copy%" AND CommandLine LIKE "%ntds.dit%")))</code></p>
 
                         </td>
                     </tr>
@@ -4683,7 +4714,7 @@
                             <a href="/techniques/T1003/004">LSA Secrets</a>
                         </td>
                         <td>
-                                    <p>Monitor executed commands and arguments that may access to a host may attempt to access Local Security Authority (LSA) secrets. Remote access tools may contain built-in features or incorporate existing tools like Mimikatz. PowerShell scripts also exist that contain credential dumping functionality, such as PowerSploit's Invoke-Mimikatz module,<span onclick=scrollToRef('scite-48') id="scite-ref-48-a" class="scite-citeref-number" title="PowerSploit. (n.d.). Retrieved December 4, 2014."data-reference="Powersploit"><sup><a href="https://github.com/mattifestation/PowerSploit" target="_blank" data-hasqtip="47" aria-describedby="qtip-47">[48]</a></sup></span> which may require additional logging features to be configured in the operating system to collect necessary information for analysis.</p>
+                                    <p>Monitor executed commands and arguments that may access to a host may attempt to access Local Security Authority (LSA) secrets. Remote access tools may contain built-in features or incorporate existing tools like Mimikatz. PowerShell scripts also exist that contain credential dumping functionality, such as PowerSploit's Invoke-Mimikatz module,<span onclick=scrollToRef('scite-48') id="scite-ref-48-a" class="scite-citeref-number" title="PowerSploit. (n.d.). Retrieved December 4, 2014."data-reference="Powersploit"><sup><a href="https://github.com/mattifestation/PowerSploit" target="_blank" data-hasqtip="47" aria-describedby="qtip-47">[48]</a></sup></span> which may require additional logging features to be configured in the operating system to collect necessary information for analysis.</p><p>Analytic 1 - Suspicious access to LSA secrets.</p><p><code> index=security (sourcetype="Powershell" EventCode=4104) Image="<em>powershell.exe" CommandLine IN ("</em>Invoke-Mimikatz<em>", "</em>Invoke-LSADump*")</code></p>
 
                         </td>
                     </tr>
@@ -4697,7 +4728,7 @@
                             <a href="/techniques/T1003/005">Cached Domain Credentials</a>
                         </td>
                         <td>
-                                    <p>Monitor executed commands and arguments that may attempt to access cached domain credentials used to allow authentication to occur in the event a domain controller is unavailable.<span onclick=scrollToRef('scite-49') id="scite-ref-49-a" class="scite-citeref-number" title="Microsoft. (2016, August 21). Cached and Stored Credentials Technical Overview. Retrieved February 21, 2020."data-reference="Microsoft - Cached Creds"><sup><a href="https://docs.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2012-r2-and-2012/hh994565(v%3Dws.11)" target="_blank" data-hasqtip="48" aria-describedby="qtip-48">[49]</a></sup></span>. Remote access tools may contain built-in features or incorporate existing tools like Mimikatz. PowerShell scripts also exist that contain credential dumping functionality, such as PowerSploit's Invoke-Mimikatz module,<span onclick=scrollToRef('scite-48') id="scite-ref-48-a" class="scite-citeref-number" title="PowerSploit. (n.d.). Retrieved December 4, 2014."data-reference="Powersploit"><sup><a href="https://github.com/mattifestation/PowerSploit" target="_blank" data-hasqtip="47" aria-describedby="qtip-47">[48]</a></sup></span> which may require additional logging features to be configured in the operating system to collect necessary information for analysis.Detection of compromised <a href="/techniques/T1078">Valid Accounts</a> in-use by adversaries may help as well.</p>
+                                    <p>Monitor executed commands and arguments that may attempt to access cached domain credentials used to allow authentication to occur in the event a domain controller is unavailable.<span onclick=scrollToRef('scite-49') id="scite-ref-49-a" class="scite-citeref-number" title="Microsoft. (2016, August 21). Cached and Stored Credentials Technical Overview. Retrieved February 21, 2020."data-reference="Microsoft - Cached Creds"><sup><a href="https://docs.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2012-r2-and-2012/hh994565(v%3Dws.11)" target="_blank" data-hasqtip="48" aria-describedby="qtip-48">[49]</a></sup></span>. Remote access tools may contain built-in features or incorporate existing tools like Mimikatz. PowerShell scripts also exist that contain credential dumping functionality, such as PowerSploit's Invoke-Mimikatz module,<span onclick=scrollToRef('scite-48') id="scite-ref-48-a" class="scite-citeref-number" title="PowerSploit. (n.d.). Retrieved December 4, 2014."data-reference="Powersploit"><sup><a href="https://github.com/mattifestation/PowerSploit" target="_blank" data-hasqtip="47" aria-describedby="qtip-47">[48]</a></sup></span> which may require additional logging features to be configured in the operating system to collect necessary information for analysis.Detection of compromised <a href="/techniques/T1078">Valid Accounts</a> in-use by adversaries may help as well.</p><p>Analytic 1 - Unusual access to cached domain credentials.</p><p><code> (index=security sourcetype="Powershell" EventCode=4104 Image="<em>powershell.exe" CommandLine IN ("</em>Invoke-Mimikatz<em>", "</em>Invoke-CachedCredentials<em>"))OR(index=security sourcetype="linux_secure" (cmd IN ("</em>mimikatz<em>", "</em>cachedump*"))) </code></p>
 
                         </td>
                     </tr>
@@ -4711,7 +4742,7 @@
                             <a href="/techniques/T1003/007">Proc Filesystem</a>
                         </td>
                         <td>
-                                    <p>Monitor executed commands and arguments that may gather credentials from information stored in the Proc filesystem or <code>/proc</code>. For instance, adversaries may use regex patterns to search for process memory that may be exfiltrated or searched for credentials.<span onclick=scrollToRef('scite-50') id="scite-ref-50-a" class="scite-citeref-number" title="Atomic Red Team. (2023, November). T1003.007 - OS Credential Dumping: Proc Filesystem. Retrieved March 28, 2024."data-reference="atomic-red proc file system"><sup><a href="https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1003.007/T1003.007.md" target="_blank" data-hasqtip="49" aria-describedby="qtip-49">[50]</a></sup></span><span onclick=scrollToRef('scite-51') id="scite-ref-51-a" class="scite-citeref-number" title="Gregal, Hunter. (2019, September 17). MimiPenguin 2.0. Retrieved March 28, 2024."data-reference="mimipenguin proc file"><sup><a href="https://github.com/huntergregal/mimipenguin/blob/master/mimipenguin.sh" target="_blank" data-hasqtip="50" aria-describedby="qtip-50">[51]</a></sup></span></p><p><code>grep -E "^[0-9a-f-]* r" /proc/"$pid"/maps | grep -E 'heap|stack' | cut -d' ' -f 1</code></p><p><code>grep -E "^[0-9a-f-]* r" /proc/"$PID"/maps | grep heap | cut -d' ' -f 1</code></p>
+                                    <p>Monitor executed commands and arguments that may gather credentials from information stored in the Proc filesystem or <code>/proc</code>. For instance, adversaries may use regex patterns to search for process memory that may be exfiltrated or searched for credentials.<span onclick=scrollToRef('scite-50') id="scite-ref-50-a" class="scite-citeref-number" title="Atomic Red Team. (2023, November). T1003.007 - OS Credential Dumping: Proc Filesystem. Retrieved March 28, 2024."data-reference="atomic-red proc file system"><sup><a href="https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1003.007/T1003.007.md" target="_blank" data-hasqtip="49" aria-describedby="qtip-49">[50]</a></sup></span><span onclick=scrollToRef('scite-51') id="scite-ref-51-a" class="scite-citeref-number" title="Gregal, Hunter. (2019, September 17). MimiPenguin 2.0. Retrieved March 28, 2024."data-reference="mimipenguin proc file"><sup><a href="https://github.com/huntergregal/mimipenguin/blob/master/mimipenguin.sh" target="_blank" data-hasqtip="50" aria-describedby="qtip-50">[51]</a></sup></span></p><p><code>grep -E "^[0-9a-f-]* r" /proc/"$pid"/maps | grep -E 'heap|stack' | cut -d' ' -f 1</code></p><p><code>grep -E "^[0-9a-f-]* r" /proc/"$PID"/maps | grep heap | cut -d' ' -f 1</code></p><p>Analytic 1 - Unexpected access to /proc filesystem.</p><p><code> index=os sourcetype="linux_audit" command IN ("grep -E '^[0-9a-f-]<em> r' /proc/</em>/maps", "cat /proc/<em>/maps", "awk '{print $1}' /proc/</em>/maps") </code></p>
 
                         </td>
                     </tr>
@@ -4725,7 +4756,7 @@
                             <a href="/techniques/T1003/008">/etc/passwd and /etc/shadow</a>
                         </td>
                         <td>
-                                    <p>Monitor executed commands and arguments that may attempt to dump the contents of <code>/etc/passwd</code> and <code>/etc/shadow</code> to enable offline password cracking.</p>
+                                    <p>Monitor executed commands and arguments that may attempt to dump the contents of <code>/etc/passwd</code> and <code>/etc/shadow</code> to enable offline password cracking.</p><p>Analytic 1 - Unexpected command execution involving /etc/passwd and /etc/shadow.</p><p><code> index=os sourcetype="linux_audit" command IN ("cat /etc/passwd", "cat /etc/shadow", "grep /etc/passwd", "grep /etc/shadow") | eval Command=command | eval TargetFile=case(match(Command, ".<em>passwd.</em>"), "/etc/passwd", match(Command, ".<em>shadow.</em>"), "/etc/shadow")</code></p>
 
                         </td>
                     </tr>
@@ -4901,7 +4932,7 @@
                         <a href="/techniques/T1012">Query Registry</a>
                     </td>
                     <td>
-                                <p>Monitor executed commands and arguments for actions that may interact with the Windows Registry to gather information about the system, configuration, and installed software.</p><p>Note: For PowerShell Module logging event id 4103, enable logging for module Microsoft.PowerShell.Management. The New-PSDrive PowerShell cmdlet creates temporary and persistent drives that are mapped to or associated with a location in a data store, such a registry key (PSProvider "Registry"). The the Get-ChildItem gets the items in one or more specified locations. By using both, you can enumerate COM objects in one or more specified locations.</p><p>Analytic 1 - Suspicious Commands</p><p><code>(source="*WinEventLog:Microsoft-Windows-Powershell/Operational" EventCode="4103") | WHERE CommandLine LIKE "%New-PSDrive%" AND (CommandLine LIKE "%Registry%" OR CommandLine LIKE "%HKEY_CLASSES_ROOT%" OR CommandLine LIKE "%HKCR%")</code></p>
+                                <p>Monitor executed commands and arguments for actions that may interact with the Windows Registry to gather information about the system, configuration, and installed software.</p><p>Note: For PowerShell Module logging event id 4103, enable logging for module Microsoft.PowerShell.Management. The New-PSDrive PowerShell cmdlet creates temporary and persistent drives that are mapped to or associated with a location in a data store, such a registry key (PSProvider "Registry"). The the Get-ChildItem gets the items in one or more specified locations. By using both, you can enumerate COM objects in one or more specified locations.</p><p>Analytic 1 - Suspicious Commands</p><p><code>(sourcetype="WinEventLog:Microsoft-Windows-Powershell/Operational" EventCode="4103") | WHERE CommandLine LIKE "%New-PSDrive%" AND (CommandLine LIKE "%Registry%" OR CommandLine LIKE "%HKEY_CLASSES_ROOT%" OR CommandLine LIKE "%HKCR%")</code></p>
 
                     </td>
                 </tr>
@@ -5036,6 +5067,34 @@
 
                     </td>
                 </tr>
+                    <tr class="sub technique enterprise" id="enterprise">
+                        <td></td>
+                        <td></td>
+                        <td>
+                            <a href="/techniques/T1496/001">.001</a>
+                        </td>
+                        <td>
+                            <a href="/techniques/T1496/001">Compute Hijacking</a>
+                        </td>
+                        <td>
+                                    <p>Monitor executed commands and arguments that may indicate common cryptomining functionality.</p>
+
+                        </td>
+                    </tr>
+                    <tr class="sub technique enterprise" id="enterprise">
+                        <td></td>
+                        <td></td>
+                        <td>
+                            <a href="/techniques/T1496/002">.002</a>
+                        </td>
+                        <td>
+                            <a href="/techniques/T1496/002">Bandwidth Hijacking</a>
+                        </td>
+                        <td>
+                                    <p>Monitor executed commands and arguments that may indicate common proxyware functionality. </p>
+
+                        </td>
+                    </tr>
                 <tr class="technique enterprise" id="enterprise">
                     <td>
                             Enterprise
@@ -5047,7 +5106,7 @@
                         <a href="/techniques/T1053">Scheduled Task/Job</a>
                     </td>
                     <td>
-                                <p>Monitor executed commands and arguments that may abuse task scheduling functionality to facilitate initial or recurring execution of malicious code.</p>
+                                <p>Monitor executed commands and arguments that may abuse task scheduling functionality to facilitate initial or recurring execution of malicious code.</p><p>Analytic 1 - Look for task scheduling commands being executed with unusual parameters.</p><p><code>index=security (sourcetype="WinEventLog:Security" OR sourcetype="linux_secure" OR sourcetype="macos_secure" OR sourcetype="container_logs")| eval CommandLine = coalesce(CommandLine, process)| where (sourcetype="WinEventLog:Security" AND EventCode IN (4697, 4702, 4698)) OR       (sourcetype="linux_secure" AND CommandLine LIKE "%cron%" OR CommandLine LIKE "%at%") OR       (sourcetype="macos_secure" AND CommandLine LIKE "%launchctl%" OR CommandLine LIKE "%cron%") OR       (sourcetype="container_logs" AND (CommandLine LIKE "%cron%" OR CommandLine LIKE "%at%"))| where (sourcetype="WinEventLog:Security" AND (CommandLine LIKE "%/create%" OR CommandLine LIKE "%/delete%" OR CommandLine LIKE "%/change%")) OR       (sourcetype="linux_secure" AND (CommandLine LIKE "%-f%" OR CommandLine LIKE "%-m%" OR CommandLine LIKE "%--env%")) OR       (sourcetype="macos_secure" AND (CommandLine LIKE "%/Library/LaunchDaemons%" OR CommandLine LIKE "%/Library/LaunchAgents%" OR CommandLine LIKE "%/System/Library/LaunchDaemons%" OR CommandLine LIKE "%/System/Library/LaunchAgents%")) OR       (sourcetype="container_logs" AND (CommandLine LIKE "%-f%" OR CommandLine LIKE "%--schedule%" OR CommandLine LIKE "%--env%")) </code></p>
 
                     </td>
                 </tr>
@@ -5061,7 +5120,7 @@
                             <a href="/techniques/T1053/002">At</a>
                         </td>
                         <td>
-                                    <p>Monitor executed commands and arguments for actions that could be taken to create/modify tasks. Tasks may also be created through Windows system management tools such as <a href="/techniques/T1047">Windows Management Instrumentation</a> and <a href="/techniques/T1059/001">PowerShell</a>, so additional logging may need to be configured to gather the appropriate data.</p>
+                                    <p>Monitor executed commands and arguments for actions that could be taken to create/modify tasks. Tasks may also be created through Windows system management tools such as <a href="/techniques/T1047">Windows Management Instrumentation</a> and <a href="/techniques/T1059/001">PowerShell</a>, so additional logging may need to be configured to gather the appropriate data.</p><p>Analytic 1 - Linux Command Execution </p><p><code> index=linux_logs sourcetype=syslog "at" | rex "user=(?<user>\w+)"</code></p><p>Analytic 2 - Windows Command Execution <code> index=windows_logs sourcetype=WinEventLog:System EventCode=4698 TaskName="at*"| where NOT (user="SYSTEM" AND TaskName="\Microsoft\Windows\Defrag\ScheduledDefrag")</code></p>
 
                         </td>
                     </tr>
@@ -5075,7 +5134,7 @@
                             <a href="/techniques/T1053/003">Cron</a>
                         </td>
                         <td>
-                                    <p>Monitor executed atq command and ensure IP addresses stored in the SSH_CONNECTION and SSH_CLIENT variables, machines that created the jobs, are trusted hosts. All at jobs are stored in /var/spool/cron/atjobs/.</p>
+                                    <p>Monitor execution of commands related to cron that are out of alignment with known software or administrative tasks. Monitor executed atq command and ensure IP addresses stored in the SSH_CONNECTION and SSH_CLIENT variables, machines that created the jobs, are trusted hosts. All at jobs are stored in /var/spool/cron/atjobs/.</p><p>Analytic 1 - Suspicious Cron execution</p><p><code> index=linux_logs sourcetype=cron_logs | search "cron" AND (command="crontab -e" OR command="crontab -l" OR command="<em> * * * </em>" OR command="<em>/cron.d/</em>")</code></p>
 
                         </td>
                     </tr>
@@ -5089,7 +5148,7 @@
                             <a href="/techniques/T1053/005">Scheduled Task</a>
                         </td>
                         <td>
-                                    <p>Monitor executed commands and arguments for actions that could be taken to gather tasks may also be created through Windows system management tools such as Windows Management Instrumentation and PowerShell, so additional logging may need to be configured to gather the appropriate data.</p>
+                                    <p>Monitor for commands being executed via schtasks or other utilities related to task scheduling.</p><p>Analytic 1 - Look for schtasks.exe execution with arguments indicative of task creation/modification.</p><p><code> sourcetype=WinEventLog:Powershell (EventCode=4104 OR command="schtasks.exe")| stats count by user host process_name command_line| where Image="schtasks.exe" OR command_line="<em>schtasks</em>"</code></p>
 
                         </td>
                     </tr>
@@ -5103,7 +5162,7 @@
                             <a href="/techniques/T1053/006">Systemd Timers</a>
                         </td>
                         <td>
-                                    <p>Monitor executed commands and arguments the 'systemd-run' utility as it may be used to create timers</p>
+                                    <p>Monitor executed commands and arguments the 'systemd-run' utility as it may be used to create timers.</p><p>Analytic 1 - Look for systemd-run execution with arguments indicative of timer creation.</p><p><code>sourcetype=linux_logs (command="systemctl<em>" OR command="systemd-run</em>") </code></p>
 
                         </td>
                     </tr>
@@ -5743,7 +5802,7 @@
                         <a href="/techniques/T1569">System Services</a>
                     </td>
                     <td>
-                                <p>Monitor for command line invocations of tools capable of modifying services that doesn’t correspond to normal usage patterns and known software, patch cycles, etc.</p>
+                                <p>Monitor command-line invocations for tools capable of creating or modifying system services (e.g., <code>systemctl</code> on Linux, <code>sc.exe</code> on Windows, <code>launchctl</code> on macOS).</p><p>Analytic 1 - Unusual service modification tools.</p><p><code> sourcetype=command_logs| search command IN ("systemctl", "sc", "launchctl")</code></p>
 
                     </td>
                 </tr>
@@ -5757,7 +5816,7 @@
                             <a href="/techniques/T1569/001">Launchctl</a>
                         </td>
                         <td>
-                                    <p>Monitor command-line execution of the <code>launchctl</code> command immediately followed by abnormal network connections.</p>
+                                    <p>Monitor the execution of the <code>launchctl</code> command, focusing on subcommands such as <code>load</code>, <code>unload</code>, and <code>start</code> that may be used by adversaries to load Launch Agents or Launch Daemons.</p><p>Note: This analytic monitors the execution of the launchctl command and its key subcommands. Exclude known administrative users to minimize false positives.</p><p>Analytic 1 - Suspicious Launchctl</p><p><code>sourcetype=macOS:unified OR sourcetype=osquery OR sourcetype=auditd| search command IN ("launchctl load", "launchctl unload", "launchctl start") </code></p>
 
                         </td>
                     </tr>
@@ -5771,7 +5830,7 @@
                             <a href="/techniques/T1569/002">Service Execution</a>
                         </td>
                         <td>
-                                    <p>Monitor executed commands and arguments that may abuse the Windows service control manager to execute malicious commands or payloads.</p>
+                                    <p>Monitor executed commands and arguments that may abuse the Windows service control manager to execute malicious commands or payloads.</p><p>Analytic 1- Commands abusing Windows service control manager.</p><p><code>sourcetype=WinEventLog:Security OR sourcetype=Powershell OR sourcetype=Sysmon EventCode IN (1,4688,4104) | search command_line IN ("sc.exe<em>", "net start</em>", "net stop<em>", "psexec.exe</em>")| where user!="SYSTEM"  // Exclude common system-level activities</code></p>
 
                         </td>
                     </tr>
@@ -5834,6 +5893,20 @@
 
                         </td>
                     </tr>
+                    <tr class="sub technique enterprise" id="enterprise">
+                        <td></td>
+                        <td></td>
+                        <td>
+                            <a href="/techniques/T1127/002">.002</a>
+                        </td>
+                        <td>
+                            <a href="/techniques/T1127/002">ClickOnce</a>
+                        </td>
+                        <td>
+                                    <p>When executed from the command line, rundll32 is used to call the ClickOnce API functions (ex: <code>rundll32.exe dfshim.dll,ShOpenVerbApplication file.appref-ms</code>).</p>
+
+                        </td>
+                    </tr>
                 <tr class="technique enterprise" id="enterprise">
                     <td>
                             Enterprise
@@ -5845,7 +5918,7 @@
                         <a href="/techniques/T1552">Unsecured Credentials</a>
                     </td>
                     <td>
-                                <p>While detecting adversaries accessing credentials may be difficult without knowing they exist in the environment, it may be possible to detect adversary use of credentials they have obtained. Monitor the command-line arguments of executing processes for suspicious words or regular expressions that may indicate searching for a password (for example: password, pwd, login, secure, or credentials). See <a href="/techniques/T1078">Valid Accounts</a> for more information.</p>
+                                <p>While detecting adversaries accessing credentials may be difficult without knowing they exist in the environment, it may be possible to detect adversary use of credentials they have obtained. Monitor the command-line arguments of executing processes for suspicious words or regular expressions that may indicate searching for a password (for example: password, pwd, login, secure, or credentials). See <a href="/techniques/T1078">Valid Accounts</a> for more information.</p><p>Analytic 1 - Suspicious commands or regular expressions indicating credential search.</p><p><code> (index=security sourcetype="Powershell" EventCode=4104) OR(index=os sourcetype="linux_secure" action="execve") OR(index=os sourcetype="macos_secure" event_type="execve") | where match(CommandLine, "(?i)(password|credential|secret|key|token|login|passwd|passphrase)")</code></p>
 
                     </td>
                 </tr>
@@ -5859,7 +5932,7 @@
                             <a href="/techniques/T1552/001">Credentials In Files</a>
                         </td>
                         <td>
-                                    <p>While detecting adversaries accessing these files may be difficult without knowing they exist in the first place, it may be possible to detect adversary use of credentials they have obtained. Monitor executed commands and arguments of executing processes for suspicious words or regular expressions that may indicate searching for a password (for example: password, pwd, login, secure, or credentials). See <a href="/techniques/T1078">Valid Accounts</a> for more information.</p>
+                                    <p>Monitor executed commands and arguments of executing processes for suspicious words or regular expressions that may indicate searching for a password (for example: password, pwd, login, secure, or credentials).</p><p>Analytic 1 - Commands indicating credential searches in files.</p><p><code> (index=security sourcetype="Powershell" EventCode=4104 CommandLine="<em>password</em>" OR CommandLine="<em>credential</em>") OR(index=sysmon sourcetype="WinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode=1 CommandLine="<em>password</em>" OR CommandLine="<em>credential</em>") OR(index=os sourcetype="linux_audit" action="execve" CommandLine="<em>password</em>" OR CommandLine="<em>credential</em>" OR CommandLine="<em>passwd</em>" OR CommandLine="<em>secret</em>") OR(index=os sourcetype="macos_secure" event_type="execve" CommandLine="<em>password</em>" OR CommandLine="<em>credential</em>" OR CommandLine="<em>passwd</em>" OR CommandLine="<em>secret</em>") </code></p>
 
                         </td>
                     </tr>
@@ -5873,7 +5946,7 @@
                             <a href="/techniques/T1552/002">Credentials in Registry</a>
                         </td>
                         <td>
-                                    <p>Monitor executed commands and arguments that may search the Registry on compromised systems for insecurely stored credentials.</p>
+                                    <p>Monitor executed commands and arguments that may search the Registry on compromised systems for insecurely stored credentials.</p><p>Analytic 1 - Commands indicating credential searches in the registry.</p><p><code> (index=security sourcetype="powershell" EventCode=4104 ScriptBlockText="<em>reg query</em> /f password /t REG_SZ /s*")</code></p>
 
                         </td>
                     </tr>
@@ -5887,7 +5960,7 @@
                             <a href="/techniques/T1552/003">Bash History</a>
                         </td>
                         <td>
-                                    <p>While users do typically rely on their history of commands, they often access this history through other utilities like "history" instead of commands like <code>cat ~/.bash_history</code>.</p>
+                                    <p>While users do typically rely on their history of commands, they often access this history through other utilities like "history" instead of commands like <code>cat ~/.bash_history</code>.</p><p>Analytic 1 - Commands accessing .bash_historythrough unexpected means.</p><p><code> (index=os sourcetype="linux_secure" action="open" filepath="/home/<em>/.bash_history") OR(index=os sourcetype="macos_secure" event_type="open" file_path="/Users/</em>/.bash_history")</code></p>
 
                         </td>
                     </tr>
@@ -5901,7 +5974,7 @@
                             <a href="/techniques/T1552/004">Private Keys</a>
                         </td>
                         <td>
-                                    <p>Monitor executed commands and arguments that may search for private key certificate files on compromised systems for insecurely stored credentials.</p>
+                                    <p>Monitor executed commands and arguments that may search for private key certificate files on compromised systems for insecurely stored credentials.</p><p>Analytic 1 - Commands indicating searches for private keys.</p><p><code> (index=security sourcetype="WinEventLog:Security" EventCode=4688 CommandLine="<em>private key</em>" OR CommandLine="<em>certificate</em>" OR CommandLine IN ("<em>.key</em>", "<em>.pgp</em>", "<em>.gpg</em>", "<em>.ppk</em>", "<em>.p12</em>", "<em>.pem</em>", "<em>.pfx</em>", "<em>.cer</em>", "<em>.p7b</em>", "<em>.asc</em>")) OR(index=sysmon sourcetype="WinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode=1 CommandLine="<em>private key</em>" OR CommandLine="<em>certificate</em>" OR CommandLine IN ("<em>.key</em>", "<em>.pgp</em>", "<em>.gpg</em>", "<em>.ppk</em>", "<em>.p12</em>", "<em>.pem</em>", "<em>.pfx</em>", "<em>.cer</em>", "<em>.p7b</em>", "<em>.asc</em>")) OR(index=os sourcetype="linux_secure" action="execve" CommandLine="<em>private key</em>" OR CommandLine="<em>certificate</em>" OR CommandLine IN ("<em>.key</em>", "<em>.pgp</em>", "<em>.gpg</em>", "<em>.ppk</em>", "<em>.p12</em>", "<em>.pem</em>", "<em>.pfx</em>", "<em>.cer</em>", "<em>.p7b</em>", "<em>.asc</em>")) OR(index=os sourcetype="macos_secure" event_type="execve" CommandLine="<em>private key</em>" OR CommandLine="<em>certificate</em>" OR CommandLine IN ("<em>.key</em>", "<em>.pgp</em>", "<em>.gpg</em>", "<em>.ppk</em>", "<em>.p12</em>", "<em>.pem</em>", "<em>.pfx</em>", "<em>.cer</em>", "<em>.p7b</em>", "<em>.asc</em>"))</code></p>
 
                         </td>
                     </tr>
@@ -5915,7 +5988,7 @@
                             <a href="/techniques/T1552/006">Group Policy Preferences</a>
                         </td>
                         <td>
-                                    <p>Monitor executed commands and arguments that may search for SYSVOL data and/or GPP XML files, especially on compromised domain controllers.</p>
+                                    <p>Monitor executed commands and arguments that may search for SYSVOL data and/or GPP XML files, especially on compromised domain controllers.</p><p>Analytic 1 - Commands indicating searches for GPP XML files.</p><p><code> (index=security sourcetype="Powershell" EventCode=4104 CommandLine="<em>dir /s </em>.xml*") </code></p>
 
                         </td>
                     </tr>
@@ -5929,7 +6002,7 @@
                             <a href="/techniques/T1552/007">Container API</a>
                         </td>
                         <td>
-                                    <p>Establish centralized logging for the activity of container and Kubernetes cluster components. Monitor logs for actions that could be taken to gather credentials to container and cloud infrastructure, including the use of discovery API calls by new or unexpected users and APIs that access Docker logs.</p>
+                                    <p>Establish centralized logging for the activity of container and Kubernetes cluster components. Monitor logs for actions that could be taken to gather credentials to container and cloud infrastructure, including the use of discovery API calls by new or unexpected users and APIs that access Docker logs.</p><p>Analytic 1 - Unexpected API calls or access to Docker logs indicating credential access.</p><p><code> index=containers sourcetype IN ("docker:events", "kubernetes:api", "kubernetes:container") | search Command IN ("docker logs", "kubectl get secrets", "kubectl describe secret", "kubectl exec", "curl http[:]//169.254.169[.]254/latest/meta-data/iam/security-credentials/", "aws iam list-access-keys", "az ad sp list")</code></p>
 
                         </td>
                     </tr>
@@ -5944,7 +6017,7 @@
                         <a href="/techniques/T1204">User Execution</a>
                     </td>
                     <td>
-                                <p>Monitor the execution of and command-line arguments for applications that may be used by an adversary to gain Initial Access that require user interaction. This includes compression applications, such as those for zip files, that can be used to <a href="/techniques/T1140">Deobfuscate/Decode Files or Information</a> in payloads.</p>
+                                <p>Detect commands triggered by users, especially related to decompression tools (e.g., zip files) that may unpack malicious payloads. This includes compression applications, such as those for zip files, that can be used to <a href="/techniques/T1140">Deobfuscate/Decode Files or Information</a> in payloads.</p><p>Analytic 1 - Command lines showing decompression or decoding actions.</p><p><code> sourcetype=WinEventLog:Powershell EventCode=4104| search process_name IN ("powershell.exe", "cmd.exe", "zip.exe", "winrar.exe")| stats count by process_name command_line user| where command_line LIKE "%unzip%" OR command_line LIKE "%decode%"</code> </p>
 
                     </td>
                 </tr>
@@ -5958,7 +6031,7 @@
                             <a href="/techniques/T1204/003">Malicious Image</a>
                         </td>
                         <td>
-                                    <p>Monitor executed commands and arguments that may attempt to take advantage of a weakness in an Internet-facing computer or program using software, data, or commands in order to cause unintended or unanticipated behavior.</p>
+                                    <p>Monitor for suspicious commands related to image or container manipulation, especially commands run from users not typically associated with these tasks.</p><p>Analytic 1 - Unexpected command execution related to image files.</p><p><code>sourcetype=command_execution| search command IN ("docker pull", "docker run", "docker exec", "kubectl run", "gcloud container images list-tags", "aws ec2 run-instances")</code></p>
 
                         </td>
                     </tr>
@@ -6060,7 +6133,7 @@
                         <a href="/techniques/T1047">Windows Management Instrumentation</a>
                     </td>
                     <td>
-                                <p>Monitor executed commands and arguments for actions that are used to perform remote behavior</p>
+                                <p>Monitor executed commands and arguments for actions that are used to perform remote behavior.</p><p>Analytic 1 - Look for wmic.exeexecution with arguments indicative of remote process creation.</p><p><code> index=windows_logs sourcetype=WinEventLog:Security OR sourcetype=WinEventLog:Microsoft-Windows-Sysmon/Operational| eval CommandLine=coalesce(CommandLine, ParentCommandLine)| eval ProcessName=lower(ProcessName), CommandLine=lower(CommandLine)| search ProcessName IN ("wmic.exe", "powershell.exe", "wbemtool.exe", "wmiprvse.exe", "wmiadap.exe", "scrcons.exe")| search CommandLine IN ("<em>process call create</em>", "<em>shadowcopy delete</em>", "<em>process start</em>", "<em>createobject</em>")| stats count by _time, ComputerName, User, ProcessName, CommandLine, ParentProcessName, ParentCommandLine, dest, src_ip, dest_ip| eval alert_message="Suspicious WMI activity detected: " + ProcessName + " executed by " + User + " on " + ComputerName + " with command: " + CommandLine| where NOT (User="SYSTEM" OR ProcessName="wmiprvse.exe" OR CommandLine="<em>wmic shadowcopy delete</em>" AND src_ip="trusted_ip_range")| table _time, ComputerName, User, ProcessName, CommandLine, ParentProcessName, ParentCommandLine, src_ip, dest_ip, alert_message</code></p>
 
                     </td>
                 </tr>
@@ -6164,8 +6237,8 @@
         <li>
             <span  id="scite-8" class="scite-citation">
                 <span class="scite-citation-text">
-                    <a rel="nofollow" class="external text" name="scite-8" href="http://www.megasecurity.org/papers/Rootkits.pdf" target="_blank">
-                        Chuvakin, A. (2003, February). An Overview of Rootkits. Retrieved April 6, 2018.
+                    <a rel="nofollow" class="external text" name="scite-8" href="https://www.megasecurity.org/papers/Rootkits.pdf" target="_blank">
+                        Chuvakin, A. (2003, February). An Overview of Rootkits. Retrieved September 12, 2024.
                     </a>
                 </span>
             </span>
@@ -6600,8 +6673,8 @@
         <li>
             <span  id="scite-44" class="scite-citation">
                 <span class="scite-citation-text">
-                    <a rel="nofollow" class="external text" name="scite-44" href="https://twitter.com/ItsReallyNick/status/1055321652777619457" target="_blank">
-                        Carr, N.. (2018, October 25). Nick Carr Status Update Masquerading. Retrieved April 22, 2019.
+                    <a rel="nofollow" class="external text" name="scite-44" href="https://x.com/ItsReallyNick/status/1055321652777619457" target="_blank">
+                        Carr, N.. (2018, October 25). Nick Carr Status Update Masquerading. Retrieved September 12, 2024.
                     </a>
                 </span>
             </span>
@@ -6901,7 +6974,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v15.1&#013;Website  v4.1.6">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v16.0&#013;Website  v4.2.0">Website Changelog</a></u>
                                 </div>
                             </div>
                             <div class="row">
@@ -6941,15 +7014,15 @@
     <script src="/theme/scripts/popper.min.js"></script>
     <script src="/theme/scripts/bootstrap-select.min.js"></script>
     <script src="/theme/scripts/bootstrap.bundle.min.js"></script>
-    <script src="/theme/scripts/site.js?3654"></script>
-    <script src="/theme/scripts/settings.js?7266"></script>
+    <script src="/theme/scripts/site.js"></script>
+    <script src="/theme/scripts/settings.js"></script>
     <script src="/theme/scripts/search_bundle.js"></script>
 
 <!--SCRIPTS-->
 <script src="/theme/scripts/resizer.js"></script>
 
     <!--SCRIPTS-->
-    <script src="/theme/scripts/filter/filter.js?2717"></script>
+    <script src="/theme/scripts/filter/filter.js?8909"></script>
     <script src="/theme/scripts/navigation.js"></script>
     <script src="/theme/scripts/mobileview-datasources.js"></script>
     <script src="/theme/scripts/bootstrap-tourist.js"></script>

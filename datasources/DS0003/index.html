@@ -169,6 +169,9 @@
             <div class="col px-0">
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
+                    <div class="container-fluid banner-message">
+                        ATT&CK v16 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v16-561c76af94cf'>blog post</a> for more information.
+                    </div>
             </div>
         </div>
         <div class="row flex-grow-1 flex-shrink-0">
@@ -1694,13 +1697,13 @@
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Permalink to this version of DS0003" 
-           href="/versions/v15/datasources/DS0003/" data-test-ignore="true">Version Permalink</a>
+           href="/versions/v16/datasources/DS0003/" data-test-ignore="true">Version Permalink</a>
     </div>
     <div class="permalink">
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Go to the live version of DS0003" 
-           href="/versions/v15/datasources/DS0003/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+           href="/versions/v16/datasources/DS0003/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
     </div>
 </div>
 
@@ -1773,7 +1776,7 @@
                         <a href="/techniques/T1053">Scheduled Task/Job</a>
                     </td>
                     <td>
-                                <p>Monitor newly constructed scheduled jobs that may abuse task scheduling functionality to facilitate initial or recurring execution of malicious code.</p><p>On Windows systems, security event ID 4698 (A scheduled task was created) provides information on newly created scheduled tasks. It includes the TaskContent field, which contains an XML blob that captures key information on the scheduled task including the command to be executed.</p><p>Analytic 1 - Scheduled Task Execution</p><p><code> source="<em>WinEventLog:Security" EventCode="4698" | WHERE UserName LIKE "</em>\SYSTEM<em>" AND (TaskContent LIKE suspicious_parameter OR TaskContent LIKE "</em>powershell.exe*")</code></p>
+                                <p>Monitor newly constructed scheduled jobs that may abuse task scheduling functionality to facilitate initial or recurring execution of malicious code.</p><p>On Windows systems, security event ID 4698 (A scheduled task was created) provides information on newly created scheduled tasks. It includes the TaskContent field, which contains an XML blob that captures key information on the scheduled task including the command to be executed.</p><p>Analytic 1 - Scheduled Task Execution</p><p><code> source="*WinEventLog:Security" EventCode="4698" | where NOT (TaskName IN ("\Microsoft\Windows\UpdateOrchestrator\Reboot", "\Microsoft\Windows\Defrag\ScheduledDefrag"))| search TaskContent="powershell.exe" OR TaskContent="cmd.exe"</code></p>
 
                     </td>
                 </tr>
@@ -1801,7 +1804,7 @@
                             <a href="/techniques/T1053/003">Cron</a>
                         </td>
                         <td>
-                                    <p>Monitor for newly constructed scheduled jobs. Legitimate scheduled tasks may be created during installation of new software or through system administration functions. Look for changes to tasks that do not correlate with known software, patch cycles, etc.</p>
+                                    <p>Monitor for newly constructed scheduled jobs. Legitimate scheduled tasks may be created during installation of new software or through system administration functions. Look for changes to tasks that do not correlate with known software, patch cycles, etc.</p><p>Analytic 1 - Look for new cron job creation events with unusual parameters.</p><p><code> index=os_logs sourcetype=syslog (command="<em>crontab -e</em>" OR command="<em>crontab -l</em>")| stats count by user host| where user != "root" OR count &gt; 1</code></p>
 
                         </td>
                     </tr>
@@ -1815,7 +1818,7 @@
                             <a href="/techniques/T1053/005">Scheduled Task</a>
                         </td>
                         <td>
-                                    <p>Monitor for newly constructed scheduled jobs by enabling the "Microsoft-Windows-TaskScheduler/Operational" setting within the event logging service. <span onclick=scrollToRef('scite-2') id="scite-ref-2-a" class="scite-citeref-number" title="Satyajit321. (2015, November 3). Scheduled Tasks History Retention settings. Retrieved December 12, 2017."data-reference="TechNet Forum Scheduled Task Operational Setting"><sup><a href="https://social.technet.microsoft.com/Forums/en-US/e5bca729-52e7-4fcb-ba12-3225c564674c/scheduled-tasks-history-retention-settings?forum=winserver8gen" target="_blank" data-hasqtip="1" aria-describedby="qtip-1">[2]</a></sup></span> Several events will then be logged on scheduled task activity, including: Event ID 106 on Windows 7, Server 2008 R2 - Scheduled task registered; Event ID 4698 on Windows 10, Server 2016 - Scheduled task created;Event ID 4700 on Windows 10, Server 2016 - Scheduled task enabled;Event ID 4701 on Windows 10, Server 2016 - Scheduled task disabled</p><p>Note: Detection of the creation or modification of Scheduled Tasks with a suspicious script, extension or user writable path. Attackers may create or modify Scheduled Tasks for the persistent execution of malicious code. This detection focuses at the same time on EventIDs 4688 and 1 with process creation (SCHTASKS) and EventID 4698, 4702 for Scheduled Task creation/modification event log.</p><p>Analytic 1 - New schedule tasks whose content includes suspicious scripts, extensions or user writable path</p><p><code> (source="*WinEventLog:Security" EventCode IN (4698, 4702)) | where(JobContent LIKE '%.cmd%' OR JobContent LIKE '%.ps1%' OR   JobContent LIKE '%.vbs%' OR JobContent LIKE '%.py%' OR   JobContent LIKE '%.js%' OR JobContent LIKE '%.exe%' OR   JobContent LIKE '%.bat%' OR JobContent LIKE '%javascript%' OR   JobContent LIKE '%powershell%' OR JobContent LIKE '%wmic%' OR   JobContent LIKE '%rundll32%' OR JobContent LIKE '%cmd%' OR   JobContent LIKE '%cscript%' OR JobContent LIKE '%wscript%' OR   JobContent LIKE '%regsvr32%' OR JobContent LIKE '%mshta%' OR   JobContent LIKE '%bitsadmin%' OR JobContent LIKE '%certutil%' OR   JobContent LIKE '%msiexec%' OR JobContent LIKE '%javaw%' OR   JobContent LIKE '%[%]APPDATA[%]%' OR JobContent LIKE '%\AppData\Roaming%' OR   JobContent LIKE '%[%]PUBLIC[%]%' OR JobContent LIKE '%C:\Users\Public%' OR   JobContent LIKE '%[%]ProgramData[%]%' OR JobContent LIKE '%C:\ProgramData%' OR   JobContent LIKE '%[%]TEMP[%]%' OR JobContent LIKE '%\AppData\Local\Temp%' OR   JobContent LIKE '%\Windows\PLA\System%' OR JobContent LIKE '%\tasks%' OR   JobContent LIKE '%\Registration\CRMLog%' OR JobContent LIKE '%\FxsTmp%' OR   JobContent LIKE '%\spool\drivers\color%' OR JobContent LIKE '%\tracing%')</code></p>
+                                    <p>Monitor for newly constructed scheduled jobs by enabling the "Microsoft-Windows-TaskScheduler/Operational" setting within the event logging service. <span onclick=scrollToRef('scite-2') id="scite-ref-2-a" class="scite-citeref-number" title="Satyajit321. (2015, November 3). Scheduled Tasks History Retention settings. Retrieved December 12, 2017."data-reference="TechNet Forum Scheduled Task Operational Setting"><sup><a href="https://social.technet.microsoft.com/Forums/en-US/e5bca729-52e7-4fcb-ba12-3225c564674c/scheduled-tasks-history-retention-settings?forum=winserver8gen" target="_blank" data-hasqtip="1" aria-describedby="qtip-1">[2]</a></sup></span> Several events will then be logged on scheduled task activity, including Event ID 106 on Windows 7 and Server 2008 R2 for scheduled task registration. For Windows 10 and Server 2016, the relevant events are also logged in the Windows Security event channel after enabling the auditing of other object access events. These include:</p><ul><li>Event ID 4698: A scheduled task was created.</li><li>Event ID 4699: A scheduled task was deleted.</li><li>Event ID 4700: A scheduled task was enabled.</li><li>Event ID 4701: A scheduled task was disabled.</li><li>Event ID 4702: A scheduled task was updated.</li></ul><p>Note: Detection of the creation or modification of Scheduled Tasks with a suspicious script, extension or user writable path. Attackers may create or modify Scheduled Tasks for the persistent execution of malicious code. This detection focuses at the same time on EventIDs 4688 and 1 with process creation (SCHTASKS) and EventID 4698, 4702 for Scheduled Task creation/modification event log.</p><p>Analytic 1 - New schedule tasks whose content includes suspicious scripts, extensions or user writable path</p><p><code> (source="*WinEventLog:Security" EventCode IN (4698, 4702, 4699, 4700, 4701)) | where(JobContent LIKE '%.cmd%' OR JobContent LIKE '%.ps1%' OR   JobContent LIKE '%.vbs%' OR JobContent LIKE '%.py%' OR   JobContent LIKE '%.js%' OR JobContent LIKE '%.exe%' OR   JobContent LIKE '%.bat%' OR JobContent LIKE '%javascript%' OR   JobContent LIKE '%powershell%' OR JobContent LIKE '%wmic%' OR   JobContent LIKE '%rundll32%' OR JobContent LIKE '%cmd%' OR   JobContent LIKE '%cscript%' OR JobContent LIKE '%wscript%' OR   JobContent LIKE '%regsvr32%' OR JobContent LIKE '%mshta%' OR   JobContent LIKE '%bitsadmin%' OR JobContent LIKE '%certutil%' OR   JobContent LIKE '%msiexec%' OR JobContent LIKE '%javaw%' OR   JobContent LIKE '%[%]APPDATA[%]%' OR JobContent LIKE '%\AppData\Roaming%' OR   JobContent LIKE '%[%]PUBLIC[%]%' OR JobContent LIKE '%C:\Users\Public%' OR   JobContent LIKE '%[%]ProgramData[%]%' OR JobContent LIKE '%C:\ProgramData%' OR   JobContent LIKE '%[%]TEMP[%]%' OR JobContent LIKE '%\AppData\Local\Temp%' OR   JobContent LIKE '%\Windows\PLA\System%' OR JobContent LIKE '%\tasks%' OR   JobContent LIKE '%\Registration\CRMLog%' OR JobContent LIKE '%\FxsTmp%' OR   JobContent LIKE '%\spool\drivers\color%' OR JobContent LIKE '%\tracing%')</code></p>
 
                         </td>
                     </tr>
@@ -1829,7 +1832,7 @@
                             <a href="/techniques/T1053/006">Systemd Timers</a>
                         </td>
                         <td>
-                                    <p>Suspicious systemd timers can also be identified by comparing results against a trusted system baseline. Malicious systemd timers may be detected by using the systemctl utility to examine system wide timers: systemctl list-timers –all. Analyze the contents of corresponding .service files present on the file system and ensure that they refer to legitimate, expected executables.</p>
+                                    <p>Suspicious systemd timers can also be identified by comparing results against a trusted system baseline. Malicious systemd timers may be detected by using the systemctl utility to examine system wide timers: systemctl list-timers –all. Analyze the contents of corresponding .service files present on the file system and ensure that they refer to legitimate, expected executables.</p><p>Analytic 1 - Look for systemd timer creation events with unusual parameters.</p><p><code> sourcetype=linux_logs (command="systemctl start <em>.timer" OR command="systemctl enable </em>.timer" OR command="systemctl daemon-reload")</code></p>
 
                         </td>
                     </tr>
@@ -1843,7 +1846,7 @@
                             <a href="/techniques/T1053/007">Container Orchestration Job</a>
                         </td>
                         <td>
-                                    <p>Monitor for the anomalous creation of scheduled jobs in container orchestration environments.</p>
+                                    <p>Monitor for Kubernetes CronJob or Job creation using Kubernetes API or CLI commands.</p><p>Note: This query tracks job creation using kubectl commands or Kubernetes API calls to create or apply CronJobs. It filters out legitimate job creation based on a baseline and identifies unusual CronJob creation or usage.</p><p>Analytic 1 - Look for new container job creation events with unusual parameters.</p><p><code> sourcetype=kubernetes:job_creation (command="kubectl create cronjob<em>" OR command="kubectl apply -f </em>.yaml" OR api_call="BatchV1.CronJob.create")</code></p><p>Note: This query monitors Kubernetes events for job creation, start, and completion. These events are useful for tracking the actual execution of scheduled tasks in the cluster.Analytic 2 - Monitoring Kubernetes Events for Job Execution</p><p><code>sourcetype=kubernetes:event type="Normal" (reason="SuccessfulCreate" OR reason="Started" OR reason="Completed") </code></p>
 
                         </td>
                     </tr>
@@ -2142,7 +2145,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v15.1&#013;Website  v4.1.6">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v16.0&#013;Website  v4.2.0">Website Changelog</a></u>
                                 </div>
                             </div>
                             <div class="row">
@@ -2182,15 +2185,15 @@
     <script src="/theme/scripts/popper.min.js"></script>
     <script src="/theme/scripts/bootstrap-select.min.js"></script>
     <script src="/theme/scripts/bootstrap.bundle.min.js"></script>
-    <script src="/theme/scripts/site.js?3228"></script>
-    <script src="/theme/scripts/settings.js?2104"></script>
+    <script src="/theme/scripts/site.js"></script>
+    <script src="/theme/scripts/settings.js"></script>
     <script src="/theme/scripts/search_bundle.js"></script>
 
 <!--SCRIPTS-->
 <script src="/theme/scripts/resizer.js"></script>
 
     <!--SCRIPTS-->
-    <script src="/theme/scripts/filter/filter.js?3522"></script>
+    <script src="/theme/scripts/filter/filter.js?5928"></script>
     <script src="/theme/scripts/navigation.js"></script>
     <script src="/theme/scripts/mobileview-datasources.js"></script>
     <script src="/theme/scripts/bootstrap-tourist.js"></script>

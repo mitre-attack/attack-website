@@ -1,0 +1,1418 @@
+{
+    "enterprise-attack": {
+        "techniques": {
+            "additions": [],
+            "major_version_changes": [],
+            "minor_version_changes": [],
+            "other_version_changes": [],
+            "patches": [
+                {
+                    "type": "attack-pattern",
+                    "id": "attack-pattern--8a2f40cf-8325-47f9-96e4-b1ca4c7389bd",
+                    "created_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "created": "2020-01-19 16:10:15.008000+00:00",
+                    "modified": "2023-05-04 18:03:36.622000+00:00",
+                    "name": "Additional Cloud Credentials",
+                    "description": "Adversaries may add adversary-controlled credentials to a cloud account to maintain persistent access to victim accounts and instances within the environment.\n\nFor example, adversaries may add credentials for Service Principals and Applications in addition to existing legitimate credentials in Azure AD.(Citation: Microsoft SolarWinds Customer Guidance)(Citation: Blue Cloud of Death)(Citation: Blue Cloud of Death Video) These credentials include both x509 keys and passwords.(Citation: Microsoft SolarWinds Customer Guidance) With sufficient permissions, there are a variety of ways to add credentials including the Azure Portal, Azure command line interface, and Azure or Az PowerShell modules.(Citation: Demystifying Azure AD Service Principals)\n\nIn infrastructure-as-a-service (IaaS) environments, after gaining access through [Cloud Accounts](https://attack.mitre.org/techniques/T1078/004), adversaries may generate or import their own SSH keys using either the <code>CreateKeyPair</code> or <code>ImportKeyPair</code> API in AWS or the <code>gcloud compute os-login ssh-keys add</code> command in GCP.(Citation: GCP SSH Key Add) This allows persistent access to instances within the cloud environment without further usage of the compromised cloud accounts.(Citation: Expel IO Evil in AWS)(Citation: Expel Behind the Scenes)\n\nAdversaries may also use the <code>CreateAccessKey</code> API in AWS or the <code>gcloud iam service-accounts keys create</code> command in GCP to add access keys to an account. If the target account has different permissions from the requesting account, the adversary may also be able to escalate their privileges in the environment (i.e. [Cloud Accounts](https://attack.mitre.org/techniques/T1078/004)).(Citation: Rhino Security Labs AWS Privilege Escalation)\n\nIn AWS environments, adversaries with the appropriate permissions may also use the `sts:GetFederationToken` API call to create a temporary set of credentials tied to the permissions of the original user account. These credentials may remain valid for the duration of their lifetime even if the original account\u2019s API credentials are deactivated.\n(Citation: Crowdstrike AWS User Federation Persistence)",
+                    "kill_chain_phases": [
+                        {
+                            "kill_chain_name": "mitre-attack",
+                            "phase_name": "persistence"
+                        }
+                    ],
+                    "revoked": false,
+                    "external_references": [
+                        {
+                            "source_name": "mitre-attack",
+                            "url": "https://attack.mitre.org/techniques/T1098/001",
+                            "external_id": "T1098.001"
+                        },
+                        {
+                            "source_name": "Crowdstrike AWS User Federation Persistence",
+                            "description": " Vaishnav Murthy and Joel Eng. (2023, January 30). How Adversaries Can Persist with AWS User Federation. Retrieved March 10, 2023.",
+                            "url": "https://www.crowdstrike.com/blog/how-adversaries-persist-with-aws-user-federation/"
+                        },
+                        {
+                            "source_name": "Expel IO Evil in AWS",
+                            "description": "A. Randazzo, B. Manahan and S. Lipton. (2020, April 28). Finding Evil in AWS. Retrieved June 25, 2020.",
+                            "url": "https://expel.io/blog/finding-evil-in-aws/"
+                        },
+                        {
+                            "source_name": "Demystifying Azure AD Service Principals",
+                            "description": "Bellavance, Ned. (2019, July 16). Demystifying Azure AD Service Principals. Retrieved January 19, 2020.",
+                            "url": "https://nedinthecloud.com/2019/07/16/demystifying-azure-ad-service-principals/"
+                        },
+                        {
+                            "source_name": "GCP SSH Key Add",
+                            "description": "Google. (n.d.). gcloud compute os-login ssh-keys add. Retrieved October 1, 2020.",
+                            "url": "https://cloud.google.com/sdk/gcloud/reference/compute/os-login/ssh-keys/add"
+                        },
+                        {
+                            "source_name": "Blue Cloud of Death Video",
+                            "description": "Kunz, Bruce. (2018, October 14). Blue Cloud of Death: Red Teaming Azure. Retrieved November 21, 2019.",
+                            "url": "https://www.youtube.com/watch?v=wQ1CuAPnrLM&feature=youtu.be&t=2815"
+                        },
+                        {
+                            "source_name": "Blue Cloud of Death",
+                            "description": "Kunz, Bryce. (2018, May 11). Blue Cloud of Death: Red Teaming Azure. Retrieved October 23, 2019.",
+                            "url": "https://speakerdeck.com/tweekfawkes/blue-cloud-of-death-red-teaming-azure-1"
+                        },
+                        {
+                            "source_name": "Microsoft SolarWinds Customer Guidance",
+                            "description": "MSRC. (2020, December 13). Customer Guidance on Recent Nation-State Cyber Attacks. Retrieved December 17, 2020.",
+                            "url": "https://msrc-blog.microsoft.com/2020/12/13/customer-guidance-on-recent-nation-state-cyber-attacks/"
+                        },
+                        {
+                            "source_name": "Expel Behind the Scenes",
+                            "description": "S. Lipton, L. Easterly, A. Randazzo and J. Hencinski. (2020, July 28). Behind the scenes in the Expel SOC: Alert-to-fix in AWS. Retrieved October 1, 2020.",
+                            "url": "https://expel.io/blog/behind-the-scenes-expel-soc-alert-aws/"
+                        },
+                        {
+                            "source_name": "Rhino Security Labs AWS Privilege Escalation",
+                            "description": "Spencer Gietzen. (n.d.). AWS IAM Privilege Escalation \u2013 Methods and Mitigation. Retrieved May 27, 2022.",
+                            "url": "https://rhinosecuritylabs.com/aws/aws-privilege-escalation-methods-mitigation/"
+                        }
+                    ],
+                    "object_marking_refs": [
+                        "marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168"
+                    ],
+                    "x_mitre_attack_spec_version": "3.1.0",
+                    "x_mitre_contributors": [
+                        "Expel",
+                        "Oleg Kolesnikov, Securonix",
+                        "Jannie Li, Microsoft Threat Intelligence\u202fCenter\u202f(MSTIC)",
+                        "Zur Ulianitzky, XM Cyber",
+                        "Alex Soler, AttackIQ",
+                        "Dylan Silva, AWS Security"
+                    ],
+                    "x_mitre_data_sources": [
+                        "User Account: User Account Modification"
+                    ],
+                    "x_mitre_deprecated": false,
+                    "x_mitre_detection": "Monitor Azure Activity Logs for Service Principal and Application modifications. Monitor for the usage of APIs that create or import SSH keys, particularly by unexpected users or accounts such as the root account.\n\nMonitor for use of credentials at unusual times or to unusual systems or services. This may also correlate with other suspicious activity.",
+                    "x_mitre_domains": [
+                        "enterprise-attack"
+                    ],
+                    "x_mitre_is_subtechnique": true,
+                    "x_mitre_modified_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "x_mitre_platforms": [
+                        "IaaS",
+                        "Azure AD",
+                        "SaaS"
+                    ],
+                    "x_mitre_version": "2.5",
+                    "detailed_diff": "{\"values_changed\": {\"root['modified']\": {\"new_value\": \"2023-05-04 18:03:36.622000+00:00\", \"old_value\": \"2023-04-12 21:30:31.151000+00:00\"}, \"root['x_mitre_contributors'][5]\": {\"new_value\": \"Dylan Silva, AWS Security\", \"old_value\": \"Dylan\"}}}",
+                    "previous_version": "2.5",
+                    "changelog_mitigations": {
+                        "shared": [
+                            "M1018: User Account Management",
+                            "M1026: Privileged Account Management",
+                            "M1030: Network Segmentation",
+                            "M1032: Multi-factor Authentication"
+                        ],
+                        "new": [],
+                        "dropped": []
+                    },
+                    "changelog_detections": {
+                        "shared": [
+                            "DS0002: User Account (User Account Modification)"
+                        ],
+                        "new": [],
+                        "dropped": []
+                    }
+                },
+                {
+                    "type": "attack-pattern",
+                    "id": "attack-pattern--e24fcba8-2557-4442-a139-1ee2f2e784db",
+                    "created_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "created": "2019-08-30 13:01:10.120000+00:00",
+                    "modified": "2023-05-04 18:01:44.086000+00:00",
+                    "name": "Cloud Service Discovery",
+                    "description": "An adversary may attempt to enumerate the cloud services running on a system after gaining access. These methods can differ from platform-as-a-service (PaaS), to infrastructure-as-a-service (IaaS), or software-as-a-service (SaaS). Many services exist throughout the various cloud providers and can include Continuous Integration and Continuous Delivery (CI/CD), Lambda Functions, Azure AD, etc. They may also include security services, such as AWS GuardDuty and Microsoft Defender for Cloud, and logging services, such as AWS CloudTrail and Google Cloud Audit Logs.\n\nAdversaries may attempt to discover information about the services enabled throughout the environment. Azure tools and APIs, such as the Azure AD Graph API and Azure Resource Manager API, can enumerate resources and services, including applications, management groups, resources and policy definitions, and their relationships that are accessible by an identity.(Citation: Azure - Resource Manager API)(Citation: Azure AD Graph API)\n\nFor example, Stormspotter is an open source tool for enumerating and constructing a graph for Azure resources and services, and Pacu is an open source AWS exploitation framework that supports several methods for discovering cloud services.(Citation: Azure - Stormspotter)(Citation: GitHub Pacu)\n\nAdversaries may use the information gained to shape follow-on behaviors, such as targeting data or credentials from enumerated services or evading identified defenses through [Disable or Modify Tools](https://attack.mitre.org/techniques/T1562/001) or [Disable Cloud Logs](https://attack.mitre.org/techniques/T1562/008).",
+                    "kill_chain_phases": [
+                        {
+                            "kill_chain_name": "mitre-attack",
+                            "phase_name": "discovery"
+                        }
+                    ],
+                    "revoked": false,
+                    "external_references": [
+                        {
+                            "source_name": "mitre-attack",
+                            "url": "https://attack.mitre.org/techniques/T1526",
+                            "external_id": "T1526"
+                        },
+                        {
+                            "source_name": "Azure AD Graph API",
+                            "description": "Microsoft. (2016, March 26). Operations overview | Graph API concepts. Retrieved June 18, 2020.",
+                            "url": "https://docs.microsoft.com/en-us/previous-versions/azure/ad/graph/howto/azure-ad-graph-api-operations-overview"
+                        },
+                        {
+                            "source_name": "Azure - Resource Manager API",
+                            "description": "Microsoft. (2019, May 20). Azure Resource Manager. Retrieved June 17, 2020.",
+                            "url": "https://docs.microsoft.com/en-us/rest/api/resources/"
+                        },
+                        {
+                            "source_name": "Azure - Stormspotter",
+                            "description": "Microsoft. (2020). Azure Stormspotter GitHub. Retrieved June 17, 2020.",
+                            "url": "https://github.com/Azure/Stormspotter"
+                        },
+                        {
+                            "source_name": "GitHub Pacu",
+                            "description": "Rhino Security Labs. (2019, August 22). Pacu. Retrieved October 17, 2019.",
+                            "url": "https://github.com/RhinoSecurityLabs/pacu"
+                        }
+                    ],
+                    "object_marking_refs": [
+                        "marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168"
+                    ],
+                    "x_mitre_attack_spec_version": "3.1.0",
+                    "x_mitre_contributors": [
+                        "Suzy Schapperle - Microsoft Azure Red Team",
+                        "Praetorian",
+                        "Thanabodi Phrakhun, I-SECURE"
+                    ],
+                    "x_mitre_data_sources": [
+                        "Cloud Service: Cloud Service Enumeration"
+                    ],
+                    "x_mitre_deprecated": false,
+                    "x_mitre_detection": "Cloud service discovery techniques will likely occur throughout an operation where an adversary is targeting cloud-based systems and services. Data and events should not be viewed in isolation, but as part of a chain of behavior that could lead to other activities based on the information obtained.\n\nNormal, benign system and network events that look like cloud service discovery may be uncommon, depending on the environment and how they are used. Monitor cloud service usage for anomalous behavior that may indicate adversarial presence within the environment.",
+                    "x_mitre_domains": [
+                        "enterprise-attack"
+                    ],
+                    "x_mitre_is_subtechnique": false,
+                    "x_mitre_modified_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "x_mitre_platforms": [
+                        "Azure AD",
+                        "Office 365",
+                        "SaaS",
+                        "IaaS",
+                        "Google Workspace"
+                    ],
+                    "x_mitre_version": "1.3",
+                    "detailed_diff": "{\"values_changed\": {\"root['modified']\": {\"new_value\": \"2023-05-04 18:01:44.086000+00:00\", \"old_value\": \"2023-04-11 20:33:55.356000+00:00\"}, \"root['x_mitre_contributors'][2]\": {\"new_value\": \"Thanabodi Phrakhun, I-SECURE\", \"old_value\": \"Thanabodi\"}}}",
+                    "previous_version": "1.3",
+                    "changelog_mitigations": {
+                        "shared": [],
+                        "new": [],
+                        "dropped": []
+                    },
+                    "changelog_detections": {
+                        "shared": [
+                            "DS0025: Cloud Service (Cloud Service Enumeration)"
+                        ],
+                        "new": [],
+                        "dropped": []
+                    }
+                },
+                {
+                    "type": "attack-pattern",
+                    "id": "attack-pattern--55bb4471-ff1f-43b4-88c1-c9384ec47abf",
+                    "created_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "created": "2022-03-17 13:28:24.989000+00:00",
+                    "modified": "2023-04-14 18:04:54.607000+00:00",
+                    "name": "Cloud API",
+                    "description": "Adversaries may abuse cloud APIs to execute malicious commands. APIs available in cloud environments provide various functionalities and are a feature-rich method for programmatic access to nearly all aspects of a tenant. These APIs may be utilized through various methods such as command line interpreters (CLIs), in-browser Cloud Shells, [PowerShell](https://attack.mitre.org/techniques/T1059/001) modules like Azure for PowerShell(Citation: Microsoft - Azure PowerShell), or software developer kits (SDKs) available for languages such as [Python](https://attack.mitre.org/techniques/T1059/006).  \n\nCloud API functionality may allow for administrative access across all major services in a tenant such as compute, storage, identity and access management (IAM), networking, and security policies.\n\nWith proper permissions (often via use of credentials such as [Application Access Token](https://attack.mitre.org/techniques/T1550/001) and [Web Session Cookie](https://attack.mitre.org/techniques/T1550/004)), adversaries may abuse cloud APIs to invoke various functions that execute malicious actions. For example, CLI and PowerShell functionality may be accessed through binaries installed on cloud-hosted or on-premises hosts or accessed through a browser-based cloud shell offered by many cloud platforms (such as AWS, Azure, and GCP). These cloud shells are often a packaged unified environment to use CLI and/or scripting modules hosted as a container in the cloud environment.  ",
+                    "kill_chain_phases": [
+                        {
+                            "kill_chain_name": "mitre-attack",
+                            "phase_name": "execution"
+                        }
+                    ],
+                    "revoked": false,
+                    "external_references": [
+                        {
+                            "source_name": "mitre-attack",
+                            "url": "https://attack.mitre.org/techniques/T1059/009",
+                            "external_id": "T1059.009"
+                        },
+                        {
+                            "source_name": "Microsoft - Azure PowerShell",
+                            "description": "Microsoft. (2014, December 12). Azure/azure-powershell. Retrieved March 24, 2023.",
+                            "url": "https://github.com/Azure/azure-powershell"
+                        }
+                    ],
+                    "object_marking_refs": [
+                        "marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168"
+                    ],
+                    "x_mitre_attack_spec_version": "3.1.0",
+                    "x_mitre_contributors": [
+                        "Ozan Olali",
+                        "Nichols Jasper",
+                        "Jason Sevilla",
+                        "Marcus Weeks",
+                        "Caio Silva"
+                    ],
+                    "x_mitre_data_sources": [
+                        "Command: Command Execution"
+                    ],
+                    "x_mitre_deprecated": false,
+                    "x_mitre_detection": "",
+                    "x_mitre_domains": [
+                        "enterprise-attack"
+                    ],
+                    "x_mitre_is_subtechnique": true,
+                    "x_mitre_modified_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "x_mitre_platforms": [
+                        "IaaS",
+                        "Azure AD",
+                        "Office 365",
+                        "SaaS",
+                        "Google Workspace"
+                    ],
+                    "x_mitre_remote_support": false,
+                    "x_mitre_version": "1.0",
+                    "detailed_diff": "{\"values_changed\": {\"root['description']\": {\"new_value\": \"Adversaries may abuse cloud APIs to execute malicious commands. APIs available in cloud environments provide various functionalities and are a feature-rich method for programmatic access to nearly all aspects of a tenant. These APIs may be utilized through various methods such as command line interpreters (CLIs), in-browser Cloud Shells, [PowerShell](https://attack.mitre.org/techniques/T1059/001) modules like Azure for PowerShell(Citation: Microsoft - Azure PowerShell), or software developer kits (SDKs) available for languages such as [Python](https://attack.mitre.org/techniques/T1059/006).  \\n\\nCloud API functionality may allow for administrative access across all major services in a tenant such as compute, storage, identity and access management (IAM), networking, and security policies.\\n\\nWith proper permissions (often via use of credentials such as [Application Access Token](https://attack.mitre.org/techniques/T1550/001) and [Web Session Cookie](https://attack.mitre.org/techniques/T1550/004)), adversaries may abuse cloud APIs to invoke various functions that execute malicious actions. For example, CLI and PowerShell functionality may be accessed through binaries installed on cloud-hosted or on-premises hosts or accessed through a browser-based cloud shell offered by many cloud platforms (such as AWS, Azure, and GCP). These cloud shells are often a packaged unified environment to use CLI and/or scripting modules hosted as a container in the cloud environment.  \", \"old_value\": \"Adversaries may abuse cloud APIs to execute malicious commands. APIs available in cloud environments provide various functionalities and are a feature-rich method for programmatic access to nearly all aspects of a tenant. These APIs may be utilized through various methods such as command line interpreters (CLIs), in-browser Cloud Shells, [PowerShell](https://attack.mitre.org/techniques/T1059/001) modules like Azure for PowerShell(Citation: A), or software developer kits (SDKs) available for languages such as [Python](https://attack.mitre.org/techniques/T1059/006).  \\n\\nCloud API functionality may allow for administrative access across all major services in a tenant such as compute, storage, identity and access management (IAM), networking, and security policies.\\n\\nWith proper permissions (often via use of credentials such as [Application Access Token](https://attack.mitre.org/techniques/T1550/001) and [Web Session Cookie](https://attack.mitre.org/techniques/T1550/004)), adversaries may abuse cloud APIs to invoke various functions that execute malicious actions. For example, CLI and PowerShell functionality may be accessed through binaries installed on cloud-hosted or on-premises hosts or accessed through a browser-based cloud shell offered by many cloud platforms (such as AWS, Azure, and GCP). These cloud shells are often a packaged unified environment to use CLI and/or scripting modules hosted as a container in the cloud environment.  \", \"diff\": \"--- \\n+++ \\n@@ -1,4 +1,4 @@\\n-Adversaries may abuse cloud APIs to execute malicious commands. APIs available in cloud environments provide various functionalities and are a feature-rich method for programmatic access to nearly all aspects of a tenant. These APIs may be utilized through various methods such as command line interpreters (CLIs), in-browser Cloud Shells, [PowerShell](https://attack.mitre.org/techniques/T1059/001) modules like Azure for PowerShell(Citation: A), or software developer kits (SDKs) available for languages such as [Python](https://attack.mitre.org/techniques/T1059/006).  \\n+Adversaries may abuse cloud APIs to execute malicious commands. APIs available in cloud environments provide various functionalities and are a feature-rich method for programmatic access to nearly all aspects of a tenant. These APIs may be utilized through various methods such as command line interpreters (CLIs), in-browser Cloud Shells, [PowerShell](https://attack.mitre.org/techniques/T1059/001) modules like Azure for PowerShell(Citation: Microsoft - Azure PowerShell), or software developer kits (SDKs) available for languages such as [Python](https://attack.mitre.org/techniques/T1059/006).  \\n \\n Cloud API functionality may allow for administrative access across all major services in a tenant such as compute, storage, identity and access management (IAM), networking, and security policies.\\n \"}, \"root['external_references'][1]['source_name']\": {\"new_value\": \"Microsoft - Azure PowerShell\", \"old_value\": \"A\"}}}",
+                    "previous_version": "1.0",
+                    "description_change_table": "\n    <table class=\"diff\" id=\"difflib_chg_to0__top\"\n           cellspacing=\"0\" cellpadding=\"0\" rules=\"groups\" >\n        <colgroup></colgroup> <colgroup></colgroup> <colgroup></colgroup>\n        <colgroup></colgroup> <colgroup></colgroup> <colgroup></colgroup>\n        <thead><tr><th class=\"diff_next\"><br /></th><th colspan=\"2\" class=\"diff_header\">Old Description</th><th class=\"diff_next\"><br /></th><th colspan=\"2\" class=\"diff_header\">New Description</th></tr></thead>\n        <tbody>\n            <tr><td class=\"diff_next\" id=\"difflib_chg_to0__0\"><a href=\"#difflib_chg_to0__top\">t</a></td><td class=\"diff_header\" id=\"from0_1\">1</td><td nowrap=\"nowrap\">Adversaries&nbsp;may&nbsp;abuse&nbsp;cloud&nbsp;APIs&nbsp;to&nbsp;execute&nbsp;malicious&nbsp;comman</td><td class=\"diff_next\"><a href=\"#difflib_chg_to0__top\">t</a></td><td class=\"diff_header\" id=\"to0_1\">1</td><td nowrap=\"nowrap\">Adversaries&nbsp;may&nbsp;abuse&nbsp;cloud&nbsp;APIs&nbsp;to&nbsp;execute&nbsp;malicious&nbsp;comman</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">ds.&nbsp;APIs&nbsp;available&nbsp;in&nbsp;cloud&nbsp;environments&nbsp;provide&nbsp;various&nbsp;fun</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">ds.&nbsp;APIs&nbsp;available&nbsp;in&nbsp;cloud&nbsp;environments&nbsp;provide&nbsp;various&nbsp;fun</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">ctionalities&nbsp;and&nbsp;are&nbsp;a&nbsp;feature-rich&nbsp;method&nbsp;for&nbsp;programmatic&nbsp;</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">ctionalities&nbsp;and&nbsp;are&nbsp;a&nbsp;feature-rich&nbsp;method&nbsp;for&nbsp;programmatic&nbsp;</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">access&nbsp;to&nbsp;nearly&nbsp;all&nbsp;aspects&nbsp;of&nbsp;a&nbsp;tenant.&nbsp;These&nbsp;APIs&nbsp;may&nbsp;be&nbsp;</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">access&nbsp;to&nbsp;nearly&nbsp;all&nbsp;aspects&nbsp;of&nbsp;a&nbsp;tenant.&nbsp;These&nbsp;APIs&nbsp;may&nbsp;be&nbsp;</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">utilized&nbsp;through&nbsp;various&nbsp;methods&nbsp;such&nbsp;as&nbsp;command&nbsp;line&nbsp;interp</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">utilized&nbsp;through&nbsp;various&nbsp;methods&nbsp;such&nbsp;as&nbsp;command&nbsp;line&nbsp;interp</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">reters&nbsp;(CLIs),&nbsp;in-browser&nbsp;Cloud&nbsp;Shells,&nbsp;[PowerShell](https:/</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">reters&nbsp;(CLIs),&nbsp;in-browser&nbsp;Cloud&nbsp;Shells,&nbsp;[PowerShell](https:/</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">/attack.mitre.org/techniques/T1059/001)&nbsp;modules&nbsp;like&nbsp;Azure&nbsp;f</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">/attack.mitre.org/techniques/T1059/001)&nbsp;modules&nbsp;like&nbsp;Azure&nbsp;f</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">or&nbsp;PowerShell(Citation:&nbsp;A),&nbsp;or&nbsp;software&nbsp;developer&nbsp;kits&nbsp;(SDKs</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">or&nbsp;PowerShell(Citation:&nbsp;<span class=\"diff_add\">Microsoft&nbsp;-&nbsp;</span>A<span class=\"diff_add\">zure&nbsp;PowerShell</span>),&nbsp;or&nbsp;so</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">)&nbsp;available&nbsp;for&nbsp;languages&nbsp;such&nbsp;as&nbsp;[Python](https://attack.mi</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">ftware&nbsp;developer&nbsp;kits&nbsp;(SDKs)&nbsp;available&nbsp;for&nbsp;languages&nbsp;such&nbsp;as</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">tre.org/techniques/T1059/006).&nbsp;&nbsp;&nbsp;&nbsp;Cloud&nbsp;API&nbsp;functionality&nbsp;ma</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">&nbsp;[Python](https://attack.mitre.org/techniques/T1059/006).&nbsp;&nbsp;&nbsp;</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">y&nbsp;allow&nbsp;for&nbsp;administrative&nbsp;access&nbsp;across&nbsp;all&nbsp;major&nbsp;services&nbsp;</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">&nbsp;Cloud&nbsp;API&nbsp;functionality&nbsp;may&nbsp;allow&nbsp;for&nbsp;administrative&nbsp;access</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">in&nbsp;a&nbsp;tenant&nbsp;such&nbsp;as&nbsp;compute,&nbsp;storage,&nbsp;identity&nbsp;and&nbsp;access&nbsp;ma</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">&nbsp;across&nbsp;all&nbsp;major&nbsp;services&nbsp;in&nbsp;a&nbsp;tenant&nbsp;such&nbsp;as&nbsp;compute,&nbsp;stor</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">nagement&nbsp;(IAM),&nbsp;networking,&nbsp;and&nbsp;security&nbsp;policies.&nbsp;&nbsp;With&nbsp;pro</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">age,&nbsp;identity&nbsp;and&nbsp;access&nbsp;management&nbsp;(IAM),&nbsp;networking,&nbsp;and&nbsp;s</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">per&nbsp;permissions&nbsp;(often&nbsp;via&nbsp;use&nbsp;of&nbsp;credentials&nbsp;such&nbsp;as&nbsp;[Appli</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">ecurity&nbsp;policies.&nbsp;&nbsp;With&nbsp;proper&nbsp;permissions&nbsp;(often&nbsp;via&nbsp;use&nbsp;of</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">cation&nbsp;Access&nbsp;Token](https://attack.mitre.org/techniques/T15</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">&nbsp;credentials&nbsp;such&nbsp;as&nbsp;[Application&nbsp;Access&nbsp;Token](https://atta</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">50/001)&nbsp;and&nbsp;[Web&nbsp;Session&nbsp;Cookie](https://attack.mitre.org/te</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">ck.mitre.org/techniques/T1550/001)&nbsp;and&nbsp;[Web&nbsp;Session&nbsp;Cookie](</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">chniques/T1550/004)),&nbsp;adversaries&nbsp;may&nbsp;abuse&nbsp;cloud&nbsp;APIs&nbsp;to&nbsp;in</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">https://attack.mitre.org/techniques/T1550/004)),&nbsp;adversaries</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">voke&nbsp;various&nbsp;functions&nbsp;that&nbsp;execute&nbsp;malicious&nbsp;actions.&nbsp;For&nbsp;e</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">&nbsp;may&nbsp;abuse&nbsp;cloud&nbsp;APIs&nbsp;to&nbsp;invoke&nbsp;various&nbsp;functions&nbsp;that&nbsp;execu</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">xample,&nbsp;CLI&nbsp;and&nbsp;PowerShell&nbsp;functionality&nbsp;may&nbsp;be&nbsp;accessed&nbsp;thr</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">te&nbsp;malicious&nbsp;actions.&nbsp;For&nbsp;example,&nbsp;CLI&nbsp;and&nbsp;PowerShell&nbsp;functi</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">ough&nbsp;binaries&nbsp;installed&nbsp;on&nbsp;cloud-hosted&nbsp;or&nbsp;on-premises&nbsp;hosts</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">onality&nbsp;may&nbsp;be&nbsp;accessed&nbsp;through&nbsp;binaries&nbsp;installed&nbsp;on&nbsp;cloud-</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">&nbsp;or&nbsp;accessed&nbsp;through&nbsp;a&nbsp;browser-based&nbsp;cloud&nbsp;shell&nbsp;offered&nbsp;by&nbsp;</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">hosted&nbsp;or&nbsp;on-premises&nbsp;hosts&nbsp;or&nbsp;accessed&nbsp;through&nbsp;a&nbsp;browser-ba</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">many&nbsp;cloud&nbsp;platforms&nbsp;(such&nbsp;as&nbsp;AWS,&nbsp;Azure,&nbsp;and&nbsp;GCP).&nbsp;These&nbsp;cl</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">sed&nbsp;cloud&nbsp;shell&nbsp;offered&nbsp;by&nbsp;many&nbsp;cloud&nbsp;platforms&nbsp;(such&nbsp;as&nbsp;AWS</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">oud&nbsp;shells&nbsp;are&nbsp;often&nbsp;a&nbsp;packaged&nbsp;unified&nbsp;environment&nbsp;to&nbsp;use&nbsp;C</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">,&nbsp;Azure,&nbsp;and&nbsp;GCP).&nbsp;These&nbsp;cloud&nbsp;shells&nbsp;are&nbsp;often&nbsp;a&nbsp;packaged&nbsp;u</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">LI&nbsp;and/or&nbsp;scripting&nbsp;modules&nbsp;hosted&nbsp;as&nbsp;a&nbsp;container&nbsp;in&nbsp;the&nbsp;clo</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">nified&nbsp;environment&nbsp;to&nbsp;use&nbsp;CLI&nbsp;and/or&nbsp;scripting&nbsp;modules&nbsp;hoste</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">ud&nbsp;environment.&nbsp;&nbsp;</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">d&nbsp;as&nbsp;a&nbsp;container&nbsp;in&nbsp;the&nbsp;cloud&nbsp;environment.&nbsp;&nbsp;</td></tr>\n        </tbody>\n    </table>",
+                    "changelog_mitigations": {
+                        "shared": [
+                            "M1026: Privileged Account Management",
+                            "M1038: Execution Prevention"
+                        ],
+                        "new": [],
+                        "dropped": []
+                    },
+                    "changelog_detections": {
+                        "shared": [
+                            "DS0017: Command (Command Execution)"
+                        ],
+                        "new": [],
+                        "dropped": []
+                    }
+                },
+                {
+                    "type": "attack-pattern",
+                    "id": "attack-pattern--215d9700-5881-48b8-8265-6449dbb7195d",
+                    "created_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "created": "2023-03-28 20:14:49.087000+00:00",
+                    "modified": "2023-05-04 18:07:16.804000+00:00",
+                    "name": "Device Driver Discovery",
+                    "description": "Adversaries may attempt to enumerate local device drivers on a victim host. Information about device drivers may highlight various insights that shape follow-on behaviors, such as the function/purpose of the host, present security tools (i.e. [Security Software Discovery](https://attack.mitre.org/techniques/T1518/001)) or other defenses (e.g., [Virtualization/Sandbox Evasion](https://attack.mitre.org/techniques/T1497)), as well as potential exploitable vulnerabilities (e.g., [Exploitation for Privilege Escalation](https://attack.mitre.org/techniques/T1068)).\n\nMany OS utilities may provide information about local device drivers, such as `driverquery.exe` and the `EnumDeviceDrivers()` API function on Windows.(Citation: Microsoft Driverquery)(Citation: Microsoft EnumDeviceDrivers) Information about device drivers (as well as associated services, i.e., [System Service Discovery](https://attack.mitre.org/techniques/T1007)) may also be available in the Registry.(Citation: Microsoft Registry Drivers)\n\nOn Linux/macOS, device drivers (in the form of kernel modules) may be visible within `/dev` or using utilities such as `lsmod` and `modinfo`.(Citation: Linux Kernel Programming)(Citation: lsmod man)(Citation: modinfo man)",
+                    "kill_chain_phases": [
+                        {
+                            "kill_chain_name": "mitre-attack",
+                            "phase_name": "discovery"
+                        }
+                    ],
+                    "revoked": false,
+                    "external_references": [
+                        {
+                            "source_name": "mitre-attack",
+                            "url": "https://attack.mitre.org/techniques/T1652",
+                            "external_id": "T1652"
+                        },
+                        {
+                            "source_name": "lsmod man",
+                            "description": "Kerrisk, M. (2022, December 18). lsmod(8) \u2014 Linux manual page. Retrieved March 28, 2023.",
+                            "url": "https://man7.org/linux/man-pages/man8/lsmod.8.html"
+                        },
+                        {
+                            "source_name": "Microsoft Registry Drivers",
+                            "description": "Microsoft. (2021, December 14). Registry Trees for Devices and Drivers. Retrieved March 28, 2023.",
+                            "url": "https://learn.microsoft.com/windows-hardware/drivers/install/overview-of-registry-trees-and-keys"
+                        },
+                        {
+                            "source_name": "Microsoft EnumDeviceDrivers",
+                            "description": "Microsoft. (2021, October 12). EnumDeviceDrivers function (psapi.h). Retrieved March 28, 2023.",
+                            "url": "https://learn.microsoft.com/windows/win32/api/psapi/nf-psapi-enumdevicedrivers"
+                        },
+                        {
+                            "source_name": "Microsoft Driverquery",
+                            "description": "Microsoft. (n.d.). driverquery. Retrieved March 28, 2023.",
+                            "url": "https://learn.microsoft.com/windows-server/administration/windows-commands/driverquery"
+                        },
+                        {
+                            "source_name": "Linux Kernel Programming",
+                            "description": "Pomerantz, O., Salzman, P.. (2003, April 4). The Linux Kernel Module Programming Guide. Retrieved April 6, 2018.",
+                            "url": "https://www.tldp.org/LDP/lkmpg/2.4/lkmpg.pdf"
+                        },
+                        {
+                            "source_name": "modinfo man",
+                            "description": "Russell, R. (n.d.). modinfo(8) - Linux man page. Retrieved March 28, 2023.",
+                            "url": "https://linux.die.net/man/8/modinfo"
+                        }
+                    ],
+                    "object_marking_refs": [
+                        "marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168"
+                    ],
+                    "x_mitre_attack_spec_version": "3.1.0",
+                    "x_mitre_contributors": [
+                        "ESET"
+                    ],
+                    "x_mitre_data_sources": [
+                        "Windows Registry: Windows Registry Key Access",
+                        "Process: OS API Execution",
+                        "Process: Process Creation",
+                        "Command: Command Execution"
+                    ],
+                    "x_mitre_deprecated": false,
+                    "x_mitre_detection": "",
+                    "x_mitre_domains": [
+                        "enterprise-attack"
+                    ],
+                    "x_mitre_is_subtechnique": false,
+                    "x_mitre_modified_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "x_mitre_platforms": [
+                        "Linux",
+                        "macOS",
+                        "Windows"
+                    ],
+                    "x_mitre_version": "1.0",
+                    "detailed_diff": "{\"values_changed\": {\"root['modified']\": {\"new_value\": \"2023-05-04 18:07:16.804000+00:00\", \"old_value\": \"2023-04-11 01:18:10.369000+00:00\"}, \"root['x_mitre_contributors'][0]\": {\"new_value\": \"ESET\", \"old_value\": \"Filip Kafka, ESET\"}, \"root['x_mitre_data_sources'][2]\": {\"new_value\": \"Process: Process Creation\", \"old_value\": \"Windows Registry: Windows Registry Key Access\"}}, \"iterable_item_added\": {\"root['x_mitre_data_sources'][0]\": \"Windows Registry: Windows Registry Key Access\"}, \"iterable_item_removed\": {\"root['x_mitre_contributors'][1]\": \"Zuzana Leg\\u00e1thov\\u00e1, ESET\", \"root['x_mitre_contributors'][2]\": \"Miroslav Babi\\u0161, ESET\", \"root['x_mitre_data_sources'][3]\": \"Process: Process Creation\"}}",
+                    "previous_version": "1.0",
+                    "changelog_mitigations": {
+                        "shared": [],
+                        "new": [],
+                        "dropped": []
+                    },
+                    "changelog_detections": {
+                        "shared": [
+                            "DS0009: Process (OS API Execution)",
+                            "DS0009: Process (Process Creation)",
+                            "DS0017: Command (Command Execution)",
+                            "DS0024: Windows Registry (Windows Registry Key Access)"
+                        ],
+                        "new": [],
+                        "dropped": []
+                    }
+                },
+                {
+                    "type": "attack-pattern",
+                    "id": "attack-pattern--ba04e672-da86-4e69-aa15-0eca5db25f43",
+                    "created_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "created": "2023-02-27 22:51:27.101000+00:00",
+                    "modified": "2023-05-04 18:00:33.023000+00:00",
+                    "name": "Exfiltration to Text Storage Sites",
+                    "description": "Adversaries may exfiltrate data to text storage sites instead of their primary command and control channel. Text storage sites, such as <code>pastebin[.]com</code>, are commonly used by developers to share code and other information.  \n\nText storage sites are often used to host malicious code for C2 communication (e.g., [Stage Capabilities](https://attack.mitre.org/techniques/T1608)), but adversaries may also use these sites to exfiltrate collected data. Furthermore, paid features and encryption options may allow adversaries to conceal and store data more securely.(Citation: Pastebin EchoSec)\n\n**Note:** This is distinct from [Exfiltration to Code Repository](https://attack.mitre.org/techniques/T1567/001), which highlight access to code repositories via APIs.",
+                    "kill_chain_phases": [
+                        {
+                            "kill_chain_name": "mitre-attack",
+                            "phase_name": "exfiltration"
+                        }
+                    ],
+                    "revoked": false,
+                    "external_references": [
+                        {
+                            "source_name": "mitre-attack",
+                            "url": "https://attack.mitre.org/techniques/T1567/003",
+                            "external_id": "T1567.003"
+                        },
+                        {
+                            "source_name": "Pastebin EchoSec",
+                            "description": "Ciarniello, A. (2019, September 24). What is Pastebin and Why Do Hackers Love It?. Retrieved April 11, 2023.",
+                            "url": "https://web.archive.org/web/20201107203304/https://www.echosec.net/blog/what-is-pastebin-and-why-do-hackers-love-it"
+                        }
+                    ],
+                    "object_marking_refs": [
+                        "marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168"
+                    ],
+                    "x_mitre_attack_spec_version": "3.1.0",
+                    "x_mitre_contributors": [
+                        "Harun K\u00fc\u00dfner"
+                    ],
+                    "x_mitre_data_sources": [
+                        "Network Traffic: Network Traffic Content",
+                        "Network Traffic: Network Traffic Flow"
+                    ],
+                    "x_mitre_deprecated": false,
+                    "x_mitre_detection": "",
+                    "x_mitre_domains": [
+                        "enterprise-attack"
+                    ],
+                    "x_mitre_is_subtechnique": true,
+                    "x_mitre_modified_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "x_mitre_platforms": [
+                        "Linux",
+                        "macOS",
+                        "Windows"
+                    ],
+                    "x_mitre_version": "1.0",
+                    "detailed_diff": "{\"dictionary_item_removed\": {\"root['x_mitre_network_requirements']\": false}, \"values_changed\": {\"root['modified']\": {\"new_value\": \"2023-05-04 18:00:33.023000+00:00\", \"old_value\": \"2023-04-14 20:36:09.042000+00:00\"}, \"root['x_mitre_contributors'][0]\": {\"new_value\": \"Harun K\\u00fc\\u00dfner\", \"old_value\": \"Kuessner Consulting\"}}}",
+                    "previous_version": "1.0",
+                    "changelog_mitigations": {
+                        "shared": [
+                            "M1021: Restrict Web-Based Content"
+                        ],
+                        "new": [],
+                        "dropped": []
+                    },
+                    "changelog_detections": {
+                        "shared": [
+                            "DS0029: Network Traffic (Network Traffic Content)",
+                            "DS0029: Network Traffic (Network Traffic Flow)"
+                        ],
+                        "new": [],
+                        "dropped": []
+                    }
+                },
+                {
+                    "type": "attack-pattern",
+                    "id": "attack-pattern--94cb00a4-b295-4d06-aa2b-5653b9c1be9c",
+                    "created_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "created": "2020-12-17 02:13:46.247000+00:00",
+                    "modified": "2023-05-04 18:05:16.877000+00:00",
+                    "name": "Forge Web Credentials",
+                    "description": "Adversaries may forge credential materials that can be used to gain access to web applications or Internet services. Web applications and services (hosted in cloud SaaS environments or on-premise servers) often use session cookies, tokens, or other materials to authenticate and authorize user access.\n\nAdversaries may generate these credential materials in order to gain access to web resources. This differs from [Steal Web Session Cookie](https://attack.mitre.org/techniques/T1539), [Steal Application Access Token](https://attack.mitre.org/techniques/T1528), and other similar behaviors in that the credentials are new and forged by the adversary, rather than stolen or intercepted from legitimate users. The generation of web credentials often requires secret values, such as passwords, [Private Keys](https://attack.mitre.org/techniques/T1552/004), or other cryptographic seed values.(Citation: GitHub AWS-ADFS-Credential-Generator) Adversaries may also forge tokens by taking advantage of features such as the `AssumeRole` and `GetFederationToken` APIs in AWS, which allow users to request temporary security credentials.(Citation: AWS Temporary Security Credentials)\n\nOnce forged, adversaries may use these web credentials to access resources (ex: [Use Alternate Authentication Material](https://attack.mitre.org/techniques/T1550)), which may bypass multi-factor and other authentication protection mechanisms.(Citation: Pass The Cookie)(Citation: Unit 42 Mac Crypto Cookies January 2019)(Citation: Microsoft SolarWinds Customer Guidance)  ",
+                    "kill_chain_phases": [
+                        {
+                            "kill_chain_name": "mitre-attack",
+                            "phase_name": "credential-access"
+                        }
+                    ],
+                    "revoked": false,
+                    "external_references": [
+                        {
+                            "source_name": "mitre-attack",
+                            "url": "https://attack.mitre.org/techniques/T1606",
+                            "external_id": "T1606"
+                        },
+                        {
+                            "source_name": "AWS Temporary Security Credentials",
+                            "description": "AWS. (n.d.). Requesting temporary security credentials. Retrieved April 1, 2022.",
+                            "url": "https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_temp_request.html"
+                        },
+                        {
+                            "source_name": "Unit 42 Mac Crypto Cookies January 2019",
+                            "description": "Chen, Y., Hu, W., Xu, Z., et. al. (2019, January 31). Mac Malware Steals Cryptocurrency Exchanges\u2019 Cookies. Retrieved October 14, 2019.",
+                            "url": "https://unit42.paloaltonetworks.com/mac-malware-steals-cryptocurrency-exchanges-cookies/"
+                        },
+                        {
+                            "source_name": "GitHub AWS-ADFS-Credential-Generator",
+                            "description": "Damian Hickey. (2017, January 28). AWS-ADFS-Credential-Generator. Retrieved December 16, 2020.",
+                            "url": "https://github.com/damianh/aws-adfs-credential-generator"
+                        },
+                        {
+                            "source_name": "Microsoft SolarWinds Customer Guidance",
+                            "description": "MSRC. (2020, December 13). Customer Guidance on Recent Nation-State Cyber Attacks. Retrieved December 17, 2020.",
+                            "url": "https://msrc-blog.microsoft.com/2020/12/13/customer-guidance-on-recent-nation-state-cyber-attacks/"
+                        },
+                        {
+                            "source_name": "Pass The Cookie",
+                            "description": "Rehberger, J. (2018, December). Pivot to the Cloud using Pass the Cookie. Retrieved April 5, 2019.",
+                            "url": "https://wunderwuzzi23.github.io/blog/passthecookie.html"
+                        }
+                    ],
+                    "object_marking_refs": [
+                        "marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168"
+                    ],
+                    "x_mitre_attack_spec_version": "3.1.0",
+                    "x_mitre_contributors": [
+                        "Dylan Silva, AWS Security"
+                    ],
+                    "x_mitre_data_sources": [
+                        "Web Credential: Web Credential Usage",
+                        "Logon Session: Logon Session Creation",
+                        "Web Credential: Web Credential Creation"
+                    ],
+                    "x_mitre_deprecated": false,
+                    "x_mitre_detection": "Monitor for anomalous authentication activity, such as logons or other user session activity associated with unknown accounts. Monitor for unexpected and abnormal access to resources, including access of websites and cloud-based applications by the same user in different locations or by different systems that do not match expected configurations.",
+                    "x_mitre_domains": [
+                        "enterprise-attack"
+                    ],
+                    "x_mitre_is_subtechnique": false,
+                    "x_mitre_modified_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "x_mitre_platforms": [
+                        "SaaS",
+                        "Windows",
+                        "macOS",
+                        "Linux",
+                        "Azure AD",
+                        "Office 365",
+                        "Google Workspace",
+                        "IaaS"
+                    ],
+                    "x_mitre_version": "1.3",
+                    "detailed_diff": "{\"values_changed\": {\"root['modified']\": {\"new_value\": \"2023-05-04 18:05:16.877000+00:00\", \"old_value\": \"2023-04-12 21:35:48.084000+00:00\"}, \"root['x_mitre_contributors'][0]\": {\"new_value\": \"Dylan Silva, AWS Security\", \"old_value\": \"Dylan\"}, \"root['x_mitre_data_sources'][1]\": {\"new_value\": \"Logon Session: Logon Session Creation\", \"old_value\": \"Web Credential: Web Credential Creation\"}, \"root['x_mitre_data_sources'][2]\": {\"new_value\": \"Web Credential: Web Credential Creation\", \"old_value\": \"Logon Session: Logon Session Creation\"}}}",
+                    "previous_version": "1.3",
+                    "changelog_mitigations": {
+                        "shared": [
+                            "M1018: User Account Management",
+                            "M1026: Privileged Account Management",
+                            "M1047: Audit",
+                            "M1054: Software Configuration"
+                        ],
+                        "new": [],
+                        "dropped": []
+                    },
+                    "changelog_detections": {
+                        "shared": [
+                            "DS0006: Web Credential (Web Credential Creation)",
+                            "DS0006: Web Credential (Web Credential Usage)",
+                            "DS0028: Logon Session (Logon Session Creation)"
+                        ],
+                        "new": [],
+                        "dropped": []
+                    }
+                },
+                {
+                    "type": "attack-pattern",
+                    "id": "attack-pattern--f5d8eed6-48a9-4cdf-a3d7-d1ffa99c3d2a",
+                    "created_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "created": "2019-04-02 13:54:43.136000+00:00",
+                    "modified": "2023-05-04 18:05:57.725000+00:00",
+                    "name": "Inhibit System Recovery",
+                    "description": "Adversaries may delete or remove built-in data and turn off services designed to aid in the recovery of a corrupted system to prevent recovery.(Citation: Talos Olympic Destroyer 2018)(Citation: FireEye WannaCry 2017) This may deny access to available backups and recovery options.\n\nOperating systems may contain features that can help fix corrupted systems, such as a backup catalog, volume shadow copies, and automatic repair features. Adversaries may disable or delete system recovery features to augment the effects of [Data Destruction](https://attack.mitre.org/techniques/T1485) and [Data Encrypted for Impact](https://attack.mitre.org/techniques/T1486).(Citation: Talos Olympic Destroyer 2018)(Citation: FireEye WannaCry 2017) Furthermore, adversaries may disable recovery notifications, then corrupt backups.(Citation: disable_notif_synology_ransom)\n\nA number of native Windows utilities have been used by adversaries to disable or delete system recovery features:\n\n* <code>vssadmin.exe</code> can be used to delete all volume shadow copies on a system - <code>vssadmin.exe delete shadows /all /quiet</code>\n* [Windows Management Instrumentation](https://attack.mitre.org/techniques/T1047) can be used to delete volume shadow copies - <code>wmic shadowcopy delete</code>\n* <code>wbadmin.exe</code> can be used to delete the Windows Backup Catalog - <code>wbadmin.exe delete catalog -quiet</code>\n* <code>bcdedit.exe</code> can be used to disable automatic Windows recovery features by modifying boot configuration data - <code>bcdedit.exe /set {default} bootstatuspolicy ignoreallfailures & bcdedit /set {default} recoveryenabled no</code>\n* <code>REAgentC.exe</code> can be used to disable Windows Recovery Environment (WinRE) repair/recovery options of an infected system\n\nOn network devices, adversaries may leverage [Disk Wipe](https://attack.mitre.org/techniques/T1561) to delete backup firmware images and reformat the file system, then [System Shutdown/Reboot](https://attack.mitre.org/techniques/T1529) to reload the device. Together this activity may leave network devices completely inoperable and inhibit recovery operations.\n\nAdversaries may also delete \u201conline\u201d backups that are connected to their network \u2013 whether via network storage media or through folders that sync to cloud services.(Citation: ZDNet Ransomware Backups 2020) In cloud environments, adversaries may disable versioning and backup policies and delete snapshots, machine images, and prior versions of objects designed to be used in disaster recovery scenarios.(Citation: Dark Reading Code Spaces Cyber Attack)(Citation: Rhino Security Labs AWS S3 Ransomware)",
+                    "kill_chain_phases": [
+                        {
+                            "kill_chain_name": "mitre-attack",
+                            "phase_name": "impact"
+                        }
+                    ],
+                    "revoked": false,
+                    "external_references": [
+                        {
+                            "source_name": "mitre-attack",
+                            "url": "https://attack.mitre.org/techniques/T1490",
+                            "external_id": "T1490"
+                        },
+                        {
+                            "source_name": "Dark Reading Code Spaces Cyber Attack",
+                            "description": " Brian Prince. (2014, June 20). Code Hosting Service Shuts Down After Cyber Attack. Retrieved March 21, 2023.",
+                            "url": "https://www.darkreading.com/attacks-breaches/code-hosting-service-shuts-down-after-cyber-attack"
+                        },
+                        {
+                            "source_name": "FireEye WannaCry 2017",
+                            "description": "Berry, A., Homan, J., and Eitzman, R. (2017, May 23). WannaCry Malware Profile. Retrieved March 15, 2019.",
+                            "url": "https://www.fireeye.com/blog/threat-research/2017/05/wannacry-malware-profile.html"
+                        },
+                        {
+                            "source_name": "Talos Olympic Destroyer 2018",
+                            "description": "Mercer, W. and Rascagneres, P. (2018, February 12). Olympic Destroyer Takes Aim At Winter Olympics. Retrieved March 14, 2019.",
+                            "url": "https://blog.talosintelligence.com/2018/02/olympic-destroyer.html"
+                        },
+                        {
+                            "source_name": "Rhino Security Labs AWS S3 Ransomware",
+                            "description": "Spencer Gietzen. (n.d.). AWS Simple Storage Service S3 Ransomware Part 2: Prevention and Defense. Retrieved March 21, 2023.",
+                            "url": "https://rhinosecuritylabs.com/aws/s3-ransomware-part-2-prevention-and-defense/"
+                        },
+                        {
+                            "source_name": "ZDNet Ransomware Backups 2020",
+                            "description": "Steve Ranger. (2020, February 27). Ransomware victims thought their backups were safe. They were wrong. Retrieved March 21, 2023.",
+                            "url": "https://www.zdnet.com/article/ransomware-victims-thought-their-backups-were-safe-they-were-wrong/"
+                        },
+                        {
+                            "source_name": "disable_notif_synology_ransom",
+                            "description": "TheDFIRReport. (2022, March 1). Disabling notifications on Synology servers before ransom. Retrieved October 19, 2022.",
+                            "url": "https://twitter.com/TheDFIRReport/status/1498657590259109894"
+                        }
+                    ],
+                    "object_marking_refs": [
+                        "marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168"
+                    ],
+                    "x_mitre_attack_spec_version": "3.1.0",
+                    "x_mitre_contributors": [
+                        "Yonatan Gotlib, Deep Instinct",
+                        "Austin Clark, @c2defense",
+                        "Pallavi Sivakumaran, WithSecure"
+                    ],
+                    "x_mitre_data_sources": [
+                        "Process: Process Creation",
+                        "Command: Command Execution",
+                        "Snapshot: Snapshot Deletion",
+                        "Windows Registry: Windows Registry Key Modification",
+                        "Cloud Storage: Cloud Storage Deletion",
+                        "Service: Service Metadata",
+                        "File: File Deletion"
+                    ],
+                    "x_mitre_deprecated": false,
+                    "x_mitre_detection": "Use process monitoring to monitor the execution and command line parameters of binaries involved in inhibiting system recovery, such as vssadmin, wbadmin, bcdedit and REAgentC. The Windows event logs, ex. Event ID 524 indicating a system catalog was deleted, may contain entries associated with suspicious activity.\n\nMonitor the status of services involved in system recovery. Monitor the registry for changes associated with system recovery features (ex: the creation of <code>HKEY_CURRENT_USER\\Software\\Policies\\Microsoft\\PreviousVersions\\DisableLocalPage</code>).\n\nFor network infrastructure devices, collect AAA logging to monitor for `erase`, `format`, and `reload` commands being run in succession.",
+                    "x_mitre_domains": [
+                        "enterprise-attack"
+                    ],
+                    "x_mitre_impact_type": [
+                        "Availability"
+                    ],
+                    "x_mitre_is_subtechnique": false,
+                    "x_mitre_modified_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "x_mitre_platforms": [
+                        "Windows",
+                        "macOS",
+                        "Linux",
+                        "Network",
+                        "IaaS"
+                    ],
+                    "x_mitre_version": "1.2",
+                    "detailed_diff": "{\"values_changed\": {\"root['modified']\": {\"new_value\": \"2023-05-04 18:05:57.725000+00:00\", \"old_value\": \"2023-04-14 23:09:55.976000+00:00\"}, \"root['x_mitre_contributors'][2]\": {\"new_value\": \"Pallavi Sivakumaran, WithSecure\", \"old_value\": \"Pallavi Sivakumaran\"}, \"root['x_mitre_data_sources'][0]\": {\"new_value\": \"Process: Process Creation\", \"old_value\": \"Command: Command Execution\"}, \"root['x_mitre_data_sources'][1]\": {\"new_value\": \"Command: Command Execution\", \"old_value\": \"Windows Registry: Windows Registry Key Modification\"}, \"root['x_mitre_data_sources'][3]\": {\"new_value\": \"Windows Registry: Windows Registry Key Modification\", \"old_value\": \"Process: Process Creation\"}, \"root['x_mitre_data_sources'][5]\": {\"new_value\": \"Service: Service Metadata\", \"old_value\": \"File: File Deletion\"}, \"root['x_mitre_data_sources'][6]\": {\"new_value\": \"File: File Deletion\", \"old_value\": \"Service: Service Metadata\"}}}",
+                    "previous_version": "1.2",
+                    "changelog_mitigations": {
+                        "shared": [
+                            "M1018: User Account Management",
+                            "M1028: Operating System Configuration",
+                            "M1053: Data Backup"
+                        ],
+                        "new": [],
+                        "dropped": []
+                    },
+                    "changelog_detections": {
+                        "shared": [
+                            "DS0009: Process (Process Creation)",
+                            "DS0010: Cloud Storage (Cloud Storage Deletion)",
+                            "DS0017: Command (Command Execution)",
+                            "DS0019: Service (Service Metadata)",
+                            "DS0020: Snapshot (Snapshot Deletion)",
+                            "DS0022: File (File Deletion)",
+                            "DS0024: Windows Registry (Windows Registry Key Modification)"
+                        ],
+                        "new": [],
+                        "dropped": []
+                    }
+                },
+                {
+                    "type": "attack-pattern",
+                    "id": "attack-pattern--90c4a591-d02d-490b-92aa-619d9701ac04",
+                    "created_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "created": "2023-03-30 22:45:00.431000+00:00",
+                    "modified": "2023-05-04 18:02:51.318000+00:00",
+                    "name": "Network Provider DLL",
+                    "description": "Adversaries may register malicious network provider dynamic link libraries (DLLs) to capture cleartext user credentials during the authentication process. Network provider DLLs allow Windows to interface with specific network protocols and can also support add-on credential management functions.(Citation: Network Provider API) During the logon process, Winlogon (the interactive logon module) sends credentials to the local `mpnotify.exe` process via RPC. The `mpnotify.exe` process then shares the credentials in cleartext with registered credential managers when notifying that a logon event is happening.(Citation: NPPSPY - Huntress)(Citation: NPPSPY Video)(Citation: NPLogonNotify) \n\nAdversaries can configure a malicious network provider DLL to receive credentials from `mpnotify.exe`.(Citation: NPPSPY) Once installed as a credential manager (via the Registry), a malicious DLL can receive and save credentials each time a user logs onto a Windows workstation or domain via the `NPLogonNotify()` function.(Citation: NPLogonNotify)\n\nAdversaries may target planting malicious network provider DLLs on systems known to have increased logon activity and/or administrator logon activity, such as servers and domain controllers.(Citation: NPPSPY - Huntress)",
+                    "kill_chain_phases": [
+                        {
+                            "kill_chain_name": "mitre-attack",
+                            "phase_name": "credential-access"
+                        },
+                        {
+                            "kill_chain_name": "mitre-attack",
+                            "phase_name": "defense-evasion"
+                        },
+                        {
+                            "kill_chain_name": "mitre-attack",
+                            "phase_name": "persistence"
+                        }
+                    ],
+                    "revoked": false,
+                    "external_references": [
+                        {
+                            "source_name": "mitre-attack",
+                            "url": "https://attack.mitre.org/techniques/T1556/008",
+                            "external_id": "T1556.008"
+                        },
+                        {
+                            "source_name": "NPPSPY - Huntress",
+                            "description": " Dray Agha. (2022, August 16). Cleartext Shenanigans: Gifting User Passwords to Adversaries With NPPSPY. Retrieved March 30, 2023.",
+                            "url": "https://www.huntress.com/blog/cleartext-shenanigans-gifting-user-passwords-to-adversaries-with-nppspy"
+                        },
+                        {
+                            "source_name": "NPPSPY Video",
+                            "description": "Grzegorz Tworek. (2021, December 14). How winlogon.exe shares the cleartext password with custom DLLs. Retrieved March 30, 2023.",
+                            "url": "https://www.youtube.com/watch?v=ggY3srD9dYs"
+                        },
+                        {
+                            "source_name": "NPPSPY",
+                            "description": "Grzegorz Tworek. (2021, December 15). NPPSpy. Retrieved March 30, 2023.",
+                            "url": "https://github.com/gtworek/PSBits/tree/master/PasswordStealing/NPPSpy"
+                        },
+                        {
+                            "source_name": "Network Provider API",
+                            "description": "Microsoft. (2021, January 7). Network Provider API. Retrieved March 30, 2023.",
+                            "url": "https://learn.microsoft.com/en-us/windows/win32/secauthn/network-provider-api"
+                        },
+                        {
+                            "source_name": "NPLogonNotify",
+                            "description": "Microsoft. (2021, October 21). NPLogonNotify function (npapi.h). Retrieved March 30, 2023.",
+                            "url": "https://learn.microsoft.com/en-us/windows/win32/api/npapi/nf-npapi-nplogonnotify"
+                        }
+                    ],
+                    "object_marking_refs": [
+                        "marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168"
+                    ],
+                    "x_mitre_attack_spec_version": "3.1.0",
+                    "x_mitre_contributors": [
+                        "CrowdStrike Falcon OverWatch",
+                        "Jai Minton"
+                    ],
+                    "x_mitre_data_sources": [
+                        "Windows Registry: Windows Registry Key Modification",
+                        "File: File Creation",
+                        "Process: OS API Execution",
+                        "Windows Registry: Windows Registry Key Creation"
+                    ],
+                    "x_mitre_deprecated": false,
+                    "x_mitre_detection": "",
+                    "x_mitre_domains": [
+                        "enterprise-attack"
+                    ],
+                    "x_mitre_is_subtechnique": true,
+                    "x_mitre_modified_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "x_mitre_platforms": [
+                        "Windows"
+                    ],
+                    "x_mitre_version": "1.0",
+                    "detailed_diff": "{\"values_changed\": {\"root['modified']\": {\"new_value\": \"2023-05-04 18:02:51.318000+00:00\", \"old_value\": \"2023-04-11 03:16:05.019000+00:00\"}, \"root['x_mitre_data_sources'][1]\": {\"new_value\": \"File: File Creation\", \"old_value\": \"Windows Registry: Windows Registry Key Creation\"}, \"root['x_mitre_data_sources'][3]\": {\"new_value\": \"Windows Registry: Windows Registry Key Creation\", \"old_value\": \"File: File Creation\"}}, \"iterable_item_added\": {\"root['x_mitre_contributors'][1]\": \"Jai Minton\"}}",
+                    "previous_version": "1.0",
+                    "changelog_mitigations": {
+                        "shared": [
+                            "M1024: Restrict Registry Permissions",
+                            "M1028: Operating System Configuration",
+                            "M1047: Audit"
+                        ],
+                        "new": [],
+                        "dropped": []
+                    },
+                    "changelog_detections": {
+                        "shared": [
+                            "DS0009: Process (OS API Execution)",
+                            "DS0022: File (File Creation)",
+                            "DS0024: Windows Registry (Windows Registry Key Creation)",
+                            "DS0024: Windows Registry (Windows Registry Key Modification)"
+                        ],
+                        "new": [],
+                        "dropped": []
+                    }
+                },
+                {
+                    "type": "attack-pattern",
+                    "id": "attack-pattern--02c5abff-30bf-4703-ab92-1f6072fae939",
+                    "created_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "created": "2023-03-23 19:55:25.546000+00:00",
+                    "modified": "2023-05-04 18:06:40.829000+00:00",
+                    "name": "Fileless Storage",
+                    "description": "Adversaries may store data in \"fileless\" formats to conceal malicious activity from defenses. Fileless storage can be broadly defined as any format other than a file. Common examples of non-volatile fileless storage include the Windows Registry, event logs, or WMI repository.(Citation: Microsoft Fileless)(Citation: SecureList Fileless)\n\nSimilar to fileless in-memory behaviors such as [Reflective Code Loading](https://attack.mitre.org/techniques/T1620) and [Process Injection](https://attack.mitre.org/techniques/T1055), fileless data storage may remain undetected by anti-virus and other endpoint security tools that can only access specific file formats from disk storage.\n\nAdversaries may use fileless storage to conceal various types of stored data, including payloads/shellcode (potentially being used as part of [Persistence](https://attack.mitre.org/tactics/TA0003)) and collected data not yet exfiltrated from the victim (e.g., [Local Data Staging](https://attack.mitre.org/techniques/T1074/001)). Adversaries also often encrypt, encode, splice, or otherwise obfuscate this fileless data when stored.\n\nSome forms of fileless storage activity may indirectly create artifacts in the file system, but in central and otherwise difficult to inspect formats such as the WMI (e.g., `%SystemRoot%\\System32\\Wbem\\Repository`) or Registry (e.g., `%SystemRoot%\\System32\\Config`) physical files.(Citation: Microsoft Fileless) ",
+                    "kill_chain_phases": [
+                        {
+                            "kill_chain_name": "mitre-attack",
+                            "phase_name": "defense-evasion"
+                        }
+                    ],
+                    "revoked": false,
+                    "external_references": [
+                        {
+                            "source_name": "mitre-attack",
+                            "url": "https://attack.mitre.org/techniques/T1027/011",
+                            "external_id": "T1027.011"
+                        },
+                        {
+                            "source_name": "SecureList Fileless",
+                            "description": "Legezo, D. (2022, May 4). A new secret stash for \u201cfileless\u201d malware. Retrieved March 23, 2023.",
+                            "url": "https://securelist.com/a-new-secret-stash-for-fileless-malware/106393/"
+                        },
+                        {
+                            "source_name": "Microsoft Fileless",
+                            "description": "Microsoft. (2023, February 6). Fileless threats. Retrieved March 23, 2023.",
+                            "url": "https://learn.microsoft.com/microsoft-365/security/intelligence/fileless-threats"
+                        }
+                    ],
+                    "object_marking_refs": [
+                        "marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168"
+                    ],
+                    "x_mitre_attack_spec_version": "3.1.0",
+                    "x_mitre_contributors": [
+                        "Christopher Peacock",
+                        "Denise Tan",
+                        "Mark Wee",
+                        "Simona David",
+                        "Xavier Rousseau"
+                    ],
+                    "x_mitre_data_sources": [
+                        "WMI: WMI Creation",
+                        "Windows Registry: Windows Registry Key Creation"
+                    ],
+                    "x_mitre_deprecated": false,
+                    "x_mitre_detection": "",
+                    "x_mitre_domains": [
+                        "enterprise-attack"
+                    ],
+                    "x_mitre_is_subtechnique": true,
+                    "x_mitre_modified_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "x_mitre_platforms": [
+                        "Windows"
+                    ],
+                    "x_mitre_version": "1.0",
+                    "detailed_diff": "{\"values_changed\": {\"root['modified']\": {\"new_value\": \"2023-05-04 18:06:40.829000+00:00\", \"old_value\": \"2023-03-24 13:51:48.636000+00:00\"}, \"root['x_mitre_data_sources'][0]\": {\"new_value\": \"WMI: WMI Creation\", \"old_value\": \"Windows Registry: Windows Registry Key Creation\"}, \"root['x_mitre_data_sources'][1]\": {\"new_value\": \"Windows Registry: Windows Registry Key Creation\", \"old_value\": \"WMI: WMI Creation\"}}, \"iterable_item_added\": {\"root['x_mitre_contributors'][4]\": \"Xavier Rousseau\"}}",
+                    "previous_version": "1.0",
+                    "changelog_mitigations": {
+                        "shared": [
+                            "M1047: Audit"
+                        ],
+                        "new": [],
+                        "dropped": []
+                    },
+                    "changelog_detections": {
+                        "shared": [
+                            "DS0005: WMI (WMI Creation)",
+                            "DS0024: Windows Registry (Windows Registry Key Creation)"
+                        ],
+                        "new": [],
+                        "dropped": []
+                    }
+                },
+                {
+                    "type": "attack-pattern",
+                    "id": "attack-pattern--f005e783-57d4-4837-88ad-dbe7faee1c51",
+                    "created_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "created": "2020-01-30 17:37:22.261000+00:00",
+                    "modified": "2023-05-04 18:04:17.588000+00:00",
+                    "name": "Application Access Token",
+                    "description": "Adversaries may use stolen application access tokens to bypass the typical authentication process and access restricted accounts, information, or services on remote systems. These tokens are typically stolen from users or services and used in lieu of login credentials.\n\nApplication access tokens are used to make authorized API requests on behalf of a user or service and are commonly used to access resources in cloud, container-based applications, and software-as-a-service (SaaS).(Citation: Auth0 - Why You Should Always Use Access Tokens to Secure APIs Sept 2019) \n\nOAuth is one commonly implemented framework that issues tokens to users for access to systems. These frameworks are used collaboratively to verify the user and determine what actions the user is allowed to perform. Once identity is established, the token allows actions to be authorized, without passing the actual credentials of the user. Therefore, compromise of the token can grant the adversary access to resources of other sites through a malicious application.(Citation: okta)\n\nFor example, with a cloud-based email service, once an OAuth access token is granted to a malicious application, it can potentially gain long-term access to features of the user account if a \"refresh\" token enabling background access is awarded.(Citation: Microsoft Identity Platform Access 2019) With an OAuth access token an adversary can use the user-granted REST API to perform functions such as email searching and contact enumeration.(Citation: Staaldraad Phishing with OAuth 2017)\n\nCompromised access tokens may be used as an initial step in compromising other services. For example, if a token grants access to a victim\u2019s primary email, the adversary may be able to extend access to all other services which the target subscribes by triggering forgotten password routines. In AWS and GCP environments, adversaries can trigger a request for a short-lived access token with the privileges of another user account.(Citation: Google Cloud Service Account Credentials)(Citation: AWS Temporary Security Credentials) The adversary can then use this token to request data or perform actions the original account could not. If permissions for this feature are misconfigured \u2013 for example, by allowing all users to request a token for a particular account - an adversary may be able to gain initial access to a Cloud Account or escalate their privileges.(Citation: Rhino Security Labs Enumerating AWS Roles)\n\nDirect API access through a token negates the effectiveness of a second authentication factor and may be immune to intuitive countermeasures like changing passwords.  For example, in AWS environments, an adversary who compromises a user\u2019s AWS API credentials may be able to use the `sts:GetFederationToken` API call to create a federated user session, which will have the same permissions as the original user but may persist even if the original user credentials are deactivated.(Citation: Crowdstrike AWS User Federation Persistence) Additionally, access abuse over an API channel can be difficult to detect even from the service provider end, as the access can still align well with a legitimate workflow.",
+                    "kill_chain_phases": [
+                        {
+                            "kill_chain_name": "mitre-attack",
+                            "phase_name": "defense-evasion"
+                        },
+                        {
+                            "kill_chain_name": "mitre-attack",
+                            "phase_name": "lateral-movement"
+                        }
+                    ],
+                    "revoked": false,
+                    "external_references": [
+                        {
+                            "source_name": "mitre-attack",
+                            "url": "https://attack.mitre.org/techniques/T1550/001",
+                            "external_id": "T1550.001"
+                        },
+                        {
+                            "source_name": "Crowdstrike AWS User Federation Persistence",
+                            "description": " Vaishnav Murthy and Joel Eng. (2023, January 30). How Adversaries Can Persist with AWS User Federation. Retrieved March 10, 2023.",
+                            "url": "https://www.crowdstrike.com/blog/how-adversaries-persist-with-aws-user-federation/"
+                        },
+                        {
+                            "source_name": "Auth0 - Why You Should Always Use Access Tokens to Secure APIs Sept 2019",
+                            "description": "Auth0. (n.d.). Why You Should Always Use Access Tokens to Secure APIs. Retrieved September 12, 2019.",
+                            "url": "https://auth0.com/blog/why-should-use-accesstokens-to-secure-an-api/"
+                        },
+                        {
+                            "source_name": "AWS Logging IAM Calls",
+                            "description": "AWS. (n.d.). Logging IAM and AWS STS API calls with AWS CloudTrail. Retrieved April 1, 2022.",
+                            "url": "https://docs.aws.amazon.com/IAM/latest/UserGuide/cloudtrail-integration.html"
+                        },
+                        {
+                            "source_name": "AWS Temporary Security Credentials",
+                            "description": "AWS. (n.d.). Requesting temporary security credentials. Retrieved April 1, 2022.",
+                            "url": "https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_temp_request.html"
+                        },
+                        {
+                            "source_name": "Microsoft Identity Platform Access 2019",
+                            "description": "Cai, S., Flores, J., de Guzman, C., et. al.. (2019, August 27). Microsoft identity platform access tokens. Retrieved October 4, 2019.",
+                            "url": "https://docs.microsoft.com/en-us/azure/active-directory/develop/access-tokens"
+                        },
+                        {
+                            "source_name": "Google Cloud Service Account Credentials",
+                            "description": "Google Cloud. (2022, March 31). Creating short-lived service account credentials. Retrieved April 1, 2022.",
+                            "url": "https://cloud.google.com/iam/docs/creating-short-lived-service-account-credentials"
+                        },
+                        {
+                            "source_name": "GCP Monitoring Service Account Usage",
+                            "description": "Google Cloud. (2022, March 31). Monitor usage patterns for service accounts and keys . Retrieved April 1, 2022.",
+                            "url": "https://cloud.google.com/iam/docs/service-account-monitoring"
+                        },
+                        {
+                            "source_name": "okta",
+                            "description": "okta. (n.d.). What Happens If Your JWT Is Stolen?. Retrieved September 12, 2019.",
+                            "url": "https://developer.okta.com/blog/2018/06/20/what-happens-if-your-jwt-is-stolen"
+                        },
+                        {
+                            "source_name": "Rhino Security Labs Enumerating AWS Roles",
+                            "description": "Spencer Gietzen. (2018, August 8). Assume the Worst: Enumerating AWS Roles through \u2018AssumeRole\u2019. Retrieved April 1, 2022.",
+                            "url": "https://rhinosecuritylabs.com/aws/assume-worst-aws-assume-role-enumeration"
+                        },
+                        {
+                            "source_name": "Staaldraad Phishing with OAuth 2017",
+                            "description": "Stalmans, E.. (2017, August 2). Phishing with OAuth and o365/Azure. Retrieved October 4, 2019.",
+                            "url": "https://staaldraad.github.io/2017/08/02/o356-phishing-with-oauth/"
+                        }
+                    ],
+                    "object_marking_refs": [
+                        "marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168"
+                    ],
+                    "x_mitre_attack_spec_version": "3.1.0",
+                    "x_mitre_contributors": [
+                        "Shailesh Tiwary (Indian Army)",
+                        "Saisha Agrawal, Microsoft Threat Intelligent Center (MSTIC)",
+                        "Jeff Sakowicz, Microsoft Identity Developer Platform Services (IDPM Services)",
+                        "Mark Wee",
+                        "Jen Burns, HubSpot",
+                        "Ian Davila, Tidal Cyber",
+                        "Dylan Silva, AWS Security"
+                    ],
+                    "x_mitre_data_sources": [
+                        "Web Credential: Web Credential Usage"
+                    ],
+                    "x_mitre_defense_bypassed": [
+                        "System Access Controls"
+                    ],
+                    "x_mitre_deprecated": false,
+                    "x_mitre_detection": "Monitor access token activity for abnormal use and permissions granted to unusual or suspicious applications and APIs. Additionally, administrators should review logs for calls to the AWS Security Token Service (STS) and usage of GCP service accounts in order to identify anomalous actions.(Citation: AWS Logging IAM Calls)(Citation: GCP Monitoring Service Account Usage)",
+                    "x_mitre_domains": [
+                        "enterprise-attack"
+                    ],
+                    "x_mitre_is_subtechnique": true,
+                    "x_mitre_modified_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "x_mitre_platforms": [
+                        "Office 365",
+                        "SaaS",
+                        "Google Workspace",
+                        "Containers",
+                        "IaaS",
+                        "Azure AD"
+                    ],
+                    "x_mitre_version": "1.5",
+                    "detailed_diff": "{\"values_changed\": {\"root['modified']\": {\"new_value\": \"2023-05-04 18:04:17.588000+00:00\", \"old_value\": \"2023-04-15 00:29:43.297000+00:00\"}, \"root['x_mitre_contributors'][6]\": {\"new_value\": \"Dylan Silva, AWS Security\", \"old_value\": \"Dylan\"}}}",
+                    "previous_version": "1.5",
+                    "changelog_mitigations": {
+                        "shared": [
+                            "M1021: Restrict Web-Based Content",
+                            "M1041: Encrypt Sensitive Information",
+                            "M1047: Audit"
+                        ],
+                        "new": [],
+                        "dropped": []
+                    },
+                    "changelog_detections": {
+                        "shared": [
+                            "DS0006: Web Credential (Web Credential Usage)"
+                        ],
+                        "new": [],
+                        "dropped": []
+                    }
+                }
+            ],
+            "revocations": [],
+            "deprecations": [],
+            "deletions": []
+        },
+        "software": {
+            "additions": [],
+            "major_version_changes": [],
+            "minor_version_changes": [],
+            "other_version_changes": [],
+            "patches": [
+                {
+                    "type": "malware",
+                    "id": "malware--8d242fb4-9033-4f13-8a88-4b9b4bcd9a53",
+                    "created_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "created": "2023-03-08 19:14:27.348000+00:00",
+                    "modified": "2023-05-01 17:05:56.388000+00:00",
+                    "name": "Black Basta",
+                    "description": "[Black Basta](https://attack.mitre.org/software/S1070) is ransomware written in C++ that has been offered within the ransomware-as-a-service (RaaS) model since at least April 2022; there are variants that target Windows and VMWare ESXi servers. [Black Basta](https://attack.mitre.org/software/S1070) operations have included the double extortion technique where in addition to demanding ransom for decrypting the files of targeted organizations the cyber actors also threaten to post sensitive information to a leak site if the ransom is not paid. [Black Basta](https://attack.mitre.org/software/S1070) affiliates have targeted multiple high-value organizations, with the largest number of victims based in the U.S. Based on similarities in TTPs, leak sites, payment sites, and negotiation tactics, security researchers assess the [Black Basta](https://attack.mitre.org/software/S1070) RaaS operators could include current or former members of the [Conti](https://attack.mitre.org/software/S0575) group.(Citation: Palo Alto Networks Black Basta August 2022)(Citation: Deep Instinct Black Basta August 2022)(Citation: Minerva Labs Black Basta May 2022)(Citation: Avertium Black Basta June 2022)(Citation: NCC Group Black Basta June 2022)(Citation: Cyble Black Basta May 2022)",
+                    "revoked": false,
+                    "labels": [
+                        "malware"
+                    ],
+                    "external_references": [
+                        {
+                            "source_name": "mitre-attack",
+                            "url": "https://attack.mitre.org/software/S1070",
+                            "external_id": "S1070"
+                        },
+                        {
+                            "source_name": "Avertium Black Basta June 2022",
+                            "description": "Avertium. (2022, June 1). AN IN-DEPTH LOOK AT BLACK BASTA RANSOMWARE. Retrieved March 7, 2023.",
+                            "url": "https://www.avertium.com/resources/threat-reports/in-depth-look-at-black-basta-ransomware"
+                        },
+                        {
+                            "source_name": "Cyble Black Basta May 2022",
+                            "description": "Cyble. (2022, May 6). New ransomware variant targeting high-value organizations. Retrieved March 7, 2023.",
+                            "url": "https://blog.cyble.com/2022/05/06/black-basta-ransomware/"
+                        },
+                        {
+                            "source_name": "Palo Alto Networks Black Basta August 2022",
+                            "description": "Elsad, A. (2022, August 25). Threat Assessment: Black Basta Ransomware. Retrieved March 8, 2023.",
+                            "url": "https://unit42.paloaltonetworks.com/threat-assessment-black-basta-ransomware"
+                        },
+                        {
+                            "source_name": "NCC Group Black Basta June 2022",
+                            "description": "Inman, R. and Gurney, P. (2022, June 6). Shining the Light on Black Basta. Retrieved March 8, 2023.",
+                            "url": "https://research.nccgroup.com/2022/06/06/shining-the-light-on-black-basta/"
+                        },
+                        {
+                            "source_name": "Deep Instinct Black Basta August 2022",
+                            "description": "Vilkomir-Preisman, S. (2022, August 18). Beating Black Basta Ransomware. Retrieved March 8, 2023.",
+                            "url": "https://www.deepinstinct.com/blog/black-basta-ransomware-threat-emergence"
+                        },
+                        {
+                            "source_name": "Minerva Labs Black Basta May 2022",
+                            "description": "Zargarov, N. (2022, May 2). New Black Basta Ransomware Hijacks Windows Fax Service. Retrieved March 7, 2023.",
+                            "url": "https://minerva-labs.com/blog/new-black-basta-ransomware-hijacks-windows-fax-service/"
+                        }
+                    ],
+                    "object_marking_refs": [
+                        "marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168"
+                    ],
+                    "x_mitre_aliases": [
+                        "Black Basta"
+                    ],
+                    "x_mitre_attack_spec_version": "3.1.0",
+                    "x_mitre_contributors": [
+                        "Daniyal Naeem, BT Security",
+                        "Mathieu Hinse",
+                        "Inna Danilevich, U.S. Bank"
+                    ],
+                    "x_mitre_deprecated": false,
+                    "x_mitre_domains": [
+                        "enterprise-attack"
+                    ],
+                    "x_mitre_modified_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "x_mitre_platforms": [
+                        "Windows"
+                    ],
+                    "x_mitre_version": "1.0",
+                    "detailed_diff": "{\"values_changed\": {\"root['modified']\": {\"new_value\": \"2023-05-01 17:05:56.388000+00:00\", \"old_value\": \"2023-04-17 21:45:00.661000+00:00\"}, \"root['x_mitre_contributors'][2]\": {\"new_value\": \"Inna Danilevich, U.S. Bank\", \"old_value\": \"Inna Danilevich, U.S Bank\"}}}",
+                    "previous_version": "1.0"
+                },
+                {
+                    "type": "malware",
+                    "id": "malware--edc5e045-5401-42bb-ad92-52b5b2ee0de9",
+                    "created_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "created": "2021-09-27 19:35:35.326000+00:00",
+                    "modified": "2023-05-01 17:05:20.902000+00:00",
+                    "name": "QakBot",
+                    "description": "[QakBot](https://attack.mitre.org/software/S0650) is a modular banking trojan that has been used primarily by financially-motivated actors since at least 2007. [QakBot](https://attack.mitre.org/software/S0650) is continuously maintained and developed and has evolved from an information stealer into a delivery agent for ransomware, most notably [ProLock](https://attack.mitre.org/software/S0654) and [Egregor](https://attack.mitre.org/software/S0554).(Citation: Trend Micro Qakbot December 2020)(Citation: Red Canary Qbot)(Citation: Kaspersky QakBot September 2021)(Citation: ATT QakBot April 2021)",
+                    "revoked": false,
+                    "labels": [
+                        "malware"
+                    ],
+                    "external_references": [
+                        {
+                            "source_name": "mitre-attack",
+                            "url": "https://attack.mitre.org/software/S0650",
+                            "external_id": "S0650"
+                        },
+                        {
+                            "source_name": "QuackBot",
+                            "description": "(Citation: Kaspersky QakBot September 2021)"
+                        },
+                        {
+                            "source_name": "Pinkslipbot",
+                            "description": "(Citation: Kaspersky QakBot September 2021)(Citation: ATT QakBot April 2021)"
+                        },
+                        {
+                            "source_name": "QBot",
+                            "description": "(Citation: Trend Micro Qakbot December 2020)(Citation: Red Canary Qbot)(Citation: Kaspersky QakBot September 2021)(Citation: ATT QakBot April 2021)"
+                        },
+                        {
+                            "source_name": "Kaspersky QakBot September 2021",
+                            "description": "Kuzmenko, A. et al. (2021, September 2). QakBot technical analysis. Retrieved September 27, 2021.",
+                            "url": "https://securelist.com/qakbot-technical-analysis/103931/"
+                        },
+                        {
+                            "source_name": "ATT QakBot April 2021",
+                            "description": "Morrow, D. (2021, April 15). The rise of QakBot. Retrieved September 27, 2021.",
+                            "url": "https://cybersecurity.att.com/blogs/labs-research/the-rise-of-qakbot"
+                        },
+                        {
+                            "source_name": "Red Canary Qbot",
+                            "description": "Rainey, K. (n.d.). Qbot. Retrieved September 27, 2021.",
+                            "url": "https://redcanary.com/threat-detection-report/threats/qbot/"
+                        },
+                        {
+                            "source_name": "Trend Micro Qakbot December 2020",
+                            "description": "Trend Micro. (2020, December 17). QAKBOT: A decade-old malware still with new tricks. Retrieved September 27, 2021.",
+                            "url": "https://success.trendmicro.com/solution/000283381"
+                        }
+                    ],
+                    "object_marking_refs": [
+                        "marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168"
+                    ],
+                    "x_mitre_aliases": [
+                        "QakBot",
+                        "Pinkslipbot",
+                        "QuackBot",
+                        "QBot"
+                    ],
+                    "x_mitre_attack_spec_version": "3.1.0",
+                    "x_mitre_contributors": [
+                        "Edward Millington",
+                        "Inna Danilevich, U.S. Bank"
+                    ],
+                    "x_mitre_deprecated": false,
+                    "x_mitre_domains": [
+                        "enterprise-attack"
+                    ],
+                    "x_mitre_modified_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "x_mitre_platforms": [
+                        "Windows"
+                    ],
+                    "x_mitre_version": "1.1",
+                    "detailed_diff": "{\"values_changed\": {\"root['modified']\": {\"new_value\": \"2023-05-01 17:05:20.902000+00:00\", \"old_value\": \"2023-04-14 14:37:59.896000+00:00\"}, \"root['x_mitre_contributors'][1]\": {\"new_value\": \"Inna Danilevich, U.S. Bank\", \"old_value\": \"Inna Danilevich, U.S Bank\"}}}",
+                    "previous_version": "1.1"
+                }
+            ],
+            "revocations": [],
+            "deprecations": [],
+            "deletions": []
+        },
+        "groups": {
+            "additions": [],
+            "major_version_changes": [],
+            "minor_version_changes": [],
+            "other_version_changes": [],
+            "patches": [],
+            "revocations": [],
+            "deprecations": [],
+            "deletions": []
+        },
+        "campaigns": {
+            "additions": [],
+            "major_version_changes": [],
+            "minor_version_changes": [],
+            "other_version_changes": [],
+            "patches": [],
+            "revocations": [],
+            "deprecations": [],
+            "deletions": []
+        },
+        "mitigations": {
+            "additions": [],
+            "major_version_changes": [],
+            "minor_version_changes": [],
+            "other_version_changes": [],
+            "patches": [],
+            "revocations": [],
+            "deprecations": [],
+            "deletions": []
+        },
+        "datasources": {
+            "additions": [],
+            "major_version_changes": [],
+            "minor_version_changes": [],
+            "other_version_changes": [],
+            "patches": [],
+            "revocations": [],
+            "deprecations": [],
+            "deletions": []
+        },
+        "datacomponents": {
+            "additions": [],
+            "major_version_changes": [],
+            "minor_version_changes": [],
+            "other_version_changes": [],
+            "patches": [],
+            "revocations": [],
+            "deprecations": [],
+            "deletions": []
+        }
+    },
+    "mobile-attack": {
+        "techniques": {
+            "additions": [],
+            "major_version_changes": [],
+            "minor_version_changes": [],
+            "other_version_changes": [],
+            "patches": [],
+            "revocations": [],
+            "deprecations": [],
+            "deletions": []
+        },
+        "software": {
+            "additions": [],
+            "major_version_changes": [],
+            "minor_version_changes": [],
+            "other_version_changes": [],
+            "patches": [],
+            "revocations": [],
+            "deprecations": [],
+            "deletions": []
+        },
+        "groups": {
+            "additions": [],
+            "major_version_changes": [],
+            "minor_version_changes": [],
+            "other_version_changes": [],
+            "patches": [],
+            "revocations": [],
+            "deprecations": [],
+            "deletions": []
+        },
+        "campaigns": {
+            "additions": [],
+            "major_version_changes": [],
+            "minor_version_changes": [],
+            "other_version_changes": [],
+            "patches": [],
+            "revocations": [],
+            "deprecations": [],
+            "deletions": []
+        },
+        "mitigations": {
+            "additions": [],
+            "major_version_changes": [],
+            "minor_version_changes": [],
+            "other_version_changes": [],
+            "patches": [],
+            "revocations": [],
+            "deprecations": [],
+            "deletions": []
+        },
+        "datasources": {
+            "additions": [],
+            "major_version_changes": [],
+            "minor_version_changes": [],
+            "other_version_changes": [],
+            "patches": [],
+            "revocations": [],
+            "deprecations": [],
+            "deletions": []
+        },
+        "datacomponents": {
+            "additions": [],
+            "major_version_changes": [],
+            "minor_version_changes": [],
+            "other_version_changes": [],
+            "patches": [],
+            "revocations": [],
+            "deprecations": [],
+            "deletions": []
+        }
+    },
+    "ics-attack": {
+        "techniques": {
+            "additions": [],
+            "major_version_changes": [],
+            "minor_version_changes": [],
+            "other_version_changes": [],
+            "patches": [
+                {
+                    "type": "attack-pattern",
+                    "id": "attack-pattern--e72425f8-9ae6-41d3-bfdb-e1b865e60722",
+                    "created_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "created": "2020-05-21 17:43:26.506000+00:00",
+                    "modified": "2023-05-08 18:58:24.092000+00:00",
+                    "name": "Project File Infection",
+                    "description": "Adversaries may attempt to infect project files with malicious code. These project files may consist of objects, program organization units, variables such as tags, documentation, and other configurations needed for PLC programs to function. (Citation: Beckhoff) Using built in functions of the engineering software, adversaries may be able to download an infected program to a PLC in the operating environment enabling further [Execution](https://attack.mitre.org/tactics/TA0104) and [Persistence](https://attack.mitre.org/tactics/TA0110) techniques. (Citation: PLCdev) \n\nAdversaries may export their own code into project files with conditions to execute at specific intervals. (Citation: Nicolas Falliere, Liam O Murchu, Eric Chien February 2011) Malicious programs allow adversaries control of all aspects of the process enabled by the PLC. Once the project file is downloaded to a PLC the workstation device may be disconnected with the infected project file still executing. (Citation: PLCdev)",
+                    "kill_chain_phases": [
+                        {
+                            "kill_chain_name": "mitre-ics-attack",
+                            "phase_name": "persistence"
+                        }
+                    ],
+                    "revoked": false,
+                    "external_references": [
+                        {
+                            "source_name": "mitre-attack",
+                            "url": "https://attack.mitre.org/techniques/T0873",
+                            "external_id": "T0873"
+                        },
+                        {
+                            "source_name": "Beckhoff",
+                            "description": "Beckhoff   TwinCAT 3 Source Control: Project Files Retrieved. 2019/11/21 ",
+                            "url": "https://infosys.beckhoff.com/english.php?content=../content/1033/tc3_sourcecontrol/18014398915785483.html&id="
+                        },
+                        {
+                            "source_name": "Nicolas Falliere, Liam O Murchu, Eric Chien February 2011",
+                            "description": "Nicolas Falliere, Liam O Murchu, Eric Chien 2011, February W32.Stuxnet Dossier (Version 1.4) Retrieved. 2017/09/22 ",
+                            "url": "https://www.wired.com/images_blogs/threatlevel/2011/02/Symantec-Stuxnet-Update-Feb-2011.pdf"
+                        },
+                        {
+                            "source_name": "PLCdev",
+                            "description": "PLCdev Nicolas Falliere, Liam O Murchu, Eric Chien 2011, February W32.Stuxnet Dossier (Version 1.4) Retrieved. 2017/09/22  Siemens SIMATIC Step 7 Programmer's Handbook Retrieved. 2019/11/21 ",
+                            "url": "http://www.plcdev.com/book/export/html/373"
+                        }
+                    ],
+                    "object_marking_refs": [
+                        "marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168"
+                    ],
+                    "x_mitre_attack_spec_version": "3.1.0",
+                    "x_mitre_data_sources": [
+                        "File: File Modification"
+                    ],
+                    "x_mitre_deprecated": false,
+                    "x_mitre_detection": "",
+                    "x_mitre_domains": [
+                        "ics-attack"
+                    ],
+                    "x_mitre_is_subtechnique": false,
+                    "x_mitre_modified_by_ref": "identity--c78cb6e5-0c4b-4611-8297-d1b8b55e40b5",
+                    "x_mitre_platforms": [
+                        "Engineering Workstation",
+                        "Human-Machine Interface"
+                    ],
+                    "x_mitre_version": "1.0",
+                    "detailed_diff": "{\"values_changed\": {\"root['modified']\": {\"new_value\": \"2023-05-08 18:58:24.092000+00:00\", \"old_value\": \"2023-03-09 18:38:51.471000+00:00\"}, \"root['description']\": {\"new_value\": \"Adversaries may attempt to infect project files with malicious code. These project files may consist of objects, program organization units, variables such as tags, documentation, and other configurations needed for PLC programs to function. (Citation: Beckhoff) Using built in functions of the engineering software, adversaries may be able to download an infected program to a PLC in the operating environment enabling further [Execution](https://attack.mitre.org/tactics/TA0104) and [Persistence](https://attack.mitre.org/tactics/TA0110) techniques. (Citation: PLCdev) \\n\\nAdversaries may export their own code into project files with conditions to execute at specific intervals. (Citation: Nicolas Falliere, Liam O Murchu, Eric Chien February 2011) Malicious programs allow adversaries control of all aspects of the process enabled by the PLC. Once the project file is downloaded to a PLC the workstation device may be disconnected with the infected project file still executing. (Citation: PLCdev)\", \"old_value\": \"Adversaries may attempt to infect project files with malicious code. These project files may consist of objects, program organization units, variables such as tags, documentation, and other configurations needed for PLC programs to function. (Citation: Beckhoff) Using built in functions of the engineering software, adversaries may be able to download an infected program to a PLC in the operating environment enabling further [execution](http://attacksite.mitre.org/tactics/TA0104/) and [persistence](http://attacksite.mitre.org/tactics/TA0110/) techniques. (Citation: PLCdev) \\n\\nAdversaries may export their own code into project files with conditions to execute at specific intervals. (Citation: Nicolas Falliere, Liam O Murchu, Eric Chien February 2011) Malicious programs allow adversaries control of all aspects of the process enabled by the PLC. Once the project file is downloaded to a PLC the workstation device may be disconnected with the infected project file still executing. (Citation: PLCdev)\", \"diff\": \"--- \\n+++ \\n@@ -1,3 +1,3 @@\\n-Adversaries may attempt to infect project files with malicious code. These project files may consist of objects, program organization units, variables such as tags, documentation, and other configurations needed for PLC programs to function. (Citation: Beckhoff) Using built in functions of the engineering software, adversaries may be able to download an infected program to a PLC in the operating environment enabling further [execution](http://attacksite.mitre.org/tactics/TA0104/) and [persistence](http://attacksite.mitre.org/tactics/TA0110/) techniques. (Citation: PLCdev) \\n+Adversaries may attempt to infect project files with malicious code. These project files may consist of objects, program organization units, variables such as tags, documentation, and other configurations needed for PLC programs to function. (Citation: Beckhoff) Using built in functions of the engineering software, adversaries may be able to download an infected program to a PLC in the operating environment enabling further [Execution](https://attack.mitre.org/tactics/TA0104) and [Persistence](https://attack.mitre.org/tactics/TA0110) techniques. (Citation: PLCdev) \\n \\n Adversaries may export their own code into project files with conditions to execute at specific intervals. (Citation: Nicolas Falliere, Liam O Murchu, Eric Chien February 2011) Malicious programs allow adversaries control of all aspects of the process enabled by the PLC. Once the project file is downloaded to a PLC the workstation device may be disconnected with the infected project file still executing. (Citation: PLCdev)\"}, \"root['x_mitre_attack_spec_version']\": {\"new_value\": \"3.1.0\", \"old_value\": \"2.1.0\"}}}",
+                    "previous_version": "1.0",
+                    "description_change_table": "\n    <table class=\"diff\" id=\"difflib_chg_to1__top\"\n           cellspacing=\"0\" cellpadding=\"0\" rules=\"groups\" >\n        <colgroup></colgroup> <colgroup></colgroup> <colgroup></colgroup>\n        <colgroup></colgroup> <colgroup></colgroup> <colgroup></colgroup>\n        <thead><tr><th class=\"diff_next\"><br /></th><th colspan=\"2\" class=\"diff_header\">Old Description</th><th class=\"diff_next\"><br /></th><th colspan=\"2\" class=\"diff_header\">New Description</th></tr></thead>\n        <tbody>\n            <tr><td class=\"diff_next\" id=\"difflib_chg_to1__0\"><a href=\"#difflib_chg_to1__top\">t</a></td><td class=\"diff_header\" id=\"from1_1\">1</td><td nowrap=\"nowrap\">Adversaries&nbsp;may&nbsp;attempt&nbsp;to&nbsp;infect&nbsp;project&nbsp;files&nbsp;with&nbsp;malicio</td><td class=\"diff_next\"><a href=\"#difflib_chg_to1__top\">t</a></td><td class=\"diff_header\" id=\"to1_1\">1</td><td nowrap=\"nowrap\">Adversaries&nbsp;may&nbsp;attempt&nbsp;to&nbsp;infect&nbsp;project&nbsp;files&nbsp;with&nbsp;malicio</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">us&nbsp;code.&nbsp;These&nbsp;project&nbsp;files&nbsp;may&nbsp;consist&nbsp;of&nbsp;objects,&nbsp;program</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">us&nbsp;code.&nbsp;These&nbsp;project&nbsp;files&nbsp;may&nbsp;consist&nbsp;of&nbsp;objects,&nbsp;program</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">&nbsp;organization&nbsp;units,&nbsp;variables&nbsp;such&nbsp;as&nbsp;tags,&nbsp;documentation,&nbsp;</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">&nbsp;organization&nbsp;units,&nbsp;variables&nbsp;such&nbsp;as&nbsp;tags,&nbsp;documentation,&nbsp;</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">and&nbsp;other&nbsp;configurations&nbsp;needed&nbsp;for&nbsp;PLC&nbsp;programs&nbsp;to&nbsp;function</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">and&nbsp;other&nbsp;configurations&nbsp;needed&nbsp;for&nbsp;PLC&nbsp;programs&nbsp;to&nbsp;function</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">.&nbsp;(Citation:&nbsp;Beckhoff)&nbsp;Using&nbsp;built&nbsp;in&nbsp;functions&nbsp;of&nbsp;the&nbsp;engin</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">.&nbsp;(Citation:&nbsp;Beckhoff)&nbsp;Using&nbsp;built&nbsp;in&nbsp;functions&nbsp;of&nbsp;the&nbsp;engin</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">eering&nbsp;software,&nbsp;adversaries&nbsp;may&nbsp;be&nbsp;able&nbsp;to&nbsp;download&nbsp;an&nbsp;infe</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">eering&nbsp;software,&nbsp;adversaries&nbsp;may&nbsp;be&nbsp;able&nbsp;to&nbsp;download&nbsp;an&nbsp;infe</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">cted&nbsp;program&nbsp;to&nbsp;a&nbsp;PLC&nbsp;in&nbsp;the&nbsp;operating&nbsp;environment&nbsp;enabling&nbsp;</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">cted&nbsp;program&nbsp;to&nbsp;a&nbsp;PLC&nbsp;in&nbsp;the&nbsp;operating&nbsp;environment&nbsp;enabling&nbsp;</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">further&nbsp;[<span class=\"diff_chg\">e</span>xecution](http://attack<span class=\"diff_sub\">site</span>.mitre.org/tactics/TA01</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">further&nbsp;[<span class=\"diff_chg\">E</span>xecution](http<span class=\"diff_add\">s</span>://attack.mitre.org/tactics/TA0104)</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">04<span class=\"diff_sub\">/</span>)&nbsp;and&nbsp;[<span class=\"diff_chg\">p</span>ersistence](http://attack<span class=\"diff_sub\">site</span>.mitre.org/tactics/T</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">&nbsp;and&nbsp;[<span class=\"diff_chg\">P</span>ersistence](http<span class=\"diff_add\">s</span>://attack.mitre.org/tactics/TA0110)&nbsp;</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">A0110<span class=\"diff_sub\">/</span>)&nbsp;techniques.&nbsp;(Citation:&nbsp;PLCdev)&nbsp;&nbsp;&nbsp;Adversaries&nbsp;may&nbsp;exp</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">techniques.&nbsp;(Citation:&nbsp;PLCdev)&nbsp;&nbsp;&nbsp;Adversaries&nbsp;may&nbsp;export&nbsp;thei</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">ort&nbsp;their&nbsp;own&nbsp;code&nbsp;into&nbsp;project&nbsp;files&nbsp;with&nbsp;conditions&nbsp;to&nbsp;exe</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">r&nbsp;own&nbsp;code&nbsp;into&nbsp;project&nbsp;files&nbsp;with&nbsp;conditions&nbsp;to&nbsp;execute&nbsp;at&nbsp;</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">cute&nbsp;at&nbsp;specific&nbsp;intervals.&nbsp;(Citation:&nbsp;Nicolas&nbsp;Falliere,&nbsp;Lia</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">specific&nbsp;intervals.&nbsp;(Citation:&nbsp;Nicolas&nbsp;Falliere,&nbsp;Liam&nbsp;O&nbsp;Murc</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">m&nbsp;O&nbsp;Murchu,&nbsp;Eric&nbsp;Chien&nbsp;February&nbsp;2011)&nbsp;Malicious&nbsp;programs&nbsp;all</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">hu,&nbsp;Eric&nbsp;Chien&nbsp;February&nbsp;2011)&nbsp;Malicious&nbsp;programs&nbsp;allow&nbsp;adver</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">ow&nbsp;adversaries&nbsp;control&nbsp;of&nbsp;all&nbsp;aspects&nbsp;of&nbsp;the&nbsp;process&nbsp;enabled</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">saries&nbsp;control&nbsp;of&nbsp;all&nbsp;aspects&nbsp;of&nbsp;the&nbsp;process&nbsp;enabled&nbsp;by&nbsp;the&nbsp;</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">&nbsp;by&nbsp;the&nbsp;PLC.&nbsp;Once&nbsp;the&nbsp;project&nbsp;file&nbsp;is&nbsp;downloaded&nbsp;to&nbsp;a&nbsp;PLC&nbsp;th</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">PLC.&nbsp;Once&nbsp;the&nbsp;project&nbsp;file&nbsp;is&nbsp;downloaded&nbsp;to&nbsp;a&nbsp;PLC&nbsp;the&nbsp;workst</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">e&nbsp;workstation&nbsp;device&nbsp;may&nbsp;be&nbsp;disconnected&nbsp;with&nbsp;the&nbsp;infected&nbsp;p</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">ation&nbsp;device&nbsp;may&nbsp;be&nbsp;disconnected&nbsp;with&nbsp;the&nbsp;infected&nbsp;project&nbsp;f</td></tr>\n            <tr><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">roject&nbsp;file&nbsp;still&nbsp;executing.&nbsp;(Citation:&nbsp;PLCdev)</td><td class=\"diff_next\"></td><td class=\"diff_header\">></td><td nowrap=\"nowrap\">ile&nbsp;still&nbsp;executing.&nbsp;(Citation:&nbsp;PLCdev)</td></tr>\n        </tbody>\n    </table>",
+                    "changelog_mitigations": {
+                        "shared": [
+                            "M0922: Restrict File and Directory Permissions",
+                            "M0941: Encrypt Sensitive Information",
+                            "M0945: Code Signing",
+                            "M0947: Audit"
+                        ],
+                        "new": [],
+                        "dropped": []
+                    },
+                    "changelog_detections": {
+                        "shared": [
+                            "DS0022: File (File Modification)"
+                        ],
+                        "new": [],
+                        "dropped": []
+                    }
+                }
+            ],
+            "revocations": [],
+            "deprecations": [],
+            "deletions": []
+        },
+        "software": {
+            "additions": [],
+            "major_version_changes": [],
+            "minor_version_changes": [],
+            "other_version_changes": [],
+            "patches": [],
+            "revocations": [],
+            "deprecations": [],
+            "deletions": []
+        },
+        "groups": {
+            "additions": [],
+            "major_version_changes": [],
+            "minor_version_changes": [],
+            "other_version_changes": [],
+            "patches": [],
+            "revocations": [],
+            "deprecations": [],
+            "deletions": []
+        },
+        "campaigns": {
+            "additions": [],
+            "major_version_changes": [],
+            "minor_version_changes": [],
+            "other_version_changes": [],
+            "patches": [],
+            "revocations": [],
+            "deprecations": [],
+            "deletions": []
+        },
+        "mitigations": {
+            "additions": [],
+            "major_version_changes": [],
+            "minor_version_changes": [],
+            "other_version_changes": [],
+            "patches": [],
+            "revocations": [],
+            "deprecations": [],
+            "deletions": []
+        },
+        "datasources": {
+            "additions": [],
+            "major_version_changes": [],
+            "minor_version_changes": [],
+            "other_version_changes": [],
+            "patches": [],
+            "revocations": [],
+            "deprecations": [],
+            "deletions": []
+        },
+        "datacomponents": {
+            "additions": [],
+            "major_version_changes": [],
+            "minor_version_changes": [],
+            "other_version_changes": [],
+            "patches": [],
+            "revocations": [],
+            "deprecations": [],
+            "deletions": []
+        }
+    },
+    "new-contributors": [
+        "Dylan Silva, AWS Security",
+        "ESET",
+        "Harun K\u00fc\u00dfner",
+        "Inna Danilevich, U.S. Bank",
+        "Jai Minton",
+        "Pallavi Sivakumaran, WithSecure",
+        "Thanabodi Phrakhun, I-SECURE",
+        "Xavier Rousseau"
+    ]
+}

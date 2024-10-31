@@ -169,6 +169,9 @@
             <div class="col px-0">
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
+                    <div class="container-fluid banner-message">
+                        ATT&CK v16 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v16-561c76af94cf'>blog post</a> for more information.
+                    </div>
             </div>
         </div>
         <div class="row flex-grow-1 flex-shrink-0">
@@ -1694,13 +1697,13 @@
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Permalink to this version of DS0032" 
-           href="/versions/v15/datasources/DS0032/" data-test-ignore="true">Version Permalink</a>
+           href="/versions/v16/datasources/DS0032/" data-test-ignore="true">Version Permalink</a>
     </div>
     <div class="permalink">
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Go to the live version of DS0032" 
-           href="/versions/v15/datasources/DS0032/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+           href="/versions/v16/datasources/DS0032/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
     </div>
 </div>
 
@@ -1787,7 +1790,7 @@
                         <a href="/techniques/T1610">Deploy Container</a>
                     </td>
                     <td>
-                                <p>Monitor for newly constructed containers that may deploy a container into an environment to facilitate execution or evade defenses.</p>
+                                <p>Monitor container creation to detect suspicious or unknown images being deployed. Ensure that only authorized images are being used in the environment, especially in sensitive areas.</p><p>Analytic 1 - Creation of unexpected or unauthorized containers</p><p><code>sourcetype=docker:daemon OR sourcetype=kubernetes:event| search action="create"| where image NOT IN ("known_images_list")</code></p>
 
                     </td>
                 </tr>
@@ -1817,7 +1820,7 @@
                         <a href="/techniques/T1053">Scheduled Task/Job</a>
                     </td>
                     <td>
-                                <p>Monitor for newly constructed containers that may abuse task scheduling functionality to facilitate initial or recurring execution of malicious code.</p>
+                                <p>Monitor for newly constructed containers that may abuse task scheduling functionality to facilitate initial or recurring execution of malicious code.</p><p>Analytic 1 - Look for new container creation events with unusual parameters.</p><p><code>index=container_logs sourcetype="docker_events" OR sourcetype="kubernetes_events"| eval event_action=coalesce(action, status)| where (event_action="create" OR event_action="start")| search event_type="container"| search (parameters="<em>--privileged</em>" OR parameters="<em>--cap-add=</em>" OR parameters="<em>--volume=</em>" OR parameters="<em>--network=host</em>" OR parameters="<em>--device</em>") </code></p>
 
                     </td>
                 </tr>
@@ -1831,7 +1834,7 @@
                             <a href="/techniques/T1053/007">Container Orchestration Job</a>
                         </td>
                         <td>
-                                    <p>Monitor for newly constructed containers</p>
+                                    <p>Monitor for container creation events within Kubernetes clusters. This helps track when new containers are being deployed, especially by jobs that could have been scheduled by adversaries.</p><p>Analytic 1 - Look for new container creation events with unusual parameters.</p><p><code>  sourcetype=kubernetes:container_creation | stats count by container_name namespace pod_name container_id image_name| where NOT [search index=container_baseline container_name=* earliest=-30d@d latest=now() | table container_name]</code> </p>
 
                         </td>
                     </tr>
@@ -1846,7 +1849,7 @@
                         <a href="/techniques/T1204">User Execution</a>
                     </td>
                     <td>
-                                <p>Monitor for newly constructed containers that may use an existing, legitimate external Web service to exfiltrate data rather than their primary command and control channel.</p>
+                                <p>Monitor for newly constructed containers that may use an existing, legitimate external Web service to exfiltrate data rather than their primary command and control channel.</p><p>Analytic 1 - Containers communicating with unexpected external services.</p><p><code>sourcetype=container_creation OR sourcetype=container_start| stats count by container_name event_description user| where container_name NOT IN ("<known_containers>") AND event_description IN ("created", "started") </code></p>
 
                     </td>
                 </tr>
@@ -1966,7 +1969,7 @@
                         <a href="/techniques/T1610">Deploy Container</a>
                     </td>
                     <td>
-                                <p>Monitor for activation or invocation of a container that may deploy a container into an environment to facilitate execution or evade defenses.</p>
+                                <p>Monitor for the start of containers, especially those not aligned with expected images or known administrative schedules.</p><p>Analytic 1 - Unexpected container starts</p><p><code>sourcetype=docker:daemon OR sourcetype=kubernetes:event| search action="start"| where user NOT IN ("known_admins") </code></p>
 
                     </td>
                 </tr>
@@ -2089,7 +2092,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v15.1&#013;Website  v4.1.6">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v16.0&#013;Website  v4.2.0">Website Changelog</a></u>
                                 </div>
                             </div>
                             <div class="row">
@@ -2129,15 +2132,15 @@
     <script src="/theme/scripts/popper.min.js"></script>
     <script src="/theme/scripts/bootstrap-select.min.js"></script>
     <script src="/theme/scripts/bootstrap.bundle.min.js"></script>
-    <script src="/theme/scripts/site.js?8263"></script>
-    <script src="/theme/scripts/settings.js?4844"></script>
+    <script src="/theme/scripts/site.js"></script>
+    <script src="/theme/scripts/settings.js"></script>
     <script src="/theme/scripts/search_bundle.js"></script>
 
 <!--SCRIPTS-->
 <script src="/theme/scripts/resizer.js"></script>
 
     <!--SCRIPTS-->
-    <script src="/theme/scripts/filter/filter.js?891"></script>
+    <script src="/theme/scripts/filter/filter.js?7463"></script>
     <script src="/theme/scripts/navigation.js"></script>
     <script src="/theme/scripts/mobileview-datasources.js"></script>
     <script src="/theme/scripts/bootstrap-tourist.js"></script>

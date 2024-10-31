@@ -169,6 +169,9 @@
             <div class="col px-0">
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
+                    <div class="container-fluid banner-message">
+                        ATT&CK v16 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v16-561c76af94cf'>blog post</a> for more information.
+                    </div>
             </div>
         </div>
         <div class="row flex-grow-1 flex-shrink-0">
@@ -279,7 +282,7 @@
                                     <!--start-indexing-for-search-->
 
                                     <div class="description-body">
-                                                <p>Adversaries can manipulate or abuse the Transparency, Consent, &amp; Control (TCC) service or database to execute malicious applications with elevated permissions. TCC is a Privacy &amp; Security macOS control mechanism used to determine if the running process has permission to access the data or services protected by TCC, such as screen sharing, camera, microphone, or Full Disk Access (FDA).</p><p>When an application requests to access data or a service protected by TCC, the TCC daemon (<code>tccd</code>) checks the TCC database, located at <code>/Library/Application Support/com.apple.TCC/TCC.db</code> (and <code>~/</code> equivalent), for existing permissions. If permissions do not exist, then the user is prompted to grant permission. Once permissions are granted, the database stores the application's permissions and will not prompt the user again unless reset. For example, when a web browser requests permissions to the user's webcam, once granted the web browser may not explicitly prompt the user again.<span onclick=scrollToRef('scite-1') id="scite-ref-1-a" class="scite-citeref-number" title="Marc-Etienne M.Léveillé. (2022, July 19). I see what you did there: A look at the CloudMensis macOS spyware. Retrieved March 21, 2024."data-reference="welivesecurity TCC"><sup><a href="https://www.welivesecurity.com/2022/07/19/i-see-what-you-did-there-look-cloudmensis-macos-spyware/" target="_blank" data-hasqtip="0" aria-describedby="qtip-0">[1]</a></sup></span></p><p>Adversaries may manipulate the TCC database or otherwise abuse the TCC service to execute malicious content. This can be done in various ways, including using privileged system applications to execute malicious payloads or manipulating the database to grant their application TCC permissions. </p><p>For example, adversaries can use Finder, which has FDA permissions by default, to execute malicious <a href="/techniques/T1059/002">AppleScript</a> while preventing a user prompt. For a system without System Integrity Protection (SIP) enabled, adversaries have also manipulated the operating system to load an adversary controlled TCC database using environment variables and <a href="/techniques/T1569/001">Launchctl</a>.<span onclick=scrollToRef('scite-2') id="scite-ref-2-a" class="scite-citeref-number" title="Phil Stokes. (2021, July 1). Bypassing macOS TCC User Privacy Protections By Accident and Design. Retrieved March 21, 2024."data-reference="TCC macOS bypass"><sup><a href="https://www.sentinelone.com/labs/bypassing-macos-tcc-user-privacy-protections-by-accident-and-design/" target="_blank" data-hasqtip="1" aria-describedby="qtip-1">[2]</a></sup></span><span onclick=scrollToRef('scite-3') id="scite-ref-3-a" class="scite-citeref-number" title="Marina Liang. (2024, April 23). Return of the mac(OS): Transparency, Consent, and Control (TCC) Database Manipulation. Retrieved March 28, 2024."data-reference="TCC Database"><sup><a href="https://interpressecurity.com/resources/return-of-the-macos-tcc/" target="_blank" data-hasqtip="2" aria-describedby="qtip-2">[3]</a></sup></span></p><p>Adversaries may also opt to instead inject code (e.g., <a href="/techniques/T1055">Process Injection</a>) into targeted applications with the desired TCC permissions.</p>
+                                                <p>Adversaries can manipulate or abuse the Transparency, Consent, &amp; Control (TCC) service or database to grant malicious executables elevated permissions. TCC is a Privacy &amp; Security macOS control mechanism used to determine if the running process has permission to access the data or services protected by TCC, such as screen sharing, camera, microphone, or Full Disk Access (FDA).</p><p>When an application requests to access data or a service protected by TCC, the TCC daemon (<code>tccd</code>) checks the TCC database, located at <code>/Library/Application Support/com.apple.TCC/TCC.db</code> (and <code>~/</code> equivalent), and an overwrites file (if connected to an MDM) for existing permissions. If permissions do not exist, then the user is prompted to grant permission. Once permissions are granted, the database stores the application's permissions and will not prompt the user again unless reset. For example, when a web browser requests permissions to the user's webcam, once granted the web browser may not explicitly prompt the user again.<span onclick=scrollToRef('scite-1') id="scite-ref-1-a" class="scite-citeref-number" title="Marc-Etienne M.Léveillé. (2022, July 19). I see what you did there: A look at the CloudMensis macOS spyware. Retrieved March 21, 2024."data-reference="welivesecurity TCC"><sup><a href="https://www.welivesecurity.com/2022/07/19/i-see-what-you-did-there-look-cloudmensis-macos-spyware/" target="_blank" data-hasqtip="0" aria-describedby="qtip-0">[1]</a></sup></span></p><p>Adversaries may access restricted data or services protected by TCC through abusing applications previously granted permissions through <a href="/techniques/T1055">Process Injection</a> or executing a malicious binary using another application. For example, adversaries can use Finder, a macOS native app with FDA permissions, to execute a malicious <a href="/techniques/T1059/002">AppleScript</a>. When executing under the Finder App, the malicious <a href="/techniques/T1059/002">AppleScript</a> inherits access to all files on the system without requiring a user prompt. When System Integrity Protection (SIP) is disabled, TCC protections are also disabled. For a system without SIP enabled, adversaries can manipulate the TCC database to add permissions to their malicious executable through loading an adversary controlled TCC database using environment variables and <a href="/techniques/T1569/001">Launchctl</a>.<span onclick=scrollToRef('scite-2') id="scite-ref-2-a" class="scite-citeref-number" title="Phil Stokes. (2021, July 1). Bypassing macOS TCC User Privacy Protections By Accident and Design. Retrieved March 21, 2024."data-reference="TCC macOS bypass"><sup><a href="https://www.sentinelone.com/labs/bypassing-macos-tcc-user-privacy-protections-by-accident-and-design/" target="_blank" data-hasqtip="1" aria-describedby="qtip-1">[2]</a></sup></span><span onclick=scrollToRef('scite-3') id="scite-ref-3-a" class="scite-citeref-number" title="Marina Liang. (2024, April 23). Return of the mac(OS): Transparency, Consent, and Control (TCC) Database Manipulation. Retrieved March 28, 2024."data-reference="TCC Database"><sup><a href="https://interpressecurity.com/resources/return-of-the-macos-tcc/" target="_blank" data-hasqtip="2" aria-describedby="qtip-2">[3]</a></sup></span></p>
 
                                     </div>
                             </div>
@@ -320,13 +323,13 @@
                                             <div class="row card-data">
                                                 <div class="col-md-1 px-0 text-center"></div>
                                                 <div class="col-md-11 pl-0">
-                                                    <span class="h5 card-title">Contributors:&nbsp;</span>Marina Liang
+                                                    <span class="h5 card-title">Contributors:&nbsp;</span>Csaba Fitzl @theevilbit of Kandji; Marina Liang; Wojciech Reguła @_r3ggi
                                                 </div>
                                             </div>
                                             <div class="row card-data">
                                                 <div class="col-md-1 px-0 text-center"></div>
                                                 <div class="col-md-11 pl-0">
-                                                    <span class="h5 card-title">Version:&nbsp;</span>1.0
+                                                    <span class="h5 card-title">Version:&nbsp;</span>1.1
                                                 </div>
                                             </div>
                                             <div class="row card-data">
@@ -338,7 +341,7 @@
                                             <div class="row card-data">
                                                 <div class="col-md-1 px-0 text-center"></div>
                                                 <div class="col-md-11 pl-0">
-                                                    <span class="h5 card-title">Last Modified:&nbsp;</span>17 April 2024
+                                                    <span class="h5 card-title">Last Modified:&nbsp;</span>16 October 2024
                                                 </div>
                                             </div>
                                     </div>
@@ -348,13 +351,13 @@
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Permalink to this version of T1548.006" 
-           href="/versions/v15/techniques/T1548/006/" data-test-ignore="true">Version Permalink</a>
+           href="/versions/v16/techniques/T1548/006/" data-test-ignore="true">Version Permalink</a>
     </div>
     <div class="permalink">
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Go to the live version of T1548.006" 
-           href="/versions/v15/techniques/T1548/006/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+           href="/versions/v16/techniques/T1548/006/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
     </div>
 </div>
 
@@ -407,18 +410,6 @@
 
                                                 </td>
                                             </tr>
-                                            <tr>
-                                                <td>
-                                                    <a href="/mitigations/M1051"> M1051 </a>
-                                                </td>
-                                                <td>
-                                                    <a href="/mitigations/M1051"> Update Software </a>
-                                                </td>
-                                                <td>
-                                                                <p>Routinely update software. Where possible, ensure systems are macOS Sierra+ and SIP is enabled.<span onclick=scrollToRef('scite-1') id="scite-ref-1-a" class="scite-citeref-number" title="Marc-Etienne M.Léveillé. (2022, July 19). I see what you did there: A look at the CloudMensis macOS spyware. Retrieved March 21, 2024."data-reference="welivesecurity TCC"><sup><a href="https://www.welivesecurity.com/2022/07/19/i-see-what-you-did-there-look-cloudmensis-macos-spyware/" target="_blank" data-hasqtip="0" aria-describedby="qtip-0">[1]</a></sup></span></p>
-
-                                                </td>
-                                            </tr>
                                     </tbody>
                                 </table>
                                 </div>
@@ -462,7 +453,7 @@
                     <a href="/datasources/DS0022/#File%20Modification">File Modification</a>
                 </td>
                     <td>
-                                <p>Monitor for changes to files associated with TCC settings, such as <code>/Library/Application Support/com.apple.TCC/TCC.db</code>.</p>
+                                <p>Monitor for changes to files associated with TCC settings, such as <code>/Library/Application Support/com.apple.TCC/TCC.db</code> and the overwrites file.</p>
 
                     </td>
             </tr>
@@ -478,7 +469,7 @@
                     <a href="/datasources/DS0009/#Process%20Creation">Process Creation</a>
                 </td>
                     <td>
-                                <p>Monitor for newly executed processes that may circumvent TCC mechanisms designed to control access to elevated privileges. macOS system logs may also indicate when <code>AuthorizationExecuteWithPrivileges</code> is being called.</p>
+                                <p>Monitor for abnormal processes executing under applications with elevated access.</p>
 
                     </td>
             </tr>
@@ -598,7 +589,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v15.1&#013;Website  v4.1.6">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v16.0&#013;Website  v4.2.0">Website Changelog</a></u>
                                 </div>
                             </div>
                             <div class="row">
@@ -638,8 +629,8 @@
     <script src="/theme/scripts/popper.min.js"></script>
     <script src="/theme/scripts/bootstrap-select.min.js"></script>
     <script src="/theme/scripts/bootstrap.bundle.min.js"></script>
-    <script src="/theme/scripts/site.js?2639"></script>
-    <script src="/theme/scripts/settings.js?1535"></script>
+    <script src="/theme/scripts/site.js"></script>
+    <script src="/theme/scripts/settings.js"></script>
     <script src="/theme/scripts/search_bundle.js"></script>
 
 <!--SCRIPTS-->

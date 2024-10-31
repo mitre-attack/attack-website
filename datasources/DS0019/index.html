@@ -169,6 +169,9 @@
             <div class="col px-0">
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
+                    <div class="container-fluid banner-message">
+                        ATT&CK v16 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v16-561c76af94cf'>blog post</a> for more information.
+                    </div>
             </div>
         </div>
         <div class="row flex-grow-1 flex-shrink-0">
@@ -1694,13 +1697,13 @@
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Permalink to this version of DS0019" 
-           href="/versions/v15/datasources/DS0019/" data-test-ignore="true">Version Permalink</a>
+           href="/versions/v16/datasources/DS0019/" data-test-ignore="true">Version Permalink</a>
     </div>
     <div class="permalink">
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Go to the live version of DS0019" 
-           href="/versions/v15/datasources/DS0019/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+           href="/versions/v16/datasources/DS0019/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
     </div>
 </div>
 
@@ -1844,7 +1847,7 @@
                             <a href="/techniques/T1543/003">Windows Service</a>
                         </td>
                         <td>
-                                    <p>Creation of new services may generate an alterable event (ex: Event ID 4697 and/or 7045 <span onclick=scrollToRef('scite-5') id="scite-ref-5-a" class="scite-citeref-number" title="Miroshnikov, A. & Hall, J. (2017, April 18). 4697(S): A service was installed in the system. Retrieved August 7, 2018."data-reference="Microsoft 4697 APR 2017"><sup><a href="https://docs.microsoft.com/windows/security/threat-protection/auditing/event-4697" target="_blank" data-hasqtip="4" aria-describedby="qtip-4">[5]</a></sup></span><span onclick=scrollToRef('scite-6') id="scite-ref-6-a" class="scite-citeref-number" title="Hardy, T. & Hall, J. (2018, February 15). Use Windows Event Forwarding to help with intrusion detection. Retrieved August 7, 2018."data-reference="Microsoft Windows Event Forwarding FEB 2018"><sup><a href="https://docs.microsoft.com/windows/security/threat-protection/use-windows-event-forwarding-to-assist-in-intrusion-detection" target="_blank" data-hasqtip="5" aria-describedby="qtip-5">[6]</a></sup></span>), especially those associated with unknown/abnormal drivers. New, benign services may be created during installation of new software.</p><p>Analytic 1 - Creation of new services with unusual directory paths such as temporal files in APPDATA</p><p><code> (source="<em>WinEventLog:Security" EventCode="4697") OR (source="</em>WinEventLog:System" EventCode="7045") | where ServiceFilePath LIKE "%APPDATA%" OR ServiceImage LIKE "%PUBLIC%"</code></p>
+                                    <p>Creation of new services may generate an alterable event (ex: Event ID 4697 and/or 7045 <span onclick=scrollToRef('scite-5') id="scite-ref-5-a" class="scite-citeref-number" title="Miroshnikov, A. & Hall, J. (2017, April 18). 4697(S): A service was installed in the system. Retrieved August 7, 2018."data-reference="Microsoft 4697 APR 2017"><sup><a href="https://docs.microsoft.com/windows/security/threat-protection/auditing/event-4697" target="_blank" data-hasqtip="4" aria-describedby="qtip-4">[5]</a></sup></span><span onclick=scrollToRef('scite-6') id="scite-ref-6-a" class="scite-citeref-number" title="Hardy, T. & Hall, J. (2018, February 15). Use Windows Event Forwarding to help with intrusion detection. Retrieved August 7, 2018."data-reference="Microsoft Windows Event Forwarding FEB 2018"><sup><a href="https://docs.microsoft.com/windows/security/threat-protection/use-windows-event-forwarding-to-assist-in-intrusion-detection" target="_blank" data-hasqtip="5" aria-describedby="qtip-5">[6]</a></sup></span>), especially those associated with unknown/abnormal drivers. New, benign services may be created during installation of new software.</p><p>Analytic 1 - Creation of new services with unusual directory paths such as temporal files in APPDATA</p><p><code> (sourcetype=WinEventLog:Security EventCode="4697") OR (sourcetype=WinEventLog:System EventCode="7045") | where ServiceFilePath LIKE "%APPDATA%" OR ServiceImage LIKE "%PUBLIC%"</code></p>
 
                         </td>
                     </tr>
@@ -1946,7 +1949,7 @@
                         <a href="/techniques/T1569">System Services</a>
                     </td>
                     <td>
-                                <p>Monitor for newly constructed services/daemons to execute commands or programs.</p>
+                                <p>Track the creation of new services, which could indicate adversarial activity aimed at persistence or execution.</p><p>Analytic 1 - Monitors service creation and modification activities</p><p><code>sourcetype=service_logs| search service_action="create" OR service_action="modify"| where user NOT IN ("known_admins") AND service_name NOT IN ("known_services")</code></p>
 
                     </td>
                 </tr>
@@ -1960,7 +1963,7 @@
                             <a href="/techniques/T1569/001">Launchctl</a>
                         </td>
                         <td>
-                                    <p>Monitor for newly constructed services/daemons to execute commands or programs.</p><p>Notes: This detection is to identify a creation of "user mode service" where the service file path is located in non-common service folder in windows.</p><p>Analytic 1 - Create Service In Suspicious File Path</p><p><code>(source="WinEventLog:Security" EventCode="4697") OR (source="WinEventLog:System" EventCode="7045")  Service_File_Name = "<em>.exe" NOT (Service_File_Name IN ("C:\Windows\</em>", "%windir%\<em>", "C:\Program File</em>", "C:\Programdata\<em>", "%systemroot%\</em>")) Service_Type = "user mode service" </code></p>
+                                    <p>Monitor the creation or modification of Launch Agents or Launch Daemons via the launchctl command.</p><p>Analytic 1 - Create Service In Suspicious File Path</p><p><code>sourcetype=osquery| search service_action="create" OR service_action="modify"| where user NOT IN ("known_admins") AND service_name IN ("LaunchAgents", "LaunchDaemons") </code></p>
 
                         </td>
                     </tr>
@@ -1974,7 +1977,7 @@
                             <a href="/techniques/T1569/002">Service Execution</a>
                         </td>
                         <td>
-                                    <p>Monitor newly constructed services that abuse control manager to execute malicious commands or payloads.</p>
+                                    <p>Monitor newly constructed services that abuse control manager to execute malicious commands or payloads.</p><p>Analytic 1 - Suspicious Service Creation</p><p><code>sourcetype=WinEventLog:Security OR sourcetype=WinEventLog:System EventCode=4697 OR EventCode=7045| table _time, user, service_name, service_file_name, process_id| where service_file_name != "<em>legitimate_software_path</em>"  // Exclude legitimate services </code></p>
 
                         </td>
                     </tr>
@@ -2504,7 +2507,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v15.1&#013;Website  v4.1.6">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v16.0&#013;Website  v4.2.0">Website Changelog</a></u>
                                 </div>
                             </div>
                             <div class="row">
@@ -2544,15 +2547,15 @@
     <script src="/theme/scripts/popper.min.js"></script>
     <script src="/theme/scripts/bootstrap-select.min.js"></script>
     <script src="/theme/scripts/bootstrap.bundle.min.js"></script>
-    <script src="/theme/scripts/site.js?5747"></script>
-    <script src="/theme/scripts/settings.js?1817"></script>
+    <script src="/theme/scripts/site.js"></script>
+    <script src="/theme/scripts/settings.js"></script>
     <script src="/theme/scripts/search_bundle.js"></script>
 
 <!--SCRIPTS-->
 <script src="/theme/scripts/resizer.js"></script>
 
     <!--SCRIPTS-->
-    <script src="/theme/scripts/filter/filter.js?1232"></script>
+    <script src="/theme/scripts/filter/filter.js?8450"></script>
     <script src="/theme/scripts/navigation.js"></script>
     <script src="/theme/scripts/mobileview-datasources.js"></script>
     <script src="/theme/scripts/bootstrap-tourist.js"></script>

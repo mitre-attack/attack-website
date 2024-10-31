@@ -169,6 +169,9 @@
             <div class="col px-0">
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
+                    <div class="container-fluid banner-message">
+                        ATT&CK v16 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v16-561c76af94cf'>blog post</a> for more information.
+                    </div>
             </div>
         </div>
         <div class="row flex-grow-1 flex-shrink-0">
@@ -1694,13 +1697,13 @@
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Permalink to this version of DS0022" 
-           href="/versions/v15/datasources/DS0022/" data-test-ignore="true">Version Permalink</a>
+           href="/versions/v16/datasources/DS0022/" data-test-ignore="true">Version Permalink</a>
     </div>
     <div class="permalink">
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Go to the live version of DS0022" 
-           href="/versions/v15/datasources/DS0022/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+           href="/versions/v16/datasources/DS0022/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
     </div>
 </div>
 
@@ -1847,7 +1850,7 @@
                         <a href="/techniques/T1555">Credentials from Password Stores</a>
                     </td>
                     <td>
-                                <p>Monitor for files being accessed that may search for common password storage locations to obtain user credentials.</p>
+                                <p>Monitor for files being accessed that may search for common password storage locations to obtain user credentials.</p><p>Analytic 1 - Unauthorized access to files containing credentials.</p><p><code>index=security sourcetype IN ("WinEventLog:Security", "WinEventLog:Microsoft-Windows-Sysmon/Operational", "linux_secure", "macos_secure")((sourcetype="WinEventLog:Security" EventCode=4663 ObjectName IN ("<em>passwords</em>", "<em>creds</em>", "<em>credentials</em>", "<em>secrets</em>")) OR (sourcetype="WinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode=11 TargetObject IN ("<em>passwords</em>", "<em>creds</em>", "<em>credentials</em>", "<em>secrets</em>")) OR (sourcetype="linux_secure" action="open" filepath IN ("<em>/etc/shadow</em>", "<em>/etc/passwd</em>", "<em>/.aws/credentials</em>", "<em>/.ssh/id_rsa</em>")) OR (sourcetype="macos_secure" event_type="open" file_path IN ("<em>/Library/Keychains/</em>", "<em>/Users/</em>/Library/Keychains/<em>", "</em>/Users/<em>/.ssh/id_rsa</em>"))) </code></p>
 
                     </td>
                 </tr>
@@ -1861,7 +1864,7 @@
                             <a href="/techniques/T1555/001">Keychain</a>
                         </td>
                         <td>
-                                    <p>Monitor for Keychain files being accessed that may be related to malicious credential collection.</p>
+                                    <p>Monitor for Keychain files being accessed that may be related to malicious credential collection.</p><p>Analytic 1 - Unauthorized access to Keychain files.</p><p><code> index=security sourcetype="macos_secure"(event_type="file_open" AND file_path IN ("~/Library/Keychains/<em>", "/Library/Keychains/</em>", "/Network/Library/Keychains/*"))</code></p>
 
                         </td>
                     </tr>
@@ -1875,7 +1878,7 @@
                             <a href="/techniques/T1555/003">Credentials from Web Browsers</a>
                         </td>
                         <td>
-                                    <p>Identify web browser files that contain credentials such as Google Chrome’s Login Data database file: <code>AppData\Local\Google\Chrome\User Data\Default\Login Data</code>. Monitor file read events of web browser files that contain credentials, especially when the reading process is unrelated to the subject web browser.</p>
+                                    <p>Identify web browser files that contain credentials such as Google Chrome’s Login Data database file: <code>AppData\Local\Google\Chrome\User Data\Default\Login Data</code>. Monitor file read events of web browser files that contain credentials, especially when the reading process is unrelated to the subject web browser.</p><p>Analytic 1 - Unauthorized access to web browser credential files.</p><p><code>index=security sourcetype IN ("WinEventLog:Microsoft-Windows-Sysmon/Operational", "linux_secure", "macos_secure") event_type="file_open"((file_path IN ("<em>\AppData\Local\Google\Chrome\User Data\Default\Login Data", "</em>\AppData\Local\Microsoft\Edge\User Data\Default\Login Data", "<em>\AppData\Roaming\Mozilla\Firefox\Profiles\</em>\logins.json") AND Platform="Windows") OR (file_path IN ("/home/<em>/.mozilla/firefox/</em>/logins.json", "/home/<em>/.config/google-chrome/Default/Login Data") AND Platform="Linux") OR (file_path IN ("/Users/</em>/Library/Application Support/Google/Chrome/Default/Login Data", "/Users/<em>/Library/Application Support/Firefox/Profiles/</em>/logins.json") AND Platform="macOS")) </code></p>
 
                         </td>
                     </tr>
@@ -1889,7 +1892,7 @@
                             <a href="/techniques/T1555/004">Windows Credential Manager</a>
                         </td>
                         <td>
-                                    <p>Consider monitoring file reads to Vault locations, <code>&percnt;Systemdrive&percnt;&bsol;Users&bsol;&bsol;&lsqb;Username&rsqb;&bsol;AppData&bsol;Local&bsol;Microsoft&bsol;&bsol;&lsqb;Vault&sol;Credentials&rsqb;&bsol;</code>, for suspicious activity.<span onclick=scrollToRef('scite-3') id="scite-ref-3-a" class="scite-citeref-number" title="Arntz, P. (2016, March 30). The Windows Vault . Retrieved November 23, 2020."data-reference="Malwarebytes The Windows Vault"><sup><a href="https://blog.malwarebytes.com/101/2016/01/the-windows-vaults/" target="_blank" data-hasqtip="2" aria-describedby="qtip-2">[3]</a></sup></span></p>
+                                    <p>Consider monitoring file reads to Vault locations, <code>&percnt;Systemdrive&percnt;&bsol;Users&bsol;&bsol;&lsqb;Username&rsqb;&bsol;AppData&bsol;Local&bsol;Microsoft&bsol;&bsol;&lsqb;Vault&sol;Credentials&rsqb;&bsol;</code>, for suspicious activity.<span onclick=scrollToRef('scite-3') id="scite-ref-3-a" class="scite-citeref-number" title="Arntz, P. (2016, March 30). The Windows Vault . Retrieved November 23, 2020."data-reference="Malwarebytes The Windows Vault"><sup><a href="https://blog.malwarebytes.com/101/2016/01/the-windows-vaults/" target="_blank" data-hasqtip="2" aria-describedby="qtip-2">[3]</a></sup></span></p><p>Analytic 1 - Unauthorized access to Windows Vault credential files.</p><p><code> index=security sourcetype="WinEventLog:Microsoft-Windows-Sysmon/Operational" event_type="file_access"(file_path IN ("%SystemDrive%\Users\<em>\AppData\Local\Microsoft\Vault\</em>\<em>.vcrd", "%SystemDrive%\Users\</em>\AppData\Local\Microsoft\Credentials\<em>\</em>.vcrd", "%SystemDrive%\Users\<em>\AppData\Local\Microsoft\Vault\</em>\Policy.vpol", "%SystemDrive%\Users\<em>\AppData\Local\Microsoft\Credentials\</em>\Policy.vpol"))</code></p>
 
                         </td>
                     </tr>
@@ -1903,7 +1906,7 @@
                             <a href="/techniques/T1555/005">Password Managers</a>
                         </td>
                         <td>
-                                    <p>Monitor file reads that may acquire user credentials from third-party password managers.<span onclick=scrollToRef('scite-4') id="scite-ref-4-a" class="scite-citeref-number" title="ise. (2019, February 19). Password Managers: Under the Hood of Secrets Management. Retrieved January 22, 2021."data-reference="ise Password Manager February 2019"><sup><a href="https://www.ise.io/casestudies/password-manager-hacking/" target="_blank" data-hasqtip="3" aria-describedby="qtip-3">[4]</a></sup></span></p>
+                                    <p>Monitor file reads that may acquire user credentials from third-party password managers.<span onclick=scrollToRef('scite-4') id="scite-ref-4-a" class="scite-citeref-number" title="ise. (2019, February 19). Password Managers: Under the Hood of Secrets Management. Retrieved January 22, 2021."data-reference="ise Password Manager February 2019"><sup><a href="https://www.ise.io/casestudies/password-manager-hacking/" target="_blank" data-hasqtip="3" aria-describedby="qtip-3">[4]</a></sup></span></p><p>Analytic 1 - Unauthorized access to password manager files.</p><p><code> index=security sourcetype IN ("WinEventLog:Microsoft-Windows-Sysmon/Operational", "linux_secure", "macos_secure") EventCode IN (1, 4663)(file_path IN ("<em>\AppData\Local\Keepass\</em>.kdbx", "<em>\AppData\Local\LastPass\</em>.lpvault", "<em>\AppData\Local\1Password\</em>.agilekeychain", "<em>\AppData\Local\Bitwarden\</em>.json", "<em>\AppData\Local\Dashlane\</em>.db", "<em>\AppData\Local\PasswordSafe\</em>.psafe3", "/home/<em>/.keepass/</em>.kdbx", "/home/<em>/.lastpass/</em>.lpvault", "/home/<em>/.1password/</em>.agilekeychain", "/home/<em>/.bitwarden/</em>.json", "/home/<em>/.dashlane/</em>.db", "/home/<em>/.passwordsafe/</em>.psafe3"))</code></p>
 
                         </td>
                     </tr>
@@ -2237,7 +2240,7 @@
                         <a href="/techniques/T1187">Forced Authentication</a>
                     </td>
                     <td>
-                                <p>Monitor for unexpected files used to gather credentials when the files are rendered</p>
+                                <p>Monitor for access to files that may indicate attempts to coerce a user into providing authentication information.</p><p>Analytic 1 - Suspicious access to files known to be used for forced authentication attacks.</p><p><code> index=security sourcetype="WinEventLog:Security" EventCode=4663 ObjectName="<em>\path\to\suspicious\file</em>" | where match(ObjectName, "(?i)\(.*\.)?(lnk|scf|url|doc|dot|xls|ppt|pdf|scf|html)$")</code></p>
 
                     </td>
                 </tr>
@@ -2267,7 +2270,7 @@
                         <a href="/techniques/T1003">OS Credential Dumping</a>
                     </td>
                     <td>
-                                <p>Monitor for hash dumpers opening the Security Accounts Manager (SAM) on the local file system (<code>%SystemRoot%/system32/config/SAM</code>). Some hash dumpers will open the local file system as a device and parse to the SAM table to avoid file access defenses. Others will make an in-memory copy of the SAM table before reading hashes. Detection of compromised ( LinkById: T1078) in-use by adversaries may help as well.</p>
+                                <p>Monitor file accesses that may indicate attempts to dump credential data from various storage locations such as LSASS memory, SAM, NTDS.dit, LSA secrets, cached domain credentials, proc filesystem, /etc/passwd, and /etc/shadow.</p><p>Analytic 1 - Unauthorized access to credential storage files.</p><p><code> (index=security sourcetype="WinEventLog:Security" EventCode=4663 ObjectName IN ("<em>\config\SAM", "</em>\ntds.dit", "<em>\policy\secrets", "</em>\cache"))OR (index=security sourcetype="auditd" (key="path" (value IN ("/etc/passwd", "/etc/shadow")) OR key="proctitle" value IN ("<em>cat</em>", "<em>strings</em>", "<em>grep</em>", "<em>awk</em>", "<em>cut</em>", "<em>sed</em>", "<em>sort</em>", "<em>uniq</em>", "<em>head</em>", "<em>tail</em>", "<em>less</em>", "<em>more</em>")))OR(index=security sourcetype="macOS:UnifiedLog" (process IN ("cat", "grep", "awk", "cut", "sed", "sort", "uniq", "head", "tail", "less", "more") OR message IN ("/etc/passwd", "/etc/shadow", "/var/db/shadow/hash/*", "/private/etc/master.passwd")))</code></p>
 
                     </td>
                 </tr>
@@ -2281,7 +2284,7 @@
                             <a href="/techniques/T1003/002">Security Account Manager</a>
                         </td>
                         <td>
-                                    <p>Monitor for hash dumpers opening the Security Accounts Manager (SAM) on the local file system (<code>%SystemRoot%/system32/config/SAM</code>). Some hash dumpers will open the local file system as a device and parse to the SAM table to avoid file access defenses. Others will make an in-memory copy of the SAM table before reading hashes. Detection of compromised <a href="/techniques/T1078">Valid Accounts</a> in-use by adversaries may help as well.</p>
+                                    <p>Monitor for hash dumpers opening the Security Accounts Manager (SAM) on the local file system (<code>%SystemRoot%/system32/config/SAM</code>). Some hash dumpers will open the local file system as a device and parse to the SAM table to avoid file access defenses. Others will make an in-memory copy of the SAM table before reading hashes. Detection of compromised <a href="/techniques/T1078">Valid Accounts</a> in-use by adversaries may help as well.</p><p>Analytic 1 - Unauthorized access to SAM database.</p><p><code> index=security sourcetype="WinEventLog:Security" EventCode=4663 ObjectName="*\config\SAM" | where ProcessName IN ("reg.exe", "powershell.exe", "wmic.exe", "schtasks.exe", "cmd.exe", "rundll32.exe", "mimikatz.exe", "procdump.exe")</code></p>
 
                         </td>
                     </tr>
@@ -2295,7 +2298,7 @@
                             <a href="/techniques/T1003/003">NTDS</a>
                         </td>
                         <td>
-                                    <p>Monitor for access or copy of the NTDS.dit.</p><p>Note: Events 4656 and 4663 (Microsoft Windows Security Auditing) provide context of processes and users requesting access or accessing file objects (ObjectType = File) such as C:\Windows\NTDS\ntds.dit. It is important to note that, in order to generate these events, a System Access Control List (SACL) must be defined for the ntds.dit file. Access rights that allow read operations on file objects and its attributes are %%4416 Read file data, %%4419 Read extended file attributes, %%4423 Read file attributes. If you search for just the name of the file and not the entire directory, you may get access events related to the ntds.dit file within a snapshot or volume shadow copy. </p><p>Events 4656 and 4663 (Microsoft Windows Security Auditing) provide context of processes and users creating or copying file objects (ObjectType = File) such as C:\Windows\NTDS\ntds.dit. It is important to note that, in order to generate these events, a System Access Control List (SACL) must be defined for the ntds.dit file. In order to filter file creation events, filter access rigths %%4417 Write data to the file and %%4424 Write file attributes.</p><p>Event 11 (Microsoft Windows Sysmon) provide context of processes and users creating or copying files. Unfortunately, this event provides context of the file being created or copied, but not the file being copied. A good starting point would be to look for new files created or copied with extension .dit.</p><p>Analytic 1 - Active Directory Dumping via NTDSUtil</p><p><code>(source=WinEventLog:"<em>Security" EventCode IN (4656, 4663)) OR (source=WinEventLog:"</em>Microsoft-Windows-Sysmon/Operational" EventCode="11") ANDObjectType="File" AND TargetFilename="*ntds.dit" AND (AccessList="%%4416" OR AccessList="%%4419" OR AccessList="%%4417" OR AccessList="%%4424")</code></p>
+                                    <p>Monitor for access or copy of the NTDS.dit.</p><p>Note: Events 4656 and 4663 (Microsoft Windows Security Auditing) provide context of processes and users requesting access or accessing file objects (ObjectType = File) such as C:\Windows\NTDS\ntds.dit. It is important to note that, in order to generate these events, a System Access Control List (SACL) must be defined for the ntds.dit file. Access rights that allow read operations on file objects and its attributes are %%4416 Read file data, %%4419 Read extended file attributes, %%4423 Read file attributes. If you search for just the name of the file and not the entire directory, you may get access events related to the ntds.dit file within a snapshot or volume shadow copy. </p><p>Events 4656 and 4663 (Microsoft Windows Security Auditing) provide context of processes and users creating or copying file objects (ObjectType = File) such as C:\Windows\NTDS\ntds.dit. It is important to note that, in order to generate these events, a System Access Control List (SACL) must be defined for the ntds.dit file. In order to filter file creation events, filter access rigths %%4417 Write data to the file and %%4424 Write file attributes.</p><p>Event 11 (Microsoft Windows Sysmon) provide context of processes and users creating or copying files. Unfortunately, this event provides context of the file being created or copied, but not the file being copied. A good starting point would be to look for new files created or copied with extension .dit.</p><p>Analytic 1 - Active Directory Dumping via NTDSUtil</p><p><code>(sourcetype=WinEventLog:Security EventCode IN (4656, 4663)) OR (sourcetype=WinEventLog:Microsoft-Windows-Sysmon/Operational EventCode="11") ANDObjectType="File" AND TargetFilename="*ntds.dit" AND (AccessList="%%4416" OR AccessList="%%4419" OR AccessList="%%4417" OR AccessList="%%4424")</code></p>
 
                         </td>
                     </tr>
@@ -2309,7 +2312,7 @@
                             <a href="/techniques/T1003/007">Proc Filesystem</a>
                         </td>
                         <td>
-                                    <p>Monitor for unexpected access to passwords and hashes stored in memory, processes must open a maps file in the /proc filesystem for the process being analyzed. This file is stored under the path <code>/proc/\/maps</code>, where the <code>\</code> directory is the unique pid of the program being interrogated for such authentication data. The AuditD monitoring tool, which ships stock in many Linux distributions, can be used to watch for hostile processes opening this file in the proc file system, alerting on the pid, process name, and arguments of such programs.</p>
+                                    <p>Monitor for unexpected access to passwords and hashes stored in memory, processes must open a maps file in the /proc filesystem for the process being analyzed. This file is stored under the path <code>/proc/\/maps</code>, where the <code>\</code> directory is the unique pid of the program being interrogated for such authentication data. The AuditD monitoring tool, which ships stock in many Linux distributions, can be used to watch for hostile processes opening this file in the proc file system, alerting on the pid, process name, and arguments of such programs.</p><p>Analytic 1 - Unauthorized access to /proc filesystem.</p><p><code> index=os sourcetype="linux_audit" command IN ("grep -E '^[0-9a-f-]<em> r' /proc/</em>/maps")</code></p>
 
                         </td>
                     </tr>
@@ -2323,7 +2326,7 @@
                             <a href="/techniques/T1003/008">/etc/passwd and /etc/shadow</a>
                         </td>
                         <td>
-                                    <p>Monitor for files being accessed that may attempt to dump the contents of <code>/etc/passwd</code> and <code>/etc/shadow</code> to enable offline password cracking. The AuditD monitoring tool, which ships stock in many Linux distributions, can be used to watch for hostile processes attempting to access <code>/etc/passwd</code> and <code>/etc/shadow</code>, alerting on the pid, process name, and arguments of such programs.</p>
+                                    <p>Monitor for files being accessed that may attempt to dump the contents of <code>/etc/passwd</code> and <code>/etc/shadow</code> to enable offline password cracking. The AuditD monitoring tool, which ships stock in many Linux distributions, can be used to watch for hostile processes attempting to access <code>/etc/passwd</code> and <code>/etc/shadow</code>, alerting on the pid, process name, and arguments of such programs.</p><p>Analytic 1 - Unauthorized access to /etc/passwd and /etc/shadow.</p><p><code> index=os sourcetype="linux_audit" file IN ("/etc/passwd", "/etc/shadow") </code></p>
 
                         </td>
                     </tr>
@@ -2428,10 +2431,24 @@
                         <a href="/techniques/T1558">Steal or Forge Kerberos Tickets</a>
                     </td>
                     <td>
-                                <p>Monitor for unexpected processes interacting with lsass.exe.<span onclick=scrollToRef('scite-7') id="scite-ref-7-a" class="scite-citeref-number" title="French, D. (2018, October 2). Detecting Attempts to Steal Passwords from Memory. Retrieved October 11, 2019."data-reference="Medium Detecting Attempts to Steal Passwords from Memory"><sup><a href="https://medium.com/threatpunter/detecting-attempts-to-steal-passwords-from-memory-558f16dce4ea" target="_blank" data-hasqtip="6" aria-describedby="qtip-6">[7]</a></sup></span> Common credential dumpers such as  <a href="/software/S0002">Mimikatz</a> access the LSA Subsystem Service (LSASS) process by opening the process, locating the LSA secrets key, and decrypting the sections in memory where credential details, including Kerberos tickets, are stored. Monitor for unusual processes accessing <code>secrets.ldb</code> and <code>.secrets.mkey</code> located in <code>/var/lib/sss/secrets/</code>.</p>
+                                <p>Monitor for unexpected processes interacting with lsass.exe.<span onclick=scrollToRef('scite-7') id="scite-ref-7-a" class="scite-citeref-number" title="French, D. (2018, October 2). Detecting Attempts to Steal Passwords from Memory. Retrieved October 11, 2019."data-reference="Medium Detecting Attempts to Steal Passwords from Memory"><sup><a href="https://medium.com/threatpunter/detecting-attempts-to-steal-passwords-from-memory-558f16dce4ea" target="_blank" data-hasqtip="6" aria-describedby="qtip-6">[7]</a></sup></span> Common credential dumpers such as  <a href="/software/S0002">Mimikatz</a> access the LSA Subsystem Service (LSASS) process by opening the process, locating the LSA secrets key, and decrypting the sections in memory where credential details, including Kerberos tickets, are stored.</p>
 
                     </td>
                 </tr>
+                    <tr class="sub technique enterprise" id="enterprise">
+                        <td></td>
+                        <td></td>
+                        <td>
+                            <a href="/techniques/T1558/005">.005</a>
+                        </td>
+                        <td>
+                            <a href="/techniques/T1558/005">Ccache Files</a>
+                        </td>
+                        <td>
+                                    <p>Monitor for abnormal read access to ccache files located in the <code>/tmp</code> directory of a system from non-user processes. </p>
+
+                        </td>
+                    </tr>
                 <tr class="technique enterprise" id="enterprise">
                     <td>
                             Enterprise
@@ -2443,7 +2460,7 @@
                         <a href="/techniques/T1539">Steal Web Session Cookie</a>
                     </td>
                     <td>
-                                <p>Monitor for an attempt by a user to gain access to a network or computing resource, often by providing credentials to cloud service management consoles. Some cloud providers, such as AWS, provide distinct log events for login attempts to the management console.</p>
+                                <p>Monitor for an attempt by a user to gain access to a network or computing resource, often by providing credentials to cloud service management consoles. Some cloud providers, such as AWS, provide distinct log events for login attempts to the management console.</p><p>Analytic 1 - Unexpected access to web session cookies files.</p><p><code> (index=security sourcetype="WinEventLog:Security" EventCode=4663 ObjectName="<em>\AppData\Roaming\</em>\Cookies\<em>" OR ObjectName="</em>\AppData\Local\<em>\Cookies\</em>") OR(index=sysmon sourcetype="WinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode=11 TargetObject="<em>\AppData\Roaming\</em>\Cookies\<em>" OR TargetObject="</em>\AppData\Local\<em>\Cookies\</em>") OR(index=os sourcetype="linux_audit" (filepath="/home/<em>/.mozilla/firefox/</em>.default-release/cookies.sqlite" OR filepath="/home/<em>/.config/google-chrome/Default/Cookies")) OR(index=os sourcetype="macos_secure" file_path="/Users/</em>/Library/Application Support/Google/Chrome/Default/Cookies") OR(index=gsuite sourcetype="gsuite:admin" event_name="LOGIN" event_type="cookie_auth") OR(index=o365 sourcetype="o365:management:activity" Operation="UserLoginViaCookie")</code></p>
 
                     </td>
                 </tr>
@@ -2473,7 +2490,7 @@
                         <a href="/techniques/T1552">Unsecured Credentials</a>
                     </td>
                     <td>
-                                <p>Monitor for suspicious file access activity, specifically indications that a process is reading multiple files in a short amount of time and/or using command-line arguments indicative of searching for credential material (ex: regex patterns). These may be indicators of automated/scripted credential access behavior. Monitoring when the user's <code>.bash_history</code> is read can help alert to suspicious activity. While users do typically rely on their history of commands, they often access this history through other utilities like "history" instead of commands like <code>cat ~/.bash_history</code>.</p>
+                                <p>Monitor for suspicious file access activity, specifically indications that a process is reading multiple files in a short amount of time and/or using command-line arguments indicative of searching for credential material (ex: regex patterns). These may be indicators of automated/scripted credential access behavior. Monitoring when the user's <code>.bash_history</code> is read can help alert to suspicious activity. While users do typically rely on their history of commands, they often access this history through other utilities like "history" instead of commands like <code>cat ~/.bash_history</code>.</p><p>Analytic 1 - Multiple file reads in a short period or searching for credential material.</p><p><code> (index=security sourcetype="WinEventLog:Security" EventCode=4663 ObjectName="<em>password</em>" OR ObjectName="<em>credential</em>") OR(index=sysmon sourcetype="WinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode=11 TargetObject="<em>password</em>" OR TargetObject="<em>credential</em>") OR(index=os sourcetype="linux_audit" action="open" filepath IN ("<em>password</em>", "<em>credential</em>", "<em>passwd</em>", "<em>shadow</em>", "<em>.pem", "</em>.key")) OR(index=os sourcetype="macos_secure" event_type="open" file_path IN ("<em>password</em>", "<em>credential</em>", "<em>passwd</em>", "<em>shadow</em>", "<em>.pem", "</em>.key"))</code></p>
 
                     </td>
                 </tr>
@@ -2487,7 +2504,7 @@
                             <a href="/techniques/T1552/001">Credentials In Files</a>
                         </td>
                         <td>
-                                    <p>Monitor for files being accessed that may search local file systems and remote file shares for files containing insecurely stored credentials. While detecting adversaries accessing these files may be difficult without knowing they exist in the first place, it may be possible to detect adversary use of credentials they have obtained. </p>
+                                    <p>Monitor for files being accessed that may search local file systems and remote file shares for files containing insecurely stored credentials. While detecting adversaries accessing these files may be difficult without knowing they exist in the first place, it may be possible to detect adversary use of credentials they have obtained. </p><p>Analytic 1 - Unauthorized access to files containing credentials.</p><p><code> (index=security sourcetype="WinEventLog:Security" EventCode=4663 ObjectName IN ("<em>password</em>", "<em>credential</em>", "<em>secret</em>", "<em>token</em>")) OR(index=sysmon sourcetype="WinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode=11 TargetObject IN ("<em>password</em>", "<em>credential</em>", "<em>secret</em>", "<em>token</em>")) OR(index=os sourcetype="linux_audit" action="open" filepath IN ("<em>password</em>", "<em>credential</em>", "<em>passwd</em>", "<em>shadow</em>", "<em>.pem", "</em>.key", "<em>secret</em>", "<em>token</em>")) OR(index=os sourcetype="macos_secure" event_type="open" file_path IN ("<em>password</em>", "<em>credential</em>", "<em>passwd</em>", "<em>shadow</em>", "<em>.pem", "</em>.key", "<em>secret</em>", "<em>token</em>"))</code></p>
 
                         </td>
                     </tr>
@@ -2501,7 +2518,7 @@
                             <a href="/techniques/T1552/003">Bash History</a>
                         </td>
                         <td>
-                                    <p>Monitoring when the user's <code>.bash_history</code> is read can help alert to suspicious activity.</p>
+                                    <p>Monitoring when the user's <code>.bash_history</code> is read can help alert to suspicious activity.</p><p>Analytic 1 - Unauthorized access to .bash_history.</p><p><code> (index=os sourcetype="linux_secure" action="open" filepath="/home/<em>/.bash_history") OR(index=os sourcetype="macos_secure" event_type="open" file_path="/Users/</em>/.bash_history") | where User NOT IN ("root", "daemon", "bin", "nobody", "_spotlight", "_mbsetupuser")| where NOT match(User, "^[a-z]+$")  # Filter out common service accounts</code></p>
 
                         </td>
                     </tr>
@@ -2515,7 +2532,7 @@
                             <a href="/techniques/T1552/004">Private Keys</a>
                         </td>
                         <td>
-                                    <p>Monitor access to files and directories related to cryptographic keys and certificates as a means for potentially detecting access patterns that may indicate collection and exfiltration activity. </p>
+                                    <p>Monitor access to files and directories related to cryptographic keys and certificates as a means for potentially detecting access patterns that may indicate collection and exfiltration activity. </p><p>Analytic 1 - Unauthorized access to cryptographic key files.</p><p><code> (index=security sourcetype="WinEventLog:Security" EventCode=4663 ObjectName IN ("<em>.key", "</em>.pgp", "<em>.gpg", "</em>.ppk", "<em>.p12", "</em>.pem", "<em>.pfx", "</em>.cer", "<em>.p7b", "</em>.asc", "<em>private key</em>", "<em>certificate</em>")) OR(index=sysmon sourcetype="WinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode=11 TargetObject IN ("<em>.key", "</em>.pgp", "<em>.gpg", "</em>.ppk", "<em>.p12", "</em>.pem", "<em>.pfx", "</em>.cer", "<em>.p7b", "</em>.asc", "<em>private key</em>", "<em>certificate</em>")) OR(index=os sourcetype="linux_secure" action="open" filepath IN ("<em>.key", "</em>.pgp", "<em>.gpg", "</em>.ppk", "<em>.p12", "</em>.pem", "<em>.pfx", "</em>.cer", "<em>.p7b", "</em>.asc", "<em>private key</em>", "<em>certificate</em>")) OR(index=os sourcetype="macos_secure" event_type="open" file_path IN ("<em>.key", "</em>.pgp", "<em>.gpg", "</em>.ppk", "<em>.p12", "</em>.pem", "<em>.pfx", "</em>.cer", "<em>.p7b", "</em>.asc", "<em>private key</em>", "<em>certificate</em>"))</code></p>
 
                         </td>
                     </tr>
@@ -2529,7 +2546,7 @@
                             <a href="/techniques/T1552/006">Group Policy Preferences</a>
                         </td>
                         <td>
-                                    <p>Monitor for attempts to access SYSVOL that involve searching for XML files.</p>
+                                    <p>Monitor for attempts to access SYSVOL that involve searching for XML files.</p><p>Analytic 1 - Unauthorized access to SYSVOL XML files.</p><p><code> index=security sourcetype="WinEventLog:Security" EventCode=4663 ObjectName="<em>SYSVOL</em>" ObjectName="*.xml"| eval AccessType=case(    AccessMask="0x1", "Read",    AccessMask="0x2", "Write",    AccessMask="0x3", "Read/Write",    AccessMask="0x4", "Delete",    true(), "Unknown")</code></p>
 
                         </td>
                     </tr>
@@ -3143,7 +3160,7 @@
                             <a href="/techniques/T1546/002">Screensaver</a>
                         </td>
                         <td>
-                                    <p>Monitor newly constructed files that may establish persistence by executing malicious content triggered by user inactivity.</p><p>Analytic 1 - Created on disk that are being used as Screensaver files</p><p><code>(source="<em>WinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode="11") TargetObject="</em>\Software\Policies\Microsoft\Windows\Control Panel\Desktop\SCRNSAVE.EXE" </code></p>
+                                    <p>Monitor newly constructed files that may establish persistence by executing malicious content triggered by user inactivity.</p><p>Analytic 1 - Created on disk that are being used as Screensaver files</p><p><code>(sourcetype=WinEventLog:Microsoft-Windows-Sysmon/Operational EventCode="11") TargetObject="*\Software\Policies\Microsoft\Windows\Control Panel\Desktop\SCRNSAVE.EXE" </code></p>
 
                         </td>
                     </tr>
@@ -3245,6 +3262,25 @@
 
                         </td>
                     </tr>
+                        <tr class="sub technique noparent enterprise" id="enterprise">
+                            <td>
+                                    Enterprise
+ 
+                            </td>
+                            <td>
+                                <a href="/techniques/T1480">T1480</a>
+                            </td>
+                            <td>
+                                <a href="/techniques/T1480/002">.002</a>
+                            </td>
+                            <td>
+                                <a href="/techniques/T1480">Execution Guardrails</a>: <a href="/techniques/T1480/002">Mutual Exclusion</a>
+                            </td>
+                            <td>
+                                        <p>Monitor for the suspicious creation of lock files – for example, in shared memory directories such as <code>/var/run</code>.<span onclick=scrollToRef('scite-15') id="scite-ref-15-a" class="scite-citeref-number" title="Elastic. (n.d.). Abnormal Process ID or Lock File Created. Retrieved September 19, 2024."data-reference="Elastic Abnormal Process ID or Lock File Created"><sup><a href="https://www.elastic.co/guide/en/security/current/abnormal-process-id-or-lock-file-created.html" target="_blank" data-hasqtip="14" aria-describedby="qtip-14">[15]</a></sup></span></p>
+
+                            </td>
+                        </tr>
                 <tr class="technique enterprise" id="enterprise">
                     <td>
                             Enterprise
@@ -3256,7 +3292,7 @@
                         <a href="/techniques/T1187">Forced Authentication</a>
                     </td>
                     <td>
-                                <p>Monitor for newly constructed .LNK, .SCF, or any other files on systems and within virtual environments that contain resources that point to external network resources </p>
+                                <p>Monitor for newly constructed .LNK, .SCF, or any other files on systems and within virtual environments that contain resources that point to external network resources.</p><p>Analytic 1 - Creation of suspicious files in locations used for forced authentication attacks.</p><p><code>(index=security sourcetype="WinEventLog:Security" EventCode=4663) OR (index=sysmon sourcetype="WinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode=11) | where match(ObjectName, "(?i)\(.*\.)?(lnk|scf|url|doc|dot|xls|ppt|pdf|html)$")| where match(ObjectName, "(?i)(desktop|public|downloads|temp|cache|start menu|startup)") </code></p>
 
                     </td>
                 </tr>
@@ -3561,7 +3597,7 @@
                         <a href="/techniques/T1556">Modify Authentication Process</a>
                     </td>
                     <td>
-                                <p>Monitor for suspicious additions to the <code>/Library/Security/SecurityAgentPlugins</code> directory.<span onclick=scrollToRef('scite-15') id="scite-ref-15-a" class="scite-citeref-number" title="Chris Ross. (2018, October 17). Persistent Credential Theft with Authorization Plugins. Retrieved April 22, 2021."data-reference="Xorrior Authorization Plugins"><sup><a href="https://xorrior.com/persistent-credential-theft/" target="_blank" data-hasqtip="14" aria-describedby="qtip-14">[15]</a></sup></span></p><p>Monitor for newly created files that may be used to register malicious network provider dynamic link libraries (DLLs).</p>
+                                <p>Monitor for suspicious additions to the <code>/Library/Security/SecurityAgentPlugins</code> directory.<span onclick=scrollToRef('scite-16') id="scite-ref-16-a" class="scite-citeref-number" title="Chris Ross. (2018, October 17). Persistent Credential Theft with Authorization Plugins. Retrieved April 22, 2021."data-reference="Xorrior Authorization Plugins"><sup><a href="https://xorrior.com/persistent-credential-theft/" target="_blank" data-hasqtip="15" aria-describedby="qtip-15">[16]</a></sup></span></p><p>Monitor for newly created files that may be used to register malicious network provider dynamic link libraries (DLLs).</p><p>Analytic 1 - Unauthorized file creation in critical directories.</p><p><code> index=security sourcetype IN ("WinEventLog:Security", "wineventlog:sysmon", "linux_audit", "macos_secure")(EventCode=4663 OR EventCode=11 OR EventCode=13 OR (sourcetype="linux_audit" AND (syscall="creat" OR syscall="open" OR syscall="openat")) OR (sourcetype="macos_secure" AND action="file_write"))| eval TargetFile=coalesce(ObjectName, FileName, target_file)| search TargetFile IN (    "C:\Windows\System32\config\SAM",    "C:\Windows\System32\config\system",    "C:\Windows\System32\config\security",    "C:\Windows\System32\lsass.exe",    "/etc/passwd",    "/etc/shadow",    "/etc/pam.d/",    "/Library/Preferences/com.apple.loginwindow.plist")</code></p>
 
                     </td>
                 </tr>
@@ -3575,7 +3611,7 @@
                             <a href="/techniques/T1556/002">Password Filter DLL</a>
                         </td>
                         <td>
-                                    <p>Monitor for newly constructed files that may register malicious password filter dynamic link libraries (DLLs) into the authentication process to acquire user credentials as they are validated.</p>
+                                    <p>Monitor for newly constructed files that may register malicious password filter dynamic link libraries (DLLs) into the authentication process to acquire user credentials as they are validated.</p><p>Analytic 1 - Unauthorized DLL registration.</p><p><code> index=windows_logs sourcetype="WinEventLog:Security" OR sourcetype="XmlWinEventLog:Microsoft-Windows-Sysmon/Operational"| search (EventCode=4688 AND (CommandLine="<em>regsvr32</em>" OR CommandLine="<em>rundll32</em>") AND CommandLine="<em>password.dll</em>")| join type=left Host [    search index=windows_logs sourcetype="WinEventLog:System"    | eval File_Creation_Time=strftime(_time, "%Y-%m-%d %H:%M:%S")    | where EventCode=7045 OR EventCode=2    | fields Host, File_Creation_Time, FileName, FilePath  ]| eval suspected_dll=if(match(FilePath, ".<em>\System32\.</em>") OR match(FilePath, ".<em>\SysWOW64\.</em>"), "High", "Low")</code></p>
 
                         </td>
                     </tr>
@@ -3678,6 +3714,20 @@
 
                         </td>
                     </tr>
+                    <tr class="sub technique enterprise" id="enterprise">
+                        <td></td>
+                        <td></td>
+                        <td>
+                            <a href="/techniques/T1027/014">.014</a>
+                        </td>
+                        <td>
+                            <a href="/techniques/T1027/014">Polymorphic Code</a>
+                        </td>
+                        <td>
+                                    <p>Monitor for files with large entropy which don’t match what is normal/expected given the file type and location.</p>
+
+                        </td>
+                    </tr>
                 <tr class="technique enterprise" id="enterprise">
                     <td>
                             Enterprise
@@ -3746,7 +3796,7 @@
                         <a href="/techniques/T1003">OS Credential Dumping</a>
                     </td>
                     <td>
-                                <p>Monitor for the unexpected creation of memory dump files (e.g., <code>lsass{*}.dmp</code>) for processes that may contain credentials, such as LSASS.</p>
+                                <p>Monitor for the unexpected creation of memory dump files for processes that may contain credentials.</p><p>Analytic 1 - Unexpected memory dump file creation.</p><p><code>(index=security sourcetype="WinEventLog:Security" EventCode=4663 ObjectName IN ("<em>lsass</em>.dmp", "<em>\config\SAM", "</em>\ntds.dit", "<em>\policy\secrets", "</em>\cache"))OR (index=security sourcetype="linux_secure" (key="path" value IN ("/etc/passwd", "/etc/shadow")))OR (index=security sourcetype="macOS:UnifiedLog" message IN ("/var/db/shadow/hash/*", "/private/etc/master.passwd"))</code></p>
 
                     </td>
                 </tr>
@@ -3760,7 +3810,7 @@
                             <a href="/techniques/T1003/001">LSASS Memory</a>
                         </td>
                         <td>
-                                    <p>Monitor for the unexpected creation of memory dump files for the LSASS process (e.g., <code>lsass{*}.dmp</code>).</p>
+                                    <p>Monitor for the unexpected creation of memory dump files for the LSASS process (e.g., <code>lsass{*}.dmp</code>).</p><p>Analytic 1 - Unexpected creation of LSASS dump files.</p><p><code> index=security sourcetype="WinEventLog:Security" EventCode=4663 ObjectName="<em>\lsass</em>.dmp" | where ProcessName IN ("procdump.exe", "rundll32.exe", "taskmgr.exe", "powershell.exe", "wmic.exe", "schtasks.exe", "cmd.exe", "comsvcs.dll") </code></p>
 
                         </td>
                     </tr>
@@ -3774,7 +3824,7 @@
                             <a href="/techniques/T1003/002">Security Account Manager</a>
                         </td>
                         <td>
-                                    <p>Monitor newly constructed files being written with default names that have extracted credentials from the Security Account Manager.</p>
+                                    <p>Monitor newly constructed files being written with default names that have extracted credentials from the Security Account Manager.</p><p>Analytic 1 - Creation of files with extracted SAM credentials.</p><p><code> index=security sourcetype="WinEventLog:Security" EventCode=4663 ObjectName IN ("<em>\config\SAM", "</em>\config\system", "<em>\config\security", "</em>\system32\config\sam", "<em>\system32\config\system", "</em>\system32\config\security") | where ProcessName IN ("reg.exe", "powershell.exe", "wmic.exe", "schtasks.exe", "cmd.exe", "rundll32.exe", "mimikatz.exe", "procdump.exe") </code></p>
 
                         </td>
                     </tr>
@@ -3852,6 +3902,34 @@
 
                     </td>
                 </tr>
+                    <tr class="sub technique enterprise" id="enterprise">
+                        <td></td>
+                        <td></td>
+                        <td>
+                            <a href="/techniques/T1496/001">.001</a>
+                        </td>
+                        <td>
+                            <a href="/techniques/T1496/001">Compute Hijacking</a>
+                        </td>
+                        <td>
+                                    <p>Monitor for common cryptomining files on local systems that may indicate compromise and resource usage.</p>
+
+                        </td>
+                    </tr>
+                    <tr class="sub technique enterprise" id="enterprise">
+                        <td></td>
+                        <td></td>
+                        <td>
+                            <a href="/techniques/T1496/002">.002</a>
+                        </td>
+                        <td>
+                            <a href="/techniques/T1496/002">Bandwidth Hijacking</a>
+                        </td>
+                        <td>
+                                    <p>Monitor for common proxyware files on local systems that may indicate compromise and resource usage. </p>
+
+                        </td>
+                    </tr>
                 <tr class="technique enterprise" id="enterprise">
                     <td>
                             Enterprise
@@ -3863,7 +3941,7 @@
                         <a href="/techniques/T1053">Scheduled Task/Job</a>
                     </td>
                     <td>
-                                <p>Monitor newly constructed files that may abuse task scheduling functionality to facilitate initial or recurring execution of malicious code.</p>
+                                <p>Monitor newly constructed files that may abuse task scheduling functionality to facilitate initial or recurring execution of malicious code.</p><p>Analytic 1 - Look for new task files with unusual parameters.</p><p><code> index=security_logs OR index=system_logs(sourcetype="docker_events" OR sourcetype="kubernetes_events" OR sourcetype="wineventlog:security" OR sourcetype="linux_secure" OR sourcetype="syslog" OR sourcetype="file_monitoring")| eval platform=case(    sourcetype=="docker_events" OR sourcetype=="kubernetes_events", "Containers",    sourcetype=="wineventlog:security", "Windows",    sourcetype=="linux_secure" OR sourcetype=="syslog", "Linux",    sourcetype=="mac_os_events", "macOS")| search (    (platform="Containers" AND (event_type="file_create" AND (file_path="<em>/etc/cron.d/</em>" OR file_path="<em>/etc/systemd/system/</em>"))) OR    (platform="Windows" AND EventCode=4663 AND (ObjectName="C:\Windows\System32\Tasks\<em>" OR ObjectName="C:\Windows\Tasks\</em>")) OR    (platform="Linux" AND (file_path="/etc/cron.d/<em>" OR file_path="/etc/systemd/system/</em>")) OR    (platform="macOS" AND (file_path="/Library/LaunchDaemons/<em>" OR file_path="/Library/LaunchAgents/</em>")))</code></p>
 
                     </td>
                 </tr>
@@ -3877,7 +3955,7 @@
                             <a href="/techniques/T1053/005">Scheduled Task</a>
                         </td>
                         <td>
-                                    <p>Monitor Windows Task Scheduler stores in %systemroot%\System32\Tasks for change entries related to scheduled tasks that do not correlate with known software, patch cycles, etc. In order to gain persistence, privilege escalation, or remote execution, an adversary may use the Windows Task Scheduler to schedule a command to be run at a specified time, date, and even host. Task Scheduler stores tasks as files in two locations - C:\Windows\Tasks (legacy) or C:\Windows\System32\Tasks. Accordingly, this analytic looks for the creation of task files in these two locations.</p><p>Analytic 1 - Scheduled Task - File Creation</p><p><code>(source="<em>WinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode="11") (TargetFilename= "C:\Windows\System32\Tasks\</em>" OR TargetFilename  "C:\Windows\Tasks\*")  AND Image!= "C:\WINDOWS\system32\svchost.exe"</code></p>
+                                    <p>Monitor Windows Task Scheduler stores in %systemroot%\System32\Tasks for change entries related to scheduled tasks that do not correlate with known software, patch cycles, etc. In order to gain persistence, privilege escalation, or remote execution, an adversary may use the Windows Task Scheduler to schedule a command to be run at a specified time, date, and even host. Task Scheduler stores tasks as files in two locations - C:\Windows\Tasks (legacy) or C:\Windows\System32\Tasks. Accordingly, this analytic looks for the creation of task files in these two locations.</p><p>Analytic 1 - Look for new task files in %systemroot%\System32\Tasks.</p><p><code>((source="<em>WinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode="11") OR (sourcetype=WinEventLog:Security EventCode=4663)) (TargetFilename= "C:\Windows\System32\Tasks\</em>" OR TargetFilename  "C:\Windows\Tasks\*")  AND Image!= "C:\WINDOWS\system32\svchost.exe"</code></p>
 
                         </td>
                     </tr>
@@ -3891,7 +3969,7 @@
                             <a href="/techniques/T1053/007">Container Orchestration Job</a>
                         </td>
                         <td>
-                                    <p>Monitor for newly constructed files by using the logging agents on Kubernetes nodes and retrieve logs from sidecar proxies for application and resource pods to monitor malicious container orchestration job deployments.</p>
+                                    <p>Monitor for newly constructed files by using the logging agents on Kubernetes nodes and retrieve logs from sidecar proxies for application and resource pods to monitor malicious container orchestration job deployments.</p><p>Note: This query monitors for .yaml configuration files that are used to define jobs and container behaviors within Kubernetes. Changes or creations of these files should be closely watched.</p><p>Analytic 1 - Look for new file creation events with unusual parameters.</p><p><code> sourcetype=kubernetes:file_creation file_path="/etc/kubernetes/manifests/*.yaml"</code></p>
 
                         </td>
                     </tr>
@@ -3934,7 +4012,7 @@
                             <a href="/techniques/T1505/003">Web Shell</a>
                         </td>
                         <td>
-                                    <p>File monitoring may be used to detect changes to files in the Web directory of a Web server that do not match with updates to the Web server's content and may indicate implantation of a Web shell script.<span onclick=scrollToRef('scite-16') id="scite-ref-16-a" class="scite-citeref-number" title=" NSA Cybersecurity Directorate. (n.d.). Mitigating Web Shells. Retrieved July 22, 2021."data-reference="NSA Cyber Mitigating Web Shells"><sup><a href="https://github.com/nsacyber/Mitigating-Web-Shells" target="_blank" data-hasqtip="15" aria-describedby="qtip-15">[16]</a></sup></span></p>
+                                    <p>File monitoring may be used to detect changes to files in the Web directory of a Web server that do not match with updates to the Web server's content and may indicate implantation of a Web shell script.<span onclick=scrollToRef('scite-17') id="scite-ref-17-a" class="scite-citeref-number" title=" NSA Cybersecurity Directorate. (n.d.). Mitigating Web Shells. Retrieved July 22, 2021."data-reference="NSA Cyber Mitigating Web Shells"><sup><a href="https://github.com/nsacyber/Mitigating-Web-Shells" target="_blank" data-hasqtip="16" aria-describedby="qtip-16">[17]</a></sup></span></p>
 
                         </td>
                     </tr>
@@ -4097,7 +4175,7 @@
                             <a href="/techniques/T1204/001">Malicious Link</a>
                         </td>
                         <td>
-                                    <p>malicious documents and files that are downloaded from a link and executed on the user's computer</p>
+                                    <p>Monitor for files created on a system after a user clicks on a malicious link. Look for common download paths and suspicious files with executable extensions.</p><p>Analytic 1 - Files downloaded from links and then executed.</p><p><code> sourcetype=Sysmon EventCode=11| search file_path IN ("<em>/Downloads/</em>", "<em>/Temp/</em>")| stats count by file_name file_path user| where file_name LIKE "%.exe" OR file_name LIKE "%.zip" OR file_name LIKE "%.js" OR file_name LIKE "%.docm"</code></p>
 
                         </td>
                     </tr>
@@ -4111,7 +4189,7 @@
                             <a href="/techniques/T1204/002">Malicious File</a>
                         </td>
                         <td>
-                                    <p>Monitor for newly constructed files that are downloaded and executed on the user's computer. Endpoint sensing or network sensing can potentially detect malicious events once the file is opened (such as a Microsoft Word document or PDF reaching out to the internet or spawning powershell.exe).</p><p>While batch files are not inherently malicious, it is uncommon to see them created after OS installation, especially in the Windows directory. This analytic looks for the suspicious activity of a batch file being created within the C:\Windows\System32 directory tree. There will be only occasional false positives due to administrator actions.</p><p>For Windows, Sysmon Event ID 11 (File create) can be used to track file creation events. This event also provides the Process ID of the process that created the file, which can be correlated with process creation events (e.g., Sysmon Event ID 1) to determine if the file was downloaded from an external network.</p><p>For MacOS, utilities that work in concert with Apple’s Endpoint Security Framework such as File Monitor can be used to track file creation events.</p><p>Analytic 1 - Batch File Write to System32</p><p><code> (source="<em>WinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode="11") file_path="</em>system32*" AND file_extension=".bat"</code></p>
+                                    <p>Monitor for files created in unusual directories or files with suspicious extensions. Focus on common locations like the Downloads folder, Temp directories, or the user’s Desktop, especially files that would be of interest from spearphishing attachments.</p><p>While batch files are not inherently malicious, it is uncommon to see them created after OS installation, especially in the Windows directory. This analytic looks for the suspicious activity of a batch file being created within the C:\Windows\System32 directory tree. There will be only occasional false positives due to administrator actions.</p><p>For MacOS, utilities that work in concert with Apple’s Endpoint Security Framework such as File Monitor can be used to track file creation events.</p><p>Analytic 1 - Batch File Write to System32</p><p><code> (sourcetype=WinEventLog:Microsoft-Windows-Sysmon/Operational EventCode="11") file_path="<em>system32</em>" AND file_extension=".bat"</code></p><p>Analytic 2 - New file creation in unusual directories.</p><p><code>sourcetype=WinEventLog:Microsoft-Windows-Sysmon/Operational EventCode=11| search file_path IN ("<em>/Downloads/</em>", "<em>/Temp/</em>", "<em>/Desktop/</em>")| stats count by file_name file_extension file_path user| where file_extension IN ("doc", "docx", "pdf", "xls", "rtf", "exe", "scr", "lnk", "pif", "cpl", "zip") </code></p>
 
                         </td>
                     </tr>
@@ -4597,7 +4675,7 @@
                             <a href="/techniques/T1222/002">Linux and Mac File and Directory Permissions Modification</a>
                         </td>
                         <td>
-                                    <p>Monitor and investigate attempts to modify ACLs and file/directory ownership. Consider enabling file/directory permission change auditing on folders containing key binary/configuration files.</p><p>This looks for any invocations of chmod. Note that this is likely to be more noisy than the Windows-specific implementation, although Linux does not generate logs for system triggered activities like in Windows. In addition, it may be necessary to whitelist cron jobs that regularly run and execute chmod.</p><p>Linux environment logs can be more noisy than the Windows-specific implementation, although Linux does not generate logs for system triggered activities like in Windows. In addition, it may be necessary to whitelist cron jobs that regularly run and execute chmod.</p><p>Analytic 1 - Access Permission Modification for Linux</p><p><code>source="<em>linux:</em>" CommandLine="chmod*"</code></p>
+                                    <p>Monitor and investigate attempts to modify ACLs and file/directory ownership. Consider enabling file/directory permission change auditing on folders containing key binary/configuration files.</p><p>This looks for any invocations of chmod. Note that this is likely to be more noisy than the Windows-specific implementation, although Linux does not generate logs for system triggered activities like in Windows. In addition, it may be necessary to whitelist cron jobs that regularly run and execute chmod.</p><p>Linux environment logs can be more noisy than the Windows-specific implementation, although Linux does not generate logs for system triggered activities like in Windows. In addition, it may be necessary to whitelist cron jobs that regularly run and execute chmod.</p><p>Analytic 1 - Access Permission Modification for Linux</p><p><code>sourcetype=linux_logs CommandLine="chmod*"</code></p>
 
                         </td>
                     </tr>
@@ -4640,7 +4718,7 @@
                             <a href="/techniques/T1564/004">NTFS File Attributes</a>
                         </td>
                         <td>
-                                    <p>Monitor for contextual data about a file, which may include information such as name, the content (ex: signature, headers, or data/media), user/owner, permissions, may use NTFS file attributes to hide their malicious data in order to evade detection. Forensic techniques exist to identify information stored in NTFS EA. <span onclick=scrollToRef('scite-17') id="scite-ref-17-a" class="scite-citeref-number" title="Harrell, C. (2012, December 11). Extracting ZeroAccess from NTFS Extended Attributes. Retrieved June 3, 2016."data-reference="Journey into IR ZeroAccess NTFS EA"><sup><a href="http://journeyintoir.blogspot.com/2012/12/extracting-zeroaccess-from-ntfs.html" target="_blank" data-hasqtip="16" aria-describedby="qtip-16">[17]</a></sup></span></p>
+                                    <p>Monitor for contextual data about a file, which may include information such as name, the content (ex: signature, headers, or data/media), user/owner, permissions, may use NTFS file attributes to hide their malicious data in order to evade detection. Forensic techniques exist to identify information stored in NTFS EA. <span onclick=scrollToRef('scite-18') id="scite-ref-18-a" class="scite-citeref-number" title="Harrell, C. (2012, December 11). Extracting ZeroAccess from NTFS Extended Attributes. Retrieved June 3, 2016."data-reference="Journey into IR ZeroAccess NTFS EA"><sup><a href="http://journeyintoir.blogspot.com/2012/12/extracting-zeroaccess-from-ntfs.html" target="_blank" data-hasqtip="17" aria-describedby="qtip-17">[18]</a></sup></span></p>
 
                         </td>
                     </tr>
@@ -4654,7 +4732,7 @@
                             <a href="/techniques/T1564/007">VBA Stomping</a>
                         </td>
                         <td>
-                                    <p>If the document is opened with a Graphical User Interface (GUI) the malicious p-code is decompiled and may be viewed. However, if the <code>PROJECT</code> stream, which specifies the project properties, is modified in a specific way the decompiled VBA code will not be displayed. For example, adding a module name that is undefined to the <code>PROJECT</code> stream will inhibit attempts of reading the VBA source code through the GUI.<span onclick=scrollToRef('scite-18') id="scite-ref-18-a" class="scite-citeref-number" title="Cole, R., Moore, A., Stark, G., Stancill, B. (2020, February 5). STOMP 2 DIS: Brilliance in the (Visual) Basics. Retrieved September 17, 2020."data-reference="FireEye VBA stomp Feb 2020"><sup><a href="https://www.fireeye.com/blog/threat-research/2020/01/stomp-2-dis-brilliance-in-the-visual-basics.html" target="_blank" data-hasqtip="17" aria-describedby="qtip-17">[18]</a></sup></span></p>
+                                    <p>If the document is opened with a Graphical User Interface (GUI) the malicious p-code is decompiled and may be viewed. However, if the <code>PROJECT</code> stream, which specifies the project properties, is modified in a specific way the decompiled VBA code will not be displayed. For example, adding a module name that is undefined to the <code>PROJECT</code> stream will inhibit attempts of reading the VBA source code through the GUI.<span onclick=scrollToRef('scite-19') id="scite-ref-19-a" class="scite-citeref-number" title="Cole, R., Moore, A., Stark, G., Stancill, B. (2020, February 5). STOMP 2 DIS: Brilliance in the (Visual) Basics. Retrieved September 17, 2020."data-reference="FireEye VBA stomp Feb 2020"><sup><a href="https://www.fireeye.com/blog/threat-research/2020/01/stomp-2-dis-brilliance-in-the-visual-basics.html" target="_blank" data-hasqtip="18" aria-describedby="qtip-18">[19]</a></sup></span></p>
 
                         </td>
                     </tr>
@@ -4697,7 +4775,7 @@
                             <a href="/techniques/T1070/006">Timestomp</a>
                         </td>
                         <td>
-                                    <p>Monitor for file modifications that collects information on file handle opens and can compare timestamp values</p>
+                                    <p>Monitor for modifications to file metadata. Compare the <code>$STANDARD_INFORMATION</code> and <code>$FILE_NAME</code> attributes in the Master File Table (MFT).<span onclick=scrollToRef('scite-20') id="scite-ref-20-a" class="scite-citeref-number" title="Lina Lau. (2022, April 28). Defence Evasion Technique: Timestomping Detection – NTFS Forensics. Retrieved September 30, 2024."data-reference="Inversecos Timestomping 2022"><sup><a href="https://www.inversecos.com/2022/04/defence-evasion-technique-timestomping.html" target="_blank" data-hasqtip="19" aria-describedby="qtip-19">[20]</a></sup></span> Additionally, look for nanoseconds in a timestamp matching "0000000". This often shows the use of an automated tool such as Metasploit.<span onclick=scrollToRef('scite-20') id="scite-ref-20-a" class="scite-citeref-number" title="Lina Lau. (2022, April 28). Defence Evasion Technique: Timestomping Detection – NTFS Forensics. Retrieved September 30, 2024."data-reference="Inversecos Timestomping 2022"><sup><a href="https://www.inversecos.com/2022/04/defence-evasion-technique-timestomping.html" target="_blank" data-hasqtip="19" aria-describedby="qtip-19">[20]</a></sup></span></p>
 
                         </td>
                     </tr>
@@ -4757,7 +4835,7 @@
                         <a href="/techniques/T1036">Masquerading</a>
                     </td>
                     <td>
-                                <p>Collect file hashes; file names that do not match their expected hash are suspect. Perform file monitoring; files with known names but in unusual locations are suspect. Look for indications of common characters that may indicate an attempt to trick users into misidentifying the file type, such as a space as the last character of a file name or the right-to-left override characters"\u202E", "[U+202E]", and "%E2%80%AE".</p><p>Check and ensure that file headers/signature and extensions match using magic bytes detection and/or file signature validation.<span onclick=scrollToRef('scite-19') id="scite-ref-19-a" class="scite-citeref-number" title="Li, V. (2019, October 2). Polyglot Files: a Hacker’s best friend. Retrieved September 27, 2022."data-reference="Polyglot Files: a Hacker’s best friend"><sup><a href="https://medium.com/swlh/polyglot-files-a-hackers-best-friend-850bf812dd8a" target="_blank" data-hasqtip="18" aria-describedby="qtip-18">[19]</a></sup></span> In Linux, the <code>file</code> command may be used to check the file signature.<span onclick=scrollToRef('scite-20') id="scite-ref-20-a" class="scite-citeref-number" title="Kessler, G. (2022, December 9). GCK'S FILE SIGNATURES TABLE. Retrieved August 23, 2022."data-reference="file_sig_table"><sup><a href="https://www.garykessler.net/library/file_sigs.html" target="_blank" data-hasqtip="19" aria-describedby="qtip-19">[20]</a></sup></span></p>
+                                <p>Collect file hashes; file names that do not match their expected hash are suspect. Perform file monitoring; files with known names but in unusual locations are suspect. Look for indications of common characters that may indicate an attempt to trick users into misidentifying the file type, such as a space as the last character of a file name or the right-to-left override characters"\u202E", "[U+202E]", and "%E2%80%AE".</p><p>Check and ensure that file headers/signature and extensions match using magic bytes detection and/or file signature validation.<span onclick=scrollToRef('scite-21') id="scite-ref-21-a" class="scite-citeref-number" title="Li, V. (2019, October 2). Polyglot Files: a Hacker’s best friend. Retrieved September 27, 2022."data-reference="Polyglot Files: a Hacker’s best friend"><sup><a href="https://medium.com/swlh/polyglot-files-a-hackers-best-friend-850bf812dd8a" target="_blank" data-hasqtip="20" aria-describedby="qtip-20">[21]</a></sup></span> In Linux, the <code>file</code> command may be used to check the file signature.<span onclick=scrollToRef('scite-22') id="scite-ref-22-a" class="scite-citeref-number" title="Kessler, G. (2022, December 9). GCK'S FILE SIGNATURES TABLE. Retrieved August 23, 2022."data-reference="file_sig_table"><sup><a href="https://www.garykessler.net/library/file_sigs.html" target="_blank" data-hasqtip="21" aria-describedby="qtip-21">[22]</a></sup></span></p>
 
                     </td>
                 </tr>
@@ -4871,7 +4949,7 @@
                         <a href="/techniques/T1027">Obfuscated Files or Information</a>
                     </td>
                     <td>
-                                <p>Monitor for contextual data about a file, which may include information such as name, the content (ex: signature, headers, or data/media), user/owner, permissions, etc.</p><p>File-based signatures may be capable of detecting code obfuscation depending on the methods used.<span onclick=scrollToRef('scite-21') id="scite-ref-21-a" class="scite-citeref-number" title="Brennan, M. (2022, February 16). Hackers No Hashing: Randomizing API Hashes to Evade Cobalt Strike Shellcode Detection. Retrieved August 22, 2022."data-reference="Huntress API Hash"><sup><a href="https://www.huntress.com/blog/hackers-no-hashing-randomizing-api-hashes-to-evade-cobalt-strike-shellcode-detection" target="_blank" data-hasqtip="20" aria-describedby="qtip-20">[21]</a></sup></span><span onclick=scrollToRef('scite-22') id="scite-ref-22-a" class="scite-citeref-number" title="Choi, S. (2015, August 6). Obfuscated API Functions in Modern Packers. Retrieved August 22, 2022."data-reference="BlackHat API Packers"><sup><a href="https://www.blackhat.com/docs/us-15/materials/us-15-Choi-API-Deobfuscator-Resolving-Obfuscated-API-Functions-In-Modern-Packers.pdf" target="_blank" data-hasqtip="21" aria-describedby="qtip-21">[22]</a></sup></span><span onclick=scrollToRef('scite-23') id="scite-ref-23-a" class="scite-citeref-number" title="Jason (jxb5151). (2021, January 28). findapihash.py. Retrieved August 22, 2022."data-reference="MITRECND FindAPIHash"><sup><a href="https://github.com/MITRECND/malchive/blob/main/malchive/utilities/findapihash.py" target="_blank" data-hasqtip="22" aria-describedby="qtip-22">[23]</a></sup></span></p>
+                                <p>Monitor for contextual data about a file, which may include information such as name, the content (ex: signature, headers, or data/media), user/owner, permissions, etc.</p><p>File-based signatures may be capable of detecting code obfuscation depending on the methods used.<span onclick=scrollToRef('scite-23') id="scite-ref-23-a" class="scite-citeref-number" title="Brennan, M. (2022, February 16). Hackers No Hashing: Randomizing API Hashes to Evade Cobalt Strike Shellcode Detection. Retrieved August 22, 2022."data-reference="Huntress API Hash"><sup><a href="https://www.huntress.com/blog/hackers-no-hashing-randomizing-api-hashes-to-evade-cobalt-strike-shellcode-detection" target="_blank" data-hasqtip="22" aria-describedby="qtip-22">[23]</a></sup></span><span onclick=scrollToRef('scite-24') id="scite-ref-24-a" class="scite-citeref-number" title="Choi, S. (2015, August 6). Obfuscated API Functions in Modern Packers. Retrieved August 22, 2022."data-reference="BlackHat API Packers"><sup><a href="https://www.blackhat.com/docs/us-15/materials/us-15-Choi-API-Deobfuscator-Resolving-Obfuscated-API-Functions-In-Modern-Packers.pdf" target="_blank" data-hasqtip="23" aria-describedby="qtip-23">[24]</a></sup></span><span onclick=scrollToRef('scite-25') id="scite-ref-25-a" class="scite-citeref-number" title="Jason (jxb5151). (2021, January 28). findapihash.py. Retrieved August 22, 2022."data-reference="MITRECND FindAPIHash"><sup><a href="https://github.com/MITRECND/malchive/blob/main/malchive/utilities/findapihash.py" target="_blank" data-hasqtip="24" aria-describedby="qtip-24">[25]</a></sup></span></p>
 
                     </td>
                 </tr>
@@ -4941,7 +5019,7 @@
                             <a href="/techniques/T1027/007">Dynamic API Resolution</a>
                         </td>
                         <td>
-                                    <p>Depending on the method used to obfuscate API function calls, a file-based signature may be capable of detecting dynamical resolution.<span onclick=scrollToRef('scite-21') id="scite-ref-21-a" class="scite-citeref-number" title="Brennan, M. (2022, February 16). Hackers No Hashing: Randomizing API Hashes to Evade Cobalt Strike Shellcode Detection. Retrieved August 22, 2022."data-reference="Huntress API Hash"><sup><a href="https://www.huntress.com/blog/hackers-no-hashing-randomizing-api-hashes-to-evade-cobalt-strike-shellcode-detection" target="_blank" data-hasqtip="20" aria-describedby="qtip-20">[21]</a></sup></span><span onclick=scrollToRef('scite-22') id="scite-ref-22-a" class="scite-citeref-number" title="Choi, S. (2015, August 6). Obfuscated API Functions in Modern Packers. Retrieved August 22, 2022."data-reference="BlackHat API Packers"><sup><a href="https://www.blackhat.com/docs/us-15/materials/us-15-Choi-API-Deobfuscator-Resolving-Obfuscated-API-Functions-In-Modern-Packers.pdf" target="_blank" data-hasqtip="21" aria-describedby="qtip-21">[22]</a></sup></span><span onclick=scrollToRef('scite-23') id="scite-ref-23-a" class="scite-citeref-number" title="Jason (jxb5151). (2021, January 28). findapihash.py. Retrieved August 22, 2022."data-reference="MITRECND FindAPIHash"><sup><a href="https://github.com/MITRECND/malchive/blob/main/malchive/utilities/findapihash.py" target="_blank" data-hasqtip="22" aria-describedby="qtip-22">[23]</a></sup></span></p>
+                                    <p>Depending on the method used to obfuscate API function calls, a file-based signature may be capable of detecting dynamical resolution.<span onclick=scrollToRef('scite-23') id="scite-ref-23-a" class="scite-citeref-number" title="Brennan, M. (2022, February 16). Hackers No Hashing: Randomizing API Hashes to Evade Cobalt Strike Shellcode Detection. Retrieved August 22, 2022."data-reference="Huntress API Hash"><sup><a href="https://www.huntress.com/blog/hackers-no-hashing-randomizing-api-hashes-to-evade-cobalt-strike-shellcode-detection" target="_blank" data-hasqtip="22" aria-describedby="qtip-22">[23]</a></sup></span><span onclick=scrollToRef('scite-24') id="scite-ref-24-a" class="scite-citeref-number" title="Choi, S. (2015, August 6). Obfuscated API Functions in Modern Packers. Retrieved August 22, 2022."data-reference="BlackHat API Packers"><sup><a href="https://www.blackhat.com/docs/us-15/materials/us-15-Choi-API-Deobfuscator-Resolving-Obfuscated-API-Functions-In-Modern-Packers.pdf" target="_blank" data-hasqtip="23" aria-describedby="qtip-23">[24]</a></sup></span><span onclick=scrollToRef('scite-25') id="scite-ref-25-a" class="scite-citeref-number" title="Jason (jxb5151). (2021, January 28). findapihash.py. Retrieved August 22, 2022."data-reference="MITRECND FindAPIHash"><sup><a href="https://github.com/MITRECND/malchive/blob/main/malchive/utilities/findapihash.py" target="_blank" data-hasqtip="24" aria-describedby="qtip-24">[25]</a></sup></span></p>
 
                         </td>
                     </tr>
@@ -5015,6 +5093,20 @@
 
                         </td>
                     </tr>
+                    <tr class="sub technique enterprise" id="enterprise">
+                        <td></td>
+                        <td></td>
+                        <td>
+                            <a href="/techniques/T1027/014">.014</a>
+                        </td>
+                        <td>
+                            <a href="/techniques/T1027/014">Polymorphic Code</a>
+                        </td>
+                        <td>
+                                    <p>Monitor for and analyze files which contain content with large entropy, as this may indicate potentially malicious compressed or encrypted data.</p>
+
+                        </td>
+                    </tr>
                 <tr class="technique enterprise" id="enterprise">
                     <td>
                             Enterprise
@@ -5040,7 +5132,7 @@
                             <a href="/techniques/T1055/013">Process Doppelgänging</a>
                         </td>
                         <td>
-                                    <p>Scan file objects reported during the PsSetCreateProcessNotifyRoutine, <span onclick=scrollToRef('scite-24') id="scite-ref-24-a" class="scite-citeref-number" title="Microsoft. (n.d.). PsSetCreateProcessNotifyRoutine routine. Retrieved December 20, 2017."data-reference="Microsoft PsSetCreateProcessNotifyRoutine routine"><sup><a href="https://msdn.microsoft.com/library/windows/hardware/ff559951.aspx" target="_blank" data-hasqtip="23" aria-describedby="qtip-23">[24]</a></sup></span> which triggers a callback whenever a process is created or deleted, specifically looking for file objects with enabled write access. <span onclick=scrollToRef('scite-25') id="scite-ref-25-a" class="scite-citeref-number" title="Liberman, T. & Kogan, E. (2017, December 7). Lost in Transaction: Process Doppelgänging. Retrieved December 20, 2017."data-reference="BlackHat Process Doppelgänging Dec 2017"><sup><a href="https://www.blackhat.com/docs/eu-17/materials/eu-17-Liberman-Lost-In-Transaction-Process-Doppelganging.pdf" target="_blank" data-hasqtip="24" aria-describedby="qtip-24">[25]</a></sup></span> Also consider comparing file objects loaded in memory to the corresponding file on disk. <span onclick=scrollToRef('scite-26') id="scite-ref-26-a" class="scite-citeref-number" title="hasherezade. (2017, December 18). Process Doppelgänging – a new way to impersonate a process. Retrieved December 20, 2017."data-reference="hasherezade Process Doppelgänging Dec 2017"><sup><a href="https://hshrzd.wordpress.com/2017/12/18/process-doppelganging-a-new-way-to-impersonate-a-process/" target="_blank" data-hasqtip="25" aria-describedby="qtip-25">[26]</a></sup></span></p>
+                                    <p>Scan file objects reported during the PsSetCreateProcessNotifyRoutine, <span onclick=scrollToRef('scite-26') id="scite-ref-26-a" class="scite-citeref-number" title="Microsoft. (n.d.). PsSetCreateProcessNotifyRoutine routine. Retrieved December 20, 2017."data-reference="Microsoft PsSetCreateProcessNotifyRoutine routine"><sup><a href="https://msdn.microsoft.com/library/windows/hardware/ff559951.aspx" target="_blank" data-hasqtip="25" aria-describedby="qtip-25">[26]</a></sup></span> which triggers a callback whenever a process is created or deleted, specifically looking for file objects with enabled write access. <span onclick=scrollToRef('scite-27') id="scite-ref-27-a" class="scite-citeref-number" title="Liberman, T. & Kogan, E. (2017, December 7). Lost in Transaction: Process Doppelgänging. Retrieved December 20, 2017."data-reference="BlackHat Process Doppelgänging Dec 2017"><sup><a href="https://www.blackhat.com/docs/eu-17/materials/eu-17-Liberman-Lost-In-Transaction-Process-Doppelganging.pdf" target="_blank" data-hasqtip="26" aria-describedby="qtip-26">[27]</a></sup></span> Also consider comparing file objects loaded in memory to the corresponding file on disk. <span onclick=scrollToRef('scite-28') id="scite-ref-28-a" class="scite-citeref-number" title="hasherezade. (2017, December 18). Process Doppelgänging – a new way to impersonate a process. Retrieved December 20, 2017."data-reference="hasherezade Process Doppelgänging Dec 2017"><sup><a href="https://hshrzd.wordpress.com/2017/12/18/process-doppelganging-a-new-way-to-impersonate-a-process/" target="_blank" data-hasqtip="27" aria-describedby="qtip-27">[28]</a></sup></span></p>
 
                         </td>
                     </tr>
@@ -5069,7 +5161,7 @@
                             <a href="/techniques/T1553/001">Gatekeeper Bypass</a>
                         </td>
                         <td>
-                                    <p>Review <code>false</code> values under the <code>LSFileQuarantineEnabled</code> entry in an application's <code>Info.plist</code> file (required by every application). <code>false</code> under <code>LSFileQuarantineEnabled</code> indicates that an application does not use the quarantine flag. Unsandboxed applications with an unspecified <code>LSFileQuarantineEnabled</code> entry will default to not setting the quarantine flag.</p><p>QuarantineEvents is a SQLite database containing a list of all files assigned the <code>com.apple.quarantine</code> attribute, located at <code>~/Library/Preferences/com.apple.LaunchServices.QuarantineEventsV2</code>. Each event contains the corresponding UUID, timestamp, application, Gatekeeper score, and decision if it was allowed. <span onclick=scrollToRef('scite-27') id="scite-ref-27-a" class="scite-citeref-number" title="hoakley. (2020, October 29). Quarantine and the quarantine flag. Retrieved September 13, 2021."data-reference="TheEclecticLightCompany Quarantine and the flag"><sup><a href="https://eclecticlight.co/2020/10/29/quarantine-and-the-quarantine-flag/" target="_blank" data-hasqtip="26" aria-describedby="qtip-26">[27]</a></sup></span></p>
+                                    <p>Review <code>false</code> values under the <code>LSFileQuarantineEnabled</code> entry in an application's <code>Info.plist</code> file (required by every application). <code>false</code> under <code>LSFileQuarantineEnabled</code> indicates that an application does not use the quarantine flag. Unsandboxed applications with an unspecified <code>LSFileQuarantineEnabled</code> entry will default to not setting the quarantine flag.</p><p>QuarantineEvents is a SQLite database containing a list of all files assigned the <code>com.apple.quarantine</code> attribute, located at <code>~/Library/Preferences/com.apple.LaunchServices.QuarantineEventsV2</code>. Each event contains the corresponding UUID, timestamp, application, Gatekeeper score, and decision if it was allowed. <span onclick=scrollToRef('scite-29') id="scite-ref-29-a" class="scite-citeref-number" title="hoakley. (2020, October 29). Quarantine and the quarantine flag. Retrieved September 13, 2021."data-reference="TheEclecticLightCompany Quarantine and the flag"><sup><a href="https://eclecticlight.co/2020/10/29/quarantine-and-the-quarantine-flag/" target="_blank" data-hasqtip="28" aria-describedby="qtip-28">[29]</a></sup></span></p>
 
                         </td>
                     </tr>
@@ -5269,7 +5361,7 @@
                             <a href="/techniques/T1548/006">TCC Manipulation</a>
                         </td>
                         <td>
-                                    <p>Monitor for changes to files associated with TCC settings, such as <code>/Library/Application Support/com.apple.TCC/TCC.db</code>.</p>
+                                    <p>Monitor for changes to files associated with TCC settings, such as <code>/Library/Application Support/com.apple.TCC/TCC.db</code> and the overwrites file.</p>
 
                         </td>
                     </tr>
@@ -5327,7 +5419,7 @@
                             <a href="/techniques/T1547/001">Registry Run Keys / Startup Folder</a>
                         </td>
                         <td>
-                                    <p>Monitor the start folder for additions or changes. Tools such as Sysinternals Autoruns may also be used to detect system changes that could be attempts at persistence, including the startup folders. <span onclick=scrollToRef('scite-28') id="scite-ref-28-a" class="scite-citeref-number" title="Russinovich, M. (2016, January 4). Autoruns for Windows v13.51. Retrieved June 6, 2016."data-reference="TechNet Autoruns"><sup><a href="https://technet.microsoft.com/en-us/sysinternals/bb963902" target="_blank" data-hasqtip="27" aria-describedby="qtip-27">[28]</a></sup></span></p>
+                                    <p>Monitor the start folder for additions or changes. Tools such as Sysinternals Autoruns may also be used to detect system changes that could be attempts at persistence, including the startup folders. <span onclick=scrollToRef('scite-30') id="scite-ref-30-a" class="scite-citeref-number" title="Russinovich, M. (2016, January 4). Autoruns for Windows v13.51. Retrieved June 6, 2016."data-reference="TechNet Autoruns"><sup><a href="https://technet.microsoft.com/en-us/sysinternals/bb963902" target="_blank" data-hasqtip="29" aria-describedby="qtip-29">[30]</a></sup></span></p>
 
                         </td>
                     </tr>
@@ -5743,7 +5835,7 @@
                             <a href="/techniques/T1546/004">Unix Shell Configuration Modification</a>
                         </td>
                         <td>
-                                    <p>Monitor for changes to <code>/etc/profile</code> and <code>/etc/profile.d</code>, these files should only be modified by system administrators. MacOS users can leverage Endpoint Security Framework file events monitoring these specific files.<span onclick=scrollToRef('scite-29') id="scite-ref-29-a" class="scite-citeref-number" title="Patrick Wardle. (2019, September 17). Writing a File Monitor with Apple's Endpoint Security Framework. Retrieved December 17, 2020."data-reference="ESF_filemonitor"><sup><a href="https://objective-see.com/blog/blog_0x48.html" target="_blank" data-hasqtip="28" aria-describedby="qtip-28">[29]</a></sup></span></p>
+                                    <p>Monitor for changes to <code>/etc/profile</code> and <code>/etc/profile.d</code>, these files should only be modified by system administrators. MacOS users can leverage Endpoint Security Framework file events monitoring these specific files.<span onclick=scrollToRef('scite-31') id="scite-ref-31-a" class="scite-citeref-number" title="Patrick Wardle. (2019, September 17). Writing a File Monitor with Apple's Endpoint Security Framework. Retrieved December 17, 2020."data-reference="ESF_filemonitor"><sup><a href="https://objective-see.com/blog/blog_0x48.html" target="_blank" data-hasqtip="30" aria-describedby="qtip-30">[31]</a></sup></span></p>
 
                         </td>
                     </tr>
@@ -5831,6 +5923,35 @@
 
                         </td>
                     </tr>
+                    <tr class="sub technique enterprise" id="enterprise">
+                        <td></td>
+                        <td></td>
+                        <td>
+                            <a href="/techniques/T1546/017">.017</a>
+                        </td>
+                        <td>
+                            <a href="/techniques/T1546/017">Udev Rules</a>
+                        </td>
+                        <td>
+                                    <p>Monitor the creation and modification of files in the directories where udev rules are located:  <code>/etc/udev/rules.d/</code>, <code>/run/udev/rules.d/</code>, <code>/lib/udev/rules.d/</code>, <code>/usr/lib/udev/rules.d/</code>, and <code>/usr/local/lib/udev/rules.d/</code>. Analyze and monitor changes to <code>RUN</code> assignment key.<span onclick=scrollToRef('scite-32') id="scite-ref-32-a" class="scite-citeref-number" title="Eder P. Ignacio. (2024, February 21). Leveraging Linux udev for persistence. Retrieved September 26, 2024."data-reference="Ignacio Udev research 2024"><sup><a href="https://ch4ik0.github.io/en/posts/leveraging-Linux-udev-for-persistence/" target="_blank" data-hasqtip="31" aria-describedby="qtip-31">[32]</a></sup></span><span onclick=scrollToRef('scite-33') id="scite-ref-33-a" class="scite-citeref-number" title="Ruben Groenewoud. (2024, August 29). Linux Detection Engineering -  A Sequel on Persistence Mechanisms. Retrieved October 16, 2024."data-reference="Elastic Linux Persistence 2024"><sup><a href="https://www.elastic.co/security-labs/sequel-on-persistence-mechanisms" target="_blank" data-hasqtip="32" aria-describedby="qtip-32">[33]</a></sup></span></p>
+
+                        </td>
+                    </tr>
+                <tr class="technique enterprise" id="enterprise">
+                    <td>
+                            Enterprise
+                    </td>
+                    <td colspan="2">
+                        <a href="/techniques/T1203">T1203</a>
+                    </td>
+                    <td>
+                        <a href="/techniques/T1203">Exploitation for Client Execution</a>
+                    </td>
+                    <td>
+                                <p>Monitor file system changes associated with exploitation, such as suspicious files dropped by browsers, Office apps, or third-party programs, which can be used for further stages of attack.</p><p>Analytic 1 - identifies file creations or modifications associated with commonly exploited software</p><p><code>sourcetype=linux_auditd| search file_path IN ("/Users/<em>/Library/", "C:\Users\</em>\AppData\Roaming\", "/home/*/.config/", "/var/tmp/")| stats count by file_path process_name user| where process_name IN ("chrome.exe", "firefox.exe", "winword.exe", "excel.exe", "acrord32.exe", "flashplayer.exe") </code></p>
+
+                    </td>
+                </tr>
                 <tr class="technique enterprise" id="enterprise">
                     <td>
                             Enterprise
@@ -5842,7 +5963,7 @@
                         <a href="/techniques/T1187">Forced Authentication</a>
                     </td>
                     <td>
-                                <p>Monitor for changes made to the .LNK, .SCF, or any other files on systems and within virtual environments that contain resources that point to external network resources </p>
+                                <p>Monitor for changes made to the .LNK, .SCF, or any other files on systems and within virtual environments that contain resources that point to external network resources. </p><p>Analytic 1 - Modifications to files known to be used for forced authentication attacks.</p><p><code>(index=security sourcetype="WinEventLog:Security" EventCode=4663)  | where match(ObjectName, "(?i)\(.*\.)?(lnk|scf|url|doc|dot|xls|ppt|pdf|html)$")| where match(ObjectName, "(?i)(desktop|public|downloads|temp|cache|start menu|startup)")</code></p>
 
                     </td>
                 </tr>
@@ -5871,7 +5992,7 @@
                             <a href="/techniques/T1564/002">Hidden Users</a>
                         </td>
                         <td>
-                                    <p>Monitor for changes made to files that may use hidden users to mask the presence of user accounts they create or modify. Monitor for changes made to the <code>/Library/Preferences/com.apple.loginwindow</code> plist file for unexpected modifications to the <code> Hide500Users</code> key value on macOS.<span onclick=scrollToRef('scite-30') id="scite-ref-30-a" class="scite-citeref-number" title="Amit Serper. (2016). Cybereason Lab Analysis OSX.Pirrit. Retrieved December 10, 2021."data-reference="Cybereason OSX Pirrit"><sup><a href="https://cdn2.hubspot.net/hubfs/3354902/Content%20PDFs/Cybereason-Lab-Analysis-OSX-Pirrit-4-6-16.pdf" target="_blank" data-hasqtip="29" aria-describedby="qtip-29">[30]</a></sup></span></p>
+                                    <p>Monitor for changes made to files that may use hidden users to mask the presence of user accounts they create or modify. Monitor for changes made to the <code>/Library/Preferences/com.apple.loginwindow</code> plist file for unexpected modifications to the <code> Hide500Users</code> key value on macOS.<span onclick=scrollToRef('scite-34') id="scite-ref-34-a" class="scite-citeref-number" title="Amit Serper. (2016). Cybereason Lab Analysis OSX.Pirrit. Retrieved December 10, 2021."data-reference="Cybereason OSX Pirrit"><sup><a href="https://cdn2.hubspot.net/hubfs/3354902/Content%20PDFs/Cybereason-Lab-Analysis-OSX-Pirrit-4-6-16.pdf" target="_blank" data-hasqtip="33" aria-describedby="qtip-33">[34]</a></sup></span></p>
 
                         </td>
                     </tr>
@@ -5899,7 +6020,7 @@
                             <a href="/techniques/T1564/004">NTFS File Attributes</a>
                         </td>
                         <td>
-                                    <p>There are many ways to create and interact with ADSs using Windows utilities. Monitor for operations (execution, copies, etc.) with file names that contain colons. This syntax (ex: <code>file.ext:ads[.ext]</code>) is commonly associated with ADSs. <span onclick=scrollToRef('scite-31') id="scite-ref-31-a" class="scite-citeref-number" title="Marlin, J. (2013, March 24). Alternate Data Streams in NTFS. Retrieved March 21, 2018."data-reference="Microsoft ADS Mar 2014"><sup><a href="https://blogs.technet.microsoft.com/askcore/2013/03/24/alternate-data-streams-in-ntfs/" target="_blank" data-hasqtip="30" aria-describedby="qtip-30">[31]</a></sup></span> <span onclick=scrollToRef('scite-32') id="scite-ref-32-a" class="scite-citeref-number" title="Moe, O. (2018, January 14). Putting Data in Alternate Data Streams and How to Execute It. Retrieved June 30, 2018."data-reference="Oddvar Moe ADS1 Jan 2018"><sup><a href="https://oddvar.moe/2018/01/14/putting-data-in-alternate-data-streams-and-how-to-execute-it/" target="_blank" data-hasqtip="31" aria-describedby="qtip-31">[32]</a></sup></span> <span onclick=scrollToRef('scite-33') id="scite-ref-33-a" class="scite-citeref-number" title="Moe, O. (2018, April 11). Putting Data in Alternate Data Streams and How to Execute It - Part 2. Retrieved June 30, 2018."data-reference="Oddvar Moe ADS2 Apr 2018"><sup><a href="https://oddvar.moe/2018/04/11/putting-data-in-alternate-data-streams-and-how-to-execute-it-part-2/" target="_blank" data-hasqtip="32" aria-describedby="qtip-32">[33]</a></sup></span> For a more exhaustive list of utilities that can be used to execute and create ADSs, see https://gist.github.com/api0cradle/cdd2d0d0ec9abb686f0e89306e277b8f.</p>
+                                    <p>There are many ways to create and interact with ADSs using Windows utilities. Monitor for operations (execution, copies, etc.) with file names that contain colons. This syntax (ex: <code>file.ext:ads[.ext]</code>) is commonly associated with ADSs. <span onclick=scrollToRef('scite-35') id="scite-ref-35-a" class="scite-citeref-number" title="Marlin, J. (2013, March 24). Alternate Data Streams in NTFS. Retrieved March 21, 2018."data-reference="Microsoft ADS Mar 2014"><sup><a href="https://blogs.technet.microsoft.com/askcore/2013/03/24/alternate-data-streams-in-ntfs/" target="_blank" data-hasqtip="34" aria-describedby="qtip-34">[35]</a></sup></span> <span onclick=scrollToRef('scite-36') id="scite-ref-36-a" class="scite-citeref-number" title="Moe, O. (2018, January 14). Putting Data in Alternate Data Streams and How to Execute It. Retrieved June 30, 2018."data-reference="Oddvar Moe ADS1 Jan 2018"><sup><a href="https://oddvar.moe/2018/01/14/putting-data-in-alternate-data-streams-and-how-to-execute-it/" target="_blank" data-hasqtip="35" aria-describedby="qtip-35">[36]</a></sup></span> <span onclick=scrollToRef('scite-37') id="scite-ref-37-a" class="scite-citeref-number" title="Moe, O. (2018, April 11). Putting Data in Alternate Data Streams and How to Execute It - Part 2. Retrieved June 30, 2018."data-reference="Oddvar Moe ADS2 Apr 2018"><sup><a href="https://oddvar.moe/2018/04/11/putting-data-in-alternate-data-streams-and-how-to-execute-it-part-2/" target="_blank" data-hasqtip="36" aria-describedby="qtip-36">[37]</a></sup></span> For a more exhaustive list of utilities that can be used to execute and create ADSs, see https://gist.github.com/api0cradle/cdd2d0d0ec9abb686f0e89306e277b8f.</p>
 
                         </td>
                     </tr>
@@ -5927,7 +6048,7 @@
                             <a href="/techniques/T1564/008">Email Hiding Rules</a>
                         </td>
                         <td>
-                                    <p>On MacOS systems, monitor for modifications to the <code>RulesActiveState.plist</code>, <code>SyncedRules.plist</code>, <code>UnsyncedRules.plist</code>, and <code>MessageRules.plist</code> files.<span onclick=scrollToRef('scite-34') id="scite-ref-34-a" class="scite-citeref-number" title="Apple. (n.d.). Use rules to manage emails you receive in Mail on Mac. Retrieved June 14, 2021."data-reference="MacOS Email Rules"><sup><a href="https://support.apple.com/guide/mail/use-rules-to-manage-emails-you-receive-mlhlp1017/mac" target="_blank" data-hasqtip="33" aria-describedby="qtip-33">[34]</a></sup></span></p>
+                                    <p>On MacOS systems, monitor for modifications to the <code>RulesActiveState.plist</code>, <code>SyncedRules.plist</code>, <code>UnsyncedRules.plist</code>, and <code>MessageRules.plist</code> files.<span onclick=scrollToRef('scite-38') id="scite-ref-38-a" class="scite-citeref-number" title="Apple. (n.d.). Use rules to manage emails you receive in Mail on Mac. Retrieved June 14, 2021."data-reference="MacOS Email Rules"><sup><a href="https://support.apple.com/guide/mail/use-rules-to-manage-emails-you-receive-mlhlp1017/mac" target="_blank" data-hasqtip="37" aria-describedby="qtip-37">[38]</a></sup></span></p>
 
                         </td>
                     </tr>
@@ -6140,7 +6261,7 @@
                             <a href="/techniques/T1070/006">Timestomp</a>
                         </td>
                         <td>
-                                    <p>Monitor for unexpected modifications to file timestamps </p>
+                                    <p>Monitor for unexpected modifications to file timestamps.</p>
 
                         </td>
                     </tr>
@@ -6186,6 +6307,20 @@
 
                         </td>
                     </tr>
+                    <tr class="sub technique enterprise" id="enterprise">
+                        <td></td>
+                        <td></td>
+                        <td>
+                            <a href="/techniques/T1070/010">.010</a>
+                        </td>
+                        <td>
+                            <a href="/techniques/T1070/010">Relocate Malware</a>
+                        </td>
+                        <td>
+                                    <p>Monitor for changes to files that may highlight malware or otherwise potentially malicious payloads being copied between different file/folder locations on a host.</p>
+
+                        </td>
+                    </tr>
                 <tr class="technique ics" id="ics">
                     <td>
                             ICS
@@ -6212,7 +6347,7 @@
                         <a href="/techniques/T1056">Input Capture</a>
                     </td>
                     <td>
-                                <p>Monitor for changes made to files for unexpected modifications to access permissions and attributes  </p>
+                                <p>Monitor for changes made to files for unexpected modifications to access permissions and attributes.</p><p>Analytic 1 - Unexpected file modifications.</p><p><code> index=security sourcetype="WinEventLog:Security" EventCode=4663 | where Object_Type="File" AND Access_Mask IN ("0x2", "0x4", "0x20", "0x80", "0x100") </code></p>
 
                     </td>
                 </tr>
@@ -6269,7 +6404,7 @@
                             <a href="/techniques/T1036/008">Masquerade File Type</a>
                         </td>
                         <td>
-                                    <p>Check and ensure that file headers/signature and extensions match using magic bytes detection and/or file signature validation.<span onclick=scrollToRef('scite-19') id="scite-ref-19-a" class="scite-citeref-number" title="Li, V. (2019, October 2). Polyglot Files: a Hacker’s best friend. Retrieved September 27, 2022."data-reference="Polyglot Files: a Hacker’s best friend"><sup><a href="https://medium.com/swlh/polyglot-files-a-hackers-best-friend-850bf812dd8a" target="_blank" data-hasqtip="18" aria-describedby="qtip-18">[19]</a></sup></span> In Linux, the <code>file</code> command may be used to check the file signature.<span onclick=scrollToRef('scite-20') id="scite-ref-20-a" class="scite-citeref-number" title="Kessler, G. (2022, December 9). GCK'S FILE SIGNATURES TABLE. Retrieved August 23, 2022."data-reference="file_sig_table"><sup><a href="https://www.garykessler.net/library/file_sigs.html" target="_blank" data-hasqtip="19" aria-describedby="qtip-19">[20]</a></sup></span></p>
+                                    <p>Check and ensure that file headers/signature and extensions match using magic bytes detection and/or file signature validation.<span onclick=scrollToRef('scite-21') id="scite-ref-21-a" class="scite-citeref-number" title="Li, V. (2019, October 2). Polyglot Files: a Hacker’s best friend. Retrieved September 27, 2022."data-reference="Polyglot Files: a Hacker’s best friend"><sup><a href="https://medium.com/swlh/polyglot-files-a-hackers-best-friend-850bf812dd8a" target="_blank" data-hasqtip="20" aria-describedby="qtip-20">[21]</a></sup></span> In Linux, the <code>file</code> command may be used to check the file signature.<span onclick=scrollToRef('scite-22') id="scite-ref-22-a" class="scite-citeref-number" title="Kessler, G. (2022, December 9). GCK'S FILE SIGNATURES TABLE. Retrieved August 23, 2022."data-reference="file_sig_table"><sup><a href="https://www.garykessler.net/library/file_sigs.html" target="_blank" data-hasqtip="21" aria-describedby="qtip-21">[22]</a></sup></span></p>
 
                         </td>
                     </tr>
@@ -6299,7 +6434,7 @@
                         <a href="/techniques/T1556">Modify Authentication Process</a>
                     </td>
                     <td>
-                                <p>Monitor for suspicious modification of files associated with authentication processes, such as configuration files and module paths (e.g. <code>/etc/pam.d/</code>). Use system-integrity tools such as AIDE and monitoring tools such as auditd to monitor PAM files. Also monitor for access to certificates and cryptographic keys material.</p>
+                                <p>Monitor for suspicious modification of files associated with authentication processes, such as configuration files and module paths (e.g. <code>/etc/pam.d/</code>). Use system-integrity tools such as AIDE and monitoring tools such as auditd to monitor PAM files. Also monitor for access to certificates and cryptographic keys material.</p><p>Analytic 1 - Unauthorized modifications to authentication-related files.</p><p><code> index=security sourcetype IN ("WinEventLog:Security", "WinEventLog:Microsoft-Windows-Sysmon/Operational", "linux_audit", "macos_secure")(EventCode=4663 OR EventCode=11 OR EventCode=13 OR (sourcetype="linux_audit" AND (syscall IN ("creat", "open", "openat", "write", "chmod", "chown", "unlink"))) OR (sourcetype="macos_secure" AND action="file_write"))| eval TargetFile=coalesce(ObjectName, FileName, target_file)| search TargetFile IN (    "C:\Windows\System32\config\SAM",    "C:\Windows\System32\config\system",    "C:\Windows\System32\config\security",    "C:\Windows\System32\lsass.exe",    "C:\Windows\System32\Drivers\etc\hosts",    "/etc/passwd",    "/etc/shadow",    "/etc/pam.d/<em>",    "/etc/security/</em>",    "/etc/sshd_config",    "/etc/ssh/sshd_config",    "/Library/Preferences/com.apple.loginwindow.plist",    "/Library/Security/authorization",    "/etc/krb5.conf",    "/etc/krb5.keytab",    "/etc/pam.conf",    "/etc/security/access.conf",    "/etc/security/limits.conf",    "/etc/security/namespace.conf",    "/etc/security/sepermit.conf",    "/etc/security/time.conf")| eval User=coalesce(Account_Name, user, uid, user_name)| eval Platform=case(    sourcetype=="WinEventLog:Security", "Windows",    sourcetype=="wineventlog:sysmon", "Windows",    sourcetype=="linux_audit", "Linux",    sourcetype=="macos_secure", "macOS",    true(), "Unknown") </code></p>
 
                     </td>
                 </tr>
@@ -6313,7 +6448,7 @@
                             <a href="/techniques/T1556/001">Domain Controller Authentication</a>
                         </td>
                         <td>
-                                    <p>Monitor for changes to functions exported from authentication-related system DLLs (such as cryptdll.dll and samsrv.dll).<span onclick=scrollToRef('scite-35') id="scite-ref-35-a" class="scite-citeref-number" title="Dell SecureWorks. (2015, January 12). Skeleton Key Malware Analysis. Retrieved April 8, 2019."data-reference="Dell Skeleton"><sup><a href="https://www.secureworks.com/research/skeleton-key-malware-analysis" target="_blank" data-hasqtip="34" aria-describedby="qtip-34">[35]</a></sup></span></p>
+                                    <p>Monitor for changes to functions exported from authentication-related system DLLs (such as cryptdll.dll and samsrv.dll).<span onclick=scrollToRef('scite-39') id="scite-ref-39-a" class="scite-citeref-number" title="Dell SecureWorks. (2015, January 12). Skeleton Key Malware Analysis. Retrieved April 8, 2019."data-reference="Dell Skeleton"><sup><a href="https://www.secureworks.com/research/skeleton-key-malware-analysis" target="_blank" data-hasqtip="38" aria-describedby="qtip-38">[39]</a></sup></span></p><p>Analytic 1 - Unauthorized changes to authentication-related DLLs.</p><p><code>index=windows sourcetype=WinEventLog:Security (    (EventCode=4663 AND Object_Type="File" AND Object_Name IN ("C:\Windows\System32\lsass.exe", "C:\Windows\System32\samlib.dll", "C:\Windows\System32\cryptdll.dll", "C:\Windows\System32\samsrv.dll"))    OR (EventCode=4662 AND Object_Type="File" AND Object_Name IN ("C:\Windows\System32\lsass.exe", "C:\Windows\System32\samlib.dll", "C:\Windows\System32\cryptdll.dll", "C:\Windows\System32\samsrv.dll"))    OR (EventCode=4670 AND Object_Name IN ("C:\Windows\System32\lsass.exe", "C:\Windows\System32\samlib.dll", "C:\Windows\System32\cryptdll.dll", "C:\Windows\System32\samsrv.dll"))) </code></p>
 
                         </td>
                     </tr>
@@ -6327,7 +6462,7 @@
                             <a href="/techniques/T1556/003">Pluggable Authentication Modules</a>
                         </td>
                         <td>
-                                    <p>Monitor PAM configuration and module paths (ex: /etc/pam.d/) for changes. Use system-integrity tools such as AIDE and monitoring tools such as auditd to monitor PAM files.</p>
+                                    <p>Monitor PAM configuration and module paths (ex: /etc/pam.d/) for changes. Use system-integrity tools such as AIDE and monitoring tools such as auditd to monitor PAM files.</p><p>Analytic 1 - Unauthorized changes to PAM configuration and module paths.</p><p><code>index=os sourcetype="linux_audit" OR sourcetype="auditd" (type="MODIFY" OR type="CREATE" OR type="DELETE") (file="/etc/pam.d/<em>" OR file="/usr/lib/security/</em>" OR file="/lib/security/*") </code></p>
 
                         </td>
                     </tr>
@@ -6341,7 +6476,7 @@
                             <a href="/techniques/T1556/004">Network Device Authentication</a>
                         </td>
                         <td>
-                                    <p>Monitor for changes made to the checksum of the operating system file and verifying the image of the operating system in memory.<span onclick=scrollToRef('scite-36') id="scite-ref-36-a" class="scite-citeref-number" title="Cisco. (n.d.). Cisco IOS Software Integrity Assurance - Cisco IOS Image File Verification. Retrieved October 19, 2020."data-reference="Cisco IOS Software Integrity Assurance - Image File Verification"><sup><a href="https://tools.cisco.com/security/center/resources/integrity_assurance.html#7" target="_blank" data-hasqtip="35" aria-describedby="qtip-35">[36]</a></sup></span><span onclick=scrollToRef('scite-37') id="scite-ref-37-a" class="scite-citeref-number" title="Cisco. (n.d.). Cisco IOS Software Integrity Assurance - Cisco IOS Run-Time Memory Integrity Verification. Retrieved October 19, 2020."data-reference="Cisco IOS Software Integrity Assurance - Run-Time Memory Verification"><sup><a href="https://tools.cisco.com/security/center/resources/integrity_assurance.html#13" target="_blank" data-hasqtip="36" aria-describedby="qtip-36">[37]</a></sup></span> Detection of this behavior may be difficult, detection efforts may be focused on closely related adversary behaviors, such as Modify System Image.</p>
+                                    <p>Monitor for changes made to the checksum of the operating system file and verifying the image of the operating system in memory.<span onclick=scrollToRef('scite-40') id="scite-ref-40-a" class="scite-citeref-number" title="Cisco. (n.d.). Cisco IOS Software Integrity Assurance - Cisco IOS Image File Verification. Retrieved October 19, 2020."data-reference="Cisco IOS Software Integrity Assurance - Image File Verification"><sup><a href="https://tools.cisco.com/security/center/resources/integrity_assurance.html#7" target="_blank" data-hasqtip="39" aria-describedby="qtip-39">[40]</a></sup></span><span onclick=scrollToRef('scite-41') id="scite-ref-41-a" class="scite-citeref-number" title="Cisco. (n.d.). Cisco IOS Software Integrity Assurance - Cisco IOS Run-Time Memory Integrity Verification. Retrieved October 19, 2020."data-reference="Cisco IOS Software Integrity Assurance - Run-Time Memory Verification"><sup><a href="https://tools.cisco.com/security/center/resources/integrity_assurance.html#13" target="_blank" data-hasqtip="40" aria-describedby="qtip-40">[41]</a></sup></span> Detection of this behavior may be difficult, detection efforts may be focused on closely related adversary behaviors, such as Modify System Image.</p>
 
                         </td>
                     </tr>
@@ -6370,7 +6505,7 @@
                         <a href="/techniques/T1601">Modify System Image</a>
                     </td>
                     <td>
-                                <p>Most embedded network devices provide a command to print the version of the currently running operating system. Use this command to query the operating system for its version number and compare it to what is expected for the device in question. Because this method may be used in conjunction with  <a href="/techniques/T1601/001">Patch System Image</a>, it may be appropriate to also verify the integrity of the vendor provided operating system image file.</p><p>Compare the checksum of the operating system file with the checksum of a known good copy from a trusted source. Some embedded network device platforms may have the capability to calculate the checksum of the file, while others may not. Even for those platforms that have the capability, it is recommended to download a copy of the file to a trusted computer to calculate the checksum with software that is not compromised. <span onclick=scrollToRef('scite-36') id="scite-ref-36-a" class="scite-citeref-number" title="Cisco. (n.d.). Cisco IOS Software Integrity Assurance - Cisco IOS Image File Verification. Retrieved October 19, 2020."data-reference="Cisco IOS Software Integrity Assurance - Image File Verification"><sup><a href="https://tools.cisco.com/security/center/resources/integrity_assurance.html#7" target="_blank" data-hasqtip="35" aria-describedby="qtip-35">[36]</a></sup></span></p><p>Many vendors of embedded network devices can provide advanced debugging support that will allow them to work with device owners to validate the integrity of the operating system running in memory. If a compromise of the operating system is suspected, contact the vendor technical support and seek such services for a more thorough inspection of the current running system.  <span onclick=scrollToRef('scite-37') id="scite-ref-37-a" class="scite-citeref-number" title="Cisco. (n.d.). Cisco IOS Software Integrity Assurance - Cisco IOS Run-Time Memory Integrity Verification. Retrieved October 19, 2020."data-reference="Cisco IOS Software Integrity Assurance - Run-Time Memory Verification"><sup><a href="https://tools.cisco.com/security/center/resources/integrity_assurance.html#13" target="_blank" data-hasqtip="36" aria-describedby="qtip-36">[37]</a></sup></span></p>
+                                <p>Most embedded network devices provide a command to print the version of the currently running operating system. Use this command to query the operating system for its version number and compare it to what is expected for the device in question. Because this method may be used in conjunction with  <a href="/techniques/T1601/001">Patch System Image</a>, it may be appropriate to also verify the integrity of the vendor provided operating system image file.</p><p>Compare the checksum of the operating system file with the checksum of a known good copy from a trusted source. Some embedded network device platforms may have the capability to calculate the checksum of the file, while others may not. Even for those platforms that have the capability, it is recommended to download a copy of the file to a trusted computer to calculate the checksum with software that is not compromised. <span onclick=scrollToRef('scite-40') id="scite-ref-40-a" class="scite-citeref-number" title="Cisco. (n.d.). Cisco IOS Software Integrity Assurance - Cisco IOS Image File Verification. Retrieved October 19, 2020."data-reference="Cisco IOS Software Integrity Assurance - Image File Verification"><sup><a href="https://tools.cisco.com/security/center/resources/integrity_assurance.html#7" target="_blank" data-hasqtip="39" aria-describedby="qtip-39">[40]</a></sup></span></p><p>Many vendors of embedded network devices can provide advanced debugging support that will allow them to work with device owners to validate the integrity of the operating system running in memory. If a compromise of the operating system is suspected, contact the vendor technical support and seek such services for a more thorough inspection of the current running system.  <span onclick=scrollToRef('scite-41') id="scite-ref-41-a" class="scite-citeref-number" title="Cisco. (n.d.). Cisco IOS Software Integrity Assurance - Cisco IOS Run-Time Memory Integrity Verification. Retrieved October 19, 2020."data-reference="Cisco IOS Software Integrity Assurance - Run-Time Memory Verification"><sup><a href="https://tools.cisco.com/security/center/resources/integrity_assurance.html#13" target="_blank" data-hasqtip="40" aria-describedby="qtip-40">[41]</a></sup></span></p>
 
                     </td>
                 </tr>
@@ -6544,7 +6679,7 @@
                         <a href="/techniques/T1014">Rootkit</a>
                     </td>
                     <td>
-                                <p>Monitor for changes and the existence of unrecognized DLLs, drivers, devices, services, and to the MBR. <span onclick=scrollToRef('scite-38') id="scite-ref-38-a" class="scite-citeref-number" title="Wikipedia. (2016, June 1). Rootkit. Retrieved June 2, 2016."data-reference="Wikipedia Rootkit"><sup><a href="https://en.wikipedia.org/wiki/Rootkit" target="_blank" data-hasqtip="37" aria-describedby="qtip-37">[38]</a></sup></span></p>
+                                <p>Monitor for changes and the existence of unrecognized DLLs, drivers, devices, services, and to the MBR. <span onclick=scrollToRef('scite-42') id="scite-ref-42-a" class="scite-citeref-number" title="Wikipedia. (2016, June 1). Rootkit. Retrieved June 2, 2016."data-reference="Wikipedia Rootkit"><sup><a href="https://en.wikipedia.org/wiki/Rootkit" target="_blank" data-hasqtip="41" aria-describedby="qtip-41">[42]</a></sup></span></p>
 
                     </td>
                 </tr>
@@ -6559,7 +6694,7 @@
                         <a href="/techniques/T1053">Scheduled Task/Job</a>
                     </td>
                     <td>
-                                <p>Monitor for changes made to files that may abuse task scheduling functionality to facilitate initial or recurring execution of malicious code.</p>
+                                <p>Monitor for changes made to files that may abuse task scheduling functionality to facilitate initial or recurring execution of malicious code.</p><p>Analytic 1 - Look for task file modifications with unusual parameters.</p><p><code>index=security_logs OR index=system_logs(sourcetype="docker_events" OR sourcetype="kubernetes_events" OR sourcetype="wineventlog:security" OR sourcetype="linux_secure" OR sourcetype="syslog" OR sourcetype="file_monitoring")| eval platform=case(    sourcetype=="docker_events" OR sourcetype=="kubernetes_events", "Containers",    sourcetype=="wineventlog:security", "Windows",    sourcetype=="linux_secure" OR sourcetype=="syslog", "Linux",    sourcetype=="mac_os_events", "macOS")| search (    (platform="Containers" AND (event_type="file_modify" AND (file_path="<em>/etc/cron.d/</em>" OR file_path="<em>/etc/systemd/system/</em>" OR file_path="/etc/crontab"))) OR    (platform="Windows" AND EventCode=4663 AND (ObjectName="C:\Windows\System32\Tasks\<em>" OR ObjectName="C:\Windows\Tasks\</em>")) OR    (platform="Linux" AND (file_path="/etc/cron.d/<em>" OR file_path="/etc/systemd/system/</em>" OR file_path="/etc/crontab")) OR    (platform="macOS" AND (file_path="/Library/LaunchDaemons/<em>" OR file_path="/Library/LaunchAgents/</em>"))) </code></p>
 
                     </td>
                 </tr>
@@ -6573,7 +6708,7 @@
                             <a href="/techniques/T1053/002">At</a>
                         </td>
                         <td>
-                                    <p>On Windows, monitor Windows Task Scheduler stores in <code>%systemroot%\System32\Tasks</code> for change entries related to scheduled tasks, especially those that do not correlate with known software, patch cycles, etc. On Linux and macOS, all <a href="/software/S0110">at</a> jobs are stored in <code>/var/spool/cron/atjobs/</code>.<span onclick=scrollToRef('scite-39') id="scite-ref-39-a" class="scite-citeref-number" title="Craig Rowland. (2019, July 25). Getting an Attacker IP Address from a Malicious Linux At Job. Retrieved October 15, 2021."data-reference="rowland linux at 2019"><sup><a href="https://www.linkedin.com/pulse/getting-attacker-ip-address-from-malicious-linux-job-craig-rowland/" target="_blank" data-hasqtip="38" aria-describedby="qtip-38">[39]</a></sup></span></p>
+                                    <p>On Windows, monitor Windows Task Scheduler stores in <code>%systemroot%\System32\Tasks</code> for change entries related to scheduled tasks, especially those that do not correlate with known software, patch cycles, etc. On Linux and macOS, all <a href="/software/S0110">at</a> jobs are stored in <code>/var/spool/cron/atjobs/</code>.<span onclick=scrollToRef('scite-43') id="scite-ref-43-a" class="scite-citeref-number" title="Craig Rowland. (2019, July 25). Getting an Attacker IP Address from a Malicious Linux At Job. Retrieved October 15, 2021."data-reference="rowland linux at 2019"><sup><a href="https://www.linkedin.com/pulse/getting-attacker-ip-address-from-malicious-linux-job-craig-rowland/" target="_blank" data-hasqtip="42" aria-describedby="qtip-42">[43]</a></sup></span></p><p>Analytic 1 - Look for task file modifications with unusual parameters. (Linux)</p><p><code>  index=linux_logs sourcetype=syslog "at" "/var/spool/cron/atjobs/"| rex "user=(?<user>\w+)"</code></p><p>Analytic 2 - Look for task file modifications with unusual parameters. (Windows) </p><p><code> index=windows_logs sourcetype=WinEventLog:System EventCode=4663 Object_Type="File"| rex field=_raw "Object_Name=(?<file_path>[^\r\n]+)"| search file_path="<em>at</em>"| where NOT (user="SYSTEM" AND file_path="C:\Windows\Tasks\allowed_task.job")</code></p>
 
                         </td>
                     </tr>
@@ -6587,7 +6722,7 @@
                             <a href="/techniques/T1053/003">Cron</a>
                         </td>
                         <td>
-                                    <p>Monitor for changes made to files for unexpected modifications to access permissions and attributes.</p><p>Analytic 1 -  Modified Files in Linux Cron Directories</p><p><code> source="<em>Linux:</em>" (Path LIKE "/etc/cron.allow.d"   OR Path LIKE "/etc/cron.d/"   OR Path LIKE "/etc/cron.hourly"   OR Path LIKE "/etc/cron.daily"   OR Path LIKE "/etc/cron.weeky"   OR Path LIKE "/etc/cron.monthly")</code></p>
+                                    <p>Monitor modifications to crontab files or system-wide cron directories. Monitor for changes made to files for unexpected modifications to access permissions and attributes.</p><p>Analytic 1 -  Modified Files in Linux Cron Directories</p><p><code> index=linux sourcetype:cron_logs:scheduled_tasks" | search "modification" AND (file_path="/etc/crontab" OR file_path="/var/spool/cron/crontabs/<em>" OR file_path="/etc/cron.d/</em>")</code></p>
 
                         </td>
                     </tr>
@@ -6601,7 +6736,7 @@
                             <a href="/techniques/T1053/005">Scheduled Task</a>
                         </td>
                         <td>
-                                    <p>Monitor Windows Task Scheduler stores in %systemroot%\System32\Tasks for change entries related to scheduled tasks that do not correlate with known software, patch cycles, etc.</p>
+                                    <p>Monitor Windows Task Scheduler stores in %systemroot%\System32\Tasks for change entries related to scheduled tasks that do not correlate with known software, patch cycles, etc.</p><p>Analytic 1 - Look for task file modifications with unusual parameters.</p><p><code> sourcetype=WinEventLog:Security (EventCode=4663 OR file_path="C:\Windows\System32\Tasks\*")| stats count by user host file_path action| where action="Write" OR action="Create"</code></p>
 
                         </td>
                     </tr>
@@ -6615,7 +6750,7 @@
                             <a href="/techniques/T1053/006">Systemd Timers</a>
                         </td>
                         <td>
-                                    <p>Monitor for changes made to systemd timer unit files for unexpected modification events within the /etc/systemd/system, /usr/lib/systemd/system/, and ~/.config/systemd/user/ directories, as well as associated symbolic links</p>
+                                    <p>Monitor for changes made to systemd timer unit files for unexpected modification events within the /etc/systemd/system, /usr/lib/systemd/system/, and ~/.config/systemd/user/ directories, as well as associated symbolic links.</p><p>Analytic 1 - Look for systemd timer file modifications with unusual parameters.</p><p><code>sourcetype=linux_file_audit (file_path="/etc/systemd/system/<em>.timer" OR file_path="/etc/systemd/system/</em>.service" OR file_path="~/.config/systemd/user/<em>.timer" OR file_path="/usr/lib/systemd/system/</em>.timer")| stats count by user host file_path action| where action="Create" OR action="Write" </code></p>
 
                         </td>
                     </tr>
@@ -6658,7 +6793,7 @@
                             <a href="/techniques/T1505/004">IIS Components</a>
                         </td>
                         <td>
-                                    <p>Monitor for modification of files (especially DLLs on webservers) that could be abused as malicious ISAPI extensions/filters or IIS modules. Changes to <code>%windir%\system32\inetsrv\config\applicationhost.config</code> could indicate an IIS module installation.<span onclick=scrollToRef('scite-40') id="scite-ref-40-a" class="scite-citeref-number" title="Microsoft. (2007, November 24). IIS Modules Overview. Retrieved June 17, 2021."data-reference="Microsoft IIS Modules Overview 2007"><sup><a href="https://docs.microsoft.com/en-us/iis/get-started/introduction-to-iis/iis-modules-overview" target="_blank" data-hasqtip="39" aria-describedby="qtip-39">[40]</a></sup></span><span onclick=scrollToRef('scite-41') id="scite-ref-41-a" class="scite-citeref-number" title="Hromcová, Z., Cherepanov, A. (2021). Anatomy of Native IIS Malware. Retrieved September 9, 2021."data-reference="ESET IIS Malware 2021"><sup><a href="https://i.blackhat.com/USA21/Wednesday-Handouts/us-21-Anatomy-Of-Native-Iis-Malware-wp.pdf" target="_blank" data-hasqtip="40" aria-describedby="qtip-40">[41]</a></sup></span></p>
+                                    <p>Monitor for modification of files (especially DLLs on webservers) that could be abused as malicious ISAPI extensions/filters or IIS modules. Changes to <code>%windir%\system32\inetsrv\config\applicationhost.config</code> could indicate an IIS module installation.<span onclick=scrollToRef('scite-44') id="scite-ref-44-a" class="scite-citeref-number" title="Microsoft. (2007, November 24). IIS Modules Overview. Retrieved June 17, 2021."data-reference="Microsoft IIS Modules Overview 2007"><sup><a href="https://docs.microsoft.com/en-us/iis/get-started/introduction-to-iis/iis-modules-overview" target="_blank" data-hasqtip="43" aria-describedby="qtip-43">[44]</a></sup></span><span onclick=scrollToRef('scite-45') id="scite-ref-45-a" class="scite-citeref-number" title="Hromcová, Z., Cherepanov, A. (2021). Anatomy of Native IIS Malware. Retrieved September 9, 2021."data-reference="ESET IIS Malware 2021"><sup><a href="https://i.blackhat.com/USA21/Wednesday-Handouts/us-21-Anatomy-Of-Native-Iis-Malware-wp.pdf" target="_blank" data-hasqtip="44" aria-describedby="qtip-44">[45]</a></sup></span></p>
 
                         </td>
                     </tr>
@@ -6717,7 +6852,7 @@
                         <a href="/techniques/T1553">Subvert Trust Controls</a>
                     </td>
                     <td>
-                                <p>Periodically baseline registered SIPs and trust providers (Registry entries and files on disk), specifically looking for new, modified, or non-Microsoft entries.<span onclick=scrollToRef('scite-42') id="scite-ref-42-a" class="scite-citeref-number" title="Graeber, M. (2017, September). Subverting Trust in Windows. Retrieved January 31, 2018."data-reference="SpectorOps Subverting Trust Sept 2017"><sup><a href="https://specterops.io/assets/resources/SpecterOps_Subverting_Trust_in_Windows.pdf" target="_blank" data-hasqtip="41" aria-describedby="qtip-41">[42]</a></sup></span> Also analyze Autoruns data for oddities and anomalies, specifically malicious files attempting persistent execution by hiding within auto-starting locations. Autoruns will hide entries signed by Microsoft or Windows by default, so ensure "Hide Microsoft Entries" and "Hide Windows Entries" are both deselected.<span onclick=scrollToRef('scite-42') id="scite-ref-42-a" class="scite-citeref-number" title="Graeber, M. (2017, September). Subverting Trust in Windows. Retrieved January 31, 2018."data-reference="SpectorOps Subverting Trust Sept 2017"><sup><a href="https://specterops.io/assets/resources/SpecterOps_Subverting_Trust_in_Windows.pdf" target="_blank" data-hasqtip="41" aria-describedby="qtip-41">[42]</a></sup></span></p><p>On macOS, the removal of the <code>com.apple.quarantine</code> flag by a user instead of the operating system is a suspicious action and should be examined further. Also monitor software update frameworks that may strip this flag when performing updates.</p>
+                                <p>Periodically baseline registered SIPs and trust providers (Registry entries and files on disk), specifically looking for new, modified, or non-Microsoft entries.<span onclick=scrollToRef('scite-46') id="scite-ref-46-a" class="scite-citeref-number" title="Graeber, M. (2017, September). Subverting Trust in Windows. Retrieved January 31, 2018."data-reference="SpectorOps Subverting Trust Sept 2017"><sup><a href="https://specterops.io/assets/resources/SpecterOps_Subverting_Trust_in_Windows.pdf" target="_blank" data-hasqtip="45" aria-describedby="qtip-45">[46]</a></sup></span> Also analyze Autoruns data for oddities and anomalies, specifically malicious files attempting persistent execution by hiding within auto-starting locations. Autoruns will hide entries signed by Microsoft or Windows by default, so ensure "Hide Microsoft Entries" and "Hide Windows Entries" are both deselected.<span onclick=scrollToRef('scite-46') id="scite-ref-46-a" class="scite-citeref-number" title="Graeber, M. (2017, September). Subverting Trust in Windows. Retrieved January 31, 2018."data-reference="SpectorOps Subverting Trust Sept 2017"><sup><a href="https://specterops.io/assets/resources/SpecterOps_Subverting_Trust_in_Windows.pdf" target="_blank" data-hasqtip="45" aria-describedby="qtip-45">[46]</a></sup></span></p><p>On macOS, the removal of the <code>com.apple.quarantine</code> flag by a user instead of the operating system is a suspicious action and should be examined further. Also monitor software update frameworks that may strip this flag when performing updates.</p>
 
                     </td>
                 </tr>
@@ -6745,7 +6880,7 @@
                             <a href="/techniques/T1553/003">SIP and Trust Provider Hijacking</a>
                         </td>
                         <td>
-                                    <p>Periodically baseline registered SIPs and trust providers (Registry entries and files on disk), specifically looking for new, modified, or non-Microsoft entries.<span onclick=scrollToRef('scite-42') id="scite-ref-42-a" class="scite-citeref-number" title="Graeber, M. (2017, September). Subverting Trust in Windows. Retrieved January 31, 2018."data-reference="SpectorOps Subverting Trust Sept 2017"><sup><a href="https://specterops.io/assets/resources/SpecterOps_Subverting_Trust_in_Windows.pdf" target="_blank" data-hasqtip="41" aria-describedby="qtip-41">[42]</a></sup></span> Also analyze Autoruns data for oddities and anomalies, specifically malicious files attempting persistent execution by hiding within auto-starting locations. Autoruns will hide entries signed by Microsoft or Windows by default, so ensure "Hide Microsoft Entries" and "Hide Windows Entries" are both deselected.<span onclick=scrollToRef('scite-42') id="scite-ref-42-a" class="scite-citeref-number" title="Graeber, M. (2017, September). Subverting Trust in Windows. Retrieved January 31, 2018."data-reference="SpectorOps Subverting Trust Sept 2017"><sup><a href="https://specterops.io/assets/resources/SpecterOps_Subverting_Trust_in_Windows.pdf" target="_blank" data-hasqtip="41" aria-describedby="qtip-41">[42]</a></sup></span></p>
+                                    <p>Periodically baseline registered SIPs and trust providers (Registry entries and files on disk), specifically looking for new, modified, or non-Microsoft entries.<span onclick=scrollToRef('scite-46') id="scite-ref-46-a" class="scite-citeref-number" title="Graeber, M. (2017, September). Subverting Trust in Windows. Retrieved January 31, 2018."data-reference="SpectorOps Subverting Trust Sept 2017"><sup><a href="https://specterops.io/assets/resources/SpecterOps_Subverting_Trust_in_Windows.pdf" target="_blank" data-hasqtip="45" aria-describedby="qtip-45">[46]</a></sup></span> Also analyze Autoruns data for oddities and anomalies, specifically malicious files attempting persistent execution by hiding within auto-starting locations. Autoruns will hide entries signed by Microsoft or Windows by default, so ensure "Hide Microsoft Entries" and "Hide Windows Entries" are both deselected.<span onclick=scrollToRef('scite-46') id="scite-ref-46-a" class="scite-citeref-number" title="Graeber, M. (2017, September). Subverting Trust in Windows. Retrieved January 31, 2018."data-reference="SpectorOps Subverting Trust Sept 2017"><sup><a href="https://specterops.io/assets/resources/SpecterOps_Subverting_Trust_in_Windows.pdf" target="_blank" data-hasqtip="45" aria-describedby="qtip-45">[46]</a></sup></span></p>
 
                         </td>
                     </tr>
@@ -6760,7 +6895,7 @@
                         <a href="/techniques/T1569">System Services</a>
                     </td>
                     <td>
-                                <p>Monitor for changes made to files that may abuse system services or daemons to execute commands or programs.</p>
+                                <p>Track changes to critical service-related files (e.g., <code>/etc/systemd/system/</code>, <code>/etc/init.d/</code>, and service binaries on Linux, <code>C:\Windows\System32\services.exe`` on Windows, or</code>/Library/LaunchDaemons``` on macOS).</p><p>Analytic 1 - Unusual file modifications related to system services.</p><p><code>sourcetype=file_monitor| search file_path IN ("/etc/systemd/system/<em>", "/etc/init.d/</em>", "/Library/LaunchDaemons/*", "C:\Windows\System32\services.exe") </code></p>
 
                     </td>
                 </tr>
@@ -6774,7 +6909,7 @@
                             <a href="/techniques/T1569/001">Launchctl</a>
                         </td>
                         <td>
-                                    <p>Every Launch Agent and Launch Daemon must have a corresponding plist file on disk which can be monitored. Plist files are located in the root, system, and users <code>/Library/LaunchAgents</code> or <code>/Library/LaunchDaemons</code> folders. <a href="/techniques/T1543/001">Launch Agent</a> or <a href="/techniques/T1543/004">Launch Daemon</a> with executable paths pointing to /tmp and /Shared folders locations are potentially suspicious.</p>
+                                    <p>Every Launch Agent and Launch Daemon must have a corresponding plist file on disk which can be monitored. Plist files are located in the root, system, and users <code>/Library/LaunchAgents</code> or <code>/Library/LaunchDaemons</code> folders. <a href="/techniques/T1543/001">Launch Agent</a> or <a href="/techniques/T1543/004">Launch Daemon</a> with executable paths pointing to /tmp and /Shared folders locations are potentially suspicious.</p><p>Analytic 1 - Suspicious plist file modifications.</p><p><code>sourcetype=osquery OR sourcetype=FSEvents| search file_path IN ("/Library/LaunchAgents/<em>", "/Library/LaunchDaemons/</em>")| where file_action="modified" AND new_executable_path IN ("/tmp/<em>", "/Shared/</em>") </code></p>
 
                         </td>
                     </tr>
@@ -7020,8 +7155,8 @@
         <li>
             <span  id="scite-15" class="scite-citation">
                 <span class="scite-citation-text">
-                    <a rel="nofollow" class="external text" name="scite-15" href="https://xorrior.com/persistent-credential-theft/" target="_blank">
-                        Chris Ross. (2018, October 17). Persistent Credential Theft with Authorization Plugins. Retrieved April 22, 2021.
+                    <a rel="nofollow" class="external text" name="scite-15" href="https://www.elastic.co/guide/en/security/current/abnormal-process-id-or-lock-file-created.html" target="_blank">
+                        Elastic. (n.d.). Abnormal Process ID or Lock File Created. Retrieved September 19, 2024.
                     </a>
                 </span>
             </span>
@@ -7032,8 +7167,8 @@
         <li>
             <span  id="scite-16" class="scite-citation">
                 <span class="scite-citation-text">
-                    <a rel="nofollow" class="external text" name="scite-16" href="https://github.com/nsacyber/Mitigating-Web-Shells" target="_blank">
-                         NSA Cybersecurity Directorate. (n.d.). Mitigating Web Shells. Retrieved July 22, 2021.
+                    <a rel="nofollow" class="external text" name="scite-16" href="https://xorrior.com/persistent-credential-theft/" target="_blank">
+                        Chris Ross. (2018, October 17). Persistent Credential Theft with Authorization Plugins. Retrieved April 22, 2021.
                     </a>
                 </span>
             </span>
@@ -7044,8 +7179,8 @@
         <li>
             <span  id="scite-17" class="scite-citation">
                 <span class="scite-citation-text">
-                    <a rel="nofollow" class="external text" name="scite-17" href="http://journeyintoir.blogspot.com/2012/12/extracting-zeroaccess-from-ntfs.html" target="_blank">
-                        Harrell, C. (2012, December 11). Extracting ZeroAccess from NTFS Extended Attributes. Retrieved June 3, 2016.
+                    <a rel="nofollow" class="external text" name="scite-17" href="https://github.com/nsacyber/Mitigating-Web-Shells" target="_blank">
+                         NSA Cybersecurity Directorate. (n.d.). Mitigating Web Shells. Retrieved July 22, 2021.
                     </a>
                 </span>
             </span>
@@ -7056,8 +7191,8 @@
         <li>
             <span  id="scite-18" class="scite-citation">
                 <span class="scite-citation-text">
-                    <a rel="nofollow" class="external text" name="scite-18" href="https://www.fireeye.com/blog/threat-research/2020/01/stomp-2-dis-brilliance-in-the-visual-basics.html" target="_blank">
-                        Cole, R., Moore, A., Stark, G., Stancill, B. (2020, February 5). STOMP 2 DIS: Brilliance in the (Visual) Basics. Retrieved September 17, 2020.
+                    <a rel="nofollow" class="external text" name="scite-18" href="http://journeyintoir.blogspot.com/2012/12/extracting-zeroaccess-from-ntfs.html" target="_blank">
+                        Harrell, C. (2012, December 11). Extracting ZeroAccess from NTFS Extended Attributes. Retrieved June 3, 2016.
                     </a>
                 </span>
             </span>
@@ -7068,8 +7203,8 @@
         <li>
             <span  id="scite-19" class="scite-citation">
                 <span class="scite-citation-text">
-                    <a rel="nofollow" class="external text" name="scite-19" href="https://medium.com/swlh/polyglot-files-a-hackers-best-friend-850bf812dd8a" target="_blank">
-                        Li, V. (2019, October 2). Polyglot Files: a Hacker’s best friend. Retrieved September 27, 2022.
+                    <a rel="nofollow" class="external text" name="scite-19" href="https://www.fireeye.com/blog/threat-research/2020/01/stomp-2-dis-brilliance-in-the-visual-basics.html" target="_blank">
+                        Cole, R., Moore, A., Stark, G., Stancill, B. (2020, February 5). STOMP 2 DIS: Brilliance in the (Visual) Basics. Retrieved September 17, 2020.
                     </a>
                 </span>
             </span>
@@ -7080,8 +7215,8 @@
         <li>
             <span  id="scite-20" class="scite-citation">
                 <span class="scite-citation-text">
-                    <a rel="nofollow" class="external text" name="scite-20" href="https://www.garykessler.net/library/file_sigs.html" target="_blank">
-                        Kessler, G. (2022, December 9). GCK'S FILE SIGNATURES TABLE. Retrieved August 23, 2022.
+                    <a rel="nofollow" class="external text" name="scite-20" href="https://www.inversecos.com/2022/04/defence-evasion-technique-timestomping.html" target="_blank">
+                        Lina Lau. (2022, April 28). Defence Evasion Technique: Timestomping Detection – NTFS Forensics. Retrieved September 30, 2024.
                     </a>
                 </span>
             </span>
@@ -7092,7 +7227,31 @@
         <li>
             <span  id="scite-21" class="scite-citation">
                 <span class="scite-citation-text">
-                    <a rel="nofollow" class="external text" name="scite-21" href="https://www.huntress.com/blog/hackers-no-hashing-randomizing-api-hashes-to-evade-cobalt-strike-shellcode-detection" target="_blank">
+                    <a rel="nofollow" class="external text" name="scite-21" href="https://medium.com/swlh/polyglot-files-a-hackers-best-friend-850bf812dd8a" target="_blank">
+                        Li, V. (2019, October 2). Polyglot Files: a Hacker’s best friend. Retrieved September 27, 2022.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-22" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-22" href="https://www.garykessler.net/library/file_sigs.html" target="_blank">
+                        Kessler, G. (2022, December 9). GCK'S FILE SIGNATURES TABLE. Retrieved August 23, 2022.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-23" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-23" href="https://www.huntress.com/blog/hackers-no-hashing-randomizing-api-hashes-to-evade-cobalt-strike-shellcode-detection" target="_blank">
                         Brennan, M. (2022, February 16). Hackers No Hashing: Randomizing API Hashes to Evade Cobalt Strike Shellcode Detection. Retrieved August 22, 2022.
                     </a>
                 </span>
@@ -7103,37 +7262,13 @@
                 </ol>
             </div>
             <div class="col">
-                    <ol start="22.0">
-                                
-        <li>
-            <span  id="scite-22" class="scite-citation">
-                <span class="scite-citation-text">
-                    <a rel="nofollow" class="external text" name="scite-22" href="https://www.blackhat.com/docs/us-15/materials/us-15-Choi-API-Deobfuscator-Resolving-Obfuscated-API-Functions-In-Modern-Packers.pdf" target="_blank">
-                        Choi, S. (2015, August 6). Obfuscated API Functions in Modern Packers. Retrieved August 22, 2022.
-                    </a>
-                </span>
-            </span>
-        </li>
-
-
-                                
-        <li>
-            <span  id="scite-23" class="scite-citation">
-                <span class="scite-citation-text">
-                    <a rel="nofollow" class="external text" name="scite-23" href="https://github.com/MITRECND/malchive/blob/main/malchive/utilities/findapihash.py" target="_blank">
-                        Jason (jxb5151). (2021, January 28). findapihash.py. Retrieved August 22, 2022.
-                    </a>
-                </span>
-            </span>
-        </li>
-
-
+                    <ol start="24.0">
                                 
         <li>
             <span  id="scite-24" class="scite-citation">
                 <span class="scite-citation-text">
-                    <a rel="nofollow" class="external text" name="scite-24" href="https://msdn.microsoft.com/library/windows/hardware/ff559951.aspx" target="_blank">
-                        Microsoft. (n.d.). PsSetCreateProcessNotifyRoutine routine. Retrieved December 20, 2017.
+                    <a rel="nofollow" class="external text" name="scite-24" href="https://www.blackhat.com/docs/us-15/materials/us-15-Choi-API-Deobfuscator-Resolving-Obfuscated-API-Functions-In-Modern-Packers.pdf" target="_blank">
+                        Choi, S. (2015, August 6). Obfuscated API Functions in Modern Packers. Retrieved August 22, 2022.
                     </a>
                 </span>
             </span>
@@ -7144,8 +7279,8 @@
         <li>
             <span  id="scite-25" class="scite-citation">
                 <span class="scite-citation-text">
-                    <a rel="nofollow" class="external text" name="scite-25" href="https://www.blackhat.com/docs/eu-17/materials/eu-17-Liberman-Lost-In-Transaction-Process-Doppelganging.pdf" target="_blank">
-                        Liberman, T. & Kogan, E. (2017, December 7). Lost in Transaction: Process Doppelgänging. Retrieved December 20, 2017.
+                    <a rel="nofollow" class="external text" name="scite-25" href="https://github.com/MITRECND/malchive/blob/main/malchive/utilities/findapihash.py" target="_blank">
+                        Jason (jxb5151). (2021, January 28). findapihash.py. Retrieved August 22, 2022.
                     </a>
                 </span>
             </span>
@@ -7156,8 +7291,8 @@
         <li>
             <span  id="scite-26" class="scite-citation">
                 <span class="scite-citation-text">
-                    <a rel="nofollow" class="external text" name="scite-26" href="https://hshrzd.wordpress.com/2017/12/18/process-doppelganging-a-new-way-to-impersonate-a-process/" target="_blank">
-                        hasherezade. (2017, December 18). Process Doppelgänging – a new way to impersonate a process. Retrieved December 20, 2017.
+                    <a rel="nofollow" class="external text" name="scite-26" href="https://msdn.microsoft.com/library/windows/hardware/ff559951.aspx" target="_blank">
+                        Microsoft. (n.d.). PsSetCreateProcessNotifyRoutine routine. Retrieved December 20, 2017.
                     </a>
                 </span>
             </span>
@@ -7168,8 +7303,8 @@
         <li>
             <span  id="scite-27" class="scite-citation">
                 <span class="scite-citation-text">
-                    <a rel="nofollow" class="external text" name="scite-27" href="https://eclecticlight.co/2020/10/29/quarantine-and-the-quarantine-flag/" target="_blank">
-                        hoakley. (2020, October 29). Quarantine and the quarantine flag. Retrieved September 13, 2021.
+                    <a rel="nofollow" class="external text" name="scite-27" href="https://www.blackhat.com/docs/eu-17/materials/eu-17-Liberman-Lost-In-Transaction-Process-Doppelganging.pdf" target="_blank">
+                        Liberman, T. & Kogan, E. (2017, December 7). Lost in Transaction: Process Doppelgänging. Retrieved December 20, 2017.
                     </a>
                 </span>
             </span>
@@ -7180,8 +7315,8 @@
         <li>
             <span  id="scite-28" class="scite-citation">
                 <span class="scite-citation-text">
-                    <a rel="nofollow" class="external text" name="scite-28" href="https://technet.microsoft.com/en-us/sysinternals/bb963902" target="_blank">
-                        Russinovich, M. (2016, January 4). Autoruns for Windows v13.51. Retrieved June 6, 2016.
+                    <a rel="nofollow" class="external text" name="scite-28" href="https://hshrzd.wordpress.com/2017/12/18/process-doppelganging-a-new-way-to-impersonate-a-process/" target="_blank">
+                        hasherezade. (2017, December 18). Process Doppelgänging – a new way to impersonate a process. Retrieved December 20, 2017.
                     </a>
                 </span>
             </span>
@@ -7192,8 +7327,8 @@
         <li>
             <span  id="scite-29" class="scite-citation">
                 <span class="scite-citation-text">
-                    <a rel="nofollow" class="external text" name="scite-29" href="https://objective-see.com/blog/blog_0x48.html" target="_blank">
-                        Patrick Wardle. (2019, September 17). Writing a File Monitor with Apple's Endpoint Security Framework. Retrieved December 17, 2020.
+                    <a rel="nofollow" class="external text" name="scite-29" href="https://eclecticlight.co/2020/10/29/quarantine-and-the-quarantine-flag/" target="_blank">
+                        hoakley. (2020, October 29). Quarantine and the quarantine flag. Retrieved September 13, 2021.
                     </a>
                 </span>
             </span>
@@ -7204,8 +7339,8 @@
         <li>
             <span  id="scite-30" class="scite-citation">
                 <span class="scite-citation-text">
-                    <a rel="nofollow" class="external text" name="scite-30" href="https://cdn2.hubspot.net/hubfs/3354902/Content%20PDFs/Cybereason-Lab-Analysis-OSX-Pirrit-4-6-16.pdf" target="_blank">
-                        Amit Serper. (2016). Cybereason Lab Analysis OSX.Pirrit. Retrieved December 10, 2021.
+                    <a rel="nofollow" class="external text" name="scite-30" href="https://technet.microsoft.com/en-us/sysinternals/bb963902" target="_blank">
+                        Russinovich, M. (2016, January 4). Autoruns for Windows v13.51. Retrieved June 6, 2016.
                     </a>
                 </span>
             </span>
@@ -7216,8 +7351,8 @@
         <li>
             <span  id="scite-31" class="scite-citation">
                 <span class="scite-citation-text">
-                    <a rel="nofollow" class="external text" name="scite-31" href="https://blogs.technet.microsoft.com/askcore/2013/03/24/alternate-data-streams-in-ntfs/" target="_blank">
-                        Marlin, J. (2013, March 24). Alternate Data Streams in NTFS. Retrieved March 21, 2018.
+                    <a rel="nofollow" class="external text" name="scite-31" href="https://objective-see.com/blog/blog_0x48.html" target="_blank">
+                        Patrick Wardle. (2019, September 17). Writing a File Monitor with Apple's Endpoint Security Framework. Retrieved December 17, 2020.
                     </a>
                 </span>
             </span>
@@ -7228,8 +7363,8 @@
         <li>
             <span  id="scite-32" class="scite-citation">
                 <span class="scite-citation-text">
-                    <a rel="nofollow" class="external text" name="scite-32" href="https://oddvar.moe/2018/01/14/putting-data-in-alternate-data-streams-and-how-to-execute-it/" target="_blank">
-                        Moe, O. (2018, January 14). Putting Data in Alternate Data Streams and How to Execute It. Retrieved June 30, 2018.
+                    <a rel="nofollow" class="external text" name="scite-32" href="https://ch4ik0.github.io/en/posts/leveraging-Linux-udev-for-persistence/" target="_blank">
+                        Eder P. Ignacio. (2024, February 21). Leveraging Linux udev for persistence. Retrieved September 26, 2024.
                     </a>
                 </span>
             </span>
@@ -7240,8 +7375,8 @@
         <li>
             <span  id="scite-33" class="scite-citation">
                 <span class="scite-citation-text">
-                    <a rel="nofollow" class="external text" name="scite-33" href="https://oddvar.moe/2018/04/11/putting-data-in-alternate-data-streams-and-how-to-execute-it-part-2/" target="_blank">
-                        Moe, O. (2018, April 11). Putting Data in Alternate Data Streams and How to Execute It - Part 2. Retrieved June 30, 2018.
+                    <a rel="nofollow" class="external text" name="scite-33" href="https://www.elastic.co/security-labs/sequel-on-persistence-mechanisms" target="_blank">
+                        Ruben Groenewoud. (2024, August 29). Linux Detection Engineering -  A Sequel on Persistence Mechanisms. Retrieved October 16, 2024.
                     </a>
                 </span>
             </span>
@@ -7252,8 +7387,8 @@
         <li>
             <span  id="scite-34" class="scite-citation">
                 <span class="scite-citation-text">
-                    <a rel="nofollow" class="external text" name="scite-34" href="https://support.apple.com/guide/mail/use-rules-to-manage-emails-you-receive-mlhlp1017/mac" target="_blank">
-                        Apple. (n.d.). Use rules to manage emails you receive in Mail on Mac. Retrieved June 14, 2021.
+                    <a rel="nofollow" class="external text" name="scite-34" href="https://cdn2.hubspot.net/hubfs/3354902/Content%20PDFs/Cybereason-Lab-Analysis-OSX-Pirrit-4-6-16.pdf" target="_blank">
+                        Amit Serper. (2016). Cybereason Lab Analysis OSX.Pirrit. Retrieved December 10, 2021.
                     </a>
                 </span>
             </span>
@@ -7264,8 +7399,8 @@
         <li>
             <span  id="scite-35" class="scite-citation">
                 <span class="scite-citation-text">
-                    <a rel="nofollow" class="external text" name="scite-35" href="https://www.secureworks.com/research/skeleton-key-malware-analysis" target="_blank">
-                        Dell SecureWorks. (2015, January 12). Skeleton Key Malware Analysis. Retrieved April 8, 2019.
+                    <a rel="nofollow" class="external text" name="scite-35" href="https://blogs.technet.microsoft.com/askcore/2013/03/24/alternate-data-streams-in-ntfs/" target="_blank">
+                        Marlin, J. (2013, March 24). Alternate Data Streams in NTFS. Retrieved March 21, 2018.
                     </a>
                 </span>
             </span>
@@ -7276,8 +7411,8 @@
         <li>
             <span  id="scite-36" class="scite-citation">
                 <span class="scite-citation-text">
-                    <a rel="nofollow" class="external text" name="scite-36" href="https://tools.cisco.com/security/center/resources/integrity_assurance.html#7" target="_blank">
-                        Cisco. (n.d.). Cisco IOS Software Integrity Assurance - Cisco IOS Image File Verification. Retrieved October 19, 2020.
+                    <a rel="nofollow" class="external text" name="scite-36" href="https://oddvar.moe/2018/01/14/putting-data-in-alternate-data-streams-and-how-to-execute-it/" target="_blank">
+                        Moe, O. (2018, January 14). Putting Data in Alternate Data Streams and How to Execute It. Retrieved June 30, 2018.
                     </a>
                 </span>
             </span>
@@ -7288,8 +7423,8 @@
         <li>
             <span  id="scite-37" class="scite-citation">
                 <span class="scite-citation-text">
-                    <a rel="nofollow" class="external text" name="scite-37" href="https://tools.cisco.com/security/center/resources/integrity_assurance.html#13" target="_blank">
-                        Cisco. (n.d.). Cisco IOS Software Integrity Assurance - Cisco IOS Run-Time Memory Integrity Verification. Retrieved October 19, 2020.
+                    <a rel="nofollow" class="external text" name="scite-37" href="https://oddvar.moe/2018/04/11/putting-data-in-alternate-data-streams-and-how-to-execute-it-part-2/" target="_blank">
+                        Moe, O. (2018, April 11). Putting Data in Alternate Data Streams and How to Execute It - Part 2. Retrieved June 30, 2018.
                     </a>
                 </span>
             </span>
@@ -7300,8 +7435,8 @@
         <li>
             <span  id="scite-38" class="scite-citation">
                 <span class="scite-citation-text">
-                    <a rel="nofollow" class="external text" name="scite-38" href="https://en.wikipedia.org/wiki/Rootkit" target="_blank">
-                        Wikipedia. (2016, June 1). Rootkit. Retrieved June 2, 2016.
+                    <a rel="nofollow" class="external text" name="scite-38" href="https://support.apple.com/guide/mail/use-rules-to-manage-emails-you-receive-mlhlp1017/mac" target="_blank">
+                        Apple. (n.d.). Use rules to manage emails you receive in Mail on Mac. Retrieved June 14, 2021.
                     </a>
                 </span>
             </span>
@@ -7312,8 +7447,8 @@
         <li>
             <span  id="scite-39" class="scite-citation">
                 <span class="scite-citation-text">
-                    <a rel="nofollow" class="external text" name="scite-39" href="https://www.linkedin.com/pulse/getting-attacker-ip-address-from-malicious-linux-job-craig-rowland/" target="_blank">
-                        Craig Rowland. (2019, July 25). Getting an Attacker IP Address from a Malicious Linux At Job. Retrieved October 15, 2021.
+                    <a rel="nofollow" class="external text" name="scite-39" href="https://www.secureworks.com/research/skeleton-key-malware-analysis" target="_blank">
+                        Dell SecureWorks. (2015, January 12). Skeleton Key Malware Analysis. Retrieved April 8, 2019.
                     </a>
                 </span>
             </span>
@@ -7324,8 +7459,8 @@
         <li>
             <span  id="scite-40" class="scite-citation">
                 <span class="scite-citation-text">
-                    <a rel="nofollow" class="external text" name="scite-40" href="https://docs.microsoft.com/en-us/iis/get-started/introduction-to-iis/iis-modules-overview" target="_blank">
-                        Microsoft. (2007, November 24). IIS Modules Overview. Retrieved June 17, 2021.
+                    <a rel="nofollow" class="external text" name="scite-40" href="https://tools.cisco.com/security/center/resources/integrity_assurance.html#7" target="_blank">
+                        Cisco. (n.d.). Cisco IOS Software Integrity Assurance - Cisco IOS Image File Verification. Retrieved October 19, 2020.
                     </a>
                 </span>
             </span>
@@ -7336,8 +7471,8 @@
         <li>
             <span  id="scite-41" class="scite-citation">
                 <span class="scite-citation-text">
-                    <a rel="nofollow" class="external text" name="scite-41" href="https://i.blackhat.com/USA21/Wednesday-Handouts/us-21-Anatomy-Of-Native-Iis-Malware-wp.pdf" target="_blank">
-                        Hromcová, Z., Cherepanov, A. (2021). Anatomy of Native IIS Malware. Retrieved September 9, 2021.
+                    <a rel="nofollow" class="external text" name="scite-41" href="https://tools.cisco.com/security/center/resources/integrity_assurance.html#13" target="_blank">
+                        Cisco. (n.d.). Cisco IOS Software Integrity Assurance - Cisco IOS Run-Time Memory Integrity Verification. Retrieved October 19, 2020.
                     </a>
                 </span>
             </span>
@@ -7348,7 +7483,55 @@
         <li>
             <span  id="scite-42" class="scite-citation">
                 <span class="scite-citation-text">
-                    <a rel="nofollow" class="external text" name="scite-42" href="https://specterops.io/assets/resources/SpecterOps_Subverting_Trust_in_Windows.pdf" target="_blank">
+                    <a rel="nofollow" class="external text" name="scite-42" href="https://en.wikipedia.org/wiki/Rootkit" target="_blank">
+                        Wikipedia. (2016, June 1). Rootkit. Retrieved June 2, 2016.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-43" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-43" href="https://www.linkedin.com/pulse/getting-attacker-ip-address-from-malicious-linux-job-craig-rowland/" target="_blank">
+                        Craig Rowland. (2019, July 25). Getting an Attacker IP Address from a Malicious Linux At Job. Retrieved October 15, 2021.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-44" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-44" href="https://docs.microsoft.com/en-us/iis/get-started/introduction-to-iis/iis-modules-overview" target="_blank">
+                        Microsoft. (2007, November 24). IIS Modules Overview. Retrieved June 17, 2021.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-45" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-45" href="https://i.blackhat.com/USA21/Wednesday-Handouts/us-21-Anatomy-Of-Native-Iis-Malware-wp.pdf" target="_blank">
+                        Hromcová, Z., Cherepanov, A. (2021). Anatomy of Native IIS Malware. Retrieved September 9, 2021.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-46" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-46" href="https://specterops.io/assets/resources/SpecterOps_Subverting_Trust_in_Windows.pdf" target="_blank">
                         Graeber, M. (2017, September). Subverting Trust in Windows. Retrieved January 31, 2018.
                     </a>
                 </span>
@@ -7421,7 +7604,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v15.1&#013;Website  v4.1.6">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v16.0&#013;Website  v4.2.0">Website Changelog</a></u>
                                 </div>
                             </div>
                             <div class="row">
@@ -7461,15 +7644,15 @@
     <script src="/theme/scripts/popper.min.js"></script>
     <script src="/theme/scripts/bootstrap-select.min.js"></script>
     <script src="/theme/scripts/bootstrap.bundle.min.js"></script>
-    <script src="/theme/scripts/site.js?1890"></script>
-    <script src="/theme/scripts/settings.js?609"></script>
+    <script src="/theme/scripts/site.js"></script>
+    <script src="/theme/scripts/settings.js"></script>
     <script src="/theme/scripts/search_bundle.js"></script>
 
 <!--SCRIPTS-->
 <script src="/theme/scripts/resizer.js"></script>
 
     <!--SCRIPTS-->
-    <script src="/theme/scripts/filter/filter.js?2413"></script>
+    <script src="/theme/scripts/filter/filter.js?1861"></script>
     <script src="/theme/scripts/navigation.js"></script>
     <script src="/theme/scripts/mobileview-datasources.js"></script>
     <script src="/theme/scripts/bootstrap-tourist.js"></script>

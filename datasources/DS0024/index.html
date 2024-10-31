@@ -169,6 +169,9 @@
             <div class="col px-0">
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
+                    <div class="container-fluid banner-message">
+                        ATT&CK v16 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v16-561c76af94cf'>blog post</a> for more information.
+                    </div>
             </div>
         </div>
         <div class="row flex-grow-1 flex-shrink-0">
@@ -1688,13 +1691,13 @@
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Permalink to this version of DS0024" 
-           href="/versions/v15/datasources/DS0024/" data-test-ignore="true">Version Permalink</a>
+           href="/versions/v16/datasources/DS0024/" data-test-ignore="true">Version Permalink</a>
     </div>
     <div class="permalink">
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Go to the live version of DS0024" 
-           href="/versions/v15/datasources/DS0024/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+           href="/versions/v16/datasources/DS0024/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
     </div>
 </div>
 
@@ -1767,7 +1770,7 @@
                         <a href="/techniques/T1003">OS Credential Dumping</a>
                     </td>
                     <td>
-                                <p>Monitor for the SAM registry key being accessed that may attempt to dump credentials to obtain account login and credential material, normally in the form of a hash or a clear text password, from the operating system and software.</p>
+                                <p>Monitor for the SAM registry key being accessed that may attempt to dump credentials to obtain account login and credential material, normally in the form of a hash or a clear text password, from the operating system and software.</p><p>Analytic 1 - Unauthorized registry access to SAM key.</p><p><code> index=security sourcetype="WinEventLog:Security" EventCode=4663 ObjectName="*\SAM" | where ProcessName IN ("mimikatz.exe", "procdump.exe", "reg.exe", "powershell.exe", "wmic.exe", "schtasks.exe", "cmd.exe") </code></p>
 
                     </td>
                 </tr>
@@ -1781,7 +1784,7 @@
                             <a href="/techniques/T1003/002">Security Account Manager</a>
                         </td>
                         <td>
-                                    <p>Monitor for the SAM registry key dump being created to access stored account password hashes. Some hash dumpers will open the local file system as a device and parse to the SAM table to avoid file access defenses. Others will make an in-memory copy of the SAM table before reading hashes. Detection of compromised <a href="/techniques/T1078">Valid Accounts</a> in-use by adversaries may help as well.</p>
+                                    <p>Monitor for the SAM registry key dump being created to access stored account password hashes. Some hash dumpers will open the local file system as a device and parse to the SAM table to avoid file access defenses. Others will make an in-memory copy of the SAM table before reading hashes. Detection of compromised <a href="/techniques/T1078">Valid Accounts</a> in-use by adversaries may help as well.</p><p>Analytic 1 - Unauthorized registry access to SAM key.</p><p><code> index=security sourcetype="WinEventLog:Security" EventCode=4663 ObjectName="*\SAM" | where ProcessName IN ("reg.exe", "powershell.exe", "wmic.exe", "schtasks.exe", "cmd.exe", "rundll32.exe", "mimikatz.exe", "procdump.exe") </code></p>
 
                         </td>
                     </tr>
@@ -1795,7 +1798,7 @@
                             <a href="/techniques/T1003/004">LSA Secrets</a>
                         </td>
                         <td>
-                                    <p>Monitor for the LSA secrets are stored in the registry at <code>HKEY_LOCAL_MACHINE\SECURITY\Policy\Secrets</code> being accessed</p>
+                                    <p>Monitor for the LSA secrets are stored in the registry at <code>HKEY_LOCAL_MACHINE\SECURITY\Policy\Secrets</code> being accessed</p><p>Analytic 1 - Unauthorized registry access to LSA secrets.</p><p><code> index=security sourcetype="WinEventLog:Security" EventCode=4663 ObjectName="<em>\Policy\Secrets</em>" | where ProcessName IN ("reg.exe", "powershell.exe", "wmic.exe", "schtasks.exe", "cmd.exe", "rundll32.exe", "mimikatz.exe", "procdump.exe") </code></p>
 
                         </td>
                     </tr>
@@ -1810,7 +1813,7 @@
                         <a href="/techniques/T1012">Query Registry</a>
                     </td>
                     <td>
-                                <p>Monitor for unexpected process interactions with the Windows Registry (i.e. reads) that may be related to gathering information.</p><p>Note: For Security Auditing event ids 4656 and 4663, a System Access Control List (SACL) that controls the use of specific access rights such as Enumerate sub-keys and Query key value is required for event generation. Depending on the Registry key you are monitoring, the implementation of a new System Access Control List (SACL) might be required. Depending of Registry key used for the creation of a System Access Control List (SACL), the generation of event ids 4656 and 4663 might be noisy.</p><p>Analytic 1 - Suspicious Registry</p><p><code>(source="*WinEventLog:Security" EventCode IN (4663, 4656)) AND ObjectType="Key" | WHERE ObjectName LIKE "%SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall%" AND (UserAccessList LIKE "%4435%" OR UserAccessList LIKE "%Enumerate sub-keys%" OR UserAccessList LIKE "%4432%" OR UserAccessList LIKE "%Query key value%") AND Image NOT IN ('FilePathToExpectedProcess01.exe','FilePathToExpectedProcess02.exe')</code></p>
+                                <p>Monitor for unexpected process interactions with the Windows Registry (i.e. reads) that may be related to gathering information.</p><p>Note: For Security Auditing event ids 4656 and 4663, a System Access Control List (SACL) that controls the use of specific access rights such as Enumerate sub-keys and Query key value is required for event generation. Depending on the Registry key you are monitoring, the implementation of a new System Access Control List (SACL) might be required. Depending of Registry key used for the creation of a System Access Control List (SACL), the generation of event ids 4656 and 4663 might be noisy.</p><p>Analytic 1 - Suspicious Registry</p><p><code>(sourcetype="WinEventLog:Security" EventCode IN (4663, 4656)) AND ObjectType="Key" | WHERE ObjectName LIKE "%SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall%" AND (UserAccessList LIKE "%4435%" OR UserAccessList LIKE "%Enumerate sub-keys%" OR UserAccessList LIKE "%4432%" OR UserAccessList LIKE "%Query key value%") AND Image NOT IN ('FilePathToExpectedProcess01.exe','FilePathToExpectedProcess02.exe')</code></p>
 
                     </td>
                 </tr>
@@ -1874,7 +1877,7 @@
                         <a href="/techniques/T1552">Unsecured Credentials</a>
                     </td>
                     <td>
-                                <p>Monitor for unexpected windows registry key being accessed that may search compromised systems to find and obtain insecurely stored credentials.</p>
+                                <p>Monitor for unexpected windows registry key being accessed that may search compromised systems to find and obtain insecurely stored credentials.</p><p>Analytic 1 - Unauthorized access to registry keys associated with credentials.</p><p><code> index=security sourcetype="WinEventLog:Microsoft-Windows-Security-Auditing" EventCode=4663 ObjectType="Registry" (ObjectName="<em>password</em>" OR ObjectName="<em>credential</em>") | eval AccessAttempt=case(    AccessMask="0x1", "Read",    AccessMask="0x2", "Write",    AccessMask="0x3", "Read/Write",    AccessMask="0x4", "Delete",    true(), "Unknown")</code></p>
 
                     </td>
                 </tr>
@@ -1888,7 +1891,7 @@
                             <a href="/techniques/T1552/002">Credentials in Registry</a>
                         </td>
                         <td>
-                                    <p>Monitor for unexpected windows registry key being accessed that may search the Registry on compromised systems for insecurely stored credentials.</p>
+                                    <p>Monitor for unexpected windows registry key being accessed that may search the Registry on compromised systems for insecurely stored credentials.</p><p>Analytic 1 - Unauthorized access to registry keys associated with credentials.</p><p><code> ndex=security sourcetype="WinEventLog:Microsoft-Windows-Security-Auditing" EventCode=4663 ObjectType="Registry" (ObjectName="<em>password</em>" OR ObjectName="<em>credential</em>")| eval AccessType=case(    AccessMask="0x1", "Read",    AccessMask="0x2", "Write",    AccessMask="0x3", "Read/Write",    AccessMask="0x4", "Delete",    true(), "Unknown")</code></p>
 
                         </td>
                     </tr>
@@ -1998,7 +2001,7 @@
                             <a href="/techniques/T1037/001">Logon Script (Windows)</a>
                         </td>
                         <td>
-                                    <p>Monitor for the creation to Registry keys associated with Windows logon scrips, nameley <code>HKCU\Environment\UserInitMprLogonScript</code>.</p><p>Adversaries may schedule software to run whenever a user logs into the system; this is done to establish persistence and sometimes for lateral movement. This trigger is established through the registry key HKEY_CURRENT_USER\EnvironmentUserInitMprLogonScript. This signature looks edits to existing keys or creation of new keys in that path. Users purposefully adding benign scripts to this path will result in false positives; that case is rare, however. There are other ways of running a script at startup or login that are not covered in this signature. Note that this signature overlaps with the Windows Sysinternals Autoruns tool, which would also show changes to this registry path.</p><p>Analytic 1 - Boot or Logon Initialization Scripts</p><p><code> (source="<em>WinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode IN (12, 14, 13)) TargetObject= "</em>\Environment*UserInitMprLogonScript")  </code></p>
+                                    <p>Monitor for the creation to Registry keys associated with Windows logon scrips, nameley <code>HKCU\Environment\UserInitMprLogonScript</code>.</p><p>Adversaries may schedule software to run whenever a user logs into the system; this is done to establish persistence and sometimes for lateral movement. This trigger is established through the registry key HKEY_CURRENT_USER\EnvironmentUserInitMprLogonScript. This signature looks edits to existing keys or creation of new keys in that path. Users purposefully adding benign scripts to this path will result in false positives; that case is rare, however. There are other ways of running a script at startup or login that are not covered in this signature. Note that this signature overlaps with the Windows Sysinternals Autoruns tool, which would also show changes to this registry path.</p><p>Analytic 1 - Boot or Logon Initialization Scripts</p><p><code> (sourcetype=WinEventLog:Microsoft-Windows-Sysmon/Operational EventCode IN (12, 14, 13)) TargetObject= "<em>\Environment</em>UserInitMprLogonScript")  </code></p>
 
                         </td>
                     </tr>
@@ -2042,7 +2045,7 @@
                             <a href="/techniques/T1543/003">Windows Service</a>
                         </td>
                         <td>
-                                    <p>Monitor for new constructed windows registry keys that may create or modify Windows services to repeatedly execute malicious payloads as part of persistence.</p><p>Analytic 1 - Creation of the HKLM\System\CurrentControlSet\Services Registry key</p><p><code> source="*WinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode="12" TargetObject="HKLM\System\CurrentControlSet\Services*"</code></p>
+                                    <p>Monitor for new constructed windows registry keys that may create or modify Windows services to repeatedly execute malicious payloads as part of persistence.</p><p>Analytic 1 - Creation of the HKLM\System\CurrentControlSet\Services Registry key</p><p><code> sourcetype=WinEventLog:Microsoft-Windows-Sysmon/Operational EventCode="12" TargetObject="HKLM\System\CurrentControlSet\Services*"</code></p>
 
                         </td>
                     </tr>
@@ -2090,7 +2093,7 @@
                         <a href="/techniques/T1556">Modify Authentication Process</a>
                     </td>
                     <td>
-                                <p>Monitor for the addition of network provider Registry keys (e.g., <code>HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\&lt;NetworkProviderName&gt;\NetworkProvider</code>).</p>
+                                <p>Monitor for the addition of network provider Registry keys (e.g., <code>HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\&lt;NetworkProviderName&gt;\NetworkProvider</code>).</p><p>Analytic 1 - Unauthorized addition of network provider Registry keys.</p><p><code> sourcetype=WinEventLog:Security(EventCode=4663 OR EventCode=4657) | eval registry_path=mvindex(split(ObjectName,"\"), 0, mvcount(split(ObjectName,"\"))-1)| search registry_path IN ("HKLM\SYSTEM\CurrentControlSet\Control\Lsa", "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Authentication", "HKLM\SYSTEM\CurrentControlSet\Services\LanmanWorkstation\Parameters")</code></p>
 
                     </td>
                 </tr>
@@ -2119,7 +2122,7 @@
                         <a href="/techniques/T1112">Modify Registry</a>
                     </td>
                     <td>
-                                <p>Monitor for newly constructed registry keys or values to aid in persistence and execution. Detection of creation of registry key HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Session Manager\SafeDllSearchMode. The key SafeDllSearchMode, if set to 0, will block the Windows mechanism for the search DLL order and adversaries may execute their own malicious dll.</p><p>Analytic 1 - Registry Edit with Creation of SafeDllSearchMode Key Set to 0</p><p><code>((source="<em>WinEventLog:Security" EventCode="4657")(ObjectValueName="SafeDllSearchMode" value="0")) OR ((source="</em>WinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode="13") EventType="SetValue" TargetObject="*SafeDllSearchMode" Details="DWORD (0x00000000)")))</code></p>
+                                <p>Monitor for newly constructed registry keys or values to aid in persistence and execution. Detection of creation of registry key <code>HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Session Manager\SafeDllSearchMode</code>. The key SafeDllSearchMode, if set to 0, will block the Windows mechanism for the search DLL order and adversaries may execute their own malicious dll.</p><p>Analytic 1 - Registry Edit with Creation of SafeDllSearchMode Key Set to 0</p><p><code>((source="<em>WinEventLog:Security" EventCode="4657")(ObjectValueName="SafeDllSearchMode" value="0")) OR ((source="</em>WinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode="13") EventType="SetValue" TargetObject="*SafeDllSearchMode" Details="DWORD (0x00000000)")))</code></p>
 
                     </td>
                 </tr>
@@ -2224,7 +2227,7 @@
                                 <a href="/techniques/T1053">Scheduled Task/Job</a>: <a href="/techniques/T1053/005">Scheduled Task</a>
                             </td>
                             <td>
-                                        <p>Monitor for newly constructed registry keys upon creation of new task. Deletion of values/keys in the registry may further indicate malicious activity.</p><p>Analytic 1 - Suspicious Creations under Schedule Registry Key</p><p><code>(source="*WinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode="12") | WHERE (RegistryKeyPath LIKE "%HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Schedule\TaskCache\Tasks%" OR    RegistryKeyPath LIKE "%HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Schedule\TaskCache\Tree%")</code></p>
+                                        <p>Monitor for newly constructed registry keys upon creation of new task. Deletion of values/keys in the registry may further indicate malicious activity.</p><p>Analytic 1 - Suspicious Creations under Schedule Registry Key</p><p><code>((source="<em>WinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode="12") OR (sourcetype=WinEventLog:Security EventCode=4657) | search (registry_path="HKLM\Software\Microsoft\Windows NT\CurrentVersion\Schedule\TaskCache\Tree\</em>" OR registry_path="HKLM\Software\Microsoft\Windows NT\CurrentVersion\Schedule\TaskCache\Tasks\*")</code></p>
 
                             </td>
                         </tr>
@@ -2253,7 +2256,7 @@
                             <a href="/techniques/T1553/004">Install Root Certificate</a>
                         </td>
                         <td>
-                                    <p>Monitoring the creation of (sub)keys within the Windows Registry may reveal malicious root certificate installation. Installed root certificates are located in the Registry under <code>HKLM\SOFTWARE\Microsoft\EnterpriseCertificates\Root\Certificates\</code> and </code>[HKLM or HKCU]\Software[\Policies]\Microsoft\SystemCertificates\Root\Certificates\</code>. There are a subset of root certificates that are consistent across Windows systems and can be used for comparison: <span onclick=scrollToRef('scite-15') id="scite-ref-15-a" class="scite-citeref-number" title="Smith, T. (2016, October 27). AppUNBlocker: Bypassing AppLocker. Retrieved December 19, 2017."data-reference="Tripwire AppUNBlocker"><sup><a href="https://www.tripwire.com/state-of-security/off-topic/appunblocker-bypassing-applocker/" target="_blank" data-hasqtip="14" aria-describedby="qtip-14">[15]</a></sup></span>* 18F7C1FCC3090203FD5BAA2F861A754976C8DD25* 245C97DF7514E7CF2DF8BE72AE957B9E04741E85* 3B1EFD3A66EA28B16697394703A72CA340A05BD5* 7F88CD7223F3C813818C994614A89C99FA3B5247* 8F43288AD272F3103B6FB1428485EA3014C0BCFE* A43489159A520F0D93D032CCAF37E7FE20A8B419* BE36A4562FB2EE05DBB3D32323ADF445084ED656* CDD4EEAE6000AC7F40C3802C171E30148030C072</p>
+                                    <p>Monitoring the creation of (sub)keys within the Windows Registry may reveal malicious root certificate installation. Installed root certificates are located in the Registry under <code>HKLM\SOFTWARE\Microsoft\EnterpriseCertificates\Root\Certificates\</code> and <code>HKLM\SOFTWARE\Microsoft\SystemCertificates\Root\Certificates\</code> or <code>HKCU\Policies\Microsoft\SystemCertificates\Root\Certificates\</code></p><p>There are a subset of root certificates that are consistent across Windows systems and can be used for comparison: <span onclick=scrollToRef('scite-15') id="scite-ref-15-a" class="scite-citeref-number" title="Smith, T. (2016, October 27). AppUNBlocker: Bypassing AppLocker. Retrieved December 19, 2017."data-reference="Tripwire AppUNBlocker"><sup><a href="https://www.tripwire.com/state-of-security/off-topic/appunblocker-bypassing-applocker/" target="_blank" data-hasqtip="14" aria-describedby="qtip-14">[15]</a></sup></span>* 18F7C1FCC3090203FD5BAA2F861A754976C8DD25* 245C97DF7514E7CF2DF8BE72AE957B9E04741E85* 3B1EFD3A66EA28B16697394703A72CA340A05BD5* 7F88CD7223F3C813818C994614A89C99FA3B5247* 8F43288AD272F3103B6FB1428485EA3014C0BCFE* A43489159A520F0D93D032CCAF37E7FE20A8B419* BE36A4562FB2EE05DBB3D32323ADF445084ED656* CDD4EEAE6000AC7F40C3802C171E30148030C072</p>
 
                         </td>
                     </tr>
@@ -2646,7 +2649,7 @@
                             <a href="/techniques/T1543/003">Windows Service</a>
                         </td>
                         <td>
-                                    <p>Look for changes to service Registry entries that do not correlate with known software, patch cycles, etc. Service information is stored in the Registry at <code>HKLM\SYSTEM\CurrentControlSet\Services</code>. Changes to the binary path and the service startup type changed from manual or disabled to automatic, if it does not typically do so, may be suspicious. Tools such as Sysinternals Autoruns may also be used to detect system service changes that could be attempts at persistence.<span onclick=scrollToRef('scite-5') id="scite-ref-5-a" class="scite-citeref-number" title="Russinovich, M. (2016, January 4). Autoruns for Windows v13.51. Retrieved June 6, 2016."data-reference="TechNet Autoruns"><sup><a href="https://technet.microsoft.com/en-us/sysinternals/bb963902" target="_blank" data-hasqtip="4" aria-describedby="qtip-4">[5]</a></sup></span></p><p>Analytic 1 - Modification of the HKLM\System\CurrentControlSet\Services Registry key</p><p><code> (source="*WinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode IN (13, 14) EventType= "SetValue" TargetObject="HKLM\System\CurrentControlSet\Services*" | where RegistryKeyPath LIKE "%ImagePath%" OR    RegistryKeyPath LIKE "%Type%" OR   RegistryKeyPath LIKE "%DisplayName%" OR   RegistryKeyPath LIKE "%Objectname%"</code></p>
+                                    <p>Look for changes to service Registry entries that do not correlate with known software, patch cycles, etc. Service information is stored in the Registry at <code>HKLM\SYSTEM\CurrentControlSet\Services</code>. Changes to the binary path and the service startup type changed from manual or disabled to automatic, if it does not typically do so, may be suspicious. Tools such as Sysinternals Autoruns may also be used to detect system service changes that could be attempts at persistence.<span onclick=scrollToRef('scite-5') id="scite-ref-5-a" class="scite-citeref-number" title="Russinovich, M. (2016, January 4). Autoruns for Windows v13.51. Retrieved June 6, 2016."data-reference="TechNet Autoruns"><sup><a href="https://technet.microsoft.com/en-us/sysinternals/bb963902" target="_blank" data-hasqtip="4" aria-describedby="qtip-4">[5]</a></sup></span></p><p>Analytic 1 - Modification of the HKLM\System\CurrentControlSet\Services Registry key</p><p><code> (sourcetype=WinEventLog:Microsoft-Windows-Sysmon/Operational EventCode IN (13, 14) EventType= "SetValue" TargetObject="HKLM\System\CurrentControlSet\Services*" | where RegistryKeyPath LIKE "%ImagePath%" OR    RegistryKeyPath LIKE "%Type%" OR   RegistryKeyPath LIKE "%DisplayName%" OR   RegistryKeyPath LIKE "%Objectname%"</code></p>
 
                         </td>
                     </tr>
@@ -3132,7 +3135,7 @@
                         <a href="/techniques/T1556">Modify Authentication Process</a>
                     </td>
                     <td>
-                                <p>Monitor for changes to Registry entries for password filters (ex: <code>HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Lsa\Notification Packages</code>) and correlate then investigate the DLL files these files reference.</p><p>Monitor for changes to Registry entries for network providers (e.g., <code>HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\NetworkProvider\Order</code>) and correlate then investigate the DLL files these values reference.</p>
+                                <p>Monitor for changes to Registry entries for password filters (ex: <code>HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Lsa\Notification Packages</code>) and correlate then investigate the DLL files these files reference.</p><p>Monitor for changes to Registry entries for network providers (e.g., <code>HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\NetworkProvider\Order</code>) and correlate then investigate the DLL files these values reference.</p><p>Analytic 1 - Unauthorized modifications to Registry entries for password filters or network providers.</p><p><code> index=wineventlog| eval suspicious_activity=if((EventCode=4657 AND (RegistryKeyPath="HKLM\SYSTEM\CurrentControlSet\Control\Lsa\Notification Packages" OR RegistryKeyPath="HKLM\SYSTEM\CurrentControlSet\Control\NetworkProvider\Order")) OR (EventCode=4663 AND AccessMask="0x2" AND (ObjectName="HKLM\SYSTEM\CurrentControlSet\Control\Lsa\Notification Packages" OR ObjectName="HKLM\SYSTEM\CurrentControlSet\Control\NetworkProvider\Order")), "true", "false")</code></p><p>Analytic 2 - Unauthorized modification of windows Registry keys may modify authentication mechanism</p><p><code> sourcetype=WinEventLog:Security(EventCode=4657 OR EventCode=4663) | eval registry_path=mvindex(split(ObjectName,"\"), 0, mvcount(split(ObjectName,"\"))-1)| search registry_path IN ("HKLM\SYSTEM\CurrentControlSet\Control\Lsa",                            "HKLM\SYSTEM\CurrentControlSet\Services\WDigest\Parameters",                            "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon",                           "HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL")</code></p>
 
                     </td>
                 </tr>
@@ -3146,7 +3149,7 @@
                             <a href="/techniques/T1556/002">Password Filter DLL</a>
                         </td>
                         <td>
-                                    <p>Monitor for changes to Registry entries for password filters (ex: HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Lsa\Notification Packages) and correlate then investigate the DLL files these files reference.</p>
+                                    <p>Monitor for changes to Registry entries for password filters (ex: HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Lsa\Notification Packages) and correlate then investigate the DLL files these files reference.</p><p>Analytic 1 - Unauthorized modifications to Registry entries for password filters.</p><p><code> index=windows_logs sourcetype="WinEventLog:Security" (EventCode=4657 OR EventCode=4688)| search (    (TargetObject="<em>\SYSTEM\CurrentControlSet\Control\Lsa\" AND ValueName="Notification Packages")    OR (TargetObject="</em>\SYSTEM\CurrentControlSet\Control\Lsa\" AND ValueName="Authentication Packages")    OR (CommandLine="<em>reg.exe</em>" AND CommandLine="<em>add</em>" AND CommandLine="<em>Lsa</em>")  )| eval Modification_Type=case(    like(CommandLine, "%reg.exe% add%"), "Command Line Registry Edit",    EventCode=4657, "Direct Registry Modification"  )</code></p>
 
                         </td>
                     </tr>
@@ -3190,7 +3193,7 @@
                         <a href="/techniques/T1111">Multi-Factor Authentication Interception</a>
                     </td>
                     <td>
-                                <p>Monitor for changes to windows registry keys or values that may target multi-factor authentication mechanisms, such as smart cards, to gain access to credentials that can be used to access systems, services, and network resources.</p>
+                                <p>Monitor for changes to windows registry keys or values that may target multi-factor authentication mechanisms, such as smart cards, to gain access to credentials that can be used to access systems, services, and network resources.</p><p>Analytic 1 - Unauthorized registry changes related to MFA settings.</p><p><code> index=security sourcetype="WinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode=13 | where match(RegistryKeyPath, "(?i)(MFA|2FA|MultiFactorAuth|SmartCard|Token|SecureID|OTP|OneTimePasscode)")</code></p>
 
                     </td>
                 </tr>
@@ -3266,7 +3269,7 @@
                                 <a href="/techniques/T1003">OS Credential Dumping</a>: <a href="/techniques/T1003/001">LSASS Memory</a>
                             </td>
                             <td>
-                                        <p>Monitor for changes to Registry entries associated with credential access that is stored in the process memory of the LSASS. For example, the adversary can modify the SAM and SYSTEM files.</p>
+                                        <p>Monitor for changes to Registry entries associated with credential access that is stored in the process memory of the LSASS. For example, the adversary can modify the SAM and SYSTEM files.</p><p>Analytics 1 - Unauthorized registry modifications related to LSASS.</p><p><code> index=security sourcetype="WinEventLog:Security" EventCode=4663 ObjectName IN ("<em>\SYSTEM\CurrentControlSet\Services\</em>", "<em>\SYSTEM\CurrentControlSet\Control\SecurityProviders\WDigest", "</em>\SYSTEM\CurrentControlSet\Control\Lsa\Kerberos", "*\SYSTEM\CurrentControlSet\Control\Lsa\MSV1_0") | where ProcessName IN ("reg.exe", "powershell.exe", "wmic.exe", "schtasks.exe", "cmd.exe", "rundll32.exe") </code></p>
 
                             </td>
                         </tr>
@@ -3373,7 +3376,7 @@
                             <a href="/techniques/T1553/004">Install Root Certificate</a>
                         </td>
                         <td>
-                                    <p>Monitoring changes to the Windows Registry may reveal malicious root certificate installation. Installed root certificates are located in the Registry under <code>HKLM\SOFTWARE\Microsoft\EnterpriseCertificates\Root\Certificates\</code> and </code>[HKLM or HKCU]\Software[\Policies]\Microsoft\SystemCertificates\Root\Certificates\</code>. There are a subset of root certificates that are consistent across Windows systems and can be used for comparison: <span onclick=scrollToRef('scite-15') id="scite-ref-15-a" class="scite-citeref-number" title="Smith, T. (2016, October 27). AppUNBlocker: Bypassing AppLocker. Retrieved December 19, 2017."data-reference="Tripwire AppUNBlocker"><sup><a href="https://www.tripwire.com/state-of-security/off-topic/appunblocker-bypassing-applocker/" target="_blank" data-hasqtip="14" aria-describedby="qtip-14">[15]</a></sup></span>* 18F7C1FCC3090203FD5BAA2F861A754976C8DD25* 245C97DF7514E7CF2DF8BE72AE957B9E04741E85* 3B1EFD3A66EA28B16697394703A72CA340A05BD5* 7F88CD7223F3C813818C994614A89C99FA3B5247* 8F43288AD272F3103B6FB1428485EA3014C0BCFE* A43489159A520F0D93D032CCAF37E7FE20A8B419* BE36A4562FB2EE05DBB3D32323ADF445084ED656* CDD4EEAE6000AC7F40C3802C171E30148030C072</p>
+                                    <p>Monitoring changes to the Windows Registry may reveal malicious root certificate installation. Installed root certificates are located in the Registry under <code>HKLM\SOFTWARE\Microsoft\EnterpriseCertificates\Root\Certificates\</code> and <code>HKLM\SOFTWARE\Microsoft\SystemCertificates\Root\Certificates\</code> or <code>HKCU\Policies\Microsoft\SystemCertificates\Root\Certificates\</code>. </p><p>There are a subset of root certificates that are consistent across Windows systems and can be used for comparison: <span onclick=scrollToRef('scite-15') id="scite-ref-15-a" class="scite-citeref-number" title="Smith, T. (2016, October 27). AppUNBlocker: Bypassing AppLocker. Retrieved December 19, 2017."data-reference="Tripwire AppUNBlocker"><sup><a href="https://www.tripwire.com/state-of-security/off-topic/appunblocker-bypassing-applocker/" target="_blank" data-hasqtip="14" aria-describedby="qtip-14">[15]</a></sup></span>* 18F7C1FCC3090203FD5BAA2F861A754976C8DD25* 245C97DF7514E7CF2DF8BE72AE957B9E04741E85* 3B1EFD3A66EA28B16697394703A72CA340A05BD5* 7F88CD7223F3C813818C994614A89C99FA3B5247* 8F43288AD272F3103B6FB1428485EA3014C0BCFE* A43489159A520F0D93D032CCAF37E7FE20A8B419* BE36A4562FB2EE05DBB3D32323ADF445084ED656* CDD4EEAE6000AC7F40C3802C171E30148030C072</p>
 
                         </td>
                     </tr>
@@ -3431,7 +3434,7 @@
                         <a href="/techniques/T1569">System Services</a>
                     </td>
                     <td>
-                                <p>Monitor for changes made to windows registry keys and/or values that may abuse system services or daemons to execute commands or programs.</p>
+                                <p>Monitor for changes made to windows registry keys and/or values that may abuse system services or daemons to execute commands or programs.</p><p>Analytic 1 - Malicious service modification</p><p><code>sourcetype= Sysmon EventCode=12| search registry_path="HKLM\SYSTEM\CurrentControlSet\Services\*" | where registry_action="modified" AND user NOT IN ("known_admins") </code></p>
 
                     </td>
                 </tr>
@@ -3445,7 +3448,7 @@
                             <a href="/techniques/T1569/002">Service Execution</a>
                         </td>
                         <td>
-                                    <p>Monitor for changes made to windows registry keys and/or values that may abuse the Windows service control manager to execute malicious commands or payloads.</p>
+                                    <p>Monitor for changes made to windows registry keys and/or values that may abuse the Windows service control manager to execute malicious commands or payloads.</p><p>Analytic 1 - Registry changes related to service execution.</p><p><code> sourcetype=WinEventLog:Security OR sourcetype=Sysmon EventCode=13 OR EventCode=4657| search registry_path IN ("HKLM\SYSTEM\CurrentControlSet\Services<em>")| where registry_value != "</em>legitimate_software_registry*"  // Filter out common services</code></p>
 
                         </td>
                     </tr>
@@ -3854,7 +3857,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v15.1&#013;Website  v4.1.6">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v16.0&#013;Website  v4.2.0">Website Changelog</a></u>
                                 </div>
                             </div>
                             <div class="row">
@@ -3894,15 +3897,15 @@
     <script src="/theme/scripts/popper.min.js"></script>
     <script src="/theme/scripts/bootstrap-select.min.js"></script>
     <script src="/theme/scripts/bootstrap.bundle.min.js"></script>
-    <script src="/theme/scripts/site.js?4556"></script>
-    <script src="/theme/scripts/settings.js?7795"></script>
+    <script src="/theme/scripts/site.js"></script>
+    <script src="/theme/scripts/settings.js"></script>
     <script src="/theme/scripts/search_bundle.js"></script>
 
 <!--SCRIPTS-->
 <script src="/theme/scripts/resizer.js"></script>
 
     <!--SCRIPTS-->
-    <script src="/theme/scripts/filter/filter.js?5807"></script>
+    <script src="/theme/scripts/filter/filter.js?5335"></script>
     <script src="/theme/scripts/navigation.js"></script>
     <script src="/theme/scripts/mobileview-datasources.js"></script>
     <script src="/theme/scripts/bootstrap-tourist.js"></script>

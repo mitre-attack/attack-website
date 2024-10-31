@@ -169,6 +169,9 @@
             <div class="col px-0">
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
+                    <div class="container-fluid banner-message">
+                        ATT&CK v16 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v16-561c76af94cf'>blog post</a> for more information.
+                    </div>
             </div>
         </div>
         <div class="row flex-grow-1 flex-shrink-0">
@@ -320,7 +323,7 @@
                                             <div class="row card-data">
                                                 <div class="col-md-1 px-0 text-center"></div>
                                                 <div class="col-md-11 pl-0">
-                                                    <span class="h5 card-title">Version:&nbsp;</span>1.1
+                                                    <span class="h5 card-title">Version:&nbsp;</span>1.2
                                                 </div>
                                             </div>
                                             <div class="row card-data">
@@ -332,7 +335,7 @@
                                             <div class="row card-data">
                                                 <div class="col-md-1 px-0 text-center"></div>
                                                 <div class="col-md-11 pl-0">
-                                                    <span class="h5 card-title">Last Modified:&nbsp;</span>24 March 2022
+                                                    <span class="h5 card-title">Last Modified:&nbsp;</span>15 October 2024
                                                 </div>
                                             </div>
                                     </div>
@@ -342,13 +345,13 @@
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Permalink to this version of T1053.003" 
-           href="/versions/v15/techniques/T1053/003/" data-test-ignore="true">Version Permalink</a>
+           href="/versions/v16/techniques/T1053/003/" data-test-ignore="true">Version Permalink</a>
     </div>
     <div class="permalink">
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Go to the live version of T1053.003" 
-           href="/versions/v15/techniques/T1053/003/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+           href="/versions/v16/techniques/T1053/003/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
     </div>
 </div>
 
@@ -433,7 +436,7 @@
                                                 <a href="/software/S0163"> Janicab </a>
                                             </td>
                                             <td>
-                                                            <p><a href="/software/S0163">Janicab</a> used a cron job for persistence on Mac devices.<span onclick=scrollToRef('scite-8') id="scite-ref-8-a" class="scite-citeref-number" title="Thomas. (2013, July 15). New signed malware called Janicab. Retrieved July 17, 2017."data-reference="Janicab"><sup><a href="http://www.thesafemac.com/new-signed-malware-called-janicab/" target="_blank" data-hasqtip="7" aria-describedby="qtip-7">[8]</a></sup></span></p>
+                                                            <p><a href="/software/S0163">Janicab</a> used a cron job for persistence on Mac devices.<span onclick=scrollToRef('scite-8') id="scite-ref-8-a" class="scite-citeref-number" title="Thomas. (2013, July 15). New signed malware called Janicab. Retrieved July 17, 2017."data-reference="Janicab"><sup><a href="https://web.archive.org/web/20230331162455/https://www.thesafemac.com/new-signed-malware-called-janicab/" target="_blank" data-hasqtip="7" aria-describedby="qtip-7">[8]</a></sup></span></p>
 
                                             </td>
                                         </tr>
@@ -598,7 +601,7 @@
                     <a href="/datasources/DS0017/#Command%20Execution">Command Execution</a>
                 </td>
                     <td>
-                                <p>Monitor executed atq command and ensure IP addresses stored in the SSH_CONNECTION and SSH_CLIENT variables, machines that created the jobs, are trusted hosts. All at jobs are stored in /var/spool/cron/atjobs/.</p>
+                                <p>Monitor execution of commands related to cron that are out of alignment with known software or administrative tasks. Monitor executed atq command and ensure IP addresses stored in the SSH_CONNECTION and SSH_CLIENT variables, machines that created the jobs, are trusted hosts. All at jobs are stored in /var/spool/cron/atjobs/.</p><p>Analytic 1 - Suspicious Cron execution</p><p><code> index=linux_logs sourcetype=cron_logs | search "cron" AND (command="crontab -e" OR command="crontab -l" OR command="<em> * * * </em>" OR command="<em>/cron.d/</em>")</code></p>
 
                     </td>
             </tr>
@@ -614,7 +617,7 @@
                     <a href="/datasources/DS0022/#File%20Modification">File Modification</a>
                 </td>
                     <td>
-                                <p>Monitor for changes made to files for unexpected modifications to access permissions and attributes.</p><p>Analytic 1 -  Modified Files in Linux Cron Directories</p><p><code> source="<em>Linux:</em>" (Path LIKE "/etc/cron.allow.d"   OR Path LIKE "/etc/cron.d/"   OR Path LIKE "/etc/cron.hourly"   OR Path LIKE "/etc/cron.daily"   OR Path LIKE "/etc/cron.weeky"   OR Path LIKE "/etc/cron.monthly")</code></p>
+                                <p>Monitor modifications to crontab files or system-wide cron directories. Monitor for changes made to files for unexpected modifications to access permissions and attributes.</p><p>Analytic 1 -  Modified Files in Linux Cron Directories</p><p><code> index=linux sourcetype:cron_logs:scheduled_tasks" | search "modification" AND (file_path="/etc/crontab" OR file_path="/var/spool/cron/crontabs/<em>" OR file_path="/etc/cron.d/</em>")</code></p>
 
                     </td>
             </tr>
@@ -630,7 +633,7 @@
                     <a href="/datasources/DS0009/#Process%20Creation">Process Creation</a>
                 </td>
                     <td>
-                                <p>Create a baseline of cron jobs and the processes that they spawn in your environment. Monitor for newly spawned outlier processes that are executed through cron jobs that have not been seen before when compared against the baseline data.</p><p>Analytic 1 - Unusual Cron Job Creation</p><p><code> source="<em>Linux:</em>" Image= "crontab" OR Image= "cron" AND CommandLine LIKE "<em>crontab -e</em>" OR CommandLine LIKE "<em>cron</em>" </code></p><p>Analytic 2 - Unusual Execution Frequency</p><p><code> source="<em>Linux:</em>" Image= "crond" OR Image= "cron" AND ImageCount &gt;= "100" </code></p>
+                                <p>Create a baseline of cron jobs and the processes that they spawn in your environment. Monitor for newly spawned outlier processes that are executed through cron jobs that have not been seen before when compared against the baseline data.</p><p>Analytic 1 - Unusual Cron Job Creation</p><p><code> index=os_logs sourcetype=process_creation (process_name="<em>cron</em>" OR process_name="<em>/usr/sbin/cron</em>") </code></p>
 
                     </td>
             </tr>
@@ -646,7 +649,7 @@
                     <a href="/datasources/DS0003/#Scheduled%20Job%20Creation">Scheduled Job Creation</a>
                 </td>
                     <td>
-                                <p>Monitor for newly constructed scheduled jobs. Legitimate scheduled tasks may be created during installation of new software or through system administration functions. Look for changes to tasks that do not correlate with known software, patch cycles, etc.</p>
+                                <p>Monitor for newly constructed scheduled jobs. Legitimate scheduled tasks may be created during installation of new software or through system administration functions. Look for changes to tasks that do not correlate with known software, patch cycles, etc.</p><p>Analytic 1 - Look for new cron job creation events with unusual parameters.</p><p><code> index=os_logs sourcetype=syslog (command="<em>crontab -e</em>" OR command="<em>crontab -l</em>")| stats count by user host| where user != "root" OR count &gt; 1</code></p>
 
                     </td>
             </tr>
@@ -748,7 +751,7 @@
         <li>
             <span  id="scite-8" class="scite-citation">
                 <span class="scite-citation-text">
-                    <a rel="nofollow" class="external text" name="scite-8" href="http://www.thesafemac.com/new-signed-malware-called-janicab/" target="_blank">
+                    <a rel="nofollow" class="external text" name="scite-8" href="https://web.archive.org/web/20230331162455/https://www.thesafemac.com/new-signed-malware-called-janicab/" target="_blank">
                         Thomas. (2013, July 15). New signed malware called Janicab. Retrieved July 17, 2017.
                     </a>
                 </span>
@@ -946,7 +949,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v15.1&#013;Website  v4.1.6">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v16.0&#013;Website  v4.2.0">Website Changelog</a></u>
                                 </div>
                             </div>
                             <div class="row">
@@ -986,8 +989,8 @@
     <script src="/theme/scripts/popper.min.js"></script>
     <script src="/theme/scripts/bootstrap-select.min.js"></script>
     <script src="/theme/scripts/bootstrap.bundle.min.js"></script>
-    <script src="/theme/scripts/site.js?1912"></script>
-    <script src="/theme/scripts/settings.js?8499"></script>
+    <script src="/theme/scripts/site.js"></script>
+    <script src="/theme/scripts/settings.js"></script>
     <script src="/theme/scripts/search_bundle.js"></script>
 
 <!--SCRIPTS-->
