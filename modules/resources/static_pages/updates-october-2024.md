@@ -8,7 +8,7 @@ save_as: resources/updates/updates-october-2024/index.html
 
 | Version | Start Date | End Date | Data | Changelogs |
 |:--------|:-----------|:---------|:-----|:-----------|
-| [ATT&CK v16](/versions/v16) | October 31, 2024 | Current version of ATT&CK | [v16.0 on MITRE/CTI](https://github.com/mitre/cti/releases/tag/ATT%26CK-v16.0) | 15.1 - 16.0 [Details](/docs/changelogs/v15.1-v16.0/changelog-detailed.html) ([JSON](/docs/changelogs/v15.1-v16.0/changelog.json)) |
+| [ATT&CK v16](/versions/v16) | October 31, 2024 | Current version of ATT&CK | [v16.0 on MITRE/CTI](https://github.com/mitre/cti/releases/tag/ATT%26CK-v16.0) <br> [v16.1 on MITRE/CTI](https://github.com/mitre/cti/releases/tag/ATT%26CK-v16.1) | 15.1 - 16.0 [Details](/docs/changelogs/v15.1-v16.0/changelog-detailed.html) ([JSON](/docs/changelogs/v15.1-v16.0/changelog.json)) <br> 16.0 - 16.1 [Details](/docs/changelogs/v16.0-v16.1/changelog-detailed.html) ([JSON](/docs/changelogs/v16.0-v16.1/changelog.json)) |
 
 The October 2024 (v16) ATT&CK release updates Techniques, Groups, Campaigns and Software for Enterprise.
 
@@ -635,6 +635,7 @@ Broken out by domain:
 ## Contributors to this release
 
 * @grahamhelton3
+* Ale Houspanossian
 * Arun Seelagan, CISA
 * Asritha Narina
 * Aung Kyaw Min Naing, @Nolan
@@ -644,13 +645,15 @@ Broken out by domain:
 * Cris Tomboc, Truswave SpiderLabs
 * Csaba Fitzl @theevilbit of Kandji
 * Daniel Acevedo, Blackbot
+* DeFord L. Smith
 * Denise Tan
 * Diego Sappa, Securonix
 * Domenico Mazzaferro Palmeri
 * Dray Agha, Huntress Labs
 * Eder Pérez Ignacio, @ch4ik0
 * Eduardo González Hernández (@codexlynx)
-* Furkan Celiik
+* Fernando Bacchin
+* Furkan Celik, PURE7
 * Hakan KARABACAK
 * Harikrishnan Muthu, Cyble
 * Harry Hill, BT Security
