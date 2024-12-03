@@ -219,6 +219,39 @@ def generate_static_pages():
 
     if not [key["module_name"] for key in modules.run_ptr if key["module_name"] == "versions"]:
         util.buildhelpers.remove_element_from_sub_menu(resources_config.module_name, "Version History")
+    
+    # Below code used to get a list of all updates children
+    updates_dict_list = {}
+    updates_name = []
+    updates_path = []
+    for static_page in os.listdir(static_pages_dir):
+        with open(os.path.join(static_pages_dir, static_page), "r", encoding="utf8") as md:
+            content = md.read()
+            if static_page.startswith("updates-"):
+                temp_string = static_page.replace(".md", "")
+                temp_string = temp_string.split("-")
+                temp_string = temp_string[1].capitalize() + " " + temp_string[2]
+                updates_name.append(temp_string)
+                temp_string = static_page.replace(".md", "")
+                updates_path.append("/resources/updates/" + temp_string + "/")
+    updates_name.sort(key=lambda date: datetime.strptime(date, "%B %Y"), reverse=True)
+    updates_path.sort(key=lambda date: datetime.strptime(date, "/resources/updates/updates-%B-%Y/"), reverse=True)
+    updates_dict_list["updates_name"] = updates_name
+    updates_dict_list["updates_path"] = updates_path
+
+    # Below code used to add the updates children to the resources sidebar
+    updates_index = 0
+    temp_dict = {}
+    for i in range(len(site_config.resource_nav["children"])):
+        if site_config.resource_nav["children"][i]["name"] == "Updates":
+            updates_index = i
+
+    for i in range(len(updates_dict_list["updates_name"])):
+        temp_dict["name"] = updates_dict_list["updates_name"][i]
+        temp_dict["path"] = updates_dict_list["updates_path"][i]
+        temp_dict["children"] = []
+        site_config.resource_nav["children"][updates_index]["children"].append(temp_dict.copy())
+        temp_dict = {}
 
     for static_page in os.listdir(static_pages_dir):
         with open(os.path.join(static_pages_dir, static_page), "r", encoding="utf8") as md:
