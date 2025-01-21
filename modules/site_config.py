@@ -53,19 +53,19 @@ staged_pelican = {}
 
 
 def send_to_pelican(key, value):
-    """Method to stage key value pairs for pelican use"""
+    """Stage key value pairs for pelican use."""
     staged_pelican[key] = value
 
 
 def check_versions_module():
-    """Return if versions module is loaded"""
+    """Return if versions module is loaded."""
     if [key["module_name"] for key in modules.run_ptr if key["module_name"] == "versions"]:
         return True
     return False
 
 
 def check_resources_module():
-    """Return if resources module is loaded"""
+    """Return if resources module is loaded."""
     if [key["module_name"] for key in modules.run_ptr if key["module_name"] == "resources"]:
         return True
     return False
@@ -114,7 +114,6 @@ javascript_path = "attack-theme/static/scripts/"
 
 # Static style pelican files directory
 static_style_dir = os.path.join("attack-theme", "static", "style/")
-
 
 # Link to instance of the ATT&CK Navigator; change for to a custom location
 navigator_link = "https://mitre-attack.github.io/attack-navigator/"
