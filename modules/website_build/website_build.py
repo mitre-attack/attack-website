@@ -1,22 +1,25 @@
+import hashlib
 import json
 import os
 import shutil
 import subprocess
-import hashlib
 from string import Template
 
 from loguru import logger
 
 import modules
-from modules import matrices, site_config, util, resources
+from modules import matrices, site_config, util
 
 from . import website_build_config
 
 
 def generate_website():
-    """Function that generates base template for HTML pages,
-    generates the index page of the website and
-    runs pelican content to convert markdown pages into html
+    """Generate the website.
+
+    This function:
+        - generates base template for HTML pages
+        - generates the index page of the website
+        - runs pelican content to convert markdown pages into html
     """
     logger.info("Generating the website")
     # Create content pages directory if does not already exist
@@ -36,9 +39,7 @@ def generate_website():
     generate_static_pages()
     generate_changelog_page()
     store_pelican_settings()
-    override_colors()
     pelican_content()
-    reset_override_colors()
     # this is nice to have if you want to run pelican manually later
     # remove_pelican_settings()
     remove_unwanted_output()
@@ -47,7 +48,7 @@ def generate_website():
 def generate_uuid_from_seeds(content_version, website_version):
     """
     Generate a UUID based on the given content_version and website_version.
-    
+
     Args:
     - content_version (str): Semantic version of the content without a leading 'v'.
     - website_version (str): Semantic version of the website with a leading 'v'.
@@ -56,15 +57,15 @@ def generate_uuid_from_seeds(content_version, website_version):
     - str: A UUID generated based on the two versions.
     """
     # Combine and hash the values
-    seed = f"{content_version}-{website_version}".encode('utf-8')
+    seed = f"{content_version}-{website_version}".encode("utf-8")
     hashed_seed = hashlib.md5(seed).hexdigest()
 
     # Convert the first 32 characters of the hash to a UUID format
-    return '-'.join([hashed_seed[i:i+length] for i, length in zip([0, 8, 12, 16, 20], [8, 4, 4, 4, 12])])
+    return "-".join([hashed_seed[i : i + length] for i, length in zip([0, 8, 12, 16, 20], [8, 4, 4, 4, 12])])
 
 
 def generate_javascript_settings():
-    """Creates javascript settings file that will be used to other javascript files"""
+    """Create JavaS</cript settings file that will be used to other JavaScript files."""
     logger.info("Generating JavaScript settings.js")
     javascript_settings_file = os.path.join(site_config.javascript_path, "settings.js")
 
@@ -74,7 +75,7 @@ def generate_javascript_settings():
     if os.path.exists(javascript_settings_file):
         with open(javascript_settings_file, "r", encoding="utf8") as js_f:
             for line in js_f:
-                if not "base_url" in line and not "build_uuid" in line:
+                if "base_url" not in line and "build_uuid" not in line:
                     # Copy line to data buffer
                     data += line
 
@@ -92,8 +93,8 @@ def generate_javascript_settings():
         js_data = website_build_config.js_dir_settings.substitute({"web_directory": web_dir})
 
         # Use the content and website versions as a seed for the build UUID to ensure that the UUID is idempotent.
-        CONTENT_VERSION = website_build_config.base_page_data['CONTENT_VERSION']
-        WEBSITE_VERSION = website_build_config.base_page_data['WEBSITE_VERSION']
+        CONTENT_VERSION = website_build_config.base_page_data["CONTENT_VERSION"]
+        WEBSITE_VERSION = website_build_config.base_page_data["WEBSITE_VERSION"]
 
         build_uuid = generate_uuid_from_seeds(CONTENT_VERSION, WEBSITE_VERSION)
 
@@ -106,7 +107,7 @@ def generate_javascript_settings():
 
 
 def generate_base_html():
-    """Responsible for generating the header and footer of website pages"""
+    """Responsible for generating the header and footer of website pages."""
     logger.info("Generating base.html from template")
     # Update navigation menu in the case that some module did not generate markdowns
     website_build_config.base_page_data["NAVIGATION_MENU"] = modules.menu_ptr
@@ -136,28 +137,32 @@ def generate_base_html():
 
     with open(
         os.path.join(website_build_config.template_dir, "base-template.html"), "r", encoding="utf8"
-    ) as base_template_f:
-        base_template = base_template_f.read()
-        base_template = Template(base_template)
+    ) as base_template_file:
+        base_template_str = base_template_file.read()
+        base_template = Template(base_template_str)
         subs = base_template.substitute(website_build_config.base_page_data)
 
-    with open(os.path.join(website_build_config.template_dir, "base.html"), "w", encoding="utf8") as base_template_f:
-        base_template_f.write(subs)
+    with open(os.path.join(website_build_config.template_dir, "base.html"), "w", encoding="utf8") as base_file:
+        base_file.write(subs)
+
 
 def generate_sidebar_html():
-        with open(
-            os.path.join(website_build_config.template_dir, "sidebar-resources-template.html"), "r", encoding="utf8"
-        ) as sidebar_template_f:
-            sidebar_template = sidebar_template_f.read()
-            sidebar_template = Template(sidebar_template)
-            subs = sidebar_template.substitute(website_build_config.sidebar_page_data)
-    
-        with open(os.path.join(website_build_config.template_dir, "sidebar-resources.html"), "w", encoding="utf8") as sidebar_template_f:
-            sidebar_template_f.write(subs)
+    """Create the sidebar html file."""
+    with open(
+        os.path.join(website_build_config.template_dir, "sidebar-resources-template.html"), "r", encoding="utf8"
+    ) as sidebar_template_f:
+        sidebar_template = sidebar_template_f.read()
+        sidebar_template = Template(sidebar_template)
+        subs = sidebar_template.substitute(website_build_config.sidebar_page_data)
+
+    with open(
+        os.path.join(website_build_config.template_dir, "sidebar-resources.html"), "w", encoding="utf8"
+    ) as sidebar_template_f:
+        sidebar_template_f.write(subs)
 
 
 def generate_index_page():
-    """Responsible for creating the landing page"""
+    """Create the landing page."""
     logger.info("Generating index page")
     data = {}
 
@@ -201,65 +206,15 @@ def generate_index_page():
 
 
 def store_pelican_settings():
-    """Store pelican settings"""
+    """Store pelican settings."""
     logger.info("Storing additional Pelican settings")
     pelican_settings_f = os.path.join(site_config.data_directory, "pelican_settings.json")
     with open(pelican_settings_f, "w", encoding="utf8") as json_f:
         json_f.write(json.dumps(site_config.staged_pelican))
 
 
-def override_colors():
-    """Override colors scss file if attack brand flag is enabled"""
-    if site_config.args.attack_brand:
-        logger.info("Overriding colors for attack-brand")
-        colors_scss_f = os.path.join(site_config.static_style_dir, "_colors.scss")
-
-        temp_file = ""
-        with open(colors_scss_f, "r", encoding="utf8") as colors_f:
-            lines = colors_f.readlines()
-
-            end_search = True
-            for line in lines:
-                if end_search and line.startswith("//$use_attack_them"):
-                    temp_file += line[2:]
-                elif end_search and line.startswith("// end search"):
-                    end_search = False
-                    temp_file += line
-                else:
-                    temp_file += line
-
-        with open(colors_scss_f, "w", encoding="utf8") as colors_f:
-            colors_f.write(temp_file)
-
-
-def reset_override_colors():
-    """Reset override colors scss file if attack brand flag is enabled"""
-    if site_config.args.attack_brand:
-        logger.info("Resetting override colors for using attack-brand")
-        colors_scss_f = os.path.join(site_config.static_style_dir, "_colors.scss")
-
-        temp_file = ""
-        with open(colors_scss_f, "r", encoding="utf8") as colors_f:
-            lines = colors_f.readlines()
-
-            end_search = True
-            for line in lines:
-                if end_search and line.startswith("$use_attack_them"):
-                    temp_file += "//" + line
-                elif end_search and line.startswith("// end search"):
-                    end_search = False
-                    temp_file += line
-                else:
-                    temp_file += line
-
-        with open(colors_scss_f, "w", encoding="utf8") as colors_f:
-            colors_f.write(temp_file)
-
-
 def generate_changelog_page():
-    """Responsible for compiling original changelog markdown into changelog markdown file
-    for rendering on the HTML
-    """
+    """Responsible for compiling original changelog markdown into changelog markdown file for rendering on the HTML."""
     logger.info("Generating Changelog page")
     current_changelog = None
     # Read local changelog
