@@ -1,0 +1,1669 @@
+@use "sass:color";
+@use "sass:math";
+@use "../abstracts/color-functions";
+@use "../abstracts/utilities";
+@use "../base/base";
+
+/* General styling */
+html {
+  height: 100%;
+}
+
+body {
+  height: 100%;
+  background: color-functions.color(body);
+  color: color-functions.on-color(body);
+
+  @include utilities.font("Roboto-Regular");
+
+  display: flex;
+  flex-direction: column;
+}
+
+// footer IE compatability
+@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+  body {
+    height: auto; // fix footer bug
+  }
+}
+
+// .maincontent { //grow the page content to fill space before footer
+//     flex-grow: 1;
+// }
+
+.attack-website-wrapper {
+  max-height: 100vh;
+  overflow-y: auto;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5 {
+  @include utilities.font("Roboto-Light");
+}
+
+strong {
+  @include utilities.font("Roboto-Bold");
+}
+
+.jumbotron {
+  padding: 0;
+  background: color-functions.color(body);
+  color: color-functions.on-color(body);
+
+  code {
+    color: color-functions.on-color-emphasis(body);
+    background-color: color-functions.color-alternate(body, 2);
+    border-radius: 3px;
+    font-family: courier, monospace;
+    padding: 0 3px;
+  }
+}
+
+a {
+  color: color-functions.color(link);
+
+  .anchor::before {
+    content: "";
+    display: block;
+    margin-top: utilities.to-rem(-80);
+    position: absolute;
+  }
+}
+
+.marker-none {
+  list-style-type: none;
+}
+
+.overflow-x-auto {
+  overflow-x: auto;
+}
+
+.fs-s {
+  font-size: small;
+}
+
+.capec-card {
+  background: rgb(128, 0, 0);
+
+  img {
+    margin: utilities.to-rem(8);
+    max-width: utilities.to-rem(160);
+    max-height: utilities.to-rem(55);
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+  }
+}
+
+.maec-card {
+  background: #212121;
+
+  img {
+    margin: utilities.to-rem(8);
+    max-width: utilities.to-rem(146);
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+  }
+}
+
+.default-img-size {
+  width: 100%;
+  max-width: utilities.to-rem(1000);
+}
+
+.mitre-logo-wtrans {
+  width: utilities.to-rem(144);
+  height: utilities.to-rem(66);
+}
+
+// left column in the home page
+.quick-links {
+  width: 100%;
+  text-align: center;
+  table-layout: fixed;
+
+  td {
+    padding: utilities.to-rem(5) 0;
+  }
+
+  tr + tr {
+    border-top: 1px solid color-functions.border-color(body);
+  }
+}
+
+.row-main-page {
+  display: flex;
+  flex-wrap: wrap;
+  margin-right: -15px;
+  margin-left: -15px;
+}
+
+@media screen and (width <= 47.9875rem) {
+  .row-main-page {
+    display: inline;
+  }
+}
+
+// p for home page
+.p-line {
+  p {
+    border-top: 0.0625rem solid #1c2226;
+  }
+}
+
+// button style in the side navigation of MATRICES, TACTICS, TECHNIQUES, MITIGATIONS, GROUPS, and SOFTWARE
+.btn-default {
+  background: color-functions.color(body);
+  border-color: color-functions.on-color-deemphasis(body);
+  color: color-functions.on-color(body);
+
+  &:hover {
+    color: color-functions.on-color-emphasis(body);
+  }
+}
+
+.website-button {
+  font-size: 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  font-family: Arial;
+  display: inline-flex;
+  align-items: center;
+  border-style: solid;
+}
+
+.slide-icon-button {
+  border-style: none;
+  background: none;
+}
+
+.slide-button {
+  @extend .website-button;
+
+  border-color: color-functions.color(active);
+  color: #fff;
+  background: color-functions.color(active);
+  padding: 6px 16px;
+
+  a & {
+    text-decoration: none !important;
+  }
+}
+
+.slide-button-secondary {
+  @extend .website-button;
+
+  color: color-functions.color(active);
+  background: #fff;
+  border-color: color-functions.color(active);
+  padding: 6px 16px;
+
+  a & {
+    text-decoration: none !important;
+  }
+}
+
+.slide-button-text {
+  position: relative;
+}
+
+.slide-button-icon {
+  position: relative;
+  padding-left: 8px;
+}
+
+.slide-button:hover {
+  background: color-functions.color(secondary);
+  border-color: color-functions.color(secondary);
+}
+
+.slide-button-secondary:hover {
+  background: color-functions.on-color(active);
+  border-color: color-functions.color(secondary);
+  color: color-functions.color(secondary);
+}
+
+// used for data sources filter dropdown
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: color-functions.on-color(secondary);
+  min-width: 160px;
+  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 20%);
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+// placeholder for base style of all navy colored buttons
+%button-style {
+  color: color-functions.on-color(secondary);
+  border-color: utilities.to-rem(1) solid color-functions.color(secondary);
+}
+
+// navy buttons are in the home page and in MATRICES
+.btn-navy {
+  @extend %button-style;
+
+  background-color: color-functions.color(secondary);
+  color: color-functions.on-color(secondary);
+
+  &:hover {
+    // Extending placeholder 'button-style' is necessary to keep on-color white. Else, the on-color will change to the <a> tag on-color when hovering the button.
+    @extend %button-style;
+
+    background-color: color.scale(color-functions.color(secondary), $lightness: 5%);
+    background-image: none;
+  }
+}
+
+// Style for changelog markdown section
+.markdown-body {
+  h1:not(:first-child) {
+    padding-top: 2rem;
+  }
+
+  h1 {
+    padding-bottom: utilities.rem(0.5);
+    font-size: utilities.rem(1.5);
+  }
+
+  h2 {
+    font-size: utilities.rem(1);
+  }
+
+  h3 {
+    font-size: utilities.rem(0.8);
+  }
+}
+
+/* **** */
+
+/* Table styling */
+.table,
+.blog-post table,
+.changelog table {
+  empty-cells: hide;
+
+  td {
+    p:last-child {
+      margin-bottom: 0;
+    }
+
+    padding: 0.75rem;
+    vertical-align: top;
+  }
+
+  th {
+    padding: utilities.rem(0.3);
+    vertical-align: top;
+    font-size: utilities.rem(0.6);
+  }
+
+  .active {
+    color: color-functions.color(primary);
+  }
+}
+
+.blog-post table {
+  margin-bottom: 1.5rem;
+}
+
+// background color for tables in TACTICS, TECHNIQUES, MITIGATIONS, GROUPS, and SOFTWARE
+.table-alternate,
+.blog-post table,
+.changelog table {
+  @extend %bg-alternate;
+
+  tbody {
+    background: color-functions.color(body);
+    color: color-functions.on-color(body);
+  }
+}
+
+// table for techniques
+.table-techniques {
+  thead tr {
+    background: #f2f2f2;
+    border-bottom: 2px solid #dee2e6;
+  }
+
+  table {
+    border-collapse: collapse;
+  }
+
+  td {
+    vertical-align: top;
+    padding: 10px;
+    border: 1px solid #dfdfdf;
+  }
+
+  tr:last-child {
+    border-bottom: 1px solid #dfdfdf;
+  }
+
+  .sub.technique {
+    border-left: none;
+  }
+
+  .technique td:first-child {
+    border-bottom: none;
+  }
+
+  .sub.technique td:first-child {
+    width: 5ex;
+    border-top: none;
+    border-bottom: none;
+  }
+
+  .sub.technique td:not(:nth-child(4)) {
+    color: #4f7cac;
+  }
+
+  .technique:not(.sub) td:not(:nth-child(3)) {
+    color: #4f7cac;
+  }
+}
+
+// Styling for techniques used table
+.techniques-used {
+  table {
+    border-collapse: collapse;
+  }
+
+  td {
+    vertical-align: top;
+    padding: 10px;
+    border: 1px solid #dfdfdf;
+  }
+
+  tr:last-child {
+    border-bottom: 1px solid #dfdfdf;
+  }
+
+  .sub.technique {
+    border-left: none;
+  }
+
+  .technique td:first-child {
+    border-bottom: none;
+  }
+
+  .technique td:nth-child(2) {
+    border-bottom: none;
+  }
+
+  .sub.technique:not(.noparent) td:nth-child(2) {
+    width: 5ex;
+    border-top: none;
+    border-bottom: none;
+  }
+
+  .sub.technique:not(.noparent) td:first-child {
+    width: 5ex;
+    border-top: none;
+    border-bottom: none;
+  }
+}
+
+.techniques-used.background {
+  thead tr {
+    background: #f2f2f2;
+    border-bottom: 2px solid #dee2e6;
+  }
+}
+
+// .table td.border {
+//     border-color: on-color-deemphasis(body);
+// }
+
+// Styling for datasources table
+.datasources-table {
+  table {
+    border-collapse: collapse;
+  }
+
+  thead tr {
+    background: #f2f2f2;
+    border-bottom: 2px solid #dee2e6;
+  }
+
+  td {
+    vertical-align: top;
+    padding: 10px;
+    border: 1px solid #dfdfdf;
+  }
+
+  tr:last-child {
+    border-bottom: 1px solid #dfdfdf;
+  }
+
+  .datacomponent.datasource {
+    border-left: none;
+  }
+
+  .datasource td:first-child {
+    border-bottom: none;
+  }
+
+  .datasource td:nth-child(2) {
+    border-bottom: none;
+  }
+
+  .datacomponent.datasource:not(.noparent) td:nth-child(2) {
+    width: 5ex;
+    border-top: none;
+    border-bottom: none;
+  }
+
+  .datacomponent.datasource:not(.noparent) td:first-child {
+    width: 5ex;
+    border-top: none;
+    border-bottom: none;
+  }
+
+  .nowrap {
+    white-space: nowrap;
+  }
+}
+
+.tables-mobile {
+  overflow-y: auto;
+}
+
+.table-bordered,
+.blog-post table,
+.changelog table {
+  &,
+  & td,
+  & th {
+    border: 1px solid color-functions.border-color(body);
+  }
+
+  th {
+    border-bottom: 2px solid color-functions.border-color(body) !important;
+  }
+}
+
+// border style for empty cells in the home page matrix and in MATRICES
+@mixin no-border($property) {
+  #{$property}: none !important;
+}
+
+// vertically aligned text
+@mixin align($text, $vertical) {
+  text-align: $text !important;
+  vertical-align: $vertical !important;
+}
+
+// matrix style in home page and in MATRICES
+.table-matrix {
+  @include no-border(border);
+
+  thead th {
+    @include align(center, middle);
+
+    border: utilities.to-rem(1) solid color-functions.border-color(body) !important;
+  }
+
+  td,
+  th {
+    @include align(center, middle);
+    @include no-border(border-top);
+
+    padding: utilities.to-rem(2) !important;
+    font-size: utilities.to-rem(12) !important;
+
+    &.border {
+      border: utilities.to-rem(1) solid color-functions.border-color(body) !important;
+    }
+
+    &.no-border {
+      @include no-border(border);
+    }
+  }
+
+  td {
+    background: color-functions.color(body);
+    color: color-functions.on-color(body);
+  }
+}
+
+// table expands/contracts depending on the cell's content
+%table-nowrap {
+  white-space: nowrap;
+  width: 1%;
+}
+
+// mitigation tables
+.table-mitigations {
+  @extend %table-nowrap;
+
+  th,
+  td {
+    @extend %table-nowrap;
+  }
+}
+
+// number of table rows in TACTICS, TECHNIQUES, MITIGATIONS, GROUPS, and SOFTWARE
+.div-count {
+  margin-top: auto;
+  margin-bottom: 0;
+}
+
+.table-object-count {
+  display: flex;
+  justify-content: flex-end;
+}
+
+// links in header row of matrices in the home page matrix and in MATRICES
+.matrix-tactics-url {
+  color: color-functions.on-color(primary);
+
+  &:visited,
+  &:hover,
+  &:active {
+    color: color-functions.on-color(primary);
+  }
+}
+
+/* **** */
+
+/* BANNER */
+.banner-message {
+  padding: utilities.to-rem(5) 0;
+  text-align: center;
+  background-color: color-functions.color-alternate(body, 2);
+}
+
+// basic banner
+.version-banner {
+  @extend .banner-message;
+}
+
+/* **** */
+
+/* IMG/SVG ICON in BANNER */
+.icon-inline {
+  display: inline-flex;
+  align-self: center;
+
+  svg,
+  img {
+    height: utilities.rem(0.7);
+    width: utilities.rem(0.7);
+    fill: currentcolor;
+    top: utilities.rem(-0.175);
+    position: relative;
+  }
+}
+
+/* **** */
+
+/* Pre-block in SIGHTINGS */
+// style for inline code blocks
+pre {
+  color: color-functions.on-color(body);
+  background-color: color-functions.color-alternate(body, 3);
+  border-radius: 5px;
+  padding: 1rem;
+}
+
+code {
+  color: #c63e1f;
+}
+
+/* **** */
+
+/* CARDS */
+// cards are used in the General Information, Staying Informed, and Related Projects page, and in TACTICS, TECHNIQUES, MITIGATIONS, GROUPS, and SOFTWARE
+.card {
+  background: color-functions.color(body);
+  color: color-functions.on-color(body);
+  border-color: color-functions.border-color(body);
+}
+
+.button-group {
+  display: flex;
+  justify-content: end;
+
+  a.button + a.button {
+    margin-left: 22px;
+  }
+
+  button {
+    justify-content: center;
+    width: 100%;
+  }
+
+  a.w-40 {
+    width: 40%;
+  }
+}
+
+.card-filter {
+  width: 20%;
+  top: 9.3rem;
+  float: right;
+  background: color-functions.on-color(active);
+}
+
+@media screen and (width <= 90.62rem) {
+  .card-filter {
+    display: contents;
+  }
+}
+
+.card-presentation {
+  margin-bottom: 30px;
+}
+
+.card-attackcon {
+  width: 100%;
+}
+
+.card-data {
+  margin-bottom: utilities.rem(0.2);
+}
+
+.card-header {
+  color: color-functions.on-color(body);
+  background: rgba(color-functions.on-color(body), 0.03);
+  border-bottom-color: color-functions.border-color(body);
+}
+
+a.partial-underline {
+  text-decoration: none;
+
+  .hover-line {
+    text-decoration: underline;
+  }
+}
+
+.contact-card {
+  border-radius: 0.75em;
+  overflow: hidden;
+
+  .card-footer {
+    padding: 0 1.25rem 1.25rem;
+
+    &.button-group {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+  }
+
+  .card-footer-no-button {
+    padding: 0.5rem 1.25rem;
+    min-height: 4rem;
+    max-height: fit-content;
+  }
+
+  .card-header {
+    padding: 1.25rem 1.25rem 0;
+
+    &.background {
+      background: color-functions.color(footer);
+      color: white;
+      padding-bottom: 1.25rem;
+    }
+  }
+
+  .card-header,
+  .card-footer {
+    &.no-background {
+      background: color-functions.color(body);
+      color: color-functions.on-color(body);
+      border: unset;
+    }
+  }
+
+  .card-body {
+    p {
+      margin: 0;
+    }
+
+    &.background {
+      background: color-functions.on-color(active);
+    }
+  }
+}
+
+.card-body {
+  // Remove extra whitespace from tables inside of cards
+  // Source: https://github.com/philipnewcomer/bootstrap4-card-tables/blob/master/src/bootstrap4-card-tables.scss
+  > .table {
+    border-right: 0;
+    border-left: 0;
+    margin-bottom: 0;
+
+    &:last-child {
+      border-bottom: 0;
+    }
+
+    &:not(.table-sm) th,
+    &:not(.table-sm) td {
+      padding: 0.75rem 1.25rem;
+    }
+
+    td:first-child,
+    th:first-child {
+      border-left: 0;
+    }
+
+    td:last-child,
+    th:last-child {
+      border-right: 0;
+    }
+
+    tr:first-child td,
+    tr:first-child th {
+      border-top: 0;
+    }
+
+    tr:last-child td {
+      border-bottom: 0;
+    }
+  }
+
+  .card-header + .table {
+    border-top: 0;
+  }
+}
+
+// remove botton margin from last item in the card
+.card-data:last-of-type {
+  margin-bottom: 0;
+}
+
+.card-title {
+  font-size: utilities.rem(0.8);
+  color: color-functions.on-color-emphasis(body);
+}
+
+.contact-card-title {
+  font-size: 1.1rem;
+  font-weight: bold;
+}
+
+.card-title-icon {
+  float: right;
+  color: color-functions.color(active);
+}
+
+/* **** */
+
+/* TWITTER */
+// twitter container in the home page
+.attack-box {
+  width: utilities.to-rem(352);
+  max-width: 100%;
+  height: utilities.to-rem(432);
+  margin: 0 auto;
+  border: 3px solid #dfdfdf;
+  padding: 3px;
+  display: flex;
+  flex-direction: column;
+
+  iframe {
+    border: 1px solid color-functions.border-color(body) !important;
+    border-radius: 0.25rem;
+  }
+}
+
+/* **** */
+
+/* BREADCRUMBS */
+.breadcrumb {
+  font-size: 90%;
+  background-color: color-functions.color(body);
+  max-width: 1140px;
+  padding: 0 15px;
+
+  .breadcrumb-item + .breadcrumb-item::before {
+    content: ">";
+    color: color-functions.on-color-deemphasis(body);
+  }
+}
+
+/* **** */
+
+.nestedlist {
+  counter-reset: item;
+}
+
+.nestedlist-item {
+  display: block;
+}
+
+.nestedlist-item::before {
+  content: counters(item, ".") ". ";
+  counter-increment: item;
+}
+
+.danger-card {
+  .card-header {
+    background: color-functions.color(primary);
+    color: color-functions.on-color(primary);
+  }
+
+  border-color: color-functions.color(primary);
+}
+
+/* **** */
+
+/* ATT&CKCON */
+// collapsible expansion panels - light
+.bg-accord-light {
+  color: color-functions.on-color(body);
+  background-color: color-functions.color-alternate(body);
+}
+
+// collapsible expansion panels - dark
+.bg-accord-dark {
+  color: color-functions.on-color(body);
+  background-color: color-functions.color-alternate(body, 3);
+}
+
+/* **** */
+
+/* CONTRIBUTE */
+.contribution-headers {
+  @include utilities.font("Roboto-Regular");
+}
+
+.usa-card-group {
+  display: flex;
+  flex-direction: row;
+}
+
+.usa-card__header {
+  @include utilities.font("Roboto-Regular");
+
+  color: color-functions.color(body);
+  background: color-functions.color(secondary);
+  border-bottom-color: color-functions.border-color(body);
+  border-radius: 0.3rem 0.3rem 0 0;
+}
+
+/* CONTRIBUTE Examples */
+.new-examples {
+  padding: utilities.to-rem(10) utilities.to-rem(10) 0 utilities.to-rem(10);
+  width: 100%;
+
+  &.second-example {
+    margin-top: utilities.to-rem(10);
+    margin-bottom: utilities.to-rem(20);
+  }
+
+  .example-container {
+    padding: utilities.to-rem(15);
+
+    .examples-div {
+      display: flex;
+
+      .margin-contribute-a {
+        margin-left: utilities.to-rem(25);
+      }
+
+      .margin-contribute-b {
+        margin-left: utilities.to-rem(183);
+      }
+    }
+
+    .examples-p {
+      margin-left: utilities.to-rem(5);
+      margin-bottom: utilities.to-rem(10);
+      word-break: break-word;
+    }
+
+    .nested-examples-div {
+      padding-left: utilities.to-rem(50);
+    }
+
+    .example-fields {
+      @include utilities.font("Roboto-Bold");
+
+      + ul {
+        padding-left: utilities.to-rem(100);
+      }
+    }
+  }
+}
+
+/* **** */
+
+/* CONTRIBUTORS */
+.scrollable-box {
+  width: 100%;
+  height: 500px;
+  overflow: auto;
+
+  // border: 1px solid black; /* just to show the box */
+  padding: utilities.to-rem(15);
+  background-color: color-functions.color-alternate(body);
+  border-radius: utilities.to-rem(3);
+}
+
+/* **** */
+
+img.yt-core-image {
+  width: 100%;
+}
+
+.iframe-width {
+  width: 500px;
+  height: 275px;
+}
+
+@media screen and (width <= 47.9875rem) {
+  .iframe-width {
+    width: 100%;
+    height: 140px;
+  }
+}
+
+/* No transition */
+.notransition::after {
+  transition: none !important;
+}
+
+/* FAQ */
+.faq {
+  .faq-section {
+    padding-bottom: 2rem;
+  }
+
+  .faq-question {
+    padding: 6px 0;
+  }
+
+  .relevant-links {
+    margin-bottom: 1rem;
+    border-radius: 3px;
+
+    .faq-link ~ .faq-link::before {
+      content: ", ";
+    }
+  }
+}
+
+/* **** */
+
+@mixin collapsible($direction) {
+  display: flex;
+  flex-direction: row;
+
+  :first-child {
+    cursor: pointer;
+    display: inline-block;
+    flex-grow: 1;
+  }
+
+  &:#{$direction},
+  &::#{$direction} {
+    content: "";
+    cursor: pointer;
+    width: utilities.to-rem(24);
+    height: utilities.to-rem(24);
+    background-repeat: no-repeat;
+    display: inline-block;
+    vertical-align: top;
+    background-position: center;
+    background-image: url("data:image/svg+xml;charset=utf8,%3Csvg fill='#{color-functions.escape-color(color-functions.on-color(body))}' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z'/%3E%3Cpath d='M0 0h24v24H0z' fill='none'/%3E%3C/svg%3E");
+    z-index: 1;
+    transition: all 0.2s ease;
+  }
+
+  @if $direction == "before" {
+    &.collapsed:#{$direction},
+    &.collapsed::#{$direction} {
+      transform: rotate(-90deg);
+    }
+  } @else {
+    &:not(.collapsed):#{$direction},
+    &:not(.collapsed)::#{$direction} {
+      transform: rotate(-180deg);
+    }
+  }
+}
+
+.attackcon-columns {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+@media screen and (width <= 47.9875rem) {
+  .attackcon-columns {
+    flex-direction: column;
+  }
+}
+
+/* Ensure the sponsors block is below and not affected by the top image */
+
+/* Card Blocks */
+// container of groups of cards
+.card-block {
+  // style of card headers in collapsable cards in Getting Started and FAQ
+  .card-header {
+    h5 {
+      @include utilities.font("Roboto-Regular");
+    }
+
+    @include collapsible("after");
+  }
+
+  // style of card titles in Related Projects
+  .card-title {
+    display: inline-block;
+    flex-grow: 1;
+
+    @include utilities.font("Roboto-Regular");
+  }
+}
+
+/* **** */
+
+/* GENERAL INFORMATION */
+.general-info {
+  // cards with image in General Information page
+  .card-img-top {
+    width: 100%;
+    height: 15vw;
+    object-fit: cover;
+  }
+
+  .graphics .card-header {
+    flex-grow: 1;
+  }
+
+  // show entire timeline
+  .showmore-btn {
+    display: block !important;
+    text-align: center;
+
+    &.show {
+      display: none !important;
+    }
+  }
+}
+
+/* **** */
+
+/* GETTING STARTED */
+// move video to an item in the getting started list when in mobile or tablet view
+.getting-started {
+  ul:not(.col) {
+    padding: 0 utilities.to-rem(15);
+    margin-left: utilities.to-rem(15);
+  }
+
+  .getting-started-content {
+    width: 75%;
+  }
+
+  @media screen and (width <= 90.62rem) {
+    .getting-started-content {
+      width: 100%;
+    }
+  }
+
+  .getting-started-icon {
+    color: color-functions.color(primary);
+  }
+
+  .video-li {
+    /* don't display the video in the list itself except in mobile layout */
+    display: none;
+  }
+
+  @media screen and (width <= 47.9875rem) {
+    .row ul.col {
+      margin-left: utilities.to-rem(30);
+    }
+
+    .video-col {
+      display: none;
+    }
+
+    .video-li {
+      display: list-item;
+    }
+  }
+}
+
+.jump-to-section {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 14rem;
+  word-wrap: normal;
+  border-radius: 0.75em;
+}
+
+/* **** */
+
+/* Timeline in GENERAL INFORMATION */
+// base style of timeline
+@mixin timeline($bg, $w, $h, $z) {
+  background: $bg;
+  position: absolute;
+  width: $w;
+  height: $h;
+  z-index: $z;
+  content: "";
+}
+
+.timeline {
+  $timeline-size: 20px;
+  $timeline-padding: 10px;
+  $timeline-hidden-height: 300px;
+
+  overflow-y: hidden;
+  position: relative;
+  list-style-type: none;
+  padding-left: 0;
+
+  // left line
+  &::before {
+    @include timeline(color-functions.on-color-deemphasis(body), utilities.to-rem(1), 100%, 2);
+
+    left: (0.5 * $timeline-size) + $timeline-padding;
+  }
+
+  &.collapse {
+    display: block !important;
+  }
+
+  // hidden section of the timeline
+  &:not(.show) {
+    height: $timeline-hidden-height;
+
+    // creating the 'faded' effect at the of the timeline when a section of the timelien is hidden
+    &::after {
+      @include timeline(linear-gradient(to bottom, transparent, color-functions.color(body)), 100%, math.div($timeline-hidden-height, 4), 4);
+
+      bottom: 0;
+      pointer-events: none; // allow the user to click-through the overlay
+    }
+  }
+
+  // milestones in timeline
+  .timeline-card {
+    margin: $timeline-size 0;
+    padding-left: $timeline-size + (2 * $timeline-padding);
+
+    // roundel on the line indicating a milestone
+    &::before {
+      @include timeline(color-functions.color(body), $timeline-size, $timeline-size, 3);
+
+      display: inline-block;
+      border-radius: 50%;
+      border: utilities.to-rem(2) solid color-functions.on-color-deemphasis(body);
+      left: $timeline-padding;
+    }
+
+    // title style of the milestone
+    .timeline-card-header {
+      width: 100%;
+      display: flex;
+      flex-direction: row;
+      clear: both;
+
+      .title {
+        display: inline-block;
+        flex-grow: 1;
+        font-size: utilities.rem(0.95);
+      }
+
+      .date {
+        display: inline-block;
+        font-size: utilities.rem(0.95);
+        text-align: right;
+        white-space: nowrap;
+        padding-left: utilities.to-rem(10);
+      }
+    }
+
+    // content of each milestone
+    .timeline-card-body {
+      padding-top: utilities.to-rem(5);
+    }
+  }
+}
+
+/* **** */
+
+/* Description formatting in TACTICS, TECHNIQUES, MITIGATIONS, GROUPS, and SOFTWARE */
+.description-body {
+  line-height: utilities.rem(1.5);
+}
+
+.description-body.in-table {
+  padding: 0.75rem 1.25rem;
+
+  p {
+    margin-bottom: 0;
+  }
+}
+
+.description-body.card-description {
+  padding: 0.3rem 0 0 0;
+
+  p {
+    margin-bottom: 0;
+  }
+}
+
+/* **** */
+
+/* External link icon */
+.external-icon {
+  width: utilities.to-rem(15);
+  margin-top: utilities.to-rem(-5);
+}
+
+/* **** */
+
+/* ATTA&K Logo */
+// attack logo in the home page
+.attack-logo-bold {
+  width: 60%;
+}
+
+// attack logo - menu
+.attack-logo {
+  // vertically center
+  margin: 8px 0;
+  display: block;
+  height: 24px;
+}
+
+/* **** */
+
+/* anchor tag to bypass navbar */
+.anchor {
+  display: block;
+  position: relative;
+  top: utilities.to-rem(-66);
+  visibility: hidden;
+}
+
+.section-view {
+  .anchor-section {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 4.125rem;
+    background: color-functions.color(body);
+    z-index: 100;
+    margin-bottom: 0;
+  }
+
+  p {
+    margin-bottom: 0;
+    padding-bottom: 0.5rem;
+  }
+
+  // don't show in mobile view
+  .section-mobile-view {
+    display: none;
+  }
+
+  // show in desktop view
+  .section-desktop-view {
+    display: block;
+  }
+
+  // collapsed view for phones and small tablets
+  @media screen and (width <= 74.938rem) {
+    // show collapsed side navigation (mobile view)
+    .section-mobile-view {
+      display: block;
+    }
+
+    // don't show side navigation in desktop view
+    .section-desktop-view {
+      display: none;
+    }
+  }
+
+  .section-shadow {
+    border-bottom: 1px solid #dfdfdf !important;
+  }
+
+  table {
+    margin-top: -1px;
+  }
+}
+
+/* **** */
+
+// how to display the sidebar
+div#sidebars {
+  display: contents;
+}
+
+/* Plus/Minus expand icons */
+// used in the expandable list items in the side navigation and in the expandable gray blocks in ATT&CKCON
+.expand-icon {
+  font-size: 5%;
+  color: color-functions.on-color(body);
+  margin-top: utilities.to-rem(7);
+}
+
+/* **** */
+
+/* attackcon page */
+.attackcons {
+  border-top-width: 0;
+
+  .sponsors {
+    flex: 1;
+    padding-left: 25px;
+  }
+
+  .p-description {
+    width: 90%;
+  }
+
+  .sponsors-block {
+    background: color-functions.on-color(active);
+    text-align: center;
+    display: flex;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+    flex-direction: column;
+    width: 200%;
+
+    .img-container {
+      margin: 10px;
+      flex: 1 1 20%;
+      box-sizing: border-box;
+
+      img {
+        width: 100%;
+        margin: auto;
+        height: auto;
+      }
+    }
+  }
+
+  @media screen and (width <= 47.9875rem) {
+    .sponsors-block {
+      width: 100%;
+      flex-direction: row;
+    }
+  }
+}
+
+.support-box {
+  background-color: color-functions.color-alternate(body, 2);
+  padding: 1.5em;
+  border-radius: 0.75em;
+  width: fit-content;
+}
+
+.sponsor-list {
+  gap: 1.5em;
+}
+
+.sponsor-square {
+  padding: 0 !important;
+  height: 150px;
+  display: flex;
+
+  a {
+    display: contents;
+  }
+
+  img.sponsor-logo {
+    background-color: color-functions.color(body);
+    border-radius: 6px;
+    object-fit: contain;
+    object-position: center;
+  }
+}
+
+/* **** */
+
+/* training pages */
+.training {
+  .exercise {
+    background: color-functions.color-alternate(body);
+  }
+}
+
+.card-training {
+  margin-bottom: 30px;
+  width: 100%;
+}
+
+.training-card-body {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: left;
+}
+
+.training-text-container {
+  flex: 1;
+  margin-right: 20px;
+}
+
+.training-header {
+  display: flex;
+  justify-content: space-between;
+}
+
+.resources-container {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  gap: 10px;
+}
+
+.resource {
+  flex: 1;
+  background-color: color-functions.on-color(active);
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+.resource-links {
+  list-style-type: none;
+  margin-top: 5px;
+  padding: 0 !important;
+  margin-left: 0 !important;
+}
+
+.resource-links li {
+  margin-bottom: 5px;
+}
+
+.resource-links a {
+  text-decoration: underline;
+}
+
+/* **** */
+
+// Decorative panels used for working-with-attack page
+
+.decorative-panels {
+  .decorative-panel {
+    // display: block;
+    .decorative-panel-header,
+    .decorative-panel-body {
+      padding: 10px;
+    }
+
+    .decorative-panel-header {
+      h3,
+      h4,
+      .btn {
+        margin-bottom: 16px;
+      }
+    }
+
+    .decorative-panel-body.show {
+      border-top: 1px solid color-functions.border-color(body);
+    }
+
+    & + .decorative-panel {
+      margin-top: 25px;
+    }
+
+    &:nth-of-type(even) {
+      border-radius: 8px;
+      background: color-functions.color-alternate(body);
+    }
+  }
+
+  @media screen and (width <= 47.9875rem) {
+    .row {
+      display: block;
+
+      &.collapse:not(.show) {
+        display: none;
+      }
+    }
+  }
+}
+
+.working-with-attack {
+  .g-24 {
+    gap: 24px;
+  }
+
+  .g-12 {
+    gap: 12px;
+  }
+
+  .row.panels {
+    margin: 0;
+  }
+
+  img {
+    border-radius: 0.75em;
+  }
+
+  img.scale {
+    object-fit: cover;
+    object-position: left top;
+    border-radius: unset !important;
+    border: 1px solid color-functions.border-color(body);
+  }
+
+  .panel {
+    padding: 0;
+    border: 1px solid color-functions.border-color(body);
+    border-radius: 0.75em;
+    max-width: 100%;
+  }
+
+  img + .panel-body {
+    border-top: 1px solid color-functions.border-color(body);
+  }
+
+  .panel-body {
+    p {
+      margin: 24px 0;
+      overflow: scroll;
+    }
+
+    &.fixed-height {
+      height: 30vh;
+    }
+  }
+
+  ul {
+    margin-bottom: 0;
+  }
+
+  @media screen and (width <= 61.938rem) {
+    .panel-body {
+      &.fixed-height {
+        min-height: 40vh;
+        max-height: fit-content;
+      }
+    }
+  }
+
+  .table-of-contents {
+    position: static;
+    float: none;
+    width: 25%;
+  }
+}
+
+.tip-box {
+  background: color-functions.on-color(active);
+  padding: 1rem;
+}
+
+/* Card Blocks */
+// container of groups of cards
+.expand-panel {
+  .card-block {
+    // style of card headers in collapsable cards in Getting Started and FAQ
+    .card-header {
+      h5 {
+        @include utilities.font("Roboto-Regular");
+      }
+
+      @include collapsible("after");
+
+      &:not(:last-child) {
+        border-bottom: none;
+      }
+    }
+
+    // style of card titles in Related Projects
+    .card-title {
+      display: inline-block;
+      flex-grow: 1;
+
+      @include utilities.font("Roboto-Regular");
+    }
+
+    .first-card {
+      border-bottom: none;
+      border-radius: 0.25rem 0.25rem 0 0;
+    }
+
+    .last-card {
+      border-radius: 0 0 0.25rem 0.25rem;
+    }
+
+    .middle-card {
+      border-bottom: none;
+      border-radius: 0;
+    }
+  }
+}
+
+/* **** */
+
+// Institutes page breaks when the user tries to print so that all the content gets printed out, not just the first page (if there is more than one page's
+// worth of content)
+@media print {
+  * {
+    overflow: visible !important;
+    break-before: always !important;
+    page-break-inside: avoid !important;
+  }
+}
