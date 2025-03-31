@@ -65,7 +65,7 @@ def generate_uuid_from_seeds(content_version, website_version):
 
 
 def generate_javascript_settings():
-    """Create JavaS</cript settings file that will be used to other JavaScript files."""
+    """Create JavaScript settings file that will be used to other JavaScript files."""
     logger.info("Generating JavaScript settings.js")
     javascript_settings_file = os.path.join(site_config.javascript_path, "settings.js")
 
@@ -257,7 +257,7 @@ def pelican_content():
 
 
 def remove_pelican_settings():
-    """Remove pelican settings"""
+    """Remove pelican settings."""
     logger.info("Removing additional Pelican settings")
     pelican_settings_f = os.path.join(site_config.data_directory, "pelican_settings.json")
     if os.path.isfile(pelican_settings_f):
@@ -265,7 +265,7 @@ def remove_pelican_settings():
 
 
 def remove_unwanted_output():
-    """Remove unwanted files from the output directory"""
+    """Remove unwanted files from the output directory."""
     logger.info("Removing unwanted files from the output directory")
     # Files to be deleted:
     # archives.html, authors.html, categories.html, tags.html,
@@ -304,9 +304,7 @@ def remove_unwanted_output():
 
 
 def generate_static_pages():
-    """Reads markdown files from the static pages directory and copies them into
-    the markdown directory
-    """
+    """Read markdown files from the static pages directory and copies them into the markdown directory."""
     logger.info("Generating static pages")
     # Verify if content/pages directory exists
     if not os.path.isdir(website_build_config.website_build_markdown_path):
