@@ -1,17 +1,15 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*- #
 from __future__ import unicode_literals
+
 import os
 
 # Need to update path with current directory in order to
-# read file with custom jinja filters 
+# read file with custom jinja filters
 import sys
+
 sys.path.append('.')
 import custom_jinja_filters
-
-# import plugins
-PLUGIN_PATHS = ['plugins']
-PLUGINS = ['assets']
 
 AUTHOR = os.environ.get('PELICAN_AUTHOR', 'MITRE')
 SITENAME = os.environ.get('PELICAN_SITENAME', 'ATT&CK')

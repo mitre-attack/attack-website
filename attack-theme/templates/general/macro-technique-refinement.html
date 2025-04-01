@@ -1,0 +1,1736 @@
+<!DOCTYPE html>
+<html lang="en" >
+<!--
+The MIT License (MIT)
+
+Copyright (c) 2025 Lauren Lusty (https://codepen.io/Lauren-Lusty/pen/OPJZrEJ)
+Fork of an original work Severance Lumon Macrodata Refinement 2.0 (https://codepen.io/cobra_winfrey/pen/ogvpYwv)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+-->
+<head>
+
+  {% include "general/google-analytics.html" %}
+  {% include "general/google-site-verification.html" %}
+
+  <meta charset="UTF-8">
+
+  <meta property="og:title" content="Macrotechnique Refinement" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://attack.mitre.org/macro-technique-refinement.html" />
+  <meta property="og:image" content="https://attack.mitre.org/theme/images/homepage/macro-technique-refinement.png" />
+  <meta property="og:description" content="Help us develop the next ATT&CK release through Macrotechnique Refinement. To start refining FUZZYSNUGGLYDUCK, click here! Fabulous prizes await success." />
+  <meta property="og:site_name" content="ATT&CK" />
+  <meta property="og:locale" content="en_US" />
+
+  <title>Macrotechnique Refinement</title>
+  <link rel="stylesheet" href="https://public.codepenassets.com/css/normalize-5.0.0.min.css">
+
+  <style>
+    @import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans&display=swap");
+    html {
+      cursor: none;
+    }
+
+    body {
+      display: grid;
+      place-items: center;
+      height: 100vh;
+      font-family: "Plus Jakarta Sans";
+      --bg: #00203a;
+      --g: #24e4f2;
+      background: var(--bg);
+      overflow: hidden;
+      --distance: 600;
+      transition: 2s ease-in-out 3s;
+      filter: brightness(0) blur(2px);
+      color: var(--g);
+      cursor: none;
+    }
+    body:active #cursor:before {
+      background: var(--g);
+      transition: 0s;
+    }
+    body .inner.new {
+      animation: fadeIn 0.5s ease-in-out 1 forwards 0.5s;
+      opacity: 0;
+    }
+    @keyframes fadeIn {
+      to {
+        opacity: 1;
+      }
+    }
+    body .inner:before {
+      content: attr(data-number);
+      transition: font-size 0.5s ease-in-out;
+      transform: translate(-50%, -50%) scale(clamp(0.45, calc(1 + ((70 - var(--distance)) / 175)), 2)) translateZ(0px);
+    }
+    body #cursor {
+      pointer-events: none;
+      opacity: 0;
+      width: 3vmin;
+      height: 3vmin;
+      position: absolute;
+      filter: drop-shadow(0 1px 0 var(--g)) drop-shadow(0 -1px 0 var(--g)) drop-shadow(1px 0 0 var(--g)) drop-shadow(-1px 0 0 var(--g)) blur(0.5px);
+      transition: opacity 0.2s ease-in-out, transform 0.3s ease-in-out 1.5s;
+      transform: scale(0);
+      z-index: 10;
+    }
+    body #cursor:before {
+      content: "";
+      transition: 0.3s ease-in-out 0.2s;
+      position: absolute;
+      background: var(--bg);
+      clip-path: polygon(1% 0%, 35% 100%, 53% 58%, 100% 48%);
+      width: 100%;
+      height: 100%;
+    }
+    body.loaded {
+      transition: 2s ease-in-out 0s;
+      filter: brightness(1);
+    }
+    body.loaded #cursor {
+      transform: scale(1);
+    }
+    body.loaded:hover #cursor {
+      opacity: 1;
+    }
+    body.loaded #header #inner {
+      transition: 0.75s ease-in-out 3s;
+      transform: translate(0, calc(-50% - 0vmin)) scaleX(1);
+    }
+    body.loaded #header #inner:before {
+      transform: translateY(-0.15vmin);
+      opacity: 0.75;
+      transition: 1s ease-in-out 3.75s;
+    }
+    body.loaded #lower:after {
+      opacity: 1;
+      transition: 0.75s ease-in-out 3s;
+    }
+    body.loaded #lower .box {
+      transform: translateY(0);
+    }
+    body.loaded #lower .box:nth-of-type(1):before {
+      opacity: 1;
+    }
+    body.loaded #lower .box:nth-of-type(2):before {
+      opacity: 1;
+    }
+    body.loaded #lower .box:nth-of-type(3):before {
+      opacity: 1;
+    }
+    body.loaded #lower .box:nth-of-type(4):before {
+      opacity: 1;
+    }
+    body.loaded #lower .box:nth-of-type(5):before {
+      opacity: 1;
+    }
+    body.loaded #lower .box:nth-of-type(5):nth-of-type(n + 6):before {
+      clip-path: polygon(0 0, var(--total) 0%, var(--total) 100%, 0% 100%);
+    }
+    body.loaded #lower .box:nth-of-type(5):nth-of-type(n + 6).loaded:before {
+      transition-delay: 0s;
+    }
+    body.loaded #lower .box:nth-of-type(6):nth-of-type(n + 6):before {
+      clip-path: polygon(0 0, var(--total) 0%, var(--total) 100%, 0% 100%);
+    }
+    body.loaded #lower .box:nth-of-type(6):nth-of-type(n + 6).loaded:before {
+      transition-delay: 0s;
+    }
+    body.loaded #lower .box:nth-of-type(7):nth-of-type(n + 6):before {
+      clip-path: polygon(0 0, var(--total) 0%, var(--total) 100%, 0% 100%);
+    }
+    body.loaded #lower .box:nth-of-type(7):nth-of-type(n + 6).loaded:before {
+      transition-delay: 0s;
+    }
+    body.loaded #lower .box:nth-of-type(8):nth-of-type(n + 6):before {
+      clip-path: polygon(0 0, var(--total) 0%, var(--total) 100%, 0% 100%);
+    }
+    body.loaded #lower .box:nth-of-type(8):nth-of-type(n + 6).loaded:before {
+      transition-delay: 0s;
+    }
+    body.loaded #lower .box:nth-of-type(9):nth-of-type(n + 6):before {
+      clip-path: polygon(0 0, var(--total) 0%, var(--total) 100%, 0% 100%);
+    }
+    body.loaded #lower .box:nth-of-type(9):nth-of-type(n + 6).loaded:before {
+      transition-delay: 0s;
+    }
+    body.loaded #lower .box:nth-of-type(10):nth-of-type(n + 6):before {
+      clip-path: polygon(0 0, var(--total) 0%, var(--total) 100%, 0% 100%);
+    }
+    body.loaded #lower .box:nth-of-type(10):nth-of-type(n + 6).loaded:before {
+      transition-delay: 0s;
+    }
+    body.loaded img {
+      opacity: 1;
+      filter: blur(0px);
+    }
+    body.loaded #wrap:before {
+      height: calc(100% + 5vmin);
+      opacity: 1;
+    }
+    body.loaded #wrap .num {
+      opacity: 1;
+    }
+    body:before, body:after {
+      content: "";
+      position: absolute;
+      width: 112.5%;
+      height: 112.5%;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%) translateZ(0px);
+      z-index: 12;
+      background: linear-gradient(rgba(0, 32, 58, 0.4) 50%, rgba(0, 0, 0, 0.05) 50%), linear-gradient(90deg, rgba(0, 0, 0, 0.01), rgba(255, 255, 255, 0.02), rgba(0, 0, 0, 0.06));
+      z-index: 12;
+      background-size: 100% 2px, 3px 100%;
+      pointer-events: none;
+      border-radius: 10vmin;
+      animation: flicker 3s ease-in-out infinite alternate;
+    }
+    @keyframes flicker {
+      22% {
+        opacity: 1;
+      }
+      25% {
+        opacity: 0.75;
+      }
+      37% {
+        opacity: 1;
+      }
+    }
+    body:after {
+      animation: none;
+      box-shadow: inset 0 0 50vmin 5vmin #000, 0 0 0 50vmin #000;
+      opacity: 0.5;
+      width: 100%;
+      height: 100%;
+    }
+    body #header {
+      position: absolute;
+      width: 100vmin;
+      top: calc(50% - 50.75vmin);
+      display: flex;
+      justify-content: flex-end;
+    }
+    body #header #inner {
+      overflow: hidden;
+      height: 5.5vmin;
+      top: calc(50% - 0.15vmin);
+      transform: translate(0, calc(-50% - 0vmin)) scaleX(0);
+      transform-origin: right;
+      transition: 0.75s ease-in-out 0s;
+      z-index: 6;
+      position: absolute;
+      width: calc(100% - 17.25vmin);
+      border: 0.15vmin solid var(--g);
+      left: 1.5vmin;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      box-sizing: border-box;
+      border-color: var(--g) transparent var(--g) var(--g);
+    }
+    body #header #inner:before {
+      opacity: 0;
+      content: attr(data-completion);
+      font-size: 2.75vmin;
+      color: var(--bg);
+      text-shadow: 0 0.2vmin var(--g), 0.2vmin 0 var(--g), -0.2vmin 0 var(--g), 0 -0.2vmin var(--g);
+      font-weight: 900;
+      padding-right: 5vmin;
+      line-height: 1;
+      transform: translateY(20vmin);
+      transition: 0.6s ease-in-out;
+    }
+    body img {
+      height: 12.5vmin;
+      width: auto;
+      margin-right: -2.5vmin;
+      transition: 1s ease-in-out 2.25s;
+      opacity: 0;
+      filter: blur(20px);
+    }
+    body #lower {
+      position: absolute;
+      width: 100vmin;
+      height: 15vmin;
+      top: calc(50% + 33.5vmin);
+      left: 50%;
+      transform: translate(-50%, 0);
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      grid-template-rows: repeat(2, 1fr);
+      grid-column-gap: 3vmin;
+      grid-row-gap: 1vmin;
+      padding: 2vmin 2vmin 4vmin;
+      box-sizing: border-box;
+    }
+    body #lower:after {
+      content: "Macrotechnique Refinement";
+      position: absolute;
+      width: 100vw;
+      left: 50%;
+      transform: translateX(-50%);
+      text-align: center;
+      bottom: -1vmin;
+      font-size: 2vmin;
+      border-top: 0.25vmin solid var(--g);
+      padding-top: 0.5vmin;
+      opacity: 0;
+      transition: 0.75s ease-in-out 0s;
+    }
+    body #lower .box {
+      position: relative;
+      transition: transform 1s ease-in-out, background-position 3s ease-in-out;
+      transform: translateY(50vh);
+    }
+    body #lower .box.open .hatch:before, body #lower .box.open .hatch:after {
+      transition-delay: 0s;
+    }
+    body #lower .box.open .hatch:before {
+      transform: rotate(-135deg);
+    }
+    body #lower .box.open .hatch:after {
+      transform: rotate(135deg);
+    }
+    body #lower .box .hatch {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+    }
+    body #lower .box .hatch:before, body #lower .box .hatch:after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0.25vmin;
+      width: calc(50% - 0.25vmin);
+      height: 0.25vmin;
+      background: var(--g);
+      transform-origin: 0% 100%;
+      transition: transform 0.3s ease-in-out 0.5s;
+      box-shadow: 0 0.25vmin 0 var(--bg), 0 0.5vmin 0 var(--bg), 0 0.75vmin 0 var(--bg);
+    }
+    body #lower .box .hatch:after {
+      left: auto;
+      right: 0.25vmin;
+      transform-origin: 100% 100%;
+    }
+    body #lower .box:after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: var(--bg);
+      z-index: -1;
+      box-shadow: inset 0.25vmin 0 0 var(--g), inset -0.25vmin 0 0 var(--g), 0 0.25vmin 0 0 var(--g);
+    }
+    body #lower .box .inner {
+      position: absolute;
+      z-index: -2;
+      left: 50%;
+    }
+    body #lower .box .inner:before {
+      animation: fontShift 1s ease-in-out 1 forwards;
+      font-size: 7vmin;
+    }
+    @keyframes fontShift {
+      to {
+        font-size: 3vmin;
+      }
+    }
+    body #lower .box:nth-of-type(1) {
+      transition-delay: 2.05s, 3.05s;
+    }
+    body #lower .box:nth-of-type(1):before {
+      z-index: 9;
+      content: "01";
+      position: absolute;
+      font-size: 3vmin;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      opacity: 0;
+      transition: 1s ease-in-out;
+      transition-delay: 3.55s;
+    }
+    body #lower .box:nth-of-type(1):nth-of-type(n + 6) {
+      overflow: hidden;
+    }
+    body #lower .box:nth-of-type(1):nth-of-type(n + 6) .hatch {
+      display: none;
+    }
+    body #lower .box:nth-of-type(1):nth-of-type(n + 6):before, body #lower .box:nth-of-type(1):nth-of-type(n + 6):after {
+      box-shadow: inset 0 0 0 0.25vmin var(--g);
+      opacity: 1;
+      width: 100%;
+      height: 100%;
+      background: var(--g);
+      transform: none;
+      display: flex;
+      align-items: center;
+      padding: 0 1vmin;
+      box-sizing: border-box;
+      content: attr(data-percent) "%";
+      top: 0;
+      left: 0;
+      font-size: 2.5vmin;
+      color: var(--bg);
+      z-index: 9;
+    }
+    body #lower .box:nth-of-type(1):nth-of-type(n + 6):before {
+      clip-path: polygon(0 0, 0% 0%, 0% 100%, 0% 100%);
+    }
+    body #lower .box:nth-of-type(1):nth-of-type(n + 6):after {
+      background: var(--bg);
+      color: var(--g);
+      z-index: 8;
+    }
+    body #lower .box:nth-of-type(2) {
+      transition-delay: 2.1s, 3.1s;
+    }
+    body #lower .box:nth-of-type(2):before {
+      z-index: 9;
+      content: "02";
+      position: absolute;
+      font-size: 3vmin;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      opacity: 0;
+      transition: 1s ease-in-out;
+      transition-delay: 3.6s;
+    }
+    body #lower .box:nth-of-type(2):nth-of-type(n + 6) {
+      overflow: hidden;
+    }
+    body #lower .box:nth-of-type(2):nth-of-type(n + 6) .hatch {
+      display: none;
+    }
+    body #lower .box:nth-of-type(2):nth-of-type(n + 6):before, body #lower .box:nth-of-type(2):nth-of-type(n + 6):after {
+      box-shadow: inset 0 0 0 0.25vmin var(--g);
+      opacity: 1;
+      width: 100%;
+      height: 100%;
+      background: var(--g);
+      transform: none;
+      display: flex;
+      align-items: center;
+      padding: 0 1vmin;
+      box-sizing: border-box;
+      content: attr(data-percent) "%";
+      top: 0;
+      left: 0;
+      font-size: 2.5vmin;
+      color: var(--bg);
+      z-index: 9;
+    }
+    body #lower .box:nth-of-type(2):nth-of-type(n + 6):before {
+      clip-path: polygon(0 0, 0% 0%, 0% 100%, 0% 100%);
+    }
+    body #lower .box:nth-of-type(2):nth-of-type(n + 6):after {
+      background: var(--bg);
+      color: var(--g);
+      z-index: 8;
+    }
+    body #lower .box:nth-of-type(3) {
+      transition-delay: 2.15s, 3.15s;
+    }
+    body #lower .box:nth-of-type(3):before {
+      z-index: 9;
+      content: "03";
+      position: absolute;
+      font-size: 3vmin;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      opacity: 0;
+      transition: 1s ease-in-out;
+      transition-delay: 3.65s;
+    }
+    body #lower .box:nth-of-type(3):nth-of-type(n + 6) {
+      overflow: hidden;
+    }
+    body #lower .box:nth-of-type(3):nth-of-type(n + 6) .hatch {
+      display: none;
+    }
+    body #lower .box:nth-of-type(3):nth-of-type(n + 6):before, body #lower .box:nth-of-type(3):nth-of-type(n + 6):after {
+      box-shadow: inset 0 0 0 0.25vmin var(--g);
+      opacity: 1;
+      width: 100%;
+      height: 100%;
+      background: var(--g);
+      transform: none;
+      display: flex;
+      align-items: center;
+      padding: 0 1vmin;
+      box-sizing: border-box;
+      content: attr(data-percent) "%";
+      top: 0;
+      left: 0;
+      font-size: 2.5vmin;
+      color: var(--bg);
+      z-index: 9;
+    }
+    body #lower .box:nth-of-type(3):nth-of-type(n + 6):before {
+      clip-path: polygon(0 0, 0% 0%, 0% 100%, 0% 100%);
+    }
+    body #lower .box:nth-of-type(3):nth-of-type(n + 6):after {
+      background: var(--bg);
+      color: var(--g);
+      z-index: 8;
+    }
+    body #lower .box:nth-of-type(4) {
+      transition-delay: 2.2s, 3.2s;
+    }
+    body #lower .box:nth-of-type(4):before {
+      z-index: 9;
+      content: "04";
+      position: absolute;
+      font-size: 3vmin;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      opacity: 0;
+      transition: 1s ease-in-out;
+      transition-delay: 3.7s;
+    }
+    body #lower .box:nth-of-type(4):nth-of-type(n + 6) {
+      overflow: hidden;
+    }
+    body #lower .box:nth-of-type(4):nth-of-type(n + 6) .hatch {
+      display: none;
+    }
+    body #lower .box:nth-of-type(4):nth-of-type(n + 6):before, body #lower .box:nth-of-type(4):nth-of-type(n + 6):after {
+      box-shadow: inset 0 0 0 0.25vmin var(--g);
+      opacity: 1;
+      width: 100%;
+      height: 100%;
+      background: var(--g);
+      transform: none;
+      display: flex;
+      align-items: center;
+      padding: 0 1vmin;
+      box-sizing: border-box;
+      content: attr(data-percent) "%";
+      top: 0;
+      left: 0;
+      font-size: 2.5vmin;
+      color: var(--bg);
+      z-index: 9;
+    }
+    body #lower .box:nth-of-type(4):nth-of-type(n + 6):before {
+      clip-path: polygon(0 0, 0% 0%, 0% 100%, 0% 100%);
+    }
+    body #lower .box:nth-of-type(4):nth-of-type(n + 6):after {
+      background: var(--bg);
+      color: var(--g);
+      z-index: 8;
+    }
+    body #lower .box:nth-of-type(5) {
+      transition-delay: 2.25s, 3.25s;
+    }
+    body #lower .box:nth-of-type(5):before {
+      z-index: 9;
+      content: "05";
+      position: absolute;
+      font-size: 3vmin;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      opacity: 0;
+      transition: 1s ease-in-out;
+      transition-delay: 3.75s;
+    }
+    body #lower .box:nth-of-type(5):nth-of-type(n + 6) {
+      overflow: hidden;
+    }
+    body #lower .box:nth-of-type(5):nth-of-type(n + 6) .hatch {
+      display: none;
+    }
+    body #lower .box:nth-of-type(5):nth-of-type(n + 6):before, body #lower .box:nth-of-type(5):nth-of-type(n + 6):after {
+      box-shadow: inset 0 0 0 0.25vmin var(--g);
+      opacity: 1;
+      width: 100%;
+      height: 100%;
+      background: var(--g);
+      transform: none;
+      display: flex;
+      align-items: center;
+      padding: 0 1vmin;
+      box-sizing: border-box;
+      content: attr(data-percent) "%";
+      top: 0;
+      left: 0;
+      font-size: 2.5vmin;
+      color: var(--bg);
+      z-index: 9;
+    }
+    body #lower .box:nth-of-type(5):nth-of-type(n + 6):before {
+      clip-path: polygon(0 0, 0% 0%, 0% 100%, 0% 100%);
+    }
+    body #lower .box:nth-of-type(5):nth-of-type(n + 6):after {
+      background: var(--bg);
+      color: var(--g);
+      z-index: 8;
+    }
+    body #lower .box:nth-of-type(6) {
+      transition-delay: 2.3s, 3.3s;
+    }
+    body #lower .box:nth-of-type(6):before {
+      z-index: 9;
+      content: "06";
+      position: absolute;
+      font-size: 3vmin;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      opacity: 0;
+      transition: 1s ease-in-out;
+      transition-delay: 3.8s;
+    }
+    body #lower .box:nth-of-type(6):nth-of-type(n + 6) {
+      overflow: hidden;
+    }
+    body #lower .box:nth-of-type(6):nth-of-type(n + 6) .hatch {
+      display: none;
+    }
+    body #lower .box:nth-of-type(6):nth-of-type(n + 6):before, body #lower .box:nth-of-type(6):nth-of-type(n + 6):after {
+      box-shadow: inset 0 0 0 0.25vmin var(--g);
+      opacity: 1;
+      width: 100%;
+      height: 100%;
+      background: var(--g);
+      transform: none;
+      display: flex;
+      align-items: center;
+      padding: 0 1vmin;
+      box-sizing: border-box;
+      content: attr(data-percent) "%";
+      top: 0;
+      left: 0;
+      font-size: 2.5vmin;
+      color: var(--bg);
+      z-index: 9;
+    }
+    body #lower .box:nth-of-type(6):nth-of-type(n + 6):before {
+      clip-path: polygon(0 0, 0% 0%, 0% 100%, 0% 100%);
+    }
+    body #lower .box:nth-of-type(6):nth-of-type(n + 6):after {
+      background: var(--bg);
+      color: var(--g);
+      z-index: 8;
+    }
+    body #lower .box:nth-of-type(7) {
+      transition-delay: 2.35s, 3.35s;
+    }
+    body #lower .box:nth-of-type(7):before {
+      z-index: 9;
+      content: "07";
+      position: absolute;
+      font-size: 3vmin;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      opacity: 0;
+      transition: 1s ease-in-out;
+      transition-delay: 3.85s;
+    }
+    body #lower .box:nth-of-type(7):nth-of-type(n + 6) {
+      overflow: hidden;
+    }
+    body #lower .box:nth-of-type(7):nth-of-type(n + 6) .hatch {
+      display: none;
+    }
+    body #lower .box:nth-of-type(7):nth-of-type(n + 6):before, body #lower .box:nth-of-type(7):nth-of-type(n + 6):after {
+      box-shadow: inset 0 0 0 0.25vmin var(--g);
+      opacity: 1;
+      width: 100%;
+      height: 100%;
+      background: var(--g);
+      transform: none;
+      display: flex;
+      align-items: center;
+      padding: 0 1vmin;
+      box-sizing: border-box;
+      content: attr(data-percent) "%";
+      top: 0;
+      left: 0;
+      font-size: 2.5vmin;
+      color: var(--bg);
+      z-index: 9;
+    }
+    body #lower .box:nth-of-type(7):nth-of-type(n + 6):before {
+      clip-path: polygon(0 0, 0% 0%, 0% 100%, 0% 100%);
+    }
+    body #lower .box:nth-of-type(7):nth-of-type(n + 6):after {
+      background: var(--bg);
+      color: var(--g);
+      z-index: 8;
+    }
+    body #lower .box:nth-of-type(8) {
+      transition-delay: 2.4s, 3.4s;
+    }
+    body #lower .box:nth-of-type(8):before {
+      z-index: 9;
+      content: "08";
+      position: absolute;
+      font-size: 3vmin;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      opacity: 0;
+      transition: 1s ease-in-out;
+      transition-delay: 3.9s;
+    }
+    body #lower .box:nth-of-type(8):nth-of-type(n + 6) {
+      overflow: hidden;
+    }
+    body #lower .box:nth-of-type(8):nth-of-type(n + 6) .hatch {
+      display: none;
+    }
+    body #lower .box:nth-of-type(8):nth-of-type(n + 6):before, body #lower .box:nth-of-type(8):nth-of-type(n + 6):after {
+      box-shadow: inset 0 0 0 0.25vmin var(--g);
+      opacity: 1;
+      width: 100%;
+      height: 100%;
+      background: var(--g);
+      transform: none;
+      display: flex;
+      align-items: center;
+      padding: 0 1vmin;
+      box-sizing: border-box;
+      content: attr(data-percent) "%";
+      top: 0;
+      left: 0;
+      font-size: 2.5vmin;
+      color: var(--bg);
+      z-index: 9;
+    }
+    body #lower .box:nth-of-type(8):nth-of-type(n + 6):before {
+      clip-path: polygon(0 0, 0% 0%, 0% 100%, 0% 100%);
+    }
+    body #lower .box:nth-of-type(8):nth-of-type(n + 6):after {
+      background: var(--bg);
+      color: var(--g);
+      z-index: 8;
+    }
+    body #lower .box:nth-of-type(9) {
+      transition-delay: 2.45s, 3.45s;
+    }
+    body #lower .box:nth-of-type(9):before {
+      z-index: 9;
+      content: "09";
+      position: absolute;
+      font-size: 3vmin;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      opacity: 0;
+      transition: 1s ease-in-out;
+      transition-delay: 3.95s;
+    }
+    body #lower .box:nth-of-type(9):nth-of-type(n + 6) {
+      overflow: hidden;
+    }
+    body #lower .box:nth-of-type(9):nth-of-type(n + 6) .hatch {
+      display: none;
+    }
+    body #lower .box:nth-of-type(9):nth-of-type(n + 6):before, body #lower .box:nth-of-type(9):nth-of-type(n + 6):after {
+      box-shadow: inset 0 0 0 0.25vmin var(--g);
+      opacity: 1;
+      width: 100%;
+      height: 100%;
+      background: var(--g);
+      transform: none;
+      display: flex;
+      align-items: center;
+      padding: 0 1vmin;
+      box-sizing: border-box;
+      content: attr(data-percent) "%";
+      top: 0;
+      left: 0;
+      font-size: 2.5vmin;
+      color: var(--bg);
+      z-index: 9;
+    }
+    body #lower .box:nth-of-type(9):nth-of-type(n + 6):before {
+      clip-path: polygon(0 0, 0% 0%, 0% 100%, 0% 100%);
+    }
+    body #lower .box:nth-of-type(9):nth-of-type(n + 6):after {
+      background: var(--bg);
+      color: var(--g);
+      z-index: 8;
+    }
+    body #lower .box:nth-of-type(10) {
+      transition-delay: 2.5s, 3.5s;
+    }
+    body #lower .box:nth-of-type(10):before {
+      z-index: 9;
+      content: "010";
+      position: absolute;
+      font-size: 3vmin;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      opacity: 0;
+      transition: 1s ease-in-out;
+      transition-delay: 4s;
+    }
+    body #lower .box:nth-of-type(10):nth-of-type(n + 6) {
+      overflow: hidden;
+    }
+    body #lower .box:nth-of-type(10):nth-of-type(n + 6) .hatch {
+      display: none;
+    }
+    body #lower .box:nth-of-type(10):nth-of-type(n + 6):before, body #lower .box:nth-of-type(10):nth-of-type(n + 6):after {
+      box-shadow: inset 0 0 0 0.25vmin var(--g);
+      opacity: 1;
+      width: 100%;
+      height: 100%;
+      background: var(--g);
+      transform: none;
+      display: flex;
+      align-items: center;
+      padding: 0 1vmin;
+      box-sizing: border-box;
+      content: attr(data-percent) "%";
+      top: 0;
+      left: 0;
+      font-size: 2.5vmin;
+      color: var(--bg);
+      z-index: 9;
+    }
+    body #lower .box:nth-of-type(10):nth-of-type(n + 6):before {
+      clip-path: polygon(0 0, 0% 0%, 0% 100%, 0% 100%);
+    }
+    body #lower .box:nth-of-type(10):nth-of-type(n + 6):after {
+      background: var(--bg);
+      color: var(--g);
+      z-index: 8;
+    }
+    body #wrap {
+      width: 100vmin;
+      height: 65vmin;
+      display: grid;
+      grid-template-columns: repeat(6, auto);
+      grid-template-rows: repeat(6, auto);
+      grid-column-gap: 20px;
+      grid-row-gap: 15px;
+      position: relative;
+      transform: translateY(-2.5vmin);
+    }
+    body #wrap.noclick {
+      pointer-events: none;
+    }
+    body #wrap:before {
+      content: "";
+      position: absolute;
+      width: 100vw;
+      height: 1vmin;
+      top: 50%;
+      left: 50%;
+      opacity: 0.85;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+      box-shadow: 0 0.25vmin 0 var(--g), 0 1vmin 0 var(--bg), 0 1.125vmin 0 var(--g), 0 -0.25vmin 0 var(--g), 0 -1vmin 0 var(--bg), 0 -1.125vmin 0 var(--g);
+      z-index: 1;
+      opacity: 0;
+      transition: opacity 0.25s ease-in-out 1s, height 1s ease-in-out 1.25s;
+    }
+    body #wrap .num {
+      position: relative;
+      opacity: 0;
+      transition: opacity 0.5s ease-in-out 3s;
+      animation: float 2s ease-in-out infinite alternate;
+      --x: -0.25vmin;
+      --y: 0vmin;
+      transform: translate(calc(var(--x) * 1), calc(var(--y) * 1)) translateZ(0px);
+    }
+    @keyframes float {
+      to {
+        transform: translate(calc(var(--x) * -1), calc(var(--y) * -1)) translateZ(0px);
+      }
+    }
+    body #wrap .num:nth-of-type(1) {
+      animation-delay: -0.05s;
+      --x: 0.2vmin;
+    }
+    body #wrap .num:nth-of-type(1):nth-of-type(even) {
+      --x: 0vmin;
+      --y: 0.25vmin;
+    }
+    body #wrap .num:nth-of-type(2) {
+      animation-delay: -0.1s;
+      --x: 0.6vmin;
+    }
+    body #wrap .num:nth-of-type(2):nth-of-type(even) {
+      --x: 0vmin;
+      --y: 0.5vmin;
+    }
+    body #wrap .num:nth-of-type(3) {
+      animation-delay: -0.15s;
+      --x: 0.7vmin;
+    }
+    body #wrap .num:nth-of-type(3):nth-of-type(even) {
+      --x: 0vmin;
+      --y: 0.1vmin;
+    }
+    body #wrap .num:nth-of-type(4) {
+      animation-delay: -0.2s;
+      --x: 0.3vmin;
+    }
+    body #wrap .num:nth-of-type(4):nth-of-type(even) {
+      --x: 0vmin;
+      --y: 0.55vmin;
+    }
+    body #wrap .num:nth-of-type(5) {
+      animation-delay: -0.25s;
+      --x: 0.7vmin;
+    }
+    body #wrap .num:nth-of-type(5):nth-of-type(even) {
+      --x: 0vmin;
+      --y: 0.6vmin;
+    }
+    body #wrap .num:nth-of-type(6) {
+      animation-delay: -0.3s;
+      --x: 0.45vmin;
+    }
+    body #wrap .num:nth-of-type(6):nth-of-type(even) {
+      --x: 0vmin;
+      --y: 0.4vmin;
+    }
+    body #wrap .num:nth-of-type(7) {
+      animation-delay: -0.35s;
+      --x: 0.15vmin;
+    }
+    body #wrap .num:nth-of-type(7):nth-of-type(even) {
+      --x: 0vmin;
+      --y: 0.5vmin;
+    }
+    body #wrap .num:nth-of-type(8) {
+      animation-delay: -0.4s;
+      --x: 0.7vmin;
+    }
+    body #wrap .num:nth-of-type(8):nth-of-type(even) {
+      --x: 0vmin;
+      --y: 0.45vmin;
+    }
+    body #wrap .num:nth-of-type(9) {
+      animation-delay: -0.45s;
+      --x: 0.4vmin;
+    }
+    body #wrap .num:nth-of-type(9):nth-of-type(even) {
+      --x: 0vmin;
+      --y: 0.5vmin;
+    }
+    body #wrap .num:nth-of-type(10) {
+      animation-delay: -0.5s;
+      --x: 0.2vmin;
+    }
+    body #wrap .num:nth-of-type(10):nth-of-type(even) {
+      --x: 0vmin;
+      --y: 0.1vmin;
+    }
+    body #wrap .num:nth-of-type(11) {
+      animation-delay: -0.55s;
+      --x: 0.35vmin;
+    }
+    body #wrap .num:nth-of-type(11):nth-of-type(even) {
+      --x: 0vmin;
+      --y: 0.45vmin;
+    }
+    body #wrap .num:nth-of-type(12) {
+      animation-delay: -0.6s;
+      --x: 0vmin;
+    }
+    body #wrap .num:nth-of-type(12):nth-of-type(even) {
+      --x: 0vmin;
+      --y: 0.7vmin;
+    }
+    body #wrap .num:nth-of-type(13) {
+      animation-delay: -0.65s;
+      --x: 0vmin;
+    }
+    body #wrap .num:nth-of-type(13):nth-of-type(even) {
+      --x: 0vmin;
+      --y: 0.5vmin;
+    }
+    body #wrap .num:nth-of-type(14) {
+      animation-delay: -0.7s;
+      --x: 0.2vmin;
+    }
+    body #wrap .num:nth-of-type(14):nth-of-type(even) {
+      --x: 0vmin;
+      --y: 0vmin;
+    }
+    body #wrap .num:nth-of-type(15) {
+      animation-delay: -0.75s;
+      --x: 0.05vmin;
+    }
+    body #wrap .num:nth-of-type(15):nth-of-type(even) {
+      --x: 0vmin;
+      --y: 0.5vmin;
+    }
+    body #wrap .num:nth-of-type(16) {
+      animation-delay: -0.8s;
+      --x: 0.2vmin;
+    }
+    body #wrap .num:nth-of-type(16):nth-of-type(even) {
+      --x: 0vmin;
+      --y: 0.6vmin;
+    }
+    body #wrap .num:nth-of-type(17) {
+      animation-delay: -0.85s;
+      --x: 0.3vmin;
+    }
+    body #wrap .num:nth-of-type(17):nth-of-type(even) {
+      --x: 0vmin;
+      --y: 0.4vmin;
+    }
+    body #wrap .num:nth-of-type(18) {
+      animation-delay: -0.9s;
+      --x: 0.7vmin;
+    }
+    body #wrap .num:nth-of-type(18):nth-of-type(even) {
+      --x: 0vmin;
+      --y: 0.1vmin;
+    }
+    body #wrap .num:nth-of-type(19) {
+      animation-delay: -0.95s;
+      --x: 0.1vmin;
+    }
+    body #wrap .num:nth-of-type(19):nth-of-type(even) {
+      --x: 0vmin;
+      --y: 0.3vmin;
+    }
+    body #wrap .num:nth-of-type(20) {
+      animation-delay: -1s;
+      --x: 0.7vmin;
+    }
+    body #wrap .num:nth-of-type(20):nth-of-type(even) {
+      --x: 0vmin;
+      --y: 0vmin;
+    }
+    body #wrap .num:nth-of-type(21) {
+      animation-delay: -1.05s;
+      --x: 0.35vmin;
+    }
+    body #wrap .num:nth-of-type(21):nth-of-type(even) {
+      --x: 0vmin;
+      --y: 0.4vmin;
+    }
+    body #wrap .num:nth-of-type(22) {
+      animation-delay: -1.1s;
+      --x: 0.6vmin;
+    }
+    body #wrap .num:nth-of-type(22):nth-of-type(even) {
+      --x: 0vmin;
+      --y: 0.7vmin;
+    }
+    body #wrap .num:nth-of-type(23) {
+      animation-delay: -1.15s;
+      --x: 0.6vmin;
+    }
+    body #wrap .num:nth-of-type(23):nth-of-type(even) {
+      --x: 0vmin;
+      --y: 0.7vmin;
+    }
+    body #wrap .num:nth-of-type(24) {
+      animation-delay: -1.2s;
+      --x: 0.5vmin;
+    }
+    body #wrap .num:nth-of-type(24):nth-of-type(even) {
+      --x: 0vmin;
+      --y: 0.5vmin;
+    }
+    body #wrap .num:nth-of-type(25) {
+      animation-delay: -1.25s;
+      --x: 0.4vmin;
+    }
+    body #wrap .num:nth-of-type(25):nth-of-type(even) {
+      --x: 0vmin;
+      --y: 0.05vmin;
+    }
+    body #wrap .num:nth-of-type(26) {
+      animation-delay: -1.3s;
+      --x: 0.25vmin;
+    }
+    body #wrap .num:nth-of-type(26):nth-of-type(even) {
+      --x: 0vmin;
+      --y: 0.55vmin;
+    }
+    body #wrap .num:nth-of-type(27) {
+      animation-delay: -1.35s;
+      --x: 0.25vmin;
+    }
+    body #wrap .num:nth-of-type(27):nth-of-type(even) {
+      --x: 0vmin;
+      --y: 0.1vmin;
+    }
+    body #wrap .num:nth-of-type(28) {
+      animation-delay: -1.4s;
+      --x: 0.5vmin;
+    }
+    body #wrap .num:nth-of-type(28):nth-of-type(even) {
+      --x: 0vmin;
+      --y: 0.05vmin;
+    }
+    body #wrap .num:nth-of-type(29) {
+      animation-delay: -1.45s;
+      --x: 0.2vmin;
+    }
+    body #wrap .num:nth-of-type(29):nth-of-type(even) {
+      --x: 0vmin;
+      --y: 0.15vmin;
+    }
+    body #wrap .num:nth-of-type(30) {
+      animation-delay: -1.5s;
+      --x: 0.6vmin;
+    }
+    body #wrap .num:nth-of-type(30):nth-of-type(even) {
+      --x: 0vmin;
+      --y: 0.4vmin;
+    }
+    body #wrap .num:nth-of-type(31) {
+      animation-delay: -1.55s;
+      --x: 0.2vmin;
+    }
+    body #wrap .num:nth-of-type(31):nth-of-type(even) {
+      --x: 0vmin;
+      --y: 0.2vmin;
+    }
+    body #wrap .num:nth-of-type(32) {
+      animation-delay: -1.6s;
+      --x: 0.15vmin;
+    }
+    body #wrap .num:nth-of-type(32):nth-of-type(even) {
+      --x: 0vmin;
+      --y: 0.1vmin;
+    }
+    body #wrap .num:nth-of-type(33) {
+      animation-delay: -1.65s;
+      --x: 0.65vmin;
+    }
+    body #wrap .num:nth-of-type(33):nth-of-type(even) {
+      --x: 0vmin;
+      --y: 0vmin;
+    }
+    body #wrap .num:nth-of-type(34) {
+      animation-delay: -1.7s;
+      --x: 0.6vmin;
+    }
+    body #wrap .num:nth-of-type(34):nth-of-type(even) {
+      --x: 0vmin;
+      --y: 0.55vmin;
+    }
+    body #wrap .num:nth-of-type(35) {
+      animation-delay: -1.75s;
+      --x: 0.25vmin;
+    }
+    body #wrap .num:nth-of-type(35):nth-of-type(even) {
+      --x: 0vmin;
+      --y: 0.1vmin;
+    }
+    body #wrap .num:nth-of-type(36) {
+      animation-delay: -1.8s;
+      --x: 0.2vmin;
+    }
+    body #wrap .num:nth-of-type(36):nth-of-type(even) {
+      --x: 0vmin;
+      --y: 0.1vmin;
+    }
+    body #wrap .num:nth-of-type(37) {
+      animation-delay: -1.85s;
+      --x: 0.1vmin;
+    }
+    body #wrap .num:nth-of-type(37):nth-of-type(even) {
+      --x: 0vmin;
+      --y: 0.2vmin;
+    }
+    body #wrap .num:nth-of-type(38) {
+      animation-delay: -1.9s;
+      --x: 0.6vmin;
+    }
+    body #wrap .num:nth-of-type(38):nth-of-type(even) {
+      --x: 0vmin;
+      --y: 0.65vmin;
+    }
+    body #wrap .num:nth-of-type(39) {
+      animation-delay: -1.95s;
+      --x: 0.55vmin;
+    }
+    body #wrap .num:nth-of-type(39):nth-of-type(even) {
+      --x: 0vmin;
+      --y: 0.05vmin;
+    }
+    body #wrap .num:nth-of-type(40) {
+      animation-delay: -2s;
+      --x: 0vmin;
+    }
+    body #wrap .num:nth-of-type(40):nth-of-type(even) {
+      --x: 0vmin;
+      --y: 0.2vmin;
+    }
+    body #wrap .num:nth-of-type(41) {
+      animation-delay: -2.05s;
+      --x: 0.3vmin;
+    }
+    body #wrap .num:nth-of-type(41):nth-of-type(even) {
+      --x: 0vmin;
+      --y: 0.05vmin;
+    }
+    body #wrap .num:nth-of-type(42) {
+      animation-delay: -2.1s;
+      --x: 0.7vmin;
+    }
+    body #wrap .num:nth-of-type(42):nth-of-type(even) {
+      --x: 0vmin;
+      --y: 0.7vmin;
+    }
+    body #wrap .num:nth-of-type(43) {
+      animation-delay: -2.15s;
+      --x: 0.65vmin;
+    }
+    body #wrap .num:nth-of-type(43):nth-of-type(even) {
+      --x: 0vmin;
+      --y: 0.35vmin;
+    }
+    body #wrap .num:nth-of-type(44) {
+      animation-delay: -2.2s;
+      --x: 0.6vmin;
+    }
+    body #wrap .num:nth-of-type(44):nth-of-type(even) {
+      --x: 0vmin;
+      --y: 0.4vmin;
+    }
+    body #wrap .num:nth-of-type(45) {
+      animation-delay: -2.25s;
+      --x: 0.05vmin;
+    }
+    body #wrap .num:nth-of-type(45):nth-of-type(even) {
+      --x: 0vmin;
+      --y: 0.55vmin;
+    }
+    body #wrap .num:nth-of-type(46) {
+      animation-delay: -2.3s;
+      --x: 0.7vmin;
+    }
+    body #wrap .num:nth-of-type(46):nth-of-type(even) {
+      --x: 0vmin;
+      --y: 0.35vmin;
+    }
+    body #wrap .num:nth-of-type(47) {
+      animation-delay: -2.35s;
+      --x: 0.1vmin;
+    }
+    body #wrap .num:nth-of-type(47):nth-of-type(even) {
+      --x: 0vmin;
+      --y: 0.05vmin;
+    }
+    body #wrap .num:nth-of-type(48) {
+      animation-delay: -2.4s;
+      --x: 0.5vmin;
+    }
+    body #wrap .num:nth-of-type(48):nth-of-type(even) {
+      --x: 0vmin;
+      --y: 0.7vmin;
+    }
+    body #wrap .num:nth-of-type(49) {
+      animation-delay: -2.45s;
+      --x: 0.35vmin;
+    }
+    body #wrap .num:nth-of-type(49):nth-of-type(even) {
+      --x: 0vmin;
+      --y: 0.1vmin;
+    }
+    body #wrap .num:nth-of-type(50) {
+      animation-delay: -2.5s;
+      --x: 0.25vmin;
+    }
+    body #wrap .num:nth-of-type(50):nth-of-type(even) {
+      --x: 0vmin;
+      --y: 0.2vmin;
+    }
+    body #wrap .num:nth-of-type(51) {
+      animation-delay: -2.55s;
+      --x: 0.1vmin;
+    }
+    body #wrap .num:nth-of-type(51):nth-of-type(even) {
+      --x: 0vmin;
+      --y: 0.1vmin;
+    }
+    body #wrap .num:nth-of-type(52) {
+      animation-delay: -2.6s;
+      --x: 0.6vmin;
+    }
+    body #wrap .num:nth-of-type(52):nth-of-type(even) {
+      --x: 0vmin;
+      --y: 0.25vmin;
+    }
+    body #wrap .num:nth-of-type(53) {
+      animation-delay: -2.65s;
+      --x: 0.65vmin;
+    }
+    body #wrap .num:nth-of-type(53):nth-of-type(even) {
+      --x: 0vmin;
+      --y: 0.15vmin;
+    }
+    body #wrap .num:nth-of-type(54) {
+      animation-delay: -2.7s;
+      --x: 0.45vmin;
+    }
+    body #wrap .num:nth-of-type(54):nth-of-type(even) {
+      --x: 0vmin;
+      --y: 0.25vmin;
+    }
+    body #wrap .num:nth-of-type(55) {
+      animation-delay: -2.75s;
+      --x: 0.2vmin;
+    }
+    body #wrap .num:nth-of-type(55):nth-of-type(even) {
+      --x: 0vmin;
+      --y: 0.1vmin;
+    }
+    body #wrap .num:nth-of-type(56) {
+      animation-delay: -2.8s;
+      --x: 0.45vmin;
+    }
+    body #wrap .num:nth-of-type(56):nth-of-type(even) {
+      --x: 0vmin;
+      --y: 0.5vmin;
+    }
+    body #wrap .num .inner {
+      position: absolute;
+      width: 50%;
+      height: 75%;
+      top: 12.5%;
+      left: 25%;
+    }
+    body #wrap .num .inner:before {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      font-size: 7vmin;
+    }
+
+    body.waffleparty {
+      filter: brightness(1);
+      pointer-events: none;
+    }
+    body.waffleparty #waffleparty {
+      scale: 0.5;
+      --playstate: running;
+    }
+
+    #waffleparty {
+      pointer-events: none;
+      transition: scale 0.5s ease-in-out 5s;
+      scale: 0;
+      position: fixed;
+      width: 75vmin;
+      height: 75vmin;
+      z-index: 10;
+      --playstate: paused;
+    }
+    #waffleparty span {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      z-index: -1;
+      font-size: 15vmin;
+      color: transparent;
+      animation: bounceIn 0.5s ease-in-out 1 forwards;
+      transform-origin: 50% 60vmin;
+      transform: translate(-50%, calc(-50% - 50vmin)) rotate(calc((360deg / var(--length)) * var(--index) - 80deg));
+      animation: rotateText 20s linear infinite;
+      animation-play-state: var(--playstate);
+    }
+    #waffleparty span:before {
+      content: attr(data-char);
+      position: absolute;
+      color: var(--g);
+      display: inline-block;
+      animation: wiggle 0.5s ease-in-out infinite alternate calc(var(--index) * 0.05s);
+      animation-play-state: var(--playstate);
+    }
+    @keyframes wiggle {
+      from {
+        transform: translateY(-1.5vmin);
+      }
+      to {
+        transform: translateY(1.5vmin);
+      }
+    }
+    @keyframes rotateText {
+      to {
+        transform: translate(-50%, calc(-50% - 50vmin)) rotate(calc((360deg / var(--length)) * var(--index) - 440deg));
+      }
+    }
+    #waffleparty:before, #waffleparty:after {
+      content: "";
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      border-radius: 100%;
+      animation: spin 10s linear infinite;
+    }
+    @keyframes spin {
+      to {
+        rotate: 360deg;
+      }
+    }
+    #waffleparty:before {
+      background: linear-gradient(to right, transparent calc(50% - 3vmin), var(--g) calc(50% - 3vmin), var(--g) calc(50% + 3vmin), transparent calc(50% + 3vmin)), linear-gradient(to bottom, transparent calc(50% - 3vmin), var(--g) calc(50% - 3vmin), var(--g) calc(50% + 3vmin), transparent calc(50% + 3vmin)), repeating-linear-gradient(to right, transparent 3vmin, var(--g) 3vmin, var(--g) 6vmin, transparent 6vmin, transparent 12vmin) 1.5vmin 0, repeating-linear-gradient(to bottom, var(--bg) 3vmin, var(--g) 3vmin, var(--g) 6vmin, var(--bg) 6vmin, var(--bg) 12vmin) 0 1.5vmin;
+      box-shadow: inset 0 0 0 4vmin var(--g);
+    }
+    #waffleparty:after {
+      background: linear-gradient(to right, transparent calc(50% - 1.75vmin), var(--bg) calc(50% - 1.75vmin), var(--bg) calc(50% + 1.75vmin), transparent calc(50% + 1.75vmin)), linear-gradient(to bottom, transparent calc(50% - 1.75vmin), var(--bg) calc(50% - 1.75vmin), var(--bg) calc(50% + 1.75vmin), transparent calc(50% + 1.75vmin));
+      box-shadow: 0 0 0 1vmin var(--g), inset 0 0 0 1vmin var(--bg);
+    }
+
+    #inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      padding: 0 1.5vmin;
+      box-sizing: border-box;
+    }
+
+    #cold-harbor {
+      font-size: 2.75vmin;
+      color: var(--bg);
+      text-shadow: 0 0.2vmin var(--g), 0.2vmin 0 var(--g), -0.2vmin 0 var(--g), 0 -0.2vmin var(--g);
+      font-weight: 900;
+      line-height: 1;
+      text-align: left;
+      flex-grow: 1;
+    }
+
+    #completion {
+      font-size: 2.75vmin;
+      color: var(--bg);
+      text-shadow: 0 0.2vmin var(--g), 0.2vmin 0 var(--g), -0.2vmin 0 var(--g), 0 -0.2vmin var(--g);
+      font-weight: 900;
+      line-height: 1;
+      text-align: right;
+      margin-right: 5vmin;
+    }
+
+  </style>
+
+</head>
+<body>
+  <!-- partial:index.partial.html -->
+  <div id='cursor'></div>
+  <div id='header'>
+    <div id='inner'>
+      <span id="cold-harbor">Fuzzy Snuggly Duck</span>
+      <span id="completion"></span>
+    </div>
+    <img src='https://assets.codepen.io/383755/lumon.svg'>
+  </div>
+  <div id='wrap'>
+    <div class='num'>
+      <div class='inner'></div>
+    </div>
+    <div class='num'>
+      <div class='inner'></div>
+    </div>
+    <div class='num'>
+      <div class='inner'></div>
+    </div>
+    <div class='num'>
+      <div class='inner'></div>
+    </div>
+    <div class='num'>
+      <div class='inner'></div>
+    </div>
+    <div class='num'>
+      <div class='inner'></div>
+    </div>
+    <div class='num'>
+      <div class='inner'></div>
+    </div>
+    <div class='num'>
+      <div class='inner'></div>
+    </div>
+    <div class='num'>
+      <div class='inner'></div>
+    </div>
+    <div class='num'>
+      <div class='inner'></div>
+    </div>
+    <div class='num'>
+      <div class='inner'></div>
+    </div>
+    <div class='num'>
+      <div class='inner'></div>
+    </div>
+    <div class='num'>
+      <div class='inner'></div>
+    </div>
+    <div class='num'>
+      <div class='inner'></div>
+    </div>
+    <div class='num'>
+      <div class='inner'></div>
+    </div>
+    <div class='num'>
+      <div class='inner'></div>
+    </div>
+    <div class='num'>
+      <div class='inner'></div>
+    </div>
+    <div class='num'>
+      <div class='inner'></div>
+    </div>
+    <div class='num'>
+      <div class='inner'></div>
+    </div>
+    <div class='num'>
+      <div class='inner'></div>
+    </div>
+    <div class='num'>
+      <div class='inner'></div>
+    </div>
+    <div class='num'>
+      <div class='inner'></div>
+    </div>
+    <div class='num'>
+      <div class='inner'></div>
+    </div>
+    <div class='num'>
+      <div class='inner'></div>
+    </div>
+    <div class='num'>
+      <div class='inner'></div>
+    </div>
+    <div class='num'>
+      <div class='inner'></div>
+    </div>
+    <div class='num'>
+      <div class='inner'></div>
+    </div>
+    <div class='num'>
+      <div class='inner'></div>
+    </div>
+    <div class='num'>
+      <div class='inner'></div>
+    </div>
+    <div class='num'>
+      <div class='inner'></div>
+    </div>
+    <div class='num'>
+      <div class='inner'></div>
+    </div>
+    <div class='num'>
+      <div class='inner'></div>
+    </div>
+    <div class='num'>
+      <div class='inner'></div>
+    </div>
+    <div class='num'>
+      <div class='inner'></div>
+    </div>
+    <div class='num'>
+      <div class='inner'></div>
+    </div>
+    <div class='num'>
+      <div class='inner'></div>
+    </div>
+  </div>
+  <div id='lower'>
+    <div class='box valid'>
+      <div class='hatch'></div>
+    </div>
+    <div class='box valid'>
+      <div class='hatch'></div>
+    </div>
+    <div class='box valid'>
+      <div class='hatch'></div>
+    </div>
+    <div class='box valid'>
+      <div class='hatch'></div>
+    </div>
+    <div class='box valid'>
+      <div class='hatch'></div>
+    </div>
+    <div class='box ready valid'></div>
+    <div class='box ready valid'></div>
+    <div class='box ready valid'></div>
+    <div class='box ready valid'></div>
+    <div class='box ready valid'></div>
+  </div>
+
+  <div id='waffleparty'></div>
+
+  <!-- partial -->
+  <script src='https://unpkg.com/gsap@3/dist/gsap.min.js'></script>
+  <script src='https://assets.codepen.io/16327/Flip.min.js'></script>
+  <script>
+    gsap.registerPlugin(Flip);
+
+    let mouse = { x: 0, y: 0 },
+      cursor = document.getElementById("cursor"),
+      totalCompletion = 0,
+      numbers = document.querySelectorAll(".inner"),
+      boxes = document.querySelectorAll(".ready"),
+      wrap = document.getElementById("wrap");
+
+    document.addEventListener("mousemove", (e) => {
+      mouse = { x: e.pageX, y: e.pageY };
+      cursor.style.left = mouse.x + "px";
+      cursor.style.top = mouse.y + "px";
+    });
+
+    document.addEventListener("mousemove", (e) => {
+      numbers.forEach((num) => {
+        let numPos = num.getBoundingClientRect();
+        x0 = numPos.left;
+        y0 = numPos.top;
+        x1 = mouse.x;
+        y1 = mouse.y;
+        distancex = x1 - x0;
+        distancey = y1 - y0;
+        distance = Math.sqrt(distancex * distancex + distancey * distancey);
+        num.style.setProperty("--distance", parseInt(distance));
+        num.parentNode.setAttribute("data-distance", parseInt(distance));
+      });
+    });
+
+    boxes.forEach((box) => {
+      const boxTotal = Math.floor(Math.random() * (55 - 0 + 1)) + 30;
+      box.setAttribute("data-percent", boxTotal);
+      box.style.setProperty("--total", boxTotal + "%");
+    });
+
+    numbers.forEach((num) => {
+      num.setAttribute("data-number", "T"+ Math.floor((Math.random() * 1000)+1000));
+      num.addEventListener("click", (e) => {
+        wrap.classList.add("noclick");
+        totalCompletion = 0;
+        let selectedBox = Math.floor(
+          Math.random() * (document.getElementsByClassName("valid").length / 2)
+        );
+        let box = document.getElementsByClassName("valid")[selectedBox];
+        let lowerBox = document.getElementsByClassName("valid")[
+          selectedBox + document.getElementsByClassName("valid").length / 2
+        ];
+        let boxTotal = lowerBox.getAttribute("data-percent");
+        lowerBox.classList.add("loaded");
+
+        const boxMult = Math.floor(Math.random() * (15 - 0 + 1)) + 1;
+        // const boxMult = Math.floor(Math.random() * (15 - 0 + 1)) + 100;
+
+        setTimeout(() => {
+          lowerBox.setAttribute(
+            "data-percent",
+            Math.min(parseInt(boxTotal) + boxMult, 100)
+          );
+          lowerBox.style.setProperty(
+            "--total",
+            Math.min(parseInt(boxTotal) + boxMult, 100) + "%"
+          );
+          if (parseInt(boxTotal) + boxMult > 99) {
+            box.classList.remove("valid");
+            lowerBox.classList.remove("valid");
+          }
+          boxes.forEach((box) => {
+            const boxPercent = box.getAttribute("data-percent");
+            totalCompletion += parseInt(boxPercent);
+            if (totalCompletion / 5 >= 99) {
+              document.body.classList.add("waffleparty");
+              setTimeout(() => {
+                document.body.classList.remove("loaded");
+              }, 2000);
+            }
+          });
+
+          document.getElementById("completion").textContent = Math.trunc(totalCompletion / 5) + "%";
+
+        }, 1000);
+        setTimeout(() => {
+          wrap.classList.remove("noclick");
+        }, 1500);
+
+        numbers.forEach((num) => {
+          if (num.parentNode.getAttribute("data-distance") < 100) {
+            num.classList.remove("new");
+            const state = Flip.getState(num);
+            const parent = num.parentNode;
+
+            box.classList.add("open");
+            box.appendChild(num);
+            Flip.from(state, {
+              duration: 1,
+              ease: "back.in(1.5)",
+              absolute: true,
+              delay: Math.random() / 3,
+              onComplete: () => {
+                num.classList.add("new");
+                num.setAttribute(
+                  "data-number",
+                  "T"+ Math.floor((Math.random() * 1000)+1000)
+                );
+                parent.appendChild(num);
+                box.classList.remove("open");
+              }
+            });
+          }
+        });
+      });
+    });
+
+    document.addEventListener("DOMContentLoaded", function () {
+      boxes.forEach((box) => {
+        const boxPercent = box.getAttribute("data-percent");
+        totalCompletion += parseInt(boxPercent);
+      });
+
+      document.getElementById("completion").textContent = Math.trunc(totalCompletion / 5) + "%";
+
+      document.body.classList.add("loaded");
+      const waffleparty = "waffle party! ".split("");
+      let splitWaffle = "";
+      waffleparty.forEach(function (char, index) {
+        splitWaffle +=
+          char.trim() === ""
+            ? ""
+            : "<span style='--index: " +
+              index +
+              "' data-char='" +
+              char +
+              "'>" +
+              char +
+              "</span>";
+      });
+      document
+        .getElementById("waffleparty")
+        .style.setProperty("--length", waffleparty.length);
+      document.getElementById("waffleparty").innerHTML += splitWaffle;
+    });
+  </script>
+
+</body>
+</html>

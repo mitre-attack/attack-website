@@ -53,6 +53,12 @@ def get_menu():
                 "children": [],
             },
             {
+                "display_name": "Updates",
+                "url": "/resources/updates/",
+                "external_link": False,
+                "children": [],
+            },
+            {
                 "display_name": "Legal & Branding",
                 "url": "/resources/legal-and-branding/",
                 "external_link": False,

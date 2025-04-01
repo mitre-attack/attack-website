@@ -1,7 +1,6 @@
 import json
 import os
 from collections.abc import Iterable
-from typing import List
 
 from loguru import logger
 
@@ -404,7 +403,7 @@ def get_software_table_data(group, reference_list):
     return data, reference
 
 
-def update_software_list(pairings: List, software_list: List, reference_list: List, reference: bool, id: str):
+def update_software_list(pairings: list, software_list: list, reference_list: list, reference: bool, id: str):
     """Update the software list with the given pairings.
 
     This function iterates through the given pairings and updates the software list with
@@ -413,11 +412,11 @@ def update_software_list(pairings: List, software_list: List, reference_list: Li
 
     Parameters
     ----------
-    pairings : List
+    pairings : list
         A list of dictionaries that contain software and reference data.
-    software_list : List
+    software_list : list
         The list of software to be updated.
-    reference_list : List
+    reference_list : list
         The list of references to be updated.
     reference : bool
         Whether the reference section should be included.
