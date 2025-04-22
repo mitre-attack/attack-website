@@ -4,6 +4,7 @@
 
 * Release ATT&CK content version 17.0.
   See detailed changes [here](https://github.com/mitre/cti/releases/tag/ATT%26CK-v17.0).
+* Update Python to version 3.13.3
 
 # v4.2.1 (2024-11-12)
 
