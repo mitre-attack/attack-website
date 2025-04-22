@@ -50,8 +50,9 @@ index_matrix = {
         "Identity Providers",
         "SaaS",
         "IaaS",
-        "Network",
+        "Network Devices",
         "Containers",
+        "ESXi",
     ],
 }
 

@@ -8,7 +8,7 @@ save_as: resources/updates/updates-october-2024/index.html
 
 | Version | Start Date | End Date | Data | Changelogs |
 |:--------|:-----------|:---------|:-----|:-----------|
-| [ATT&CK v16](/versions/v16) | October 31, 2024 | Current version of ATT&CK | [v16.0 on MITRE/CTI](https://github.com/mitre/cti/releases/tag/ATT%26CK-v16.0) <br> [v16.1 on MITRE/CTI](https://github.com/mitre/cti/releases/tag/ATT%26CK-v16.1) | 15.1 - 16.0 [Details](/docs/changelogs/v15.1-v16.0/changelog-detailed.html) ([JSON](/docs/changelogs/v15.1-v16.0/changelog.json)) <br> 16.0 - 16.1 [Details](/docs/changelogs/v16.0-v16.1/changelog-detailed.html) ([JSON](/docs/changelogs/v16.0-v16.1/changelog.json)) |
+| [ATT&CK v16](/versions/v16) | October 31, 2024 | April 21, 2025 | [v16.0 on MITRE/CTI](https://github.com/mitre/cti/releases/tag/ATT%26CK-v16.0) <br> [v16.1 on MITRE/CTI](https://github.com/mitre/cti/releases/tag/ATT%26CK-v16.1) | 15.1 - 16.0 [Details](/docs/changelogs/v15.1-v16.0/changelog-detailed.html) ([JSON](/docs/changelogs/v15.1-v16.0/changelog.json)) <br> 16.0 - 16.1 [Details](/docs/changelogs/v16.0-v16.1/changelog-detailed.html) ([JSON](/docs/changelogs/v16.0-v16.1/changelog.json)) |
 
 The October 2024 (v16) ATT&CK release updates Techniques, Groups, Campaigns and Software for Enterprise.
 

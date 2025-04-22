@@ -89,8 +89,25 @@ Consult these sections as needed for step 5 in the above list.
 
 * Create a detailed changelog for the release:
   * Create a new folder: `modules/resources/docs/changelogs/v<previous-ATT&CK-version>-v<current-ATT&CK-version>`
-  * Create a detailed changelog using the mitreattack-python library's `diff_stix` command
-    * TODO: put specific `diff_stix` command here
+  * Create a detailed changelog using mitreattack-python
+
+  ```sh
+  # Clone mitreattack-python repo and download latest ATT&CK STIX
+  git clone git@github.com:mitre-attack/mitreattack-python.git
+  cd mitreattack-python
+  python3 -m venv venv
+  . venv/bin/activate
+  pip install -r requirements-dev.txt
+  pip install -e .
+  cd examples/
+  download_attack_stix --all
+
+  # update the generate_multiple_attack_diffs.py file to have the correct comparison pairs
+  # run the script
+  python generate_multiple_attack_diffs.py
+
+  ```
+
   * Manually modify the detailed changelog's href's at the top for links to the Navigator layers and changelog.json
     * TODO: one day modify the script above to not need this edit anymore
   * Put the following files from the `diff_stix` command into the folder created above
