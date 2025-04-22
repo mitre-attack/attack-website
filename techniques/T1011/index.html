@@ -172,7 +172,7 @@
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
                     <div class="container-fluid banner-message">
-                        ATT&CKcon 6.0 returns October 14-15, 2025 in McLean, VA. More details about tickets and our CFP can be found <a href='https://na.eventscloud.com/attackcon6'>here</a>
+                        ATT&CK v17 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v17-dfb59eae2204'>blog post</a> for more information.
                     </div>
             </div>
         </div>
@@ -300,7 +300,7 @@
                                             <div class="row card-data">
                                                 <div class="col-md-1 px-0 text-center"></div>
                                                 <div class="col-md-11 pl-0">
-                                                    <span class="h5 card-title">Last Modified:&nbsp;</span>11 September 2023
+                                                    <span class="h5 card-title">Last Modified:&nbsp;</span>15 April 2025
                                                 </div>
                                             </div>
                                     </div>
@@ -310,13 +310,13 @@
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Permalink to this version of T1011" 
-           href="/versions/v16/techniques/T1011/" data-test-ignore="true">Version Permalink</a>
+           href="/versions/v17/techniques/T1011/" data-test-ignore="true">Version Permalink</a>
     </div>
     <div class="permalink">
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Go to the live version of T1011" 
-           href="/versions/v16/techniques/T1011/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+           href="/versions/v17/techniques/T1011/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
     </div>
 </div>
 
@@ -384,7 +384,7 @@
                     <a href="/datasources/DS0017/#Command%20Execution">Command Execution</a>
                 </td>
                     <td>
-                                <p>Monitor executed commands and arguments that may attempt to exfiltrate data over a different network medium than the command and control channel</p>
+                                <p>Monitor commands that enable alternate network interfaces (WiFi, Bluetooth, cellular), execution of utilities such as nmcli, netsh, or iwconfig that modify network settings, or unusual command-line activity related to USB tethering or VPN activation.</p><p>Analytic 1 - Detecting Alternate Network Activation Commands </p><p><code>  (EventCode=1 OR source="/var/log/audit/audit.log" type="execve")| where (command IN ("nmcli radio wifi on", "rfkill unblock all", "netsh wlan connect", "ifconfig wlan0 up", "pppd call"))| eval risk_score=case(    command IN ("nmcli radio wifi on", "netsh wlan connect"), 9,    command IN ("rfkill unblock all", "ifconfig wlan0 up"), 8)| where risk_score &gt;= 8| stats count by _time, host, user, command, risk_score</code></p>
 
                     </td>
             </tr>
@@ -400,7 +400,7 @@
                     <a href="/datasources/DS0022/#File%20Access">File Access</a>
                 </td>
                     <td>
-                                <p>Monitor for files being accessed that could be related to exfiltration, such as file reads by a process that also has an active network connection.</p>
+                                <p>Monitor for access to sensitive files before potential exfiltration, files being staged in locations accessible to alternate networks, or usage of USB storage, external disks, or wireless file transfer.</p><p>Analytic 1 - Detecting File Access Before Alternate Network Exfiltration </p><p><code> (EventCode=11 OR EventCode=4663 OR source="/var/log/audit/audit.log" type="open")| where (file_path IN ("/media/usb/<em>", "/mnt/usb/</em>", "/var/tmp/exfil/<em>", "C:\Users\</em>\Documents\exfil"))| eval risk_score=case(    file_path IN ("/media/usb/<em>", "/mnt/usb/</em>"), 9,    file_path IN ("/var/tmp/exfil/*"), 8)| where risk_score &gt;= 8| stats count by _time, host, user, file_path, risk_score</code></p>
 
                     </td>
             </tr>
@@ -416,7 +416,7 @@
                     <a href="/datasources/DS0029/#Network%20Connection%20Creation">Network Connection Creation</a>
                 </td>
                     <td>
-                                <p>Monitor for newly constructed network connections that may attempt to exfiltrate data over a different network medium than the command and control channel. Processes utilizing the network that do not normally have network communication or have never been seen before are suspicious.</p><p>Note: Network Analysis frameworks such as Zeek can be used to capture, decode, and alert on TCP network connection creation. The below analytic is using an event ID from OSQuery. </p>
+                                <p>Monitor for newly constructed network connections that may attempt to exfiltrate data over a different network medium than the command and control channel. Processes utilizing the network that do not normally have network communication or have never been seen before are suspicious.</p><p>Note: Network Analysis frameworks such as Zeek can be used to capture, decode, and alert on TCP network connection creation. The below analytic is using an event ID from OSQuery. </p><p>Analytic 1 - Detecting Exfiltration via Alternate Network Connections </p><p><code> (EventCode=3 OR EventCode=10400)OR (source="zeek_conn.log" interface IN ("wlan0", "ppp0", "bt0", "usb0"))| eval risk_score=case(    interface IN ("wlan0", "usb0"), 9,    interface IN ("ppp0", "bt0"), 8)| where risk_score &gt;= 8| stats count by _time, host, user, interface, dest_ip, risk_score</code></p>
 
                     </td>
             </tr>
@@ -427,7 +427,7 @@
                             <a href="/datasources/DS0029/#Network%20Traffic%20Content">Network Traffic Content</a>
                         </td>
                             <td>
-                                        <p>Monitor and analyze traffic patterns and packet inspection associated to protocol(s) that do not follow the expected protocol standards and traffic flows (e.g extraneous packets that do not belong to established flows, gratuitous or anomalous traffic patterns, anomalous syntax, or structure). Consider correlation with process monitoring and command line to detect anomalous processes execution and command line arguments associated to traffic patterns (e.g. monitor anomalies in use of files that do not normally initiate connections for respective protocol(s)).</p>
+                                        <p>Monitor high-volume data transfers over secondary network connections, outbound SSH/SFTP connections over unauthorized networks, or anomalous encryption methods used for data exfiltration.</p><p>Analytic 1 - Detecting Large Data Exfiltration via Alternate Network </p><p><code> (EventCode=3)OR (source="zeek_conn.log" dest_port IN (22, 443, 53) AND bytes_out &gt; 5000000)OR (source="firewall_logs" bytes_out &gt; 10000000)| eval risk_score=case(    bytes_out &gt; 10000000, 9,    bytes_out &gt; 5000000, 8)| where risk_score &gt;= 8| stats count by _time, host, user, dest_ip, dest_port, bytes_out, risk_score</code></p>
 
                             </td>
                     </tr>
@@ -546,7 +546,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v16.1&#013;Website  v4.2.1">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v17.0&#013;Website  v4.2.2">Website Changelog</a></u>
                                 </div>
                             </div>
                             <div class="row">

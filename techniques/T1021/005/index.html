@@ -172,7 +172,7 @@
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
                     <div class="container-fluid banner-message">
-                        ATT&CKcon 6.0 returns October 14-15, 2025 in McLean, VA. More details about tickets and our CFP can be found <a href='https://na.eventscloud.com/attackcon6'>here</a>
+                        ATT&CK v17 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v17-dfb59eae2204'>blog post</a> for more information.
                     </div>
             </div>
         </div>
@@ -339,17 +339,9 @@
                                                 </div>
                                             </div>
                                             <div class="row card-data">
-                                                <div class="col-md-1 px-0 text-center">
-                                                    <span data-toggle="tooltip" data-placement="left" title="" data-test-ignore="true" data-original-title="Additional information on requirements the adversary needs to meet or about the state of the system (software, patch level, etc.) that may be required for the (sub-)technique to work">&#9432;</span>
-                                                </div>
-                                                <div class="col-md-11 pl-0">
-                                                    <span class="h5 card-title">System Requirements:&nbsp;</span>VNC server installed and listening for connections.
-                                                </div>
-                                            </div>
-                                            <div class="row card-data">
                                                 <div class="col-md-1 px-0 text-center"></div>
                                                 <div class="col-md-11 pl-0">
-                                                    <span class="h5 card-title">Version:&nbsp;</span>1.1
+                                                    <span class="h5 card-title">Version:&nbsp;</span>1.2
                                                 </div>
                                             </div>
                                             <div class="row card-data">
@@ -361,7 +353,7 @@
                                             <div class="row card-data">
                                                 <div class="col-md-1 px-0 text-center"></div>
                                                 <div class="col-md-11 pl-0">
-                                                    <span class="h5 card-title">Last Modified:&nbsp;</span>12 September 2024
+                                                    <span class="h5 card-title">Last Modified:&nbsp;</span>15 April 2025
                                                 </div>
                                             </div>
                                     </div>
@@ -371,13 +363,13 @@
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Permalink to this version of T1021.005" 
-           href="/versions/v16/techniques/T1021/005/" data-test-ignore="true">Version Permalink</a>
+           href="/versions/v17/techniques/T1021/005/" data-test-ignore="true">Version Permalink</a>
     </div>
     <div class="permalink">
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Go to the live version of T1021.005" 
-           href="/versions/v16/techniques/T1021/005/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+           href="/versions/v17/techniques/T1021/005/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
     </div>
 </div>
 
@@ -615,7 +607,7 @@
                     <a href="/datasources/DS0028/#Logon%20Session%20Creation">Logon Session Creation</a>
                 </td>
                     <td>
-                                <p>Monitor for user accounts logged into systems that may use <a href="/techniques/T1078">Valid Accounts</a> to remotely control machines using Virtual Network Computing (VNC). For example, on macOS systems <code>log show --predicate 'process = "screensharingd" and eventMessage contains "Authentication:"'</code> can be used to review incoming VNC connection attempts for suspicious activity.<span onclick=scrollToRef('scite-24') id="scite-ref-24-a" class="scite-citeref-number" title="Sarah Edwards. (2020, April 30). Analysis of Apple Unified Logs: Quarantine Edition [Entry 6] – Working From Home? Remote Logins. Retrieved August 19, 2021."data-reference="Apple Unified Log Analysis Remote Login and Screen Sharing"><sup><a href="https://sarah-edwards-xzkc.squarespace.com/blog/2020/4/30/analysis-of-apple-unified-logs-quarantine-edition-entry-6-working-from-home-remote-logins" target="_blank" data-hasqtip="23" aria-describedby="qtip-23">[24]</a></sup></span> </p>
+                                <p>Monitor for user accounts logged into systems that may use <a href="/techniques/T1078">Valid Accounts</a> to remotely control machines using Virtual Network Computing (VNC). For example, on macOS systems <code>log show --predicate 'process = "screensharingd" and eventMessage contains "Authentication:"'</code> can be used to review incoming VNC connection attempts for suspicious activity.<span onclick=scrollToRef('scite-24') id="scite-ref-24-a" class="scite-citeref-number" title="Sarah Edwards. (2020, April 30). Analysis of Apple Unified Logs: Quarantine Edition [Entry 6] – Working From Home? Remote Logins. Retrieved August 19, 2021."data-reference="Apple Unified Log Analysis Remote Login and Screen Sharing"><sup><a href="https://sarah-edwards-xzkc.squarespace.com/blog/2020/4/30/analysis-of-apple-unified-logs-quarantine-edition-entry-6-working-from-home-remote-logins" target="_blank" data-hasqtip="23" aria-describedby="qtip-23">[24]</a></sup></span> </p><p><code>sourcetype="vnc_logs"| search message="Authentication succeeded" OR message="Authentication failed"| stats count by user, src_ip, dest_host, _time| eval vnc_anomaly=if(count &gt; threshold OR dest_host IN ("critical_hosts"), "suspicious", "normal")| where vnc_anomaly="suspicious"| table _time, user, src_ip, dest_host, vnc_anomaly</code></p>
 
                     </td>
             </tr>
@@ -631,7 +623,7 @@
                     <a href="/datasources/DS0029/#Network%20Connection%20Creation">Network Connection Creation</a>
                 </td>
                     <td>
-                                <p>Monitor for newly constructed network connections that may use <a href="/techniques/T1078">Valid Accounts</a> to remotely control machines using Virtual Network Computing (VNC). Use of VNC may be legitimate depending on the environment and how it’s used. Other factors, such as access patterns and activity that occurs after a remote login, may indicate suspicious or malicious behavior using VNC. </p>
+                                <p>Monitor for newly constructed network connections that may use <a href="/techniques/T1078">Valid Accounts</a> to remotely control machines using Virtual Network Computing (VNC). Use of VNC may be legitimate depending on the environment and how it’s used. Other factors, such as access patterns and activity that occurs after a remote login, may indicate suspicious or malicious behavior using VNC. </p><p><code> sourcetype="network_traffic" dest_port=5900 protocol="tcp"| stats count by src_ip, dest_ip, dest_port, _time| eval vnc_connection_anomaly=if(count &gt; threshold OR src_ip IN ("untrusted_ips"), "suspicious", "normal")| where vnc_connection_anomaly="suspicious"| table _time, src_ip, dest_ip, vnc_connection_anomaly</code></p>
 
                     </td>
             </tr>
@@ -647,7 +639,7 @@
                     <a href="/datasources/DS0009/#Process%20Creation">Process Creation</a>
                 </td>
                     <td>
-                                <p>Monitor for newly executed processes that may use <a href="/techniques/T1078">Valid Accounts</a> to remotely control machines using Virtual Network Computing (VNC). For example, on macOS systems the <code>screensharingd</code> process may be related to VNC connection activity.<span onclick=scrollToRef('scite-24') id="scite-ref-24-a" class="scite-citeref-number" title="Sarah Edwards. (2020, April 30). Analysis of Apple Unified Logs: Quarantine Edition [Entry 6] – Working From Home? Remote Logins. Retrieved August 19, 2021."data-reference="Apple Unified Log Analysis Remote Login and Screen Sharing"><sup><a href="https://sarah-edwards-xzkc.squarespace.com/blog/2020/4/30/analysis-of-apple-unified-logs-quarantine-edition-entry-6-working-from-home-remote-logins" target="_blank" data-hasqtip="23" aria-describedby="qtip-23">[24]</a></sup></span></p>
+                                <p>Monitor for newly executed processes that may use <a href="/techniques/T1078">Valid Accounts</a> to remotely control machines using Virtual Network Computing (VNC). For example, on macOS systems the <code>screensharingd</code> process may be related to VNC connection activity.<span onclick=scrollToRef('scite-24') id="scite-ref-24-a" class="scite-citeref-number" title="Sarah Edwards. (2020, April 30). Analysis of Apple Unified Logs: Quarantine Edition [Entry 6] – Working From Home? Remote Logins. Retrieved August 19, 2021."data-reference="Apple Unified Log Analysis Remote Login and Screen Sharing"><sup><a href="https://sarah-edwards-xzkc.squarespace.com/blog/2020/4/30/analysis-of-apple-unified-logs-quarantine-edition-entry-6-working-from-home-remote-logins" target="_blank" data-hasqtip="23" aria-describedby="qtip-23">[24]</a></sup></span></p><p><code>source="/var/log/audit/audit.log" OR source="/var/log/vncserver.log"| search parent_process="vncserver" OR parent_process="screensharingd"| stats count by user, process, parent_process, _time| eval process_anomaly=if(count &gt; threshold, "suspicious", "normal")| where process_anomaly="suspicious"| table _time, user, process, parent_process, process_anomaly</code></p>
 
                     </td>
             </tr>
@@ -1019,7 +1011,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v16.1&#013;Website  v4.2.1">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v17.0&#013;Website  v4.2.2">Website Changelog</a></u>
                                 </div>
                             </div>
                             <div class="row">

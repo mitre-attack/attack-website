@@ -1,0 +1,2462 @@
+
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+            <script async src="https://www.googletagmanager.com/gtag/js?id=UA-62667723-1"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'UA-62667723-1');
+        </script>
+        <meta name="google-site-verification" content="2oJKLqNN62z6AOCb0A0IXGtbQuj-lev5YPAHFF_cbHQ"/>
+
+        <meta charset='utf-8'>
+        <meta name='viewport' content='width=device-width, initial-scale=1,shrink-to-fit=no'>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <link rel='shortcut icon' href="/versions/v17/theme/favicon.ico" type='image/x-icon'>
+        <title>Subvert Trust Controls: Code Signing, Sub-technique T1553.002 - Enterprise | MITRE ATT&CK&reg;</title>
+        <!-- USWDS CSS -->
+        <!-- Bootstrap CSS -->
+        <link rel='stylesheet' href="/versions/v17/theme/style/vendors/bootstrap.min.css" />
+        <link rel='stylesheet' href="/versions/v17/theme/style/vendors/bootstrap-tourist.css" />
+        <link rel='stylesheet' href="/versions/v17/theme/style/vendors/bootstrap-select.min.css" />
+        <!-- Fontawesome CSS -->
+        <link rel="stylesheet" href="/versions/v17/theme/style/vendors/fontawesome-6.5.1/css/fontawesome.min.css"/>
+        <link rel="stylesheet" href="/versions/v17/theme/style/vendors/fontawesome-6.5.1/css/brands.min.css"/>
+        <link rel="stylesheet" href="/versions/v17/theme/style/vendors/fontawesome-6.5.1/css/solid.min.css"/>
+            <link rel="stylesheet" href="/versions/v17/theme/style-attack.css"/>
+
+
+</head>
+
+<body>
+
+    <div class="container-fluid attack-website-wrapper d-flex flex-column h-100">
+        <div class="row sticky-top flex-grow-0 flex-shrink-1">
+            <!-- header elements -->
+            <header class="col px-0">
+                    <nav class='navbar navbar-expand-lg navbar-dark position-static'>
+        <a class='navbar-brand' href="/versions/v17/"><img src="/versions/v17/theme/images/mitre_attack_logo.png" class="attack-logo"></a>
+        <button class='navbar-toggler' type='button' data-toggle='collapse' data-target='#navbarCollapse'
+                aria-controls='navbarCollapse' aria-expanded='false' aria-label='Toggle navigation'>
+                <span class='navbar-toggler-icon'></span>
+        </button>
+        <div class='collapse navbar-collapse' id='navbarCollapse'>
+            <ul class='nav nav-tabs ml-auto'>
+                        <li class="nav-item dropdown">
+                                
+    <a class="nav-link dropdown-toggle" href="/versions/v17/matrices/" id="navbarDropdown" role="button"
+    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <b>Matrices</b>
+    </a>
+    <div class="dropdown-menu " aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="/versions/v17/matrices/enterprise/">Enterprise</a>
+                <a class="dropdown-item" href="/versions/v17/matrices/mobile/">Mobile</a>
+                <a class="dropdown-item" href="/versions/v17/matrices/ics/">ICS</a>
+    </div>
+
+
+                        </li>
+                        <li class="nav-item dropdown">
+                                
+    <a class="nav-link dropdown-toggle" href="/versions/v17/tactics/" id="navbarDropdown" role="button"
+    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <b>Tactics</b>
+    </a>
+    <div class="dropdown-menu " aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="/versions/v17/tactics/enterprise/">Enterprise</a>
+                <a class="dropdown-item" href="/versions/v17/tactics/mobile/">Mobile</a>
+                <a class="dropdown-item" href="/versions/v17/tactics/ics/">ICS</a>
+    </div>
+
+
+                        </li>
+                        <li class="nav-item dropdown">
+                                
+    <a class="nav-link dropdown-toggle" href="/versions/v17/techniques/" id="navbarDropdown" role="button"
+    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <b>Techniques</b>
+    </a>
+    <div class="dropdown-menu " aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="/versions/v17/techniques/enterprise/">Enterprise</a>
+                <a class="dropdown-item" href="/versions/v17/techniques/mobile/">Mobile</a>
+                <a class="dropdown-item" href="/versions/v17/techniques/ics/">ICS</a>
+    </div>
+
+
+                        </li>
+                        <li class="nav-item dropdown">
+                                
+    <a class="nav-link dropdown-toggle" href="/versions/v17/datasources" id="navbarDropdown" role="button"
+    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <b>Defenses</b>
+    </a>
+    <div class="dropdown-menu " aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="/versions/v17/datasources">Data Sources</a>
+                
+<div class="dropright dropdown">
+<a class="dropdown-item dropdown-toggle" href="/versions/v17/mitigations/" id="navbarDropdown" role="button"
+    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <b>Mitigations</b>
+    </a>
+    <div class="dropdown-menu " aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="/versions/v17/mitigations/enterprise/">Enterprise</a>
+            <a class="dropdown-item" href="/versions/v17/mitigations/mobile/">Mobile</a>
+            <a class="dropdown-item" href="/versions/v17/mitigations/ics/">ICS</a>
+    </div>
+</div>
+
+                <a class="dropdown-item" href="/versions/v17/assets">Assets</a>
+    </div>
+
+
+                        </li>
+                        <li class="nav-item dropdown">
+                                
+    <a class="nav-link dropdown-toggle" href="/versions/v17/groups" id="navbarDropdown" role="button"
+    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <b>CTI</b>
+    </a>
+    <div class="dropdown-menu " aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="/versions/v17/groups">Groups</a>
+                <a class="dropdown-item" href="/versions/v17/software">Software</a>
+                <a class="dropdown-item" href="/versions/v17/campaigns">Campaigns</a>
+    </div>
+
+
+                        </li>
+                        <li class="nav-item dropdown">
+                                
+    <a class="nav-link dropdown-toggle" href="/versions/v17/resources/" id="navbarDropdown" role="button"
+    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <b>Resources</b>
+    </a>
+    <div class="dropdown-menu " aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="/versions/v17/resources/">Get Started</a>
+                <a class="dropdown-item" href="/versions/v17/resources/learn-more-about-attack/">Learn More about ATT&CK</a>
+                <a class="dropdown-item" href="/versions/v17/resources/attackcon/">ATT&CKcon</a>
+                <a class="dropdown-item" href="/versions/v17/resources/attack-data-and-tools/">ATT&CK Data & Tools</a>
+                <a class="dropdown-item" href="/versions/v17/resources/faq/">FAQ</a>
+                <a class="dropdown-item" href="/versions/v17/resources/engage-with-attack/contact/">Engage with ATT&CK</a>
+                <a class="dropdown-item" href="/resources/versions/">Version History</a>
+                <a class="dropdown-item" href="/resources/updates/">Updates</a>
+                <a class="dropdown-item" href="/versions/v17/resources/legal-and-branding/">Legal & Branding</a>
+    </div>
+
+
+                        </li>
+                        <li class="nav-item">
+                            <a href="/versions/v17/resources/engage-with-attack/benefactors/"  class="nav-link" ><b>Benefactors</b></a>
+                        </li>
+                        <li class="nav-item">
+                                <a href="https://medium.com/mitre-attack/" target="_blank" class="nav-link">
+        <b>Blog</b>&nbsp;
+        <img src="/versions/v17/theme/images/external-site.svg" alt="External site" class="external-icon" />
+    </a>
+
+                        </li>
+                        <li class="nav-item">
+                            <button id="search-button" class="btn search-button">Search <div id="search-icon" class="icon-button search-icon"></div></button>
+                        </li>
+            </ul>
+        </div>
+    </nav>
+
+            </header>
+        </div>
+        <div class="row flex-grow-0 flex-shrink-1">
+            <!-- banner elements -->
+            <div class="col px-0">
+                <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
+                <div class="container-fluid version-banner"><div class="icon-inline baseline mr-1"><img src="/versions/v17/theme/images/icon-warning-24px.svg"></div>Currently viewing <a href="https://github.com/mitre/cti/releases/tag/ATT%26CK-v17.0" target="_blank">ATT&CK v17.0</a> which is the current version of ATT&CK. <a href="/resources/versions/">Learn more about the versioning system</a> or <a href="/">see the live site</a>.</div>
+                    <div class="container-fluid d-none">
+                        ATT&CK v17 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v17-dfb59eae2204'>blog post</a> for more information.
+                    </div>
+            </div>
+        </div>
+        <div class="row flex-grow-1 flex-shrink-0">
+            <!-- main content elements -->
+            <!--start-indexing-for-search-->
+
+ 
+     
+    <div class="sidebar nav sticky-top flex-column pr-0 pt-4 pb-3 pl-3" id="v-tab" role="tablist" aria-orientation="vertical">
+        <div class="resizer" id="resizer"></div>
+<!--stop-indexing-for-search-->
+<div id="sidebars"></div>
+<!--start-indexing-for-search-->
+    </div>
+
+    
+     
+    <div class="tab-content col-xl-9 pt-4" id="v-tabContent">
+        <div class="tab-pane fade show active" id="v-attckmatrix" role="tabpanel" aria-labelledby="v-attckmatrix-tab">
+    
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/versions/v17/">Home</a></li>
+            <li class="breadcrumb-item"><a href="/versions/v17/techniques/enterprise">Techniques</a></li>
+            <li class="breadcrumb-item"><a href="/versions/v17/techniques/enterprise">Enterprise</a></li>
+            <li class="breadcrumb-item"><a href="/versions/v17/techniques/T1553">Subvert Trust Controls</a></li>
+        <li class="breadcrumb-item">Code Signing</li>
+    </ol>
+    <div class="tab-pane fade show active" id="v-" role="tabpanel" aria-labelledby="v--tab"></div>
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="jumbotron jumbotron-fluid">
+                <div class="container-fluid">
+                    <h1 id="">
+                            <span id="subtechnique-parent-name">Subvert Trust Controls:</span>
+                        Code Signing
+                    </h1>
+
+                        <div class="row">
+                            <div class="col-md-8">
+                                    <!--stop-indexing-for-search-->
+                                    <div class="card-block pb-2">
+                                        <div class="card">
+                                            <div class="card-header collapsed" id="subtechniques-card-header" data-toggle="collapse" data-target="#subtechniques-card-body" aria-expanded="false" aria-controls="subtechniques-card-body">
+                                                    <h5 class="mb-0" id ="sub-techniques">Other sub-techniques of Subvert Trust Controls (6)</h5>
+                                            </div>
+                                            <div id="subtechniques-card-body" class="card-body p-0 collapse" aria-labelledby="subtechniques-card-header">
+                                                <table class="table table-bordered">
+                                                    <thead>
+                                                        <tr>
+                                                            <th scope="col">ID</th>
+                                                            <th scope="col">Name</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                            <tr>
+                                                                    <td>
+                                                                        <a href="/versions/v17/techniques/T1553/001/" class="subtechnique-table-item" data-subtechnique_id="T1553.001"> T1553.001 </a>
+                                                                    </td>
+                                                                    <td>
+                                                                        <a href="/versions/v17/techniques/T1553/001/" class="subtechnique-table-item" data-subtechnique_id="T1553.001"> Gatekeeper Bypass </a>
+                                                                    </td>
+                                                            </tr>
+                                                            <tr>
+                                                                    <td class="active">
+                                                                        T1553.002
+                                                                    </td>
+                                                                    <td class="active">
+                                                                        Code Signing
+                                                                    </td>
+                                                            </tr>
+                                                            <tr>
+                                                                    <td>
+                                                                        <a href="/versions/v17/techniques/T1553/003/" class="subtechnique-table-item" data-subtechnique_id="T1553.003"> T1553.003 </a>
+                                                                    </td>
+                                                                    <td>
+                                                                        <a href="/versions/v17/techniques/T1553/003/" class="subtechnique-table-item" data-subtechnique_id="T1553.003"> SIP and Trust Provider Hijacking </a>
+                                                                    </td>
+                                                            </tr>
+                                                            <tr>
+                                                                    <td>
+                                                                        <a href="/versions/v17/techniques/T1553/004/" class="subtechnique-table-item" data-subtechnique_id="T1553.004"> T1553.004 </a>
+                                                                    </td>
+                                                                    <td>
+                                                                        <a href="/versions/v17/techniques/T1553/004/" class="subtechnique-table-item" data-subtechnique_id="T1553.004"> Install Root Certificate </a>
+                                                                    </td>
+                                                            </tr>
+                                                            <tr>
+                                                                    <td>
+                                                                        <a href="/versions/v17/techniques/T1553/005/" class="subtechnique-table-item" data-subtechnique_id="T1553.005"> T1553.005 </a>
+                                                                    </td>
+                                                                    <td>
+                                                                        <a href="/versions/v17/techniques/T1553/005/" class="subtechnique-table-item" data-subtechnique_id="T1553.005"> Mark-of-the-Web Bypass </a>
+                                                                    </td>
+                                                            </tr>
+                                                            <tr>
+                                                                    <td>
+                                                                        <a href="/versions/v17/techniques/T1553/006/" class="subtechnique-table-item" data-subtechnique_id="T1553.006"> T1553.006 </a>
+                                                                    </td>
+                                                                    <td>
+                                                                        <a href="/versions/v17/techniques/T1553/006/" class="subtechnique-table-item" data-subtechnique_id="T1553.006"> Code Signing Policy Modification </a>
+                                                                    </td>
+                                                            </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--start-indexing-for-search-->
+
+                                    <div class="description-body">
+                                                <p>Adversaries may create, acquire, or steal code signing materials to sign their malware or tools. Code signing provides a level of authenticity on a binary from the developer and a guarantee that the binary has not been tampered with. <span onclick=scrollToRef('scite-1') id="scite-ref-1-a" class="scite-citeref-number" title="Wikipedia. (2015, November 10). Code Signing. Retrieved March 31, 2016."data-reference="Wikipedia Code Signing"><sup><a href="https://en.wikipedia.org/wiki/Code_signing" target="_blank" data-hasqtip="0" aria-describedby="qtip-0">[1]</a></sup></span> The certificates used during an operation may be created, acquired, or stolen by the adversary. <span onclick=scrollToRef('scite-2') id="scite-ref-2-a" class="scite-citeref-number" title="Ladikov, A. (2015, January 29). Why You Shouldn’t Completely Trust Files Signed with Digital Certificates. Retrieved March 31, 2016."data-reference="Securelist Digital Certificates"><sup><a href="https://securelist.com/why-you-shouldnt-completely-trust-files-signed-with-digital-certificates/68593/" target="_blank" data-hasqtip="1" aria-describedby="qtip-1">[2]</a></sup></span> <span onclick=scrollToRef('scite-3') id="scite-ref-3-a" class="scite-citeref-number" title="Shinotsuka, H. (2013, February 22). How Attackers Steal Private Keys from Digital Certificates. Retrieved March 31, 2016."data-reference="Symantec Digital Certificates"><sup><a href="http://www.symantec.com/connect/blogs/how-attackers-steal-private-keys-digital-certificates" target="_blank" data-hasqtip="2" aria-describedby="qtip-2">[3]</a></sup></span> Unlike <a href="/versions/v17/techniques/T1036/001">Invalid Code Signature</a>, this activity will result in a valid signature.</p><p>Code signing to verify software on first run can be used on modern Windows and macOS systems. It is not used on Linux due to the decentralized nature of the platform. <span onclick=scrollToRef('scite-1') id="scite-ref-1-a" class="scite-citeref-number" title="Wikipedia. (2015, November 10). Code Signing. Retrieved March 31, 2016."data-reference="Wikipedia Code Signing"><sup><a href="https://en.wikipedia.org/wiki/Code_signing" target="_blank" data-hasqtip="0" aria-describedby="qtip-0">[1]</a></sup></span><span onclick=scrollToRef('scite-4') id="scite-ref-4-a" class="scite-citeref-number" title="Howard Oakley. (2020, November 16). Checks on executable code in Catalina and Big Sur: a first draft. Retrieved September 21, 2022."data-reference="EclecticLightChecksonEXECodeSigning"><sup><a href="https://eclecticlight.co/2020/11/16/checks-on-executable-code-in-catalina-and-big-sur-a-first-draft/" target="_blank" data-hasqtip="3" aria-describedby="qtip-3">[4]</a></sup></span></p><p>Code signing certificates may be used to bypass security policies that require signed code to execute on a system. </p>
+
+                                    </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card">
+                                    <div class="card-body">
+                                            <div class="row card-data" id="card-id">
+                                                <div class="col-md-1 px-0 text-center"></div>
+                                                <div class="col-md-11 pl-0">
+                                                    <span class="h5 card-title">ID:&nbsp;</span>T1553.002
+                                                </div>
+                                            </div>
+                                        <!--stop-indexing-for-search-->
+                                        <div class="row card-data">
+                                            <div class="col-md-1 px-0 text-center"></div>
+                                            <div class="col-md-11 pl-0">
+                                                    <span class="h5 card-title">Sub-technique of:&nbsp;</span>
+                                                    <a href="/versions/v17/techniques/T1553">T1553</a>
+                                            </div>
+                                        </div>
+                                        <!--start-indexing-for-search-->
+                                            <div id="card-tactics" class="row card-data">
+                                                <div class="col-md-1 px-0 text-center">
+                                                    <span data-toggle="tooltip" data-placement="left" title="" data-test-ignore="true" data-original-title="The tactic objectives that the (sub-)technique can be used to accomplish">&#9432;</span>
+                                                </div>
+                                                <div class="col-md-11 pl-0">
+                                                    <span class="h5 card-title">Tactic:</span>
+                                                        <a href="/versions/v17/tactics/TA0005">Defense Evasion</a>                                                </div>
+                                            </div>
+                                            <div class="row card-data">
+                                                <div class="col-md-1 px-0 text-center">
+                                                    <span data-toggle="tooltip" data-placement="left" title="" data-test-ignore="true" data-original-title="The system an adversary is operating within; could be an operating system or application">&#9432;</span>
+                                                </div>
+                                                <div class="col-md-11 pl-0">
+                                                    <span class="h5 card-title">Platforms:&nbsp;</span>Windows, macOS
+                                                </div>
+                                            </div>
+                                            <div class="row card-data">
+                                                <div class="col-md-1 px-0 text-center"></div>
+                                                <div class="col-md-11 pl-0">
+                                                    <span class="h5 card-title">Version:&nbsp;</span>1.2
+                                                </div>
+                                            </div>
+                                            <div class="row card-data">
+                                                <div class="col-md-1 px-0 text-center"></div>
+                                                <div class="col-md-11 pl-0">
+                                                    <span class="h5 card-title">Created:&nbsp;</span>05 February 2020
+                                                </div>
+                                            </div>
+                                            <div class="row card-data">
+                                                <div class="col-md-1 px-0 text-center"></div>
+                                                <div class="col-md-11 pl-0">
+                                                    <span class="h5 card-title">Last Modified:&nbsp;</span>16 April 2025
+                                                </div>
+                                            </div>
+                                    </div>
+                                </div>
+                                    <div class="text-center pt-2 version-button permalink">
+    <div class="live">
+        <a data-toggle="tooltip" 
+           data-placement="bottom" 
+           title="Permalink to this version of T1553.002" 
+           href="/versions/v17/techniques/T1553/002/" data-test-ignore="true">Version Permalink</a>
+    </div>
+    <div class="permalink">
+        <a data-toggle="tooltip" 
+           data-placement="bottom" 
+           title="Go to the live version of T1553.002" 
+           href="/techniques/T1553/002/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+    </div>
+</div>
+
+                            </div>
+                        </div>
+                            <h2 class="pt-3" id ="examples">Procedure Examples</h2>
+                            <div class="tables-mobile">
+                            <table class="table table-bordered table-alternate mt-2">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">ID</th>
+                                        <th scope="col">Name</th>
+                                        <th scope="col">Description</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v17/software/S0504"> S0504 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v17/software/S0504"> Anchor </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v17/software/S0504">Anchor</a> has been signed with valid certificates to evade detection by security tools.<span onclick=scrollToRef('scite-5') id="scite-ref-5-a" class="scite-citeref-number" title="Dahan, A. et al. (2019, December 11). DROPPING ANCHOR: FROM A TRICKBOT INFECTION TO THE DISCOVERY OF THE ANCHOR MALWARE. Retrieved September 10, 2020."data-reference="Cyberreason Anchor December 2019"><sup><a href="https://www.cybereason.com/blog/dropping-anchor-from-a-trickbot-infection-to-the-discovery-of-the-anchor-malware" target="_blank" data-hasqtip="4" aria-describedby="qtip-4">[5]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v17/software/S0584"> S0584 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v17/software/S0584"> AppleJeus </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v17/software/S0584">AppleJeus</a> has used a valid digital signature from Sectigo to appear legitimate.<span onclick=scrollToRef('scite-6') id="scite-ref-6-a" class="scite-citeref-number" title="Cybersecurity and Infrastructure Security Agency. (2021, February 21). AppleJeus: Analysis of North Korea’s Cryptocurrency Malware. Retrieved March 1, 2021."data-reference="CISA AppleJeus Feb 2021"><sup><a href="https://us-cert.cisa.gov/ncas/alerts/aa21-048a" target="_blank" data-hasqtip="5" aria-describedby="qtip-5">[6]</a></sup></span> </p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v17/groups/G0096"> G0096 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v17/groups/G0096"> APT41 </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v17/groups/G0096">APT41</a> leveraged code-signing certificates to sign malware when targeting both gaming and non-gaming organizations.<span onclick=scrollToRef('scite-7') id="scite-ref-7-a" class="scite-citeref-number" title="Fraser, N., et al. (2019, August 7). Double DragonAPT41, a dual espionage and cyber crime operation APT41. Retrieved September 23, 2019."data-reference="FireEye APT41 Aug 2019"><sup><a href="https://www.mandiant.com/sites/default/files/2022-02/rt-apt41-dual-operation.pdf" target="_blank" data-hasqtip="6" aria-describedby="qtip-6">[7]</a></sup></span><span onclick=scrollToRef('scite-8') id="scite-ref-8-a" class="scite-citeref-number" title="Rostovcev, N. (2021, June 10). Big airline heist APT41 likely behind a third-party attack on Air India. Retrieved August 26, 2021."data-reference="Group IB APT 41 June 2021"><sup><a href="https://www.group-ib.com/blog/colunmtk-apt41/" target="_blank" data-hasqtip="7" aria-describedby="qtip-7">[8]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v17/campaigns/C0040"> C0040 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v17/campaigns/C0040"> APT41 DUST </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="https://attack.mitre.org/campaigns/C0040">APT41 DUST</a> used stolen code signing certificates for <a href="/versions/v17/software/S1159">DUSTTRAP</a> malware and subsequent payloads.<span onclick=scrollToRef('scite-9') id="scite-ref-9-a" class="scite-citeref-number" title="Mike Stokkel et al. (2024, July 18). APT41 Has Arisen From the DUST. Retrieved September 16, 2024."data-reference="Google Cloud APT41 2024"><sup><a href="https://cloud.google.com/blog/topics/threat-intelligence/apt41-arisen-from-dust" target="_blank" data-hasqtip="8" aria-describedby="qtip-8">[9]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v17/software/S0475"> S0475 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v17/software/S0475"> BackConfig </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v17/software/S0475">BackConfig</a> has been signed with self signed digital certificates mimicking a legitimate software company.<span onclick=scrollToRef('scite-10') id="scite-ref-10-a" class="scite-citeref-number" title="Hinchliffe, A. and Falcone, R. (2020, May 11). Updated BackConfig Malware Targeting Government and Military Organizations in South Asia. Retrieved June 17, 2020."data-reference="Unit 42 BackConfig May 2020"><sup><a href="https://unit42.paloaltonetworks.com/updated-backconfig-malware-targeting-government-and-military-organizations/" target="_blank" data-hasqtip="9" aria-describedby="qtip-9">[10]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v17/software/S0234"> S0234 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v17/software/S0234"> Bandook </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v17/software/S0234">Bandook</a> was signed with valid Certum certificates.<span onclick=scrollToRef('scite-11') id="scite-ref-11-a" class="scite-citeref-number" title="Check Point. (2020, November 26). Bandook: Signed & Delivered. Retrieved May 31, 2021."data-reference="CheckPoint Bandook Nov 2020"><sup><a href="https://research.checkpoint.com/2020/bandook-signed-delivered/" target="_blank" data-hasqtip="10" aria-describedby="qtip-10">[11]</a></sup></span> </p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v17/software/S0534"> S0534 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v17/software/S0534"> Bazar </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v17/software/S0534">Bazar</a> has been signed with fake certificates including those appearing to be from VB CORPORATE PTY. LTD.<span onclick=scrollToRef('scite-12') id="scite-ref-12-a" class="scite-citeref-number" title="Cybereason Nocturnus. (2020, July 16). A BAZAR OF TRICKS: FOLLOWING TEAM9’S DEVELOPMENT CYCLES. Retrieved November 18, 2020."data-reference="Cybereason Bazar July 2020"><sup><a href="https://www.cybereason.com/blog/a-bazar-of-tricks-following-team9s-development-cycles" target="_blank" data-hasqtip="11" aria-describedby="qtip-11">[12]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v17/software/S1070"> S1070 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v17/software/S1070"> Black Basta </a>
+                                            </td>
+                                            <td>
+                                                            <p>The <a href="/versions/v17/software/S1070">Black Basta</a> dropper has been digitally signed with a certificate issued by Akeo Consulting for legitimate executables used for creating bootable USB drives.<span onclick=scrollToRef('scite-13') id="scite-ref-13-a" class="scite-citeref-number" title="Check Point. (2022, October 20). BLACK BASTA AND THE UNNOTICED DELIVERY. Retrieved March 8, 2023."data-reference="Check Point Black Basta October 2022"><sup><a href="https://research.checkpoint.com/2022/black-basta-and-the-unnoticed-delivery/" target="_blank" data-hasqtip="12" aria-describedby="qtip-12">[13]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v17/software/S0520"> S0520 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v17/software/S0520"> BLINDINGCAN </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v17/software/S0520">BLINDINGCAN</a> has been signed with code-signing certificates such as CodeRipper.<span onclick=scrollToRef('scite-14') id="scite-ref-14-a" class="scite-citeref-number" title="US-CERT. (2020, August 19). MAR-10295134-1.v1 – North Korean Remote Access Trojan: BLINDINGCAN. Retrieved August 19, 2020."data-reference="US-CERT BLINDINGCAN Aug 2020"><sup><a href="https://us-cert.cisa.gov/ncas/analysis-reports/ar20-232a" target="_blank" data-hasqtip="13" aria-describedby="qtip-13">[14]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v17/software/S0415"> S0415 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v17/software/S0415"> BOOSTWRITE </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v17/software/S0415">BOOSTWRITE</a> has been signed by a valid CA.<span onclick=scrollToRef('scite-15') id="scite-ref-15-a" class="scite-citeref-number" title="Carr, N, et all. (2019, October 10). Mahalo FIN7: Responding to the Criminal Operators’ New Tools and Techniques. Retrieved October 11, 2019."data-reference="FireEye FIN7 Oct 2019"><sup><a href="https://www.fireeye.com/blog/threat-research/2019/10/mahalo-fin7-responding-to-new-tools-and-techniques.html" target="_blank" data-hasqtip="14" aria-describedby="qtip-14">[15]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v17/campaigns/C0015"> C0015 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v17/campaigns/C0015"> C0015 </a>
+                                            </td>
+                                            <td>
+                                                            <p>For <a href="https://attack.mitre.org/campaigns/C0015">C0015</a>, the threat actors used DLL files that had invalid certificates.<span onclick=scrollToRef('scite-16') id="scite-ref-16-a" class="scite-citeref-number" title="DFIR Report. (2021, November 29). CONTInuing the Bazar Ransomware Story. Retrieved September 29, 2022."data-reference="DFIR Conti Bazar Nov 2021"><sup><a href="https://thedfirreport.com/2021/11/29/continuing-the-bazar-ransomware-story/" target="_blank" data-hasqtip="15" aria-describedby="qtip-15">[16]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v17/software/S0144"> S0144 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v17/software/S0144"> ChChes </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v17/software/S0144">ChChes</a> samples were digitally signed with a certificate originally used by Hacking Team that was later leaked and subsequently revoked.<span onclick=scrollToRef('scite-17') id="scite-ref-17-a" class="scite-citeref-number" title="Miller-Osborn, J. and Grunzweig, J.. (2017, February 16). menuPass Returns with New Malware and New Attacks Against Japanese Academics and Organizations. Retrieved March 1, 2017."data-reference="Palo Alto menuPass Feb 2017"><sup><a href="http://researchcenter.paloaltonetworks.com/2017/02/unit42-menupass-returns-new-malware-new-attacks-japanese-academics-organizations/" target="_blank" data-hasqtip="16" aria-describedby="qtip-16">[17]</a></sup></span><span onclick=scrollToRef('scite-18') id="scite-ref-18-a" class="scite-citeref-number" title="Nakamura, Y.. (2017, February 17). ChChes - Malware that Communicates with C&C Servers Using Cookie Headers. Retrieved November 17, 2024."data-reference="JPCERT ChChes Feb 2017"><sup><a href="https://blogs.jpcert.or.jp/en/2017/02/chches-malware--93d6.html" target="_blank" data-hasqtip="17" aria-describedby="qtip-17">[18]</a></sup></span><span onclick=scrollToRef('scite-19') id="scite-ref-19-a" class="scite-citeref-number" title="PwC and BAE Systems. (2017, April). Operation Cloud Hopper: Technical Annex. Retrieved April 13, 2017."data-reference="PWC Cloud Hopper Technical Annex April 2017"><sup><a href="https://www.pwc.co.uk/cyber-security/pdf/pwc-uk-operation-cloud-hopper-technical-annex-april-2017.pdf" target="_blank" data-hasqtip="18" aria-describedby="qtip-18">[19]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v17/software/S1149"> S1149 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v17/software/S1149"> CHIMNEYSWEEP </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v17/software/S1149">CHIMNEYSWEEP</a> has been dropped by a self-extracting archive signed with a valid digital certificate.<span onclick=scrollToRef('scite-20') id="scite-ref-20-a" class="scite-citeref-number" title="Jenkins, L. at al. (2022, August 4). ROADSWEEP Ransomware - Likely Iranian Threat Actor Conducts Politically Motivated Disruptive Activity Against Albanian Government Organizations. Retrieved August 6, 2024."data-reference="Mandiant ROADSWEEP August 2022"><sup><a href="https://cloud.google.com/blog/topics/threat-intelligence/likely-iranian-threat-actor-conducts-politically-motivated-disruptive-activity-against/" target="_blank" data-hasqtip="19" aria-describedby="qtip-19">[20]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v17/software/S0611"> S0611 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v17/software/S0611"> Clop </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v17/software/S0611">Clop</a> can use code signing to evade detection.<span onclick=scrollToRef('scite-21') id="scite-ref-21-a" class="scite-citeref-number" title="Santos, D. (2021, April 13). Threat Assessment: Clop Ransomware. Retrieved July 30, 2021."data-reference="Unit42 Clop April 2021"><sup><a href="https://unit42.paloaltonetworks.com/clop-ransomware/" target="_blank" data-hasqtip="20" aria-describedby="qtip-20">[21]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v17/software/S0154"> S0154 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v17/software/S0154"> Cobalt Strike </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v17/software/S0154">Cobalt Strike</a> can use self signed Java applets to execute signed applet attacks.<span onclick=scrollToRef('scite-22') id="scite-ref-22-a" class="scite-citeref-number" title="Mavis, N. (2020, September 21). The Art and Science of Detecting Cobalt Strike. Retrieved September 12, 2024."data-reference="Talos Cobalt Strike September 2020"><sup><a href="https://web.archive.org/web/20210219195905/https://talos-intelligence-site.s3.amazonaws.com/production/document_files/files/000/095/031/original/Talos_Cobalt_Strike.pdf" target="_blank" data-hasqtip="21" aria-describedby="qtip-21">[22]</a></sup></span><span onclick=scrollToRef('scite-23') id="scite-ref-23-a" class="scite-citeref-number" title="Strategic Cyber LLC. (2020, November 5). Cobalt Strike: Advanced Threat Tactics for Penetration Testers. Retrieved April 13, 2021."data-reference="Cobalt Strike Manual 4.3 November 2020"><sup><a href="https://web.archive.org/web/20210708035426/https://www.cobaltstrike.com/downloads/csmanual43.pdf" target="_blank" data-hasqtip="22" aria-describedby="qtip-22">[23]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v17/groups/G0052"> G0052 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v17/groups/G0052"> CopyKittens </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v17/groups/G0052">CopyKittens</a> digitally signed an executable with a stolen certificate from legitimate company AI Squared.<span onclick=scrollToRef('scite-24') id="scite-ref-24-a" class="scite-citeref-number" title="ClearSky Cyber Security and Trend Micro. (2017, July). Operation Wilted Tulip: Exposing a cyber espionage apparatus. Retrieved August 21, 2017."data-reference="ClearSky Wilted Tulip July 2017"><sup><a href="http://www.clearskysec.com/wp-content/uploads/2017/07/Operation_Wilted_Tulip.pdf" target="_blank" data-hasqtip="23" aria-describedby="qtip-23">[24]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v17/software/S0527"> S0527 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v17/software/S0527"> CSPY Downloader </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v17/software/S0527">CSPY Downloader</a> has come signed with revoked certificates.<span onclick=scrollToRef('scite-25') id="scite-ref-25-a" class="scite-citeref-number" title="Dahan, A. et al. (2020, November 2). Back to the Future: Inside the Kimsuky KGH Spyware Suite. Retrieved November 6, 2020."data-reference="Cybereason Kimsuky November 2020"><sup><a href="https://www.cybereason.com/blog/back-to-the-future-inside-the-kimsuky-kgh-spyware-suite" target="_blank" data-hasqtip="24" aria-describedby="qtip-24">[25]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v17/groups/G1034"> G1034 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v17/groups/G1034"> Daggerfly </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v17/groups/G1034">Daggerfly</a> has used signed, but not notarized, malicious files for execution in macOS environments.<span onclick=scrollToRef('scite-26') id="scite-ref-26-a" class="scite-citeref-number" title="Ahn Ho, Facundo Muñoz, & Marc-Etienne M.Léveillé. (2024, March 7). Evasive Panda leverages Monlam Festival to target Tibetans. Retrieved July 25, 2024."data-reference="ESET EvasivePanda 2024"><sup><a href="https://www.welivesecurity.com/en/eset-research/evasive-panda-leverages-monlam-festival-target-tibetans/" target="_blank" data-hasqtip="25" aria-describedby="qtip-25">[26]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v17/groups/G0012"> G0012 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v17/groups/G0012"> Darkhotel </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v17/groups/G0012">Darkhotel</a> has used code-signing certificates on its malware that are either forged due to weak keys or stolen. <a href="/versions/v17/groups/G0012">Darkhotel</a> has also stolen certificates and signed backdoors and downloaders with them.<span onclick=scrollToRef('scite-27') id="scite-ref-27-a" class="scite-citeref-number" title="Kaspersky Lab's Global Research and Analysis Team. (2014, November). The Darkhotel APT A Story of Unusual Hospitality. Retrieved November 12, 2014."data-reference="Kaspersky Darkhotel"><sup><a href="https://media.kasperskycontenthub.com/wp-content/uploads/sites/43/2018/03/08070903/darkhotel_kl_07.11.pdf" target="_blank" data-hasqtip="26" aria-describedby="qtip-26">[27]</a></sup></span><span onclick=scrollToRef('scite-28') id="scite-ref-28-a" class="scite-citeref-number" title="Kaspersky Lab's Global Research & Analysis Team. (2015, August 10). Darkhotel's attacks in 2015. Retrieved November 2, 2018."data-reference="Securelist Darkhotel Aug 2015"><sup><a href="https://securelist.com/darkhotels-attacks-in-2015/71713/" target="_blank" data-hasqtip="27" aria-describedby="qtip-27">[28]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v17/software/S0187"> S0187 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v17/software/S0187"> Daserf </a>
+                                            </td>
+                                            <td>
+                                                            <p>Some <a href="/versions/v17/software/S0187">Daserf</a> samples were signed with a stolen digital certificate.<span onclick=scrollToRef('scite-29') id="scite-ref-29-a" class="scite-citeref-number" title="DiMaggio, J. (2016, April 28). Tick cyberespionage group zeros in on Japan. Retrieved July 16, 2018."data-reference="Symantec Tick Apr 2016"><sup><a href="https://www.symantec.com/connect/blogs/tick-cyberespionage-group-zeros-japan" target="_blank" data-hasqtip="28" aria-describedby="qtip-28">[29]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v17/software/S0377"> S0377 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v17/software/S0377"> Ebury </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v17/software/S0377">Ebury</a> has installed a self-signed RPM package mimicking the original system package on RPM based systems.<span onclick=scrollToRef('scite-30') id="scite-ref-30-a" class="scite-citeref-number" title="M.Léveillé, M.. (2014, February 21). An In-depth Analysis of Linux/Ebury. Retrieved April 19, 2019."data-reference="ESET Ebury Feb 2014"><sup><a href="https://www.welivesecurity.com/2014/02/21/an-in-depth-analysis-of-linuxebury/" target="_blank" data-hasqtip="29" aria-describedby="qtip-29">[30]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v17/software/S0624"> S0624 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v17/software/S0624"> Ecipekac </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v17/software/S0624">Ecipekac</a> has used a valid, legitimate digital signature to evade detection.<span onclick=scrollToRef('scite-31') id="scite-ref-31-a" class="scite-citeref-number" title="GREAT. (2021, March 30). APT10: sophisticated multi-layered loader Ecipekac discovered in A41APT campaign. Retrieved June 17, 2021."data-reference="Securelist APT10 March 2021"><sup><a href="https://securelist.com/apt10-sophisticated-multi-layered-loader-ecipekac-discovered-in-a41apt-campaign/101519/" target="_blank" data-hasqtip="30" aria-describedby="qtip-30">[31]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v17/software/S0091"> S0091 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v17/software/S0091"> Epic </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v17/groups/G0010">Turla</a> has used valid digital certificates from Sysprint AG to sign its <a href="/versions/v17/software/S0091">Epic</a> dropper.<span onclick=scrollToRef('scite-32') id="scite-ref-32-a" class="scite-citeref-number" title="Kaspersky Lab's Global Research and Analysis Team. (2014, August 7). The Epic Turla Operation: Solving some of the mysteries of Snake/Uroburos. Retrieved December 11, 2014."data-reference="Kaspersky Turla"><sup><a href="https://securelist.com/the-epic-turla-operation/65545/" target="_blank" data-hasqtip="31" aria-describedby="qtip-31">[32]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v17/groups/G0037"> G0037 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v17/groups/G0037"> FIN6 </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v17/groups/G0037">FIN6</a> has used Comodo code-signing certificates.<span onclick=scrollToRef('scite-33') id="scite-ref-33-a" class="scite-citeref-number" title="Villadsen, O.. (2019, August 29). More_eggs, Anyone? Threat Actor ITG08 Strikes Again. Retrieved September 16, 2019."data-reference="Security Intelligence More Eggs Aug 2019"><sup><a href="https://securityintelligence.com/posts/more_eggs-anyone-threat-actor-itg08-strikes-again/" target="_blank" data-hasqtip="32" aria-describedby="qtip-32">[33]</a></sup></span>    </p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v17/groups/G0046"> G0046 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v17/groups/G0046"> FIN7 </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v17/groups/G0046">FIN7</a> has signed <a href="/versions/v17/software/S0030">Carbanak</a> payloads with legally purchased code signing certificates. <a href="/versions/v17/groups/G0046">FIN7</a> has also digitally signed their phishing documents, backdoors and other staging tools to bypass security controls.<span onclick=scrollToRef('scite-34') id="scite-ref-34-a" class="scite-citeref-number" title="Bennett, J., Vengerik, B. (2017, June 12). Behind the CARBANAK Backdoor. Retrieved June 11, 2018."data-reference="FireEye CARBANAK June 2017"><sup><a href="https://www.fireeye.com/blog/threat-research/2017/06/behind-the-carbanak-backdoor.html" target="_blank" data-hasqtip="33" aria-describedby="qtip-33">[34]</a></sup></span><span onclick=scrollToRef('scite-35') id="scite-ref-35-a" class="scite-citeref-number" title="Carr, N., et al. (2018, August 01). On the Hunt for FIN7: Pursuing an Enigmatic and Evasive Global Criminal Operation. Retrieved August 23, 2018."data-reference="FireEye FIN7 Aug 2018"><sup><a href="https://www.fireeye.com/blog/threat-research/2018/08/fin7-pursuing-an-enigmatic-and-evasive-global-criminal-operation.html" target="_blank" data-hasqtip="34" aria-describedby="qtip-34">[35]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v17/groups/G0093"> G0093 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v17/groups/G0093"> GALLIUM </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v17/groups/G0093">GALLIUM</a> has used stolen certificates to sign its tools including those from Whizzimo LLC.<span onclick=scrollToRef('scite-36') id="scite-ref-36-a" class="scite-citeref-number" title="MSTIC. (2019, December 12). GALLIUM: Targeting global telecom. Retrieved January 13, 2021."data-reference="Microsoft GALLIUM December 2019"><sup><a href="https://www.microsoft.com/security/blog/2019/12/12/gallium-targeting-global-telecom/" target="_blank" data-hasqtip="35" aria-describedby="qtip-35">[36]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v17/software/S0168"> S0168 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v17/software/S0168"> Gazer </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v17/software/S0168">Gazer</a> versions are signed with various valid certificates; one was likely faked and issued by Comodo for "Solid Loop Ltd," and another was issued for "Ultimate Computer Support Ltd."<span onclick=scrollToRef('scite-37') id="scite-ref-37-a" class="scite-citeref-number" title="ESET. (2017, August). Gazing at Gazer: Turla’s new second stage backdoor. Retrieved September 14, 2017."data-reference="ESET Gazer Aug 2017"><sup><a href="https://www.welivesecurity.com/wp-content/uploads/2017/08/eset-gazer.pdf" target="_blank" data-hasqtip="36" aria-describedby="qtip-36">[37]</a></sup></span><span onclick=scrollToRef('scite-38') id="scite-ref-38-a" class="scite-citeref-number" title="Kaspersky Lab's Global Research & Analysis Team. (2017, August 30). Introducing WhiteBear. Retrieved September 21, 2017."data-reference="Securelist WhiteBear Aug 2017"><sup><a href="https://securelist.com/introducing-whitebear/81638/" target="_blank" data-hasqtip="37" aria-describedby="qtip-37">[38]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v17/software/S1197"> S1197 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v17/software/S1197"> GoBear </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v17/software/S1197">GoBear</a> uses stolen legitimate code signing certificates for defense evasion.<span onclick=scrollToRef('scite-39') id="scite-ref-39-a" class="scite-citeref-number" title="Jiho Kim & Sebin Lee, S2W. (2024, February 7). Kimsuky disguised as a Korean company signed with a valid certificate to distribute Troll Stealer (English ver.). Retrieved January 17, 2025."data-reference="S2W Troll Stealer 2024"><sup><a href="https://medium.com/s2wblog/kimsuky-disguised-as-a-korean-company-signed-with-a-valid-certificate-to-distribute-troll-stealer-cfa5d54314e2" target="_blank" data-hasqtip="38" aria-describedby="qtip-38">[39]</a></sup></span><span onclick=scrollToRef('scite-40') id="scite-ref-40-a" class="scite-citeref-number" title="Symantec Threat Hunter Team. (2024, May 16). Springtail: New Linux Backdoor Added to Toolkit. Retrieved January 17, 2025."data-reference="Symantec Troll Stealer 2024"><sup><a href="https://www.security.com/threat-intelligence/springtail-kimsuky-backdoor-espionage" target="_blank" data-hasqtip="39" aria-describedby="qtip-39">[40]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v17/software/S0342"> S0342 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v17/software/S0342"> GreyEnergy </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v17/software/S0342">GreyEnergy</a> digitally signs the malware with a code-signing certificate.<span onclick=scrollToRef('scite-41') id="scite-ref-41-a" class="scite-citeref-number" title="Cherepanov, A. (2018, October). GREYENERGY A successor to BlackEnergy. Retrieved November 15, 2018."data-reference="ESET GreyEnergy Oct 2018"><sup><a href="https://www.welivesecurity.com/wp-content/uploads/2018/10/ESET_GreyEnergy.pdf" target="_blank" data-hasqtip="40" aria-describedby="qtip-40">[41]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v17/software/S0170"> S0170 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v17/software/S0170"> Helminth </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v17/software/S0170">Helminth</a> samples have been signed with legitimate, compromised code signing certificates owned by software company AI Squared.<span onclick=scrollToRef('scite-42') id="scite-ref-42-a" class="scite-citeref-number" title="ClearSky Cybersecurity. (2017, January 5). Iranian Threat Agent OilRig Delivers Digitally Signed Malware, Impersonates University of Oxford. Retrieved May 3, 2017."data-reference="ClearSky OilRig Jan 2017"><sup><a href="http://www.clearskysec.com/oilrig/" target="_blank" data-hasqtip="41" aria-describedby="qtip-41">[42]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v17/software/S0697"> S0697 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v17/software/S0697"> HermeticWiper </a>
+                                            </td>
+                                            <td>
+                                                            <p>The <a href="/versions/v17/software/S0697">HermeticWiper</a> executable has been signed with a legitimate certificate issued to Hermetica Digital Ltd.<span onclick=scrollToRef('scite-43') id="scite-ref-43-a" class="scite-citeref-number" title="Symantec Threat Hunter Team. (2022, February 24). Ukraine: Disk-wiping Attacks Precede Russian Invasion. Retrieved March 25, 2022."data-reference="Symantec Ukraine Wipers February 2022"><sup><a href="https://symantec-enterprise-blogs.security.com/blogs/threat-intelligence/ukraine-wiper-malware-russia" target="_blank" data-hasqtip="42" aria-describedby="qtip-42">[43]</a></sup></span><span onclick=scrollToRef('scite-44') id="scite-ref-44-a" class="scite-citeref-number" title="Thomas, W. et al. (2022, February 25). CrowdStrike Falcon Protects from New Wiper Malware Used in Ukraine Cyberattacks. Retrieved March 25, 2022."data-reference="Crowdstrike DriveSlayer February 2022"><sup><a href="https://www.crowdstrike.com/blog/how-crowdstrike-falcon-protects-against-wiper-malware-used-in-ukraine-attacks/" target="_blank" data-hasqtip="43" aria-describedby="qtip-43">[44]</a></sup></span><span onclick=scrollToRef('scite-45') id="scite-ref-45-a" class="scite-citeref-number" title="ESET. (2022, February 24). HermeticWiper: New data wiping malware hits Ukraine. Retrieved March 25, 2022."data-reference="ESET Hermetic Wiper February 2022"><sup><a href="https://www.welivesecurity.com/2022/02/24/hermeticwiper-new-data-wiping-malware-hits-ukraine" target="_blank" data-hasqtip="44" aria-describedby="qtip-44">[45]</a></sup></span><span onclick=scrollToRef('scite-46') id="scite-ref-46-a" class="scite-citeref-number" title="Dani, M. (2022, March 1). Ukrainian Targets Hit by HermeticWiper, New Datawiper Malware. Retrieved March 25, 2022."data-reference="Qualys Hermetic Wiper March 2022"><sup><a href="https://blog.qualys.com/vulnerabilities-threat-research/2022/03/01/ukrainian-targets-hit-by-hermeticwiper-new-datawiper-malware" target="_blank" data-hasqtip="45" aria-describedby="qtip-45">[46]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v17/software/S0698"> S0698 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v17/software/S0698"> HermeticWizard </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v17/software/S0698">HermeticWizard</a> has been signed by valid certificates assigned to Hermetica Digital.<span onclick=scrollToRef('scite-47') id="scite-ref-47-a" class="scite-citeref-number" title="ESET. (2022, March 1). IsaacWiper and HermeticWizard: New wiper and worm targetingUkraine. Retrieved April 10, 2022."data-reference="ESET Hermetic Wizard March 2022"><sup><a href="https://www.welivesecurity.com/2022/03/01/isaacwiper-hermeticwizard-wiper-worm-targeting-ukraine" target="_blank" data-hasqtip="46" aria-describedby="qtip-46">[47]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v17/software/S0163"> S0163 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v17/software/S0163"> Janicab </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v17/software/S0163">Janicab</a> used a valid AppleDeveloperID to sign the code to get past security restrictions.<span onclick=scrollToRef('scite-48') id="scite-ref-48-a" class="scite-citeref-number" title="Thomas. (2013, July 15). New signed malware called Janicab. Retrieved July 17, 2017."data-reference="Janicab"><sup><a href="https://web.archive.org/web/20230331162455/https://www.thesafemac.com/new-signed-malware-called-janicab/" target="_blank" data-hasqtip="47" aria-describedby="qtip-47">[48]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v17/groups/G0094"> G0094 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v17/groups/G0094"> Kimsuky </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v17/groups/G0094">Kimsuky</a> has signed files with the name EGIS CO,. Ltd. and has stolen a valid certificate that is used to sign the malware and the dropper.<span onclick=scrollToRef('scite-49') id="scite-ref-49-a" class="scite-citeref-number" title="ThreatConnect. (2020, September 28). Kimsuky Phishing Operations Putting In Work. Retrieved October 30, 2020."data-reference="ThreatConnect Kimsuky September 2020"><sup><a href="https://threatconnect.com/blog/kimsuky-phishing-operations-putting-in-work/" target="_blank" data-hasqtip="48" aria-describedby="qtip-48">[49]</a></sup></span><span onclick=scrollToRef('scite-39') id="scite-ref-39-a" class="scite-citeref-number" title="Jiho Kim & Sebin Lee, S2W. (2024, February 7). Kimsuky disguised as a Korean company signed with a valid certificate to distribute Troll Stealer (English ver.). Retrieved January 17, 2025."data-reference="S2W Troll Stealer 2024"><sup><a href="https://medium.com/s2wblog/kimsuky-disguised-as-a-korean-company-signed-with-a-valid-certificate-to-distribute-troll-stealer-cfa5d54314e2" target="_blank" data-hasqtip="38" aria-describedby="qtip-38">[39]</a></sup></span>  </p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v17/groups/G0032"> G0032 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v17/groups/G0032"> Lazarus Group </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v17/groups/G0032">Lazarus Group</a> has digitally signed malware and utilities to evade detection.<span onclick=scrollToRef('scite-50') id="scite-ref-50-a" class="scite-citeref-number" title="Saini, A. and Hossein, J. (2022, January 27). North Korea’s Lazarus APT leverages Windows Update client, GitHub in latest campaign. Retrieved January 27, 2022."data-reference="Lazarus APT January 2022"><sup><a href="https://blog.malwarebytes.com/threat-intelligence/2022/01/north-koreas-lazarus-apt-leverages-windows-update-client-github-in-latest-campaign/" target="_blank" data-hasqtip="49" aria-describedby="qtip-49">[50]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v17/groups/G0065"> G0065 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v17/groups/G0065"> Leviathan </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v17/groups/G0065">Leviathan</a> has used stolen code signing certificates to sign malware.<span onclick=scrollToRef('scite-51') id="scite-ref-51-a" class="scite-citeref-number" title="FireEye. (2018, March 16). Suspected Chinese Cyber Espionage Group (TEMP.Periscope) Targeting U.S. Engineering and Maritime Industries. Retrieved April 11, 2018."data-reference="FireEye Periscope March 2018"><sup><a href="https://www.fireeye.com/blog/threat-research/2018/03/suspected-chinese-espionage-group-targeting-maritime-and-engineering-industries.html" target="_blank" data-hasqtip="50" aria-describedby="qtip-50">[51]</a></sup></span><span onclick=scrollToRef('scite-52') id="scite-ref-52-a" class="scite-citeref-number" title="Plan, F., et al. (2019, March 4). APT40: Examining a China-Nexus Espionage Actor. Retrieved March 18, 2019."data-reference="FireEye APT40 March 2019"><sup><a href="https://www.fireeye.com/blog/threat-research/2019/03/apt40-examining-a-china-nexus-espionage-actor.html" target="_blank" data-hasqtip="51" aria-describedby="qtip-51">[52]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v17/software/S0372"> S0372 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v17/software/S0372"> LockerGoga </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v17/software/S0372">LockerGoga</a> has been signed with stolen certificates in order to make it look more legitimate.<span onclick=scrollToRef('scite-53') id="scite-ref-53-a" class="scite-citeref-number" title="Greenberg, A. (2019, March 25). A Guide to LockerGoga, the Ransomware Crippling Industrial Firms. Retrieved July 17, 2019."data-reference="Wired Lockergoga 2019"><sup><a href="https://www.wired.com/story/lockergoga-ransomware-crippling-industrial-firms/" target="_blank" data-hasqtip="52" aria-describedby="qtip-52">[53]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v17/groups/G1014"> G1014 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v17/groups/G1014"> LuminousMoth </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v17/groups/G1014">LuminousMoth</a> has signed their malware with a valid digital signature.<span onclick=scrollToRef('scite-54') id="scite-ref-54-a" class="scite-citeref-number" title="Lechtik, M, and etl. (2021, July 14). LuminousMoth APT: Sweeping attacks for the chosen few. Retrieved October 20, 2022."data-reference="Kaspersky LuminousMoth July 2021"><sup><a href="https://securelist.com/apt-luminousmoth/103332/" target="_blank" data-hasqtip="53" aria-describedby="qtip-53">[54]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v17/software/S1213"> S1213 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v17/software/S1213"> Lumma Stealer </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v17/software/S1213">Lumma Stealer</a> has used valid code signing digital certificates from ConsolHQ LTD and Verandah Green Limited to appear legitimate.<span onclick=scrollToRef('scite-55') id="scite-ref-55-a" class="scite-citeref-number" title="Buddy Tancio, Fe Cureg, and Jovit Samaniego, Trend Micro. (2025, January 30). Lumma Stealer’s GitHub-Based Delivery Explored via Managed Detection and Response. Retrieved March 22, 2025."data-reference="TrendMicro LummaStealer 2025"><sup><a href="https://www.trendmicro.com/en_us/research/25/a/lumma-stealers-github-based-delivery-via-mdr.html" target="_blank" data-hasqtip="54" aria-describedby="qtip-54">[55]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v17/software/S1016"> S1016 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v17/software/S1016"> MacMa </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v17/software/S1016">MacMa</a> has been delivered using ad hoc Apple Developer code signing certificates.<span onclick=scrollToRef('scite-56') id="scite-ref-56-a" class="scite-citeref-number" title="Phil Stokes. (2021, November 15). Infect If Needed | A Deeper Dive Into Targeted Backdoor macOS.Macma. Retrieved July 26, 2024."data-reference="SentinelOne Macma 2021"><sup><a href="https://www.sentinelone.com/labs/infect-if-needed-a-deeper-dive-into-targeted-backdoor-macos-macma/" target="_blank" data-hasqtip="55" aria-describedby="qtip-55">[56]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v17/groups/G0045"> G0045 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v17/groups/G0045"> menuPass </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v17/groups/G0045">menuPass</a> has resized and added data to the certificate table to enable the signing of modified files with legitimate signatures.<span onclick=scrollToRef('scite-31') id="scite-ref-31-a" class="scite-citeref-number" title="GREAT. (2021, March 30). APT10: sophisticated multi-layered loader Ecipekac discovered in A41APT campaign. Retrieved June 17, 2021."data-reference="Securelist APT10 March 2021"><sup><a href="https://securelist.com/apt10-sophisticated-multi-layered-loader-ecipekac-discovered-in-a41apt-campaign/101519/" target="_blank" data-hasqtip="30" aria-describedby="qtip-30">[31]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v17/software/S0455"> S0455 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v17/software/S0455"> Metamorfo </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v17/software/S0455">Metamorfo</a> has digitally signed executables using AVAST Software certificates.<span onclick=scrollToRef('scite-57') id="scite-ref-57-a" class="scite-citeref-number" title="Erlich, C. (2020, April 3). The Avast Abuser: Metamorfo Banking Malware Hides By Abusing Avast Executable. Retrieved May 26, 2020."data-reference="Medium Metamorfo Apr 2020"><sup><a href="https://medium.com/@chenerlich/the-avast-abuser-metamorfo-banking-malware-hides-by-abusing-avast-executable-ac9b8b392767" target="_blank" data-hasqtip="56" aria-describedby="qtip-56">[57]</a></sup></span> </p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v17/groups/G0021"> G0021 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v17/groups/G0021"> Molerats </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v17/groups/G0021">Molerats</a> has used forged Microsoft code-signing certificates on malware.<span onclick=scrollToRef('scite-58') id="scite-ref-58-a" class="scite-citeref-number" title="Villeneuve, N., Haq, H., Moran, N. (2013, August 23). OPERATION MOLERATS: MIDDLE EAST CYBER ATTACKS USING POISON IVY. Retrieved November 17, 2024."data-reference="FireEye Operation Molerats"><sup><a href="https://web.archive.org/web/20201031075438/https://www.fireeye.com/blog/threat-research/2013/08/operation-molerats-middle-east-cyber-attacks-using-poison-ivy.html" target="_blank" data-hasqtip="57" aria-describedby="qtip-57">[58]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v17/software/S0284"> S0284 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v17/software/S0284"> More_eggs </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v17/software/S0284">More_eggs</a> has used a signed binary shellcode loader and a signed Dynamic Link Library (DLL) to create a reverse shell.<span onclick=scrollToRef('scite-33') id="scite-ref-33-a" class="scite-citeref-number" title="Villadsen, O.. (2019, August 29). More_eggs, Anyone? Threat Actor ITG08 Strikes Again. Retrieved September 16, 2019."data-reference="Security Intelligence More Eggs Aug 2019"><sup><a href="https://securityintelligence.com/posts/more_eggs-anyone-threat-actor-itg08-strikes-again/" target="_blank" data-hasqtip="32" aria-describedby="qtip-32">[33]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v17/groups/G1009"> G1009 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v17/groups/G1009"> Moses Staff </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v17/groups/G1009">Moses Staff</a> has used signed drivers from an open source tool called DiskCryptor to evade detection.<span onclick=scrollToRef('scite-59') id="scite-ref-59-a" class="scite-citeref-number" title="Checkpoint Research. (2021, November 15). Uncovering MosesStaff techniques: Ideology over Money. Retrieved August 11, 2022."data-reference="Checkpoint MosesStaff Nov 2021"><sup><a href="https://research.checkpoint.com/2021/mosesstaff-targeting-israeli-companies/" target="_blank" data-hasqtip="58" aria-describedby="qtip-58">[59]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v17/software/S0210"> S0210 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v17/software/S0210"> Nerex </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v17/software/S0210">Nerex</a> drops a signed Microsoft DLL to disk.<span onclick=scrollToRef('scite-60') id="scite-ref-60-a" class="scite-citeref-number" title="Ladley, F. (2012, May 15). Backdoor.Nerex. Retrieved February 23, 2018."data-reference="Symantec Nerex May 2012"><sup><a href="https://www.symantec.com/security_response/writeup.jsp?docid=2012-051515-3445-99" target="_blank" data-hasqtip="59" aria-describedby="qtip-59">[60]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v17/groups/G0049"> G0049 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v17/groups/G0049"> OilRig </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v17/groups/G0049">OilRig</a> has signed its malware with stolen certificates.<span onclick=scrollToRef('scite-42') id="scite-ref-42-a" class="scite-citeref-number" title="ClearSky Cybersecurity. (2017, January 5). Iranian Threat Agent OilRig Delivers Digitally Signed Malware, Impersonates University of Oxford. Retrieved May 3, 2017."data-reference="ClearSky OilRig Jan 2017"><sup><a href="http://www.clearskysec.com/oilrig/" target="_blank" data-hasqtip="41" aria-describedby="qtip-41">[42]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v17/campaigns/C0022"> C0022 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v17/campaigns/C0022"> Operation Dream Job </a>
+                                            </td>
+                                            <td>
+                                                            <p>During <a href="https://attack.mitre.org/campaigns/C0022">Operation Dream Job</a>, <a href="/versions/v17/groups/G0032">Lazarus Group</a> digitally signed their own malware to evade detection.<span onclick=scrollToRef('scite-61') id="scite-ref-61-a" class="scite-citeref-number" title="Breitenbacher, D and Osis, K. (2020, June 17). OPERATION IN(TER)CEPTION: Targeted Attacks Against European Aerospace and Military Companies. Retrieved December 20, 2021."data-reference="ESET Lazarus Jun 2020"><sup><a href="https://www.welivesecurity.com/wp-content/uploads/2020/06/ESET_Operation_Interception.pdf" target="_blank" data-hasqtip="60" aria-describedby="qtip-60">[61]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v17/campaigns/C0006"> C0006 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v17/campaigns/C0006"> Operation Honeybee </a>
+                                            </td>
+                                            <td>
+                                                            <p>During <a href="https://attack.mitre.org/campaigns/C0006">Operation Honeybee</a>, the threat actors deployed the MaoCheng dropper with a stolen Adobe Systems digital signature.<span onclick=scrollToRef('scite-62') id="scite-ref-62-a" class="scite-citeref-number" title="Sherstobitoff, R. (2018, March 02). McAfee Uncovers Operation Honeybee, a Malicious Document Campaign Targeting Humanitarian Aid Groups. Retrieved May 16, 2018."data-reference="McAfee Honeybee"><sup><a href="https://www.mcafee.com/blogs/other-blogs/mcafee-labs/mcafee-uncovers-operation-honeybee-malicious-document-campaign-targeting-humanitarian-aid-groups/" target="_blank" data-hasqtip="61" aria-describedby="qtip-61">[62]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v17/groups/G0040"> G0040 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v17/groups/G0040"> Patchwork </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v17/groups/G0040">Patchwork</a> has signed malware with self-signed certificates from fictitious and spoofed legitimate software companies.<span onclick=scrollToRef('scite-10') id="scite-ref-10-a" class="scite-citeref-number" title="Hinchliffe, A. and Falcone, R. (2020, May 11). Updated BackConfig Malware Targeting Government and Military Organizations in South Asia. Retrieved June 17, 2020."data-reference="Unit 42 BackConfig May 2020"><sup><a href="https://unit42.paloaltonetworks.com/updated-backconfig-malware-targeting-government-and-military-organizations/" target="_blank" data-hasqtip="9" aria-describedby="qtip-9">[10]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v17/software/S0501"> S0501 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v17/software/S0501"> PipeMon </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v17/software/S0501">PipeMon</a>, its installer, and tools are signed with stolen code-signing certificates.<span onclick=scrollToRef('scite-63') id="scite-ref-63-a" class="scite-citeref-number" title="Tartare, M. et al. (2020, May 21). No "Game over" for the Winnti Group. Retrieved August 24, 2020."data-reference="ESET PipeMon May 2020"><sup><a href="https://www.welivesecurity.com/2020/05/21/no-game-over-winnti-group/" target="_blank" data-hasqtip="62" aria-describedby="qtip-62">[63]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v17/groups/G0056"> G0056 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v17/groups/G0056"> PROMETHIUM </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v17/groups/G0056">PROMETHIUM</a> has signed code with self-signed certificates.<span onclick=scrollToRef('scite-64') id="scite-ref-64-a" class="scite-citeref-number" title="Tudorica, R. et al. (2020, June 30). StrongPity APT - Revealing Trojanized Tools, Working Hours and Infrastructure. Retrieved July 20, 2020."data-reference="Bitdefender StrongPity June 2020"><sup><a href="https://www.bitdefender.com/files/News/CaseStudies/study/353/Bitdefender-Whitepaper-StrongPity-APT.pdf" target="_blank" data-hasqtip="63" aria-describedby="qtip-63">[64]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v17/software/S0650"> S0650 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v17/software/S0650"> QakBot </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v17/software/S0650">QakBot</a> can use signed loaders to evade detection.<span onclick=scrollToRef('scite-65') id="scite-ref-65-a" class="scite-citeref-number" title="Morrow, D. (2021, April 15). The rise of QakBot. Retrieved September 27, 2021."data-reference="ATT QakBot April 2021"><sup><a href="https://cybersecurity.att.com/blogs/labs-research/the-rise-of-qakbot" target="_blank" data-hasqtip="64" aria-describedby="qtip-64">[65]</a></sup></span><span onclick=scrollToRef('scite-66') id="scite-ref-66-a" class="scite-citeref-number" title="Vilkomir-Preisman, S. (2022, August 18). Beating Black Basta Ransomware. Retrieved March 8, 2023."data-reference="Deep Instinct Black Basta August 2022"><sup><a href="https://www.deepinstinct.com/blog/black-basta-ransomware-threat-emergence" target="_blank" data-hasqtip="65" aria-describedby="qtip-65">[66]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v17/software/S0262"> S0262 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v17/software/S0262"> QuasarRAT </a>
+                                            </td>
+                                            <td>
+                                                            <p>A <a href="/versions/v17/software/S0262">QuasarRAT</a> .dll file is digitally signed by a certificate from AirVPN.<span onclick=scrollToRef('scite-67') id="scite-ref-67-a" class="scite-citeref-number" title="Meltzer, M, et al. (2018, June 07). Patchwork APT Group Targets US Think Tanks. Retrieved July 16, 2018."data-reference="Volexity Patchwork June 2018"><sup><a href="https://www.volexity.com/blog/2018/06/07/patchwork-apt-group-targets-us-think-tanks/" target="_blank" data-hasqtip="66" aria-describedby="qtip-66">[67]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v17/campaigns/C0047"> C0047 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v17/campaigns/C0047"> RedDelta Modified PlugX Infection Chain Operations </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v17/groups/G0129">Mustang Panda</a> used legitimate, signed binaries such as <code>inkform.exe</code> or <code>ExcelRepairToolboxLauncher.exe</code> for follow-on execution of malicious DLLs through DLL search order hijacking in <a href="https://attack.mitre.org/campaigns/C0047">RedDelta Modified PlugX Infection Chain Operations</a>.<span onclick=scrollToRef('scite-68') id="scite-ref-68-a" class="scite-citeref-number" title="Insikt Group. (2025, January 9). Chinese State-Sponsored RedDelta Targeted Taiwan, Mongolia, and Southeast Asia with Adapted PlugX Infection Chain. Retrieved January 14, 2025."data-reference="Recorded Future RedDelta 2025"><sup><a href="https://go.recordedfuture.com/hubfs/reports/cta-cn-2025-0109.pdf" target="_blank" data-hasqtip="67" aria-describedby="qtip-67">[68]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v17/software/S1150"> S1150 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v17/software/S1150"> ROADSWEEP </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v17/software/S1150">ROADSWEEP</a> has been digitally signed with a certificate issued to the Kuwait Telecommunications Company KSC.<span onclick=scrollToRef('scite-69') id="scite-ref-69-a" class="scite-citeref-number" title="CISA. (2022, September 23). AA22-264A Iranian State Actors Conduct Cyber Operations Against the Government of Albania. Retrieved August 6, 2024."data-reference="CISA Iran Albanian Attacks September 2022"><sup><a href="https://www.cisa.gov/news-events/cybersecurity-advisories/aa22-264a" target="_blank" data-hasqtip="68" aria-describedby="qtip-68">[69]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v17/software/S0148"> S0148 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v17/software/S0148"> RTM </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v17/software/S0148">RTM</a> samples have been signed with a code-signing certificates.<span onclick=scrollToRef('scite-70') id="scite-ref-70-a" class="scite-citeref-number" title="Faou, M. and Boutin, J. (2017, February). Read The Manual: A Guide to the RTM Banking Trojan. Retrieved March 9, 2017."data-reference="ESET RTM Feb 2017"><sup><a href="https://www.welivesecurity.com/wp-content/uploads/2017/02/Read-The-Manual.pdf" target="_blank" data-hasqtip="69" aria-describedby="qtip-69">[70]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v17/groups/G1031"> G1031 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v17/groups/G1031"> Saint Bear </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v17/groups/G1031">Saint Bear</a> has used an initial loader malware featuring a legitimate code signing certificate associated with "Electrum Technologies GmbH."<span onclick=scrollToRef('scite-71') id="scite-ref-71-a" class="scite-citeref-number" title="Unit 42. (2022, February 25). Spear Phishing Attacks Target Organizations in Ukraine, Payloads Include the Document Stealer OutSteel and the Downloader SaintBot. Retrieved June 9, 2022."data-reference="Palo Alto Unit 42 OutSteel SaintBot February 2022 "><sup><a href="https://unit42.paloaltonetworks.com/ukraine-targeted-outsteel-saintbot/" target="_blank" data-hasqtip="70" aria-describedby="qtip-70">[71]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v17/groups/G1015"> G1015 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v17/groups/G1015"> Scattered Spider </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v17/groups/G1015">Scattered Spider</a> has used self-signed and stolen certificates originally issued to NVIDIA and Global Software LLC.<span onclick=scrollToRef('scite-72') id="scite-ref-72-a" class="scite-citeref-number" title="CrowdStrike. (2023, January 10). SCATTERED SPIDER Exploits Windows Security Deficiencies with Bring-Your-Own-Vulnerable-Driver Tactic in Attempt to Bypass Endpoint Security. Retrieved July 5, 2023."data-reference="CrowdStrike Scattered Spider BYOVD January 2023"><sup><a href="https://www.crowdstrike.com/blog/scattered-spider-attempts-to-avoid-detection-with-bring-your-own-vulnerable-driver-tactic/" target="_blank" data-hasqtip="71" aria-describedby="qtip-71">[72]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v17/groups/G0091"> G0091 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v17/groups/G0091"> Silence </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v17/groups/G0091">Silence</a> has used a valid certificate to sign their primary loader Silence.Downloader (aka TrueBot).<span onclick=scrollToRef('scite-73') id="scite-ref-73-a" class="scite-citeref-number" title="Group-IB. (2019, August). Silence 2.0: Going Global. Retrieved May 5, 2020."data-reference="Group IB Silence Aug 2019"><sup><a href="https://www.group-ib.com/resources/threat-research/silence_2.0.going_global.pdf" target="_blank" data-hasqtip="72" aria-describedby="qtip-72">[73]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v17/campaigns/C0024"> C0024 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v17/campaigns/C0024"> SolarWinds Compromise </a>
+                                            </td>
+                                            <td>
+                                                            <p>During the <a href="https://attack.mitre.org/campaigns/C0024">SolarWinds Compromise</a>, <a href="/versions/v17/groups/G0016">APT29</a> was able to get <a href="/versions/v17/software/S0559">SUNBURST</a> signed by SolarWinds code signing certificates by injecting the malware into the SolarWinds Orion software lifecycle.<span onclick=scrollToRef('scite-74') id="scite-ref-74-a" class="scite-citeref-number" title="FireEye. (2020, December 13). Highly Evasive Attacker Leverages SolarWinds Supply Chain to Compromise Multiple Global Victims With SUNBURST Backdoor. Retrieved January 4, 2021."data-reference="FireEye SUNBURST Backdoor December 2020"><sup><a href="https://www.fireeye.com/blog/threat-research/2020/12/evasive-attacker-leverages-solarwinds-supply-chain-compromises-with-sunburst-backdoor.html" target="_blank" data-hasqtip="73" aria-describedby="qtip-73">[74]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v17/software/S0646"> S0646 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v17/software/S0646"> SpicyOmelette </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v17/software/S0646">SpicyOmelette</a> has been signed with valid digital certificates.<span onclick=scrollToRef('scite-75') id="scite-ref-75-a" class="scite-citeref-number" title="CTU. (2018, September 27). Cybercriminals Increasingly Trying to Ensnare the Big Financial Fish. Retrieved September 20, 2021."data-reference="Secureworks GOLD KINGSWOOD September 2018"><sup><a href="https://www.secureworks.com/blog/cybercriminals-increasingly-trying-to-ensnare-the-big-financial-fish" target="_blank" data-hasqtip="74" aria-describedby="qtip-74">[75]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v17/software/S1183"> S1183 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v17/software/S1183"> StrelaStealer </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v17/software/S1183">StrelaStealer</a> variants have used valid code signing certificates.<span onclick=scrollToRef('scite-76') id="scite-ref-76-a" class="scite-citeref-number" title="Golo Mühr, Joe Fasulo & Charlotte Hammond, IBM X-Force. (2024, November 12). Strela Stealer: Today’s invoice is tomorrow’s phish. Retrieved December 31, 2024."data-reference="IBM StrelaStealer 2024"><sup><a href="https://securityintelligence.com/x-force/strela-stealer-todays-invoice-tomorrows-phish/" target="_blank" data-hasqtip="75" aria-describedby="qtip-75">[76]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v17/software/S0491"> S0491 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v17/software/S0491"> StrongPity </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v17/software/S0491">StrongPity</a> has been signed with self-signed certificates.<span onclick=scrollToRef('scite-64') id="scite-ref-64-a" class="scite-citeref-number" title="Tudorica, R. et al. (2020, June 30). StrongPity APT - Revealing Trojanized Tools, Working Hours and Infrastructure. Retrieved July 20, 2020."data-reference="Bitdefender StrongPity June 2020"><sup><a href="https://www.bitdefender.com/files/News/CaseStudies/study/353/Bitdefender-Whitepaper-StrongPity-APT.pdf" target="_blank" data-hasqtip="63" aria-describedby="qtip-63">[64]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v17/software/S0603"> S0603 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v17/software/S0603"> Stuxnet </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v17/software/S0603">Stuxnet</a> used a digitally signed driver with a compromised Realtek certificate.<span onclick=scrollToRef('scite-77') id="scite-ref-77-a" class="scite-citeref-number" title="Nicolas Falliere, Liam O Murchu, Eric Chien 2011, February W32.Stuxnet Dossier (Version 1.4) Retrieved November 17, 2024."data-reference="Nicolas Falliere, Liam O Murchu, Eric Chien February 2011"><sup><a href="https://docs.broadcom.com/doc/security-response-w32-stuxnet-dossier-11-en" target="_blank" data-hasqtip="76" aria-describedby="qtip-76">[77]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v17/groups/G0039"> G0039 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v17/groups/G0039"> Suckfly </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v17/groups/G0039">Suckfly</a> has used stolen certificates to sign its malware.<span onclick=scrollToRef('scite-78') id="scite-ref-78-a" class="scite-citeref-number" title="DiMaggio, J. (2016, March 15). Suckfly: Revealing the secret life of your code signing certificates. Retrieved August 3, 2016."data-reference="Symantec Suckfly March 2016"><sup><a href="http://www.symantec.com/connect/blogs/suckfly-revealing-secret-life-your-code-signing-certificates" target="_blank" data-hasqtip="77" aria-describedby="qtip-77">[78]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v17/software/S0559"> S0559 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v17/software/S0559"> SUNBURST </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v17/software/S0559">SUNBURST</a> was digitally signed by SolarWinds from March - May 2020.<span onclick=scrollToRef('scite-74') id="scite-ref-74-a" class="scite-citeref-number" title="FireEye. (2020, December 13). Highly Evasive Attacker Leverages SolarWinds Supply Chain to Compromise Multiple Global Victims With SUNBURST Backdoor. Retrieved January 4, 2021."data-reference="FireEye SUNBURST Backdoor December 2020"><sup><a href="https://www.fireeye.com/blog/threat-research/2020/12/evasive-attacker-leverages-solarwinds-supply-chain-compromises-with-sunburst-backdoor.html" target="_blank" data-hasqtip="73" aria-describedby="qtip-73">[74]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v17/software/S0663"> S0663 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v17/software/S0663"> SysUpdate </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v17/software/S0663">SysUpdate</a> has been signed with stolen digital certificates.<span onclick=scrollToRef('scite-79') id="scite-ref-79-a" class="scite-citeref-number" title="Daniel Lunghi. (2023, March 1). Iron Tiger’s SysUpdate Reappears, Adds Linux Targeting. Retrieved March 20, 2023."data-reference="Lunghi Iron Tiger Linux"><sup><a href="https://www.trendmicro.com/en_us/research/23/c/iron-tiger-sysupdate-adds-linux-targeting.html" target="_blank" data-hasqtip="78" aria-describedby="qtip-78">[79]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v17/groups/G0092"> G0092 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v17/groups/G0092"> TA505 </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v17/groups/G0092">TA505</a> has signed payloads with code signing certificates from Thawte and Sectigo.<span onclick=scrollToRef('scite-80') id="scite-ref-80-a" class="scite-citeref-number" title="Salem, E. (2019, April 25). Threat Actor TA505 Targets Financial Enterprises Using LOLBins and a New Backdoor Malware. Retrieved May 28, 2019."data-reference="Cybereason TA505 April 2019"><sup><a href="https://www.cybereason.com/blog/threat-actor-ta505-targets-financial-enterprises-using-lolbins-and-a-new-backdoor-malware" target="_blank" data-hasqtip="79" aria-describedby="qtip-79">[80]</a></sup></span><span onclick=scrollToRef('scite-81') id="scite-ref-81-a" class="scite-citeref-number" title="Vilkomir-Preisman, S. (2019, April 2). New ServHelper Variant Employs Excel 4.0 Macro to Drop Signed Payload. Retrieved September 16, 2024.."data-reference="Deep Instinct TA505 Apr 2019"><sup><a href="https://www.deepinstinct.com/blog/new-servhelper-variant-employs-excel-4-0-macro-to-drop-signed-payload" target="_blank" data-hasqtip="80" aria-describedby="qtip-80">[81]</a></sup></span><span onclick=scrollToRef('scite-82') id="scite-ref-82-a" class="scite-citeref-number" title="Hiroaki, H. and Lu, L. (2019, June 12). Shifting Tactics: Breaking Down TA505 Group’s Use of HTML, RATs and Other Techniques in Latest Campaigns. Retrieved May 29, 2020."data-reference="Trend Micro TA505 June 2019"><sup><a href="https://blog.trendmicro.com/trendlabs-security-intelligence/shifting-tactics-breaking-down-ta505-groups-use-of-html-rats-and-other-techniques-in-latest-campaigns/" target="_blank" data-hasqtip="81" aria-describedby="qtip-81">[82]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v17/software/S0266"> S0266 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v17/software/S0266"> TrickBot </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v17/software/S0266">TrickBot</a> has come with a signed downloader component.<span onclick=scrollToRef('scite-5') id="scite-ref-5-a" class="scite-citeref-number" title="Dahan, A. et al. (2019, December 11). DROPPING ANCHOR: FROM A TRICKBOT INFECTION TO THE DISCOVERY OF THE ANCHOR MALWARE. Retrieved September 10, 2020."data-reference="Cyberreason Anchor December 2019"><sup><a href="https://www.cybereason.com/blog/dropping-anchor-from-a-trickbot-infection-to-the-discovery-of-the-anchor-malware" target="_blank" data-hasqtip="4" aria-describedby="qtip-4">[5]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v17/software/S1196"> S1196 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v17/software/S1196"> Troll Stealer </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v17/software/S1196">Troll Stealer</a>, along with its associated dropper, utilizes legitimate, stolen code signing certificates.<span onclick=scrollToRef('scite-39') id="scite-ref-39-a" class="scite-citeref-number" title="Jiho Kim & Sebin Lee, S2W. (2024, February 7). Kimsuky disguised as a Korean company signed with a valid certificate to distribute Troll Stealer (English ver.). Retrieved January 17, 2025."data-reference="S2W Troll Stealer 2024"><sup><a href="https://medium.com/s2wblog/kimsuky-disguised-as-a-korean-company-signed-with-a-valid-certificate-to-distribute-troll-stealer-cfa5d54314e2" target="_blank" data-hasqtip="38" aria-describedby="qtip-38">[39]</a></sup></span><span onclick=scrollToRef('scite-83') id="scite-ref-83-a" class="scite-citeref-number" title="AhnLab ASEC. (2024, February 16). TrollAgent That Infects Systems Upon Security Program Installation Process (Kimsuky Group). Retrieved January 17, 2025."data-reference="ASEC Troll Stealer 2024"><sup><a href="https://asec.ahnlab.com/en/61934/" target="_blank" data-hasqtip="82" aria-describedby="qtip-82">[83]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v17/groups/G0044"> G0044 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v17/groups/G0044"> Winnti Group </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v17/groups/G0044">Winnti Group</a> used stolen certificates to sign its malware.<span onclick=scrollToRef('scite-84') id="scite-ref-84-a" class="scite-citeref-number" title="Kaspersky Lab's Global Research and Analysis Team. (2013, April 11). Winnti. More than just a game. Retrieved February 8, 2017."data-reference="Kaspersky Winnti April 2013"><sup><a href="https://securelist.com/winnti-more-than-just-a-game/37029/" target="_blank" data-hasqtip="83" aria-describedby="qtip-83">[84]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v17/groups/G0102"> G0102 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v17/groups/G0102"> Wizard Spider </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v17/groups/G0102">Wizard Spider</a> has used Digicert code-signing certificates for some of its malware.<span onclick=scrollToRef('scite-85') id="scite-ref-85-a" class="scite-citeref-number" title="The DFIR Report. (2020, November 5). Ryuk Speed Run, 2 Hours to Ransom. Retrieved November 6, 2020."data-reference="DFIR Ryuk 2 Hour Speed Run November 2020"><sup><a href="https://thedfirreport.com/2020/11/05/ryuk-speed-run-2-hours-to-ransom/" target="_blank" data-hasqtip="84" aria-describedby="qtip-84">[85]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v17/software/S1151"> S1151 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v17/software/S1151"> ZeroCleare </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v17/software/S1151">ZeroCleare</a> can deploy a vulnerable, signed driver on a compromised host to bypass operating system safeguards.<span onclick=scrollToRef('scite-86') id="scite-ref-86-a" class="scite-citeref-number" title="Kessem, L. (2019, December 4). New Destructive Wiper ZeroCleare Targets Energy Sector in the Middle East. Retrieved September 4, 2024."data-reference="IBM ZeroCleare Wiper December 2019"><sup><a href="https://securityintelligence.com/posts/new-destructive-wiper-zerocleare-targets-energy-sector-in-the-middle-east/" target="_blank" data-hasqtip="85" aria-describedby="qtip-85">[86]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                </tbody>
+                            </table>
+                            </div>
+                            <h2 class="pt-3" id ="mitigations">Mitigations</h2>
+                                <p>
+                                    This type of attack technique cannot be easily mitigated with preventive controls since
+                                    it is based on the abuse of system features.
+                                </p>
+                            <h2 class="pt-3" id="detection">Detection</h2>
+                                <div class="tables-mobile">
+<table class="table datasources-table table-bordered">
+    <thead>
+        <tr>
+            <th class="p-2" scope="col">ID</th>
+            <th class="p-2 nowrap" scope="col">Data Source</th>
+            <th class="p-2 nowrap" scope="col">Data Component</th>
+            <th class="p-2" scope="col">Detects</th>
+        </tr>
+    </thead>
+    <tbody>
+            <tr class="datasource" id="uses-DS0022">
+                <td>
+                    <a href="/versions/v17/datasources/DS0022">DS0022</a>
+                </td>
+                <td class="nowrap">
+                    <a href="/versions/v17/datasources/DS0022">File</a>
+                </td>
+                <!-- Add first data component here -->
+                <td> 
+                    <a href="/datasources/DS0022/#File%20Metadata">File Metadata</a>
+                </td>
+                    <td>
+                                <p>Collect and analyze signing certificate metadata on software that executes within the environment to look for unusual certificate characteristics and outliers.</p>
+
+                    </td>
+            </tr>
+    </tbody>
+</table>
+</div>
+
+
+                            <h2 class="pt-3" id="references">References</h2>
+
+        <div class="row">
+            <div class="col">
+                <ol>
+                            
+        <li>
+            <span  id="scite-1" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-1" href="https://en.wikipedia.org/wiki/Code_signing" target="_blank">
+                        Wikipedia. (2015, November 10). Code Signing. Retrieved March 31, 2016.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-2" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-2" href="https://securelist.com/why-you-shouldnt-completely-trust-files-signed-with-digital-certificates/68593/" target="_blank">
+                        Ladikov, A. (2015, January 29). Why You Shouldn’t Completely Trust Files Signed with Digital Certificates. Retrieved March 31, 2016.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-3" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-3" href="http://www.symantec.com/connect/blogs/how-attackers-steal-private-keys-digital-certificates" target="_blank">
+                        Shinotsuka, H. (2013, February 22). How Attackers Steal Private Keys from Digital Certificates. Retrieved March 31, 2016.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-4" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-4" href="https://eclecticlight.co/2020/11/16/checks-on-executable-code-in-catalina-and-big-sur-a-first-draft/" target="_blank">
+                        Howard Oakley. (2020, November 16). Checks on executable code in Catalina and Big Sur: a first draft. Retrieved September 21, 2022.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-5" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-5" href="https://www.cybereason.com/blog/dropping-anchor-from-a-trickbot-infection-to-the-discovery-of-the-anchor-malware" target="_blank">
+                        Dahan, A. et al. (2019, December 11). DROPPING ANCHOR: FROM A TRICKBOT INFECTION TO THE DISCOVERY OF THE ANCHOR MALWARE. Retrieved September 10, 2020.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-6" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-6" href="https://us-cert.cisa.gov/ncas/alerts/aa21-048a" target="_blank">
+                        Cybersecurity and Infrastructure Security Agency. (2021, February 21). AppleJeus: Analysis of North Korea’s Cryptocurrency Malware. Retrieved March 1, 2021.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-7" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-7" href="https://www.mandiant.com/sites/default/files/2022-02/rt-apt41-dual-operation.pdf" target="_blank">
+                        Fraser, N., et al. (2019, August 7). Double DragonAPT41, a dual espionage and cyber crime operation APT41. Retrieved September 23, 2019.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-8" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-8" href="https://www.group-ib.com/blog/colunmtk-apt41/" target="_blank">
+                        Rostovcev, N. (2021, June 10). Big airline heist APT41 likely behind a third-party attack on Air India. Retrieved August 26, 2021.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-9" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-9" href="https://cloud.google.com/blog/topics/threat-intelligence/apt41-arisen-from-dust" target="_blank">
+                        Mike Stokkel et al. (2024, July 18). APT41 Has Arisen From the DUST. Retrieved September 16, 2024.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-10" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-10" href="https://unit42.paloaltonetworks.com/updated-backconfig-malware-targeting-government-and-military-organizations/" target="_blank">
+                        Hinchliffe, A. and Falcone, R. (2020, May 11). Updated BackConfig Malware Targeting Government and Military Organizations in South Asia. Retrieved June 17, 2020.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-11" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-11" href="https://research.checkpoint.com/2020/bandook-signed-delivered/" target="_blank">
+                        Check Point. (2020, November 26). Bandook: Signed & Delivered. Retrieved May 31, 2021.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-12" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-12" href="https://www.cybereason.com/blog/a-bazar-of-tricks-following-team9s-development-cycles" target="_blank">
+                        Cybereason Nocturnus. (2020, July 16). A BAZAR OF TRICKS: FOLLOWING TEAM9’S DEVELOPMENT CYCLES. Retrieved November 18, 2020.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-13" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-13" href="https://research.checkpoint.com/2022/black-basta-and-the-unnoticed-delivery/" target="_blank">
+                        Check Point. (2022, October 20). BLACK BASTA AND THE UNNOTICED DELIVERY. Retrieved March 8, 2023.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-14" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-14" href="https://us-cert.cisa.gov/ncas/analysis-reports/ar20-232a" target="_blank">
+                        US-CERT. (2020, August 19). MAR-10295134-1.v1 – North Korean Remote Access Trojan: BLINDINGCAN. Retrieved August 19, 2020.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-15" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-15" href="https://www.fireeye.com/blog/threat-research/2019/10/mahalo-fin7-responding-to-new-tools-and-techniques.html" target="_blank">
+                        Carr, N, et all. (2019, October 10). Mahalo FIN7: Responding to the Criminal Operators’ New Tools and Techniques. Retrieved October 11, 2019.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-16" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-16" href="https://thedfirreport.com/2021/11/29/continuing-the-bazar-ransomware-story/" target="_blank">
+                        DFIR Report. (2021, November 29). CONTInuing the Bazar Ransomware Story. Retrieved September 29, 2022.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-17" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-17" href="http://researchcenter.paloaltonetworks.com/2017/02/unit42-menupass-returns-new-malware-new-attacks-japanese-academics-organizations/" target="_blank">
+                        Miller-Osborn, J. and Grunzweig, J.. (2017, February 16). menuPass Returns with New Malware and New Attacks Against Japanese Academics and Organizations. Retrieved March 1, 2017.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-18" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-18" href="https://blogs.jpcert.or.jp/en/2017/02/chches-malware--93d6.html" target="_blank">
+                        Nakamura, Y.. (2017, February 17). ChChes - Malware that Communicates with C&C Servers Using Cookie Headers. Retrieved November 17, 2024.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-19" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-19" href="https://www.pwc.co.uk/cyber-security/pdf/pwc-uk-operation-cloud-hopper-technical-annex-april-2017.pdf" target="_blank">
+                        PwC and BAE Systems. (2017, April). Operation Cloud Hopper: Technical Annex. Retrieved April 13, 2017.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-20" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-20" href="https://cloud.google.com/blog/topics/threat-intelligence/likely-iranian-threat-actor-conducts-politically-motivated-disruptive-activity-against/" target="_blank">
+                        Jenkins, L. at al. (2022, August 4). ROADSWEEP Ransomware - Likely Iranian Threat Actor Conducts Politically Motivated Disruptive Activity Against Albanian Government Organizations. Retrieved August 6, 2024.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-21" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-21" href="https://unit42.paloaltonetworks.com/clop-ransomware/" target="_blank">
+                        Santos, D. (2021, April 13). Threat Assessment: Clop Ransomware. Retrieved July 30, 2021.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-22" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-22" href="https://web.archive.org/web/20210219195905/https://talos-intelligence-site.s3.amazonaws.com/production/document_files/files/000/095/031/original/Talos_Cobalt_Strike.pdf" target="_blank">
+                        Mavis, N. (2020, September 21). The Art and Science of Detecting Cobalt Strike. Retrieved September 12, 2024.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-23" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-23" href="https://web.archive.org/web/20210708035426/https://www.cobaltstrike.com/downloads/csmanual43.pdf" target="_blank">
+                        Strategic Cyber LLC. (2020, November 5). Cobalt Strike: Advanced Threat Tactics for Penetration Testers. Retrieved April 13, 2021.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-24" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-24" href="http://www.clearskysec.com/wp-content/uploads/2017/07/Operation_Wilted_Tulip.pdf" target="_blank">
+                        ClearSky Cyber Security and Trend Micro. (2017, July). Operation Wilted Tulip: Exposing a cyber espionage apparatus. Retrieved August 21, 2017.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-25" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-25" href="https://www.cybereason.com/blog/back-to-the-future-inside-the-kimsuky-kgh-spyware-suite" target="_blank">
+                        Dahan, A. et al. (2020, November 2). Back to the Future: Inside the Kimsuky KGH Spyware Suite. Retrieved November 6, 2020.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-26" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-26" href="https://www.welivesecurity.com/en/eset-research/evasive-panda-leverages-monlam-festival-target-tibetans/" target="_blank">
+                        Ahn Ho, Facundo Muñoz, & Marc-Etienne M.Léveillé. (2024, March 7). Evasive Panda leverages Monlam Festival to target Tibetans. Retrieved July 25, 2024.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-27" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-27" href="https://media.kasperskycontenthub.com/wp-content/uploads/sites/43/2018/03/08070903/darkhotel_kl_07.11.pdf" target="_blank">
+                        Kaspersky Lab's Global Research and Analysis Team. (2014, November). The Darkhotel APT A Story of Unusual Hospitality. Retrieved November 12, 2014.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-28" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-28" href="https://securelist.com/darkhotels-attacks-in-2015/71713/" target="_blank">
+                        Kaspersky Lab's Global Research & Analysis Team. (2015, August 10). Darkhotel's attacks in 2015. Retrieved November 2, 2018.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-29" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-29" href="https://www.symantec.com/connect/blogs/tick-cyberespionage-group-zeros-japan" target="_blank">
+                        DiMaggio, J. (2016, April 28). Tick cyberespionage group zeros in on Japan. Retrieved July 16, 2018.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-30" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-30" href="https://www.welivesecurity.com/2014/02/21/an-in-depth-analysis-of-linuxebury/" target="_blank">
+                        M.Léveillé, M.. (2014, February 21). An In-depth Analysis of Linux/Ebury. Retrieved April 19, 2019.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-31" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-31" href="https://securelist.com/apt10-sophisticated-multi-layered-loader-ecipekac-discovered-in-a41apt-campaign/101519/" target="_blank">
+                        GREAT. (2021, March 30). APT10: sophisticated multi-layered loader Ecipekac discovered in A41APT campaign. Retrieved June 17, 2021.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-32" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-32" href="https://securelist.com/the-epic-turla-operation/65545/" target="_blank">
+                        Kaspersky Lab's Global Research and Analysis Team. (2014, August 7). The Epic Turla Operation: Solving some of the mysteries of Snake/Uroburos. Retrieved December 11, 2014.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-33" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-33" href="https://securityintelligence.com/posts/more_eggs-anyone-threat-actor-itg08-strikes-again/" target="_blank">
+                        Villadsen, O.. (2019, August 29). More_eggs, Anyone? Threat Actor ITG08 Strikes Again. Retrieved September 16, 2019.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-34" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-34" href="https://www.fireeye.com/blog/threat-research/2017/06/behind-the-carbanak-backdoor.html" target="_blank">
+                        Bennett, J., Vengerik, B. (2017, June 12). Behind the CARBANAK Backdoor. Retrieved June 11, 2018.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-35" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-35" href="https://www.fireeye.com/blog/threat-research/2018/08/fin7-pursuing-an-enigmatic-and-evasive-global-criminal-operation.html" target="_blank">
+                        Carr, N., et al. (2018, August 01). On the Hunt for FIN7: Pursuing an Enigmatic and Evasive Global Criminal Operation. Retrieved August 23, 2018.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-36" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-36" href="https://www.microsoft.com/security/blog/2019/12/12/gallium-targeting-global-telecom/" target="_blank">
+                        MSTIC. (2019, December 12). GALLIUM: Targeting global telecom. Retrieved January 13, 2021.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-37" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-37" href="https://www.welivesecurity.com/wp-content/uploads/2017/08/eset-gazer.pdf" target="_blank">
+                        ESET. (2017, August). Gazing at Gazer: Turla’s new second stage backdoor. Retrieved September 14, 2017.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-38" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-38" href="https://securelist.com/introducing-whitebear/81638/" target="_blank">
+                        Kaspersky Lab's Global Research & Analysis Team. (2017, August 30). Introducing WhiteBear. Retrieved September 21, 2017.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-39" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-39" href="https://medium.com/s2wblog/kimsuky-disguised-as-a-korean-company-signed-with-a-valid-certificate-to-distribute-troll-stealer-cfa5d54314e2" target="_blank">
+                        Jiho Kim & Sebin Lee, S2W. (2024, February 7). Kimsuky disguised as a Korean company signed with a valid certificate to distribute Troll Stealer (English ver.). Retrieved January 17, 2025.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-40" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-40" href="https://www.security.com/threat-intelligence/springtail-kimsuky-backdoor-espionage" target="_blank">
+                        Symantec Threat Hunter Team. (2024, May 16). Springtail: New Linux Backdoor Added to Toolkit. Retrieved January 17, 2025.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-41" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-41" href="https://www.welivesecurity.com/wp-content/uploads/2018/10/ESET_GreyEnergy.pdf" target="_blank">
+                        Cherepanov, A. (2018, October). GREYENERGY A successor to BlackEnergy. Retrieved November 15, 2018.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-42" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-42" href="http://www.clearskysec.com/oilrig/" target="_blank">
+                        ClearSky Cybersecurity. (2017, January 5). Iranian Threat Agent OilRig Delivers Digitally Signed Malware, Impersonates University of Oxford. Retrieved May 3, 2017.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-43" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-43" href="https://symantec-enterprise-blogs.security.com/blogs/threat-intelligence/ukraine-wiper-malware-russia" target="_blank">
+                        Symantec Threat Hunter Team. (2022, February 24). Ukraine: Disk-wiping Attacks Precede Russian Invasion. Retrieved March 25, 2022.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                </ol>
+            </div>
+            <div class="col">
+                    <ol start="44.0">
+                                
+        <li>
+            <span  id="scite-44" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-44" href="https://www.crowdstrike.com/blog/how-crowdstrike-falcon-protects-against-wiper-malware-used-in-ukraine-attacks/" target="_blank">
+                        Thomas, W. et al. (2022, February 25). CrowdStrike Falcon Protects from New Wiper Malware Used in Ukraine Cyberattacks. Retrieved March 25, 2022.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-45" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-45" href="https://www.welivesecurity.com/2022/02/24/hermeticwiper-new-data-wiping-malware-hits-ukraine" target="_blank">
+                        ESET. (2022, February 24). HermeticWiper: New data wiping malware hits Ukraine. Retrieved March 25, 2022.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-46" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-46" href="https://blog.qualys.com/vulnerabilities-threat-research/2022/03/01/ukrainian-targets-hit-by-hermeticwiper-new-datawiper-malware" target="_blank">
+                        Dani, M. (2022, March 1). Ukrainian Targets Hit by HermeticWiper, New Datawiper Malware. Retrieved March 25, 2022.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-47" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-47" href="https://www.welivesecurity.com/2022/03/01/isaacwiper-hermeticwizard-wiper-worm-targeting-ukraine" target="_blank">
+                        ESET. (2022, March 1). IsaacWiper and HermeticWizard: New wiper and worm targetingUkraine. Retrieved April 10, 2022.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-48" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-48" href="https://web.archive.org/web/20230331162455/https://www.thesafemac.com/new-signed-malware-called-janicab/" target="_blank">
+                        Thomas. (2013, July 15). New signed malware called Janicab. Retrieved July 17, 2017.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-49" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-49" href="https://threatconnect.com/blog/kimsuky-phishing-operations-putting-in-work/" target="_blank">
+                        ThreatConnect. (2020, September 28). Kimsuky Phishing Operations Putting In Work. Retrieved October 30, 2020.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-50" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-50" href="https://blog.malwarebytes.com/threat-intelligence/2022/01/north-koreas-lazarus-apt-leverages-windows-update-client-github-in-latest-campaign/" target="_blank">
+                        Saini, A. and Hossein, J. (2022, January 27). North Korea’s Lazarus APT leverages Windows Update client, GitHub in latest campaign. Retrieved January 27, 2022.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-51" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-51" href="https://www.fireeye.com/blog/threat-research/2018/03/suspected-chinese-espionage-group-targeting-maritime-and-engineering-industries.html" target="_blank">
+                        FireEye. (2018, March 16). Suspected Chinese Cyber Espionage Group (TEMP.Periscope) Targeting U.S. Engineering and Maritime Industries. Retrieved April 11, 2018.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-52" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-52" href="https://www.fireeye.com/blog/threat-research/2019/03/apt40-examining-a-china-nexus-espionage-actor.html" target="_blank">
+                        Plan, F., et al. (2019, March 4). APT40: Examining a China-Nexus Espionage Actor. Retrieved March 18, 2019.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-53" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-53" href="https://www.wired.com/story/lockergoga-ransomware-crippling-industrial-firms/" target="_blank">
+                        Greenberg, A. (2019, March 25). A Guide to LockerGoga, the Ransomware Crippling Industrial Firms. Retrieved July 17, 2019.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-54" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-54" href="https://securelist.com/apt-luminousmoth/103332/" target="_blank">
+                        Lechtik, M, and etl. (2021, July 14). LuminousMoth APT: Sweeping attacks for the chosen few. Retrieved October 20, 2022.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-55" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-55" href="https://www.trendmicro.com/en_us/research/25/a/lumma-stealers-github-based-delivery-via-mdr.html" target="_blank">
+                        Buddy Tancio, Fe Cureg, and Jovit Samaniego, Trend Micro. (2025, January 30). Lumma Stealer’s GitHub-Based Delivery Explored via Managed Detection and Response. Retrieved March 22, 2025.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-56" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-56" href="https://www.sentinelone.com/labs/infect-if-needed-a-deeper-dive-into-targeted-backdoor-macos-macma/" target="_blank">
+                        Phil Stokes. (2021, November 15). Infect If Needed | A Deeper Dive Into Targeted Backdoor macOS.Macma. Retrieved July 26, 2024.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-57" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-57" href="https://medium.com/@chenerlich/the-avast-abuser-metamorfo-banking-malware-hides-by-abusing-avast-executable-ac9b8b392767" target="_blank">
+                        Erlich, C. (2020, April 3). The Avast Abuser: Metamorfo Banking Malware Hides By Abusing Avast Executable. Retrieved May 26, 2020.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-58" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-58" href="https://web.archive.org/web/20201031075438/https://www.fireeye.com/blog/threat-research/2013/08/operation-molerats-middle-east-cyber-attacks-using-poison-ivy.html" target="_blank">
+                        Villeneuve, N., Haq, H., Moran, N. (2013, August 23). OPERATION MOLERATS: MIDDLE EAST CYBER ATTACKS USING POISON IVY. Retrieved November 17, 2024.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-59" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-59" href="https://research.checkpoint.com/2021/mosesstaff-targeting-israeli-companies/" target="_blank">
+                        Checkpoint Research. (2021, November 15). Uncovering MosesStaff techniques: Ideology over Money. Retrieved August 11, 2022.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-60" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-60" href="https://www.symantec.com/security_response/writeup.jsp?docid=2012-051515-3445-99" target="_blank">
+                        Ladley, F. (2012, May 15). Backdoor.Nerex. Retrieved February 23, 2018.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-61" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-61" href="https://www.welivesecurity.com/wp-content/uploads/2020/06/ESET_Operation_Interception.pdf" target="_blank">
+                        Breitenbacher, D and Osis, K. (2020, June 17). OPERATION IN(TER)CEPTION: Targeted Attacks Against European Aerospace and Military Companies. Retrieved December 20, 2021.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-62" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-62" href="https://www.mcafee.com/blogs/other-blogs/mcafee-labs/mcafee-uncovers-operation-honeybee-malicious-document-campaign-targeting-humanitarian-aid-groups/" target="_blank">
+                        Sherstobitoff, R. (2018, March 02). McAfee Uncovers Operation Honeybee, a Malicious Document Campaign Targeting Humanitarian Aid Groups. Retrieved May 16, 2018.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-63" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-63" href="https://www.welivesecurity.com/2020/05/21/no-game-over-winnti-group/" target="_blank">
+                        Tartare, M. et al. (2020, May 21). No “Game over” for the Winnti Group. Retrieved August 24, 2020.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-64" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-64" href="https://www.bitdefender.com/files/News/CaseStudies/study/353/Bitdefender-Whitepaper-StrongPity-APT.pdf" target="_blank">
+                        Tudorica, R. et al. (2020, June 30). StrongPity APT - Revealing Trojanized Tools, Working Hours and Infrastructure. Retrieved July 20, 2020.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-65" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-65" href="https://cybersecurity.att.com/blogs/labs-research/the-rise-of-qakbot" target="_blank">
+                        Morrow, D. (2021, April 15). The rise of QakBot. Retrieved September 27, 2021.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-66" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-66" href="https://www.deepinstinct.com/blog/black-basta-ransomware-threat-emergence" target="_blank">
+                        Vilkomir-Preisman, S. (2022, August 18). Beating Black Basta Ransomware. Retrieved March 8, 2023.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-67" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-67" href="https://www.volexity.com/blog/2018/06/07/patchwork-apt-group-targets-us-think-tanks/" target="_blank">
+                        Meltzer, M, et al. (2018, June 07). Patchwork APT Group Targets US Think Tanks. Retrieved July 16, 2018.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-68" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-68" href="https://go.recordedfuture.com/hubfs/reports/cta-cn-2025-0109.pdf" target="_blank">
+                        Insikt Group. (2025, January 9). Chinese State-Sponsored RedDelta Targeted Taiwan, Mongolia, and Southeast Asia with Adapted PlugX Infection Chain. Retrieved January 14, 2025.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-69" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-69" href="https://www.cisa.gov/news-events/cybersecurity-advisories/aa22-264a" target="_blank">
+                        CISA. (2022, September 23). AA22-264A Iranian State Actors Conduct Cyber Operations Against the Government of Albania. Retrieved August 6, 2024.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-70" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-70" href="https://www.welivesecurity.com/wp-content/uploads/2017/02/Read-The-Manual.pdf" target="_blank">
+                        Faou, M. and Boutin, J. (2017, February). Read The Manual: A Guide to the RTM Banking Trojan. Retrieved March 9, 2017.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-71" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-71" href="https://unit42.paloaltonetworks.com/ukraine-targeted-outsteel-saintbot/" target="_blank">
+                        Unit 42. (2022, February 25). Spear Phishing Attacks Target Organizations in Ukraine, Payloads Include the Document Stealer OutSteel and the Downloader SaintBot. Retrieved June 9, 2022.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-72" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-72" href="https://www.crowdstrike.com/blog/scattered-spider-attempts-to-avoid-detection-with-bring-your-own-vulnerable-driver-tactic/" target="_blank">
+                        CrowdStrike. (2023, January 10). SCATTERED SPIDER Exploits Windows Security Deficiencies with Bring-Your-Own-Vulnerable-Driver Tactic in Attempt to Bypass Endpoint Security. Retrieved July 5, 2023.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-73" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-73" href="https://www.group-ib.com/resources/threat-research/silence_2.0.going_global.pdf" target="_blank">
+                        Group-IB. (2019, August). Silence 2.0: Going Global. Retrieved May 5, 2020.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-74" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-74" href="https://www.fireeye.com/blog/threat-research/2020/12/evasive-attacker-leverages-solarwinds-supply-chain-compromises-with-sunburst-backdoor.html" target="_blank">
+                        FireEye. (2020, December 13). Highly Evasive Attacker Leverages SolarWinds Supply Chain to Compromise Multiple Global Victims With SUNBURST Backdoor. Retrieved January 4, 2021.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-75" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-75" href="https://www.secureworks.com/blog/cybercriminals-increasingly-trying-to-ensnare-the-big-financial-fish" target="_blank">
+                        CTU. (2018, September 27). Cybercriminals Increasingly Trying to Ensnare the Big Financial Fish. Retrieved September 20, 2021.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-76" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-76" href="https://securityintelligence.com/x-force/strela-stealer-todays-invoice-tomorrows-phish/" target="_blank">
+                        Golo Mühr, Joe Fasulo & Charlotte Hammond, IBM X-Force. (2024, November 12). Strela Stealer: Today’s invoice is tomorrow’s phish. Retrieved December 31, 2024.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-77" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-77" href="https://docs.broadcom.com/doc/security-response-w32-stuxnet-dossier-11-en" target="_blank">
+                        Nicolas Falliere, Liam O Murchu, Eric Chien 2011, February W32.Stuxnet Dossier (Version 1.4) Retrieved November 17, 2024.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-78" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-78" href="http://www.symantec.com/connect/blogs/suckfly-revealing-secret-life-your-code-signing-certificates" target="_blank">
+                        DiMaggio, J. (2016, March 15). Suckfly: Revealing the secret life of your code signing certificates. Retrieved August 3, 2016.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-79" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-79" href="https://www.trendmicro.com/en_us/research/23/c/iron-tiger-sysupdate-adds-linux-targeting.html" target="_blank">
+                        Daniel Lunghi. (2023, March 1). Iron Tiger’s SysUpdate Reappears, Adds Linux Targeting. Retrieved March 20, 2023.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-80" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-80" href="https://www.cybereason.com/blog/threat-actor-ta505-targets-financial-enterprises-using-lolbins-and-a-new-backdoor-malware" target="_blank">
+                        Salem, E. (2019, April 25). Threat Actor TA505 Targets Financial Enterprises Using LOLBins and a New Backdoor Malware. Retrieved May 28, 2019.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-81" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-81" href="https://www.deepinstinct.com/blog/new-servhelper-variant-employs-excel-4-0-macro-to-drop-signed-payload" target="_blank">
+                        Vilkomir-Preisman, S. (2019, April 2). New ServHelper Variant Employs Excel 4.0 Macro to Drop Signed Payload. Retrieved September 16, 2024..
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-82" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-82" href="https://blog.trendmicro.com/trendlabs-security-intelligence/shifting-tactics-breaking-down-ta505-groups-use-of-html-rats-and-other-techniques-in-latest-campaigns/" target="_blank">
+                        Hiroaki, H. and Lu, L. (2019, June 12). Shifting Tactics: Breaking Down TA505 Group’s Use of HTML, RATs and Other Techniques in Latest Campaigns. Retrieved May 29, 2020.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-83" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-83" href="https://asec.ahnlab.com/en/61934/" target="_blank">
+                        AhnLab ASEC. (2024, February 16). TrollAgent That Infects Systems Upon Security Program Installation Process (Kimsuky Group). Retrieved January 17, 2025.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-84" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-84" href="https://securelist.com/winnti-more-than-just-a-game/37029/" target="_blank">
+                        Kaspersky Lab's Global Research and Analysis Team. (2013, April 11). Winnti. More than just a game. Retrieved February 8, 2017.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-85" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-85" href="https://thedfirreport.com/2020/11/05/ryuk-speed-run-2-hours-to-ransom/" target="_blank">
+                        The DFIR Report. (2020, November 5). Ryuk Speed Run, 2 Hours to Ransom. Retrieved November 6, 2020.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-86" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-86" href="https://securityintelligence.com/posts/new-destructive-wiper-zerocleare-targets-energy-sector-in-the-middle-east/" target="_blank">
+                        Kessem, L. (2019, December 4). New Destructive Wiper ZeroCleare Targets Energy Sector in the Middle East. Retrieved September 4, 2024.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+  
+                    </ol>
+            </div>             
+        </div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+    
+        </div>
+    </div>
+
+            <!--stop-indexing-for-search-->
+            <!-- search overlay for entire page -- not displayed inline -->
+            <div class="overlay search" id="search-overlay" style="display: none;">
+    <div class="overlay-inner">
+        <!-- text input for searching -->
+        <div class="search-header">
+            <div class="search-input">
+                <input type="text" id="search-input" placeholder="search">
+            </div>
+            <div class="search-icons">
+                <div class="search-parsing-icon spinner-border" style="display: none" id="search-parsing-icon"></div>
+                <div class="close-search-icon" id="close-search-icon">&times;</div>
+            </div>
+        </div>
+        <!-- results and controls for loading more results -->
+        <div id="search-body" class="search-body">
+            <div class="results" id="search-results">
+                <!-- content will be appended here on search -->
+            </div>
+            <div id="load-more-results" class="load-more-results">
+                <button class="btn btn-default" id="load-more-results-button">load more results</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+        </div>
+        <div class="row flex-grow-0 flex-shrink-1">
+            <!-- footer elements -->
+            <footer class="col footer">
+                <div class="container-fluid">
+                    <div class="row row-footer">
+                        <div class="col-2 col-sm-2 col-md-2">
+                            <div class="footer-center-responsive my-auto">
+                                <a href="https://www.mitre.org" target="_blank" rel="noopener" aria-label="MITRE">
+                                    <img src="/versions/v17/theme/images/mitrelogowhiteontrans.gif" class="mitre-logo-wtrans">
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-2 col-sm-2 footer-responsive-break"></div>
+                        <div class="footer-link-group">
+                            <div class="row row-footer">
+                                <div class="px-3 col-footer">
+                                    <u class="footer-link"><a href="/versions/v17/resources/engage-with-attack/contact" class="footer-link">Contact Us</a></u>
+                                </div>
+                                <div class="px-3 col-footer">
+                                    <u class="footer-link"><a href="/versions/v17/resources/legal-and-branding/terms-of-use" class="footer-link">Terms of Use</a></u>
+                                </div>
+                                    <div class="px-3 col-footer">
+                                        <u class="footer-link"><a href="/versions/v17/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
+                                    </div>
+                                <div class="px-3">
+                                    <u class="footer-link"><a href="/versions/v17/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v17.0&#013;Website  v4.2.2">Website Changelog</a></u>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <small class="px-3">
+                                    &copy;&nbsp;2015&nbsp;-&nbsp;2025, The MITRE Corporation. MITRE ATT&CK and ATT&CK are registered trademarks of The MITRE Corporation.
+                                </small>
+                            </div>
+                        </div>
+                        <div class="w-100 p-2 footer-responsive-break"></div>
+                            <div class="col pr-4">
+                                <div class="footer-float-right-responsive-brand">
+                                    <div class="row row-footer row-footer-icon">
+                                        <div class="mb-1">
+                                            <a href="https://twitter.com/MITREattack" class="btn btn-footer">
+                                                <i class="fa-brands fa-x-twitter fa-lg"></i>
+                                            </a>
+                                            <a href="https://github.com/mitre-attack" class="btn btn-footer">
+                                                <i class="fa-brands fa-github fa-lg"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+
+<!--stopindex-->
+
+</div>
+    <!--SCRIPTS-->
+    <script src="/versions/v17/theme/scripts/jquery-3.5.1.min.js"></script>
+    <script src="/versions/v17/theme/scripts/popper.min.js"></script>
+    <script src="/versions/v17/theme/scripts/bootstrap-select.min.js"></script>
+    <script src="/versions/v17/theme/scripts/bootstrap.bundle.min.js"></script>
+    <script src="/versions/v17/theme/scripts/site.js"></script>
+    <script src="/versions/v17/theme/scripts/settings.js"></script>
+    <script src="/versions/v17/theme/scripts/search_bundle.js"></script>
+
+<!--SCRIPTS-->
+<script src="/versions/v17/theme/scripts/resizer.js"></script>
+
+<!--SCRIPTS-->
+<script src="/versions/v17/theme/scripts/bootstrap-tourist.js"></script>
+<script src="/versions/v17/theme/scripts/settings.js"></script>
+    <script src="/versions/v17/theme/scripts/tour/tour-subtechniques.js"></script>
+<script src="/versions/v17/theme/scripts/sidebar-load-all.js"></script>
+</body>
+</html>

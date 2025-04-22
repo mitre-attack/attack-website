@@ -172,7 +172,7 @@
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
                     <div class="container-fluid banner-message">
-                        ATT&CKcon 6.0 returns October 14-15, 2025 in McLean, VA. More details about tickets and our CFP can be found <a href='https://na.eventscloud.com/attackcon6'>here</a>
+                        ATT&CK v17 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v17-dfb59eae2204'>blog post</a> for more information.
                     </div>
             </div>
         </div>
@@ -353,7 +353,7 @@
                                             <div class="row card-data">
                                                 <div class="col-md-1 px-0 text-center"></div>
                                                 <div class="col-md-11 pl-0">
-                                                    <span class="h5 card-title">Last Modified:&nbsp;</span>11 August 2023
+                                                    <span class="h5 card-title">Last Modified:&nbsp;</span>15 April 2025
                                                 </div>
                                             </div>
                                     </div>
@@ -363,13 +363,13 @@
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Permalink to this version of T1021.003" 
-           href="/versions/v16/techniques/T1021/003/" data-test-ignore="true">Version Permalink</a>
+           href="/versions/v17/techniques/T1021/003/" data-test-ignore="true">Version Permalink</a>
     </div>
     <div class="permalink">
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Go to the live version of T1021.003" 
-           href="/versions/v16/techniques/T1021/003/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+           href="/versions/v17/techniques/T1021/003/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
     </div>
 </div>
 
@@ -511,7 +511,7 @@
                     <a href="/datasources/DS0011/#Module%20Load">Module Load</a>
                 </td>
                     <td>
-                                <p>Monitor for COM objects loading DLLs and other modules not typically associated with the application.<span onclick=scrollToRef('scite-5') id="scite-ref-5-a" class="scite-citeref-number" title="Nelson, M. (2017, November 16). Lateral Movement using Outlook's CreateObject Method and DotNetToJScript. Retrieved November 21, 2017."data-reference="Enigma Outlook DCOM Lateral Movement Nov 2017"><sup><a href="https://enigma0x3.net/2017/11/16/lateral-movement-using-outlooks-createobject-method-and-dotnettojscript/" target="_blank" data-hasqtip="4" aria-describedby="qtip-4">[5]</a></sup></span></p><p>Note: Sysmon Event ID 7 (Image loaded) can be used to monitor for suspicious DLLs loaded by the DCOM Server Process Launcher which runs inside of svchost.exe. This is a particularly noisy event and can generate a large volume of data, so we recommend baselining and filtering out any known benign svchost.exe module loads that occur as part of its typical operation.</p>
+                                <p>Monitor for COM objects loading DLLs and other modules not typically associated with the application.<span onclick=scrollToRef('scite-5') id="scite-ref-5-a" class="scite-citeref-number" title="Nelson, M. (2017, November 16). Lateral Movement using Outlook's CreateObject Method and DotNetToJScript. Retrieved November 21, 2017."data-reference="Enigma Outlook DCOM Lateral Movement Nov 2017"><sup><a href="https://enigma0x3.net/2017/11/16/lateral-movement-using-outlooks-createobject-method-and-dotnettojscript/" target="_blank" data-hasqtip="4" aria-describedby="qtip-4">[5]</a></sup></span></p><p>Note: Sysmon Event ID 7 (Image loaded) can be used to monitor for suspicious DLLs loaded by the DCOM Server Process Launcher which runs inside of svchost.exe. This is a particularly noisy event and can generate a large volume of data, so we recommend baselining and filtering out any known benign svchost.exe module loads that occur as part of its typical operation.</p><p><code>sourcetype="WinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode=7| search ImageLoaded="<em>\</em>.dll" ParentImage="<em>dcomlaunch.exe</em>"| stats count by ImageLoaded, ParentImage, User, Computer, _time| eval suspicious_load=if(count &gt; threshold, "suspicious", "normal")| where suspicious_load="suspicious"| table _time, ImageLoaded, ParentImage, User, Computer, suspicious_load </code></p>
 
                     </td>
             </tr>
@@ -527,7 +527,7 @@
                     <a href="/datasources/DS0029/#Network%20Connection%20Creation">Network Connection Creation</a>
                 </td>
                     <td>
-                                <p>Monitor for newly constructed network connections that may use <a href="/techniques/T1078">Valid Accounts</a> to interact with remote machines using Distributed Component Object Model (DCOM). The adversary may then perform actions as the logged-on user. Monitor for any influxes or abnormal increases in DCOM related Distributed Computing Environment/Remote Procedure Call (DCE/RPC) traffic (typically over port 135).</p><p>Note: Network Analysis frameworks such as Zeek can be used to capture, decode, and alert on RPC network flows. Traffic to the RPC Endpoint Mapper will always have the destination port of 135. Assuming success, RPC traffic will continue to the endpoint. The endpoint and the client both bind to dynamically assigned ports (on Windows, this is typically greater than 49152). The traffic between the client and endpoint can be detected by looking at traffic to 135 followed by traffic where the source and destination ports are at least 49152.</p>
+                                <p>Monitor for newly constructed network connections that may use <a href="/techniques/T1078">Valid Accounts</a> to interact with remote machines using Distributed Component Object Model (DCOM). Monitor for any influxes or abnormal increases in DCOM related Distributed Computing Environment/Remote Procedure Call (DCE/RPC) traffic (typically over port 135).</p><p>Remote Procedure Call (RPC) traffic, especially over port 135, used for DCOM communication. Look for patterns indicating high volumes of RPC calls or connections between systems.</p><p>Note: Network Analysis frameworks such as Zeek can be used to capture, decode, and alert on RPC network flows. Traffic to the RPC Endpoint Mapper will always have the destination port of 135. Assuming success, RPC traffic will continue to the endpoint. The endpoint and the client both bind to dynamically assigned ports (on Windows, this is typically greater than 49152). The traffic between the client and endpoint can be detected by looking at traffic to 135 followed by traffic where the source and destination ports are at least 49152.</p><p><code>sourcetype="seek"| search dest_port=135 protocol="DCE/RPC"| stats count by src_ip, dest_ip, dest_port, _time| eval rpc_activity=if(count &gt; threshold AND src_ip NOT IN ("trusted_ips"), "suspicious", "normal")| where rpc_activity="suspicious"| table _time, src_ip, dest_ip, dest_port, rpc_activity </code></p>
 
                     </td>
             </tr>
@@ -543,7 +543,7 @@
                     <a href="/datasources/DS0009/#Process%20Creation">Process Creation</a>
                 </td>
                     <td>
-                                <p>Monitor for newly executed processes associated with DCOM activity, especially those invoked by a user different than the one currently logged on. Enumeration of COM objects, via <a href="/techniques/T1012">Query Registry</a> or <a href="/techniques/T1059/001">PowerShell</a>, may also precede malicious use.<span onclick=scrollToRef('scite-1') id="scite-ref-1-a" class="scite-citeref-number" title="Hamilton, C. (2019, June 4). Hunting COM Objects. Retrieved June 10, 2019."data-reference="Fireeye Hunting COM June 2019"><sup><a href="https://www.fireeye.com/blog/threat-research/2019/06/hunting-com-objects.html" target="_blank" data-hasqtip="0" aria-describedby="qtip-0">[1]</a></sup></span><span onclick=scrollToRef('scite-6') id="scite-ref-6-a" class="scite-citeref-number" title="Nelson, M. (2017, January 5). Lateral Movement using the MMC20 Application COM Object. Retrieved November 21, 2017."data-reference="Enigma MMC20 COM Jan 2017"><sup><a href="https://enigma0x3.net/2017/01/05/lateral-movement-using-the-mmc20-application-com-object/" target="_blank" data-hasqtip="5" aria-describedby="qtip-5">[6]</a></sup></span></p><p>The Microsoft Management Console (mmc.exe) can be by used by threat actors used to spawn arbitrary processes through DCOM. The typical process tree for this method looks like: svchost.exe —&gt; mmc.exe —&gt; <some_process>.exe. </p><p>Accordingly, look for process creation events of mmc.exe in conjunction with the -Embedding command-line argument, along with suspicious child processes that can be used for malicious purposes, such as cmd.exe, reg.exe, etc.</p><p>Similar to the Microsoft Management Console, Excel can also be used to execute processes through DCOM. In this case, the typical process tree looks like: svchost.exe —&gt; excel.exe —&gt; <some_process>.exe. </p><p>Look for process creation events of excel.exe in conjunction with the /automation -Embedding command-line argument, along with suspicious child processes that can be used for malicious purposes, such as cmd.exe, reg.exe, etc.</p>
+                                <p>Monitor for newly executed processes associated with DCOM activity, especially those invoked by a user different than the one currently logged on. Enumeration of COM objects, via <a href="/techniques/T1012">Query Registry</a> or <a href="/techniques/T1059/001">PowerShell</a>, may also precede malicious use.<span onclick=scrollToRef('scite-1') id="scite-ref-1-a" class="scite-citeref-number" title="Hamilton, C. (2019, June 4). Hunting COM Objects. Retrieved June 10, 2019."data-reference="Fireeye Hunting COM June 2019"><sup><a href="https://www.fireeye.com/blog/threat-research/2019/06/hunting-com-objects.html" target="_blank" data-hasqtip="0" aria-describedby="qtip-0">[1]</a></sup></span><span onclick=scrollToRef('scite-6') id="scite-ref-6-a" class="scite-citeref-number" title="Nelson, M. (2017, January 5). Lateral Movement using the MMC20 Application COM Object. Retrieved November 21, 2017."data-reference="Enigma MMC20 COM Jan 2017"><sup><a href="https://enigma0x3.net/2017/01/05/lateral-movement-using-the-mmc20-application-com-object/" target="_blank" data-hasqtip="5" aria-describedby="qtip-5">[6]</a></sup></span></p><p>The Microsoft Management Console (mmc.exe) can be by used by threat actors used to spawn arbitrary processes through DCOM. The typical process tree for this method looks like: svchost.exe —&gt; mmc.exe —&gt; <some_process>.exe. </p><p>Accordingly, look for process creation events of mmc.exe in conjunction with the -Embedding command-line argument, along with suspicious child processes that can be used for malicious purposes, such as cmd.exe, reg.exe, etc.</p><p>Similar to the Microsoft Management Console, Excel can also be used to execute processes through DCOM. In this case, the typical process tree looks like: svchost.exe —&gt; excel.exe —&gt; <some_process>.exe. </p><p>Look for process creation events of excel.exe in conjunction with the /automation -Embedding command-line argument, along with suspicious child processes that can be used for malicious purposes, such as cmd.exe, reg.exe, etc.</p><p><code>sourcetype="WinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode=1| search ParentImage="<em>dcomlaunch.exe</em>" OR CommandLine="<em>dcom</em>"| stats count by ParentImage, CommandLine, User, Computer, _time| eval suspicious_process=if(count &gt; threshold, "suspicious", "normal")| where suspicious_process="suspicious"| table _time, ParentImage, CommandLine, User, Computer, suspicious_process </code></p>
 
                     </td>
             </tr>
@@ -819,7 +819,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v16.1&#013;Website  v4.2.1">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v17.0&#013;Website  v4.2.2">Website Changelog</a></u>
                                 </div>
                             </div>
                             <div class="row">

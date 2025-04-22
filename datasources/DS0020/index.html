@@ -172,7 +172,7 @@
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
                     <div class="container-fluid banner-message">
-                        ATT&CKcon 6.0 returns October 14-15, 2025 in McLean, VA. More details about tickets and our CFP can be found <a href='https://na.eventscloud.com/attackcon6'>here</a>
+                        ATT&CK v17 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v17-dfb59eae2204'>blog post</a> for more information.
                     </div>
             </div>
         </div>
@@ -1175,7 +1175,7 @@
   </div>
   <div class="sidenav-body collapse" id="DS0009-body" aria-labelledby="DS0009-header">
         <div class="sidenav">
-    <div class="sidenav-head  enterprise ics " id="DS0009-OS API Execution">
+    <div class="sidenav-head  enterprise mobile ics " id="DS0009-OS API Execution">
       <a href="/datasources/DS0009/#OS%20API%20Execution">
         OS API Execution
       </a>
@@ -1689,7 +1689,7 @@
                                             <div class="row card-data">
                                                 <div class="col-1 px-0 text-center"></div>
                                                 <div class="col-11 pl-0">
-                                                    <span class="h5 card-title">Last Modified:&nbsp;</span>10 November 2021
+                                                    <span class="h5 card-title">Last Modified:&nbsp;</span>16 April 2025
                                                 </div>
                                             </div>
                                     </div>
@@ -1699,13 +1699,13 @@
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Permalink to this version of DS0020" 
-           href="/versions/v16/datasources/DS0020/" data-test-ignore="true">Version Permalink</a>
+           href="/versions/v17/datasources/DS0020/" data-test-ignore="true">Version Permalink</a>
     </div>
     <div class="permalink">
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Go to the live version of DS0020" 
-           href="/versions/v16/datasources/DS0020/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+           href="/versions/v17/datasources/DS0020/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
     </div>
 </div>
 
@@ -1728,7 +1728,7 @@
                                         </div>
                                         <div class="section-desktop-view">
                                                 <div class="description-body">
-                                                            <p>Initial construction of a new snapshot (ex: AWS create-snapshot)</p>
+                                                            <p>The process of taking a point-in-time copy of a cloud storage volume (files, settings, configurations, etc.), virtual machine (VM), or database that can be created and deployed in cloud environments.</p><p><em>Data Collection Measures:</em></p><ul><li>Cloud Platform Logs (IaaS)<ul><li>AWS CloudTrail Logs: Monitor API calls related to snapshot creation (<code>CreateSnapshot</code>).</li><li>Azure Monitor Logs: Track snapshot creation (<code>Microsoft.Compute/snapshots/write</code>).</li><li>Google Cloud Logging: Detect <code>compute.disks.createSnapshot</code>.</li></ul></li></ul>
 
                                                 </div>
                                         </div>
@@ -1739,7 +1739,7 @@
                                         </div>
                                         <div class="section-mobile-view">
                                                 <div class="description-body">
-                                                            <p>Initial construction of a new snapshot (ex: AWS create-snapshot)</p>
+                                                            <p>The process of taking a point-in-time copy of a cloud storage volume (files, settings, configurations, etc.), virtual machine (VM), or database that can be created and deployed in cloud environments.</p><p><em>Data Collection Measures:</em></p><ul><li>Cloud Platform Logs (IaaS)<ul><li>AWS CloudTrail Logs: Monitor API calls related to snapshot creation (<code>CreateSnapshot</code>).</li><li>Azure Monitor Logs: Track snapshot creation (<code>Microsoft.Compute/snapshots/write</code>).</li><li>Google Cloud Logging: Detect <code>compute.disks.createSnapshot</code>.</li></ul></li></ul>
 
                                                 </div>
                                         </div>
@@ -1794,7 +1794,7 @@
                         <a href="/techniques/T1537">Transfer Data to Cloud Account</a>
                     </td>
                     <td>
-                                <p>Monitor account activity for attempts to create and share data, such as snapshots or backups, with untrusted or unusual accounts.</p>
+                                <p>Monitor account activity for attempts to create and share data, such as snapshots or backups, with untrusted or unusual accounts.</p><p>Analytic 1 - Detecting Suspicious Snapshot Exfiltration</p><p><code>(EventCode="CreateSnapshot" OR EventCode="ModifySnapshotAttribute" OR source="Google_Admin_Logs")| where (action IN ("create_snapshot", "modify_snapshot_acl", "backup_created"))| stats count by _time, host, user, action, snapshot_name| where count &gt;= 3| eval risk_score=case(    snapshot_name LIKE "%backup%" OR snapshot_name LIKE "%export%", 9,    snapshot_name LIKE "%snapshot%", 8)| where risk_score &gt;= 8| table _time, host, user, action, snapshot_name, risk_score </code></p>
 
                     </td>
                 </tr>
@@ -1812,7 +1812,7 @@
                                         </div>
                                         <div class="section-desktop-view">
                                                 <div class="description-body">
-                                                            <p>Removal of a snapshot (ex: AWS delete-snapshot)</p>
+                                                            <p>The removal of a point-in-time backup of a cloud storage volume, virtual machine (VM), or database.</p><p><em>Data Collection Measures:</em></p><ul><li>AWS CloudTrail<ul><li>Logs <code>DeleteSnapshot</code> API calls in EC2, RDS, and EBS services.</li></ul></li><li>Azure Monitor Logs<ul><li>Tracks snapshot deletions via <code>Microsoft.Compute/snapshots/delete</code> API calls.</li></ul></li><li>Google Cloud Logging<ul><li>Detects snapshot removal through <code>compute.disks.deleteSnapshot</code> events.</li></ul></li></ul>
 
                                                 </div>
                                         </div>
@@ -1823,7 +1823,7 @@
                                         </div>
                                         <div class="section-mobile-view">
                                                 <div class="description-body">
-                                                            <p>Removal of a snapshot (ex: AWS delete-snapshot)</p>
+                                                            <p>The removal of a point-in-time backup of a cloud storage volume, virtual machine (VM), or database.</p><p><em>Data Collection Measures:</em></p><ul><li>AWS CloudTrail<ul><li>Logs <code>DeleteSnapshot</code> API calls in EC2, RDS, and EBS services.</li></ul></li><li>Azure Monitor Logs<ul><li>Tracks snapshot deletions via <code>Microsoft.Compute/snapshots/delete</code> API calls.</li></ul></li><li>Google Cloud Logging<ul><li>Detects snapshot removal through <code>compute.disks.deleteSnapshot</code> events.</li></ul></li></ul>
 
                                                 </div>
                                         </div>
@@ -1897,7 +1897,7 @@
                                         </div>
                                         <div class="section-desktop-view">
                                                 <div class="description-body">
-                                                            <p>An extracted list of snapshops within a cloud environment (ex: AWS describe-snapshots)</p>
+                                                            <p>The process of listing or retrieving metadata about existing snapshots in a cloud environment.</p><p><em>Data Collection Measures:</em></p><ul><li>AWS CloudTrail<ul><li>Logs API calls such as <code>DescribeSnapshots</code>, <code>ListSnapshots</code>, and <code>GetSnapshotAttributes</code>.</li></ul></li><li>Azure Monitor Logs<ul><li>Tracks snapshot enumeration via <code>Microsoft.Compute/snapshots/read</code>.</li></ul></li><li>Google Cloud Logging<ul><li>Detects snapshot listing through <code>compute.disks.listSnapshots</code>.</li></ul></li></ul>
 
                                                 </div>
                                         </div>
@@ -1908,7 +1908,7 @@
                                         </div>
                                         <div class="section-mobile-view">
                                                 <div class="description-body">
-                                                            <p>An extracted list of snapshops within a cloud environment (ex: AWS describe-snapshots)</p>
+                                                            <p>The process of listing or retrieving metadata about existing snapshots in a cloud environment.</p><p><em>Data Collection Measures:</em></p><ul><li>AWS CloudTrail<ul><li>Logs API calls such as <code>DescribeSnapshots</code>, <code>ListSnapshots</code>, and <code>GetSnapshotAttributes</code>.</li></ul></li><li>Azure Monitor Logs<ul><li>Tracks snapshot enumeration via <code>Microsoft.Compute/snapshots/read</code>.</li></ul></li><li>Google Cloud Logging<ul><li>Detects snapshot listing through <code>compute.disks.listSnapshots</code>.</li></ul></li></ul>
 
                                                 </div>
                                         </div>
@@ -2036,7 +2036,7 @@
                                         </div>
                                         <div class="section-desktop-view">
                                                 <div class="description-body">
-                                                            <p>Changes made to a snapshop, such as metadata and control data (ex: AWS modify-snapshot-attribute)</p>
+                                                            <p>Changes made to a cloud snapshot's metadata, attributes, or control settings. These modifications may involve adjusting access permissions, changing retention policies, or altering encryption settings. </p><p><em>Data Collection Measures:</em></p><ul><li>AWS CloudTrail<ul><li>Tracks API calls such as <code>ModifySnapshotAttribute</code>, <code>ResetSnapshotAttribute</code>, and <code>ModifySnapshotTier</code>.</li></ul></li><li>Azure Monitor Logs<ul><li>Logs changes via <code>Microsoft.Compute/snapshots/write</code>.</li></ul></li><li>Google Cloud Logging<ul><li>Captures modifications through <code>compute.snapshots.setIamPolicy</code> and <code>compute.snapshots.patch</code>.</li></ul></li></ul>
 
                                                 </div>
                                         </div>
@@ -2047,7 +2047,7 @@
                                         </div>
                                         <div class="section-mobile-view">
                                                 <div class="description-body">
-                                                            <p>Changes made to a snapshop, such as metadata and control data (ex: AWS modify-snapshot-attribute)</p>
+                                                            <p>Changes made to a cloud snapshot's metadata, attributes, or control settings. These modifications may involve adjusting access permissions, changing retention policies, or altering encryption settings. </p><p><em>Data Collection Measures:</em></p><ul><li>AWS CloudTrail<ul><li>Tracks API calls such as <code>ModifySnapshotAttribute</code>, <code>ResetSnapshotAttribute</code>, and <code>ModifySnapshotTier</code>.</li></ul></li><li>Azure Monitor Logs<ul><li>Logs changes via <code>Microsoft.Compute/snapshots/write</code>.</li></ul></li><li>Google Cloud Logging<ul><li>Captures modifications through <code>compute.snapshots.setIamPolicy</code> and <code>compute.snapshots.patch</code>.</li></ul></li></ul>
 
                                                 </div>
                                         </div>
@@ -2245,7 +2245,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v16.1&#013;Website  v4.2.1">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v17.0&#013;Website  v4.2.2">Website Changelog</a></u>
                                 </div>
                             </div>
                             <div class="row">
@@ -2293,7 +2293,7 @@
 <script src="/theme/scripts/resizer.js"></script>
 
     <!--SCRIPTS-->
-    <script src="/theme/scripts/filter/filter.js?1160"></script>
+    <script src="/theme/scripts/filter/filter.js?7833"></script>
     <script src="/theme/scripts/navigation.js"></script>
     <script src="/theme/scripts/mobileview-datasources.js"></script>
     <script src="/theme/scripts/bootstrap-tourist.js"></script>

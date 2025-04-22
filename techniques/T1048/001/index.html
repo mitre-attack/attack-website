@@ -172,7 +172,7 @@
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
                     <div class="container-fluid banner-message">
-                        ATT&CKcon 6.0 returns October 14-15, 2025 in McLean, VA. More details about tickets and our CFP can be found <a href='https://na.eventscloud.com/attackcon6'>here</a>
+                        ATT&CK v17 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v17-dfb59eae2204'>blog post</a> for more information.
                     </div>
             </div>
         </div>
@@ -295,13 +295,13 @@
                                                     <span data-toggle="tooltip" data-placement="left" title="" data-test-ignore="true" data-original-title="The system an adversary is operating within; could be an operating system or application">&#9432;</span>
                                                 </div>
                                                 <div class="col-md-11 pl-0">
-                                                    <span class="h5 card-title">Platforms:&nbsp;</span>Linux, Windows, macOS
+                                                    <span class="h5 card-title">Platforms:&nbsp;</span>ESXi, Linux, Windows, macOS
                                                 </div>
                                             </div>
                                             <div class="row card-data">
                                                 <div class="col-md-1 px-0 text-center"></div>
                                                 <div class="col-md-11 pl-0">
-                                                    <span class="h5 card-title">Version:&nbsp;</span>1.0
+                                                    <span class="h5 card-title">Version:&nbsp;</span>1.1
                                                 </div>
                                             </div>
                                             <div class="row card-data">
@@ -313,7 +313,7 @@
                                             <div class="row card-data">
                                                 <div class="col-md-1 px-0 text-center"></div>
                                                 <div class="col-md-11 pl-0">
-                                                    <span class="h5 card-title">Last Modified:&nbsp;</span>28 March 2020
+                                                    <span class="h5 card-title">Last Modified:&nbsp;</span>15 April 2025
                                                 </div>
                                             </div>
                                     </div>
@@ -323,13 +323,13 @@
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Permalink to this version of T1048.001" 
-           href="/versions/v16/techniques/T1048/001/" data-test-ignore="true">Version Permalink</a>
+           href="/versions/v17/techniques/T1048/001/" data-test-ignore="true">Version Permalink</a>
     </div>
     <div class="permalink">
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Go to the live version of T1048.001" 
-           href="/versions/v16/techniques/T1048/001/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+           href="/versions/v17/techniques/T1048/001/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
     </div>
 </div>
 
@@ -409,7 +409,7 @@
                     <a href="/datasources/DS0017/#Command%20Execution">Command Execution</a>
                 </td>
                     <td>
-                                <p>Monitor executed commands and arguments that may steal data by exfiltrating it over a symmetrically encrypted network protocol other than that of the existing command and control channel.</p>
+                                <p>Monitor for execution of encryption-related tools before outbound data transfer, use of symmetric encryption algorithms (AES, RC4, Blowfish) in scripts or binaries, or file encryption activity followed by network communication.</p><p>Analytic 1 - Detecting Symmetric Encryption Before Exfiltration </p><p><code> (EventCode=1 OR source="/var/log/audit/audit.log" type="execve")| where (command IN ("openssl enc -aes-256-cbc", "gpg -c", "python -c 'import Crypto.Cipher.AES'", "certutil -encode"))| eval risk_score=case(    command IN ("openssl enc -aes-256-cbc", "gpg -c"), 9,    command IN ("python -c 'import Crypto.Cipher.AES'", "certutil -encode"), 8)| where risk_score &gt;= 8| stats count by _time, host, user, command, risk_score</code></p>
 
                     </td>
             </tr>
@@ -425,7 +425,7 @@
                     <a href="/datasources/DS0022/#File%20Access">File Access</a>
                 </td>
                     <td>
-                                <p>Monitor for files viewed in isolation that may steal data by exfiltrating it over a symmetrically encrypted network protocol other than that of the existing command and control channel.</p>
+                                <p>Monitor for files being encrypted before transfer, temporary storage of encrypted files before exfiltration, or files with unusual extensions indicative of encryption (.aes, .enc, .bin).</p><p>Analytic 1 - Detecting Encrypted Files Before Exfiltration </p><p><code> (EventCode=11 OR EventCode=4663 OR source="/var/log/audit/audit.log" type="open")| where (file_path IN ("/tmp/<em>", "/var/tmp/</em>", "/home/<em>/Downloads/</em>", "C:\Users\*\Documents\exfil") AND file_extension IN ("aes", "enc", "bin"))| eval risk_score=case(    file_extension="aes" OR file_extension="enc", 9,    file_extension="bin", 8)| where risk_score &gt;= 8| stats count by _time, host, user, file_path, file_extension, risk_score</code></p>
 
                     </td>
             </tr>
@@ -441,7 +441,7 @@
                     <a href="/datasources/DS0029/#Network%20Connection%20Creation">Network Connection Creation</a>
                 </td>
                     <td>
-                                <p>Monitor for newly constructed network connections that are sent or received by untrusted hosts. </p>
+                                <p>Monitor for outbound network connections using traditionally non-encrypted protocols, connections where data sent is significantly larger than data received, traffic spikes over uncommon ports (e.g., FTP, SMB, SMTP, ICMP), or traffic patterns indicative of encrypted payload transmission.</p><p>Analytic 1 - Detecting Symmetric Encrypted Exfiltration via Alternative Protocols</p><p><code> (EventCode=3 OR source="zeek_conn.log" OR source="firewall_logs")| where (dest_port IN (21, 25, 53, 139, 445, 587, 990) AND bytes_out &gt; 10000000)| stats count, sum(bytes_out) as total_bytes by _time, host, process, dest_ip, dest_port| where count &gt;= 3 AND total_bytes &gt; 50000000| eval risk_score=case(    total_bytes &gt; 100000000, 9,    total_bytes &gt; 50000000, 8)| where risk_score &gt;= 8| table host, dest_ip, total_bytes, dest_port, risk_score</code></p>
 
                     </td>
             </tr>
@@ -452,7 +452,7 @@
                             <a href="/datasources/DS0029/#Network%20Traffic%20Content">Network Traffic Content</a>
                         </td>
                             <td>
-                                        <p>Monitor and analyze traffic patterns and packet inspection associated to protocol(s) that do not follow the expected protocol standards and traffic flows (e.g extraneous packets that do not belong to established flows, gratuitous or anomalous traffic patterns, anomalous syntax, or structure). Consider correlation with process monitoring and command line to detect anomalous processes execution and command line arguments associated to traffic patterns (e.g. monitor anomalies in use of files that do not normally initiate connections for respective protocol(s)).</p>
+                                        <p>Monitor for encrypted payloads using symmetric cryptography over plaintext channels, detection of RC4, AES, or Blowfish in network traffic, or HTTP, FTP, or DNS packets containing unusually long Base64 or XOR-encoded strings.</p><p>Analytic 1 - Detecting Encrypted Payloads in Alternative Protocols</p><p><code> (EventCode=3 OR source="zeek_http.log" OR source="dns.log")| where (uri_length &gt; 200 OR request_body_length &gt; 5000)| eval encoded_data=if(match(uri, "([A-Za-z0-9+/=]{100,})") OR match(request_body, "([A-Za-z0-9+/=]{100,})"), 1, 0)| where encoded_data=1| stats count by _time, host, user, uri, request_body_length, risk_score| eval risk_score=case(    request_body_length &gt; 10000, 9,    request_body_length &gt; 5000, 8)| where risk_score &gt;= 8| table host, uri, request_body_length, risk_score</code></p>
 
                             </td>
                     </tr>
@@ -556,7 +556,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v16.1&#013;Website  v4.2.1">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v17.0&#013;Website  v4.2.2">Website Changelog</a></u>
                                 </div>
                             </div>
                             <div class="row">

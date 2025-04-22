@@ -172,7 +172,7 @@
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
                     <div class="container-fluid banner-message">
-                        ATT&CKcon 6.0 returns October 14-15, 2025 in McLean, VA. More details about tickets and our CFP can be found <a href='https://na.eventscloud.com/attackcon6'>here</a>
+                        ATT&CK v17 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v17-dfb59eae2204'>blog post</a> for more information.
                     </div>
             </div>
         </div>
@@ -324,7 +324,7 @@
                                     <!--start-indexing-for-search-->
 
                                     <div class="description-body">
-                                                <p>Adversaries may impair command history logging to hide commands they run on a compromised system. Various command interpreters keep track of the commands users type in their terminal so that users can retrace what they've done. </p><p>On Linux and macOS, command history is tracked in a file pointed to by the environment variable <code>HISTFILE</code>. When a user logs off a system, this information is flushed to a file in the user's home directory called <code>~/.bash_history</code>. The <code>HISTCONTROL</code> environment variable keeps track of what should be saved by the <code>history</code> command and eventually into the <code>~/.bash_history</code> file when a user logs out. <code>HISTCONTROL</code> does not exist by default on macOS, but can be set by the user and will be respected.</p><p>Adversaries may clear the history environment variable (<code>unset HISTFILE</code>) or set the command history size to zero (<code>export HISTFILESIZE=0</code>) to prevent logging of commands. Additionally, <code>HISTCONTROL</code> can be configured to ignore commands that start with a space by simply setting it to "ignorespace". <code>HISTCONTROL</code> can also be set to ignore duplicate commands by setting it to "ignoredups". In some Linux systems, this is set by default to "ignoreboth" which covers both of the previous examples. This means that " ls" will not be saved, but "ls" would be saved by history. Adversaries can abuse this to operate without leaving traces by simply prepending a space to all of their terminal commands. </p><p>On Windows systems, the <code>PSReadLine</code> module tracks commands used in all PowerShell sessions and writes them to a file (<code>$env:APPDATA\Microsoft\Windows\PowerShell\PSReadLine\ConsoleHost_history.txt</code> by default). Adversaries may change where these logs are saved using <code>Set-PSReadLineOption -HistorySavePath {File Path}</code>. This will cause <code>ConsoleHost_history.txt</code> to stop receiving logs. Additionally, it is possible to turn off logging to this file using the PowerShell command <code>Set-PSReadlineOption -HistorySaveStyle SaveNothing</code>.<span onclick=scrollToRef('scite-1') id="scite-ref-1-a" class="scite-citeref-number" title="Microsoft. (2020, May 13). About History. Retrieved September 4, 2020."data-reference="Microsoft PowerShell Command History"><sup><a href="https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_history?view=powershell-7" target="_blank" data-hasqtip="0" aria-describedby="qtip-0">[1]</a></sup></span><span onclick=scrollToRef('scite-2') id="scite-ref-2-a" class="scite-citeref-number" title="jak. (2020, June 27). Live Discover - PowerShell command audit. Retrieved August 21, 2020."data-reference="Sophos PowerShell command audit"><sup><a href="https://community.sophos.com/products/intercept/early-access-program/f/live-discover-response-queries/121529/live-discover---powershell-command-audit" target="_blank" data-hasqtip="1" aria-describedby="qtip-1">[2]</a></sup></span><span onclick=scrollToRef('scite-3') id="scite-ref-3-a" class="scite-citeref-number" title="Vikas, S. (2020, August 26). PowerShell Command History Forensics. Retrieved September 4, 2020."data-reference="Sophos PowerShell Command History Forensics"><sup><a href="https://community.sophos.com/products/malware/b/blog/posts/powershell-command-history-forensics" target="_blank" data-hasqtip="2" aria-describedby="qtip-2">[3]</a></sup></span></p><p>Adversaries may also leverage a <a href="/techniques/T1059/008">Network Device CLI</a> on network devices to disable historical command logging (e.g. <code>no logging</code>).</p>
+                                                <p>Adversaries may impair command history logging to hide commands they run on a compromised system. Various command interpreters keep track of the commands users type in their terminal so that users can retrace what they've done. </p><p>On Linux and macOS, command history is tracked in a file pointed to by the environment variable <code>HISTFILE</code>. When a user logs off a system, this information is flushed to a file in the user's home directory called <code>~/.bash_history</code>. The <code>HISTCONTROL</code> environment variable keeps track of what should be saved by the <code>history</code> command and eventually into the <code>~/.bash_history</code> file when a user logs out. <code>HISTCONTROL</code> does not exist by default on macOS, but can be set by the user and will be respected. The <code>HISTFILE</code> environment variable is also used in some ESXi systems.<span onclick=scrollToRef('scite-1') id="scite-ref-1-a" class="scite-citeref-number" title="Alexander Marvi, Jeremy Koppen, Tufail Ahmed, and Jonathan Lepore. (2022, September 29). Bad VIB(E)s Part One: Investigating Novel Malware Persistence Within ESXi Hypervisors. Retrieved March 26, 2025."data-reference="Google Cloud Threat Intelligence ESXi VIBs 2022"><sup><a href="https://cloud.google.com/blog/topics/threat-intelligence/esxi-hypervisors-malware-persistence" target="_blank" data-hasqtip="0" aria-describedby="qtip-0">[1]</a></sup></span></p><p>Adversaries may clear the history environment variable (<code>unset HISTFILE</code>) or set the command history size to zero (<code>export HISTFILESIZE=0</code>) to prevent logging of commands. Additionally, <code>HISTCONTROL</code> can be configured to ignore commands that start with a space by simply setting it to "ignorespace". <code>HISTCONTROL</code> can also be set to ignore duplicate commands by setting it to "ignoredups". In some Linux systems, this is set by default to "ignoreboth" which covers both of the previous examples. This means that " ls" will not be saved, but "ls" would be saved by history. Adversaries can abuse this to operate without leaving traces by simply prepending a space to all of their terminal commands. </p><p>On Windows systems, the <code>PSReadLine</code> module tracks commands used in all PowerShell sessions and writes them to a file (<code>$env:APPDATA\Microsoft\Windows\PowerShell\PSReadLine\ConsoleHost_history.txt</code> by default). Adversaries may change where these logs are saved using <code>Set-PSReadLineOption -HistorySavePath {File Path}</code>. This will cause <code>ConsoleHost_history.txt</code> to stop receiving logs. Additionally, it is possible to turn off logging to this file using the PowerShell command <code>Set-PSReadlineOption -HistorySaveStyle SaveNothing</code>.<span onclick=scrollToRef('scite-2') id="scite-ref-2-a" class="scite-citeref-number" title="Microsoft. (2020, May 13). About History. Retrieved September 4, 2020."data-reference="Microsoft PowerShell Command History"><sup><a href="https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_history?view=powershell-7" target="_blank" data-hasqtip="1" aria-describedby="qtip-1">[2]</a></sup></span><span onclick=scrollToRef('scite-3') id="scite-ref-3-a" class="scite-citeref-number" title="jak. (2020, June 27). Live Discover - PowerShell command audit. Retrieved August 21, 2020."data-reference="Sophos PowerShell command audit"><sup><a href="https://community.sophos.com/products/intercept/early-access-program/f/live-discover-response-queries/121529/live-discover---powershell-command-audit" target="_blank" data-hasqtip="2" aria-describedby="qtip-2">[3]</a></sup></span><span onclick=scrollToRef('scite-4') id="scite-ref-4-a" class="scite-citeref-number" title="Vikas, S. (2020, August 26). PowerShell Command History Forensics. Retrieved November 17, 2024."data-reference="Sophos PowerShell Command History Forensics"><sup><a href="https://community.sophos.com/sophos-labs/b/blog/posts/powershell-command-history-forensics" target="_blank" data-hasqtip="3" aria-describedby="qtip-3">[4]</a></sup></span></p><p>Adversaries may also leverage a <a href="/techniques/T1059/008">Network Device CLI</a> on network devices to disable historical command logging (e.g. <code>no logging</code>).</p>
 
                                     </div>
                             </div>
@@ -359,15 +359,7 @@
                                                     <span data-toggle="tooltip" data-placement="left" title="" data-test-ignore="true" data-original-title="The system an adversary is operating within; could be an operating system or application">&#9432;</span>
                                                 </div>
                                                 <div class="col-md-11 pl-0">
-                                                    <span class="h5 card-title">Platforms:&nbsp;</span>Linux, Network, Windows, macOS
-                                                </div>
-                                            </div>
-                                            <div class="row card-data">
-                                                <div class="col-md-1 px-0 text-center">
-                                                    <span data-toggle="tooltip" data-placement="left" title="" data-test-ignore="true" data-original-title="If the (sub-)technique can be used to bypass or evade a particular defensive tool, methodology, or process">&#9432;</span>
-                                                </div>
-                                                <div class="col-md-11 pl-0">
-                                                    <span class="h5 card-title">Defense Bypassed:&nbsp;</span>Host forensic analysis, Log analysis
+                                                    <span class="h5 card-title">Platforms:&nbsp;</span>ESXi, Linux, Network Devices, Windows, macOS
                                                 </div>
                                             </div>
                                             <div class="row card-data">
@@ -379,7 +371,7 @@
                                             <div class="row card-data">
                                                 <div class="col-md-1 px-0 text-center"></div>
                                                 <div class="col-md-11 pl-0">
-                                                    <span class="h5 card-title">Version:&nbsp;</span>2.2
+                                                    <span class="h5 card-title">Version:&nbsp;</span>2.3
                                                 </div>
                                             </div>
                                             <div class="row card-data">
@@ -391,7 +383,7 @@
                                             <div class="row card-data">
                                                 <div class="col-md-1 px-0 text-center"></div>
                                                 <div class="col-md-11 pl-0">
-                                                    <span class="h5 card-title">Last Modified:&nbsp;</span>30 March 2023
+                                                    <span class="h5 card-title">Last Modified:&nbsp;</span>15 April 2025
                                                 </div>
                                             </div>
                                     </div>
@@ -401,13 +393,13 @@
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Permalink to this version of T1562.003" 
-           href="/versions/v16/techniques/T1562/003/" data-test-ignore="true">Version Permalink</a>
+           href="/versions/v17/techniques/T1562/003/" data-test-ignore="true">Version Permalink</a>
     </div>
     <div class="permalink">
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Go to the live version of T1562.003" 
-           href="/versions/v16/techniques/T1562/003/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+           href="/versions/v17/techniques/T1562/003/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
     </div>
 </div>
 
@@ -432,7 +424,19 @@
                                                 <a href="/groups/G0082"> APT38 </a>
                                             </td>
                                             <td>
-                                                            <p><a href="/groups/G0082">APT38</a> has prepended a space to all of their terminal commands to operate without leaving traces in the HISTCONTROL environment.<span onclick=scrollToRef('scite-4') id="scite-ref-4-a" class="scite-citeref-number" title="DHS/CISA. (2020, August 26). FASTCash 2.0: North Korea's BeagleBoyz Robbing Banks. Retrieved September 29, 2021."data-reference="CISA AA20-239A BeagleBoyz August 2020"><sup><a href="https://us-cert.cisa.gov/ncas/alerts/aa20-239a" target="_blank" data-hasqtip="3" aria-describedby="qtip-3">[4]</a></sup></span></p>
+                                                            <p><a href="/groups/G0082">APT38</a> has prepended a space to all of their terminal commands to operate without leaving traces in the HISTCONTROL environment.<span onclick=scrollToRef('scite-5') id="scite-ref-5-a" class="scite-citeref-number" title="DHS/CISA. (2020, August 26). FASTCash 2.0: North Korea's BeagleBoyz Robbing Banks. Retrieved September 29, 2021."data-reference="CISA AA20-239A BeagleBoyz August 2020"><sup><a href="https://us-cert.cisa.gov/ncas/alerts/aa20-239a" target="_blank" data-hasqtip="4" aria-describedby="qtip-4">[5]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/campaigns/C0046"> C0046 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/campaigns/C0046"> ArcaneDoor </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="https://attack.mitre.org/campaigns/C0046">ArcaneDoor</a> included disabling logging on targeted Cisco ASA appliances.<span onclick=scrollToRef('scite-6') id="scite-ref-6-a" class="scite-citeref-number" title="Cisco Talos. (2024, April 24). ArcaneDoor - New espionage-focused campaign found targeting perimeter network devices. Retrieved January 6, 2025."data-reference="Cisco ArcaneDoor 2024"><sup><a href="https://blog.talosintelligence.com/arcanedoor-new-espionage-focused-campaign-found-targeting-perimeter-network-devices/" target="_blank" data-hasqtip="5" aria-describedby="qtip-5">[6]</a></sup></span><span onclick=scrollToRef('scite-7') id="scite-ref-7-a" class="scite-citeref-number" title="Canadian Centre for Cyber Security. (2024, April 24). Cyber Activity Impacting CISCO ASA VPNs. Retrieved January 6, 2025."data-reference="CCCS ArcaneDoor 2024"><sup><a href="https://www.cyber.gc.ca/en/news-events/cyber-activity-impacting-cisco-asa-vpns" target="_blank" data-hasqtip="6" aria-describedby="qtip-6">[7]</a></sup></span></p>
 
                                             </td>
                                         </tr>
@@ -444,7 +448,31 @@
                                                 <a href="/software/S1161"> BPFDoor </a>
                                             </td>
                                             <td>
-                                                            <p><a href="/software/S1161">BPFDoor</a> sets the <code>MYSQL_HISTFILE</code> and <code>HISTFILE</code> to <code>/dev/null</code> preventing the shell and MySQL from logging history in <code>/proc/&lt;PID&gt;/environ</code>.<span onclick=scrollToRef('scite-5') id="scite-ref-5-a" class="scite-citeref-number" title="The Sandfly Security Team. (2022, May 11). BPFDoor - An Evasive Linux Backdoor Technical Analysis. Retrieved September 29, 2023."data-reference="Sandfly BPFDoor 2022"><sup><a href="https://sandflysecurity.com/blog/bpfdoor-an-evasive-linux-backdoor-technical-analysis/" target="_blank" data-hasqtip="4" aria-describedby="qtip-4">[5]</a></sup></span> </p>
+                                                            <p><a href="/software/S1161">BPFDoor</a> sets the <code>MYSQL_HISTFILE</code> and <code>HISTFILE</code> to <code>/dev/null</code> preventing the shell and MySQL from logging history in <code>/proc/&lt;PID&gt;/environ</code>.<span onclick=scrollToRef('scite-8') id="scite-ref-8-a" class="scite-citeref-number" title="The Sandfly Security Team. (2022, May 11). BPFDoor - An Evasive Linux Backdoor Technical Analysis. Retrieved September 29, 2023."data-reference="Sandfly BPFDoor 2022"><sup><a href="https://sandflysecurity.com/blog/bpfdoor-an-evasive-linux-backdoor-technical-analysis/" target="_blank" data-hasqtip="7" aria-describedby="qtip-7">[8]</a></sup></span> </p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/software/S1186"> S1186 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/software/S1186"> Line Dancer </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/software/S1186">Line Dancer</a> can disable syslog on compromised devices.<span onclick=scrollToRef('scite-6') id="scite-ref-6-a" class="scite-citeref-number" title="Cisco Talos. (2024, April 24). ArcaneDoor - New espionage-focused campaign found targeting perimeter network devices. Retrieved January 6, 2025."data-reference="Cisco ArcaneDoor 2024"><sup><a href="https://blog.talosintelligence.com/arcanedoor-new-espionage-focused-campaign-found-targeting-perimeter-network-devices/" target="_blank" data-hasqtip="5" aria-describedby="qtip-5">[6]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/groups/G1041"> G1041 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/groups/G1041"> Sea Turtle </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/groups/G1041">Sea Turtle</a> unset the Bash and MySQL history files on victim systems.<span onclick=scrollToRef('scite-9') id="scite-ref-9-a" class="scite-citeref-number" title="Hunt & Hackett Research Team. (2024, January 5). Turkish espionage campaigns in the Netherlands. Retrieved November 20, 2024."data-reference="Hunt Sea Turtle 2024"><sup><a href="https://www.huntandhackett.com/blog/turkish-espionage-campaigns" target="_blank" data-hasqtip="8" aria-describedby="qtip-8">[9]</a></sup></span></p>
 
                                             </td>
                                         </tr>
@@ -456,7 +484,7 @@
                                                 <a href="/software/S0692"> SILENTTRINITY </a>
                                             </td>
                                             <td>
-                                                            <p><a href="/software/S0692">SILENTTRINITY</a> can bypass ScriptBlock logging to execute unmanaged PowerShell code from memory.<span onclick=scrollToRef('scite-6') id="scite-ref-6-a" class="scite-citeref-number" title="Salvati, M. (2019, August 6). SILENTTRINITY Modules. Retrieved March 24, 2022."data-reference="GitHub SILENTTRINITY Modules July 2019"><sup><a href="https://github.com/byt3bl33d3r/SILENTTRINITY/tree/master/silenttrinity/core/teamserver/modules/boo" target="_blank" data-hasqtip="5" aria-describedby="qtip-5">[6]</a></sup></span></p>
+                                                            <p><a href="/software/S0692">SILENTTRINITY</a> can bypass ScriptBlock logging to execute unmanaged PowerShell code from memory.<span onclick=scrollToRef('scite-10') id="scite-ref-10-a" class="scite-citeref-number" title="Salvati, M. (2019, August 6). SILENTTRINITY Modules. Retrieved March 24, 2022."data-reference="GitHub SILENTTRINITY Modules July 2019"><sup><a href="https://github.com/byt3bl33d3r/SILENTTRINITY/tree/master/silenttrinity/core/teamserver/modules/boo" target="_blank" data-hasqtip="9" aria-describedby="qtip-9">[10]</a></sup></span></p>
 
                                             </td>
                                         </tr>
@@ -482,7 +510,7 @@
                                                     <a href="/mitigations/M1039"> Environment Variable Permissions </a>
                                                 </td>
                                                 <td>
-                                                                <p>Prevent users from changing the <code>HISTCONTROL</code>, <code>HISTFILE</code>, and <code>HISTFILESIZE</code> environment variables. <span onclick=scrollToRef('scite-7') id="scite-ref-7-a" class="scite-citeref-number" title="Mathew Branwell. (2012, March 21). Securing .bash_history file. Retrieved July 8, 2017."data-reference="Securing bash history"><sup><a href="http://www.akyl.net/securing-bashhistory-file-make-sure-your-linux-system-users-won%E2%80%99t-hide-or-delete-their-bashhistory" target="_blank" data-hasqtip="6" aria-describedby="qtip-6">[7]</a></sup></span></p>
+                                                                <p>Prevent users from changing the <code>HISTCONTROL</code>, <code>HISTFILE</code>, and <code>HISTFILESIZE</code> environment variables. <span onclick=scrollToRef('scite-11') id="scite-ref-11-a" class="scite-citeref-number" title="Mathew Branwell. (2012, March 21). Securing .bash_history file. Retrieved July 8, 2017."data-reference="Securing bash history"><sup><a href="http://www.akyl.net/securing-bashhistory-file-make-sure-your-linux-system-users-won%E2%80%99t-hide-or-delete-their-bashhistory" target="_blank" data-hasqtip="10" aria-describedby="qtip-10">[11]</a></sup></span></p>
 
                                                 </td>
                                             </tr>
@@ -559,8 +587,8 @@
         <li>
             <span  id="scite-1" class="scite-citation">
                 <span class="scite-citation-text">
-                    <a rel="nofollow" class="external text" name="scite-1" href="https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_history?view=powershell-7" target="_blank">
-                        Microsoft. (2020, May 13). About History. Retrieved September 4, 2020.
+                    <a rel="nofollow" class="external text" name="scite-1" href="https://cloud.google.com/blog/topics/threat-intelligence/esxi-hypervisors-malware-persistence" target="_blank">
+                        Alexander Marvi, Jeremy Koppen, Tufail Ahmed, and Jonathan Lepore. (2022, September 29). Bad VIB(E)s Part One: Investigating Novel Malware Persistence Within ESXi Hypervisors. Retrieved March 26, 2025.
                     </a>
                 </span>
             </span>
@@ -571,8 +599,8 @@
         <li>
             <span  id="scite-2" class="scite-citation">
                 <span class="scite-citation-text">
-                    <a rel="nofollow" class="external text" name="scite-2" href="https://community.sophos.com/products/intercept/early-access-program/f/live-discover-response-queries/121529/live-discover---powershell-command-audit" target="_blank">
-                        jak. (2020, June 27). Live Discover - PowerShell command audit. Retrieved August 21, 2020.
+                    <a rel="nofollow" class="external text" name="scite-2" href="https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_history?view=powershell-7" target="_blank">
+                        Microsoft. (2020, May 13). About History. Retrieved September 4, 2020.
                     </a>
                 </span>
             </span>
@@ -583,8 +611,8 @@
         <li>
             <span  id="scite-3" class="scite-citation">
                 <span class="scite-citation-text">
-                    <a rel="nofollow" class="external text" name="scite-3" href="https://community.sophos.com/products/malware/b/blog/posts/powershell-command-history-forensics" target="_blank">
-                        Vikas, S. (2020, August 26). PowerShell Command History Forensics. Retrieved September 4, 2020.
+                    <a rel="nofollow" class="external text" name="scite-3" href="https://community.sophos.com/products/intercept/early-access-program/f/live-discover-response-queries/121529/live-discover---powershell-command-audit" target="_blank">
+                        jak. (2020, June 27). Live Discover - PowerShell command audit. Retrieved August 21, 2020.
                     </a>
                 </span>
             </span>
@@ -595,8 +623,32 @@
         <li>
             <span  id="scite-4" class="scite-citation">
                 <span class="scite-citation-text">
-                    <a rel="nofollow" class="external text" name="scite-4" href="https://us-cert.cisa.gov/ncas/alerts/aa20-239a" target="_blank">
+                    <a rel="nofollow" class="external text" name="scite-4" href="https://community.sophos.com/sophos-labs/b/blog/posts/powershell-command-history-forensics" target="_blank">
+                        Vikas, S. (2020, August 26). PowerShell Command History Forensics. Retrieved November 17, 2024.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-5" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-5" href="https://us-cert.cisa.gov/ncas/alerts/aa20-239a" target="_blank">
                         DHS/CISA. (2020, August 26). FASTCash 2.0: North Korea's BeagleBoyz Robbing Banks. Retrieved September 29, 2021.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-6" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-6" href="https://blog.talosintelligence.com/arcanedoor-new-espionage-focused-campaign-found-targeting-perimeter-network-devices/" target="_blank">
+                        Cisco Talos. (2024, April 24). ArcaneDoor - New espionage-focused campaign found targeting perimeter network devices. Retrieved January 6, 2025.
                     </a>
                 </span>
             </span>
@@ -606,12 +658,24 @@
                 </ol>
             </div>
             <div class="col">
-                    <ol start="5.0">
+                    <ol start="7.0">
                                 
         <li>
-            <span  id="scite-5" class="scite-citation">
+            <span  id="scite-7" class="scite-citation">
                 <span class="scite-citation-text">
-                    <a rel="nofollow" class="external text" name="scite-5" href="https://sandflysecurity.com/blog/bpfdoor-an-evasive-linux-backdoor-technical-analysis/" target="_blank">
+                    <a rel="nofollow" class="external text" name="scite-7" href="https://www.cyber.gc.ca/en/news-events/cyber-activity-impacting-cisco-asa-vpns" target="_blank">
+                        Canadian Centre for Cyber Security. (2024, April 24). Cyber Activity Impacting CISCO ASA VPNs. Retrieved January 6, 2025.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-8" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-8" href="https://sandflysecurity.com/blog/bpfdoor-an-evasive-linux-backdoor-technical-analysis/" target="_blank">
                         The Sandfly Security Team. (2022, May 11). BPFDoor - An Evasive Linux Backdoor Technical Analysis. Retrieved September 29, 2023.
                     </a>
                 </span>
@@ -621,9 +685,21 @@
 
                                 
         <li>
-            <span  id="scite-6" class="scite-citation">
+            <span  id="scite-9" class="scite-citation">
                 <span class="scite-citation-text">
-                    <a rel="nofollow" class="external text" name="scite-6" href="https://github.com/byt3bl33d3r/SILENTTRINITY/tree/master/silenttrinity/core/teamserver/modules/boo" target="_blank">
+                    <a rel="nofollow" class="external text" name="scite-9" href="https://www.huntandhackett.com/blog/turkish-espionage-campaigns" target="_blank">
+                        Hunt & Hackett Research Team. (2024, January 5). Turkish espionage campaigns in the Netherlands. Retrieved November 20, 2024.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-10" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-10" href="https://github.com/byt3bl33d3r/SILENTTRINITY/tree/master/silenttrinity/core/teamserver/modules/boo" target="_blank">
                         Salvati, M. (2019, August 6). SILENTTRINITY Modules. Retrieved March 24, 2022.
                     </a>
                 </span>
@@ -633,9 +709,9 @@
 
                                 
         <li>
-            <span  id="scite-7" class="scite-citation">
+            <span  id="scite-11" class="scite-citation">
                 <span class="scite-citation-text">
-                    <a rel="nofollow" class="external text" name="scite-7" href="http://www.akyl.net/securing-bashhistory-file-make-sure-your-linux-system-users-won%E2%80%99t-hide-or-delete-their-bashhistory" target="_blank">
+                    <a rel="nofollow" class="external text" name="scite-11" href="http://www.akyl.net/securing-bashhistory-file-make-sure-your-linux-system-users-won%E2%80%99t-hide-or-delete-their-bashhistory" target="_blank">
                         Mathew Branwell. (2012, March 21). Securing .bash_history file. Retrieved July 8, 2017.
                     </a>
                 </span>
@@ -709,7 +785,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v16.1&#013;Website  v4.2.1">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v17.0&#013;Website  v4.2.2">Website Changelog</a></u>
                                 </div>
                             </div>
                             <div class="row">

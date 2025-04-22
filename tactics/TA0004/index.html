@@ -172,7 +172,7 @@
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
                     <div class="container-fluid banner-message">
-                        ATT&CKcon 6.0 returns October 14-15, 2025 in McLean, VA. More details about tickets and our CFP can be found <a href='https://na.eventscloud.com/attackcon6'>here</a>
+                        ATT&CK v17 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v17-dfb59eae2204'>blog post</a> for more information.
                     </div>
             </div>
         </div>
@@ -221,7 +221,7 @@
                                     <div class="card-body">
                                         <div class="card-data"><span class="h5 card-title">ID:</span> TA0004</div>    
                                             <div class="card-data"><span class="h5 card-title">Created:&nbsp;</span>17 October 2018</div>
-                                            <div class="card-data"><span class="h5 card-title">Last Modified:&nbsp;</span>06 January 2021</div>
+                                            <div class="card-data"><span class="h5 card-title">Last Modified:&nbsp;</span>16 April 2025</div>
               
                                     </div>
                                 </div>
@@ -230,13 +230,13 @@
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Permalink to this version of TA0004" 
-           href="/versions/v16/tactics/TA0004/" data-test-ignore="true">Version Permalink</a>
+           href="/versions/v17/tactics/TA0004/" data-test-ignore="true">Version Permalink</a>
     </div>
     <div class="permalink">
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Go to the live version of TA0004" 
-           href="/versions/v16/tactics/TA0004/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+           href="/versions/v17/tactics/TA0004/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
     </div>
 </div>
 
@@ -479,7 +479,7 @@
                             <a href="/techniques/T1098/004"> SSH Authorized Keys </a>
                         </td>
                         <td>
-                                    Adversaries may modify the SSH <code>authorized_keys</code> file to maintain persistence on a victim host. Linux distributions and macOS commonly use key-based authentication to secure the authentication process of SSH sessions for remote management. The <code>authorized_keys</code> file in SSH specifies the SSH keys that can be used for logging into the user account for which the file is configured. This file is usually found in the user's home directory under <code>&lt;user-home&gt;/.ssh/authorized_keys</code>. Users may edit the system’s SSH config file to modify the directives PubkeyAuthentication and RSAAuthentication to the value "yes" to ensure public key and RSA authentication are enabled. The SSH config file is usually located under <code>/etc/ssh/sshd_config</code>.
+                                    Adversaries may modify the SSH <code>authorized_keys</code> file to maintain persistence on a victim host. Linux distributions, macOS, and ESXi hypervisors commonly use key-based authentication to secure the authentication process of SSH sessions for remote management. The <code>authorized_keys</code> file in SSH specifies the SSH keys that can be used for logging into the user account for which the file is configured. This file is usually found in the user's home directory under <code>&lt;user-home&gt;/.ssh/authorized_keys</code> (or, on ESXi, <code>/etc/ssh/keys-&lt;username&gt;/authorized_keys</code>). Users may edit the system’s SSH config file to modify the directives <code>PubkeyAuthentication</code> and <code>RSAAuthentication</code> to the value <code>yes</code> to ensure public key and RSA authentication are enabled, as well as modify the directive <code>PermitRootLogin</code> to the value <code>yes</code> to enable root authentication via SSH. The SSH config file is usually located under <code>/etc/ssh/sshd_config</code>.
 
                         </td>
                     </tr>   
@@ -776,7 +776,7 @@
                             <a href="/techniques/T1037/004"> RC Scripts </a>
                         </td>
                         <td>
-                                    Adversaries may establish persistence by modifying RC scripts which are executed during a Unix-like system’s startup. These files allow system administrators to map and start custom services at startup for different run levels. RC scripts require root privileges to modify.
+                                    Adversaries may establish persistence by modifying RC scripts, which are executed during a Unix-like system’s startup. These files allow system administrators to map and start custom services at startup for different run levels. RC scripts require root privileges to modify.
 
                         </td>
                     </tr>   
@@ -916,7 +916,7 @@
                         <a href="/techniques/T1611"> Escape to Host </a>
                     </td>
                     <td>
-                                Adversaries may break out of a container to gain access to the underlying host. This can allow an adversary access to other containerized resources from the host level or to the host itself. In principle, containerized resources should provide a clear separation of application functionality and be isolated from the host environment.
+                                Adversaries may break out of a container or virtualized environment to gain access to the underlying host. This can allow an adversary access to other containerized or virtualized resources from the host level or to the host itself. In principle, containerized / virtualized resources should provide a clear separation of application functionality and be isolated from the host environment.
 
                     </td>
                 </tr>
@@ -1183,23 +1183,10 @@
                             <a href="/techniques/T1574/001"> .001 </a>
                         </td>
                         <td>
-                            <a href="/techniques/T1574/001"> DLL Search Order Hijacking </a>
+                            <a href="/techniques/T1574/001"> DLL </a>
                         </td>
                         <td>
-                                    Adversaries may execute their own malicious payloads by hijacking the search order used to load DLLs. Windows systems use a common method to look for required DLLs to load into a program.  Hijacking DLL loads may be for the purpose of establishing persistence as well as elevating privileges and/or evading restrictions on file execution.
-
-                        </td>
-                    </tr>   
-                    <tr class="sub technique">
-                        <td></td>
-                        <td>
-                            <a href="/techniques/T1574/002"> .002 </a>
-                        </td>
-                        <td>
-                            <a href="/techniques/T1574/002"> DLL Side-Loading </a>
-                        </td>
-                        <td>
-                                    Adversaries may execute their own malicious payloads by side-loading DLLs. Similar to <a href="/techniques/T1574/001">DLL Search Order Hijacking</a>, side-loading involves hijacking which DLL a program loads. But rather than just planting the DLL within the search order of a program then waiting for the victim application to be invoked, adversaries may directly side-load their payloads by planting then invoking a legitimate application that executes their payload(s).
+                                    Adversaries may abuse dynamic-link library files (DLLs) in order to achieve persistence, escalate privileges, and evade defenses. DLLs are libraries that contain code and data that can be simultaneously utilized by multiple programs. While DLLs are not malicious by nature, they can be abused through mechanisms such as side-loading, hijacking search order, and phantom DLL hijacking.
 
                         </td>
                     </tr>   
@@ -1238,7 +1225,7 @@
                             <a href="/techniques/T1574/006"> Dynamic Linker Hijacking </a>
                         </td>
                         <td>
-                                    Adversaries may execute their own malicious payloads by hijacking environment variables the dynamic linker uses to load shared libraries. During the execution preparation phase of a program, the dynamic linker loads specified absolute paths of shared libraries from environment variables and files, such as <code>LD_PRELOAD</code> on Linux or <code>DYLD_INSERT_LIBRARIES</code> on macOS. Libraries specified in environment variables are loaded first, taking precedence over system libraries with the same function name. These variables are often used by developers to debug binaries without needing to recompile, deconflict mapped symbols, and implement custom functions without changing the original library.
+                                    Adversaries may execute their own malicious payloads by hijacking environment variables the dynamic linker uses to load shared libraries. During the execution preparation phase of a program, the dynamic linker loads specified absolute paths of shared libraries from various environment variables and files, such as <code>LD_PRELOAD</code> on Linux or <code>DYLD_INSERT_LIBRARIES</code> on macOS. Libraries specified in environment variables are loaded first, taking precedence over system libraries with the same function name. Each platform's linker uses an extensive list of environment variables at different points in execution. These variables are often used by developers to debug binaries without needing to recompile, deconflict mapped symbols, and implement custom functions in the original library.
 
                         </td>
                     </tr>   
@@ -1612,7 +1599,7 @@
                             <a href="/techniques/T1078/001"> Default Accounts </a>
                         </td>
                         <td>
-                                    Adversaries may obtain and abuse credentials of a default account as a means of gaining Initial Access, Persistence, Privilege Escalation, or Defense Evasion. Default accounts are those that are built-into an OS, such as the Guest or Administrator accounts on Windows systems. Default accounts also include default factory/provider set accounts on other types of systems, software, or devices, including the root user account in AWS and the default service account in Kubernetes.
+                                    Adversaries may obtain and abuse credentials of a default account as a means of gaining Initial Access, Persistence, Privilege Escalation, or Defense Evasion. Default accounts are those that are built-into an OS, such as the Guest or Administrator accounts on Windows systems. Default accounts also include default factory/provider set accounts on other types of systems, software, or devices, including the root user account in AWS, the root user account in ESXi, and the default service account in Kubernetes.
 
                         </td>
                     </tr>   
@@ -1651,7 +1638,7 @@
                             <a href="/techniques/T1078/004"> Cloud Accounts </a>
                         </td>
                         <td>
-                                    Valid accounts in cloud environments may allow adversaries to perform actions to achieve Initial Access, Persistence, Privilege Escalation, or Defense Evasion. Cloud accounts are those created and configured by an organization for use by users, remote support, services, or for administration of resources within a cloud service provider or SaaS application. Cloud Accounts can exist solely in the cloud; alternatively, they may be hybrid-joined between on-premises systems and the cloud through syncing or federation with other identity sources such as Windows Active Directory. 
+                                    Valid accounts in cloud environments may allow adversaries to perform actions to achieve Initial Access, Persistence, Privilege Escalation, or Defense Evasion. Cloud accounts are those created and configured by an organization for use by users, remote support, services, or for administration of resources within a cloud service provider or SaaS application. Cloud Accounts can exist solely in the cloud; alternatively, they may be hybrid-joined between on-premises systems and the cloud through syncing or federation with other identity sources such as Windows Active Directory.
 
                         </td>
                     </tr>   
@@ -1718,7 +1705,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v16.1&#013;Website  v4.2.1">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v17.0&#013;Website  v4.2.2">Website Changelog</a></u>
                                 </div>
                             </div>
                             <div class="row">

@@ -172,7 +172,7 @@
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
                     <div class="container-fluid banner-message">
-                        ATT&CKcon 6.0 returns October 14-15, 2025 in McLean, VA. More details about tickets and our CFP can be found <a href='https://na.eventscloud.com/attackcon6'>here</a>
+                        ATT&CK v17 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v17-dfb59eae2204'>blog post</a> for more information.
                     </div>
             </div>
         </div>
@@ -211,7 +211,7 @@
                         <div class="row">
                             <div class="col-md-8">
                                     <div class="description-body">
-                                                <p>Prevent abuse of library loading mechanisms in the operating system and software to load untrusted code by configuring appropriate library loading mechanisms and investigating potential vulnerable software.</p>
+                                                <p>Restricting library loading involves implementing security controls to ensure that only trusted and verified libraries (DLLs, shared objects, etc.) are loaded into processes. Adversaries often abuse Dynamic-Link Library (DLL) Injection, DLL Search Order Hijacking, or LD_PRELOAD mechanisms to execute malicious code by forcing the operating system to load untrusted libraries. This mitigation can be implemented through the following measures: </p><p>Enforce Safe Library Loading Practices:</p><ul><li>Enable <code>SafeDLLSearchMode</code> on Windows.</li><li>Restrict <code>LD_PRELOAD</code> and <code>LD_LIBRARY_PATH</code> usage on Linux systems.</li></ul><p>Code Signing Enforcement:</p><ul><li>Require digital signatures for all libraries loaded into processes.</li><li>Use tools like Signtool, and WDAC to enforce signed DLL execution.</li></ul><p>Environment Hardening:</p><ul><li>Secure library paths and directories to prevent adversaries from placing rogue libraries.</li><li>Monitor user-writable directories and system configurations for unauthorized changes.</li></ul><p>Audit and Monitor Library Loading:</p><ul><li>Enable <code>Sysmon</code> on Windows to monitor for suspicious library loads.</li><li>Use <code>auditd</code> on Linux to monitor shared library paths and configuration file changes.</li></ul><p>Use Application Control Solutions:</p><ul><li>Implement AppLocker, WDAC, or SELinux to allow only trusted libraries.</li></ul><p><em>Tools for Implementation</em></p><p>Windows-Specific Tools:</p><ul><li>AppLocker: Application whitelisting for DLLs.</li><li>Windows Defender Application Control (WDAC): Restrict unauthorized library execution.</li><li>Signtool: Verify and enforce code signing.</li><li>Sysmon: Monitor DLL load events (Event ID 7).</li></ul><p>Linux-Specific Tools:</p><ul><li>auditd: Monitor changes to library paths and critical files.</li><li>SELinux/AppArmor: Define policies to restrict library loading.</li><li>ldconfig and chattr: Secure LD configuration files and prevent unauthorized modifications.</li></ul><p>Cross-Platform Solutions:</p><ul><li>Wazuh or OSSEC: File integrity monitoring for library changes.</li><li>Tripwire: Detect and alert on unauthorized library modifications.</li></ul>
 
                                     </div>
                             </div>
@@ -219,9 +219,9 @@
                                 <div class="card">
                                     <div class="card-body">
                                             <div class="card-data"><span class="h5 card-title">ID:</span> M1044</div>
-                                            <div class="card-data"><span class="h5 card-title">Version:</span> 1.0</div>
+                                            <div class="card-data"><span class="h5 card-title">Version:</span> 1.1</div>
                                             <div class="card-data"><span class="h5 card-title">Created:&nbsp;</span>11 June 2019</div>
-                                            <div class="card-data"><span class="h5 card-title">Last Modified:&nbsp;</span>11 June 2019</div>
+                                            <div class="card-data"><span class="h5 card-title">Last Modified:&nbsp;</span>18 December 2024</div>
                                     </div>
                                 </div>
                                     <div class="text-center pt-2 version-button live">
@@ -229,13 +229,13 @@
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Permalink to this version of M1044" 
-           href="/versions/v16/mitigations/M1044/" data-test-ignore="true">Version Permalink</a>
+           href="/versions/v17/mitigations/M1044/" data-test-ignore="true">Version Permalink</a>
     </div>
     <div class="permalink">
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Go to the live version of M1044" 
-           href="/versions/v16/mitigations/M1044/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+           href="/versions/v17/mitigations/M1044/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
     </div>
 </div>
 
@@ -318,10 +318,10 @@
                             <a href="/techniques/T1574/001">.001</a>
                         </td>
                         <td>
-                            <a href="/techniques/T1574/001">DLL Search Order Hijacking</a>
+                            <a href="/techniques/T1574/001">DLL</a>
                         </td>
                         <td>
-                                    <p>Disallow loading of remote DLLs. This is included by default in Windows Server 2012+ and is available by patch for XP+ and Server 2003+.</p><p>Enable Safe DLL Search Mode to force search for system DLLs in directories with greater restrictions (e.g. <code>%SYSTEMROOT%</code>)to be used before local directory DLLs (e.g. a user's home directory)</p><p>The Safe DLL Search Mode can be enabled via Group Policy at Computer Configuration &gt; [Policies] &gt; Administrative Templates &gt; MSS (Legacy): MSS: (SafeDllSearchMode) Enable Safe DLL search mode. The associated Windows Registry key for this is located at <code>HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\SafeDLLSearchMode</code><span onclick=scrollToRef('scite-2') id="scite-ref-2-a" class="scite-citeref-number" title="Microsoft. (2010, August 12). More information about the DLL Preloading remote attack vector. Retrieved December 5, 2014."data-reference="Microsoft More information about DLL"><sup><a href="https://msrc-blog.microsoft.com/2010/08/23/more-information-about-the-dll-preloading-remote-attack-vector/" target="_blank" data-hasqtip="1" aria-describedby="qtip-1">[2]</a></sup></span><span onclick=scrollToRef('scite-3') id="scite-ref-3-a" class="scite-citeref-number" title="Microsoft. (2018, May 31). Dynamic-Link Library Search Order. Retrieved November 30, 2014."data-reference="Microsoft Dynamic Link Library Search Order"><sup><a href="https://docs.microsoft.com/en-us/windows/win32/dlls/dynamic-link-library-search-order?redirectedfrom=MSDN" target="_blank" data-hasqtip="2" aria-describedby="qtip-2">[3]</a></sup></span></p>
+                                    <p>Disallow loading of remote DLLs. This is included by default in Windows Server 2012+ and is available by patch for XP+ and Server 2003+.<span onclick=scrollToRef('scite-2') id="scite-ref-2-a" class="scite-citeref-number" title="Microsoft. (2010, August 12). More information about the DLL Preloading remote attack vector. Retrieved December 5, 2014."data-reference="Microsoft More information about DLL"><sup><a href="https://msrc-blog.microsoft.com/2010/08/23/more-information-about-the-dll-preloading-remote-attack-vector/" target="_blank" data-hasqtip="1" aria-describedby="qtip-1">[2]</a></sup></span></p><p>Enable Safe DLL Search Mode to move the user's current folder later in the search order. This is included by default in modern versions of Windows; the associated Windows Registry key is located at <code>HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\SafeDLLSearchMode</code>.<span onclick=scrollToRef('scite-3') id="scite-ref-3-a" class="scite-citeref-number" title="Microsoft. (2018, May 31). Dynamic-Link Library Search Order. Retrieved November 30, 2014."data-reference="Microsoft Dynamic Link Library Search Order"><sup><a href="https://docs.microsoft.com/en-us/windows/win32/dlls/dynamic-link-library-search-order?redirectedfrom=MSDN" target="_blank" data-hasqtip="2" aria-describedby="qtip-2">[3]</a></sup></span></p>
 
                         </td>
                     </tr>
@@ -440,7 +440,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v16.1&#013;Website  v4.2.1">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v17.0&#013;Website  v4.2.2">Website Changelog</a></u>
                                 </div>
                             </div>
                             <div class="row">

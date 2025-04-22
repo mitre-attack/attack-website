@@ -172,7 +172,7 @@
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
                     <div class="container-fluid banner-message">
-                        ATT&CKcon 6.0 returns October 14-15, 2025 in McLean, VA. More details about tickets and our CFP can be found <a href='https://na.eventscloud.com/attackcon6'>here</a>
+                        ATT&CK v17 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v17-dfb59eae2204'>blog post</a> for more information.
                     </div>
             </div>
         </div>
@@ -266,7 +266,7 @@
                                             <div class="row card-data">
                                                 <div class="col-md-1 px-0 text-center"></div>
                                                 <div class="col-md-11 pl-0">
-                                                    <span class="h5 card-title">Last Modified:&nbsp;</span>01 October 2023
+                                                    <span class="h5 card-title">Last Modified:&nbsp;</span>15 April 2025
                                                 </div>
                                             </div>
                                     </div>
@@ -276,13 +276,13 @@
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Permalink to this version of T1659" 
-           href="/versions/v16/techniques/T1659/" data-test-ignore="true">Version Permalink</a>
+           href="/versions/v17/techniques/T1659/" data-test-ignore="true">Version Permalink</a>
     </div>
     <div class="permalink">
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Go to the live version of T1659" 
-           href="/versions/v16/techniques/T1659/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+           href="/versions/v17/techniques/T1659/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
     </div>
 </div>
 
@@ -388,7 +388,7 @@
                     <a href="/datasources/DS0022/#File%20Creation">File Creation</a>
                 </td>
                     <td>
-                                <p>Monitor for unexpected and abnormal file creations that may indicate malicious content injected through online network communications.</p>
+                                <p>Monitor for unexpected and abnormal file creations that may indicate malicious content injected through online network communications.</p><p>Analytic 1 - Detecting Malicious File Creation via Content Injection</p><p><code>(EventCode=11 OR source="/var/log/audit/audit.log" type="open")| where (file_type IN ("exe", "dll", "js", "vbs", "ps1", "sh", "php"))| where (process_path="C:\Users\<em>\AppData\Local\Temp\</em>" OR process_path="/tmp/<em>" OR process_path="/var/tmp/</em>")| eval risk_score=case(    like(file_name, "%.exe"), 8,    like(file_name, "%.js"), 9,    like(file_name, "%.sh"), 7)| where risk_score &gt;= 7| stats count by _time, host, user, file_name, process_path, risk_score </code></p>
 
                     </td>
             </tr>
@@ -404,7 +404,7 @@
                     <a href="/datasources/DS0029/#Network%20Traffic%20Content">Network Traffic Content</a>
                 </td>
                     <td>
-                                <p>Monitor for other unusual network traffic that may indicate additional malicious content transferred to the system. Use network intrusion detection systems, sometimes with SSL/TLS inspection, to look for known malicious payloads, content obfuscation, and exploit code.</p>
+                                <p>Monitor for other unusual network traffic that may indicate additional malicious content transferred to the system. Use network intrusion detection systems, sometimes with SSL/TLS inspection, to look for known malicious payloads, content obfuscation, and exploit code.</p><p>Analytic 1 - Detecting Content Injection in Network Traffic</p><p><code> (EventCode=3)OR (source="zeek_http_logs" response_code IN (302, 307) AND url IN (malicious_redirect_list))OR (source="proxy_logs" response_body_content IN (suspicious_script_list))| eval risk_score=case(    response_code=302 AND url IN (malicious_redirect_list), 9,    response_body_content IN (suspicious_script_list), 8,    url LIKE "%@%", 7)| where risk_score &gt;= 7| stats count by _time, host, user, url, response_code, risk_score</code></p>
 
                     </td>
             </tr>
@@ -420,7 +420,7 @@
                     <a href="/datasources/DS0009/#Process%20Creation">Process Creation</a>
                 </td>
                     <td>
-                                <p>Look for behaviors on the endpoint system that might indicate successful compromise, such as abnormal behaviors of browser processes. This could include suspicious files written to disk, evidence of <a href="/techniques/T1055">Process Injection</a> for attempts to hide execution, or evidence of Discovery.</p>
+                                <p>Look for behaviors on the endpoint system that might indicate successful compromise, such as abnormal behaviors of browser processes. This could include suspicious files written to disk, evidence of <a href="/techniques/T1055">Process Injection</a> for attempts to hide execution, or evidence of Discovery.</p><p>Analytic 1 - Detecting Malicious Process Execution from Injected Content</p><p><code>(EventCode=1 OR source="/var/log/audit/audit.log" type="execve")| where (parent_process IN ("chrome.exe", "firefox.exe", "edge.exe", "safari.exe", "iexplore.exe"))| where (process_name IN ("powershell.exe", "cmd.exe", "wget", "curl", "bash", "python"))| eval risk_score=case(    process_name IN ("powershell.exe", "cmd.exe"), 9,    process_name IN ("wget", "curl"), 8,    parent_process IN ("chrome.exe", "firefox.exe"), 7)| where risk_score &gt;= 7| stats count by _time, host, user, process_name, parent_process, risk_score </code></p>
 
                     </td>
             </tr>
@@ -564,7 +564,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v16.1&#013;Website  v4.2.1">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v17.0&#013;Website  v4.2.2">Website Changelog</a></u>
                                 </div>
                             </div>
                             <div class="row">

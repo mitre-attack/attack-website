@@ -172,7 +172,7 @@
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
                     <div class="container-fluid banner-message">
-                        ATT&CKcon 6.0 returns October 14-15, 2025 in McLean, VA. More details about tickets and our CFP can be found <a href='https://na.eventscloud.com/attackcon6'>here</a>
+                        ATT&CK v17 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v17-dfb59eae2204'>blog post</a> for more information.
                     </div>
             </div>
         </div>
@@ -1175,7 +1175,7 @@
   </div>
   <div class="sidenav-body collapse" id="DS0009-body" aria-labelledby="DS0009-header">
         <div class="sidenav">
-    <div class="sidenav-head  enterprise ics " id="DS0009-OS API Execution">
+    <div class="sidenav-head  enterprise mobile ics " id="DS0009-OS API Execution">
       <a href="/datasources/DS0009/#OS%20API%20Execution">
         OS API Execution
       </a>
@@ -1689,7 +1689,7 @@
                                             <div class="row card-data">
                                                 <div class="col-1 px-0 text-center"></div>
                                                 <div class="col-11 pl-0">
-                                                    <span class="h5 card-title">Last Modified:&nbsp;</span>20 April 2023
+                                                    <span class="h5 card-title">Last Modified:&nbsp;</span>16 April 2025
                                                 </div>
                                             </div>
                                     </div>
@@ -1699,13 +1699,13 @@
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Permalink to this version of DS0013" 
-           href="/versions/v16/datasources/DS0013/" data-test-ignore="true">Version Permalink</a>
+           href="/versions/v17/datasources/DS0013/" data-test-ignore="true">Version Permalink</a>
     </div>
     <div class="permalink">
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Go to the live version of DS0013" 
-           href="/versions/v16/datasources/DS0013/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+           href="/versions/v17/datasources/DS0013/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
     </div>
 </div>
 
@@ -1728,7 +1728,7 @@
                                         </div>
                                         <div class="section-desktop-view">
                                                 <div class="description-body">
-                                                            <p>Logging, messaging, and other artifacts highlighting the health of host sensors (ex: metrics, errors, and/or exceptions from logging applications)</p>
+                                                            <p>Logging, messaging, and other artifacts that highlight the health and operational state of host-based security sensors, such as Endpoint Detection and Response (EDR) agents, antivirus software, logging services, and system monitoring tools. Monitoring sensor health is essential for detecting misconfigurations, sensor failures, tampering, or deliberate security control evasion by adversaries.</p><p><em>Data Collection Measures:</em></p><ul><li>Windows Event Logs:<ul><li>Event ID 1074 (System Shutdown): Detects unexpected system reboots/shutdowns.</li><li>Event ID 6006 (Event Log Stopped): Logs when Windows event logging is stopped.</li><li>Event ID 16 (Sysmon): Detects configuration state changes that may indicate log tampering.</li><li>Event ID 12 (Windows Defender Status Change) – Detects changes in Windows Defender state.</li></ul></li><li>Linux/macOS Monitoring:<ul><li><code>/var/log/syslog</code>, <code>/var/log/auth.log</code>, <code>/var/log/kern.log</code></li><li>Journald (journalctl) for kernel and system alerts.</li></ul></li><li>Endpoint Detection and Response (EDR) Tools:<ul><li>Monitor agent health status, detect sensor tampering, and alert on missing telemetry.</li></ul></li><li>Mobile Threat Intelligence Logs:<ul><li>Samsung Knox, SafetyNet, iOS Secure Enclave provide sensor health status for mobile endpoints.</li></ul></li></ul>
 
                                                 </div>
                                         </div>
@@ -1739,7 +1739,7 @@
                                         </div>
                                         <div class="section-mobile-view">
                                                 <div class="description-body">
-                                                            <p>Logging, messaging, and other artifacts highlighting the health of host sensors (ex: metrics, errors, and/or exceptions from logging applications)</p>
+                                                            <p>Logging, messaging, and other artifacts that highlight the health and operational state of host-based security sensors, such as Endpoint Detection and Response (EDR) agents, antivirus software, logging services, and system monitoring tools. Monitoring sensor health is essential for detecting misconfigurations, sensor failures, tampering, or deliberate security control evasion by adversaries.</p><p><em>Data Collection Measures:</em></p><ul><li>Windows Event Logs:<ul><li>Event ID 1074 (System Shutdown): Detects unexpected system reboots/shutdowns.</li><li>Event ID 6006 (Event Log Stopped): Logs when Windows event logging is stopped.</li><li>Event ID 16 (Sysmon): Detects configuration state changes that may indicate log tampering.</li><li>Event ID 12 (Windows Defender Status Change) – Detects changes in Windows Defender state.</li></ul></li><li>Linux/macOS Monitoring:<ul><li><code>/var/log/syslog</code>, <code>/var/log/auth.log</code>, <code>/var/log/kern.log</code></li><li>Journald (journalctl) for kernel and system alerts.</li></ul></li><li>Endpoint Detection and Response (EDR) Tools:<ul><li>Monitor agent health status, detect sensor tampering, and alert on missing telemetry.</li></ul></li><li>Mobile Threat Intelligence Logs:<ul><li>Samsung Knox, SafetyNet, iOS Secure Enclave provide sensor health status for mobile endpoints.</li></ul></li></ul>
 
                                                 </div>
                                         </div>
@@ -2175,7 +2175,7 @@
                         <a href="/techniques/T1195">Supply Chain Compromise</a>
                     </td>
                     <td>
-                                <p>Perform physical inspection of hardware to look for potential tampering. Perform integrity checking on pre-OS boot mechanisms that can be manipulated for malicious purposes and compare against known good baseline behavior.</p>
+                                <p>Perform physical inspection of hardware to look for potential tampering. Perform integrity checking on pre-OS boot mechanisms that can be manipulated for malicious purposes and compare against known good baseline behavior.</p><p><code> (EventCode=7045 OR EventCode=1116)OR (source="/var/log/system.log" message="Blocked binary execution")| eval risk_score=case(    like(Image, "%Temp%"), 7,    like(Image, "%AppData%"), 6,    like(Image, "%C:\Users\Public%"), 8)| where risk_score &gt;= 6| stats count by host, user, Image, CommandLine, risk_score| table _time, host, user, Image, CommandLine, risk_score</code></p>
 
                     </td>
                 </tr>
@@ -2358,7 +2358,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v16.1&#013;Website  v4.2.1">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v17.0&#013;Website  v4.2.2">Website Changelog</a></u>
                                 </div>
                             </div>
                             <div class="row">
@@ -2406,7 +2406,7 @@
 <script src="/theme/scripts/resizer.js"></script>
 
     <!--SCRIPTS-->
-    <script src="/theme/scripts/filter/filter.js?8050"></script>
+    <script src="/theme/scripts/filter/filter.js?4040"></script>
     <script src="/theme/scripts/navigation.js"></script>
     <script src="/theme/scripts/mobileview-datasources.js"></script>
     <script src="/theme/scripts/bootstrap-tourist.js"></script>

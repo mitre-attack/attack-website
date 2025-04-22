@@ -172,7 +172,7 @@
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
                     <div class="container-fluid banner-message">
-                        ATT&CKcon 6.0 returns October 14-15, 2025 in McLean, VA. More details about tickets and our CFP can be found <a href='https://na.eventscloud.com/attackcon6'>here</a>
+                        ATT&CK v17 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v17-dfb59eae2204'>blog post</a> for more information.
                     </div>
             </div>
         </div>
@@ -250,13 +250,13 @@
                                                     <span data-toggle="tooltip" data-placement="left" title="" data-test-ignore="true" data-original-title="The system an adversary is operating within; could be an operating system or application">&#9432;</span>
                                                 </div>
                                                 <div class="col-md-11 pl-0">
-                                                    <span class="h5 card-title">Platforms:&nbsp;</span>IaaS, Network
+                                                    <span class="h5 card-title">Platforms:&nbsp;</span>IaaS, Network Devices
                                                 </div>
                                             </div>
                                             <div class="row card-data">
                                                 <div class="col-md-1 px-0 text-center"></div>
                                                 <div class="col-md-11 pl-0">
-                                                    <span class="h5 card-title">Version:&nbsp;</span>1.3
+                                                    <span class="h5 card-title">Version:&nbsp;</span>1.4
                                                 </div>
                                             </div>
                                             <div class="row card-data">
@@ -268,7 +268,7 @@
                                             <div class="row card-data">
                                                 <div class="col-md-1 px-0 text-center"></div>
                                                 <div class="col-md-11 pl-0">
-                                                    <span class="h5 card-title">Last Modified:&nbsp;</span>15 October 2024
+                                                    <span class="h5 card-title">Last Modified:&nbsp;</span>15 April 2025
                                                 </div>
                                             </div>
                                     </div>
@@ -278,13 +278,13 @@
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Permalink to this version of T1020.001" 
-           href="/versions/v16/techniques/T1020/001/" data-test-ignore="true">Version Permalink</a>
+           href="/versions/v17/techniques/T1020/001/" data-test-ignore="true">Version Permalink</a>
     </div>
     <div class="permalink">
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Go to the live version of T1020.001" 
-           href="/versions/v16/techniques/T1020/001/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+           href="/versions/v17/techniques/T1020/001/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
     </div>
 </div>
 
@@ -364,7 +364,7 @@
                     <a href="/datasources/DS0029/#Network%20Connection%20Creation">Network Connection Creation</a>
                 </td>
                     <td>
-                                <p>Monitor for newly constructed network connections that are sent or received by abnormal or untrusted hosts. </p>
+                                <p>Monitor for creation of unauthorized traffic mirroring sessions, unexpected outbound network connections from routers or cloud instances, configuration changes in network devices related to traffic forwarding or unusual new network flows, particularly on ports associated with traffic analysis tools.</p><p>Analytic 1 - Detecting Unauthorized Traffic Mirroring Sessions</p><p><code> (EventCode="CreateTrafficMirrorSession" OR EventCode="VirtualNetworkTapCreated" OR source="firewall_logs" message="Mirror Port Config Change")| eval risk_score=case(    EventCode="CreateTrafficMirrorSession", 9,    EventCode="VirtualNetworkTapCreated", 8,    EventCode="ModifyTrafficMirrorSession", 7)| where risk_score &gt;= 7| stats count by _time, host, user, EventCode, risk_score</code></p>
 
                     </td>
             </tr>
@@ -375,7 +375,7 @@
                             <a href="/datasources/DS0029/#Network%20Traffic%20Flow">Network Traffic Flow</a>
                         </td>
                             <td>
-                                        <p>Monitor and analyze network flows associated to protocol(s) that do not follow the expected protocol standards and traffic flows (e.g extraneous packets that do not belong to established flows, or gratuitous or anomalous traffic patterns). Consider analyzing newly constructed network connections that are sent or received by untrusted hosts, unexpcted hardware devices, or other uncommon data flows.</p>
+                                        <p>Monitor and analyze network flows associated to protocol(s) that do not follow the expected protocol standards and traffic flows (e.g extraneous packets that do not belong to established flows, or gratuitous or anomalous traffic patterns). Consider analyzing newly constructed network connections that are sent or received by untrusted hosts, unexpcted hardware devices, or other uncommon data flows.</p><p>Analytic 1 - Detecting Traffic Duplication and Unexpected Mirroring Behavior </p><p><code> (source="zeek_conn.log" OR source="firewall_logs" OR source="cloud_network_logs")| where (flow_type="asymmetric" OR flow_type="mirrored")| where (dest_port IN (4789, 4790, 8000, 5000) OR bytes_out &gt; 10000000)| eval risk_score=case(    flow_type="asymmetric" AND dest_port IN (4789, 4790), 9,    flow_type="mirrored" AND bytes_out &gt; 10000000, 8)| where risk_score &gt;= 8| stats count by _time, host, source_ip, dest_ip, bytes_out, risk_score</code></p>
 
                             </td>
                     </tr>
@@ -543,7 +543,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v16.1&#013;Website  v4.2.1">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v17.0&#013;Website  v4.2.2">Website Changelog</a></u>
                                 </div>
                             </div>
                             <div class="row">
