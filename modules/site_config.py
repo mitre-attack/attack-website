@@ -179,8 +179,8 @@ layer_md = Template(
     "save_as: ${path}/${attack_id}-${domain}-layer.json\n"
     "json: "
 )
-layer_version = "4.4"
-navigator_version = "4.8.1"
+layer_version = "4.5"
+navigator_version = "5.1.0"
 
 # Directory for test reports
 test_report_directory = "reports"

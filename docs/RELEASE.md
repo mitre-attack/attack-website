@@ -133,6 +133,8 @@ Consult these sections as needed for step 5 in the above list.
   * Release [ATT&CK content version X.Y](https://github.com/mitre/cti/releases/tag/ATT%26CK-vX.Y).
     See the release notes [here](https://attack.mitre.org/resources/updates/updates-<month>-<year>/).
   ```
+* Update the `layer_version` and `navigator_version` in `modules/site_config.py` if navigator version or navigator layer version has been updated.<br>
+Check the layer specification version [here](https://github.com/mitre-attack/attack-navigator/blob/master/layers/spec/v4.5/layerformat.md) and the navigator version [here](https://github.com/mitre-attack/attack-navigator/blob/master/CHANGELOG.md).
 
 ### Minor release
 
@@ -150,3 +152,5 @@ Consult these sections as needed for step 5 in the above list.
   * Release ATT&CK content version X.Y.
     See detailed changes [here](https://github.com/mitre/cti/releases/tag/ATT%26CK-vX.Y).
   ```
+* Update the `layer_version` and `navigator_version` in `modules/site_config.py` if navigator version or navigator layer version has been updated.<br>
+Check the layer specification version [here](https://github.com/mitre-attack/attack-navigator/blob/master/layers/spec/v4.5/layerformat.md) and the navigator version [here](https://github.com/mitre-attack/attack-navigator/blob/master/CHANGELOG.md).
