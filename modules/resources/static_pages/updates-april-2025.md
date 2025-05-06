@@ -8,7 +8,7 @@ save_as: resources/updates/updates-april-2025/index.html
 
 | Version | Start Date | End Date | Data | Changelogs |
 |:--------|:-----------|:---------|:-----|:-----------|
-| [ATT&CK v17](/versions/v17) | April 22, 2025 | Current version of ATT&CK | [v17.0 on MITRE/CTI](https://github.com/mitre/cti/releases/tag/ATT%26CK-v17.0) | 16.1 - 17.0 [Details](/docs/changelogs/v16.1-v17.0/changelog-detailed.html) ([JSON](/docs/changelogs/v16.1-v17.0/changelog.json)) |
+| [ATT&CK v17](/versions/v17) | April 22, 2025 | Current version of ATT&CK | [v17.0 on MITRE/CTI](https://github.com/mitre/cti/releases/tag/ATT%26CK-v17.0) <br />[v17.1 on MITRE/CTI](https://github.com/mitre/cti/releases/tag/ATT%26CK-v17.1) | 16.1 - 17.0 [Details](/docs/changelogs/v16.1-v17.0/changelog-detailed.html) ([JSON](/docs/changelogs/v16.1-v17.0/changelog.json)) <br />17.0 - 17.1 [Details](/docs/changelogs/v17.0-v17.1/changelog-detailed.html) ([JSON](/docs/changelogs/v17.0-v17.1/changelog.json)) |
 
 The April 2025 (v17) ATT&CK release updates Techniques, Groups, Campaigns and Software for Enterprise, Mobile, and ICS.
 
