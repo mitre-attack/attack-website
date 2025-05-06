@@ -1,3 +1,10 @@
+# v4.2.3 (2025-05-06)
+
+## Features
+
+* Release ATT&CK content version 17.1.
+  See detailed changes [here](https://github.com/mitre/cti/releases/tag/ATT%26CK-v17.1).
+
 # v4.2.2 (2025-04-22)
 
 ## Features
