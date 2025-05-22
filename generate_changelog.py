@@ -29,12 +29,11 @@ def get_parsed_args():
 
     return args
 
-def generate_release_changelog(args):
+def create_changelogs(args):
+    """Use to create the changelog."""
     old_version = args.old_version
     new_version = args.new_version
-    create_changelogs(old_version, new_version)
-
-def create_changelogs(old_version, new_version):
+    
     output_folder = f"modules/resources/docs/changelogs/v{old_version}-v{new_version}"
     download_attack_stix(download_dir="attack-releases")
     get_new_changelog_md(
@@ -58,6 +57,6 @@ if __name__ == "__main__":
     # Get args
     args = get_parsed_args()
 
-    generate_release_changelog(args)
+    create_changelogs(args)
     
     logger.debug(f"Changelog between {args.old_version} and {args.new_version} created")
