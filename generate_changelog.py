@@ -1,15 +1,37 @@
+import argparse
 
+from dotenv import load_dotenv
 from loguru import logger
 from mitreattack.diffStix.changelog_helper import get_new_changelog_md
 from mitreattack.download_stix import download_attack_stix
-from modules import site_config
 
-from . import release_config
+load_dotenv()
 
+def get_parsed_args():
+    """Create argument parser and parse arguments."""
+    parser = argparse.ArgumentParser(
+        description=(
+            "Build the ATT&CK website changelogs between two versions.\n"
+            "Provide the old ATT&CK version and the new ATT&CK version.\n"
+            "Example usage - python3 generate_changelog.py 16.0 16.1"
+        )
+    )
+    
+    parser.add_argument(
+        "old_version",
+        help="Old ATT&CK version number. Example: '16.0'."
+    )
+    parser.add_argument(
+        "new_version",
+        help="New ATT&CK version number. Example: '16.1'."
+    )   
+    args = parser.parse_args()
 
-def generate_release_changelog():
-    old_version = site_config.args.release[0]
-    new_version = site_config.args.release[1]
+    return args
+
+def generate_release_changelog(args):
+    old_version = args.old_version
+    new_version = args.new_version
     create_changelogs(old_version, new_version)
 
 def create_changelogs(old_version, new_version):
@@ -28,8 +50,14 @@ def create_changelogs(old_version, new_version):
         # site_prefix: str = "",
         verbose=True,
         include_contributors=True,
-        markdown_file=f"{output_folder}/changelog.md",
-        html_file=f"{output_folder}/index.html",
         html_file_detailed=f"{output_folder}/changelog-detailed.html",
         json_file=f"{output_folder}/changelog.json",
     )
+
+if __name__ == "__main__":
+    # Get args
+    args = get_parsed_args()
+
+    generate_release_changelog(args)
+    
+    logger.debug(f"Changelog between {args.old_version} and {args.new_version} created")

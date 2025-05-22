@@ -95,13 +95,6 @@ def get_parsed_args():
         ),
     )
     parser.add_argument(
-        "--release",
-        "-r",
-        nargs=2,
-        metavar=("old_version", "new_version"),
-        help="Run the release module with two arguments: old_version and new_version. Example: '--release 16.0 16.1'.",
-    )
-    parser.add_argument(
         "--test",
         "-t",
         nargs="+",
@@ -171,9 +164,6 @@ def get_parsed_args():
     # If modules is empty, means all modules will be ran
     if not args.modules:
         args.modules = module_choices
-
-    if args.release:
-        args.modules.append("release")
 
     # If the extras flag was called without params, set to all
     if not args.extras and isinstance(args.extras, list):
