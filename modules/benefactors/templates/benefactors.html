@@ -62,10 +62,24 @@
 		<div id="meta-sponsor-box" class="mt-5">
 			<h4>ATT&CK Benefactors</h4>
 			<span><strong>Thanks to the following companies who have supported ATT&CK!</strong></span>
-			<div id="sponsor-box" class="support-box my-4">
+            <br><br>
+            <h4>Friends</h4>
+			<div id="sponsor-box-friends" class="support-box my-4">
 				<div class="row justify-content-center px-4">
 					<div class="col col-sm">
-						<div class="row sponsor-list" id="sponsor-table-body">
+						<div class="row sponsor-list" id="sponsor-table-body-friends">
+							<!-- Sponsor logos will be dynamically added here -->
+						</div>
+					</div>
+				</div>
+			</div>
+
+            <br>
+            <h4>Supporters</h4>
+            <div id="sponsor-box-supporters" class="support-box my-4">
+				<div class="row justify-content-center px-4">
+					<div class="col col-sm">
+						<div class="row sponsor-list" id="sponsor-table-body-supporters">
 							<!-- Sponsor logos will be dynamically added here -->
 						</div>
 					</div>
@@ -83,18 +97,13 @@
 
 <script>
     // Sponsor data
-    const sponsorSupport = [
+    const friends = [
         {
             sponsors: [
                 {
                     logo: "/theme/images/benefactors/AttackIQ-logo.png",
                     url: "https://attackiq.com/",
                     title: "AttackIQ, Inc."
-                },
-                {
-                    logo: "/theme/images/benefactors/Booz_Allen_logo_black.png",
-                    url: "https://www.bah.com",
-                    title: "Booz Allen Hamilton Inc."
                 },
 				{
                     logo: "/theme/images/benefactors/citi.png",
@@ -105,40 +114,78 @@
                     logo: "/theme/images/benefactors/crowdstrike.png",
                     url: "https://www.crowdstrike.com/",
                     title: "CrowdStrike, Inc."
-                }
+                },
+                {
+                    logo: "/theme/images/benefactors/fortinet.png",
+                    url: "https://www.fortinet.com/",
+                    title: "Fortinet"
+                },
             ],
         },
         {
             sponsors: [
+				
 				{
+                    logo: "/theme/images/benefactors/hca.png",
+                    url: "https://hcahealthcare.com/",
+                    title: "HCA Healthcare"
+                },
+                {
+                    logo: "/theme/images/benefactors/jpmorganchase.png",
+                    url: "https://www.jpmorganchase.com/",
+                    title: "JPMorgan Chase Bank, N.A."
+                },
+                {
+                    logo: "/theme/images/benefactors/lloyds.png",
+                    url: "https://www.lloydsbankinggroup.com/",
+                    title: "Lloyds Banking Group"
+                },
+                {
+                    logo: "/theme/images/benefactors//microsoft.png",
+                    url: "https://www.microsoft.com/en-us/",
+                    title: "Microsoft Corporation"
+                },
+
+            ],
+        },
+		{
+            sponsors: [
+				{
+                    logo: "/theme/images/benefactors/verizon.png",
+                    url: "https://www.verizon.com/business/",
+                    title: "Verizon Business"
+                },
+			]
+		}
+    ];
+
+    const supporters = [
+        {
+            sponsors: [
+                {
+                    logo: "/theme/images/benefactors/Booz_Allen_logo_black.png",
+                    url: "https://www.bah.com",
+                    title: "Booz Allen Hamilton Inc."
+                },
+                {
                     logo: "/theme/images/benefactors/ensign.png",
                     url: "https://www.ensigninfosecurity.com/",
                     title: "Ensign InfoSecurity"
-                },
-				{
-                    logo: "/theme/images/benefactors/fortinet.png",
-                    url: "https://www.fortinet.com/",
-                    title: "Fortinet"
                 },
                 {
                     logo: "/theme/images/benefactors/fujitsu.png",
                     url: "https://www.fujitsu.com/global/",
                     title: "Fujitsu"
                 },
-				{
-                    logo: "/theme/images/benefactors/hca.png",
-                    url: "https://hcahealthcare.com/",
-                    title: "HCA Healthcare"
-                }
-            ],
-        },
-		{
-            sponsors: [
-				{
+                {
 					logo: "/theme/images/benefactors/hidden-layer.png",
                     url: "https://hiddenlayer.com/",
                     title: "HiddenLayer"
 				},
+            ],
+        },
+		{
+            sponsors: [	
 				{
                     logo: "/theme/images/benefactors//infineon.png",
                     url: " https://www.infineon.com/",
@@ -148,25 +195,6 @@
                     logo: "/theme/images/benefactors/intel.png",
                     url: "https://www.intel.com/content/www/us/en/homepage.html",
                     title: "Intel Corporation"
-                },
-                {
-                    logo: "/theme/images/benefactors/jpmorganchase.png",
-                    url: "https://www.jpmorganchase.com/",
-                    title: "JPMorgan Chase Bank, N.A."
-                }
-            ],
-        },
-		{
-            sponsors: [
-				{
-                    logo: "/theme/images/benefactors/lloyds.png",
-                    url: "https://www.lloydsbankinggroup.com/",
-                    title: "Lloyds Banking Group"
-                },
-                {
-                    logo: "/theme/images/benefactors//microsoft.png",
-                    url: "https://www.microsoft.com/en-us/",
-                    title: "Microsoft Corporation"
                 },
                 {
                     logo: "/theme/images/benefactors/nab.png",
@@ -206,11 +234,6 @@
         },
 		{
             sponsors: [
-				{
-                    logo: "/theme/images/benefactors/verizon.png",
-                    url: "https://www.verizon.com/business/",
-                    title: "Verizon Business"
-                },
                 {
                     logo: "/theme/images/benefactors/ZIMPERIUM-logo_blackBG.png",
 					url: "https://www.zimperium.com",
@@ -220,12 +243,13 @@
 		}
     ];
 
-    // Reference to the sponsor list container
-    const sponsorTableBody = document.getElementById("sponsor-table-body");
 
+    // Reference to the sponsor list container
+    const friendsTableBody = document.getElementById("sponsor-table-body-friends");
+    const supportersTableBody = document.getElementById("sponsor-table-body-supporters");
     // Function to generate the sponsor logos
-    function generateSponsorLogos() {
-        sponsorSupport.forEach(group => {
+    function generateFriendLogos() {
+        friends.forEach(group => {
             const sponsors = group.sponsors;
 
             // Create rows with up to 4 sponsors per row
@@ -260,17 +284,66 @@
                     row.appendChild(col);
                 }
 
-                sponsorTableBody.appendChild(row);
+                friendsTableBody.appendChild(row);
+            }
+        });
+    }
+
+    function generateSupporterLogos() {
+        supporters.forEach(group => {
+            const sponsors = group.sponsors;
+
+            // Create rows with up to 4 sponsors per row
+            for (let i = 0; i < sponsors.length; i += 4) {
+                const row = document.createElement("div");
+                row.className = "row sponsor-list";
+
+                // Add up to 4 sponsors in each row
+                for (let j = i; j < i + 4; j++) {
+                    const col = document.createElement("div");
+                    col.className = "col-sm sponsor-square";
+					if (j < sponsors.length) {
+						col.setAttribute("data-toggle", "tooltip");
+            			col.setAttribute("data-placement", "top");
+            			col.setAttribute("data-animation", "false");
+            			col.setAttribute("data-original-title", sponsors[j].title);
+
+                        const sponsor = sponsors[j];
+                        const link = document.createElement("a");
+                        link.href = sponsor.url;
+                        link.target = "_blank";
+
+                        const image = document.createElement("img");
+                        image.src = sponsor.logo;
+                        image.alt = "Sponsor Logo";
+                        image.className = "w-100 sponsor-logo p-3";
+
+                        link.appendChild(image);
+                        col.appendChild(link);
+                    }
+
+                    row.appendChild(col);
+                }
+
+                supportersTableBody.appendChild(row);
             }
         });
     }
 
     // Check if there are sponsors and generate the logos
-    if (sponsorSupport.length > 0) {
-        document.getElementById("sponsor-box").style.display = "block"; // Show the box
-        generateSponsorLogos();
+    if (friends.length > 0) {
+        document.getElementById("sponsor-box-friends").style.display = "block"; // Show the box
+        generateFriendLogos();
     } else {
-        document.getElementById("sponsor-box").style.display = "none"; // Hide the box
+        document.getElementById("sponsor-box-friends").style.display = "none"; // Hide the box
+    }
+
+    // Check if there are sponsors and generate the logos
+    if (supporters.length > 0) {
+        document.getElementById("sponsor-box-supporters").style.display = "block"; // Show the box
+        generateSupporterLogos();
+    } else {
+        document.getElementById("sponsor-box-supporters").style.display = "none"; // Hide the box
     }
 </script>
 {% endblock %}
