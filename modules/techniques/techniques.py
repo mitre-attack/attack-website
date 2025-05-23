@@ -361,15 +361,14 @@ def get_mitigations_table_data(technique, reference_list):
             if not mitigation["object"].get("x_mitre_deprecated"):
                 attack_id = util.buildhelpers.get_attack_id(mitigation["object"])
                 # Only add if mitigation attack id is found
-                if not attack_id: continue
+                if not attack_id:
+                    continue
                 row = {}
                 row["mid"] = attack_id
                 row["name"] = mitigation["object"]["name"]
                 if mitigation["relationship"].get("description"):
                     # Get filtered description
-                    reference_list = util.buildhelpers.update_reference_list(
-                        reference_list, mitigation["relationship"]
-                    )
+                    reference_list = util.buildhelpers.update_reference_list(reference_list, mitigation["relationship"])
                     row["descr"] = mitigation["relationship"]["description"]
 
                 mitigation_data.append(row)
@@ -396,15 +395,14 @@ def get_assets_table_data(technique, reference_list):
                 attack_id = util.buildhelpers.get_attack_id(asset["object"])
 
                 # Only add if attack id is found
-                if not attack_id: continue
+                if not attack_id:
+                    continue
                 row = {}
                 row["id"] = attack_id
                 row["name"] = asset["object"]["name"]
                 if asset["relationship"].get("description"):
                     # Get filtered description
-                    reference_list = util.buildhelpers.update_reference_list(
-                        reference_list, asset["relationship"]
-                    )
+                    reference_list = util.buildhelpers.update_reference_list(reference_list, asset["relationship"])
                     row["descr"] = asset["relationship"]["description"]
 
                 asset_data.append(row)
@@ -436,7 +434,8 @@ def get_examples_table_data(technique, reference_list):
                 attack_id = util.buildhelpers.get_attack_id(example["object"])
 
                 # Only add example data if the attack id is found
-                if not attack_id: continue
+                if not attack_id:
+                    continue
                 row = {}
 
                 row["id"] = attack_id
@@ -447,9 +446,7 @@ def get_examples_table_data(technique, reference_list):
 
                 if example["relationship"].get("description"):
                     # Get filtered description
-                    reference_list = util.buildhelpers.update_reference_list(
-                        reference_list, example["relationship"]
-                    )
+                    reference_list = util.buildhelpers.update_reference_list(reference_list, example["relationship"])
                     row["descr"] = example["relationship"]["description"]
 
                 example_data.append(row)
@@ -544,7 +541,8 @@ def get_techniques_list(techniques):
         if not technique.get("revoked") and not technique.get("x_mitre_deprecated"):
             attack_id = util.buildhelpers.get_attack_id(technique)
 
-            if not attack_id: continue
+            if not attack_id:
+                continue
 
             technique_dict = {}
             technique_dict["id"] = attack_id
@@ -649,6 +647,7 @@ def get_datasources_and_components_of_technique(technique, reference_list):
 
     return datasource_and_components, show_descriptions
 
+
 def generate_sidebar_techniques(side_nav_data):
     """Responsible for generating the sidebar for the technique pages."""
     logger.info("Generating technique sidebar")
@@ -659,5 +658,7 @@ def generate_sidebar_techniques(side_nav_data):
     sidebar_techniques_md = techniques_config.sidebar_techniques_md + json.dumps(data)
 
     # write markdown to file
-    with open(os.path.join(techniques_config.techniques_markdown_path, "sidebar_techniques.md"), "w", encoding="utf8") as md_file:
+    with open(
+        os.path.join(techniques_config.techniques_markdown_path, "sidebar_techniques.md"), "w", encoding="utf8"
+    ) as md_file:
         md_file.write(sidebar_techniques_md)

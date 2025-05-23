@@ -15,6 +15,7 @@ from . import resources_config
 
 import urllib.parse
 
+
 def generate_resources():
     """Responsible for generating the resources pages."""
     logger.info("Generating Resources")
@@ -62,6 +63,7 @@ def generate_resources():
     generate_use_case_page()
     generate_sidebar_resources()
 
+
 def copy_docs(module_docs_path):
     """Move module specific docs into the website's content directory for pelican."""
     logger.info("Copying files to docs directory")
@@ -79,17 +81,20 @@ def copy_docs(module_docs_path):
             else:
                 shutil.copyfile(os.path.join(module_docs_path, doc), os.path.join(site_config.docs_dir, doc))
 
+
 def extract_video_id(url):
-    if '=' in url and '&' in url:
-        start = url.find('=') + 1
-        end = url.find('&', start)
+    if "=" in url and "&" in url:
+        start = url.find("=") + 1
+        end = url.find("&", start)
         return url[start:end]
     return url
+
 
 def extract_playlist_id(url):
     parsed_url = urllib.parse.urlparse(url)
     query_params = urllib.parse.parse_qs(parsed_url.query)
-    return query_params.get('list', [None])[0]
+    return query_params.get("list", [None])[0]
+
 
 def generate_training_pages():
     """Responsible for generating the markdown pages of the training pages."""
@@ -104,13 +109,22 @@ def generate_training_pages():
             if "lessons" in trainings[training_main][module]:
                 if trainings[training_main][module]["is_youtube"]:
                     # if videos are in a playlist
-                    if "playlist" in trainings[training_main][module] and trainings[training_main][module]["playlist"] == True:
-                        trainings[training_main][module]["first_video_id"] = extract_video_id(trainings[training_main][module]["lessons"][0]["youtube"])
-                        trainings[training_main][module]["playlist_id"] = extract_playlist_id(trainings[training_main][module]["lessons"][0]["youtube"])
+                    if (
+                        "playlist" in trainings[training_main][module]
+                        and trainings[training_main][module]["playlist"] == True
+                    ):
+                        trainings[training_main][module]["first_video_id"] = extract_video_id(
+                            trainings[training_main][module]["lessons"][0]["youtube"]
+                        )
+                        trainings[training_main][module]["playlist_id"] = extract_playlist_id(
+                            trainings[training_main][module]["lessons"][0]["youtube"]
+                        )
                     # if videos are not in a playlist
                     else:
                         for lesson_idx in range(len(trainings[training_main][module]["lessons"])):
-                            trainings[training_main][module]["lessons"][lesson_idx]["video_id"] = extract_video_id(trainings[training_main][module]["lessons"][lesson_idx]["youtube"])
+                            trainings[training_main][module]["lessons"][lesson_idx]["video_id"] = extract_video_id(
+                                trainings[training_main][module]["lessons"][lesson_idx]["youtube"]
+                            )
 
     # Define a dictionary of training pages and their corresponding markdown templates
     training_pages = {
@@ -128,8 +142,11 @@ def generate_training_pages():
     # Generate markdown for each training page and write it to a file
     for page_name, page_template in training_pages.items():
         page_content = page_template + json.dumps(trainings)
-        with open(os.path.join(site_config.resources_markdown_path, f"{page_name}.md"), "w", encoding="utf8") as md_file:
+        with open(
+            os.path.join(site_config.resources_markdown_path, f"{page_name}.md"), "w", encoding="utf8"
+        ) as md_file:
             md_file.write(page_content)
+
 
 def generate_brand_page():
     """Responsible for generating the markdown pages of the training pages."""
@@ -212,6 +229,7 @@ def generate_faq_page():
     with open(os.path.join(site_config.resources_markdown_path, "faq.md"), "w", encoding="utf8") as md_file:
         md_file.write(faq_content)
 
+
 def generate_static_pages():
     """Reads markdown files from the static pages directory and copies them into the markdown directory."""
     logger.info("Generating static pages")
@@ -219,7 +237,7 @@ def generate_static_pages():
 
     if not [key["module_name"] for key in modules.run_ptr if key["module_name"] == "versions"]:
         util.buildhelpers.remove_element_from_sub_menu(resources_config.module_name, "Version History")
-    
+
     # Below code used to get a list of all updates children
     updates_dict_list = {}
     updates_name = []
@@ -289,7 +307,7 @@ def generate_working_with_attack():
         "techniques",
         "datasources",
         "campaigns",
-        "assets"
+        "assets",
     ]
 
     # Verify if directories exists
@@ -342,7 +360,9 @@ def generate_sidebar_resources():
     sidebar_resources_md = resources_config.sidebar_resources_md
 
     # write markdown to file
-    with open(os.path.join(site_config.resources_markdown_path, "sidebar_resources.md"), "w", encoding="utf8") as md_file:
+    with open(
+        os.path.join(site_config.resources_markdown_path, "sidebar_resources.md"), "w", encoding="utf8"
+    ) as md_file:
         md_file.write(sidebar_resources_md)
 
 
@@ -360,7 +380,7 @@ def generate_contribute_page():
 
     data = {}
 
-    data["contributors"] = [] 
+    data["contributors"] = []
 
     contributors_first_col = []
     contributors_second_col = []
@@ -384,10 +404,9 @@ def generate_contribute_page():
     subs = resources_config.contribute_md + json.dumps(data)
 
     # Open markdown file for the contribute page
-    with open(
-        os.path.join(site_config.resources_markdown_path, "contribute.md"), "w", encoding="utf8"
-    ) as md_file:
+    with open(os.path.join(site_config.resources_markdown_path, "contribute.md"), "w", encoding="utf8") as md_file:
         md_file.write(subs)
+
 
 def generate_presentation_archive():
     """Responsible for compiling resources json into resources markdown files for rendering on the HMTL."""
@@ -408,6 +427,7 @@ def generate_presentation_archive():
     ) as md_file:
         md_file.write(resources_content)
 
+
 def generate_use_case_page():
     """Responsible for compiling use cases json into use cases markdown file for rendering on the HMTL."""
     logger.info("Generating get started pages")
@@ -424,7 +444,7 @@ def generate_use_case_page():
     for i in range(len(use_case_data)):
         use_case_name.append(use_case_data[i]["title"])
         title = "Title: " + use_case_data[i]["title"] + "\n"
-        name = use_case_data[i]["title"].lower().replace(' ','-').replace("&", "a")
+        name = use_case_data[i]["title"].lower().replace(" ", "-").replace("&", "a")
         template = "Template: resources/use-cases\n"
         use_case_path.append("/resources/get-started/" + name + "/")
         save_as = "save_as: resources/get-started/" + name + "/index.html\n"
@@ -439,6 +459,6 @@ def generate_use_case_page():
     use_case_list = use_case_dict_list["use_case_md"]
     for i in range(len(use_case_list)):
         use_case_content = use_case_list[i] + json.dumps(use_case_data[i])
-        f_name = "use-case-" + use_case_data[i]["title"].lower().replace(' ','-') + ".md"
+        f_name = "use-case-" + use_case_data[i]["title"].lower().replace(" ", "-") + ".md"
         with open(os.path.join(site_config.resources_markdown_path, f_name), "w", encoding="utf8") as md_file:
             md_file.write(use_case_content)
