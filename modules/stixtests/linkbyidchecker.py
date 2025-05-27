@@ -126,7 +126,7 @@ def linkbyid_check():
                     "Object with broken data": pretty_name,
                     "Section found in": "Description",
                     # sort of abusing "Unknown LinkById" here, but it works well enough
-                    "Unknown LinkById": f"{{{{LinkById\|{attack_id_in_description}}}}}",
+                    "Unknown LinkById": rf"{{{{LinkById|{attack_id_in_description}}}}}",
                 }
                 link_by_id_warnings.append(warning)
 

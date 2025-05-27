@@ -259,7 +259,7 @@ def generate_data_for_md(technique_dict, technique, tactic_list, is_sub_techniqu
             if technique.get("x_mitre_system_requirements"):
                 technique["x_mitre_system_requirements"].sort()
                 technique_dict["sysreqs"] = ", ".join(technique["x_mitre_system_requirements"])
-                technique_dict["sysreqs"] = re.sub("\.?\\n+", "; ", technique_dict["sysreqs"])
+                technique_dict["sysreqs"] = re.sub(r"\.?\\n+", "; ", technique_dict["sysreqs"])
 
             # Get permissions required
             if technique.get("x_mitre_permissions_required"):

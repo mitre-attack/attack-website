@@ -10,52 +10,10 @@ import modules
 from . import tests_config
 
 # STATIC PROPERTIES
-# The spaces here are for readability with symbol characters.
-# The strings are stripped of whitespace.
-# These get compiled into a regex string
 
-allowed_in_link_with_external_links = "".join(
-    list(
-        map(
-            lambda s: s.strip(),
-            [
-                "   -   ",
-                "   ?   ",
-                "   \w   ",
-                "   \\   ",
-                "   $   ",
-                "   \.   ",
-                "   !   ",
-                "   \*   ",
-                "   '   ",
-                "   ()   ",
-                "   /    ",
-                "   :    ",
-            ],
-        )
-    )
-)
+allowed_in_link_with_external_links = r"-?\w\$\.!\*'()/:"
 
-allowed_in_link = "".join(
-    list(
-        map(
-            lambda s: s.strip(),
-            [
-                "   -   ",
-                "   ?   ",
-                "   \w   ",
-                "   \\   ",
-                "   $   ",
-                "   \.   ",
-                "   !   ",
-                "   \*   ",
-                "   '   ",
-                "   ()   ",
-                "   /    ",
-            ],
-        )
-    )
-)
+allowed_in_link = r"-?\w\$\.!\*'()/"
 
 links_list = {}
 in_use_links = {}
@@ -114,7 +72,7 @@ def get_correct_link(path):
         "docx",
         "rtf",
     ]:
-        if re.search("(css|js)\?[\w\d]+", sort_of_extension):
+        if re.search(r"(css|js)\?[\w\d]+", sort_of_extension):
             # CSS & JavaScript: check for cache-disabling query string suffix, e.g style.min.css?f8be4c06
             path = path.split("?")[0]  # remove suffix
         else:
@@ -201,9 +159,9 @@ def internal_external_link_checker(filepath, html_str):
         if (
             "/versions/" in filepath
         ):  # don't check links with data-test-ignore attribute, or live version link name, when on previous versions
-            linkregex = f'{prefix}\s?=\s?["\']([{allowed_in_link_with_external_links}]+)["\'](?! ?data-test-ignore="true")(?!>live version)'
+            linkregex = rf'{prefix}\s?=\s?["\']([{allowed_in_link_with_external_links}]+)["\'](?! ?data-test-ignore="true")(?!>live version)'
         else:
-            linkregex = f"{prefix}\s?=\s?[\"']([{allowed_in_link_with_external_links}]+)[\"']"
+            linkregex = rf"{prefix}\s?=\s?[\"']([{allowed_in_link_with_external_links}]+)[\"']"
         links = re.findall(linkregex, html_str)
 
         # check if link has a dest
@@ -262,7 +220,7 @@ def internal_link_checker(filepath, html_str):
 
     # find all links
     for prefix in ["href", "src"]:
-        links = re.findall(f"{prefix}\s?=\s?[\"']([{allowed_in_link}]+)[\"']", html_str)
+        links = re.findall(rf"{prefix}\s?=\s?[\"']([{allowed_in_link}]+)[\"']", html_str)
         # check if link has a dest
         for link in links:
             # Check if link is relative path

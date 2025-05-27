@@ -134,7 +134,7 @@ def update_reference_list(reference_list, obj):
 def get_reference_set(reflist):
     """This function retrieves the unique set of references in the given list of descriptions and
     returns them in string format to be displayed as citations."""
-    p = re.compile("\(Citation: (.*?)\)")
+    p = re.compile(r"\(Citation: (.*?)\)")
     citations = {}
     for c in reflist:
         citations_in_ref = p.findall(c)
