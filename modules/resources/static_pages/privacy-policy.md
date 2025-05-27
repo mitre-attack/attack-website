@@ -53,7 +53,7 @@ MITRE maintains reasonable safeguards designed to protect personal information f
 MITRE is based in the United States. If you are visiting our Site from outside the United States, please be aware that information we obtain about you may be transferred to and processed in the United States or other jurisdictions. By using the Site and providing your personal information, you acknowledge that your personal information may be transferred to and processed in jurisdictions outside your own. Please be aware that the data protection laws and regulations that may apply to your personal information transferred to the United States or other countries may be different from the laws in your country of residence.
 
 ## Information for Visitors from Australia
-We are committed to handling your personal information in an open and transparent manner in accordance with applicable laws and regulations. For more information on your privacy rights, you can visit the website of The Office of the Australian Information Commissioner at [www.oaic.gov.au/](www.oaic.gov.au/).
+We are committed to handling your personal information in an open and transparent manner in accordance with applicable laws and regulations. For more information on your privacy rights, you can visit the website of The Office of the Australian Information Commissioner at [https://www.oaic.gov.au/](https://www.oaic.gov.au/).
 
 ## Information for Visitors from the European Economic Area and the United Kingdom
 This section provides a GDPR Notice (“Notice”) for residents of the European Economic Area (“EEA”) and United Kingdom (“UK”) regarding their respective rights under the European Union’s General Data Protection Regulation and the United Kingdom’s General Data Protection Regulation (collectively, the “GDPR”). MITRE is the data controller for personal data collected through the Site.
@@ -76,7 +76,7 @@ Your personal data is processed pursuant to the following legal bases:
     *  	To analyze and improve the safety and security of our Site and services, including by implementing and enhancing security measures and safeguards and protecting against fraud, spam, and other abuses;
     *	To maintain and improve our Site and services; and
     *	To operate and promote MITRE’s services and provide you with information and communications about our services that are tailored to, and in accordance with, your preferences.
-*	You have consented to our processing of your personal data. When you consent, you may change your mind and withdraw your consent at any time by emailing us at [privacy@mitre.org](privacy@mitre.org).
+*	You have consented to our processing of your personal data. When you consent, you may change your mind and withdraw your consent at any time by emailing us at [privacy@mitre.org](mailto:privacy@mitre.org).
 
 ### Your Rights Under the GDPR
 The GDPR provides individuals with certain rights regarding their personal data. You may ask us to take the following actions:
@@ -88,9 +88,9 @@ The GDPR provides individuals with certain rights regarding their personal data.
 *	object to our use of your personal data for marketing purposes; and
 *	object to our reliance on legitimate interests as the basis for processing your personal data.
 
-You may submit these requests by email to [privacy@mitre.org](privacy@mitre.org). We may require specific information from you to help us verify your identity prior to processing your request. Applicable law may require or permit us to decline your request. If we decline your request, we will tell you why, subject to any legal restrictions on disclosing this information.
+You may submit these requests by email to [privacy@mitre.org](mailto:privacy@mitre.org). We may require specific information from you to help us verify your identity prior to processing your request. Applicable law may require or permit us to decline your request. If we decline your request, we will tell you why, subject to any legal restrictions on disclosing this information.
 
-If you would like to submit a complaint about our use of your personal data or our response to your request regarding your personal data, you may contact us at [privacy@mitre.org](privacy@mitre.org) or submit a complaint directly to the data protection authority in your jurisdiction. If you reside in the EEA, you can find information about your data protection authority [here](https://edpb.europa.eu/about-edpb/about-edpb/members_en). If you reside in the UK, you may file complaints with the Information Commissioner’s Office [here](https://ico.org.uk/make-a-complaint/).
+If you would like to submit a complaint about our use of your personal data or our response to your request regarding your personal data, you may contact us at [privacy@mitre.org](mailto:privacy@mitre.org) or submit a complaint directly to the data protection authority in your jurisdiction. If you reside in the EEA, you can find information about your data protection authority [here](https://edpb.europa.eu/about-edpb/about-edpb/members_en). If you reside in the UK, you may file complaints with the Information Commissioner’s Office [here](https://ico.org.uk/make-a-complaint/).
 
 ### Our Retention of Your Personal Data
 MITRE retains your personal data for no longer than is necessary to achieve the purposes for which the personal data was collected, or as may otherwise be permitted or required under applicable law. To determine the appropriate retention period, we will consider the scope and sensitivity of the personal data; the potential risk of harm from unauthorized access to, use, or disclosure of the data; the purposes for which we process the data; whether we can achieve our purposes through other means; our business needs; and applicable legal requirements. Unless otherwise required by applicable law, at the end of the retention period, we will anonymize or securely destroy your personal data.
@@ -100,7 +100,7 @@ By using this Site, you acknowledge that your personal data may be collected, tr
 If it is necessary for us to transfer personal data out of the EEA and the UK, we do so by using suitable data transfer mechanisms, such as the standard contractual clauses approved by the European Commission, which impose data protection obligations on parties to the transfer.
 
 ## Information for Specific Individuals
-Residents of U.S. states with consumer privacy laws in effect and enforceable may contact us at [privacy@mitre.org](privacy@mitre.org) for further information about our privacy practices.
+Residents of U.S. states with consumer privacy laws in effect and enforceable may contact us at [privacy@mitre.org](mailto:privacy@mitre.org) for further information about our privacy practices.
 
 ## Privacy of Children
 This Site is not intended for children, and we do not knowingly collect personal information from children. If we become aware that we have collected personal information from a child, we will delete it in accordance with applicable law.
@@ -109,24 +109,22 @@ This Site is not intended for children, and we do not knowingly collect personal
 MITRE may update or modify this Privacy Policy from time to time at our discretion. We will indicate changes to this Privacy Policy by updating the “Effective Date” at the beginning of the Privacy Policy. Please review this Privacy Policy periodically and especially before you provide any personal information to us. Your continued use of this Site after any update to this Privacy Policy will constitute your acceptance of our changes.
 
 ## Questions
-If you have questions about this Privacy Policy or MITRE’s privacy practices, you may email [privacy@mitre.org](privacy@mitre.org).
+If you have questions about this Privacy Policy or MITRE’s privacy practices, you may email [privacy@mitre.org](mailto:privacy@mitre.org).
 MITRE’s Data Protection Officer for Singapore may be contacted as follows:
 
-In the United States
+In the United States<br>
+Dena Kozanas – Data Protection Officer<br>
+Associate General Counsel & Chief Privacy Official<br>
+7515 Colshire Drive<br>
+McLean, VA 22102<br>
+Phone: +1 (703) 269-8515<br>
+Email: [privacy@mitre.org](mailto:privacy@mitre.org)
 
-Dena Kozanas – Data Protection Officer\
-Associate General Counsel & Chief Privacy Official\
-7515 Colshire Drive\
-McLean, VA 22102\
-Phone: +1 (703) 269-8515\
-Email: privacy@mitre.org  
-
-In Singapore 
-
-MITRE Asia Pacific Singapore\
-Thomas (Tass) Bruce Hudak – Privacy Coordinator\
-1 Changi Business Park Avenue 1\
-Suite #02-03/04\
-Singapore 486058\
-Phone: +65 8876 4609\
+In Singapore<br>
+MITRE Asia Pacific Singapore<br>
+Thomas (Tass) Bruce Hudak – Privacy Coordinator<br>
+1 Changi Business Park Avenue 1<br>
+Suite #02-03/04<br>
+Singapore 486058<br>
+Phone: +65 8876 4609<br>
 Email: [privacy@mitre.org](mailto: privacy@mitre.org)
