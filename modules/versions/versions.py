@@ -14,8 +14,7 @@ from . import versions_config
 
 
 def generate_versions():
-    """Responsible for generating the versions pages"""
-
+    """Responsible for generating the versions pages."""
     # Move templates to templates directory
     util.buildhelpers.move_templates(versions_config.module_name, versions_config.versions_templates_path)
 
@@ -56,7 +55,7 @@ def onerror(func, path, exc_info):
 allowed_in_link = r"-?\w\$\.!\*'()/"
 
 def versionPath(version):
-    # get the path of a given version
+    """Get the path of a given version."""
     if "path" in version:
         return version["path"]
     else:
@@ -64,7 +63,7 @@ def versionPath(version):
 
 
 def deploy():
-    """Deploy previous versions to website directory"""
+    """Deploy previous versions to website directory."""
     versions_config.prev_versions_deploy_folder = os.path.join(
         site_config.web_directory, versions_config.prev_versions_path
     )
@@ -156,7 +155,8 @@ def deploy_previous_version(version, repo):
 
 
 def archive(version_data, is_current=False):
-    """perform archival operations on a version in /prev_versions_path
+    """Perform archival operations on a version in /prev_versions_path.
+
     - remove unnecessary files (.git, CNAME, preserved versions for that version)
     - replace links on all pages
     - add archived version banner to all pages
@@ -243,7 +243,7 @@ def archive(version_data, is_current=False):
             html_str = html_str.replace("version-button live", "version-button permalink")
             # update live version links on the versioning button
             from_str = rf"href=[\"']\/versions\/v[\w-]+\/([{allowed_in_link}]+)[\"'](.*)>[Ll]ive [Vv]ersion<\/a>"
-            to_str = rf'href="/\g<1>"\g<2>>Live Version</a>'
+            to_str = r'href="/\g<1>"\g<2>>Live Version</a>'
             html_str = re.sub(from_str, to_str, html_str)
 
             # remove banner message if it is present
@@ -303,7 +303,8 @@ def archive(version_data, is_current=False):
 
 
 def build_alias(version, alias):
-    """build redirects from alias to version
+    """Build redirects from alias to version.
+
     version is the path of the version, e.g "v5"
     alias is the alias to build, e.g "october2018"
     """
@@ -329,7 +330,7 @@ def build_alias(version, alias):
 
 
 def build_markdown(versions):
-    """build markdown for the versions list page"""
+    """Build markdown for the versions list page."""
     # build urls
     versions["current"]["url"] = versionPath(versions["current"])
     versions["current"]["changelog_label"] = " ".join(versions["current"]["changelog"].split("-")[1:]).title()
