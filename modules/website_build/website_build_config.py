@@ -57,7 +57,7 @@ index_matrix = {
 }
 
 # ATT&CK overview
-attack_index_md = "Title: ATT&CK Overview \n" "Template: general/attack-index \n" "save_as: index.html\n" "data: "
+attack_index_md = "Title: ATT&CK Overview \nTemplate: general/attack-index \nsave_as: index.html\ndata: "
 
 # ATT&CK index markdown path
 attack_index_path = "content/pages/index.md"
@@ -71,4 +71,4 @@ js_build_uuid = Template('var build_uuid = "${build_uuid}";\n')
 website_build_templates_path = "modules/website_build/templates/"
 
 # CHANGELOG md
-changelog_md = "Title: Changelog\n" "Template: website_build/changelog\n" "save_as: resources/changelog.html\n\n"
+changelog_md = "Title: Changelog\nTemplate: website_build/changelog\nsave_as: resources/changelog.html\n\n"

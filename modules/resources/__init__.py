@@ -27,12 +27,7 @@ def get_menu():
                 "external_link": False,
                 "children": [],
             },
-            {
-                "display_name": "ATT&CKcon",
-                "url": "/resources/attackcon/",
-                "external_link": False,
-                "children": []
-            },
+            {"display_name": "ATT&CKcon", "url": "/resources/attackcon/", "external_link": False, "children": []},
             {
                 "display_name": "ATT&CK Data & Tools",
                 "url": "/resources/attack-data-and-tools/",
@@ -63,7 +58,7 @@ def get_menu():
                 "url": "/resources/legal-and-branding/",
                 "external_link": False,
                 "children": [],
-            }
+            },
         ],
     }
 

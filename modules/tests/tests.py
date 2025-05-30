@@ -207,7 +207,7 @@ def check_size():
         MSG = "Approaching 1 GB limit: " + f"{size_MB:.2f} MB"
     else:
         STATUS = tests_config.FAILED_STATUS
-        MSG = "Surpassed 1 GB limit: " f"{size_MB/MB_TO_GB_CONVERSION:.3f} GB" + tests_config.RESET
+        MSG = f"Surpassed 1 GB limit: {size_MB / MB_TO_GB_CONVERSION:.3f} GB" + tests_config.RESET
 
     logger.info(f"STATUS {STATUS} TEST {TEST} MSG {MSG}")
 

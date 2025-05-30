@@ -7,7 +7,7 @@ from modules import site_config
 
 from . import tests_config
 
-potential_issues_list = ["\(Citation: ?[^)]+\)?"]
+potential_issues_list = [r"\(Citation: ?[^)]+\)?"]
 
 
 def citations_check():

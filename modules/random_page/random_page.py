@@ -16,7 +16,7 @@ def generate_json():
         "groups": "Group",
         "software": "Software",
         "campaigns": "Campaign",
-        "assets": "Asset"
+        "assets": "Asset",
     }
     routes = {}
 

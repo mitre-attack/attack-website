@@ -51,18 +51,14 @@ def generate_markdown_files():
         data = {}
 
         notes = util.relationshipgetters.get_objects_using_notes()
-        side_menu_data = util.buildhelpers.get_side_menu_data(
-            "Assets", "/assets/", asset_list_no_deprecated_revoked
-        )
+        side_menu_data = util.buildhelpers.get_side_menu_data("Assets", "/assets/", asset_list_no_deprecated_revoked)
         data["side_menu_data"] = side_menu_data
         data["assets_table"] = get_assets_table_data(asset_list_no_deprecated_revoked)
         data["assets_list_len"] = str(len(asset_list_no_deprecated_revoked))
 
         subs = assets_config.asset_index_md + json.dumps(data)
 
-        with open(
-            os.path.join(assets_config.asset_markdown_path, "overview.md"), "w", encoding="utf8"
-        ) as md_file:
+        with open(os.path.join(assets_config.asset_markdown_path, "overview.md"), "w", encoding="utf8") as md_file:
             md_file.write(subs)
 
         # Create the markdown for assets
@@ -77,7 +73,8 @@ def generate_asset_md(asset, side_menu_data, notes):
 
     attack_id = util.buildhelpers.get_attack_id(asset)
 
-    if not attack_id: return
+    if not attack_id:
+        return
 
     data = {}
     data["attack_id"] = attack_id
@@ -178,7 +175,8 @@ def get_assets_table_data(asset_list):
     assets_table_data = []
     for asset in asset_list:
         attack_id = util.buildhelpers.get_attack_id(asset)
-        if not attack_id: continue
+        if not attack_id:
+            continue
 
         domain_list = util.buildhelpers.get_domain_name(asset)
         row = {
@@ -187,7 +185,7 @@ def get_assets_table_data(asset_list):
         }
 
         for domain_idx in range(len(domain_list)):
-            domain_list[domain_idx] = domain_list[domain_idx].replace('-attack','')
+            domain_list[domain_idx] = domain_list[domain_idx].replace("-attack", "")
             if domain_list[domain_idx] == "ics":
                 domain_list[domain_idx] = domain_list[domain_idx].upper()
             else:
@@ -206,12 +204,13 @@ def get_assets_table_data(asset_list):
 
 
 def get_related_asset_data(related_assets):
-    if not related_assets: return []
+    if not related_assets:
+        return []
 
     related_asset_data = []
     for related_asset in related_assets:
         row = {
-            "name": related_asset["name"], # required
+            "name": related_asset["name"],  # required
         }
         if related_asset.get("related_asset_sectors"):
             related_asset["related_asset_sectors"].sort()
@@ -224,7 +223,7 @@ def get_related_asset_data(related_assets):
 
 def get_techniques_targeting_asset_data(asset, reference_list):
     """Given an asset and its reference list, get the techniques targeting the asset.
-        Check the reference list for citations, if not found in list, add it.
+    Check the reference list for citations, if not found in list, add it.
     """
     technique_list = {}
     techniques_targeting_assets = util.relationshipgetters.get_techniques_targeting_assets()

@@ -152,6 +152,7 @@ def get_assets_targeted_by_techniques():
 
     return assets_targeted_by_techniques
 
+
 def get_techniques_detected_by_datacomponent():
     global techniques_detected_by_datacomponent
 
@@ -452,6 +453,7 @@ def get_campaign_list():
         campaign_list = get_resources()["campaigns"]
 
     return campaign_list
+
 
 def get_asset_list():
     """asset list getter"""

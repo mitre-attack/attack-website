@@ -11,27 +11,7 @@ def generate_subdirectory():
         replace()
 
 
-allowed_in_link = "".join(
-    list(
-        map(
-            lambda s: s.strip(),
-            [
-                "   -   ",
-                "   ?   ",
-                "   \w   ",
-                "   \\   ",
-                "   $   ",
-                "   \.   ",
-                "   !   ",
-                "   \*   ",
-                "   '   ",
-                "   ()   ",
-                "   /    ",
-            ],
-        )
-    )
-)
-
+allowed_in_link = r"-?\w\$\.!\*'()/"
 
 def replace_links(filepath):
     """In the given file, replace the in-site links to reference
@@ -43,7 +23,7 @@ def replace_links(filepath):
         html_str = html.read()
 
     # subdirectory link format
-    dest_link_format = f"/{site_config.subdirectory}\g<1>"
+    dest_link_format = rf"/{site_config.subdirectory}\g<1>"
 
     def substitute(prefix, html_str):
         from_str = f"{prefix}=[\"']([{allowed_in_link}]+)[\"']"

@@ -134,7 +134,7 @@ def update_reference_list(reference_list, obj):
 def get_reference_set(reflist):
     """This function retrieves the unique set of references in the given list of descriptions and
     returns them in string format to be displayed as citations."""
-    p = re.compile("\(Citation: (.*?)\)")
+    p = re.compile(r"\(Citation: (.*?)\)")
     citations = {}
     for c in reflist:
         citations_in_ref = p.findall(c)
@@ -495,16 +495,12 @@ def replace_html_chars(to_be_replaced):
 
 
 colorMap = {
-    0: "#ffffff", # techniques not used by the object
-    1: "#66b1ff", # techniques used by the object
-    2: "#ff6666", # techniques used by inherited campaign relationships
-    3: "#ff66f4"  # techniques used by the object AND used by inherited campaign relationships (1 & 2)
+    0: "#ffffff",  # techniques not used by the object
+    1: "#66b1ff",  # techniques used by the object
+    2: "#ff6666",  # techniques used by inherited campaign relationships
+    3: "#ff66f4",  # techniques used by the object AND used by inherited campaign relationships (1 & 2)
 }
-domain_name_map = {
-    "enterprise-attack": "Enterprise",
-    "mobile-attack": "Mobile",
-    "ics-attack": "ICS"
-}
+domain_name_map = {"enterprise-attack": "Enterprise", "mobile-attack": "Mobile", "ics-attack": "ICS"}
 
 
 def get_navigator_layers(name, attack_id, obj_type, rel_type, version, techniques_used, inheritance=False):
@@ -526,10 +522,13 @@ def get_navigator_layers(name, attack_id, obj_type, rel_type, version, technique
         color = technique["color"] if technique.get("color") else 0
         has_subtechniques = True if technique.get("subtechniques") else False
         score = 1 if technique.get("descr") else 0
-        technique_layer_object = get_technique_layer_object(technique["id"], description, score, color, has_subtechniques)
+        technique_layer_object = get_technique_layer_object(
+            technique["id"], description, score, color, has_subtechniques
+        )
 
         # Skip this technique if no layer object
-        if not technique_layer_object: continue
+        if not technique_layer_object:
+            continue
 
         # Add technique layer object to domain layer
         if "enterprise" in technique["domain"]:
@@ -560,26 +559,32 @@ def get_navigator_layers(name, attack_id, obj_type, rel_type, version, technique
     # Build list of domains with navigator layers
     layers = []
     if enterprise_layer["techniques"]:
-        layers.append({
-            "domain": "enterprise",
-            "name": domain_name_map["enterprise-attack"],
-            "filename": f"{attack_id}-enterprise-layer.json",
-            "layer": json.dumps(enterprise_layer)
-        })
+        layers.append(
+            {
+                "domain": "enterprise",
+                "name": domain_name_map["enterprise-attack"],
+                "filename": f"{attack_id}-enterprise-layer.json",
+                "layer": json.dumps(enterprise_layer),
+            }
+        )
     if mobile_layer["techniques"]:
-        layers.append({
-            "domain": "mobile",
-            "name": domain_name_map["mobile-attack"],
-            "filename": f"{attack_id}-mobile-layer.json",
-            "layer": json.dumps(mobile_layer)
-        })
+        layers.append(
+            {
+                "domain": "mobile",
+                "name": domain_name_map["mobile-attack"],
+                "filename": f"{attack_id}-mobile-layer.json",
+                "layer": json.dumps(mobile_layer),
+            }
+        )
     if ics_layer["techniques"]:
-        layers.append({
-            "domain": "ics",
-            "name": domain_name_map["ics-attack"],
-            "filename": f"{attack_id}-ics-layer.json",
-            "layer": json.dumps(ics_layer)
-        })
+        layers.append(
+            {
+                "domain": "ics",
+                "name": domain_name_map["ics-attack"],
+                "filename": f"{attack_id}-ics-layer.json",
+                "layer": json.dumps(ics_layer),
+            }
+        )
 
     return layers
 
@@ -589,7 +594,9 @@ def build_base_layer(domain, object_name, object_type, rel_type, attack_id, vers
     layer = {}
 
     # Layer description
-    layer["description"] = f"{domain_name_map[domain]} techniques {rel_type} {object_name}, ATT&CK {object_type} {attack_id}"
+    layer["description"] = (
+        f"{domain_name_map[domain]} techniques {rel_type} {object_name}, ATT&CK {object_type} {attack_id}"
+    )
     if version:
         # Add object version number if it exists
         layer["description"] += f" (v{version})"
@@ -615,16 +622,19 @@ def build_base_layer(domain, object_name, object_type, rel_type, attack_id, vers
     }
 
     # Layer legend
-    layer["legendItems"] = [
-        {"label": f"{rel_type} {object_name}", "color": colorMap[1]}
-    ]
+    layer["legendItems"] = [{"label": f"{rel_type} {object_name}", "color": colorMap[1]}]
 
     # Add campaign inheritance to legend, if applicable
     if inheritance:
-        layer["legendItems"].extend([
-            {"label": f"{rel_type} a campaign attributed to {object_name}", "color": colorMap[2]},
-            {"label": f"{rel_type} {object_name} and {rel_type} a campaign attributed to {object_name}", "color": colorMap[3]}
-        ])
+        layer["legendItems"].extend(
+            [
+                {"label": f"{rel_type} a campaign attributed to {object_name}", "color": colorMap[2]},
+                {
+                    "label": f"{rel_type} {object_name} and {rel_type} a campaign attributed to {object_name}",
+                    "color": colorMap[3],
+                },
+            ]
+        )
 
     return layer
 
@@ -645,7 +655,7 @@ def get_technique_layer_object(attack_id, description, score, color, showSub=Fal
         navigator_technique["score"] = score
     if color and color in colorMap.keys():
         navigator_technique["color"] = colorMap[color]
-    
+
     # show subtechniques?
     navigator_technique["showSubtechniques"] = showSub
 
@@ -689,7 +699,7 @@ def print_end(name, start_time, end_time):
     hyphens = "-" * number_of_hyphens
 
     # spaces here because we need to overwrite the word "running"
-    sys.stdout.write(f"\r{name: <{name_space}} : {hyphens} {end_time-start_time:.2f}s      \n")
+    sys.stdout.write(f"\r{name: <{name_space}} : {hyphens} {end_time - start_time:.2f}s      \n")
 
     sys.stdout.flush()
 

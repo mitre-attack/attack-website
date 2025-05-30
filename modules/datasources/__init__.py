@@ -16,13 +16,23 @@ def get_menu():
         "priority": datasources_config.priority,
         "children": [
             {"display_name": "Data Sources", "url": "/datasources", "external_link": False, "children": []},
-            {"display_name": "Mitigations", "url": "/mitigations/", "external_link": False, "children": [
-                {"display_name": "Enterprise", "url": "/mitigations/enterprise/", "external_link": False, "children": []},
-                {"display_name": "Mobile", "url": "/mitigations/mobile/", "external_link": False, "children": []},
-                {"display_name": "ICS", "url": "/mitigations/ics/", "external_link": False, "children": []},
-            ]},
-            {"display_name": "Assets", "url": "/assets", "external_link": False, "children": [] }
-        ]
+            {
+                "display_name": "Mitigations",
+                "url": "/mitigations/",
+                "external_link": False,
+                "children": [
+                    {
+                        "display_name": "Enterprise",
+                        "url": "/mitigations/enterprise/",
+                        "external_link": False,
+                        "children": [],
+                    },
+                    {"display_name": "Mobile", "url": "/mitigations/mobile/", "external_link": False, "children": []},
+                    {"display_name": "ICS", "url": "/mitigations/ics/", "external_link": False, "children": []},
+                ],
+            },
+            {"display_name": "Assets", "url": "/assets", "external_link": False, "children": []},
+        ],
     }
 
 

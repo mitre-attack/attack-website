@@ -306,6 +306,7 @@ def get_software_table_data(campaign, reference_list):
     software_data = sorted(software_data, key=lambda k: k["name"].lower())
     return software_data
 
+
 def generate_sidebar_campaigns(side_menu_data):
     """Responsible for generating the sidebar for the campaigns pages."""
     logger.info("Generating campaigns sidebar")
@@ -316,5 +317,7 @@ def generate_sidebar_campaigns(side_menu_data):
     sidebar_campaigns_md = campaigns_config.sidebar_campaigns_md + json.dumps(data)
 
     # write markdown to file
-    with open(os.path.join(campaigns_config.campaign_markdown_path, "sidebar_campaigns.md"), "w", encoding="utf8") as md_file:
+    with open(
+        os.path.join(campaigns_config.campaign_markdown_path, "sidebar_campaigns.md"), "w", encoding="utf8"
+    ) as md_file:
         md_file.write(sidebar_campaigns_md)
