@@ -229,6 +229,7 @@ def get_techniques_addressed_data(mitigation, reference_list):
     )
     return technique_data
 
+
 def generate_sidebar_mitigations(side_nav_data):
     """Responsible for generating the sidebar for the mitigations pages."""
     logger.info("Generating mitigations sidebar")
@@ -239,5 +240,7 @@ def generate_sidebar_mitigations(side_nav_data):
     sidebar_mitigations_md = mitigations_config.sidebar_mitigations_md + json.dumps(data)
 
     # write markdown to file
-    with open(os.path.join(mitigations_config.mitigation_markdown_path, "sidebar_mitigations.md"), "w", encoding="utf8") as md_file:
+    with open(
+        os.path.join(mitigations_config.mitigation_markdown_path, "sidebar_mitigations.md"), "w", encoding="utf8"
+    ) as md_file:
         md_file.write(sidebar_mitigations_md)

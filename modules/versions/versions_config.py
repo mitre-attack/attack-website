@@ -16,6 +16,4 @@ prev_versions_deploy_folder = ""
 
 versions_repo = "https://github.com/mitre-attack/attack-website.git"
 versions_directory = "attack-versions"
-versions_md = (
-    "Title: Version History\n" "Template: versions/versions\n" "save_as: resources/versions/index.html\n" "data: "
-)
+versions_md = "Title: Version History\nTemplate: versions/versions\nsave_as: resources/versions/index.html\ndata: "

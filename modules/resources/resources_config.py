@@ -76,12 +76,7 @@ training_detection_engineering_md = (
 )
 
 # FAQ md
-faq_md = (
-    "Title: Frequently Asked Questions\n"
-    "Template: general/faq-overview\n"
-    "save_as: resources/faq/index.html\n"
-    "data: "
-)
+faq_md = "Title: Frequently Asked Questions\nTemplate: general/faq-overview\nsave_as: resources/faq/index.html\ndata: "
 
 # Contribute md
 contribute_md = (
@@ -119,7 +114,5 @@ presentation_archive_md = (
 
 # Sidebar md
 sidebar_resources_md = (
-    "Title: Resources Sidebar\n"
-    "Template: general/sidebar-resources \n"
-    "save_as: resources/sidebar-resources/index.html\n"
+    "Title: Resources Sidebar\nTemplate: general/sidebar-resources \nsave_as: resources/sidebar-resources/index.html\n"
 )
