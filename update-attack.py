@@ -158,6 +158,11 @@ def get_parsed_args():
         type=str,
         help=("If a Google site verification code is provided, then the site will include it on all pages."),
     )
+    parser.add_argument(
+        "--include-osano",
+        action="store_true",
+        help=("If specified, the site will include the Osano privacy compliance script."),
+    )
 
     args = parser.parse_args()
 
