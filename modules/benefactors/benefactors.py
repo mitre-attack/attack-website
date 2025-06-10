@@ -24,5 +24,7 @@ def generate_benefactors():
     benefactors_md = benefactors_config.benefactors_md
 
     # write markdown to file
-    with open(os.path.join(benefactors_config.benefactors_markdown_path, "benefactors.md"), "w", encoding="utf8") as md_file:
+    with open(
+        os.path.join(benefactors_config.benefactors_markdown_path, "benefactors.md"), "w", encoding="utf8"
+    ) as md_file:
         md_file.write(benefactors_md)

@@ -17,5 +17,6 @@ def get_menu():
         "children": [],
     }
 
+
 def run_module():
     return (benefactors.generate_benefactors(), benefactors_config.module_name)

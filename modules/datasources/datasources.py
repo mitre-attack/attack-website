@@ -229,7 +229,7 @@ def get_datasources_table_data(datasource_list):
             row["id"] = attack_id
 
             for domain_idx in range(len(domain_list)):
-                domain_list[domain_idx] = domain_list[domain_idx].replace('-attack','')
+                domain_list[domain_idx] = domain_list[domain_idx].replace("-attack", "")
                 if domain_list[domain_idx] == "ics":
                     domain_list[domain_idx] = domain_list[domain_idx].upper()
                 else:
@@ -322,21 +322,22 @@ def get_datacomponents_data(datasource, reference_list):
 
 
 def get_domains_of_datacomponent(datacomponent, techniques_detected_by_datacomponent, technique_to_domain):
-        """Retrives domains of given data component"""
-        domains_of_datacomponent = []
+    """Retrives domains of given data component"""
+    domains_of_datacomponent = []
 
-        # get data components to techniques mapping to find domains
-        techniques_of_datacomp = techniques_detected_by_datacomponent.get(datacomponent["id"])
-        if techniques_of_datacomp:
-            technique_list = {}
-            for technique_rel in techniques_of_datacomp:
-                attack_id = util.buildhelpers.get_attack_id(technique_rel["object"])
-                if attack_id:
-                    domain = technique_to_domain[attack_id].split("-")[0]
-                    if not domain in domains_of_datacomponent:
-                        domains_of_datacomponent.append(domain)
+    # get data components to techniques mapping to find domains
+    techniques_of_datacomp = techniques_detected_by_datacomponent.get(datacomponent["id"])
+    if techniques_of_datacomp:
+        technique_list = {}
+        for technique_rel in techniques_of_datacomp:
+            attack_id = util.buildhelpers.get_attack_id(technique_rel["object"])
+            if attack_id:
+                domain = technique_to_domain[attack_id].split("-")[0]
+                if not domain in domains_of_datacomponent:
+                    domains_of_datacomponent.append(domain)
 
-        return domains_of_datacomponent
+    return domains_of_datacomponent
+
 
 def get_datasources_domain(datasource):
     """Responsible for generating the list of domains for the datasources and datacomponents."""
@@ -357,7 +358,9 @@ def get_datasources_domain(datasource):
                     # get data component detections
                     techniques_of_datacomp = techniques_detected_by_datacomponent.get(datacomponent["id"])
                     if techniques_of_datacomp:
-                        domains_of_datacomponent = get_domains_of_datacomponent(datacomponent, techniques_detected_by_datacomponent, technique_to_domain)
+                        domains_of_datacomponent = get_domains_of_datacomponent(
+                            datacomponent, techniques_detected_by_datacomponent, technique_to_domain
+                        )
                         # Add missing domains to data source
                         for domain in domains_of_datacomponent:
                             if not domain in domains_of_datasource:

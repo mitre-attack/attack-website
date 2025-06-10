@@ -11,18 +11,12 @@ techniques_templates_path = "modules/techniques/templates/"
 
 # String template for all techniques
 technique_md = Template(
-    "Title: ${name}-${domain}\n"
-    "Template: techniques/technique\n"
-    "save_as: techniques/${attack_id}/index.html\n"
-    "data: "
+    "Title: ${name}-${domain}\nTemplate: techniques/technique\nsave_as: techniques/${attack_id}/index.html\ndata: "
 )
 
 # String template for domains
 technique_domain_md = Template(
-    "Title: Techniques\n"
-    "Template: techniques/techniques-domain-index\n"
-    "save_as: techniques/${domain}/index.html\n"
-    "data: "
+    "Title: Techniques\nTemplate: techniques/techniques-domain-index\nsave_as: techniques/${domain}/index.html\ndata: "
 )
 
 # Overview md template

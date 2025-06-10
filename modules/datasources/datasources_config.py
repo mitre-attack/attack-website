@@ -11,15 +11,12 @@ datasource_markdown_path = "content/pages/datasources/"
 
 # String template for data sources index page
 datasource_index_md = (
-    "Title: Data Sources overview\n"
-    "Template: datasources/datasources-index\n"
-    "save_as: datasources/index.html\n"
-    "data: "
+    "Title: Data Sources overview\nTemplate: datasources/datasources-index\nsave_as: datasources/index.html\ndata: "
 )
 
 # String template for data source page
 datasource_md = Template(
-    "Title: ${name}\n" "Template: datasources/datasource\n" "save_as: datasources/${attack_id}/index.html\n" "data: "
+    "Title: ${name}\nTemplate: datasources/datasource\nsave_as: datasources/${attack_id}/index.html\ndata: "
 )
 
 # Path for templates

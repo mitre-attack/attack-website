@@ -135,17 +135,9 @@ resources_markdown_path = "content/pages/resources/"
 
 # Redirect md string template
 redirect_md_index = Template(
-    "Title: ${title}\n"
-    "Template: general/redirect-index\n"
-    "RedirectLink: ${to}\n"
-    "save_as: ${from}/index.html"
+    "Title: ${title}\nTemplate: general/redirect-index\nRedirectLink: ${to}\nsave_as: ${from}/index.html"
 )
-redirect_md = Template(
-    "Title: ${title}\n"
-    "Template: general/redirect-index\n"
-    "RedirectLink: ${to}\n"
-    "save_as: ${from}"
-)
+redirect_md = Template("Title: ${title}\nTemplate: general/redirect-index\nRedirectLink: ${to}\nsave_as: ${from}")
 
 # Custom_alphabet used to sort list of dictionaries by domain name
 # depending on domain ordering
@@ -174,10 +166,7 @@ custom_alphabet += rest_of_alphabet
 #     domain: "enterprise", "mobile", "ics"
 #     path: the path to the object, e.g "software/S1001" or "groups/G2021"
 layer_md = Template(
-    "Title: ${domain} Techniques\n"
-    "Template: general/json\n"
-    "save_as: ${path}/${attack_id}-${domain}-layer.json\n"
-    "json: "
+    "Title: ${domain} Techniques\nTemplate: general/json\nsave_as: ${path}/${attack_id}-${domain}-layer.json\njson: "
 )
 layer_version = "4.5"
 navigator_version = "5.1.0"
@@ -191,3 +180,5 @@ WORKBENCH_API_KEY = os.getenv("WORKBENCH_API_KEY")
 
 GOOGLE_ANALYTICS = os.getenv("GOOGLE_ANALYTICS")
 GOOGLE_SITE_VERIFICATION = os.getenv("GOOGLE_SITE_VERIFICATION")
+
+INCLUDE_OSANO = os.getenv("INCLUDE_OSANO")

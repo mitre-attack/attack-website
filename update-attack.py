@@ -158,6 +158,11 @@ def get_parsed_args():
         type=str,
         help=("If a Google site verification code is provided, then the site will include it on all pages."),
     )
+    parser.add_argument(
+        "--include-osano",
+        action="store_true",
+        help=("If specified, the site will include the Osano privacy compliance script."),
+    )
 
     args = parser.parse_args()
 
@@ -230,7 +235,7 @@ if __name__ == "__main__":
         ptr["run_module"]()
         end_time = time.time()
         util.buildhelpers.print_end(ptr["module_name"], start_time, end_time)
-    
+
     # Print end of module
     update_end = time.time()
     util.buildhelpers.print_end("TOTAL Update Time", update_start, update_end)
