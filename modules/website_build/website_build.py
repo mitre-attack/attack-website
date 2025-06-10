@@ -236,17 +236,22 @@ def pelican_content():
 
     google_analytics = site_config.GOOGLE_ANALYTICS
     google_site_verification = site_config.GOOGLE_SITE_VERIFICATION
+    include_osano = site_config.INCLUDE_OSANO
 
     if site_config.args.google_analytics:
         google_analytics = site_config.args.google_analytics
     if site_config.args.google_site_verification:
         google_site_verification = site_config.args.google_site_verification
+    if site_config.args.include_osano:
+        include_osano = site_config.args.include_osano
 
     extra_settings = ""
     if google_analytics:
         extra_settings = f"{extra_settings} GOOGLE_ANALYTICS='\"{google_analytics}\"'"
     if google_site_verification:
         extra_settings = f"{extra_settings} GOOGLE_SITE_VERIFICATION='\"{google_site_verification}\"'"
+    if include_osano:
+        extra_settings = f"{extra_settings} INCLUDE_OSANO='\"{include_osano}\"'"
 
     if extra_settings:
         pelican_cmd = f"{pelican_cmd} -e {extra_settings}"
