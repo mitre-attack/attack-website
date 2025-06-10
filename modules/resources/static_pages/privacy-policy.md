@@ -8,7 +8,7 @@ save_as: resources/legal-and-branding/privacy/index.html
 
 **THE MITRE CORPORATION RESPECTS THE PRIVACY OF ITS WEBSITE USERS.**
 
-**Effective Date: [XX/XX/2025]**
+**Effective Date: 10 June 2025**
 
 This Privacy Policy explains the types of personal information that The
 MITRE Corporation ("**MITRE** ," "**we**," "**our**," "**us**") collects
