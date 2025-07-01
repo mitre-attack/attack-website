@@ -62,7 +62,7 @@
 
 ## Misc
 
-* Added Lightning Talk YouTube links for ATT&CKCon 4.0
+* Added Lightning Talk YouTube links for ATT&CKcon 4.0
 
 ## Bugfixes
 
