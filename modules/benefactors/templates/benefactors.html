@@ -63,6 +63,17 @@
 			<h4>ATT&CK Benefactors</h4>
 			<span><strong>Thanks to the following companies who have supported ATT&CK!</strong></span>
             <br><br>
+            <h4>Advocates</h4>
+			<div id="sponsor-box-advocates" class="support-box my-4">
+				<div class="row justify-content-center px-4">
+					<div class="col col-sm">
+						<div class="row sponsor-list" id="sponsor-table-body-advocates">
+							<!-- Sponsor logos will be dynamically added here -->
+						</div>
+					</div>
+				</div>
+			</div>
+
             <h4>Friends</h4>
 			<div id="sponsor-box-friends" class="support-box my-4">
 				<div class="row justify-content-center px-4">
@@ -97,6 +108,18 @@
 
 <script>
     // Sponsor data
+    const advocates = [
+        {
+            sponsors: [
+                {
+                    logo: "/theme/images/benefactors/lloyds.png",
+                    url: "https://www.lloydsbankinggroup.com/",
+                    title: "Lloyds Banking Group"
+                }
+            ]
+        }
+    ];
+
     const friends = [
         {
             sponsors: [
@@ -140,19 +163,14 @@
                     title: "JPMorgan Chase Bank, N.A."
                 },
                 {
-                    logo: "/theme/images/benefactors/lloyds.png",
-                    url: "https://www.lloydsbankinggroup.com/",
-                    title: "Lloyds Banking Group"
+                    logo: "/theme/images/benefactors//microsoft.png",
+                    url: "https://www.microsoft.com/en-us/",
+                    title: "Microsoft Corporation"
                 },
             ],
         },
 		{
             sponsors: [
-                {
-                    logo: "/theme/images/benefactors//microsoft.png",
-                    url: "https://www.microsoft.com/en-us/",
-                    title: "Microsoft Corporation"
-                },
 				{
                     logo: "/theme/images/benefactors/verizon.png",
                     url: "https://www.verizon.com/business/",
@@ -248,9 +266,54 @@
 
 
     // Reference to the sponsor list container
+    const advocatesTableBody = document.getElementById("sponsor-table-body-advocates");
     const friendsTableBody = document.getElementById("sponsor-table-body-friends");
     const supportersTableBody = document.getElementById("sponsor-table-body-supporters");
-    // Function to generate the sponsor logos
+
+    // Function to generate the sponsor advocate logos
+    function generateAdvocateLogos() {
+        advocates.forEach(group => {
+            const sponsors = group.sponsors;
+
+            // Create rows with up to 4 sponsors per row
+            for (let i = 0; i < sponsors.length; i += 4) {
+                const row = document.createElement("div");
+                row.className = "row sponsor-list";
+                const rowLength = Math.min(sponsors.length, 4)
+
+                // Add up to 4 sponsors in each row
+                for (let j = i; j < i + rowLength; j++) {
+                    const col = document.createElement("div");
+                    col.className = "col-sm sponsor-square";
+					if (j < sponsors.length) {
+						col.setAttribute("data-toggle", "tooltip");
+            			col.setAttribute("data-placement", "top");
+            			col.setAttribute("data-animation", "false");
+            			col.setAttribute("data-original-title", sponsors[j].title);
+
+                        const sponsor = sponsors[j];
+                        const link = document.createElement("a");
+                        link.href = sponsor.url;
+                        link.target = "_blank";
+
+                        const image = document.createElement("img");
+                        image.src = sponsor.logo;
+                        image.alt = "Sponsor Logo";
+                        image.className = "w-100 sponsor-logo p-3";
+
+                        link.appendChild(image);
+                        col.appendChild(link);
+                    }
+
+                    row.appendChild(col);
+                }
+
+                advocatesTableBody.appendChild(row);
+            }
+        });
+    }
+
+    // Function to generate the sponsor friend logos
     function generateFriendLogos() {
         friends.forEach(group => {
             const sponsors = group.sponsors;
@@ -292,6 +355,7 @@
         });
     }
 
+    // Function to generate the sponsor supporter logos
     function generateSupporterLogos() {
         supporters.forEach(group => {
             const sponsors = group.sponsors;
@@ -333,7 +397,15 @@
         });
     }
 
-    // Check if there are sponsors and generate the logos
+    // Check if there are sponsor advocates and generate the logos
+    if (advocates.length > 0) {
+        document.getElementById("sponsor-box-advocates").style.display = "block"; // Show the box
+        generateAdvocateLogos();
+    } else {
+        document.getElementById("sponsor-box-advocates").style.display = "none"; // Hide the box
+    }
+
+    // Check if there are sponsor friends and generate the logos
     if (friends.length > 0) {
         document.getElementById("sponsor-box-friends").style.display = "block"; // Show the box
         generateFriendLogos();
@@ -341,7 +413,7 @@
         document.getElementById("sponsor-box-friends").style.display = "none"; // Hide the box
     }
 
-    // Check if there are sponsors and generate the logos
+    // Check if there are sponsor supporters and generate the logos
     if (supporters.length > 0) {
         document.getElementById("sponsor-box-supporters").style.display = "block"; // Show the box
         generateSupporterLogos();
