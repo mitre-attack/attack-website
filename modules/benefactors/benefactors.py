@@ -1,16 +1,12 @@
-import json
-import math
 import os
 
 from modules import util
 
 from . import benefactors_config
-from .. import site_config
 
 
 def generate_benefactors():
     """Generate benefactors page markdown"""
-
     # Create content pages directory if does not already exist
     util.buildhelpers.create_content_pages_dir()
 
