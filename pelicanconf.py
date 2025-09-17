@@ -22,6 +22,12 @@ TIMEZONE = os.environ.get("PELICAN_TIMEZONE", "America/New_York")
 DEFAULT_LANG = os.environ.get("PELICAN_DEFAULT_LANG", "en")
 
 THEME = "attack-theme"
+ARCHIVES_SAVE_AS = ""
+AUTHOR_SAVE_AS = ""
+AUTHORS_SAVE_AS = ""
+CATEGORY_SAVE_AS = ""
+CATEGORIES_SAVE_AS = ""
+TAGS_SAVE_AS = ""
 
 # Feed generation is usually not desired when developing
 FEED_ALL_ATOM = None
