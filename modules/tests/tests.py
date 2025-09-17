@@ -12,7 +12,7 @@ from . import citationchecker, linkchecker, sizechecker, tests_config
 
 
 def run_tests():
-    """Run tests"""
+    """Run tests."""
     error_list = []
     tests = 0
 
@@ -118,7 +118,7 @@ def display_error_report(report_file, error_count, error_type):
 
 
 def check_links(external_links):
-    """Wrapper to check internal and/or external links"""
+    """Check internal and/or external links."""
     # Link test
     TEST = "Links"
 
@@ -171,7 +171,7 @@ def check_links(external_links):
 
 
 def check_citations():
-    """Wrapper to check for broken citations"""
+    """Check for broken citations."""
     TEST = "Broken Citations"
     logger.info(f"RUNNING {TEST}")
 
@@ -190,7 +190,7 @@ def check_citations():
 
 
 def check_size():
-    """Wrapper to check output size for Github's limit"""
+    """Check output size for Github's limit."""
     TEST = "Output Folder Size"
     logger.info(f"RUNNING {TEST}")
 
