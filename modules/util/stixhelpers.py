@@ -5,7 +5,6 @@ from pathlib import Path
 
 import requests
 import stix2
-import urllib3
 from loguru import logger
 from requests.adapters import HTTPAdapter, Retry
 
@@ -392,7 +391,6 @@ def grab_resources(ms):
 
 def get_stix_memory_stores():
     """Read the json files for each domain and create a dict that contains the memory stores for each domain."""
-
     ms = {}
     srcs = []
 
@@ -401,6 +399,7 @@ def get_stix_memory_stores():
 
     for domain in site_config.domains:
         stix_filename = None
+        logger.info(f"Loading {domain['name']} domain STIX from: {domain['location']}")
 
         # Download json from http or https
         stix_filename = f"{stix_output_dir}/{domain['name']}.json"
@@ -410,7 +409,6 @@ def get_stix_memory_stores():
             shutil.copy(domain["location"], str(stix_filename))
 
         if os.path.exists(stix_filename):
-            logger.info(f"Loading STIX file from: {stix_filename}")
             ms[domain["name"]] = stix2.MemoryStore()
             ms[domain["name"]].load_from_file(stix_filename)
         else:
