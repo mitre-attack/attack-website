@@ -175,7 +175,7 @@ def deploy_previous_version(version_data):
     archive_filename = f"website-{version_name}.tar.gz"
     archive_path = os.path.join(archive_dir, archive_filename)
     archive_url = (
-        f"https://github.com/mitre-attack/attack-website/releases/download/Archived-Website-Files/{archive_filename}"
+        f"https://github.com/mitre-attack/attack-website/releases/download/archived-website-files/{archive_filename}"
     )
 
     if os.path.exists(archive_path):
