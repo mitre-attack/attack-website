@@ -15,15 +15,16 @@ from . import tests_config
 
 IGNORED_LINKS = ["full-coverage.html", "macro-technique-refinement.html"]
 
-allowed_in_link_with_external_links = r"-?\w\$\.!\*'()/:"
-allowed_in_link = r"-?\w\$\.!\*'()/"
+ALLOWED_IN_LINK_INTERNAL = r"-?\w\$\.!\*'()/"
+ALLOWED_IN_LINK_EXTERNAL = r"-?\w\$\.!\*'()/:"
+LINK_POSTFIX = r']+)["\']'
 
 # Pre-compiled regex patterns
 LINK_REGEXES = {
-    "href_external": re.compile(r'href\s?=\s?["\']([' + allowed_in_link_with_external_links + r']+)["\']'),
-    "src_external": re.compile(r'src\s?=\s?["\']([' + allowed_in_link_with_external_links + r']+)["\']'),
-    "href_internal": re.compile(r'href\s?=\s?["\']([' + allowed_in_link + r']+)["\']'),
-    "src_internal": re.compile(r'src\s?=\s?["\']([' + allowed_in_link + r']+)["\']'),
+    "href_internal": re.compile(r'href\s?=\s?["\']([' + ALLOWED_IN_LINK_INTERNAL + LINK_POSTFIX),
+    "href_external": re.compile(r'href\s?=\s?["\']([' + ALLOWED_IN_LINK_EXTERNAL + LINK_POSTFIX),
+    "src_internal": re.compile(r'src\s?=\s?["\']([' + ALLOWED_IN_LINK_INTERNAL + LINK_POSTFIX),
+    "src_external": re.compile(r'src\s?=\s?["\']([' + ALLOWED_IN_LINK_EXTERNAL + LINK_POSTFIX),
     "cache_bust": re.compile(r"(css|js)\?\w+"),
 }
 
@@ -185,9 +186,9 @@ def internal_external_link_checker(filepath, html_str):
         if (
             "/versions/" in filepath
         ):  # don't check links with data-test-ignore attribute, or live version link name, when on previous versions
-            linkregex = rf'{prefix}\s?=\s?["\']([{allowed_in_link_with_external_links}]+)["\'](?! ?data-test-ignore="true")(?!>live version)'
+            linkregex = rf'{prefix}\s?=\s?["\']([{ALLOWED_IN_LINK_EXTERNAL}]+)["\'](?! ?data-test-ignore="true")(?!>live version)'
         else:
-            linkregex = rf"{prefix}\s?=\s?[\"']([{allowed_in_link_with_external_links}]+)[\"']"
+            linkregex = rf"{prefix}\s?=\s?[\"']([{ALLOWED_IN_LINK_EXTERNAL}]+)[\"']"
         links = re.findall(linkregex, html_str)
 
         # check if link has a dest
@@ -246,7 +247,7 @@ def internal_link_checker(filepath, html_str):
 
     # find all links
     for prefix in ["href", "src"]:
-        links = re.findall(rf"{prefix}\s?=\s?[\"']([{allowed_in_link}]+)[\"']", html_str)
+        links = re.findall(rf"{prefix}\s?=\s?[\"']([{ALLOWED_IN_LINK_INTERNAL}]+)[\"']", html_str)
         # check if link has a dest
         for link in links:
             # Check if link is relative path
@@ -264,7 +265,6 @@ def internal_link_checker(filepath, html_str):
                 if ignored_link in link:
                     logger.debug(f"Ignoring link: {link}")
                     links_list[link] = None
-                    continue
 
             # Check if link is in use
             check_if_link_in_use(filepath, link)
@@ -395,7 +395,6 @@ def check_links(external_links=False):
             html_filepaths.append(filepath)
 
     # Parallelize link checking
-    reports = []
     max_workers = min(32, os.cpu_count() or 4)
     lock = threading.Lock()
     with ThreadPoolExecutor(max_workers=max_workers) as executor:
