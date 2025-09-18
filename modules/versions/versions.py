@@ -1,16 +1,28 @@
+import concurrent.futures as cf
+import functools
+import io
 import json
 import os
 import re
 import shutil
-import stat
+import subprocess
+import tarfile
+import tempfile
 from datetime import datetime
+from pathlib import Path
 
-from git import Repo
+import requests
 from loguru import logger
 
 from modules import site_config, util
 
 from . import versions_config
+
+ALLOWED = r"-?\w\$\.!\*'()/"
+SRC_RE = re.compile(rf'src=["\'](?!/versions/)([{ALLOWED}]+)["\']')
+HREF_RE = re.compile(r'href=(["\'])((?!/(versions|resources)/)/[^"\']*)\1')
+META_REDIR_RE = re.compile(r'content="0; url=(["\']?)(?!/(versions|resources)/|https?://)(/[^"\'>]*)\1')
+LIVE_BTN_RE = re.compile(rf'href=["\']/versions/v[\w-]+/([{ALLOWED}]+)["\'](.*)>[Ll]ive [Vv]ersion</a>')
 
 
 def generate_versions():
@@ -18,109 +30,57 @@ def generate_versions():
     # Move templates to templates directory
     util.buildhelpers.move_templates(versions_config.module_name, versions_config.versions_templates_path)
 
-    # Verify if resources directory exists
-    if not os.path.isdir(site_config.resources_markdown_path):
-        os.mkdir(site_config.resources_markdown_path)
+    # Create resources and versions directories
+    os.makedirs(site_config.resources_markdown_path, exist_ok=True)
+    os.makedirs(versions_config.versions_markdown_path, exist_ok=True)
 
-    # Verify if resources directory exists
-    if not os.path.isdir(versions_config.versions_markdown_path):
-        os.mkdir(versions_config.versions_markdown_path)
-
-    deploy()
-
-
-# Error handler for windows by:
-# https://stackoverflow.com/questions/2656322/shutil-rmtree-fails-on-windows-with-access-is-denied
-def onerror(func, path, exc_info):
-    """
-    Error handler for ``shutil.rmtree``.
-
-    If the error is due to an access error (read only file)
-    it attempts to add write permission and then retries.
-
-    If the error is for another reason it re-raises the error.
-
-    Usage : ``shutil.rmtree(path, onerror=onerror)``
-    """
-    try:
-        if not os.access(path, os.W_OK):
-            # Is the error an access error ?
-            os.chmod(path, stat.S_IWUSR)
-            func(path)
-    except:
-        raise
-
-
-# allowed characters inside of hyperlinks
-allowed_in_link = r"-?\w\$\.!\*'()/"
-
-def versionPath(version):
-    """Get the path of a given version."""
-    if "path" in version:
-        return version["path"]
-    else:
-        return version["name"].split(".")[0]  # parse path from name if not given explicitly
-
-
-def deploy():
-    """Deploy previous versions to website directory."""
+    # Ensure directories exist
     versions_config.prev_versions_deploy_folder = os.path.join(
         site_config.web_directory, versions_config.prev_versions_path
     )
-
-    # TODO we probably don't need to re-clone the website here, just a git pull should be sufficient
-    # delete previous copy of attack-versions
-    if os.path.exists(versions_config.versions_directory):
-        shutil.rmtree(versions_config.versions_directory, onerror=onerror)
-    # download new version of attack-website for use in versioning
-    logger.info(f"git cloning {versions_config.versions_repo} >>> {versions_config.versions_directory}")
-    versions_repo = Repo.clone_from(versions_config.versions_repo, versions_config.versions_directory)
-
-    # remove previously deployed previous versions
-    if os.path.exists(versions_config.prev_versions_deploy_folder):
-        for child in os.listdir(versions_config.prev_versions_deploy_folder):
-            if os.path.isdir(os.path.join(versions_config.prev_versions_deploy_folder, child)):
-                shutil.rmtree(versions_config.prev_versions_deploy_folder)
+    os.makedirs(versions_config.prev_versions_deploy_folder, exist_ok=True)
 
     with open("data/versions.json", "r") as f:
         versions = json.load(f)
 
-    # build previous versions
-    for version in versions["previous"]:
-        deploy_previous_version(version, versions_repo)
+    logger.info("Deploying preserved versions …")
+    with cf.ThreadPoolExecutor() as executor:
+        list(executor.map(deploy_previous_version, versions["previous"]))
 
-    # build the versions page
-    build_markdown(versions)
-
-    # Create directory if it does not exist
-    if not os.path.isdir(site_config.web_directory):
-        os.makedirs(site_config.web_directory)
+    build_markdown(versions=versions)
 
     # write robots.txt to disallow crawlers
+    os.makedirs(site_config.web_directory, exist_ok=True)
     with open(os.path.join(site_config.web_directory, "robots.txt"), "w", encoding="utf8") as robots:
         robots.write(
-            f"User-agent: *\nDisallow: {site_config.subdirectory}/previous/\nDisallow: {site_config.subdirectory}/{versions_config.prev_versions_path}/"
+            f"User-agent: *\n"
+            f"Disallow: {site_config.subdirectory}/previous/\n"
+            f"Disallow: {site_config.subdirectory}/{versions_config.prev_versions_path}/"
         )
 
 
 def deploy_current_version():
-    """Build a permalink of the current version."""
+    """Build a permalink of the current version.
+
+    This is only called by the search module's preserve_current_version().
+    """
     versions_config.prev_versions_deploy_folder = os.path.join(
         site_config.web_directory, versions_config.prev_versions_path
     )
 
     with open("data/versions.json", "r") as f:
-        version = json.load(f)["current"]
+        version_data = json.load(f)["current"]
 
-    if not os.path.exists(os.path.join(versions_config.prev_versions_deploy_folder, versionPath(version))):
-        os.mkdir(os.path.join(versions_config.prev_versions_deploy_folder, versionPath(version)))
+    version_path = version_data["name"].split(".")[0]
+
+    os.makedirs(os.path.join(versions_config.prev_versions_deploy_folder, version_path), exist_ok=True)
     for item in os.listdir(site_config.web_directory):
-        # skip previous and versions directories when copying
-        if item == "previous" or item == "versions":
+        # skip versions directories when copying
+        if item == "versions":
             continue
         # copy the current version into a preserved version
         src = os.path.join(site_config.web_directory, item)
-        dest = os.path.join(versions_config.prev_versions_deploy_folder, versionPath(version), item)
+        dest = os.path.join(versions_config.prev_versions_deploy_folder, version_path, item)
         # copy depending on file type
         if os.path.exists(dest):
             print(f"error copying {src}: path {dest} already exists | {item}")
@@ -130,215 +90,344 @@ def deploy_current_version():
             shutil.copy(src, dest)
 
     # run archival scripts
-    archive(version, is_current=True)
+    archive(version_data=version_data, is_current=True)
 
 
-def deploy_previous_version(version, repo):
-    """Build a version of the site to /prev_versions_path. version is a version from versions.json, repo is a reference to the attack-website Repo object."""
-    logger.info(f"Building website for ATT&CK {version}")
-    # check out the commit for that version
-    repo.git.checkout(version["commit"])
-    # copy over files
-    ignored_stuff = shutil.ignore_patterns(
-        ".git", "beta", "CNAME", "robots.txt", "previous", "previous-versions", "versions"
-    )
-    shutil.copytree(
-        os.path.join(versions_config.versions_directory),
-        os.path.join(versions_config.prev_versions_deploy_folder, versionPath(version)),
-        ignore=ignored_stuff,
-    )
-    # run archival scripts on version
-    archive(version)
-    # build alias for version
-    for alias in version["aliases"]:
-        build_alias(versionPath(version), alias)
+def create_tar_gz(source_dir, output_path):
+    """Create a tar.gz archive from source_dir."""
+    logger.info(f"Creating tar.gz archive: {output_path}")
+    with tarfile.open(output_path, "w:gz") as tar:
+        tar.add(source_dir, arcname=".")
+    logger.info(f"Archive created: {output_path}")
 
 
-def archive(version_data, is_current=False):
-    """Perform archival operations on a version in /prev_versions_path.
+def extract_tar_gz(archive_path, dest_path):
+    """Extract a .tar.gz archive to dest_path."""
+    os.makedirs(dest_path, exist_ok=True)
+    with tarfile.open(archive_path, "r:gz") as tar:
+        tar.extractall(path=dest_path)
 
-    - remove unnecessary files (.git, CNAME, preserved versions for that version)
-    - replace links on all pages
-    - add archived version banner to all pages
+
+def download_archive(url, local_path):
+    """Download a website archive file from GitHub. Returns True if download succeeded."""
+    try:
+        logger.info(f"Downloading website archive from {url} to {local_path}")
+        r = requests.get(url, timeout=15)
+        r.raise_for_status()
+        with open(local_path, "wb") as f:
+            f.write(r.content)
+        logger.info(f"Successfully downloaded archive: {local_path}")
+        return True
+    except Exception as ex:
+        logger.warning(f"Failed to download archive from {url}: {ex}")
+        return False
+
+
+def export_commit(commit: str, dest_path: str) -> None:
+    """Materialise `commit` into `dest_path` using `git archive`.
+
+    Equivalent to: git archive <commit> | tar -x -C <dest_path>
     """
-    version = versionPath(version_data)
+    os.makedirs(dest_path, exist_ok=True)
 
-    version_path = os.path.join(
-        versions_config.prev_versions_deploy_folder, version
-    )  # root of the filesystem containing the version
-    version_url_path = os.path.join(
-        versions_config.prev_versions_path, version
-    )  # root of the URL of the version, for prefixing URLs
+    # Create a tar stream of the commit
+    proc = subprocess.run(
+        ["git", "archive", "--format=tar", commit],
+        stdout=subprocess.PIPE,
+        check=True,
+    )
+    # Extract the tar stream in-memory
+    with tarfile.open(fileobj=io.BytesIO(proc.stdout)) as tar:
+        tar.extractall(path=dest_path)
 
-    def saferemove(path, type):
-        if not os.path.exists(path):
-            return
-        if type == "file":
-            os.remove(path)
-        elif type == "directory":
-            shutil.rmtree(path, onerror=onerror)
 
-    # remove .git
-    saferemove(os.path.join(version_path, ".git"), "directory")
-    # remove beta directory
-    saferemove(os.path.join(version_path, "beta"), "directory")
-    # remove CNAME
-    saferemove(os.path.join(version_path, "CNAME"), "file")
-    # remove robots
-    saferemove(os.path.join(version_path, "robots.txt"), "file")
+def export_git_archive_to_file(commit: str, output_path: Path) -> None:
+    """Create a git archive file for the given commit."""
+    logger.info(f"Creating git archive for commit {commit} > {output_path}")
+    with open(output_path, "wb") as out:
+        subprocess.run(
+            ["git", "archive", "--format=tar.gz", commit],
+            stdout=out,
+            check=True,
+        )
+    logger.info(f"Git archive created: {output_path}")
 
-    # remove previous versions from this previous version
-    for prev_directory in map(
-        lambda d: os.path.join(version_path, d),
-        [
-            "previous",
-            versions_config.prev_versions_path,
-            os.path.join("resources", "previous-versions"),
-            os.path.join("resources", "versions"),
-        ],
-    ):
-        if os.path.exists(prev_directory):
-            shutil.rmtree(prev_directory, onerror=onerror)
 
-    # remove updates page
-    updates_dir = os.path.join(version_path, "resources", "updates")
-    if os.path.exists(updates_dir):
-        shutil.rmtree(updates_dir, onerror=onerror)
+def deploy_previous_version(version_data):
+    """
+    Build a version of the site to /prev_versions_path.
 
-    # walk version HTML files
-    for directory, _, files in os.walk(version_path):
-        for filename in filter(lambda f: f.endswith(".html"), files):
-            # replace links in the file
+    Attempts to deploy using a local archive, then remote URL,
+    falling back to git archive if neither is available.
+    """
+    version_name = version_data["name"]  # e.g. v16.1
+    logger.info(f"Building website for ATT&CK {version_name}")
 
-            # open the file
-            filepath = os.path.join(directory, filename)
-            with open(filepath, mode="r", encoding="utf8") as html:
-                html_str = html.read()
+    vpath = version_name.split(".")[0]
+    dest_path = os.path.join(versions_config.prev_versions_deploy_folder, vpath)
 
-            # helper function to substitute links so that they point to /versions/
-            dest_link_format = rf"/{version_url_path}\g<1>"
+    # Find the archive directory to use based on environment variable or command line argument
+    archive_dir = site_config.ATTACK_VERSION_ARCHIVES
+    if site_config.args.version_archive_dir:
+        archive_dir = site_config.args.version_archive_dir
 
-            def substitute(prefix, html_str):
-                fromstr = rf"{prefix}=[\"'](?!\/versions\/)([{allowed_in_link}]+)[\"']"
-                tostr = f'{prefix}="{dest_link_format}"'
-                return re.sub(fromstr, tostr, html_str)
+    os.makedirs(archive_dir, exist_ok=True)
+    archive_filename = f"website-{version_name}.tar.gz"
+    archive_path = os.path.join(archive_dir, archive_filename)
+    archive_url = (
+        f"https://github.com/mitre-attack/attack-website/releases/download/Archived-Website-Files/{archive_filename}"
+    )
 
-            # ditto, but for redirections
-            def substitute_redirection(prefix, html_str):
-                from_str = f"{prefix}=([{allowed_in_link}]+)[\"']"
-                to_str = f'{prefix}={dest_link_format}"'
-                return re.sub(from_str, to_str, html_str)
+    if os.path.exists(archive_path):
+        logger.info(f"{version_name}: extracting from local archive {archive_filename}")
+        extract_tar_gz(archive_path=archive_path, dest_path=dest_path)
+        return
 
-            # replace links so that they properly point to where the version is stored
-            html_str = substitute("src", html_str)
-            html_str = substitute("href", html_str)
-            html_str = substitute_redirection('content="0; url', html_str)
-            # update links to previous-versions to point to the main site instead of an archived page
-            for previous_page in ["previous-versions", "versions"]:  # backwards compatability
-                html_str = html_str.replace(f"/{version_url_path}/resources/{previous_page}/", "/resources/versions/")
-            # update links to updates to point to main site instead of archied page
-            html_str = html_str.replace(f"/{version_url_path}/resources/updates/", "/resources/updates/")
+    if download_archive(url=archive_url, local_path=archive_path):
+        logger.info(f"{version_name}: extracting downloaded archive {archive_filename}")
+        extract_tar_gz(archive_path=archive_path, dest_path=dest_path)
+        return
 
-            # update versioning button to show the permalink site version, aka "back to main site"
-            html_str = html_str.replace("version-button live", "version-button permalink")
-            # update live version links on the versioning button
-            from_str = rf"href=[\"']\/versions\/v[\w-]+\/([{allowed_in_link}]+)[\"'](.*)>[Ll]ive [Vv]ersion<\/a>"
-            to_str = r'href="/\g<1>"\g<2>>Live Version</a>'
-            html_str = re.sub(from_str, to_str, html_str)
+    # this saves the cleaned up version archive for the future
+    logger.warning(f"{version_name}: download failed, falling back to git archive")
+    create_version_archive(version_data=version_data, output_dir=archive_dir)
+    extract_tar_gz(archive_path=archive_path, dest_path=dest_path)
 
-            # remove banner message if it is present
-            for banner_class in ["banner-message", "under-development"]:  # backwards compatability
-                html_str = html_str.replace(banner_class, "d-none")  # hide the banner
 
-            # format banner depending on if this is the current version or a previous version
-            if is_current:
-                version_marking = f'Currently viewing <a href="{version_data["cti_url"]}" target="_blank">ATT&CK {version_data["name"]}</a> which is the current version of ATT&CK.'
-            else:
-                version_marking = f'Currently viewing <a href="{version_data["cti_url"]}" target="_blank">ATT&CK {version_data["name"]}</a> which was live between {version_data["date_start"]} and {version_data["date_end"]}.'
+def process_html_file(path: str, version_url_path: str, is_current: bool, version_data: dict):
+    """Rewrite one HTML file in place."""
+    try:
+        with open(path, "r", encoding="utf8") as f:
+            html = f.read()
 
-            # add versions banner
-            for banner_tag in [
-                "<!-- !previous versions banner! -->",
-                "<!-- !versions banner! -->",
-            ]:  # backwards compatability
-                html_str = html_str.replace(
-                    banner_tag,
-                    (
-                        '<div class="container-fluid version-banner">'
-                        f'<div class="icon-inline baseline mr-1"><img src="/{version_url_path}/theme/images/icon-warning-24px.svg"></div>'
-                        f"{version_marking} "
-                        '<a href="/resources/versions/">Learn more about the versioning system</a> or <a href="/">see the live site</a>.</div>'
-                    ),
-                )
+        ### regex replacements
+        # replace links so that they properly point to where the version is stored
+        html = SRC_RE.sub(lambda m: f'src="/{version_url_path}{m.group(1)}"', html)
+        html = HREF_RE.sub(lambda m: f"href={m.group(1)}/{version_url_path}/{m.group(2)[1:]}{m.group(1)}", html)
+        html = META_REDIR_RE.sub(
+            lambda m: f'content="0; url=/{version_url_path}{"/" if m.group(3) == "/" else m.group(3)}'
+            + (m.group(1) if m.group(1) else ""),
+            html,
+        )
+        # update live version links on the versioning button
+        html = LIVE_BTN_RE.sub(lambda m: f'href="/{m.group(1)}"{m.group(2)}>Live Version</a>', html)
 
-            # overwrite with updated html
-            with open(filepath, mode="w", encoding="utf8") as updated_html:
-                updated_html.write(html_str)
+        ### simple string replacements
+        # update links to previous-versions to point to the main site instead of an archived page
+        html = html.replace(f"/{version_url_path}/resources/previous-versions/", "/resources/versions/")
+        html = html.replace(f"/{version_url_path}/resources/versions/", "/resources/versions/")
+        # update links to updates to point to main site instead of archived page
+        html = html.replace(f"/{version_url_path}/resources/updates/", "/resources/updates/")
 
-    # update settings js file
+        # update links to docs
+        html = html.replace(f"/{version_url_path}/docs/", "/docs/")
+
+        # update versioning button to show the permalink site version: "back to main site"
+        html = html.replace("version-button live", "version-button permalink")
+        # remove banner message if it is present
+        html = html.replace("banner-message", "d-none")
+        html = html.replace("under-development", "d-none")
+
+        # banner injection
+        if is_current:
+            marking = (
+                "Currently viewing "
+                f'<a href="{version_data["cti_url"]}" target="_blank">'
+                f"ATT&CK {version_data['name']}"
+                "</a> "
+                "which is the current version of ATT&CK."
+            )
+        else:
+            marking = (
+                "Currently viewing "
+                f'<a href="{version_data["cti_url"]}" target="_blank">'
+                f"ATT&CK {version_data['name']}"
+                "</a> "
+                f"which was live between {version_data['date_start']} and {version_data['date_end']}."
+            )
+        banner_html = (
+            '<div class="container-fluid version-banner">'
+            '<div class="icon-inline baseline mr-1">'
+            f'<img src="/{version_url_path}/theme/images/icon-warning-24px.svg"></div>'
+            f"{marking} "
+            '<a href="/resources/versions/">Learn more about the versioning '
+            'system</a> or <a href="/">see the live site</a>.</div>'
+        )
+        html = html.replace("<!-- !previous versions banner! -->", banner_html)
+        html = html.replace("<!-- !versions banner! -->", banner_html)
+
+        # Special case!
+        if version_url_path == "versions/v13" and "techniques/T1037/004/index.html" in path:
+            logger.info("REMOVING BROKEN LINK in /versions/v13/techniques/T1037/004/index.html")
+            # Replace <a href="/versions/v13/techniques/T1053/004">Launchd</a> with Launchd
+            # ATT&CK v13 somehow missed T1053.004 in the STIX and it was later brought back and deprecated
+            html = re.sub(
+                r'<a\s+href="/versions/v13/techniques/T1053/004"[^>]*>(.*?)</a>',
+                r"\1",
+                html,
+                flags=re.IGNORECASE | re.DOTALL,
+            )
+
+        # overwrite with updated html
+        with open(path, "w", encoding="utf8") as f:
+            f.write(html)
+
+    except Exception as e:
+        logger.warning(f"Failed to process {path}: {e}")
+
+
+def process_html_files(version_data: dict, version_path: str, is_current: bool = False):
+    """Process all HTML files in a version directory."""
+    version = version_data["name"].split(".")[0]
+    version_url_path = f"versions/{version}"
+
+    logger.info(f"{version}: rewriting html")
+
+    worker = functools.partial(
+        process_html_file, version_url_path=version_url_path, is_current=is_current, version_data=version_data
+    )
+    html_files = []
+    for root, _, files in os.walk(version_path):
+        html_files.extend(os.path.join(root, f) for f in files if f.endswith(".html"))
+
+    with cf.ThreadPoolExecutor() as pool:
+        pool.map(worker, html_files)
+
+
+def process_search_files(version_data: dict, version_path: str):
+    """Process search-related JavaScript files in a version directory."""
+    version = version_data["name"].split(".")[0]
+    version_url_path = f"versions/{version}"
+
+    logger.info(f"{version}: rewriting search files")
+
+    # tweak settings.js / for search capability. works for ATT&CK v7 onwards
     settings_path = os.path.join(version_path, "theme", "scripts", "settings.js")
     if os.path.exists(settings_path):
-        with open(settings_path, mode="r", encoding="utf8") as settings_file:
-            settings_contents = settings_file.read()
-
-        settings_contents = re.sub('base_url ?= ?"(.*)"', rf'base_url = "/{version_url_path}\1"', settings_contents)
-        settings_contents = re.sub("tour_steps ?= .*;", "tour_steps = {};", settings_contents)
-
-        with open(settings_path, mode="w", encoding="utf8") as settings_file:
-            settings_file.write(settings_contents)
+        with open(settings_path, "r", encoding="utf8") as sf:
+            contents = sf.read()
+        contents = re.sub(r'base_url ?= ?"(.+?)"', rf'base_url = "/{version_url_path}\1"', contents)
+        contents = re.sub(r"tour_steps ?= .*?;", "tour_steps = {};", contents)
+        with open(settings_path, "w", encoding="utf8") as sf:
+            sf.write(contents)
     else:
-        # update search page for old versions of the site
-        for search_file_name in ["search_bundle.js"]:
+        # legacy search path for ATT&CK version 6 and prior
+        # NOTE: search.js and search_babelized.js are in v7-v12, but they don't need to be updated since settings.js is updated above
+        for search_file_name in ["search.js", "search_babelized.js"]:
             search_file_path = os.path.join(version_path, "theme", "scripts", search_file_name)
             if os.path.exists(search_file_path):
-                with open(search_file_path, mode="r", encoding="utf8") as search_file:
-                    search_contents = search_file.read()
-
+                with open(search_file_path, "r", encoding="utf8") as f:
+                    search_contents = f.read()
                 search_contents = re.sub(
-                    'site_base_url ?= ?""', f'site_base_url = "/{version_url_path}"', search_contents
+                    r'site_base_url ?= ?""', f'site_base_url = "/{version_url_path}"', search_contents
                 )
+                with open(search_file_path, "w", encoding="utf8") as f:
+                    f.write(search_contents)
 
-                with open(search_file_path, mode="w", encoding="utf8") as search_file:
-                    search_file.write(search_contents)
+
+def saferemove(p):
+    """Safely remove a file or directory."""
+    if not os.path.exists(p):
+        return
+    if os.path.isfile(p):
+        os.remove(p)
+    elif os.path.isdir(p):
+        shutil.rmtree(p)
 
 
-def build_alias(version, alias):
-    """Build redirects from alias to version.
+def remove_unwanted_files(extract_dir):
+    """Remove unnecessary files and directories from previous website version."""
+    logger.info("Cleaning extracted archive (removing unnecessary files/folders)…")
+    targets = [
+        ".git",
+        ".well-known",
+        "beta",
+        "docs",
+        "mobile",
+        "previous",
+        "versions",
+        "w",
+        "wiki",
+        "resources",
+        "CNAME",
+        "robots.txt",
+        "assets.html",
+        "campaigns.html",
+        "groups.html",
+        "software.html",
+        "tactics.html",
+        "techniques.html",
+        "full-coverage.html",
+        "macro-technique-refinement.html",
+    ]
+    for rel_path in targets:
+        target_path = os.path.join(extract_dir, rel_path)
+        saferemove(target_path)
+    logger.info("Cleaning complete.")
 
-    version is the path of the version, e.g "v5"
-    alias is the alias to build, e.g "october2018"
+
+def archive(version_data: dict, is_current: bool = False):
+    """Post-process an exported version folder.
+
+    – remove unnecessary files,
+    – rewrite all HTML files (parallel),
+    – tweak settings.js / search_bundle.js (kept from the old code).
     """
-    for root, folder, files in os.walk(os.path.join(versions_config.prev_versions_deploy_folder, version)):
-        for thefile in files:
-            # where the file should go
-            newRoot = root.replace(version, alias).replace(versions_config.prev_versions_path, "previous")
-            # file to build
-            redirectFrom = os.path.join(newRoot, thefile)
+    version = version_data["name"].split(".")[0]
+    version_path = os.path.join(versions_config.prev_versions_deploy_folder, version)
 
-            # where this file should point to
-            if thefile == "index.html":
-                redirectTo = root  # index.html is implicit
-            else:
-                redirectTo = "/".join([root, thefile])  # file is not index.html so it needs to be specified explicitly
-            redirectTo = redirectTo.split(site_config.parent_web_directory)[1]  # remove parent web folder from path
+    remove_unwanted_files(extract_dir=version_path)
+    process_html_files(version_data, version_path, is_current)
+    process_search_files(version_data, version_path)
 
-            # write the redirect file
-            if not os.path.isdir(newRoot):
-                os.makedirs(newRoot, exist_ok=True)  # make parents as well
-            with open(redirectFrom, "w") as f:
-                f.write(f'<meta http-equiv="refresh" content="0; url={redirectTo}"/>')
+
+def create_version_archive(version_data: dict, output_dir: str = "attack-version-archives"):
+    """Create a cleaned archive for a specific version.
+
+    This function is designed to be called from archive-website.py
+    for batch processing versions into archives.
+    """
+    version_label = version_data["name"]
+    commit_to_use = version_data["commit"]
+
+    logger.info(f"--- Processing version {version_label} ---")
+
+    cleaned_dir = Path(output_dir)
+    cleaned_dir.mkdir(parents=True, exist_ok=True)
+
+    cleaned_archive_name = f"website-{version_label}.tar.gz"
+    cleaned_archive_path = cleaned_dir / cleaned_archive_name
+
+    # main temp dir for extracted/cleaned contents
+    with tempfile.TemporaryDirectory() as tmpdir:
+        # dedicated temp dir for git archive tarball
+        with tempfile.TemporaryDirectory() as archive_tmpdir:
+            archive_tmp_path = Path(archive_tmpdir)
+            git_archive_name = f"website-{version_label}-git-archive.tar.gz"
+            git_archive_path = archive_tmp_path / git_archive_name
+
+            export_git_archive_to_file(commit_to_use, git_archive_path)
+            extract_tar_gz(git_archive_path, tmpdir)
+
+        remove_unwanted_files(tmpdir)
+        process_html_files(version_data, tmpdir, is_current=False)
+        process_search_files(version_data, tmpdir)
+
+        create_tar_gz(tmpdir, cleaned_archive_path)
+
+    logger.info(f"--- Finished version {version_label} ---\n")
 
 
 def build_markdown(versions):
     """Build markdown for the versions list page."""
     # build urls
-    versions["current"]["url"] = versionPath(versions["current"])
+    versions["current"]["url"] = versions["current"]["name"].split(".")[0]
     versions["current"]["changelog_label"] = " ".join(versions["current"]["changelog"].split("-")[1:]).title()
 
     for versionGroup in ["previous", "older"]:  # apply transforms to both previous and older
-        for version in versions[versionGroup]:
-            version["url"] = versionPath(version)
-            version["changelog_label"] = " ".join(version["changelog"].split("-")[1:]).title()
+        for version_data in versions[versionGroup]:
+            version_data["url"] = version_data["name"].split(".")[0]
+            version_data["changelog_label"] = " ".join(version_data["changelog"].split("-")[1:]).title()
 
     # sort previous versions by date
     versions_data = {

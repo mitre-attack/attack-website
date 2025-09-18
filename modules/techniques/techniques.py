@@ -21,12 +21,6 @@ def generate_techniques():
     if not os.path.isdir(techniques_config.techniques_markdown_path):
         os.mkdir(techniques_config.techniques_markdown_path)
 
-    # TODO resolve infinite redirect loop when run locally. Needs further testing before code removal.
-    # Generate redirections
-    util.buildhelpers.generate_redirections(
-        redirections_filename=techniques_config.techniques_redirection_location, redirect_md=site_config.redirect_md
-    )
-
     # Write the technique index.html page
     with open(os.path.join(techniques_config.techniques_markdown_path, "overview.md"), "w", encoding="utf8") as md_file:
         md_file.write(techniques_config.technique_overview_md)

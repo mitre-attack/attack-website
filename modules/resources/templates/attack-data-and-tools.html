@@ -53,7 +53,7 @@
                     <div class="panel-body p-4 fixed-height">
                         <h3>ATT&amp;CK Navigator</h3>
                         <p>
-                            The ATT&CK Navigator is a web-based tool for annotating and exploring ATT&CK matrices. It can be used to visualize defensive coverage, red/blue team planning, the frequency of detected techniques, and more. 
+                            The ATT&CK Navigator is a web-based tool for annotating and exploring ATT&CK matrices. It can be used to visualize defensive coverage, red/blue team planning, the frequency of detected techniques, and more.
                         </p>
                     </div>
                     <div class="g-12 d-flex flex-column px-4 pb-4">
@@ -85,7 +85,7 @@
                     <div class="panel-body p-4 fixed-height">
                         <h3>ATT&amp;CK Workbench</h3>
                         <p>
-                            The ATT&CK Workbench is an application allowing users to explore, create, annotate, and share extensions of 
+                            The ATT&CK Workbench is an application allowing users to explore, create, annotate, and share extensions of
                             the ATT&CK knowledge base.
                         </p>
                     </div>
@@ -140,20 +140,20 @@
             <div class="row my-4">
                 <div class="col-sm-8">
                     <p>
-                        Structured Threat Information Expression (STIX&trade;) is a language and serialization format used to 
-                        exchange cyber threat intelligence (CTI). The ATT&CK dataset is available in STIX 2.0 and STIX 2.1. 
-                        Other presentations of this dataset, including the ATT&CK Navigator and this website, are built from 
-                        the STIX data. 
+                        Structured Threat Information Expression (STIX&trade;) is a language and serialization format used to
+                        exchange cyber threat intelligence (CTI). The ATT&CK dataset is available in STIX 2.0 and STIX 2.1.
+                        Other presentations of this dataset, including the ATT&CK Navigator and this website, are built from
+                        the STIX data.
                     </p>
                     <p>
-                        STIX is a machine-readable format providing access to the ATT&CK knowledge base. It is the most granular 
-                        representation of the ATT&CK data, and all other representations are derived from the STIX dataset. 
+                        STIX is a machine-readable format providing access to the ATT&CK knowledge base. It is the most granular
+                        representation of the ATT&CK data, and all other representations are derived from the STIX dataset.
                     </p>
                     <p>
-                        The ATT&CK STIX representation is most easily manipulated in Python using the 
-                        <a href="https://github.com/oasis-open/cti-python-stix2#installation">stix2 library</a>. 
-                        However, because STIX is represented in JSON, other programming languages can easily interact with 
-                        the raw content. 
+                        The ATT&CK STIX representation is most easily manipulated in Python using the
+                        <a href="https://github.com/oasis-open/cti-python-stix2#installation">stix2 library</a>.
+                        However, because STIX is represented in JSON, other programming languages can easily interact with
+                        the raw content.
                     </p>
                     <div class="tip-box">
                         <p>
@@ -217,10 +217,10 @@
                         <!-- taxii -->
                         <h3>TAXII 2.1</h3>
                         <p>
-                            The ATT&amp;CK STIX data can also be accessed via the official ATT&amp;CK TAXII&trade; server. 
-                            Trusted Automated Exchange of Intelligence Information (TAXII) is an application protocol for 
+                            The ATT&amp;CK STIX data can also be accessed via the official ATT&amp;CK TAXII&trade; server.
+                            Trusted Automated Exchange of Intelligence Information (TAXII) is an application protocol for
                             exchanging CTI over HTTPS. The ATT&amp;CK TAXII server provides API access to the ATT&amp;CK
-                            STIX knowledge base. 
+                            STIX knowledge base.
                         </p>
                         <div class="d-flex flex-row mb-4 mt-3">
                             <a href="https://github.com/mitre-attack/attack-workbench-taxii-server/blob/main/docs/USAGE.md">
@@ -274,7 +274,7 @@
                     </div>
                 </div>
             </div>
-    
+
             <!-- excel -->
             <div class="anchor" id="excel-attack">
                 <p></p>
@@ -283,19 +283,19 @@
             <div class="row">
                 <div class="col-sm-8">
                     <p>
-                        These spreadsheets are built from the STIX dataset and provide a more human-accessible view into the 
-                        knowledge base while also supporting rudimentary querying/filtering capabilities. 
+                        These spreadsheets are built from the STIX dataset and provide a more human-accessible view into the
+                        knowledge base while also supporting rudimentary querying/filtering capabilities.
                     </p>
                     <p>
-                        The Excel representation of the ATT&CK dataset below includes both master spreadsheets, containing all 
-                        object types, and individual spreadsheets for each object type. The individual type spreadsheets break 
-                        out relationships (e.g procedure examples connecting groups to techniques) into separate sheets by 
+                        The Excel representation of the ATT&CK dataset below includes both master spreadsheets, containing all
+                        object types, and individual spreadsheets for each object type. The individual type spreadsheets break
+                        out relationships (e.g procedure examples connecting groups to techniques) into separate sheets by
                         relationship type, while the master spreadsheet includes all relationship types in a single sheet.
                     </p>
                     <p>
-                        A citations sheet can be used to look up the in-text citations which appear in some fields. For domains 
-                        that include multiple matrices, such as Mobile ATT&CK, each matrix gets its own named sheet. Unlike the 
-                        STIX dataset, objects that have been revoked or deprecated are not included in the spreadsheets. 
+                        A citations sheet can be used to look up the in-text citations which appear in some fields. For domains
+                        that include multiple matrices, such as Mobile ATT&CK, each matrix gets its own named sheet. Unlike the
+                        STIX dataset, objects that have been revoked or deprecated are not included in the spreadsheets.
                     </p>
                     <div class="tip-box">
                         <p>
@@ -314,12 +314,41 @@
             </div>
 
             <!-- spreadsheets -->
-            <p class="mt-5">
-                <strong>Excel Spreadsheets representing the ATT&amp;CK dataset:</strong>
-            </p>
-            <div class="row panels mt-3 g-24">
-                {{filetree.filetree(parsed.excel_files)}}
+            {# Tabbed section for ATT&CK Excel files by version #}
+            {% if parsed.excel_files_by_version and parsed.excel_files_by_version|length > 0 %}
+            <div class="mt-4">
+              <h5 class="fw-bold mb-3" style="font-size:1.1rem;">ATT&CK Excel Files by Version</h5>
+              <ul class="nav nav-tabs mb-2" role="tablist">
+                {% set versions = parsed.excel_files_by_version.keys()|list %}
+                {% for version in versions %}
+                  {% if loop.first %}
+                    <li class="nav-item">
+                      <a class="nav-link active" id="tab-{{ version|replace('.', '-') }}" data-toggle="tab" href="#pane-{{ version|replace('.', '-') }}" role="tab" aria-controls="pane-{{ version|replace('.', '-') }}" aria-selected="true">
+                        {{ version }}
+                      </a>
+                    </li>
+                  {% else %}
+                    <li class="nav-item">
+                      <a class="nav-link" id="tab-{{ version|replace('.', '-') }}" data-toggle="tab" href="#pane-{{ version|replace('.', '-') }}" role="tab" aria-controls="pane-{{ version|replace('.', '-') }}" aria-selected="false">
+                        {{ version }}
+                      </a>
+                    </li>
+                  {% endif %}
+                {% endfor %}
+              </ul>
+              <div class="tab-content card card-body p-3" style="background: #f8f9fa;">
+                {% for version in versions %}
+                  {% set domains = parsed.excel_files_by_version[version] %}
+                  <div class="tab-pane fade {% if loop.first %}show active{% endif %}" id="pane-{{ version|replace('.', '-') }}" role="tabpanel" aria-labelledby="tab-{{ version|replace('.', '-') }}">
+                    <div class="fw-semibold mb-2" style="font-size:1rem;">Version {{ version[1:] }}</div>
+                    <div class="row panels mt-2 g-24">
+                      {{ filetree.filetree(domains) }}
+                    </div>
+                  </div>
+                {% endfor %}
+              </div>
             </div>
+            {% endif %}
 
             <!-- converter -->
             <div class="mt-5">
@@ -329,8 +358,8 @@
                     <i class="fa-solid fa-up-right-from-square"></i>
                 </a>
                 <p class="mt-2">
-                    This folder within the pip module contains an additional module for converting ATT&amp;CK STIX data 
-                    to Excel spreadsheets. It also provides a means to access ATT&amp;CK data as Pandas DataFrames for data analysis. 
+                    This folder within the pip module contains an additional module for converting ATT&amp;CK STIX data
+                    to Excel spreadsheets. It also provides a means to access ATT&amp;CK data as Pandas DataFrames for data analysis.
                 </p>
             </div>
         </div>

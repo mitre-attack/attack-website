@@ -40,6 +40,10 @@ domains = [
     {"name": "pre-attack", "location": STIX_LOCATION_PRE, "alias": "PRE-ATT&CK", "deprecated": True},
 ]
 
+# Directory for attack version archives
+default_archive_dir = "attack-version-archives"
+ATTACK_VERSION_ARCHIVES = os.getenv("ATTACK_VERSION_ARCHIVES", default_archive_dir)
+
 # banner for the website
 default_banner_message = "This is a custom instance of the MITRE ATT&CK Website. The official website can be found at <a href='https://attack.mitre.org'>attack.mitre.org</a>."
 BANNER_ENABLED = os.getenv("BANNER_ENABLED", True)

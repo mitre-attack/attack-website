@@ -1,7 +1,5 @@
 import shutil
 
-import colorama
-
 # Not found constant
 NOT_FOUND = -1
 

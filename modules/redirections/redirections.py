@@ -1,8 +1,6 @@
 import os
 import uuid
 
-from loguru import logger
-
 from modules import site_config, util
 
 from . import redirections_config
@@ -78,66 +76,6 @@ def generate_markdown_files(domain):
                     generate_obj_redirect(
                         redirections_config.mobile_redirect_dict[types[0]], new_attack_id, old_attack_id, domain
                     )
-
-    generate_tactic_redirects(ms, domain)
-    generate_datasource_redirects(ms, domain)
-
-
-def generate_tactic_redirects(ms, domain):
-    """Responsible for generating tactic redirects markdown."""
-    tactics = util.stixhelpers.get_all_of_type(ms[domain], ["x-mitre-tactic"])
-
-    data = {}
-    for tactic in tactics:
-        attack_id = util.buildhelpers.get_attack_id(tactic)
-
-        if attack_id:
-            clean_tactic_name = tactic["name"].replace(" ", "_")
-            old_site_prefix = redirections_config.redirects_paths[domain]
-            redirect_title = f"{clean_tactic_name}-{domain}-{uuid.uuid1()}"
-
-            data = {
-                "title": redirect_title,
-                "from": f"{old_site_prefix}{clean_tactic_name}",
-                "to": f"/tactics/{attack_id}",
-            }
-
-        subs = site_config.redirect_md_index.substitute(data)
-
-        with open(
-            os.path.join(site_config.redirects_markdown_path, data["title"] + ".md"), "w", encoding="utf8"
-        ) as md_file:
-            md_file.write(subs)
-
-
-def generate_datasource_redirects(ms, domain):
-    """Responsible for generating data source redirects markdown."""
-    datasources = util.stixhelpers.get_all_of_type(ms[domain], ["x-mitre-data-source"])
-
-    data = {}
-    for ds in datasources:
-        ext_refs = ds.get("external_references")
-        if ext_refs:
-            i = util.buildhelpers.find_index_id(ext_refs)
-            if i != util.buildhelpers.util_config.NOT_FOUND:
-                attack_id = ext_refs[i]["external_id"]
-                invalid_url = "data-sources" in ext_refs[i]["url"]
-
-                if not invalid_url:
-                    continue  # skip this datasource
-
-                ds_redirect_title = f"{attack_id}-{uuid.uuid1()}"
-                data = {
-                    "title": ds_redirect_title,
-                    "from": f"data-sources/{attack_id}",
-                    "to": f"/datasources/{attack_id}",
-                }
-
-        subs = site_config.redirect_md_index.substitute(data)
-        with open(
-            os.path.join(site_config.redirects_markdown_path, data["title"] + ".md"), "w", encoding="utf8"
-        ) as md_file:
-            md_file.write(subs)
 
 
 def generate_obj_redirect(redirect_link, new_attack_id, old_attack_id, domain):

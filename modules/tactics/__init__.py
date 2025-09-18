@@ -1,6 +1,6 @@
-from . import tactics
-from . import tactics_config
 import json
+
+from . import tactics, tactics_config
 
 
 def get_priority():
@@ -20,13 +20,6 @@ def get_menu():
             {"display_name": "ICS", "url": "/tactics/ics/", "external_link": False, "children": []},
         ],
     }
-
-
-# TODO resolve infinite redirect loop when run locally. Needs further testing before code removal.
-def get_redirections():
-    with open(tactics_config.tactics_redirection_location, "r", encoding="utf8") as json_redirections:
-        return json.load(json_redirections)
-    return []
 
 
 def run_module():

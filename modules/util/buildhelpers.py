@@ -1,12 +1,9 @@
 import datetime
 import json
-import math
 import os
 import re
 import shutil
-import string
 import sys
-import uuid
 
 import bleach
 from loguru import logger
@@ -18,7 +15,7 @@ from . import relationshipgetters, util_config
 
 
 def timestamp():
-    """This method is here to return a timestamp."""
+    """Return a timestamp."""
     timestamp = datetime.datetime.now().strftime("%H:%M:%S")
     return timestamp
 
@@ -56,8 +53,10 @@ def get_first_last_seen_dates(obj):
 
 
 def get_first_last_seen_citations(obj):
-    """Given an object, return the first seen and last seen citations. This function generates
-    the descriptions/citations for the first/last seen fields."""
+    """Return the first seen and last seen citations of an object.
+
+    This function generates the descriptions/citations for the first/last seen fields.
+    """
     data = {}
     if obj.get("x_mitre_first_seen_citation"):
         data["first_seen_citation"] = obj.get("x_mitre_first_seen_citation")
@@ -75,7 +74,7 @@ def format_date_as_month_year(date):
 
 
 def find_index_id(ext_ref):
-    """This method will search for the index of the external_id in the external reference list."""
+    """Search for the index of the external_id in the external reference list."""
     count = 0
     flag = True
     while count < len(ext_ref) and flag:
@@ -132,8 +131,7 @@ def update_reference_list(reference_list, obj):
 
 
 def get_reference_set(reflist):
-    """This function retrieves the unique set of references in the given list of descriptions and
-    returns them in string format to be displayed as citations."""
+    """Retrieve the unique set of references in the given list of descriptions and return them in string format to be displayed as citations."""
     p = re.compile(r"\(Citation: (.*?)\)")
     citations = {}
     for c in reflist:
@@ -146,7 +144,7 @@ def get_reference_set(reflist):
 
 
 def get_alias_data(alias_list, ext_refs):
-    """This function generates the Alias Description section for the pages."""
+    """Generate the Alias Description section for the pages."""
     if not alias_list:
         return []
 
@@ -228,7 +226,7 @@ def get_technique_table_data(tactic, techniques_list):
                     sub_data["name"] = subtechnique["object"]["name"]
                     sub_attack_id = get_attack_id(subtechnique["object"])
                     if sub_attack_id:
-                        if not "." in sub_attack_id:
+                        if "." not in sub_attack_id:
                             raise Exception(f"{attack_id} subtechnique's attackID '{sub_attack_id}' is malformed")
                         sub_data["id"] = sub_attack_id.split(".")[1]
                         sub_data["descr"] = subtechnique["object"]["description"]
@@ -296,7 +294,6 @@ def get_side_nav_domains_data(side_nav_title, elements_list):
 
 def get_side_menu_data(side_nav_title, path_prefix, elements_list, domain=None):
     """Responsible for generating the links that are located on the left side of pages for desktop clients."""
-
     elements_data = []
 
     for element in elements_list:
@@ -426,7 +423,7 @@ def technique_used_helper(technique_list, technique, reference_list, inherited=F
 
         # Check if parent ID was added by sub-technique
         # parent technique will be marked as not used
-        elif technique_list[attack_id]["technique_used"] == False:
+        elif not technique_list[attack_id]["technique_used"]:
             # Include as a technique used
             technique_list[attack_id]["technique_used"] = True
 
@@ -505,7 +502,6 @@ domain_name_map = {"enterprise-attack": "Enterprise", "mobile-attack": "Mobile",
 
 def get_navigator_layers(name, attack_id, obj_type, rel_type, version, techniques_used, inheritance=False):
     """Generate the Enterprise, Mobile, and ICS Navigator JSON layers for the given object."""
-
     # Generate Enterprise base layer
     enterprise_layer = build_base_layer("enterprise-attack", name, obj_type, rel_type, attack_id, version, inheritance)
 
@@ -677,31 +673,6 @@ def add_platform_path(platforms):
         platform["path"] = get_platform_path(platform["name"])
 
     return platforms
-
-
-def print_start(name):
-    """Given a name and a time, display current progress."""
-    number_of_hyphens = 40
-    name_space = 22
-
-    hyphens = "-" * number_of_hyphens
-
-    sys.stdout.write(f"\r{name: <{name_space}} : {hyphens} Running...")
-
-    sys.stdout.flush()
-
-
-def print_end(name, start_time, end_time):
-    """Given a name and a time, display current progress."""
-    number_of_hyphens = 40
-    name_space = 22
-
-    hyphens = "-" * number_of_hyphens
-
-    # spaces here because we need to overwrite the word "running"
-    sys.stdout.write(f"\r{name: <{name_space}} : {hyphens} {end_time - start_time:.2f}s      \n")
-
-    sys.stdout.flush()
 
 
 def filter_techniques_by_platform(tech_list, platforms):

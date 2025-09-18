@@ -9,9 +9,7 @@ from . import tactics_config
 
 
 def generate_tactics():
-    """Responsible for verifying tactic directory and generating tactic
-    index markdown
-    """
+    """Responsible for verifying tactic directory and generating tactic index markdown."""
     # Create content pages directory if does not already exist
     util.buildhelpers.create_content_pages_dir()
 
@@ -21,12 +19,6 @@ def generate_tactics():
     # Verify if directory exists
     if not os.path.isdir(tactics_config.tactics_markdown_path):
         os.mkdir(tactics_config.tactics_markdown_path)
-
-    # TODO resolve infinite redirect loop when run locally. Needs further testing before code removal.
-    # Generate redirections
-    util.buildhelpers.generate_redirections(
-        redirections_filename=tactics_config.tactics_redirection_location, redirect_md=site_config.redirect_md
-    )
 
     # To verify if a technique was generated
     tactic_generated = False
@@ -62,9 +54,7 @@ def generate_tactics():
 
 
 def generate_domain_markdown(domain, techniques, tactics, side_nav_data, notes, deprecated=None):
-    """Generate tactic index markdown for each domain and generates
-    shared data for tactics
-    """
+    """Generate tactic index markdown for each domain and generates shared data for tactics."""
     if tactics[domain]:
         # Write out the markdown file for overview of domain
         data = {"domain": domain.split("-")[0], "tactics_list_len": str(len(tactics[domain]))}
@@ -97,7 +87,7 @@ def generate_domain_markdown(domain, techniques, tactics, side_nav_data, notes, 
 
 
 def generate_tactic_md(tactic, domain, tactic_list, techniques, side_nav_data, notes):
-    """Generate markdown for given tactic"""
+    """Generate markdown for given tactic."""
     attack_id = util.buildhelpers.get_attack_id(tactic)
 
     # Add if attack id is found
@@ -152,9 +142,7 @@ def generate_tactic_md(tactic, domain, tactic_list, techniques, side_nav_data, n
 
 
 def get_domain_table_data(tactic_list):
-    """Given a tactic list, returns an array of jsons with tactic name, id
-    and their description
-    """
+    """Given a tactic list, returns an array of jsons with tactic name, id and their description."""
     tactic_table = []
 
     # Set up the tactics table for a domain
@@ -173,9 +161,7 @@ def get_domain_table_data(tactic_list):
 
 
 def get_techniques_of_tactic(tactic, techniques):
-    """Given a tactic and a full list of techniques, return techniques that
-    appear inside of tactic
-    """
+    """Given a tactic and a full list of techniques, return techniques that appear inside of tactic."""
     techniques_list = []
 
     for technique in techniques:

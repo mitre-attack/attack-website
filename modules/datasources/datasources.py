@@ -1,12 +1,12 @@
-from collections.abc import Iterable
 import json
 import os
+from collections.abc import Iterable
 
 from modules import util
 from modules.util import relationshipgetters as rsg
 
-from . import datasources_config
 from .. import site_config
+from . import datasources_config
 
 
 def generate_datasources():
@@ -153,7 +153,7 @@ def get_datasources_side_nav_data(datasources):
                 attack_id = util.buildhelpers.get_attack_id(technique_rel["object"])
                 if attack_id:
                     domain = technique_to_domain[attack_id].split("-")[0]
-                    if not domain in domains_of_datacomponent:
+                    if domain not in domains_of_datacomponent:
                         domains_of_datacomponent.append(domain)
 
         return domains_of_datacomponent
@@ -180,7 +180,7 @@ def get_datasources_side_nav_data(datasources):
                             domains_of_datacomponent = get_domains_of_datacomponent(datacomponent)
                             # Add missing domains to data source
                             for domain in domains_of_datacomponent:
-                                if not domain in domains_of_datasource:
+                                if domain not in domains_of_datasource:
                                     domains_of_datasource.append(domain)
 
                             datacomponent_data = {
@@ -296,7 +296,7 @@ def get_datacomponents_data(datasource, reference_list):
                         attack_id = util.buildhelpers.get_attack_id(technique_rel["object"])
                         if attack_id:
                             domain = technique_to_domain[attack_id].split("-")[0]
-                            if not domain in domains_of_datacomponent:
+                            if domain not in domains_of_datacomponent:
                                 domains_of_datacomponent.append(domain)
 
                         technique_data = []
@@ -333,7 +333,7 @@ def get_domains_of_datacomponent(datacomponent, techniques_detected_by_datacompo
             attack_id = util.buildhelpers.get_attack_id(technique_rel["object"])
             if attack_id:
                 domain = technique_to_domain[attack_id].split("-")[0]
-                if not domain in domains_of_datacomponent:
+                if domain not in domains_of_datacomponent:
                     domains_of_datacomponent.append(domain)
 
     return domains_of_datacomponent
@@ -341,7 +341,6 @@ def get_domains_of_datacomponent(datacomponent, techniques_detected_by_datacompo
 
 def get_datasources_domain(datasource):
     """Responsible for generating the list of domains for the datasources and datacomponents."""
-
     # Get data components of data source
     datacomponent_of = rsg.get_datacomponent_of()
     technique_to_domain = rsg.get_technique_to_domain()
@@ -363,7 +362,7 @@ def get_datasources_domain(datasource):
                         )
                         # Add missing domains to data source
                         for domain in domains_of_datacomponent:
-                            if not domain in domains_of_datasource:
+                            if domain not in domains_of_datasource:
                                 domains_of_datasource.append(domain)
 
     return domains_of_datasource
