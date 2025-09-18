@@ -141,6 +141,18 @@ def export_commit(commit: str, dest_path: str) -> None:
         tar.extractall(path=dest_path)
 
 
+def export_git_archive_to_file(commit: str, output_path: Path) -> None:
+    """Create a git archive file for the given commit."""
+    logger.info(f"Creating git archive for commit {commit} > {output_path}")
+    with open(output_path, "wb") as out:
+        subprocess.run(
+            ["git", "archive", "--format=tar.gz", commit],
+            stdout=out,
+            check=True,
+        )
+    logger.info(f"Git archive created: {output_path}")
+
+
 def deploy_previous_version(version_data):
     """
     Build a version of the site to /prev_versions_path.
@@ -384,13 +396,21 @@ def create_version_archive(version_data: dict, output_dir: str = "attack-version
 
     # main temp dir for extracted/cleaned contents
     with tempfile.TemporaryDirectory() as tmpdir:
-        export_commit(commit_to_use, tmpdir)
+        # dedicated temp dir for git archive tarball
+        with tempfile.TemporaryDirectory() as archive_tmpdir:
+            archive_tmp_path = Path(archive_tmpdir)
+            git_archive_name = f"website-{version_label}-git-archive.tar.gz"
+            git_archive_path = archive_tmp_path / git_archive_name
+
+            export_git_archive_to_file(commit_to_use, git_archive_path)
+            extract_tar_gz(git_archive_path, tmpdir)
 
         remove_unwanted_files(tmpdir)
         process_html_files(version_data, tmpdir, is_current=False)
         process_search_files(version_data, tmpdir)
 
         create_tar_gz(tmpdir, cleaned_archive_path)
+
     logger.info(f"--- Finished version {version_label} ---\n")
 
 
