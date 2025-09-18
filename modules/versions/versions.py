@@ -166,7 +166,11 @@ def deploy_previous_version(version_data):
     vpath = version_name.split(".")[0]
     dest_path = os.path.join(versions_config.prev_versions_deploy_folder, vpath)
 
-    archive_dir = "attack-version-archives"
+    # Find the archive directory to use based on environment variable or command line argument
+    archive_dir = site_config.ATTACK_VERSION_ARCHIVES
+    if site_config.args.version_archive_dir:
+        archive_dir = site_config.args.version_archive_dir
+
     os.makedirs(archive_dir, exist_ok=True)
     archive_filename = f"website-{version_name}.tar.gz"
     archive_path = os.path.join(archive_dir, archive_filename)

@@ -131,6 +131,13 @@ def get_parsed_args():
         help="Forces application to exit with success status codes even if tests fail.",
     )
     parser.add_argument(
+        "--version-archive-dir",
+        type=str,
+        help=(
+            "If specified, sets the directory for the ATT&CK version archives. Defaults to attack-version-archives"
+        ),
+    )
+    parser.add_argument(
         "--banner",
         type=str,
         help=(
