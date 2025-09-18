@@ -1,7 +1,3 @@
-import os
-
-from modules import site_config
-
 module_name = "Versions"
 priority = 8.1
 
@@ -14,6 +10,5 @@ versions_templates_path = "modules/versions/templates/"
 prev_versions_path = "versions"
 prev_versions_deploy_folder = ""
 
-versions_repo = "https://github.com/mitre-attack/attack-website.git"
 versions_directory = "attack-versions"
 versions_md = "Title: Version History\nTemplate: versions/versions\nsave_as: resources/versions/index.html\ndata: "
