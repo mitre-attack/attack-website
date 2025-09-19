@@ -72,15 +72,16 @@ def deploy_current_version():
         version_data = json.load(f)["current"]
 
     version_path = version_data["name"].split(".")[0]
+    version_full_path = os.path.join(versions_config.prev_versions_deploy_folder, version_path)
 
-    os.makedirs(os.path.join(versions_config.prev_versions_deploy_folder, version_path), exist_ok=True)
+    os.makedirs(version_full_path, exist_ok=True)
     for item in os.listdir(site_config.web_directory):
         # skip versions directories when copying
         if item == "versions":
             continue
         # copy the current version into a preserved version
         src = os.path.join(site_config.web_directory, item)
-        dest = os.path.join(versions_config.prev_versions_deploy_folder, version_path, item)
+        dest = os.path.join(version_full_path, item)
         # copy depending on file type
         if os.path.exists(dest):
             print(f"error copying {src}: path {dest} already exists | {item}")
@@ -90,7 +91,11 @@ def deploy_current_version():
             shutil.copy(src, dest)
 
     # run archival scripts
-    archive(version_data=version_data, is_current=True)
+    archive(
+        version_data=version_data,
+        version_path=version_full_path,
+        is_current=True,
+    )
 
 
 def create_tar_gz(source_dir, output_path):
@@ -366,19 +371,25 @@ def remove_unwanted_files(extract_dir):
     logger.info("Cleaning complete.")
 
 
-def archive(version_data: dict, is_current: bool = False):
+def archive(version_data: dict, version_path: str, is_current: bool = False):
     """Post-process an exported version folder.
 
     – remove unnecessary files,
     – rewrite all HTML files (parallel),
     – tweak settings.js / search_bundle.js (kept from the old code).
     """
-    version = version_data["name"].split(".")[0]
-    version_path = os.path.join(versions_config.prev_versions_deploy_folder, version)
-
     remove_unwanted_files(extract_dir=version_path)
     process_html_files(version_data, version_path, is_current)
     process_search_files(version_data, version_path)
+    fix_permissions(version_path)
+
+
+def fix_permissions(root_dir):
+    """Set directories to 755 and files to 644 recursively."""
+    for dirpath, dirnames, filenames in os.walk(root_dir):
+        os.chmod(dirpath, 0o755)
+        for filename in filenames:
+            os.chmod(os.path.join(dirpath, filename), 0o644)
 
 
 def create_version_archive(version_data: dict, output_dir: str = "attack-version-archives"):
@@ -409,9 +420,7 @@ def create_version_archive(version_data: dict, output_dir: str = "attack-version
             export_git_archive_to_file(commit_to_use, git_archive_path)
             extract_tar_gz(git_archive_path, tmpdir)
 
-        remove_unwanted_files(tmpdir)
-        process_html_files(version_data, tmpdir, is_current=False)
-        process_search_files(version_data, tmpdir)
+        archive(version_data=version_data, version_path=tmpdir, is_current=False)
 
         create_tar_gz(tmpdir, cleaned_archive_path)
 
