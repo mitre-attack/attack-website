@@ -215,6 +215,15 @@ def datacomponent_of():
     return datacomponent_of
 
 
+def get_datacomponent_from_list(datacomponent_stix_id):
+    """Return data component object with given stix id."""
+    datacomponents = relationshipgetters.get_datacomponent_list()
+    for dc in datacomponents:
+        if dc["id"] == datacomponent_stix_id:
+            return dc
+    return None
+
+
 def get_datasource_from_list(datasource_stix_id):
     """Return data source object with given data source stix id."""
     datasources = relationshipgetters.get_datasource_list()
@@ -233,10 +242,12 @@ def datasource_of():
     datasource_of = {}
     for datacomponent in datacomponents:
         if not datasource_of.get(datacomponent["id"]):
-            datasource = get_datasource_from_list(datacomponent["x_mitre_data_source_ref"])
+            data_source_stix_id = datacomponent.get("x_mitre_data_source_ref", None)
+            if data_source_stix_id:
+                datasource = get_datasource_from_list(data_source_stix_id)
 
-            if datasource:
-                datasource_of[datacomponent["id"]] = datasource
+                if datasource:
+                    datasource_of[datacomponent["id"]] = datasource
 
     return datasource_of
 
@@ -245,6 +256,17 @@ def get_analytic_from_list(analytic_stix_id):
     """Return analytic object with given stix id."""
     analytics = relationshipgetters.get_analytic_list()
     return next((analytic for analytic in analytics if analytic["id"] == analytic_stix_id), None)
+
+
+def get_related_detection_strategies(analytic_stix_id):
+    """Return detection strategies referencing this analytic."""
+    detection_strategies = relationshipgetters.get_detectionstrategy_list()
+    references = []
+    for det in detection_strategies:
+        analytic_refs = det.get("x_mitre_analytic_refs", [])
+        if analytic_stix_id in analytic_refs:
+            references.append(det)
+    return references
 
 
 def add_replace_or_ignore(stix_objs, attack_id_objs, obj_in_question):

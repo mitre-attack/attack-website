@@ -266,10 +266,10 @@ def generate_data_for_md(technique_dict, technique, tactic_list, is_sub_techniqu
                 technique_dict["eff_perms"] = ", ".join(technique["x_mitre_effective_permissions"])
 
             # Get data sources and components
-            (
-                technique_dict["datasources"],
-                technique_dict["show_descriptions"],
-            ) = get_datasources_and_components_of_technique(technique, reference_list)
+            # (
+            #     technique_dict["datasources"],
+            #     technique_dict["show_descriptions"],
+            # ) = get_datasources_and_components_of_technique(technique, reference_list)
 
             # Get if technique supports remote
             if technique.get("x_mitre_remote_support"):

@@ -67,9 +67,10 @@ def linkbyid_check():
 
     data_component_stix_id_to_datasource_attack_id = {}
     for data_component in all_data_components:
-        data_source_stix_id = data_component["x_mitre_data_source_ref"]
-        data_source_attack_id = stix_id_to_attack_id[data_source_stix_id]
-        data_component_stix_id_to_datasource_attack_id[data_component["id"]] = data_source_attack_id
+        data_source_stix_id = data_component.get("x_mitre_data_source_ref", None)
+        if data_source_stix_id:
+            data_source_attack_id = stix_id_to_attack_id[data_source_stix_id]
+            data_component_stix_id_to_datasource_attack_id[data_component["id"]] = data_source_attack_id
 
     # when searching for these regexes, be sure to ignore the case
     old_linkbyid_syntax = r"{{LinkById\|(.*?)}}"
