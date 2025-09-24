@@ -13,11 +13,13 @@ techniques_used_by_groups = {}
 techniques_used_by_campaigns = {}
 techniques_targeting_assets = {}
 techniques_detected_by_datacomponent = {}
+techniques_detected_by_detectionstrategy = {}
 groups_using_tool = {}
 groups_using_malware = {}
 mitigation_mitigates_techniques = {}
 technique_mitigated_by_mitigation = {}
 datacomponents_detecting_technique = {}
+detectionstrategies_detecting_technique = {}
 tools_using_technique = {}
 malware_using_technique = {}
 groups_using_technique = {}
@@ -47,6 +49,8 @@ datacomponent_list = []
 mitigation_list = []
 campaign_list = []
 asset_list = []
+analytic_list = []
+detectionstrategy_list = []
 
 technique_to_domain = {}
 
@@ -169,6 +173,24 @@ def get_datacomponents_detecting_technique():
         datacomponents_detecting_technique = rsh.datacomponents_detecting_technique(get_srcs())
 
     return datacomponents_detecting_technique
+
+
+def get_techniques_detected_by_detectionstrategy():
+    global techniques_detected_by_detectionstrategy
+
+    if not techniques_detected_by_detectionstrategy:
+        techniques_detected_by_detectionstrategy = rsh.techniques_detected_by_detectionstrategy(get_srcs())
+
+    return techniques_detected_by_detectionstrategy
+
+
+def get_detectionstrategies_detecting_technique():
+    global detectionstrategies_detecting_technique
+
+    if not detectionstrategies_detecting_technique:
+        detectionstrategies_detecting_technique = rsh.detectionstrategy_detecting_technique(get_srcs())
+
+    return detectionstrategies_detecting_technique
 
 
 def get_groups_using_tool():
@@ -463,6 +485,26 @@ def get_asset_list():
         asset_list = get_resources()["assets"]
 
     return asset_list
+
+
+def get_detectionstrategy_list():
+    """detection strategy list getter"""
+    global detectionstrategy_list
+
+    if not detectionstrategy_list:
+        detectionstrategy_list = get_resources()["detectionstrategies"]
+
+    return detectionstrategy_list
+
+
+def get_analytic_list():
+    """analytic list getter"""
+    global analytic_list
+
+    if not analytic_list:
+        analytic_list = get_resources()["analytics"]
+
+    return analytic_list
 
 
 def get_technique_to_domain():

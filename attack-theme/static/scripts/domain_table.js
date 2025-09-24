@@ -1,7 +1,7 @@
 // this function filters table rows based on the selection
 function filter_row(selected) {
     let col_index = 3
-    const rows = document.querySelectorAll("#ds-table tbody tr");
+    const rows = document.querySelectorAll("#domain-sort-table tbody tr");
     let count = 0;
     rows.forEach((row) => {
         let row_count = 0
@@ -25,8 +25,8 @@ function filter_row(selected) {
             count = count + 1;
         }
     })
-    let filter_count = document.querySelector(".table-object-count")
-    filter_count.innerHTML = `Data Sources: ${count}`
+    let filter_count = document.querySelector(".table-object-count .total-count");
+    filter_count.innerHTML = `${count}`;
 }
 
 $(document).ready(function() {
@@ -61,7 +61,7 @@ function showDomain() {
 
 // this function sorts the table based on either ID or Name
 function sortTable(col_no) {
-    let table = document.getElementById("ds-table");
+    let table = document.getElementById("domain-sort-table");
     let direction = "asc";
     let table_switching = true;
     let asc_direction = false;

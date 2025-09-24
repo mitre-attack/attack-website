@@ -340,6 +340,21 @@ def parent_technique_of(srcs):
     """
     return get_related(srcs, "attack-pattern", "subtechnique-of", "attack-pattern")
 
+# technique:detection strategy
+def techniques_detected_by_detectionstrategy(srcs):
+    """Return detectionstrategy_id => {technique, relationship} for each technique detected by detection strategy.
+
+    srcs should be an array of memorystores for enterprise, mobile, and ics
+    """
+    return get_related(srcs, "x-mitre-detection-strategy", "detects", "attack-pattern")
+
+
+def detectionstrategy_detecting_technique(srcs):
+    """Return technique => {detection strategy, relationship} for each detection strategy decting a technique.
+
+    srcs should be an array of memorystores for enterprise, mobile, and ics
+    """
+    return get_related(srcs, "x-mitre-detection-strategy", "detects", "attack-pattern", reverse=True)
 
 def get_objects_using_notes(srcs):
     """Build note object mapping.

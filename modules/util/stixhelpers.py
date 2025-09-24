@@ -241,6 +241,12 @@ def datasource_of():
     return datasource_of
 
 
+def get_analytic_from_list(analytic_stix_id):
+    """Return analytic object with given stix id."""
+    analytics = relationshipgetters.get_analytic_list()
+    return next((analytic for analytic in analytics if analytic["id"] == analytic_stix_id), None)
+
+
 def add_replace_or_ignore(stix_objs, attack_id_objs, obj_in_question):
     """Add if object does not already exist.
 
@@ -366,6 +372,10 @@ def grab_resources(ms):
     # Generates list of assets
     asset_list = get_domain_resources(["x-mitre-asset"])
 
+    datacomponent_list = get_domain_resources(["x-mitre-data-component"])
+    detectionstrategy_list = get_domain_resources(["x-mitre-detection-strategy"])
+    analytic_list = get_domain_resources(["x-mitre-analytic"])
+
     # Generates list of relationships
     rel_list = []
     for domain in site_config.domains:
@@ -385,6 +395,9 @@ def grab_resources(ms):
         "mitigations": coa_list,
         "campaigns": campaign_list,
         "assets": asset_list,
+        "datacomponents": datacomponent_list,
+        "analytics": analytic_list,
+        "detectionstrategies": detectionstrategy_list,
     }
     return resources
 
@@ -440,6 +453,7 @@ def get_contributors(ms):
             "x-mitre-data-source",
             "x-mitre-tactic",
             "x-mitre-asset",
+            "x-mitre-detection-strategy",
         ]
         src = ms[domain["name"]]
         obj_list = []

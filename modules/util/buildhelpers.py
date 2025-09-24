@@ -104,6 +104,10 @@ def get_domain_name(object):
     return object.get("x_mitre_domains")
 
 
+def get_domain_display_name(domain):
+    return domain_name_map.get(domain, domain)
+
+
 def update_reference_list(reference_list, obj):
     """Given a reference list and an object, update the reference list with the external references found in the object."""
     if obj.get("external_references"):

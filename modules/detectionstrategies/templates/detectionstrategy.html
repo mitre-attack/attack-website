@@ -1,0 +1,170 @@
+{% extends "general/two-column.html" %}
+
+{% import 'macros/deprecated.html' as deprecated %}
+{% import 'macros/notes.html' as notes %}
+{% import 'macros/citations.html' as citations %}
+{% import 'macros/versioning.html' as versioning %}
+{% import 'macros/navigation.html' as navigation %}
+{% import 'macros/clean_output.html' as clean_output %}
+
+{% set parsed = page.data | from_json %}
+{% set title = parsed.name + ", Detection Strategy " + parsed.attack_id + " | MITRE ATT&CK&reg;" -%}
+{% set active_page = "detectionstrategies" -%}
+
+{% block head %}
+    {{ super () }}
+    {% if parsed.deprecated %}
+        <meta name="robots" content="noindex, nofollow">
+    {% endif %}
+{%  endblock %}
+
+{% block innerleft %}
+<!--stop-indexing-for-search-->
+<div id="v-tab" role="tablist" aria-orientation="vertical" class="h-100">
+        {{ navigation.sidenav(parsed.sidebar_data, output_file) }}
+    </div>
+<!--start-indexing-for-search-->
+{% endblock %}
+
+{% block innerright %}
+{{ super () }}
+
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/">Home</a></li>
+        <li class="breadcrumb-item"><a href="/detectionstrategies/">Detection Strategies</a></li>
+        <li class="breadcrumb-item">{{ parsed.name }}</li>
+    </ol>
+
+    <div class="tab-pane fade show active" id="v-{{pages.title}}" role="tabpanel" aria-labelledby="v-{{pages.title}}-tab"></div>
+    
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="jumbotron jumbotron-fluid">
+                <div class="container-fluid">
+                    <h1>
+                        {{ parsed.name }}
+                    </h1>
+
+                    {% if parsed.deprecated %}
+                        {{ deprecated.deprecated("This detection strategy has been deprecated.") }}
+                    {% else %}
+                        <div class="row">
+                            <div class="col-md-8">
+                                {% if parsed.technique_detected %}
+                                    <h4>
+                                        Technique Detected:&nbsp;
+                                        <a href="{{parsed.technique_detected.url}}">
+                                            {{parsed.technique_detected.name}} ({{parsed.technique_detected.attack_id}})
+                                        </a>
+                                    </h4>
+                                    {% if parsed.technique_detected.detects %}
+                                        <div class="description-body">
+                                            {{clean_output.stixToHTML(parsed.technique_detected.detects, parsed.citations)}}
+                                        </div>
+                                    {% endif %}
+                                {% endif %}
+                                {% if parsed.notes %}
+                                    {{ notes.notes_section(parsed.notes) }}
+                                {% endif %}
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card">
+                                    <div class="card-body">
+                                        {% if parsed.attack_id %}
+                                            <div class="card-data"><span class="h5 card-title">ID:</span> {{parsed.attack_id}}</div>
+                                        {% endif %}
+                                        {% if parsed.domains %}
+                                            <div class="row card-data">
+                                                <div class="col-md-12">
+                                                    <span class="h5 card-title">Domains</span>: {{ parsed.domains|join(", ") }}
+                                                </div>
+                                            </div>
+                                        {% endif %}
+                                        {% if parsed.analytic_ids %}
+                                            <div class="row card-data">
+                                                <div class="col-md-12">
+                                                    <span class="h5 card-title">Analytics</span>: {{ parsed.analytic_ids|join(", ") }}
+                                                </div>
+                                            </div>
+                                        {% endif %}
+                                        {% if parsed.contributors %}
+                                            <div class="row card-data">
+                                                <div class="col-md-12">
+                                                    <span class="h5 card-title">Contributors</span>: {{ parsed.contributors|join("; ") }}
+                                                </div>
+                                            </div>
+                                        {% endif %}
+                                        {% if parsed.version %}
+                                            <div class="row card-data">
+                                                <div class="col-md-12">
+                                                    <span class="h5 card-title">Version</span>: {{ parsed.version }}
+                                                </div>
+                                            </div>
+                                        {% endif %}
+                                        {% if parsed.created %}
+                                            <div class="row card-data">
+                                                <div class="col-md-12">
+                                                    <span class="h5 card-title">Created</span>: {{ parsed.created }}
+                                                </div>
+                                            </div>
+                                        {% endif %}
+                                        {% if parsed.modified %}
+                                            <div class="row card-data">
+                                                <div class="col-md-12">
+                                                    <span class="h5 card-title">Last Modified</span>: {{ parsed.modified }}
+                                                </div>
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                {% if parsed.versioning_feature %}
+                                    {{ versioning.permalink_button(output_file, parsed.attack_id)}}
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        {% if parsed.analytics %}
+                            <h2 class="pt-3" id="analytics">Analytics</h2>
+                            <div class="tables-mobile">
+                                <table class="table table-bordered table-alternate mt-2">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Platform</th>
+                                            <th scope="col">ID</th>
+                                            <th scope="col">Detection Statement</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for platform, analytics in parsed.analytics.items() %}
+                                            {% for analytic in analytics %}
+                                            <tr>
+                                                {% if loop.first %}
+                                                    <td rowspan="{{ analytics|length }}">{{ platform }}</td>
+                                                {% endif %}
+                                                <td><a href="{{ analytic.url }}">{{ analytic.id }}</a></td>
+                                                <td>{{ analytic.description }}</td>
+                                            </tr>
+                                            {% endfor %}
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        {% endif %}
+
+                        {{ citations.reference_section(parsed.citations) }}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    <!--SCRIPTS-->
+    <script src="/theme/scripts/sidebar-load-all.js"></script>
+    <script src="/theme/scripts/bootstrap-tourist.js"></script>
+    <script src="/theme/scripts/settings.js"></script>
+    <script src="/theme/scripts/tour/tour-relationships.js"></script>
+{% endblock %}
