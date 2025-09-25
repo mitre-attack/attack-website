@@ -1,5 +1,5 @@
 // replaced by versions feature
-site_base_url = ""
+site_base_url = "/versions/v3"
 
 $.ajax({
   url: site_base_url + "/index.json",

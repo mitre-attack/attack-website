@@ -19,13 +19,13 @@
         <meta charset='utf-8'>
         <meta name='viewport' content='width=device-width, initial-scale=1,shrink-to-fit=no'>
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <link rel='shortcut icon' href="/versions/v17/theme/favicon.ico" type='image/x-icon'>
+        <link rel='shortcut icon' href='/versions/v17/theme/favicon.ico' type='image/x-icon'>
         <title>Scheduled Task/Job: Scheduled Task, Sub-technique T1053.005 - Enterprise | MITRE ATT&CK&reg;</title>
         <!-- USWDS CSS -->
         <!-- Bootstrap CSS -->
-        <link rel='stylesheet' href="/versions/v17/theme/style/vendors/bootstrap.min.css" />
-        <link rel='stylesheet' href="/versions/v17/theme/style/vendors/bootstrap-tourist.css" />
-        <link rel='stylesheet' href="/versions/v17/theme/style/vendors/bootstrap-select.min.css" />
+        <link rel='stylesheet' href='/versions/v17/theme/style/vendors/bootstrap.min.css' />
+        <link rel='stylesheet' href='/versions/v17/theme/style/vendors/bootstrap-tourist.css' />
+        <link rel='stylesheet' href='/versions/v17/theme/style/vendors/bootstrap-select.min.css' />
         <!-- Fontawesome CSS -->
         <link rel="stylesheet" href="/versions/v17/theme/style/vendors/fontawesome-6.5.1/css/fontawesome.min.css"/>
         <link rel="stylesheet" href="/versions/v17/theme/style/vendors/fontawesome-6.5.1/css/brands.min.css"/>
@@ -42,7 +42,7 @@
             <!-- header elements -->
             <header class="col px-0">
                     <nav class='navbar navbar-expand-lg navbar-dark position-static'>
-        <a class='navbar-brand' href="/versions/v17/"><img src="/versions/v17/theme/images/mitre_attack_logo.png" class="attack-logo"></a>
+        <a class='navbar-brand' href='/versions/v17/'><img src="/versions/v17/theme/images/mitre_attack_logo.png" class="attack-logo"></a>
         <button class='navbar-toggler' type='button' data-toggle='collapse' data-target='#navbarCollapse'
                 aria-controls='navbarCollapse' aria-expanded='false' aria-label='Toggle navigation'>
                 <span class='navbar-toggler-icon'></span>
@@ -133,26 +133,26 @@
                         </li>
                         <li class="nav-item dropdown">
                                 
-    <a class="nav-link dropdown-toggle" href="/versions/v17/resources/" id="navbarDropdown" role="button"
+    <a class="nav-link dropdown-toggle" href="/resources/" id="navbarDropdown" role="button"
     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         <b>Resources</b>
     </a>
     <div class="dropdown-menu " aria-labelledby="navbarDropdown">
-                <a class="dropdown-item" href="/versions/v17/resources/">Get Started</a>
-                <a class="dropdown-item" href="/versions/v17/resources/learn-more-about-attack/">Learn More about ATT&CK</a>
-                <a class="dropdown-item" href="/versions/v17/resources/attackcon/">ATT&CKcon</a>
-                <a class="dropdown-item" href="/versions/v17/resources/attack-data-and-tools/">ATT&CK Data & Tools</a>
-                <a class="dropdown-item" href="/versions/v17/resources/faq/">FAQ</a>
-                <a class="dropdown-item" href="/versions/v17/resources/engage-with-attack/contact/">Engage with ATT&CK</a>
+                <a class="dropdown-item" href="/resources/">Get Started</a>
+                <a class="dropdown-item" href="/resources/learn-more-about-attack/">Learn More about ATT&CK</a>
+                <a class="dropdown-item" href="/resources/attackcon/">ATT&CKcon</a>
+                <a class="dropdown-item" href="/resources/attack-data-and-tools/">ATT&CK Data & Tools</a>
+                <a class="dropdown-item" href="/resources/faq/">FAQ</a>
+                <a class="dropdown-item" href="/resources/engage-with-attack/contact/">Engage with ATT&CK</a>
                 <a class="dropdown-item" href="/resources/versions/">Version History</a>
                 <a class="dropdown-item" href="/resources/updates/">Updates</a>
-                <a class="dropdown-item" href="/versions/v17/resources/legal-and-branding/">Legal & Branding</a>
+                <a class="dropdown-item" href="/resources/legal-and-branding/">Legal & Branding</a>
     </div>
 
 
                         </li>
                         <li class="nav-item">
-                            <a href="/versions/v17/resources/engage-with-attack/benefactors/"  class="nav-link" ><b>Benefactors</b></a>
+                            <a href="/resources/engage-with-attack/benefactors/"  class="nav-link" ><b>Benefactors</b></a>
                         </li>
                         <li class="nav-item">
                                 <a href="https://medium.com/mitre-attack/" target="_blank" class="nav-link">
@@ -2511,7 +2511,7 @@
                 </td>
                 <!-- Add first data component here -->
                 <td> 
-                    <a href="/datasources/DS0017/#Command%20Execution">Command Execution</a>
+                    <a href="/versions/v17/datasources/DS0017/#Command%20Execution">Command Execution</a>
                 </td>
                     <td>
                                 <p>Monitor for commands being executed via schtasks or other utilities related to task scheduling.</p><p>Analytic 1 - Look for schtasks.exe execution with arguments indicative of task creation/modification.</p><p><code> sourcetype=WinEventLog:Powershell (EventCode=4104 OR command="schtasks.exe")| stats count by user host process_name command_line| where Image="schtasks.exe" OR command_line="<em>schtasks</em>"</code></p>
@@ -2527,7 +2527,7 @@
                 </td>
                 <!-- Add first data component here -->
                 <td> 
-                    <a href="/datasources/DS0022/#File%20Creation">File Creation</a>
+                    <a href="/versions/v17/datasources/DS0022/#File%20Creation">File Creation</a>
                 </td>
                     <td>
                                 <p>Monitor Windows Task Scheduler stores in %systemroot%\System32\Tasks for change entries related to scheduled tasks that do not correlate with known software, patch cycles, etc. In order to gain persistence, privilege escalation, or remote execution, an adversary may use the Windows Task Scheduler to schedule a command to be run at a specified time, date, and even host. Task Scheduler stores tasks as files in two locations - C:\Windows\Tasks (legacy) or C:\Windows\System32\Tasks. Accordingly, this analytic looks for the creation of task files in these two locations.</p><p>Analytic 1 - Look for new task files in %systemroot%\System32\Tasks.</p><p><code>((source="<em>WinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode="11") OR (sourcetype=WinEventLog:Security EventCode=4663)) (TargetFilename= "C:\Windows\System32\Tasks\</em>" OR TargetFilename  "C:\Windows\Tasks\*")  AND Image!= "C:\WINDOWS\system32\svchost.exe"</code></p>
@@ -2538,7 +2538,7 @@
                         <td></td>
                         <td></td>
                         <td>
-                            <a href="/datasources/DS0022/#File%20Modification">File Modification</a>
+                            <a href="/versions/v17/datasources/DS0022/#File%20Modification">File Modification</a>
                         </td>
                             <td>
                                         <p>Monitor Windows Task Scheduler stores in %systemroot%\System32\Tasks for change entries related to scheduled tasks that do not correlate with known software, patch cycles, etc.</p><p>Analytic 1 - Look for task file modifications with unusual parameters.</p><p><code> sourcetype=WinEventLog:Security (EventCode=4663 OR file_path="C:\Windows\System32\Tasks\*")| stats count by user host file_path action| where action="Write" OR action="Create"</code></p>
@@ -2554,7 +2554,7 @@
                 </td>
                 <!-- Add first data component here -->
                 <td> 
-                    <a href="/datasources/DS0029/#Network%20Traffic%20Flow">Network Traffic Flow</a>
+                    <a href="/versions/v17/datasources/DS0029/#Network%20Traffic%20Flow">Network Traffic Flow</a>
                 </td>
                     <td>
                                 <p>Monitor network data for uncommon data flows. Processes utilizing the network that do not normally have network communication or have never been seen before are suspicious. Look for RPC traffic after being mapped, which implies a destination port of at least 49152. If network inspection is available via packet captures or a NIDS, then traffic through the <code>ITaskSchedulerService</code> interface can be detected. Microsoft has a list of the possible methods that are implemented for the <code>ITaskSchedulerService</code> interface, which may be useful in differentiating read and query operations from creations and modifications.</p><p>When scheduled tasks are created remotely, Windows uses RPC (135/tcp) to communicate with the Task Scheduler on the remote machine. Once an RPC connection is established, the client communicates with the Scheduled Tasks endpoint, which runs within the service group netsvcs. With packet capture and the right packet decoders or byte-stream based signatures, remote invocations of these functions can be identified.Certain strings can be identifiers of the schtasks, by looking up the interface UUID of ITaskSchedulerService in different formats</p><ul><li>UUID <code>86d35949-83c9-4044-b424-db363231fd0c</code> (decoded)</li><li>Hex <code>49 59 d3 86 c9 83 44 40 b4 24 db 36 32 31 fd 0c</code> (raw)</li><li>ASCII <code>IYD@$621</code> (printable bytes only)</li></ul><p>This identifier is present three times during the RPC request phase. Any sensor that has access to the byte code as raw, decoded, or ASCII could implement an analytic.</p><p>Analytic 1 - Look for RPC traffic with ITaskSchedulerService interface usage.</p><p><code>sourcetype=Netflow OR sourcetype=PacketCapture OR sourcetype=WinEventLog:Security EventCode=5156 | search (dest_port=135 OR dest_port=5985 OR dest_port=5986) AND (protocol="tcp" OR protocol="udp")  AND (Image="taskeng.exe" OR Image="schtasks.exe")| stats count by src_ip dest_ip dest_port| where count &gt; threshold </code></p>
@@ -2570,7 +2570,7 @@
                 </td>
                 <!-- Add first data component here -->
                 <td> 
-                    <a href="/datasources/DS0009/#Process%20Creation">Process Creation</a>
+                    <a href="/versions/v17/datasources/DS0009/#Process%20Creation">Process Creation</a>
                 </td>
                     <td>
                                 <p>Monitor for newly constructed processes and/or command-lines that execute from the svchost.exe in Windows 10 and the Windows Task Scheduler taskeng.exe for older versions of Windows. <span onclick=scrollToRef('scite-232') id="scite-ref-232-a" class="scite-citeref-number" title="Loobeek, L. (2017, December 8). leoloobeek Status. Retrieved September 12, 2024."data-reference="Twitter Leoloobeek Scheduled Task"><sup><a href="https://x.com/leoloobeek/status/939248813465853953" target="_blank" data-hasqtip="231" aria-describedby="qtip-231">[232]</a></sup></span> If scheduled tasks are not used for persistence, then the adversary is likely to remove the task when the action is complete. Look for instances of <code> schtasks.exe </code> running as processes. The <code> command_line </code> field is necessary to disambiguate between types of schtasks commands. These include the flags <code>/create </code>,<code> /run</code>,<code> /query</code>,<code> /delete</code>,<code> /change</code>, and <code> /end</code>.</p><p>Detection of the creation or modification of Scheduled Tasks with a suspicious script, extension or user writable path. Attackers may create or modify Scheduled Tasks for the persistent execution of malicious code. This detection focuses at the same time on EventIDs 4688 and 1 with process creation (SCHTASKS) and EventID 4698, 4702 for Scheduled Task creation/modification event log.</p><p>Analytic 1 - New processes whose parent processes are svchost.exe or taskeng.exe</p><p><code> (source="<em>WinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode="1") OR (source="</em>WinEventLog:Security" EventCode="4688") AND (ParentImage="<em>svchost.exe</em>" OR ParentImage="<em>taskeng.exe</em>")</code></p><p>Analytic 2 - Scheduled Task Creation or Modification Containing Suspicious Scripts, Extensions or User Writable Paths</p><p><code>(        (source="<em>WinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode="1")         OR         (source="</em>WinEventLog:Security" EventCode="4688")         CommandLine="<em>SCHTASKS</em>"         (CommandLine="<em>/CREATE</em>" OR CommandLine="<em>/CHANGE</em>")    )     (        (            CommandLine="<em>.cmd</em>" OR             CommandLine="<em>.ps1</em>" OR             CommandLine="<em>.vbs</em>" OR             CommandLine="<em>.py</em>" OR             CommandLine="<em>.js</em>" OR             CommandLine="<em>.exe</em>" OR             CommandLine="<em>.bat</em>"        ) OR         (            CommandLine="<em>javascript</em>" OR             CommandLine="<em>powershell</em>" OR             CommandLine="<em>wmic</em>" OR             CommandLine="<em>rundll32</em>" OR             CommandLine="<em>cmd</em>" OR             CommandLine="<em>cscript</em>" OR             CommandLine="<em>wscript</em>" OR             CommandLine="<em>regsvr32</em>" OR             CommandLine="<em>mshta</em>" OR             CommandLine="<em>bitsadmin</em>" OR             CommandLine="<em>certutil</em>" OR             CommandLine="<em>msiexec</em>" OR             CommandLine="<em>javaw</em>"        ) OR         (            CommandLine="<em>%APPDATA%</em>" OR             CommandLine="<em>\AppData\Roaming</em>" OR             CommandLine="<em>%PUBLIC%</em>" OR             CommandLine="<em>C:\Users\Public</em>" OR             CommandLine="<em>%ProgramData%</em>" OR             CommandLine="<em>C:\ProgramData</em>" OR             CommandLine="<em>%TEMP%</em>" OR             CommandLine="<em>\AppData\Local\Temp</em>" OR             CommandLine="<em>\Windows\PLA\System</em>" OR             CommandLine="<em>\tasks</em>" OR             CommandLine="<em>\Registration\CRMLog</em>" OR             CommandLine="<em>\FxsTmp</em>" OR             CommandLine="<em>\spool\drivers\color</em>" OR             CommandLine="<em>\tracing</em>"        )    )</code></p>
@@ -2586,7 +2586,7 @@
                 </td>
                 <!-- Add first data component here -->
                 <td> 
-                    <a href="/datasources/DS0003/#Scheduled%20Job%20Creation">Scheduled Job Creation</a>
+                    <a href="/versions/v17/datasources/DS0003/#Scheduled%20Job%20Creation">Scheduled Job Creation</a>
                 </td>
                     <td>
                                 <p>Monitor for newly constructed scheduled jobs by enabling the "Microsoft-Windows-TaskScheduler/Operational" setting within the event logging service. <span onclick=scrollToRef('scite-233') id="scite-ref-233-a" class="scite-citeref-number" title="Satyajit321. (2015, November 3). Scheduled Tasks History Retention settings. Retrieved December 12, 2017."data-reference="TechNet Forum Scheduled Task Operational Setting"><sup><a href="https://social.technet.microsoft.com/Forums/en-US/e5bca729-52e7-4fcb-ba12-3225c564674c/scheduled-tasks-history-retention-settings?forum=winserver8gen" target="_blank" data-hasqtip="232" aria-describedby="qtip-232">[233]</a></sup></span> Several events will then be logged on scheduled task activity, including Event ID 106 on Windows 7 and Server 2008 R2 for scheduled task registration. For Windows 10 and Server 2016, the relevant events are also logged in the Windows Security event channel after enabling the auditing of other object access events. These include:</p><ul><li>Event ID 4698: A scheduled task was created.</li><li>Event ID 4699: A scheduled task was deleted.</li><li>Event ID 4700: A scheduled task was enabled.</li><li>Event ID 4701: A scheduled task was disabled.</li><li>Event ID 4702: A scheduled task was updated.</li></ul><p>Note: Detection of the creation or modification of Scheduled Tasks with a suspicious script, extension or user writable path. Attackers may create or modify Scheduled Tasks for the persistent execution of malicious code. This detection focuses at the same time on EventIDs 4688 and 1 with process creation (SCHTASKS) and EventID 4698, 4702 for Scheduled Task creation/modification event log.</p><p>Analytic 1 - New schedule tasks whose content includes suspicious scripts, extensions or user writable path</p><p><code> (source="*WinEventLog:Security" EventCode IN (4698, 4702, 4699, 4700, 4701)) | where(JobContent LIKE '%.cmd%' OR JobContent LIKE '%.ps1%' OR   JobContent LIKE '%.vbs%' OR JobContent LIKE '%.py%' OR   JobContent LIKE '%.js%' OR JobContent LIKE '%.exe%' OR   JobContent LIKE '%.bat%' OR JobContent LIKE '%javascript%' OR   JobContent LIKE '%powershell%' OR JobContent LIKE '%wmic%' OR   JobContent LIKE '%rundll32%' OR JobContent LIKE '%cmd%' OR   JobContent LIKE '%cscript%' OR JobContent LIKE '%wscript%' OR   JobContent LIKE '%regsvr32%' OR JobContent LIKE '%mshta%' OR   JobContent LIKE '%bitsadmin%' OR JobContent LIKE '%certutil%' OR   JobContent LIKE '%msiexec%' OR JobContent LIKE '%javaw%' OR   JobContent LIKE '%[%]APPDATA[%]%' OR JobContent LIKE '%\AppData\Roaming%' OR   JobContent LIKE '%[%]PUBLIC[%]%' OR JobContent LIKE '%C:\Users\Public%' OR   JobContent LIKE '%[%]ProgramData[%]%' OR JobContent LIKE '%C:\ProgramData%' OR   JobContent LIKE '%[%]TEMP[%]%' OR JobContent LIKE '%\AppData\Local\Temp%' OR   JobContent LIKE '%\Windows\PLA\System%' OR JobContent LIKE '%\tasks%' OR   JobContent LIKE '%\Registration\CRMLog%' OR JobContent LIKE '%\FxsTmp%' OR   JobContent LIKE '%\spool\drivers\color%' OR JobContent LIKE '%\tracing%')</code></p>
@@ -2602,7 +2602,7 @@
                 </td>
                 <!-- Add first data component here -->
                 <td> 
-                    <a href="/datasources/DS0024/#Windows%20Registry%20Key%20Creation">Windows Registry Key Creation</a>
+                    <a href="/versions/v17/datasources/DS0024/#Windows%20Registry%20Key%20Creation">Windows Registry Key Creation</a>
                 </td>
                     <td>
                                 <p>Monitor for newly constructed registry keys upon creation of new task. Deletion of values/keys in the registry may further indicate malicious activity.</p><p>Analytic 1 - Suspicious Creations under Schedule Registry Key</p><p><code>((source="<em>WinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode="12") OR (sourcetype=WinEventLog:Security EventCode=4657) | search (registry_path="HKLM\Software\Microsoft\Windows NT\CurrentVersion\Schedule\TaskCache\Tree\</em>" OR registry_path="HKLM\Software\Microsoft\Windows NT\CurrentVersion\Schedule\TaskCache\Tasks\*")</code></p>
@@ -5476,16 +5476,16 @@
                         <div class="footer-link-group">
                             <div class="row row-footer">
                                 <div class="px-3 col-footer">
-                                    <u class="footer-link"><a href="/versions/v17/resources/engage-with-attack/contact" class="footer-link">Contact Us</a></u>
+                                    <u class="footer-link"><a href="/resources/engage-with-attack/contact" class="footer-link">Contact Us</a></u>
                                 </div>
                                 <div class="px-3 col-footer">
-                                    <u class="footer-link"><a href="/versions/v17/resources/legal-and-branding/terms-of-use" class="footer-link">Terms of Use</a></u>
+                                    <u class="footer-link"><a href="/resources/legal-and-branding/terms-of-use" class="footer-link">Terms of Use</a></u>
                                 </div>
                                     <div class="px-3 col-footer">
-                                        <u class="footer-link"><a href="/versions/v17/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
+                                        <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3 col-footer">
-                                    <u class="footer-link"><a href="/versions/v17/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v17.1&#013;Website  v4.2.3">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v17.1&#013;Website  v4.2.3">Website Changelog</a></u>
                                 </div>
                                 <div class="px-3">
                                     <u class="footer-link"><a href="/resources/legal-and-branding/privacy/#" class="footer-link" onclick="Osano.cm.showDrawer('osano-cm-dom-info-dialog-open')">Cookie Preferences</a></u>

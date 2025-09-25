@@ -19,13 +19,13 @@
         <meta charset='utf-8'>
         <meta name='viewport' content='width=device-width, initial-scale=1,shrink-to-fit=no'>
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <link rel='shortcut icon' href="/versions/v17/theme/favicon.ico" type='image/x-icon'>
+        <link rel='shortcut icon' href='/versions/v17/theme/favicon.ico' type='image/x-icon'>
         <title>Input Injection, Technique T1674 - Enterprise | MITRE ATT&CK&reg;</title>
         <!-- USWDS CSS -->
         <!-- Bootstrap CSS -->
-        <link rel='stylesheet' href="/versions/v17/theme/style/vendors/bootstrap.min.css" />
-        <link rel='stylesheet' href="/versions/v17/theme/style/vendors/bootstrap-tourist.css" />
-        <link rel='stylesheet' href="/versions/v17/theme/style/vendors/bootstrap-select.min.css" />
+        <link rel='stylesheet' href='/versions/v17/theme/style/vendors/bootstrap.min.css' />
+        <link rel='stylesheet' href='/versions/v17/theme/style/vendors/bootstrap-tourist.css' />
+        <link rel='stylesheet' href='/versions/v17/theme/style/vendors/bootstrap-select.min.css' />
         <!-- Fontawesome CSS -->
         <link rel="stylesheet" href="/versions/v17/theme/style/vendors/fontawesome-6.5.1/css/fontawesome.min.css"/>
         <link rel="stylesheet" href="/versions/v17/theme/style/vendors/fontawesome-6.5.1/css/brands.min.css"/>
@@ -42,7 +42,7 @@
             <!-- header elements -->
             <header class="col px-0">
                     <nav class='navbar navbar-expand-lg navbar-dark position-static'>
-        <a class='navbar-brand' href="/versions/v17/"><img src="/versions/v17/theme/images/mitre_attack_logo.png" class="attack-logo"></a>
+        <a class='navbar-brand' href='/versions/v17/'><img src="/versions/v17/theme/images/mitre_attack_logo.png" class="attack-logo"></a>
         <button class='navbar-toggler' type='button' data-toggle='collapse' data-target='#navbarCollapse'
                 aria-controls='navbarCollapse' aria-expanded='false' aria-label='Toggle navigation'>
                 <span class='navbar-toggler-icon'></span>
@@ -133,26 +133,26 @@
                         </li>
                         <li class="nav-item dropdown">
                                 
-    <a class="nav-link dropdown-toggle" href="/versions/v17/resources/" id="navbarDropdown" role="button"
+    <a class="nav-link dropdown-toggle" href="/resources/" id="navbarDropdown" role="button"
     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         <b>Resources</b>
     </a>
     <div class="dropdown-menu " aria-labelledby="navbarDropdown">
-                <a class="dropdown-item" href="/versions/v17/resources/">Get Started</a>
-                <a class="dropdown-item" href="/versions/v17/resources/learn-more-about-attack/">Learn More about ATT&CK</a>
-                <a class="dropdown-item" href="/versions/v17/resources/attackcon/">ATT&CKcon</a>
-                <a class="dropdown-item" href="/versions/v17/resources/attack-data-and-tools/">ATT&CK Data & Tools</a>
-                <a class="dropdown-item" href="/versions/v17/resources/faq/">FAQ</a>
-                <a class="dropdown-item" href="/versions/v17/resources/engage-with-attack/contact/">Engage with ATT&CK</a>
+                <a class="dropdown-item" href="/resources/">Get Started</a>
+                <a class="dropdown-item" href="/resources/learn-more-about-attack/">Learn More about ATT&CK</a>
+                <a class="dropdown-item" href="/resources/attackcon/">ATT&CKcon</a>
+                <a class="dropdown-item" href="/resources/attack-data-and-tools/">ATT&CK Data & Tools</a>
+                <a class="dropdown-item" href="/resources/faq/">FAQ</a>
+                <a class="dropdown-item" href="/resources/engage-with-attack/contact/">Engage with ATT&CK</a>
                 <a class="dropdown-item" href="/resources/versions/">Version History</a>
                 <a class="dropdown-item" href="/resources/updates/">Updates</a>
-                <a class="dropdown-item" href="/versions/v17/resources/legal-and-branding/">Legal & Branding</a>
+                <a class="dropdown-item" href="/resources/legal-and-branding/">Legal & Branding</a>
     </div>
 
 
                         </li>
                         <li class="nav-item">
-                            <a href="/versions/v17/resources/engage-with-attack/benefactors/"  class="nav-link" ><b>Benefactors</b></a>
+                            <a href="/resources/engage-with-attack/benefactors/"  class="nav-link" ><b>Benefactors</b></a>
                         </li>
                         <li class="nav-item">
                                 <a href="https://medium.com/mitre-attack/" target="_blank" class="nav-link">
@@ -384,7 +384,7 @@
                 </td>
                 <!-- Add first data component here -->
                 <td> 
-                    <a href="/datasources/DS0016/#Drive%20Creation">Drive Creation</a>
+                    <a href="/versions/v17/datasources/DS0016/#Drive%20Creation">Drive Creation</a>
                 </td>
                     <td>
                                 <p>Monitor for newly executed processes when removable media is mounted. Additionally, monitor for unexpected or rapid USB HID enumeration events (e.g., a USB HID device connecting and immediately issuing keystrokes) or anomalies (e.g., a device claiming to be a keyboard but has a suspicious vendor ID) that could indicate a possible rogue device. Tools like Windows Event Logs (e.g., event IDs 20001 - 20003), sysfs on Linux (e.g., <code>/sys/bus/usb/devices/</code>), and macOS IORegistry (e.g., <code>ioreg -p IOUSB</code>) can provide insight into input devices.</p><p>Additionally, consider leveraging keyboard hook APIs to monitor for keystrokes that are too fast and too uniform (e.g., a script executing keystrokes with no human variation or that are too precise). </p><p>Analytic 1 Detect HID like Device Injection </p><p><code> index=wineventlog sourcetype="WinEventLog:System" EventCode=400 OR EventCode=20001| eval usb_device=coalesce(UsbDevice, DeviceName)| search usb_device="<em>keyboard</em>" OR usb_device="<em>HID</em>"| transaction usb_device maxspan=30s| join usb_device    [      search index=main sourcetype="WinEventLog:Security" (EventCode=4688 OR EventCode=4104)      | stats count by usb_device, _time, CommandLine, ParentProcessName, NewProcessName    ]| where count &gt; 0| table _time, usb_device, NewProcessName, CommandLine, ParentProcessName</code></p>
@@ -400,7 +400,7 @@
                 </td>
                 <!-- Add first data component here -->
                 <td> 
-                    <a href="/datasources/DS0009/#Process%20Creation">Process Creation</a>
+                    <a href="/versions/v17/datasources/DS0009/#Process%20Creation">Process Creation</a>
                 </td>
                     <td>
                                 <p>Monitor log files for process execution through command-line and scripting activities. Additionally monitor for various tools launching keystrokes such as PowerShell, AutoHotkey, xdotool, AppleScript, or WScript.</p><p>Analytic 1 - Unusual Input Simulators </p><p><code> index=main sourcetype="WinEventLog:Security" OR sourcetype=sysmon(NewProcessName="<em>powershell.exe" OR NewProcessName="</em>cmd.exe" OR NewProcessName="<em>bash" OR NewProcessName="</em>osascript")| stats earliest(_time) as start_time, latest(_time) as end_time, values(ParentProcessName) as parent, values(CommandLine) as cmd by NewProcessName, user| where parent="explorer.exe" OR parent="winlogon.exe" OR parent="unknown"| eval duration = end_time - start_time| where duration &lt; 10| table start_time, NewProcessName, cmd, parent, user </code></p>
@@ -416,7 +416,7 @@
                 </td>
                 <!-- Add first data component here -->
                 <td> 
-                    <a href="/datasources/DS0012/#Script%20Execution">Script Execution</a>
+                    <a href="/versions/v17/datasources/DS0012/#Script%20Execution">Script Execution</a>
                 </td>
                     <td>
                                 <p>Monitor for any attempts to enable scripts running on a system that would be considered suspicious. If scripts are not commonly used on a system, but enabled, scripts running out of cycle from patching or other administrator functions are suspicious. Scripts should be captured from the file system when possible to determine their actions and intent. </p><p>Analytic 1 - Scripts injected via clipboard or keystroke simulation </p><p><code> (index=main sourcetype="WinEventLog:Microsoft-Windows-PowerShell/Operational" EventCode=4104)OR (index=main sourcetype=sysmon EventCode=1 CommandLine="<em>osascript</em>" OR CommandLine="<em>python</em>" OR CommandLine="<em>bash</em>")| transaction user maxspan=15s| join user    [        search index=wineventlog sourcetype="WinEventLog:System" (EventCode=400 OR EventCode=20001)        | search DeviceName="<em>HID</em>" OR DeviceName="<em>Keyboard</em>"        | stats count by user, _time, DeviceName    ]| table _time, user, CommandLine, DeviceName </code></p>
@@ -554,16 +554,16 @@
                         <div class="footer-link-group">
                             <div class="row row-footer">
                                 <div class="px-3 col-footer">
-                                    <u class="footer-link"><a href="/versions/v17/resources/engage-with-attack/contact" class="footer-link">Contact Us</a></u>
+                                    <u class="footer-link"><a href="/resources/engage-with-attack/contact" class="footer-link">Contact Us</a></u>
                                 </div>
                                 <div class="px-3 col-footer">
-                                    <u class="footer-link"><a href="/versions/v17/resources/legal-and-branding/terms-of-use" class="footer-link">Terms of Use</a></u>
+                                    <u class="footer-link"><a href="/resources/legal-and-branding/terms-of-use" class="footer-link">Terms of Use</a></u>
                                 </div>
                                     <div class="px-3 col-footer">
-                                        <u class="footer-link"><a href="/versions/v17/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
+                                        <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3 col-footer">
-                                    <u class="footer-link"><a href="/versions/v17/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v17.1&#013;Website  v4.2.3">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v17.1&#013;Website  v4.2.3">Website Changelog</a></u>
                                 </div>
                                 <div class="px-3">
                                     <u class="footer-link"><a href="/resources/legal-and-branding/privacy/#" class="footer-link" onclick="Osano.cm.showDrawer('osano-cm-dom-info-dialog-open')">Cookie Preferences</a></u>

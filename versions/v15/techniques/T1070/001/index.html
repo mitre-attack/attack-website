@@ -15,13 +15,13 @@
         <meta charset='utf-8'>
         <meta name='viewport' content='width=device-width, initial-scale=1,shrink-to-fit=no'>
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <link rel='shortcut icon' href="/versions/v15/theme/favicon.ico" type='image/x-icon'>
+        <link rel='shortcut icon' href='/versions/v15/theme/favicon.ico' type='image/x-icon'>
         <title>Indicator Removal: Clear Windows Event Logs, Sub-technique T1070.001 - Enterprise | MITRE ATT&CK&reg;</title>
         <!-- USWDS CSS -->
         <!-- Bootstrap CSS -->
-        <link rel='stylesheet' href="/versions/v15/theme/style/bootstrap.min.css" />
-        <link rel='stylesheet' href="/versions/v15/theme/style/bootstrap-tourist.css" />
-        <link rel='stylesheet' href="/versions/v15/theme/style/bootstrap-select.min.css" />
+        <link rel='stylesheet' href='/versions/v15/theme/style/bootstrap.min.css' />
+        <link rel='stylesheet' href='/versions/v15/theme/style/bootstrap-tourist.css' />
+        <link rel='stylesheet' href='/versions/v15/theme/style/bootstrap-select.min.css' />
         <!-- Fontawesome CSS -->
         <link rel="stylesheet" href="/versions/v15/theme/style/fontawesome-6.5.1/css/fontawesome.min.css"/>
         <link rel="stylesheet" href="/versions/v15/theme/style/fontawesome-6.5.1/css/brands.min.css"/>
@@ -37,7 +37,7 @@
             <!-- header elements -->
             <header class="col px-0">
                     <nav class='navbar navbar-expand-lg navbar-dark position-static'>
-        <a class='navbar-brand' href="/versions/v15/"><img src="/versions/v15/theme/images/mitre_attack_logo.png" class="attack-logo"></a>
+        <a class='navbar-brand' href='/versions/v15/'><img src="/versions/v15/theme/images/mitre_attack_logo.png" class="attack-logo"></a>
         <button class='navbar-toggler' type='button' data-toggle='collapse' data-target='#navbarCollapse'
                 aria-controls='navbarCollapse' aria-expanded='false' aria-label='Toggle navigation'>
                 <span class='navbar-toggler-icon'></span>
@@ -128,25 +128,25 @@
                         </li>
                         <li class="nav-item dropdown">
                                 
-    <a class="nav-link dropdown-toggle" href="/versions/v15/resources/" id="navbarDropdown" role="button"
+    <a class="nav-link dropdown-toggle" href="/resources/" id="navbarDropdown" role="button"
     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         <b>Resources</b>
     </a>
     <div class="dropdown-menu " aria-labelledby="navbarDropdown">
-                <a class="dropdown-item" href="/versions/v15/resources/">Get Started</a>
-                <a class="dropdown-item" href="/versions/v15/resources/learn-more-about-attack/">Learn More about ATT&CK</a>
-                <a class="dropdown-item" href="/versions/v15/resources/attackcon/">ATT&CKcon</a>
-                <a class="dropdown-item" href="/versions/v15/resources/attack-data-and-tools/">ATT&CK Data & Tools</a>
-                <a class="dropdown-item" href="/versions/v15/resources/faq/">FAQ</a>
-                <a class="dropdown-item" href="/versions/v15/resources/engage-with-attack/contact/">Engage with ATT&CK</a>
+                <a class="dropdown-item" href="/resources/">Get Started</a>
+                <a class="dropdown-item" href="/resources/learn-more-about-attack/">Learn More about ATT&CK</a>
+                <a class="dropdown-item" href="/resources/attackcon/">ATT&CKcon</a>
+                <a class="dropdown-item" href="/resources/attack-data-and-tools/">ATT&CK Data & Tools</a>
+                <a class="dropdown-item" href="/resources/faq/">FAQ</a>
+                <a class="dropdown-item" href="/resources/engage-with-attack/contact/">Engage with ATT&CK</a>
                 <a class="dropdown-item" href="/resources/versions/">Version History</a>
-                <a class="dropdown-item" href="/versions/v15/resources/legal-and-branding/">Legal & Branding</a>
+                <a class="dropdown-item" href="/resources/legal-and-branding/">Legal & Branding</a>
     </div>
 
 
                         </li>
                         <li class="nav-item">
-                            <a href="/versions/v15/resources/engage-with-attack/benefactors/"  class="nav-link" ><b>Benefactors</b></a>
+                            <a href="/resources/engage-with-attack/benefactors/"  class="nav-link" ><b>Benefactors</b></a>
                         </li>
                         <li class="nav-item">
                                 <a href="https://medium.com/mitre-attack/" target="_blank" class="nav-link">
@@ -813,7 +813,7 @@
                 </td>
                 <!-- Add first data component here -->
                 <td> 
-                    <a href="/datasources/DS0017/#Command%20Execution">Command Execution</a>
+                    <a href="/versions/v15/datasources/DS0017/#Command%20Execution">Command Execution</a>
                 </td>
                     <td>
                                 <p>Monitor executed commands and arguments for actions that would delete Windows event logs (via PowerShell) such as <code>Remove-EventLog -LogName Security</code>.</p><p>Note: Event ID 4104 (from the Microsoft-Windows-Powershell/Operational log) captures Powershell script blocks, which can be analyzed and used to detect on attempts to Clear Windows Event Logs. In particular, Powershell has a built-in Clear-EventLog cmdlet that allows for a specified log to be cleared. </p>
@@ -829,7 +829,7 @@
                 </td>
                 <!-- Add first data component here -->
                 <td> 
-                    <a href="/datasources/DS0022/#File%20Deletion">File Deletion</a>
+                    <a href="/versions/v15/datasources/DS0022/#File%20Deletion">File Deletion</a>
                 </td>
                     <td>
                                 <p>Monitor for unexpected deletion of Windows event logs (via native binaries) and may also generate an alterable event (Event ID 1102: "The audit log was cleared"). When an eventlog is cleared, a new event is created that alerts that the eventlog was cleared. For Security logs, its event code 1100 and 1102. For System logs, it is event code 104.</p><p>It is unlikely that event log data would be cleared during normal operations, and it is likely that malicious attackers may try to cover their tracks by clearing an event log. When an event log gets cleared, it is suspicious. </p><ol><li><p>This is often done using wevtutil, a legitimate tool provided by Microsoft. This action interferes with event collection and notification, and may lead to a security event going undetected, thereby potentially leading to further compromise of the network. </p></li><li><p>Alerting when a Clear Event Log is generated could point to this intruder technique. Centrally collecting events has the added benefit of making it much harder for attackers to cover their tracks. Event Forwarding permits sources to forward multiple copies of a collected event to multiple collectors, thus enabling redundant event collection. Using a redundant event collection model can minimize the single point of failure risk. </p></li><li><p>Attackers may set the option of the sources of events with <code>Limit-EventLog -LogName Security -OverflowAction DoNotOverwrite</code> to not delete old Evenlog when the .evtx is full. By default the Security Log size is configured with the minimum value of 20 480KB (~23 000 EventLog). So if this option is enabled, all the new EventLogs will be automatically deleted. We can detect this behavior with the Security EventLog 1104. </p></li><li><p>Attackers may delete .evtx with <code>del C:\Windows\System32\winevt\logs\Security.evtx</code> or <code>Remove-Item C:\Windows\System32\winevt\logs\Security.evtx</code> after having disabled and stopped the Eventlog service. As the EventLog service is disabled and stopped, the .evtx files are no longer used by this service and can be deleted. The new EventLog will be Unavailable until the configuration is reset. </p></li><li><p>Attackers may use the powershell command <code>Remove-EventLog -LogName Security</code> to unregister source of events that are part of Windows (Application, Security…). This command deletes the security EventLog (which also generates EventId 1102) but the new Eventlogs are still recorded until the system is rebooted . After the System is rebooted, the Security log is unregistered and doesn’t log any new Eventlog. However logs generated between the command and the reboot are still available in the .evtx file.</p></li></ol><p>Analytic 1 - User Activity from Clearing Event Logs</p><p><code> (source="<em>WinEventLog:Security" EventCode IN (1100, 1102, 1104)) OR (source="</em>WinEventLog:System" EventCode IN (104))</code></p>
@@ -845,7 +845,7 @@
                 </td>
                 <!-- Add first data component here -->
                 <td> 
-                    <a href="/datasources/DS0009/#OS%20API%20Execution">OS API Execution</a>
+                    <a href="/versions/v15/datasources/DS0009/#OS%20API%20Execution">OS API Execution</a>
                 </td>
                     <td>
                                 <p>Monitor for Windows API calls that may clear Windows Event Logs to hide the activity of an intrusion.</p>
@@ -856,7 +856,7 @@
                         <td></td>
                         <td></td>
                         <td>
-                            <a href="/datasources/DS0009/#Process%20Creation">Process Creation</a>
+                            <a href="/versions/v15/datasources/DS0009/#Process%20Creation">Process Creation</a>
                         </td>
                             <td>
                                         <p>Monitor for newly executed processes that may clear Windows Event Logs to hide the activity of an intrusion. In an attempt to clear traces after compromising a machine, threat actors often try to clear Windows Event logs. This is often done using "wevtutil", a legitimate tool provided by Microsoft. This action interferes with event collection and notification, and may lead to a security event going undetected, thereby potentially leading to further compromise of the network.</p><p>Note: This search query looks for wevtutil, Clear-EventLog, Limit-EventLog, Remove-Item or Remove-EventLog inside a command that may cause the system to remove Windows Event logs.</p><p>Analytic 1 - Clearing Windows Logs with Wevtutil</p><p><code>(source="<em>WinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode="1") OR (source="</em>WinEventLog:Security" EventCode="4688") (Image=<em>wevtutil</em> CommandLine=<em>cl</em> (CommandLine=<em>System</em> OR CommandLine=<em>Security</em> OR CommandLine=<em>Setup</em> OR CommandLine=<em>Application</em>) OR Clear-EventLog OR Limit-EventLog OR (Remove-Item AND .evtx) OR Remove-EventLog) </code></p>
@@ -1318,16 +1318,16 @@
                         <div class="footer-link-group">
                             <div class="row row-footer">
                                 <div class="px-3 col-footer">
-                                    <u class="footer-link"><a href="/versions/v15/resources/engage-with-attack/contact" class="footer-link">Contact Us</a></u>
+                                    <u class="footer-link"><a href="/resources/engage-with-attack/contact" class="footer-link">Contact Us</a></u>
                                 </div>
                                 <div class="px-3 col-footer">
-                                    <u class="footer-link"><a href="/versions/v15/resources/legal-and-branding/terms-of-use" class="footer-link">Terms of Use</a></u>
+                                    <u class="footer-link"><a href="/resources/legal-and-branding/terms-of-use" class="footer-link">Terms of Use</a></u>
                                 </div>
                                     <div class="px-3 col-footer">
-                                        <u class="footer-link"><a href="/versions/v15/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
+                                        <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3">
-                                    <u class="footer-link"><a href="/versions/v15/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v15.1&#013;Website  v4.1.6">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v15.1&#013;Website  v4.1.6">Website Changelog</a></u>
                                 </div>
                             </div>
                             <div class="row">

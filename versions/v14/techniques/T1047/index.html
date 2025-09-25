@@ -15,13 +15,13 @@
         <meta charset='utf-8'>
         <meta name='viewport' content='width=device-width, initial-scale=1,shrink-to-fit=no'>
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <link rel='shortcut icon' href="/versions/v14/theme/favicon.ico" type='image/x-icon'>
+        <link rel='shortcut icon' href='/versions/v14/theme/favicon.ico' type='image/x-icon'>
         <title>Windows Management Instrumentation, Technique T1047 - Enterprise | MITRE ATT&CK&reg;</title>
         <!-- USWDS CSS -->
         <!-- Bootstrap CSS -->
-        <link rel='stylesheet' href="/versions/v14/theme/style/bootstrap.min.css" />
-        <link rel='stylesheet' href="/versions/v14/theme/style/bootstrap-tourist.css" />
-        <link rel='stylesheet' href="/versions/v14/theme/style/bootstrap-select.min.css" />
+        <link rel='stylesheet' href='/versions/v14/theme/style/bootstrap.min.css' />
+        <link rel='stylesheet' href='/versions/v14/theme/style/bootstrap-tourist.css' />
+        <link rel='stylesheet' href='/versions/v14/theme/style/bootstrap-select.min.css' />
         <!-- Fontawesome CSS -->
         <link rel="stylesheet" href="/versions/v14/theme/style/fontawesome-6.5.1/css/fontawesome.min.css"/>
         <link rel="stylesheet" href="/versions/v14/theme/style/fontawesome-6.5.1/css/brands.min.css"/>
@@ -37,7 +37,7 @@
             <!-- header elements -->
             <header class="col px-0">
                     <nav class='navbar navbar-expand-lg navbar-dark position-static'>
-        <a class='navbar-brand' href="/versions/v14/"><img src="/versions/v14/theme/images/mitre_attack_logo.png" class="attack-logo"></a>
+        <a class='navbar-brand' href='/versions/v14/'><img src="/versions/v14/theme/images/mitre_attack_logo.png" class="attack-logo"></a>
         <button class='navbar-toggler' type='button' data-toggle='collapse' data-target='#navbarCollapse'
                 aria-controls='navbarCollapse' aria-expanded='false' aria-label='Toggle navigation'>
                 <span class='navbar-toggler-icon'></span>
@@ -128,24 +128,24 @@
                         </li>
                         <li class="nav-item dropdown">
                                 
-    <a class="nav-link dropdown-toggle" href="/versions/v14/resources/" id="navbarDropdown" role="button"
+    <a class="nav-link dropdown-toggle" href="/resources/" id="navbarDropdown" role="button"
     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         <b>Resources</b>
     </a>
     <div class="dropdown-menu " aria-labelledby="navbarDropdown">
-                <a class="dropdown-item" href="/versions/v14/resources/">Get Started</a>
-                <a class="dropdown-item" href="/versions/v14/resources/learn-more-about-attack/">Learn More about ATT&CK</a>
-                <a class="dropdown-item" href="/versions/v14/resources/attack-data-and-tools/">ATT&CK Data & Tools</a>
-                <a class="dropdown-item" href="/versions/v14/resources/faq/">FAQ</a>
-                <a class="dropdown-item" href="/versions/v14/resources/engage-with-attack/contact/">Engage with ATT&CK</a>
+                <a class="dropdown-item" href="/resources/">Get Started</a>
+                <a class="dropdown-item" href="/resources/learn-more-about-attack/">Learn More about ATT&CK</a>
+                <a class="dropdown-item" href="/resources/attack-data-and-tools/">ATT&CK Data & Tools</a>
+                <a class="dropdown-item" href="/resources/faq/">FAQ</a>
+                <a class="dropdown-item" href="/resources/engage-with-attack/contact/">Engage with ATT&CK</a>
                 <a class="dropdown-item" href="/resources/versions/">Version History</a>
-                <a class="dropdown-item" href="/versions/v14/resources/legal-and-branding/">Legal & Branding</a>
+                <a class="dropdown-item" href="/resources/legal-and-branding/">Legal & Branding</a>
     </div>
 
 
                         </li>
                         <li class="nav-item">
-                            <a href="/versions/v14/resources/engage-with-attack/benefactors/"  class="nav-link" ><b>Benefactors</b></a>
+                            <a href="/resources/engage-with-attack/benefactors/"  class="nav-link" ><b>Benefactors</b></a>
                         </li>
                         <li class="nav-item">
                                 <a href="https://medium.com/mitre-attack/" target="_blank" class="nav-link">
@@ -1741,7 +1741,7 @@
                 </td>
                 <!-- Add first data component here -->
                 <td> 
-                    <a href="/datasources/DS0017/#Command%20Execution">Command Execution</a>
+                    <a href="/versions/v14/datasources/DS0017/#Command%20Execution">Command Execution</a>
                 </td>
                     <td>
                                 <p>Monitor executed commands and arguments for actions that are used to perform remote behavior</p>
@@ -1757,7 +1757,7 @@
                 </td>
                 <!-- Add first data component here -->
                 <td> 
-                    <a href="/datasources/DS0029/#Network%20Connection%20Creation">Network Connection Creation</a>
+                    <a href="/versions/v14/datasources/DS0029/#Network%20Connection%20Creation">Network Connection Creation</a>
                 </td>
                     <td>
                                 <p>Monitor network traffic for WMI connections for potential use to remotely edit configuration, start services, or query files. When remote WMI requests are over RPC it connects to a DCOM interface within the RPC group <code>netsvcs</code>. To detect this activity, a sensor is needed at the network level that can decode RPC traffic or on the host where the communication can be detected more natively, such as Event Tracing for Windows. Using wireshark/tshark decoders, the WMI interfaces can be extracted so that WMI activity over RPC can be detected. Although the description details how to detect remote WMI precisely, a decent estimate has been to look for the string RPCSS within the initial RPC connection on 135/tcp. It returns a superset of this activity, and will trigger on all DCOM-related services running within RPC, which is likely to also be activity that should be detected between hosts. More about RPCSS at : rpcss_dcom_interfaces.html</p><p>After the WMI connection has been initialized, a process can be remotely launched using the command: <code>wmic /node:"<hostname>" process call create "<command line>"</code>, which is detected in the third Detection Pseudocode. </p><p>This leaves artifacts at both a network (RPC) and process (command line) level. When <code>wmic.exe</code> (or the schtasks API) is used to remotely create processes, Windows uses RPC (135/tcp) to communicate with the the remote machine.</p><p>After RPC authenticates, the RPC endpoint mapper opens a high port connection, through which the schtasks Remote Procedure Call is actually implemented. With the right packet decoders, or by looking for certain byte streams in raw data, these functions can be identified.</p><p>When the command line is executed, it has the parent process of <code>C:\windows\system32\wbem\WmiPrvSE.exe</code>. This analytic looks for these two events happening in sequence, so that the network connection and target process are output.</p><p>Certain strings can be identifiers of the WMI by looking up the interface UUID for <code>IRemUnknown2</code> in different formats- UUID <code>00000143-0000-0000-c000-000000000046</code> (decoded)- Hex <code>43 01 00 00 00 00 00 00 c0 00 00 00 00 00 00 46</code> (raw)- ASCII <code>CF</code> (printable text only)</p><p>This identifier is present three times during the RPC request phase. Any sensor that has access to the byte code as raw, decoded, or ASCII could implement this analytic. The transfer syntax is- UUID <code>8a885d04-1ceb-11c9-9fe8-08002b104860</code> (decoded)- Hex <code>04 5d 88 8a eb 1c c9 11 9f e8 08 00 2b 10 48 60</code> (raw)- ASCII <code>`]+H``</code> (printable text only)</p><p>Thus, a great ASCII based signature is- <code><em>CF</em>]+H<em>CF</em>CF<em>host</em>"</code></p><p>Note: To detect WMI over RPC (using DCOM), a sensor needs to exist that has the insight into individual connections and can actually decode and make sense of RPC traffic. Specifically, WMI can be detected by looking at RPC traffic where the target interface matches that of WMI, which is IRemUnknown2. Look for instances of the WMI querying in network traffic, and find the cases where a process is launched immediately after a connection is seen. This essentially merges the request to start a remote process via WMI with the process execution. If other processes are spawned from wmiprvse.exe in this time frame, it is possible for race conditions to occur, and the wrong process may be merged. If this is the case, it may be useful to look deeper into the network traffic to see if the desired command can be extracted.</p><h4> Analytic 1 - Remote WMI over RPC</h4><p><code>wmi_flow = filter network_flow where (dest_port == 135 and proto_info.rpc_interface == "IRemUnknown2")</code></p><h4> Analytic 2 : Remotely Launched Executables via WMI</h4><p><code>wmi_children = filter processes where (parent_process == "wmiprvse.exe")wmi_flow = filter network flow where (src_port ≥ 49152 and dest_port ≥ 49152 and proto_info.rpc_interface == "IRemUnknown2")remote_wmi_process = join wmi_children, wmi_flow where (wmi_flow.time &lt; wmi_children.time &lt; wmi_flow.time + 1 sec and wmi_flow.hostname == wmi_children.hostname</code></p>
@@ -1773,7 +1773,7 @@
                 </td>
                 <!-- Add first data component here -->
                 <td> 
-                    <a href="/datasources/DS0009/#Process%20Creation">Process Creation</a>
+                    <a href="/versions/v14/datasources/DS0009/#Process%20Creation">Process Creation</a>
                 </td>
                     <td>
                                 <p>Monitor for newly constructed processes and/or command-lines of "wmic". If the command line utility <code>wmic.exe</code> is used on the source host, then it can additionally be detected on an analytic. The command line on the source host is constructed into something like <code>wmic.exe /node:"\&lt;hostname&gt;" process call create "\&lt;command line&gt;"</code>. It is possible to also connect via IP address, in which case the string <code>"\&lt;hostname&gt;"</code> would instead look like IP Address. Processes can be created remotely via WMI in a few other ways, such as more direct API access or the built-in utility PowerShell.</p><p>Note: Event IDs are for Sysmon (Event ID 10 - process access) and Windows Security Log (Event ID 4688 - a new process has been created). </p><p>Besides executing arbitrary processes, wmic.exe can also be used to executed data stored in NTFS alternate data streams <a href="/versions/v14/techniques/T1564/004">NTFS File Attributes</a>.Looks for instances of wmic.exe as well as the substrings in the command line:- process call create- /node:</p><h4> Analytic 1 : Create Remote Process via WMIC</h4><p><code> processes = filter processes where ((event_id="10" OR event_id="4688") AND exe == "wmic.exe" AND command_line == "<em> process call create </em>")</code></p>
@@ -1789,7 +1789,7 @@
                 </td>
                 <!-- Add first data component here -->
                 <td> 
-                    <a href="/datasources/DS0005/#WMI%20Creation">WMI Creation</a>
+                    <a href="/versions/v14/datasources/DS0005/#WMI%20Creation">WMI Creation</a>
                 </td>
                     <td>
                                 <p>Monitor for newly constructed WMI objects that will execute malicious commands and payloads. </p>
@@ -3692,16 +3692,16 @@
                         <div class="footer-link-group">
                             <div class="row row-footer">
                                 <div class="px-3 col-footer">
-                                    <u class="footer-link"><a href="/versions/v14/resources/engage-with-attack/contact" class="footer-link">Contact Us</a></u>
+                                    <u class="footer-link"><a href="/resources/engage-with-attack/contact" class="footer-link">Contact Us</a></u>
                                 </div>
                                 <div class="px-3 col-footer">
-                                    <u class="footer-link"><a href="/versions/v14/resources/legal-and-branding/terms-of-use" class="footer-link">Terms of Use</a></u>
+                                    <u class="footer-link"><a href="/resources/legal-and-branding/terms-of-use" class="footer-link">Terms of Use</a></u>
                                 </div>
                                     <div class="px-3 col-footer">
-                                        <u class="footer-link"><a href="/versions/v14/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
+                                        <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3">
-                                    <u class="footer-link"><a href="/versions/v14/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v14.1&#013;Website  v4.1.1">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v14.1&#013;Website  v4.1.1">Website Changelog</a></u>
                                 </div>
                             </div>
                             <div class="row">

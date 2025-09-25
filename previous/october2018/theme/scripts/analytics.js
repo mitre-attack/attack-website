@@ -1,1 +1,0 @@
-<meta http-equiv="refresh" content="0; url=/versions/v3/theme/scripts/analytics.js"/>

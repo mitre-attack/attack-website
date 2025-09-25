@@ -15,13 +15,13 @@
         <meta charset='utf-8'>
         <meta name='viewport' content='width=device-width, initial-scale=1,shrink-to-fit=no'>
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <link rel='shortcut icon' href="/versions/v13/theme/favicon.ico" type='image/x-icon'>
+        <link rel='shortcut icon' href='/versions/v13/theme/favicon.ico' type='image/x-icon'>
         <title>Indicator Removal: Clear Command History, Sub-technique T1070.003 - Enterprise | MITRE ATT&CK&reg;</title>
         <!-- Bootstrap CSS -->
-        <link rel='stylesheet' href="/versions/v13/theme/style/bootstrap.min.css" />
-        <link rel='stylesheet' href="/versions/v13/theme/style/bootstrap-glyphicon.min.css" />
-        <link rel='stylesheet' href="/versions/v13/theme/style/bootstrap-tourist.css" />
-        <link rel='stylesheet' href="/versions/v13/theme/style/bootstrap-select.min.css" />
+        <link rel='stylesheet' href='/versions/v13/theme/style/bootstrap.min.css' />
+        <link rel='stylesheet' href='/versions/v13/theme/style/bootstrap-glyphicon.min.css' />
+        <link rel='stylesheet' href='/versions/v13/theme/style/bootstrap-tourist.css' />
+        <link rel='stylesheet' href='/versions/v13/theme/style/bootstrap-select.min.css' />
         <link rel="stylesheet" type="text/css" href="/versions/v13/theme/style.min.css?e8044105">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
@@ -35,7 +35,7 @@
             <header class="col px-0">
     
                     <nav class='navbar navbar-expand-lg navbar-dark position-static'>
-        <a class='navbar-brand' href="/versions/v13/"><img src="/versions/v13/theme/images/mitre_attack_logo.png" class="attack-logo"></a>
+        <a class='navbar-brand' href='/versions/v13/'><img src="/versions/v13/theme/images/mitre_attack_logo.png" class="attack-logo"></a>
         <button class='navbar-toggler' type='button' data-toggle='collapse' data-target='#navbarCollapse'
                 aria-controls='navbarCollapse' aria-expanded='false' aria-label='Toggle navigation'>
                 <span class='navbar-toggler-icon'></span>
@@ -112,21 +112,21 @@
                         </li>
                         <li class="nav-item dropdown">
                                 
-    <a class="nav-link dropdown-toggle" href="/versions/v13/resources/" id="navbarDropdown" role="button"
+    <a class="nav-link dropdown-toggle" href="/resources/" id="navbarDropdown" role="button"
     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         <b>Resources</b>
     </a>
     <div class="dropdown-menu " aria-labelledby="navbarDropdown">
-                <a class="dropdown-item" href="/versions/v13/resources/">General Information</a>
-                <a class="dropdown-item" href="/versions/v13/resources/getting-started/">Getting Started</a>
-                <a class="dropdown-item" href="/versions/v13/resources/training/">Training</a>
-                <a class="dropdown-item" href="/versions/v13/resources/attackcon/">ATT&CKcon</a>
-                <a class="dropdown-item" href="/versions/v13/resources/working-with-attack/">Working with ATT&CK</a>
-                <a class="dropdown-item" href="/versions/v13/resources/faq/">FAQ</a>
+                <a class="dropdown-item" href="/resources/">General Information</a>
+                <a class="dropdown-item" href="/resources/getting-started/">Getting Started</a>
+                <a class="dropdown-item" href="/resources/training/">Training</a>
+                <a class="dropdown-item" href="/resources/attackcon/">ATT&CKcon</a>
+                <a class="dropdown-item" href="/resources/working-with-attack/">Working with ATT&CK</a>
+                <a class="dropdown-item" href="/resources/faq/">FAQ</a>
                 <a class="dropdown-item" href="/resources/updates/">Updates</a>
                 <a class="dropdown-item" href="/resources/versions/">Versions of ATT&CK</a>
-                <a class="dropdown-item" href="/versions/v13/resources/related-projects/">Related Projects</a>
-                <a class="dropdown-item" href="/versions/v13/resources/brand/">Brand Guide</a>
+                <a class="dropdown-item" href="/resources/related-projects/">Related Projects</a>
+                <a class="dropdown-item" href="/resources/brand/">Brand Guide</a>
     </div>
 
 
@@ -139,7 +139,7 @@
 
                         </li>
                         <li class="nav-item">
-                            <a href="/versions/v13/resources/contribute/"  class="nav-link" ><b>Contribute</b></a>
+                            <a href="/resources/contribute/"  class="nav-link" ><b>Contribute</b></a>
                         </li>
                         <li class="nav-item">
                             <button id="search-button" class="btn search-button">Search <div id="search-icon" class="icon-button search-icon"></div></button>
@@ -9454,7 +9454,7 @@
                 </td>
                 <!-- Add first data component here -->
                 <td> 
-                    <a href="/datasources/DS0017/#Command%20Execution">Command Execution</a>
+                    <a href="/versions/v13/datasources/DS0017/#Command%20Execution">Command Execution</a>
                 </td>
                     <td>
                                 <p>Monitor executed commands and arguments for actions that could be taken to clear command history, such as <code>Clear-History</code> on Windows or <code>clear logging</code> / <code>clear history</code> via a Network Device CLI in AAA logs, or to disable writing command history, such as <code>history -c</code> in bash/zsh .</p><h4>Implementation 1 : Clear Powershell Console Command History </h4><h5> Detection Pseudocode</h5><p><code> suspicious_commands = filter ProcessId, ProcessFilePath, command_line where  (event_id == "1" OR event_id == "4688")   AND  (command_line LIKE '%rm (Get-PSReadlineOption).HistorySavePath%' OR   command_line LIKE '%del (Get-PSReadlineOption).HistorySavePath%' OR    command_line LIKE '%Set-PSReadlineOption –HistorySaveStyle SaveNothing%’ OR   command_line LIKE '%Remove-Item (Get-PSReadlineOption).HistorySavePath%' OR   (command_line LIKE '%del%' AND     command_line LIKE '%Microsoft\Windows\Powershell\PSReadline\ConsoleHost_history.txt%'))</code></p><h4> Implementation 2 : Powershell Commands </h4><h5> Detection Pseudocode </h5><p><code> suspicious_commands = filter CommandName, CommandType where   event_id == "4103" AND  (CommandName LIKE '%Clear-History%' OR   (CommandName LIKE '%Remove-Item%' AND CommandParameterValue LIKE '%ConsoleHost_history.text%')) </code></p>
@@ -9470,7 +9470,7 @@
                 </td>
                 <!-- Add first data component here -->
                 <td> 
-                    <a href="/datasources/DS0022/#File%20Deletion">File Deletion</a>
+                    <a href="/versions/v13/datasources/DS0022/#File%20Deletion">File Deletion</a>
                 </td>
                     <td>
                                 <p>Monitor for unexpected deletion of a command history file, such as ConsoleHost_history.txt, ~/.zsh_history, or ~/.bash_history.</p><h4> Implementation 1 : Deletion of command history files</h4><h5>Detection Pseudocode</h5><p><code> suspicious_files = filter ProcessGuid, ProcessFilePath, UserName, FilePath where  (event_id == "23" AND   FilePath LIKE '%ConsoleHost_history.txt%') OR  (event_id == "4663" AND   FilePath LIKE '%ConsoleHost_history.txt%' AND   ObjectType == "File" AND   (UserAccessList LIKE '%1537%' OR     UserAccessList LIKE '%DELETE%'))</code></p><h4> Detection Notes</h4><ul><li>For Security Auditing event id 4663, enable success events for category Object Access and subcategory File System.</li><li>For Security Auditing event id 4663, a System Access Control List (SACL) that controls the use of specific access rights such as DELETE is required for event generation.</li><li>For Security Auditing event id 4663, depending on the File Path you are monitoring, the implementation of a new System Access Control List (SACL) might be required.</li><li>For Windows Sysmon event id 23, installation of application with configuration file is required.</li><li>For Windows Sysmon event id 23, addition of FileDelete events in config file is required.</li></ul>
@@ -9481,7 +9481,7 @@
                         <td></td>
                         <td></td>
                         <td>
-                            <a href="/datasources/DS0022/#File%20Modification">File Modification</a>
+                            <a href="/versions/v13/datasources/DS0022/#File%20Modification">File Modification</a>
                         </td>
                             <td>
                                         <p>Monitor for changes made to command history files, such as ConsoleHost_history.txt, ~/.zsh_history, or ~/.bash_history, for unexpected modifications to contents, access permissions, and attributes.</p><h4> Implementation 1 : Modification of access rights to command history files </h4><h5>Detection Pseudocode</h5><p><code> suspicious_files = filter ProcessGuid, ProcessFilePath, UserName, FilePath where  (event_id == "4663" AND   FilePath LIKE '%ConsoleHost_history.txt%' AND   ObjectType == "File" AND   (UserAccessList LIKE '%1539%' or UserAccessList LIKE '%WRITE_DAC%')) OR  (event_id == "4670" AND   FilePath LIKE '%ConsoleHost_history.txt%' AND   ObjectType == "File" AND   (ObjectNewSd LIKE '%;FA%' OR    ObjectNewSd LIKE '%;FW%' OR    ObjectNewSd LIKE '%;BU%'))</code></p><h4>Detection Notes</h4><ul><li>For Security Auditing event id 4663 and 4670, enable success events for category Object Access and subcategory File System.</li><li>For Security Auditing event id 4663, a System Access Control List (SACL) that controls the use of specific access rights such as WRITE_DAC is required for event generation.</li><li>For Security Auditing event id 4663 and 4670, depending on the File Path you are monitoring, the implementation of a new System Access Control List (SACL) might be required.</li><li>For Security Auditing event id 4670, FA right means File all access right, FW right means File generic write, BU trustee means Built-in users.</li></ul>
@@ -9497,7 +9497,7 @@
                 </td>
                 <!-- Add first data component here -->
                 <td> 
-                    <a href="/datasources/DS0002/#User%20Account%20Authentication">User Account Authentication</a>
+                    <a href="/versions/v13/datasources/DS0002/#User%20Account%20Authentication">User Account Authentication</a>
                 </td>
                     <td>
                                 <p>Monitor for an attempts by a user to gain access to a network or computing resource, often by providing credentials via remote terminal services, that do not have a corresponding entry in a command history file.</p>
@@ -9736,17 +9736,17 @@
                     
                                 <div class="col text-right">
                                     <small>
-                                        <a href="/versions/v13/resources/privacy" class="footer-link">Privacy Policy</a>
+                                        <a href="/resources/privacy" class="footer-link">Privacy Policy</a>
                                     </small>
                                 </div>
                                 <div class="col text-center">
                                     <small>
-                                        <a href="/versions/v13/resources/terms-of-use" class="footer-link">Terms of Use</a>
+                                        <a href="/resources/terms-of-use" class="footer-link">Terms of Use</a>
                                     </small>
                                 </div>
                                 <div class="col  text-left ">
                                     <small>
-                                        <a href="/versions/v13/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v13.1&#013;Website  v4.0.5">ATT&CK v13.1</a>
+                                        <a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v13.1&#013;Website  v4.0.5">ATT&CK v13.1</a>
                                     </small>
                                 </div>
             

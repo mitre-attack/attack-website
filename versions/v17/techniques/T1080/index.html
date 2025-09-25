@@ -19,13 +19,13 @@
         <meta charset='utf-8'>
         <meta name='viewport' content='width=device-width, initial-scale=1,shrink-to-fit=no'>
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <link rel='shortcut icon' href="/versions/v17/theme/favicon.ico" type='image/x-icon'>
+        <link rel='shortcut icon' href='/versions/v17/theme/favicon.ico' type='image/x-icon'>
         <title>Taint Shared Content, Technique T1080 - Enterprise | MITRE ATT&CK&reg;</title>
         <!-- USWDS CSS -->
         <!-- Bootstrap CSS -->
-        <link rel='stylesheet' href="/versions/v17/theme/style/vendors/bootstrap.min.css" />
-        <link rel='stylesheet' href="/versions/v17/theme/style/vendors/bootstrap-tourist.css" />
-        <link rel='stylesheet' href="/versions/v17/theme/style/vendors/bootstrap-select.min.css" />
+        <link rel='stylesheet' href='/versions/v17/theme/style/vendors/bootstrap.min.css' />
+        <link rel='stylesheet' href='/versions/v17/theme/style/vendors/bootstrap-tourist.css' />
+        <link rel='stylesheet' href='/versions/v17/theme/style/vendors/bootstrap-select.min.css' />
         <!-- Fontawesome CSS -->
         <link rel="stylesheet" href="/versions/v17/theme/style/vendors/fontawesome-6.5.1/css/fontawesome.min.css"/>
         <link rel="stylesheet" href="/versions/v17/theme/style/vendors/fontawesome-6.5.1/css/brands.min.css"/>
@@ -42,7 +42,7 @@
             <!-- header elements -->
             <header class="col px-0">
                     <nav class='navbar navbar-expand-lg navbar-dark position-static'>
-        <a class='navbar-brand' href="/versions/v17/"><img src="/versions/v17/theme/images/mitre_attack_logo.png" class="attack-logo"></a>
+        <a class='navbar-brand' href='/versions/v17/'><img src="/versions/v17/theme/images/mitre_attack_logo.png" class="attack-logo"></a>
         <button class='navbar-toggler' type='button' data-toggle='collapse' data-target='#navbarCollapse'
                 aria-controls='navbarCollapse' aria-expanded='false' aria-label='Toggle navigation'>
                 <span class='navbar-toggler-icon'></span>
@@ -133,26 +133,26 @@
                         </li>
                         <li class="nav-item dropdown">
                                 
-    <a class="nav-link dropdown-toggle" href="/versions/v17/resources/" id="navbarDropdown" role="button"
+    <a class="nav-link dropdown-toggle" href="/resources/" id="navbarDropdown" role="button"
     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         <b>Resources</b>
     </a>
     <div class="dropdown-menu " aria-labelledby="navbarDropdown">
-                <a class="dropdown-item" href="/versions/v17/resources/">Get Started</a>
-                <a class="dropdown-item" href="/versions/v17/resources/learn-more-about-attack/">Learn More about ATT&CK</a>
-                <a class="dropdown-item" href="/versions/v17/resources/attackcon/">ATT&CKcon</a>
-                <a class="dropdown-item" href="/versions/v17/resources/attack-data-and-tools/">ATT&CK Data & Tools</a>
-                <a class="dropdown-item" href="/versions/v17/resources/faq/">FAQ</a>
-                <a class="dropdown-item" href="/versions/v17/resources/engage-with-attack/contact/">Engage with ATT&CK</a>
+                <a class="dropdown-item" href="/resources/">Get Started</a>
+                <a class="dropdown-item" href="/resources/learn-more-about-attack/">Learn More about ATT&CK</a>
+                <a class="dropdown-item" href="/resources/attackcon/">ATT&CKcon</a>
+                <a class="dropdown-item" href="/resources/attack-data-and-tools/">ATT&CK Data & Tools</a>
+                <a class="dropdown-item" href="/resources/faq/">FAQ</a>
+                <a class="dropdown-item" href="/resources/engage-with-attack/contact/">Engage with ATT&CK</a>
                 <a class="dropdown-item" href="/resources/versions/">Version History</a>
                 <a class="dropdown-item" href="/resources/updates/">Updates</a>
-                <a class="dropdown-item" href="/versions/v17/resources/legal-and-branding/">Legal & Branding</a>
+                <a class="dropdown-item" href="/resources/legal-and-branding/">Legal & Branding</a>
     </div>
 
 
                         </li>
                         <li class="nav-item">
-                            <a href="/versions/v17/resources/engage-with-attack/benefactors/"  class="nav-link" ><b>Benefactors</b></a>
+                            <a href="/resources/engage-with-attack/benefactors/"  class="nav-link" ><b>Benefactors</b></a>
                         </li>
                         <li class="nav-item">
                                 <a href="https://medium.com/mitre-attack/" target="_blank" class="nav-link">
@@ -540,7 +540,7 @@
                 </td>
                 <!-- Add first data component here -->
                 <td> 
-                    <a href="/datasources/DS0022/#File%20Creation">File Creation</a>
+                    <a href="/versions/v17/datasources/DS0022/#File%20Creation">File Creation</a>
                 </td>
                     <td>
                                 <p>Monitor for newly constructed files from files that write or overwrite many files to a network shared directory may be suspicious. Monitor for the creation of hidden files and directories that may be used to conceal malicious files or scripts on shared network locations.</p><p><code> sourcetype="WinEventLog:Security" EventCode=4663 OR sourcetype="linux:audit" syscall IN ("creat", "open")| search ObjectType="File" AccessMask="0x2" // 0x2 indicates write access| stats count by ObjectName, AccountName, ProcessName, SourceIPAddress, _time| eval suspicious=if(match(ObjectName, "\.exe$|\.lnk$|\.scr$|\.bat$|\.vbs$") AND AccountName!="known_admin_user", "suspicious", "normal")</code></p>
@@ -551,7 +551,7 @@
                         <td></td>
                         <td></td>
                         <td>
-                            <a href="/datasources/DS0022/#File%20Modification">File Modification</a>
+                            <a href="/versions/v17/datasources/DS0022/#File%20Modification">File Modification</a>
                         </td>
                             <td>
                                         <p>Monitor for files that write or overwrite many files to a network shared directory may be suspicious.Track file modification events in shared directories, especially modifications that alter executables or scripts. Monitor for signs of binary tampering, such as changes to .DLL or .EXE files that were previously trusted. Look for metadata changes, such as new authors or timestamps inconsistent with expected changes.</p><p><code>sourcetype="WinEventLog:Security" EventCode=4663 OR sourcetype="linux:audit" syscall="write"| search ObjectType="File" AccessMask="0x2"| stats count by ObjectName, AccountName, ProcessName, SourceIPAddress, _time| eval modification_suspicious=if(match(ObjectName, "\.exe$|\.dll$|\.lnk$") AND ProcessName!="approved_tool.exe", "suspicious", "normal")| where modification_suspicious="suspicious" </code> </p>
@@ -567,7 +567,7 @@
                 </td>
                 <!-- Add first data component here -->
                 <td> 
-                    <a href="/datasources/DS0033/#Network%20Share%20Access">Network Share Access</a>
+                    <a href="/versions/v17/datasources/DS0033/#Network%20Share%20Access">Network Share Access</a>
                 </td>
                     <td>
                                 <p>Monitor for unexpected and abnormal accesses to network shares, especially those also associated with file activity. Monitor access to shared network directories to detect unauthorized or suspicious access, especially from unfamiliar accounts or at unusual times.Identify potential attempts to access hidden files or unusual file types within the directory.</p><p><code> sourcetype="WinEventLog:Security" EventCode=5145| search ObjectType="File"| stats count by ShareName, AccountName, AccessMask, SourceIPAddress, _time| eval access_suspicious=if(match(ShareName, "\hidden_directory\") AND AccessMask="0x2", "suspicious", "normal")| where access_suspicious="suspicious"| table _time, ShareName, AccountName, AccessMask, SourceIPAddress, access_suspicious</code></p>
@@ -583,7 +583,7 @@
                 </td>
                 <!-- Add first data component here -->
                 <td> 
-                    <a href="/datasources/DS0009/#Process%20Creation">Process Creation</a>
+                    <a href="/versions/v17/datasources/DS0009/#Process%20Creation">Process Creation</a>
                 </td>
                     <td>
                                 <p>Monitor processes that are executed from removable media for malicious or abnormal activity such as network connections due to Command and Control and possible network Discovery techniques.</p><p><code> sourcetype="WinEventLog:Microsoft-Windows-Sysmon/Operational" EventID=1 OR sourcetype="linux:audit" syscall="execve"| search ParentImage IN ("\network_share\<em>.exe", "\network_share\</em>.bat")| stats count by Image, ParentImage, AccountName, CommandLine, _time| eval exec_suspicious=if(match(ParentImage, "\network_share\") AND AccountName!="known_service_account", "suspicious", "normal")| where exec_suspicious="suspicious"</code></p>
@@ -925,16 +925,16 @@
                         <div class="footer-link-group">
                             <div class="row row-footer">
                                 <div class="px-3 col-footer">
-                                    <u class="footer-link"><a href="/versions/v17/resources/engage-with-attack/contact" class="footer-link">Contact Us</a></u>
+                                    <u class="footer-link"><a href="/resources/engage-with-attack/contact" class="footer-link">Contact Us</a></u>
                                 </div>
                                 <div class="px-3 col-footer">
-                                    <u class="footer-link"><a href="/versions/v17/resources/legal-and-branding/terms-of-use" class="footer-link">Terms of Use</a></u>
+                                    <u class="footer-link"><a href="/resources/legal-and-branding/terms-of-use" class="footer-link">Terms of Use</a></u>
                                 </div>
                                     <div class="px-3 col-footer">
-                                        <u class="footer-link"><a href="/versions/v17/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
+                                        <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3 col-footer">
-                                    <u class="footer-link"><a href="/versions/v17/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v17.1&#013;Website  v4.2.3">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v17.1&#013;Website  v4.2.3">Website Changelog</a></u>
                                 </div>
                                 <div class="px-3">
                                     <u class="footer-link"><a href="/resources/legal-and-branding/privacy/#" class="footer-link" onclick="Osano.cm.showDrawer('osano-cm-dom-info-dialog-open')">Cookie Preferences</a></u>

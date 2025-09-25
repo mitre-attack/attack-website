@@ -1,2 +1,2 @@
-let base_url = "/versions/v7";
+let base_url = "";
 let tour_steps = {};
