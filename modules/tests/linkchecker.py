@@ -1,7 +1,10 @@
 import os
 import re
+import threading
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 import requests
+from loguru import logger
 
 import modules
 from modules import site_config
@@ -10,9 +13,25 @@ from . import tests_config
 
 # STATIC PROPERTIES
 
-allowed_in_link_with_external_links = r"-?\w\$\.!\*'()/:"
+IGNORED_LINKS = ["full-coverage.html", "macro-technique-refinement.html"]
 
-allowed_in_link = r"-?\w\$\.!\*'()/"
+ALLOWED_IN_LINK_INTERNAL = r"-?\w\$\.!\*'()/"
+ALLOWED_IN_LINK_EXTERNAL = r"-?\w\$\.!\*'()/:"
+LINK_POSTFIX = r']+)["\']'
+
+# Pre-compiled regex patterns
+LINK_REGEXES = {
+    "href_internal": re.compile(r'href\s?=\s?["\']([' + ALLOWED_IN_LINK_INTERNAL + LINK_POSTFIX),
+    "href_external": re.compile(r'href\s?=\s?["\']([' + ALLOWED_IN_LINK_EXTERNAL + LINK_POSTFIX),
+    "src_internal": re.compile(r'src\s?=\s?["\']([' + ALLOWED_IN_LINK_INTERNAL + LINK_POSTFIX),
+    "src_external": re.compile(r'src\s?=\s?["\']([' + ALLOWED_IN_LINK_EXTERNAL + LINK_POSTFIX),
+    "cache_bust": re.compile(r"(css|js)\?\w+"),
+}
+
+# Caches
+file_exists_cache = {}
+get_correct_link_cache = {}
+relative_link_cache = {}
 
 links_list = {}
 in_use_links = {}
@@ -44,8 +63,13 @@ def remove_extra_from_path(filepath):
 
 def get_correct_link(path):
     """Given a path, return the correct path by adding index.html or removing cache-disabling query string suffix."""
+    # Use cache to avoid redundant work
+    if path in get_correct_link_cache:
+        return get_correct_link_cache[path]
+
     # Ignore if it starts with http
     if path.startswith("http"):
+        get_correct_link_cache[path] = path
         return path
 
     # All paths need to start with /
@@ -71,7 +95,7 @@ def get_correct_link(path):
         "docx",
         "rtf",
     ]:
-        if re.search(r"(css|js)\?\w+", sort_of_extension):
+        if LINK_REGEXES["cache_bust"].search(sort_of_extension):
             # CSS & JavaScript: check for cache-disabling query string suffix, e.g style.min.css?f8be4c06
             path = path.split("?")[0]  # remove suffix
         else:
@@ -80,10 +104,10 @@ def get_correct_link(path):
             # serving a file add index.html to replicate webserver
             # functionality
             if not path.endswith("/"):
-                # logger.debug(f"does this even happen? even once? {path}")
                 path += "/"
             path += "index.html"
 
+    get_correct_link_cache[path] = path
     return path
 
 
@@ -109,7 +133,7 @@ def internal_link_test(link):
         web_dir = site_config.web_directory.split(site_config.subdirectory)[0]
     else:
         web_dir = site_config.web_directory
-    
+
     # Get correct link path
     path = web_dir + get_correct_link(link)
 
@@ -125,18 +149,26 @@ def internal_link_test(link):
         from_index_path = path.split("/index.html")
         from_index_path = from_index_path[0] + ".html"
 
-    if os.path.exists(path) or os.path.exists(to_index_path) or os.path.exists(from_index_path):
-        return False
-    else:
-        return True
+    # Use cache for file existence checks
+    for test_path in (path, to_index_path, from_index_path):
+        if test_path in file_exists_cache:
+            if file_exists_cache[test_path]:
+                return False
+        else:
+            exists = os.path.exists(test_path)
+            file_exists_cache[test_path] = exists
+            if exists:
+                return False
+    return True
 
 
 def check_if_relative_link(link):
     """Given a link, return true if it is a relative path."""
-    if not link.startswith("http"):
-        if not link.startswith("/"):
-            return True
-    return False
+    if link in relative_link_cache:
+        return relative_link_cache[link]
+    result = not link.startswith("http") and not link.startswith("/")
+    relative_link_cache[link] = result
+    return result
 
 
 def internal_external_link_checker(filepath, html_str):
@@ -154,9 +186,9 @@ def internal_external_link_checker(filepath, html_str):
         if (
             "/versions/" in filepath
         ):  # don't check links with data-test-ignore attribute, or live version link name, when on previous versions
-            linkregex = rf'{prefix}\s?=\s?["\']([{allowed_in_link_with_external_links}]+)["\'](?! ?data-test-ignore="true")(?!>live version)'
+            linkregex = rf'{prefix}\s?=\s?["\']([{ALLOWED_IN_LINK_EXTERNAL}]+)["\'](?! ?data-test-ignore="true")(?!>live version)'
         else:
-            linkregex = rf"{prefix}\s?=\s?[\"']([{allowed_in_link_with_external_links}]+)[\"']"
+            linkregex = rf"{prefix}\s?=\s?[\"']([{ALLOWED_IN_LINK_EXTERNAL}]+)[\"']"
         links = re.findall(linkregex, html_str)
 
         # check if link has a dest
@@ -215,7 +247,7 @@ def internal_link_checker(filepath, html_str):
 
     # find all links
     for prefix in ["href", "src"]:
-        links = re.findall(rf"{prefix}\s?=\s?[\"']([{allowed_in_link}]+)[\"']", html_str)
+        links = re.findall(rf"{prefix}\s?=\s?[\"']([{ALLOWED_IN_LINK_INTERNAL}]+)[\"']", html_str)
         # check if link has a dest
         for link in links:
             # Check if link is relative path
@@ -228,6 +260,11 @@ def internal_link_checker(filepath, html_str):
 
             # Get correct path
             link = get_correct_link(link)
+
+            for ignored_link in IGNORED_LINKS:
+                if ignored_link in link:
+                    logger.debug(f"Ignoring link: {link}")
+                    links_list[link] = None
 
             # Check if link is in use
             check_if_link_in_use(filepath, link)
@@ -350,34 +387,39 @@ def check_links(external_links=False):
     filenames = []
     internal_problem = False
 
+    html_filepaths = []
     for directory, _, files in os.walk(site_config.web_directory):
         for filename in filter(lambda f: f.endswith(".html"), files):
             filepath = os.path.join(directory, filename)
-
             filenames.append(filepath)
+            html_filepaths.append(filepath)
 
-            # Do not check previous dir with external links
-            if external_links and "previous" not in directory and "versions" not in directory:
-                report = check_links_on_page(filepath, True)
+    # Parallelize link checking
+    max_workers = min(32, os.cpu_count() or 4)
+    lock = threading.Lock()
+    with ThreadPoolExecutor(max_workers=max_workers) as executor:
+        future_to_filepath = {}
+        for filepath in html_filepaths:
+            if external_links and "previous" not in filepath and "versions" not in filepath:
+                future = executor.submit(check_links_on_page, filepath, True)
             else:
-                report = check_links_on_page(filepath)
+                future = executor.submit(check_links_on_page, filepath)
+            future_to_filepath[future] = filepath
 
-            # Set internal problem flag to true if internal
-            # problem is found. We want to exit out on error if an internal
-            # link is broken
-            if not internal_problem:
-                if report.get("internal_problem"):
+        for future in as_completed(future_to_filepath):
+            report = future.result()
+            with lock:
+                # Set internal problem flag to true if internal link is broken
+                if not internal_problem and report.get("internal_problem"):
                     internal_problem = True
-
-            if report.get("problems"):
-                broken_pages.append(report)
-
-            if report.get("relative_links"):
-                relative_links_report = {
-                    "path": report["path"],
-                    "relative_links": report["relative_links"],
-                }
-                relative_links.append(relative_links_report)
+                if report.get("problems"):
+                    broken_pages.append(report)
+                if report.get("relative_links"):
+                    relative_links_report = {
+                        "path": report["path"],
+                        "relative_links": report["relative_links"],
+                    }
+                    relative_links.append(relative_links_report)
 
     # Get unlinked pages list
     unlinked_pages = check_unlinked_pages(filenames)

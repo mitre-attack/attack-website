@@ -1,9 +1,10 @@
 import json
 import math
 import os
+import re
 import shutil
+import urllib.parse
 from datetime import datetime
-from pathlib import Path
 
 from loguru import logger
 from mitreattack.attackToExcel import attackToExcel
@@ -13,8 +14,6 @@ from modules import site_config, util
 
 from . import resources_config
 
-import urllib.parse
-
 
 def generate_resources():
     """Responsible for generating the resources pages."""
@@ -23,12 +22,10 @@ def generate_resources():
     util.buildhelpers.create_content_pages_dir()
 
     # Verify if resources directory exists
-    if not os.path.isdir(site_config.resources_markdown_path):
-        os.mkdir(site_config.resources_markdown_path)
+    os.makedirs(site_config.resources_markdown_path, exist_ok=True)
 
     # Verify if resources directory exists
-    if not os.path.isdir(resources_config.updates_markdown_path):
-        os.mkdir(resources_config.updates_markdown_path)
+    os.makedirs(resources_config.updates_markdown_path, exist_ok=True)
 
     # Verify if versions module is in the running pool, if not remove it.
     build_versions_module = False
@@ -66,20 +63,12 @@ def generate_resources():
 
 def copy_docs(module_docs_path):
     """Move module specific docs into the website's content directory for pelican."""
-    logger.info("Copying files to docs directory")
+    logger.info(f"Copying docs from {module_docs_path} to {site_config.docs_dir}")
     if os.path.isdir(module_docs_path):
-        # Check that content directory exist
-        if not os.path.exists(site_config.content_dir):
-            os.mkdir(site_config.content_dir)
-        # Check that docs directory exist
-        if not os.path.exists(site_config.docs_dir):
-            os.mkdir(site_config.docs_dir)
+        os.makedirs(site_config.content_dir, exist_ok=True)
+        os.makedirs(site_config.docs_dir, exist_ok=True)
 
-        for doc in os.listdir(module_docs_path):
-            if os.path.isdir(os.path.join(module_docs_path, doc)):
-                shutil.copytree(os.path.join(module_docs_path, doc), os.path.join(site_config.docs_dir, doc))
-            else:
-                shutil.copyfile(os.path.join(module_docs_path, doc), os.path.join(site_config.docs_dir, doc))
+        shutil.copytree(module_docs_path, site_config.docs_dir, dirs_exist_ok=True)
 
 
 def extract_video_id(url):
@@ -231,7 +220,7 @@ def generate_faq_page():
 
 
 def generate_static_pages():
-    """Reads markdown files from the static pages directory and copies them into the markdown directory."""
+    """Read markdown files from the static pages directory and copies them into the markdown directory."""
     logger.info("Generating static pages")
     static_pages_dir = os.path.join("modules", "resources", "static_pages")
 
@@ -292,34 +281,10 @@ def generate_static_pages():
 def generate_working_with_attack():
     """Responsible for generating Access Data & Tools and creating Excel files."""
     logger.info("Generating Access Data & Tools page")
-    excel_dirs = [
-        f"enterprise-attack-{site_config.full_attack_version}",
-        f"mobile-attack-{site_config.full_attack_version}",
-        f"ics-attack-{site_config.full_attack_version}",
-    ]
-    files_types = [
-        "matrices",
-        "mitigations",
-        "relationships",
-        "software",
-        "groups",
-        "tactics",
-        "techniques",
-        "datasources",
-        "campaigns",
-        "assets",
-    ]
-
-    # Verify if directories exists
-    if not os.path.isdir(site_config.web_directory):
-        os.makedirs(site_config.web_directory)
-
-    docs_dir = os.path.join(site_config.web_directory, "docs")
-    if not os.path.isdir(docs_dir):
-        os.makedirs(docs_dir)
+    docs_dir = os.path.join(site_config.docs_dir)
+    os.makedirs(docs_dir, exist_ok=True)
 
     ms = util.relationshipgetters.get_ms()
-
     for domain in site_config.domains:
         if domain["deprecated"]:
             continue
@@ -331,20 +296,68 @@ def generate_working_with_attack():
             output_dir=docs_dir,
             mem_store=ms[domain_name],
         )
+        src_dir = os.path.join(docs_dir, f"{domain_name}-{site_config.full_attack_version}")
+        if not os.path.isdir(src_dir):
+            logger.error(f"Excel files not generated/found in: {src_dir}")
 
-    files_json = {"excel_files": []}
-    for excel_dir in excel_dirs:
-        excel_json = {"label": f"{excel_dir}.xlsx", "url": f"/docs/{excel_dir}/{excel_dir}.xlsx", "children": []}
-        for file_type in files_types:
-            child_json = {
-                "label": f"{excel_dir}-{file_type}.xlsx",
-                "url": f"/docs/{excel_dir}/{excel_dir}-{file_type}.xlsx",
-            }
-            if os.path.exists(site_config.web_directory + child_json["url"]):
-                excel_json["children"].append(child_json)
-        files_json["excel_files"].append(excel_json)
+        # TODO: delete this block if we end up with greater control of how to generate output in mitreattack-python
+        dst_dir = os.path.join(docs_dir, "attack-excel-files", site_config.full_attack_version, domain_name)
+        os.makedirs(dst_dir, exist_ok=True)
+        for fname in os.listdir(src_dir):
+            if fname.endswith(".xlsx"):
+                old_path = os.path.join(src_dir, fname)
+                new_path = os.path.join(dst_dir, fname)
+                logger.debug(f"Moving {old_path} to {new_path}")
+                shutil.move(old_path, new_path)
+        try:
+            logger.debug(f"Removing directory: {src_dir}")
+            os.rmdir(src_dir)
+        except OSError:
+            pass
 
+    attack_excel_root = "content/docs/attack-excel-files"
+    logger.debug(f"Scanning for ATT&CK Excel files in: {attack_excel_root}")
+
+    versions = sorted(
+        [d for d in os.listdir(attack_excel_root) if os.path.isdir(os.path.join(attack_excel_root, d))],
+        key=lambda v: tuple(map(int, re.findall(r"\d+", v))),
+        reverse=True,
+    )
+
+    excel_files_by_version = {}
+    for version in versions:
+        version_path = os.path.join(attack_excel_root, version)
+        if not os.path.isdir(version_path):
+            continue
+        domain_list = []
+        for domain in sorted(os.listdir(version_path)):
+            domain_path = os.path.join(version_path, domain)
+            if not os.path.isdir(domain_path):
+                continue
+            files = []
+            for fname in sorted(os.listdir(domain_path)):
+                if fname.endswith(".xlsx"):
+                    url = f"/docs/attack-excel-files/{version}/{domain}/{fname}"
+                    files.append(
+                        {
+                            "label": fname,
+                            "url": url,
+                        }
+                    )
+            if files:
+                master_label = f"{domain}-{version}.xlsx"
+                master_file = next((f for f in files if f["label"] == master_label), None)
+                master_url = master_file["url"] if master_file else ""
+                children = [f for f in files if f["label"] != master_label] if master_file else files
+
+                domain_dict = {"label": master_label, "url": master_url, "children": children}
+                domain_list.append(domain_dict)
+        if domain_list:
+            excel_files_by_version[version] = domain_list
+
+    files_json = {"excel_files_by_version": excel_files_by_version}
     working_with_attack_content = resources_config.working_with_attack_md + json.dumps(files_json)
+
     # write markdown to file
     with open(
         os.path.join(site_config.resources_markdown_path, "working_with_attack.md"), "w", encoding="utf8"
@@ -369,11 +382,6 @@ def generate_sidebar_resources():
 def generate_contribute_page():
     """Responsible for generating the markdown pages of the contribute pages."""
     logger.info("Generating contributing page")
-
-    # Generate redirections
-    util.buildhelpers.generate_redirections(
-        redirections_filename=resources_config.resources_redirections_location, redirect_md=site_config.redirect_md
-    )
 
     ms = util.relationshipgetters.get_ms()
     contributors = util.stixhelpers.get_contributors(ms)

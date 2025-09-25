@@ -1,13 +1,13 @@
-from collections.abc import Iterable
 import json
 import os
+from collections.abc import Iterable
 
 from loguru import logger
 
 from modules import util
 
-from . import software_config
 from .. import site_config
+from . import software_config
 
 
 def generate_software():
@@ -21,12 +21,6 @@ def generate_software():
     # Verify if directory exists
     if not os.path.isdir(software_config.software_markdown_path):
         os.mkdir(software_config.software_markdown_path)
-
-    # TODO resolve infinite redirect loop when run locally. Needs further testing before code removal.
-    # Generate redirections
-    util.buildhelpers.generate_redirections(
-        redirections_filename=software_config.software_redirection_location, redirect_md=site_config.redirect_md
-    )
 
     # Generates the markdown files to be used for page generation and verifies if a software was generated
     software_generated = generate_markdown_files()

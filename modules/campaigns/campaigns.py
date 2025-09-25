@@ -6,15 +6,12 @@ from loguru import logger
 
 from modules import util
 
-from . import campaigns_config
 from .. import site_config
+from . import campaigns_config
 
 
 def generate_campaigns():
-    """
-    Responsible for verifying campaign directory and starting off campaign markdown generation.
-    """
-
+    """Responsible for verifying campaign directory and starting off campaign markdown generation."""
     # Create content pages directory if does not already exist
     util.buildhelpers.create_content_pages_dir()
 
@@ -25,12 +22,6 @@ def generate_campaigns():
     if not os.path.isdir(campaigns_config.campaign_markdown_path):
         os.mkdir(campaigns_config.campaign_markdown_path)
 
-    # TODO resolve infinite redirect loop when run locally. Needs further testing before code removal.
-    # Generate redirections
-    util.buildhelpers.generate_redirections(
-        redirections_filename=campaigns_config.campaigns_redirection_location, redirect_md=site_config.redirect_md
-    )
-
     # Generates the markdown files to be used for page generation
     campaigns_generated = generate_markdown_files()
 
@@ -39,10 +30,7 @@ def generate_campaigns():
 
 
 def generate_markdown_files():
-    """
-    Responsible for generating campaign index page and getting shared data for all campaigns.
-    """
-
+    """Responsible for generating campaign index page and getting shared data for all campaigns."""
     has_campaign = False
 
     campaign_list = util.relationshipgetters.get_campaign_list()
@@ -79,7 +67,6 @@ def generate_markdown_files():
 
 def generate_campaign_md(campaign, side_menu_data, notes):
     """Responsible for generating markdown of all campaigns."""
-
     attack_id = util.buildhelpers.get_attack_id(campaign)
 
     if attack_id:

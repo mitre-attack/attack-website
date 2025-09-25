@@ -1,5 +1,4 @@
-from . import tests
-from . import tests_config
+from . import tests, tests_config
 
 
 def get_priority():

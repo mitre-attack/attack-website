@@ -123,6 +123,11 @@ Consult these sections as needed for step 5 in the above list.
     * Dates should not overlap
     * `cti_url`: should be tag URL for the release on the mitre/cti repo
     * `commit`: should be sha256 hash of latest commit from mitre-attack/attack-website on the `gh-pages` branch prior to new content release
+
+
+* Run the `archive-website.py` script to get the previously released archives of the ATT&CK website
+  * Upload the `tar.gz` of the latest previous version of the website to the [Archived Website Files](https://github.com/mitre-attack/attack-website/releases/tag/archived-website-files) release
+  * Optional - If sufficient changes were made to the archive process the re-upload all `tar.gz` files
 * Update notes
   * Add new file: `modules/resources/static_pages/updates-<month>-<year>.md`
   * Update former updates announcement file to specify end date of old release

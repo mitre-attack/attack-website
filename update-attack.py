@@ -1,12 +1,11 @@
 import argparse
 import time
 
-import colorama
 from dotenv import load_dotenv
 from loguru import logger
 
 import modules
-from modules import site_config, util
+from modules import site_config
 
 load_dotenv()
 
@@ -132,6 +131,13 @@ def get_parsed_args():
         help="Forces application to exit with success status codes even if tests fail.",
     )
     parser.add_argument(
+        "--version-archive-dir",
+        type=str,
+        help=(
+            "If specified, sets the directory for the ATT&CK version archives. Defaults to attack-version-archives"
+        ),
+    )
+    parser.add_argument(
         "--banner",
         type=str,
         help=(
@@ -184,7 +190,7 @@ def remove_from_build(arg_modules, arg_extras):
     """Given a list of modules from command line, remove modules that appear in module directory that are not in list."""
 
     def remove_from_running_pool():
-        """Remove modules from running pool if they are not in modules list from argument"""
+        """Remove modules from running pool if they are not in modules list from argument."""
         copy_of_modules = []
 
         for module in modules.run_ptr:
@@ -194,7 +200,7 @@ def remove_from_build(arg_modules, arg_extras):
         modules.run_ptr = copy_of_modules
 
     def remove_from_menu():
-        """Remove modules from menu if they are not in modules list from argument"""
+        """Remove modules from menu if they are not in modules list from argument."""
         copy_of_menu = []
 
         for module in modules.menu_ptr:
@@ -211,13 +217,22 @@ def remove_from_build(arg_modules, arg_extras):
     remove_from_menu()
 
 
-if __name__ == "__main__":
-    """Beginning of ATT&CK update module"""
+def main():
+    """Entry point for the update script."""
     # Get args
     args = get_parsed_args()
 
     # Remove modules from build
     remove_from_build(args.modules, args.extras)
+
+    # Print only the modules that will be run, marking extras
+    logger.info("Building website using the following modules in this order:")
+    for m in modules.run_ptr:
+        mod_name = m["module_name"]
+        if mod_name.lower() in extras:
+            logger.info(f"{mod_name} [extra]")
+        else:
+            logger.info(f"{mod_name}")
 
     # Arguments used for pelican
     site_config.send_to_pelican("no_stix_link_replacement", args.no_stix_link_replacement)
@@ -225,17 +240,18 @@ if __name__ == "__main__":
     # Start time of update
     update_start = time.time()
 
-    # Init colorama for output
-    colorama.init()
-
     # Get running modules and priorities
     for ptr in modules.run_ptr:
-        util.buildhelpers.print_start(ptr["module_name"])
+        logger.info(f"RUNNING MODULE: {ptr['module_name']}")
         start_time = time.time()
         ptr["run_module"]()
         end_time = time.time()
-        util.buildhelpers.print_end(ptr["module_name"], start_time, end_time)
+        logger.info(f"FINISHED MODULE: {ptr['module_name']} in {end_time - start_time:.2f} seconds")
 
     # Print end of module
     update_end = time.time()
-    util.buildhelpers.print_end("TOTAL Update Time", update_start, update_end)
+    logger.info(f"TOTAL Update Time: {update_end - update_start:.2f} seconds")
+
+
+if __name__ == "__main__":
+    main()

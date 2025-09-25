@@ -2,12 +2,10 @@ import collections
 import json
 import os
 
-from loguru import logger
-
 from modules import util
 
-from . import assets_config
 from .. import site_config
+from . import assets_config
 
 
 def generate_assets():
@@ -22,11 +20,6 @@ def generate_assets():
     if not os.path.isdir(assets_config.asset_markdown_path):
         os.mkdir(assets_config.asset_markdown_path)
 
-    # Generate redirections
-    util.buildhelpers.generate_redirections(
-        redirections_filename=assets_config.assets_redirection_location, redirect_md=site_config.redirect_md
-    )
-
     # Generates the markdown files to be used for page generation
     assets_generated = generate_markdown_files()
 
@@ -35,9 +28,7 @@ def generate_assets():
 
 
 def generate_markdown_files():
-    """
-    Responsible for generating asset index page and getting shared data for all assets.
-    """
+    """Responsible for generating asset index page and getting shared data for all assets."""
     has_asset = False
 
     asset_list = util.relationshipgetters.get_asset_list()
@@ -70,7 +61,6 @@ def generate_markdown_files():
 
 def generate_asset_md(asset, side_menu_data, notes):
     """Responsible for generating markdown of all assets."""
-
     attack_id = util.buildhelpers.get_attack_id(asset)
 
     if not attack_id:

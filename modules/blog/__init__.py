@@ -1,3 +1,5 @@
+from loguru import logger
+
 from . import blog_config
 
 
@@ -14,3 +16,6 @@ def get_menu():
         "priority": blog_config.priority,
         "children": [],
     }
+
+def run_module():
+    logger.info("Running Blog module...")

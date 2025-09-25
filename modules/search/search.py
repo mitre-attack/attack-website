@@ -159,8 +159,7 @@ def clean(filepath):
 
 
 def preserve_current_version():
-    """Preserve current version"""
-
+    """Preserve current version."""
     # Check for intermodule dependency
     if [key["module_name"] for key in modules.run_ptr if key["module_name"] == "versions"]:
         versions.versions.deploy_current_version()

@@ -1,7 +1,6 @@
 import hashlib
 import json
 import os
-import shutil
 import subprocess
 from string import Template
 
@@ -42,7 +41,6 @@ def generate_website():
     pelican_content()
     # this is nice to have if you want to run pelican manually later
     # remove_pelican_settings()
-    remove_unwanted_output()
 
 
 def generate_uuid_from_seeds(content_version, website_version):
@@ -53,7 +51,8 @@ def generate_uuid_from_seeds(content_version, website_version):
     - content_version (str): Semantic version of the content without a leading 'v'.
     - website_version (str): Semantic version of the website with a leading 'v'.
 
-    Returns:
+    Returns
+    -------
     - str: A UUID generated based on the two versions.
     """
     # Combine and hash the values
@@ -267,45 +266,6 @@ def remove_pelican_settings():
     pelican_settings_f = os.path.join(site_config.data_directory, "pelican_settings.json")
     if os.path.isfile(pelican_settings_f):
         os.remove(pelican_settings_f)
-
-
-def remove_unwanted_output():
-    """Remove unwanted files from the output directory."""
-    logger.info("Removing unwanted files from the output directory")
-    # Files to be deleted:
-    # archives.html, authors.html, categories.html, tags.html,
-    # author\blake-strom.html, category\cyber-threat-intelligence.html
-
-    archives_path = os.path.join(site_config.web_directory, "archives.html")
-    authors_path = os.path.join(site_config.web_directory, "authors.html")
-    categories_path = os.path.join(site_config.web_directory, "categories.html")
-    tags_path = os.path.join(site_config.web_directory, "tags.html")
-    author_path = os.path.join(site_config.web_directory, "author")
-    category_path = os.path.join(site_config.web_directory, "category")
-
-    if os.path.exists(archives_path):
-        logger.debug(f"Removing: {archives_path}")
-        os.remove(archives_path)
-
-    if os.path.exists(authors_path):
-        logger.debug(f"Removing: {authors_path}")
-        os.remove(authors_path)
-
-    if os.path.exists(categories_path):
-        logger.debug(f"Removing: {categories_path}")
-        os.remove(categories_path)
-
-    if os.path.exists(tags_path):
-        logger.debug(f"Removing: {tags_path}")
-        os.remove(tags_path)
-
-    if os.path.exists(author_path):
-        logger.debug(f"Removing: {author_path}")
-        shutil.rmtree(author_path)
-
-    if os.path.exists(category_path):
-        logger.debug(f"Removing: {category_path}")
-        shutil.rmtree(category_path)
 
 
 def generate_static_pages():

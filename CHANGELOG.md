@@ -1,3 +1,11 @@
+# v4.3.0 (2025-09-25)
+
+## Features
+
+* Update versions module to speed up how previous versions are created
+* Previous versions of website only archive ATT&CK object pages and redirect Resource pages to the latest version
+* Add Excel file table to ATT&CK data and tools for easier access to previous versions
+
 # v4.2.3 (2025-05-06)
 
 ## Features
