@@ -269,6 +269,14 @@ def get_related_detection_strategies(analytic_stix_id):
     return references
 
 
+def get_analytics_from_detection_strategy(detection_strategy):
+    """Build a lookup map for all analytics from the given detection strategy."""
+    all_analytics = relationshipgetters.get_analytic_list()
+    analytics_map = { analytic["id"]: analytic for analytic in all_analytics }
+    analytic_refs = detection_strategy.get("x_mitre_analytic_refs", [])
+    return { ref: analytics_map.get(ref) for ref in analytic_refs }
+
+
 def add_replace_or_ignore(stix_objs, attack_id_objs, obj_in_question):
     """Add if object does not already exist.
 
@@ -366,8 +374,9 @@ def grab_resources(ms):
                 # Returns sorted list by name of domain resources by given type list
                 # Builds list from unique ATT&CK IDs
                 curr_list = ms[domain["name"]].query(
-                    [stix2.Filter("type", "=", stix_type), stix2.Filter("revoked", "=", False)]
+                    [stix2.Filter("type", "=", stix_type)]
                 )
+                curr_list = [obj for obj in curr_list if not getattr(obj, "revoked", False)]
 
                 for val in curr_list:
                     add_replace_or_ignore(stix_objs, attack_id_objs, val)

@@ -2,6 +2,7 @@ import json
 import os
 
 from modules import util
+from loguru import logger
 
 from .. import site_config
 from . import detectionstrategies_config
@@ -35,6 +36,8 @@ def generate_markdown_files():
 
     if active_detection_strategy_list:
         has_detection_strategies = True
+    else:
+        logger.debug("No detection strategies found")
 
     if has_detection_strategies:
         notes = util.relationshipgetters.get_objects_using_notes()
@@ -143,12 +146,12 @@ def get_technique_detected_data(detection_strategy, reference_list):
 
 def build_analytics_by_platform(detection_strategy, reference_list):
     """Generate analytic table by platform."""
-    analytic_refs = detection_strategy.get("x_mitre_analytic_refs", [])
+    analytics_map = util.stixhelpers.get_analytics_from_detection_strategy(detection_strategy)
     platform_dict = {}
     analytic_ids = []
 
-    for analytic_ref in analytic_refs:
-        analytic = util.stixhelpers.get_analytic_from_list(analytic_ref)
+    for analytic in analytics_map.values():
+        if analytic is None: continue # skip missing analytics
 
         platforms = analytic.get("x_mitre_platforms", [])
         if not platforms:

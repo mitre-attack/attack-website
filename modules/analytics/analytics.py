@@ -36,6 +36,8 @@ def generate_markdown_files():
 
     if active_analytics:
         has_analytics = True
+    else:
+        logger.debug("No analytics found")
     
     if has_analytics:
         notes = util.relationshipgetters.get_objects_using_notes()
@@ -88,6 +90,7 @@ def generate_analytic_md(analytic, sidebar_data, notes):
     """Generate markdown for individual analytic pages."""
     attack_id = util.buildhelpers.get_attack_id(analytic)
     if not attack_id:
+        logger.debug(f"No attack ID found on analytic: {analytic["id"]}")
         return
 
     # build reference list
@@ -127,6 +130,9 @@ def generate_analytic_md(analytic, sidebar_data, notes):
 
 def get_related_detection_strategies(analytic_ref):
     related_dets = util.stixhelpers.get_related_detection_strategies(analytic_ref)
+    if not related_dets:
+        logger.debug(f"No related detection strategy found for analytic {analytic_ref}")
+
     det_data = []
     for det in related_dets:
         attack_id = util.buildhelpers.get_attack_id(det)
@@ -139,8 +145,13 @@ def get_related_detection_strategies(analytic_ref):
 
 
 def build_log_source_table(analytic):
-    log_sources = analytic.get("x_mitre_log_source_references")
     log_source_table = []
+
+    log_sources = analytic.get("x_mitre_log_source_references")
+    if not log_sources:
+        logger.debug(f"No log source references found on Analytic {analytic["id"]}")
+        return log_source_table
+
     for log_source in log_sources:
         log_source_data = {
             "name": log_source.get("name", ""),
@@ -149,7 +160,7 @@ def build_log_source_table(analytic):
         datacomponent_ref = log_source.get("x_mitre_data_component_ref", None)
         datacomponent = util.stixhelpers.get_datacomponent_from_list(datacomponent_ref)
         if not datacomponent:
-            logger.debug(f"NOT FOUND: Log source data component {log_source}")
+            logger.debug(f"Log source data component not found: {log_source}")
             log_source_data["data_component_not_found"] = True
         else:
             datacomponent_id = util.buildhelpers.get_attack_id(datacomponent)
