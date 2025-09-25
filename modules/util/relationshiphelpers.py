@@ -232,7 +232,7 @@ def campaigns_using_technique(srcs):
 
 
 def groups_attributed_to_campaign(srcs):
-    """Return campaign_id => {group, relationship} for each group attributed to the campaign
+    """Return campaign_id => {group, relationship} for each group attributed to the campaign.
 
     srcs should be an array of memorystores for enterprise, mobile, and pre
     """
@@ -240,7 +240,7 @@ def groups_attributed_to_campaign(srcs):
 
 
 def campaigns_attributed_to_group(srcs):
-    """Return group_id => {campaign, relationship} for each campaign attributed to the group
+    """Return group_id => {campaign, relationship} for each campaign attributed to the group.
 
     srcs should be an array of memorystores for enterprise, mobile, and pre
     """

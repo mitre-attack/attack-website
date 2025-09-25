@@ -320,21 +320,76 @@
               <h5 class="fw-bold mb-3" style="font-size:1.1rem;">ATT&CK Excel Files by Version</h5>
               <ul class="nav nav-tabs mb-2" role="tablist">
                 {% set versions = parsed.excel_files_by_version.keys()|list %}
-                {% for version in versions %}
-                  {% if loop.first %}
-                    <li class="nav-item">
-                      <a class="nav-link active" id="tab-{{ version|replace('.', '-') }}" data-toggle="tab" href="#pane-{{ version|replace('.', '-') }}" role="tab" aria-controls="pane-{{ version|replace('.', '-') }}" aria-selected="true">
-                        {{ version }}
-                      </a>
-                    </li>
-                  {% else %}
-                    <li class="nav-item">
-                      <a class="nav-link" id="tab-{{ version|replace('.', '-') }}" data-toggle="tab" href="#pane-{{ version|replace('.', '-') }}" role="tab" aria-controls="pane-{{ version|replace('.', '-') }}" aria-selected="false">
-                        {{ version }}
-                      </a>
-                    </li>
-                  {% endif %}
-                {% endfor %}
+                {% set visible_count = 3 %}
+                {% if versions|length <= visible_count %}
+                  {% for version in versions %}
+                    {% if loop.first %}
+                      <li class="nav-item">
+                        <a class="nav-link active" id="tab-{{ version|replace('.', '-') }}" data-toggle="tab" href="#pane-{{ version|replace('.', '-') }}" role="tab" aria-selected="true">
+                          {{ version }}
+                        </a>
+                      </li>
+                    {% else %}
+                      <li class="nav-item">
+                        <a class="nav-link" id="tab-{{ version|replace('.', '-') }}" data-toggle="tab" href="#pane-{{ version|replace('.', '-') }}" role="tab" aria-selected="false">
+                          {{ version }}
+                        </a>
+                      </li>
+                    {% endif %}
+                  {% endfor %}
+                {% else %}
+                  {% for version in versions[:visible_count] %}
+                    {% if loop.first %}
+                      <li class="nav-item">
+                        <a class="nav-link active" id="tab-{{ version|replace('.', '-') }}" data-toggle="tab" href="#pane-{{ version|replace('.', '-') }}" role="tab" aria-selected="true">
+                          {{ version }}
+                        </a>
+                      </li>
+                    {% else %}
+                      <li class="nav-item">
+                        <a class="nav-link" id="tab-{{ version|replace('.', '-') }}" data-toggle="tab" href="#pane-{{ version|replace('.', '-') }}" role="tab" aria-selected="false">
+                          {{ version }}
+                        </a>
+                      </li>
+                    {% endif %}
+                  {% endfor %}
+                  <li class="nav-item dropdown">
+                    <!-- Localized override for the "Older versions" dropdown so it looks like a page-level dropdown
+                         rather than inheriting the top navigation (.nav/.navbar) styles in style-attack.css.
+                         We intentionally scope the CSS here (template-only change) and add an extra class on
+                         the dropdown menu. -->
+                    <style>
+                      /* Scoped to this dropdown; uses !important to override global navbar rules */
+                      .older-versions-dropdown {
+                        background-color: white !important;
+                        box-shadow: 0 8px 16px rgba(0,0,0,0.08);
+                      }
+                      .older-versions-dropdown .dropdown-item {
+                        color: #39434c !important;
+                      }
+                      .older-versions-dropdown .dropdown-item.active {
+                        background-color: white !important;
+                      }
+                      .older-versions-dropdown .dropdown-item:hover,
+                      .older-versions-dropdown .dropdown-item:focus {
+                        color: #4f7cac !important;
+                      }
+                    </style>
+
+                    <a class="nav-link dropdown-toggle" id="older-versions-dropdown" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      Older versions
+                    </a>
+                    <ul class="dropdown-menu older-versions-dropdown" aria-labelledby="older-versions-dropdown">
+                      {% for version in versions[visible_count:] %}
+                        <li>
+                          <a class="dropdown-item" id="tab-{{ version|replace('.', '-') }}" data-toggle="tab" href="#pane-{{ version|replace('.', '-') }}" role="tab" aria-selected="false">
+                            {{ version }}
+                          </a>
+                        </li>
+                      {% endfor %}
+                    </ul>
+                  </li>
+                {% endif %}
               </ul>
               <div class="tab-content card card-body p-3" style="background: #f8f9fa;">
                 {% for version in versions %}
@@ -371,5 +426,32 @@
 {% block scripts %}
 {{ super() }}
 <!--SCRIPTS-->
+
+<!-- Script to manage active states for dropdown tabs -->
+<script>
+$(document).ready(function() {
+    // Handle tab switching for all tabs (including dropdown items)
+    $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+    var activeTab = $(e.target);
+    var previousTab = $(e.relatedTarget);
+
+    // Remove active class from all dropdown items
+    $('.dropdown-item[data-toggle="tab"]').removeClass('active');
+
+    // If the newly active tab is a dropdown item, add active class
+    if (activeTab.hasClass('dropdown-item')) {
+        activeTab.addClass('active');
+    }
+
+    });
+
+    // Optional: Close dropdown when an item is clicked
+    $('.dropdown-item[data-toggle="tab"]').on('click', function() {
+    $(this).closest('.dropdown').removeClass('show');
+    $(this).closest('.dropdown-menu').removeClass('show');
+    });
+});
+</script>
+
 <script src="/theme/scripts/sidebar-load-all.js"></script>
 {% endblock %}
