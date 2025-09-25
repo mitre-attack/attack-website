@@ -233,7 +233,7 @@ def datasource_of():
     datasource_of = {}
     for datacomponent in datacomponents:
         if not datasource_of.get(datacomponent["id"]):
-            datasource = get_datasource_from_list(datacomponent["x_mitre_data_source_ref"])
+            datasource = get_datasource_from_list(datacomponent.get("x_mitre_data_source_ref"))
 
             if datasource:
                 datasource_of[datacomponent["id"]] = datasource
