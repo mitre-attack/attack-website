@@ -138,7 +138,7 @@ def get_technique_detected_data(detection_strategy, reference_list):
         "name": technique["name"],
         "attack_id": attack_id,
         "detects": relationship.get("description", ""),
-        "url": f"/techniques/{attack_id}",
+        "url": f"/techniques/{attack_id.replace('.', '/')}",
     }
     reference_list = util.buildhelpers.update_reference_list(reference_list, relationship)
     return technique_data
