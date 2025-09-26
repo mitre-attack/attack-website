@@ -218,6 +218,9 @@ def generate_data_for_md(technique_dict, technique, tactic_list, is_sub_techniqu
             # Get asset table
             technique_dict["assets_table"] = get_assets_table_data(technique, reference_list)
 
+            # Get detection strategy table
+            technique_dict["detections_strategies_table"] = get_detection_strategies_table_data(technique, reference_list)
+
             # Get technique version
             if technique.get("x_mitre_version"):
                 technique_dict["version"] = technique["x_mitre_version"]
@@ -409,6 +412,43 @@ def get_assets_table_data(technique, reference_list):
     if asset_data:
         asset_data = sorted(asset_data, key=lambda k: k["name"].lower())
     return asset_data
+
+def get_analytic_list(analytics):
+    analytics_list = []
+    for keys, values in analytics.items():
+        analytics_list.append({'id': values["external_references"][0]["external_id"]})
+    return analytics_list
+
+def get_detection_strategies_table_data(technique, reference_list):
+    """Return detection strategy data for a technique.
+
+    Given a technique and a reference list, find detection strategies targeted by the
+    technique and return a list with detection strategy data. Also modify the reference
+    list if a relationship reference is not present in the list.
+    """
+    detection_strategy_data = []
+
+    # Check if technique has assets
+    detection_strategies_for_techniques = util.relationshipgetters.get_detectionstrategies_detecting_technique().get(technique["id"])
+    if detection_strategies_for_techniques:
+        # Iterate through technique assets
+        for detection_strategy in detection_strategies_for_techniques:
+            # Do not add deprecated assets to table
+            if not detection_strategy["object"].get("x_mitre_deprecated"):
+                attack_id = util.buildhelpers.get_attack_id(detection_strategy["object"])
+
+                # Only add if attack id is found
+                if not attack_id:
+                    continue
+                row = {}
+                row["id"] = attack_id
+                row["name"] = detection_strategy["object"]["name"]
+                row["analytics"] = get_analytic_list(util.stixhelpers.get_analytics_from_detection_strategy(detection_strategy["object"]))
+                detection_strategy_data.append(row)
+
+    if detection_strategy_data:
+        detection_strategy_data = sorted(detection_strategy_data, key=lambda k: k["name"].lower())
+    return detection_strategy_data
 
 
 def get_examples_table_data(technique, reference_list):
