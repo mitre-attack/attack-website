@@ -34,6 +34,14 @@ def generate_markdown_files():
     detection_strategy_list = util.relationshipgetters.get_detectionstrategy_list()
     active_detection_strategy_list = util.buildhelpers.filter_deprecated_revoked(detection_strategy_list)
 
+    detection_strategies = {}
+    ms = util.relationshipgetters.get_ms()
+    for domain in site_config.domains:
+        if domain["deprecated"]:
+            continue
+        # Reads the STIX and creates a list of the ATT&CK detection strategies
+        detection_strategies[domain["name"]] = util.stixhelpers.get_detection_strategy_list(ms[domain["name"]])
+
     if active_detection_strategy_list:
         has_detection_strategies = True
     else:
@@ -43,10 +51,14 @@ def generate_markdown_files():
         notes = util.relationshipgetters.get_objects_using_notes()
 
         # Generate sidebar data
-        sidebar_data = util.buildhelpers.get_side_menu_data(
-            "detection strategies", "/detectionstrategies/", active_detection_strategy_list
-        )
-        data["sidebar_data"] = sidebar_data
+        # sidebar_data = util.buildhelpers.get_side_menu_data(
+        #     "detection strategies", "/detectionstrategies/", active_detection_strategy_list
+        # )
+        sidebar_data = util.buildhelpers.get_side_nav_domains_data("detection strategies", detection_strategies, False)
+
+        # data["sidebar_data"] = sidebar_data
+        generate_sidebar_detectionstrategies(sidebar_data)
+
 
         data["total_count"] = str(len(active_detection_strategy_list))
         data["detection_strategy_table"] = get_detection_strategy_table(active_detection_strategy_list)
@@ -172,4 +184,19 @@ def build_analytics_by_platform(detection_strategy, reference_list):
         platform_dict[platform].append(analytic_data)
 
     return platform_dict, analytic_ids
+
+def generate_sidebar_detectionstrategies(side_nav_data):
+    """Responsible for generating the sidebar for the detectionstrategies pages."""
+    logger.info("Generating detectionstrategies sidebar")
+    data = {}
+    data["menu"] = side_nav_data
+
+    # Sidebar Overview
+    sidebar_detectionstrategies_md = detectionstrategies_config.sidebar_detectionstrategies_md + json.dumps(data)
+
+    # write markdown to file
+    with open(
+        os.path.join(detectionstrategies_config.detectionstrategy_markdown_path, "sidebar_detectionstrategies.md"), "w", encoding="utf8"
+    ) as md_file:
+        md_file.write(sidebar_detectionstrategies_md)
 

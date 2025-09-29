@@ -23,3 +23,10 @@ detectionstrategy_index_md = (
 detectionstrategy_md = Template(
     "Title: ${name}\nTemplate: detectionstrategies/detectionstrategy\nsave_as: detectionstrategies/${attack_id}/index.html\ndata: "
 )
+
+sidebar_detectionstrategies_md = (
+    "Title: Detection Strategies Sidebar\n"
+    "Template: general/sidebar-template \n"
+    "save_as: detectionstrategies/sidebar-detectionstrategies/index.html\n"
+    "data: "
+)

@@ -256,14 +256,15 @@ def get_technique_table_data(tactic, techniques_list):
     return technique_table
 
 
-def get_side_nav_domains_data(side_nav_title, elements_list):
+def get_side_nav_domains_data(side_nav_title, elements_list, domain_page=True):
     """Responsible for generating the links that are located on the left side of pages for desktop clients."""
-
+    title_in_url = side_nav_title.replace(' ','')
+    
     def get_element_data(element):
         return {
             "name": element["name"],
             "id": element["name"],
-            "path": "/{}/{}/".format(side_nav_title, attack_id),
+            "path": "/{}/{}/".format(title_in_url, attack_id),
             "children": [],
         }
 
@@ -276,7 +277,7 @@ def get_side_nav_domains_data(side_nav_title, elements_list):
             domain_data = {
                 "name": domain["alias"],
                 "id": domain["name"].split("-")[0],
-                "path": "/{}/{}/".format(side_nav_title, domain["name"].split("-")[0]),
+                "path": "/{}/{}/".format(title_in_url, domain["name"].split("-")[0]) if domain_page else None,
                 "children": [],
             }
 
@@ -290,7 +291,7 @@ def get_side_nav_domains_data(side_nav_title, elements_list):
     # return side menu
     return {
         "name": side_nav_title,
-        "id": side_nav_title,
+        "id": title_in_url,
         "path": None,  # root level doesn't get a path
         "children": elements_data,
     }
