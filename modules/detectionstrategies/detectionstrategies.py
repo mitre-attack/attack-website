@@ -39,8 +39,8 @@ def generate_markdown_files():
     for domain in site_config.domains:
         if domain["deprecated"]:
             continue
-        # Reads the STIX and creates a list of the ATT&CK detection strategies
-        detection_strategies[domain["name"]] = util.stixhelpers.get_detection_strategy_list(ms[domain["name"]])
+        # Reads the STIX and creates a list of the ATT&CK detection strategies filtered by domain
+        detection_strategies[domain["name"]] = util.stixhelpers.get_detection_strategy_list_from_src(ms[domain["name"]])
 
     if active_detection_strategy_list:
         has_detection_strategies = True
@@ -51,12 +51,8 @@ def generate_markdown_files():
         notes = util.relationshipgetters.get_objects_using_notes()
 
         # Generate sidebar data
-        # sidebar_data = util.buildhelpers.get_side_menu_data(
-        #     "detection strategies", "/detectionstrategies/", active_detection_strategy_list
-        # )
         sidebar_data = util.buildhelpers.get_side_nav_domains_data("detection strategies", detection_strategies, False)
 
-        # data["sidebar_data"] = sidebar_data
         generate_sidebar_detectionstrategies(sidebar_data)
 
 
@@ -150,7 +146,7 @@ def get_technique_detected_data(detection_strategy, reference_list):
         "name": technique["name"],
         "attack_id": attack_id,
         "detects": relationship.get("description", ""),
-        "url": f"/techniques/{attack_id.replace('.', '/')}",
+        "url": f"/techniques/{attack_id}",
     }
     reference_list = util.buildhelpers.update_reference_list(reference_list, relationship)
     return technique_data
