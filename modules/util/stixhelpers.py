@@ -14,7 +14,7 @@ from . import buildhelpers, relationshipgetters
 from . import relationshiphelpers as rsh
 
 
-def get_mitigation_list(src, get_deprecated=False):
+def get_mitigation_list_from_src(src, get_deprecated=False):
     """Read the STIX and return a list of all mitigations in the STIX."""
     mitigations = src.query([stix2.Filter("type", "=", "course-of-action"), stix2.Filter("revoked", "=", False)])
 
@@ -24,7 +24,7 @@ def get_mitigation_list(src, get_deprecated=False):
 
     return sorted(mitigations, key=lambda k: k["name"].lower())
 
-def get_detection_strategy_list(src, get_deprecated=False):
+def get_detection_strategy_list_from_src(src, get_deprecated=False):
     """Read the STIX and return a list of all mitigations in the STIX."""
     detectionstrategies = src.query([stix2.Filter("type", "=", "x-mitre-detection-strategy")])
     if not get_deprecated:

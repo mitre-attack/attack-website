@@ -35,8 +35,8 @@ def generate_mitigations():
         if domain["deprecated"]:
             continue
         # Reads the STIX and creates a list of the ATT&CK mitigations
-        mitigations[domain["name"]] = util.stixhelpers.get_mitigation_list(ms[domain["name"]])
-        mitigations_with_deprecated[domain["name"]] = util.stixhelpers.get_mitigation_list(
+        mitigations[domain["name"]] = util.stixhelpers.get_mitigation_list_from_src(ms[domain["name"]])
+        mitigations_with_deprecated[domain["name"]] = util.stixhelpers.get_mitigation_list_from_src(
             src=ms[domain["name"]], get_deprecated=True
         )
 
