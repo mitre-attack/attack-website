@@ -57,7 +57,7 @@ def generate_markdown_files():
 
         # Create markdown for analytics
         for analytic in analytics:
-            generate_analytic_md(analytic, notes)
+            generate_analytic_md(analytic, sidebar_data, notes)
     
     return has_analytics
 
@@ -86,7 +86,7 @@ def get_analytic_table(analytics):
     # sort by id
     return sorted(analytic_table, key=lambda k: k["id"])
 
-def generate_analytic_md(analytic, notes):
+def generate_analytic_md(analytic, sidebar_data, notes):
     """Generate markdown for individual analytic pages."""
     attack_id = util.buildhelpers.get_attack_id(analytic)
     if not attack_id:
@@ -116,6 +116,7 @@ def generate_analytic_md(analytic, notes):
         "log_sources": build_log_source_table(analytic),
         "domains": domain_names,
         "citations": reference_list,
+        "sidebar_data": sidebar_data,
         "versioning_feature": site_config.check_versions_module(),
     }
 
