@@ -1,6 +1,7 @@
 from string import Template
 
 module_name = "Mitigations"
+module_tab_name = "Defenses"
 priority = 5
 
 # Markdown path for mitigations
