@@ -93,6 +93,7 @@ def get_datacomponent_table(datacomponent_list):
             "id": attack_id,
             "name": datacomponent.get("name"),
             "domains": domain_names,
+            "description": datacomponent.get("description"),
             "deprecated": datacomponent.get("x_mitre_deprecated", False),
         }
         datacomponent_table.append(row)
