@@ -57,7 +57,7 @@ def generate_markdown_files():
 
         # Create markdown for analytics
         for analytic in analytics:
-            generate_analytic_md(analytic, sidebar_data, notes)
+            generate_analytic_md(analytic, notes)
     
     return has_analytics
 
@@ -86,7 +86,7 @@ def get_analytic_table(analytics):
     # sort by id
     return sorted(analytic_table, key=lambda k: k["id"])
 
-def generate_analytic_md(analytic, sidebar_data, notes):
+def generate_analytic_md(analytic, notes):
     """Generate markdown for individual analytic pages."""
     attack_id = util.buildhelpers.get_attack_id(analytic)
     if not attack_id:
@@ -104,7 +104,6 @@ def generate_analytic_md(analytic, sidebar_data, notes):
     data = {
         "attack_id": attack_id,
         "name": analytic.get("name"),
-        "sidebar_data": sidebar_data,
         "notes": notes.get(analytic["id"]),
         "created": dates.get("created"),
         "modified": dates.get("modified"),

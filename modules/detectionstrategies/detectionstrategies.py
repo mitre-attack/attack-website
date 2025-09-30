@@ -52,9 +52,7 @@ def generate_markdown_files():
 
         # Generate sidebar data
         sidebar_data = util.buildhelpers.get_side_nav_domains_data("detection strategies", detection_strategies, False)
-
         generate_sidebar_detectionstrategies(sidebar_data)
-
 
         data["total_count"] = str(len(active_detection_strategy_list))
         data["detection_strategy_table"] = get_detection_strategy_table(active_detection_strategy_list)
@@ -65,7 +63,7 @@ def generate_markdown_files():
 
         # Create markdown for detection strategies
         for detection_strategy in detection_strategy_list:
-            generate_detection_strategy_md(detection_strategy, sidebar_data, notes)
+            generate_detection_strategy_md(detection_strategy, notes)
     
     return has_detection_strategies
 
@@ -93,10 +91,9 @@ def get_detection_strategy_table(detection_strategy_list):
     return sorted(detection_strategy_table, key=lambda k: k["name"].lower())
 
 
-def generate_detection_strategy_md(detection_strategy, sidebar_data, notes):
+def generate_detection_strategy_md(detection_strategy, notes):
     """Generate markdown for individual detection strategies."""
     attack_id = util.buildhelpers.get_attack_id(detection_strategy)
-
     if not attack_id:
         return
     
@@ -106,15 +103,16 @@ def generate_detection_strategy_md(detection_strategy, sidebar_data, notes):
     reference_list = { "current_number": 0 }
     reference_list = util.buildhelpers.update_reference_list(reference_list, detection_strategy)
 
+    domains = detection_strategy.get("x_mitre_domains", [])
+    domain_names = [util.buildhelpers.get_domain_display_name(domain) for domain in domains]
     analytics_by_platform, analytic_ids = build_analytics_by_platform(detection_strategy, reference_list)
     data = {
         "attack_id": attack_id,
-        "sidebar_data": sidebar_data,
         "notes": notes.get(detection_strategy["id"]),
         "created": dates.get("created"),
         "modified": dates.get("modified"),
         "name": detection_strategy.get("name"),
-        "domains": detection_strategy.get("x_mitre_domains"),
+        "domains": domain_names,
         "version": detection_strategy.get("x_mitre_version"),
         "contributors": detection_strategy.get("x_mitre_contributors", []),
         "deprecated": detection_strategy.get("x_mitre_deprecated", False),
