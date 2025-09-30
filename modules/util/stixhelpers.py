@@ -25,13 +25,22 @@ def get_mitigation_list_from_src(src, get_deprecated=False):
     return sorted(mitigations, key=lambda k: k["name"].lower())
 
 def get_detection_strategy_list_from_src(src, get_deprecated=False):
-    """Read the STIX and return a list of all mitigations in the STIX."""
+    """Read the STIX and return a list of all detection strategies in the STIX."""
     detectionstrategies = src.query([stix2.Filter("type", "=", "x-mitre-detection-strategy")])
     if not get_deprecated:
         # Filter out deprecated objects for detectionstrategies pages
         detectionstrategies = [x for x in detectionstrategies if not hasattr(x, "x_mitre_deprecated") or x.x_mitre_deprecated is False]
 
     return sorted(detectionstrategies, key=lambda k: k["name"].lower())
+
+def get_datacomponent_list_from_src(src, get_deprecated=False):
+    """Read the STIX and return a list of all data components in the STIX."""
+    datacomponents = src.query([stix2.Filter("type", "=", "x-mitre-data-component")])
+    if not get_deprecated:
+        # Filter out deprecated objects
+        datacomponents = [x for x in datacomponents if not hasattr(x, "x_mitre_deprecated") or x.x_mitre_deprecated is False]
+
+    return sorted(datacomponents, key=lambda k: k["name"].lower())
 
 def get_matrices(src, domain):
     """Read the STIX and return a list of all matrices in the STIX."""

@@ -21,7 +21,7 @@ module_choices = [
     "techniques",
     "campaigns",
     "assets",
-    # "datacomponents",
+    "datacomponents",
     "detectionstrategies",
     "analytics",
     "tour",

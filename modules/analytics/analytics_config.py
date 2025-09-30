@@ -2,7 +2,7 @@ from string import Template
 
 module_name = "Analytics"
 module_tab_name = "Defenses"
-priority = 4.2
+priority = 5.2
 
 # Markdown path
 analytic_markdown_path = "content/pages/analytics/"

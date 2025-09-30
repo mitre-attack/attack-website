@@ -52,9 +52,7 @@ def generate_markdown_files():
 
         # Generate sidebar data
         sidebar_data = util.buildhelpers.get_side_nav_domains_data("detection strategies", detection_strategies, False)
-
         generate_sidebar_detectionstrategies(sidebar_data)
-
 
         data["total_count"] = str(len(active_detection_strategy_list))
         data["detection_strategy_table"] = get_detection_strategy_table(active_detection_strategy_list)
@@ -65,7 +63,7 @@ def generate_markdown_files():
 
         # Create markdown for detection strategies
         for detection_strategy in detection_strategy_list:
-            generate_detection_strategy_md(detection_strategy, sidebar_data, notes)
+            generate_detection_strategy_md(detection_strategy, notes)
     
     return has_detection_strategies
 
@@ -93,10 +91,9 @@ def get_detection_strategy_table(detection_strategy_list):
     return sorted(detection_strategy_table, key=lambda k: k["name"].lower())
 
 
-def generate_detection_strategy_md(detection_strategy, sidebar_data, notes):
+def generate_detection_strategy_md(detection_strategy, notes):
     """Generate markdown for individual detection strategies."""
     attack_id = util.buildhelpers.get_attack_id(detection_strategy)
-
     if not attack_id:
         return
     
@@ -106,15 +103,16 @@ def generate_detection_strategy_md(detection_strategy, sidebar_data, notes):
     reference_list = { "current_number": 0 }
     reference_list = util.buildhelpers.update_reference_list(reference_list, detection_strategy)
 
+    domains = detection_strategy.get("x_mitre_domains", [])
+    domain_names = [util.buildhelpers.get_domain_display_name(domain) for domain in domains]
     analytics_by_platform, analytic_ids = build_analytics_by_platform(detection_strategy, reference_list)
     data = {
         "attack_id": attack_id,
-        "sidebar_data": sidebar_data,
         "notes": notes.get(detection_strategy["id"]),
         "created": dates.get("created"),
         "modified": dates.get("modified"),
         "name": detection_strategy.get("name"),
-        "domains": detection_strategy.get("x_mitre_domains"),
+        "domains": domain_names,
         "version": detection_strategy.get("x_mitre_version"),
         "contributors": detection_strategy.get("x_mitre_contributors", []),
         "deprecated": detection_strategy.get("x_mitre_deprecated", False),
@@ -172,6 +170,8 @@ def build_analytics_by_platform(detection_strategy, reference_list):
             "id": attack_id,
             "description": analytic.get("description", ""),
             "url": f"/analytics/{attack_id}",
+            "log_source_table": build_log_source_table(analytic),
+            "mutable_elements": analytic.get("x_mitre_mutable_elements", [])
         }
         reference_list = util.buildhelpers.update_reference_list(reference_list, analytic)
 
@@ -180,6 +180,7 @@ def build_analytics_by_platform(detection_strategy, reference_list):
         platform_dict[platform].append(analytic_data)
 
     return platform_dict, analytic_ids
+
 
 def generate_sidebar_detectionstrategies(side_nav_data):
     """Responsible for generating the sidebar for the detectionstrategies pages."""
@@ -196,3 +197,29 @@ def generate_sidebar_detectionstrategies(side_nav_data):
     ) as md_file:
         md_file.write(sidebar_detectionstrategies_md)
 
+
+def build_log_source_table(analytic):
+    log_source_dict = {}
+    log_sources = analytic.get("x_mitre_log_source_references")
+    if not log_sources:
+        logger.debug(f"No log source references found on Analytic {analytic['id']}")
+        return log_source_dict
+
+    for log_source in log_sources:
+        datacomponent_ref = log_source.get("x_mitre_data_component_ref", None)
+        datacomponent = util.stixhelpers.get_datacomponent_from_list(datacomponent_ref)
+        if not datacomponent:
+            logger.debug(f"Log source data component not found: {log_source}")
+            continue # skip log source with no data component
+
+        datacomponent_id = util.buildhelpers.get_attack_id(datacomponent)
+        if datacomponent_id not in log_source_dict:
+            log_source_dict[datacomponent_id] = {
+                "datacomponent": {
+                    "name": datacomponent.get("name"),
+                    "url": f"/datacomponents/{datacomponent_id}",
+                },
+                "log_sources": []
+            }
+        log_source_dict[datacomponent_id]["log_sources"].append(log_source)
+    return log_source_dict

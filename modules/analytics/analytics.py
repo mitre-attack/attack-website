@@ -104,7 +104,6 @@ def generate_analytic_md(analytic, sidebar_data, notes):
     data = {
         "attack_id": attack_id,
         "name": analytic.get("name"),
-        "sidebar_data": sidebar_data,
         "notes": notes.get(analytic["id"]),
         "created": dates.get("created"),
         "modified": dates.get("modified"),
@@ -117,6 +116,7 @@ def generate_analytic_md(analytic, sidebar_data, notes):
         "log_sources": build_log_source_table(analytic),
         "domains": domain_names,
         "citations": reference_list,
+        "sidebar_data": sidebar_data,
         "versioning_feature": site_config.check_versions_module(),
     }
 

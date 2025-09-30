@@ -3,7 +3,7 @@ from string import Template
 module_name = "Detection Strategies"
 module_name_no_spaces = "detectionstrategies"
 module_tab_name = "Defenses"
-priority = 4.1
+priority = 5.1
 
 # Markdown path
 detectionstrategy_markdown_path = "content/pages/detectionstrategies/"
