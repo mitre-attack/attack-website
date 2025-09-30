@@ -172,6 +172,8 @@ def build_analytics_by_platform(detection_strategy, reference_list):
             "id": attack_id,
             "description": analytic.get("description", ""),
             "url": f"/analytics/{attack_id}",
+            "log_source_table": build_log_source_table(analytic),
+            "mutable_elements": analytic.get("x_mitre_mutable_elements", [])
         }
         reference_list = util.buildhelpers.update_reference_list(reference_list, analytic)
 
@@ -180,6 +182,7 @@ def build_analytics_by_platform(detection_strategy, reference_list):
         platform_dict[platform].append(analytic_data)
 
     return platform_dict, analytic_ids
+
 
 def generate_sidebar_detectionstrategies(side_nav_data):
     """Responsible for generating the sidebar for the detectionstrategies pages."""
@@ -196,3 +199,29 @@ def generate_sidebar_detectionstrategies(side_nav_data):
     ) as md_file:
         md_file.write(sidebar_detectionstrategies_md)
 
+
+def build_log_source_table(analytic):
+    log_source_dict = {}
+    log_sources = analytic.get("x_mitre_log_source_references")
+    if not log_sources:
+        logger.debug(f"No log source references found on Analytic {analytic['id']}")
+        return log_source_dict
+
+    for log_source in log_sources:
+        datacomponent_ref = log_source.get("x_mitre_data_component_ref", None)
+        datacomponent = util.stixhelpers.get_datacomponent_from_list(datacomponent_ref)
+        if not datacomponent:
+            logger.debug(f"Log source data component not found: {log_source}")
+            continue # skip log source with no data component
+
+        datacomponent_id = util.buildhelpers.get_attack_id(datacomponent)
+        if datacomponent_id not in log_source_dict:
+            log_source_dict[datacomponent_id] = {
+                "datacomponent": {
+                    "name": datacomponent.get("name"),
+                    "url": f"/datacomponents/{datacomponent_id}",
+                },
+                "log_sources": []
+            }
+        log_source_dict[datacomponent_id]["log_sources"].append(log_source)
+    return log_source_dict
