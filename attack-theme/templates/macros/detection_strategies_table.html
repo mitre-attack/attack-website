@@ -7,32 +7,31 @@
         <tr>
             <th class="p-2" scope="col">ID</th>
             <th class="p-2 nowrap" scope="col">Name</th>
-            <th class="p-2 nowrap" scope="col">Analytics</th>
+            <th class="p-2 nowrap" scope="col">Analytic ID</th>
+            <th class="p-2 nowrap" scope="col">Analytic Description</th>
         </tr>
     </thead>
     <tbody>
         {% for detection_strategy in detection_strategies %}
-            <tr class="detection_strategy" id="uses-{{detection_strategy.id}}">
-                <td>
-                    <a href="/detectionstrategies/{{detection_strategy.id}}">{{detection_strategy.id}}</a>
-                </td>
-                <td class="nowrap">
-                    <a href="/detectionstrategies/{{detection_strategy.id}}">{{detection_strategy.name}}</a>
-                </td>
-                <td>
-                    {% if detection_strategy.analytics %}
-                        <ul class="list-unstyled mb-0">
-                            {% for analytic in detection_strategy.analytics %}
-                                <li>
-                                    <a href="/analytics/{{analytic.id}}">{{ analytic.id }}</a>
-                                </li>
-                            {% endfor %}
-                        </ul>
-                    {% else %}
-                        <span class="text-muted">None</span>
+            {% set rowspan = analytics|length if analytics else 1 %}
+            {% for analytic in detection_strategy.analytics %}
+                <tr class="detection_strategy" id="uses-{{detection_strategy.id}}">
+                    {% if loop.first %}
+                        <td rowspan="{{ rowspan }}">
+                            <a href="/detectionstrategies/{{detection_strategy.id}}">{{detection_strategy.id}}</a>
+                        </td>
+                        <td class="nowrap" rowspan="{{ rowspan }}">
+                            <a href="/detectionstrategies/{{detection_strategy.id}}">{{detection_strategy.name}}</a>
+                        </td>
                     {% endif %}
-                </td>
-            </tr>
+                    <td>
+                        <a href="/analytics/{{ analytic.id }}">{{ analytic.id }}</a>
+                    </td>
+                    <td>
+                        {{ analytic.description }}</a>
+                    </td>
+                </tr>
+            {% endfor %}
         {% endfor %}
     </tbody>
 </table>

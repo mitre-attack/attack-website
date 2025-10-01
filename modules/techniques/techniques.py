@@ -416,7 +416,7 @@ def get_assets_table_data(technique, reference_list):
 def get_analytic_list(analytics):
     analytics_list = []
     for keys, values in analytics.items():
-        analytics_list.append({'id': values["external_references"][0]["external_id"]})
+        analytics_list.append({'id': values["external_references"][0]["external_id"], 'description': values['description']})
     return analytics_list
 
 def get_detection_strategies_table_data(technique, reference_list):
