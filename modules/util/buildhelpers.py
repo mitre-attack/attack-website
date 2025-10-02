@@ -256,14 +256,18 @@ def get_technique_table_data(tactic, techniques_list):
     return technique_table
 
 
-def get_side_nav_domains_data(side_nav_title, elements_list, domain_page=True):
+def get_side_nav_domains_data(side_nav_title, elements_list, domain_page=True, use_name_or_id='name'):
     """Responsible for generating the links that are located on the left side of pages for desktop clients."""
     title_in_url = side_nav_title.replace(' ','')
     
     def get_element_data(element):
+        if use_name_or_id == 'name':
+            set_sidebar_element_name = element["name"]
+        else:
+            set_sidebar_element_name = element["external_references"][0]["external_id"]
         return {
-            "name": element["name"],
-            "id": element["name"],
+            "name": set_sidebar_element_name,
+            "id": set_sidebar_element_name,
             "path": "/{}/{}/".format(title_in_url, attack_id),
             "children": [],
         }

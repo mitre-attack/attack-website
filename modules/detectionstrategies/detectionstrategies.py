@@ -40,8 +40,7 @@ def generate_markdown_files():
         if domain["deprecated"]:
             continue
         # Reads the STIX and creates a list of the ATT&CK detection strategies filtered by domain
-        detection_strategies[domain["name"]] = util.stixhelpers.get_detection_strategy_list_from_src(ms[domain["name"]])
-
+        detection_strategies[domain["name"]] = util.stixhelpers.get_detection_strategy_list_from_src(ms[domain["name"]], sort_by_id=True)
     if active_detection_strategy_list:
         has_detection_strategies = True
     else:
@@ -51,7 +50,7 @@ def generate_markdown_files():
         notes = util.relationshipgetters.get_objects_using_notes()
 
         # Generate sidebar data
-        sidebar_data = util.buildhelpers.get_side_nav_domains_data("detection strategies", detection_strategies, False)
+        sidebar_data = util.buildhelpers.get_side_nav_domains_data("detection strategies", detection_strategies, domain_page=False, use_name_or_id="id")
         generate_sidebar_detectionstrategies(sidebar_data)
 
         data["total_count"] = str(len(active_detection_strategy_list))
