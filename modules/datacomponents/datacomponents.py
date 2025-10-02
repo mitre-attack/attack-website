@@ -140,7 +140,10 @@ def generate_datacomponent_md(datacomponent, notes):
         "domains": domain_names,
         "version": datacomponent.get("x_mitre_version"),
         "deprecated": datacomponent.get("x_mitre_deprecated", False),
-        "log_sources": datacomponent.get("x_mitre_log_sources", []),
+        "log_sources": sorted(
+            datacomponent.get("x_mitre_log_sources", []),
+            key=lambda x: x["name"].lower()
+        ),
         "citations": reference_list,
         "notes": notes.get(datacomponent["id"])
     }
