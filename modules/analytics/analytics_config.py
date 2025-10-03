@@ -17,8 +17,3 @@ analytic_index_md = (
     "save_as: analytics/index.html\n"
     "data: "
 )
-
-# String template for individual page
-analytic_md = Template(
-    "Title: ${attack_id}\nTemplate: analytics/analytic\nsave_as: analytics/${attack_id}/index.html\ndata: "
-)

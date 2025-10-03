@@ -6,4 +6,4 @@ def get_priority():
 
 
 def run_module():
-    return analytics.generate_analytic(), analytics_config.module_name
+    return analytics.generate_analytic_overview(), analytics_config.module_name

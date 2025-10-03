@@ -32,12 +32,17 @@ function filter_row(selected) {
 $(document).ready(function() {
     let arrow_up = document.getElementById("arrow-up-0");
     let arrow_down = document.getElementById("arrow-down-0");
-    arrow_down.style.display = "inline-block";
-    arrow_up.style.display = "none";
+    if (arrow_up && arrow_down) {
+        arrow_down.style.display = "inline-block";
+        arrow_up.style.display = "none";
+    }
+
     arrow_up = document.getElementById("arrow-up-1");
     arrow_down = document.getElementById("arrow-down-1");
-    arrow_down.style.display = "inline-block";
-    arrow_up.style.display = "none";
+    if (arrow_up && arrow_down) {
+        arrow_down.style.display = "inline-block";
+        arrow_up.style.display = "none";
+    }
     showDomain();
 });
 
