@@ -98,6 +98,18 @@ def get_attack_id(object):
 
     return None
 
+def get_analytic_url(analytic):
+    """Given an analytic, get the website URL."""
+    detection_strategies = relationshipgetters.get_detectionstrategy_list()
+    
+    for detection_strategy in detection_strategies:
+        if analytic["id"] in detection_strategy.get("x_mitre_analytic_refs", []):
+            detection_strategy_id = get_attack_id(detection_strategy)
+            analytic_id = get_attack_id(analytic)
+            return f"/detectionstrategies/{detection_strategy_id}#{analytic_id}"
+    
+    return None
+
 
 def get_domain_name(object):
     """Given an object, return domains."""

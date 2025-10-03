@@ -80,6 +80,7 @@ def get_analytic_table(analytics):
             "domains": domain_names,
             "description": analytic.get("description", ""),
             "deprecated": analytic.get("x_mitre_deprecated", False),
+            "url": util.buildhelpers.get_analytic_url(analytic),
         }
         analytic_table.append(row)
 
