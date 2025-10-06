@@ -126,8 +126,9 @@
                             <h2 class="pt-3" id="analytics">Analytics</h2>
                             <ul class="nav nav-tabs mb-2" role="tablist">
                                 {% for platform in parsed.analytics.keys() %}
+                                    {% set platform_id = platform|replace(' ', '_') %}
                                     <li class="nav-item">
-                                        <a class="nav-link {% if loop.first %}active{% endif %}" id="tab-{{ platform }}" data-toggle="tab" href="#pane-{{ platform }}" role="tab" aria-selected="true">
+                                        <a class="nav-link {% if loop.first %}active{% endif %}" id="tab-{{ platform_id }}" data-toggle="tab" href="#pane-{{ platform_id }}" role="tab" aria-selected="true">
                                             {{ platform }}
                                         </a>
                                     </li>
@@ -135,7 +136,8 @@
                             </ul>
                             <div class="tab-content card card-body p-3">
                                 {% for platform in parsed.analytics.keys() %}
-                                    <div class="tab-pane fade {% if loop.first %}show active{% endif %}" id="pane-{{ platform }}" role="tabpanel" aria-labelledby="tab-{{ platform }}">
+                                    {% set platform_id = platform|replace(' ', '_') %}
+                                    <div class="tab-pane fade {% if loop.first %}show active{% endif %}" id="pane-{{ platform_id }}" role="tabpanel" aria-labelledby="tab-{{ platform_id }}">
                                         {% for analytic in parsed.analytics[platform] %}
                                             {% if analytic.log_source_table or analytic.mutable_elements %}
                                                 <h4 class="pt-3" id="{{analytic.id}}">{{ analytic.id }}</h4>
