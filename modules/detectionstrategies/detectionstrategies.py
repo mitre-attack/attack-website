@@ -225,7 +225,6 @@ def build_log_source_table(analytic):
     log_source_dict = {}
     log_sources = analytic.get("x_mitre_log_source_references")
     if not log_sources:
-        logger.debug(f"No log source references found on Analytic {analytic['id']}")
         return log_source_dict
 
     for log_source in log_sources:
