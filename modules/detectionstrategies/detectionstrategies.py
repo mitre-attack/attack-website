@@ -1,8 +1,9 @@
 import json
 import os
 
-from modules import util
 from loguru import logger
+
+from modules import util
 
 from .. import site_config
 from . import detectionstrategies_config
@@ -14,7 +15,9 @@ def generate_detectionstrategy():
     util.buildhelpers.create_content_pages_dir()
 
     # Move templates to templates directory
-    util.buildhelpers.move_templates(detectionstrategies_config.module_name_no_spaces, detectionstrategies_config.detectionstrategies_templates_path)
+    util.buildhelpers.move_templates(
+        detectionstrategies_config.module_name_no_spaces, detectionstrategies_config.detectionstrategies_templates_path
+    )
 
     # Verify if directory exists
     if not os.path.isdir(detectionstrategies_config.detectionstrategy_markdown_path):
@@ -40,7 +43,9 @@ def generate_markdown_files():
         if domain["deprecated"]:
             continue
         # Reads the STIX and creates a list of the ATT&CK detection strategies filtered by domain
-        detection_strategies[domain["name"]] = util.stixhelpers.get_detection_strategy_list_from_src(ms[domain["name"]], sort_by_id=True)
+        detection_strategies[domain["name"]] = util.stixhelpers.get_detection_strategy_list_from_src(
+            ms[domain["name"]], sort_by_id=True
+        )
     if active_detection_strategy_list:
         has_detection_strategies = True
     else:
@@ -50,20 +55,26 @@ def generate_markdown_files():
         notes = util.relationshipgetters.get_objects_using_notes()
 
         # Generate sidebar data
-        sidebar_data = util.buildhelpers.get_side_nav_domains_data("detection strategies", detection_strategies, domain_page=False, use_name_or_id="id")
+        sidebar_data = util.buildhelpers.get_side_nav_domains_data(
+            "detection strategies", detection_strategies, domain_page=False, use_name_or_id="id"
+        )
         generate_sidebar_detectionstrategies(sidebar_data)
 
         data["total_count"] = str(len(active_detection_strategy_list))
         data["detection_strategy_table"] = get_detection_strategy_table(active_detection_strategy_list)
 
         subs = detectionstrategies_config.detectionstrategy_index_md + json.dumps(data)
-        with open(os.path.join(detectionstrategies_config.detectionstrategy_markdown_path, "overview.md"), "w", encoding="utf8") as md_file:
+        with open(
+            os.path.join(detectionstrategies_config.detectionstrategy_markdown_path, "overview.md"),
+            "w",
+            encoding="utf8",
+        ) as md_file:
             md_file.write(subs)
 
         # Create markdown for detection strategies
         for detection_strategy in detection_strategy_list:
             generate_detection_strategy_md(detection_strategy, notes)
-    
+
     return has_detection_strategies
 
 
@@ -85,7 +96,7 @@ def get_detection_strategy_table(detection_strategy_list):
             "deprecated": detection_strategy.get("x_mitre_deprecated", False),
         }
         detection_strategy_table.append(row)
-    
+
     # sort by detection strategy name
     return sorted(detection_strategy_table, key=lambda k: k["name"].lower())
 
@@ -95,11 +106,11 @@ def generate_detection_strategy_md(detection_strategy, notes):
     attack_id = util.buildhelpers.get_attack_id(detection_strategy)
     if not attack_id:
         return
-    
+
     dates = util.buildhelpers.get_created_and_modified_dates(detection_strategy)
 
     # Build reference list
-    reference_list = { "current_number": 0 }
+    reference_list = {"current_number": 0}
     reference_list = util.buildhelpers.update_reference_list(reference_list, detection_strategy)
 
     domains = detection_strategy.get("x_mitre_domains", [])
@@ -126,16 +137,22 @@ def generate_detection_strategy_md(detection_strategy, notes):
     subs += json.dumps(data)
 
     # Write the markdown file
-    with open(os.path.join(detectionstrategies_config.detectionstrategy_markdown_path, attack_id + ".md"), "w", encoding="utf8") as md_file:
+    with open(
+        os.path.join(detectionstrategies_config.detectionstrategy_markdown_path, attack_id + ".md"),
+        "w",
+        encoding="utf8",
+    ) as md_file:
         md_file.write(subs)
 
 
 def get_technique_detected_data(detection_strategy, reference_list):
     """Get techniques detected by this detection strategy and add any missing citations."""
-    technique_detected = util.relationshipgetters.get_techniques_detected_by_detectionstrategy().get(detection_strategy["id"], [None])
+    technique_detected = util.relationshipgetters.get_techniques_detected_by_detectionstrategy().get(
+        detection_strategy["id"], [None]
+    )
     if not technique_detected[0]:
         return {}
-    
+
     technique = technique_detected[0]["object"]
     attack_id = util.buildhelpers.get_attack_id(technique)
     relationship = technique_detected[0]["relationship"]
@@ -156,11 +173,12 @@ def build_analytics_by_platform(detection_strategy, reference_list):
     analytic_ids = []
 
     for analytic in analytics_map.values():
-        if analytic is None: continue # skip missing analytics
+        if analytic is None:
+            continue  # skip missing analytics
 
         platforms = analytic.get("x_mitre_platforms", [])
         if not platforms:
-            continue # skip analytics with no platform
+            continue  # skip analytics with no platform
         platform = platforms[0]
 
         attack_id = util.buildhelpers.get_attack_id(analytic)
@@ -170,7 +188,7 @@ def build_analytics_by_platform(detection_strategy, reference_list):
             "description": analytic.get("description", ""),
             "url": f"/analytics/{attack_id}",
             "log_source_table": build_log_source_table(analytic),
-            "mutable_elements": analytic.get("x_mitre_mutable_elements", [])
+            "mutable_elements": analytic.get("x_mitre_mutable_elements", []),
         }
         reference_list = util.buildhelpers.update_reference_list(reference_list, analytic)
 
@@ -192,7 +210,9 @@ def generate_sidebar_detectionstrategies(side_nav_data):
 
     # write markdown to file
     with open(
-        os.path.join(detectionstrategies_config.detectionstrategy_markdown_path, "sidebar_detectionstrategies.md"), "w", encoding="utf8"
+        os.path.join(detectionstrategies_config.detectionstrategy_markdown_path, "sidebar_detectionstrategies.md"),
+        "w",
+        encoding="utf8",
     ) as md_file:
         md_file.write(sidebar_detectionstrategies_md)
 
@@ -209,7 +229,7 @@ def build_log_source_table(analytic):
         datacomponent = util.stixhelpers.get_datacomponent_from_list(datacomponent_ref)
         if not datacomponent:
             logger.debug(f"Log source data component not found: {log_source}")
-            continue # skip log source with no data component
+            continue  # skip log source with no data component
 
         datacomponent_id = util.buildhelpers.get_attack_id(datacomponent)
         if datacomponent_id not in log_source_dict:
@@ -218,7 +238,7 @@ def build_log_source_table(analytic):
                     "name": datacomponent.get("name"),
                     "url": f"/datacomponents/{datacomponent_id}",
                 },
-                "log_sources": []
+                "log_sources": [],
             }
         log_source_dict[datacomponent_id]["log_sources"].append(log_source)
     return log_source_dict
