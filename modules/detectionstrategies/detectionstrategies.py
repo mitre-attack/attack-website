@@ -155,6 +155,9 @@ def get_technique_detected_data(detection_strategy, reference_list):
 
     technique = technique_detected[0]["object"]
     attack_id = util.buildhelpers.get_attack_id(technique)
+    if attack_id is None:
+        logger.error(f"technique is missing an ATT&CK ID: {technique['stix']['id']}")
+        return {}
     relationship = technique_detected[0]["relationship"]
     technique_data = {
         "name": technique["name"],
@@ -218,6 +221,7 @@ def generate_sidebar_detectionstrategies(side_nav_data):
 
 
 def build_log_source_table(analytic):
+    """Generate a dict of log source references (data component names and URLs)."""
     log_source_dict = {}
     log_sources = analytic.get("x_mitre_log_source_references")
     if not log_sources:

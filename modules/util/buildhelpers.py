@@ -3,7 +3,7 @@ import json
 import os
 import re
 import shutil
-import sys
+from typing import Optional
 
 import bleach
 from loguru import logger
@@ -87,7 +87,7 @@ def find_index_id(ext_ref):
     return count
 
 
-def get_attack_id(object):
+def get_attack_id(object) -> Optional[str]:
     """Given an object, return attack_id."""
     external_references = object.get("external_references")
     if external_references:
