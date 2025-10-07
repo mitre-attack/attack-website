@@ -98,16 +98,17 @@ def get_attack_id(object):
 
     return None
 
+
 def get_analytic_url(analytic):
     """Given an analytic, get the website URL."""
     detection_strategies = relationshipgetters.get_detectionstrategy_list()
-    
+
     for detection_strategy in detection_strategies:
         if analytic["id"] in detection_strategy.get("x_mitre_analytic_refs", []):
             detection_strategy_id = get_attack_id(detection_strategy)
             analytic_id = get_attack_id(analytic)
             return f"/detectionstrategies/{detection_strategy_id}#{analytic_id}"
-    
+
     return None
 
 
@@ -268,12 +269,12 @@ def get_technique_table_data(tactic, techniques_list):
     return technique_table
 
 
-def get_side_nav_domains_data(side_nav_title, elements_list, domain_page=True, use_name_or_id='name'):
+def get_side_nav_domains_data(side_nav_title, elements_list, domain_page=True, use_name_or_id="name"):
     """Responsible for generating the links that are located on the left side of pages for desktop clients."""
-    title_in_url = side_nav_title.replace(' ','')
-    
+    title_in_url = side_nav_title.replace(" ", "")
+
     def get_element_data(element):
-        if use_name_or_id == 'name':
+        if use_name_or_id == "name":
             set_sidebar_element_name = element["name"]
         else:
             set_sidebar_element_name = element["external_references"][0]["external_id"]
