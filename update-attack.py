@@ -12,6 +12,9 @@ load_dotenv()
 # argument defaults and options for the CLI
 module_choices = [
     "clean",
+    # NOTE: While datasources are deprecated starting in ATT&CK v18, we still include them for legacy support.
+    # All Datasource objects should be individually deprecated, but still have pages generated.
+    "datasources",
     "groups",
     "search",
     "matrices",
