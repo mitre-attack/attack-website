@@ -115,7 +115,7 @@ def generate_detection_strategy_md(detection_strategy, notes):
 
     domains = detection_strategy.get("x_mitre_domains", [])
     domain_names = [util.buildhelpers.get_domain_display_name(domain) for domain in domains]
-    analytics_by_platform, analytic_ids = build_analytics_by_platform(detection_strategy, reference_list)
+    analytics_by_platform, analytic_ids, reference_list = build_analytics_by_platform(detection_strategy, reference_list)
     data = {
         "attack_id": attack_id,
         "notes": notes.get(detection_strategy["id"]),
@@ -180,6 +180,8 @@ def build_analytics_by_platform(detection_strategy, reference_list):
             continue  # skip missing analytics
 
         platforms = analytic.get("x_mitre_platforms", [])
+        if platforms == ["None"]:
+            platforms = ["ICS"]
         if not platforms:
             continue  # skip analytics with no platform
         platform = platforms[0]
@@ -199,7 +201,7 @@ def build_analytics_by_platform(detection_strategy, reference_list):
             platform_dict[platform] = []
         platform_dict[platform].append(analytic_data)
 
-    return platform_dict, analytic_ids
+    return platform_dict, analytic_ids, reference_list
 
 
 def generate_sidebar_detectionstrategies(side_nav_data):
