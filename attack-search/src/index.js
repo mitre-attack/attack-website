@@ -61,9 +61,9 @@ async function initializeSearchService() {
       // Restore search service from IndexedDB
       try {
         console.debug('Initializing SearchService (assume documents already cached)...');
-        searchService = new SearchService('search-results', saved_uuid);
+        const searchService = new SearchService('search-results', saved_uuid);
         await searchService.initializeAsync(null); // Passing null will instruct the search service to attempt
-                                                             // restoring itself from the IndexedDB
+        // restoring itself from the IndexedDB
         console.debug('SearchService is initialized.');
       } catch (error) {
         console.error('Failed to initialize SearchService:', error);
@@ -82,31 +82,31 @@ async function initializeSearchService() {
 
       // Download all JSON files from directory
       // Loop through the searchFilePaths array to construct the URLs
-      searchFilePaths.forEach(function(filename) {
+      searchFilePaths.forEach((filename) => {
         jsonFiles.push(baseUrl + filename);
       });
 
       // Use Promise.all() to download all files concurrently
       Promise.all(jsonFiles.map(url => $.getJSON(url)))
-          .then(data => {
-            // Concatenate all file data into a single array
-            const combinedData = data.reduce((acc, curr) => acc.concat(curr), []);
+        .then(data => {
+          // Concatenate all file data into a single array
+          const combinedData = data.reduce((acc, curr) => acc.concat(curr), []);
 
-            // Initialize search service with combined data
-            searchService = new SearchService('search-results', build_uuid);
-            return searchService.initializeAsync(combinedData);
-          })
-          .then(() => {
-            localStorage.setItem('saved_uuid', build_uuid);
-            console.debug('SearchService is initialized.');
-            searchParsingIcon.hide();
-            searchServiceIsLoaded = true;
-          })
-          .catch(error => {
-            console.error('Failed to initialize SearchService:', error);
-            searchParsingIcon.hide();
-            searchServiceIsLoaded = false;
-          });
+          // Initialize search service with combined data
+          const searchService = new SearchService('search-results', build_uuid);
+          return searchService.initializeAsync(combinedData);
+        })
+        .then(() => {
+          localStorage.setItem('saved_uuid', build_uuid);
+          console.debug('SearchService is initialized.');
+          searchParsingIcon.hide();
+          searchServiceIsLoaded = true;
+        })
+        .catch(error => {
+          console.error('Failed to initialize SearchService:', error);
+          searchParsingIcon.hide();
+          searchServiceIsLoaded = false;
+        });
     }
   }
   else {
