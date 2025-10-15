@@ -51,6 +51,7 @@ analytic_list = []
 detectionstrategy_list = []
 
 technique_to_domain = {}
+logsource_to_detections = {}
 
 # Relationship getters
 
@@ -495,6 +496,22 @@ def get_detectionstrategy_list():
         detectionstrategy_list = get_resources()["detectionstrategies"]
 
     return detectionstrategy_list
+
+def get_logsource_to_detections_mapping():
+    """get mapping from log sources to detection strategies and analytics"""
+    global logsource_to_detections
+    for detection_strategy in detectionstrategy_list:
+        analytics_list_for_detection_strategy = stixhelpers.get_analytics_from_detection_strategy(detection_strategy)
+        for analytic_list_for_detection_strategy in analytics_list_for_detection_strategy.values():
+            log_sources = analytic_list_for_detection_strategy.get("x_mitre_log_source_references", [])
+            for log_source in log_sources:
+                log_source_id = log_source.get("x_mitre_data_component_ref")
+                if log_source_id not in logsource_to_detections:
+                    logsource_to_detections[log_source_id] = []
+                already_exists = any(entry[0] == detection_strategy for entry in logsource_to_detections[log_source_id])
+                if not already_exists:
+                    logsource_to_detections[log_source_id].append([detection_strategy, analytic_list_for_detection_strategy, log_source])
+    return logsource_to_detections
 
 
 def get_analytic_list():

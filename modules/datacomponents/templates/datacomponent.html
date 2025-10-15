@@ -6,6 +6,7 @@
 {% import 'macros/versioning.html' as versioning %}
 {% import 'macros/navigation.html' as navigation %}
 {% import 'macros/clean_output.html' as clean_output %}
+{% import 'macros/detection_strategies_table_datacomponents.html' as detection_strategies_table_datacomponents %}
 
 {% set parsed = page.data | from_json %}
 {% set title = parsed.name + ", Data Component " + parsed.attack_id + " | MITRE ATT&CK&reg;" -%}
@@ -123,6 +124,10 @@
                                     </tbody>
                                 </table>
                             </div>
+                        {% endif %}
+                        {% if parsed.detectionstrategies %}
+                            <h2 class="pt-3" id="detection">Detection Strategy</h2>
+                            {{detection_strategies_table_datacomponents.detection_strategies_table_datacomponents(parsed.detectionstrategies)}}
                         {% endif %}
 
                         {{ citations.reference_section(parsed.citations) }}

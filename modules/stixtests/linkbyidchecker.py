@@ -82,7 +82,7 @@ def linkbyid_check():
             data_component_stix_id_to_attack_id[data_component["id"]] = data_source_attack_id
         else:
             # cannot find a related attack ID
-            logger.warning(f"Data Component {data_component["id"]} has no attack ID and no x_mitre_data_source_ref")
+            logger.warning(f"Data Component {data_component['id']} has no attack ID and no x_mitre_data_source_ref")
 
 
     # when searching for these regexes, be sure to ignore the case

@@ -7,7 +7,6 @@ from loguru import logger
 from .. import site_config
 from . import datacomponents_config
 
-
 def generate_datacomponents():
     """Responsible for verifying data component directory and starting off data component markdown generation."""
     # Create content pages directory if does not already exist
@@ -34,6 +33,9 @@ def generate_datacomponents():
 
 def generate_markdown_files():
     """Responsible for generating datacomponent index page and getting shared data for all datacomponents."""
+
+    mappings = util.relationshipgetters.get_logsource_to_detections_mapping()
+
     has_datacomponents = False
 
     datacomponent_list = util.relationshipgetters.get_datacomponent_list()
@@ -73,7 +75,7 @@ def generate_markdown_files():
 
         # Create the markdown for the enterprise datacomponents in the STIX
         for datacomponent in datacomponent_list:
-            generate_datacomponent_md(datacomponent, notes)
+            generate_datacomponent_md(datacomponent, notes, mappings)
 
     return has_datacomponents
 
@@ -117,7 +119,7 @@ def generate_sidebar_datacomponents(sidebar_data):
         md_file.write(sidebar_md)
 
 
-def generate_datacomponent_md(datacomponent, notes):
+def generate_datacomponent_md(datacomponent, notes, mappings):
     """Generate markdown for individual data components."""
     attack_id = util.buildhelpers.get_attack_id(datacomponent)
     if not attack_id:
@@ -130,6 +132,21 @@ def generate_datacomponent_md(datacomponent, notes):
     reference_list = util.buildhelpers.update_reference_list(reference_list, datacomponent)
 
     domains = datacomponent.get("x_mitre_domains", [])
+
+    # get list of detection strategies and technique associated with them
+    datacomponent_information = mappings.get(datacomponent.get("id"), [])
+    detection_strategies = []
+    for detection_strategy, analytic, log_source in datacomponent_information:
+        technique_detected = util.relationshipgetters.get_techniques_detected_by_detectionstrategy().get(
+            detection_strategy["id"], [None]
+        )
+        technique = technique_detected[0]["object"]
+        attack_id_technique = util.buildhelpers.get_attack_id(technique)
+        technique["url"] = f"/techniques/{attack_id_technique.replace('.', '/')}"
+
+        detection_strategy["technique"] = technique
+        detection_strategies.append(detection_strategy)
+
     domain_names = [util.buildhelpers.get_domain_display_name(domain) for domain in domains]
     data = {
         "attack_id": attack_id,
@@ -145,9 +162,9 @@ def generate_datacomponent_md(datacomponent, notes):
             key=lambda x: x["name"].lower()
         ),
         "citations": reference_list,
-        "notes": notes.get(datacomponent["id"])
+        "notes": notes.get(datacomponent["id"]),
+        "detectionstrategies": detection_strategies
     }
-
     subs = datacomponents_config.datacomponent_md.substitute(data)
     subs += json.dumps(data)
 
