@@ -10,7 +10,6 @@ techniques_used_by_tools = {}
 techniques_used_by_groups = {}
 techniques_used_by_campaigns = {}
 techniques_targeting_assets = {}
-techniques_detected_by_datacomponent = {}
 techniques_detected_by_detectionstrategy = {}
 groups_using_tool = {}
 groups_using_malware = {}
@@ -28,7 +27,6 @@ campaigns_using_malware = {}
 groups_attributed_to_campaign = {}
 campaigns_attributed_to_group = {}
 subtechniques_of = {}
-datacomponent_of = {}
 datasource_of = {}
 parent_technique_of = {}
 objects_using_notes = {}
@@ -154,16 +152,6 @@ def get_assets_targeted_by_techniques():
         assets_targeted_by_techniques = rsh.assets_targeted_by_techniques(get_srcs())
 
     return assets_targeted_by_techniques
-
-
-def get_techniques_detected_by_datacomponent():
-    """Return techniques detected by data components."""
-    global techniques_detected_by_datacomponent
-
-    if not techniques_detected_by_datacomponent:
-        techniques_detected_by_datacomponent = rsh.techniques_detected_by_datacomponent(get_srcs())
-
-    return techniques_detected_by_datacomponent
 
 
 def get_datacomponents_detecting_technique():
@@ -322,16 +310,6 @@ def get_subtechniques_of():
         subtechniques_of = rsh.subtechniques_of(get_srcs())
 
     return subtechniques_of
-
-
-def get_datacomponent_of():
-    """Return data components of data sources."""
-    global datacomponent_of
-
-    if not datacomponent_of:
-        datacomponent_of = stixhelpers.datacomponent_of()
-
-    return datacomponent_of
 
 
 def get_datasource_of():
