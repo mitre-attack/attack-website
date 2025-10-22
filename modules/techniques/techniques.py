@@ -101,7 +101,6 @@ def generate_domain_markdown(domain, techniques_no_sub, tactics, side_nav_data, 
 def generate_technique_md(technique, domain, side_nav_data, tactic_list, notes, datasource_of):
     """Generetes markdown data for given technique."""
     attack_id = util.buildhelpers.get_attack_id(technique)
-
     # Only add technique if the attack id was found
     if attack_id:
         subtechniques_of = util.relationshipgetters.get_subtechniques_of()
@@ -413,9 +412,10 @@ def get_assets_table_data(technique, reference_list):
         asset_data = sorted(asset_data, key=lambda k: k["name"].lower())
     return asset_data
 
-def get_analytic_list(analytics):
+def get_analytic_list(analytics, reference_list):
     analytics_list = []
     for keys, values in analytics.items():
+        reference_list = util.buildhelpers.update_reference_list(reference_list, values)
         analytics_list.append({'id': values["external_references"][0]["external_id"], 'description': values['description']})
     return analytics_list
 
@@ -443,8 +443,9 @@ def get_detection_strategies_table_data(technique, reference_list):
                 row = {}
                 row["id"] = attack_id
                 row["name"] = detection_strategy["object"]["name"]
-                row["analytics"] = get_analytic_list(util.stixhelpers.get_analytics_from_detection_strategy(detection_strategy["object"]))
+                row["analytics"] = get_analytic_list(util.stixhelpers.get_analytics_from_detection_strategy(detection_strategy["object"]), reference_list)
                 detection_strategy_data.append(row)
+                reference_list = util.buildhelpers.update_reference_list(reference_list, detection_strategy)
 
     if detection_strategy_data:
         detection_strategy_data = sorted(detection_strategy_data, key=lambda k: k["name"].lower())
