@@ -13,7 +13,7 @@ save_as: resources/updates/updates-october-2023/index.html
 The October 2023 (v14) ATT&CK release updates Techniques, Groups, Campaigns and Software for Enterprise, Mobile, and ICS. The biggest changes in ATT&CK v14 are a large expansion of detection notes and analytics to Techniques in Enterprise, a minor scoping change to Enterprise resulting in coverage of [Financial Theft](/techniques/T1657) and [Voice](/techniques/T1566/004) [Phishing](/techniques/T1598/004), structured Detections in Mobile, and the (re-)addition of [Assets](/assets) to ICS. An [accompanying blog post](https://medium.com/mitre-attack/attack-v14-fa473603f86b
 ) describes these changes as well as improvements across ATT&CK's various domains and platforms.
 
-This release also includes a [human-readable detailed changelog](/docs/changelogs/v13.1-v14.0/changelog-detailed.html) showing more specifically what changed in updated ATT&CK objects, and a [machine-readable JSON changelog](/docs/changelogs/v13.1-v14.0/changelog.json), whose format is described in [ATT&CK's Github](https://github.com/mitre-attack/mitreattack-python/blob/master/mitreattack/diffStix/README.md).
+This release also includes a [human-readable detailed changelog](/docs/changelogs/v13.1-v14.0/changelog-detailed.html) showing more specifically what changed in updated ATT&CK objects, and a [machine-readable JSON changelog](/docs/changelogs/v13.1-v14.0/changelog.json), whose format is described in [ATT&CK's Github](https://github.com/mitre-attack/mitreattack-python/blob/main/mitreattack/diffStix/README.md).
 
 This version of ATT&CK contains 760 Pieces of Software, 143 Groups, and 24 Campaigns. Broken out by domain:
 
