@@ -16,7 +16,7 @@ The biggest changes in ATT&CK v17 are the addition of an [ESXi](/matrices/enterp
 
 In this release we have revoked Hijack Execution Flow: [DLL Side-Loading](/versions/v16/techniques/T1574/002/) and merged it into Hijack Execution Flow: [DLL](/techniques/T1574/001), which itself was renamed from Hijack Execution Flow: DLL Search Order Hijacking. This change was made to reflect the previously overlapping scope of the two sub-techniques and frequent confusion between them.
 
-This release also includes a [human-readable detailed changelog](/docs/changelogs/v16.1-v17.0/changelog-detailed.html) showing more specifically what changed in updated ATT&CK objects, and a [machine-readable JSON changelog](/docs/changelogs/v16.1-v17.0/changelog.json), whose format is described in [ATT&CK's Github](https://github.com/mitre-attack/mitreattack-python/blob/master/mitreattack/diffStix/README.md).
+This release also includes a [human-readable detailed changelog](/docs/changelogs/v16.1-v17.0/changelog-detailed.html) showing more specifically what changed in updated ATT&CK objects, and a [machine-readable JSON changelog](/docs/changelogs/v16.1-v17.0/changelog.json), whose format is described in [ATT&CK's Github](https://github.com/mitre-attack/mitreattack-python/blob/main/mitreattack/diffStix/README.md).
 
 This version of ATT&CK contains 877 Pieces of Software, 170 Groups, and 50 Campaigns
 Broken out by domain:
