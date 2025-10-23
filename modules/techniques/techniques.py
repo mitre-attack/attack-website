@@ -117,7 +117,9 @@ def generate_technique_md(technique, domain, side_nav_data, tactic_list, notes, 
         technique_dict["subtechniques"] = get_subtechniques(technique)
 
         # Generate data for technique
-        technique_dict = generate_data_for_md(technique_dict=technique_dict, technique=technique, tactic_list=tactic_list, datasource_of=datasource_of)
+        technique_dict = generate_data_for_md(
+            technique_dict=technique_dict, technique=technique, tactic_list=tactic_list, datasource_of=datasource_of
+        )
 
         subs = techniques_config.technique_md.substitute(technique_dict)
         path = technique_dict["attack_id"]
@@ -143,7 +145,13 @@ def generate_technique_md(technique, domain, side_nav_data, tactic_list, notes, 
                 sub_tech_dict["parent_name"] = technique.get("name")
                 sub_tech_dict["subtechniques"] = technique_dict["subtechniques"]
 
-                sub_tech_dict = generate_data_for_md(technique_dict=sub_tech_dict, technique=subtechnique["object"], tactic_list=tactic_list, is_sub_technique=True, datasource_of=datasource_of)
+                sub_tech_dict = generate_data_for_md(
+                    technique_dict=sub_tech_dict,
+                    technique=subtechnique["object"],
+                    tactic_list=tactic_list,
+                    is_sub_technique=True,
+                    datasource_of=datasource_of,
+                )
 
                 if sub_tech_dict.get("sub_number"):
                     subs = techniques_config.sub_technique_md.substitute(sub_tech_dict)
@@ -218,7 +226,9 @@ def generate_data_for_md(technique_dict, technique, tactic_list, is_sub_techniqu
             technique_dict["assets_table"] = get_assets_table_data(technique, reference_list)
 
             # Get detection strategy table
-            technique_dict["detections_strategies_table"] = get_detection_strategies_table_data(technique, reference_list)
+            technique_dict["detections_strategies_table"] = get_detection_strategies_table_data(
+                technique, reference_list
+            )
 
             # Get technique version
             if technique.get("x_mitre_version"):
@@ -386,12 +396,16 @@ def get_assets_table_data(technique, reference_list):
         asset_data = sorted(asset_data, key=lambda k: k["name"].lower())
     return asset_data
 
+
 def get_analytic_list(analytics, reference_list):
     analytics_list = []
     for keys, values in analytics.items():
         reference_list = util.buildhelpers.update_reference_list(reference_list, values)
-        analytics_list.append({'id': values["external_references"][0]["external_id"], 'description': values['description']})
+        analytics_list.append(
+            {"id": values["external_references"][0]["external_id"], "description": values["description"]}
+        )
     return analytics_list
+
 
 def get_detection_strategies_table_data(technique, reference_list):
     """Return detection strategy data for a technique.
@@ -403,7 +417,9 @@ def get_detection_strategies_table_data(technique, reference_list):
     detection_strategy_data = []
 
     # Check if technique has assets
-    detection_strategies_for_techniques = util.relationshipgetters.get_detectionstrategies_detecting_technique().get(technique["id"])
+    detection_strategies_for_techniques = util.relationshipgetters.get_detectionstrategies_detecting_technique().get(
+        technique["id"]
+    )
     if detection_strategies_for_techniques:
         # Iterate through technique assets
         for detection_strategy in detection_strategies_for_techniques:
@@ -414,10 +430,11 @@ def get_detection_strategies_table_data(technique, reference_list):
                 # Only add if attack id is found
                 if not attack_id:
                     continue
+                analytics = util.stixhelpers.get_analytics_from_detection_strategy(detection_strategy["object"])
                 row = {}
                 row["id"] = attack_id
                 row["name"] = detection_strategy["object"]["name"]
-                row["analytics"] = get_analytic_list(util.stixhelpers.get_analytics_from_detection_strategy(detection_strategy["object"]), reference_list)
+                row["analytics"] = get_analytic_list(analytics=analytics, reference_list=reference_list)
                 detection_strategy_data.append(row)
                 reference_list = util.buildhelpers.update_reference_list(reference_list, detection_strategy)
 
