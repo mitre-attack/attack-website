@@ -24,24 +24,31 @@ def get_mitigation_list_from_src(src, get_deprecated=False):
 
     return sorted(mitigations, key=lambda k: k["name"].lower())
 
+
 def get_detection_strategy_list_from_src(src, get_deprecated=False, sort_by_id=False):
     """Read the STIX and return a list of all detection strategies in the STIX."""
     detectionstrategies = src.query([stix2.Filter("type", "=", "x-mitre-detection-strategy")])
     if not get_deprecated:
         # Filter out deprecated objects for detectionstrategies pages
-        detectionstrategies = [x for x in detectionstrategies if not hasattr(x, "x_mitre_deprecated") or x.x_mitre_deprecated is False]
+        detectionstrategies = [
+            x for x in detectionstrategies if not hasattr(x, "x_mitre_deprecated") or x.x_mitre_deprecated is False
+        ]
     if sort_by_id:
         return sorted(detectionstrategies, key=lambda k: k["external_references"][0]["external_id"])
     return sorted(detectionstrategies, key=lambda k: k["name"].lower())
+
 
 def get_datacomponent_list_from_src(src, get_deprecated=False):
     """Read the STIX and return a list of all data components in the STIX."""
     datacomponents = src.query([stix2.Filter("type", "=", "x-mitre-data-component")])
     if not get_deprecated:
         # Filter out deprecated objects
-        datacomponents = [x for x in datacomponents if not hasattr(x, "x_mitre_deprecated") or x.x_mitre_deprecated is False]
+        datacomponents = [
+            x for x in datacomponents if not hasattr(x, "x_mitre_deprecated") or x.x_mitre_deprecated is False
+        ]
 
     return sorted(datacomponents, key=lambda k: k["name"].lower())
+
 
 def get_matrices(src, domain):
     """Read the STIX and return a list of all matrices in the STIX."""
@@ -288,9 +295,9 @@ def get_related_detection_strategies(analytic_stix_id):
 def get_analytics_from_detection_strategy(detection_strategy):
     """Build a lookup map for all analytics from the given detection strategy."""
     all_analytics = relationshipgetters.get_analytic_list()
-    analytics_map = { analytic["id"]: analytic for analytic in all_analytics }
+    analytics_map = {analytic["id"]: analytic for analytic in all_analytics}
     analytic_refs = detection_strategy.get("x_mitre_analytic_refs", [])
-    return { ref: analytics_map.get(ref) for ref in analytic_refs }
+    return {ref: analytics_map.get(ref) for ref in analytic_refs}
 
 
 def add_replace_or_ignore(stix_objs, attack_id_objs, obj_in_question):
@@ -389,9 +396,7 @@ def grab_resources(ms):
             for stix_type in types:
                 # Returns sorted list by name of domain resources by given type list
                 # Builds list from unique ATT&CK IDs
-                curr_list = ms[domain["name"]].query(
-                    [stix2.Filter("type", "=", stix_type)]
-                )
+                curr_list = ms[domain["name"]].query([stix2.Filter("type", "=", stix_type)])
                 curr_list = [obj for obj in curr_list if not getattr(obj, "revoked", False)]
 
                 for val in curr_list:
