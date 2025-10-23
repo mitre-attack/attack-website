@@ -1,11 +1,13 @@
 import json
 import os
 
-from modules import util
 from loguru import logger
+
+from modules import util
 
 from .. import site_config
 from . import datacomponents_config
+
 
 def generate_datacomponents():
     """Responsible for verifying data component directory and starting off data component markdown generation."""
@@ -33,7 +35,6 @@ def generate_datacomponents():
 
 def generate_markdown_files():
     """Responsible for generating datacomponent index page and getting shared data for all datacomponents."""
-
     mappings = util.relationshipgetters.get_logsource_to_detections_mapping()
 
     has_datacomponents = False
@@ -64,7 +65,7 @@ def generate_markdown_files():
 
         data = {
             "total_count": str(len(active_datacomponent_list)),
-            "datacomponent_table": get_datacomponent_table(active_datacomponent_list)
+            "datacomponent_table": get_datacomponent_table(active_datacomponent_list),
         }
 
         subs = datacomponents_config.datacomponent_index_md + json.dumps(data)
@@ -99,7 +100,7 @@ def get_datacomponent_table(datacomponent_list):
             "deprecated": datacomponent.get("x_mitre_deprecated", False),
         }
         datacomponent_table.append(row)
-    
+
     # sort by detection strategy name
     return sorted(datacomponent_table, key=lambda k: k["name"].lower())
 
@@ -107,14 +108,16 @@ def get_datacomponent_table(datacomponent_list):
 def generate_sidebar_datacomponents(sidebar_data):
     """Responsible for generating the sidebar for the data component pages."""
     logger.info("Generating data components sidebar")
-    data = { "menu": sidebar_data }
+    data = {"menu": sidebar_data}
 
     # Sidebar Overview
     sidebar_md = datacomponents_config.sidebar_datacomponents_md + json.dumps(data)
 
     # write markdown to file
     with open(
-        os.path.join(datacomponents_config.datacomponent_markdown_path, "sidebar_datacomponents.md"), "w", encoding="utf8"
+        os.path.join(datacomponents_config.datacomponent_markdown_path, "sidebar_datacomponents.md"),
+        "w",
+        encoding="utf8",
     ) as md_file:
         md_file.write(sidebar_md)
 
@@ -124,11 +127,11 @@ def generate_datacomponent_md(datacomponent, notes, mappings):
     attack_id = util.buildhelpers.get_attack_id(datacomponent)
     if not attack_id:
         return
-    
+
     dates = util.buildhelpers.get_created_and_modified_dates(datacomponent)
 
     # build reference list
-    reference_list = { "current_number": 0 }
+    reference_list = {"current_number": 0}
     reference_list = util.buildhelpers.update_reference_list(reference_list, datacomponent)
 
     domains = datacomponent.get("x_mitre_domains", [])
@@ -142,10 +145,18 @@ def generate_datacomponent_md(datacomponent, notes, mappings):
         )
         technique = technique_detected[0]["object"]
         attack_id_technique = util.buildhelpers.get_attack_id(technique)
-        technique["url"] = f"/techniques/{attack_id_technique.replace('.', '/')}"
+        if attack_id_technique is None:
+            continue
 
-        detection_strategy["technique"] = technique
-        detection_strategies.append(detection_strategy)
+        detection_strategy_dict = {
+            "id": detection_strategy.id,
+            "name": detection_strategy.name,
+            "attack_id": detection_strategy.external_references[0].external_id,
+            "technique_url": f"/techniques/{attack_id_technique.replace('.', '/')}",
+            "technique_attack_id": attack_id_technique,
+        }
+
+        detection_strategies.append(detection_strategy_dict)
 
     domain_names = [util.buildhelpers.get_domain_display_name(domain) for domain in domains]
     data = {
@@ -157,17 +168,16 @@ def generate_datacomponent_md(datacomponent, notes, mappings):
         "domains": domain_names,
         "version": datacomponent.get("x_mitre_version"),
         "deprecated": datacomponent.get("x_mitre_deprecated", False),
-        "log_sources": sorted(
-            datacomponent.get("x_mitre_log_sources", []),
-            key=lambda x: x["name"].lower()
-        ),
+        "log_sources": sorted(datacomponent.get("x_mitre_log_sources", []), key=lambda x: x["name"].lower()),
         "citations": reference_list,
         "notes": notes.get(datacomponent["id"]),
-        "detectionstrategies": detection_strategies
+        "detectionstrategies": detection_strategies,
     }
     subs = datacomponents_config.datacomponent_md.substitute(data)
     subs += json.dumps(data)
 
     # Write the markdown file
-    with open(os.path.join(datacomponents_config.datacomponent_markdown_path, attack_id + ".md"), "w", encoding="utf8") as md_file:
+    with open(
+        os.path.join(datacomponents_config.datacomponent_markdown_path, attack_id + ".md"), "w", encoding="utf8"
+    ) as md_file:
         md_file.write(subs)
