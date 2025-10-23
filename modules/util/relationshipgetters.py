@@ -467,7 +467,7 @@ def get_asset_list():
 
 
 def get_detectionstrategy_list():
-    """detection strategy list getter"""
+    """Detection strategy list getter"""
     global detectionstrategy_list
 
     if not detectionstrategy_list:
@@ -475,9 +475,12 @@ def get_detectionstrategy_list():
 
     return detectionstrategy_list
 
+
 def get_logsource_to_detections_mapping():
-    """get mapping from log sources to detection strategies and analytics"""
+    """Get mapping from log sources to detection strategies and analytics"""
     global logsource_to_detections
+    global detectionstrategy_list
+
     for detection_strategy in detectionstrategy_list:
         analytics_list_for_detection_strategy = stixhelpers.get_analytics_from_detection_strategy(detection_strategy)
         for analytic_list_for_detection_strategy in analytics_list_for_detection_strategy.values():
@@ -488,12 +491,14 @@ def get_logsource_to_detections_mapping():
                     logsource_to_detections[log_source_id] = []
                 already_exists = any(entry[0] == detection_strategy for entry in logsource_to_detections[log_source_id])
                 if not already_exists:
-                    logsource_to_detections[log_source_id].append([detection_strategy, analytic_list_for_detection_strategy, log_source])
+                    logsource_to_detections[log_source_id].append(
+                        [detection_strategy, analytic_list_for_detection_strategy, log_source]
+                    )
     return logsource_to_detections
 
 
 def get_analytic_list():
-    """analytic list getter"""
+    """Analytic list getter"""
     global analytic_list
 
     if not analytic_list:
