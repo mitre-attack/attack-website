@@ -15,7 +15,6 @@ groups_using_tool = {}
 groups_using_malware = {}
 mitigation_mitigates_techniques = {}
 technique_mitigated_by_mitigation = {}
-datacomponents_detecting_technique = {}
 detectionstrategies_detecting_technique = {}
 tools_using_technique = {}
 malware_using_technique = {}
@@ -152,16 +151,6 @@ def get_assets_targeted_by_techniques():
         assets_targeted_by_techniques = rsh.assets_targeted_by_techniques(get_srcs())
 
     return assets_targeted_by_techniques
-
-
-def get_datacomponents_detecting_technique():
-    """Return data components that detect techniques."""
-    global datacomponents_detecting_technique
-
-    if not datacomponents_detecting_technique:
-        datacomponents_detecting_technique = rsh.datacomponents_detecting_technique(get_srcs())
-
-    return datacomponents_detecting_technique
 
 
 def get_techniques_detected_by_detectionstrategy():
