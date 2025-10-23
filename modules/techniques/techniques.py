@@ -312,26 +312,6 @@ def generate_data_for_md(technique_dict, technique, tactic_list, is_sub_techniqu
             if technique.get("x_mitre_detection"):
                 technique_dict["detection"] = technique["x_mitre_detection"]
 
-            # Get if technique is detectable by common defenses
-            if technique.get("x_mitre_detectable_by_common_defenses"):
-                technique_dict["detectable"] = technique.get("x_mitre_detectable_by_common_defenses")
-
-            # Get explanation of detecatable by common defenses
-            if technique.get("x_mitre_detectable_by_common_defenses_explanation"):
-                technique_dict["detectable_exp"] = util.buildhelpers.replace_html_chars(
-                    technique["x_mitre_detectable_by_common_defenses_explanation"]
-                )
-
-            # Get diffulty for adversaries
-            if technique.get("x_mitre_difficulty_for_adversary"):
-                technique_dict["diff_for_adv"] = technique["x_mitre_difficulty_for_adversary"]
-
-            # Get explanation of difficulty for adversaries
-            if technique.get("x_mitre_difficulty_for_adversary_explanation"):
-                technique_dict["diff_for_adv_exp"] = util.buildhelpers.replace_html_chars(
-                    technique["x_mitre_difficulty_for_adversary_explanation"]
-                )
-
             technique_dict["citations"] = reference_list
 
             technique_dict["versioning_feature"] = site_config.check_versions_module()
