@@ -10,6 +10,10 @@ save_as: resources/updates/updates-april-2018/index.html
 |:--------|:-----------|:---------|:-----|
 | ATT&CK v2 | April 13, 2018 | October 22, 2018 | [v2.0 on MITRE/CTI](https://github.com/mitre/cti/releases/tag/ATT%26CK-v2.0) | 
 
+## Table of Contents
+
+[TOC]
+
 #### Initial Access Tactic Addition
 
 [Initial Access](/tactics/TA0001) was added to ATT&CK and some techniques were added to [Execution](/tactics/TA0002) to cover the Launch and Compromise techniques within PRE-ATT&CK. The techniques were refactored to fit the enterprise level of detail.

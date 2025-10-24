@@ -10,6 +10,10 @@ save_as: resources/updates/updates-october-2018/index.html
 |:--------|:-----------|:---------|:-----|
 | [ATT&CK v3](/versions/v3) | October 23, 2018 | April 29, 2019 | [v3.0 on MITRE/CTI](https://github.com/mitre/cti/releases/tag/ATT%26CK-v3.0) |
 
+## Table of Contents
+
+[TOC]
+
 #### Transition from MediaWiki
 The MediaWiki version of ATT&CK was moved to [attack-old.mitre.org](https://attack-old.mitre.org) and will remain up until the end of January 2019. The old website will not be receiving content updates during this timeframe, so you will need to use the new website and [STIX/TAXII](/resources/attack-data-and-tools) to get the most up-to-date ATT&CK information.
 

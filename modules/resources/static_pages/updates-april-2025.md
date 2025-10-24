@@ -36,6 +36,9 @@ Broken out by domain:
 * Deprecations: ATT&CK objects which are deprecated and no longer in use, and not replaced.
 * Deletions: ATT&CK objects which are no longer found in the STIX data.
 
+## Table of Contents
+
+[TOC]
 
 ## Techniques
 

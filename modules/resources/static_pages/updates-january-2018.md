@@ -10,6 +10,10 @@ save_as: resources/updates/updates-january-2018/index.html
 |:--------|:-----------|:---------|:-----|
 | ATT&CK v1 | January 6, 2018 | April 12, 2018 | [v1.0 on MITRE/CTI](https://github.com/mitre/cti/releases/tag/ATT%26CK-v1.0) | 
 
+## Table of Contents
+
+[TOC]
+
 #### Techniques
 
 **19 new techniques** - Up to 188 from 169:

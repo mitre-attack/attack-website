@@ -6,6 +6,10 @@ Template: resources/update-post
 url: /resources/updates/updates-july-2017
 save_as: resources/updates/updates-july-2017/index.html
 
+## Table of Contents
+
+[TOC]
+
 #### Big update for July 2017. ATT&CK now totals 169 techniques across Windows, Mac, and Linux:
 
 **Rollout of Mac and Linux ATT&CK for Enterprise techniques**

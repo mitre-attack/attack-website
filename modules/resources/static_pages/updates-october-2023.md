@@ -32,6 +32,10 @@ This version of ATT&CK contains 760 Pieces of Software, 143 Groups, and 24 Campa
 * Deprecations: ATT&CK objects which are deprecated and no longer in use, and not replaced.
 * Deletions: ATT&CK objects which are no longer found in the STIX data.
 
+## Table of Contents
+
+[TOC]
+
 ## Techniques
 
 ### Enterprise

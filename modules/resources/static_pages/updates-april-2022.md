@@ -18,6 +18,10 @@ In this release we have replaced the Enterprise Sub-Techniques [Boot or Logon Au
 
 This version of ATT&CK for Enterprise contains 14 Tactics, 191 Techniques, 386 Sub-techniques, 134 Groups, and 680 Pieces of Software.
 
+## Table of Contents
+
+[TOC]
+
 ## Techniques
 
 ### Enterprise

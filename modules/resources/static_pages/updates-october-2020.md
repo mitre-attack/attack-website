@@ -14,6 +14,10 @@ The October 2020 (v8) ATT&CK release updates Techniques, Groups, and Software fo
 
 This version of ATT&CK for Enterprise contains 14 Tactics, 177 Techniques, and 348 Sub-techniques.
 
+## Table of Contents
+
+[TOC]
+
 #### Retirement of PRE-ATT&CK
 This release deprecates and removes the PRE-ATT&CK domain from ATT&CK, replacing its scope with two new Tactics in Enterprise ATT&CK [Reconnaissance](/tactics/TA0043/) and [Resource Development](/tactics/TA0042/). A new platform has also been added to ATT&CK to represent the environment these techniques occur in, [PRE](/matrices/enterprise/pre/). The previous contents of PRE-ATT&CK have been preserved [here](/versions/v7/matrices/pre/). See [the accompanying blog post](https://medium.com/mitre-attack/the-retirement-of-pre-attack-4b73ffecd3d3) for more details.
 

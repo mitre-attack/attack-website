@@ -24,6 +24,10 @@ This release includes a new [human-readable detailed changelog](/docs/changelogs
 
 This version of ATT&CK for Enterprise contains 14 Tactics, 196 Techniques, 411 Sub-techniques, 138 Groups, 22 Campaigns, and 740 Pieces of Software.
 
+## Table of Contents
+
+[TOC]
+
 ## Techniques
 
 ### Enterprise
