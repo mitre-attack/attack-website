@@ -149,9 +149,9 @@ def generate_datacomponent_md(datacomponent, notes, mappings):
             continue
 
         detection_strategy_dict = {
-            "id": detection_strategy.id,
-            "name": detection_strategy.name,
-            "attack_id": detection_strategy.external_references[0].external_id,
+            "id": detection_strategy['id'],
+            "name": detection_strategy['name'],
+            "attack_id": detection_strategy['external_references'][0]['external_id'],
             "technique_url": f"/techniques/{attack_id_technique.replace('.', '/')}",
             "technique_attack_id": attack_id_technique,
         }

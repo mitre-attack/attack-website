@@ -408,7 +408,7 @@ def technique_used_helper(technique_list, technique, reference_list, inherited=F
                         subtechnique["color"] = 3  # belongs both to object and inherited from another
                         if "descr" in technique_data and "descr" in subtechnique:
                             # add markdown newline between descriptions
-                            subtechnique["descr"] += "<p>" + technique_data["descr"] + "</p>"
+                            subtechnique["descr"] += "\n\n" + technique_data["descr"]
                         elif "descr" in technique_data:
                             subtechnique["descr"] = technique_data["descr"]
                         break
@@ -432,7 +432,7 @@ def technique_used_helper(technique_list, technique, reference_list, inherited=F
                     technique_list[attack_id]["color"] = 3  # belongs both to object and inherited from another
                     if "descr" in technique_data and "descr" in technique_list[attack_id]:
                         # add markdown newline between descriptions
-                        technique_list[attack_id]["descr"] += "<p>" + technique_data["descr"] + "</p>"
+                        technique_list[attack_id]["descr"] += "\n\n" + technique_data["descr"]
                     elif "descr" in technique_data:
                         technique_list[attack_id]["descr"] = technique_data["descr"]
                 else:
