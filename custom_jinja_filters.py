@@ -169,7 +169,7 @@ def stixToHTML(data, citations, firstParagraphOnly, convert):
     """
     if convert:
         # Replace data from markdown format
-        data = markdown.markdown(data)
+        data = markdown.markdown(data, extensions=['nl2br'])
 
     # Replace url links
     data = filter_urls(data)
