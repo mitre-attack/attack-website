@@ -61,7 +61,7 @@ async function initializeSearchService() {
       // Restore search service from IndexedDB
       try {
         console.debug('Initializing SearchService (assume documents already cached)...');
-        const searchService = new SearchService('search-results', saved_uuid);
+        searchService = new SearchService('search-results', saved_uuid);
         await searchService.initializeAsync(null); // Passing null will instruct the search service to attempt
         // restoring itself from the IndexedDB
         console.debug('SearchService is initialized.');
@@ -82,7 +82,7 @@ async function initializeSearchService() {
 
       // Download all JSON files from directory
       // Loop through the searchFilePaths array to construct the URLs
-      searchFilePaths.forEach((filename) => {
+      searchFilePaths.forEach(function(filename) {
         jsonFiles.push(baseUrl + filename);
       });
 
@@ -93,7 +93,7 @@ async function initializeSearchService() {
           const combinedData = data.reduce((acc, curr) => acc.concat(curr), []);
 
           // Initialize search service with combined data
-          const searchService = new SearchService('search-results', build_uuid);
+          searchService = new SearchService('search-results', build_uuid);
           return searchService.initializeAsync(combinedData);
         })
         .then(() => {

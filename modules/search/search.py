@@ -10,7 +10,7 @@ from loguru import logger
 import modules
 from modules import site_config, versions
 
-types = ["software", "datasources", "groups", "tactics", "techniques"]
+types = ["software", "groups", "tactics", "techniques"]
 sub_types = ["mobile", "enterprise", "ics"]
 types_hash = set(types)
 sub_types_hash = set(sub_types)
@@ -46,8 +46,6 @@ def generate_index():
                 file_type = "groups"
             elif path.startswith("/campaigns/"):
                 file_type = "campaigns"
-            elif path.startswith("/datasources/"):
-                file_type = "datasources"
             elif path.startswith("/datacomponents/"):
                 file_type = "datacomponents"
             elif path.startswith("/software/"):
@@ -56,10 +54,10 @@ def generate_index():
                 file_type = "tactics"
             elif path.startswith("/techniques/"):
                 file_type = "techniques"
-            elif path.startswith("/analytics/"):
-                file_type = "analytics"
             elif path.startswith("/detectionstrategies/"):
                 file_type = "detectionstrategies"
+            elif path.startswith("/analytics/"):
+                file_type = "analytics"
             else:
                 file_type = "misc"
 

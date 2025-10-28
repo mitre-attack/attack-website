@@ -3,7 +3,6 @@ const baseURL = ''; // TODO migrate from base_url (generated via Pelican)
 const searchFilePaths = [
   'campaigns.json',
   'assets.json',
-  'datasources.json',
   'datacomponents.json',
   'groups.json',
   'matrices.json',
