@@ -16,6 +16,10 @@ In this release we have renamed [T1185](/techniques/T1185/) and [T1557](/techniq
 
 This version of ATT&CK for Enterprise contains 14 Tactics, 188 Techniques, 379 Sub-techniques, 129 Groups, and 637 Pieces of Software.
 
+## Table of Contents
+
+[TOC]
+
 ### New Data Sources and/or Components in Enterprise ATT&CK:
 
 * [Active Directory](/datasources/DS0026)

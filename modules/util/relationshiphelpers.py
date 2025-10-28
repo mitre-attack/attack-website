@@ -178,25 +178,6 @@ def campaigns_using_malware(srcs):
     return get_related(srcs, "campaign", "uses", "malware", reverse=True)
 
 
-# technique:data component
-def techniques_detected_by_datacomponent(srcs):
-    """Return datacomponent_id => {technique, relationship} for each technique detected by data component.
-
-    srcs should be an array of memorystores for enterprise, mobile, and pre.
-    The mobile and pre memorystores should not contain data components nor data sources.
-    """
-    return get_related(srcs, "x-mitre-data-component", "detects", "attack-pattern")
-
-
-def datacomponents_detecting_technique(srcs):
-    """Return technique => {data component, relationship} for each data component decting a technique.
-
-    srcs should be an array of memorystores for enterprise, mobile, and pre.
-    The mobile and pre memorystores should not contain data components nor data sources.
-    """
-    return get_related(srcs, "x-mitre-data-component", "detects", "attack-pattern", reverse=True)
-
-
 # technique:group
 def techniques_used_by_groups(srcs):
     """Return group_id => {technique, relationship} for each technique used by the group.
@@ -232,7 +213,7 @@ def campaigns_using_technique(srcs):
 
 
 def groups_attributed_to_campaign(srcs):
-    """Return campaign_id => {group, relationship} for each group attributed to the campaign
+    """Return campaign_id => {group, relationship} for each group attributed to the campaign.
 
     srcs should be an array of memorystores for enterprise, mobile, and pre
     """
@@ -240,7 +221,7 @@ def groups_attributed_to_campaign(srcs):
 
 
 def campaigns_attributed_to_group(srcs):
-    """Return group_id => {campaign, relationship} for each campaign attributed to the group
+    """Return group_id => {campaign, relationship} for each campaign attributed to the group.
 
     srcs should be an array of memorystores for enterprise, mobile, and pre
     """
@@ -340,6 +321,21 @@ def parent_technique_of(srcs):
     """
     return get_related(srcs, "attack-pattern", "subtechnique-of", "attack-pattern")
 
+# technique:detection strategy
+def techniques_detected_by_detectionstrategy(srcs):
+    """Return detectionstrategy_id => {technique, relationship} for each technique detected by detection strategy.
+
+    srcs should be an array of memorystores for enterprise, mobile, and ics
+    """
+    return get_related(srcs, "x-mitre-detection-strategy", "detects", "attack-pattern")
+
+
+def detectionstrategy_detecting_technique(srcs):
+    """Return technique => {detection strategy, relationship} for each detection strategy decting a technique.
+
+    srcs should be an array of memorystores for enterprise, mobile, and ics
+    """
+    return get_related(srcs, "x-mitre-detection-strategy", "detects", "attack-pattern", reverse=True)
 
 def get_objects_using_notes(srcs):
     """Build note object mapping.

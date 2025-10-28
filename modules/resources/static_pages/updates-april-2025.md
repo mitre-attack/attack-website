@@ -8,7 +8,7 @@ save_as: resources/updates/updates-april-2025/index.html
 
 | Version | Start Date | End Date | Data | Changelogs |
 |:--------|:-----------|:---------|:-----|:-----------|
-| [ATT&CK v17](/versions/v17) | April 22, 2025 | Current version of ATT&CK | [v17.0 on MITRE/CTI](https://github.com/mitre/cti/releases/tag/ATT%26CK-v17.0) <br />[v17.1 on MITRE/CTI](https://github.com/mitre/cti/releases/tag/ATT%26CK-v17.1) | 16.1 - 17.0 [Details](/docs/changelogs/v16.1-v17.0/changelog-detailed.html) ([JSON](/docs/changelogs/v16.1-v17.0/changelog.json)) <br />17.0 - 17.1 [Details](/docs/changelogs/v17.0-v17.1/changelog-detailed.html) ([JSON](/docs/changelogs/v17.0-v17.1/changelog.json)) |
+| [ATT&CK v17](/versions/v17) | April 22, 2025 | October 27, 2025 | [v17.0 on MITRE/CTI](https://github.com/mitre/cti/releases/tag/ATT%26CK-v17.0) <br />[v17.1 on MITRE/CTI](https://github.com/mitre/cti/releases/tag/ATT%26CK-v17.1) | 16.1 - 17.0 [Details](/docs/changelogs/v16.1-v17.0/changelog-detailed.html) ([JSON](/docs/changelogs/v16.1-v17.0/changelog.json)) <br />17.0 - 17.1 [Details](/docs/changelogs/v17.0-v17.1/changelog-detailed.html) ([JSON](/docs/changelogs/v17.0-v17.1/changelog.json)) |
 
 The April 2025 (v17) ATT&CK release updates Techniques, Groups, Campaigns and Software for Enterprise, Mobile, and ICS.
 
@@ -16,7 +16,7 @@ The biggest changes in ATT&CK v17 are the addition of an [ESXi](/matrices/enterp
 
 In this release we have revoked Hijack Execution Flow: [DLL Side-Loading](/versions/v16/techniques/T1574/002/) and merged it into Hijack Execution Flow: [DLL](/techniques/T1574/001), which itself was renamed from Hijack Execution Flow: DLL Search Order Hijacking. This change was made to reflect the previously overlapping scope of the two sub-techniques and frequent confusion between them.
 
-This release also includes a [human-readable detailed changelog](/docs/changelogs/v16.1-v17.0/changelog-detailed.html) showing more specifically what changed in updated ATT&CK objects, and a [machine-readable JSON changelog](/docs/changelogs/v16.1-v17.0/changelog.json), whose format is described in [ATT&CK's Github](https://github.com/mitre-attack/mitreattack-python/blob/master/mitreattack/diffStix/README.md).
+This release also includes a [human-readable detailed changelog](/docs/changelogs/v16.1-v17.0/changelog-detailed.html) showing more specifically what changed in updated ATT&CK objects, and a [machine-readable JSON changelog](/docs/changelogs/v16.1-v17.0/changelog.json), whose format is described in [ATT&CK's Github](https://github.com/mitre-attack/mitreattack-python/blob/main/mitreattack/diffStix/README.md).
 
 This version of ATT&CK contains 877 Pieces of Software, 170 Groups, and 50 Campaigns
 Broken out by domain:
@@ -36,6 +36,9 @@ Broken out by domain:
 * Deprecations: ATT&CK objects which are deprecated and no longer in use, and not replaced.
 * Deletions: ATT&CK objects which are no longer found in the STIX data.
 
+## Table of Contents
+
+[TOC]
 
 ## Techniques
 

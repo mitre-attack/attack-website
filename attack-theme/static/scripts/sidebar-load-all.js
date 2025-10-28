@@ -58,7 +58,7 @@ $("#sidebars").load(mod_entry, function() {
             if (offsetValue <= 0){
                 offsetValue = sidenav_active_elements[sidenav_active_elements.length - 1].offsetTop;
             }
-            sidenav[0].scrollTop = offsetValue - 60;
+            sidenav[0].scrollTop = offsetValue - 100;
         });
     });
 

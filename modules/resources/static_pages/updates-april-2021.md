@@ -13,6 +13,11 @@ save_as: resources/updates/updates-april-2021/index.html
 The April 2021 (v9) ATT&CK release updates Techniques, Groups, and Software for Enterprise, Mobile, and ICS. The biggest changes are a change in how we describe data sources, the addition of the [Containers](/matrices/enterprise/containers/) and [Google Workspace](/matrices/enterprise/cloud/googleworkspace/) platforms, and the replacement of the AWS, GCP, and Azure platforms with a single [IaaS](/matrices/enterprise/cloud/iaas/) (Infrastructure as a Service) platform. An [accompanying blog post](https://medium.com/mitre-attack/attack-april-2021-release-39accaf23c81) describes these changes and additions in more detail, with a focus on the new structure of data sources.
 
 This version of ATT&CK for Enterprise contains 14 Tactics, 185 Techniques, and 367 Sub-techniques.
+
+## Table of Contents
+
+[TOC]
+
 ### Techniques
 
 **Enterprise**

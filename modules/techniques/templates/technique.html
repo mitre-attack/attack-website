@@ -4,7 +4,7 @@
 {% import 'macros/deprecated.html' as deprecated %}
 {% import 'macros/clean_output.html' as clean_output %}
 {% import 'macros/citations.html' as citations %}
-{% import 'macros/datasource_table.html' as datasource_table %}
+{% import 'macros/detection_strategies_table_techniques.html' as detection_strategies_table_techniques %}
 
 {% import 'macros/notes.html' as notes %}
 {% if parsed.parent_name %}
@@ -430,34 +430,9 @@
                                 </p>
                             {% endif %}
                         {% endif %}
-                        {% if parsed.detection or parsed.datasources %}
-                            <h2 class="pt-3" id="detection">Detection</h2>
-                            {% if parsed.datasources %}
-                                {{datasource_table.datasource_table(parsed.datasources, parsed.show_descriptions, parsed.citations)}}
-                            {% endif %}
-                            {% if parsed.detection and not parsed.show_descriptions %}
-                                <div>
-                                    {{clean_output.stixToHTML(parsed.detection, parsed.citations)}}
-                                </div>
-                            {% endif %}
-                        {% endif %}
-                        {% if parsed.detectable %}
-                            <h2 class="pt-3" id="detectable">Detection</h2>
-                            <div>
-                                <p><b>Detectable by Common Defenses (Yes/No/Partial):&nbsp</b><span>{{parsed.detectable}}</span></p>
-                                {% if parsed.detectable_exp %}
-                                    <p><b>Explanation:&nbsp</b><span>{{parsed.detectable_exp}}</span></p>
-                                {% endif %}
-                            </div>
-                        {% endif %}
-                        {% if parsed.diff_for_adv %}
-                            <h2 class="pt-3" id="difficulty">Difficulty for the Adversary</h2>
-                            <div>
-                                <p><b>Easy for the Adversary (Yes/No):&nbsp</b><span>{{parsed.diff_for_adv}}</span></p>
-                                {% if parsed.diff_for_adv_exp %}
-                                    <p><b>Explanation:&nbsp</b><span>{{parsed.diff_for_adv_exp}}</span></p>
-                                {% endif %}
-                            </div>
+                        {% if parsed.detections_strategies_table %}
+                                <h2 class="pt-3" id="detection">Detection Strategy</h2>
+                                {{detection_strategies_table_techniques.detection_strategies_table_techniques(parsed.detections_strategies_table, parsed.citations)}}
                         {% endif %}
 
                     {{ citations.reference_section(parsed.citations) }}

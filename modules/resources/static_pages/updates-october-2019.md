@@ -12,6 +12,10 @@ save_as: resources/updates/updates-october-2019/index.html
 
 The October 2019 ATT&CK release updates techniques, Groups, and Software for both Enterprise and Mobile. The biggest change is the addition of cloud-focused techniques.
 
+## Table of Contents
+
+[TOC]
+
 #### ATT&CK for Cloud
 
 36 techniques have been added or updated to cover adversary behavior against cloud-based platforms. We’ve added three infrastructure as a service (IaaS) platforms, [Amazon Web Services (AWS)](/matrices/enterprise/cloud/aws/), [Microsoft Azure (Azure)](/matrices/enterprise/cloud/azure/), and [Google Cloud Platform (GCP)](/matrices/enterprise/cloud/gcp/). The [Software as a service (SaaS)](/matrices/enterprise/cloud/saas/) platform will cover techniques against general cloud-based software platforms. Separately from IaaS and SaaS, we've also added two cloud software platforms, [Azure Active Directory (Azure AD)](/matrices/enterprise/cloud/azuread/) and [Office 365](/matrices/enterprise/cloud/office365/), to cover techniques against those specific platforms.

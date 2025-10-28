@@ -36,7 +36,10 @@ def linkbyid_check():
     )
     custom_stix_types_that_should_have_attack_ids = (
         "x-mitre-data-source",
+        "x-mitre-data-component",
         "x-mitre-tactic",
+        "x-mitre-analytic",
+        "x-mitre-detection-strategy",
     )
 
     all_attack_ids = []
@@ -44,32 +47,43 @@ def linkbyid_check():
     stix_id_to_stix_object = {}
     all_data_components = []
     for stix_object in all_stix_objects:
-        _id = stix_object["id"]
-
-        stix_id_to_stix_object[_id] = stix_object
+        stix_id = stix_object["id"]
+        stix_id_to_stix_object[stix_id] = stix_object
 
         external_references = stix_object.get("external_references")
-        if isinstance(stix_object, stix_types_that_should_have_attack_ids) or _id.startswith(
+        if isinstance(stix_object, stix_types_that_should_have_attack_ids) or stix_id.startswith(
             custom_stix_types_that_should_have_attack_ids
         ):
-            if external_references:
-                if "external_id" in external_references[0]:
-                    attack_id = external_references[0]["external_id"]
-                    stix_id = _id
-
-                    all_attack_ids.append(attack_id)
-                    stix_id_to_attack_id[stix_id] = attack_id
+            if external_references and "external_id" in external_references[0]:
+                attack_id = external_references[0]["external_id"]
+                all_attack_ids.append(attack_id)
+                stix_id_to_attack_id[stix_id] = attack_id
             else:
-                logger.error(f"STIX object does not have an expected ATT&CK ID: {_id}")
+                # suppress warnings for legacy data components without attack IDs
+                if not stix_id.startswith("x-mitre-data-component"):
+                    logger.error(f"STIX object does not have an expected ATT&CK ID: {stix_id}")
 
-        if _id.startswith("x-mitre-data-component"):
+        if stix_id.startswith("x-mitre-data-component"):
             all_data_components.append(stix_object)
 
-    data_component_stix_id_to_datasource_attack_id = {}
+    # build lookup for data component to data source attack ID
+    # (backwards compatibility with older data components that do
+    # not have attack IDs)
+    data_component_stix_id_to_attack_id = {}
     for data_component in all_data_components:
-        data_source_stix_id = data_component["x_mitre_data_source_ref"]
-        data_source_attack_id = stix_id_to_attack_id[data_source_stix_id]
-        data_component_stix_id_to_datasource_attack_id[data_component["id"]] = data_source_attack_id
+        data_source_stix_id = data_component.get("x_mitre_data_source_ref", None)
+        if data_component["id"] in stix_id_to_attack_id:
+            # data component has its own attack ID, map directly
+            data_component_attack_id = stix_id_to_attack_id[data_component["id"]]
+            data_component_stix_id_to_attack_id[data_component["id"]] = data_component_attack_id
+        elif data_source_stix_id:
+            # old data schema where data components reference a data source, map to data source attack ID
+            data_source_attack_id = stix_id_to_attack_id[data_source_stix_id]
+            data_component_stix_id_to_attack_id[data_component["id"]] = data_source_attack_id
+        else:
+            # cannot find a related attack ID
+            logger.warning(f"Data Component {data_component['id']} has no attack ID and no x_mitre_data_source_ref")
+
 
     # when searching for these regexes, be sure to ignore the case
     old_linkbyid_syntax = r"{{LinkById\|(.*?)}}"
@@ -77,16 +91,15 @@ def linkbyid_check():
 
     link_by_id_warnings = []
     for stix_object in all_stix_objects:
-        _id = stix_object.get("id")
+        stix_id = stix_object.get("id")
         name = stix_object.get("name")
         description = stix_object.get("description")
         external_references = stix_object.get("external_references")
         is_subtechnique = stix_object.get("x_mitre_is_subtechnique")
 
         attack_id = None
-        if external_references:
-            if "external_id" in external_references[0]:
-                attack_id = external_references[0]["external_id"]
+        if external_references and "external_id" in external_references[0]:
+            attack_id = external_references[0]["external_id"]
 
         pretty_name = ""
         if isinstance(stix_object, stix2.v21.sro.Relationship):
@@ -94,7 +107,8 @@ def linkbyid_check():
             target = stix_object["target_ref"]
 
             if source.startswith("x-mitre-data-component"):
-                source_attack_id = data_component_stix_id_to_datasource_attack_id[source]
+                # support for old relationships with data components
+                source_attack_id = data_component_stix_id_to_attack_id[source]
             else:
                 source_attack_id = stix_id_to_attack_id[source]
 
@@ -116,7 +130,7 @@ def linkbyid_check():
                 else:
                     pretty_name = f"[{attack_id}] {name}"
             else:
-                pretty_name = f"[{attack_id}] {_id}"
+                pretty_name = f"[{attack_id}] {stix_id}"
 
         if description:
             attack_ids_in_description = re.findall(old_linkbyid_syntax, description, re.IGNORECASE)

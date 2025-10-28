@@ -14,7 +14,7 @@ The April 2024 (v15) ATT&CK release updates Techniques, Groups, Campaigns and So
 
 The biggest changes in ATT&CK v15 are a shift in language (from CAR pseudocode to real-world query languages) for analytics in Enterprise detections, detection notes and analytics added to [Enterprise Execution](https://attack.mitre.org/tactics/TA0002/) techniques, improved defensive recommendations for [Cloud](https://attack.mitre.org/matrices/enterprise/cloud/) techniques, and the addition of activity from a number of cyber-criminal and underreported threat groups. An [accompanying blog post](https://medium.com/mitre-attack/attack-v15-26685f300acc) describes these changes as well as additional improvements across ATT&CK's various domains and platforms.
 
-This release also includes a [human-readable detailed changelog](/docs/changelogs/v14.1-v15.0/changelog-detailed.html) showing more specifically what changed in updated ATT&CK objects, and a [machine-readable JSON changelog](/docs/changelogs/v14.1-v15.0/changelog.json), whose format is described in [ATT&CK's Github](https://github.com/mitre-attack/mitreattack-python/blob/master/mitreattack/diffStix/README.md).
+This release also includes a [human-readable detailed changelog](/docs/changelogs/v14.1-v15.0/changelog-detailed.html) showing more specifically what changed in updated ATT&CK objects, and a [machine-readable JSON changelog](/docs/changelogs/v14.1-v15.0/changelog.json), whose format is described in [ATT&CK's Github](https://github.com/mitre-attack/mitreattack-python/blob/main/mitreattack/diffStix/README.md).
 
 This version of ATT&CK contains 794 Pieces of Software, 152 Groups, and 30 Campaigns. Broken out by domain:
 
@@ -32,6 +32,10 @@ This version of ATT&CK contains 794 Pieces of Software, 152 Groups, and 30 Campa
 * Revocations: ATT&CK objects which are revoked by a different object.
 * Deprecations: ATT&CK objects which are deprecated and no longer in use, and not replaced.
 * Deletions: ATT&CK objects which are no longer found in the STIX data.
+
+## Table of Contents
+
+[TOC]
 
 ## Techniques
 

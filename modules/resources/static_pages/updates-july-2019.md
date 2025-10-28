@@ -22,6 +22,10 @@ The Effects tactic in ATT&CK for Mobile was renamed to Impact for consistency wi
  
 We've also updated the [Enterprise tactic descriptions](/tactics/enterprise/) based on a contribution from Elly Searle at CrowdStrike to make them more straightforward, uniform, and easier to understand.
 
+## Table of Contents
+
+[TOC]
+
 ### Techniques
 
 **Enterprise**

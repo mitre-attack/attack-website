@@ -3,7 +3,7 @@ import json
 import os
 import re
 import shutil
-import sys
+from typing import Optional
 
 import bleach
 from loguru import logger
@@ -87,7 +87,7 @@ def find_index_id(ext_ref):
     return count
 
 
-def get_attack_id(object):
+def get_attack_id(object) -> Optional[str]:
     """Given an object, return attack_id."""
     external_references = object.get("external_references")
     if external_references:
@@ -99,9 +99,26 @@ def get_attack_id(object):
     return None
 
 
+def get_analytic_url(analytic):
+    """Given an analytic, get the website URL."""
+    detection_strategies = relationshipgetters.get_detectionstrategy_list()
+
+    for detection_strategy in detection_strategies:
+        if analytic["id"] in detection_strategy.get("x_mitre_analytic_refs", []):
+            detection_strategy_id = get_attack_id(detection_strategy)
+            analytic_id = get_attack_id(analytic)
+            return f"/detectionstrategies/{detection_strategy_id}#{analytic_id}"
+
+    return None
+
+
 def get_domain_name(object):
     """Given an object, return domains."""
     return object.get("x_mitre_domains")
+
+
+def get_domain_display_name(domain):
+    return domain_name_map.get(domain, domain)
 
 
 def update_reference_list(reference_list, obj):
@@ -252,14 +269,19 @@ def get_technique_table_data(tactic, techniques_list):
     return technique_table
 
 
-def get_side_nav_domains_data(side_nav_title, elements_list):
+def get_side_nav_domains_data(side_nav_title, elements_list, domain_page=True, use_name_or_id="name"):
     """Responsible for generating the links that are located on the left side of pages for desktop clients."""
+    title_in_url = side_nav_title.replace(" ", "")
 
     def get_element_data(element):
+        if use_name_or_id == "name":
+            set_sidebar_element_name = element["name"]
+        else:
+            set_sidebar_element_name = element["external_references"][0]["external_id"]
         return {
-            "name": element["name"],
-            "id": element["name"],
-            "path": "/{}/{}/".format(side_nav_title, attack_id),
+            "name": set_sidebar_element_name,
+            "id": set_sidebar_element_name,
+            "path": "/{}/{}/".format(title_in_url, attack_id),
             "children": [],
         }
 
@@ -272,7 +294,7 @@ def get_side_nav_domains_data(side_nav_title, elements_list):
             domain_data = {
                 "name": domain["alias"],
                 "id": domain["name"].split("-")[0],
-                "path": "/{}/{}/".format(side_nav_title, domain["name"].split("-")[0]),
+                "path": "/{}/{}/".format(title_in_url, domain["name"].split("-")[0]) if domain_page else None,
                 "children": [],
             }
 
@@ -286,7 +308,7 @@ def get_side_nav_domains_data(side_nav_title, elements_list):
     # return side menu
     return {
         "name": side_nav_title,
-        "id": side_nav_title,
+        "id": title_in_url,
         "path": None,  # root level doesn't get a path
         "children": elements_data,
     }
@@ -386,7 +408,7 @@ def technique_used_helper(technique_list, technique, reference_list, inherited=F
                         subtechnique["color"] = 3  # belongs both to object and inherited from another
                         if "descr" in technique_data and "descr" in subtechnique:
                             # add markdown newline between descriptions
-                            subtechnique["descr"] += "<p>" + technique_data["descr"] + "</p>"
+                            subtechnique["descr"] += "\n\n" + technique_data["descr"]
                         elif "descr" in technique_data:
                             subtechnique["descr"] = technique_data["descr"]
                         break
@@ -410,7 +432,7 @@ def technique_used_helper(technique_list, technique, reference_list, inherited=F
                     technique_list[attack_id]["color"] = 3  # belongs both to object and inherited from another
                     if "descr" in technique_data and "descr" in technique_list[attack_id]:
                         # add markdown newline between descriptions
-                        technique_list[attack_id]["descr"] += "<p>" + technique_data["descr"] + "</p>"
+                        technique_list[attack_id]["descr"] += "\n\n" + technique_data["descr"]
                     elif "descr" in technique_data:
                         technique_list[attack_id]["descr"] = technique_data["descr"]
                 else:

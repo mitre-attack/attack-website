@@ -124,10 +124,9 @@ Consult these sections as needed for step 5 in the above list.
     * `cti_url`: should be tag URL for the release on the mitre/cti repo
     * `commit`: should be sha256 hash of latest commit from mitre-attack/attack-website on the `gh-pages` branch prior to new content release
 
-
 * Run the `archive-website.py` script to get the previously released archives of the ATT&CK website
   * Upload the `tar.gz` of the latest previous version of the website to the [Archived Website Files](https://github.com/mitre-attack/attack-website/releases/tag/archived-website-files) release
-  * Optional - If sufficient changes were made to the archive process the re-upload all `tar.gz` files
+  * Optional - If sufficient changes were made to the archive process then re-upload all `tar.gz` files
 * Update notes
   * Add new file: `modules/resources/static_pages/updates-<month>-<year>.md`
   * Update former updates announcement file to specify end date of old release
@@ -138,6 +137,7 @@ Consult these sections as needed for step 5 in the above list.
   * Release [ATT&CK content version X.Y](https://github.com/mitre/cti/releases/tag/ATT%26CK-vX.Y).
     See the release notes [here](https://attack.mitre.org/resources/updates/updates-<month>-<year>/).
   ```
+
 * Update the `layer_version` and `navigator_version` in `modules/site_config.py` if navigator version or navigator layer version has been updated.<br>
 Check the layer specification version [here](https://github.com/mitre-attack/attack-navigator/blob/master/layers/spec/) and the navigator version [here](https://github.com/mitre-attack/attack-navigator/blob/master/CHANGELOG.md).
 
@@ -157,5 +157,6 @@ Check the layer specification version [here](https://github.com/mitre-attack/att
   * Release ATT&CK content version X.Y.
     See detailed changes [here](https://github.com/mitre/cti/releases/tag/ATT%26CK-vX.Y).
   ```
+
 * Update the `layer_version` and `navigator_version` in `modules/site_config.py` if navigator version or navigator layer version has been updated.<br>
 Check the layer specification version [here](https://github.com/mitre-attack/attack-navigator/blob/master/layers/spec/) and the navigator version [here](https://github.com/mitre-attack/attack-navigator/blob/master/CHANGELOG.md).

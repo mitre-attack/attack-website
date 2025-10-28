@@ -1,0 +1,149 @@
+{% extends "general/two-column.html" %}
+
+{% import 'macros/deprecated.html' as deprecated %}
+{% import 'macros/notes.html' as notes %}
+{% import 'macros/citations.html' as citations %}
+{% import 'macros/versioning.html' as versioning %}
+{% import 'macros/navigation.html' as navigation %}
+{% import 'macros/clean_output.html' as clean_output %}
+{% import 'macros/detection_strategies_table_datacomponents.html' as detection_strategies_table_datacomponents %}
+
+{% set parsed = page.data | from_json %}
+{% set title = parsed.name + ", Data Component " + parsed.attack_id + " | MITRE ATT&CK&reg;" -%}
+{% set active_page = "datacomponents" -%}
+
+{% block head %}
+    {{ super () }}
+    {% if parsed.deprecated %}
+        <meta name="robots" content="noindex, nofollow">
+    {% endif %}
+{%  endblock %}
+
+{% block innerleft %}
+<!--stop-indexing-for-search-->
+<div id="sidebars"></div>
+<!--start-indexing-for-search-->
+{% endblock %}
+
+{% block innerright %}
+{{ super () }}
+
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/">Home</a></li>
+        <li class="breadcrumb-item"><a href="/datacomponents/">Data Components</a></li>
+        <li class="breadcrumb-item">{{ parsed.name }}</li>
+    </ol>
+
+    <div class="tab-pane fade show active" id="v-{{pages.title}}" role="tabpanel" aria-labelledby="v-{{pages.title}}-tab"></div>
+    
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="jumbotron jumbotron-fluid">
+                <div class="container-fluid">
+                    <h1>
+                        {{ parsed.name }}
+                    </h1>
+
+                    {% if parsed.deprecated %}
+                        {% if parsed.description %}
+                            {{ deprecated.deprecated(clean_output.stixToHTML(parsed.description, firstParagraphOnly=True)) }}
+                        {% else %}
+                            {{ deprecated.deprecated("This data component has been deprecated.") }}
+                        {% endif %}
+                    {% else %}
+                        <div class="row">
+                            <div class="col-md-8">
+                                {% if parsed.description %}
+                                    <div class="description-body">
+                                        {{ clean_output.stixToHTML(parsed.description, parsed.citations) }}
+                                    </div>
+                                {% endif %}
+                                {% if parsed.notes %}
+                                    {{ notes.notes_section(parsed.notes) }}
+                                {% endif %}
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card">
+                                    <div class="card-body">
+                                        {% if parsed.attack_id %}
+                                            <div class="card-data"><span class="h5 card-title">ID:</span> {{parsed.attack_id}}</div>
+                                        {% endif %}
+                                        {% if parsed.domains %}
+                                            <div class="row card-data">
+                                                <div class="col-md-12">
+                                                    <span class="h5 card-title">Domains</span>: {{ parsed.domains|join(", ") }}
+                                                </div>
+                                            </div>
+                                        {% endif %}
+                                        {% if parsed.version %}
+                                            <div class="row card-data">
+                                                <div class="col-md-12">
+                                                    <span class="h5 card-title">Version</span>: {{ parsed.version }}
+                                                </div>
+                                            </div>
+                                        {% endif %}
+                                        {% if parsed.created %}
+                                            <div class="row card-data">
+                                                <div class="col-md-12">
+                                                    <span class="h5 card-title">Created</span>: {{ parsed.created }}
+                                                </div>
+                                            </div>
+                                        {% endif %}
+                                        {% if parsed.modified %}
+                                            <div class="row card-data">
+                                                <div class="col-md-12">
+                                                    <span class="h5 card-title">Last Modified</span>: {{ parsed.modified }}
+                                                </div>
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                {% if parsed.versioning_feature %}
+                                    {{ versioning.permalink_button(output_file, parsed.attack_id)}}
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        {% if parsed.log_sources %}
+                            <h2 class="pt-3" id="log_sources">Log Sources</h2>
+                            <div class="tables-mobile">
+                                <table class="table table-bordered table-alternate mt-2">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Name</th>
+                                            <th scope="col">Channel</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for log_source in parsed.log_sources %}
+                                            <tr>
+                                                <td>{{ log_source.name }}</td>
+                                                <td>{{ log_source.channel }}</td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        {% endif %}
+                        {% if parsed.detectionstrategies %}
+                            <h2 class="pt-3" id="detection">Detection Strategy</h2>
+                            {{detection_strategies_table_datacomponents.detection_strategies_table_datacomponents(parsed.detectionstrategies)}}
+                        {% endif %}
+
+                        {{ citations.reference_section(parsed.citations) }}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    <!--SCRIPTS-->
+    <script src="/theme/scripts/sidebar-load-all.js"></script>
+    <script src="/theme/scripts/bootstrap-tourist.js"></script>
+    <script src="/theme/scripts/settings.js"></script>
+    <script src="/theme/scripts/tour/tour-relationships.js"></script>
+{% endblock %}

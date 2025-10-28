@@ -88,19 +88,19 @@ def generate_domain_markdown(domain, techniques_no_sub, tactics, side_nav_data, 
             md_file.write(subs)
 
         # Create the markdown for techniques in the STIX
+        datasource_of = util.relationshipgetters.get_datasource_of()
         for technique in techniques_no_sub[domain]:
             if "revoked" not in technique or technique["revoked"] is False:
-                generate_technique_md(technique, domain, side_nav_data, tactics[domain], notes)
+                generate_technique_md(technique, domain, side_nav_data, tactics[domain], notes, datasource_of)
 
         return True
 
     return False
 
 
-def generate_technique_md(technique, domain, side_nav_data, tactic_list, notes):
+def generate_technique_md(technique, domain, side_nav_data, tactic_list, notes, datasource_of):
     """Generetes markdown data for given technique."""
     attack_id = util.buildhelpers.get_attack_id(technique)
-
     # Only add technique if the attack id was found
     if attack_id:
         subtechniques_of = util.relationshipgetters.get_subtechniques_of()
@@ -117,7 +117,9 @@ def generate_technique_md(technique, domain, side_nav_data, tactic_list, notes):
         technique_dict["subtechniques"] = get_subtechniques(technique)
 
         # Generate data for technique
-        technique_dict = generate_data_for_md(technique_dict, technique, tactic_list)
+        technique_dict = generate_data_for_md(
+            technique_dict=technique_dict, technique=technique, tactic_list=tactic_list, datasource_of=datasource_of
+        )
 
         subs = techniques_config.technique_md.substitute(technique_dict)
         path = technique_dict["attack_id"]
@@ -143,7 +145,13 @@ def generate_technique_md(technique, domain, side_nav_data, tactic_list, notes):
                 sub_tech_dict["parent_name"] = technique.get("name")
                 sub_tech_dict["subtechniques"] = technique_dict["subtechniques"]
 
-                sub_tech_dict = generate_data_for_md(sub_tech_dict, subtechnique["object"], tactic_list, True)
+                sub_tech_dict = generate_data_for_md(
+                    technique_dict=sub_tech_dict,
+                    technique=subtechnique["object"],
+                    tactic_list=tactic_list,
+                    is_sub_technique=True,
+                    datasource_of=datasource_of,
+                )
 
                 if sub_tech_dict.get("sub_number"):
                     subs = techniques_config.sub_technique_md.substitute(sub_tech_dict)
@@ -158,7 +166,7 @@ def generate_technique_md(technique, domain, side_nav_data, tactic_list, notes):
                         md_file.write(subs)
 
 
-def generate_data_for_md(technique_dict, technique, tactic_list, is_sub_technique=False):
+def generate_data_for_md(technique_dict, technique, tactic_list, is_sub_technique=False, datasource_of=None):
     """Given a technique or subtechnique, fill technique dictionary to create markdown file."""
     technique_dict["name"] = technique.get("name")
 
@@ -217,6 +225,11 @@ def generate_data_for_md(technique_dict, technique, tactic_list, is_sub_techniqu
             # Get asset table
             technique_dict["assets_table"] = get_assets_table_data(technique, reference_list)
 
+            # Get detection strategy table
+            technique_dict["detections_strategies_table"] = get_detection_strategies_table_data(
+                technique, reference_list
+            )
+
             # Get technique version
             if technique.get("x_mitre_version"):
                 technique_dict["version"] = technique["x_mitre_version"]
@@ -265,12 +278,6 @@ def generate_data_for_md(technique_dict, technique, tactic_list, is_sub_techniqu
                 technique["x_mitre_effective_permissions"].sort()
                 technique_dict["eff_perms"] = ", ".join(technique["x_mitre_effective_permissions"])
 
-            # Get data sources and components
-            (
-                technique_dict["datasources"],
-                technique_dict["show_descriptions"],
-            ) = get_datasources_and_components_of_technique(technique, reference_list)
-
             # Get if technique supports remote
             if technique.get("x_mitre_remote_support"):
                 if technique["x_mitre_remote_support"]:
@@ -309,26 +316,6 @@ def generate_data_for_md(technique_dict, technique, tactic_list, is_sub_techniqu
             if technique.get("x_mitre_detection"):
                 technique_dict["detection"] = technique["x_mitre_detection"]
 
-            # Get if technique is detectable by common defenses
-            if technique.get("x_mitre_detectable_by_common_defenses"):
-                technique_dict["detectable"] = technique.get("x_mitre_detectable_by_common_defenses")
-
-            # Get explanation of detecatable by common defenses
-            if technique.get("x_mitre_detectable_by_common_defenses_explanation"):
-                technique_dict["detectable_exp"] = util.buildhelpers.replace_html_chars(
-                    technique["x_mitre_detectable_by_common_defenses_explanation"]
-                )
-
-            # Get diffulty for adversaries
-            if technique.get("x_mitre_difficulty_for_adversary"):
-                technique_dict["diff_for_adv"] = technique["x_mitre_difficulty_for_adversary"]
-
-            # Get explanation of difficulty for adversaries
-            if technique.get("x_mitre_difficulty_for_adversary_explanation"):
-                technique_dict["diff_for_adv_exp"] = util.buildhelpers.replace_html_chars(
-                    technique["x_mitre_difficulty_for_adversary_explanation"]
-                )
-
             technique_dict["citations"] = reference_list
 
             technique_dict["versioning_feature"] = site_config.check_versions_module()
@@ -341,9 +328,11 @@ def generate_data_for_md(technique_dict, technique, tactic_list, is_sub_techniqu
 
 
 def get_mitigations_table_data(technique, reference_list):
-    """Given a technique a reference list, find mitigations that mitigate
-    technique and return list with mitigation data. Also modifies the
-    reference list if it finds a reference that is not on the list
+    """Given a technique and a reference list, return mitigation data.
+
+    Find mitigations that mitigate the technique and return a list with mitigation
+    data. Also modifies the reference list if it finds a reference that is not
+    on the list.
     """
     mitigation_data = []
 
@@ -373,9 +362,11 @@ def get_mitigations_table_data(technique, reference_list):
 
 
 def get_assets_table_data(technique, reference_list):
-    """Given a technique a reference list, find assets that are targeted by the
-    technique and return list with asset data. Also modifies the
-    reference list if it finds a reference that is not on the list
+    """Return asset data for a technique.
+
+    Given a technique and a reference list, find assets targeted by the
+    technique and return a list with asset data. Also modify the reference
+    list if a relationship reference is not present in the list.
     """
     asset_data = []
 
@@ -406,10 +397,71 @@ def get_assets_table_data(technique, reference_list):
     return asset_data
 
 
+def get_analytic_list(analytics, reference_list):
+    """Build a list of analytics with their IDs and descriptions, updating the reference list as needed.
+
+    Parameters
+    ----------
+    analytics : dict
+        Mapping of analytics where each value includes 'external_references' and 'description'.
+    reference_list : dict
+        Reference accumulator passed to update_reference_list; may be modified by the helper.
+
+    Returns
+    -------
+    list[dict]
+        List of dictionaries with keys 'id' and 'description' for each analytic.
+    """
+    analytics_list = []
+    for keys, values in analytics.items():
+        reference_list = util.buildhelpers.update_reference_list(reference_list, values)
+        analytics_list.append(
+            {"id": values["external_references"][0]["external_id"], "description": values["description"]}
+        )
+    return analytics_list
+
+
+def get_detection_strategies_table_data(technique, reference_list):
+    """Return detection strategy data for a technique.
+
+    Given a technique and a reference list, find detection strategies targeted by the
+    technique and return a list with detection strategy data. Also modify the reference
+    list if a relationship reference is not present in the list.
+    """
+    detection_strategy_data = []
+
+    # Check if technique has assets
+    detection_strategies_for_techniques = util.relationshipgetters.get_detectionstrategies_detecting_technique().get(
+        technique["id"]
+    )
+    if detection_strategies_for_techniques:
+        # Iterate through technique assets
+        for detection_strategy in detection_strategies_for_techniques:
+            # Do not add deprecated assets to table
+            if not detection_strategy["object"].get("x_mitre_deprecated"):
+                attack_id = util.buildhelpers.get_attack_id(detection_strategy["object"])
+
+                # Only add if attack id is found
+                if not attack_id:
+                    continue
+                analytics = util.stixhelpers.get_analytics_from_detection_strategy(detection_strategy["object"])
+                row = {}
+                row["id"] = attack_id
+                row["name"] = detection_strategy["object"]["name"]
+                row["analytics"] = get_analytic_list(analytics=analytics, reference_list=reference_list)
+                detection_strategy_data.append(row)
+                reference_list = util.buildhelpers.update_reference_list(reference_list, detection_strategy)
+
+    if detection_strategy_data:
+        detection_strategy_data = sorted(detection_strategy_data, key=lambda k: k["name"].lower())
+    return detection_strategy_data
+
+
 def get_examples_table_data(technique, reference_list):
-    """Given a technique object, find examples in malware using technique,
-    tools using technique and groups using technique. Return list with
-    example data
+    """Return example data for a technique.
+
+    Find malware, tools, groups, and campaigns that use the technique and
+    return a list with example data.
     """
     # Creating map to avoid repeating the code multiple times
     examples_map = [
@@ -451,7 +503,7 @@ def get_examples_table_data(technique, reference_list):
 
 
 def get_path_from_type(object):
-    """Given an object, return the path"""
+    """Return the path for an object."""
     path_map = {"intrusion-set": "groups", "malware": "software", "tool": "software", "campaign": "campaigns"}
     return path_map[object.get("type")]
 
@@ -528,7 +580,7 @@ def get_technique_side_nav_data(techniques, tactics):
 
 
 def get_techniques_list(techniques):
-    """This method is used to generate a list of techniques."""
+    """Generate a list of techniques."""
     technique_list = {}
 
     for technique in techniques:
@@ -582,64 +634,6 @@ def get_subtechniques(technique):
                 subtechs.append(sub_data)
 
     return sorted(subtechs, key=lambda k: k["id"])
-
-
-def get_datasources_and_components_of_technique(technique, reference_list):
-    """Given a technique object, find data sources and components
-    detecting the technique. Returns list with the following structure
-
-    For each data source:
-    Data Source ATT&CK ID
-    Data Source name
-    Data components
-            Data component name
-            Data component descr
-    """
-    datasource_and_components = []
-
-    datacomponents_of_technique = util.relationshipgetters.get_datacomponents_detecting_technique().get(technique["id"])
-    datasource_of = util.relationshipgetters.get_datasource_of()
-
-    show_descriptions = False
-
-    if datacomponents_of_technique:
-        datasources_data = {}
-        for datacomponent in datacomponents_of_technique:
-            datasource = datasource_of.get(datacomponent["object"]["id"])
-            datasource_attack_id = util.buildhelpers.get_attack_id(datasource)
-            if datasource_attack_id:
-                if not datasources_data.get(datasource_attack_id):
-                    datasources_data[datasource_attack_id] = {}
-                    datasources_data[datasource_attack_id]["attack_id"] = datasource_attack_id
-                    datasources_data[datasource_attack_id]["name"] = datasource["name"]
-                    datasources_data[datasource_attack_id]["datacomponents"] = []
-
-                datacomponent_data = {}
-                datacomponent_data["name"] = datacomponent["object"]["name"]
-
-                if datacomponent["relationship"].get("description"):
-                    reference_list = util.buildhelpers.update_reference_list(
-                        reference_list, datacomponent["relationship"]
-                    )
-                    datacomponent_data["descr"] = datacomponent["relationship"]["description"]
-                    if not show_descriptions:
-                        show_descriptions = True
-
-                datasources_data[datasource_attack_id]["datacomponents"].append(datacomponent_data)
-
-        for datasource_key in datasources_data:
-            # Sort data components
-            datasources_data[datasource_key]["datacomponents"] = sorted(
-                datasources_data[datasource_key]["datacomponents"], key=lambda k: k["name"].lower()
-            )
-            # Add
-            datasource_and_components.append(datasources_data[datasource_key])
-
-    if datasource_and_components:
-        # Sort by data source name
-        datasource_and_components = sorted(datasource_and_components, key=lambda k: k["name"].lower())
-
-    return datasource_and_components, show_descriptions
 
 
 def generate_sidebar_techniques(side_nav_data):

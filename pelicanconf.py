@@ -52,3 +52,17 @@ JINJA_FILTERS = {
     "stixToHTML": custom_jinja_filters.stixToHTML,
     "permalink": custom_jinja_filters.permalink,
 }
+
+MARKDOWN = {
+    "extension_configs": {
+        # defaults
+        "markdown.extensions.codehilite": {"css_class": "highlight"},
+        "markdown.extensions.extra": {},
+        "markdown.extensions.meta": {},
+        # This is for enabling the TOC generation: https://python-markdown.github.io/extensions/toc/
+        "markdown.extensions.toc": {"anchorlink": True},
+        # Turns new lines into HTML breaks, like GitHub and StackOverflow: https://python-markdown.github.io/extensions/nl2br/
+        "markdown.extensions.nl2br": {},
+    },
+    "output_format": "html5",
+}

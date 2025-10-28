@@ -38,20 +38,17 @@ def generate_markdown_files():
     has_datasource = False
 
     datasource_list = rsg.get_datasource_list()
-    datasource_list_no_deprecated_revoked = util.buildhelpers.filter_deprecated_revoked(datasource_list)
 
-    if datasource_list_no_deprecated_revoked:
+    if datasource_list:
         has_datasource = True
 
     if has_datasource:
-        data = {}
-
-        notes = rsg.get_objects_using_notes()
-        side_menu_data = get_datasources_side_nav_data(datasource_list_no_deprecated_revoked)
-        data["side_menu_data"] = side_menu_data
-        data["datasources_table"] = get_datasources_table_data(datasource_list_no_deprecated_revoked)
-        data["datasources_list_len"] = str(len(datasource_list_no_deprecated_revoked))
-
+        side_menu_data = get_datasources_side_nav_data(datasource_list)
+        data = {
+            "datasources_table": get_datasources_table_data(datasource_list),
+            "datasources_list_len": str(len(datasource_list)),
+            "side_menu_data": side_menu_data,
+        }
         subs = datasources_config.datasource_index_md + json.dumps(data)
 
         with open(
@@ -60,6 +57,7 @@ def generate_markdown_files():
             md_file.write(subs)
 
         # Create the markdown for the enterprise datasources in the STIX
+        notes = rsg.get_objects_using_notes()
         for datasource in datasource_list:
             generate_datasource_md(datasource, side_menu_data, notes)
 
@@ -72,9 +70,7 @@ def generate_datasource_md(datasource, side_menu_data, notes):
 
     if attack_id:
         data = {}
-
         data["attack_id"] = attack_id
-
         data["side_menu_data"] = side_menu_data
         data["notes"] = notes.get(datasource["id"])
 
@@ -112,13 +108,9 @@ def generate_datasource_md(datasource, side_menu_data, notes):
             datasource["x_mitre_collection_layers"].sort()
             data["collection_layers"] = ", ".join(datasource["x_mitre_collection_layers"])
 
-        # Get data components of data source and the technique relationships
-        data["datacomponents_list"] = get_datacomponents_data(datasource, reference_list)
-
         data["citations"] = reference_list
 
-        if datasource.get("x_mitre_deprecated"):
-            data["deprecated"] = True
+        data["deprecated"] = datasource.get("x_mitre_deprecated", False)
 
         data["versioning_feature"] = site_config.check_versions_module()
 
@@ -136,73 +128,22 @@ def get_datasources_side_nav_data(datasources):
     """Responsible for generating the links that are located on the left side of individual data sources domain pages."""
     side_nav_data = []
 
-    # Get data components of data source
-    datacomponent_of = rsg.get_datacomponent_of()
-    technique_to_domain = rsg.get_technique_to_domain()
-    techniques_detected_by_datacomponent = rsg.get_techniques_detected_by_datacomponent()
-
-    def get_domains_of_datacomponent(datacomponent):
-        """Retrives domains of given data component"""
-        domains_of_datacomponent = []
-
-        # get data components to techniques mapping to find domains
-        techniques_of_datacomp = techniques_detected_by_datacomponent.get(datacomponent["id"])
-        if techniques_of_datacomp:
-            technique_list = {}
-            for technique_rel in techniques_of_datacomp:
-                attack_id = util.buildhelpers.get_attack_id(technique_rel["object"])
-                if attack_id:
-                    domain = technique_to_domain[attack_id].split("-")[0]
-                    if domain not in domains_of_datacomponent:
-                        domains_of_datacomponent.append(domain)
-
-        return domains_of_datacomponent
-
     # Loop through data sources
     for datasource in datasources:
         attack_id = util.buildhelpers.get_attack_id(datasource)
 
         if attack_id:
-            domains_of_datasource = []
+            domains = datasource.get("x_mitre_domains", [])
+            domain_names = [util.buildhelpers.get_domain_display_name(domain) for domain in domains]
             datasource_data = {
                 "name": datasource["name"],
                 "id": attack_id,
                 "path": "/datasources/{}/".format(attack_id),
+                "domains": domain_names,
                 "children": [],
             }
-
-            if datacomponent_of.get(datasource["id"]):
-                for datacomponent in datacomponent_of[datasource["id"]]:
-                    if not datacomponent.get("x_mitre_deprecated") and not datacomponent.get("revoked"):
-                        # get data component detections
-                        techniques_of_datacomp = techniques_detected_by_datacomponent.get(datacomponent["id"])
-                        if techniques_of_datacomp:
-                            domains_of_datacomponent = get_domains_of_datacomponent(datacomponent)
-                            # Add missing domains to data source
-                            for domain in domains_of_datacomponent:
-                                if domain not in domains_of_datasource:
-                                    domains_of_datasource.append(domain)
-
-                            datacomponent_data = {
-                                "name": datacomponent["name"],
-                                "id": datacomponent["name"],
-                                "path": "/datasources/{}/#{}".format(attack_id, datacomponent["name"]),
-                                "domains": domains_of_datacomponent,
-                                "children": [],
-                            }
-
-                            # Add data component data to data source
-                            datasource_data["children"].append(datacomponent_data)
-
-                    # Sort subtechniques by ATT&CK ID
-                    if datasource_data["children"]:
-                        datasource_data["children"] = sorted(
-                            datasource_data["children"], key=lambda k: k["name"].lower()
-                        )
-
-        datasource_data["domains"] = domains_of_datasource
-        # add data source and children to the side navigation
-        side_nav_data.append(datasource_data)
+            # add data source and children to the side navigation
+            side_nav_data.append(datasource_data)
 
     side_nav_data = sorted(side_nav_data, key=lambda k: k["name"].lower())
 
@@ -217,152 +158,21 @@ def get_datasources_side_nav_data(datasources):
 def get_datasources_table_data(datasource_list):
     """Responsible for generating datasource table data for the datasource index page."""
     datasources_table_data = []
-
-    # Now the table on the right, which is made up of datasource data
     for datasource in datasource_list:
         attack_id = util.buildhelpers.get_attack_id(datasource)
-        domain_list = get_datasources_domain(datasource)
 
         if attack_id:
-            row = {}
-
-            row["id"] = attack_id
-
-            for domain_idx in range(len(domain_list)):
-                domain_list[domain_idx] = domain_list[domain_idx].replace("-attack", "")
-                if domain_list[domain_idx] == "ics":
-                    domain_list[domain_idx] = domain_list[domain_idx].upper()
-                else:
-                    domain_list[domain_idx] = domain_list[domain_idx].capitalize()
-            row["domains"] = domain_list
-
-            if datasource.get("name"):
-                row["name"] = datasource["name"]
-
-            if datasource.get("description"):
-                row["descr"] = datasource["description"]
-
-                if datasource.get("x_mitre_deprecated"):
-                    row["deprecated"] = True
-
+            domains = datasource.get("x_mitre_domains", [])
+            domain_names = [util.buildhelpers.get_domain_display_name(domain) for domain in domains]
+            row = {
+                "id": attack_id,
+                "name": datasource.get("name"),
+                "domains": domain_names,
+                "descr": datasource.get("description", ""),
+                "deprecated": datasource.get("x_mitre_deprecated", False),
+            }
             datasources_table_data.append(row)
 
     # Sort by data source name
     datasources_table_data = sorted(datasources_table_data, key=lambda k: k["name"].lower())
-
     return datasources_table_data
-
-
-def get_datacomponents_data(datasource, reference_list):
-    """Given a data source and its reference list, get a list of data components of the data source.
-
-    Add techniques detected by data components. Check the reference list for citations, if not found in list, add it.
-    """
-    datacomponents_data = []
-
-    # Get data components of data source
-    datacomponent_of = rsg.get_datacomponent_of()
-    technique_to_domain = rsg.get_technique_to_domain()
-    techniques_detected_by_datacomponent = rsg.get_techniques_detected_by_datacomponent()
-
-    if datacomponent_of.get(datasource["id"]):
-        for datacomponent in datacomponent_of[datasource["id"]]:
-            if not datacomponent.get("x_mitre_deprecated") and not datacomponent.get("revoked"):
-                # get data component detections
-                techniques_of_datacomp = techniques_detected_by_datacomponent.get(datacomponent["id"])
-
-                # skip if no detections
-                if not techniques_of_datacomp:
-                    continue
-
-                reference = False
-                datacomponent_data = {"name": datacomponent["name"], "descr": datacomponent["description"]}
-
-                # update reference list
-                reference_list = util.buildhelpers.update_reference_list(reference_list, datacomponent)
-
-                # get data components to techniques mapping
-                datacomponent_data["techniques"] = []
-                domains_of_datacomponent = []
-                technique_list = {}
-                for technique_rel in techniques_of_datacomp:
-                    # Do not add if technique is deprecated
-                    if not technique_rel["object"].get("x_mitre_deprecated"):
-                        technique_list = util.buildhelpers.technique_used_helper(
-                            technique_list, technique_rel, reference_list
-                        )
-
-                        # Get domain of technique
-                        attack_id = util.buildhelpers.get_attack_id(technique_rel["object"])
-                        if attack_id:
-                            domain = technique_to_domain[attack_id].split("-")[0]
-                            if domain not in domains_of_datacomponent:
-                                domains_of_datacomponent.append(domain)
-
-                        technique_data = []
-                        for item in technique_list:
-                            if technique_list[item].get("descr"):
-                                if reference == False:
-                                    reference = True
-                            technique_data.append(technique_list[item])
-
-                        # Sort by technique name
-                        technique_data = sorted(technique_data, key=lambda k: k["name"].lower())
-
-                        datacomponent_data["techniques"] = technique_data
-                        datacomponent_data["add_datacomponent_ref"] = reference
-
-                datacomponent_data["domains"] = domains_of_datacomponent
-                datacomponents_data.append(datacomponent_data)
-
-    # Sort output by data component name
-    datacomponents_data = sorted(datacomponents_data, key=lambda k: k["name"].lower())
-
-    return datacomponents_data
-
-
-def get_domains_of_datacomponent(datacomponent, techniques_detected_by_datacomponent, technique_to_domain):
-    """Retrives domains of given data component"""
-    domains_of_datacomponent = []
-
-    # get data components to techniques mapping to find domains
-    techniques_of_datacomp = techniques_detected_by_datacomponent.get(datacomponent["id"])
-    if techniques_of_datacomp:
-        technique_list = {}
-        for technique_rel in techniques_of_datacomp:
-            attack_id = util.buildhelpers.get_attack_id(technique_rel["object"])
-            if attack_id:
-                domain = technique_to_domain[attack_id].split("-")[0]
-                if domain not in domains_of_datacomponent:
-                    domains_of_datacomponent.append(domain)
-
-    return domains_of_datacomponent
-
-
-def get_datasources_domain(datasource):
-    """Responsible for generating the list of domains for the datasources and datacomponents."""
-    # Get data components of data source
-    datacomponent_of = rsg.get_datacomponent_of()
-    technique_to_domain = rsg.get_technique_to_domain()
-    techniques_detected_by_datacomponent = rsg.get_techniques_detected_by_datacomponent()
-
-    # Loop through data sources
-    attack_id = util.buildhelpers.get_attack_id(datasource)
-
-    if attack_id:
-        domains_of_datasource = []
-        if datacomponent_of.get(datasource["id"]):
-            for datacomponent in datacomponent_of[datasource["id"]]:
-                if not datacomponent.get("x_mitre_deprecated") and not datacomponent.get("revoked"):
-                    # get data component detections
-                    techniques_of_datacomp = techniques_detected_by_datacomponent.get(datacomponent["id"])
-                    if techniques_of_datacomp:
-                        domains_of_datacomponent = get_domains_of_datacomponent(
-                            datacomponent, techniques_detected_by_datacomponent, technique_to_domain
-                        )
-                        # Add missing domains to data source
-                        for domain in domains_of_datacomponent:
-                            if domain not in domains_of_datasource:
-                                domains_of_datasource.append(domain)
-
-    return domains_of_datasource

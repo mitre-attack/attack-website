@@ -1,5 +1,3 @@
-from modules import site_config
-
 from . import relationshiphelpers as rsh
 from . import stixhelpers
 
@@ -12,12 +10,12 @@ techniques_used_by_tools = {}
 techniques_used_by_groups = {}
 techniques_used_by_campaigns = {}
 techniques_targeting_assets = {}
-techniques_detected_by_datacomponent = {}
+techniques_detected_by_detectionstrategy = {}
 groups_using_tool = {}
 groups_using_malware = {}
 mitigation_mitigates_techniques = {}
 technique_mitigated_by_mitigation = {}
-datacomponents_detecting_technique = {}
+detectionstrategies_detecting_technique = {}
 tools_using_technique = {}
 malware_using_technique = {}
 groups_using_technique = {}
@@ -28,7 +26,6 @@ campaigns_using_malware = {}
 groups_attributed_to_campaign = {}
 campaigns_attributed_to_group = {}
 subtechniques_of = {}
-datacomponent_of = {}
 datasource_of = {}
 parent_technique_of = {}
 objects_using_notes = {}
@@ -47,14 +44,17 @@ datacomponent_list = []
 mitigation_list = []
 campaign_list = []
 asset_list = []
+analytic_list = []
+detectionstrategy_list = []
 
 technique_to_domain = {}
+logsource_to_detections = {}
 
 # Relationship getters
 
 
 def get_malware_used_by_groups():
-    """malware used by groups getter"""
+    """Return malware used by groups."""
     global malware_used_by_groups
 
     if not malware_used_by_groups:
@@ -64,7 +64,7 @@ def get_malware_used_by_groups():
 
 
 def get_tools_used_by_groups():
-    """tools used by groups getter"""
+    """Return tools used by groups."""
     global tools_used_by_groups
 
     if not tools_used_by_groups:
@@ -74,7 +74,7 @@ def get_tools_used_by_groups():
 
 
 def get_malware_used_by_campaigns():
-    """malware used by campaigns getter"""
+    """Return malware used by campaigns."""
     global malware_used_by_campaigns
 
     if not malware_used_by_campaigns:
@@ -84,7 +84,7 @@ def get_malware_used_by_campaigns():
 
 
 def get_tools_used_by_campaigns():
-    """tools used by campaigns getter"""
+    """Return tools used by campaigns."""
     global tools_used_by_campaigns
 
     if not tools_used_by_campaigns:
@@ -94,7 +94,7 @@ def get_tools_used_by_campaigns():
 
 
 def get_techniques_used_by_malware():
-    """techniques used by malware getter"""
+    """Return techniques used by malware."""
     global techniques_used_by_malware
 
     if not techniques_used_by_malware:
@@ -104,7 +104,7 @@ def get_techniques_used_by_malware():
 
 
 def get_techniques_used_by_tools():
-    """techniques used by tools getter"""
+    """Return techniques used by tools."""
     global techniques_used_by_tools
 
     if not techniques_used_by_tools:
@@ -114,7 +114,7 @@ def get_techniques_used_by_tools():
 
 
 def get_techniques_used_by_groups():
-    """techniques used by groups getter"""
+    """Return techniques used by groups."""
     global techniques_used_by_groups
 
     if not techniques_used_by_groups:
@@ -124,7 +124,7 @@ def get_techniques_used_by_groups():
 
 
 def get_techniques_used_by_campaigns():
-    """techniques used by campaigns getter"""
+    """Return techniques used by campaigns."""
     global techniques_used_by_campaigns
 
     if not techniques_used_by_campaigns:
@@ -134,7 +134,7 @@ def get_techniques_used_by_campaigns():
 
 
 def get_techniques_targeting_assets():
-    """techniques targeting assets getter"""
+    """Return techniques targeting assets."""
     global techniques_targeting_assets
 
     if not techniques_targeting_assets:
@@ -144,7 +144,7 @@ def get_techniques_targeting_assets():
 
 
 def get_assets_targeted_by_techniques():
-    """assets targeted by techniques getter"""
+    """Return assets targeted by techniques."""
     global assets_targeted_by_techniques
 
     if not assets_targeted_by_techniques:
@@ -153,26 +153,26 @@ def get_assets_targeted_by_techniques():
     return assets_targeted_by_techniques
 
 
-def get_techniques_detected_by_datacomponent():
-    global techniques_detected_by_datacomponent
+def get_techniques_detected_by_detectionstrategy():
+    global techniques_detected_by_detectionstrategy
 
-    if not techniques_detected_by_datacomponent:
-        techniques_detected_by_datacomponent = rsh.techniques_detected_by_datacomponent(get_srcs())
+    if not techniques_detected_by_detectionstrategy:
+        techniques_detected_by_detectionstrategy = rsh.techniques_detected_by_detectionstrategy(get_srcs())
 
-    return techniques_detected_by_datacomponent
+    return techniques_detected_by_detectionstrategy
 
 
-def get_datacomponents_detecting_technique():
-    global datacomponents_detecting_technique
+def get_detectionstrategies_detecting_technique():
+    global detectionstrategies_detecting_technique
 
-    if not datacomponents_detecting_technique:
-        datacomponents_detecting_technique = rsh.datacomponents_detecting_technique(get_srcs())
+    if not detectionstrategies_detecting_technique:
+        detectionstrategies_detecting_technique = rsh.detectionstrategy_detecting_technique(get_srcs())
 
-    return datacomponents_detecting_technique
+    return detectionstrategies_detecting_technique
 
 
 def get_groups_using_tool():
-    """groups using tool getter"""
+    """Return groups using a tool."""
     global groups_using_tool
 
     if not groups_using_tool:
@@ -182,7 +182,7 @@ def get_groups_using_tool():
 
 
 def get_groups_using_malware():
-    """groups using malware getter"""
+    """Return groups using malware."""
     global groups_using_malware
 
     if not groups_using_malware:
@@ -192,7 +192,7 @@ def get_groups_using_malware():
 
 
 def get_mitigation_mitigates_techniques():
-    """mitigation migates techniques getter"""
+    """Return mapping of mitigations that mitigate techniques."""
     global mitigation_mitigates_techniques
 
     if not mitigation_mitigates_techniques:
@@ -202,7 +202,7 @@ def get_mitigation_mitigates_techniques():
 
 
 def get_technique_mitigated_by_mitigation():
-    """technique mitigated by mitigation getter"""
+    """Return techniques mitigated by mitigations."""
     global technique_mitigated_by_mitigation
 
     if not technique_mitigated_by_mitigation:
@@ -212,7 +212,7 @@ def get_technique_mitigated_by_mitigation():
 
 
 def get_tools_using_technique():
-    """tools using technique getter"""
+    """Return tools using a technique."""
     global tools_using_technique
 
     if not tools_using_technique:
@@ -222,7 +222,7 @@ def get_tools_using_technique():
 
 
 def get_malware_using_technique():
-    """malware using technique getter"""
+    """Return malware using a technique."""
     global malware_using_technique
 
     if not malware_using_technique:
@@ -232,7 +232,7 @@ def get_malware_using_technique():
 
 
 def get_groups_using_technique():
-    """groups using technique getter"""
+    """Return groups using a technique."""
     global groups_using_technique
 
     if not groups_using_technique:
@@ -242,7 +242,7 @@ def get_groups_using_technique():
 
 
 def get_campaigns_using_technique():
-    """campaigns using technique getter"""
+    """Return campaigns using a technique."""
     global campaigns_using_technique
 
     if not campaigns_using_technique:
@@ -252,7 +252,7 @@ def get_campaigns_using_technique():
 
 
 def get_campaigns_using_tool():
-    """campaigns using tool getter"""
+    """Return campaigns using a tool."""
     global campaigns_using_tool
 
     if not campaigns_using_tool:
@@ -262,7 +262,7 @@ def get_campaigns_using_tool():
 
 
 def get_campaigns_using_malware():
-    """campaigns using malware getter"""
+    """Return campaigns using malware."""
     global campaigns_using_malware
 
     if not campaigns_using_malware:
@@ -272,7 +272,7 @@ def get_campaigns_using_malware():
 
 
 def get_groups_attributed_to_campaigns():
-    """groups attributed to campaign getter"""
+    """Return groups attributed to campaigns."""
     global groups_attributed_to_campaign
 
     if not groups_attributed_to_campaign:
@@ -282,7 +282,7 @@ def get_groups_attributed_to_campaigns():
 
 
 def get_campaigns_attributed_to_group():
-    """campaigns attributed to group getter"""
+    """Return campaigns attributed to a group."""
     global campaigns_attributed_to_group
 
     if not campaigns_attributed_to_group:
@@ -292,7 +292,7 @@ def get_campaigns_attributed_to_group():
 
 
 def get_subtechniques_of():
-    """subtechniques of techniques getter"""
+    """Return subtechniques for techniques."""
     global subtechniques_of
 
     if not subtechniques_of:
@@ -301,18 +301,8 @@ def get_subtechniques_of():
     return subtechniques_of
 
 
-def get_datacomponent_of():
-    """data components of data sources getter"""
-    global datacomponent_of
-
-    if not datacomponent_of:
-        datacomponent_of = stixhelpers.datacomponent_of()
-
-    return datacomponent_of
-
-
 def get_datasource_of():
-    """data source of data component getter"""
+    """Return the data source for a data component."""
     global datasource_of
 
     if not datasource_of:
@@ -322,7 +312,7 @@ def get_datasource_of():
 
 
 def get_parent_technique_of():
-    """parent of subtechnique getter"""
+    """Return parent technique for subtechniques."""
     global parent_technique_of
 
     if not parent_technique_of:
@@ -332,7 +322,7 @@ def get_parent_technique_of():
 
 
 def get_objects_using_notes():
-    """get objects using notes"""
+    """Return objects using notes."""
     global objects_using_notes
 
     if not objects_using_notes:
@@ -342,7 +332,7 @@ def get_objects_using_notes():
 
 
 def get_ms():
-    """memory shares getter"""
+    """Return STIX memory stores."""
     global ms
     global srcs
 
@@ -354,7 +344,7 @@ def get_ms():
 
 
 def get_srcs():
-    """memory shares without domain getter"""
+    """Return STIX memory stores without domain."""
     global ms
     global srcs
 
@@ -366,7 +356,7 @@ def get_srcs():
 
 
 def get_resources():
-    """resources getter"""
+    """Return grabbed resources."""
     global resources
 
     if not resources:
@@ -376,7 +366,7 @@ def get_resources():
 
 
 def get_relationships():
-    """relationship getter"""
+    """Return relationships from resources."""
     global relationships
 
     if not relationships:
@@ -386,7 +376,7 @@ def get_relationships():
 
 
 def get_group_list():
-    """group list getter"""
+    """Return the group list."""
     global group_list
 
     if not group_list:
@@ -396,7 +386,7 @@ def get_group_list():
 
 
 def get_software_list():
-    """software list getter"""
+    """Return the software list."""
     global software_list
 
     if not software_list:
@@ -406,7 +396,7 @@ def get_software_list():
 
 
 def get_technique_list():
-    """technique list getter"""
+    """Return the technique list."""
     global technique_list
 
     if not technique_list:
@@ -416,7 +406,7 @@ def get_technique_list():
 
 
 def get_datasource_list():
-    """data source list getter"""
+    """Return the data source list."""
     global datasource_list
 
     if not datasource_list:
@@ -426,7 +416,7 @@ def get_datasource_list():
 
 
 def get_datacomponent_list():
-    """data component list getter"""
+    """Return the data component list."""
     global datacomponent_list
 
     if not datacomponent_list:
@@ -436,7 +426,7 @@ def get_datacomponent_list():
 
 
 def get_mitigation_list():
-    """mitigation list getter"""
+    """Return the mitigation list."""
     global mitigation_list
 
     if not mitigation_list:
@@ -446,7 +436,7 @@ def get_mitigation_list():
 
 
 def get_campaign_list():
-    """campaign list getter"""
+    """Return the campaign list."""
     global campaign_list
 
     if not campaign_list:
@@ -456,7 +446,7 @@ def get_campaign_list():
 
 
 def get_asset_list():
-    """asset list getter"""
+    """Return the asset list."""
     global asset_list
 
     if not asset_list:
@@ -465,8 +455,49 @@ def get_asset_list():
     return asset_list
 
 
+def get_detectionstrategy_list():
+    """Detection strategy list getter"""
+    global detectionstrategy_list
+
+    if not detectionstrategy_list:
+        detectionstrategy_list = get_resources()["detectionstrategies"]
+
+    return detectionstrategy_list
+
+
+def get_logsource_to_detections_mapping():
+    """Get mapping from log sources to detection strategies and analytics"""
+    global logsource_to_detections
+    global detectionstrategy_list
+
+    for detection_strategy in detectionstrategy_list:
+        analytics_list_for_detection_strategy = stixhelpers.get_analytics_from_detection_strategy(detection_strategy)
+        for analytic_list_for_detection_strategy in analytics_list_for_detection_strategy.values():
+            log_sources = analytic_list_for_detection_strategy.get("x_mitre_log_source_references", [])
+            for log_source in log_sources:
+                log_source_id = log_source.get("x_mitre_data_component_ref")
+                if log_source_id not in logsource_to_detections:
+                    logsource_to_detections[log_source_id] = []
+                already_exists = any(entry[0] == detection_strategy for entry in logsource_to_detections[log_source_id])
+                if not already_exists:
+                    logsource_to_detections[log_source_id].append(
+                        [detection_strategy, analytic_list_for_detection_strategy, log_source]
+                    )
+    return logsource_to_detections
+
+
+def get_analytic_list():
+    """Analytic list getter"""
+    global analytic_list
+
+    if not analytic_list:
+        analytic_list = get_resources()["analytics"]
+
+    return analytic_list
+
+
 def get_technique_to_domain():
-    """technique to domain getter"""
+    """Return mapping of technique to domain."""
     global technique_to_domain
 
     if not technique_to_domain:

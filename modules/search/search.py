@@ -48,12 +48,18 @@ def generate_index():
                 file_type = "campaigns"
             elif path.startswith("/datasources/"):
                 file_type = "datasources"
+            elif path.startswith("/datacomponents/"):
+                file_type = "datacomponents"
             elif path.startswith("/software/"):
                 file_type = "software"
             elif path.startswith("/tactics/"):
                 file_type = "tactics"
             elif path.startswith("/techniques/"):
                 file_type = "techniques"
+            elif path.startswith("/analytics/"):
+                file_type = "analytics"
+            elif path.startswith("/detectionstrategies/"):
+                file_type = "detectionstrategies"
             else:
                 file_type = "misc"
 

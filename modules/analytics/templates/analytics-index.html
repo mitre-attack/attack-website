@@ -1,0 +1,108 @@
+{% extends "general/two-column.html" %} 
+{% set title = "Analytics | MITRE ATT&CK&reg;" %}
+{% set parsed = page.data | from_json %}
+{% set active_page = "analytics" -%}
+{% import 'macros/navigation.html' as navigation %}
+{% import 'macros/clean_output.html' as clean_output %}
+
+{% block innerleft %}
+<!--stop-indexing-for-search-->
+<div id="v-tab" role="tablist" aria-orientation="vertical" class="h-100">
+        {{ navigation.sidenav(parsed.sidebar_data, output_file) }} 
+    </div>
+<!--start-indexing-for-search-->
+{% endblock %}
+
+{% block innerright %}
+    {{ super () }}
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/">Home</a></li>
+        <li class="breadcrumb-item">Analytics</li>
+    </ol>
+    <div class="tab-pane fade show active" id="v-{{ pages.title }}" role="tabpanel" aria-labelledby="v-{{ pages.title }}-tab"></div>
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="jumbotron jumbotron-fluid">
+                <div class="container-fluid">
+                    <div class="overflow-x-auto">
+                        <h1>Analytics</h1>
+                        <p>
+                            Analytics contain platform-specific detection logic and represent the 
+                            implementation details of a detection strategy.
+                        </p>
+                        <h6 class="table-object-count">Analytics:&nbsp;<span class="total-count">{{ parsed.total_count }}</span></h6>
+                        <div class="tables-mobile">
+                        <table class="table table-bordered table-alternate mt-2" id="domain-sort-table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">ID</th>
+                                    <th scope="col">Platform</th>
+                                    <th scope="col">
+                                        <div class="dropdown">
+                                            Domain
+                                            <i class="fa-solid fa-sm fa-filter"></i>
+                                            <div class="dropdown-content">
+                                                <div id="filterMenu" class="data-sources-menu">
+                                                    <div class="custom-control custom-switch">
+                                                        <input type="checkbox" checked="checked" id="Enterprise" onchange="showDomain()">
+                                                        <label for="Enterprise">Enterprise</label>
+                                                    </div>
+                                                    <div class="custom-control custom-switch">
+                                                        <input type="checkbox" checked="checked" id="Mobile" onchange="showDomain()">
+                                                        <label for="Mobile">Mobile</label>
+                                                    </div>
+                                                    <div class="custom-control custom-switch">
+                                                        <input type="checkbox" checked="checked" id="ICS" onchange="showDomain()">
+                                                        <label for="ICS">ICS</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </th>
+                                    <th scope="col">Detection Strategy</th>
+                                    <th scope="col">Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for row in parsed.analytics_table %}
+                                    <tr>
+                                        <td>
+                                            <a href="{{ row.url }}"> {{ row.id | upper }} </a>
+                                        </td>
+                                        <td>{{ row.platforms|join(", ") }}</td>
+                                        <td>
+                                            {% for domain in row.domains %}
+                                                {{ domain }}<br>
+                                            {% endfor %}
+                                        </td>
+                                        <td>
+                                            {% set dets = row.detection_strategy %}
+                                            {% for det in dets %}
+                                                <a href="{{ det.url }}">{{ det.id | upper }}</a>
+                                                <br>
+                                            {% endfor %}
+                                        </td>
+                                        <td>
+                                            {% if row.deprecated %}
+                                                <span style="color: red">****Deprecation Warning****</span>
+                                            {% endif %}
+                                            {{ clean_output.stixToHTML(row.description) }}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    <!--SCRIPTS-->
+    <script src="/theme/scripts/sidebar-load-all.js"></script>
+    <script src="/theme/scripts/domain_table.js"></script>
+{% endblock %}

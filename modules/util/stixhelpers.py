@@ -14,7 +14,7 @@ from . import buildhelpers, relationshipgetters
 from . import relationshiphelpers as rsh
 
 
-def get_mitigation_list(src, get_deprecated=False):
+def get_mitigation_list_from_src(src, get_deprecated=False):
     """Read the STIX and return a list of all mitigations in the STIX."""
     mitigations = src.query([stix2.Filter("type", "=", "course-of-action"), stix2.Filter("revoked", "=", False)])
 
@@ -23,6 +23,31 @@ def get_mitigation_list(src, get_deprecated=False):
         mitigations = [x for x in mitigations if not hasattr(x, "x_mitre_deprecated") or x.x_mitre_deprecated is False]
 
     return sorted(mitigations, key=lambda k: k["name"].lower())
+
+
+def get_detection_strategy_list_from_src(src, get_deprecated=False, sort_by_id=False):
+    """Read the STIX and return a list of all detection strategies in the STIX."""
+    detectionstrategies = src.query([stix2.Filter("type", "=", "x-mitre-detection-strategy")])
+    if not get_deprecated:
+        # Filter out deprecated objects for detectionstrategies pages
+        detectionstrategies = [
+            x for x in detectionstrategies if not hasattr(x, "x_mitre_deprecated") or x.x_mitre_deprecated is False
+        ]
+    if sort_by_id:
+        return sorted(detectionstrategies, key=lambda k: k["external_references"][0]["external_id"])
+    return sorted(detectionstrategies, key=lambda k: k["name"].lower())
+
+
+def get_datacomponent_list_from_src(src, get_deprecated=False):
+    """Read the STIX and return a list of all data components in the STIX."""
+    datacomponents = src.query([stix2.Filter("type", "=", "x-mitre-data-component")])
+    if not get_deprecated:
+        # Filter out deprecated objects
+        datacomponents = [
+            x for x in datacomponents if not hasattr(x, "x_mitre_deprecated") or x.x_mitre_deprecated is False
+        ]
+
+    return sorted(datacomponents, key=lambda k: k["name"].lower())
 
 
 def get_matrices(src, domain):
@@ -215,6 +240,15 @@ def datacomponent_of():
     return datacomponent_of
 
 
+def get_datacomponent_from_list(datacomponent_stix_id):
+    """Return data component object with given stix id."""
+    datacomponents = relationshipgetters.get_datacomponent_list()
+    for dc in datacomponents:
+        if dc["id"] == datacomponent_stix_id:
+            return dc
+    return None
+
+
 def get_datasource_from_list(datasource_stix_id):
     """Return data source object with given data source stix id."""
     datasources = relationshipgetters.get_datasource_list()
@@ -233,12 +267,37 @@ def datasource_of():
     datasource_of = {}
     for datacomponent in datacomponents:
         if not datasource_of.get(datacomponent["id"]):
-            datasource = get_datasource_from_list(datacomponent["x_mitre_data_source_ref"])
+            datasource = get_datasource_from_list(datacomponent.get("x_mitre_data_source_ref"))
 
             if datasource:
                 datasource_of[datacomponent["id"]] = datasource
 
     return datasource_of
+
+
+def get_analytic_from_list(analytic_stix_id):
+    """Return analytic object with given stix id."""
+    analytics = relationshipgetters.get_analytic_list()
+    return next((analytic for analytic in analytics if analytic["id"] == analytic_stix_id), None)
+
+
+def get_related_detection_strategies(analytic_stix_id):
+    """Return detection strategies referencing this analytic."""
+    detection_strategies = relationshipgetters.get_detectionstrategy_list()
+    references = []
+    for det in detection_strategies:
+        analytic_refs = det.get("x_mitre_analytic_refs", [])
+        if analytic_stix_id in analytic_refs:
+            references.append(det)
+    return references
+
+
+def get_analytics_from_detection_strategy(detection_strategy):
+    """Build a lookup map for all analytics from the given detection strategy."""
+    all_analytics = relationshipgetters.get_analytic_list()
+    analytics_map = {analytic["id"]: analytic for analytic in all_analytics}
+    analytic_refs = detection_strategy.get("x_mitre_analytic_refs", [])
+    return {ref: analytics_map.get(ref) for ref in analytic_refs}
 
 
 def add_replace_or_ignore(stix_objs, attack_id_objs, obj_in_question):
@@ -337,9 +396,8 @@ def grab_resources(ms):
             for stix_type in types:
                 # Returns sorted list by name of domain resources by given type list
                 # Builds list from unique ATT&CK IDs
-                curr_list = ms[domain["name"]].query(
-                    [stix2.Filter("type", "=", stix_type), stix2.Filter("revoked", "=", False)]
-                )
+                curr_list = ms[domain["name"]].query([stix2.Filter("type", "=", stix_type)])
+                curr_list = [obj for obj in curr_list if not getattr(obj, "revoked", False)]
 
                 for val in curr_list:
                     add_replace_or_ignore(stix_objs, attack_id_objs, val)
@@ -366,6 +424,10 @@ def grab_resources(ms):
     # Generates list of assets
     asset_list = get_domain_resources(["x-mitre-asset"])
 
+    datacomponent_list = get_domain_resources(["x-mitre-data-component"])
+    detectionstrategy_list = get_domain_resources(["x-mitre-detection-strategy"])
+    analytic_list = get_domain_resources(["x-mitre-analytic"])
+
     # Generates list of relationships
     rel_list = []
     for domain in site_config.domains:
@@ -385,6 +447,9 @@ def grab_resources(ms):
         "mitigations": coa_list,
         "campaigns": campaign_list,
         "assets": asset_list,
+        "datacomponents": datacomponent_list,
+        "analytics": analytic_list,
+        "detectionstrategies": detectionstrategy_list,
     }
     return resources
 
@@ -440,6 +505,7 @@ def get_contributors(ms):
             "x-mitre-data-source",
             "x-mitre-tactic",
             "x-mitre-asset",
+            "x-mitre-detection-strategy",
         ]
         src = ms[domain["name"]]
         obj_list = []
