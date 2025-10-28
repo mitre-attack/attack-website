@@ -93,12 +93,11 @@
                         </li>
                         <li class="nav-item dropdown">
                                 
-    <a class="nav-link dropdown-toggle" href="/datasources" id="navbarDropdown" role="button"
+    <a class="nav-link dropdown-toggle" href="/mitigations" id="navbarDropdown" role="button"
     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         <b>Defenses</b>
     </a>
     <div class="dropdown-menu " aria-labelledby="navbarDropdown">
-                <a class="dropdown-item" href="/datasources">Data Sources</a>
                 
 <div class="dropright dropdown">
 <a class="dropdown-item dropdown-toggle" href="/mitigations/" id="navbarDropdown" role="button"
@@ -113,6 +112,19 @@
 </div>
 
                 <a class="dropdown-item" href="/assets">Assets</a>
+                
+<div class="dropright dropdown">
+<a class="dropdown-item dropdown-toggle" href="/detectionstrategies/" id="navbarDropdown" role="button"
+    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <b>Detections</b>
+    </a>
+    <div class="dropdown-menu " aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="/detectionstrategies/">Detection Strategies</a>
+            <a class="dropdown-item" href="/analytics/">Analytics</a>
+            <a class="dropdown-item" href="/datacomponents">Data Components</a>
+    </div>
+</div>
+
     </div>
 
 
@@ -176,7 +188,7 @@
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
                     <div class="container-fluid banner-message">
-                        
+                        ATT&CK v18 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v18-8f82d839ee9e'>blog post</a> or <a href='https://attack.mitre.org/resources/updates/'>changelog</a> for more information.
 
                     </div>
             </div>
@@ -273,7 +285,7 @@
                                             <div class="row card-data">
                                                 <div class="col-md-1 px-0 text-center"></div>
                                                 <div class="col-md-11 pl-0">
-                                                    <span class="h5 card-title">Last Modified:&nbsp;</span>15 April 2025
+                                                    <span class="h5 card-title">Last Modified:&nbsp;</span>24 October 2025
                                                 </div>
                                             </div>
                                     </div>
@@ -283,13 +295,13 @@
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Permalink to this version of T1011.001" 
-           href="/versions/v17/techniques/T1011/001/" data-test-ignore="true">Version Permalink</a>
+           href="/versions/v18/techniques/T1011/001/" data-test-ignore="true">Version Permalink</a>
     </div>
     <div class="permalink">
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Go to the live version of T1011.001" 
-           href="/versions/v17/techniques/T1011/001/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+           href="/versions/v18/techniques/T1011/001/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
     </div>
 </div>
 
@@ -359,88 +371,51 @@
                                     </tbody>
                                 </table>
                                 </div>
-                            <h2 class="pt-3" id="detection">Detection</h2>
+                                <h2 class="pt-3" id="detection">Detection Strategy</h2>
                                 <div class="tables-mobile">
 <table class="table datasources-table table-bordered">
     <thead>
         <tr>
             <th class="p-2" scope="col">ID</th>
-            <th class="p-2 nowrap" scope="col">Data Source</th>
-            <th class="p-2 nowrap" scope="col">Data Component</th>
-            <th class="p-2" scope="col">Detects</th>
+            <th class="p-2 nowrap" scope="col">Name</th>
+            <th class="p-2 nowrap" scope="col">Analytic ID</th>
+            <th class="p-2 nowrap" scope="col">Analytic Description</th>
         </tr>
     </thead>
     <tbody>
-            <tr class="datasource" id="uses-DS0017">
-                <td>
-                    <a href="/datasources/DS0017">DS0017</a>
-                </td>
-                <td class="nowrap">
-                    <a href="/datasources/DS0017">Command</a>
-                </td>
-                <!-- Add first data component here -->
-                <td> 
-                    <a href="/datasources/DS0017/#Command%20Execution">Command Execution</a>
-                </td>
-                    <td>
-                                <p>Monitor commands enabling Bluetooth interfaces (rfkill unblock bluetooth, btmgmt power on), execution of Bluetooth file transfer utilities (bluetoothctl, l2ping, hcitool).</p><p>Analytic 1 - Detecting Bluetooth Activation Commands </p><p><code>(EventCode=1 OR source="/var/log/audit/audit.log" type="execve")| where (command IN ("rfkill unblock bluetooth", "bluetoothctl power on", "btmgmt power on", "hciconfig hci0 up"))| eval risk_score=case(    command IN ("rfkill unblock bluetooth", "btmgmt power on"), 9,    command IN ("bluetoothctl power on", "hciconfig hci0 up"), 8)| where risk_score &gt;= 8| stats count by _time, host, user, command, risk_score </code></p>
-
-                    </td>
-            </tr>
-            <tr class="datasource" id="uses-DS0022">
-                <td>
-                    <a href="/datasources/DS0022">DS0022</a>
-                </td>
-                <td class="nowrap">
-                    <a href="/datasources/DS0022">File</a>
-                </td>
-                <!-- Add first data component here -->
-                <td> 
-                    <a href="/datasources/DS0022/#File%20Access">File Access</a>
-                </td>
-                    <td>
-                                <p>Monitor file access events in directories commonly used for data staging (/tmp, C:\Users\Public), files copied to Bluetooth shared folders, or high-volume file reads or writes before network activity.</p><p>Analytic 1 - Detecting File Access Before Bluetooth Exfiltration </p><p><code> (EventCode=11 OR EventCode=4663 OR source="/var/log/audit/audit.log" type="open")| where (file_path IN ("/var/tmp/<em>", "/home/</em>/Downloads/<em>", "/media/bluetooth/</em>", "C:\Users\<em>\Documents\exfil"))| eval risk_score=case(    file_path IN ("/media/bluetooth/</em>"), 9,    file_path IN ("/var/tmp/*"), 8)| where risk_score &gt;= 8| stats count by _time, host, user, file_path, risk_score</code></p>
-
-                    </td>
-            </tr>
-            <tr class="datasource" id="uses-DS0029">
-                <td>
-                    <a href="/datasources/DS0029">DS0029</a>
-                </td>
-                <td class="nowrap">
-                    <a href="/datasources/DS0029">Network Traffic</a>
-                </td>
-                <!-- Add first data component here -->
-                <td> 
-                    <a href="/datasources/DS0029/#Network%20Connection%20Creation">Network Connection Creation</a>
-                </td>
-                    <td>
-                                <p>Monitor for unusual Bluetooth device pairings, inbound or outbound Bluetooth connections from unexpected processes, or unexpected activation of Bluetooth Personal Area Network (PAN) services.</p><p>Analytic 1 - Detecting Unauthorized Bluetooth Network Connections</p><p><code>(EventCode=3 OR EventCode=10400)OR (source="zeek_conn.log" interface IN ("bt0"))| eval risk_score=case(    interface IN ("bt0"), 9,    process_name IN ("bluetoothctl", "bttransfer"), 8)| where risk_score &gt;= 8| stats count by _time, host, user, interface, dest_device, risk_score </code></p>
-
-                    </td>
-            </tr>
-                    <tr class="datacomponent datasource" id="uses-DS0029-Network Traffic Content">
-                        <td></td>
-                        <td></td>
-                        <td>
-                            <a href="/datasources/DS0029/#Network%20Traffic%20Content">Network Traffic Content</a>
+                <tr class="detection_strategy" id="uses-DET0554">
+                        <td rowspan="3">
+                            <a href="/detectionstrategies/DET0554">DET0554</a>
                         </td>
-                            <td>
-                                        <p>Monitor high-volume data transfers over Bluetooth, Bluetooth PAN being used to route exfiltrated data, or Unusual Bluetooth protocol usage on enterprise endpoints.</p><p>Analytic 1 - Detecting Large Data Exfiltration via Bluetooth</p><p><code> (EventCode=3)OR (source="zeek_conn.log" protocol="bluetooth" bytes_out &gt; 5000000)OR (source="firewall_logs" protocol="bluetooth" bytes_out &gt; 10000000)| eval risk_score=case(    bytes_out &gt; 10000000, 9,    bytes_out &gt; 5000000, 8)| where risk_score &gt;= 8| stats count by _time, host, user, dest_device, bytes_out, risk_score</code></p>
-
-                            </td>
-                    </tr>
-                    <tr class="datacomponent datasource" id="uses-DS0029-Network Traffic Flow">
-                        <td></td>
-                        <td></td>
-                        <td>
-                            <a href="/datasources/DS0029/#Network%20Traffic%20Flow">Network Traffic Flow</a>
+                        <td rowspan="3">
+                            <a href="/detectionstrategies/DET0554">Detection of Bluetooth-Based Data Exfiltration</a>
                         </td>
-                            <td>
-                                        <p>Monitor network data for uncommon data flows., such as the usage of abnormal/unexpected protocols.</p>
-
-                            </td>
-                    </tr>
+                    <td>
+                        <a href="/detectionstrategies/DET0554#AN1531">AN1531</a>
+                    </td>
+                    <td>
+                                <p>Detection of non-interactive or suspicious processes accessing Bluetooth interfaces and transmitting outbound traffic following file access or staging activity.</p>
+</a>
+                    </td>
+                </tr>
+                <tr class="detection_strategy" id="uses-DET0554">
+                    <td>
+                        <a href="/detectionstrategies/DET0554#AN1532">AN1532</a>
+                    </td>
+                    <td>
+                                <p>Use of hcitool, bluetoothctl, or rfcomm to initialize Bluetooth connection paired with recent file reads by the same user or session.</p>
+</a>
+                    </td>
+                </tr>
+                <tr class="detection_strategy" id="uses-DET0554">
+                    <td>
+                        <a href="/detectionstrategies/DET0554#AN1533">AN1533</a>
+                    </td>
+                    <td>
+                                <p>Observation of <code>blueutil</code>/<code>networksetup</code> commands or low-level APIs toggling Bluetooth or initiating transfers, especially if paired with recent large file read activity by non-GUI processes.</p>
+</a>
+                    </td>
+                </tr>
     </tbody>
 </table>
 </div>
@@ -530,7 +505,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3 col-footer">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v17.1&#013;Website  v4.2.3">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v18.0&#013;Website  v4.4.0">Website Changelog</a></u>
                                 </div>
                                 <div class="px-3">
                                     <u class="footer-link"><a href="/resources/legal-and-branding/privacy/#" class="footer-link" onclick="Osano.cm.showDrawer('osano-cm-dom-info-dialog-open')">Cookie Preferences</a></u>

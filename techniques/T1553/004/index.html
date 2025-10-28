@@ -93,12 +93,11 @@
                         </li>
                         <li class="nav-item dropdown">
                                 
-    <a class="nav-link dropdown-toggle" href="/datasources" id="navbarDropdown" role="button"
+    <a class="nav-link dropdown-toggle" href="/mitigations" id="navbarDropdown" role="button"
     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         <b>Defenses</b>
     </a>
     <div class="dropdown-menu " aria-labelledby="navbarDropdown">
-                <a class="dropdown-item" href="/datasources">Data Sources</a>
                 
 <div class="dropright dropdown">
 <a class="dropdown-item dropdown-toggle" href="/mitigations/" id="navbarDropdown" role="button"
@@ -113,6 +112,19 @@
 </div>
 
                 <a class="dropdown-item" href="/assets">Assets</a>
+                
+<div class="dropright dropdown">
+<a class="dropdown-item dropdown-toggle" href="/detectionstrategies/" id="navbarDropdown" role="button"
+    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <b>Detections</b>
+    </a>
+    <div class="dropdown-menu " aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="/detectionstrategies/">Detection Strategies</a>
+            <a class="dropdown-item" href="/analytics/">Analytics</a>
+            <a class="dropdown-item" href="/datacomponents">Data Components</a>
+    </div>
+</div>
+
     </div>
 
 
@@ -176,7 +188,7 @@
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
                     <div class="container-fluid banner-message">
-                        
+                        ATT&CK v18 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v18-8f82d839ee9e'>blog post</a> or <a href='https://attack.mitre.org/resources/updates/'>changelog</a> for more information.
 
                     </div>
             </div>
@@ -348,7 +360,7 @@
                                             <div class="row card-data">
                                                 <div class="col-md-1 px-0 text-center"></div>
                                                 <div class="col-md-11 pl-0">
-                                                    <span class="h5 card-title">Last Modified:&nbsp;</span>15 April 2025
+                                                    <span class="h5 card-title">Last Modified:&nbsp;</span>24 October 2025
                                                 </div>
                                             </div>
                                     </div>
@@ -358,13 +370,13 @@
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Permalink to this version of T1553.004" 
-           href="/versions/v17/techniques/T1553/004/" data-test-ignore="true">Version Permalink</a>
+           href="/versions/v18/techniques/T1553/004/" data-test-ignore="true">Version Permalink</a>
     </div>
     <div class="permalink">
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Go to the live version of T1553.004" 
-           href="/versions/v17/techniques/T1553/004/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+           href="/versions/v18/techniques/T1553/004/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
     </div>
 </div>
 
@@ -470,77 +482,51 @@
                                     </tbody>
                                 </table>
                                 </div>
-                            <h2 class="pt-3" id="detection">Detection</h2>
+                                <h2 class="pt-3" id="detection">Detection Strategy</h2>
                                 <div class="tables-mobile">
 <table class="table datasources-table table-bordered">
     <thead>
         <tr>
             <th class="p-2" scope="col">ID</th>
-            <th class="p-2 nowrap" scope="col">Data Source</th>
-            <th class="p-2 nowrap" scope="col">Data Component</th>
-            <th class="p-2" scope="col">Detects</th>
+            <th class="p-2 nowrap" scope="col">Name</th>
+            <th class="p-2 nowrap" scope="col">Analytic ID</th>
+            <th class="p-2 nowrap" scope="col">Analytic Description</th>
         </tr>
     </thead>
     <tbody>
-            <tr class="datasource" id="uses-DS0017">
-                <td>
-                    <a href="/datasources/DS0017">DS0017</a>
-                </td>
-                <td class="nowrap">
-                    <a href="/datasources/DS0017">Command</a>
-                </td>
-                <!-- Add first data component here -->
-                <td> 
-                    <a href="/datasources/DS0017/#Command%20Execution">Command Execution</a>
-                </td>
-                    <td>
-                                <p>Monitor for commands, such as <code>security add-trusted-cert</code> (macOS) or <code>certutil -addstore</code> (Windows), that can be used to install root certificates. A system's root certificates are unlikely to change frequently. Monitor new certificates installed on a system that could be due to malicious activity. <span onclick=scrollToRef('scite-4') id="scite-ref-4-a" class="scite-citeref-number" title="Graeber, M. (2017, December 22). Code Signing Certificate Cloning Attacks and Defenses. Retrieved April 3, 2018."data-reference="SpectorOps Code Signing Dec 2017"><sup><a href="https://posts.specterops.io/code-signing-certificate-cloning-attacks-and-defenses-6f98657fc6ec" target="_blank" data-hasqtip="3" aria-describedby="qtip-3">[4]</a></sup></span> Check pre-installed certificates on new systems to ensure unnecessary or suspicious certificates are not present. Microsoft provides a list of trustworthy root certificates online and through <code>authroot.stl</code>. <span onclick=scrollToRef('scite-4') id="scite-ref-4-a" class="scite-citeref-number" title="Graeber, M. (2017, December 22). Code Signing Certificate Cloning Attacks and Defenses. Retrieved April 3, 2018."data-reference="SpectorOps Code Signing Dec 2017"><sup><a href="https://posts.specterops.io/code-signing-certificate-cloning-attacks-and-defenses-6f98657fc6ec" target="_blank" data-hasqtip="3" aria-describedby="qtip-3">[4]</a></sup></span> The Sysinternals Sigcheck utility can also be used (<code>sigcheck[64].exe -tuv</code>) to dump the contents of the certificate store and list valid certificates not rooted to the Microsoft Certificate Trust List. <span onclick=scrollToRef('scite-13') id="scite-ref-13-a" class="scite-citeref-number" title="Russinovich, M. et al.. (2017, May 22). Sigcheck. Retrieved April 3, 2018."data-reference="Microsoft Sigcheck May 2017"><sup><a href="https://docs.microsoft.com/sysinternals/downloads/sigcheck" target="_blank" data-hasqtip="12" aria-describedby="qtip-12">[13]</a></sup></span></p>
-
-                    </td>
-            </tr>
-            <tr class="datasource" id="uses-DS0009">
-                <td>
-                    <a href="/datasources/DS0009">DS0009</a>
-                </td>
-                <td class="nowrap">
-                    <a href="/datasources/DS0009">Process</a>
-                </td>
-                <!-- Add first data component here -->
-                <td> 
-                    <a href="/datasources/DS0009/#Process%20Creation">Process Creation</a>
-                </td>
-                    <td>
-                                <p>Monitor for processes, such as <code>certmgr.exe</code> (macOS) or <code>certutil.exe</code> (Windows), that can be used to install root certificates. A system's root certificates are unlikely to change frequently. Monitor new certificates installed on a system that could be due to malicious activity. <span onclick=scrollToRef('scite-4') id="scite-ref-4-a" class="scite-citeref-number" title="Graeber, M. (2017, December 22). Code Signing Certificate Cloning Attacks and Defenses. Retrieved April 3, 2018."data-reference="SpectorOps Code Signing Dec 2017"><sup><a href="https://posts.specterops.io/code-signing-certificate-cloning-attacks-and-defenses-6f98657fc6ec" target="_blank" data-hasqtip="3" aria-describedby="qtip-3">[4]</a></sup></span> Check pre-installed certificates on new systems to ensure unnecessary or suspicious certificates are not present. Microsoft provides a list of trustworthy root certificates online and through <code>authroot.stl</code>. <span onclick=scrollToRef('scite-4') id="scite-ref-4-a" class="scite-citeref-number" title="Graeber, M. (2017, December 22). Code Signing Certificate Cloning Attacks and Defenses. Retrieved April 3, 2018."data-reference="SpectorOps Code Signing Dec 2017"><sup><a href="https://posts.specterops.io/code-signing-certificate-cloning-attacks-and-defenses-6f98657fc6ec" target="_blank" data-hasqtip="3" aria-describedby="qtip-3">[4]</a></sup></span> The Sysinternals Sigcheck utility can also be used (<code>sigcheck[64].exe -tuv</code>) to dump the contents of the certificate store and list valid certificates not rooted to the Microsoft Certificate Trust List. <span onclick=scrollToRef('scite-13') id="scite-ref-13-a" class="scite-citeref-number" title="Russinovich, M. et al.. (2017, May 22). Sigcheck. Retrieved April 3, 2018."data-reference="Microsoft Sigcheck May 2017"><sup><a href="https://docs.microsoft.com/sysinternals/downloads/sigcheck" target="_blank" data-hasqtip="12" aria-describedby="qtip-12">[13]</a></sup></span></p><p>Analytic 1 - Attempt to Add Certificate to Untrusted Store</p><p><code> (source="WinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode="1") OR (source="WinEventLog:Security" EventCode="4688") AND Image="C:\Windows\System32\certutil.exe" CommandLine="<em>-addstore</em>"</code></p>
-
-                    </td>
-            </tr>
-            <tr class="datasource" id="uses-DS0024">
-                <td>
-                    <a href="/datasources/DS0024">DS0024</a>
-                </td>
-                <td class="nowrap">
-                    <a href="/datasources/DS0024">Windows Registry</a>
-                </td>
-                <!-- Add first data component here -->
-                <td> 
-                    <a href="/datasources/DS0024/#Windows%20Registry%20Key%20Creation">Windows Registry Key Creation</a>
-                </td>
-                    <td>
-                                <p>Monitoring the creation of (sub)keys within the Windows Registry may reveal malicious root certificate installation. Installed root certificates are located in the Registry under <code>HKLM\SOFTWARE\Microsoft\EnterpriseCertificates\Root\Certificates\</code> and <code>HKLM\SOFTWARE\Microsoft\SystemCertificates\Root\Certificates\</code> or <code>HKCU\Policies\Microsoft\SystemCertificates\Root\Certificates\</code></p><p>There are a subset of root certificates that are consistent across Windows systems and can be used for comparison: <span onclick=scrollToRef('scite-14') id="scite-ref-14-a" class="scite-citeref-number" title="Smith, T. (2016, October 27). AppUNBlocker: Bypassing AppLocker. Retrieved December 19, 2017."data-reference="Tripwire AppUNBlocker"><sup><a href="https://www.tripwire.com/state-of-security/off-topic/appunblocker-bypassing-applocker/" target="_blank" data-hasqtip="13" aria-describedby="qtip-13">[14]</a></sup></span>* 18F7C1FCC3090203FD5BAA2F861A754976C8DD25* 245C97DF7514E7CF2DF8BE72AE957B9E04741E85* 3B1EFD3A66EA28B16697394703A72CA340A05BD5* 7F88CD7223F3C813818C994614A89C99FA3B5247* 8F43288AD272F3103B6FB1428485EA3014C0BCFE* A43489159A520F0D93D032CCAF37E7FE20A8B419* BE36A4562FB2EE05DBB3D32323ADF445084ED656* CDD4EEAE6000AC7F40C3802C171E30148030C072</p>
-
-                    </td>
-            </tr>
-                    <tr class="datacomponent datasource" id="uses-DS0024-Windows Registry Key Modification">
-                        <td></td>
-                        <td></td>
-                        <td>
-                            <a href="/datasources/DS0024/#Windows%20Registry%20Key%20Modification">Windows Registry Key Modification</a>
+                <tr class="detection_strategy" id="uses-DET0056">
+                        <td rowspan="3">
+                            <a href="/detectionstrategies/DET0056">DET0056</a>
                         </td>
-                            <td>
-                                        <p>Monitoring changes to the Windows Registry may reveal malicious root certificate installation. Installed root certificates are located in the Registry under <code>HKLM\SOFTWARE\Microsoft\EnterpriseCertificates\Root\Certificates\</code> and <code>HKLM\SOFTWARE\Microsoft\SystemCertificates\Root\Certificates\</code> or <code>HKCU\Policies\Microsoft\SystemCertificates\Root\Certificates\</code>. </p><p>There are a subset of root certificates that are consistent across Windows systems and can be used for comparison: <span onclick=scrollToRef('scite-14') id="scite-ref-14-a" class="scite-citeref-number" title="Smith, T. (2016, October 27). AppUNBlocker: Bypassing AppLocker. Retrieved December 19, 2017."data-reference="Tripwire AppUNBlocker"><sup><a href="https://www.tripwire.com/state-of-security/off-topic/appunblocker-bypassing-applocker/" target="_blank" data-hasqtip="13" aria-describedby="qtip-13">[14]</a></sup></span>* 18F7C1FCC3090203FD5BAA2F861A754976C8DD25* 245C97DF7514E7CF2DF8BE72AE957B9E04741E85* 3B1EFD3A66EA28B16697394703A72CA340A05BD5* 7F88CD7223F3C813818C994614A89C99FA3B5247* 8F43288AD272F3103B6FB1428485EA3014C0BCFE* A43489159A520F0D93D032CCAF37E7FE20A8B419* BE36A4562FB2EE05DBB3D32323ADF445084ED656* CDD4EEAE6000AC7F40C3802C171E30148030C072</p>
-
-                            </td>
-                    </tr>
+                        <td rowspan="3">
+                            <a href="/detectionstrategies/DET0056">Detection Strategy for Subvert Trust Controls via Install Root Certificate.</a>
+                        </td>
+                    <td>
+                        <a href="/detectionstrategies/DET0056#AN0153">AN0153</a>
+                    </td>
+                    <td>
+                                <p>Detection of unauthorized modifications to Windows root certificate stores by monitoring registry keys, certificate installation processes, and creation of new certificate entries not in baseline trusted lists.</p>
+</a>
+                    </td>
+                </tr>
+                <tr class="detection_strategy" id="uses-DET0056">
+                    <td>
+                        <a href="/detectionstrategies/DET0056#AN0154">AN0154</a>
+                    </td>
+                    <td>
+                                <p>Detection of unexpected additions or modifications to system-wide certificate stores or execution of commands adding certificates to trusted stores.</p>
+</a>
+                    </td>
+                </tr>
+                <tr class="detection_strategy" id="uses-DET0056">
+                    <td>
+                        <a href="/detectionstrategies/DET0056#AN0155">AN0155</a>
+                    </td>
+                    <td>
+                                <p>Detection of malicious certificate installation via monitoring execution of the <code>security add-trusted-cert</code> command and modifications to system keychains.</p>
+</a>
+                    </td>
+                </tr>
     </tbody>
 </table>
 </div>
@@ -623,7 +609,11 @@
         </li>
 
 
-                            
+                </ol>
+            </div>
+            <div class="col">
+                    <ol start="7.0">
+                                
         <li>
             <span  id="scite-7" class="scite-citation">
                 <span class="scite-citation-text">
@@ -635,10 +625,6 @@
         </li>
 
 
-                </ol>
-            </div>
-            <div class="col">
-                    <ol start="8.0">
                                 
         <li>
             <span  id="scite-8" class="scite-citation">
@@ -693,30 +679,6 @@
                 <span class="scite-citation-text">
                     <a rel="nofollow" class="external text" name="scite-12" href="https://en.wikipedia.org/wiki/HTTP_Public_Key_Pinning" target="_blank">
                         Wikipedia. (2017, February 28). HTTP Public Key Pinning. Retrieved March 31, 2017.
-                    </a>
-                </span>
-            </span>
-        </li>
-
-
-                                
-        <li>
-            <span  id="scite-13" class="scite-citation">
-                <span class="scite-citation-text">
-                    <a rel="nofollow" class="external text" name="scite-13" href="https://docs.microsoft.com/sysinternals/downloads/sigcheck" target="_blank">
-                        Russinovich, M. et al.. (2017, May 22). Sigcheck. Retrieved April 3, 2018.
-                    </a>
-                </span>
-            </span>
-        </li>
-
-
-                                
-        <li>
-            <span  id="scite-14" class="scite-citation">
-                <span class="scite-citation-text">
-                    <a rel="nofollow" class="external text" name="scite-14" href="https://www.tripwire.com/state-of-security/off-topic/appunblocker-bypassing-applocker/" target="_blank">
-                        Smith, T. (2016, October 27). AppUNBlocker: Bypassing AppLocker. Retrieved December 19, 2017.
                     </a>
                 </span>
             </span>
@@ -789,7 +751,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3 col-footer">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v17.1&#013;Website  v4.2.3">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v18.0&#013;Website  v4.4.0">Website Changelog</a></u>
                                 </div>
                                 <div class="px-3">
                                     <u class="footer-link"><a href="/resources/legal-and-branding/privacy/#" class="footer-link" onclick="Osano.cm.showDrawer('osano-cm-dom-info-dialog-open')">Cookie Preferences</a></u>

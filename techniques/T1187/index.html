@@ -93,12 +93,11 @@
                         </li>
                         <li class="nav-item dropdown">
                                 
-    <a class="nav-link dropdown-toggle" href="/datasources" id="navbarDropdown" role="button"
+    <a class="nav-link dropdown-toggle" href="/mitigations" id="navbarDropdown" role="button"
     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         <b>Defenses</b>
     </a>
     <div class="dropdown-menu " aria-labelledby="navbarDropdown">
-                <a class="dropdown-item" href="/datasources">Data Sources</a>
                 
 <div class="dropright dropdown">
 <a class="dropdown-item dropdown-toggle" href="/mitigations/" id="navbarDropdown" role="button"
@@ -113,6 +112,19 @@
 </div>
 
                 <a class="dropdown-item" href="/assets">Assets</a>
+                
+<div class="dropright dropdown">
+<a class="dropdown-item dropdown-toggle" href="/detectionstrategies/" id="navbarDropdown" role="button"
+    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <b>Detections</b>
+    </a>
+    <div class="dropdown-menu " aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="/detectionstrategies/">Detection Strategies</a>
+            <a class="dropdown-item" href="/analytics/">Analytics</a>
+            <a class="dropdown-item" href="/datacomponents">Data Components</a>
+    </div>
+</div>
+
     </div>
 
 
@@ -176,7 +188,7 @@
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
                     <div class="container-fluid banner-message">
-                        
+                        ATT&CK v18 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v18-8f82d839ee9e'>blog post</a> or <a href='https://attack.mitre.org/resources/updates/'>changelog</a> for more information.
 
                     </div>
             </div>
@@ -218,7 +230,7 @@
                             <div class="col-md-8">
 
                                     <div class="description-body">
-                                                <p>Adversaries may gather credential material by invoking or forcing a user to automatically provide authentication information through a mechanism in which they can intercept.</p><p>The Server Message Block (SMB) protocol is commonly used in Windows networks for authentication and communication between systems for access to resources and file sharing. When a Windows system attempts to connect to an SMB resource it will automatically attempt to authenticate and send credential information for the current user to the remote system. <span onclick=scrollToRef('scite-1') id="scite-ref-1-a" class="scite-citeref-number" title="Wikipedia. (2017, December 16). Server Message Block. Retrieved December 21, 2017."data-reference="Wikipedia Server Message Block"><sup><a href="https://en.wikipedia.org/wiki/Server_Message_Block" target="_blank" data-hasqtip="0" aria-describedby="qtip-0">[1]</a></sup></span> This behavior is typical in enterprise environments so that users do not need to enter credentials to access network resources.</p><p>Web Distributed Authoring and Versioning (WebDAV) is also typically used by Windows systems as a backup protocol when SMB is blocked or fails. WebDAV is an extension of HTTP and will typically operate over TCP ports 80 and 443. <span onclick=scrollToRef('scite-2') id="scite-ref-2-a" class="scite-citeref-number" title="Stevens, D. (2017, November 13). WebDAV Traffic To Malicious Sites. Retrieved December 21, 2017."data-reference="Didier Stevens WebDAV Traffic"><sup><a href="https://blog.didierstevens.com/2017/11/13/webdav-traffic-to-malicious-sites/" target="_blank" data-hasqtip="1" aria-describedby="qtip-1">[2]</a></sup></span> <span onclick=scrollToRef('scite-3') id="scite-ref-3-a" class="scite-citeref-number" title="Microsoft. (n.d.). Managing WebDAV Security (IIS 6.0). Retrieved November 17, 2024."data-reference="Microsoft Managing WebDAV Security"><sup><a href="https://web.archive.org/web/20100210125749/https://www.microsoft.com/technet/prodtechnol/WindowsServer2003/Library/IIS/4beddb35-0cba-424c-8b9b-a5832ad8e208.mspx" target="_blank" data-hasqtip="2" aria-describedby="qtip-2">[3]</a></sup></span></p><p>Adversaries may take advantage of this behavior to gain access to user account hashes through forced SMB/WebDAV authentication. An adversary can send an attachment to a user through spearphishing that contains a resource link to an external server controlled by the adversary (i.e. <a href="/techniques/T1221">Template Injection</a>), or place a specially crafted file on navigation path for privileged accounts (e.g. .SCF file placed on desktop) or on a publicly accessible share to be accessed by victim(s). When the user's system accesses the untrusted resource it will attempt authentication and send information, including the user's hashed credentials, over SMB to the adversary controlled server. <span onclick=scrollToRef('scite-4') id="scite-ref-4-a" class="scite-citeref-number" title="Dunning, J. (2016, August 1). Hashjacking. Retrieved December 21, 2017."data-reference="GitHub Hashjacking"><sup><a href="https://github.com/hob0/hashjacking" target="_blank" data-hasqtip="3" aria-describedby="qtip-3">[4]</a></sup></span> With access to the credential hash, an adversary can perform off-line <a href="/techniques/T1110">Brute Force</a> cracking to gain access to plaintext credentials. <span onclick=scrollToRef('scite-5') id="scite-ref-5-a" class="scite-citeref-number" title="Cylance. (2015, April 13). Redirect to SMB. Retrieved December 21, 2017."data-reference="Cylance Redirect to SMB"><sup><a href="https://www.cylance.com/content/dam/cylance/pdfs/white_papers/RedirectToSMB.pdf" target="_blank" data-hasqtip="4" aria-describedby="qtip-4">[5]</a></sup></span></p><p>There are several different ways this can occur. <span onclick=scrollToRef('scite-6') id="scite-ref-6-a" class="scite-citeref-number" title="Osanda Malith Jayathissa. (2017, March 24). Places of Interest in Stealing NetNTLM Hashes. Retrieved January 26, 2018."data-reference="Osanda Stealing NetNTLM Hashes"><sup><a href="https://osandamalith.com/2017/03/24/places-of-interest-in-stealing-netntlm-hashes/" target="_blank" data-hasqtip="5" aria-describedby="qtip-5">[6]</a></sup></span> Some specifics from in-the-wild use include:</p><ul><li>A spearphishing attachment containing a document with a resource that is automatically loaded when the document is opened (i.e. <a href="/techniques/T1221">Template Injection</a>). The document can include, for example, a request similar to <code>file[:]//[remote address]/Normal.dotm</code> to trigger the SMB request. <span onclick=scrollToRef('scite-7') id="scite-ref-7-a" class="scite-citeref-number" title="US-CERT. (2017, October 20). Alert (TA17-293A): Advanced Persistent Threat Activity Targeting Energy and Other Critical Infrastructure Sectors. Retrieved November 2, 2017."data-reference="US-CERT APT Energy Oct 2017"><sup><a href="https://www.us-cert.gov/ncas/alerts/TA17-293A" target="_blank" data-hasqtip="6" aria-describedby="qtip-6">[7]</a></sup></span></li><li>A modified .LNK or .SCF file with the icon filename pointing to an external reference such as <code>\[remote address]\pic.png</code> that will force the system to load the resource when the icon is rendered to repeatedly gather credentials. <span onclick=scrollToRef('scite-7') id="scite-ref-7-a" class="scite-citeref-number" title="US-CERT. (2017, October 20). Alert (TA17-293A): Advanced Persistent Threat Activity Targeting Energy and Other Critical Infrastructure Sectors. Retrieved November 2, 2017."data-reference="US-CERT APT Energy Oct 2017"><sup><a href="https://www.us-cert.gov/ncas/alerts/TA17-293A" target="_blank" data-hasqtip="6" aria-describedby="qtip-6">[7]</a></sup></span></li></ul>
+                                                <p>Adversaries may gather credential material by invoking or forcing a user to automatically provide authentication information through a mechanism in which they can intercept.</p><p>The Server Message Block (SMB) protocol is commonly used in Windows networks for authentication and communication between systems for access to resources and file sharing. When a Windows system attempts to connect to an SMB resource it will automatically attempt to authenticate and send credential information for the current user to the remote system.<span onclick=scrollToRef('scite-1') id="scite-ref-1-a" class="scite-citeref-number" title="Wikipedia. (2017, December 16). Server Message Block. Retrieved December 21, 2017."data-reference="Wikipedia Server Message Block"><sup><a href="https://en.wikipedia.org/wiki/Server_Message_Block" target="_blank" data-hasqtip="0" aria-describedby="qtip-0">[1]</a></sup></span> This behavior is typical in enterprise environments so that users do not need to enter credentials to access network resources.</p><p>Web Distributed Authoring and Versioning (WebDAV) is also typically used by Windows systems as a backup protocol when SMB is blocked or fails. WebDAV is an extension of HTTP and will typically operate over TCP ports 80 and 443.<span onclick=scrollToRef('scite-2') id="scite-ref-2-a" class="scite-citeref-number" title="Stevens, D. (2017, November 13). WebDAV Traffic To Malicious Sites. Retrieved December 21, 2017."data-reference="Didier Stevens WebDAV Traffic"><sup><a href="https://blog.didierstevens.com/2017/11/13/webdav-traffic-to-malicious-sites/" target="_blank" data-hasqtip="1" aria-describedby="qtip-1">[2]</a></sup></span><span onclick=scrollToRef('scite-3') id="scite-ref-3-a" class="scite-citeref-number" title="Microsoft. (n.d.). Managing WebDAV Security (IIS 6.0). Retrieved November 17, 2024."data-reference="Microsoft Managing WebDAV Security"><sup><a href="https://web.archive.org/web/20100210125749/https://www.microsoft.com/technet/prodtechnol/WindowsServer2003/Library/IIS/4beddb35-0cba-424c-8b9b-a5832ad8e208.mspx" target="_blank" data-hasqtip="2" aria-describedby="qtip-2">[3]</a></sup></span></p><p>Adversaries may take advantage of this behavior to gain access to user account hashes through forced SMB/WebDAV authentication. An adversary can send an attachment to a user through spearphishing that contains a resource link to an external server controlled by the adversary  (i.e. <a href="/techniques/T1221">Template Injection</a>), or place a specially crafted file on navigation path for privileged accounts (e.g. .SCF file placed on desktop) or on a publicly accessible share to be accessed by victim(s). When the user's system accesses the untrusted resource, it will attempt authentication and send information, including the user's hashed credentials, over SMB to the adversary-controlled server.<span onclick=scrollToRef('scite-4') id="scite-ref-4-a" class="scite-citeref-number" title="Dunning, J. (2016, August 1). Hashjacking. Retrieved December 21, 2017."data-reference="GitHub Hashjacking"><sup><a href="https://github.com/hob0/hashjacking" target="_blank" data-hasqtip="3" aria-describedby="qtip-3">[4]</a></sup></span> With access to the credential hash, an adversary can perform off-line <a href="/techniques/T1110">Brute Force</a> cracking to gain access to plaintext credentials.<span onclick=scrollToRef('scite-5') id="scite-ref-5-a" class="scite-citeref-number" title="Cylance. (2015, April 13). Redirect to SMB. Retrieved December 21, 2017."data-reference="Cylance Redirect to SMB"><sup><a href="https://www.cylance.com/content/dam/cylance/pdfs/white_papers/RedirectToSMB.pdf" target="_blank" data-hasqtip="4" aria-describedby="qtip-4">[5]</a></sup></span></p><p>There are several different ways this can occur.<span onclick=scrollToRef('scite-6') id="scite-ref-6-a" class="scite-citeref-number" title="Osanda Malith Jayathissa. (2017, March 24). Places of Interest in Stealing NetNTLM Hashes. Retrieved January 26, 2018."data-reference="Osanda Stealing NetNTLM Hashes"><sup><a href="https://osandamalith.com/2017/03/24/places-of-interest-in-stealing-netntlm-hashes/" target="_blank" data-hasqtip="5" aria-describedby="qtip-5">[6]</a></sup></span> Some specifics from in-the-wild use include:</p><ul><li>A spearphishing attachment containing a document with a resource that is automatically loaded when the document is opened (i.e. <a href="/techniques/T1221">Template Injection</a>). The document can include, for example, a request similar to <code>file[:]//[remote address]/Normal.dotm</code> to trigger the SMB request.<span onclick=scrollToRef('scite-7') id="scite-ref-7-a" class="scite-citeref-number" title="US-CERT. (2017, October 20). Alert (TA17-293A): Advanced Persistent Threat Activity Targeting Energy and Other Critical Infrastructure Sectors. Retrieved November 2, 2017."data-reference="US-CERT APT Energy Oct 2017"><sup><a href="https://www.us-cert.gov/ncas/alerts/TA17-293A" target="_blank" data-hasqtip="6" aria-describedby="qtip-6">[7]</a></sup></span></li><li>A modified .LNK or .SCF file with the icon filename pointing to an external reference such as <code>\[remote address]\pic.png</code> that will force the system to load the resource when the icon is rendered to repeatedly gather credentials.<span onclick=scrollToRef('scite-7') id="scite-ref-7-a" class="scite-citeref-number" title="US-CERT. (2017, October 20). Alert (TA17-293A): Advanced Persistent Threat Activity Targeting Energy and Other Critical Infrastructure Sectors. Retrieved November 2, 2017."data-reference="US-CERT APT Energy Oct 2017"><sup><a href="https://www.us-cert.gov/ncas/alerts/TA17-293A" target="_blank" data-hasqtip="6" aria-describedby="qtip-6">[7]</a></sup></span></li></ul><p>Alternatively, by leveraging the <code>EfsRpcOpenFileRaw</code> function, an adversary can send SMB requests to a remote system's MS-EFSRPC interface and force the victim computer to initiate an authentication procedure and share its authentication details. The Encrypting File System Remote Protocol (EFSRPC) is a protocol used in Windows networks for maintenance and management operations on encrypted data that is stored remotely to be accessed over a network. Utilization of <code>EfsRpcOpenFileRaw</code> function in EFSRPC is used to open an encrypted object on the server for backup or restore. Adversaries can collect this data and abuse it as part of a NTLM relay attack to gain access to remote systems on the same internal network.<span onclick=scrollToRef('scite-8') id="scite-ref-8-a" class="scite-citeref-number" title="Condon, Caitlin. (2022, April 24). PetitPotam: Novel Attack Chain Can Fully Compromise Windows Domains. Retrieved May 30, 2025."data-reference="Rapid7"><sup><a href="https://www.rapid7.com/blog/post/2021/08/03/petitpotam-novel-attack-chain-can-fully-compromise-windows-domains-running-ad-cs/" target="_blank" data-hasqtip="7" aria-describedby="qtip-7">[8]</a></sup></span><span onclick=scrollToRef('scite-9') id="scite-ref-9-a" class="scite-citeref-number" title="topotam. (2021, July 18). PetitPotam. PoC tool to coerce Windows hosts to authenticate to other machines. Retrieved May 30, 2025."data-reference="GitHub"><sup><a href="https://github.com/topotam/PetitPotam" target="_blank" data-hasqtip="8" aria-describedby="qtip-8">[9]</a></sup></span></p>
 
                                     </div>
                             </div>
@@ -259,13 +271,13 @@
                                             <div class="row card-data">
                                                 <div class="col-md-1 px-0 text-center"></div>
                                                 <div class="col-md-11 pl-0">
-                                                    <span class="h5 card-title">Contributors:&nbsp;</span>Sudhanshu Chauhan, @Sudhanshu_C; Teodor Cimpoesu
+                                                    <span class="h5 card-title">Contributors:&nbsp;</span>Jiraput Thamsongkrah; Natthawut Saexu; Purinut Wongwaiwuttiguldej; Sudhanshu Chauhan, @Sudhanshu_C; Teodor Cimpoesu
                                                 </div>
                                             </div>
                                             <div class="row card-data">
                                                 <div class="col-md-1 px-0 text-center"></div>
                                                 <div class="col-md-11 pl-0">
-                                                    <span class="h5 card-title">Version:&nbsp;</span>1.3
+                                                    <span class="h5 card-title">Version:&nbsp;</span>1.4
                                                 </div>
                                             </div>
                                             <div class="row card-data">
@@ -277,7 +289,7 @@
                                             <div class="row card-data">
                                                 <div class="col-md-1 px-0 text-center"></div>
                                                 <div class="col-md-11 pl-0">
-                                                    <span class="h5 card-title">Last Modified:&nbsp;</span>15 April 2025
+                                                    <span class="h5 card-title">Last Modified:&nbsp;</span>24 October 2025
                                                 </div>
                                             </div>
                                     </div>
@@ -287,13 +299,13 @@
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Permalink to this version of T1187" 
-           href="/versions/v17/techniques/T1187/" data-test-ignore="true">Version Permalink</a>
+           href="/versions/v18/techniques/T1187/" data-test-ignore="true">Version Permalink</a>
     </div>
     <div class="permalink">
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Go to the live version of T1187" 
-           href="/versions/v17/techniques/T1187/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+           href="/versions/v18/techniques/T1187/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
     </div>
 </div>
 
@@ -318,7 +330,7 @@
                                                 <a href="/groups/G0079"> DarkHydrus </a>
                                             </td>
                                             <td>
-                                                            <p><a href="/groups/G0079">DarkHydrus</a> used <a href="/techniques/T1221">Template Injection</a> to launch an authentication window for users to enter their credentials.<span onclick=scrollToRef('scite-8') id="scite-ref-8-a" class="scite-citeref-number" title="Falcone, R. (2018, August 07). DarkHydrus Uses Phishery to Harvest Credentials in the Middle East. Retrieved August 10, 2018."data-reference="Unit 42 Phishery Aug 2018"><sup><a href="https://researchcenter.paloaltonetworks.com/2018/08/unit42-darkhydrus-uses-phishery-harvest-credentials-middle-east/" target="_blank" data-hasqtip="7" aria-describedby="qtip-7">[8]</a></sup></span></p>
+                                                            <p><a href="/groups/G0079">DarkHydrus</a> used <a href="/techniques/T1221">Template Injection</a> to launch an authentication window for users to enter their credentials.<span onclick=scrollToRef('scite-10') id="scite-ref-10-a" class="scite-citeref-number" title="Falcone, R. (2018, August 07). DarkHydrus Uses Phishery to Harvest Credentials in the Middle East. Retrieved August 10, 2018."data-reference="Unit 42 Phishery Aug 2018"><sup><a href="https://researchcenter.paloaltonetworks.com/2018/08/unit42-darkhydrus-uses-phishery-harvest-credentials-middle-east/" target="_blank" data-hasqtip="9" aria-describedby="qtip-9">[10]</a></sup></span></p>
 
                                             </td>
                                         </tr>
@@ -330,7 +342,7 @@
                                                 <a href="/groups/G0035"> Dragonfly </a>
                                             </td>
                                             <td>
-                                                            <p><a href="/groups/G0035">Dragonfly</a> has gathered hashed user credentials over SMB using spearphishing attachments with external resource links and by modifying .LNK file icon resources to collect credentials from virtualized systems.<span onclick=scrollToRef('scite-9') id="scite-ref-9-a" class="scite-citeref-number" title="US-CERT. (2018, March 16). Alert (TA18-074A): Russian Government Cyber Activity Targeting Energy and Other Critical Infrastructure Sectors. Retrieved June 6, 2018."data-reference="US-CERT TA18-074A"><sup><a href="https://www.us-cert.gov/ncas/alerts/TA18-074A" target="_blank" data-hasqtip="8" aria-describedby="qtip-8">[9]</a></sup></span><span onclick=scrollToRef('scite-10') id="scite-ref-10-a" class="scite-citeref-number" title="Slowik, J. (2021, October). THE BAFFLING BERSERK BEAR: A DECADE’S ACTIVITY TARGETING CRITICAL INFRASTRUCTURE. Retrieved December 6, 2021."data-reference="Gigamon Berserk Bear October 2021"><sup><a href="https://vblocalhost.com/uploads/VB2021-Slowik.pdf" target="_blank" data-hasqtip="9" aria-describedby="qtip-9">[10]</a></sup></span></p>
+                                                            <p><a href="/groups/G0035">Dragonfly</a> has gathered hashed user credentials over SMB using spearphishing attachments with external resource links and by modifying .LNK file icon resources to collect credentials from virtualized systems.<span onclick=scrollToRef('scite-11') id="scite-ref-11-a" class="scite-citeref-number" title="US-CERT. (2018, March 16). Alert (TA18-074A): Russian Government Cyber Activity Targeting Energy and Other Critical Infrastructure Sectors. Retrieved June 6, 2018."data-reference="US-CERT TA18-074A"><sup><a href="https://www.us-cert.gov/ncas/alerts/TA18-074A" target="_blank" data-hasqtip="10" aria-describedby="qtip-10">[11]</a></sup></span><span onclick=scrollToRef('scite-12') id="scite-ref-12-a" class="scite-citeref-number" title="Slowik, J. (2021, October). THE BAFFLING BERSERK BEAR: A DECADE’S ACTIVITY TARGETING CRITICAL INFRASTRUCTURE. Retrieved December 6, 2021."data-reference="Gigamon Berserk Bear October 2021"><sup><a href="https://vblocalhost.com/uploads/VB2021-Slowik.pdf" target="_blank" data-hasqtip="11" aria-describedby="qtip-11">[12]</a></sup></span></p>
 
                                             </td>
                                         </tr>
@@ -342,7 +354,7 @@
                                                 <a href="/software/S0634"> EnvyScout </a>
                                             </td>
                                             <td>
-                                                            <p><a href="/software/S0634">EnvyScout</a> can use protocol handlers to coax the operating system to send NTLMv2 authentication responses to attacker-controlled infrastructure.<span onclick=scrollToRef('scite-11') id="scite-ref-11-a" class="scite-citeref-number" title="MSTIC. (2021, May 28). Breaking down NOBELIUM’s latest early-stage toolset. Retrieved August 4, 2021."data-reference="MSTIC Nobelium Toolset May 2021"><sup><a href="https://www.microsoft.com/security/blog/2021/05/28/breaking-down-nobeliums-latest-early-stage-toolset/" target="_blank" data-hasqtip="10" aria-describedby="qtip-10">[11]</a></sup></span></p>
+                                                            <p><a href="/software/S0634">EnvyScout</a> can use protocol handlers to coax the operating system to send NTLMv2 authentication responses to attacker-controlled infrastructure.<span onclick=scrollToRef('scite-13') id="scite-ref-13-a" class="scite-citeref-number" title="MSTIC. (2021, May 28). Breaking down NOBELIUM’s latest early-stage toolset. Retrieved August 4, 2021."data-reference="MSTIC Nobelium Toolset May 2021"><sup><a href="https://www.microsoft.com/security/blog/2021/05/28/breaking-down-nobeliums-latest-early-stage-toolset/" target="_blank" data-hasqtip="12" aria-describedby="qtip-12">[13]</a></sup></span></p>
 
                                             </td>
                                         </tr>
@@ -368,7 +380,7 @@
                                                     <a href="/mitigations/M1037"> Filter Network Traffic </a>
                                                 </td>
                                                 <td>
-                                                                <p>Block SMB traffic from exiting an enterprise network with egress filtering or by blocking TCP ports 139, 445 and UDP port 137. Filter or block WebDAV protocol traffic from exiting the network. If access to external resources over SMB and WebDAV is necessary, then traffic should be tightly limited with allowlisting. <span onclick=scrollToRef('scite-12') id="scite-ref-12-a" class="scite-citeref-number" title="US-CERT. (2017, March 16). SMB Security Best Practices. Retrieved December 21, 2017."data-reference="US-CERT SMB Security"><sup><a href="https://www.us-cert.gov/ncas/current-activity/2017/01/16/SMB-Security-Best-Practices" target="_blank" data-hasqtip="11" aria-describedby="qtip-11">[12]</a></sup></span> <span onclick=scrollToRef('scite-7') id="scite-ref-7-a" class="scite-citeref-number" title="US-CERT. (2017, October 20). Alert (TA17-293A): Advanced Persistent Threat Activity Targeting Energy and Other Critical Infrastructure Sectors. Retrieved November 2, 2017."data-reference="US-CERT APT Energy Oct 2017"><sup><a href="https://www.us-cert.gov/ncas/alerts/TA17-293A" target="_blank" data-hasqtip="6" aria-describedby="qtip-6">[7]</a></sup></span></p>
+                                                                <p>Block SMB traffic from exiting an enterprise network with egress filtering or by blocking TCP ports 139, 445 and UDP port 137. Filter or block WebDAV protocol traffic from exiting the network. If access to external resources over SMB and WebDAV is necessary, then traffic should be tightly limited with allowlisting. <span onclick=scrollToRef('scite-14') id="scite-ref-14-a" class="scite-citeref-number" title="US-CERT. (2017, March 16). SMB Security Best Practices. Retrieved December 21, 2017."data-reference="US-CERT SMB Security"><sup><a href="https://www.us-cert.gov/ncas/current-activity/2017/01/16/SMB-Security-Best-Practices" target="_blank" data-hasqtip="13" aria-describedby="qtip-13">[14]</a></sup></span> <span onclick=scrollToRef('scite-7') id="scite-ref-7-a" class="scite-citeref-number" title="US-CERT. (2017, October 20). Alert (TA17-293A): Advanced Persistent Threat Activity Targeting Energy and Other Critical Infrastructure Sectors. Retrieved November 2, 2017."data-reference="US-CERT APT Energy Oct 2017"><sup><a href="https://www.us-cert.gov/ncas/alerts/TA17-293A" target="_blank" data-hasqtip="6" aria-describedby="qtip-6">[7]</a></sup></span></p>
 
                                                 </td>
                                             </tr>
@@ -387,83 +399,33 @@
                                     </tbody>
                                 </table>
                                 </div>
-                            <h2 class="pt-3" id="detection">Detection</h2>
+                                <h2 class="pt-3" id="detection">Detection Strategy</h2>
                                 <div class="tables-mobile">
 <table class="table datasources-table table-bordered">
     <thead>
         <tr>
             <th class="p-2" scope="col">ID</th>
-            <th class="p-2 nowrap" scope="col">Data Source</th>
-            <th class="p-2 nowrap" scope="col">Data Component</th>
-            <th class="p-2" scope="col">Detects</th>
+            <th class="p-2 nowrap" scope="col">Name</th>
+            <th class="p-2 nowrap" scope="col">Analytic ID</th>
+            <th class="p-2 nowrap" scope="col">Analytic Description</th>
         </tr>
     </thead>
     <tbody>
-            <tr class="datasource" id="uses-DS0022">
-                <td>
-                    <a href="/datasources/DS0022">DS0022</a>
-                </td>
-                <td class="nowrap">
-                    <a href="/datasources/DS0022">File</a>
-                </td>
-                <!-- Add first data component here -->
-                <td> 
-                    <a href="/datasources/DS0022/#File%20Access">File Access</a>
-                </td>
+                <tr class="detection_strategy" id="uses-DET0022">
+                        <td rowspan="1">
+                            <a href="/detectionstrategies/DET0022">DET0022</a>
+                        </td>
+                        <td rowspan="1">
+                            <a href="/detectionstrategies/DET0022">Detect Forced SMB/WebDAV Authentication via lure files and outbound NTLM</a>
+                        </td>
                     <td>
-                                <p>Monitor for access to files that may indicate attempts to coerce a user into providing authentication information.</p><p>Analytic 1 - Suspicious access to files known to be used for forced authentication attacks.</p><p><code> index=security sourcetype="WinEventLog:Security" EventCode=4663 ObjectName="<em>\path\to\suspicious\file</em>" | where match(ObjectName, "(?i)\(.*\.)?(lnk|scf|url|doc|dot|xls|ppt|pdf|scf|html)$")</code></p>
-
+                        <a href="/detectionstrategies/DET0022#AN0065">AN0065</a>
                     </td>
-            </tr>
-                    <tr class="datacomponent datasource" id="uses-DS0022-File Creation">
-                        <td></td>
-                        <td></td>
-                        <td>
-                            <a href="/datasources/DS0022/#File%20Creation">File Creation</a>
-                        </td>
-                            <td>
-                                        <p>Monitor for newly constructed .LNK, .SCF, or any other files on systems and within virtual environments that contain resources that point to external network resources.</p><p>Analytic 1 - Creation of suspicious files in locations used for forced authentication attacks.</p><p><code>(index=security sourcetype="WinEventLog:Security" EventCode=4663) OR (index=sysmon sourcetype="WinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode=11) | where match(ObjectName, "(?i)\(.*\.)?(lnk|scf|url|doc|dot|xls|ppt|pdf|html)$")| where match(ObjectName, "(?i)(desktop|public|downloads|temp|cache|start menu|startup)") </code></p>
-
-                            </td>
-                    </tr>
-                    <tr class="datacomponent datasource" id="uses-DS0022-File Modification">
-                        <td></td>
-                        <td></td>
-                        <td>
-                            <a href="/datasources/DS0022/#File%20Modification">File Modification</a>
-                        </td>
-                            <td>
-                                        <p>Monitor for changes made to the .LNK, .SCF, or any other files on systems and within virtual environments that contain resources that point to external network resources. </p><p>Analytic 1 - Modifications to files known to be used for forced authentication attacks.</p><p><code>(index=security sourcetype="WinEventLog:Security" EventCode=4663)  | where match(ObjectName, "(?i)\(.*\.)?(lnk|scf|url|doc|dot|xls|ppt|pdf|html)$")| where match(ObjectName, "(?i)(desktop|public|downloads|temp|cache|start menu|startup)")</code></p>
-
-                            </td>
-                    </tr>
-            <tr class="datasource" id="uses-DS0029">
-                <td>
-                    <a href="/datasources/DS0029">DS0029</a>
-                </td>
-                <td class="nowrap">
-                    <a href="/datasources/DS0029">Network Traffic</a>
-                </td>
-                <!-- Add first data component here -->
-                <td> 
-                    <a href="/datasources/DS0029/#Network%20Traffic%20Content">Network Traffic Content</a>
-                </td>
                     <td>
-                                <p>For internal traffic, monitor the workstation-to-workstation unusual (vs. baseline) SMB traffic. For many networks there should not be any, but it depends on how systems on the network are configured and where resources are located.</p><p>Analytic 1 - Detection of NTLM hash traffic or other suspicious authentication traffic.</p><p><code> index=network sourcetype="stream:tcp" (dest_port=445 OR dest_port=80 OR dest_port=443) | eval Protocol=case(dest_port==445, "SMB", dest_port==80, "HTTP", dest_port==443, "HTTPS", true(), "Unknown")| search (command IN ("NTLMSSP_NEGOTIATE", "NTLMSSP_AUTH")) | eval SuspiciousAuth=case(    match(_raw, "NTLMSSP_NEGOTIATE"), "NTLM Negotiate",    match(_raw, "NTLMSSP_AUTH"), "NTLM Authentication",    true(), "Unknown")</code></p>
-
+                                <p>Adversary stages a lure that references a remote resource (e.g., LNK/SCF/Office template). When the user opens/renders the file or a shell enumerates icons, the host automatically attempts SMB or WebDAV authentication to the attacker host. The chain is: (1) lure file is created or modified in a user-exposed location → (2) user or system accesses the lure → (3) host makes outbound NTLM (SMB 139/445 or WebDAV over 80/443) to an untrusted destination → (4) repeated attempts from multiple users/hosts or from privileged workstations.</p>
+</a>
                     </td>
-            </tr>
-                    <tr class="datacomponent datasource" id="uses-DS0029-Network Traffic Flow">
-                        <td></td>
-                        <td></td>
-                        <td>
-                            <a href="/datasources/DS0029/#Network%20Traffic%20Flow">Network Traffic Flow</a>
-                        </td>
-                            <td>
-                                        <p>Monitor for SMB traffic on TCP ports 139, 445 and UDP port 137 and WebDAV traffic attempting to exit the network to unknown external systems.If attempts are detected, then investigate endpoint data sources to find the root cause.</p><p>Analytic 1 - Unusual network traffic patterns indicative of forced authentication attempts.</p><p><code> index=network sourcetype="stream:tcp" (dest_port=445 OR dest_port=80 OR dest_port=443)| eval Protocol=case(dest_port==445, "SMB", dest_port==80, "HTTP", dest_port==443, "HTTPS", true(), "Unknown")| eval SuspiciousConn=if((Protocol="SMB" AND src_ip!=dest_ip AND (src_ip!="known_ip1" AND dest_ip!="known_ip2")), 1, 0)| where SuspiciousConn=1 </code></p>
-
-                            </td>
-                    </tr>
+                </tr>
     </tbody>
 </table>
 </div>
@@ -546,11 +508,7 @@
         </li>
 
 
-                </ol>
-            </div>
-            <div class="col">
-                    <ol start="7.0">
-                                
+                            
         <li>
             <span  id="scite-7" class="scite-citation">
                 <span class="scite-citation-text">
@@ -562,12 +520,16 @@
         </li>
 
 
+                </ol>
+            </div>
+            <div class="col">
+                    <ol start="8.0">
                                 
         <li>
             <span  id="scite-8" class="scite-citation">
                 <span class="scite-citation-text">
-                    <a rel="nofollow" class="external text" name="scite-8" href="https://researchcenter.paloaltonetworks.com/2018/08/unit42-darkhydrus-uses-phishery-harvest-credentials-middle-east/" target="_blank">
-                        Falcone, R. (2018, August 07). DarkHydrus Uses Phishery to Harvest Credentials in the Middle East. Retrieved August 10, 2018.
+                    <a rel="nofollow" class="external text" name="scite-8" href="https://www.rapid7.com/blog/post/2021/08/03/petitpotam-novel-attack-chain-can-fully-compromise-windows-domains-running-ad-cs/" target="_blank">
+                        Condon, Caitlin. (2022, April 24). PetitPotam: Novel Attack Chain Can Fully Compromise Windows Domains. Retrieved May 30, 2025.
                     </a>
                 </span>
             </span>
@@ -578,8 +540,8 @@
         <li>
             <span  id="scite-9" class="scite-citation">
                 <span class="scite-citation-text">
-                    <a rel="nofollow" class="external text" name="scite-9" href="https://www.us-cert.gov/ncas/alerts/TA18-074A" target="_blank">
-                        US-CERT. (2018, March 16). Alert (TA18-074A): Russian Government Cyber Activity Targeting Energy and Other Critical Infrastructure Sectors. Retrieved June 6, 2018.
+                    <a rel="nofollow" class="external text" name="scite-9" href="https://github.com/topotam/PetitPotam" target="_blank">
+                        topotam. (2021, July 18). PetitPotam. PoC tool to coerce Windows hosts to authenticate to other machines. Retrieved May 30, 2025.
                     </a>
                 </span>
             </span>
@@ -590,8 +552,8 @@
         <li>
             <span  id="scite-10" class="scite-citation">
                 <span class="scite-citation-text">
-                    <a rel="nofollow" class="external text" name="scite-10" href="https://vblocalhost.com/uploads/VB2021-Slowik.pdf" target="_blank">
-                        Slowik, J. (2021, October). THE BAFFLING BERSERK BEAR: A DECADE’S ACTIVITY TARGETING CRITICAL INFRASTRUCTURE. Retrieved December 6, 2021.
+                    <a rel="nofollow" class="external text" name="scite-10" href="https://researchcenter.paloaltonetworks.com/2018/08/unit42-darkhydrus-uses-phishery-harvest-credentials-middle-east/" target="_blank">
+                        Falcone, R. (2018, August 07). DarkHydrus Uses Phishery to Harvest Credentials in the Middle East. Retrieved August 10, 2018.
                     </a>
                 </span>
             </span>
@@ -602,8 +564,8 @@
         <li>
             <span  id="scite-11" class="scite-citation">
                 <span class="scite-citation-text">
-                    <a rel="nofollow" class="external text" name="scite-11" href="https://www.microsoft.com/security/blog/2021/05/28/breaking-down-nobeliums-latest-early-stage-toolset/" target="_blank">
-                        MSTIC. (2021, May 28). Breaking down NOBELIUM’s latest early-stage toolset. Retrieved August 4, 2021.
+                    <a rel="nofollow" class="external text" name="scite-11" href="https://www.us-cert.gov/ncas/alerts/TA18-074A" target="_blank">
+                        US-CERT. (2018, March 16). Alert (TA18-074A): Russian Government Cyber Activity Targeting Energy and Other Critical Infrastructure Sectors. Retrieved June 6, 2018.
                     </a>
                 </span>
             </span>
@@ -614,7 +576,31 @@
         <li>
             <span  id="scite-12" class="scite-citation">
                 <span class="scite-citation-text">
-                    <a rel="nofollow" class="external text" name="scite-12" href="https://www.us-cert.gov/ncas/current-activity/2017/01/16/SMB-Security-Best-Practices" target="_blank">
+                    <a rel="nofollow" class="external text" name="scite-12" href="https://vblocalhost.com/uploads/VB2021-Slowik.pdf" target="_blank">
+                        Slowik, J. (2021, October). THE BAFFLING BERSERK BEAR: A DECADE’S ACTIVITY TARGETING CRITICAL INFRASTRUCTURE. Retrieved December 6, 2021.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-13" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-13" href="https://www.microsoft.com/security/blog/2021/05/28/breaking-down-nobeliums-latest-early-stage-toolset/" target="_blank">
+                        MSTIC. (2021, May 28). Breaking down NOBELIUM’s latest early-stage toolset. Retrieved August 4, 2021.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-14" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-14" href="https://www.us-cert.gov/ncas/current-activity/2017/01/16/SMB-Security-Best-Practices" target="_blank">
                         US-CERT. (2017, March 16). SMB Security Best Practices. Retrieved December 21, 2017.
                     </a>
                 </span>
@@ -688,7 +674,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3 col-footer">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v17.1&#013;Website  v4.2.3">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v18.0&#013;Website  v4.4.0">Website Changelog</a></u>
                                 </div>
                                 <div class="px-3">
                                     <u class="footer-link"><a href="/resources/legal-and-branding/privacy/#" class="footer-link" onclick="Osano.cm.showDrawer('osano-cm-dom-info-dialog-open')">Cookie Preferences</a></u>

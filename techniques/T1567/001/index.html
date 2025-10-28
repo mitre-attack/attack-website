@@ -93,12 +93,11 @@
                         </li>
                         <li class="nav-item dropdown">
                                 
-    <a class="nav-link dropdown-toggle" href="/datasources" id="navbarDropdown" role="button"
+    <a class="nav-link dropdown-toggle" href="/mitigations" id="navbarDropdown" role="button"
     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         <b>Defenses</b>
     </a>
     <div class="dropdown-menu " aria-labelledby="navbarDropdown">
-                <a class="dropdown-item" href="/datasources">Data Sources</a>
                 
 <div class="dropright dropdown">
 <a class="dropdown-item dropdown-toggle" href="/mitigations/" id="navbarDropdown" role="button"
@@ -113,6 +112,19 @@
 </div>
 
                 <a class="dropdown-item" href="/assets">Assets</a>
+                
+<div class="dropright dropdown">
+<a class="dropdown-item dropdown-toggle" href="/detectionstrategies/" id="navbarDropdown" role="button"
+    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <b>Detections</b>
+    </a>
+    <div class="dropdown-menu " aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="/detectionstrategies/">Detection Strategies</a>
+            <a class="dropdown-item" href="/analytics/">Analytics</a>
+            <a class="dropdown-item" href="/datacomponents">Data Components</a>
+    </div>
+</div>
+
     </div>
 
 
@@ -176,7 +188,7 @@
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
                     <div class="container-fluid banner-message">
-                        
+                        ATT&CK v18 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v18-8f82d839ee9e'>blog post</a> or <a href='https://attack.mitre.org/resources/updates/'>changelog</a> for more information.
 
                     </div>
             </div>
@@ -326,7 +338,7 @@
                                             <div class="row card-data">
                                                 <div class="col-md-1 px-0 text-center"></div>
                                                 <div class="col-md-11 pl-0">
-                                                    <span class="h5 card-title">Last Modified:&nbsp;</span>15 April 2025
+                                                    <span class="h5 card-title">Last Modified:&nbsp;</span>24 October 2025
                                                 </div>
                                             </div>
                                     </div>
@@ -336,13 +348,13 @@
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Permalink to this version of T1567.001" 
-           href="/versions/v17/techniques/T1567/001/" data-test-ignore="true">Version Permalink</a>
+           href="/versions/v18/techniques/T1567/001/" data-test-ignore="true">Version Permalink</a>
     </div>
     <div class="permalink">
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Go to the live version of T1567.001" 
-           href="/versions/v17/techniques/T1567/001/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+           href="/versions/v18/techniques/T1567/001/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
     </div>
 </div>
 
@@ -400,77 +412,60 @@
                                     </tbody>
                                 </table>
                                 </div>
-                            <h2 class="pt-3" id="detection">Detection</h2>
+                                <h2 class="pt-3" id="detection">Detection Strategy</h2>
                                 <div class="tables-mobile">
 <table class="table datasources-table table-bordered">
     <thead>
         <tr>
             <th class="p-2" scope="col">ID</th>
-            <th class="p-2 nowrap" scope="col">Data Source</th>
-            <th class="p-2 nowrap" scope="col">Data Component</th>
-            <th class="p-2" scope="col">Detects</th>
+            <th class="p-2 nowrap" scope="col">Name</th>
+            <th class="p-2 nowrap" scope="col">Analytic ID</th>
+            <th class="p-2 nowrap" scope="col">Analytic Description</th>
         </tr>
     </thead>
     <tbody>
-            <tr class="datasource" id="uses-DS0017">
-                <td>
-                    <a href="/datasources/DS0017">DS0017</a>
-                </td>
-                <td class="nowrap">
-                    <a href="/datasources/DS0017">Command</a>
-                </td>
-                <!-- Add first data component here -->
-                <td> 
-                    <a href="/datasources/DS0017/#Command%20Execution">Command Execution</a>
-                </td>
-                    <td>
-                                <p>Monitor for execution of commands for repository interaction (git push, curl, gh repo create, git clone), use of API clients (e.g., curl -X POST https://api.github.com/repos/user/repo/contents/), or unusual usage of PowerShell or Bash scripts to automate repository uploads.</p><p>Analytic 1 - Detecting Repository Uploads via Command Execution</p><p><code> (EventCode=1 OR source="/var/log/audit/audit.log" type="execve")| where (command IN ("git push", "gh repo create", "curl -X POST", "git clone", "git add", "git commit"))| eval risk_score=case(    command IN ("git push", "gh repo create"), 9,    command IN ("curl -X POST", "git commit"), 8)| where risk_score &gt;= 8| stats count by _time, host, user, command, risk_score</code></p>
-
-                    </td>
-            </tr>
-            <tr class="datasource" id="uses-DS0022">
-                <td>
-                    <a href="/datasources/DS0022">DS0022</a>
-                </td>
-                <td class="nowrap">
-                    <a href="/datasources/DS0022">File</a>
-                </td>
-                <!-- Add first data component here -->
-                <td> 
-                    <a href="/datasources/DS0022/#File%20Access">File Access</a>
-                </td>
-                    <td>
-                                <p>Monitor for files being accessed to exfiltrate data to a code repository rather than over their primary command and control channel.</p><p>Analytic 1 - Detecting File Staging for Exfiltration to Code Repositories </p><p><code> (EventCode=11 OR EventCode=4663 OR source="/var/log/audit/audit.log" type="open")| where (file_path IN ("/home/<em>/repos/</em>", "C:\Users\<em>\Documents\git_repos\</em>", "/var/tmp/repos/"))| eval risk_score=case(    file_path LIKE "/home/<em>/repos/%", 9,    file_path LIKE "C:\Users\</em>\Documents\git_repos\%", 8)| where risk_score &gt;= 8| stats count by _time, host, user, file_path, risk_score</code></p>
-
-                    </td>
-            </tr>
-            <tr class="datasource" id="uses-DS0029">
-                <td>
-                    <a href="/datasources/DS0029">DS0029</a>
-                </td>
-                <td class="nowrap">
-                    <a href="/datasources/DS0029">Network Traffic</a>
-                </td>
-                <!-- Add first data component here -->
-                <td> 
-                    <a href="/datasources/DS0029/#Network%20Traffic%20Content">Network Traffic Content</a>
-                </td>
-                    <td>
-                                <p>Monitor for outbound network connections to code repository services (e.g., github.com, gitlab.com), web API calls to repository endpoints (POST https://api.github.com/repos/...), or SSH traffic to Git services (git@github.com:username/repo.git).</p><p>Analytic 1 - Detecting Outbound Connections to Code Repositories </p><p><code> (EventCode=3 OR source="zeek_conn.log" OR source="firewall_logs")| where (dest_ip IN (known_code_repos) AND bytes_out &gt; 5000000)| stats count, sum(bytes_out) as total_bytes by _time, host, process, dest_ip| where total_bytes &gt; 50000000| eval risk_score=case(    total_bytes &gt; 100000000, 9,    total_bytes &gt; 50000000, 8)| where risk_score &gt;= 8| table host, dest_ip, total_bytes, risk_score</code></p>
-
-                    </td>
-            </tr>
-                    <tr class="datacomponent datasource" id="uses-DS0029-Network Traffic Flow">
-                        <td></td>
-                        <td></td>
-                        <td>
-                            <a href="/datasources/DS0029/#Network%20Traffic%20Flow">Network Traffic Flow</a>
+                <tr class="detection_strategy" id="uses-DET0318">
+                        <td rowspan="4">
+                            <a href="/detectionstrategies/DET0318">DET0318</a>
                         </td>
-                            <td>
-                                        <p>Monitor network data for uncommon data flows. Processes utilizing the network that do not normally have network communication or have never been seen before are suspicious. Monitor for use of code repositories for data exfiltration. </p>
-
-                            </td>
-                    </tr>
+                        <td rowspan="4">
+                            <a href="/detectionstrategies/DET0318">Detection Strategy for Exfiltration to Code Repository</a>
+                        </td>
+                    <td>
+                        <a href="/detectionstrategies/DET0318#AN0895">AN0895</a>
+                    </td>
+                    <td>
+                                <p>Processes such as PowerShell, Git, or curl initiating outbound HTTPS POST requests to known code repository APIs (e.g., github.com, gitlab.com) immediately following large file reads. Defender view: correlation between file access of sensitive directories (e.g., Documents, Finance) and abnormal data uploads to repository domains.</p>
+</a>
+                    </td>
+                </tr>
+                <tr class="detection_strategy" id="uses-DET0318">
+                    <td>
+                        <a href="/detectionstrategies/DET0318#AN0896">AN0896</a>
+                    </td>
+                    <td>
+                                <p>Processes like git, curl, or python scripts executing commands that package files (tar, gzip) followed by HTTPS uploads to code repository endpoints. Defender view: detect unusual git push activity or scripted HTTPS requests outside normal developer work hours.</p>
+</a>
+                    </td>
+                </tr>
+                <tr class="detection_strategy" id="uses-DET0318">
+                    <td>
+                        <a href="/detectionstrategies/DET0318#AN0897">AN0897</a>
+                    </td>
+                    <td>
+                                <p>Office or scripting applications initiating unusual HTTPS traffic to code repository APIs with high outbound-to-inbound ratios. Defender perspective: monitor for sensitive file access in combination with network connections to github.com, gitlab.com, or bitbucket.org.</p>
+</a>
+                    </td>
+                </tr>
+                <tr class="detection_strategy" id="uses-DET0318">
+                    <td>
+                        <a href="/detectionstrategies/DET0318#AN0898">AN0898</a>
+                    </td>
+                    <td>
+                                <p>ESXi host processes (vmx, hostd) initiating HTTPS sessions toward external code repositories. Defender perspective: detect datastore reads followed by outbound web traffic inconsistent with administrative baselines.</p>
+</a>
+                    </td>
+                </tr>
     </tbody>
 </table>
 </div>
@@ -560,7 +555,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3 col-footer">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v17.1&#013;Website  v4.2.3">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v18.0&#013;Website  v4.4.0">Website Changelog</a></u>
                                 </div>
                                 <div class="px-3">
                                     <u class="footer-link"><a href="/resources/legal-and-branding/privacy/#" class="footer-link" onclick="Osano.cm.showDrawer('osano-cm-dom-info-dialog-open')">Cookie Preferences</a></u>

@@ -93,12 +93,11 @@
                         </li>
                         <li class="nav-item dropdown">
                                 
-    <a class="nav-link dropdown-toggle" href="/datasources" id="navbarDropdown" role="button"
+    <a class="nav-link dropdown-toggle" href="/mitigations" id="navbarDropdown" role="button"
     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         <b>Defenses</b>
     </a>
     <div class="dropdown-menu " aria-labelledby="navbarDropdown">
-                <a class="dropdown-item" href="/datasources">Data Sources</a>
                 
 <div class="dropright dropdown">
 <a class="dropdown-item dropdown-toggle" href="/mitigations/" id="navbarDropdown" role="button"
@@ -113,6 +112,19 @@
 </div>
 
                 <a class="dropdown-item" href="/assets">Assets</a>
+                
+<div class="dropright dropdown">
+<a class="dropdown-item dropdown-toggle" href="/detectionstrategies/" id="navbarDropdown" role="button"
+    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <b>Detections</b>
+    </a>
+    <div class="dropdown-menu " aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="/detectionstrategies/">Detection Strategies</a>
+            <a class="dropdown-item" href="/analytics/">Analytics</a>
+            <a class="dropdown-item" href="/datacomponents">Data Components</a>
+    </div>
+</div>
+
     </div>
 
 
@@ -176,7 +188,7 @@
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
                     <div class="container-fluid banner-message">
-                        
+                        ATT&CK v18 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v18-8f82d839ee9e'>blog post</a> or <a href='https://attack.mitre.org/resources/updates/'>changelog</a> for more information.
 
                     </div>
             </div>
@@ -390,7 +402,7 @@
                                             <div class="row card-data">
                                                 <div class="col-md-1 px-0 text-center"></div>
                                                 <div class="col-md-11 pl-0">
-                                                    <span class="h5 card-title">Last Modified:&nbsp;</span>15 April 2025
+                                                    <span class="h5 card-title">Last Modified:&nbsp;</span>24 October 2025
                                                 </div>
                                             </div>
                                     </div>
@@ -400,13 +412,13 @@
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Permalink to this version of T1574.013" 
-           href="/versions/v17/techniques/T1574/013/" data-test-ignore="true">Version Permalink</a>
+           href="/versions/v18/techniques/T1574/013/" data-test-ignore="true">Version Permalink</a>
     </div>
     <div class="permalink">
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Go to the live version of T1574.013" 
-           href="/versions/v17/techniques/T1574/013/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+           href="/versions/v18/techniques/T1574/013/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
     </div>
 </div>
 
@@ -476,34 +488,33 @@
                                     </tbody>
                                 </table>
                                 </div>
-                            <h2 class="pt-3" id="detection">Detection</h2>
+                                <h2 class="pt-3" id="detection">Detection Strategy</h2>
                                 <div class="tables-mobile">
 <table class="table datasources-table table-bordered">
     <thead>
         <tr>
             <th class="p-2" scope="col">ID</th>
-            <th class="p-2 nowrap" scope="col">Data Source</th>
-            <th class="p-2 nowrap" scope="col">Data Component</th>
-            <th class="p-2" scope="col">Detects</th>
+            <th class="p-2 nowrap" scope="col">Name</th>
+            <th class="p-2 nowrap" scope="col">Analytic ID</th>
+            <th class="p-2 nowrap" scope="col">Analytic Description</th>
         </tr>
     </thead>
     <tbody>
-            <tr class="datasource" id="uses-DS0009">
-                <td>
-                    <a href="/datasources/DS0009">DS0009</a>
-                </td>
-                <td class="nowrap">
-                    <a href="/datasources/DS0009">Process</a>
-                </td>
-                <!-- Add first data component here -->
-                <td> 
-                    <a href="/datasources/DS0009/#OS%20API%20Execution">OS API Execution</a>
-                </td>
+                <tr class="detection_strategy" id="uses-DET0577">
+                        <td rowspan="1">
+                            <a href="/detectionstrategies/DET0577">DET0577</a>
+                        </td>
+                        <td rowspan="1">
+                            <a href="/detectionstrategies/DET0577">Detection Strategy for Hijack Execution Flow through the KernelCallbackTable on Windows.</a>
+                        </td>
                     <td>
-                                <p>Monitoring Windows API calls indicative of the various types of code injection may generate a significant amount of data and may not be directly useful for defense unless collected under specific circumstances. for known bad sequence of calls, since benign use of API functions may be common and difficult to distinguish from malicious behavior. Windows API calls such as <code>WriteProcessMemory()</code> and <code>NtQueryInformationProcess()</code> with the parameter set to <code>ProcessBasicInformation</code> may be used for this technique.<span onclick=scrollToRef('scite-1') id="scite-ref-1-a" class="scite-citeref-number" title="Saini, A. and Hossein, J. (2022, January 27). North Korea’s Lazarus APT leverages Windows Update client, GitHub in latest campaign. Retrieved January 27, 2022."data-reference="Lazarus APT January 2022"><sup><a href="https://blog.malwarebytes.com/threat-intelligence/2022/01/north-koreas-lazarus-apt-leverages-windows-update-client-github-in-latest-campaign/" target="_blank" data-hasqtip="0" aria-describedby="qtip-0">[1]</a></sup></span></p>
-
+                        <a href="/detectionstrategies/DET0577#AN1593">AN1593</a>
                     </td>
-            </tr>
+                    <td>
+                                <p>Unexpected modification of the KernelCallbackTable in a process’s PEB followed by invocation of modified callback functions (e.g., fnCOPYDATA) through Windows messages. Defender observes suspicious API call chains such as NtQueryInformationProcess → WriteProcessMemory → abnormal GUI callback execution, often correlating to anomalous process behavior such as network activity or code injection.</p>
+</a>
+                    </td>
+                </tr>
     </tbody>
 </table>
 </div>
@@ -644,7 +655,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3 col-footer">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v17.1&#013;Website  v4.2.3">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v18.0&#013;Website  v4.4.0">Website Changelog</a></u>
                                 </div>
                                 <div class="px-3">
                                     <u class="footer-link"><a href="/resources/legal-and-branding/privacy/#" class="footer-link" onclick="Osano.cm.showDrawer('osano-cm-dom-info-dialog-open')">Cookie Preferences</a></u>

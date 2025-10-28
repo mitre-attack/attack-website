@@ -93,12 +93,11 @@
                         </li>
                         <li class="nav-item dropdown">
                                 
-    <a class="nav-link dropdown-toggle" href="/datasources" id="navbarDropdown" role="button"
+    <a class="nav-link dropdown-toggle" href="/mitigations" id="navbarDropdown" role="button"
     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         <b>Defenses</b>
     </a>
     <div class="dropdown-menu " aria-labelledby="navbarDropdown">
-                <a class="dropdown-item" href="/datasources">Data Sources</a>
                 
 <div class="dropright dropdown">
 <a class="dropdown-item dropdown-toggle" href="/mitigations/" id="navbarDropdown" role="button"
@@ -113,6 +112,19 @@
 </div>
 
                 <a class="dropdown-item" href="/assets">Assets</a>
+                
+<div class="dropright dropdown">
+<a class="dropdown-item dropdown-toggle" href="/detectionstrategies/" id="navbarDropdown" role="button"
+    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <b>Detections</b>
+    </a>
+    <div class="dropdown-menu " aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="/detectionstrategies/">Detection Strategies</a>
+            <a class="dropdown-item" href="/analytics/">Analytics</a>
+            <a class="dropdown-item" href="/datacomponents">Data Components</a>
+    </div>
+</div>
+
     </div>
 
 
@@ -176,7 +188,7 @@
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
                     <div class="container-fluid banner-message">
-                        
+                        ATT&CK v18 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v18-8f82d839ee9e'>blog post</a> or <a href='https://attack.mitre.org/resources/updates/'>changelog</a> for more information.
 
                     </div>
             </div>
@@ -277,7 +289,7 @@
                                             <div class="row card-data">
                                                 <div class="col-md-1 px-0 text-center"></div>
                                                 <div class="col-md-11 pl-0">
-                                                    <span class="h5 card-title">Last Modified:&nbsp;</span>15 April 2025
+                                                    <span class="h5 card-title">Last Modified:&nbsp;</span>24 October 2025
                                                 </div>
                                             </div>
                                     </div>
@@ -287,13 +299,13 @@
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Permalink to this version of T1210" 
-           href="/versions/v17/techniques/T1210/" data-test-ignore="true">Version Permalink</a>
+           href="/versions/v18/techniques/T1210/" data-test-ignore="true">Version Permalink</a>
     </div>
     <div class="permalink">
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Go to the live version of T1210" 
-           href="/versions/v17/techniques/T1210/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+           href="/versions/v18/techniques/T1210/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
     </div>
 </div>
 
@@ -711,50 +723,60 @@
                                     </tbody>
                                 </table>
                                 </div>
-                            <h2 class="pt-3" id="detection">Detection</h2>
+                                <h2 class="pt-3" id="detection">Detection Strategy</h2>
                                 <div class="tables-mobile">
 <table class="table datasources-table table-bordered">
     <thead>
         <tr>
             <th class="p-2" scope="col">ID</th>
-            <th class="p-2 nowrap" scope="col">Data Source</th>
-            <th class="p-2 nowrap" scope="col">Data Component</th>
-            <th class="p-2" scope="col">Detects</th>
+            <th class="p-2 nowrap" scope="col">Name</th>
+            <th class="p-2 nowrap" scope="col">Analytic ID</th>
+            <th class="p-2 nowrap" scope="col">Analytic Description</th>
         </tr>
     </thead>
     <tbody>
-            <tr class="datasource" id="uses-DS0015">
-                <td>
-                    <a href="/datasources/DS0015">DS0015</a>
-                </td>
-                <td class="nowrap">
-                    <a href="/datasources/DS0015">Application Log</a>
-                </td>
-                <!-- Add first data component here -->
-                <td> 
-                    <a href="/datasources/DS0015/#Application%20Log%20Content">Application Log Content</a>
-                </td>
+                <tr class="detection_strategy" id="uses-DET0118">
+                        <td rowspan="4">
+                            <a href="/detectionstrategies/DET0118">DET0118</a>
+                        </td>
+                        <td rowspan="4">
+                            <a href="/detectionstrategies/DET0118">Exploitation of Remote Services – multi-platform lateral movement detection</a>
+                        </td>
                     <td>
-                                <p>Detecting software exploitation may be difficult depending on the tools available. Software exploits may not always succeed or may cause the exploited process to become unstable or crash. Web Application Firewalls may detect improper inputs attempting exploitation.</p><p><code> sourcetype="WinEventLog:System" (EventCode=7031 OR EventCode=1000) OR sourcetype="linux:syslog" OR sourcetype="macos:system"| search Message="service terminated unexpectedly" OR Message="segmentation fault" OR Message="service restart"| stats count by Host, ServiceName, Message, _time| eval exploitation_suspicious=if(count &gt; threshold OR match(Message, "segmentation fault|service terminated unexpectedly"), "suspicious", "normal")| where exploitation_suspicious="suspicious"| table _time, Host, ServiceName, Message, exploitation_suspicious</code></p>
-
+                        <a href="/detectionstrategies/DET0118#AN0327">AN0327</a>
                     </td>
-            </tr>
-            <tr class="datasource" id="uses-DS0029">
-                <td>
-                    <a href="/datasources/DS0029">DS0029</a>
-                </td>
-                <td class="nowrap">
-                    <a href="/datasources/DS0029">Network Traffic</a>
-                </td>
-                <!-- Add first data component here -->
-                <td> 
-                    <a href="/datasources/DS0029/#Network%20Traffic%20Content">Network Traffic Content</a>
-                </td>
                     <td>
-                                <p>Use deep packet inspection to look for artifacts of common exploit traffic, such as known payloads.</p><p><code> sourcetype="network:packet_capture" OR sourcetype="ids:alert"| search (alert IN ("SMB Exploit Detected", "RDP Exploit Attempt", "MySQL Exploit Attempt")) OR (src_port IN (445, 3389, 3306))| stats count by src_ip, dest_ip, dest_port, protocol, signature, _time| eval anomaly_detected=if(count &gt; threshold OR match(signature, "Exploit Attempt|Remote Code Execution"), "suspicious", "normal")| where anomaly_detected="suspicious"| table _time, src_ip, dest_ip, dest_port, protocol, signature, anomaly_detected</code></p>
-
+                                <p>Correlates inbound network access to remote service ports (e.g., SMB/RPC 445/135, RDP 3389, WinRM 5985/5986) with near-time instability in the target service (crash, abnormal restart), suspicious child process creation under the service, and post-access lateral-movement behaviors. The chain indicates likely exploitation rather than normal administration.</p>
+</a>
                     </td>
-            </tr>
+                </tr>
+                <tr class="detection_strategy" id="uses-DET0118">
+                    <td>
+                        <a href="/detectionstrategies/DET0118#AN0328">AN0328</a>
+                    </td>
+                    <td>
+                                <p>Links inbound network access to SSHD/SMB/NFS/Databases or custom daemons with subsequent daemon crash/restart, core dump, or spawning of shells/reverse shells from the service context, indicating remote exploitation.</p>
+</a>
+                    </td>
+                </tr>
+                <tr class="detection_strategy" id="uses-DET0118">
+                    <td>
+                        <a href="/detectionstrategies/DET0118#AN0329">AN0329</a>
+                    </td>
+                    <td>
+                                <p>Detects exploitation targeting ESXi/vCenter by correlating attempts to reach known exploitable endpoints (OpenSLP 427, CIM 5989, Hostd/Vpxa HTTPS 443, ESXi SOAP) with vmkernel/hostd crashes, unexpected hostd/vpxa restarts, or new reverse/outbound connections from ESXi host/vCenter to internal assets.</p>
+</a>
+                    </td>
+                </tr>
+                <tr class="detection_strategy" id="uses-DET0118">
+                    <td>
+                        <a href="/detectionstrategies/DET0118#AN0330">AN0330</a>
+                    </td>
+                    <td>
+                                <p>Ties inbound access to exposed services (ARD/VNC 5900, SSH 22, ScreenSharing, web services) with process crashes in unified logs and abnormal child processes spawned under those services (e.g., bash, curl) to indicate exploitation.</p>
+</a>
+                    </td>
+                </tr>
     </tbody>
 </table>
 </div>
@@ -1399,7 +1421,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3 col-footer">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v17.1&#013;Website  v4.2.3">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v18.0&#013;Website  v4.4.0">Website Changelog</a></u>
                                 </div>
                                 <div class="px-3">
                                     <u class="footer-link"><a href="/resources/legal-and-branding/privacy/#" class="footer-link" onclick="Osano.cm.showDrawer('osano-cm-dom-info-dialog-open')">Cookie Preferences</a></u>

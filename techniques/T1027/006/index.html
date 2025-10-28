@@ -93,12 +93,11 @@
                         </li>
                         <li class="nav-item dropdown">
                                 
-    <a class="nav-link dropdown-toggle" href="/datasources" id="navbarDropdown" role="button"
+    <a class="nav-link dropdown-toggle" href="/mitigations" id="navbarDropdown" role="button"
     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         <b>Defenses</b>
     </a>
     <div class="dropdown-menu " aria-labelledby="navbarDropdown">
-                <a class="dropdown-item" href="/datasources">Data Sources</a>
                 
 <div class="dropright dropdown">
 <a class="dropdown-item dropdown-toggle" href="/mitigations/" id="navbarDropdown" role="button"
@@ -113,6 +112,19 @@
 </div>
 
                 <a class="dropdown-item" href="/assets">Assets</a>
+                
+<div class="dropright dropdown">
+<a class="dropdown-item dropdown-toggle" href="/detectionstrategies/" id="navbarDropdown" role="button"
+    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <b>Detections</b>
+    </a>
+    <div class="dropdown-menu " aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="/detectionstrategies/">Detection Strategies</a>
+            <a class="dropdown-item" href="/analytics/">Analytics</a>
+            <a class="dropdown-item" href="/datacomponents">Data Components</a>
+    </div>
+</div>
+
     </div>
 
 
@@ -176,7 +188,7 @@
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
                     <div class="container-fluid banner-message">
-                        
+                        ATT&CK v18 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v18-8f82d839ee9e'>blog post</a> or <a href='https://attack.mitre.org/resources/updates/'>changelog</a> for more information.
 
                     </div>
             </div>
@@ -424,7 +436,7 @@
                                             <div class="row card-data">
                                                 <div class="col-md-1 px-0 text-center"></div>
                                                 <div class="col-md-11 pl-0">
-                                                    <span class="h5 card-title">Version:&nbsp;</span>1.2
+                                                    <span class="h5 card-title">Version:&nbsp;</span>1.3
                                                 </div>
                                             </div>
                                             <div class="row card-data">
@@ -436,7 +448,7 @@
                                             <div class="row card-data">
                                                 <div class="col-md-1 px-0 text-center"></div>
                                                 <div class="col-md-11 pl-0">
-                                                    <span class="h5 card-title">Last Modified:&nbsp;</span>15 April 2025
+                                                    <span class="h5 card-title">Last Modified:&nbsp;</span>24 October 2025
                                                 </div>
                                             </div>
                                     </div>
@@ -446,13 +458,13 @@
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Permalink to this version of T1027.006" 
-           href="/versions/v17/techniques/T1027/006/" data-test-ignore="true">Version Permalink</a>
+           href="/versions/v18/techniques/T1027/006/" data-test-ignore="true">Version Permalink</a>
     </div>
     <div class="permalink">
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Go to the live version of T1027.006" 
-           href="/versions/v17/techniques/T1027/006/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+           href="/versions/v18/techniques/T1027/006/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
     </div>
 </div>
 
@@ -527,41 +539,58 @@
                                                     <a href="/mitigations/M1048"> Application Isolation and Sandboxing </a>
                                                 </td>
                                                 <td>
-                                                                <p>Browser sandboxes can be used to mitigate some of the impact of exploitation, but sandbox escapes may still exist. </p>
+                                                                <p>Use Browser Extensions or Built-in Security Tools that:</p><ul><li>Monitor JavaScript API calls such as <code>Blob</code>, <code>URL.createObjectURL,</code> and <code>msSaveOrOpenBlob</code></li><li>Intercept and analyze HTML5 <code>download</code> attributes for suspicious payload generation</li><li>Alert or block behaviors that match known HTML smuggling patterns (e.g., blob-to-disk payload construction)</li></ul><p>Apply Content Security Policy (CSP) headers to:</p><ul><li>Restrict inline JavaScript and dynamic script generation</li><li>Disallow downloads from unauthorized sources or blob URIs</li><li>Prevent cross-origin resource sharing (CORS) abuse commonly used in smuggling chains</li></ul><p>Enable or enforce enterprise browser security controls, such as:</p><ul><li>Endpoint's Network Protection and Attack Surface Reduction (ASR) rules, which can block Office and browser processes from creating child processes or writing to disk in suspicious ways</li><li>Google Chrome Enterprise Policies, which can control file download behavior, restrict extensions, and isolate risky browsing environments</li></ul><p>Deploy browser sandboxing solutions that can isolate JavaScript execution environments and enforce behavioral policy restrictions</p>
 
                                                 </td>
                                             </tr>
                                     </tbody>
                                 </table>
                                 </div>
-                            <h2 class="pt-3" id="detection">Detection</h2>
+                                <h2 class="pt-3" id="detection">Detection Strategy</h2>
                                 <div class="tables-mobile">
 <table class="table datasources-table table-bordered">
     <thead>
         <tr>
             <th class="p-2" scope="col">ID</th>
-            <th class="p-2 nowrap" scope="col">Data Source</th>
-            <th class="p-2 nowrap" scope="col">Data Component</th>
-            <th class="p-2" scope="col">Detects</th>
+            <th class="p-2 nowrap" scope="col">Name</th>
+            <th class="p-2 nowrap" scope="col">Analytic ID</th>
+            <th class="p-2 nowrap" scope="col">Analytic Description</th>
         </tr>
     </thead>
     <tbody>
-            <tr class="datasource" id="uses-DS0022">
-                <td>
-                    <a href="/datasources/DS0022">DS0022</a>
-                </td>
-                <td class="nowrap">
-                    <a href="/datasources/DS0022">File</a>
-                </td>
-                <!-- Add first data component here -->
-                <td> 
-                    <a href="/datasources/DS0022/#File%20Creation">File Creation</a>
-                </td>
+                <tr class="detection_strategy" id="uses-DET0313">
+                        <td rowspan="3">
+                            <a href="/detectionstrategies/DET0313">DET0313</a>
+                        </td>
+                        <td rowspan="3">
+                            <a href="/detectionstrategies/DET0313">Detection Strategy for HTML Smuggling via JavaScript Blob + Dynamic File Drop</a>
+                        </td>
                     <td>
-                                <p>Monitor for newly constructed files via JavaScript, developing rules for the different variants, with a combination of different encoding and/or encryption schemes, may be very challenging. Consider monitoring files downloaded from the Internet, possibly by HTML Smuggling, for suspicious activities. Data and events should not be viewed in isolation, but as part of a chain of behavior that could lead to other activities.</p>
-
+                        <a href="/detectionstrategies/DET0313#AN0872">AN0872</a>
                     </td>
-            </tr>
+                    <td>
+                                <p>Detection of browser-based or email client-driven file creation (often from temp directories) following navigation to or execution of HTML files containing JavaScript Blob APIs or base64 Data URLs, with follow-on execution of the dropped payload. Leveraging Sysmon EventID 15 to inspect Zone.Identifier ADS for HostUrl/ReferrerUrl indicators (e.g., HostUrl=about:internet). Optional: absence of a large HTTP download record for the same URL/client in proxy logs (suggests local assembly)</p>
+</a>
+                    </td>
+                </tr>
+                <tr class="detection_strategy" id="uses-DET0313">
+                    <td>
+                        <a href="/detectionstrategies/DET0313#AN0873">AN0873</a>
+                    </td>
+                    <td>
+                                <p>Detection of browser-based downloads from HTML sources that trigger file creation in temp or user directories followed by execution of new files within short timeframes and suspicious parent-child lineage.</p>
+</a>
+                    </td>
+                </tr>
+                <tr class="detection_strategy" id="uses-DET0313">
+                    <td>
+                        <a href="/detectionstrategies/DET0313#AN0874">AN0874</a>
+                    </td>
+                    <td>
+                                <p>Detection of HTML-based downloads via Safari/Chrome that create obfuscated files (e.g., .zip, .app, .js) in user directories and are followed by suspicious executions from preview or launch services.</p>
+</a>
+                    </td>
+                </tr>
     </tbody>
 </table>
 </div>
@@ -738,7 +767,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3 col-footer">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v17.1&#013;Website  v4.2.3">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v18.0&#013;Website  v4.4.0">Website Changelog</a></u>
                                 </div>
                                 <div class="px-3">
                                     <u class="footer-link"><a href="/resources/legal-and-branding/privacy/#" class="footer-link" onclick="Osano.cm.showDrawer('osano-cm-dom-info-dialog-open')">Cookie Preferences</a></u>

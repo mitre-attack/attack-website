@@ -92,12 +92,11 @@
                         </li>
                         <li class="nav-item dropdown">
                                 
-    <a class="nav-link dropdown-toggle" href="/datasources" id="navbarDropdown" role="button"
+    <a class="nav-link dropdown-toggle" href="/mitigations" id="navbarDropdown" role="button"
     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         <b>Defenses</b>
     </a>
     <div class="dropdown-menu " aria-labelledby="navbarDropdown">
-                <a class="dropdown-item" href="/datasources">Data Sources</a>
                 
 <div class="dropright dropdown">
 <a class="dropdown-item dropdown-toggle" href="/mitigations/" id="navbarDropdown" role="button"
@@ -112,6 +111,19 @@
 </div>
 
                 <a class="dropdown-item" href="/assets">Assets</a>
+                
+<div class="dropright dropdown">
+<a class="dropdown-item dropdown-toggle" href="/detectionstrategies/" id="navbarDropdown" role="button"
+    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <b>Detections</b>
+    </a>
+    <div class="dropdown-menu " aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="/detectionstrategies/">Detection Strategies</a>
+            <a class="dropdown-item" href="/analytics/">Analytics</a>
+            <a class="dropdown-item" href="/datacomponents">Data Components</a>
+    </div>
+</div>
+
     </div>
 
 
@@ -175,7 +187,7 @@
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
                     <div class="container-fluid banner-message">
-                        
+                        ATT&CK v18 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v18-8f82d839ee9e'>blog post</a> or <a href='https://attack.mitre.org/resources/updates/'>changelog</a> for more information.
 
                     </div>
             </div>
@@ -229,7 +241,143 @@
 <p>This release introduces the Campaign data structure to ATT&amp;CK and an initial limited set of Campaigns. ATT&amp;CK's Campaigns are defined as a grouping of intrusion activity conducted over a specific period of time with common targets and objectives. A key aspect of Campaigns is that the activity may or may not be linked to a specific threat actor. Campaigns are described in detail in the blog post <a href="https://medium.com/mitre-attack/introducing-attack-campaigns-6b15baa6cbb4">Introducing Campaigns to MITRE ATT&amp;CK</a>. Specifics on how Campaigns are implemented in ATT&amp;CK's Enterprise, ICS, and Mobile STIX representations are described in ATT&amp;CK's <a href="https://github.com/mitre/cti/blob/master/USAGE.md#campaigns">STIX 2.0 Data Model</a> and <a href="https://github.com/mitre-attack/attack-stix-data/blob/master/USAGE.md#campaigns">STIX 2.1 Data Model</a>. Several existing Groups were identified as more closely matching the Campaign than the Group definition and were converted to Campaigns. The 7 impacted groups were deprecated (noted below) and new Campaigns were created in their place.</p>
 <p>In this release we have renamed the Enterprise Technique "Indicator Removal on Host" to <a href="/techniques/T1070">Indicator Removal (T1070)</a> and rescoped it to better account for adversary behavior in cloud environments.</p>
 <p>This version of ATT&amp;CK for Enterprise contains 14 Tactics, 193 Techniques, 401 Sub-techniques, 135 Groups, 14 Campaigns, and 718 Pieces of Software.</p>
-<h2>New Campaigns in ATT&amp;CK</h2>
+<h2 id="table-of-contents"><a class="toclink" href="#table-of-contents">Table of Contents</a></h2>
+<div class="toc">
+<ul>
+<li><a href="#table-of-contents">Table of Contents</a></li>
+<li><a href="#new-campaigns-in-attck">New Campaigns in ATT&amp;CK</a></li>
+<li><a href="#techniques">Techniques</a><ul>
+<li><a href="#enterprise">Enterprise</a><ul>
+<li><a href="#new-techniques">New Techniques</a></li>
+<li><a href="#technique-changes">Technique Changes</a></li>
+<li><a href="#minor-technique-changes">Minor Technique Changes</a></li>
+<li><a href="#technique-revocations">Technique Revocations</a></li>
+<li><a href="#technique-deprecations">Technique Deprecations</a></li>
+</ul>
+</li>
+<li><a href="#mobile">Mobile</a><ul>
+<li><a href="#new-techniques_1">New Techniques</a></li>
+<li><a href="#technique-changes_1">Technique Changes</a></li>
+<li><a href="#minor-technique-changes_1">Minor Technique Changes</a></li>
+<li><a href="#technique-revocations_1">Technique Revocations</a></li>
+<li><a href="#technique-deprecations_1">Technique Deprecations</a></li>
+</ul>
+</li>
+<li><a href="#ics">ICS</a><ul>
+<li><a href="#new-techniques_2">New Techniques</a></li>
+<li><a href="#technique-changes_2">Technique Changes</a></li>
+<li><a href="#minor-technique-changes_2">Minor Technique Changes</a></li>
+<li><a href="#technique-revocations_2">Technique Revocations</a></li>
+<li><a href="#technique-deprecations_2">Technique Deprecations</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#software">Software</a><ul>
+<li><a href="#enterprise_1">Enterprise</a><ul>
+<li><a href="#new-software">New Software</a></li>
+<li><a href="#software-changes">Software Changes</a></li>
+<li><a href="#minor-software-changes">Minor Software Changes</a></li>
+<li><a href="#software-revocations">Software Revocations</a></li>
+<li><a href="#software-deprecations">Software Deprecations</a></li>
+</ul>
+</li>
+<li><a href="#mobile_1">Mobile</a><ul>
+<li><a href="#new-software_1">New Software</a></li>
+<li><a href="#software-changes_1">Software Changes</a></li>
+<li><a href="#minor-software-changes_1">Minor Software Changes</a></li>
+<li><a href="#software-revocations_1">Software Revocations</a></li>
+<li><a href="#software-deprecations_1">Software Deprecations</a></li>
+</ul>
+</li>
+<li><a href="#ics_1">ICS</a><ul>
+<li><a href="#new-software_2">New Software</a></li>
+<li><a href="#software-changes_2">Software Changes</a></li>
+<li><a href="#minor-software-changes_2">Minor Software Changes</a></li>
+<li><a href="#software-revocations_2">Software Revocations</a></li>
+<li><a href="#software-deprecations_2">Software Deprecations</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#groups">Groups</a><ul>
+<li><a href="#enterprise_2">Enterprise</a><ul>
+<li><a href="#new-groups">New Groups</a></li>
+<li><a href="#group-changes">Group Changes</a></li>
+<li><a href="#minor-group-changes">Minor Group Changes</a></li>
+<li><a href="#group-revocations">Group Revocations</a></li>
+<li><a href="#group-deprecations">Group Deprecations</a></li>
+</ul>
+</li>
+<li><a href="#mobile_2">Mobile</a><ul>
+<li><a href="#new-groups_1">New Groups</a></li>
+<li><a href="#group-changes_1">Group Changes</a></li>
+<li><a href="#minor-group-changes_1">Minor Group Changes</a></li>
+<li><a href="#group-revocations_1">Group Revocations</a></li>
+<li><a href="#group-deprecations_1">Group Deprecations</a></li>
+</ul>
+</li>
+<li><a href="#ics_2">ICS</a><ul>
+<li><a href="#new-groups_2">New Groups</a></li>
+<li><a href="#group-changes_2">Group Changes</a></li>
+<li><a href="#minor-group-changes_2">Minor Group Changes</a></li>
+<li><a href="#group-revocations_2">Group Revocations</a></li>
+<li><a href="#group-deprecations_2">Group Deprecations</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#mitigations">Mitigations</a><ul>
+<li><a href="#enterprise_3">Enterprise</a><ul>
+<li><a href="#new-mitigations">New Mitigations</a></li>
+<li><a href="#mitigation-changes">Mitigation Changes</a></li>
+<li><a href="#minor-mitigation-changes">Minor Mitigation Changes</a></li>
+<li><a href="#mitigation-revocations">Mitigation Revocations</a></li>
+<li><a href="#mitigation-deprecations">Mitigation Deprecations</a></li>
+</ul>
+</li>
+<li><a href="#mobile_3">Mobile</a><ul>
+<li><a href="#new-mitigations_1">New Mitigations</a></li>
+<li><a href="#mitigation-changes_1">Mitigation Changes</a></li>
+<li><a href="#minor-mitigation-changes_1">Minor Mitigation Changes</a></li>
+<li><a href="#mitigation-revocations_1">Mitigation Revocations</a></li>
+<li><a href="#mitigation-deprecations_1">Mitigation Deprecations</a></li>
+</ul>
+</li>
+<li><a href="#ics_3">ICS</a><ul>
+<li><a href="#new-mitigations_2">New Mitigations</a></li>
+<li><a href="#mitigation-changes_2">Mitigation Changes</a></li>
+<li><a href="#minor-mitigation-changes_2">Minor Mitigation Changes</a></li>
+<li><a href="#mitigation-revocations_2">Mitigation Revocations</a></li>
+<li><a href="#mitigation-deprecations_2">Mitigation Deprecations</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#data-sources-andor-components">Data Sources and/or Components</a><ul>
+<li><a href="#enterprise_4">Enterprise</a><ul>
+<li><a href="#new-data-sources-andor-components">New Data Sources and/or Components</a></li>
+<li><a href="#data-source-andor-component-changes">Data Source and/or Component Changes</a></li>
+<li><a href="#minor-data-source-andor-component-changes">Minor Data Source and/or Component Changes</a></li>
+<li><a href="#data-source-andor-component-revocations">Data Source and/or Component Revocations</a></li>
+<li><a href="#data-source-andor-component-deprecations">Data Source and/or Component Deprecations</a></li>
+</ul>
+</li>
+<li><a href="#mobile_4">Mobile</a></li>
+<li><a href="#ics_4">ICS</a><ul>
+<li><a href="#new-data-sources-andor-components_1">New Data Sources and/or Components</a></li>
+<li><a href="#data-source-andor-component-changes_1">Data Source and/or Component Changes</a></li>
+<li><a href="#minor-data-source-andor-component-changes_1">Minor Data Source and/or Component Changes</a></li>
+<li><a href="#data-source-andor-component-revocations_1">Data Source and/or Component Revocations</a></li>
+<li><a href="#data-source-andor-component-deprecations_1">Data Source and/or Component Deprecations</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#contributors-to-this-release">Contributors to this release</a></li>
+</ul>
+</div>
+<h2 id="new-campaigns-in-attck"><a class="toclink" href="#new-campaigns-in-attck">New Campaigns in ATT&amp;CK</a></h2>
 <ul>
 <li><a href="/campaigns/C0010">C0010</a> <small style="color:#929393">(v1.0)</small></li>
 <li><a href="/campaigns/C0011">C0011</a> <small style="color:#929393">(v1.0)</small></li>
@@ -246,9 +394,9 @@
 <li><a href="/campaigns/C0005">Operation Spalax</a> <small style="color:#929393">(v1.0)</small></li>
 <li><a href="/campaigns/C0014">Operation Wocao</a> <small style="color:#929393">(v1.0)</small> (replaces the group G0116/Operation Wocao)</li>
 </ul>
-<h2>Techniques</h2>
-<h3>Enterprise</h3>
-<h4>New Techniques</h4>
+<h2 id="techniques"><a class="toclink" href="#techniques">Techniques</a></h2>
+<h3 id="enterprise"><a class="toclink" href="#enterprise">Enterprise</a></h3>
+<h4 id="new-techniques"><a class="toclink" href="#new-techniques">New Techniques</a></h4>
 <ul>
 <li>Acquire Infrastructure: <a href="/techniques/T1583/007">Serverless</a> <small style="color:#929393">(v1.0)</small></li>
 <li>Compromise Accounts: <a href="/techniques/T1586/003">Cloud Accounts</a> <small style="color:#929393">(v1.0)</small></li>
@@ -269,7 +417,7 @@
 <li><a href="/techniques/T1649">Steal or Forge Authentication Certificates</a> <small style="color:#929393">(v1.0)</small></li>
 <li>Traffic Signaling: <a href="/techniques/T1205/002">Socket Filters</a> <small style="color:#929393">(v1.0)</small></li>
 </ul>
-<h4>Technique Changes</h4>
+<h4 id="technique-changes"><a class="toclink" href="#technique-changes">Technique Changes</a></h4>
 <ul>
 <li>Account Discovery: <a href="/techniques/T1087/002">Domain Account</a> <small style="color:#929393">(v1.0&#8594;v1.1)</small></li>
 <li>Account Discovery: <a href="/techniques/T1087/001">Local Account</a> <small style="color:#929393">(v1.2&#8594;v1.3)</small></li>
@@ -342,7 +490,7 @@
 <li>Use Alternate Authentication Material: <a href="/techniques/T1550/001">Application Access Token</a> <small style="color:#929393">(v1.3&#8594;v1.4)</small></li>
 <li><a href="/techniques/T1078">Valid Accounts</a> <small style="color:#929393">(v2.4&#8594;v2.5)</small></li>
 </ul>
-<h4>Minor Technique Changes</h4>
+<h4 id="minor-technique-changes"><a class="toclink" href="#minor-technique-changes">Minor Technique Changes</a></h4>
 <ul>
 <li>Abuse Elevation Control Mechanism: <a href="/techniques/T1548/004">Elevated Execution with Prompt</a> <small style="color:#eb6635">(v1.0&#8594;v1.0)</small></li>
 <li>Adversary-in-the-Middle: <a href="/techniques/T1557/002">ARP Cache Poisoning</a> <small style="color:#eb6635">(v1.1&#8594;v1.1)</small></li>
@@ -361,42 +509,42 @@
 <li><a href="/techniques/T1596">Search Open Technical Databases</a> <small style="color:#eb6635">(v1.0&#8594;v1.0)</small></li>
 <li><a href="/techniques/T1489">Service Stop</a> <small style="color:#eb6635">(v1.2&#8594;v1.2)</small></li>
 </ul>
-<h4>Technique Revocations</h4>
+<h4 id="technique-revocations"><a class="toclink" href="#technique-revocations">Technique Revocations</a></h4>
 <ul>
 <li>No changes</li>
 </ul>
-<h4>Technique Deprecations</h4>
+<h4 id="technique-deprecations"><a class="toclink" href="#technique-deprecations">Technique Deprecations</a></h4>
 <ul>
 <li>No changes</li>
 </ul>
-<h3>Mobile</h3>
-<h4>New Techniques</h4>
+<h3 id="mobile"><a class="toclink" href="#mobile">Mobile</a></h3>
+<h4 id="new-techniques_1"><a class="toclink" href="#new-techniques_1">New Techniques</a></h4>
 <ul>
 <li>No changes</li>
 </ul>
-<h4>Technique Changes</h4>
+<h4 id="technique-changes_1"><a class="toclink" href="#technique-changes_1">Technique Changes</a></h4>
 <ul>
 <li>No changes</li>
 </ul>
-<h4>Minor Technique Changes</h4>
+<h4 id="minor-technique-changes_1"><a class="toclink" href="#minor-technique-changes_1">Minor Technique Changes</a></h4>
 <ul>
 <li>Location Tracking: <a href="/techniques/T1430/002">Impersonate SS7 Nodes</a> <small style="color:#eb6635">(v1.0&#8594;v1.0)</small></li>
 <li>Location Tracking: <a href="/techniques/T1430/001">Remote Device Management Services</a> <small style="color:#eb6635">(v1.0&#8594;v1.0)</small></li>
 </ul>
-<h4>Technique Revocations</h4>
+<h4 id="technique-revocations_1"><a class="toclink" href="#technique-revocations_1">Technique Revocations</a></h4>
 <ul>
 <li>No changes</li>
 </ul>
-<h4>Technique Deprecations</h4>
+<h4 id="technique-deprecations_1"><a class="toclink" href="#technique-deprecations_1">Technique Deprecations</a></h4>
 <ul>
 <li>No changes</li>
 </ul>
-<h3>ICS</h3>
-<h4>New Techniques</h4>
+<h3 id="ics"><a class="toclink" href="#ics">ICS</a></h3>
+<h4 id="new-techniques_2"><a class="toclink" href="#new-techniques_2">New Techniques</a></h4>
 <ul>
 <li><a href="/techniques/T0891">Hardcoded Credentials</a> <small style="color:#929393">(v1.0)</small></li>
 </ul>
-<h4>Technique Changes</h4>
+<h4 id="technique-changes_2"><a class="toclink" href="#technique-changes_2">Technique Changes</a></h4>
 <ul>
 <li><a href="/techniques/T0830">Adversary-in-the-Middle</a> <small style="color:#929393">(v1.0&#8594;v2.0)</small></li>
 <li><a href="/techniques/T0878">Alarm Suppression</a> <small style="color:#929393">(v1.0&#8594;v1.1)</small></li>
@@ -439,7 +587,7 @@
 <li><a href="/techniques/T0860">Wireless Compromise</a> <small style="color:#929393">(v1.0&#8594;v1.1)</small></li>
 <li><a href="/techniques/T0887">Wireless Sniffing</a> <small style="color:#929393">(v1.0&#8594;v1.1)</small></li>
 </ul>
-<h4>Minor Technique Changes</h4>
+<h4 id="minor-technique-changes_2"><a class="toclink" href="#minor-technique-changes_2">Minor Technique Changes</a></h4>
 <ul>
 <li><a href="/techniques/T0804">Block Reporting Message</a> <small style="color:#eb6635">(v1.0&#8594;v1.0)</small></li>
 <li><a href="/techniques/T0806">Brute Force I/O</a> <small style="color:#eb6635">(v1.0&#8594;v1.0)</small></li>
@@ -466,17 +614,17 @@
 <li><a href="/techniques/T0847">Replication Through Removable Media</a> <small style="color:#eb6635">(v1.0&#8594;v1.0)</small></li>
 <li><a href="/techniques/T0853">Scripting</a> <small style="color:#eb6635">(v1.0&#8594;v1.0)</small></li>
 </ul>
-<h4>Technique Revocations</h4>
+<h4 id="technique-revocations_2"><a class="toclink" href="#technique-revocations_2">Technique Revocations</a></h4>
 <ul>
 <li>No changes</li>
 </ul>
-<h4>Technique Deprecations</h4>
+<h4 id="technique-deprecations_2"><a class="toclink" href="#technique-deprecations_2">Technique Deprecations</a></h4>
 <ul>
 <li>No changes</li>
 </ul>
-<h2>Software</h2>
-<h3>Enterprise</h3>
-<h4>New Software</h4>
+<h2 id="software"><a class="toclink" href="#software">Software</a></h2>
+<h3 id="enterprise_1"><a class="toclink" href="#enterprise_1">Enterprise</a></h3>
+<h4 id="new-software"><a class="toclink" href="#new-software">New Software</a></h4>
 <ul>
 <li><a href="/software/S1028">Action RAT</a> <small style="color:#929393">(v1.0)</small></li>
 <li><a href="/software/S1025">Amadey</a> <small style="color:#929393">(v1.0)</small></li>
@@ -516,7 +664,7 @@
 <li><a href="/software/S1043">ccf32</a> <small style="color:#929393">(v1.0)</small></li>
 <li><a href="/software/S1048">macOS.OSAMiner</a> <small style="color:#929393">(v1.0)</small></li>
 </ul>
-<h4>Software Changes</h4>
+<h4 id="software-changes"><a class="toclink" href="#software-changes">Software Changes</a></h4>
 <ul>
 <li><a href="/software/S0677">AADInternals</a> <small style="color:#929393">(v1.0&#8594;v1.1)</small></li>
 <li><a href="/software/S0073">ASPXSpy</a> <small style="color:#929393">(v1.1&#8594;v1.2)</small></li>
@@ -584,7 +732,7 @@
 <li><a href="/software/S0385">njRAT</a> <small style="color:#929393">(v1.3&#8594;v1.4)</small></li>
 <li><a href="/software/S0350">zwShell</a> <small style="color:#929393">(v1.1&#8594;v2.0)</small></li>
 </ul>
-<h4>Minor Software Changes</h4>
+<h4 id="minor-software-changes"><a class="toclink" href="#minor-software-changes">Minor Software Changes</a></h4>
 <ul>
 <li><a href="/software/S0093">Backdoor.Oldrea</a> <small style="color:#eb6635">(v2.0&#8594;v2.0)</small></li>
 <li><a href="/software/S0606">Bad Rabbit</a> <small style="color:#eb6635">(v1.0&#8594;v1.0)</small></li>
@@ -607,46 +755,46 @@
 <li><a href="/software/S0146">TEXTMATE</a> <small style="color:#eb6635">(v1.1&#8594;v1.1)</small></li>
 <li><a href="/software/S0004">TinyZBot</a> <small style="color:#eb6635">(v1.1&#8594;v1.1)</small></li>
 </ul>
-<h4>Software Revocations</h4>
+<h4 id="software-revocations"><a class="toclink" href="#software-revocations">Software Revocations</a></h4>
 <ul>
 <li>No changes</li>
 </ul>
-<h4>Software Deprecations</h4>
+<h4 id="software-deprecations"><a class="toclink" href="#software-deprecations">Software Deprecations</a></h4>
 <ul>
 <li>No changes</li>
 </ul>
-<h3>Mobile</h3>
-<h4>New Software</h4>
+<h3 id="mobile_1"><a class="toclink" href="#mobile_1">Mobile</a></h3>
+<h4 id="new-software_1"><a class="toclink" href="#new-software_1">New Software</a></h4>
 <ul>
 <li>No changes</li>
 </ul>
-<h4>Software Changes</h4>
+<h4 id="software-changes_1"><a class="toclink" href="#software-changes_1">Software Changes</a></h4>
 <ul>
 <li>No changes</li>
 </ul>
-<h4>Minor Software Changes</h4>
+<h4 id="minor-software-changes_1"><a class="toclink" href="#minor-software-changes_1">Minor Software Changes</a></h4>
 <ul>
 <li>No changes</li>
 </ul>
-<h4>Software Revocations</h4>
+<h4 id="software-revocations_1"><a class="toclink" href="#software-revocations_1">Software Revocations</a></h4>
 <ul>
 <li>No changes</li>
 </ul>
-<h4>Software Deprecations</h4>
+<h4 id="software-deprecations_1"><a class="toclink" href="#software-deprecations_1">Software Deprecations</a></h4>
 <ul>
 <li>No changes</li>
 </ul>
-<h3>ICS</h3>
-<h4>New Software</h4>
+<h3 id="ics_1"><a class="toclink" href="#ics_1">ICS</a></h3>
+<h4 id="new-software_2"><a class="toclink" href="#new-software_2">New Software</a></h4>
 <ul>
 <li><a href="/software/S1045">INCONTROLLER</a> <small style="color:#929393">(v1.0)</small></li>
 </ul>
-<h4>Software Changes</h4>
+<h4 id="software-changes_2"><a class="toclink" href="#software-changes_2">Software Changes</a></h4>
 <ul>
 <li><a href="/software/S0604">Industroyer</a> <small style="color:#929393">(v1.0&#8594;v1.1)</small></li>
 <li><a href="/software/S0603">Stuxnet</a> <small style="color:#929393">(v1.1&#8594;v1.2)</small></li>
 </ul>
-<h4>Minor Software Changes</h4>
+<h4 id="minor-software-changes_2"><a class="toclink" href="#minor-software-changes_2">Minor Software Changes</a></h4>
 <ul>
 <li><a href="/software/S1000">ACAD/Medre.A</a> <small style="color:#eb6635">(v1.0&#8594;v1.0)</small></li>
 <li><a href="/software/S0093">Backdoor.Oldrea</a> <small style="color:#eb6635">(v2.0&#8594;v2.0)</small></li>
@@ -657,17 +805,17 @@
 <li><a href="/software/S1009">Triton</a> <small style="color:#eb6635">(v1.0&#8594;v1.0)</small></li>
 <li><a href="/software/S1010">VPNFilter</a> <small style="color:#eb6635">(v1.0&#8594;v1.0)</small></li>
 </ul>
-<h4>Software Revocations</h4>
+<h4 id="software-revocations_2"><a class="toclink" href="#software-revocations_2">Software Revocations</a></h4>
 <ul>
 <li>No changes</li>
 </ul>
-<h4>Software Deprecations</h4>
+<h4 id="software-deprecations_2"><a class="toclink" href="#software-deprecations_2">Software Deprecations</a></h4>
 <ul>
 <li>No changes</li>
 </ul>
-<h2>Groups</h2>
-<h3>Enterprise</h3>
-<h4>New Groups</h4>
+<h2 id="groups"><a class="toclink" href="#groups">Groups</a></h2>
+<h3 id="enterprise_2"><a class="toclink" href="#enterprise_2">Enterprise</a></h3>
+<h4 id="new-groups"><a class="toclink" href="#new-groups">New Groups</a></h4>
 <ul>
 <li><a href="/groups/G1007">Aoqin Dragon</a> <small style="color:#929393">(v1.0)</small></li>
 <li><a href="/groups/G1002">BITTER</a> <small style="color:#929393">(v1.0)</small></li>
@@ -680,7 +828,7 @@
 <li><a href="/groups/G1005">POLONIUM</a> <small style="color:#929393">(v1.0)</small></li>
 <li><a href="/groups/G1008">SideCopy</a> <small style="color:#929393">(v1.0)</small></li>
 </ul>
-<h4>Group Changes</h4>
+<h4 id="group-changes"><a class="toclink" href="#group-changes">Group Changes</a></h4>
 <ul>
 <li><a href="/groups/G0016">APT29</a> <small style="color:#929393">(v3.0&#8594;v3.1)</small></li>
 <li><a href="/groups/G0052">CopyKittens</a> <small style="color:#929393">(v1.5&#8594;v1.6)</small></li>
@@ -695,7 +843,7 @@
 <li><a href="/groups/G0139">TeamTNT</a> <small style="color:#929393">(v1.1&#8594;v1.2)</small></li>
 <li><a href="/groups/G0134">Transparent Tribe</a> <small style="color:#929393">(v1.0&#8594;v1.1)</small></li>
 </ul>
-<h4>Minor Group Changes</h4>
+<h4 id="minor-group-changes"><a class="toclink" href="#minor-group-changes">Minor Group Changes</a></h4>
 <ul>
 <li><a href="/groups/G0023">APT16</a> <small style="color:#eb6635">(v1.1&#8594;v1.1)</small></li>
 <li><a href="/groups/G0087">APT39</a> <small style="color:#eb6635">(v3.1&#8594;v3.1)</small></li>
@@ -717,11 +865,11 @@
 <li><a href="/groups/G0010">Turla</a> <small style="color:#eb6635">(v3.0&#8594;v3.0)</small></li>
 <li><a href="/groups/G0045">menuPass</a> <small style="color:#eb6635">(v2.1&#8594;v2.1)</small></li>
 </ul>
-<h4>Group Revocations</h4>
+<h4 id="group-revocations"><a class="toclink" href="#group-revocations">Group Revocations</a></h4>
 <ul>
 <li>No changes</li>
 </ul>
-<h4>Group Deprecations</h4>
+<h4 id="group-deprecations"><a class="toclink" href="#group-deprecations">Group Deprecations</a></h4>
 <ul>
 <li><a href="/groups/G0132">CostaRicto</a> <small style="color:#929393">(v1.0)</small></li>
 <li><a href="/groups/G0031">Dust Storm</a> <small style="color:#929393">(v1.0)</small></li>
@@ -731,64 +879,64 @@
 <li><a href="/groups/G0116">Operation Wocao</a> <small style="color:#929393">(v1.0)</small></li>
 <li><a href="/groups/G0104">Sharpshooter</a> <small style="color:#929393">(v1.0)</small></li>
 </ul>
-<h3>Mobile</h3>
-<h4>New Groups</h4>
+<h3 id="mobile_2"><a class="toclink" href="#mobile_2">Mobile</a></h3>
+<h4 id="new-groups_1"><a class="toclink" href="#new-groups_1">New Groups</a></h4>
 <ul>
 <li><a href="/groups/G1006">Earth Lusca</a> <small style="color:#929393">(v1.0)</small></li>
 </ul>
-<h4>Group Changes</h4>
+<h4 id="group-changes_1"><a class="toclink" href="#group-changes_1">Group Changes</a></h4>
 <ul>
 <li>No changes</li>
 </ul>
-<h4>Minor Group Changes</h4>
+<h4 id="minor-group-changes_1"><a class="toclink" href="#minor-group-changes_1">Minor Group Changes</a></h4>
 <ul>
 <li><a href="/groups/G0034">Sandworm Team</a> <small style="color:#eb6635">(v2.2&#8594;v2.2)</small></li>
 </ul>
-<h4>Group Revocations</h4>
+<h4 id="group-revocations_1"><a class="toclink" href="#group-revocations_1">Group Revocations</a></h4>
 <ul>
 <li>No changes</li>
 </ul>
-<h4>Group Deprecations</h4>
+<h4 id="group-deprecations_1"><a class="toclink" href="#group-deprecations_1">Group Deprecations</a></h4>
 <ul>
 <li>No changes</li>
 </ul>
-<h3>ICS</h3>
-<h4>New Groups</h4>
+<h3 id="ics_2"><a class="toclink" href="#ics_2">ICS</a></h3>
+<h4 id="new-groups_2"><a class="toclink" href="#new-groups_2">New Groups</a></h4>
 <ul>
 <li>No changes</li>
 </ul>
-<h4>Group Changes</h4>
+<h4 id="group-changes_2"><a class="toclink" href="#group-changes_2">Group Changes</a></h4>
 <ul>
 <li><a href="/groups/G0035">Dragonfly</a> <small style="color:#929393">(v3.0&#8594;v3.1)</small></li>
 <li><a href="/groups/G1001">HEXANE</a> <small style="color:#929393">(v1.0&#8594;v2.0)</small></li>
 <li><a href="/groups/G0032">Lazarus Group</a> <small style="color:#929393">(v3.0&#8594;v3.1)</small></li>
 </ul>
-<h4>Minor Group Changes</h4>
+<h4 id="minor-group-changes_2"><a class="toclink" href="#minor-group-changes_2">Minor Group Changes</a></h4>
 <ul>
 <li><a href="/groups/G0037">FIN6</a> <small style="color:#eb6635">(v3.2&#8594;v3.2)</small></li>
 <li><a href="/groups/G0046">FIN7</a> <small style="color:#eb6635">(v2.1&#8594;v2.1)</small></li>
 <li><a href="/groups/G0049">OilRig</a> <small style="color:#eb6635">(v3.0&#8594;v3.0)</small></li>
 <li><a href="/groups/G0034">Sandworm Team</a> <small style="color:#eb6635">(v2.2&#8594;v2.2)</small></li>
 </ul>
-<h4>Group Revocations</h4>
+<h4 id="group-revocations_2"><a class="toclink" href="#group-revocations_2">Group Revocations</a></h4>
 <ul>
 <li>No changes</li>
 </ul>
-<h4>Group Deprecations</h4>
+<h4 id="group-deprecations_2"><a class="toclink" href="#group-deprecations_2">Group Deprecations</a></h4>
 <ul>
 <li>No changes</li>
 </ul>
-<h2>Mitigations</h2>
-<h3>Enterprise</h3>
-<h4>New Mitigations</h4>
+<h2 id="mitigations"><a class="toclink" href="#mitigations">Mitigations</a></h2>
+<h3 id="enterprise_3"><a class="toclink" href="#enterprise_3">Enterprise</a></h3>
+<h4 id="new-mitigations"><a class="toclink" href="#new-mitigations">New Mitigations</a></h4>
 <ul>
 <li>No changes</li>
 </ul>
-<h4>Mitigation Changes</h4>
+<h4 id="mitigation-changes"><a class="toclink" href="#mitigation-changes">Mitigation Changes</a></h4>
 <ul>
 <li>No changes</li>
 </ul>
-<h4>Minor Mitigation Changes</h4>
+<h4 id="minor-mitigation-changes"><a class="toclink" href="#minor-mitigation-changes">Minor Mitigation Changes</a></h4>
 <ul>
 <li><a href="/mitigations/M1036">Account Use Policies</a> <small style="color:#eb6635">(v1.0&#8594;v1.0)</small></li>
 <li><a href="/mitigations/M1047">Audit</a> <small style="color:#eb6635">(v1.1&#8594;v1.1)</small></li>
@@ -796,63 +944,63 @@
 <li><a href="/mitigations/M1032">Multi-factor Authentication</a> <small style="color:#eb6635">(v1.0&#8594;v1.0)</small></li>
 <li><a href="/mitigations/M1027">Password Policies</a> <small style="color:#eb6635">(v1.0&#8594;v1.0)</small></li>
 </ul>
-<h4>Mitigation Revocations</h4>
+<h4 id="mitigation-revocations"><a class="toclink" href="#mitigation-revocations">Mitigation Revocations</a></h4>
 <ul>
 <li>No changes</li>
 </ul>
-<h4>Mitigation Deprecations</h4>
+<h4 id="mitigation-deprecations"><a class="toclink" href="#mitigation-deprecations">Mitigation Deprecations</a></h4>
 <ul>
 <li>No changes</li>
 </ul>
-<h3>Mobile</h3>
-<h4>New Mitigations</h4>
+<h3 id="mobile_3"><a class="toclink" href="#mobile_3">Mobile</a></h3>
+<h4 id="new-mitigations_1"><a class="toclink" href="#new-mitigations_1">New Mitigations</a></h4>
 <ul>
 <li>No changes</li>
 </ul>
-<h4>Mitigation Changes</h4>
+<h4 id="mitigation-changes_1"><a class="toclink" href="#mitigation-changes_1">Mitigation Changes</a></h4>
 <ul>
 <li>No changes</li>
 </ul>
-<h4>Minor Mitigation Changes</h4>
+<h4 id="minor-mitigation-changes_1"><a class="toclink" href="#minor-mitigation-changes_1">Minor Mitigation Changes</a></h4>
 <ul>
 <li>No changes</li>
 </ul>
-<h4>Mitigation Revocations</h4>
+<h4 id="mitigation-revocations_1"><a class="toclink" href="#mitigation-revocations_1">Mitigation Revocations</a></h4>
 <ul>
 <li>No changes</li>
 </ul>
-<h4>Mitigation Deprecations</h4>
+<h4 id="mitigation-deprecations_1"><a class="toclink" href="#mitigation-deprecations_1">Mitigation Deprecations</a></h4>
 <ul>
 <li>No changes</li>
 </ul>
-<h3>ICS</h3>
-<h4>New Mitigations</h4>
+<h3 id="ics_3"><a class="toclink" href="#ics_3">ICS</a></h3>
+<h4 id="new-mitigations_2"><a class="toclink" href="#new-mitigations_2">New Mitigations</a></h4>
 <ul>
 <li>No changes</li>
 </ul>
-<h4>Mitigation Changes</h4>
+<h4 id="mitigation-changes_2"><a class="toclink" href="#mitigation-changes_2">Mitigation Changes</a></h4>
 <ul>
 <li>No changes</li>
 </ul>
-<h4>Minor Mitigation Changes</h4>
+<h4 id="minor-mitigation-changes_2"><a class="toclink" href="#minor-mitigation-changes_2">Minor Mitigation Changes</a></h4>
 <ul>
 <li>No changes</li>
 </ul>
-<h4>Mitigation Revocations</h4>
+<h4 id="mitigation-revocations_2"><a class="toclink" href="#mitigation-revocations_2">Mitigation Revocations</a></h4>
 <ul>
 <li>No changes</li>
 </ul>
-<h4>Mitigation Deprecations</h4>
+<h4 id="mitigation-deprecations_2"><a class="toclink" href="#mitigation-deprecations_2">Mitigation Deprecations</a></h4>
 <ul>
 <li>No changes</li>
 </ul>
-<h2>Data Sources and/or Components</h2>
-<h3>Enterprise</h3>
-<h4>New Data Sources and/or Components</h4>
+<h2 id="data-sources-andor-components"><a class="toclink" href="#data-sources-andor-components">Data Sources and/or Components</a></h2>
+<h3 id="enterprise_4"><a class="toclink" href="#enterprise_4">Enterprise</a></h3>
+<h4 id="new-data-sources-andor-components"><a class="toclink" href="#new-data-sources-andor-components">New Data Sources and/or Components</a></h4>
 <ul>
 <li>No changes</li>
 </ul>
-<h4>Data Source and/or Component Changes</h4>
+<h4 id="data-source-andor-component-changes"><a class="toclink" href="#data-source-andor-component-changes">Data Source and/or Component Changes</a></h4>
 <ul>
 <li><a href="/datasources/DS0017">Command</a> <small style="color:#929393">(v1.0&#8594;v1.1)</small></li>
 <li><a href="/datasources/DS0017/#Command%20Execution">Command Execution</a> <small style="color:#929393">(v1.0&#8594;v1.1)</small></li>
@@ -872,23 +1020,23 @@
 <li><a href="/datasources/DS0002">User Account</a> <small style="color:#929393">(v1.0&#8594;v1.1)</small></li>
 <li><a href="/datasources/DS0002/#User%20Account%20Authentication">User Account Authentication</a> <small style="color:#929393">(v1.0&#8594;v1.1)</small></li>
 </ul>
-<h4>Minor Data Source and/or Component Changes</h4>
+<h4 id="minor-data-source-andor-component-changes"><a class="toclink" href="#minor-data-source-andor-component-changes">Minor Data Source and/or Component Changes</a></h4>
 <ul>
 <li>No changes</li>
 </ul>
-<h4>Data Source and/or Component Revocations</h4>
+<h4 id="data-source-andor-component-revocations"><a class="toclink" href="#data-source-andor-component-revocations">Data Source and/or Component Revocations</a></h4>
 <ul>
 <li>No changes</li>
 </ul>
-<h4>Data Source and/or Component Deprecations</h4>
+<h4 id="data-source-andor-component-deprecations"><a class="toclink" href="#data-source-andor-component-deprecations">Data Source and/or Component Deprecations</a></h4>
 <ul>
 <li><a href="/datasources/DS0031">Cluster</a> <small style="color:#929393">(v1.0)</small></li>
 <li><a href="/datasources/DS0031/#Cluster%20Metadata">Cluster Metadata</a> <small style="color:#929393">(v1.0)</small></li>
 </ul>
-<h3>Mobile</h3>
+<h3 id="mobile_4"><a class="toclink" href="#mobile_4">Mobile</a></h3>
 <p>ATT&amp;CK for Mobile does not support structured data sources</p>
-<h3>ICS</h3>
-<h4>New Data Sources and/or Components</h4>
+<h3 id="ics_4"><a class="toclink" href="#ics_4">ICS</a></h3>
+<h4 id="new-data-sources-andor-components_1"><a class="toclink" href="#new-data-sources-andor-components_1">New Data Sources and/or Components</a></h4>
 <ul>
 <li><a href="/datasources/DS0039">Asset</a> <small style="color:#929393">(v1.0)</small></li>
 <li><a href="/datasources/DS0039/#Asset%20Inventory">Asset Inventory</a> <small style="color:#929393">(v1.0)</small></li>
@@ -896,7 +1044,7 @@
 <li>Scheduled Job: <a href="/datasources/DS0003/#Scheduled%20Job%20Creation">Scheduled Job Creation</a> <small style="color:#929393">(v1.0)</small></li>
 <li>Service: <a href="/datasources/DS0019/#Service%20Modification">Service Modification</a> <small style="color:#929393">(v1.0)</small></li>
 </ul>
-<h4>Data Source and/or Component Changes</h4>
+<h4 id="data-source-andor-component-changes_1"><a class="toclink" href="#data-source-andor-component-changes_1">Data Source and/or Component Changes</a></h4>
 <ul>
 <li><a href="/datasources/DS0017">Command</a> <small style="color:#929393">(v1.0&#8594;v1.1)</small></li>
 <li><a href="/datasources/DS0017/#Command%20Execution">Command Execution</a> <small style="color:#929393">(v1.0&#8594;v1.1)</small></li>
@@ -911,19 +1059,19 @@
 <li><a href="/datasources/DS0002">User Account</a> <small style="color:#929393">(v1.0&#8594;v1.1)</small></li>
 <li><a href="/datasources/DS0002/#User%20Account%20Authentication">User Account Authentication</a> <small style="color:#929393">(v1.0&#8594;v1.1)</small></li>
 </ul>
-<h4>Minor Data Source and/or Component Changes</h4>
+<h4 id="minor-data-source-andor-component-changes_1"><a class="toclink" href="#minor-data-source-andor-component-changes_1">Minor Data Source and/or Component Changes</a></h4>
 <ul>
 <li>No changes</li>
 </ul>
-<h4>Data Source and/or Component Revocations</h4>
+<h4 id="data-source-andor-component-revocations_1"><a class="toclink" href="#data-source-andor-component-revocations_1">Data Source and/or Component Revocations</a></h4>
 <ul>
 <li>No changes</li>
 </ul>
-<h4>Data Source and/or Component Deprecations</h4>
+<h4 id="data-source-andor-component-deprecations_1"><a class="toclink" href="#data-source-andor-component-deprecations_1">Data Source and/or Component Deprecations</a></h4>
 <ul>
 <li>No changes</li>
 </ul>
-<h2>Contributors to this release</h2>
+<h2 id="contributors-to-this-release"><a class="toclink" href="#contributors-to-this-release">Contributors to this release</a></h2>
 <ul>
 <li>Aagam Shah, @neutrinoguy, ABB</li>
 <li>Andrea Serrano Urea, Telefónica Tech</li>
@@ -1057,7 +1205,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3 col-footer">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v17.1&#013;Website  v4.2.3">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v18.0&#013;Website  v4.4.0">Website Changelog</a></u>
                                 </div>
                                 <div class="px-3">
                                     <u class="footer-link"><a href="/resources/legal-and-branding/privacy/#" class="footer-link" onclick="Osano.cm.showDrawer('osano-cm-dom-info-dialog-open')">Cookie Preferences</a></u>

@@ -1,0 +1,784 @@
+
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+        <script src=https://cmp.osano.com/AzyhULTdPkqmy4aDN/83f786b4-d60d-4938-b70a-73afd166380a/osano.js></script>
+    <style>
+        .osano-cm-widget{display: none;}
+    </style>
+        <script async src="https://www.googletagmanager.com/gtag/js?id=UA-62667723-1"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'UA-62667723-1');
+        </script>
+        <meta name="google-site-verification" content="2oJKLqNN62z6AOCb0A0IXGtbQuj-lev5YPAHFF_cbHQ"/>
+
+        <meta charset='utf-8'>
+        <meta name='viewport' content='width=device-width, initial-scale=1,shrink-to-fit=no'>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <link rel='shortcut icon' href='/versions/v18/theme/favicon.ico' type='image/x-icon'>
+        <title>Steal or Forge Kerberos Tickets: Golden Ticket, Sub-technique T1558.001 - Enterprise | MITRE ATT&CK&reg;</title>
+        <!-- USWDS CSS -->
+        <!-- Bootstrap CSS -->
+        <link rel='stylesheet' href='/versions/v18/theme/style/vendors/bootstrap.min.css' />
+        <link rel='stylesheet' href='/versions/v18/theme/style/vendors/bootstrap-tourist.css' />
+        <link rel='stylesheet' href='/versions/v18/theme/style/vendors/bootstrap-select.min.css' />
+        <!-- Fontawesome CSS -->
+        <link rel="stylesheet" href="/versions/v18/theme/style/vendors/fontawesome-6.5.1/css/fontawesome.min.css"/>
+        <link rel="stylesheet" href="/versions/v18/theme/style/vendors/fontawesome-6.5.1/css/brands.min.css"/>
+        <link rel="stylesheet" href="/versions/v18/theme/style/vendors/fontawesome-6.5.1/css/solid.min.css"/>
+            <link rel="stylesheet" href="/versions/v18/theme/style-attack.css"/>
+
+
+</head>
+
+<body>
+
+    <div class="container-fluid attack-website-wrapper d-flex flex-column h-100">
+        <div class="row sticky-top flex-grow-0 flex-shrink-1">
+            <!-- header elements -->
+            <header class="col px-0">
+                    <nav class='navbar navbar-expand-lg navbar-dark position-static'>
+        <a class='navbar-brand' href='/versions/v18/'><img src="/versions/v18/theme/images/mitre_attack_logo.png" class="attack-logo"></a>
+        <button class='navbar-toggler' type='button' data-toggle='collapse' data-target='#navbarCollapse'
+                aria-controls='navbarCollapse' aria-expanded='false' aria-label='Toggle navigation'>
+                <span class='navbar-toggler-icon'></span>
+        </button>
+        <div class='collapse navbar-collapse' id='navbarCollapse'>
+            <ul class='nav nav-tabs ml-auto'>
+                        <li class="nav-item dropdown">
+                                
+    <a class="nav-link dropdown-toggle" href="/versions/v18/matrices/" id="navbarDropdown" role="button"
+    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <b>Matrices</b>
+    </a>
+    <div class="dropdown-menu " aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="/versions/v18/matrices/enterprise/">Enterprise</a>
+                <a class="dropdown-item" href="/versions/v18/matrices/mobile/">Mobile</a>
+                <a class="dropdown-item" href="/versions/v18/matrices/ics/">ICS</a>
+    </div>
+
+
+                        </li>
+                        <li class="nav-item dropdown">
+                                
+    <a class="nav-link dropdown-toggle" href="/versions/v18/tactics/" id="navbarDropdown" role="button"
+    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <b>Tactics</b>
+    </a>
+    <div class="dropdown-menu " aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="/versions/v18/tactics/enterprise/">Enterprise</a>
+                <a class="dropdown-item" href="/versions/v18/tactics/mobile/">Mobile</a>
+                <a class="dropdown-item" href="/versions/v18/tactics/ics/">ICS</a>
+    </div>
+
+
+                        </li>
+                        <li class="nav-item dropdown">
+                                
+    <a class="nav-link dropdown-toggle" href="/versions/v18/techniques/" id="navbarDropdown" role="button"
+    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <b>Techniques</b>
+    </a>
+    <div class="dropdown-menu " aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="/versions/v18/techniques/enterprise/">Enterprise</a>
+                <a class="dropdown-item" href="/versions/v18/techniques/mobile/">Mobile</a>
+                <a class="dropdown-item" href="/versions/v18/techniques/ics/">ICS</a>
+    </div>
+
+
+                        </li>
+                        <li class="nav-item dropdown">
+                                
+    <a class="nav-link dropdown-toggle" href="/versions/v18/mitigations" id="navbarDropdown" role="button"
+    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <b>Defenses</b>
+    </a>
+    <div class="dropdown-menu " aria-labelledby="navbarDropdown">
+                
+<div class="dropright dropdown">
+<a class="dropdown-item dropdown-toggle" href="/versions/v18/mitigations/" id="navbarDropdown" role="button"
+    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <b>Mitigations</b>
+    </a>
+    <div class="dropdown-menu " aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="/versions/v18/mitigations/enterprise/">Enterprise</a>
+            <a class="dropdown-item" href="/versions/v18/mitigations/mobile/">Mobile</a>
+            <a class="dropdown-item" href="/versions/v18/mitigations/ics/">ICS</a>
+    </div>
+</div>
+
+                <a class="dropdown-item" href="/versions/v18/assets">Assets</a>
+                
+<div class="dropright dropdown">
+<a class="dropdown-item dropdown-toggle" href="/versions/v18/detectionstrategies/" id="navbarDropdown" role="button"
+    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <b>Detections</b>
+    </a>
+    <div class="dropdown-menu " aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="/versions/v18/detectionstrategies/">Detection Strategies</a>
+            <a class="dropdown-item" href="/versions/v18/analytics/">Analytics</a>
+            <a class="dropdown-item" href="/versions/v18/datacomponents">Data Components</a>
+    </div>
+</div>
+
+    </div>
+
+
+                        </li>
+                        <li class="nav-item dropdown">
+                                
+    <a class="nav-link dropdown-toggle" href="/versions/v18/groups" id="navbarDropdown" role="button"
+    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <b>CTI</b>
+    </a>
+    <div class="dropdown-menu " aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="/versions/v18/groups">Groups</a>
+                <a class="dropdown-item" href="/versions/v18/software">Software</a>
+                <a class="dropdown-item" href="/versions/v18/campaigns">Campaigns</a>
+    </div>
+
+
+                        </li>
+                        <li class="nav-item dropdown">
+                                
+    <a class="nav-link dropdown-toggle" href="/resources/" id="navbarDropdown" role="button"
+    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <b>Resources</b>
+    </a>
+    <div class="dropdown-menu " aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="/resources/">Get Started</a>
+                <a class="dropdown-item" href="/resources/learn-more-about-attack/">Learn More about ATT&CK</a>
+                <a class="dropdown-item" href="/resources/attackcon/">ATT&CKcon</a>
+                <a class="dropdown-item" href="/resources/attack-data-and-tools/">ATT&CK Data & Tools</a>
+                <a class="dropdown-item" href="/resources/faq/">FAQ</a>
+                <a class="dropdown-item" href="/resources/engage-with-attack/contact/">Engage with ATT&CK</a>
+                <a class="dropdown-item" href="/resources/versions/">Version History</a>
+                <a class="dropdown-item" href="/resources/updates/">Updates</a>
+                <a class="dropdown-item" href="/resources/legal-and-branding/">Legal & Branding</a>
+    </div>
+
+
+                        </li>
+                        <li class="nav-item">
+                            <a href="/resources/engage-with-attack/benefactors/"  class="nav-link" ><b>Benefactors</b></a>
+                        </li>
+                        <li class="nav-item">
+                                <a href="https://medium.com/mitre-attack/" target="_blank" class="nav-link">
+        <b>Blog</b>&nbsp;
+        <img src="/versions/v18/theme/images/external-site.svg" alt="External site" class="external-icon" />
+    </a>
+
+                        </li>
+                        <li class="nav-item">
+                            <button id="search-button" class="btn search-button">Search <div id="search-icon" class="icon-button search-icon"></div></button>
+                        </li>
+            </ul>
+        </div>
+    </nav>
+
+            </header>
+        </div>
+        <div class="row flex-grow-0 flex-shrink-1">
+            <!-- banner elements -->
+            <div class="col px-0">
+                <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
+                <div class="container-fluid version-banner"><div class="icon-inline baseline mr-1"><img src="/versions/v18/theme/images/icon-warning-24px.svg"></div>Currently viewing <a href="https://github.com/mitre/cti/releases/tag/ATT%26CK-v18.0" target="_blank">ATT&CK v18.0</a> which is the current version of ATT&CK. <a href="/resources/versions/">Learn more about the versioning system</a> or <a href="/">see the live site</a>.</div>
+                    <div class="container-fluid d-none">
+                        ATT&CK v18 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v18-8f82d839ee9e'>blog post</a> or <a href='https://attack.mitre.org/resources/updates/'>changelog</a> for more information.
+
+                    </div>
+            </div>
+        </div>
+        <div class="row flex-grow-1 flex-shrink-0">
+            <!-- main content elements -->
+            <!--start-indexing-for-search-->
+
+ 
+     
+    <div class="sidebar nav sticky-top flex-column pr-0 pt-4 pb-3 pl-3" id="v-tab" role="tablist" aria-orientation="vertical">
+        <div class="resizer" id="resizer"></div>
+<!--stop-indexing-for-search-->
+<div id="sidebars"></div>
+<!--start-indexing-for-search-->
+    </div>
+
+    
+     
+    <div class="tab-content col-xl-9 pt-4" id="v-tabContent">
+        <div class="tab-pane fade show active" id="v-attckmatrix" role="tabpanel" aria-labelledby="v-attckmatrix-tab">
+    
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/versions/v18/">Home</a></li>
+            <li class="breadcrumb-item"><a href="/versions/v18/techniques/enterprise">Techniques</a></li>
+            <li class="breadcrumb-item"><a href="/versions/v18/techniques/enterprise">Enterprise</a></li>
+            <li class="breadcrumb-item"><a href="/versions/v18/techniques/T1558">Steal or Forge Kerberos Tickets</a></li>
+        <li class="breadcrumb-item">Golden Ticket</li>
+    </ol>
+    <div class="tab-pane fade show active" id="v-" role="tabpanel" aria-labelledby="v--tab"></div>
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="jumbotron jumbotron-fluid">
+                <div class="container-fluid">
+                    <h1 id="">
+                            <span id="subtechnique-parent-name">Steal or Forge Kerberos Tickets:</span>
+                        Golden Ticket
+                    </h1>
+
+                        <div class="row">
+                            <div class="col-md-8">
+                                    <!--stop-indexing-for-search-->
+                                    <div class="card-block pb-2">
+                                        <div class="card">
+                                            <div class="card-header collapsed" id="subtechniques-card-header" data-toggle="collapse" data-target="#subtechniques-card-body" aria-expanded="false" aria-controls="subtechniques-card-body">
+                                                    <h5 class="mb-0" id ="sub-techniques">Other sub-techniques of Steal or Forge Kerberos Tickets (5)</h5>
+                                            </div>
+                                            <div id="subtechniques-card-body" class="card-body p-0 collapse" aria-labelledby="subtechniques-card-header">
+                                                <table class="table table-bordered">
+                                                    <thead>
+                                                        <tr>
+                                                            <th scope="col">ID</th>
+                                                            <th scope="col">Name</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                            <tr>
+                                                                    <td class="active">
+                                                                        T1558.001
+                                                                    </td>
+                                                                    <td class="active">
+                                                                        Golden Ticket
+                                                                    </td>
+                                                            </tr>
+                                                            <tr>
+                                                                    <td>
+                                                                        <a href="/versions/v18/techniques/T1558/002/" class="subtechnique-table-item" data-subtechnique_id="T1558.002"> T1558.002 </a>
+                                                                    </td>
+                                                                    <td>
+                                                                        <a href="/versions/v18/techniques/T1558/002/" class="subtechnique-table-item" data-subtechnique_id="T1558.002"> Silver Ticket </a>
+                                                                    </td>
+                                                            </tr>
+                                                            <tr>
+                                                                    <td>
+                                                                        <a href="/versions/v18/techniques/T1558/003/" class="subtechnique-table-item" data-subtechnique_id="T1558.003"> T1558.003 </a>
+                                                                    </td>
+                                                                    <td>
+                                                                        <a href="/versions/v18/techniques/T1558/003/" class="subtechnique-table-item" data-subtechnique_id="T1558.003"> Kerberoasting </a>
+                                                                    </td>
+                                                            </tr>
+                                                            <tr>
+                                                                    <td>
+                                                                        <a href="/versions/v18/techniques/T1558/004/" class="subtechnique-table-item" data-subtechnique_id="T1558.004"> T1558.004 </a>
+                                                                    </td>
+                                                                    <td>
+                                                                        <a href="/versions/v18/techniques/T1558/004/" class="subtechnique-table-item" data-subtechnique_id="T1558.004"> AS-REP Roasting </a>
+                                                                    </td>
+                                                            </tr>
+                                                            <tr>
+                                                                    <td>
+                                                                        <a href="/versions/v18/techniques/T1558/005/" class="subtechnique-table-item" data-subtechnique_id="T1558.005"> T1558.005 </a>
+                                                                    </td>
+                                                                    <td>
+                                                                        <a href="/versions/v18/techniques/T1558/005/" class="subtechnique-table-item" data-subtechnique_id="T1558.005"> Ccache Files </a>
+                                                                    </td>
+                                                            </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--start-indexing-for-search-->
+
+                                    <div class="description-body">
+                                                <p>Adversaries who have the KRBTGT account password hash may forge Kerberos ticket-granting tickets (TGT), also known as a golden ticket.<span onclick=scrollToRef('scite-1') id="scite-ref-1-a" class="scite-citeref-number" title="Metcalf, S. (2015, August 7). Kerberos Golden Tickets are Now More Golden. Retrieved December 1, 2017."data-reference="AdSecurity Kerberos GT Aug 2015"><sup><a href="https://adsecurity.org/?p=1640" target="_blank" data-hasqtip="0" aria-describedby="qtip-0">[1]</a></sup></span> Golden tickets enable adversaries to generate authentication material for any account in Active Directory.<span onclick=scrollToRef('scite-2') id="scite-ref-2-a" class="scite-citeref-number" title="Abolins, D., Boldea, C., Socha, K., Soria-Machado, M. (2016, April 26). Kerberos Golden Ticket Protection. Retrieved July 13, 2017."data-reference="CERT-EU Golden Ticket Protection"><sup><a href="https://cert.europa.eu/static/WhitePapers/UPDATED%20-%20CERT-EU_Security_Whitepaper_2014-007_Kerberos_Golden_Ticket_Protection_v1_4.pdf" target="_blank" data-hasqtip="1" aria-describedby="qtip-1">[2]</a></sup></span> </p><p>Using a golden ticket, adversaries are then able to request ticket granting service (TGS) tickets, which enable access to specific resources. Golden tickets require adversaries to interact with the Key Distribution Center (KDC) in order to obtain TGS.<span onclick=scrollToRef('scite-3') id="scite-ref-3-a" class="scite-citeref-number" title="Metcalf, S. (2015, May 03). Detecting Forged Kerberos Ticket (Golden Ticket & Silver Ticket) Use in Active Directory. Retrieved December 23, 2015."data-reference="ADSecurity Detecting Forged Tickets"><sup><a href="https://adsecurity.org/?p=1515" target="_blank" data-hasqtip="2" aria-describedby="qtip-2">[3]</a></sup></span></p><p>The KDC service runs all on domain controllers that are part of an Active Directory domain. KRBTGT is the Kerberos Key Distribution Center (KDC) service account and is responsible for encrypting and signing all Kerberos tickets.<span onclick=scrollToRef('scite-4') id="scite-ref-4-a" class="scite-citeref-number" title="Sean Metcalf. (2014, November 10). Kerberos & KRBTGT: Active Directory’s Domain Kerberos Service Account. Retrieved January 30, 2020."data-reference="ADSecurity Kerberos and KRBTGT"><sup><a href="https://adsecurity.org/?p=483" target="_blank" data-hasqtip="3" aria-describedby="qtip-3">[4]</a></sup></span> The KRBTGT password hash may be obtained using <a href="/versions/v18/techniques/T1003">OS Credential Dumping</a> and privileged access to a domain controller.</p>
+
+                                    </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card">
+                                    <div class="card-body">
+                                            <div class="row card-data" id="card-id">
+                                                <div class="col-md-1 px-0 text-center"></div>
+                                                <div class="col-md-11 pl-0">
+                                                    <span class="h5 card-title">ID:&nbsp;</span>T1558.001
+                                                </div>
+                                            </div>
+                                        <!--stop-indexing-for-search-->
+                                        <div class="row card-data">
+                                            <div class="col-md-1 px-0 text-center"></div>
+                                            <div class="col-md-11 pl-0">
+                                                    <span class="h5 card-title">Sub-technique of:&nbsp;</span>
+                                                    <a href="/versions/v18/techniques/T1558">T1558</a>
+                                            </div>
+                                        </div>
+                                        <!--start-indexing-for-search-->
+                                            <div id="card-tactics" class="row card-data">
+                                                <div class="col-md-1 px-0 text-center">
+                                                    <span data-toggle="tooltip" data-placement="left" title="" data-test-ignore="true" data-original-title="The tactic objectives that the (sub-)technique can be used to accomplish">&#9432;</span>
+                                                </div>
+                                                <div class="col-md-11 pl-0">
+                                                    <span class="h5 card-title">Tactic:</span>
+                                                        <a href="/versions/v18/tactics/TA0006">Credential Access</a>                                                </div>
+                                            </div>
+                                            <div class="row card-data">
+                                                <div class="col-md-1 px-0 text-center">
+                                                    <span data-toggle="tooltip" data-placement="left" title="" data-test-ignore="true" data-original-title="The system an adversary is operating within; could be an operating system or application">&#9432;</span>
+                                                </div>
+                                                <div class="col-md-11 pl-0">
+                                                    <span class="h5 card-title">Platforms:&nbsp;</span>Windows
+                                                </div>
+                                            </div>
+                                            <div class="row card-data">
+                                                <div class="col-md-1 px-0 text-center"></div>
+                                                <div class="col-md-11 pl-0">
+                                                    <span class="h5 card-title">Contributors:&nbsp;</span>Itamar Mizrahi, Cymptom
+                                                </div>
+                                            </div>
+                                            <div class="row card-data">
+                                                <div class="col-md-1 px-0 text-center"></div>
+                                                <div class="col-md-11 pl-0">
+                                                    <span class="h5 card-title">Version:&nbsp;</span>1.2
+                                                </div>
+                                            </div>
+                                            <div class="row card-data">
+                                                <div class="col-md-1 px-0 text-center"></div>
+                                                <div class="col-md-11 pl-0">
+                                                    <span class="h5 card-title">Created:&nbsp;</span>11 February 2020
+                                                </div>
+                                            </div>
+                                            <div class="row card-data">
+                                                <div class="col-md-1 px-0 text-center"></div>
+                                                <div class="col-md-11 pl-0">
+                                                    <span class="h5 card-title">Last Modified:&nbsp;</span>24 October 2025
+                                                </div>
+                                            </div>
+                                    </div>
+                                </div>
+                                    <div class="text-center pt-2 version-button permalink">
+    <div class="live">
+        <a data-toggle="tooltip" 
+           data-placement="bottom" 
+           title="Permalink to this version of T1558.001" 
+           href="/versions/v18/techniques/T1558/001/" data-test-ignore="true">Version Permalink</a>
+    </div>
+    <div class="permalink">
+        <a data-toggle="tooltip" 
+           data-placement="bottom" 
+           title="Go to the live version of T1558.001" 
+           href="/techniques/T1558/001/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+    </div>
+</div>
+
+                            </div>
+                        </div>
+                            <h2 class="pt-3" id ="examples">Procedure Examples</h2>
+                            <div class="tables-mobile">
+                            <table class="table table-bordered table-alternate mt-2">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">ID</th>
+                                        <th scope="col">Name</th>
+                                        <th scope="col">Description</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v18/software/S0363"> S0363 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v18/software/S0363"> Empire </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v18/software/S0363">Empire</a> can leverage its implementation of <a href="/versions/v18/software/S0002">Mimikatz</a> to obtain and use golden tickets.<span onclick=scrollToRef('scite-5') id="scite-ref-5-a" class="scite-citeref-number" title="Schroeder, W., Warner, J., Nelson, M. (n.d.). Github PowerShellEmpire. Retrieved April 28, 2016."data-reference="Github PowerShell Empire"><sup><a href="https://github.com/PowerShellEmpire/Empire" target="_blank" data-hasqtip="4" aria-describedby="qtip-4">[5]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v18/groups/G0004"> G0004 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v18/groups/G0004"> Ke3chang </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v18/groups/G0004">Ke3chang</a> has used <a href="/versions/v18/software/S0002">Mimikatz</a> to generate Kerberos golden tickets.<span onclick=scrollToRef('scite-6') id="scite-ref-6-a" class="scite-citeref-number" title="Smallridge, R. (2018, March 10). APT15 is alive and strong: An analysis of RoyalCli and RoyalDNS. Retrieved April 4, 2018."data-reference="NCC Group APT15 Alive and Strong"><sup><a href="https://research.nccgroup.com/2018/03/10/apt15-is-alive-and-strong-an-analysis-of-royalcli-and-royaldns/" target="_blank" data-hasqtip="5" aria-describedby="qtip-5">[6]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v18/software/S0002"> S0002 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v18/software/S0002"> Mimikatz </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v18/software/S0002">Mimikatz</a>'s kerberos module can create golden tickets.<span onclick=scrollToRef('scite-7') id="scite-ref-7-a" class="scite-citeref-number" title="Deply, B., Le Toux, V.. (2016, June 5). module ~ kerberos. Retrieved March 17, 2020."data-reference="GitHub Mimikatz kerberos Module"><sup><a href="https://github.com/gentilkiwi/mimikatz/wiki/module-~-kerberos" target="_blank" data-hasqtip="6" aria-describedby="qtip-6">[7]</a></sup></span><span onclick=scrollToRef('scite-8') id="scite-ref-8-a" class="scite-citeref-number" title="Strategic Cyber LLC. (2020, November 5). Cobalt Strike: Advanced Threat Tactics for Penetration Testers. Retrieved April 13, 2021."data-reference="Cobalt Strike Manual 4.3 November 2020"><sup><a href="https://web.archive.org/web/20210708035426/https://www.cobaltstrike.com/downloads/csmanual43.pdf" target="_blank" data-hasqtip="7" aria-describedby="qtip-7">[8]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v18/software/S1071"> S1071 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v18/software/S1071"> Rubeus </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v18/software/S1071">Rubeus</a> can forge a ticket-granting ticket.<span onclick=scrollToRef('scite-9') id="scite-ref-9-a" class="scite-citeref-number" title="Harmj0y. (n.d.). Rubeus. Retrieved March 29, 2023."data-reference="GitHub Rubeus March 2023"><sup><a href="https://github.com/GhostPack/Rubeus" target="_blank" data-hasqtip="8" aria-describedby="qtip-8">[9]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v18/software/S0633"> S0633 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v18/software/S0633"> Sliver </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v18/software/S0633">Sliver</a> incorporates the <a href="/versions/v18/software/S1071">Rubeus</a> framework to allow for Kerberos ticket manipulation, specifically for forging Kerberos Golden Tickets.<span onclick=scrollToRef('scite-10') id="scite-ref-10-a" class="scite-citeref-number" title="Cybereason Global SOC and Incident Response Team. (n.d.). Sliver C2 Leveraged by Many Threat Actors. Retrieved March 24, 2025."data-reference="Cybereason Sliver Undated"><sup><a href="https://www.cybereason.com/blog/sliver-c2-leveraged-by-many-threat-actors" target="_blank" data-hasqtip="9" aria-describedby="qtip-9">[10]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                </tbody>
+                            </table>
+                            </div>
+                            <h2 class="pt-3" id ="mitigations">Mitigations</h2>
+                            <div class="tables-mobile">
+                                <table class="table table-bordered table-alternate mt-2">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">ID</th>
+                                            <th scope="col">Mitigation</th>
+                                            <th scope="col">Description</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                            <tr>
+                                                <td>
+                                                    <a href="/versions/v18/mitigations/M1015"> M1015 </a>
+                                                </td>
+                                                <td>
+                                                    <a href="/versions/v18/mitigations/M1015"> Active Directory Configuration </a>
+                                                </td>
+                                                <td>
+                                                                <p>For containing the impact of a previously generated golden ticket, reset the built-in KRBTGT account password twice, which will invalidate any existing golden tickets that have been created with the KRBTGT hash and other Kerberos tickets derived from it. For each domain, change the KRBTGT account password once, force replication, and then change the password a second time. Consider rotating the KRBTGT account password every 180 days.<span onclick=scrollToRef('scite-11') id="scite-ref-11-a" class="scite-citeref-number" title="UCF. (n.d.). The password for the krbtgt account on a domain must be reset at least every 180 days. Retrieved November 5, 2020."data-reference="STIG krbtgt reset"><sup><a href="https://www.stigviewer.com/stig/windows_server_2016/2019-12-12/finding/V-91779" target="_blank" data-hasqtip="10" aria-describedby="qtip-10">[11]</a></sup></span></p>
+
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <a href="/versions/v18/mitigations/M1026"> M1026 </a>
+                                                </td>
+                                                <td>
+                                                    <a href="/versions/v18/mitigations/M1026"> Privileged Account Management </a>
+                                                </td>
+                                                <td>
+                                                                <p>Limit domain admin account permissions to domain controllers and limited servers. Delegate other admin functions to separate accounts.</p>
+
+                                                </td>
+                                            </tr>
+                                    </tbody>
+                                </table>
+                                </div>
+                                <h2 class="pt-3" id="detection">Detection Strategy</h2>
+                                <div class="tables-mobile">
+<table class="table datasources-table table-bordered">
+    <thead>
+        <tr>
+            <th class="p-2" scope="col">ID</th>
+            <th class="p-2 nowrap" scope="col">Name</th>
+            <th class="p-2 nowrap" scope="col">Analytic ID</th>
+            <th class="p-2 nowrap" scope="col">Analytic Description</th>
+        </tr>
+    </thead>
+    <tbody>
+                <tr class="detection_strategy" id="uses-DET0144">
+                        <td rowspan="1">
+                            <a href="/versions/v18/detectionstrategies/DET0144">DET0144</a>
+                        </td>
+                        <td rowspan="1">
+                            <a href="/versions/v18/detectionstrategies/DET0144">Detect Forged Kerberos Golden Tickets (T1558.001)</a>
+                        </td>
+                    <td>
+                        <a href="/versions/v18/detectionstrategies/DET0144#AN0405">AN0405</a>
+                    </td>
+                    <td>
+                                <p>Detects forged Kerberos Golden Tickets by correlating anomalous Kerberos ticket lifetimes, unexpected encryption types (e.g., RC4 in modern domains), malformed fields in logon/logoff events, and TGS requests without preceding TGT requests. Also monitors for abnormal patterns of access associated with elevated privileges across multiple systems.</p>
+</a>
+                    </td>
+                </tr>
+    </tbody>
+</table>
+</div>
+
+
+                            <h2 class="pt-3" id="references">References</h2>
+
+        <div class="row">
+            <div class="col">
+                <ol>
+                            
+        <li>
+            <span  id="scite-1" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-1" href="https://adsecurity.org/?p=1640" target="_blank">
+                        Metcalf, S. (2015, August 7). Kerberos Golden Tickets are Now More Golden. Retrieved December 1, 2017.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-2" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-2" href="https://cert.europa.eu/static/WhitePapers/UPDATED%20-%20CERT-EU_Security_Whitepaper_2014-007_Kerberos_Golden_Ticket_Protection_v1_4.pdf" target="_blank">
+                        Abolins, D., Boldea, C., Socha, K., Soria-Machado, M. (2016, April 26). Kerberos Golden Ticket Protection. Retrieved July 13, 2017.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-3" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-3" href="https://adsecurity.org/?p=1515" target="_blank">
+                        Metcalf, S. (2015, May 03). Detecting Forged Kerberos Ticket (Golden Ticket & Silver Ticket) Use in Active Directory. Retrieved December 23, 2015.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-4" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-4" href="https://adsecurity.org/?p=483" target="_blank">
+                        Sean Metcalf. (2014, November 10). Kerberos & KRBTGT: Active Directory’s Domain Kerberos Service Account. Retrieved January 30, 2020.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-5" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-5" href="https://github.com/PowerShellEmpire/Empire" target="_blank">
+                        Schroeder, W., Warner, J., Nelson, M. (n.d.). Github PowerShellEmpire. Retrieved April 28, 2016.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-6" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-6" href="https://research.nccgroup.com/2018/03/10/apt15-is-alive-and-strong-an-analysis-of-royalcli-and-royaldns/" target="_blank">
+                        Smallridge, R. (2018, March 10). APT15 is alive and strong: An analysis of RoyalCli and RoyalDNS. Retrieved April 4, 2018.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                </ol>
+            </div>
+            <div class="col">
+                    <ol start="7.0">
+                                
+        <li>
+            <span  id="scite-7" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-7" href="https://github.com/gentilkiwi/mimikatz/wiki/module-~-kerberos" target="_blank">
+                        Deply, B., Le Toux, V.. (2016, June 5). module ~ kerberos. Retrieved March 17, 2020.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-8" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-8" href="https://web.archive.org/web/20210708035426/https://www.cobaltstrike.com/downloads/csmanual43.pdf" target="_blank">
+                        Strategic Cyber LLC. (2020, November 5). Cobalt Strike: Advanced Threat Tactics for Penetration Testers. Retrieved April 13, 2021.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-9" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-9" href="https://github.com/GhostPack/Rubeus" target="_blank">
+                        Harmj0y. (n.d.). Rubeus. Retrieved March 29, 2023.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-10" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-10" href="https://www.cybereason.com/blog/sliver-c2-leveraged-by-many-threat-actors" target="_blank">
+                        Cybereason Global SOC and Incident Response Team. (n.d.). Sliver C2 Leveraged by Many Threat Actors. Retrieved March 24, 2025.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-11" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-11" href="https://www.stigviewer.com/stig/windows_server_2016/2019-12-12/finding/V-91779" target="_blank">
+                        UCF. (n.d.). The password for the krbtgt account on a domain must be reset at least every 180 days. Retrieved November 5, 2020.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+  
+                    </ol>
+            </div>             
+        </div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+    
+        </div>
+    </div>
+
+            <!--stop-indexing-for-search-->
+            <!-- search overlay for entire page -- not displayed inline -->
+            <div class="overlay search" id="search-overlay" style="display: none;">
+    <div class="overlay-inner">
+        <!-- text input for searching -->
+        <div class="search-header">
+            <div class="search-input">
+                <input type="text" id="search-input" placeholder="search">
+            </div>
+            <div class="search-icons">
+                <div class="search-parsing-icon spinner-border" style="display: none" id="search-parsing-icon"></div>
+                <div class="close-search-icon" id="close-search-icon">&times;</div>
+            </div>
+        </div>
+        <!-- results and controls for loading more results -->
+        <div id="search-body" class="search-body">
+            <div class="results" id="search-results">
+                <!-- content will be appended here on search -->
+            </div>
+            <div id="load-more-results" class="load-more-results">
+                <button class="btn btn-default" id="load-more-results-button">load more results</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+        </div>
+        <div class="row flex-grow-0 flex-shrink-1">
+            <!-- footer elements -->
+            <footer class="col footer">
+                <div class="container-fluid">
+                    <div class="row row-footer">
+                        <div class="col-2 col-sm-2 col-md-2">
+                            <div class="footer-center-responsive my-auto">
+                                <a href="https://www.mitre.org" target="_blank" rel="noopener" aria-label="MITRE">
+                                    <img src="/versions/v18/theme/images/mitrelogowhiteontrans.gif" class="mitre-logo-wtrans">
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-2 col-sm-2 footer-responsive-break"></div>
+                        <div class="footer-link-group">
+                            <div class="row row-footer">
+                                <div class="px-3 col-footer">
+                                    <u class="footer-link"><a href="/resources/engage-with-attack/contact" class="footer-link">Contact Us</a></u>
+                                </div>
+                                <div class="px-3 col-footer">
+                                    <u class="footer-link"><a href="/resources/legal-and-branding/terms-of-use" class="footer-link">Terms of Use</a></u>
+                                </div>
+                                    <div class="px-3 col-footer">
+                                        <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
+                                    </div>
+                                <div class="px-3 col-footer">
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v18.0&#013;Website  v4.4.0">Website Changelog</a></u>
+                                </div>
+                                <div class="px-3">
+                                    <u class="footer-link"><a href="/resources/legal-and-branding/privacy/#" class="footer-link" onclick="Osano.cm.showDrawer('osano-cm-dom-info-dialog-open')">Cookie Preferences</a></u>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <small class="px-3">
+                                    &copy;&nbsp;2015&nbsp;-&nbsp;2025, The MITRE Corporation. MITRE ATT&CK and ATT&CK are registered trademarks of The MITRE Corporation.
+                                </small>
+                            </div>
+                        </div>
+                        <div class="w-100 p-2 footer-responsive-break"></div>
+                            <div class="col pr-4">
+                                <div class="footer-float-right-responsive-brand">
+                                    <div class="row row-footer row-footer-icon">
+                                        <div class="mb-1">
+                                            <a href="https://x.com/MITREattack" class="btn btn-footer">
+                                                <i class="fa-brands fa-x-twitter fa-lg"></i>
+                                            </a>
+                                            <a href="https://github.com/mitre-attack" class="btn btn-footer">
+                                                <i class="fa-brands fa-github fa-lg"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+
+<!--stopindex-->
+
+</div>
+    <!--SCRIPTS-->
+    <script src="/versions/v18/theme/scripts/jquery-3.5.1.min.js"></script>
+    <script src="/versions/v18/theme/scripts/popper.min.js"></script>
+    <script src="/versions/v18/theme/scripts/bootstrap-select.min.js"></script>
+    <script src="/versions/v18/theme/scripts/bootstrap.bundle.min.js"></script>
+    <script src="/versions/v18/theme/scripts/site.js"></script>
+    <script src="/versions/v18/theme/scripts/settings.js"></script>
+    <script src="/versions/v18/theme/scripts/search_bundle.js"></script>
+
+<!--SCRIPTS-->
+<script src="/versions/v18/theme/scripts/resizer.js"></script>
+
+<!--SCRIPTS-->
+<script src="/versions/v18/theme/scripts/bootstrap-tourist.js"></script>
+<script src="/versions/v18/theme/scripts/settings.js"></script>
+    <script src="/versions/v18/theme/scripts/tour/tour-subtechniques.js"></script>
+<script src="/versions/v18/theme/scripts/sidebar-load-all.js"></script>
+</body>
+</html>

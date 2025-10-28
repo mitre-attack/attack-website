@@ -93,12 +93,11 @@
                         </li>
                         <li class="nav-item dropdown">
                                 
-    <a class="nav-link dropdown-toggle" href="/datasources" id="navbarDropdown" role="button"
+    <a class="nav-link dropdown-toggle" href="/mitigations" id="navbarDropdown" role="button"
     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         <b>Defenses</b>
     </a>
     <div class="dropdown-menu " aria-labelledby="navbarDropdown">
-                <a class="dropdown-item" href="/datasources">Data Sources</a>
                 
 <div class="dropright dropdown">
 <a class="dropdown-item dropdown-toggle" href="/mitigations/" id="navbarDropdown" role="button"
@@ -113,6 +112,19 @@
 </div>
 
                 <a class="dropdown-item" href="/assets">Assets</a>
+                
+<div class="dropright dropdown">
+<a class="dropdown-item dropdown-toggle" href="/detectionstrategies/" id="navbarDropdown" role="button"
+    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <b>Detections</b>
+    </a>
+    <div class="dropdown-menu " aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="/detectionstrategies/">Detection Strategies</a>
+            <a class="dropdown-item" href="/analytics/">Analytics</a>
+            <a class="dropdown-item" href="/datacomponents">Data Components</a>
+    </div>
+</div>
+
     </div>
 
 
@@ -176,7 +188,7 @@
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
                     <div class="container-fluid banner-message">
-                        
+                        ATT&CK v18 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v18-8f82d839ee9e'>blog post</a> or <a href='https://attack.mitre.org/resources/updates/'>changelog</a> for more information.
 
                     </div>
             </div>
@@ -446,13 +458,13 @@
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Permalink to this version of T1027.017" 
-           href="/versions/v17/techniques/T1027/017/" data-test-ignore="true">Version Permalink</a>
+           href="/versions/v18/techniques/T1027/017/" data-test-ignore="true">Version Permalink</a>
     </div>
     <div class="permalink">
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Go to the live version of T1027.017" 
-           href="/versions/v17/techniques/T1027/017/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+           href="/versions/v18/techniques/T1027/017/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
     </div>
 </div>
 
@@ -484,34 +496,51 @@
                                     </tbody>
                                 </table>
                                 </div>
-                            <h2 class="pt-3" id="detection">Detection</h2>
+                                <h2 class="pt-3" id="detection">Detection Strategy</h2>
                                 <div class="tables-mobile">
 <table class="table datasources-table table-bordered">
     <thead>
         <tr>
             <th class="p-2" scope="col">ID</th>
-            <th class="p-2 nowrap" scope="col">Data Source</th>
-            <th class="p-2 nowrap" scope="col">Data Component</th>
-            <th class="p-2" scope="col">Detects</th>
+            <th class="p-2 nowrap" scope="col">Name</th>
+            <th class="p-2 nowrap" scope="col">Analytic ID</th>
+            <th class="p-2 nowrap" scope="col">Analytic Description</th>
         </tr>
     </thead>
     <tbody>
-            <tr class="datasource" id="uses-DS0022">
-                <td>
-                    <a href="/datasources/DS0022">DS0022</a>
-                </td>
-                <td class="nowrap">
-                    <a href="/datasources/DS0022">File</a>
-                </td>
-                <!-- Add first data component here -->
-                <td> 
-                    <a href="/datasources/DS0022/#File%20Creation">File Creation</a>
-                </td>
+                <tr class="detection_strategy" id="uses-DET0510">
+                        <td rowspan="3">
+                            <a href="/detectionstrategies/DET0510">DET0510</a>
+                        </td>
+                        <td rowspan="3">
+                            <a href="/detectionstrategies/DET0510">Detection Strategy for SVG Smuggling with Script Execution and Delivery Behavior</a>
+                        </td>
                     <td>
-                                <p>Monitor for newly constructed files via JavaScript. Developing rules for the different variants, with a combination of different encoding and/or encryption schemes, may be very challenging. Consider monitoring files downloaded from the Internet, possibly by SVG Smuggling, for suspicious activities. Data and events should not be viewed in isolation, but as part of a chain of behavior that could lead to other activities. </p><p>SVG Smuggling is often chained:</p><ul><li>.svg downloaded → parsed or executed by browser/email client</li><li>Drops or references a secondary payload (HTML/JS/Payload)</li><li>Follow-on execution with powershell, cmd, wscript, etc.</li></ul><p>Analytic 1 - Detect malicious use of SVG files embedded with script tags to assemble, download, or redirect to payloads.</p><p><code> index=<em> (sourcetype="WinEventLog:Microsoft-Windows-Sysmon/Operational" OR sourcetype="linux_audit" OR sourcetype="osquery")(file_name="</em>.svg" OR file_path="<em>\Downloads\</em>.svg" OR file_path="/tmp/<em>.svg" OR file_path="/Users/</em>/Downloads/<em>.svg")| join type=inner file_path [  search index=</em> process_name IN ("powershell.exe", "wscript.exe", "cmd.exe", "mshta.exe", "bash", "curl", "wget")  | stats min(_time) as proc_time by file_path, process_name, host]| eval time_diff=proc_time - _time| where time_diff &gt;= 0 AND time_diff &lt; 120| table _time, host, user, file_path, file_name, process_name, command_line, time_diff| sort _time </code></p><p>Analytic 2 - Suspicious JavaScript or Obfuscation in SVG</p><p><code> file_name="<em>.svg"| rex field=_raw "<script>(?<js_payload>.</em>?)</script>"| search js_payload="<em>eval</em>" OR js_payload="<em>atob</em>" OR js_payload="<em>window.location</em>" OR js_payload="<em>document.write</em>"| table _time, file_name, js_payload </code></p>
-
+                        <a href="/detectionstrategies/DET0510#AN1407">AN1407</a>
                     </td>
-            </tr>
+                    <td>
+                                <p>Detects suspicious SVG file creation or download events followed by script engine execution (e.g., wscript.exe, mshta.exe, rundll32.exe), network callbacks, or browser-based credential collection.</p>
+</a>
+                    </td>
+                </tr>
+                <tr class="detection_strategy" id="uses-DET0510">
+                    <td>
+                        <a href="/detectionstrategies/DET0510#AN1408">AN1408</a>
+                    </td>
+                    <td>
+                                <p>Detects downloaded SVG files followed by execution of browser processes or tools like xdg-open, and rapid follow-on network connections or process spawns to interpreters like python or bash.</p>
+</a>
+                    </td>
+                </tr>
+                <tr class="detection_strategy" id="uses-DET0510">
+                    <td>
+                        <a href="/detectionstrategies/DET0510#AN1409">AN1409</a>
+                    </td>
+                    <td>
+                                <p>Detects SVGs downloaded via browser that invoke AppleScript, osascript, or JavaScriptCore processes, followed by network egress or file drop to LaunchAgents or ~/Library.</p>
+</a>
+                    </td>
+                </tr>
     </tbody>
 </table>
 </div>
@@ -640,7 +669,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3 col-footer">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v17.1&#013;Website  v4.2.3">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v18.0&#013;Website  v4.4.0">Website Changelog</a></u>
                                 </div>
                                 <div class="px-3">
                                     <u class="footer-link"><a href="/resources/legal-and-branding/privacy/#" class="footer-link" onclick="Osano.cm.showDrawer('osano-cm-dom-info-dialog-open')">Cookie Preferences</a></u>

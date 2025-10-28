@@ -93,12 +93,11 @@
                         </li>
                         <li class="nav-item dropdown">
                                 
-    <a class="nav-link dropdown-toggle" href="/datasources" id="navbarDropdown" role="button"
+    <a class="nav-link dropdown-toggle" href="/mitigations" id="navbarDropdown" role="button"
     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         <b>Defenses</b>
     </a>
     <div class="dropdown-menu " aria-labelledby="navbarDropdown">
-                <a class="dropdown-item" href="/datasources">Data Sources</a>
                 
 <div class="dropright dropdown">
 <a class="dropdown-item dropdown-toggle" href="/mitigations/" id="navbarDropdown" role="button"
@@ -113,6 +112,19 @@
 </div>
 
                 <a class="dropdown-item" href="/assets">Assets</a>
+                
+<div class="dropright dropdown">
+<a class="dropdown-item dropdown-toggle" href="/detectionstrategies/" id="navbarDropdown" role="button"
+    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <b>Detections</b>
+    </a>
+    <div class="dropdown-menu " aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="/detectionstrategies/">Detection Strategies</a>
+            <a class="dropdown-item" href="/analytics/">Analytics</a>
+            <a class="dropdown-item" href="/datacomponents">Data Components</a>
+    </div>
+</div>
+
     </div>
 
 
@@ -176,7 +188,7 @@
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
                     <div class="container-fluid banner-message">
-                        
+                        ATT&CK v18 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v18-8f82d839ee9e'>blog post</a> or <a href='https://attack.mitre.org/resources/updates/'>changelog</a> for more information.
 
                     </div>
             </div>
@@ -366,7 +378,7 @@
                                             <div class="row card-data">
                                                 <div class="col-md-1 px-0 text-center"></div>
                                                 <div class="col-md-11 pl-0">
-                                                    <span class="h5 card-title">Last Modified:&nbsp;</span>15 April 2025
+                                                    <span class="h5 card-title">Last Modified:&nbsp;</span>24 October 2025
                                                 </div>
                                             </div>
                                     </div>
@@ -376,13 +388,13 @@
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Permalink to this version of T1556.005" 
-           href="/versions/v17/techniques/T1556/005/" data-test-ignore="true">Version Permalink</a>
+           href="/versions/v18/techniques/T1556/005/" data-test-ignore="true">Version Permalink</a>
     </div>
     <div class="permalink">
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Go to the live version of T1556.005" 
-           href="/versions/v17/techniques/T1556/005/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+           href="/versions/v18/techniques/T1556/005/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
     </div>
 </div>
 
@@ -426,82 +438,33 @@
                                     </tbody>
                                 </table>
                                 </div>
-                            <h2 class="pt-3" id="detection">Detection</h2>
+                                <h2 class="pt-3" id="detection">Detection Strategy</h2>
                                 <div class="tables-mobile">
 <table class="table datasources-table table-bordered">
     <thead>
         <tr>
             <th class="p-2" scope="col">ID</th>
-            <th class="p-2 nowrap" scope="col">Data Source</th>
-            <th class="p-2 nowrap" scope="col">Data Component</th>
-            <th class="p-2" scope="col">Detects</th>
+            <th class="p-2 nowrap" scope="col">Name</th>
+            <th class="p-2 nowrap" scope="col">Analytic ID</th>
+            <th class="p-2 nowrap" scope="col">Analytic Description</th>
         </tr>
     </thead>
     <tbody>
-            <tr class="datasource" id="uses-DS0026">
-                <td>
-                    <a href="/datasources/DS0026">DS0026</a>
-                </td>
-                <td class="nowrap">
-                    <a href="/datasources/DS0026">Active Directory</a>
-                </td>
-                <!-- Add first data component here -->
-                <td> 
-                    <a href="/datasources/DS0026/#Active%20Directory%20Object%20Modification">Active Directory Object Modification</a>
-                </td>
+                <tr class="detection_strategy" id="uses-DET0589">
+                        <td rowspan="1">
+                            <a href="/detectionstrategies/DET0589">DET0589</a>
+                        </td>
+                        <td rowspan="1">
+                            <a href="/detectionstrategies/DET0589">Detect Modification of Authentication Process via Reversible Encryption</a>
+                        </td>
                     <td>
-                                <p>Monitor property changes in Group Policy: <code>Computer Configuration\Windows Settings\Security Settings\Account Policies\Password Policy\Store passwords using reversible encryption</code>. By default, the property should be set to Disabled.</p><p>Analytic 1 - Enabling reversible encryption outside of standard procedures.</p><p><code>index=windows source="WinEventLog:Security" (EventCode=5136 OR EventCode=5137 OR EventCode=5138 OR EventCode=5139)| search AttributeLDAPDisplayName="msDS-User-Account-Control-Computed" OR AttributeLDAPDisplayName="userParameters"| rex field=_raw "ObjectDN=(?P<ObjectDN>[^,]+)"| eval Modification=if(match(AttributeValue, ".<em>;PwdProperties=1.</em>"), "Enabled", "Disabled")| stats count by ObjectDN, Modification, EventCode, AttributeValue| where Modification="Enabled" </code></p>
-
+                        <a href="/detectionstrategies/DET0589#AN1621">AN1621</a>
                     </td>
-            </tr>
-            <tr class="datasource" id="uses-DS0017">
-                <td>
-                    <a href="/datasources/DS0017">DS0017</a>
-                </td>
-                <td class="nowrap">
-                    <a href="/datasources/DS0017">Command</a>
-                </td>
-                <!-- Add first data component here -->
-                <td> 
-                    <a href="/datasources/DS0017/#Command%20Execution">Command Execution</a>
-                </td>
                     <td>
-                                <p>Monitor command-line usage for <code>-AllowReversiblePasswordEncryption $true</code> or other actions that could be related to malicious tampering of user settings (i.e. <a href="/techniques/T1484/001">Group Policy Modification</a>). </p><p>Analytic 1 - Command-line actions indicating changes to encryption settings.</p><p><code> index=security (sourcetype="WinEventLog:Security" OR sourcetype="powershell")(EventCode=4688 OR EventCode=4104) commandline="<em>set-aduser</em>" commandline="<em>allowreversiblepasswordencryption</em>"         | table _time, Process_ID, User, CommandLine</code></p>
-
+                                <p>Detects enabling of reversible password encryption in Active Directory or Group Policy, suspicious PowerShell commands modifying AD user properties, and unusual account configuration changes correlated with policy modifications. Multi-event correlation links Group Policy edits, PowerShell command execution, and user account property changes to identify tampering with authentication encryption settings.</p>
+</a>
                     </td>
-            </tr>
-            <tr class="datasource" id="uses-DS0012">
-                <td>
-                    <a href="/datasources/DS0012">DS0012</a>
-                </td>
-                <td class="nowrap">
-                    <a href="/datasources/DS0012">Script</a>
-                </td>
-                <!-- Add first data component here -->
-                <td> 
-                    <a href="/datasources/DS0012/#Script%20Execution">Script Execution</a>
-                </td>
-                    <td>
-                                <p>Consider monitoring and/or blocking suspicious execution of Active Directory PowerShell modules, such as <code>Set-ADUser</code> and <code>Set-ADAccountControl</code>, that change account configurations.</p>
-
-                    </td>
-            </tr>
-            <tr class="datasource" id="uses-DS0002">
-                <td>
-                    <a href="/datasources/DS0002">DS0002</a>
-                </td>
-                <td class="nowrap">
-                    <a href="/datasources/DS0002">User Account</a>
-                </td>
-                <!-- Add first data component here -->
-                <td> 
-                    <a href="/datasources/DS0002/#User%20Account%20Metadata">User Account Metadata</a>
-                </td>
-                    <td>
-                                <p>Monitor Fine-Grained Password Policies and regularly audit user accounts and group settings.<span onclick=scrollToRef('scite-4') id="scite-ref-4-a" class="scite-citeref-number" title="Metcalf, S. (2015, November 22). Dump Clear-Text Passwords for All Admins in the Domain Using Mimikatz DCSync. Retrieved November 15, 2021."data-reference="dump_pwd_dcsync"><sup><a href="https://adsecurity.org/?p=2053" target="_blank" data-hasqtip="3" aria-describedby="qtip-3">[4]</a></sup></span></p>
-
-                    </td>
-            </tr>
+                </tr>
     </tbody>
 </table>
 </div>
@@ -666,7 +629,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3 col-footer">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v17.1&#013;Website  v4.2.3">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v18.0&#013;Website  v4.4.0">Website Changelog</a></u>
                                 </div>
                                 <div class="px-3">
                                     <u class="footer-link"><a href="/resources/legal-and-branding/privacy/#" class="footer-link" onclick="Osano.cm.showDrawer('osano-cm-dom-info-dialog-open')">Cookie Preferences</a></u>

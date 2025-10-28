@@ -93,12 +93,11 @@
                         </li>
                         <li class="nav-item dropdown">
                                 
-    <a class="nav-link dropdown-toggle" href="/datasources" id="navbarDropdown" role="button"
+    <a class="nav-link dropdown-toggle" href="/mitigations" id="navbarDropdown" role="button"
     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         <b>Defenses</b>
     </a>
     <div class="dropdown-menu " aria-labelledby="navbarDropdown">
-                <a class="dropdown-item" href="/datasources">Data Sources</a>
                 
 <div class="dropright dropdown">
 <a class="dropdown-item dropdown-toggle" href="/mitigations/" id="navbarDropdown" role="button"
@@ -113,6 +112,19 @@
 </div>
 
                 <a class="dropdown-item" href="/assets">Assets</a>
+                
+<div class="dropright dropdown">
+<a class="dropdown-item dropdown-toggle" href="/detectionstrategies/" id="navbarDropdown" role="button"
+    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <b>Detections</b>
+    </a>
+    <div class="dropdown-menu " aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="/detectionstrategies/">Detection Strategies</a>
+            <a class="dropdown-item" href="/analytics/">Analytics</a>
+            <a class="dropdown-item" href="/datacomponents">Data Components</a>
+    </div>
+</div>
+
     </div>
 
 
@@ -176,7 +188,7 @@
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
                     <div class="container-fluid banner-message">
-                        
+                        ATT&CK v18 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v18-8f82d839ee9e'>blog post</a> or <a href='https://attack.mitre.org/resources/updates/'>changelog</a> for more information.
 
                     </div>
             </div>
@@ -422,13 +434,13 @@
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Permalink to this version of T1564.013" 
-           href="/versions/v17/techniques/T1564/013/" data-test-ignore="true">Version Permalink</a>
+           href="/versions/v18/techniques/T1564/013/" data-test-ignore="true">Version Permalink</a>
     </div>
     <div class="permalink">
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Go to the live version of T1564.013" 
-           href="/versions/v17/techniques/T1564/013/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+           href="/versions/v18/techniques/T1564/013/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
     </div>
 </div>
 
@@ -465,66 +477,33 @@
                                     This type of attack technique cannot be easily mitigated with preventive controls since
                                     it is based on the abuse of system features.
                                 </p>
-                            <h2 class="pt-3" id="detection">Detection</h2>
+                                <h2 class="pt-3" id="detection">Detection Strategy</h2>
                                 <div class="tables-mobile">
 <table class="table datasources-table table-bordered">
     <thead>
         <tr>
             <th class="p-2" scope="col">ID</th>
-            <th class="p-2 nowrap" scope="col">Data Source</th>
-            <th class="p-2 nowrap" scope="col">Data Component</th>
-            <th class="p-2" scope="col">Detects</th>
+            <th class="p-2 nowrap" scope="col">Name</th>
+            <th class="p-2 nowrap" scope="col">Analytic ID</th>
+            <th class="p-2 nowrap" scope="col">Analytic Description</th>
         </tr>
     </thead>
     <tbody>
-            <tr class="datasource" id="uses-DS0017">
-                <td>
-                    <a href="/datasources/DS0017">DS0017</a>
-                </td>
-                <td class="nowrap">
-                    <a href="/datasources/DS0017">Command</a>
-                </td>
-                <!-- Add first data component here -->
-                <td> 
-                    <a href="/datasources/DS0017/#Command%20Execution">Command Execution</a>
-                </td>
+                <tr class="detection_strategy" id="uses-DET0428">
+                        <td rowspan="1">
+                            <a href="/detectionstrategies/DET0428">DET0428</a>
+                        </td>
+                        <td rowspan="1">
+                            <a href="/detectionstrategies/DET0428">Detection Strategy for Bind Mounts on Linux</a>
+                        </td>
                     <td>
-                                <p>Configure auditd rules to monitor use of the <code>/bin/mount</code> command, especially with relation to the <code>/proc</code> directory. </p><p>Analytic 1 - Use of Mount with bind arguments targeting /proc/ paths </p><p><code> index=linux_logs source="/var/log/audit/audit.log"| eval syscall=coalesce(syscall, "unknown"), exe=coalesce(exe, "unknown")| search syscall="mount" exe="/bin/mount" (msg="<em>bind</em>" OR msg="<em>bind,rw</em>")| rex field=msg "a0=\"(?<source_path>[^\"]+)\" a1=\"(?<target_path>[^\"]+)\""| where like(source_path, "/proc/%") AND like(target_path, "/proc/%")| eval is_suspicious=if(match(target_path, "/proc/[1-9][0-9]*") AND NOT cidrmatch(source_path, target_path), 1, 0)| stats count by exe, source_path, target_path, uid, pid, is_suspicious| where is_suspicious=1 </code></p>
-
+                        <a href="/detectionstrategies/DET0428#AN1196">AN1196</a>
                     </td>
-            </tr>
-            <tr class="datasource" id="uses-DS0022">
-                <td>
-                    <a href="/datasources/DS0022">DS0022</a>
-                </td>
-                <td class="nowrap">
-                    <a href="/datasources/DS0022">File</a>
-                </td>
-                <!-- Add first data component here -->
-                <td> 
-                    <a href="/datasources/DS0022/#File%20Creation">File Creation</a>
-                </td>
                     <td>
-                                <p>Monitor for the creation of PID directories under <code>/proc</code> with unusual characteristics. For example, these directories should typically be read-only; the creation of a directory with write permissions may indicate unusual activity.<span onclick=scrollToRef('scite-4') id="scite-ref-4-a" class="scite-citeref-number" title="DFIR. (2024, May 16). The 'Invisibility Cloak' - Slash-Proc Magic. Retrieved April 11, 2025."data-reference="DFIR Proc Bind Mount"><sup><a href="https://dfir.ch/posts/slash-proc/" target="_blank" data-hasqtip="3" aria-describedby="qtip-3">[4]</a></sup></span></p>
-
+                                <p>Abuse of bind mounts to obscure process directories. Defender perspective: detecting anomalous mount operations where a process’s /proc entry is remapped to another directory, often hiding malicious activity from native utilities (ps, top). Behavior chain includes: (1) execution of <code>mount</code> with <code>-o bind</code> or <code>-B</code> flags, (2) modification of /proc entries inconsistent with expected process lineage, and (3) subsequent anomalous activity from processes whose metadata no longer matches execution context.</p>
+</a>
                     </td>
-            </tr>
-            <tr class="datasource" id="uses-DS0009">
-                <td>
-                    <a href="/datasources/DS0009">DS0009</a>
-                </td>
-                <td class="nowrap">
-                    <a href="/datasources/DS0009">Process</a>
-                </td>
-                <!-- Add first data component here -->
-                <td> 
-                    <a href="/datasources/DS0009/#OS%20API%20Execution">OS API Execution</a>
-                </td>
-                    <td>
-                                <p>Configure auditd rules to monitor use of the <code>mount</code> system call, especially with respect to the <code>/proc</code> directory. Bind mount activity invokes <code>mount()</code> with the <code>MS_BIND</code> flag. </p><p>Analytic 1 - Using eBPF or sys call logging </p><p><code> index=syscalls source="/var/log/audit/audit.log"| search syscall="mount"| regex args=".<em>bind.</em>"| eval suspicious=if(like(args, "%/proc/%") AND like(args, "%bind%"), 1, 0)| stats count by pid, exe, args, uid, suspicious| where suspicious=1 </code></p>
-
-                    </td>
-            </tr>
+                </tr>
     </tbody>
 </table>
 </div>
@@ -569,18 +548,6 @@
                 <span class="scite-citation-text">
                     <a rel="nofollow" class="external text" name="scite-3" href="https://blog.lumen.com/routers-roasting-on-an-open-firewall-the-kv-botnet-investigation/" target="_blank">
                         Black Lotus Labs. (2023, December 13). Routers Roasting On An Open Firewall: The KV-Botnet Investigation. Retrieved June 10, 2024.
-                    </a>
-                </span>
-            </span>
-        </li>
-
-
-                                
-        <li>
-            <span  id="scite-4" class="scite-citation">
-                <span class="scite-citation-text">
-                    <a rel="nofollow" class="external text" name="scite-4" href="https://dfir.ch/posts/slash-proc/" target="_blank">
-                        DFIR. (2024, May 16). The 'Invisibility Cloak' - Slash-Proc Magic. Retrieved April 11, 2025.
                     </a>
                 </span>
             </span>
@@ -653,7 +620,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3 col-footer">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v17.1&#013;Website  v4.2.3">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v18.0&#013;Website  v4.4.0">Website Changelog</a></u>
                                 </div>
                                 <div class="px-3">
                                     <u class="footer-link"><a href="/resources/legal-and-branding/privacy/#" class="footer-link" onclick="Osano.cm.showDrawer('osano-cm-dom-info-dialog-open')">Cookie Preferences</a></u>

@@ -92,12 +92,11 @@
                         </li>
                         <li class="nav-item dropdown">
                                 
-    <a class="nav-link dropdown-toggle" href="/datasources" id="navbarDropdown" role="button"
+    <a class="nav-link dropdown-toggle" href="/mitigations" id="navbarDropdown" role="button"
     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         <b>Defenses</b>
     </a>
     <div class="dropdown-menu " aria-labelledby="navbarDropdown">
-                <a class="dropdown-item" href="/datasources">Data Sources</a>
                 
 <div class="dropright dropdown">
 <a class="dropdown-item dropdown-toggle" href="/mitigations/" id="navbarDropdown" role="button"
@@ -112,6 +111,19 @@
 </div>
 
                 <a class="dropdown-item" href="/assets">Assets</a>
+                
+<div class="dropright dropdown">
+<a class="dropdown-item dropdown-toggle" href="/detectionstrategies/" id="navbarDropdown" role="button"
+    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <b>Detections</b>
+    </a>
+    <div class="dropdown-menu " aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="/detectionstrategies/">Detection Strategies</a>
+            <a class="dropdown-item" href="/analytics/">Analytics</a>
+            <a class="dropdown-item" href="/datacomponents">Data Components</a>
+    </div>
+</div>
+
     </div>
 
 
@@ -175,7 +187,7 @@
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
                     <div class="container-fluid banner-message">
-                        
+                        ATT&CK v18 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v18-8f82d839ee9e'>blog post</a> or <a href='https://attack.mitre.org/resources/updates/'>changelog</a> for more information.
 
                     </div>
             </div>
@@ -225,7 +237,7 @@
 </tbody>
 </table>
 <p>The April 2023 (v13) ATT&amp;CK release updates Techniques, Groups, Campaigns and Software for Enterprise, Mobile, and ICS. The biggest changes in ATT&amp;CK v13 are the addition of detailed detection guidance to some Techniques in ATT&amp;CK for Enterprise, Mobile Data Sources, and two new types of changelogs to help identify more precisely what has changed in ATT&amp;CK. An <a href="https://medium.com/mitre-attack/attack-v13-enters-the-room-5cef174c32ff">accompanying blog post</a> describes these changes as well as improvements across ATT&amp;CK's various domains and platforms.</p>
-<p>This release includes a new <a href="/docs/changelogs/v12.1-v13.0/changelog-detailed.html">human-readable detailed changelog</a> showing more specifically what changed in updated ATT&amp;CK objects, and a new <a href="/docs/changelogs/v12.1-v13.0/changelog.json">machine-readable JSON changelog</a>, whose format is described in <a href="https://github.com/mitre-attack/mitreattack-python/blob/master/mitreattack/diffStix/README.md">ATT&amp;CK's Github</a>. The terminology used in these release notes has also been updated to better describe the changes to various ATT&amp;CK objects:</p>
+<p>This release includes a new <a href="/docs/changelogs/v12.1-v13.0/changelog-detailed.html">human-readable detailed changelog</a> showing more specifically what changed in updated ATT&amp;CK objects, and a new <a href="/docs/changelogs/v12.1-v13.0/changelog.json">machine-readable JSON changelog</a>, whose format is described in <a href="https://github.com/mitre-attack/mitreattack-python/blob/main/mitreattack/diffStix/README.md">ATT&amp;CK's Github</a>. The terminology used in these release notes has also been updated to better describe the changes to various ATT&amp;CK objects:</p>
 <ul>
 <li>New objects: ATT&amp;CK objects which are only present in the new release.</li>
 <li>Major version changes: ATT&amp;CK objects that have a major version change. (e.g., 1.0 → 2.0)</li>
@@ -236,9 +248,136 @@
 <li>Object deletions: ATT&amp;CK objects which are no longer found in the STIX data.</li>
 </ul>
 <p>This version of ATT&amp;CK for Enterprise contains 14 Tactics, 196 Techniques, 411 Sub-techniques, 138 Groups, 22 Campaigns, and 740 Pieces of Software.</p>
-<h2>Techniques</h2>
-<h3>Enterprise</h3>
-<h4>New Techniques</h4>
+<h2 id="table-of-contents"><a class="toclink" href="#table-of-contents">Table of Contents</a></h2>
+<div class="toc">
+<ul>
+<li><a href="#table-of-contents">Table of Contents</a></li>
+<li><a href="#techniques">Techniques</a><ul>
+<li><a href="#enterprise">Enterprise</a><ul>
+<li><a href="#new-techniques">New Techniques</a></li>
+<li><a href="#major-version-changes">Major Version Changes</a></li>
+<li><a href="#minor-version-changes">Minor Version Changes</a></li>
+<li><a href="#patches">Patches</a></li>
+</ul>
+</li>
+<li><a href="#mobile">Mobile</a><ul>
+<li><a href="#minor-version-changes_1">Minor Version Changes</a></li>
+</ul>
+</li>
+<li><a href="#ics">ICS</a><ul>
+<li><a href="#new-techniques_1">New Techniques</a></li>
+<li><a href="#minor-version-changes_2">Minor Version Changes</a></li>
+<li><a href="#patches_1">Patches</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#software">Software</a><ul>
+<li><a href="#enterprise_1">Enterprise</a><ul>
+<li><a href="#new-software">New Software</a></li>
+<li><a href="#minor-version-changes_3">Minor Version Changes</a></li>
+<li><a href="#patches_2">Patches</a></li>
+</ul>
+</li>
+<li><a href="#mobile_1">Mobile</a><ul>
+<li><a href="#new-software_1">New Software</a></li>
+<li><a href="#major-version-changes_1">Major Version Changes</a></li>
+<li><a href="#minor-version-changes_4">Minor Version Changes</a></li>
+<li><a href="#patches_3">Patches</a></li>
+</ul>
+</li>
+<li><a href="#ics_1">ICS</a><ul>
+<li><a href="#new-software_2">New Software</a></li>
+<li><a href="#minor-version-changes_5">Minor Version Changes</a></li>
+<li><a href="#patches_4">Patches</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#groups">Groups</a><ul>
+<li><a href="#enterprise_2">Enterprise</a><ul>
+<li><a href="#new-groups">New Groups</a></li>
+<li><a href="#major-version-changes_2">Major Version Changes</a></li>
+<li><a href="#minor-version-changes_6">Minor Version Changes</a></li>
+<li><a href="#patches_5">Patches</a></li>
+</ul>
+</li>
+<li><a href="#mobile_2">Mobile</a><ul>
+<li><a href="#major-version-changes_3">Major Version Changes</a></li>
+<li><a href="#patches_6">Patches</a></li>
+</ul>
+</li>
+<li><a href="#ics_2">ICS</a><ul>
+<li><a href="#major-version-changes_4">Major Version Changes</a></li>
+<li><a href="#minor-version-changes_7">Minor Version Changes</a></li>
+<li><a href="#patches_7">Patches</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#campaigns">Campaigns</a><ul>
+<li><a href="#enterprise_3">Enterprise</a><ul>
+<li><a href="#new-campaigns">New Campaigns</a></li>
+<li><a href="#minor-version-changes_8">Minor Version Changes</a></li>
+</ul>
+</li>
+<li><a href="#mobile_3">Mobile</a></li>
+<li><a href="#ics_3">ICS</a><ul>
+<li><a href="#new-campaigns_1">New Campaigns</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#mitigations">Mitigations</a><ul>
+<li><a href="#enterprise_4">Enterprise</a><ul>
+<li><a href="#minor-version-changes_9">Minor Version Changes</a></li>
+</ul>
+</li>
+<li><a href="#mobile_4">Mobile</a></li>
+<li><a href="#ics_4">ICS</a><ul>
+<li><a href="#new-mitigations">New Mitigations</a></li>
+<li><a href="#minor-version-changes_10">Minor Version Changes</a></li>
+<li><a href="#patches_8">Patches</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#data-sources">Data Sources</a><ul>
+<li><a href="#enterprise_5">Enterprise</a><ul>
+<li><a href="#patches_9">Patches</a></li>
+</ul>
+</li>
+<li><a href="#mobile_5">Mobile</a><ul>
+<li><a href="#new-data-sources">New Data Sources</a></li>
+</ul>
+</li>
+<li><a href="#ics_5">ICS</a><ul>
+<li><a href="#patches_10">Patches</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#data-components">Data Components</a><ul>
+<li><a href="#enterprise_6">Enterprise</a><ul>
+<li><a href="#patches_11">Patches</a></li>
+</ul>
+</li>
+<li><a href="#mobile_6">Mobile</a><ul>
+<li><a href="#new-data-components">New Data Components</a></li>
+</ul>
+</li>
+<li><a href="#ics_6">ICS</a><ul>
+<li><a href="#patches_12">Patches</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#contributors-to-this-release">Contributors to this release</a></li>
+</ul>
+</div>
+<h2 id="techniques"><a class="toclink" href="#techniques">Techniques</a></h2>
+<h3 id="enterprise"><a class="toclink" href="#enterprise">Enterprise</a></h3>
+<h4 id="new-techniques"><a class="toclink" href="#new-techniques">New Techniques</a></h4>
 <ul>
 <li><a href="/techniques/T1650">Acquire Access</a> <small style="color:#929393">(v1.0)</small></li>
 <li>Acquire Infrastructure: <a href="/techniques/T1583/008">Malvertising</a> <small style="color:#929393">(v1.0)</small></li>
@@ -254,11 +393,11 @@
 <li>Remote Services: <a href="/techniques/T1021/007">Cloud Services</a> <small style="color:#929393">(v1.0)</small></li>
 <li>Unsecured Credentials: <a href="/techniques/T1552/008">Chat Messages</a> <small style="color:#929393">(v1.0)</small></li>
 </ul>
-<h4>Major Version Changes</h4>
+<h4 id="major-version-changes"><a class="toclink" href="#major-version-changes">Major Version Changes</a></h4>
 <ul>
 <li><a href="/techniques/T1217">Browser Information Discovery</a> <small style="color:#929393">(v1.0&#8594;v2.0)</small></li>
 </ul>
-<h4>Minor Version Changes</h4>
+<h4 id="minor-version-changes"><a class="toclink" href="#minor-version-changes">Minor Version Changes</a></h4>
 <ul>
 <li><a href="/techniques/T1548">Abuse Elevation Control Mechanism</a> <small style="color:#929393">(v1.0&#8594;v1.1)</small></li>
 <li><a href="/techniques/T1548/002">Bypass User Account Control</a> <small style="color:#929393">(v2.0&#8594;v2.1)</small></li>
@@ -397,7 +536,7 @@
 <li><a href="/techniques/T1078/003">Local Accounts</a> <small style="color:#929393">(v1.2&#8594;v1.3)</small></li>
 <li><a href="/techniques/T1047">Windows Management Instrumentation</a> <small style="color:#929393">(v1.2&#8594;v1.3)</small></li>
 </ul>
-<h4>Patches</h4>
+<h4 id="patches"><a class="toclink" href="#patches">Patches</a></h4>
 <ul>
 <li>Abuse Elevation Control Mechanism: <a href="/techniques/T1548/001">Setuid and Setgid</a> <small style="color:#929393">(v1.1)</small></li>
 <li><a href="/techniques/T1134">Access Token Manipulation</a> <small style="color:#929393">(v2.0)</small></li>
@@ -482,8 +621,8 @@
 <li>Valid Accounts: <a href="/techniques/T1078/001">Default Accounts</a> <small style="color:#929393">(v1.2)</small></li>
 <li><a href="/techniques/T1125">Video Capture</a> <small style="color:#929393">(v1.1)</small></li>
 </ul>
-<h3>Mobile</h3>
-<h4>Minor Version Changes</h4>
+<h3 id="mobile"><a class="toclink" href="#mobile">Mobile</a></h3>
+<h4 id="minor-version-changes_1"><a class="toclink" href="#minor-version-changes_1">Minor Version Changes</a></h4>
 <ul>
 <li><a href="/techniques/T1626">Abuse Elevation Control Mechanism</a> <small style="color:#929393">(v1.0&#8594;v1.1)</small></li>
 <li><a href="/techniques/T1626/001">Device Administrator Permissions</a> <small style="color:#929393">(v1.0&#8594;v1.1)</small></li>
@@ -568,13 +707,13 @@
 <li><a href="/techniques/T1481/001">Dead Drop Resolver</a> <small style="color:#929393">(v1.0&#8594;v1.1)</small></li>
 <li><a href="/techniques/T1481/003">One-Way Communication</a> <small style="color:#929393">(v1.0&#8594;v1.1)</small></li>
 </ul>
-<h3>ICS</h3>
-<h4>New Techniques</h4>
+<h3 id="ics"><a class="toclink" href="#ics">ICS</a></h3>
+<h4 id="new-techniques_1"><a class="toclink" href="#new-techniques_1">New Techniques</a></h4>
 <ul>
 <li><a href="/techniques/T0892">Change Credential</a> <small style="color:#929393">(v1.0)</small></li>
 <li><a href="/techniques/T0893">Data from Local System</a> <small style="color:#929393">(v1.0)</small></li>
 </ul>
-<h4>Minor Version Changes</h4>
+<h4 id="minor-version-changes_2"><a class="toclink" href="#minor-version-changes_2">Minor Version Changes</a></h4>
 <ul>
 <li><a href="/techniques/T0878">Alarm Suppression</a> <small style="color:#929393">(v1.1&#8594;v1.2)</small></li>
 <li><a href="/techniques/T0806">Brute Force I/O</a> <small style="color:#929393">(v1.0&#8594;v1.1)</small></li>
@@ -593,7 +732,7 @@
 <li><a href="/techniques/T0855">Unauthorized Command Message</a> <small style="color:#929393">(v1.1&#8594;v1.2)</small></li>
 <li><a href="/techniques/T0860">Wireless Compromise</a> <small style="color:#929393">(v1.1&#8594;v1.2)</small></li>
 </ul>
-<h4>Patches</h4>
+<h4 id="patches_1"><a class="toclink" href="#patches_1">Patches</a></h4>
 <ul>
 <li><a href="/techniques/T0830">Adversary-in-the-Middle</a> <small style="color:#929393">(v2.0)</small></li>
 <li><a href="/techniques/T0802">Automated Collection</a> <small style="color:#929393">(v1.0)</small></li>
@@ -650,9 +789,9 @@
 <li><a href="/techniques/T0859">Valid Accounts</a> <small style="color:#929393">(v1.1)</small></li>
 <li><a href="/techniques/T0887">Wireless Sniffing</a> <small style="color:#929393">(v1.1)</small></li>
 </ul>
-<h2>Software</h2>
-<h3>Enterprise</h3>
-<h4>New Software</h4>
+<h2 id="software"><a class="toclink" href="#software">Software</a></h2>
+<h3 id="enterprise_1"><a class="toclink" href="#enterprise_1">Enterprise</a></h3>
+<h4 id="new-software"><a class="toclink" href="#new-software">New Software</a></h4>
 <ul>
 <li><a href="/software/S1053">AvosLocker</a> <small style="color:#929393">(v1.0)</small></li>
 <li><a href="/software/S1070">Black Basta</a> <small style="color:#929393">(v1.0)</small></li>
@@ -670,7 +809,7 @@
 <li><a href="/software/S1065">Woody RAT</a> <small style="color:#929393">(v1.0)</small></li>
 <li><a href="/software/S1059">metaMain</a> <small style="color:#929393">(v1.0)</small></li>
 </ul>
-<h4>Minor Version Changes</h4>
+<h4 id="minor-version-changes_3"><a class="toclink" href="#minor-version-changes_3">Minor Version Changes</a></h4>
 <ul>
 <li><a href="/software/S0677">AADInternals</a> <small style="color:#929393">(v1.1&#8594;v1.2)</small></li>
 <li><a href="/software/S0552">AdFind</a> <small style="color:#929393">(v1.1&#8594;v1.2)</small></li>
@@ -755,7 +894,7 @@
 <li><a href="/software/S0105">dsquery</a> <small style="color:#929393">(v1.3&#8594;v1.4)</small></li>
 <li><a href="/software/S0108">netsh</a> <small style="color:#929393">(v1.1&#8594;v1.2)</small></li>
 </ul>
-<h4>Patches</h4>
+<h4 id="patches_2"><a class="toclink" href="#patches_2">Patches</a></h4>
 <ul>
 <li><a href="/software/S0137">CORESHELL</a> <small style="color:#929393">(v2.1)</small></li>
 <li><a href="/software/S0144">ChChes</a> <small style="color:#929393">(v1.1)</small></li>
@@ -788,8 +927,8 @@
 <li><a href="/software/S0412">ZxShell</a> <small style="color:#929393">(v1.2)</small></li>
 <li><a href="/software/S0032">gh0st RAT</a> <small style="color:#929393">(v3.1)</small></li>
 </ul>
-<h3>Mobile</h3>
-<h4>New Software</h4>
+<h3 id="mobile_1"><a class="toclink" href="#mobile_1">Mobile</a></h3>
+<h4 id="new-software_1"><a class="toclink" href="#new-software_1">New Software</a></h4>
 <ul>
 <li><a href="/software/S1061">AbstractEmu</a> <small style="color:#929393">(v1.0)</small></li>
 <li><a href="/software/S1054">Drinik</a> <small style="color:#929393">(v1.0)</small></li>
@@ -799,30 +938,30 @@
 <li><a href="/software/S1069">TangleBot</a> <small style="color:#929393">(v1.0)</small></li>
 <li><a href="/software/S1056">TianySpy</a> <small style="color:#929393">(v1.0)</small></li>
 </ul>
-<h4>Major Version Changes</h4>
+<h4 id="major-version-changes_1"><a class="toclink" href="#major-version-changes_1">Major Version Changes</a></h4>
 <ul>
 <li><a href="/software/S0311">YiSpecter</a> <small style="color:#929393">(v1.0&#8594;v2.0)</small></li>
 </ul>
-<h4>Minor Version Changes</h4>
+<h4 id="minor-version-changes_4"><a class="toclink" href="#minor-version-changes_4">Minor Version Changes</a></h4>
 <ul>
 <li><a href="/software/S0432">Bread</a> <small style="color:#929393">(v1.1&#8594;v1.2)</small></li>
 <li><a href="/software/S0322">HummingBad</a> <small style="color:#929393">(v1.0&#8594;v1.1)</small></li>
 </ul>
-<h4>Patches</h4>
+<h4 id="patches_3"><a class="toclink" href="#patches_3">Patches</a></h4>
 <ul>
 <li><a href="/software/S0655">BusyGasper</a> <small style="color:#929393">(v1.0)</small></li>
 </ul>
-<h3>ICS</h3>
-<h4>New Software</h4>
+<h3 id="ics_1"><a class="toclink" href="#ics_1">ICS</a></h3>
+<h4 id="new-software_2"><a class="toclink" href="#new-software_2">New Software</a></h4>
 <ul>
 <li><a href="/software/S1072">Industroyer2</a> <small style="color:#929393">(v1.0)</small></li>
 </ul>
-<h4>Minor Version Changes</h4>
+<h4 id="minor-version-changes_5"><a class="toclink" href="#minor-version-changes_5">Minor Version Changes</a></h4>
 <ul>
 <li><a href="/software/S0496">REvil</a> <small style="color:#929393">(v2.0&#8594;v2.1)</small></li>
 <li><a href="/software/S0603">Stuxnet</a> <small style="color:#929393">(v1.2&#8594;v1.3)</small></li>
 </ul>
-<h4>Patches</h4>
+<h4 id="patches_4"><a class="toclink" href="#patches_4">Patches</a></h4>
 <ul>
 <li><a href="/software/S0608">Conficker</a> <small style="color:#929393">(v1.0)</small></li>
 <li><a href="/software/S0038">Duqu</a> <small style="color:#929393">(v1.2)</small></li>
@@ -834,21 +973,21 @@
 <li><a href="/software/S1009">Triton</a> <small style="color:#929393">(v1.0)</small></li>
 <li><a href="/software/S0366">WannaCry</a> <small style="color:#929393">(v1.1)</small></li>
 </ul>
-<h2>Groups</h2>
-<h3>Enterprise</h3>
-<h4>New Groups</h4>
+<h2 id="groups"><a class="toclink" href="#groups">Groups</a></h2>
+<h3 id="enterprise_2"><a class="toclink" href="#enterprise_2">Enterprise</a></h3>
+<h4 id="new-groups"><a class="toclink" href="#new-groups">New Groups</a></h4>
 <ul>
 <li><a href="/groups/G1012">CURIUM</a> <small style="color:#929393">(v1.0)</small></li>
 <li><a href="/groups/G1014">LuminousMoth</a> <small style="color:#929393">(v1.0)</small></li>
 <li><a href="/groups/G1013">Metador</a> <small style="color:#929393">(v1.0)</small></li>
 </ul>
-<h4>Major Version Changes</h4>
+<h4 id="major-version-changes_2"><a class="toclink" href="#major-version-changes_2">Major Version Changes</a></h4>
 <ul>
 <li><a href="/groups/G0016">APT29</a> <small style="color:#929393">(v3.1&#8594;v4.0)</small></li>
 <li><a href="/groups/G0115">GOLD SOUTHFIELD</a> <small style="color:#929393">(v1.1&#8594;v2.0)</small></li>
 <li><a href="/groups/G0034">Sandworm Team</a> <small style="color:#929393">(v2.2&#8594;v3.0)</small></li>
 </ul>
-<h4>Minor Version Changes</h4>
+<h4 id="minor-version-changes_6"><a class="toclink" href="#minor-version-changes_6">Minor Version Changes</a></h4>
 <ul>
 <li><a href="/groups/G0073">APT19</a> <small style="color:#929393">(v1.4&#8594;v1.5)</small></li>
 <li><a href="/groups/G0050">APT32</a> <small style="color:#929393">(v2.5&#8594;v2.6)</small></li>
@@ -882,7 +1021,7 @@
 <li><a href="/groups/G0102">Wizard Spider</a> <small style="color:#929393">(v2.0&#8594;v2.1)</small></li>
 <li><a href="/groups/G0128">ZIRCONIUM</a> <small style="color:#929393">(v1.0&#8594;v1.1)</small></li>
 </ul>
-<h4>Patches</h4>
+<h4 id="patches_5"><a class="toclink" href="#patches_5">Patches</a></h4>
 <ul>
 <li><a href="/groups/G0007">APT28</a> <small style="color:#929393">(v4.0)</small></li>
 <li><a href="/groups/G0064">APT33</a> <small style="color:#929393">(v1.4)</small></li>
@@ -895,22 +1034,22 @@
 <li><a href="/groups/G0044">Winnti Group</a> <small style="color:#929393">(v1.2)</small></li>
 <li><a href="/groups/G0045">menuPass</a> <small style="color:#929393">(v2.1)</small></li>
 </ul>
-<h3>Mobile</h3>
-<h4>Major Version Changes</h4>
+<h3 id="mobile_2"><a class="toclink" href="#mobile_2">Mobile</a></h3>
+<h4 id="major-version-changes_3"><a class="toclink" href="#major-version-changes_3">Major Version Changes</a></h4>
 <ul>
 <li><a href="/groups/G0034">Sandworm Team</a> <small style="color:#929393">(v2.2&#8594;v3.0)</small></li>
 </ul>
-<h4>Patches</h4>
+<h4 id="patches_6"><a class="toclink" href="#patches_6">Patches</a></h4>
 <ul>
 <li><a href="/groups/G0007">APT28</a> <small style="color:#929393">(v4.0)</small></li>
 </ul>
-<h3>ICS</h3>
-<h4>Major Version Changes</h4>
+<h3 id="ics_2"><a class="toclink" href="#ics_2">ICS</a></h3>
+<h4 id="major-version-changes_4"><a class="toclink" href="#major-version-changes_4">Major Version Changes</a></h4>
 <ul>
 <li><a href="/groups/G0115">GOLD SOUTHFIELD</a> <small style="color:#929393">(v1.1&#8594;v2.0)</small></li>
 <li><a href="/groups/G0034">Sandworm Team</a> <small style="color:#929393">(v2.2&#8594;v3.0)</small></li>
 </ul>
-<h4>Minor Version Changes</h4>
+<h4 id="minor-version-changes_7"><a class="toclink" href="#minor-version-changes_7">Minor Version Changes</a></h4>
 <ul>
 <li><a href="/groups/G0037">FIN6</a> <small style="color:#929393">(v3.2&#8594;v3.3)</small></li>
 <li><a href="/groups/G0046">FIN7</a> <small style="color:#929393">(v2.1&#8594;v2.2)</small></li>
@@ -919,15 +1058,15 @@
 <li><a href="/groups/G0049">OilRig</a> <small style="color:#929393">(v3.0&#8594;v3.1)</small></li>
 <li><a href="/groups/G0102">Wizard Spider</a> <small style="color:#929393">(v2.0&#8594;v2.1)</small></li>
 </ul>
-<h4>Patches</h4>
+<h4 id="patches_7"><a class="toclink" href="#patches_7">Patches</a></h4>
 <ul>
 <li><a href="/groups/G0064">APT33</a> <small style="color:#929393">(v1.4)</small></li>
 <li><a href="/groups/G0035">Dragonfly</a> <small style="color:#929393">(v3.1)</small></li>
 <li><a href="/groups/G0088">TEMP.Veles</a> <small style="color:#929393">(v1.3)</small></li>
 </ul>
-<h2>Campaigns</h2>
-<h3>Enterprise</h3>
-<h4>New Campaigns</h4>
+<h2 id="campaigns"><a class="toclink" href="#campaigns">Campaigns</a></h2>
+<h3 id="enterprise_3"><a class="toclink" href="#enterprise_3">Enterprise</a></h3>
+<h4 id="new-campaigns"><a class="toclink" href="#new-campaigns">New Campaigns</a></h4>
 <ul>
 <li><a href="/campaigns/C0025">2016 Ukraine Electric Power Attack</a> <small style="color:#929393">(v1.0)</small></li>
 <li><a href="/campaigns/C0017">C0017</a> <small style="color:#929393">(v1.0)</small></li>
@@ -937,38 +1076,38 @@
 <li><a href="/campaigns/C0023">Operation Ghost</a> <small style="color:#929393">(v1.0)</small></li>
 <li><a href="/campaigns/C0024">SolarWinds Compromise</a> <small style="color:#929393">(v1.0)</small></li>
 </ul>
-<h4>Minor Version Changes</h4>
+<h4 id="minor-version-changes_8"><a class="toclink" href="#minor-version-changes_8">Minor Version Changes</a></h4>
 <ul>
 <li><a href="/campaigns/C0001">Frankenstein</a> <small style="color:#929393">(v1.0&#8594;v1.1)</small></li>
 <li><a href="/campaigns/C0012">Operation CuckooBees</a> <small style="color:#929393">(v1.0&#8594;v1.1)</small></li>
 <li><a href="/campaigns/C0014">Operation Wocao</a> <small style="color:#929393">(v1.0&#8594;v1.1)</small></li>
 </ul>
-<h3>Mobile</h3>
-<h3>ICS</h3>
-<h4>New Campaigns</h4>
+<h3 id="mobile_3"><a class="toclink" href="#mobile_3">Mobile</a></h3>
+<h3 id="ics_3"><a class="toclink" href="#ics_3">ICS</a></h3>
+<h4 id="new-campaigns_1"><a class="toclink" href="#new-campaigns_1">New Campaigns</a></h4>
 <ul>
 <li><a href="/campaigns/C0025">2016 Ukraine Electric Power Attack</a> <small style="color:#929393">(v1.0)</small></li>
 <li><a href="/campaigns/C0020">Maroochy Water Breach</a> <small style="color:#929393">(v1.0)</small></li>
 </ul>
-<h2>Mitigations</h2>
-<h3>Enterprise</h3>
-<h4>Minor Version Changes</h4>
+<h2 id="mitigations"><a class="toclink" href="#mitigations">Mitigations</a></h2>
+<h3 id="enterprise_4"><a class="toclink" href="#enterprise_4">Enterprise</a></h3>
+<h4 id="minor-version-changes_9"><a class="toclink" href="#minor-version-changes_9">Minor Version Changes</a></h4>
 <ul>
 <li><a href="/mitigations/M1047">Audit</a> <small style="color:#929393">(v1.1&#8594;v1.2)</small></li>
 <li><a href="/mitigations/M1028">Operating System Configuration</a> <small style="color:#929393">(v1.1&#8594;v1.2)</small></li>
 <li><a href="/mitigations/M1024">Restrict Registry Permissions</a> <small style="color:#929393">(v1.0&#8594;v1.1)</small></li>
 </ul>
-<h3>Mobile</h3>
-<h3>ICS</h3>
-<h4>New Mitigations</h4>
+<h3 id="mobile_4"><a class="toclink" href="#mobile_4">Mobile</a></h3>
+<h3 id="ics_4"><a class="toclink" href="#ics_4">ICS</a></h3>
+<h4 id="new-mitigations"><a class="toclink" href="#new-mitigations">New Mitigations</a></h4>
 <ul>
 <li><a href="/mitigations/M0818">Validate Program Inputs</a> <small style="color:#929393">(v1.0)</small></li>
 </ul>
-<h4>Minor Version Changes</h4>
+<h4 id="minor-version-changes_10"><a class="toclink" href="#minor-version-changes_10">Minor Version Changes</a></h4>
 <ul>
 <li><a href="/mitigations/M0814">Static Network Configuration</a> <small style="color:#929393">(v1.0&#8594;v1.1)</small></li>
 </ul>
-<h4>Patches</h4>
+<h4 id="patches_8"><a class="toclink" href="#patches_8">Patches</a></h4>
 <ul>
 <li><a href="/mitigations/M0801">Access Management</a> <small style="color:#929393">(v1.0)</small></li>
 <li><a href="/mitigations/M0936">Account Use Policies</a> <small style="color:#929393">(v1.0)</small></li>
@@ -1015,9 +1154,9 @@
 <li><a href="/mitigations/M0916">Vulnerability Scanning</a> <small style="color:#929393">(v1.0)</small></li>
 <li><a href="/mitigations/M0815">Watchdog Timers</a> <small style="color:#929393">(v1.0)</small></li>
 </ul>
-<h2>Data Sources</h2>
-<h3>Enterprise</h3>
-<h4>Patches</h4>
+<h2 id="data-sources"><a class="toclink" href="#data-sources">Data Sources</a></h2>
+<h3 id="enterprise_5"><a class="toclink" href="#enterprise_5">Enterprise</a></h3>
+<h4 id="patches_9"><a class="toclink" href="#patches_9">Patches</a></h4>
 <ul>
 <li><a href="/datasources/DS0017">Command</a> <small style="color:#929393">(v1.1)</small></li>
 <li><a href="/datasources/DS0022">File</a> <small style="color:#929393">(v1.0)</small></li>
@@ -1029,8 +1168,8 @@
 <li><a href="/datasources/DS0013">Sensor Health</a> <small style="color:#929393">(v1.1)</small></li>
 <li><a href="/datasources/DS0002">User Account</a> <small style="color:#929393">(v1.1)</small></li>
 </ul>
-<h3>Mobile</h3>
-<h4>New Data Sources</h4>
+<h3 id="mobile_5"><a class="toclink" href="#mobile_5">Mobile</a></h3>
+<h4 id="new-data-sources"><a class="toclink" href="#new-data-sources">New Data Sources</a></h4>
 <ul>
 <li><a href="/datasources/DS0041">Application Vetting</a> <small style="color:#929393">(v1.0)</small></li>
 <li><a href="/datasources/DS0017">Command</a> <small style="color:#eb6635">(v1.1)</small></li>
@@ -1039,8 +1178,8 @@
 <li><a href="/datasources/DS0013">Sensor Health</a> <small style="color:#eb6635">(v1.1)</small></li>
 <li><a href="/datasources/DS0042">User Interface</a> <small style="color:#929393">(v1.0)</small></li>
 </ul>
-<h3>ICS</h3>
-<h4>Patches</h4>
+<h3 id="ics_5"><a class="toclink" href="#ics_5">ICS</a></h3>
+<h4 id="patches_10"><a class="toclink" href="#patches_10">Patches</a></h4>
 <ul>
 <li><a href="/datasources/DS0039">Asset</a> <small style="color:#929393">(v1.0)</small></li>
 <li><a href="/datasources/DS0017">Command</a> <small style="color:#929393">(v1.1)</small></li>
@@ -1052,14 +1191,14 @@
 <li><a href="/datasources/DS0012">Script</a> <small style="color:#929393">(v1.1)</small></li>
 <li><a href="/datasources/DS0002">User Account</a> <small style="color:#929393">(v1.1)</small></li>
 </ul>
-<h2>Data Components</h2>
-<h3>Enterprise</h3>
-<h4>Patches</h4>
+<h2 id="data-components"><a class="toclink" href="#data-components">Data Components</a></h2>
+<h3 id="enterprise_6"><a class="toclink" href="#enterprise_6">Enterprise</a></h3>
+<h4 id="patches_11"><a class="toclink" href="#patches_11">Patches</a></h4>
 <ul>
 <li><a href="/datasources/DS0009/#OS%20API%20Execution">OS API Execution</a> <small style="color:#929393">(v1.0)</small></li>
 </ul>
-<h3>Mobile</h3>
-<h4>New Data Components</h4>
+<h3 id="mobile_6"><a class="toclink" href="#mobile_6">Mobile</a></h3>
+<h4 id="new-data-components"><a class="toclink" href="#new-data-components">New Data Components</a></h4>
 <ul>
 <li><a href="/datasources/DS0041/#API%20Calls">API Calls</a> <small style="color:#929393">(v1.0)</small></li>
 <li><a href="/datasources/DS0017/#Command%20Execution">Command Execution</a> <small style="color:#eb6635">(v1.1)</small></li>
@@ -1077,12 +1216,12 @@
 <li><a href="/datasources/DS0042/#System%20Notifications">System Notifications</a> <small style="color:#929393">(v1.0)</small></li>
 <li><a href="/datasources/DS0042/#System%20Settings">System Settings</a> <small style="color:#929393">(v1.0)</small></li>
 </ul>
-<h3>ICS</h3>
-<h4>Patches</h4>
+<h3 id="ics_6"><a class="toclink" href="#ics_6">ICS</a></h3>
+<h4 id="patches_12"><a class="toclink" href="#patches_12">Patches</a></h4>
 <ul>
 <li><a href="/datasources/DS0009/#OS%20API%20Execution">OS API Execution</a> <small style="color:#929393">(v1.0)</small></li>
 </ul>
-<h2>Contributors to this release</h2>
+<h2 id="contributors-to-this-release"><a class="toclink" href="#contributors-to-this-release">Contributors to this release</a></h2>
 <ul>
 <li>Adam Lichters</li>
 <li>Adrien Bataille</li>
@@ -1222,7 +1361,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3 col-footer">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v17.1&#013;Website  v4.2.3">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v18.0&#013;Website  v4.4.0">Website Changelog</a></u>
                                 </div>
                                 <div class="px-3">
                                     <u class="footer-link"><a href="/resources/legal-and-branding/privacy/#" class="footer-link" onclick="Osano.cm.showDrawer('osano-cm-dom-info-dialog-open')">Cookie Preferences</a></u>

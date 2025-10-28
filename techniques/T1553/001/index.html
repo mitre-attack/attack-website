@@ -93,12 +93,11 @@
                         </li>
                         <li class="nav-item dropdown">
                                 
-    <a class="nav-link dropdown-toggle" href="/datasources" id="navbarDropdown" role="button"
+    <a class="nav-link dropdown-toggle" href="/mitigations" id="navbarDropdown" role="button"
     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         <b>Defenses</b>
     </a>
     <div class="dropdown-menu " aria-labelledby="navbarDropdown">
-                <a class="dropdown-item" href="/datasources">Data Sources</a>
                 
 <div class="dropright dropdown">
 <a class="dropdown-item dropdown-toggle" href="/mitigations/" id="navbarDropdown" role="button"
@@ -113,6 +112,19 @@
 </div>
 
                 <a class="dropdown-item" href="/assets">Assets</a>
+                
+<div class="dropright dropdown">
+<a class="dropdown-item dropdown-toggle" href="/detectionstrategies/" id="navbarDropdown" role="button"
+    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <b>Detections</b>
+    </a>
+    <div class="dropdown-menu " aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="/detectionstrategies/">Detection Strategies</a>
+            <a class="dropdown-item" href="/analytics/">Analytics</a>
+            <a class="dropdown-item" href="/datacomponents">Data Components</a>
+    </div>
+</div>
+
     </div>
 
 
@@ -176,7 +188,7 @@
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
                     <div class="container-fluid banner-message">
-                        
+                        ATT&CK v18 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v18-8f82d839ee9e'>blog post</a> or <a href='https://attack.mitre.org/resources/updates/'>changelog</a> for more information.
 
                     </div>
             </div>
@@ -348,7 +360,7 @@
                                             <div class="row card-data">
                                                 <div class="col-md-1 px-0 text-center"></div>
                                                 <div class="col-md-11 pl-0">
-                                                    <span class="h5 card-title">Last Modified:&nbsp;</span>16 April 2025
+                                                    <span class="h5 card-title">Last Modified:&nbsp;</span>24 October 2025
                                                 </div>
                                             </div>
                                     </div>
@@ -358,13 +370,13 @@
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Permalink to this version of T1553.001" 
-           href="/versions/v17/techniques/T1553/001/" data-test-ignore="true">Version Permalink</a>
+           href="/versions/v18/techniques/T1553/001/" data-test-ignore="true">Version Permalink</a>
     </div>
     <div class="permalink">
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Go to the live version of T1553.001" 
-           href="/versions/v17/techniques/T1553/001/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+           href="/versions/v18/techniques/T1553/001/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
     </div>
 </div>
 
@@ -482,77 +494,33 @@
                                     </tbody>
                                 </table>
                                 </div>
-                            <h2 class="pt-3" id="detection">Detection</h2>
+                                <h2 class="pt-3" id="detection">Detection Strategy</h2>
                                 <div class="tables-mobile">
 <table class="table datasources-table table-bordered">
     <thead>
         <tr>
             <th class="p-2" scope="col">ID</th>
-            <th class="p-2 nowrap" scope="col">Data Source</th>
-            <th class="p-2 nowrap" scope="col">Data Component</th>
-            <th class="p-2" scope="col">Detects</th>
+            <th class="p-2 nowrap" scope="col">Name</th>
+            <th class="p-2 nowrap" scope="col">Analytic ID</th>
+            <th class="p-2 nowrap" scope="col">Analytic Description</th>
         </tr>
     </thead>
     <tbody>
-            <tr class="datasource" id="uses-DS0017">
-                <td>
-                    <a href="/datasources/DS0017">DS0017</a>
-                </td>
-                <td class="nowrap">
-                    <a href="/datasources/DS0017">Command</a>
-                </td>
-                <!-- Add first data component here -->
-                <td> 
-                    <a href="/datasources/DS0017/#Command%20Execution">Command Execution</a>
-                </td>
-                    <td>
-                                <p>Monitor and investigate attempts to modify extended file attributes with utilities such as <code>xattr</code>. Built-in system utilities may generate high false positive alerts, so compare against baseline knowledge for how systems are typically used and correlate modification events with other indications of malicious activity where possible. </p>
-
-                    </td>
-            </tr>
-            <tr class="datasource" id="uses-DS0022">
-                <td>
-                    <a href="/datasources/DS0022">DS0022</a>
-                </td>
-                <td class="nowrap">
-                    <a href="/datasources/DS0022">File</a>
-                </td>
-                <!-- Add first data component here -->
-                <td> 
-                    <a href="/datasources/DS0022/#File%20Metadata">File Metadata</a>
-                </td>
-                    <td>
-                                <p>Review <code>false</code> values under the <code>LSFileQuarantineEnabled</code> entry in an application's <code>Info.plist</code> file (required by every application). <code>false</code> under <code>LSFileQuarantineEnabled</code> indicates that an application does not use the quarantine flag. Unsandboxed applications with an unspecified <code>LSFileQuarantineEnabled</code> entry will default to not setting the quarantine flag.</p><p>QuarantineEvents is a SQLite database containing a list of all files assigned the <code>com.apple.quarantine</code> attribute, located at <code>~/Library/Preferences/com.apple.LaunchServices.QuarantineEventsV2</code>. Each event contains the corresponding UUID, timestamp, application, Gatekeeper score, and decision if it was allowed. <span onclick=scrollToRef('scite-1') id="scite-ref-1-a" class="scite-citeref-number" title="hoakley. (2020, October 29). Quarantine and the quarantine flag. Retrieved September 13, 2021."data-reference="TheEclecticLightCompany Quarantine and the flag"><sup><a href="https://eclecticlight.co/2020/10/29/quarantine-and-the-quarantine-flag/" target="_blank" data-hasqtip="0" aria-describedby="qtip-0">[1]</a></sup></span></p>
-
-                    </td>
-            </tr>
-                    <tr class="datacomponent datasource" id="uses-DS0022-File Modification">
-                        <td></td>
-                        <td></td>
-                        <td>
-                            <a href="/datasources/DS0022/#File%20Modification">File Modification</a>
+                <tr class="detection_strategy" id="uses-DET0288">
+                        <td rowspan="1">
+                            <a href="/detectionstrategies/DET0288">DET0288</a>
                         </td>
-                            <td>
-                                        <p>The removal of the <code>com.apple.quarantine</code> flag by a user instead of the operating system is a suspicious action and should be examined further. Also monitor software update frameworks that may strip this flag when performing updates.</p>
-
-                            </td>
-                    </tr>
-            <tr class="datasource" id="uses-DS0009">
-                <td>
-                    <a href="/datasources/DS0009">DS0009</a>
-                </td>
-                <td class="nowrap">
-                    <a href="/datasources/DS0009">Process</a>
-                </td>
-                <!-- Add first data component here -->
-                <td> 
-                    <a href="/datasources/DS0009/#Process%20Creation">Process Creation</a>
-                </td>
+                        <td rowspan="1">
+                            <a href="/detectionstrategies/DET0288">Detect Gatekeeper Bypass via Quarantine Flag and Trust Control Manipulation</a>
+                        </td>
                     <td>
-                                <p>Monitor and investigate attempts to modify extended file attributes with utilities such as <code>xattr</code>. Built-in system utilities may generate high false positive alerts, so compare against baseline knowledge for how systems are typically used and correlate modification events with other indications of malicious activity where possible. </p>
-
+                        <a href="/detectionstrategies/DET0288#AN0800">AN0800</a>
                     </td>
-            </tr>
+                    <td>
+                                <p>Correlates suspicious removal or modification of the com.apple.quarantine extended attribute, manipulation of LSFileQuarantineEnabled values in Info.plist, and unexpected process execution of unsigned or non-notarized binaries. Also monitors abnormal trust validation failures in unified logs and unusual activity in QuarantineEvents database entries.</p>
+</a>
+                    </td>
+                </tr>
     </tbody>
 </table>
 </div>
@@ -801,7 +769,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3 col-footer">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v17.1&#013;Website  v4.2.3">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v18.0&#013;Website  v4.4.0">Website Changelog</a></u>
                                 </div>
                                 <div class="px-3">
                                     <u class="footer-link"><a href="/resources/legal-and-branding/privacy/#" class="footer-link" onclick="Osano.cm.showDrawer('osano-cm-dom-info-dialog-open')">Cookie Preferences</a></u>

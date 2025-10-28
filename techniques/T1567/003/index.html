@@ -93,12 +93,11 @@
                         </li>
                         <li class="nav-item dropdown">
                                 
-    <a class="nav-link dropdown-toggle" href="/datasources" id="navbarDropdown" role="button"
+    <a class="nav-link dropdown-toggle" href="/mitigations" id="navbarDropdown" role="button"
     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         <b>Defenses</b>
     </a>
     <div class="dropdown-menu " aria-labelledby="navbarDropdown">
-                <a class="dropdown-item" href="/datasources">Data Sources</a>
                 
 <div class="dropright dropdown">
 <a class="dropdown-item dropdown-toggle" href="/mitigations/" id="navbarDropdown" role="button"
@@ -113,6 +112,19 @@
 </div>
 
                 <a class="dropdown-item" href="/assets">Assets</a>
+                
+<div class="dropright dropdown">
+<a class="dropdown-item dropdown-toggle" href="/detectionstrategies/" id="navbarDropdown" role="button"
+    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <b>Detections</b>
+    </a>
+    <div class="dropdown-menu " aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="/detectionstrategies/">Detection Strategies</a>
+            <a class="dropdown-item" href="/analytics/">Analytics</a>
+            <a class="dropdown-item" href="/datacomponents">Data Components</a>
+    </div>
+</div>
+
     </div>
 
 
@@ -176,7 +188,7 @@
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
                     <div class="container-fluid banner-message">
-                        
+                        ATT&CK v18 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v18-8f82d839ee9e'>blog post</a> or <a href='https://attack.mitre.org/resources/updates/'>changelog</a> for more information.
 
                     </div>
             </div>
@@ -342,13 +354,13 @@
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Permalink to this version of T1567.003" 
-           href="/versions/v17/techniques/T1567/003/" data-test-ignore="true">Version Permalink</a>
+           href="/versions/v18/techniques/T1567/003/" data-test-ignore="true">Version Permalink</a>
     </div>
     <div class="permalink">
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Go to the live version of T1567.003" 
-           href="/versions/v17/techniques/T1567/003/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+           href="/versions/v18/techniques/T1567/003/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
     </div>
 </div>
 
@@ -380,45 +392,60 @@
                                     </tbody>
                                 </table>
                                 </div>
-                            <h2 class="pt-3" id="detection">Detection</h2>
+                                <h2 class="pt-3" id="detection">Detection Strategy</h2>
                                 <div class="tables-mobile">
 <table class="table datasources-table table-bordered">
     <thead>
         <tr>
             <th class="p-2" scope="col">ID</th>
-            <th class="p-2 nowrap" scope="col">Data Source</th>
-            <th class="p-2 nowrap" scope="col">Data Component</th>
-            <th class="p-2" scope="col">Detects</th>
+            <th class="p-2 nowrap" scope="col">Name</th>
+            <th class="p-2 nowrap" scope="col">Analytic ID</th>
+            <th class="p-2 nowrap" scope="col">Analytic Description</th>
         </tr>
     </thead>
     <tbody>
-            <tr class="datasource" id="uses-DS0029">
-                <td>
-                    <a href="/datasources/DS0029">DS0029</a>
-                </td>
-                <td class="nowrap">
-                    <a href="/datasources/DS0029">Network Traffic</a>
-                </td>
-                <!-- Add first data component here -->
-                <td> 
-                    <a href="/datasources/DS0029/#Network%20Traffic%20Content">Network Traffic Content</a>
-                </td>
-                    <td>
-                                <p>Monitor and analyze network traffic for exfiltration attempts using text storage sites, i.e. POST requests to text storage sites, Base64 or other obfuscated data within outbound web requests, or unusual user-agent strings indicating API-based exfiltration.'</p><p>Analytic 1 - Detecting Large Data Transfers to Pastebin or Similar Services </p><p><code> (EventCode=3 OR source="zeek_http.log" OR source="firewall_logs")| where (dest_domain LIKE "<em>.pastebin.com" OR dest_domain LIKE "</em>.hastebin.com" OR dest_domain LIKE "<em>.rentry.co" OR dest_domain LIKE "</em>.ghostbin.com")| where (http_method="POST")| stats count, sum(bytes_out) as total_bytes by _time, host, user, dest_domain, user_agent| where total_bytes &gt; 500000| eval risk_score=case(    total_bytes &gt; 10000000, 9,    total_bytes &gt; 500000, 8)| where risk_score &gt;= 8| table host, user, dest_domain, total_bytes, user_agent, risk_score</code> </p>
-
-                    </td>
-            </tr>
-                    <tr class="datacomponent datasource" id="uses-DS0029-Network Traffic Flow">
-                        <td></td>
-                        <td></td>
-                        <td>
-                            <a href="/datasources/DS0029/#Network%20Traffic%20Flow">Network Traffic Flow</a>
+                <tr class="detection_strategy" id="uses-DET0284">
+                        <td rowspan="4">
+                            <a href="/detectionstrategies/DET0284">DET0284</a>
                         </td>
-                            <td>
-                                        <p>Monitor network data for uncommon data flows, specifically to text storage sites such as <code>Pastebin[.]com</code>, <code>Paste[.]ee</code>, and <code>Pastebin[.]pl</code>.</p>
-
-                            </td>
-                    </tr>
+                        <td rowspan="4">
+                            <a href="/detectionstrategies/DET0284">Detection Strategy for Exfiltration to Text Storage Sites</a>
+                        </td>
+                    <td>
+                        <a href="/detectionstrategies/DET0284#AN0787">AN0787</a>
+                    </td>
+                    <td>
+                                <p>Unexpected processes (e.g., powershell.exe, wscript.exe, office apps) initiating HTTP POST/PUT requests to text storage domains like pastebin.com or hastebin.com, particularly when preceded by file access in sensitive directories. Defender perspective: correlation of process lineage, large clipboard/file read operations, and outbound uploads to text storage services.</p>
+</a>
+                    </td>
+                </tr>
+                <tr class="detection_strategy" id="uses-DET0284">
+                    <td>
+                        <a href="/detectionstrategies/DET0284#AN0788">AN0788</a>
+                    </td>
+                    <td>
+                                <p>Use of curl, wget, or custom scripts to POST data to pastebin-like services. Defender perspective: identify chained behavior where files are compressed/read followed by HTTPS POST requests to text-sharing endpoints.</p>
+</a>
+                    </td>
+                </tr>
+                <tr class="detection_strategy" id="uses-DET0284">
+                    <td>
+                        <a href="/detectionstrategies/DET0284#AN0789">AN0789</a>
+                    </td>
+                    <td>
+                                <p>Processes such as osascript, curl, or office applications sending data to text storage APIs/domains. Defender perspective: anomalous clipboard or file reads by unexpected applications immediately followed by outbound HTTPS requests to pastebin-like services.</p>
+</a>
+                    </td>
+                </tr>
+                <tr class="detection_strategy" id="uses-DET0284">
+                    <td>
+                        <a href="/detectionstrategies/DET0284#AN0790">AN0790</a>
+                    </td>
+                    <td>
+                                <p>ESXi services (vmx, hostd) generating outbound HTTPS POST requests to text storage sites. Defender perspective: anomalous datastore or log reads chained with traffic to pastebin-like destinations.</p>
+</a>
+                    </td>
+                </tr>
     </tbody>
 </table>
 </div>
@@ -508,7 +535,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3 col-footer">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v17.1&#013;Website  v4.2.3">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v18.0&#013;Website  v4.4.0">Website Changelog</a></u>
                                 </div>
                                 <div class="px-3">
                                     <u class="footer-link"><a href="/resources/legal-and-branding/privacy/#" class="footer-link" onclick="Osano.cm.showDrawer('osano-cm-dom-info-dialog-open')">Cookie Preferences</a></u>

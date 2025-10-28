@@ -93,12 +93,11 @@
                         </li>
                         <li class="nav-item dropdown">
                                 
-    <a class="nav-link dropdown-toggle" href="/datasources" id="navbarDropdown" role="button"
+    <a class="nav-link dropdown-toggle" href="/mitigations" id="navbarDropdown" role="button"
     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         <b>Defenses</b>
     </a>
     <div class="dropdown-menu " aria-labelledby="navbarDropdown">
-                <a class="dropdown-item" href="/datasources">Data Sources</a>
                 
 <div class="dropright dropdown">
 <a class="dropdown-item dropdown-toggle" href="/mitigations/" id="navbarDropdown" role="button"
@@ -113,6 +112,19 @@
 </div>
 
                 <a class="dropdown-item" href="/assets">Assets</a>
+                
+<div class="dropright dropdown">
+<a class="dropdown-item dropdown-toggle" href="/detectionstrategies/" id="navbarDropdown" role="button"
+    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <b>Detections</b>
+    </a>
+    <div class="dropdown-menu " aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="/detectionstrategies/">Detection Strategies</a>
+            <a class="dropdown-item" href="/analytics/">Analytics</a>
+            <a class="dropdown-item" href="/datacomponents">Data Components</a>
+    </div>
+</div>
+
     </div>
 
 
@@ -176,7 +188,7 @@
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
                     <div class="container-fluid banner-message">
-                        
+                        ATT&CK v18 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v18-8f82d839ee9e'>blog post</a> or <a href='https://attack.mitre.org/resources/updates/'>changelog</a> for more information.
 
                     </div>
             </div>
@@ -361,7 +373,7 @@
                                             <div class="row card-data">
                                                 <div class="col-md-1 px-0 text-center"></div>
                                                 <div class="col-md-11 pl-0">
-                                                    <span class="h5 card-title">Last Modified:&nbsp;</span>15 April 2025
+                                                    <span class="h5 card-title">Last Modified:&nbsp;</span>24 October 2025
                                                 </div>
                                             </div>
                                     </div>
@@ -371,13 +383,13 @@
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Permalink to this version of T1021" 
-           href="/versions/v17/techniques/T1021/" data-test-ignore="true">Version Permalink</a>
+           href="/versions/v18/techniques/T1021/" data-test-ignore="true">Version Permalink</a>
     </div>
     <div class="permalink">
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Go to the live version of T1021" 
-           href="/versions/v17/techniques/T1021/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+           href="/versions/v18/techniques/T1021/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
     </div>
 </div>
 
@@ -567,141 +579,69 @@
                                     </tbody>
                                 </table>
                                 </div>
-                            <h2 class="pt-3" id="detection">Detection</h2>
+                                <h2 class="pt-3" id="detection">Detection Strategy</h2>
                                 <div class="tables-mobile">
 <table class="table datasources-table table-bordered">
     <thead>
         <tr>
             <th class="p-2" scope="col">ID</th>
-            <th class="p-2 nowrap" scope="col">Data Source</th>
-            <th class="p-2 nowrap" scope="col">Data Component</th>
-            <th class="p-2" scope="col">Detects</th>
+            <th class="p-2 nowrap" scope="col">Name</th>
+            <th class="p-2 nowrap" scope="col">Analytic ID</th>
+            <th class="p-2 nowrap" scope="col">Analytic Description</th>
         </tr>
     </thead>
     <tbody>
-            <tr class="datasource" id="uses-DS0017">
-                <td>
-                    <a href="/datasources/DS0017">DS0017</a>
-                </td>
-                <td class="nowrap">
-                    <a href="/datasources/DS0017">Command</a>
-                </td>
-                <!-- Add first data component here -->
-                <td> 
-                    <a href="/datasources/DS0017/#Command%20Execution">Command Execution</a>
-                </td>
-                    <td>
-                                <p>Monitor executed commands and arguments that may use <a href="/techniques/T1078">Valid Accounts</a> to log into a service specifically designed to accept remote connections, such as telnet, SSH, and VNC. The adversary may then perform actions as the logged-on user.</p><p>Analytic 1 - Detect adversary commands executed via remote sessions.</p><p><code> index=* (sourcetype="WinEventLog:Microsoft-Windows-Sysmon/Operational" OR sourcetype="/var/log/auth.log") AND (EventCode= 1 OR EventCode=sshd)| search parent_process_name="sshd" OR parent_process_name="mstsc.exe" OR parent_process_name="rdpclip.exe"| eval suspicious_command=case(    match(command_line, "net user|powershell|/etc/passwd|nc|curl|socat"), "high",    match(command_line, "whoami|ls|dir|pwd"), "low",    true(), "normal"  )| stats count by host, process_name, command_line, suspicious_command, _time| where count &gt; threshold AND suspicious_command="high"| table _time, host, process_name, command_line, suspicious_command  </code></p>
-
-                    </td>
-            </tr>
-            <tr class="datasource" id="uses-DS0028">
-                <td>
-                    <a href="/datasources/DS0028">DS0028</a>
-                </td>
-                <td class="nowrap">
-                    <a href="/datasources/DS0028">Logon Session</a>
-                </td>
-                <!-- Add first data component here -->
-                <td> 
-                    <a href="/datasources/DS0028/#Logon%20Session%20Creation">Logon Session Creation</a>
-                </td>
-                    <td>
-                                <p>Monitor for user accounts logged into systems they would not normally access or abnormal access patterns, such as multiple systems over a relatively short period of time. Correlate use of login activity related to remote services with unusual behavior or other malicious or suspicious activity. Adversaries will likely need to learn about an environment and the relationships between systems through Discovery techniques prior to attempting Lateral Movement. For example, in macOS you can review logs for "screensharingd" and "Authentication" event messages. <span onclick=scrollToRef('scite-7') id="scite-ref-7-a" class="scite-citeref-number" title="Dan Borges. (2019, July 21). MacOS Red Teaming 206: ARD (Apple Remote Desktop Protocol). Retrieved September 10, 2021."data-reference="Lockboxx ARD 2019"><sup><a href="http://lockboxx.blogspot.com/2019/07/macos-red-teaming-206-ard-apple-remote.html" target="_blank" data-hasqtip="6" aria-describedby="qtip-6">[7]</a></sup></span><span onclick=scrollToRef('scite-18') id="scite-ref-18-a" class="scite-citeref-number" title="Sarah Edwards. (2020, April 30). Analysis of Apple Unified Logs: Quarantine Edition [Entry 6] – Working From Home? Remote Logins. Retrieved August 19, 2021."data-reference="Apple Unified Log Analysis Remote Login and Screen Sharing"><sup><a href="https://sarah-edwards-xzkc.squarespace.com/blog/2020/4/30/analysis-of-apple-unified-logs-quarantine-edition-entry-6-working-from-home-remote-logins" target="_blank" data-hasqtip="17" aria-describedby="qtip-17">[18]</a></sup></span></p><p>Note: When using Security event id 4624, %$ means user names that do not end with $ character. Usually, computer accounts or local system accounts names end with the $ character. When using Security event 4624, UserName and UserLogonId correspond to TargetUserName and TargetLogonId respectively. When using Security event 4624, LogonType 3 corresponds to a Network Logon</p><p>Analytic 1 - New services being created under network logon sessions by non-system users<code>(sourcetype="WinEventLog:Security" EventCode IN (4624, 4648, 4625)) AND LogonType="3" AND UserName NOT '<em>$' | rename UserLogonId AS LogonID| join type=inner LogonID[| search (source="</em>WinEventLog:Security" EventCode="4697") | rename UserLogonId as LogonID]</code></p>
-
-                    </td>
-            </tr>
-            <tr class="datasource" id="uses-DS0011">
-                <td>
-                    <a href="/datasources/DS0011">DS0011</a>
-                </td>
-                <td class="nowrap">
-                    <a href="/datasources/DS0011">Module</a>
-                </td>
-                <!-- Add first data component here -->
-                <td> 
-                    <a href="/datasources/DS0011/#Module%20Load">Module Load</a>
-                </td>
-                    <td>
-                                <p>Monitor DLL/PE file events, specifically creation of these binary files as well as the loading of DLLs into processes, that may use <a href="/techniques/T1078">Valid Accounts</a> to log into a service specifically designed to accept remote connections, such as telnet, SSH, and VNC. The adversary may then perform actions as the logged-on user.</p><p>Note: On Windows, Sysmon Event ID 7 (Image loaded) can be used to monitor the loading of DLLs into processes, including those designed to accept remote connections. This is a particularly noisy event and can generate a large volume of data, so we recommend baselining and filtering out any known benign processes and module to help reduce the number of events that are produced.</p>
-
-                    </td>
-            </tr>
-            <tr class="datasource" id="uses-DS0033">
-                <td>
-                    <a href="/datasources/DS0033">DS0033</a>
-                </td>
-                <td class="nowrap">
-                    <a href="/datasources/DS0033">Network Share</a>
-                </td>
-                <!-- Add first data component here -->
-                <td> 
-                    <a href="/datasources/DS0033/#Network%20Share%20Access">Network Share Access</a>
-                </td>
-                    <td>
-                                <p>Monitor interactions with network shares, such as reads or file transfers, using remote services such as Server Message Block (SMB).</p>
-
-                    </td>
-            </tr>
-            <tr class="datasource" id="uses-DS0029">
-                <td>
-                    <a href="/datasources/DS0029">DS0029</a>
-                </td>
-                <td class="nowrap">
-                    <a href="/datasources/DS0029">Network Traffic</a>
-                </td>
-                <!-- Add first data component here -->
-                <td> 
-                    <a href="/datasources/DS0029/#Network%20Connection%20Creation">Network Connection Creation</a>
-                </td>
-                    <td>
-                                <p>Monitor for newly constructed network connections that may use <a href="/techniques/T1078">Valid Accounts</a> to log into a service specifically designed to accept remote connections, such as RDP, telnet, SSH, and VNC. Monitor network connections involving common remote management protocols, such as ports tcp:3283 and tcp:5900, as well as ports tcp: 3389 and tcp:22 for remote login.</p><p><code> index="network_logs" sourcetype="network_connection"| search protocol IN ("tcp/22", "tcp/3389", "tcp/5900")| stats count by src_ip, dest_ip, dest_port, _time| eval suspicious_connection=if(src_ip NOT IN ("trusted_sources") AND count &gt; threshold, "high", "normal")| where suspicious_connection="high"| table _time, src_ip, dest_ip, dest_port, suspicious_connection</code></p>
-
-                    </td>
-            </tr>
-                    <tr class="datacomponent datasource" id="uses-DS0029-Network Traffic Flow">
-                        <td></td>
-                        <td></td>
-                        <td>
-                            <a href="/datasources/DS0029/#Network%20Traffic%20Flow">Network Traffic Flow</a>
+                <tr class="detection_strategy" id="uses-DET0269">
+                        <td rowspan="5">
+                            <a href="/detectionstrategies/DET0269">DET0269</a>
                         </td>
-                            <td>
-                                        <p>Monitor network data for uncommon data flows that may be related to abuse of <a href="/techniques/T1078">Valid Accounts</a> to log into a service specifically designed to accept remote connections, such as RDP, telnet, SSH, and VNC.</p><p>Note: Network Analysis frameworks such as Zeek can be used to capture, decode, and alert on network service protocols such as SSH and RDP.</p><p>Analytic 1 - Suspicious Protocols</p><p><code>sourcetype="netflow" | search dest_port=22 OR dest_port=3389 OR dest_port=5900 OR dest_port=3283  // SSH, RDP, VNC, ARD</code></p>
-
-                            </td>
-                    </tr>
-            <tr class="datasource" id="uses-DS0009">
-                <td>
-                    <a href="/datasources/DS0009">DS0009</a>
-                </td>
-                <td class="nowrap">
-                    <a href="/datasources/DS0009">Process</a>
-                </td>
-                <!-- Add first data component here -->
-                <td> 
-                    <a href="/datasources/DS0009/#Process%20Creation">Process Creation</a>
-                </td>
+                        <td rowspan="5">
+                            <a href="/detectionstrategies/DET0269">Behavioral Detection Strategy for Remote Service Logins and Post-Access Activity</a>
+                        </td>
                     <td>
-                                <p>Monitor for newly executed processes that may use <a href="/techniques/T1078">Valid Accounts</a> to log into a service specifically designed to accept remote connections, such as RDP, telnet, SSH, and VNC. The adversary may then perform actions that spawn additional processes as the logged-on user.</p><p>Malicious actors may rename built-in commands or external tools, such as those provided by SysInternals, to better blend in with the environment. In those cases, the file path name is arbitrary and may blend in well with the background. If the arguments are closely inspected, it may be possible to infer what tools are running and understand what an adversary is doing. When any legitimate software shares the same command lines, it must be whitelisted according to the expected parameters.</p><p>Any tool of interest with commonly known command line usage can be detecting by command line analysis. Known substrings of command lines include</p><ul><li>PuTTY</li><li>port forwarding <code>-R * -pw</code></li><li>secure copy (scp) <code>-pw * * <em>@</em></code></li><li>mimikatz <code>sekurlsa::</code></li><li>RAR <code><em> -hp </em></code></li><li>Archive* a * Additionally, it may be useful to find IP addresses in the command line</li><li><code>\d{1,3}.\d{1,3}.\d{1,3}.\d{1,3}</code></li></ul><p>Analytic 1 - Suspicious Arguments</p><p><code>(sourcetype="WinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode="1") OR (sourcetype="WinEventLog:Security" EventCode="4688") AND CommandLine="-R .<em> -pw" OR CommandLine="-pw .</em> .<em> .</em>@.<em>" OR CommandLine="sekurlsa" OR CommandLine=" -hp " OR CommandLine=".</em> a .*" </code></p>
-
+                        <a href="/detectionstrategies/DET0269#AN0750">AN0750</a>
                     </td>
-            </tr>
-            <tr class="datasource" id="uses-DS0005">
-                <td>
-                    <a href="/datasources/DS0005">DS0005</a>
-                </td>
-                <td class="nowrap">
-                    <a href="/datasources/DS0005">WMI</a>
-                </td>
-                <!-- Add first data component here -->
-                <td> 
-                    <a href="/datasources/DS0005/#WMI%20Creation">WMI Creation</a>
-                </td>
                     <td>
-                                <p>Monitor for newly constructed WMI objects that is often used to log into a service that accepts remote connects.  </p>
-
+                                <p>Logon via RDP or WMI by a user account followed by uncommon command execution, file manipulation, or lateral network connections.</p>
+</a>
                     </td>
-            </tr>
+                </tr>
+                <tr class="detection_strategy" id="uses-DET0269">
+                    <td>
+                        <a href="/detectionstrategies/DET0269#AN0751">AN0751</a>
+                    </td>
+                    <td>
+                                <p>SSH session from new source IP followed by interactive shell or privilege escalation (e.g., sudo, su) and outbound lateral connection.</p>
+</a>
+                    </td>
+                </tr>
+                <tr class="detection_strategy" id="uses-DET0269">
+                    <td>
+                        <a href="/detectionstrategies/DET0269#AN0752">AN0752</a>
+                    </td>
+                    <td>
+                                <p>Remote login via ARD or SSH followed by screensharingd process activity or modification of TCC-protected files.</p>
+</a>
+                    </td>
+                </tr>
+                <tr class="detection_strategy" id="uses-DET0269">
+                    <td>
+                        <a href="/detectionstrategies/DET0269#AN0753">AN0753</a>
+                    </td>
+                    <td>
+                                <p>Use of cloud-based bastion or VM console session followed by commands that initiate outbound SSH or RDP sessions from the cloud instance to other environments.</p>
+</a>
+                    </td>
+                </tr>
+                <tr class="detection_strategy" id="uses-DET0269">
+                    <td>
+                        <a href="/detectionstrategies/DET0269#AN0754">AN0754</a>
+                    </td>
+                    <td>
+                                <p>vSphere API logins (vimService) or SSH to ESXi host followed by unauthorized shell commands or lateral remote logins from the ESXi host.</p>
+</a>
+                    </td>
+                </tr>
     </tbody>
 </table>
 </div>
@@ -920,18 +860,6 @@
         </li>
 
 
-                                
-        <li>
-            <span  id="scite-18" class="scite-citation">
-                <span class="scite-citation-text">
-                    <a rel="nofollow" class="external text" name="scite-18" href="https://sarah-edwards-xzkc.squarespace.com/blog/2020/4/30/analysis-of-apple-unified-logs-quarantine-edition-entry-6-working-from-home-remote-logins" target="_blank">
-                        Sarah Edwards. (2020, April 30). Analysis of Apple Unified Logs: Quarantine Edition [Entry 6] – Working From Home? Remote Logins. Retrieved August 19, 2021.
-                    </a>
-                </span>
-            </span>
-        </li>
-
-
   
                     </ol>
             </div>             
@@ -998,7 +926,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3 col-footer">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v17.1&#013;Website  v4.2.3">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v18.0&#013;Website  v4.4.0">Website Changelog</a></u>
                                 </div>
                                 <div class="px-3">
                                     <u class="footer-link"><a href="/resources/legal-and-branding/privacy/#" class="footer-link" onclick="Osano.cm.showDrawer('osano-cm-dom-info-dialog-open')">Cookie Preferences</a></u>

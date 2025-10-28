@@ -93,12 +93,11 @@
                         </li>
                         <li class="nav-item dropdown">
                                 
-    <a class="nav-link dropdown-toggle" href="/datasources" id="navbarDropdown" role="button"
+    <a class="nav-link dropdown-toggle" href="/mitigations" id="navbarDropdown" role="button"
     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         <b>Defenses</b>
     </a>
     <div class="dropdown-menu " aria-labelledby="navbarDropdown">
-                <a class="dropdown-item" href="/datasources">Data Sources</a>
                 
 <div class="dropright dropdown">
 <a class="dropdown-item dropdown-toggle" href="/mitigations/" id="navbarDropdown" role="button"
@@ -113,6 +112,19 @@
 </div>
 
                 <a class="dropdown-item" href="/assets">Assets</a>
+                
+<div class="dropright dropdown">
+<a class="dropdown-item dropdown-toggle" href="/detectionstrategies/" id="navbarDropdown" role="button"
+    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <b>Detections</b>
+    </a>
+    <div class="dropdown-menu " aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="/detectionstrategies/">Detection Strategies</a>
+            <a class="dropdown-item" href="/analytics/">Analytics</a>
+            <a class="dropdown-item" href="/datacomponents">Data Components</a>
+    </div>
+</div>
+
     </div>
 
 
@@ -176,7 +188,7 @@
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
                     <div class="container-fluid banner-message">
-                        
+                        ATT&CK v18 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v18-8f82d839ee9e'>blog post</a> or <a href='https://attack.mitre.org/resources/updates/'>changelog</a> for more information.
 
                     </div>
             </div>
@@ -281,13 +293,13 @@
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Permalink to this version of T0821" 
-           href="/versions/v17/techniques/T0821/" data-test-ignore="true">Version Permalink</a>
+           href="/versions/v18/techniques/T0821/" data-test-ignore="true">Version Permalink</a>
     </div>
     <div class="permalink">
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Go to the live version of T0821" 
-           href="/versions/v17/techniques/T0821/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+           href="/versions/v18/techniques/T0821/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
     </div>
 </div>
 
@@ -352,6 +364,22 @@
                                     </tr>
                                 </thead>
                                 <tbody>
+                                        <tr>
+                                            <td>
+                                                <a href="/assets/A0017"> A0017 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/assets/A0017"> Distributed Control System (DCS) Controller </a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/assets/A0018"> A0018 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/assets/A0018"> Programmable Automation Controller (PAC) </a>
+                                            </td>
+                                        </tr>
                                         <tr>
                                             <td>
                                                 <a href="/assets/A0003"> A0003 </a>
@@ -432,66 +460,33 @@
                                     </tbody>
                                 </table>
                                 </div>
-                            <h2 class="pt-3" id="detection">Detection</h2>
+                                <h2 class="pt-3" id="detection">Detection Strategy</h2>
                                 <div class="tables-mobile">
 <table class="table datasources-table table-bordered">
     <thead>
         <tr>
             <th class="p-2" scope="col">ID</th>
-            <th class="p-2 nowrap" scope="col">Data Source</th>
-            <th class="p-2 nowrap" scope="col">Data Component</th>
-            <th class="p-2" scope="col">Detects</th>
+            <th class="p-2 nowrap" scope="col">Name</th>
+            <th class="p-2 nowrap" scope="col">Analytic ID</th>
+            <th class="p-2 nowrap" scope="col">Analytic Description</th>
         </tr>
     </thead>
     <tbody>
-            <tr class="datasource" id="uses-DS0015">
-                <td>
-                    <a href="/datasources/DS0015">DS0015</a>
-                </td>
-                <td class="nowrap">
-                    <a href="/datasources/DS0015">Application Log</a>
-                </td>
-                <!-- Add first data component here -->
-                <td> 
-                    <a href="/datasources/DS0015/#Application%20Log%20Content">Application Log Content</a>
-                </td>
+                <tr class="detection_strategy" id="uses-DET0741">
+                        <td rowspan="1">
+                            <a href="/detectionstrategies/DET0741">DET0741</a>
+                        </td>
+                        <td rowspan="1">
+                            <a href="/detectionstrategies/DET0741">Detection of Modify Controller Tasking</a>
+                        </td>
                     <td>
-                                <p>Monitor asset application logs for information that indicate task parameters have changed.</p>
-
+                        <a href="/detectionstrategies/DET0741#AN1874">AN1874</a>
                     </td>
-            </tr>
-            <tr class="datasource" id="uses-DS0039">
-                <td>
-                    <a href="/datasources/DS0039">DS0039</a>
-                </td>
-                <td class="nowrap">
-                    <a href="/datasources/DS0039">Asset</a>
-                </td>
-                <!-- Add first data component here -->
-                <td> 
-                    <a href="/datasources/DS0039/#Software">Software</a>
-                </td>
                     <td>
-                                <p>Engineering and asset management software will often maintain a copy of the expected program loaded on a controller and may also record any changes made to controller programs and tasks. Data from these platforms can be used to identify modified controller tasking.</p>
-
+                                <p>Monitor asset application logs for information that indicate task parameters have changed.<br />Monitor device alarms that indicate controller task parameters have changed, although not all devices produce such alarms.</p><p><a href="/techniques/T0843">Program Download</a> may be used to enable this technique. Monitor for program downloads which may be noticeable via operational alarms. Asset management systems should be consulted to understand expected program versions.<br />Engineering and asset management software will often maintain a copy of the expected program loaded on a controller and may also record any changes made to controller programs and tasks. Data from these platforms can be used to identify modified controller tasking.</p>
+</a>
                     </td>
-            </tr>
-            <tr class="datasource" id="uses-DS0040">
-                <td>
-                    <a href="/datasources/DS0040">DS0040</a>
-                </td>
-                <td class="nowrap">
-                    <a href="/datasources/DS0040">Operational Databases</a>
-                </td>
-                <!-- Add first data component here -->
-                <td> 
-                    <a href="/datasources/DS0040/#Device%20Alarm">Device Alarm</a>
-                </td>
-                    <td>
-                                <p>Monitor device alarms that indicate controller task parameters have changed, although not all devices produce such alarms.</p><p><a href="/techniques/T0843">Program Download</a> may be used to enable this technique. Monitor for program downloads which may be noticeable via operational alarms. Asset management systems should be consulted to understand expected program versions.</p>
-
-                    </td>
-            </tr>
+                </tr>
     </tbody>
 </table>
 </div>
@@ -644,7 +639,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3 col-footer">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v17.1&#013;Website  v4.2.3">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v18.0&#013;Website  v4.4.0">Website Changelog</a></u>
                                 </div>
                                 <div class="px-3">
                                     <u class="footer-link"><a href="/resources/legal-and-branding/privacy/#" class="footer-link" onclick="Osano.cm.showDrawer('osano-cm-dom-info-dialog-open')">Cookie Preferences</a></u>

@@ -93,12 +93,11 @@
                         </li>
                         <li class="nav-item dropdown">
                                 
-    <a class="nav-link dropdown-toggle" href="/datasources" id="navbarDropdown" role="button"
+    <a class="nav-link dropdown-toggle" href="/mitigations" id="navbarDropdown" role="button"
     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         <b>Defenses</b>
     </a>
     <div class="dropdown-menu " aria-labelledby="navbarDropdown">
-                <a class="dropdown-item" href="/datasources">Data Sources</a>
                 
 <div class="dropright dropdown">
 <a class="dropdown-item dropdown-toggle" href="/mitigations/" id="navbarDropdown" role="button"
@@ -113,6 +112,19 @@
 </div>
 
                 <a class="dropdown-item" href="/assets">Assets</a>
+                
+<div class="dropright dropdown">
+<a class="dropdown-item dropdown-toggle" href="/detectionstrategies/" id="navbarDropdown" role="button"
+    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <b>Detections</b>
+    </a>
+    <div class="dropdown-menu " aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="/detectionstrategies/">Detection Strategies</a>
+            <a class="dropdown-item" href="/analytics/">Analytics</a>
+            <a class="dropdown-item" href="/datacomponents">Data Components</a>
+    </div>
+</div>
+
     </div>
 
 
@@ -176,7 +188,7 @@
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
                     <div class="container-fluid banner-message">
-                        
+                        ATT&CK v18 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v18-8f82d839ee9e'>blog post</a> or <a href='https://attack.mitre.org/resources/updates/'>changelog</a> for more information.
 
                     </div>
             </div>
@@ -271,7 +283,7 @@
                                             <div class="row card-data">
                                                 <div class="col-md-1 px-0 text-center"></div>
                                                 <div class="col-md-11 pl-0">
-                                                    <span class="h5 card-title">Last Modified:&nbsp;</span>15 April 2025
+                                                    <span class="h5 card-title">Last Modified:&nbsp;</span>24 October 2025
                                                 </div>
                                             </div>
                                     </div>
@@ -281,13 +293,13 @@
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Permalink to this version of T1029" 
-           href="/versions/v17/techniques/T1029/" data-test-ignore="true">Version Permalink</a>
+           href="/versions/v18/techniques/T1029/" data-test-ignore="true">Version Permalink</a>
     </div>
     <div class="permalink">
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Go to the live version of T1029" 
-           href="/versions/v17/techniques/T1029/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+           href="/versions/v18/techniques/T1029/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
     </div>
 </div>
 
@@ -549,45 +561,51 @@
                                     </tbody>
                                 </table>
                                 </div>
-                            <h2 class="pt-3" id="detection">Detection</h2>
+                                <h2 class="pt-3" id="detection">Detection Strategy</h2>
                                 <div class="tables-mobile">
 <table class="table datasources-table table-bordered">
     <thead>
         <tr>
             <th class="p-2" scope="col">ID</th>
-            <th class="p-2 nowrap" scope="col">Data Source</th>
-            <th class="p-2 nowrap" scope="col">Data Component</th>
-            <th class="p-2" scope="col">Detects</th>
+            <th class="p-2 nowrap" scope="col">Name</th>
+            <th class="p-2 nowrap" scope="col">Analytic ID</th>
+            <th class="p-2 nowrap" scope="col">Analytic Description</th>
         </tr>
     </thead>
     <tbody>
-            <tr class="datasource" id="uses-DS0029">
-                <td>
-                    <a href="/datasources/DS0029">DS0029</a>
-                </td>
-                <td class="nowrap">
-                    <a href="/datasources/DS0029">Network Traffic</a>
-                </td>
-                <!-- Add first data component here -->
-                <td> 
-                    <a href="/datasources/DS0029/#Network%20Connection%20Creation">Network Connection Creation</a>
-                </td>
-                    <td>
-                                <p>Monitor for repeated outbound connections to the same destination at scheduled intervals, connections from processes that typically do not initiate network communications, transfers using non-standard ports or unexpected encryption methods.</p><p>Analytic 1 - Detecting Recurring Network Connections for Exfiltration</p><p><code> (EventCode=3)OR (source="zeek_conn.log" OR source="firewall_logs")| where (dest_ip IN (suspicious_ip_list) OR bytes_out &gt; 5000000)| bucket span=1h _time| stats count by _time, host, process, dest_ip, bytes_out| where count &gt; 3| stats count by host, dest_ip, count, earliest(_time), latest(_time)| where count &gt;= 3| eval risk_score=case(    count &gt;= 5, 9,    count = 3 OR 4, 7)| where risk_score &gt;= 7| table host, dest_ip, count, earliest, latest, risk_score</code></p>
-
-                    </td>
-            </tr>
-                    <tr class="datacomponent datasource" id="uses-DS0029-Network Traffic Flow">
-                        <td></td>
-                        <td></td>
-                        <td>
-                            <a href="/datasources/DS0029/#Network%20Traffic%20Flow">Network Traffic Flow</a>
+                <tr class="detection_strategy" id="uses-DET0399">
+                        <td rowspan="3">
+                            <a href="/detectionstrategies/DET0399">DET0399</a>
                         </td>
-                            <td>
-                                        <p>Monitor for network traffic originating from unknown/unexpected hardware devices. Local network traffic metadata (such as source MAC addressing) as well as usage of network management protocols such as DHCP may be helpful in identifying hardware.</p><p>Analytic 1 - Detecting High Volume Exfiltration at Specific Intervals </p><p><code>(EventCode=3 OR source="zeek_conn.log" OR source="firewall_logs")| where (bytes_out &gt; 10000000)| bucket span=1h _time| stats sum(bytes_out) as total_bytes by _time, host, dest_ip| where total_bytes &gt; 100000000| stats count by host, dest_ip, total_bytes, earliest(_time), latest(_time)| where count &gt;= 3| eval risk_score=case(    total_bytes &gt; 500000000, 9,    total_bytes &gt; 100000000, 8)| where risk_score &gt;= 8| table host, dest_ip, total_bytes, earliest, latest, risk_score </code></p>
-
-                            </td>
-                    </tr>
+                        <td rowspan="3">
+                            <a href="/detectionstrategies/DET0399">Detection Strategy for Scheduled Transfer and Recurrent Exfiltration Patterns</a>
+                        </td>
+                    <td>
+                        <a href="/detectionstrategies/DET0399#AN1118">AN1118</a>
+                    </td>
+                    <td>
+                                <p>Recurring network exfiltration initiated by scheduled or script-based processes exhibiting time-based regularity and consistent external destinations.</p>
+</a>
+                    </td>
+                </tr>
+                <tr class="detection_strategy" id="uses-DET0399">
+                    <td>
+                        <a href="/detectionstrategies/DET0399#AN1119">AN1119</a>
+                    </td>
+                    <td>
+                                <p>Detection of cron-based or script-based recurring transfers where the same script, user, or destination reappears at predictable intervals.</p>
+</a>
+                    </td>
+                </tr>
+                <tr class="detection_strategy" id="uses-DET0399">
+                    <td>
+                        <a href="/detectionstrategies/DET0399#AN1120">AN1120</a>
+                    </td>
+                    <td>
+                                <p>LaunchAgent or launchd recurring jobs initiating data transfer to consistent external IPs or domains with repeat timing signatures.</p>
+</a>
+                    </td>
+                </tr>
     </tbody>
 </table>
 </div>
@@ -896,7 +914,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3 col-footer">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v17.1&#013;Website  v4.2.3">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v18.0&#013;Website  v4.4.0">Website Changelog</a></u>
                                 </div>
                                 <div class="px-3">
                                     <u class="footer-link"><a href="/resources/legal-and-branding/privacy/#" class="footer-link" onclick="Osano.cm.showDrawer('osano-cm-dom-info-dialog-open')">Cookie Preferences</a></u>

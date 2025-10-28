@@ -93,12 +93,11 @@
                         </li>
                         <li class="nav-item dropdown">
                                 
-    <a class="nav-link dropdown-toggle" href="/datasources" id="navbarDropdown" role="button"
+    <a class="nav-link dropdown-toggle" href="/mitigations" id="navbarDropdown" role="button"
     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         <b>Defenses</b>
     </a>
     <div class="dropdown-menu " aria-labelledby="navbarDropdown">
-                <a class="dropdown-item" href="/datasources">Data Sources</a>
                 
 <div class="dropright dropdown">
 <a class="dropdown-item dropdown-toggle" href="/mitigations/" id="navbarDropdown" role="button"
@@ -113,6 +112,19 @@
 </div>
 
                 <a class="dropdown-item" href="/assets">Assets</a>
+                
+<div class="dropright dropdown">
+<a class="dropdown-item dropdown-toggle" href="/detectionstrategies/" id="navbarDropdown" role="button"
+    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <b>Detections</b>
+    </a>
+    <div class="dropdown-menu " aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="/detectionstrategies/">Detection Strategies</a>
+            <a class="dropdown-item" href="/analytics/">Analytics</a>
+            <a class="dropdown-item" href="/datacomponents">Data Components</a>
+    </div>
+</div>
+
     </div>
 
 
@@ -176,7 +188,7 @@
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
                     <div class="container-fluid banner-message">
-                        
+                        ATT&CK v18 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v18-8f82d839ee9e'>blog post</a> or <a href='https://attack.mitre.org/resources/updates/'>changelog</a> for more information.
 
                     </div>
             </div>
@@ -412,7 +424,7 @@
                                             <div class="row card-data">
                                                 <div class="col-md-1 px-0 text-center"></div>
                                                 <div class="col-md-11 pl-0">
-                                                    <span class="h5 card-title">Last Modified:&nbsp;</span>15 April 2025
+                                                    <span class="h5 card-title">Last Modified:&nbsp;</span>24 October 2025
                                                 </div>
                                             </div>
                                     </div>
@@ -422,13 +434,13 @@
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Permalink to this version of T1547.010" 
-           href="/versions/v17/techniques/T1547/010/" data-test-ignore="true">Version Permalink</a>
+           href="/versions/v18/techniques/T1547/010/" data-test-ignore="true">Version Permalink</a>
     </div>
     <div class="permalink">
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Go to the live version of T1547.010" 
-           href="/versions/v17/techniques/T1547/010/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+           href="/versions/v18/techniques/T1547/010/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
     </div>
 </div>
 
@@ -439,82 +451,33 @@
                                     This type of attack technique cannot be easily mitigated with preventive controls since
                                     it is based on the abuse of system features.
                                 </p>
-                            <h2 class="pt-3" id="detection">Detection</h2>
+                                <h2 class="pt-3" id="detection">Detection Strategy</h2>
                                 <div class="tables-mobile">
 <table class="table datasources-table table-bordered">
     <thead>
         <tr>
             <th class="p-2" scope="col">ID</th>
-            <th class="p-2 nowrap" scope="col">Data Source</th>
-            <th class="p-2 nowrap" scope="col">Data Component</th>
-            <th class="p-2" scope="col">Detects</th>
+            <th class="p-2 nowrap" scope="col">Name</th>
+            <th class="p-2 nowrap" scope="col">Analytic ID</th>
+            <th class="p-2 nowrap" scope="col">Analytic Description</th>
         </tr>
     </thead>
     <tbody>
-            <tr class="datasource" id="uses-DS0022">
-                <td>
-                    <a href="/datasources/DS0022">DS0022</a>
-                </td>
-                <td class="nowrap">
-                    <a href="/datasources/DS0022">File</a>
-                </td>
-                <!-- Add first data component here -->
-                <td> 
-                    <a href="/datasources/DS0022/#File%20Creation">File Creation</a>
-                </td>
+                <tr class="detection_strategy" id="uses-DET0204">
+                        <td rowspan="1">
+                            <a href="/detectionstrategies/DET0204">DET0204</a>
+                        </td>
+                        <td rowspan="1">
+                            <a href="/detectionstrategies/DET0204">Detection Strategy for T1547.010 – Port Monitor DLL Persistence via spoolsv.exe (Windows)</a>
+                        </td>
                     <td>
-                                <p>Monitor newly constructed files that may use port monitors to run an attacker supplied DLL during system boot for persistence or privilege escalation.</p>
-
+                        <a href="/detectionstrategies/DET0204#AN0580">AN0580</a>
                     </td>
-            </tr>
-            <tr class="datasource" id="uses-DS0011">
-                <td>
-                    <a href="/datasources/DS0011">DS0011</a>
-                </td>
-                <td class="nowrap">
-                    <a href="/datasources/DS0011">Module</a>
-                </td>
-                <!-- Add first data component here -->
-                <td> 
-                    <a href="/datasources/DS0011/#Module%20Load">Module Load</a>
-                </td>
                     <td>
-                                <p>Monitor DLLs that are loaded by spoolsv.exe for DLLs that are abnormal. New DLLs written to the System32 directory that do not correlate with known good software or patching may be suspicious.</p>
-
+                                <p>Detects suspicious registry modifications under <code>HKLM\SYSTEM\CurrentControlSet\Control\Print\Monitors\*\Driver</code>, DLL loads by <code>spoolsv.exe</code> of non-standard or unsigned modules, and abnormal usage of the <code>AddMonitor</code> API by non-installation processes. This pattern often indicates an attempt to persist a malicious DLL via the print monitor mechanism, particularly when correlated with creation of files in <code>C:\Windows\System32</code> not tied to known patches or installations.</p>
+</a>
                     </td>
-            </tr>
-            <tr class="datasource" id="uses-DS0009">
-                <td>
-                    <a href="/datasources/DS0009">DS0009</a>
-                </td>
-                <td class="nowrap">
-                    <a href="/datasources/DS0009">Process</a>
-                </td>
-                <!-- Add first data component here -->
-                <td> 
-                    <a href="/datasources/DS0009/#OS%20API%20Execution">OS API Execution</a>
-                </td>
-                    <td>
-                                <p>Monitor process API calls to <code>AddMonitor</code>.<span onclick=scrollToRef('scite-1') id="scite-ref-1-a" class="scite-citeref-number" title="Microsoft. (n.d.). AddMonitor function. Retrieved September 12, 2024."data-reference="AddMonitor"><sup><a href="https://learn.microsoft.com/en-us/windows/win32/printdocs/addmonitor" target="_blank" data-hasqtip="0" aria-describedby="qtip-0">[1]</a></sup></span></p>
-
-                    </td>
-            </tr>
-            <tr class="datasource" id="uses-DS0024">
-                <td>
-                    <a href="/datasources/DS0024">DS0024</a>
-                </td>
-                <td class="nowrap">
-                    <a href="/datasources/DS0024">Windows Registry</a>
-                </td>
-                <!-- Add first data component here -->
-                <td> 
-                    <a href="/datasources/DS0024/#Windows%20Registry%20Key%20Modification">Windows Registry Key Modification</a>
-                </td>
-                    <td>
-                                <p>Monitor Registry writes to <code>HKLM\SYSTEM\CurrentControlSet\Control\Print\Monitors</code>. Run the Autoruns utility, which checks for this Registry key as a persistence mechanism <span onclick=scrollToRef('scite-3') id="scite-ref-3-a" class="scite-citeref-number" title="Russinovich, M. (2016, January 4). Autoruns for Windows v13.51. Retrieved June 6, 2016."data-reference="TechNet Autoruns"><sup><a href="https://technet.microsoft.com/en-us/sysinternals/bb963902" target="_blank" data-hasqtip="2" aria-describedby="qtip-2">[3]</a></sup></span></p>
-
-                    </td>
-            </tr>
+                </tr>
     </tbody>
 </table>
 </div>
@@ -537,28 +500,16 @@
         </li>
 
 
-                            
+                </ol>
+            </div>
+            <div class="col">
+                    <ol start="2.0">
+                                
         <li>
             <span  id="scite-2" class="scite-citation">
                 <span class="scite-citation-text">
                     <a rel="nofollow" class="external text" name="scite-2" href="https://www.defcon.org/images/defcon-22/dc-22-presentations/Bloxham/DEFCON-22-Brady-Bloxham-Windows-API-Abuse-UPDATED.pdf" target="_blank">
                         Bloxham, B. (n.d.). Getting Windows to Play with Itself &#91;PowerPoint slides&#93;. Retrieved November 12, 2014.
-                    </a>
-                </span>
-            </span>
-        </li>
-
-
-                </ol>
-            </div>
-            <div class="col">
-                    <ol start="3.0">
-                                
-        <li>
-            <span  id="scite-3" class="scite-citation">
-                <span class="scite-citation-text">
-                    <a rel="nofollow" class="external text" name="scite-3" href="https://technet.microsoft.com/en-us/sysinternals/bb963902" target="_blank">
-                        Russinovich, M. (2016, January 4). Autoruns for Windows v13.51. Retrieved June 6, 2016.
                     </a>
                 </span>
             </span>
@@ -631,7 +582,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3 col-footer">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v17.1&#013;Website  v4.2.3">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v18.0&#013;Website  v4.4.0">Website Changelog</a></u>
                                 </div>
                                 <div class="px-3">
                                     <u class="footer-link"><a href="/resources/legal-and-branding/privacy/#" class="footer-link" onclick="Osano.cm.showDrawer('osano-cm-dom-info-dialog-open')">Cookie Preferences</a></u>

@@ -93,12 +93,11 @@
                         </li>
                         <li class="nav-item dropdown">
                                 
-    <a class="nav-link dropdown-toggle" href="/datasources" id="navbarDropdown" role="button"
+    <a class="nav-link dropdown-toggle" href="/mitigations" id="navbarDropdown" role="button"
     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         <b>Defenses</b>
     </a>
     <div class="dropdown-menu " aria-labelledby="navbarDropdown">
-                <a class="dropdown-item" href="/datasources">Data Sources</a>
                 
 <div class="dropright dropdown">
 <a class="dropdown-item dropdown-toggle" href="/mitigations/" id="navbarDropdown" role="button"
@@ -113,6 +112,19 @@
 </div>
 
                 <a class="dropdown-item" href="/assets">Assets</a>
+                
+<div class="dropright dropdown">
+<a class="dropdown-item dropdown-toggle" href="/detectionstrategies/" id="navbarDropdown" role="button"
+    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <b>Detections</b>
+    </a>
+    <div class="dropdown-menu " aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="/detectionstrategies/">Detection Strategies</a>
+            <a class="dropdown-item" href="/analytics/">Analytics</a>
+            <a class="dropdown-item" href="/datacomponents">Data Components</a>
+    </div>
+</div>
+
     </div>
 
 
@@ -176,7 +188,7 @@
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
                     <div class="container-fluid banner-message">
-                        
+                        ATT&CK v18 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v18-8f82d839ee9e'>blog post</a> or <a href='https://attack.mitre.org/resources/updates/'>changelog</a> for more information.
 
                     </div>
             </div>
@@ -382,13 +394,13 @@
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Permalink to this version of T1556.006" 
-           href="/versions/v17/techniques/T1556/006/" data-test-ignore="true">Version Permalink</a>
+           href="/versions/v18/techniques/T1556/006/" data-test-ignore="true">Version Permalink</a>
     </div>
     <div class="permalink">
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Go to the live version of T1556.006" 
-           href="/versions/v17/techniques/T1556/006/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+           href="/versions/v18/techniques/T1556/006/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
     </div>
 </div>
 
@@ -494,93 +506,87 @@
                                     </tbody>
                                 </table>
                                 </div>
-                            <h2 class="pt-3" id="detection">Detection</h2>
+                                <h2 class="pt-3" id="detection">Detection Strategy</h2>
                                 <div class="tables-mobile">
 <table class="table datasources-table table-bordered">
     <thead>
         <tr>
             <th class="p-2" scope="col">ID</th>
-            <th class="p-2 nowrap" scope="col">Data Source</th>
-            <th class="p-2 nowrap" scope="col">Data Component</th>
-            <th class="p-2" scope="col">Detects</th>
+            <th class="p-2 nowrap" scope="col">Name</th>
+            <th class="p-2 nowrap" scope="col">Analytic ID</th>
+            <th class="p-2 nowrap" scope="col">Analytic Description</th>
         </tr>
     </thead>
     <tbody>
-            <tr class="datasource" id="uses-DS0026">
-                <td>
-                    <a href="/datasources/DS0026">DS0026</a>
-                </td>
-                <td class="nowrap">
-                    <a href="/datasources/DS0026">Active Directory</a>
-                </td>
-                <!-- Add first data component here -->
-                <td> 
-                    <a href="/datasources/DS0026/#Active%20Directory%20Object%20Modification">Active Directory Object Modification</a>
-                </td>
-                    <td>
-                                <p>Monitor for changes made to AD security settings related to MFA logon requirements, such as changes to Azure AD Conditional Access Policies or the registration of new MFA applications. </p>
-
-                    </td>
-            </tr>
-            <tr class="datasource" id="uses-DS0015">
-                <td>
-                    <a href="/datasources/DS0015">DS0015</a>
-                </td>
-                <td class="nowrap">
-                    <a href="/datasources/DS0015">Application Log</a>
-                </td>
-                <!-- Add first data component here -->
-                <td> 
-                    <a href="/datasources/DS0015/#Application%20Log%20Content">Application Log Content</a>
-                </td>
-                    <td>
-                                <p>Monitor for changes made to global multi-factor authentication settings in Identity-as-a-Service providers. For example, in Okta environments, the events <code>system.mfa.factor.activate</code> and <code>system.mfa.factor.deactivate</code> will trigger when an MFA factor is globally activated or deactivated. <span onclick=scrollToRef('scite-7') id="scite-ref-7-a" class="scite-citeref-number" title="Okta Defensive Cyber Operations. (2023, August 31). Cross-Tenant Impersonation: Prevention and Detection. Retrieved March 4, 2024."data-reference="Okta Cross-Tenant Impersonation"><sup><a href="https://sec.okta.com/articles/2023/08/cross-tenant-impersonation-prevention-and-detection" target="_blank" data-hasqtip="6" aria-describedby="qtip-6">[7]</a></sup></span> </p><p>Analytic 1 - Changes to MFA settings outside of normal maintenance windows.</p><p><code> index=security sourcetype="audit" OR sourcetype="azure:eventhub" OR sourcetype="o365:management:activity" OR sourcetype="gsuite:reports:admin" EventCode IN ("UserAddedToMFAExcludedGroup", "MFASettingsModified", "MFASettingsDisabled", "AddMFAOption", "RemoveMFAOption", "MFAEnforcementDisabled")</code></p>
-
-                    </td>
-            </tr>
-            <tr class="datasource" id="uses-DS0028">
-                <td>
-                    <a href="/datasources/DS0028">DS0028</a>
-                </td>
-                <td class="nowrap">
-                    <a href="/datasources/DS0028">Logon Session</a>
-                </td>
-                <!-- Add first data component here -->
-                <td> 
-                    <a href="/datasources/DS0028/#Logon%20Session%20Creation">Logon Session Creation</a>
-                </td>
-                    <td>
-                                <p>Monitor for logon sessions for user accounts and devices that did not require MFA for authentication.</p><p>Analytic 1 - Successful logons without MFA.</p><p><code>index=security sourcetype="azure:eventhub" OR sourcetype="o365:management:activity" OR sourcetype="gsuite:reports:admin" OR sourcetype="linux_secure" OR sourcetype="WinEventLog:Security" (EventID="4624" OR EventID="4648" OR EventID="AuthenticationSuccess" OR EventCode IN ("4104", "552", "1200") OR EventName="UserLoggedIn" OR action="login_success")| eval MFA_used = case(    isnotnull('AdditionalProperties.MFARequired') AND AdditionalProperties.MFARequired="true", "MFA",    isnotnull('AdditionalProperties.MFAStatus') AND AdditionalProperties.MFAStatus="success", "MFA",    isnotnull('AdditionalProperties.MFA') AND AdditionalProperties.MFA="success", "MFA",    isnotnull('AuthenticationMethod') AND AuthenticationMethod IN ("MFA", "TOTP", "U2F", "Push Notification"), "MFA",    isnotnull('MultiFactorUsed') AND MultiFactorUsed="Yes", "MFA",    1==1, "No MFA")| search MFA_used="No MFA" </code></p>
-
-                    </td>
-            </tr>
-            <tr class="datasource" id="uses-DS0002">
-                <td>
-                    <a href="/datasources/DS0002">DS0002</a>
-                </td>
-                <td class="nowrap">
-                    <a href="/datasources/DS0002">User Account</a>
-                </td>
-                <!-- Add first data component here -->
-                <td> 
-                    <a href="/datasources/DS0002/#User%20Account%20Authentication">User Account Authentication</a>
-                </td>
-                    <td>
-                                <p>Monitor for account authentications in which MFA credentials are not provided by the user account to the authenticating entity. </p>
-
-                    </td>
-            </tr>
-                    <tr class="datacomponent datasource" id="uses-DS0002-User Account Modification">
-                        <td></td>
-                        <td></td>
-                        <td>
-                            <a href="/datasources/DS0002/#User%20Account%20Modification">User Account Modification</a>
+                <tr class="detection_strategy" id="uses-DET0190">
+                        <td rowspan="7">
+                            <a href="/detectionstrategies/DET0190">DET0190</a>
                         </td>
-                            <td>
-                                        <p>Monitor for the enrollment of devices and user accounts with alternative security settings that do not require MFA credentials for successful logon. Monitor for attempts to disable MFA on individual user accounts.<span onclick=scrollToRef('scite-6') id="scite-ref-6-a" class="scite-citeref-number" title="Pany, D. & Hanley, C. (2023, May 3). Cloudy with a Chance of Bad Logs: Cloud Platform Log Configurations to Consider in Investigations. Retrieved October 16, 2023."data-reference="Mandiant Cloudy Logs 2023"><sup><a href="https://www.mandiant.com/resources/blog/cloud-bad-log-configurations" target="_blank" data-hasqtip="5" aria-describedby="qtip-5">[6]</a></sup></span> Additionally, monitor for attempts to change or reset users’ MFA factor settings. For example, in Okta environments, the event <code>user.mfa.factor.reset_all</code> will trigger when all MFA factors are reset for a user. <span onclick=scrollToRef('scite-7') id="scite-ref-7-a" class="scite-citeref-number" title="Okta Defensive Cyber Operations. (2023, August 31). Cross-Tenant Impersonation: Prevention and Detection. Retrieved March 4, 2024."data-reference="Okta Cross-Tenant Impersonation"><sup><a href="https://sec.okta.com/articles/2023/08/cross-tenant-impersonation-prevention-and-detection" target="_blank" data-hasqtip="6" aria-describedby="qtip-6">[7]</a></sup></span> </p><p>Analytic 1 - Unusual registration of MFA devices, changes to StrongAuthenticationPhoneAppDetail properties.</p><p><code>index="m365_audit_logs" Workload="AzureActiveDirectory" Operation="Update user" Actor="Azure MFA StrongAuthenticationService"| search ObjectId!="expected_user_id"| table CreationTime, Actor, ObjectId, IPAddress, ModifiedProperties </code></p>
-
-                            </td>
-                    </tr>
+                        <td rowspan="7">
+                            <a href="/detectionstrategies/DET0190">Detect MFA Modification or Disabling Across Platforms</a>
+                        </td>
+                    <td>
+                        <a href="/detectionstrategies/DET0190#AN0543">AN0543</a>
+                    </td>
+                    <td>
+                                <p>Detects registry and Group Policy modifications that disable or weaken MFA, suspicious PowerShell usage modifying MFA-related attributes, and anomalous login sessions succeeding without expected MFA challenge.</p>
+</a>
+                    </td>
+                </tr>
+                <tr class="detection_strategy" id="uses-DET0190">
+                    <td>
+                        <a href="/detectionstrategies/DET0190#AN0544">AN0544</a>
+                    </td>
+                    <td>
+                                <p>Detects conditional access policy changes, exclusion of accounts from MFA enforcement, or registration of new MFA factors by non-admin or anomalous users.</p>
+</a>
+                    </td>
+                </tr>
+                <tr class="detection_strategy" id="uses-DET0190">
+                    <td>
+                        <a href="/detectionstrategies/DET0190#AN0545">AN0545</a>
+                    </td>
+                    <td>
+                                <p>Detects API calls to cloud secrets/MFA configurations where MFA enforcement policies are disabled or bypassed.</p>
+</a>
+                    </td>
+                </tr>
+                <tr class="detection_strategy" id="uses-DET0190">
+                    <td>
+                        <a href="/detectionstrategies/DET0190#AN0546">AN0546</a>
+                    </td>
+                    <td>
+                                <p>Detects PAM module modifications or removal of MFA hooks in /etc/pam.d/ configurations, correlated with successful authentications lacking MFA prompts.</p>
+</a>
+                    </td>
+                </tr>
+                <tr class="detection_strategy" id="uses-DET0190">
+                    <td>
+                        <a href="/detectionstrategies/DET0190#AN0547">AN0547</a>
+                    </td>
+                    <td>
+                                <p>Detects modifications to authorization plugins responsible for MFA enforcement and correlates with suspicious login sessions missing MFA prompts.</p>
+</a>
+                    </td>
+                </tr>
+                <tr class="detection_strategy" id="uses-DET0190">
+                    <td>
+                        <a href="/detectionstrategies/DET0190#AN0548">AN0548</a>
+                    </td>
+                    <td>
+                                <p>Detects suspicious MFA method changes, such as registration of weaker factors (e.g., SMS), or removal of MFA requirements for specific accounts or groups.</p>
+</a>
+                    </td>
+                </tr>
+                <tr class="detection_strategy" id="uses-DET0190">
+                    <td>
+                        <a href="/detectionstrategies/DET0190#AN0549">AN0549</a>
+                    </td>
+                    <td>
+                                <p>Detects MFA bypass attempts by modifying tenant-wide authentication policies or excluding high-value accounts from MFA enforcement.</p>
+</a>
+                    </td>
+                </tr>
     </tbody>
 </table>
 </div>
@@ -627,7 +633,11 @@
         </li>
 
 
-                            
+                </ol>
+            </div>
+            <div class="col">
+                    <ol start="4.0">
+                                
         <li>
             <span  id="scite-4" class="scite-citation">
                 <span class="scite-citation-text">
@@ -639,10 +649,6 @@
         </li>
 
 
-                </ol>
-            </div>
-            <div class="col">
-                    <ol start="5.0">
                                 
         <li>
             <span  id="scite-5" class="scite-citation">
@@ -661,18 +667,6 @@
                 <span class="scite-citation-text">
                     <a rel="nofollow" class="external text" name="scite-6" href="https://www.mandiant.com/resources/blog/cloud-bad-log-configurations" target="_blank">
                         Pany, D. & Hanley, C. (2023, May 3). Cloudy with a Chance of Bad Logs: Cloud Platform Log Configurations to Consider in Investigations. Retrieved October 16, 2023.
-                    </a>
-                </span>
-            </span>
-        </li>
-
-
-                                
-        <li>
-            <span  id="scite-7" class="scite-citation">
-                <span class="scite-citation-text">
-                    <a rel="nofollow" class="external text" name="scite-7" href="https://sec.okta.com/articles/2023/08/cross-tenant-impersonation-prevention-and-detection" target="_blank">
-                        Okta Defensive Cyber Operations. (2023, August 31). Cross-Tenant Impersonation: Prevention and Detection. Retrieved March 4, 2024.
                     </a>
                 </span>
             </span>
@@ -745,7 +739,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3 col-footer">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v17.1&#013;Website  v4.2.3">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v18.0&#013;Website  v4.4.0">Website Changelog</a></u>
                                 </div>
                                 <div class="px-3">
                                     <u class="footer-link"><a href="/resources/legal-and-branding/privacy/#" class="footer-link" onclick="Osano.cm.showDrawer('osano-cm-dom-info-dialog-open')">Cookie Preferences</a></u>

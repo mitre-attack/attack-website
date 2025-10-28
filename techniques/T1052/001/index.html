@@ -93,12 +93,11 @@
                         </li>
                         <li class="nav-item dropdown">
                                 
-    <a class="nav-link dropdown-toggle" href="/datasources" id="navbarDropdown" role="button"
+    <a class="nav-link dropdown-toggle" href="/mitigations" id="navbarDropdown" role="button"
     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         <b>Defenses</b>
     </a>
     <div class="dropdown-menu " aria-labelledby="navbarDropdown">
-                <a class="dropdown-item" href="/datasources">Data Sources</a>
                 
 <div class="dropright dropdown">
 <a class="dropdown-item dropdown-toggle" href="/mitigations/" id="navbarDropdown" role="button"
@@ -113,6 +112,19 @@
 </div>
 
                 <a class="dropdown-item" href="/assets">Assets</a>
+                
+<div class="dropright dropdown">
+<a class="dropdown-item dropdown-toggle" href="/detectionstrategies/" id="navbarDropdown" role="button"
+    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <b>Detections</b>
+    </a>
+    <div class="dropdown-menu " aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="/detectionstrategies/">Detection Strategies</a>
+            <a class="dropdown-item" href="/analytics/">Analytics</a>
+            <a class="dropdown-item" href="/datacomponents">Data Components</a>
+    </div>
+</div>
+
     </div>
 
 
@@ -176,7 +188,7 @@
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
                     <div class="container-fluid banner-message">
-                        
+                        ATT&CK v18 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v18-8f82d839ee9e'>blog post</a> or <a href='https://attack.mitre.org/resources/updates/'>changelog</a> for more information.
 
                     </div>
             </div>
@@ -279,7 +291,7 @@
                                             <div class="row card-data">
                                                 <div class="col-md-1 px-0 text-center"></div>
                                                 <div class="col-md-11 pl-0">
-                                                    <span class="h5 card-title">Last Modified:&nbsp;</span>15 April 2025
+                                                    <span class="h5 card-title">Last Modified:&nbsp;</span>24 October 2025
                                                 </div>
                                             </div>
                                     </div>
@@ -289,13 +301,13 @@
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Permalink to this version of T1052.001" 
-           href="/versions/v17/techniques/T1052/001/" data-test-ignore="true">Version Permalink</a>
+           href="/versions/v18/techniques/T1052/001/" data-test-ignore="true">Version Permalink</a>
     </div>
     <div class="permalink">
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Go to the live version of T1052.001" 
-           href="/versions/v17/techniques/T1052/001/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+           href="/versions/v18/techniques/T1052/001/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
     </div>
 </div>
 
@@ -449,82 +461,51 @@
                                     </tbody>
                                 </table>
                                 </div>
-                            <h2 class="pt-3" id="detection">Detection</h2>
+                                <h2 class="pt-3" id="detection">Detection Strategy</h2>
                                 <div class="tables-mobile">
 <table class="table datasources-table table-bordered">
     <thead>
         <tr>
             <th class="p-2" scope="col">ID</th>
-            <th class="p-2 nowrap" scope="col">Data Source</th>
-            <th class="p-2 nowrap" scope="col">Data Component</th>
-            <th class="p-2" scope="col">Detects</th>
+            <th class="p-2 nowrap" scope="col">Name</th>
+            <th class="p-2 nowrap" scope="col">Analytic ID</th>
+            <th class="p-2 nowrap" scope="col">Analytic Description</th>
         </tr>
     </thead>
     <tbody>
-            <tr class="datasource" id="uses-DS0017">
-                <td>
-                    <a href="/datasources/DS0017">DS0017</a>
-                </td>
-                <td class="nowrap">
-                    <a href="/datasources/DS0017">Command</a>
-                </td>
-                <!-- Add first data component here -->
-                <td> 
-                    <a href="/datasources/DS0017/#Command%20Execution">Command Execution</a>
-                </td>
+                <tr class="detection_strategy" id="uses-DET0220">
+                        <td rowspan="3">
+                            <a href="/detectionstrategies/DET0220">DET0220</a>
+                        </td>
+                        <td rowspan="3">
+                            <a href="/detectionstrategies/DET0220">Detection of USB-Based Data Exfiltration</a>
+                        </td>
                     <td>
-                                <p>Monitor for execution of file transfer commands targeting USB storage (robocopy, xcopy, cp, rsync), use of disk management utilities (diskpart, mount, mkfs, fdisk), or PowerShell or Bash scripts automating USB file transfers.</p><p>Analytic 1 - Detecting File Transfers to USB via Command Execution</p><p><code> (EventCode=1 OR source="/var/log/audit/audit.log" type="execve")| where (command IN ("robocopy", "xcopy", "cp", "rsync", "mount", "diskutil", "diskpart"))| eval risk_score=case(    command IN ("robocopy", "cp", "rsync"), 9,    command IN ("mount", "diskutil", "diskpart"), 8)| where risk_score &gt;= 8| stats count by _time, host, user, command, risk_score</code></p>
-
+                        <a href="/detectionstrategies/DET0220#AN0616">AN0616</a>
                     </td>
-            </tr>
-            <tr class="datasource" id="uses-DS0016">
-                <td>
-                    <a href="/datasources/DS0016">DS0016</a>
-                </td>
-                <td class="nowrap">
-                    <a href="/datasources/DS0016">Drive</a>
-                </td>
-                <!-- Add first data component here -->
-                <td> 
-                    <a href="/datasources/DS0016/#Drive%20Creation">Drive Creation</a>
-                </td>
                     <td>
-                                <p>Monitor for newly assigned drive letters or mount points to a data storage device that may attempt to exfiltrate data over a USB connected physical device.</p><p>Analytic 1 - Detecting New USB Drive Mounting Events</p><p><code>(EventCode=6 OR EventCode=4663 OR source="/var/log/syslog" "usb-storage added" OR source="com.apple.DiskArbitration")| where (device_type IN ("USB", "Removable Storage"))| stats count by _time, host, user, device_name, device_type| eval risk_score=case(    device_type="USB", 9,    device_type="Removable Storage", 8)| where risk_score &gt;= 8| table host, user, device_name, device_type, risk_score </code></p>
-
+                                <p>Detects USB device insertion followed by high-volume or sensitive file access and staging activity by suspicious processes or accounts.</p>
+</a>
                     </td>
-            </tr>
-            <tr class="datasource" id="uses-DS0022">
-                <td>
-                    <a href="/datasources/DS0022">DS0022</a>
-                </td>
-                <td class="nowrap">
-                    <a href="/datasources/DS0022">File</a>
-                </td>
-                <!-- Add first data component here -->
-                <td> 
-                    <a href="/datasources/DS0022/#File%20Access">File Access</a>
-                </td>
+                </tr>
+                <tr class="detection_strategy" id="uses-DET0220">
                     <td>
-                                <p>Monitor file access on removable media that may attempt to exfiltrate data over a USB connected physical device.</p><p>Analytic 1 - Detecting File Transfers to USB Storage </p><p><code> (EventCode=11 OR EventCode=4663 OR source="/var/log/audit/audit.log" type="open")| where (file_path IN ("/media/usb/<em>", "/mnt/usb/</em>", "D:\USB\<em>", "E:\USB\</em>"))| eval risk_score=case(    file_path LIKE "%/media/usb/%", 9,    file_path LIKE "%D:\USB\%", 8)| where risk_score &gt;= 8| stats count by _time, host, user, file_path, risk_score</code></p>
-
+                        <a href="/detectionstrategies/DET0220#AN0617">AN0617</a>
                     </td>
-            </tr>
-            <tr class="datasource" id="uses-DS0009">
-                <td>
-                    <a href="/datasources/DS0009">DS0009</a>
-                </td>
-                <td class="nowrap">
-                    <a href="/datasources/DS0009">Process</a>
-                </td>
-                <!-- Add first data component here -->
-                <td> 
-                    <a href="/datasources/DS0009/#Process%20Creation">Process Creation</a>
-                </td>
                     <td>
-                                <p>Monitor for newly executed processes when removable media is mounted </p><p>Analytic 1 - Detecting Processes Executed from USB Devices </p><p><code> (EventCode=1 OR source="/var/log/audit/audit.log" type="execve")| where (process_name IN ("explorer.exe", "powershell.exe", "cmd.exe", "bash", "sh") AND process_path LIKE "/media/usb/%")| eval risk_score=case(    process_path LIKE "/media/usb/%", 9,    process_path LIKE "D:\USB\%", 8)| where risk_score &gt;= 8| stats count by _time, host, user, process_name, process_path, risk_score</code></p>
-
+                                <p>Detects USB block device mount followed by file access in sensitive directories or high-volume copy operations by user-controlled processes.</p>
+</a>
                     </td>
-            </tr>
+                </tr>
+                <tr class="detection_strategy" id="uses-DET0220">
+                    <td>
+                        <a href="/detectionstrategies/DET0220#AN0618">AN0618</a>
+                    </td>
+                    <td>
+                                <p>Detects external volume mount with Finder, Terminal, or script-initiated file copy from user profiles, sensitive folders, or cloud storage sync directories to USB.</p>
+</a>
+                    </td>
+                </tr>
     </tbody>
 </table>
 </div>
@@ -725,7 +706,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3 col-footer">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v17.1&#013;Website  v4.2.3">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v18.0&#013;Website  v4.4.0">Website Changelog</a></u>
                                 </div>
                                 <div class="px-3">
                                     <u class="footer-link"><a href="/resources/legal-and-branding/privacy/#" class="footer-link" onclick="Osano.cm.showDrawer('osano-cm-dom-info-dialog-open')">Cookie Preferences</a></u>

@@ -92,12 +92,11 @@
                         </li>
                         <li class="nav-item dropdown">
                                 
-    <a class="nav-link dropdown-toggle" href="/datasources" id="navbarDropdown" role="button"
+    <a class="nav-link dropdown-toggle" href="/mitigations" id="navbarDropdown" role="button"
     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         <b>Defenses</b>
     </a>
     <div class="dropdown-menu " aria-labelledby="navbarDropdown">
-                <a class="dropdown-item" href="/datasources">Data Sources</a>
                 
 <div class="dropright dropdown">
 <a class="dropdown-item dropdown-toggle" href="/mitigations/" id="navbarDropdown" role="button"
@@ -112,6 +111,19 @@
 </div>
 
                 <a class="dropdown-item" href="/assets">Assets</a>
+                
+<div class="dropright dropdown">
+<a class="dropdown-item dropdown-toggle" href="/detectionstrategies/" id="navbarDropdown" role="button"
+    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <b>Detections</b>
+    </a>
+    <div class="dropdown-menu " aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="/detectionstrategies/">Detection Strategies</a>
+            <a class="dropdown-item" href="/analytics/">Analytics</a>
+            <a class="dropdown-item" href="/datacomponents">Data Components</a>
+    </div>
+</div>
+
     </div>
 
 
@@ -175,7 +187,7 @@
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
                     <div class="container-fluid banner-message">
-                        
+                        ATT&CK v18 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v18-8f82d839ee9e'>blog post</a> or <a href='https://attack.mitre.org/resources/updates/'>changelog</a> for more information.
 
                     </div>
             </div>
@@ -207,7 +219,7 @@
             <div class="clearfix pb-3">
                 <h1>ATT&CK Sightings</h1>
                     <p><em>The ATT&amp;CK Team believes that we can best equip teams to defend against adversaries by collecting and reporting sightings of techniques to the entire community, so we're conducting a pilot to solicit that data. You can share to help make the whole community better!</em></p>
-<h2>Background</h2>
+<h2 id="background"><a class="toclink" href="#background">Background</a></h2>
 <p>Though the open-source reporting that is integrated into ATT&amp;CK provides important information about which techniques are used by which adversaries, it is subject to various biases:</p>
 <ul>
 <li><strong>Novelty bias</strong>: new and interesting techniques or existing techniques used by new actors get reported, while run of the mill techniques used over and over again do not.</li>
@@ -217,28 +229,28 @@
 <li><strong>Availability bias</strong>: techniques that are easily called to mind are likely reported more frequently, as report authors think to include them more often.</li>
 </ul>
 <p>This doesn't mean that information contained in threat reports is useless -- obviously, it's very useful towards telling us what's being used, by who, and how. It’s the entire foundation of the ATT&amp;CK knowledge base. But, what it does mean is that using it as raw data to understand the prevalence of techniques or how they’re leveraged over time and across industries might give deceiving answers. This can be particularly important if you’re prioritizing defensive operations – you want to focus defenses on techniques that are used more often by more adversaries, not  just those that are new and interesting or come to mind more easily.</p>
-<p>To help counter this and extend ATT&amp;CK’s foundation as a data-driven knowledge base, the team will begin soliciting contributions of raw <em>sightings</em> of ATT&amp;CK techniques. We hope that this data will help us make the ATT&amp;CK knowledge base itself better as well as make it easier for consumers to understand how techniques are used.
+<p>To help counter this and extend ATT&amp;CK’s foundation as a data-driven knowledge base, the team will begin soliciting contributions of raw <em>sightings</em> of ATT&amp;CK techniques. We hope that this data will help us make the ATT&amp;CK knowledge base itself better as well as make it easier for consumers to understand how techniques are used.<br>
 <br><br></p>
-<h2>Types of Sightings</h2>
+<h2 id="types-of-sightings"><a class="toclink" href="#types-of-sightings">Types of Sightings</a></h2>
 <p>ATT&amp;CK sightings data collection will take three forms, each of which provides a different insight into the usage of techniques.</p>
-<h4>Direct sighting of a technique</h4>
+<h4 id="direct-sighting-of-a-technique"><a class="toclink" href="#direct-sighting-of-a-technique">Direct sighting of a technique</a></h4>
 <p>The ATT&amp;CK team is most interested in data from actual sightings of techniques being executed in the course of an attack. In other words, during an event investigation data is collected which shows that one or more ATT&amp;CK techniques were actually used by the adversary on (or targeted at) the victim infrastructure. Cases where multiple techniques were detected as part of a single attack should be reported as a single sighting with multiple techniques listed.</p>
 <p><strong>Example</strong>: If mimikatz were used on a victim machine to dump credentials and that was observed by an EDR tool, it would constitute a direct sighting of Credential Dumping. This might take the form of a sighting of a process accessing lsass.exe memory, for example.</p>
 <p>Direct sightings of techniques are the most valuable type of sighting because they tell you, at a ground-truth level, that the adversary relied on a specific technique to carry out an attack.</p>
 <p>Direct technique sightings are reported using the <a href="#direct-technique-sighting">direct-technique-sighting</a> format.</p>
-<h4>Direct sighting of malicious software</h4>
+<h4 id="direct-sighting-of-malicious-software"><a class="toclink" href="#direct-sighting-of-malicious-software">Direct sighting of malicious software</a></h4>
 <p>In some cases, a technique might not be directly observed (or even be observable given sensing capability) but the presence of a piece of malicious software on the machine can give a strong hint that it was used. In other cases, software to carry out a technique might be blocked at the perimeter – in those cases, it indicates that the adversary might have wanted to use a certain technique but wasn't able to.</p>
 <p><em>Note: There is of course a grey area when talking about malicious software. What we mean is tools that can be used to carry out malicious attacks, including things commonly called "penetration test" software as well as those that are clearly malicious. On the other hand, we don't mean built-in OS functionality. So please </em><em>do</em><em> send us sightings of things like metasploit or cobalt strike, but </em><em>do not</em><em> send us sightings of powershell or the net command. Those latter items should be reported as a direct sighting of a technique (e.g., T1086).</em></p>
 <p><strong>Example</strong>: The presence of mimikatz.exe on a machine without evidence that it was actually run to dump credentials – or, mimikatz.exe being blocked at the perimeter or by antimalware -- would constitute a direct sighting of mimikatz. From that, you can assume some attempt to perform credential access techniques available in mimikatz -- but because they were not directly observed, you can't be certain exactly what did or could have happened.</p>
 <p>Note that direct software sightings are most useful for <a href="https://attack.mitre.org/software/">software already contained in ATT&amp;CK</a> that directly enables one or more ATT&amp;CK techniques.</p>
 <p>Direct software sightings are reported using the <a href="#direct-software-sighting">direct-software-sighting</a> format.</p>
-<h4>Indirect sightings of malicious software</h4>
+<h4 id="indirect-sightings-of-malicious-software"><a class="toclink" href="#indirect-sightings-of-malicious-software">Indirect sightings of malicious software</a></h4>
 <p>In other cases, threat intelligence platforms or ISACs might have data feeds that indirectly demonstrate the fact that a piece of software is being used, without directly observing it.</p>
 <p><strong>Example</strong>: A file hash for mimikatz.exe shared to an ISAC or threat intel platform would be an indirect sighting of mimikatz.exe. As with a direct sighting of malware, this does provide some indication (though weaker) that an adversary was interested in performing credential access.</p>
 <p>Note that, as above, indirect software sightings are most useful for <a href="https://attack.mitre.org/software/">software already contained in ATT&amp;CK</a> that directly enables one or more ATT&amp;CK techniques. Additionally, indirect sightings should only be reported when there is a reasonable presumption that they haven't been reported by another party. In other words, don't write a scraper for some TIP and send sightings for all IOCs in that TIP unless you own or operate the TIP (if you do, please send us the sightings!).</p>
-<p>Indirect software sightings are reported using the <a href="#indirect-software-sighting">indirect-software-sighting</a> format.
+<p>Indirect software sightings are reported using the <a href="#indirect-software-sighting">indirect-software-sighting</a> format.<br>
 <br><br></p>
-<h2>Data Usage</h2>
+<h2 id="data-usage"><a class="toclink" href="#data-usage">Data Usage</a></h2>
 <p>In general, the ATT&amp;CK team believes that richer data collection of more raw data will allow us to better understand how techniques are used in practice. You could ask questions like:</p>
 <ul>
 <li>Which techniques are used more often?</li>
@@ -255,16 +267,16 @@
 </ul>
 <p>After those initial steps are completed (we expect a few months, but it could be longer) and the participants can agree on how they want the data published we’ll begin initial operations. At that phase, we’ll continue to work closely with all submitters to ensure that we get the data we’re expecting. Over time, we can transition to more automated collection and processing.</p>
 <p>Note that this is not an operational threat sharing mechanism and we do not intend to ever directly share even anonymized raw sightings data.</p>
-<p><center><img src="/theme/images/sightings-lifecycle.png" alt="pilot to initial ops to mature ops flow" /></center>
+<p><center><img src="/theme/images/sightings-lifecycle.png" alt="pilot to initial ops to mature ops flow" /></center><br>
 <br><br></p>
-<h2>Contribute</h2>
+<h2 id="contribute"><a class="toclink" href="#contribute">Contribute</a></h2>
 <p>Have data that fits into one of these buckets? Contact us at <a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#97;&#116;&#116;&#97;&#99;&#107;&#64;&#109;&#105;&#116;&#114;&#101;&#46;&#111;&#114;&#103;">&#97;&#116;&#116;&#97;&#99;&#107;&#64;&#109;&#105;&#116;&#114;&#101;&#46;&#111;&#114;&#103;</a> to get started! In particular we hope that EDR vendors, intel reporters, TIP vendors, ISACs, and end user organizations can help the community by providing this data. The format description below is meant to get you started -- if you have any questions simply get in touch.</p>
-<p>We'd also love to hear from you if you would you find data like this useful or have ideas on how we can publish it to make it useful.
+<p>We'd also love to hear from you if you would you find data like this useful or have ideas on how we can publish it to make it useful.<br>
 <br><br></p>
-<h2>Format Definitions</h2>
+<h2 id="format-definitions"><a class="toclink" href="#format-definitions">Format Definitions</a></h2>
 <p>All formats are JSON and consist of either a list of entries or a single entry. Please e-mail <a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#97;&#116;&#116;&#97;&#99;&#107;&#64;&#109;&#105;&#116;&#114;&#101;&#46;&#111;&#114;&#103;">&#97;&#116;&#116;&#97;&#99;&#107;&#64;&#109;&#105;&#116;&#114;&#101;&#46;&#111;&#114;&#103;</a> with any questions or suggestions.</p>
 <p>Fields in <strong>bold</strong> are required, all other fields are optional. For the "Timestamp" datatype, please use RFC 3339 timestamps in UTC time. Most importantly, please do not include any information beyond that specified in the format below. In particular, we do not want to collect sensitive victim information or other PII.</p>
-<h4><a class="anchor" name="direct-technique-sighting"></a>direct-technique-sighting</h4>
+<h4 id="direct-technique-sighting"><a class="toclink" href="#direct-technique-sighting"><a class="anchor" name="direct-technique-sighting"></a>direct-technique-sighting</a></h4>
 <table>
 <thead>
 <tr>
@@ -332,7 +344,7 @@
 </tbody>
 </table>
 <p><br></p>
-<h4><a class="anchor" name="direct-software-sighting"></a>direct-software-sighting</h4>
+<h4 id="direct-software-sighting"><a class="toclink" href="#direct-software-sighting"><a class="anchor" name="direct-software-sighting"></a>direct-software-sighting</a></h4>
 <table>
 <thead>
 <tr>
@@ -405,7 +417,7 @@
 </tbody>
 </table>
 <p><br></p>
-<h4><a class="anchor" name="indirect-software-sighting"></a>indirect-software-sighting</h4>
+<h4 id="indirect-software-sighting"><a class="toclink" href="#indirect-software-sighting"><a class="anchor" name="indirect-software-sighting"></a>indirect-software-sighting</a></h4>
 <table>
 <thead>
 <tr>
@@ -478,7 +490,7 @@
 </tbody>
 </table>
 <p><br></p>
-<h4><a class="anchor" name="technique"></a>technique</h4>
+<h4 id="technique"><a class="toclink" href="#technique"><a class="anchor" name="technique"></a>technique</a></h4>
 <table>
 <thead>
 <tr>
@@ -521,7 +533,7 @@
 </tbody>
 </table>
 <p><br></p>
-<h5>Formatting raw data</h5>
+<h5 id="formatting-raw-data"><a class="toclink" href="#formatting-raw-data">Formatting raw data</a></h5>
 <p>Each object in the list of raw data should consist of an object from the <a href="https://car.mitre.org/data_model/">CAR data model</a> in the form "object.action": {"field": "value"}.</p>
 <p>For example:</p>
 <p><strong>Command Line</strong>:</p>
@@ -536,10 +548,10 @@
 <span class="p">}</span>
 </code></pre></div>
 
-<p>More complete examples are also below. If something isn't expressible in the CAR data model as-is, just make up and object and action that makes sense to you and we'll figure it out.
+<p>More complete examples are also below. If something isn't expressible in the CAR data model as-is, just make up and object and action that makes sense to you and we'll figure it out.<br>
 <br><br></p>
-<h2>Examples</h2>
-<h4>Simple Technique Sighting</h4>
+<h2 id="examples"><a class="toclink" href="#examples">Examples</a></h2>
+<h4 id="simple-technique-sighting"><a class="toclink" href="#simple-technique-sighting">Simple Technique Sighting</a></h4>
 <p>A managed service provider monitors sensor data across its customer base. During that monitoring, an analytic flags a Sysmon process event that indicates a scheduled task is being created using "at".</p>
 <div class="highlight"><pre><span></span><code>{
   &quot;id&quot;: &quot;DT-1234&quot;,
@@ -561,7 +573,7 @@
 }
 </code></pre></div>
 
-<h4>Technique Sighting with Attribution</h4>
+<h4 id="technique-sighting-with-attribution"><a class="toclink" href="#technique-sighting-with-attribution">Technique Sighting with Attribution</a></h4>
 <p>An ISAC collects, anonymizes, and redistributes sightings from its members. While it doesn’t receive the raw data, it does have demographic and (sometimes) attribution information.</p>
 <div class="highlight"><pre><span></span><code>{
   &quot;id&quot;: &quot;1000&quot;,
@@ -583,7 +595,7 @@
 }
 </code></pre></div>
 
-<h4>Malware Blocked by Security Tool</h4>
+<h4 id="malware-blocked-by-security-tool"><a class="toclink" href="#malware-blocked-by-security-tool">Malware Blocked by Security Tool</a></h4>
 <p>A large end-user organization is running an anti-malware service that blocks execution of a Mac malware already in ATT&amp;CK.</p>
 <div class="highlight"><pre><span></span><code>{
   &quot;id&quot;: &quot;32&quot;,
@@ -596,7 +608,7 @@
 }
 </code></pre></div>
 
-<h4>IOC Submission</h4>
+<h4 id="ioc-submission"><a class="toclink" href="#ioc-submission">IOC Submission</a></h4>
 <p>A TIP vendor submits a set of IOCs that have been identified with ATT&amp;CK techniques.</p>
 <div class="highlight"><pre><span></span><code>{
   &quot;id&quot;: &quot;32&quot;,
@@ -667,7 +679,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3 col-footer">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v17.1&#013;Website  v4.2.3">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v18.0&#013;Website  v4.4.0">Website Changelog</a></u>
                                 </div>
                                 <div class="px-3">
                                     <u class="footer-link"><a href="/resources/legal-and-branding/privacy/#" class="footer-link" onclick="Osano.cm.showDrawer('osano-cm-dom-info-dialog-open')">Cookie Preferences</a></u>

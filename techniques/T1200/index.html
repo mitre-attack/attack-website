@@ -93,12 +93,11 @@
                         </li>
                         <li class="nav-item dropdown">
                                 
-    <a class="nav-link dropdown-toggle" href="/datasources" id="navbarDropdown" role="button"
+    <a class="nav-link dropdown-toggle" href="/mitigations" id="navbarDropdown" role="button"
     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         <b>Defenses</b>
     </a>
     <div class="dropdown-menu " aria-labelledby="navbarDropdown">
-                <a class="dropdown-item" href="/datasources">Data Sources</a>
                 
 <div class="dropright dropdown">
 <a class="dropdown-item dropdown-toggle" href="/mitigations/" id="navbarDropdown" role="button"
@@ -113,6 +112,19 @@
 </div>
 
                 <a class="dropdown-item" href="/assets">Assets</a>
+                
+<div class="dropright dropdown">
+<a class="dropdown-item dropdown-toggle" href="/detectionstrategies/" id="navbarDropdown" role="button"
+    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <b>Detections</b>
+    </a>
+    <div class="dropdown-menu " aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="/detectionstrategies/">Detection Strategies</a>
+            <a class="dropdown-item" href="/analytics/">Analytics</a>
+            <a class="dropdown-item" href="/datacomponents">Data Components</a>
+    </div>
+</div>
+
     </div>
 
 
@@ -176,7 +188,7 @@
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
                     <div class="container-fluid banner-message">
-                        
+                        ATT&CK v18 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v18-8f82d839ee9e'>blog post</a> or <a href='https://attack.mitre.org/resources/updates/'>changelog</a> for more information.
 
                     </div>
             </div>
@@ -271,7 +283,7 @@
                                             <div class="row card-data">
                                                 <div class="col-md-1 px-0 text-center"></div>
                                                 <div class="col-md-11 pl-0">
-                                                    <span class="h5 card-title">Last Modified:&nbsp;</span>15 April 2025
+                                                    <span class="h5 card-title">Last Modified:&nbsp;</span>24 October 2025
                                                 </div>
                                             </div>
                                     </div>
@@ -281,13 +293,13 @@
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Permalink to this version of T1200" 
-           href="/versions/v17/techniques/T1200/" data-test-ignore="true">Version Permalink</a>
+           href="/versions/v18/techniques/T1200/" data-test-ignore="true">Version Permalink</a>
     </div>
     <div class="permalink">
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Go to the live version of T1200" 
-           href="/versions/v17/techniques/T1200/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+           href="/versions/v18/techniques/T1200/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
     </div>
 </div>
 
@@ -357,66 +369,51 @@
                                     </tbody>
                                 </table>
                                 </div>
-                            <h2 class="pt-3" id="detection">Detection</h2>
+                                <h2 class="pt-3" id="detection">Detection Strategy</h2>
                                 <div class="tables-mobile">
 <table class="table datasources-table table-bordered">
     <thead>
         <tr>
             <th class="p-2" scope="col">ID</th>
-            <th class="p-2 nowrap" scope="col">Data Source</th>
-            <th class="p-2 nowrap" scope="col">Data Component</th>
-            <th class="p-2" scope="col">Detects</th>
+            <th class="p-2 nowrap" scope="col">Name</th>
+            <th class="p-2 nowrap" scope="col">Analytic ID</th>
+            <th class="p-2 nowrap" scope="col">Analytic Description</th>
         </tr>
     </thead>
     <tbody>
-            <tr class="datasource" id="uses-DS0015">
-                <td>
-                    <a href="/datasources/DS0015">DS0015</a>
-                </td>
-                <td class="nowrap">
-                    <a href="/datasources/DS0015">Application Log</a>
-                </td>
-                <!-- Add first data component here -->
-                <td> 
-                    <a href="/datasources/DS0015/#Application%20Log%20Content">Application Log Content</a>
-                </td>
+                <tr class="detection_strategy" id="uses-DET0069">
+                        <td rowspan="3">
+                            <a href="/detectionstrategies/DET0069">DET0069</a>
+                        </td>
+                        <td rowspan="3">
+                            <a href="/detectionstrategies/DET0069">Detect unauthorized or suspicious Hardware Additions (USB/Thunderbolt/Network)</a>
+                        </td>
                     <td>
-                                <p>Monitor new external hardware devices connected to a system (USB, Thunderbolt, PCIe), unauthorized HID (Human Interface Device) injections simulating keyboard/mouse inputs, unusual kernel-level access from attached devices (e.g., DMA attacks), or execution of suspicious processes upon device connection.</p><p>Analytic 1 - Detecting Unauthorized USB or Thunderbolt Devices</p><p><code> (EventCode=6416) OR (source="/var/log/messages" OR source="/var/log/syslog" "usb" OR "thunderbolt")OR (source="sysmon" EventCode=1 Image="C:\Windows\System32\cmd.exe" CommandLine="<em>usb</em>")| eval risk_score=case(    like(DeviceID, "%BadUSB%"), 8,    like(DeviceID, "%RubberDucky%"), 9,    like(DeviceID, "%LanTap%"), 7)| where risk_score &gt;= 7| stats count by _time, host, DeviceID, user, risk_score</code></p>
-
+                        <a href="/detectionstrategies/DET0069#AN0185">AN0185</a>
                     </td>
-            </tr>
-            <tr class="datasource" id="uses-DS0016">
-                <td>
-                    <a href="/datasources/DS0016">DS0016</a>
-                </td>
-                <td class="nowrap">
-                    <a href="/datasources/DS0016">Drive</a>
-                </td>
-                <!-- Add first data component here -->
-                <td> 
-                    <a href="/datasources/DS0016/#Drive%20Creation">Drive Creation</a>
-                </td>
                     <td>
-                                <p>Monitor for newly constructed drives or other related events associated with computer hardware and other accessories (especially new or unknown) being connected to systems. Endpoint sensors may be able to detect the addition of hardware via USB, Thunderbolt, and other external device communication ports.</p><p>Analytic 1 - Detecting Unauthorized External Drives </p><p><code> (EventCode=4663 OR EventCode=11)OR (source="/var/log/messages" OR source="/var/log/syslog" "block device added")OR (source="macOS_logs" Event="com.apple.diskarbitrationd")| eval risk_score=case(    like(DeviceName, "%Kingston%"), 7,    like(DeviceName, "%SanDisk%"), 6,    like(DeviceName, "%Unknown%"), 9)| where risk_score &gt;= 7| stats count by _time, host, DeviceName, user, risk_score</code></p>
-
+                                <p>Chain: (1) a new external device is recognized by Windows (USB/Thunderbolt/PCIe) or a new block device appears; (2) within a short window, the same user/session spawns processes or the OS mounts a new volume; (3) optional follow-on activity such as HID keystroke injection, DMA driver load, or new network interface MAC on DHCP. Correlate Security EID 6416 / Kernel-PnP with sysmon and DHCP/network metadata.</p>
+</a>
                     </td>
-            </tr>
-            <tr class="datasource" id="uses-DS0029">
-                <td>
-                    <a href="/datasources/DS0029">DS0029</a>
-                </td>
-                <td class="nowrap">
-                    <a href="/datasources/DS0029">Network Traffic</a>
-                </td>
-                <!-- Add first data component here -->
-                <td> 
-                    <a href="/datasources/DS0029/#Network%20Traffic%20Flow">Network Traffic Flow</a>
-                </td>
+                </tr>
+                <tr class="detection_strategy" id="uses-DET0069">
                     <td>
-                                <p>Monitor for network traffic originating from unknown/unexpected hardware devices. Local network traffic metadata (such as source MAC addressing) as well as usage of network management protocols such as DHCP may be helpful in identifying hardware.</p><p>Analytic 1 - Detecting Unauthorized Network Devices</p><p><code>(EventCode=10400)OR (source="/var/log/syslog" "new MAC address detected")OR (source="firewall_logs" "DHCP Lease Granted" mac_address NOT IN (trusted_macs))| eval risk_score=case(    like(mac_address, "%00:0C:29%"), 8,    like(mac_address, "%Unknown%"), 9,    like(mac_address, "%RaspberryPi%"), 7)| where risk_score &gt;= 7| stats count by _time, host, mac_address, ip_address, risk_score </code></p>
-
+                        <a href="/detectionstrategies/DET0069#AN0186">AN0186</a>
                     </td>
-            </tr>
+                    <td>
+                                <p>Chain: (1) udev / kernel logs show hot-plug (USB/Thunderbolt/PCIe); (2) block device created by udisks/diskarbitration; (3) optional: new network interface or DHCP lease observed. Correlate /var/log/messages|syslog, auditd SYSCALL open/creat on /dev, and DHCP/Zeek.</p>
+</a>
+                    </td>
+                </tr>
+                <tr class="detection_strategy" id="uses-DET0069">
+                    <td>
+                        <a href="/detectionstrategies/DET0069#AN0187">AN0187</a>
+                    </td>
+                    <td>
+                                <p>Chain: (1) unified logs report IOUSBHost/IOThunderbolt device arrival; (2) diskarbitrationd attaches a new volume; (3) optional: config profile manipulation or new network interface MAC obtains a lease. Correlate unifiedlogs (subsystems: IOUSBHost, IOKit, diskarbitrationd), FSEvents, and DHCP/Zeek.</p>
+</a>
+                    </td>
+                </tr>
     </tbody>
 </table>
 </div>
@@ -569,7 +566,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3 col-footer">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v17.1&#013;Website  v4.2.3">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v18.0&#013;Website  v4.4.0">Website Changelog</a></u>
                                 </div>
                                 <div class="px-3">
                                     <u class="footer-link"><a href="/resources/legal-and-branding/privacy/#" class="footer-link" onclick="Osano.cm.showDrawer('osano-cm-dom-info-dialog-open')">Cookie Preferences</a></u>

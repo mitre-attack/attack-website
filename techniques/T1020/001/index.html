@@ -93,12 +93,11 @@
                         </li>
                         <li class="nav-item dropdown">
                                 
-    <a class="nav-link dropdown-toggle" href="/datasources" id="navbarDropdown" role="button"
+    <a class="nav-link dropdown-toggle" href="/mitigations" id="navbarDropdown" role="button"
     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         <b>Defenses</b>
     </a>
     <div class="dropdown-menu " aria-labelledby="navbarDropdown">
-                <a class="dropdown-item" href="/datasources">Data Sources</a>
                 
 <div class="dropright dropdown">
 <a class="dropdown-item dropdown-toggle" href="/mitigations/" id="navbarDropdown" role="button"
@@ -113,6 +112,19 @@
 </div>
 
                 <a class="dropdown-item" href="/assets">Assets</a>
+                
+<div class="dropright dropdown">
+<a class="dropdown-item dropdown-toggle" href="/detectionstrategies/" id="navbarDropdown" role="button"
+    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <b>Detections</b>
+    </a>
+    <div class="dropdown-menu " aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="/detectionstrategies/">Detection Strategies</a>
+            <a class="dropdown-item" href="/analytics/">Analytics</a>
+            <a class="dropdown-item" href="/datacomponents">Data Components</a>
+    </div>
+</div>
+
     </div>
 
 
@@ -176,7 +188,7 @@
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
                     <div class="container-fluid banner-message">
-                        
+                        ATT&CK v18 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v18-8f82d839ee9e'>blog post</a> or <a href='https://attack.mitre.org/resources/updates/'>changelog</a> for more information.
 
                     </div>
             </div>
@@ -273,7 +285,7 @@
                                             <div class="row card-data">
                                                 <div class="col-md-1 px-0 text-center"></div>
                                                 <div class="col-md-11 pl-0">
-                                                    <span class="h5 card-title">Last Modified:&nbsp;</span>15 April 2025
+                                                    <span class="h5 card-title">Last Modified:&nbsp;</span>24 October 2025
                                                 </div>
                                             </div>
                                     </div>
@@ -283,13 +295,13 @@
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Permalink to this version of T1020.001" 
-           href="/versions/v17/techniques/T1020/001/" data-test-ignore="true">Version Permalink</a>
+           href="/versions/v18/techniques/T1020/001/" data-test-ignore="true">Version Permalink</a>
     </div>
     <div class="permalink">
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Go to the live version of T1020.001" 
-           href="/versions/v17/techniques/T1020/001/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+           href="/versions/v18/techniques/T1020/001/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
     </div>
 </div>
 
@@ -345,45 +357,42 @@
                                     </tbody>
                                 </table>
                                 </div>
-                            <h2 class="pt-3" id="detection">Detection</h2>
+                                <h2 class="pt-3" id="detection">Detection Strategy</h2>
                                 <div class="tables-mobile">
 <table class="table datasources-table table-bordered">
     <thead>
         <tr>
             <th class="p-2" scope="col">ID</th>
-            <th class="p-2 nowrap" scope="col">Data Source</th>
-            <th class="p-2 nowrap" scope="col">Data Component</th>
-            <th class="p-2" scope="col">Detects</th>
+            <th class="p-2 nowrap" scope="col">Name</th>
+            <th class="p-2 nowrap" scope="col">Analytic ID</th>
+            <th class="p-2 nowrap" scope="col">Analytic Description</th>
         </tr>
     </thead>
     <tbody>
-            <tr class="datasource" id="uses-DS0029">
-                <td>
-                    <a href="/datasources/DS0029">DS0029</a>
-                </td>
-                <td class="nowrap">
-                    <a href="/datasources/DS0029">Network Traffic</a>
-                </td>
-                <!-- Add first data component here -->
-                <td> 
-                    <a href="/datasources/DS0029/#Network%20Connection%20Creation">Network Connection Creation</a>
-                </td>
-                    <td>
-                                <p>Monitor for creation of unauthorized traffic mirroring sessions, unexpected outbound network connections from routers or cloud instances, configuration changes in network devices related to traffic forwarding or unusual new network flows, particularly on ports associated with traffic analysis tools.</p><p>Analytic 1 - Detecting Unauthorized Traffic Mirroring Sessions</p><p><code> (EventCode="CreateTrafficMirrorSession" OR EventCode="VirtualNetworkTapCreated" OR source="firewall_logs" message="Mirror Port Config Change")| eval risk_score=case(    EventCode="CreateTrafficMirrorSession", 9,    EventCode="VirtualNetworkTapCreated", 8,    EventCode="ModifyTrafficMirrorSession", 7)| where risk_score &gt;= 7| stats count by _time, host, user, EventCode, risk_score</code></p>
-
-                    </td>
-            </tr>
-                    <tr class="datacomponent datasource" id="uses-DS0029-Network Traffic Flow">
-                        <td></td>
-                        <td></td>
-                        <td>
-                            <a href="/datasources/DS0029/#Network%20Traffic%20Flow">Network Traffic Flow</a>
+                <tr class="detection_strategy" id="uses-DET0403">
+                        <td rowspan="2">
+                            <a href="/detectionstrategies/DET0403">DET0403</a>
                         </td>
-                            <td>
-                                        <p>Monitor and analyze network flows associated to protocol(s) that do not follow the expected protocol standards and traffic flows (e.g extraneous packets that do not belong to established flows, or gratuitous or anomalous traffic patterns). Consider analyzing newly constructed network connections that are sent or received by untrusted hosts, unexpcted hardware devices, or other uncommon data flows.</p><p>Analytic 1 - Detecting Traffic Duplication and Unexpected Mirroring Behavior </p><p><code> (source="zeek_conn.log" OR source="firewall_logs" OR source="cloud_network_logs")| where (flow_type="asymmetric" OR flow_type="mirrored")| where (dest_port IN (4789, 4790, 8000, 5000) OR bytes_out &gt; 10000000)| eval risk_score=case(    flow_type="asymmetric" AND dest_port IN (4789, 4790), 9,    flow_type="mirrored" AND bytes_out &gt; 10000000, 8)| where risk_score &gt;= 8| stats count by _time, host, source_ip, dest_ip, bytes_out, risk_score</code></p>
-
-                            </td>
-                    </tr>
+                        <td rowspan="2">
+                            <a href="/detectionstrategies/DET0403">Detection Strategy for Traffic Duplication via Mirroring in IaaS and Network Devices</a>
+                        </td>
+                    <td>
+                        <a href="/detectionstrategies/DET0403#AN1131">AN1131</a>
+                    </td>
+                    <td>
+                                <p>Configuration changes to virtual TAP/mirror policies that forward traffic to unapproved destinations. Detection correlates management plane API calls with mirrored traffic observation.</p>
+</a>
+                    </td>
+                </tr>
+                <tr class="detection_strategy" id="uses-DET0403">
+                    <td>
+                        <a href="/detectionstrategies/DET0403#AN1132">AN1132</a>
+                    </td>
+                    <td>
+                                <p>Unauthorized mirroring sessions initiated on routers/switches (e.g., via <code>monitor session</code>, <code>mirror port</code>) coupled with outbound traffic from mirrored interface to unexpected destinations.</p>
+</a>
+                    </td>
+                </tr>
     </tbody>
 </table>
 </div>
@@ -548,7 +557,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3 col-footer">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v17.1&#013;Website  v4.2.3">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v18.0&#013;Website  v4.4.0">Website Changelog</a></u>
                                 </div>
                                 <div class="px-3">
                                     <u class="footer-link"><a href="/resources/legal-and-branding/privacy/#" class="footer-link" onclick="Osano.cm.showDrawer('osano-cm-dom-info-dialog-open')">Cookie Preferences</a></u>

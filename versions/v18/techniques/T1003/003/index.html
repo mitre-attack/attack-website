@@ -1,0 +1,1384 @@
+
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+        <script src=https://cmp.osano.com/AzyhULTdPkqmy4aDN/83f786b4-d60d-4938-b70a-73afd166380a/osano.js></script>
+    <style>
+        .osano-cm-widget{display: none;}
+    </style>
+        <script async src="https://www.googletagmanager.com/gtag/js?id=UA-62667723-1"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'UA-62667723-1');
+        </script>
+        <meta name="google-site-verification" content="2oJKLqNN62z6AOCb0A0IXGtbQuj-lev5YPAHFF_cbHQ"/>
+
+        <meta charset='utf-8'>
+        <meta name='viewport' content='width=device-width, initial-scale=1,shrink-to-fit=no'>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <link rel='shortcut icon' href='/versions/v18/theme/favicon.ico' type='image/x-icon'>
+        <title>OS Credential Dumping: NTDS, Sub-technique T1003.003 - Enterprise | MITRE ATT&CK&reg;</title>
+        <!-- USWDS CSS -->
+        <!-- Bootstrap CSS -->
+        <link rel='stylesheet' href='/versions/v18/theme/style/vendors/bootstrap.min.css' />
+        <link rel='stylesheet' href='/versions/v18/theme/style/vendors/bootstrap-tourist.css' />
+        <link rel='stylesheet' href='/versions/v18/theme/style/vendors/bootstrap-select.min.css' />
+        <!-- Fontawesome CSS -->
+        <link rel="stylesheet" href="/versions/v18/theme/style/vendors/fontawesome-6.5.1/css/fontawesome.min.css"/>
+        <link rel="stylesheet" href="/versions/v18/theme/style/vendors/fontawesome-6.5.1/css/brands.min.css"/>
+        <link rel="stylesheet" href="/versions/v18/theme/style/vendors/fontawesome-6.5.1/css/solid.min.css"/>
+            <link rel="stylesheet" href="/versions/v18/theme/style-attack.css"/>
+
+
+</head>
+
+<body>
+
+    <div class="container-fluid attack-website-wrapper d-flex flex-column h-100">
+        <div class="row sticky-top flex-grow-0 flex-shrink-1">
+            <!-- header elements -->
+            <header class="col px-0">
+                    <nav class='navbar navbar-expand-lg navbar-dark position-static'>
+        <a class='navbar-brand' href='/versions/v18/'><img src="/versions/v18/theme/images/mitre_attack_logo.png" class="attack-logo"></a>
+        <button class='navbar-toggler' type='button' data-toggle='collapse' data-target='#navbarCollapse'
+                aria-controls='navbarCollapse' aria-expanded='false' aria-label='Toggle navigation'>
+                <span class='navbar-toggler-icon'></span>
+        </button>
+        <div class='collapse navbar-collapse' id='navbarCollapse'>
+            <ul class='nav nav-tabs ml-auto'>
+                        <li class="nav-item dropdown">
+                                
+    <a class="nav-link dropdown-toggle" href="/versions/v18/matrices/" id="navbarDropdown" role="button"
+    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <b>Matrices</b>
+    </a>
+    <div class="dropdown-menu " aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="/versions/v18/matrices/enterprise/">Enterprise</a>
+                <a class="dropdown-item" href="/versions/v18/matrices/mobile/">Mobile</a>
+                <a class="dropdown-item" href="/versions/v18/matrices/ics/">ICS</a>
+    </div>
+
+
+                        </li>
+                        <li class="nav-item dropdown">
+                                
+    <a class="nav-link dropdown-toggle" href="/versions/v18/tactics/" id="navbarDropdown" role="button"
+    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <b>Tactics</b>
+    </a>
+    <div class="dropdown-menu " aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="/versions/v18/tactics/enterprise/">Enterprise</a>
+                <a class="dropdown-item" href="/versions/v18/tactics/mobile/">Mobile</a>
+                <a class="dropdown-item" href="/versions/v18/tactics/ics/">ICS</a>
+    </div>
+
+
+                        </li>
+                        <li class="nav-item dropdown">
+                                
+    <a class="nav-link dropdown-toggle" href="/versions/v18/techniques/" id="navbarDropdown" role="button"
+    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <b>Techniques</b>
+    </a>
+    <div class="dropdown-menu " aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="/versions/v18/techniques/enterprise/">Enterprise</a>
+                <a class="dropdown-item" href="/versions/v18/techniques/mobile/">Mobile</a>
+                <a class="dropdown-item" href="/versions/v18/techniques/ics/">ICS</a>
+    </div>
+
+
+                        </li>
+                        <li class="nav-item dropdown">
+                                
+    <a class="nav-link dropdown-toggle" href="/versions/v18/mitigations" id="navbarDropdown" role="button"
+    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <b>Defenses</b>
+    </a>
+    <div class="dropdown-menu " aria-labelledby="navbarDropdown">
+                
+<div class="dropright dropdown">
+<a class="dropdown-item dropdown-toggle" href="/versions/v18/mitigations/" id="navbarDropdown" role="button"
+    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <b>Mitigations</b>
+    </a>
+    <div class="dropdown-menu " aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="/versions/v18/mitigations/enterprise/">Enterprise</a>
+            <a class="dropdown-item" href="/versions/v18/mitigations/mobile/">Mobile</a>
+            <a class="dropdown-item" href="/versions/v18/mitigations/ics/">ICS</a>
+    </div>
+</div>
+
+                <a class="dropdown-item" href="/versions/v18/assets">Assets</a>
+                
+<div class="dropright dropdown">
+<a class="dropdown-item dropdown-toggle" href="/versions/v18/detectionstrategies/" id="navbarDropdown" role="button"
+    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <b>Detections</b>
+    </a>
+    <div class="dropdown-menu " aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="/versions/v18/detectionstrategies/">Detection Strategies</a>
+            <a class="dropdown-item" href="/versions/v18/analytics/">Analytics</a>
+            <a class="dropdown-item" href="/versions/v18/datacomponents">Data Components</a>
+    </div>
+</div>
+
+    </div>
+
+
+                        </li>
+                        <li class="nav-item dropdown">
+                                
+    <a class="nav-link dropdown-toggle" href="/versions/v18/groups" id="navbarDropdown" role="button"
+    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <b>CTI</b>
+    </a>
+    <div class="dropdown-menu " aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="/versions/v18/groups">Groups</a>
+                <a class="dropdown-item" href="/versions/v18/software">Software</a>
+                <a class="dropdown-item" href="/versions/v18/campaigns">Campaigns</a>
+    </div>
+
+
+                        </li>
+                        <li class="nav-item dropdown">
+                                
+    <a class="nav-link dropdown-toggle" href="/resources/" id="navbarDropdown" role="button"
+    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <b>Resources</b>
+    </a>
+    <div class="dropdown-menu " aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="/resources/">Get Started</a>
+                <a class="dropdown-item" href="/resources/learn-more-about-attack/">Learn More about ATT&CK</a>
+                <a class="dropdown-item" href="/resources/attackcon/">ATT&CKcon</a>
+                <a class="dropdown-item" href="/resources/attack-data-and-tools/">ATT&CK Data & Tools</a>
+                <a class="dropdown-item" href="/resources/faq/">FAQ</a>
+                <a class="dropdown-item" href="/resources/engage-with-attack/contact/">Engage with ATT&CK</a>
+                <a class="dropdown-item" href="/resources/versions/">Version History</a>
+                <a class="dropdown-item" href="/resources/updates/">Updates</a>
+                <a class="dropdown-item" href="/resources/legal-and-branding/">Legal & Branding</a>
+    </div>
+
+
+                        </li>
+                        <li class="nav-item">
+                            <a href="/resources/engage-with-attack/benefactors/"  class="nav-link" ><b>Benefactors</b></a>
+                        </li>
+                        <li class="nav-item">
+                                <a href="https://medium.com/mitre-attack/" target="_blank" class="nav-link">
+        <b>Blog</b>&nbsp;
+        <img src="/versions/v18/theme/images/external-site.svg" alt="External site" class="external-icon" />
+    </a>
+
+                        </li>
+                        <li class="nav-item">
+                            <button id="search-button" class="btn search-button">Search <div id="search-icon" class="icon-button search-icon"></div></button>
+                        </li>
+            </ul>
+        </div>
+    </nav>
+
+            </header>
+        </div>
+        <div class="row flex-grow-0 flex-shrink-1">
+            <!-- banner elements -->
+            <div class="col px-0">
+                <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
+                <div class="container-fluid version-banner"><div class="icon-inline baseline mr-1"><img src="/versions/v18/theme/images/icon-warning-24px.svg"></div>Currently viewing <a href="https://github.com/mitre/cti/releases/tag/ATT%26CK-v18.0" target="_blank">ATT&CK v18.0</a> which is the current version of ATT&CK. <a href="/resources/versions/">Learn more about the versioning system</a> or <a href="/">see the live site</a>.</div>
+                    <div class="container-fluid d-none">
+                        ATT&CK v18 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v18-8f82d839ee9e'>blog post</a> or <a href='https://attack.mitre.org/resources/updates/'>changelog</a> for more information.
+
+                    </div>
+            </div>
+        </div>
+        <div class="row flex-grow-1 flex-shrink-0">
+            <!-- main content elements -->
+            <!--start-indexing-for-search-->
+
+ 
+     
+    <div class="sidebar nav sticky-top flex-column pr-0 pt-4 pb-3 pl-3" id="v-tab" role="tablist" aria-orientation="vertical">
+        <div class="resizer" id="resizer"></div>
+<!--stop-indexing-for-search-->
+<div id="sidebars"></div>
+<!--start-indexing-for-search-->
+    </div>
+
+    
+     
+    <div class="tab-content col-xl-9 pt-4" id="v-tabContent">
+        <div class="tab-pane fade show active" id="v-attckmatrix" role="tabpanel" aria-labelledby="v-attckmatrix-tab">
+    
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/versions/v18/">Home</a></li>
+            <li class="breadcrumb-item"><a href="/versions/v18/techniques/enterprise">Techniques</a></li>
+            <li class="breadcrumb-item"><a href="/versions/v18/techniques/enterprise">Enterprise</a></li>
+            <li class="breadcrumb-item"><a href="/versions/v18/techniques/T1003">OS Credential Dumping</a></li>
+        <li class="breadcrumb-item">NTDS</li>
+    </ol>
+    <div class="tab-pane fade show active" id="v-" role="tabpanel" aria-labelledby="v--tab"></div>
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="jumbotron jumbotron-fluid">
+                <div class="container-fluid">
+                    <h1 id="">
+                            <span id="subtechnique-parent-name">OS Credential Dumping:</span>
+                        NTDS
+                    </h1>
+
+                        <div class="row">
+                            <div class="col-md-8">
+                                    <!--stop-indexing-for-search-->
+                                    <div class="card-block pb-2">
+                                        <div class="card">
+                                            <div class="card-header collapsed" id="subtechniques-card-header" data-toggle="collapse" data-target="#subtechniques-card-body" aria-expanded="false" aria-controls="subtechniques-card-body">
+                                                    <h5 class="mb-0" id ="sub-techniques">Other sub-techniques of OS Credential Dumping (8)</h5>
+                                            </div>
+                                            <div id="subtechniques-card-body" class="card-body p-0 collapse" aria-labelledby="subtechniques-card-header">
+                                                <table class="table table-bordered">
+                                                    <thead>
+                                                        <tr>
+                                                            <th scope="col">ID</th>
+                                                            <th scope="col">Name</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                            <tr>
+                                                                    <td>
+                                                                        <a href="/versions/v18/techniques/T1003/001/" class="subtechnique-table-item" data-subtechnique_id="T1003.001"> T1003.001 </a>
+                                                                    </td>
+                                                                    <td>
+                                                                        <a href="/versions/v18/techniques/T1003/001/" class="subtechnique-table-item" data-subtechnique_id="T1003.001"> LSASS Memory </a>
+                                                                    </td>
+                                                            </tr>
+                                                            <tr>
+                                                                    <td>
+                                                                        <a href="/versions/v18/techniques/T1003/002/" class="subtechnique-table-item" data-subtechnique_id="T1003.002"> T1003.002 </a>
+                                                                    </td>
+                                                                    <td>
+                                                                        <a href="/versions/v18/techniques/T1003/002/" class="subtechnique-table-item" data-subtechnique_id="T1003.002"> Security Account Manager </a>
+                                                                    </td>
+                                                            </tr>
+                                                            <tr>
+                                                                    <td class="active">
+                                                                        T1003.003
+                                                                    </td>
+                                                                    <td class="active">
+                                                                        NTDS
+                                                                    </td>
+                                                            </tr>
+                                                            <tr>
+                                                                    <td>
+                                                                        <a href="/versions/v18/techniques/T1003/004/" class="subtechnique-table-item" data-subtechnique_id="T1003.004"> T1003.004 </a>
+                                                                    </td>
+                                                                    <td>
+                                                                        <a href="/versions/v18/techniques/T1003/004/" class="subtechnique-table-item" data-subtechnique_id="T1003.004"> LSA Secrets </a>
+                                                                    </td>
+                                                            </tr>
+                                                            <tr>
+                                                                    <td>
+                                                                        <a href="/versions/v18/techniques/T1003/005/" class="subtechnique-table-item" data-subtechnique_id="T1003.005"> T1003.005 </a>
+                                                                    </td>
+                                                                    <td>
+                                                                        <a href="/versions/v18/techniques/T1003/005/" class="subtechnique-table-item" data-subtechnique_id="T1003.005"> Cached Domain Credentials </a>
+                                                                    </td>
+                                                            </tr>
+                                                            <tr>
+                                                                    <td>
+                                                                        <a href="/versions/v18/techniques/T1003/006/" class="subtechnique-table-item" data-subtechnique_id="T1003.006"> T1003.006 </a>
+                                                                    </td>
+                                                                    <td>
+                                                                        <a href="/versions/v18/techniques/T1003/006/" class="subtechnique-table-item" data-subtechnique_id="T1003.006"> DCSync </a>
+                                                                    </td>
+                                                            </tr>
+                                                            <tr>
+                                                                    <td>
+                                                                        <a href="/versions/v18/techniques/T1003/007/" class="subtechnique-table-item" data-subtechnique_id="T1003.007"> T1003.007 </a>
+                                                                    </td>
+                                                                    <td>
+                                                                        <a href="/versions/v18/techniques/T1003/007/" class="subtechnique-table-item" data-subtechnique_id="T1003.007"> Proc Filesystem </a>
+                                                                    </td>
+                                                            </tr>
+                                                            <tr>
+                                                                    <td>
+                                                                        <a href="/versions/v18/techniques/T1003/008/" class="subtechnique-table-item" data-subtechnique_id="T1003.008"> T1003.008 </a>
+                                                                    </td>
+                                                                    <td>
+                                                                        <a href="/versions/v18/techniques/T1003/008/" class="subtechnique-table-item" data-subtechnique_id="T1003.008"> /etc/passwd and /etc/shadow </a>
+                                                                    </td>
+                                                            </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--start-indexing-for-search-->
+
+                                    <div class="description-body">
+                                                <p>Adversaries may attempt to access or create a copy of the Active Directory domain database in order to steal credential information, as well as obtain other information about domain members such as devices, users, and access rights. By default, the NTDS file (NTDS.dit) is located in <code>%SystemRoot%\NTDS\Ntds.dit</code> of a domain controller.<span onclick=scrollToRef('scite-1') id="scite-ref-1-a" class="scite-citeref-number" title="Wikipedia. (2018, March 10). Active Directory. Retrieved April 11, 2018."data-reference="Wikipedia Active Directory"><sup><a href="https://en.wikipedia.org/wiki/Active_Directory" target="_blank" data-hasqtip="0" aria-describedby="qtip-0">[1]</a></sup></span></p><p>In addition to looking for NTDS files on active Domain Controllers, adversaries may search for backups that contain the same or similar information.<span onclick=scrollToRef('scite-2') id="scite-ref-2-a" class="scite-citeref-number" title="Metcalf, S. (2015, January 19). Attackers Can Now Use Mimikatz to Implant Skeleton Key on Domain Controllers & BackDoor Your Active Directory Forest. Retrieved February 3, 2015."data-reference="Metcalf 2015"><sup><a href="http://adsecurity.org/?p=1275" target="_blank" data-hasqtip="1" aria-describedby="qtip-1">[2]</a></sup></span></p><p>The following tools and techniques can be used to enumerate the NTDS file and the contents of the entire Active Directory hashes.</p><ul><li>Volume Shadow Copy</li><li>secretsdump.py</li><li>Using the in-built Windows tool, ntdsutil.exe</li><li>Invoke-NinjaCopy</li></ul>
+
+                                    </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card">
+                                    <div class="card-body">
+                                            <div class="row card-data" id="card-id">
+                                                <div class="col-md-1 px-0 text-center"></div>
+                                                <div class="col-md-11 pl-0">
+                                                    <span class="h5 card-title">ID:&nbsp;</span>T1003.003
+                                                </div>
+                                            </div>
+                                        <!--stop-indexing-for-search-->
+                                        <div class="row card-data">
+                                            <div class="col-md-1 px-0 text-center"></div>
+                                            <div class="col-md-11 pl-0">
+                                                    <span class="h5 card-title">Sub-technique of:&nbsp;</span>
+                                                    <a href="/versions/v18/techniques/T1003">T1003</a>
+                                            </div>
+                                        </div>
+                                        <!--start-indexing-for-search-->
+                                            <div id="card-tactics" class="row card-data">
+                                                <div class="col-md-1 px-0 text-center">
+                                                    <span data-toggle="tooltip" data-placement="left" title="" data-test-ignore="true" data-original-title="The tactic objectives that the (sub-)technique can be used to accomplish">&#9432;</span>
+                                                </div>
+                                                <div class="col-md-11 pl-0">
+                                                    <span class="h5 card-title">Tactic:</span>
+                                                        <a href="/versions/v18/tactics/TA0006">Credential Access</a>                                                </div>
+                                            </div>
+                                            <div class="row card-data">
+                                                <div class="col-md-1 px-0 text-center">
+                                                    <span data-toggle="tooltip" data-placement="left" title="" data-test-ignore="true" data-original-title="The system an adversary is operating within; could be an operating system or application">&#9432;</span>
+                                                </div>
+                                                <div class="col-md-11 pl-0">
+                                                    <span class="h5 card-title">Platforms:&nbsp;</span>Windows
+                                                </div>
+                                            </div>
+                                            <div class="row card-data">
+                                                <div class="col-md-1 px-0 text-center"></div>
+                                                <div class="col-md-11 pl-0">
+                                                    <span class="h5 card-title">Contributors:&nbsp;</span>Ed Williams, Trustwave, SpiderLabs
+                                                </div>
+                                            </div>
+                                            <div class="row card-data">
+                                                <div class="col-md-1 px-0 text-center"></div>
+                                                <div class="col-md-11 pl-0">
+                                                    <span class="h5 card-title">Version:&nbsp;</span>1.3
+                                                </div>
+                                            </div>
+                                            <div class="row card-data">
+                                                <div class="col-md-1 px-0 text-center"></div>
+                                                <div class="col-md-11 pl-0">
+                                                    <span class="h5 card-title">Created:&nbsp;</span>11 February 2020
+                                                </div>
+                                            </div>
+                                            <div class="row card-data">
+                                                <div class="col-md-1 px-0 text-center"></div>
+                                                <div class="col-md-11 pl-0">
+                                                    <span class="h5 card-title">Last Modified:&nbsp;</span>24 October 2025
+                                                </div>
+                                            </div>
+                                    </div>
+                                </div>
+                                    <div class="text-center pt-2 version-button permalink">
+    <div class="live">
+        <a data-toggle="tooltip" 
+           data-placement="bottom" 
+           title="Permalink to this version of T1003.003" 
+           href="/versions/v18/techniques/T1003/003/" data-test-ignore="true">Version Permalink</a>
+    </div>
+    <div class="permalink">
+        <a data-toggle="tooltip" 
+           data-placement="bottom" 
+           title="Go to the live version of T1003.003" 
+           href="/techniques/T1003/003/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+    </div>
+</div>
+
+                            </div>
+                        </div>
+                            <h2 class="pt-3" id ="examples">Procedure Examples</h2>
+                            <div class="tables-mobile">
+                            <table class="table table-bordered table-alternate mt-2">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">ID</th>
+                                        <th scope="col">Name</th>
+                                        <th scope="col">Description</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v18/groups/G0007"> G0007 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v18/groups/G0007"> APT28 </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v18/groups/G0007">APT28</a> has used the ntdsutil.exe utility to export the Active Directory database for credential access.<span onclick=scrollToRef('scite-3') id="scite-ref-3-a" class="scite-citeref-number" title="NSA, CISA, FBI, NCSC. (2021, July). Russian GRU Conducting Global Brute Force Campaign to Compromise Enterprise and Cloud Environments. Retrieved July 26, 2021."data-reference="Cybersecurity Advisory GRU Brute Force Campaign July 2021"><sup><a href="https://media.defense.gov/2021/Jul/01/2002753896/-1/-1/1/CSA_GRU_GLOBAL_BRUTE_FORCE_CAMPAIGN_UOO158036-21.PDF" target="_blank" data-hasqtip="2" aria-describedby="qtip-2">[3]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v18/campaigns/C0051"> C0051 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v18/campaigns/C0051"> APT28 Nearest Neighbor Campaign </a>
+                                            </td>
+                                            <td>
+                                                            <p>During <a href="https://attack.mitre.org/campaigns/C0051">APT28 Nearest Neighbor Campaign</a>, <a href="/versions/v18/groups/G0007">APT28</a> dumped NTDS.dit through creating volume shadow copies via <code>vssadmin</code>.<span onclick=scrollToRef('scite-4') id="scite-ref-4-a" class="scite-citeref-number" title="Koessel, Sean. Adair, Steven. Lancaster, Tom. (2024, November 22). The Nearest Neighbor Attack: How A Russian APT Weaponized Nearby Wi-Fi Networks for Covert Access. Retrieved February 25, 2025."data-reference="Nearest Neighbor Volexity"><sup><a href="https://www.volexity.com/blog/2024/11/22/the-nearest-neighbor-attack-how-a-russian-apt-weaponized-nearby-wi-fi-networks-for-covert-access/" target="_blank" data-hasqtip="3" aria-describedby="qtip-3">[4]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v18/groups/G0096"> G0096 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v18/groups/G0096"> APT41 </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v18/groups/G0096">APT41</a> used ntdsutil to obtain a copy of the victim environment <code>ntds.dit</code> file.<span onclick=scrollToRef('scite-5') id="scite-ref-5-a" class="scite-citeref-number" title="Nikita Rostovcev. (2022, August 18). APT41 World Tour 2021 on a tight schedule. Retrieved February 22, 2024."data-reference="Rostovcev APT41 2021"><sup><a href="https://www.group-ib.com/blog/apt41-world-tour-2021/" target="_blank" data-hasqtip="4" aria-describedby="qtip-4">[5]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v18/groups/G0114"> G0114 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v18/groups/G0114"> Chimera </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v18/groups/G0114">Chimera</a> has gathered the SYSTEM registry and ntds.dit files from target systems.<span onclick=scrollToRef('scite-6') id="scite-ref-6-a" class="scite-citeref-number" title="Cycraft. (2020, April 15). APT Group Chimera - APT Operation Skeleton key Targets Taiwan Semiconductor Vendors. Retrieved August 24, 2020.."data-reference="Cycraft Chimera April 2020"><sup><a href="https://cycraft.com/download/CyCraft-Whitepaper-Chimera_V4.1.pdf" target="_blank" data-hasqtip="5" aria-describedby="qtip-5">[6]</a></sup></span> <a href="/versions/v18/groups/G0114">Chimera</a> specifically has used the NtdsAudit tool to dump the password hashes of domain users via <code>msadcs.exe "NTDS.dit" -s "SYSTEM" -p RecordedTV_pdmp.txt --users-csv RecordedTV_users.csv</code> and used ntdsutil to copy the Active Directory database.<span onclick=scrollToRef('scite-7') id="scite-ref-7-a" class="scite-citeref-number" title="Jansen, W . (2021, January 12). Abusing cloud services to fly under the radar. Retrieved September 12, 2024."data-reference="NCC Group Chimera January 2021"><sup><a href="https://web.archive.org/web/20230218064220/https://research.nccgroup.com/2021/01/12/abusing-cloud-services-to-fly-under-the-radar/" target="_blank" data-hasqtip="6" aria-describedby="qtip-6">[7]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v18/software/S0488"> S0488 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v18/software/S0488"> CrackMapExec </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v18/software/S0488">CrackMapExec</a> can dump hashed passwords associated with Active Directory using Windows' Directory Replication Services API (DRSUAPI), or Volume Shadow Copy.<span onclick=scrollToRef('scite-8') id="scite-ref-8-a" class="scite-citeref-number" title="byt3bl33d3r. (2018, September 8). SMB: Command Reference. Retrieved July 17, 2020."data-reference="CME Github September 2018"><sup><a href="https://github.com/byt3bl33d3r/CrackMapExec/wiki/SMB-Command-Reference" target="_blank" data-hasqtip="7" aria-describedby="qtip-7">[8]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v18/campaigns/C0029"> C0029 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v18/campaigns/C0029"> Cutting Edge </a>
+                                            </td>
+                                            <td>
+                                                            <p>During <a href="https://attack.mitre.org/campaigns/C0029">Cutting Edge</a>, threat actors accessed and mounted virtual hard disk backups to extract <br />ntds.dit.<span onclick=scrollToRef('scite-9') id="scite-ref-9-a" class="scite-citeref-number" title="Meltzer, M. et al. (2024, January 10). Active Exploitation of Two Zero-Day Vulnerabilities in Ivanti Connect Secure VPN. Retrieved February 27, 2024."data-reference="Volexity Ivanti Zero-Day Exploitation January 2024"><sup><a href="https://www.volexity.com/blog/2024/01/10/active-exploitation-of-two-zero-day-vulnerabilities-in-ivanti-connect-secure-vpn/" target="_blank" data-hasqtip="8" aria-describedby="qtip-8">[9]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v18/groups/G0035"> G0035 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v18/groups/G0035"> Dragonfly </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v18/groups/G0035">Dragonfly</a> has dropped and executed SecretsDump to dump password hashes. They also obtained ntds.dit from domain controllers.<span onclick=scrollToRef('scite-10') id="scite-ref-10-a" class="scite-citeref-number" title="US-CERT. (2018, March 16). Alert (TA18-074A): Russian Government Cyber Activity Targeting Energy and Other Critical Infrastructure Sectors. Retrieved June 6, 2018."data-reference="US-CERT TA18-074A"><sup><a href="https://www.us-cert.gov/ncas/alerts/TA18-074A" target="_blank" data-hasqtip="9" aria-describedby="qtip-9">[10]</a></sup></span><span onclick=scrollToRef('scite-11') id="scite-ref-11-a" class="scite-citeref-number" title="Core Security. (n.d.). Impacket. Retrieved November 2, 2017."data-reference="Core Security Impacket"><sup><a href="https://www.coresecurity.com/core-labs/open-source-tools/impacket" target="_blank" data-hasqtip="10" aria-describedby="qtip-10">[11]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v18/software/S0404"> S0404 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v18/software/S0404"> esentutl </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v18/software/S0404">esentutl</a> can copy <code>ntds.dit</code> using the Volume Shadow Copy service.<span onclick=scrollToRef('scite-12') id="scite-ref-12-a" class="scite-citeref-number" title="LOLBAS. (n.d.). Esentutl.exe. Retrieved September 3, 2019."data-reference="LOLBAS Esentutl"><sup><a href="https://lolbas-project.github.io/lolbas/Binaries/Esentutl/" target="_blank" data-hasqtip="11" aria-describedby="qtip-11">[12]</a></sup></span><span onclick=scrollToRef('scite-13') id="scite-ref-13-a" class="scite-citeref-number" title="Cary, M. (2018, December 6). Locked File Access Using ESENTUTL.exe. Retrieved September 5, 2019."data-reference="Cary Esentutl"><sup><a href="https://dfironthemountain.wordpress.com/2018/12/06/locked-file-access-using-esentutl-exe/" target="_blank" data-hasqtip="12" aria-describedby="qtip-12">[13]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v18/groups/G1016"> G1016 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v18/groups/G1016"> FIN13 </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v18/groups/G1016">FIN13</a> has harvested the NTDS.DIT file and leveraged the <a href="/versions/v18/software/S0357">Impacket</a> tool on the compromised domain controller to locally decrypt it.<span onclick=scrollToRef('scite-14') id="scite-ref-14-a" class="scite-citeref-number" title="Sygnia Incident Response Team. (2022, January 5). TG2003: ELEPHANT BEETLE UNCOVERING AN ORGANIZED FINANCIAL-THEFT OPERATION. Retrieved February 9, 2023."data-reference="Sygnia Elephant Beetle Jan 2022"><sup><a href="https://f.hubspotusercontent30.net/hubfs/8776530/Sygnia-%20Elephant%20Beetle_Jan2022.pdf?__hstc=147695848.3e8f1a482c8f8d4531507747318e660b.1680005306711.1680005306711.1680005306711.1&__hssc=147695848.1.1680005306711&__hsfp=3000179024&hsCtaTracking=189ec409-ae2d-4909-8bf1-62dcdd694372%7Cca91d317-8f10-4a38-9f80-367f551ad64d" target="_blank" data-hasqtip="13" aria-describedby="qtip-13">[14]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v18/groups/G0037"> G0037 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v18/groups/G0037"> FIN6 </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v18/groups/G0037">FIN6</a> has used Metasploit’s <a href="/versions/v18/software/S0029">PsExec</a> NTDSGRAB module to obtain a copy of the victim's Active Directory database.<span onclick=scrollToRef('scite-15') id="scite-ref-15-a" class="scite-citeref-number" title="FireEye Threat Intelligence. (2016, April). Follow the Money: Dissecting the Operations of the Cyber Crime Group FIN6. Retrieved November 17, 2024."data-reference="FireEye FIN6 April 2016"><sup><a href="https://web.archive.org/web/20190807112824/https://www2.fireeye.com/rs/848-DID-242/images/rpt-fin6.pdf" target="_blank" data-hasqtip="14" aria-describedby="qtip-14">[15]</a></sup></span><span onclick=scrollToRef('scite-16') id="scite-ref-16-a" class="scite-citeref-number" title="McKeague, B. et al. (2019, April 5). Pick-Six: Intercepting a FIN6 Intrusion, an Actor Recently Tied to Ryuk and LockerGoga Ransomware. Retrieved April 17, 2019."data-reference="FireEye FIN6 Apr 2019"><sup><a href="https://www.fireeye.com/blog/threat-research/2019/04/pick-six-intercepting-a-fin6-intrusion.html" target="_blank" data-hasqtip="15" aria-describedby="qtip-15">[16]</a></sup></span>   </p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v18/groups/G0117"> G0117 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v18/groups/G0117"> Fox Kitten </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v18/groups/G0117">Fox Kitten</a> has used Volume Shadow Copy to access credential information from NTDS.<span onclick=scrollToRef('scite-17') id="scite-ref-17-a" class="scite-citeref-number" title="CISA. (2020, September 15). Iran-Based Threat Actor Exploits VPN Vulnerabilities. Retrieved December 21, 2020."data-reference="CISA AA20-259A Iran-Based Actor September 2020"><sup><a href="https://us-cert.cisa.gov/ncas/alerts/aa20-259a" target="_blank" data-hasqtip="16" aria-describedby="qtip-16">[17]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v18/groups/G0125"> G0125 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v18/groups/G0125"> HAFNIUM </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v18/groups/G0125">HAFNIUM</a> has stolen copies of the Active Directory database (NTDS.DIT).<span onclick=scrollToRef('scite-18') id="scite-ref-18-a" class="scite-citeref-number" title="Gruzweig, J. et al. (2021, March 2). Operation Exchange Marauder: Active Exploitation of Multiple Zero-Day Microsoft Exchange Vulnerabilities. Retrieved March 3, 2021."data-reference="Volexity Exchange Marauder March 2021"><sup><a href="https://www.volexity.com/blog/2021/03/02/active-exploitation-of-microsoft-exchange-zero-day-vulnerabilities/" target="_blank" data-hasqtip="17" aria-describedby="qtip-17">[18]</a></sup></span><span onclick=scrollToRef('scite-19') id="scite-ref-19-a" class="scite-citeref-number" title="Microsoft Threat Intelligence . (2025, March 5). Silk Typhoon targeting IT supply chain. Retrieved March 20, 2025."data-reference="Microsoft Silk Typhoon MAR 2025"><sup><a href="https://www.microsoft.com/en-us/security/blog/2025/03/05/silk-typhoon-targeting-it-supply-chain/" target="_blank" data-hasqtip="18" aria-describedby="qtip-18">[19]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v18/software/S0357"> S0357 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v18/software/S0357"> Impacket </a>
+                                            </td>
+                                            <td>
+                                                            <p>SecretsDump and <a href="/versions/v18/software/S0002">Mimikatz</a> modules within <a href="/versions/v18/software/S0357">Impacket</a> can perform credential dumping to obtain account and password information from NTDS.dit.<span onclick=scrollToRef('scite-20') id="scite-ref-20-a" class="scite-citeref-number" title="SecureAuth. (n.d.).  Retrieved January 15, 2019."data-reference="Impacket Tools"><sup><a href="https://www.secureauth.com/labs/open-source-tools/impacket" target="_blank" data-hasqtip="19" aria-describedby="qtip-19">[20]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v18/groups/G0004"> G0004 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v18/groups/G0004"> Ke3chang </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v18/groups/G0004">Ke3chang</a> has used NTDSDump and other password dumping tools to gather credentials.<span onclick=scrollToRef('scite-21') id="scite-ref-21-a" class="scite-citeref-number" title="MSTIC. (2021, December 6). NICKEL targeting government organizations across Latin America and Europe. Retrieved March 18, 2022."data-reference="Microsoft NICKEL December 2021"><sup><a href="https://www.microsoft.com/security/blog/2021/12/06/nickel-targeting-government-organizations-across-latin-america-and-europe" target="_blank" data-hasqtip="20" aria-describedby="qtip-20">[21]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v18/software/S0250"> S0250 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v18/software/S0250"> Koadic </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v18/software/S0250">Koadic</a> can gather hashed passwords by gathering domain controller hashes from NTDS.<span onclick=scrollToRef('scite-22') id="scite-ref-22-a" class="scite-citeref-number" title="Magius, J., et al. (2017, July 19). Koadic. Retrieved September 27, 2024."data-reference="Github Koadic"><sup><a href="https://github.com/offsecginger/koadic" target="_blank" data-hasqtip="21" aria-describedby="qtip-21">[22]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v18/groups/G1004"> G1004 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v18/groups/G1004"> LAPSUS$ </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v18/groups/G1004">LAPSUS$</a> has used Windows built-in tool <code>ntdsutil</code> to extract the Active Directory (AD) database.<span onclick=scrollToRef('scite-23') id="scite-ref-23-a" class="scite-citeref-number" title="MSTIC, DART, M365 Defender. (2022, March 24). DEV-0537 Criminal Actor Targeting Organizations for Data Exfiltration and Destruction. Retrieved May 17, 2022."data-reference="MSTIC DEV-0537 Mar 2022"><sup><a href="https://www.microsoft.com/security/blog/2022/03/22/dev-0537-criminal-actor-targeting-organizations-for-data-exfiltration-and-destruction/" target="_blank" data-hasqtip="22" aria-describedby="qtip-22">[23]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v18/groups/G1051"> G1051 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v18/groups/G1051"> Medusa Group </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v18/groups/G1051">Medusa Group</a> has accessed the ntds.dit file to engage in credential dumping.<span onclick=scrollToRef('scite-24') id="scite-ref-24-a" class="scite-citeref-number" title="Threat Hunter Team Symantec and Carbon Black. (2025, March 6). Medusa Ransomware Activity Continues to Increase. Retrieved October 15, 2025."data-reference="Broadcom Medusa Ransomware Medusa Group March 2025"><sup><a href="https://www.security.com/threat-intelligence/medusa-ransomware-attacks" target="_blank" data-hasqtip="23" aria-describedby="qtip-23">[24]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v18/groups/G0045"> G0045 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v18/groups/G0045"> menuPass </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v18/groups/G0045">menuPass</a> has used Ntdsutil to dump credentials.<span onclick=scrollToRef('scite-25') id="scite-ref-25-a" class="scite-citeref-number" title="Symantec. (2020, November 17). Japan-Linked Organizations Targeted in Long-Running and Sophisticated Attack Campaign. Retrieved December 17, 2020."data-reference="Symantec Cicada November 2020"><sup><a href="https://symantec-enterprise-blogs.security.com/blogs/threat-intelligence/cicada-apt10-japan-espionage" target="_blank" data-hasqtip="24" aria-describedby="qtip-24">[25]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v18/groups/G0129"> G0129 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v18/groups/G0129"> Mustang Panda </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v18/groups/G0129">Mustang Panda</a> has used vssadmin to create a volume shadow copy and retrieve the NTDS.dit file. <a href="/versions/v18/groups/G0129">Mustang Panda</a> has also used <code>reg save</code> on the SYSTEM file Registry location to help extract the NTDS.dit file.<span onclick=scrollToRef('scite-26') id="scite-ref-26-a" class="scite-citeref-number" title="Counter Threat Unit Research Team. (2019, December 29). BRONZE PRESIDENT Targets NGOs. Retrieved April 13, 2021."data-reference="Secureworks BRONZE PRESIDENT December 2019"><sup><a href="https://www.secureworks.com/research/bronze-president-targets-ngos" target="_blank" data-hasqtip="25" aria-describedby="qtip-25">[26]</a></sup></span><span onclick=scrollToRef('scite-27') id="scite-ref-27-a" class="scite-citeref-number" title="Lior Rochberger, Tom Fakterman, Robert Falcone. (2023, September 22). Cyberespionage Attacks Against Southeast Asian Government Linked to Stately Taurus, Aka Mustang Panda. Retrieved September 9, 2025."data-reference="Palo Alto Unit42 STATELY TAURUS TONESHELL September 2023"><sup><a href="https://unit42.paloaltonetworks.com/stately-taurus-attacks-se-asian-government/" target="_blank" data-hasqtip="26" aria-describedby="qtip-26">[27]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v18/campaigns/C0048"> C0048 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v18/campaigns/C0048"> Operation MidnightEclipse </a>
+                                            </td>
+                                            <td>
+                                                            <p>During <a href="https://attack.mitre.org/campaigns/C0048">Operation MidnightEclipse</a>, threat actors obtained active directory credentials via the NTDS.DIT file.<span onclick=scrollToRef('scite-28') id="scite-ref-28-a" class="scite-citeref-number" title="Volexity Threat Research. (2024, April 12). Zero-Day Exploitation of Unauthenticated Remote Code Execution Vulnerability in GlobalProtect (CVE-2024-3400). Retrieved November 20, 2024."data-reference="Volexity UPSTYLE 2024"><sup><a href="https://www.volexity.com/blog/2024/04/12/zero-day-exploitation-of-unauthenticated-remote-code-execution-vulnerability-in-globalprotect-cve-2024-3400/" target="_blank" data-hasqtip="27" aria-describedby="qtip-27">[28]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v18/groups/G0034"> G0034 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v18/groups/G0034"> Sandworm Team </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v18/groups/G0034">Sandworm Team</a> has used <code>ntdsutil.exe</code> to back up the Active Directory database, likely for credential access.<span onclick=scrollToRef('scite-29') id="scite-ref-29-a" class="scite-citeref-number" title="MSTIC. (2022, October 14). New "Prestige" ransomware impacts organizations in Ukraine and Poland. Retrieved January 19, 2023."data-reference="Microsoft Prestige ransomware October 2022"><sup><a href="https://www.microsoft.com/en-us/security/blog/2022/10/14/new-prestige-ransomware-impacts-organizations-in-ukraine-and-poland/" target="_blank" data-hasqtip="28" aria-describedby="qtip-28">[29]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v18/groups/G1015"> G1015 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v18/groups/G1015"> Scattered Spider </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v18/groups/G1015">Scattered Spider</a> has extracted the <code>NTDS.dit</code> file by creating volume shadow copies of virtual domain controller disks.<span onclick=scrollToRef('scite-30') id="scite-ref-30-a" class="scite-citeref-number" title="Microsoft. (2023, October 25). Octo Tempest crosses boundaries to facilitate extortion, encryption, and destruction. Retrieved March 18, 2024."data-reference="MSTIC Octo Tempest Operations October 2023"><sup><a href="https://www.microsoft.com/en-us/security/blog/2023/10/25/octo-tempest-crosses-boundaries-to-facilitate-extortion-encryption-and-destruction/" target="_blank" data-hasqtip="29" aria-describedby="qtip-29">[30]</a></sup></span><span onclick=scrollToRef('scite-31') id="scite-ref-31-a" class="scite-citeref-number" title=" Counter Adversary Operations. (2025, July 2). CrowdStrike Services Observes SCATTERED SPIDER Escalate Attacks Across Industries. Retrieved October 13, 2025."data-reference="CrowdStrike Scattered Spider JUL 2025"><sup><a href="https://www.crowdstrike.com/en-us/blog/crowdstrike-services-observes-scattered-spider-escalate-attacks/" target="_blank" data-hasqtip="30" aria-describedby="qtip-30">[31]</a></sup></span><span onclick=scrollToRef('scite-32') id="scite-ref-32-a" class="scite-citeref-number" title="Mandiant Incident Response. (2025, July 23). From Help Desk to Hypervisor: Defending Your VMware vSphere Estate from UNC3944. Retrieved October 13, 2025."data-reference="Mandiant VMware vSphere JUL 2025"><sup><a href="https://cloud.google.com/blog/topics/threat-intelligence/defending-vsphere-from-unc3944" target="_blank" data-hasqtip="31" aria-describedby="qtip-31">[32]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v18/groups/G1017"> G1017 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v18/groups/G1017"> Volt Typhoon </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v18/groups/G1017">Volt Typhoon</a> has used ntds.util to create domain controller installation media containing usernames and password hashes.<span onclick=scrollToRef('scite-33') id="scite-ref-33-a" class="scite-citeref-number" title="Microsoft Threat Intelligence. (2023, May 24). Volt Typhoon targets US critical infrastructure with living-off-the-land techniques. Retrieved July 27, 2023."data-reference="Microsoft Volt Typhoon May 2023"><sup><a href="https://www.microsoft.com/en-us/security/blog/2023/05/24/volt-typhoon-targets-us-critical-infrastructure-with-living-off-the-land-techniques/" target="_blank" data-hasqtip="32" aria-describedby="qtip-32">[33]</a></sup></span><span onclick=scrollToRef('scite-34') id="scite-ref-34-a" class="scite-citeref-number" title="NSA et al. (2023, May 24). People's Republic of China State-Sponsored Cyber Actor Living off the Land to Evade Detection. Retrieved July 27, 2023."data-reference="Joint Cybersecurity Advisory Volt Typhoon June 2023"><sup><a href="https://media.defense.gov/2023/May/24/2003229517/-1/-1/0/CSA_Living_off_the_Land.PDF" target="_blank" data-hasqtip="33" aria-describedby="qtip-33">[34]</a></sup></span><span onclick=scrollToRef('scite-35') id="scite-ref-35-a" class="scite-citeref-number" title="Counter Threat Unit Research Team. (2023, May 24). Chinese Cyberespionage Group BRONZE SILHOUETTE Targets U.S. Government and Defense Organizations. Retrieved July 27, 2023."data-reference="Secureworks BRONZE SILHOUETTE May 2023"><sup><a href="https://www.secureworks.com/blog/chinese-cyberespionage-group-bronze-silhouette-targets-us-government-and-defense-organizations" target="_blank" data-hasqtip="34" aria-describedby="qtip-34">[35]</a></sup></span><span onclick=scrollToRef('scite-36') id="scite-ref-36-a" class="scite-citeref-number" title="CISA et al.. (2024, February 7). PRC State-Sponsored Actors Compromise and Maintain Persistent Access to U.S. Critical Infrastructure. Retrieved May 15, 2024."data-reference="CISA AA24-038A PRC Critical Infrastructure February 2024"><sup><a href="https://www.cisa.gov/sites/default/files/2024-03/aa24-038a_csa_prc_state_sponsored_actors_compromise_us_critical_infrastructure_3.pdf" target="_blank" data-hasqtip="35" aria-describedby="qtip-35">[36]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a href="/versions/v18/groups/G0102"> G0102 </a>
+                                            </td>
+                                            <td>
+                                                <a href="/versions/v18/groups/G0102"> Wizard Spider </a>
+                                            </td>
+                                            <td>
+                                                            <p><a href="/versions/v18/groups/G0102">Wizard Spider</a> has gained access to credentials via exported copies of the ntds.dit Active Directory database. <a href="/versions/v18/groups/G0102">Wizard Spider</a> has also created a volume shadow copy and used a batch script file to collect NTDS.dit with the use of the Windows utility, ntdsutil.<span onclick=scrollToRef('scite-37') id="scite-ref-37-a" class="scite-citeref-number" title="Kimberly Goody, Jeremy Kennelly, Joshua Shilko, Steve Elovitz, Douglas Bienstock. (2020, October 28). Unhappy Hour Special: KEGTAP and SINGLEMALT With a Ransomware Chaser. Retrieved October 28, 2020."data-reference="FireEye KEGTAP SINGLEMALT October 2020"><sup><a href="https://www.fireeye.com/blog/threat-research/2020/10/kegtap-and-singlemalt-with-a-ransomware-chaser.html" target="_blank" data-hasqtip="36" aria-describedby="qtip-36">[37]</a></sup></span><span onclick=scrollToRef('scite-38') id="scite-ref-38-a" class="scite-citeref-number" title="Shilko, J., et al. (2021, October 7). FIN12: The Prolific Ransomware Intrusion Threat Actor That Has Aggressively Pursued Healthcare Targets. Retrieved June 15, 2023."data-reference="Mandiant FIN12 Oct 2021"><sup><a href="https://www.mandiant.com/sites/default/files/2021-10/fin12-group-profile.pdf" target="_blank" data-hasqtip="37" aria-describedby="qtip-37">[38]</a></sup></span></p>
+
+                                            </td>
+                                        </tr>
+                                </tbody>
+                            </table>
+                            </div>
+                            <h2 class="pt-3" id ="mitigations">Mitigations</h2>
+                            <div class="tables-mobile">
+                                <table class="table table-bordered table-alternate mt-2">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">ID</th>
+                                            <th scope="col">Mitigation</th>
+                                            <th scope="col">Description</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                            <tr>
+                                                <td>
+                                                    <a href="/versions/v18/mitigations/M1041"> M1041 </a>
+                                                </td>
+                                                <td>
+                                                    <a href="/versions/v18/mitigations/M1041"> Encrypt Sensitive Information </a>
+                                                </td>
+                                                <td>
+                                                                <p>Ensure Domain Controller backups are properly secured.<span onclick=scrollToRef('scite-2') id="scite-ref-2-a" class="scite-citeref-number" title="Metcalf, S. (2015, January 19). Attackers Can Now Use Mimikatz to Implant Skeleton Key on Domain Controllers & BackDoor Your Active Directory Forest. Retrieved February 3, 2015."data-reference="Metcalf 2015"><sup><a href="http://adsecurity.org/?p=1275" target="_blank" data-hasqtip="1" aria-describedby="qtip-1">[2]</a></sup></span></p>
+
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <a href="/versions/v18/mitigations/M1027"> M1027 </a>
+                                                </td>
+                                                <td>
+                                                    <a href="/versions/v18/mitigations/M1027"> Password Policies </a>
+                                                </td>
+                                                <td>
+                                                                <p>Ensure that local administrator accounts have complex, unique passwords across all systems on the network.</p>
+
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <a href="/versions/v18/mitigations/M1026"> M1026 </a>
+                                                </td>
+                                                <td>
+                                                    <a href="/versions/v18/mitigations/M1026"> Privileged Account Management </a>
+                                                </td>
+                                                <td>
+                                                                <p>Do not put user or admin domain accounts in the local administrator groups across systems unless they are tightly controlled, as this is often equivalent to having a local administrator account with the same password on all systems. Follow best practices for design and administration of an enterprise network to limit privileged account use across administrative tiers.</p>
+
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <a href="/versions/v18/mitigations/M1017"> M1017 </a>
+                                                </td>
+                                                <td>
+                                                    <a href="/versions/v18/mitigations/M1017"> User Training </a>
+                                                </td>
+                                                <td>
+                                                                <p>Limit credential overlap across accounts and systems by training users and administrators not to use the same password for multiple accounts.</p>
+
+                                                </td>
+                                            </tr>
+                                    </tbody>
+                                </table>
+                                </div>
+                                <h2 class="pt-3" id="detection">Detection Strategy</h2>
+                                <div class="tables-mobile">
+<table class="table datasources-table table-bordered">
+    <thead>
+        <tr>
+            <th class="p-2" scope="col">ID</th>
+            <th class="p-2 nowrap" scope="col">Name</th>
+            <th class="p-2 nowrap" scope="col">Analytic ID</th>
+            <th class="p-2 nowrap" scope="col">Analytic Description</th>
+        </tr>
+    </thead>
+    <tbody>
+                <tr class="detection_strategy" id="uses-DET0586">
+                        <td rowspan="1">
+                            <a href="/versions/v18/detectionstrategies/DET0586">DET0586</a>
+                        </td>
+                        <td rowspan="1">
+                            <a href="/versions/v18/detectionstrategies/DET0586">Detection of NTDS.dit Credential Dumping from Domain Controllers</a>
+                        </td>
+                    <td>
+                        <a href="/versions/v18/detectionstrategies/DET0586#AN1611">AN1611</a>
+                    </td>
+                    <td>
+                                <p>Detects credential dumping attempts targeting the NTDS.dit database by monitoring shadow copy creation, suspicious file access to %SystemRoot%\NTDS\ntds.dit, and the use of tooling like ntdsutil.exe or volume management APIs.</p>
+</a>
+                    </td>
+                </tr>
+    </tbody>
+</table>
+</div>
+
+
+                            <h2 class="pt-3" id="references">References</h2>
+
+        <div class="row">
+            <div class="col">
+                <ol>
+                            
+        <li>
+            <span  id="scite-1" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-1" href="https://en.wikipedia.org/wiki/Active_Directory" target="_blank">
+                        Wikipedia. (2018, March 10). Active Directory. Retrieved April 11, 2018.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-2" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-2" href="http://adsecurity.org/?p=1275" target="_blank">
+                        Metcalf, S. (2015, January 19). Attackers Can Now Use Mimikatz to Implant Skeleton Key on Domain Controllers & BackDoor Your Active Directory Forest. Retrieved February 3, 2015.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-3" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-3" href="https://media.defense.gov/2021/Jul/01/2002753896/-1/-1/1/CSA_GRU_GLOBAL_BRUTE_FORCE_CAMPAIGN_UOO158036-21.PDF" target="_blank">
+                        NSA, CISA, FBI, NCSC. (2021, July). Russian GRU Conducting Global Brute Force Campaign to Compromise Enterprise and Cloud Environments. Retrieved July 26, 2021.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-4" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-4" href="https://www.volexity.com/blog/2024/11/22/the-nearest-neighbor-attack-how-a-russian-apt-weaponized-nearby-wi-fi-networks-for-covert-access/" target="_blank">
+                        Koessel, Sean. Adair, Steven. Lancaster, Tom. (2024, November 22). The Nearest Neighbor Attack: How A Russian APT Weaponized Nearby Wi-Fi Networks for Covert Access. Retrieved February 25, 2025.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-5" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-5" href="https://www.group-ib.com/blog/apt41-world-tour-2021/" target="_blank">
+                        Nikita Rostovcev. (2022, August 18). APT41 World Tour 2021 on a tight schedule. Retrieved February 22, 2024.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-6" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-6" href="https://cycraft.com/download/CyCraft-Whitepaper-Chimera_V4.1.pdf" target="_blank">
+                        Cycraft. (2020, April 15). APT Group Chimera - APT Operation Skeleton key Targets Taiwan Semiconductor Vendors. Retrieved August 24, 2020..
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-7" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-7" href="https://web.archive.org/web/20230218064220/https://research.nccgroup.com/2021/01/12/abusing-cloud-services-to-fly-under-the-radar/" target="_blank">
+                        Jansen, W . (2021, January 12). Abusing cloud services to fly under the radar. Retrieved September 12, 2024.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-8" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-8" href="https://github.com/byt3bl33d3r/CrackMapExec/wiki/SMB-Command-Reference" target="_blank">
+                        byt3bl33d3r. (2018, September 8). SMB: Command Reference. Retrieved July 17, 2020.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-9" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-9" href="https://www.volexity.com/blog/2024/01/10/active-exploitation-of-two-zero-day-vulnerabilities-in-ivanti-connect-secure-vpn/" target="_blank">
+                        Meltzer, M. et al. (2024, January 10). Active Exploitation of Two Zero-Day Vulnerabilities in Ivanti Connect Secure VPN. Retrieved February 27, 2024.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-10" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-10" href="https://www.us-cert.gov/ncas/alerts/TA18-074A" target="_blank">
+                        US-CERT. (2018, March 16). Alert (TA18-074A): Russian Government Cyber Activity Targeting Energy and Other Critical Infrastructure Sectors. Retrieved June 6, 2018.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-11" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-11" href="https://www.coresecurity.com/core-labs/open-source-tools/impacket" target="_blank">
+                        Core Security. (n.d.). Impacket. Retrieved November 2, 2017.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-12" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-12" href="https://lolbas-project.github.io/lolbas/Binaries/Esentutl/" target="_blank">
+                        LOLBAS. (n.d.). Esentutl.exe. Retrieved September 3, 2019.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-13" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-13" href="https://dfironthemountain.wordpress.com/2018/12/06/locked-file-access-using-esentutl-exe/" target="_blank">
+                        Cary, M. (2018, December 6). Locked File Access Using ESENTUTL.exe. Retrieved September 5, 2019.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-14" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-14" href="https://f.hubspotusercontent30.net/hubfs/8776530/Sygnia-%20Elephant%20Beetle_Jan2022.pdf?__hstc=147695848.3e8f1a482c8f8d4531507747318e660b.1680005306711.1680005306711.1680005306711.1&__hssc=147695848.1.1680005306711&__hsfp=3000179024&hsCtaTracking=189ec409-ae2d-4909-8bf1-62dcdd694372%7Cca91d317-8f10-4a38-9f80-367f551ad64d" target="_blank">
+                        Sygnia Incident Response Team. (2022, January 5). TG2003: ELEPHANT BEETLE UNCOVERING AN ORGANIZED FINANCIAL-THEFT OPERATION. Retrieved February 9, 2023.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-15" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-15" href="https://web.archive.org/web/20190807112824/https://www2.fireeye.com/rs/848-DID-242/images/rpt-fin6.pdf" target="_blank">
+                        FireEye Threat Intelligence. (2016, April). Follow the Money: Dissecting the Operations of the Cyber Crime Group FIN6. Retrieved November 17, 2024.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-16" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-16" href="https://www.fireeye.com/blog/threat-research/2019/04/pick-six-intercepting-a-fin6-intrusion.html" target="_blank">
+                        McKeague, B. et al. (2019, April 5). Pick-Six: Intercepting a FIN6 Intrusion, an Actor Recently Tied to Ryuk and LockerGoga Ransomware. Retrieved April 17, 2019.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-17" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-17" href="https://us-cert.cisa.gov/ncas/alerts/aa20-259a" target="_blank">
+                        CISA. (2020, September 15). Iran-Based Threat Actor Exploits VPN Vulnerabilities. Retrieved December 21, 2020.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-18" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-18" href="https://www.volexity.com/blog/2021/03/02/active-exploitation-of-microsoft-exchange-zero-day-vulnerabilities/" target="_blank">
+                        Gruzweig, J. et al. (2021, March 2). Operation Exchange Marauder: Active Exploitation of Multiple Zero-Day Microsoft Exchange Vulnerabilities. Retrieved March 3, 2021.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                            
+        <li>
+            <span  id="scite-19" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-19" href="https://www.microsoft.com/en-us/security/blog/2025/03/05/silk-typhoon-targeting-it-supply-chain/" target="_blank">
+                        Microsoft Threat Intelligence . (2025, March 5). Silk Typhoon targeting IT supply chain. Retrieved March 20, 2025.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                </ol>
+            </div>
+            <div class="col">
+                    <ol start="20.0">
+                                
+        <li>
+            <span  id="scite-20" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-20" href="https://www.secureauth.com/labs/open-source-tools/impacket" target="_blank">
+                        SecureAuth. (n.d.).  Retrieved January 15, 2019.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-21" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-21" href="https://www.microsoft.com/security/blog/2021/12/06/nickel-targeting-government-organizations-across-latin-america-and-europe" target="_blank">
+                        MSTIC. (2021, December 6). NICKEL targeting government organizations across Latin America and Europe. Retrieved March 18, 2022.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-22" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-22" href="https://github.com/offsecginger/koadic" target="_blank">
+                        Magius, J., et al. (2017, July 19). Koadic. Retrieved September 27, 2024.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-23" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-23" href="https://www.microsoft.com/security/blog/2022/03/22/dev-0537-criminal-actor-targeting-organizations-for-data-exfiltration-and-destruction/" target="_blank">
+                        MSTIC, DART, M365 Defender. (2022, March 24). DEV-0537 Criminal Actor Targeting Organizations for Data Exfiltration and Destruction. Retrieved May 17, 2022.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-24" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-24" href="https://www.security.com/threat-intelligence/medusa-ransomware-attacks" target="_blank">
+                        Threat Hunter Team Symantec and Carbon Black. (2025, March 6). Medusa Ransomware Activity Continues to Increase. Retrieved October 15, 2025.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-25" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-25" href="https://symantec-enterprise-blogs.security.com/blogs/threat-intelligence/cicada-apt10-japan-espionage" target="_blank">
+                        Symantec. (2020, November 17). Japan-Linked Organizations Targeted in Long-Running and Sophisticated Attack Campaign. Retrieved December 17, 2020.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-26" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-26" href="https://www.secureworks.com/research/bronze-president-targets-ngos" target="_blank">
+                        Counter Threat Unit Research Team. (2019, December 29). BRONZE PRESIDENT Targets NGOs. Retrieved April 13, 2021.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-27" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-27" href="https://unit42.paloaltonetworks.com/stately-taurus-attacks-se-asian-government/" target="_blank">
+                        Lior Rochberger, Tom Fakterman, Robert Falcone. (2023, September 22). Cyberespionage Attacks Against Southeast Asian Government Linked to Stately Taurus, Aka Mustang Panda. Retrieved September 9, 2025.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-28" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-28" href="https://www.volexity.com/blog/2024/04/12/zero-day-exploitation-of-unauthenticated-remote-code-execution-vulnerability-in-globalprotect-cve-2024-3400/" target="_blank">
+                        Volexity Threat Research. (2024, April 12). Zero-Day Exploitation of Unauthenticated Remote Code Execution Vulnerability in GlobalProtect (CVE-2024-3400). Retrieved November 20, 2024.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-29" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-29" href="https://www.microsoft.com/en-us/security/blog/2022/10/14/new-prestige-ransomware-impacts-organizations-in-ukraine-and-poland/" target="_blank">
+                        MSTIC. (2022, October 14). New “Prestige” ransomware impacts organizations in Ukraine and Poland. Retrieved January 19, 2023.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-30" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-30" href="https://www.microsoft.com/en-us/security/blog/2023/10/25/octo-tempest-crosses-boundaries-to-facilitate-extortion-encryption-and-destruction/" target="_blank">
+                        Microsoft. (2023, October 25). Octo Tempest crosses boundaries to facilitate extortion, encryption, and destruction. Retrieved March 18, 2024.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-31" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-31" href="https://www.crowdstrike.com/en-us/blog/crowdstrike-services-observes-scattered-spider-escalate-attacks/" target="_blank">
+                         Counter Adversary Operations. (2025, July 2). CrowdStrike Services Observes SCATTERED SPIDER Escalate Attacks Across Industries. Retrieved October 13, 2025.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-32" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-32" href="https://cloud.google.com/blog/topics/threat-intelligence/defending-vsphere-from-unc3944" target="_blank">
+                        Mandiant Incident Response. (2025, July 23). From Help Desk to Hypervisor: Defending Your VMware vSphere Estate from UNC3944. Retrieved October 13, 2025.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-33" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-33" href="https://www.microsoft.com/en-us/security/blog/2023/05/24/volt-typhoon-targets-us-critical-infrastructure-with-living-off-the-land-techniques/" target="_blank">
+                        Microsoft Threat Intelligence. (2023, May 24). Volt Typhoon targets US critical infrastructure with living-off-the-land techniques. Retrieved July 27, 2023.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-34" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-34" href="https://media.defense.gov/2023/May/24/2003229517/-1/-1/0/CSA_Living_off_the_Land.PDF" target="_blank">
+                        NSA et al. (2023, May 24). People's Republic of China State-Sponsored Cyber Actor Living off the Land to Evade Detection. Retrieved July 27, 2023.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-35" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-35" href="https://www.secureworks.com/blog/chinese-cyberespionage-group-bronze-silhouette-targets-us-government-and-defense-organizations" target="_blank">
+                        Counter Threat Unit Research Team. (2023, May 24). Chinese Cyberespionage Group BRONZE SILHOUETTE Targets U.S. Government and Defense Organizations. Retrieved July 27, 2023.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-36" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-36" href="https://www.cisa.gov/sites/default/files/2024-03/aa24-038a_csa_prc_state_sponsored_actors_compromise_us_critical_infrastructure_3.pdf" target="_blank">
+                        CISA et al.. (2024, February 7). PRC State-Sponsored Actors Compromise and Maintain Persistent Access to U.S. Critical Infrastructure. Retrieved May 15, 2024.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-37" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-37" href="https://www.fireeye.com/blog/threat-research/2020/10/kegtap-and-singlemalt-with-a-ransomware-chaser.html" target="_blank">
+                        Kimberly Goody, Jeremy Kennelly, Joshua Shilko, Steve Elovitz, Douglas Bienstock. (2020, October 28). Unhappy Hour Special: KEGTAP and SINGLEMALT With a Ransomware Chaser. Retrieved October 28, 2020.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-38" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-38" href="https://www.mandiant.com/sites/default/files/2021-10/fin12-group-profile.pdf" target="_blank">
+                        Shilko, J., et al. (2021, October 7). FIN12: The Prolific Ransomware Intrusion Threat Actor That Has Aggressively Pursued Healthcare Targets. Retrieved June 15, 2023.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+  
+                    </ol>
+            </div>             
+        </div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+    
+        </div>
+    </div>
+
+            <!--stop-indexing-for-search-->
+            <!-- search overlay for entire page -- not displayed inline -->
+            <div class="overlay search" id="search-overlay" style="display: none;">
+    <div class="overlay-inner">
+        <!-- text input for searching -->
+        <div class="search-header">
+            <div class="search-input">
+                <input type="text" id="search-input" placeholder="search">
+            </div>
+            <div class="search-icons">
+                <div class="search-parsing-icon spinner-border" style="display: none" id="search-parsing-icon"></div>
+                <div class="close-search-icon" id="close-search-icon">&times;</div>
+            </div>
+        </div>
+        <!-- results and controls for loading more results -->
+        <div id="search-body" class="search-body">
+            <div class="results" id="search-results">
+                <!-- content will be appended here on search -->
+            </div>
+            <div id="load-more-results" class="load-more-results">
+                <button class="btn btn-default" id="load-more-results-button">load more results</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+        </div>
+        <div class="row flex-grow-0 flex-shrink-1">
+            <!-- footer elements -->
+            <footer class="col footer">
+                <div class="container-fluid">
+                    <div class="row row-footer">
+                        <div class="col-2 col-sm-2 col-md-2">
+                            <div class="footer-center-responsive my-auto">
+                                <a href="https://www.mitre.org" target="_blank" rel="noopener" aria-label="MITRE">
+                                    <img src="/versions/v18/theme/images/mitrelogowhiteontrans.gif" class="mitre-logo-wtrans">
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-2 col-sm-2 footer-responsive-break"></div>
+                        <div class="footer-link-group">
+                            <div class="row row-footer">
+                                <div class="px-3 col-footer">
+                                    <u class="footer-link"><a href="/resources/engage-with-attack/contact" class="footer-link">Contact Us</a></u>
+                                </div>
+                                <div class="px-3 col-footer">
+                                    <u class="footer-link"><a href="/resources/legal-and-branding/terms-of-use" class="footer-link">Terms of Use</a></u>
+                                </div>
+                                    <div class="px-3 col-footer">
+                                        <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
+                                    </div>
+                                <div class="px-3 col-footer">
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v18.0&#013;Website  v4.4.0">Website Changelog</a></u>
+                                </div>
+                                <div class="px-3">
+                                    <u class="footer-link"><a href="/resources/legal-and-branding/privacy/#" class="footer-link" onclick="Osano.cm.showDrawer('osano-cm-dom-info-dialog-open')">Cookie Preferences</a></u>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <small class="px-3">
+                                    &copy;&nbsp;2015&nbsp;-&nbsp;2025, The MITRE Corporation. MITRE ATT&CK and ATT&CK are registered trademarks of The MITRE Corporation.
+                                </small>
+                            </div>
+                        </div>
+                        <div class="w-100 p-2 footer-responsive-break"></div>
+                            <div class="col pr-4">
+                                <div class="footer-float-right-responsive-brand">
+                                    <div class="row row-footer row-footer-icon">
+                                        <div class="mb-1">
+                                            <a href="https://x.com/MITREattack" class="btn btn-footer">
+                                                <i class="fa-brands fa-x-twitter fa-lg"></i>
+                                            </a>
+                                            <a href="https://github.com/mitre-attack" class="btn btn-footer">
+                                                <i class="fa-brands fa-github fa-lg"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+
+<!--stopindex-->
+
+</div>
+    <!--SCRIPTS-->
+    <script src="/versions/v18/theme/scripts/jquery-3.5.1.min.js"></script>
+    <script src="/versions/v18/theme/scripts/popper.min.js"></script>
+    <script src="/versions/v18/theme/scripts/bootstrap-select.min.js"></script>
+    <script src="/versions/v18/theme/scripts/bootstrap.bundle.min.js"></script>
+    <script src="/versions/v18/theme/scripts/site.js"></script>
+    <script src="/versions/v18/theme/scripts/settings.js"></script>
+    <script src="/versions/v18/theme/scripts/search_bundle.js"></script>
+
+<!--SCRIPTS-->
+<script src="/versions/v18/theme/scripts/resizer.js"></script>
+
+<!--SCRIPTS-->
+<script src="/versions/v18/theme/scripts/bootstrap-tourist.js"></script>
+<script src="/versions/v18/theme/scripts/settings.js"></script>
+    <script src="/versions/v18/theme/scripts/tour/tour-subtechniques.js"></script>
+<script src="/versions/v18/theme/scripts/sidebar-load-all.js"></script>
+</body>
+</html>

@@ -93,12 +93,11 @@
                         </li>
                         <li class="nav-item dropdown">
                                 
-    <a class="nav-link dropdown-toggle" href="/datasources" id="navbarDropdown" role="button"
+    <a class="nav-link dropdown-toggle" href="/mitigations" id="navbarDropdown" role="button"
     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         <b>Defenses</b>
     </a>
     <div class="dropdown-menu " aria-labelledby="navbarDropdown">
-                <a class="dropdown-item" href="/datasources">Data Sources</a>
                 
 <div class="dropright dropdown">
 <a class="dropdown-item dropdown-toggle" href="/mitigations/" id="navbarDropdown" role="button"
@@ -113,6 +112,19 @@
 </div>
 
                 <a class="dropdown-item" href="/assets">Assets</a>
+                
+<div class="dropright dropdown">
+<a class="dropdown-item dropdown-toggle" href="/detectionstrategies/" id="navbarDropdown" role="button"
+    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <b>Detections</b>
+    </a>
+    <div class="dropdown-menu " aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="/detectionstrategies/">Detection Strategies</a>
+            <a class="dropdown-item" href="/analytics/">Analytics</a>
+            <a class="dropdown-item" href="/datacomponents">Data Components</a>
+    </div>
+</div>
+
     </div>
 
 
@@ -176,7 +188,7 @@
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
                     <div class="container-fluid banner-message">
-                        
+                        ATT&CK v18 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v18-8f82d839ee9e'>blog post</a> or <a href='https://attack.mitre.org/resources/updates/'>changelog</a> for more information.
 
                     </div>
             </div>
@@ -307,7 +319,7 @@
                                             <div class="row card-data">
                                                 <div class="col-md-1 px-0 text-center"></div>
                                                 <div class="col-md-11 pl-0">
-                                                    <span class="h5 card-title">Last Modified:&nbsp;</span>15 April 2025
+                                                    <span class="h5 card-title">Last Modified:&nbsp;</span>24 October 2025
                                                 </div>
                                             </div>
                                     </div>
@@ -317,13 +329,13 @@
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Permalink to this version of T1563" 
-           href="/versions/v17/techniques/T1563/" data-test-ignore="true">Version Permalink</a>
+           href="/versions/v18/techniques/T1563/" data-test-ignore="true">Version Permalink</a>
     </div>
     <div class="permalink">
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Go to the live version of T1563" 
-           href="/versions/v17/techniques/T1563/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+           href="/versions/v18/techniques/T1563/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
     </div>
 </div>
 
@@ -403,93 +415,51 @@
                                     </tbody>
                                 </table>
                                 </div>
-                            <h2 class="pt-3" id="detection">Detection</h2>
+                                <h2 class="pt-3" id="detection">Detection Strategy</h2>
                                 <div class="tables-mobile">
 <table class="table datasources-table table-bordered">
     <thead>
         <tr>
             <th class="p-2" scope="col">ID</th>
-            <th class="p-2 nowrap" scope="col">Data Source</th>
-            <th class="p-2 nowrap" scope="col">Data Component</th>
-            <th class="p-2" scope="col">Detects</th>
+            <th class="p-2 nowrap" scope="col">Name</th>
+            <th class="p-2 nowrap" scope="col">Analytic ID</th>
+            <th class="p-2 nowrap" scope="col">Analytic Description</th>
         </tr>
     </thead>
     <tbody>
-            <tr class="datasource" id="uses-DS0017">
-                <td>
-                    <a href="/datasources/DS0017">DS0017</a>
-                </td>
-                <td class="nowrap">
-                    <a href="/datasources/DS0017">Command</a>
-                </td>
-                <!-- Add first data component here -->
-                <td> 
-                    <a href="/datasources/DS0017/#Command%20Execution">Command Execution</a>
-                </td>
-                    <td>
-                                <p>Monitor executed commands and arguments that may take control of preexisting sessions with remote services to move laterally in an environment.</p><p><code> (source="WinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode="1") OR (source="WinEventLog:Security" EventCode="4688")| search (command_line="<em>attach-session</em>" OR command_line="<em>tmux attach</em>" OR command_line="<em>screen -r</em>" OR command_line="<em>rdpwrap</em>")| stats count by user, host, parent_process_name, process_name, command_line, _time| eval hijacking_attempt=if(count &gt; threshold OR match(command_line, "attach|hijack|reconnect"), "suspicious", "normal")| where hijacking_attempt="suspicious"</code> </p>
-
-                    </td>
-            </tr>
-            <tr class="datasource" id="uses-DS0028">
-                <td>
-                    <a href="/datasources/DS0028">DS0028</a>
-                </td>
-                <td class="nowrap">
-                    <a href="/datasources/DS0028">Logon Session</a>
-                </td>
-                <!-- Add first data component here -->
-                <td> 
-                    <a href="/datasources/DS0028/#Logon%20Session%20Creation">Logon Session Creation</a>
-                </td>
-                    <td>
-                                <p>Monitor for user accounts logged into systems they would not normally access or access patterns to multiple systems over a relatively short period of time.</p><p><code> sourcetype IN ("WinEventLog:Security", "linux_secure", "macos_secure")| search event_code=4624 OR process="sshd" OR message="Accepted password for"| eval abnormal_login=if(logon_type IN ("3", "10") AND src_ip IN ("<em>untrusted_ip_range</em>") AND user NOT IN ("allowed_users"), "suspicious", "normal")| where abnormal_login="suspicious"| stats count by src_ip, user, host, logon_type, _time| table _time, src_ip, user, host, logon_type, abnormal_login</code></p>
-
-                    </td>
-            </tr>
-            <tr class="datasource" id="uses-DS0029">
-                <td>
-                    <a href="/datasources/DS0029">DS0029</a>
-                </td>
-                <td class="nowrap">
-                    <a href="/datasources/DS0029">Network Traffic</a>
-                </td>
-                <!-- Add first data component here -->
-                <td> 
-                    <a href="/datasources/DS0029/#Network%20Traffic%20Content">Network Traffic Content</a>
-                </td>
-                    <td>
-                                <p>Monitor network traffic for signs of hijacked sessions, such as unusual traffic patterns or unexpected session resumptions. Identify suspicious remote connections that align with ongoing user sessions.</p><p><code>sourcetype=flow| search (dest_port=22 OR dest_port=3389 OR dest_port=23) AND (connection_state="ESTABLISHED")| eval session_hijack=if(session_duration &gt; threshold_duration AND connection_origin="suspicious_ip", "possible_hijack", "normal")| where session_hijack="possible_hijack"| stats count by src_ip, dest_ip, dest_port, connection_state, _time| table _time, src_ip, dest_ip, dest_port, session_hijack </code></p>
-
-                    </td>
-            </tr>
-                    <tr class="datacomponent datasource" id="uses-DS0029-Network Traffic Flow">
-                        <td></td>
-                        <td></td>
-                        <td>
-                            <a href="/datasources/DS0029/#Network%20Traffic%20Flow">Network Traffic Flow</a>
+                <tr class="detection_strategy" id="uses-DET0079">
+                        <td rowspan="3">
+                            <a href="/detectionstrategies/DET0079">DET0079</a>
                         </td>
-                            <td>
-                                        <p>Monitor network data for uncommon data flows. Processes utilizing the network that do not normally have network communication or have never been seen before are suspicious.</p>
-
-                            </td>
-                    </tr>
-            <tr class="datasource" id="uses-DS0009">
-                <td>
-                    <a href="/datasources/DS0009">DS0009</a>
-                </td>
-                <td class="nowrap">
-                    <a href="/datasources/DS0009">Process</a>
-                </td>
-                <!-- Add first data component here -->
-                <td> 
-                    <a href="/datasources/DS0009/#Process%20Creation">Process Creation</a>
-                </td>
+                        <td rowspan="3">
+                            <a href="/detectionstrategies/DET0079">Detection of Remote Service Session Hijacking</a>
+                        </td>
                     <td>
-                                <p>Monitor newly executed processes that may take control of preexisting sessions with remote services to move laterally in an environment.</p>
-
+                        <a href="/detectionstrategies/DET0079#AN0216">AN0216</a>
                     </td>
-            </tr>
+                    <td>
+                                <p>Detection of anomalous RDP or remote service session activity where a logon session is hijacked rather than newly created. Indicators include mismatched user credentials vs. active session tokens, service session takeovers without corresponding successful logon events, or RDP shadowing activity without user consent.</p>
+</a>
+                    </td>
+                </tr>
+                <tr class="detection_strategy" id="uses-DET0079">
+                    <td>
+                        <a href="/detectionstrategies/DET0079#AN0217">AN0217</a>
+                    </td>
+                    <td>
+                                <p>Detection of SSH/Telnet session hijacking via discrepancies between authentication logs and active session tables. Adversary behavior includes reusing or stealing active PTY sessions, attaching to screen/tmux, or issuing commands without corresponding login events.</p>
+</a>
+                    </td>
+                </tr>
+                <tr class="detection_strategy" id="uses-DET0079">
+                    <td>
+                        <a href="/detectionstrategies/DET0079#AN0218">AN0218</a>
+                    </td>
+                    <td>
+                                <p>Detection of hijacked VNC or SSH sessions on macOS where adversaries take over an existing session rather than authenticating directly. Indicators include process execution from active sessions without new logon events, manipulation of TTY sessions, or anomalous network activity tied to dormant sessions.</p>
+</a>
+                    </td>
+                </tr>
     </tbody>
 </table>
 </div>
@@ -594,7 +564,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3 col-footer">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v17.1&#013;Website  v4.2.3">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v18.0&#013;Website  v4.4.0">Website Changelog</a></u>
                                 </div>
                                 <div class="px-3">
                                     <u class="footer-link"><a href="/resources/legal-and-branding/privacy/#" class="footer-link" onclick="Osano.cm.showDrawer('osano-cm-dom-info-dialog-open')">Cookie Preferences</a></u>

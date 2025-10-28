@@ -92,12 +92,11 @@
                         </li>
                         <li class="nav-item dropdown">
                                 
-    <a class="nav-link dropdown-toggle" href="/datasources" id="navbarDropdown" role="button"
+    <a class="nav-link dropdown-toggle" href="/mitigations" id="navbarDropdown" role="button"
     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         <b>Defenses</b>
     </a>
     <div class="dropdown-menu " aria-labelledby="navbarDropdown">
-                <a class="dropdown-item" href="/datasources">Data Sources</a>
                 
 <div class="dropright dropdown">
 <a class="dropdown-item dropdown-toggle" href="/mitigations/" id="navbarDropdown" role="button"
@@ -112,6 +111,19 @@
 </div>
 
                 <a class="dropdown-item" href="/assets">Assets</a>
+                
+<div class="dropright dropdown">
+<a class="dropdown-item dropdown-toggle" href="/detectionstrategies/" id="navbarDropdown" role="button"
+    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <b>Detections</b>
+    </a>
+    <div class="dropdown-menu " aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="/detectionstrategies/">Detection Strategies</a>
+            <a class="dropdown-item" href="/analytics/">Analytics</a>
+            <a class="dropdown-item" href="/datacomponents">Data Components</a>
+    </div>
+</div>
+
     </div>
 
 
@@ -175,7 +187,7 @@
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
                     <div class="container-fluid banner-message">
-                        
+                        ATT&CK v18 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v18-8f82d839ee9e'>blog post</a> or <a href='https://attack.mitre.org/resources/updates/'>changelog</a> for more information.
 
                     </div>
             </div>
@@ -228,9 +240,103 @@
 <p>This release contains a beta version of <a href="/matrices/mobile/">ATT&amp;CK for Mobile</a> represented using sub-techniques. The current stable version of ATT&amp;CK for Mobile can still be found at <a href="https://attack.mitre.org/versions/v10/matrices/mobile/">https://attack.mitre.org/versions/v10/matrices/mobile/</a>. Information on how to make the transition to this new version of ATT&amp;CK for Mobile can be found in an <a href="https://medium.com/mitre-attack/attack-goes-to-v11-599a9112a025">accompanying blog post</a>. A version of this beta content rendered in STIX can be found in our <a href="https://github.com/mitre/cti/releases/tag/ATT%26CK-v11.0-mobile-beta">GitHub repo</a>.</p>
 <p>In this release we have replaced the Enterprise Sub-Techniques <a href="https://attack.mitre.org/versions/v10/techniques/T1547/011/">Boot or Logon Autostart Execution: Plist Modification (T1547.011)</a> with <a href="/techniques/T1647/">Plist File Modification (T1647)</a> and <a href="https://attack.mitre.org/versions/v10/techniques/T1053/001/">Scheduled Task/Job: At (Linux)(T1053.001)</a> was incorporated into <a href="/techniques/T1053/002/">Scheduled Task/Job: At (T1053.002)</a> in to better reflect adversary behavior.</p>
 <p>This version of ATT&amp;CK for Enterprise contains 14 Tactics, 191 Techniques, 386 Sub-techniques, 134 Groups, and 680 Pieces of Software.</p>
-<h2>Techniques</h2>
-<h3>Enterprise</h3>
-<h4>New Techniques</h4>
+<h2 id="table-of-contents"><a class="toclink" href="#table-of-contents">Table of Contents</a></h2>
+<div class="toc">
+<ul>
+<li><a href="#table-of-contents">Table of Contents</a></li>
+<li><a href="#techniques">Techniques</a><ul>
+<li><a href="#enterprise">Enterprise</a><ul>
+<li><a href="#new-techniques">New Techniques</a></li>
+<li><a href="#technique-changes">Technique changes</a></li>
+<li><a href="#minor-technique-changes">Minor Technique changes</a></li>
+<li><a href="#technique-revocations">Technique revocations</a></li>
+<li><a href="#technique-deprecations">Technique deprecations</a></li>
+</ul>
+</li>
+<li><a href="#mobile-v110-beta">Mobile v11.0-beta</a><ul>
+<li><a href="#new-techniques_1">New Techniques</a></li>
+<li><a href="#technique-changes_1">Technique changes</a></li>
+<li><a href="#minor-technique-changes_1">Minor Technique changes</a></li>
+<li><a href="#technique-revocations_1">Technique revocations</a></li>
+<li><a href="#technique-deprecations_1">Technique deprecations</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#software">Software</a><ul>
+<li><a href="#enterprise_1">Enterprise</a><ul>
+<li><a href="#new-software">New Software</a></li>
+<li><a href="#software-changes">Software changes</a></li>
+<li><a href="#minor-software-changes">Minor Software changes</a></li>
+<li><a href="#software-revocations">Software revocations</a></li>
+<li><a href="#software-deprecations">Software deprecations</a></li>
+</ul>
+</li>
+<li><a href="#mobile">Mobile</a><ul>
+<li><a href="#new-software_1">New Software</a></li>
+<li><a href="#software-changes_1">Software changes</a></li>
+<li><a href="#minor-software-changes_1">Minor Software changes</a></li>
+<li><a href="#software-revocations_1">Software revocations</a></li>
+<li><a href="#software-deprecations_1">Software deprecations</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#groups">Groups</a><ul>
+<li><a href="#enterprise_2">Enterprise</a><ul>
+<li><a href="#new-groups">New Groups</a></li>
+<li><a href="#group-changes">Group changes</a></li>
+<li><a href="#minor-group-changes">Minor Group changes</a></li>
+<li><a href="#group-revocations">Group revocations</a></li>
+<li><a href="#group-deprecations">Group deprecations</a></li>
+</ul>
+</li>
+<li><a href="#mobile_1">Mobile</a><ul>
+<li><a href="#new-groups_1">New Groups</a></li>
+<li><a href="#group-changes_1">Group changes</a></li>
+<li><a href="#minor-group-changes_1">Minor Group changes</a></li>
+<li><a href="#group-revocations_1">Group revocations</a></li>
+<li><a href="#group-deprecations_1">Group deprecations</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#mitigations">Mitigations</a><ul>
+<li><a href="#enterprise_3">Enterprise</a><ul>
+<li><a href="#new-mitigations">New Mitigations</a></li>
+<li><a href="#mitigation-changes">Mitigation changes</a></li>
+<li><a href="#minor-mitigation-changes">Minor Mitigation changes</a></li>
+<li><a href="#mitigation-revocations">Mitigation revocations</a></li>
+<li><a href="#mitigation-deprecations">Mitigation deprecations</a></li>
+</ul>
+</li>
+<li><a href="#mobile_2">Mobile</a><ul>
+<li><a href="#new-mitigations_1">New Mitigations</a></li>
+<li><a href="#mitigation-changes_1">Mitigation changes</a></li>
+<li><a href="#minor-mitigation-changes_1">Minor Mitigation changes</a></li>
+<li><a href="#mitigation-revocations_1">Mitigation revocations</a></li>
+<li><a href="#mitigation-deprecations_1">Mitigation deprecations</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#data-sources-andor-components">Data Sources and/or Components</a><ul>
+<li><a href="#enterprise_4">Enterprise</a><ul>
+<li><a href="#new-data-sources-andor-components">New Data Sources and/or Components</a></li>
+<li><a href="#minor-data-source-andor-component-changes">Minor Data Source and/or Component changes</a></li>
+<li><a href="#data-source-andor-component-revocations">Data Source and/or Component revocations</a></li>
+<li><a href="#data-source-andor-component-deprecations">Data Source and/or Component deprecations</a></li>
+</ul>
+</li>
+<li><a href="#mobile_3">Mobile</a></li>
+</ul>
+</li>
+<li><a href="#contributors-to-this-release">Contributors to this release</a></li>
+</ul>
+</div>
+<h2 id="techniques"><a class="toclink" href="#techniques">Techniques</a></h2>
+<h3 id="enterprise"><a class="toclink" href="#enterprise">Enterprise</a></h3>
+<h4 id="new-techniques"><a class="toclink" href="#new-techniques">New Techniques</a></h4>
 <ul>
 <li>Account Manipulation: <a href="/techniques/T1098/005">Device Registration</a></li>
 <li>Active Scanning: <a href="/techniques/T1595/003">Wordlist Scanning</a></li>
@@ -245,7 +351,7 @@
 <li>Process Injection: <a href="/techniques/T1055/015">ListPlanting</a></li>
 <li>Server Software Component: <a href="/techniques/T1505/005">Terminal Services DLL</a></li>
 </ul>
-<h4>Technique changes</h4>
+<h4 id="technique-changes"><a class="toclink" href="#technique-changes">Technique changes</a></h4>
 <ul>
 <li>Abuse Elevation Control Mechanism: <a href="/techniques/T1548/001">Setuid and Setgid</a></li>
 <li><a href="/techniques/T1531">Account Access Removal</a></li>
@@ -393,7 +499,7 @@
 <li><a href="/techniques/T1078/004">Cloud Accounts</a></li>
 <li><a href="/techniques/T1125">Video Capture</a></li>
 </ul>
-<h4>Minor Technique changes</h4>
+<h4 id="minor-technique-changes"><a class="toclink" href="#minor-technique-changes">Minor Technique changes</a></h4>
 <ul>
 <li><a href="/techniques/T1548">Abuse Elevation Control Mechanism</a></li>
 <li><a href="/techniques/T1548/002">Bypass User Account Control</a></li>
@@ -468,18 +574,18 @@
 <li>Valid Accounts: <a href="/techniques/T1078/002">Domain Accounts</a></li>
 <li><a href="/techniques/T1047">Windows Management Instrumentation</a></li>
 </ul>
-<h4>Technique revocations</h4>
+<h4 id="technique-revocations"><a class="toclink" href="#technique-revocations">Technique revocations</a></h4>
 <ul>
 <li>Boot or Logon Autostart Execution: Plist Modification (revoked by <a href="/techniques/T1647/">Plist File Modification (T1647)</a>)</li>
 <li>Scheduled Task/Job: At (Linux) (revoked by Scheduled Task/Job: <a href="/techniques/T1053/002/">At (T1053.002)</a>)</li>
 </ul>
-<h4>Technique deprecations</h4>
+<h4 id="technique-deprecations"><a class="toclink" href="#technique-deprecations">Technique deprecations</a></h4>
 <ul>
 <li>No changes</li>
 </ul>
-<h3>Mobile v11.0-beta</h3>
+<h3 id="mobile-v110-beta"><a class="toclink" href="#mobile-v110-beta">Mobile v11.0-beta</a></h3>
 <p>The below changes represent the Mobile v11.0-beta release. The current production release at <a href="https://attack.mitre.org/versions/v10/matrices/mobile/">https://attack.mitre.org/versions/v10/matrices/mobile/</a> remains unchanged.</p>
-<h4>New Techniques</h4>
+<h4 id="new-techniques_1"><a class="toclink" href="#new-techniques_1">New Techniques</a></h4>
 <ul>
 <li><a href="/techniques/T1626">Abuse Elevation Control Mechanism</a></li>
 <li><a href="/techniques/T1626/001">Device Administrator Permissions</a></li>
@@ -547,7 +653,7 @@
 <li>Web Service: <a href="/techniques/T1481/001">Dead Drop Resolver</a></li>
 <li>Web Service: <a href="/techniques/T1481/003">One-Way Communication</a></li>
 </ul>
-<h4>Technique changes</h4>
+<h4 id="technique-changes_1"><a class="toclink" href="#technique-changes_1">Technique changes</a></h4>
 <ul>
 <li><a href="/techniques/T1517">Access Notifications</a></li>
 <li><a href="/techniques/T1437">Application Layer Protocol</a></li>
@@ -585,11 +691,11 @@
 <li><a href="/techniques/T1512">Video Capture</a></li>
 <li><a href="/techniques/T1481">Web Service</a></li>
 </ul>
-<h4>Minor Technique changes</h4>
+<h4 id="minor-technique-changes_1"><a class="toclink" href="#minor-technique-changes_1">Minor Technique changes</a></h4>
 <ul>
 <li>No changes</li>
 </ul>
-<h4>Technique revocations</h4>
+<h4 id="technique-revocations_1"><a class="toclink" href="#technique-revocations_1">Technique revocations</a></h4>
 <ul>
 <li>Access Calendar Entries (revoked by Protected User Data: <a href="/techniques/T1636/001">Calendar Entries</a>)</li>
 <li>Access Call Log (revoked by Protected User Data: <a href="/techniques/T1636/002">Call Log</a>)</li>
@@ -628,7 +734,7 @@
 <li>Uninstall Malicious Application (revoked by Indicator Removal on Host: <a href="/techniques/T1630/001">Uninstall Malicious Application</a>)</li>
 <li>User Evasion (revoked by Hide Artifacts: <a href="/techniques/T1628/002">User Evasion</a>)</li>
 </ul>
-<h4>Technique deprecations</h4>
+<h4 id="technique-deprecations_1"><a class="toclink" href="#technique-deprecations_1">Technique deprecations</a></h4>
 <ul>
 <li><a href="/techniques/T1413">Access Sensitive Data in Device Logs</a></li>
 <li><a href="/techniques/T1427">Attack PC via USB Connection</a></li>
@@ -645,9 +751,9 @@
 <li><a href="/techniques/T1469">Remotely Wipe Data Without Authorization</a></li>
 <li><a href="/techniques/T1451">SIM Card Swap</a></li>
 </ul>
-<h2>Software</h2>
-<h3>Enterprise</h3>
-<h4>New Software</h4>
+<h2 id="software"><a class="toclink" href="#software">Software</a></h2>
+<h3 id="enterprise_1"><a class="toclink" href="#enterprise_1">Enterprise</a></h3>
+<h4 id="new-software"><a class="toclink" href="#new-software">New Software</a></h4>
 <ul>
 <li><a href="/software/S0677">AADInternals</a></li>
 <li><a href="/software/S0693">CaddyWiper</a></li>
@@ -689,7 +795,7 @@
 <li><a href="/software/S0689">WhisperGate</a></li>
 <li><a href="/software/S0672">Zox</a></li>
 </ul>
-<h4>Software changes</h4>
+<h4 id="software-changes"><a class="toclink" href="#software-changes">Software changes</a></h4>
 <ul>
 <li><a href="/software/S0622">AppleSeed</a></li>
 <li><a href="/software/S0099">Arp</a></li>
@@ -748,7 +854,7 @@
 <li><a href="/software/S0103">route</a></li>
 <li><a href="/software/S0111">schtasks</a></li>
 </ul>
-<h4>Minor Software changes</h4>
+<h4 id="minor-software-changes"><a class="toclink" href="#minor-software-changes">Minor Software changes</a></h4>
 <ul>
 <li><a href="/software/S0504">Anchor</a></li>
 <li><a href="/software/S0635">BoomBox</a></li>
@@ -767,46 +873,46 @@
 <li><a href="/software/S0466">WindTail</a></li>
 <li><a href="/software/S0086">ZLib</a></li>
 </ul>
-<h4>Software revocations</h4>
+<h4 id="software-revocations"><a class="toclink" href="#software-revocations">Software revocations</a></h4>
 <ul>
 <li>No changes</li>
 </ul>
-<h4>Software deprecations</h4>
+<h4 id="software-deprecations"><a class="toclink" href="#software-deprecations">Software deprecations</a></h4>
 <ul>
 <li>No changes</li>
 </ul>
-<h3>Mobile</h3>
-<h4>New Software</h4>
+<h3 id="mobile"><a class="toclink" href="#mobile">Mobile</a></h3>
+<h4 id="new-software_1"><a class="toclink" href="#new-software_1">New Software</a></h4>
 <ul>
 <li>No changes</li>
 </ul>
-<h4>Software changes</h4>
+<h4 id="software-changes_1"><a class="toclink" href="#software-changes_1">Software changes</a></h4>
 <ul>
 <li><a href="/software/S0182">FinFisher</a></li>
 <li><a href="/software/S0490">XLoader for iOS</a></li>
 </ul>
-<h4>Minor Software changes</h4>
+<h4 id="minor-software-changes_1"><a class="toclink" href="#minor-software-changes_1">Minor Software changes</a></h4>
 <ul>
 <li><a href="/software/S0293">BrainTest</a></li>
 </ul>
-<h4>Software revocations</h4>
+<h4 id="software-revocations_1"><a class="toclink" href="#software-revocations_1">Software revocations</a></h4>
 <ul>
 <li>No changes</li>
 </ul>
-<h4>Software deprecations</h4>
+<h4 id="software-deprecations_1"><a class="toclink" href="#software-deprecations_1">Software deprecations</a></h4>
 <ul>
 <li>No changes</li>
 </ul>
-<h2>Groups</h2>
-<h3>Enterprise</h3>
-<h4>New Groups</h4>
+<h2 id="groups"><a class="toclink" href="#groups">Groups</a></h2>
+<h3 id="enterprise_2"><a class="toclink" href="#enterprise_2">Enterprise</a></h3>
+<h4 id="new-groups"><a class="toclink" href="#new-groups">New Groups</a></h4>
 <ul>
 <li><a href="/groups/G0143">Aquatic Panda</a></li>
 <li><a href="/groups/G0142">Confucius</a></li>
 <li><a href="/groups/G0141">Gelsemium</a></li>
 <li><a href="/groups/G0140">LazyScripter</a></li>
 </ul>
-<h4>Group changes</h4>
+<h4 id="group-changes"><a class="toclink" href="#group-changes">Group changes</a></h4>
 <ul>
 <li><a href="/groups/G0007">APT28</a></li>
 <li><a href="/groups/G0016">APT29</a></li>
@@ -831,7 +937,7 @@
 <li><a href="/groups/G0090">WIRTE</a></li>
 <li><a href="/groups/G0044">Winnti Group</a></li>
 </ul>
-<h4>Minor Group changes</h4>
+<h4 id="minor-group-changes"><a class="toclink" href="#minor-group-changes">Minor Group changes</a></h4>
 <ul>
 <li><a href="/groups/G0082">APT38</a></li>
 <li><a href="/groups/G0130">Ajax Security Team</a></li>
@@ -843,83 +949,83 @@
 <li><a href="/groups/G0039">Suckfly</a></li>
 <li><a href="/groups/G0092">TA505</a></li>
 </ul>
-<h4>Group revocations</h4>
+<h4 id="group-revocations"><a class="toclink" href="#group-revocations">Group revocations</a></h4>
 <ul>
 <li>Dragonfly 2.0 (revoked by <a href="/groups/G0035">Dragonfly</a>)</li>
 </ul>
-<h4>Group deprecations</h4>
+<h4 id="group-deprecations"><a class="toclink" href="#group-deprecations">Group deprecations</a></h4>
 <ul>
 <li>No changes</li>
 </ul>
-<h3>Mobile</h3>
-<h4>New Groups</h4>
+<h3 id="mobile_1"><a class="toclink" href="#mobile_1">Mobile</a></h3>
+<h4 id="new-groups_1"><a class="toclink" href="#new-groups_1">New Groups</a></h4>
 <ul>
 <li>No changes</li>
 </ul>
-<h4>Group changes</h4>
+<h4 id="group-changes_1"><a class="toclink" href="#group-changes_1">Group changes</a></h4>
 <ul>
 <li><a href="/groups/G0007">APT28</a></li>
 <li><a href="/groups/G0034">Sandworm Team</a></li>
 </ul>
-<h4>Minor Group changes</h4>
+<h4 id="minor-group-changes_1"><a class="toclink" href="#minor-group-changes_1">Minor Group changes</a></h4>
 <ul>
 <li>No changes</li>
 </ul>
-<h4>Group revocations</h4>
+<h4 id="group-revocations_1"><a class="toclink" href="#group-revocations_1">Group revocations</a></h4>
 <ul>
 <li>No changes</li>
 </ul>
-<h4>Group deprecations</h4>
+<h4 id="group-deprecations_1"><a class="toclink" href="#group-deprecations_1">Group deprecations</a></h4>
 <ul>
 <li>No changes</li>
 </ul>
-<h2>Mitigations</h2>
-<h3>Enterprise</h3>
-<h4>New Mitigations</h4>
+<h2 id="mitigations"><a class="toclink" href="#mitigations">Mitigations</a></h2>
+<h3 id="enterprise_3"><a class="toclink" href="#enterprise_3">Enterprise</a></h3>
+<h4 id="new-mitigations"><a class="toclink" href="#new-mitigations">New Mitigations</a></h4>
 <ul>
 <li>No changes</li>
 </ul>
-<h4>Mitigation  changes</h4>
+<h4 id="mitigation-changes"><a class="toclink" href="#mitigation-changes">Mitigation  changes</a></h4>
 <ul>
 <li><a href="/mitigations/M1038">Execution Prevention</a></li>
 </ul>
-<h4>Minor Mitigation changes</h4>
+<h4 id="minor-mitigation-changes"><a class="toclink" href="#minor-mitigation-changes">Minor Mitigation changes</a></h4>
 <ul>
 <li>No changes</li>
 </ul>
-<h4>Mitigation revocations</h4>
+<h4 id="mitigation-revocations"><a class="toclink" href="#mitigation-revocations">Mitigation revocations</a></h4>
 <ul>
 <li>No changes</li>
 </ul>
-<h4>Mitigation deprecations</h4>
+<h4 id="mitigation-deprecations"><a class="toclink" href="#mitigation-deprecations">Mitigation deprecations</a></h4>
 <ul>
 <li>No changes</li>
 </ul>
-<h3>Mobile</h3>
-<h4>New Mitigations</h4>
+<h3 id="mobile_2"><a class="toclink" href="#mobile_2">Mobile</a></h3>
+<h4 id="new-mitigations_1"><a class="toclink" href="#new-mitigations_1">New Mitigations</a></h4>
 <ul>
 <li>No changes</li>
 </ul>
-<h4>Mitigation changes</h4>
+<h4 id="mitigation-changes_1"><a class="toclink" href="#mitigation-changes_1">Mitigation changes</a></h4>
 <ul>
 <li>No changes</li>
 </ul>
-<h4>Minor Mitigation changes</h4>
+<h4 id="minor-mitigation-changes_1"><a class="toclink" href="#minor-mitigation-changes_1">Minor Mitigation changes</a></h4>
 <ul>
 <li>No changes</li>
 </ul>
-<h4>Mitigation revocations</h4>
+<h4 id="mitigation-revocations_1"><a class="toclink" href="#mitigation-revocations_1">Mitigation revocations</a></h4>
 <ul>
 <li>No changes</li>
 </ul>
-<h4>Mitigation deprecations</h4>
+<h4 id="mitigation-deprecations_1"><a class="toclink" href="#mitigation-deprecations_1">Mitigation deprecations</a></h4>
 <ul>
 <li><a href="/mitigations/M1005">Application Vetting</a></li>
 <li><a href="/mitigations/M1007">Caution with Device Administrator Access</a></li>
 </ul>
-<h2>Data Sources and/or Components</h2>
-<h3>Enterprise</h3>
-<h4>New Data Sources and/or Components</h4>
+<h2 id="data-sources-andor-components"><a class="toclink" href="#data-sources-andor-components">Data Sources and/or Components</a></h2>
+<h3 id="enterprise_4"><a class="toclink" href="#enterprise_4">Enterprise</a></h3>
+<h4 id="new-data-sources-andor-components"><a class="toclink" href="#new-data-sources-andor-components">New Data Sources and/or Components</a></h4>
 <ul>
 <li>No changes</li>
 </ul>
@@ -927,7 +1033,7 @@
 <ul>
 <li>No changes</li>
 </ul>
-<h4>Minor Data Source and/or Component changes</h4>
+<h4 id="minor-data-source-andor-component-changes"><a class="toclink" href="#minor-data-source-andor-component-changes">Minor Data Source and/or Component changes</a></h4>
 <ul>
 <li><a href="/datasources/DS0026">Active Directory</a></li>
 <li><a href="/datasources/DS0015">Application Log</a></li>
@@ -959,17 +1065,17 @@
 <li><a href="/datasources/DS0034">Volume</a></li>
 <li><a href="/datasources/DS0006">Web Credential</a></li>
 </ul>
-<h4>Data Source and/or Component revocations</h4>
+<h4 id="data-source-andor-component-revocations"><a class="toclink" href="#data-source-andor-component-revocations">Data Source and/or Component revocations</a></h4>
 <ul>
 <li>No changes</li>
 </ul>
-<h4>Data Source and/or Component deprecations</h4>
+<h4 id="data-source-andor-component-deprecations"><a class="toclink" href="#data-source-andor-component-deprecations">Data Source and/or Component deprecations</a></h4>
 <ul>
 <li>No changes</li>
 </ul>
-<h3>Mobile</h3>
+<h3 id="mobile_3"><a class="toclink" href="#mobile_3">Mobile</a></h3>
 <p>ATT&amp;CK for Mobile does not support data sources</p>
-<h2>Contributors to this release</h2>
+<h2 id="contributors-to-this-release"><a class="toclink" href="#contributors-to-this-release">Contributors to this release</a></h2>
 <ul>
 <li>Abhijit Mohanta, @abhijit_mohanta, Uptycs</li>
 <li>Akshat Pradhan, Qualys</li>
@@ -1108,7 +1214,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3 col-footer">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v17.1&#013;Website  v4.2.3">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v18.0&#013;Website  v4.4.0">Website Changelog</a></u>
                                 </div>
                                 <div class="px-3">
                                     <u class="footer-link"><a href="/resources/legal-and-branding/privacy/#" class="footer-link" onclick="Osano.cm.showDrawer('osano-cm-dom-info-dialog-open')">Cookie Preferences</a></u>

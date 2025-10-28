@@ -93,12 +93,11 @@
                         </li>
                         <li class="nav-item dropdown">
                                 
-    <a class="nav-link dropdown-toggle" href="/datasources" id="navbarDropdown" role="button"
+    <a class="nav-link dropdown-toggle" href="/mitigations" id="navbarDropdown" role="button"
     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         <b>Defenses</b>
     </a>
     <div class="dropdown-menu " aria-labelledby="navbarDropdown">
-                <a class="dropdown-item" href="/datasources">Data Sources</a>
                 
 <div class="dropright dropdown">
 <a class="dropdown-item dropdown-toggle" href="/mitigations/" id="navbarDropdown" role="button"
@@ -113,6 +112,19 @@
 </div>
 
                 <a class="dropdown-item" href="/assets">Assets</a>
+                
+<div class="dropright dropdown">
+<a class="dropdown-item dropdown-toggle" href="/detectionstrategies/" id="navbarDropdown" role="button"
+    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <b>Detections</b>
+    </a>
+    <div class="dropdown-menu " aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="/detectionstrategies/">Detection Strategies</a>
+            <a class="dropdown-item" href="/analytics/">Analytics</a>
+            <a class="dropdown-item" href="/datacomponents">Data Components</a>
+    </div>
+</div>
+
     </div>
 
 
@@ -176,7 +188,7 @@
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
                     <div class="container-fluid banner-message">
-                        
+                        ATT&CK v18 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v18-8f82d839ee9e'>blog post</a> or <a href='https://attack.mitre.org/resources/updates/'>changelog</a> for more information.
 
                     </div>
             </div>
@@ -305,7 +317,7 @@
                                             <div class="row card-data">
                                                 <div class="col-md-1 px-0 text-center"></div>
                                                 <div class="col-md-11 pl-0">
-                                                    <span class="h5 card-title">Last Modified:&nbsp;</span>15 April 2025
+                                                    <span class="h5 card-title">Last Modified:&nbsp;</span>24 October 2025
                                                 </div>
                                             </div>
                                     </div>
@@ -315,13 +327,13 @@
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Permalink to this version of T1011" 
-           href="/versions/v17/techniques/T1011/" data-test-ignore="true">Version Permalink</a>
+           href="/versions/v18/techniques/T1011/" data-test-ignore="true">Version Permalink</a>
     </div>
     <div class="permalink">
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Go to the live version of T1011" 
-           href="/versions/v17/techniques/T1011/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+           href="/versions/v18/techniques/T1011/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
     </div>
 </div>
 
@@ -365,88 +377,51 @@
                                     </tbody>
                                 </table>
                                 </div>
-                            <h2 class="pt-3" id="detection">Detection</h2>
+                                <h2 class="pt-3" id="detection">Detection Strategy</h2>
                                 <div class="tables-mobile">
 <table class="table datasources-table table-bordered">
     <thead>
         <tr>
             <th class="p-2" scope="col">ID</th>
-            <th class="p-2 nowrap" scope="col">Data Source</th>
-            <th class="p-2 nowrap" scope="col">Data Component</th>
-            <th class="p-2" scope="col">Detects</th>
+            <th class="p-2 nowrap" scope="col">Name</th>
+            <th class="p-2 nowrap" scope="col">Analytic ID</th>
+            <th class="p-2 nowrap" scope="col">Analytic Description</th>
         </tr>
     </thead>
     <tbody>
-            <tr class="datasource" id="uses-DS0017">
-                <td>
-                    <a href="/datasources/DS0017">DS0017</a>
-                </td>
-                <td class="nowrap">
-                    <a href="/datasources/DS0017">Command</a>
-                </td>
-                <!-- Add first data component here -->
-                <td> 
-                    <a href="/datasources/DS0017/#Command%20Execution">Command Execution</a>
-                </td>
-                    <td>
-                                <p>Monitor commands that enable alternate network interfaces (WiFi, Bluetooth, cellular), execution of utilities such as nmcli, netsh, or iwconfig that modify network settings, or unusual command-line activity related to USB tethering or VPN activation.</p><p>Analytic 1 - Detecting Alternate Network Activation Commands </p><p><code>  (EventCode=1 OR source="/var/log/audit/audit.log" type="execve")| where (command IN ("nmcli radio wifi on", "rfkill unblock all", "netsh wlan connect", "ifconfig wlan0 up", "pppd call"))| eval risk_score=case(    command IN ("nmcli radio wifi on", "netsh wlan connect"), 9,    command IN ("rfkill unblock all", "ifconfig wlan0 up"), 8)| where risk_score &gt;= 8| stats count by _time, host, user, command, risk_score</code></p>
-
-                    </td>
-            </tr>
-            <tr class="datasource" id="uses-DS0022">
-                <td>
-                    <a href="/datasources/DS0022">DS0022</a>
-                </td>
-                <td class="nowrap">
-                    <a href="/datasources/DS0022">File</a>
-                </td>
-                <!-- Add first data component here -->
-                <td> 
-                    <a href="/datasources/DS0022/#File%20Access">File Access</a>
-                </td>
-                    <td>
-                                <p>Monitor for access to sensitive files before potential exfiltration, files being staged in locations accessible to alternate networks, or usage of USB storage, external disks, or wireless file transfer.</p><p>Analytic 1 - Detecting File Access Before Alternate Network Exfiltration </p><p><code> (EventCode=11 OR EventCode=4663 OR source="/var/log/audit/audit.log" type="open")| where (file_path IN ("/media/usb/<em>", "/mnt/usb/</em>", "/var/tmp/exfil/<em>", "C:\Users\</em>\Documents\exfil"))| eval risk_score=case(    file_path IN ("/media/usb/<em>", "/mnt/usb/</em>"), 9,    file_path IN ("/var/tmp/exfil/*"), 8)| where risk_score &gt;= 8| stats count by _time, host, user, file_path, risk_score</code></p>
-
-                    </td>
-            </tr>
-            <tr class="datasource" id="uses-DS0029">
-                <td>
-                    <a href="/datasources/DS0029">DS0029</a>
-                </td>
-                <td class="nowrap">
-                    <a href="/datasources/DS0029">Network Traffic</a>
-                </td>
-                <!-- Add first data component here -->
-                <td> 
-                    <a href="/datasources/DS0029/#Network%20Connection%20Creation">Network Connection Creation</a>
-                </td>
-                    <td>
-                                <p>Monitor for newly constructed network connections that may attempt to exfiltrate data over a different network medium than the command and control channel. Processes utilizing the network that do not normally have network communication or have never been seen before are suspicious.</p><p>Note: Network Analysis frameworks such as Zeek can be used to capture, decode, and alert on TCP network connection creation. The below analytic is using an event ID from OSQuery. </p><p>Analytic 1 - Detecting Exfiltration via Alternate Network Connections </p><p><code> (EventCode=3 OR EventCode=10400)OR (source="zeek_conn.log" interface IN ("wlan0", "ppp0", "bt0", "usb0"))| eval risk_score=case(    interface IN ("wlan0", "usb0"), 9,    interface IN ("ppp0", "bt0"), 8)| where risk_score &gt;= 8| stats count by _time, host, user, interface, dest_ip, risk_score</code></p>
-
-                    </td>
-            </tr>
-                    <tr class="datacomponent datasource" id="uses-DS0029-Network Traffic Content">
-                        <td></td>
-                        <td></td>
-                        <td>
-                            <a href="/datasources/DS0029/#Network%20Traffic%20Content">Network Traffic Content</a>
+                <tr class="detection_strategy" id="uses-DET0077">
+                        <td rowspan="3">
+                            <a href="/detectionstrategies/DET0077">DET0077</a>
                         </td>
-                            <td>
-                                        <p>Monitor high-volume data transfers over secondary network connections, outbound SSH/SFTP connections over unauthorized networks, or anomalous encryption methods used for data exfiltration.</p><p>Analytic 1 - Detecting Large Data Exfiltration via Alternate Network </p><p><code> (EventCode=3)OR (source="zeek_conn.log" dest_port IN (22, 443, 53) AND bytes_out &gt; 5000000)OR (source="firewall_logs" bytes_out &gt; 10000000)| eval risk_score=case(    bytes_out &gt; 10000000, 9,    bytes_out &gt; 5000000, 8)| where risk_score &gt;= 8| stats count by _time, host, user, dest_ip, dest_port, bytes_out, risk_score</code></p>
-
-                            </td>
-                    </tr>
-                    <tr class="datacomponent datasource" id="uses-DS0029-Network Traffic Flow">
-                        <td></td>
-                        <td></td>
-                        <td>
-                            <a href="/datasources/DS0029/#Network%20Traffic%20Flow">Network Traffic Flow</a>
+                        <td rowspan="3">
+                            <a href="/detectionstrategies/DET0077">Detection of Exfiltration Over Alternate Network Interfaces</a>
                         </td>
-                            <td>
-                                        <p>Monitor network data for uncommon data flows., such as the usage of abnormal/unexpected protocols.</p>
-
-                            </td>
-                    </tr>
+                    <td>
+                        <a href="/detectionstrategies/DET0077#AN0212">AN0212</a>
+                    </td>
+                    <td>
+                                <p>Execution of file transfer or network access activity through non-primary interfaces (e.g., WiFi, Bluetooth, cellular) by processes not typically associated with such behavior (e.g., rundll32, powershell, regsvr32).</p>
+</a>
+                    </td>
+                </tr>
+                <tr class="detection_strategy" id="uses-DET0077">
+                    <td>
+                        <a href="/detectionstrategies/DET0077#AN0213">AN0213</a>
+                    </td>
+                    <td>
+                                <p>Use of <code>rfkill</code>, <code>nmcli</code>, or low-level tools (e.g., <code>iw</code>, <code>hcitool</code>, <code>pppd</code>) to enable alternate interfaces followed by data transfer via non-primary NICs.</p>
+</a>
+                    </td>
+                </tr>
+                <tr class="detection_strategy" id="uses-DET0077">
+                    <td>
+                        <a href="/detectionstrategies/DET0077#AN0214">AN0214</a>
+                    </td>
+                    <td>
+                                <p>AppleScript or system calls to activate WiFi/Bluetooth interfaces (<code>networksetup</code>, <code>blueutil</code>), followed by exfiltration via AirDrop, cloud sync, or network socket.</p>
+</a>
+                    </td>
+                </tr>
     </tbody>
 </table>
 </div>
@@ -551,7 +526,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3 col-footer">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v17.1&#013;Website  v4.2.3">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v18.0&#013;Website  v4.4.0">Website Changelog</a></u>
                                 </div>
                                 <div class="px-3">
                                     <u class="footer-link"><a href="/resources/legal-and-branding/privacy/#" class="footer-link" onclick="Osano.cm.showDrawer('osano-cm-dom-info-dialog-open')">Cookie Preferences</a></u>

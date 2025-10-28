@@ -93,12 +93,11 @@
                         </li>
                         <li class="nav-item dropdown">
                                 
-    <a class="nav-link dropdown-toggle" href="/datasources" id="navbarDropdown" role="button"
+    <a class="nav-link dropdown-toggle" href="/mitigations" id="navbarDropdown" role="button"
     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         <b>Defenses</b>
     </a>
     <div class="dropdown-menu " aria-labelledby="navbarDropdown">
-                <a class="dropdown-item" href="/datasources">Data Sources</a>
                 
 <div class="dropright dropdown">
 <a class="dropdown-item dropdown-toggle" href="/mitigations/" id="navbarDropdown" role="button"
@@ -113,6 +112,19 @@
 </div>
 
                 <a class="dropdown-item" href="/assets">Assets</a>
+                
+<div class="dropright dropdown">
+<a class="dropdown-item dropdown-toggle" href="/detectionstrategies/" id="navbarDropdown" role="button"
+    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <b>Detections</b>
+    </a>
+    <div class="dropdown-menu " aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="/detectionstrategies/">Detection Strategies</a>
+            <a class="dropdown-item" href="/analytics/">Analytics</a>
+            <a class="dropdown-item" href="/datacomponents">Data Components</a>
+    </div>
+</div>
+
     </div>
 
 
@@ -176,7 +188,7 @@
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
                     <div class="container-fluid banner-message">
-                        
+                        ATT&CK v18 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v18-8f82d839ee9e'>blog post</a> or <a href='https://attack.mitre.org/resources/updates/'>changelog</a> for more information.
 
                     </div>
             </div>
@@ -254,7 +266,7 @@
                                                                         <a href="/techniques/T1552/003/" class="subtechnique-table-item" data-subtechnique_id="T1552.003"> T1552.003 </a>
                                                                     </td>
                                                                     <td>
-                                                                        <a href="/techniques/T1552/003/" class="subtechnique-table-item" data-subtechnique_id="T1552.003"> Bash History </a>
+                                                                        <a href="/techniques/T1552/003/" class="subtechnique-table-item" data-subtechnique_id="T1552.003"> Shell History </a>
                                                                     </td>
                                                             </tr>
                                                             <tr>
@@ -364,7 +376,7 @@
                                             <div class="row card-data">
                                                 <div class="col-md-1 px-0 text-center"></div>
                                                 <div class="col-md-11 pl-0">
-                                                    <span class="h5 card-title">Last Modified:&nbsp;</span>15 April 2025
+                                                    <span class="h5 card-title">Last Modified:&nbsp;</span>24 October 2025
                                                 </div>
                                             </div>
                                     </div>
@@ -374,13 +386,13 @@
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Permalink to this version of T1552.007" 
-           href="/versions/v17/techniques/T1552/007/" data-test-ignore="true">Version Permalink</a>
+           href="/versions/v18/techniques/T1552/007/" data-test-ignore="true">Version Permalink</a>
     </div>
     <div class="permalink">
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Go to the live version of T1552.007" 
-           href="/versions/v17/techniques/T1552/007/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+           href="/versions/v18/techniques/T1552/007/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
     </div>
 </div>
 
@@ -474,50 +486,33 @@
                                     </tbody>
                                 </table>
                                 </div>
-                            <h2 class="pt-3" id="detection">Detection</h2>
+                                <h2 class="pt-3" id="detection">Detection Strategy</h2>
                                 <div class="tables-mobile">
 <table class="table datasources-table table-bordered">
     <thead>
         <tr>
             <th class="p-2" scope="col">ID</th>
-            <th class="p-2 nowrap" scope="col">Data Source</th>
-            <th class="p-2 nowrap" scope="col">Data Component</th>
-            <th class="p-2" scope="col">Detects</th>
+            <th class="p-2 nowrap" scope="col">Name</th>
+            <th class="p-2 nowrap" scope="col">Analytic ID</th>
+            <th class="p-2 nowrap" scope="col">Analytic Description</th>
         </tr>
     </thead>
     <tbody>
-            <tr class="datasource" id="uses-DS0017">
-                <td>
-                    <a href="/datasources/DS0017">DS0017</a>
-                </td>
-                <td class="nowrap">
-                    <a href="/datasources/DS0017">Command</a>
-                </td>
-                <!-- Add first data component here -->
-                <td> 
-                    <a href="/datasources/DS0017/#Command%20Execution">Command Execution</a>
-                </td>
+                <tr class="detection_strategy" id="uses-DET0198">
+                        <td rowspan="1">
+                            <a href="/detectionstrategies/DET0198">DET0198</a>
+                        </td>
+                        <td rowspan="1">
+                            <a href="/detectionstrategies/DET0198">Detect Abuse of Container APIs for Credential Access</a>
+                        </td>
                     <td>
-                                <p>Establish centralized logging for the activity of container and Kubernetes cluster components. Monitor logs for actions that could be taken to gather credentials to container and cloud infrastructure, including the use of discovery API calls by new or unexpected users and APIs that access Docker logs.</p><p>Analytic 1 - Unexpected API calls or access to Docker logs indicating credential access.</p><p><code> index=containers sourcetype IN ("docker:events", "kubernetes:api", "kubernetes:container") | search Command IN ("docker logs", "kubectl get secrets", "kubectl describe secret", "kubectl exec", "curl http[:]//169.254.169[.]254/latest/meta-data/iam/security-credentials/", "aws iam list-access-keys", "az ad sp list")</code></p>
-
+                        <a href="/detectionstrategies/DET0198#AN0571">AN0571</a>
                     </td>
-            </tr>
-            <tr class="datasource" id="uses-DS0002">
-                <td>
-                    <a href="/datasources/DS0002">DS0002</a>
-                </td>
-                <td class="nowrap">
-                    <a href="/datasources/DS0002">User Account</a>
-                </td>
-                <!-- Add first data component here -->
-                <td> 
-                    <a href="/datasources/DS0002/#User%20Account%20Authentication">User Account Authentication</a>
-                </td>
                     <td>
-                                <p>It may be possible to detect adversary use of credentials they have obtained such as in <a href="/techniques/T1078">Valid Accounts</a>.</p><p>Analytic 1 - Failed or unusual logon attempts using compromised credentials.</p><p><code> (index=containers sourcetype="docker:events" action="create" container_name="<em>" user!="root") OR(index=containers sourcetype="kubernetes:api" verb IN ("create", "patch", "delete") objectRef.resource IN ("pods", "secrets") user.username!="system:serviceaccount:</em>")</code></p>
-
+                                <p>Detection correlates anomalous Docker or Kubernetes API requests with access to logs, secrets, or service accounts. Observes unauthorized use of <code>docker logs</code>, <code>kubectl get secrets</code>, or direct API calls to Kubernetes API server endpoints. Identifies behavioral patterns where adversaries escalate from basic pod/container interaction to privileged API calls exposing sensitive credential material.</p>
+</a>
                     </td>
-            </tr>
+                </tr>
     </tbody>
 </table>
 </div>
@@ -730,7 +725,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3 col-footer">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v17.1&#013;Website  v4.2.3">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v18.0&#013;Website  v4.4.0">Website Changelog</a></u>
                                 </div>
                                 <div class="px-3">
                                     <u class="footer-link"><a href="/resources/legal-and-branding/privacy/#" class="footer-link" onclick="Osano.cm.showDrawer('osano-cm-dom-info-dialog-open')">Cookie Preferences</a></u>

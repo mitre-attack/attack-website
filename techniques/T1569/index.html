@@ -93,12 +93,11 @@
                         </li>
                         <li class="nav-item dropdown">
                                 
-    <a class="nav-link dropdown-toggle" href="/datasources" id="navbarDropdown" role="button"
+    <a class="nav-link dropdown-toggle" href="/mitigations" id="navbarDropdown" role="button"
     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         <b>Defenses</b>
     </a>
     <div class="dropdown-menu " aria-labelledby="navbarDropdown">
-                <a class="dropdown-item" href="/datasources">Data Sources</a>
                 
 <div class="dropright dropdown">
 <a class="dropdown-item dropdown-toggle" href="/mitigations/" id="navbarDropdown" role="button"
@@ -113,6 +112,19 @@
 </div>
 
                 <a class="dropdown-item" href="/assets">Assets</a>
+                
+<div class="dropright dropdown">
+<a class="dropdown-item dropdown-toggle" href="/detectionstrategies/" id="navbarDropdown" role="button"
+    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <b>Detections</b>
+    </a>
+    <div class="dropdown-menu " aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="/detectionstrategies/">Detection Strategies</a>
+            <a class="dropdown-item" href="/analytics/">Analytics</a>
+            <a class="dropdown-item" href="/datacomponents">Data Components</a>
+    </div>
+</div>
+
     </div>
 
 
@@ -176,7 +188,7 @@
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
                     <div class="container-fluid banner-message">
-                        
+                        ATT&CK v18 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v18-8f82d839ee9e'>blog post</a> or <a href='https://attack.mitre.org/resources/updates/'>changelog</a> for more information.
 
                     </div>
             </div>
@@ -315,7 +327,7 @@
                                             <div class="row card-data">
                                                 <div class="col-md-1 px-0 text-center"></div>
                                                 <div class="col-md-11 pl-0">
-                                                    <span class="h5 card-title">Last Modified:&nbsp;</span>15 April 2025
+                                                    <span class="h5 card-title">Last Modified:&nbsp;</span>24 October 2025
                                                 </div>
                                             </div>
                                     </div>
@@ -325,13 +337,13 @@
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Permalink to this version of T1569" 
-           href="/versions/v17/techniques/T1569/" data-test-ignore="true">Version Permalink</a>
+           href="/versions/v18/techniques/T1569/" data-test-ignore="true">Version Permalink</a>
     </div>
     <div class="permalink">
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Go to the live version of T1569" 
-           href="/versions/v17/techniques/T1569/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+           href="/versions/v18/techniques/T1569/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
     </div>
 </div>
 
@@ -399,98 +411,51 @@
                                     </tbody>
                                 </table>
                                 </div>
-                            <h2 class="pt-3" id="detection">Detection</h2>
+                                <h2 class="pt-3" id="detection">Detection Strategy</h2>
                                 <div class="tables-mobile">
 <table class="table datasources-table table-bordered">
     <thead>
         <tr>
             <th class="p-2" scope="col">ID</th>
-            <th class="p-2 nowrap" scope="col">Data Source</th>
-            <th class="p-2 nowrap" scope="col">Data Component</th>
-            <th class="p-2" scope="col">Detects</th>
+            <th class="p-2 nowrap" scope="col">Name</th>
+            <th class="p-2 nowrap" scope="col">Analytic ID</th>
+            <th class="p-2 nowrap" scope="col">Analytic Description</th>
         </tr>
     </thead>
     <tbody>
-            <tr class="datasource" id="uses-DS0017">
-                <td>
-                    <a href="/datasources/DS0017">DS0017</a>
-                </td>
-                <td class="nowrap">
-                    <a href="/datasources/DS0017">Command</a>
-                </td>
-                <!-- Add first data component here -->
-                <td> 
-                    <a href="/datasources/DS0017/#Command%20Execution">Command Execution</a>
-                </td>
+                <tr class="detection_strategy" id="uses-DET0279">
+                        <td rowspan="3">
+                            <a href="/detectionstrategies/DET0279">DET0279</a>
+                        </td>
+                        <td rowspan="3">
+                            <a href="/detectionstrategies/DET0279">Detection Strategy for System Services across OS platforms.</a>
+                        </td>
                     <td>
-                                <p>Monitor command-line invocations for tools capable of creating or modifying system services (e.g., <code>systemctl</code> on Linux, <code>sc.exe</code> on Windows, <code>launchctl</code> on macOS).</p><p>Analytic 1 - Unusual service modification tools.</p><p><code> sourcetype=command_logs| search command IN ("systemctl", "sc", "launchctl")</code></p>
-
+                        <a href="/detectionstrategies/DET0279#AN0778">AN0778</a>
                     </td>
-            </tr>
-            <tr class="datasource" id="uses-DS0022">
-                <td>
-                    <a href="/datasources/DS0022">DS0022</a>
-                </td>
-                <td class="nowrap">
-                    <a href="/datasources/DS0022">File</a>
-                </td>
-                <!-- Add first data component here -->
-                <td> 
-                    <a href="/datasources/DS0022/#File%20Modification">File Modification</a>
-                </td>
                     <td>
-                                <p>Track changes to critical service-related files (e.g., <code>/etc/systemd/system/</code>, <code>/etc/init.d/</code>, and service binaries on Linux, <code>C:\Windows\System32\services.exe</code> on Windows, or <code>/Library/LaunchDaemons</code> on macOS).</p><p>Analytic 1 - Unusual file modifications related to system services.</p><p><code>sourcetype=file_monitor| search file_path IN ("/etc/systemd/system/<em>", "/etc/init.d/</em>", "/Library/LaunchDaemons/*", "C:\Windows\System32\services.exe") </code></p>
-
+                                <p>Monitor for abnormal creation or modification of Windows services (e.g., via sc.exe, PowerShell, or API calls) that load non-standard executables. Correlate registry changes in service keys with service creation events and process execution to detect service abuse for persistence or execution.</p>
+</a>
                     </td>
-            </tr>
-            <tr class="datasource" id="uses-DS0009">
-                <td>
-                    <a href="/datasources/DS0009">DS0009</a>
-                </td>
-                <td class="nowrap">
-                    <a href="/datasources/DS0009">Process</a>
-                </td>
-                <!-- Add first data component here -->
-                <td> 
-                    <a href="/datasources/DS0009/#Process%20Creation">Process Creation</a>
-                </td>
+                </tr>
+                <tr class="detection_strategy" id="uses-DET0279">
                     <td>
-                                <p>Monitor newly executed processes that may abuse system services or daemons to execute commands or programs.</p><p>Analytic 1 - New processes abusing system services.</p><p><code>sourcetype=process_logs| search process IN ("services.exe", "systemd", "launchd") </code></p>
-
+                        <a href="/detectionstrategies/DET0279#AN0779">AN0779</a>
                     </td>
-            </tr>
-            <tr class="datasource" id="uses-DS0019">
-                <td>
-                    <a href="/datasources/DS0019">DS0019</a>
-                </td>
-                <td class="nowrap">
-                    <a href="/datasources/DS0019">Service</a>
-                </td>
-                <!-- Add first data component here -->
-                <td> 
-                    <a href="/datasources/DS0019/#Service%20Creation">Service Creation</a>
-                </td>
                     <td>
-                                <p>Track the creation of new services, which could indicate adversarial activity aimed at persistence or execution.</p><p>Analytic 1 - Monitors service creation and modification activities</p><p><code>sourcetype=service_logs| search service_action="create" OR service_action="modify"| where user NOT IN ("known_admins") AND service_name NOT IN ("known_services")</code></p>
-
+                                <p>Detect unusual invocations of systemctl, service, or init scripts creating or modifying daemons. Monitor audit logs for execution of binaries from unexpected paths linked to service start/stop activity.</p>
+</a>
                     </td>
-            </tr>
-            <tr class="datasource" id="uses-DS0024">
-                <td>
-                    <a href="/datasources/DS0024">DS0024</a>
-                </td>
-                <td class="nowrap">
-                    <a href="/datasources/DS0024">Windows Registry</a>
-                </td>
-                <!-- Add first data component here -->
-                <td> 
-                    <a href="/datasources/DS0024/#Windows%20Registry%20Key%20Modification">Windows Registry Key Modification</a>
-                </td>
+                </tr>
+                <tr class="detection_strategy" id="uses-DET0279">
                     <td>
-                                <p>Monitor for changes made to windows registry keys and/or values that may abuse system services or daemons to execute commands or programs.</p><p>Analytic 1 - Malicious service modification</p><p><code>sourcetype= Sysmon EventCode=12| search registry_path="HKLM\SYSTEM\CurrentControlSet\Services\*" | where registry_action="modified" AND user NOT IN ("known_admins") </code></p>
-
+                        <a href="/detectionstrategies/DET0279#AN0780">AN0780</a>
                     </td>
-            </tr>
+                    <td>
+                                <p>Monitor launchd service definitions and property list (.plist) modifications for non-standard executables. Detect unauthorized processes registered as launch daemons or agents.</p>
+</a>
+                    </td>
+                </tr>
     </tbody>
 </table>
 </div>
@@ -580,7 +545,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3 col-footer">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v17.1&#013;Website  v4.2.3">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v18.0&#013;Website  v4.4.0">Website Changelog</a></u>
                                 </div>
                                 <div class="px-3">
                                     <u class="footer-link"><a href="/resources/legal-and-branding/privacy/#" class="footer-link" onclick="Osano.cm.showDrawer('osano-cm-dom-info-dialog-open')">Cookie Preferences</a></u>

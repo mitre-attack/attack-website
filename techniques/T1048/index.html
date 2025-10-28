@@ -93,12 +93,11 @@
                         </li>
                         <li class="nav-item dropdown">
                                 
-    <a class="nav-link dropdown-toggle" href="/datasources" id="navbarDropdown" role="button"
+    <a class="nav-link dropdown-toggle" href="/mitigations" id="navbarDropdown" role="button"
     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         <b>Defenses</b>
     </a>
     <div class="dropdown-menu " aria-labelledby="navbarDropdown">
-                <a class="dropdown-item" href="/datasources">Data Sources</a>
                 
 <div class="dropright dropdown">
 <a class="dropdown-item dropdown-toggle" href="/mitigations/" id="navbarDropdown" role="button"
@@ -113,6 +112,19 @@
 </div>
 
                 <a class="dropdown-item" href="/assets">Assets</a>
+                
+<div class="dropright dropdown">
+<a class="dropdown-item dropdown-toggle" href="/detectionstrategies/" id="navbarDropdown" role="button"
+    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <b>Detections</b>
+    </a>
+    <div class="dropdown-menu " aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="/detectionstrategies/">Detection Strategies</a>
+            <a class="dropdown-item" href="/analytics/">Analytics</a>
+            <a class="dropdown-item" href="/datacomponents">Data Components</a>
+    </div>
+</div>
+
     </div>
 
 
@@ -176,7 +188,7 @@
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
                     <div class="container-fluid banner-message">
-                        
+                        ATT&CK v18 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v18-8f82d839ee9e'>blog post</a> or <a href='https://attack.mitre.org/resources/updates/'>changelog</a> for more information.
 
                     </div>
             </div>
@@ -321,7 +333,7 @@
                                             <div class="row card-data">
                                                 <div class="col-md-1 px-0 text-center"></div>
                                                 <div class="col-md-11 pl-0">
-                                                    <span class="h5 card-title">Last Modified:&nbsp;</span>15 April 2025
+                                                    <span class="h5 card-title">Last Modified:&nbsp;</span>24 October 2025
                                                 </div>
                                             </div>
                                     </div>
@@ -331,13 +343,13 @@
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Permalink to this version of T1048" 
-           href="/versions/v17/techniques/T1048/" data-test-ignore="true">Version Permalink</a>
+           href="/versions/v18/techniques/T1048/" data-test-ignore="true">Version Permalink</a>
     </div>
     <div class="permalink">
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Go to the live version of T1048" 
-           href="/versions/v17/techniques/T1048/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+           href="/versions/v18/techniques/T1048/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
     </div>
 </div>
 
@@ -551,120 +563,69 @@
                                     </tbody>
                                 </table>
                                 </div>
-                            <h2 class="pt-3" id="detection">Detection</h2>
+                                <h2 class="pt-3" id="detection">Detection Strategy</h2>
                                 <div class="tables-mobile">
 <table class="table datasources-table table-bordered">
     <thead>
         <tr>
             <th class="p-2" scope="col">ID</th>
-            <th class="p-2 nowrap" scope="col">Data Source</th>
-            <th class="p-2 nowrap" scope="col">Data Component</th>
-            <th class="p-2" scope="col">Detects</th>
+            <th class="p-2 nowrap" scope="col">Name</th>
+            <th class="p-2 nowrap" scope="col">Analytic ID</th>
+            <th class="p-2 nowrap" scope="col">Analytic Description</th>
         </tr>
     </thead>
     <tbody>
-            <tr class="datasource" id="uses-DS0015">
-                <td>
-                    <a href="/datasources/DS0015">DS0015</a>
-                </td>
-                <td class="nowrap">
-                    <a href="/datasources/DS0015">Application Log</a>
-                </td>
-                <!-- Add first data component here -->
-                <td> 
-                    <a href="/datasources/DS0015/#Application%20Log%20Content">Application Log Content</a>
-                </td>
-                    <td>
-                                <p>Monitor cloud-based file hosting services, such as Google Drive and Microsoft OneDrive, for unusual instances of file downloads – for example, many downloads by a single user in a short period of time. In environments with high-maturity, it may be possible to leverage User-Behavioral Analytics (UBA) platforms to detect and alert on user-based anomalies. Additionally, data loss prevention policies can be defined to detect and alert on exfiltration events on particularly sensitive data. </p><p>Analytic 1 - Detecting Alternative Exfiltration via Cloud Services</p><p><code>(EventCode="FileUploaded" OR EventCode="PutObject" OR source="O365_audit" OR source="Google_Admin_Logs")| where (action IN ("upload", "putObject", "email_sent", "drive_upload"))| stats count by _time, host, user, action, destination, file_size| where count &gt;= 3| eval risk_score=case(    action IN ("putObject", "FileUploaded") AND file_size &gt; 10000000, 9,    action IN ("email_sent") AND file_size &gt; 5000000, 8)| where risk_score &gt;= 8| table _time, host, user, action, destination, file_size, risk_score </code></p>
-
-                    </td>
-            </tr>
-            <tr class="datasource" id="uses-DS0010">
-                <td>
-                    <a href="/datasources/DS0010">DS0010</a>
-                </td>
-                <td class="nowrap">
-                    <a href="/datasources/DS0010">Cloud Storage</a>
-                </td>
-                <!-- Add first data component here -->
-                <td> 
-                    <a href="/datasources/DS0010/#Cloud%20Storage%20Access">Cloud Storage Access</a>
-                </td>
-                    <td>
-                                <p>Monitor for unusual queries to the cloud provider's storage service. Activity originating from unexpected sources may indicate improper permissions are set and are allowing access to data. Additionally, detecting failed attempts by a user for a certain object, followed by escalation of privileges by the same user, and access to the same object may be an indication of suspicious activity.</p><p>Analytic 1 - Detecting Suspicious Cloud Storage Exfiltration</p><p><code>(EventCode="PutObject" OR EventCode="FileSharedExternally" OR source="Google_Admin_Logs")| where (file_size &gt; 5000000 OR file_access_count &gt; 10)| stats count by _time, host, user, file_name, action, storage_bucket, file_size| where count &gt;= 5| eval risk_score=case(    file_size &gt; 50000000, 9,    file_size &gt; 10000000, 8)| where risk_score &gt;= 8| table _time, host, user, file_name, action, storage_bucket, file_size, risk_score </code></p>
-
-                    </td>
-            </tr>
-            <tr class="datasource" id="uses-DS0017">
-                <td>
-                    <a href="/datasources/DS0017">DS0017</a>
-                </td>
-                <td class="nowrap">
-                    <a href="/datasources/DS0017">Command</a>
-                </td>
-                <!-- Add first data component here -->
-                <td> 
-                    <a href="/datasources/DS0017/#Command%20Execution">Command Execution</a>
-                </td>
-                    <td>
-                                <p>Monitor executed commands and arguments that may steal data by exfiltrating it over a different protocol than that of the existing command and control channel.</p><p>Analytic 1 - Detecting Alternative Protocol Exfiltration via Command Execution </p><p><code> (EventCode=1 OR source="/var/log/audit/audit.log" type="execve")| where (command IN ("scp", "ftp", "curl -d", "wget --post-file", "powershell -enc", "tar -cf", "7z a"))| eval risk_score=case(    command IN ("scp", "rsync", "ftp"), 9,    command IN ("tar -cf", "zip -r"), 8,    command IN ("powershell -enc", "wget"), 7)| where risk_score &gt;= 8| stats count by _time, host, user, command, risk_score</code></p>
-
-                    </td>
-            </tr>
-            <tr class="datasource" id="uses-DS0022">
-                <td>
-                    <a href="/datasources/DS0022">DS0022</a>
-                </td>
-                <td class="nowrap">
-                    <a href="/datasources/DS0022">File</a>
-                </td>
-                <!-- Add first data component here -->
-                <td> 
-                    <a href="/datasources/DS0022/#File%20Access">File Access</a>
-                </td>
-                    <td>
-                                <p>Monitor for suspicious files (i.e. .pdf, .docx, .jpg, etc.) viewed in isolation that may steal data by exfiltrating it over a different protocol than that of the existing command and control channel.</p>
-
-                    </td>
-            </tr>
-            <tr class="datasource" id="uses-DS0029">
-                <td>
-                    <a href="/datasources/DS0029">DS0029</a>
-                </td>
-                <td class="nowrap">
-                    <a href="/datasources/DS0029">Network Traffic</a>
-                </td>
-                <!-- Add first data component here -->
-                <td> 
-                    <a href="/datasources/DS0029/#Network%20Connection%20Creation">Network Connection Creation</a>
-                </td>
-                    <td>
-                                <p>Monitor for outbound connections using non-standard ports for FTP, SMTP, or SMB, new processes generating large amounts of outbound traffic, or traffic flows that do not align with normal business usage patterns.</p><p>Analytic 1 - Detecting Exfiltration Over Alternative Protocols </p><p><code> (EventCode=3 OR source="zeek_conn.log" OR source="firewall_logs")| where (dest_port IN (21, 25, 53, 139, 445, 587, 465, 990))| bucket span=1h _time| stats count, sum(bytes_out) as total_bytes by _time, host, process, dest_ip, dest_port| where count &gt;= 5 AND total_bytes &gt; 10000000| eval risk_score=case(    total_bytes &gt; 50000000, 9,    total_bytes &gt; 10000000, 8)| where risk_score &gt;= 8| table host, dest_ip, total_bytes, dest_port, risk_score</code> </p>
-
-                    </td>
-            </tr>
-                    <tr class="datacomponent datasource" id="uses-DS0029-Network Traffic Content">
-                        <td></td>
-                        <td></td>
-                        <td>
-                            <a href="/datasources/DS0029/#Network%20Traffic%20Content">Network Traffic Content</a>
+                <tr class="detection_strategy" id="uses-DET0131">
+                        <td rowspan="5">
+                            <a href="/detectionstrategies/DET0131">DET0131</a>
                         </td>
-                            <td>
-                                        <p>Monitor and analyze traffic patterns and packet inspection associated to protocol(s) that do not follow the expected protocol standards and traffic flows (e.g extraneous packets that do not belong to established flows, gratuitous or anomalous traffic patterns, anomalous syntax, or structure). Consider correlation with process monitoring and command line to detect anomalous processes execution and command line arguments associated to traffic patterns (e.g. monitor anomalies in use of files that do not normally initiate connections for respective protocol(s)).</p>
-
-                            </td>
-                    </tr>
-                    <tr class="datacomponent datasource" id="uses-DS0029-Network Traffic Flow">
-                        <td></td>
-                        <td></td>
-                        <td>
-                            <a href="/datasources/DS0029/#Network%20Traffic%20Flow">Network Traffic Flow</a>
+                        <td rowspan="5">
+                            <a href="/detectionstrategies/DET0131">Behavioral Detection Strategy for Exfiltration Over Alternative Protocol</a>
                         </td>
-                            <td>
-                                        <p>Monitor network data for uncommon data flows. Processes utilizing the network that do not normally have network communication or have never been seen before are suspicious.</p>
-
-                            </td>
-                    </tr>
+                    <td>
+                        <a href="/detectionstrategies/DET0131#AN0367">AN0367</a>
+                    </td>
+                    <td>
+                                <p>Detects unusual outbound file transfer behavior using protocols like FTP, SMB, SMTP, or DNS, involving non-standard processes, off-hour activity, or uncommonly high volume.</p>
+</a>
+                    </td>
+                </tr>
+                <tr class="detection_strategy" id="uses-DET0131">
+                    <td>
+                        <a href="/detectionstrategies/DET0131#AN0368">AN0368</a>
+                    </td>
+                    <td>
+                                <p>Detects file exfiltration using tools like curl, scp, or custom binaries over protocols such as FTP, HTTP/S, or DNS tunneling, especially outside baseline user behavior.</p>
+</a>
+                    </td>
+                </tr>
+                <tr class="detection_strategy" id="uses-DET0131">
+                    <td>
+                        <a href="/detectionstrategies/DET0131#AN0369">AN0369</a>
+                    </td>
+                    <td>
+                                <p>Detects non-native file transfer via curl, Python scripts, or AppleScript using uncommon protocols like FTP, SMTP, or DNS exfiltration through mDNSResponder abuse.</p>
+</a>
+                    </td>
+                </tr>
+                <tr class="detection_strategy" id="uses-DET0131">
+                    <td>
+                        <a href="/detectionstrategies/DET0131#AN0370">AN0370</a>
+                    </td>
+                    <td>
+                                <p>Detects access to cloud APIs or CLI tools to move or sync files from sensitive buckets to external endpoints using protocols like HTTPS or S3 APIs.</p>
+</a>
+                    </td>
+                </tr>
+                <tr class="detection_strategy" id="uses-DET0131">
+                    <td>
+                        <a href="/detectionstrategies/DET0131#AN0371">AN0371</a>
+                    </td>
+                    <td>
+                                <p>Detects outbound traffic from hostd/vpxa or guest VM interfaces using unauthorized protocols such as FTP, HTTP POST bursts, or long-lived DNS tunnels.</p>
+</a>
+                    </td>
+                </tr>
     </tbody>
 </table>
 </div>
@@ -925,7 +886,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3 col-footer">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v17.1&#013;Website  v4.2.3">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v18.0&#013;Website  v4.4.0">Website Changelog</a></u>
                                 </div>
                                 <div class="px-3">
                                     <u class="footer-link"><a href="/resources/legal-and-branding/privacy/#" class="footer-link" onclick="Osano.cm.showDrawer('osano-cm-dom-info-dialog-open')">Cookie Preferences</a></u>

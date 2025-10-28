@@ -93,12 +93,11 @@
                         </li>
                         <li class="nav-item dropdown">
                                 
-    <a class="nav-link dropdown-toggle" href="/datasources" id="navbarDropdown" role="button"
+    <a class="nav-link dropdown-toggle" href="/mitigations" id="navbarDropdown" role="button"
     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         <b>Defenses</b>
     </a>
     <div class="dropdown-menu " aria-labelledby="navbarDropdown">
-                <a class="dropdown-item" href="/datasources">Data Sources</a>
                 
 <div class="dropright dropdown">
 <a class="dropdown-item dropdown-toggle" href="/mitigations/" id="navbarDropdown" role="button"
@@ -113,6 +112,19 @@
 </div>
 
                 <a class="dropdown-item" href="/assets">Assets</a>
+                
+<div class="dropright dropdown">
+<a class="dropdown-item dropdown-toggle" href="/detectionstrategies/" id="navbarDropdown" role="button"
+    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <b>Detections</b>
+    </a>
+    <div class="dropdown-menu " aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="/detectionstrategies/">Detection Strategies</a>
+            <a class="dropdown-item" href="/analytics/">Analytics</a>
+            <a class="dropdown-item" href="/datacomponents">Data Components</a>
+    </div>
+</div>
+
     </div>
 
 
@@ -176,7 +188,7 @@
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
                     <div class="container-fluid banner-message">
-                        
+                        ATT&CK v18 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v18-8f82d839ee9e'>blog post</a> or <a href='https://attack.mitre.org/resources/updates/'>changelog</a> for more information.
 
                     </div>
             </div>
@@ -318,7 +330,7 @@
                                             <div class="row card-data">
                                                 <div class="col-md-1 px-0 text-center"></div>
                                                 <div class="col-md-11 pl-0">
-                                                    <span class="h5 card-title">Last Modified:&nbsp;</span>15 April 2025
+                                                    <span class="h5 card-title">Last Modified:&nbsp;</span>24 October 2025
                                                 </div>
                                             </div>
                                     </div>
@@ -328,13 +340,13 @@
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Permalink to this version of T1048.001" 
-           href="/versions/v17/techniques/T1048/001/" data-test-ignore="true">Version Permalink</a>
+           href="/versions/v18/techniques/T1048/001/" data-test-ignore="true">Version Permalink</a>
     </div>
     <div class="permalink">
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Go to the live version of T1048.001" 
-           href="/versions/v17/techniques/T1048/001/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+           href="/versions/v18/techniques/T1048/001/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
     </div>
 </div>
 
@@ -390,88 +402,60 @@
                                     </tbody>
                                 </table>
                                 </div>
-                            <h2 class="pt-3" id="detection">Detection</h2>
+                                <h2 class="pt-3" id="detection">Detection Strategy</h2>
                                 <div class="tables-mobile">
 <table class="table datasources-table table-bordered">
     <thead>
         <tr>
             <th class="p-2" scope="col">ID</th>
-            <th class="p-2 nowrap" scope="col">Data Source</th>
-            <th class="p-2 nowrap" scope="col">Data Component</th>
-            <th class="p-2" scope="col">Detects</th>
+            <th class="p-2 nowrap" scope="col">Name</th>
+            <th class="p-2 nowrap" scope="col">Analytic ID</th>
+            <th class="p-2 nowrap" scope="col">Analytic Description</th>
         </tr>
     </thead>
     <tbody>
-            <tr class="datasource" id="uses-DS0017">
-                <td>
-                    <a href="/datasources/DS0017">DS0017</a>
-                </td>
-                <td class="nowrap">
-                    <a href="/datasources/DS0017">Command</a>
-                </td>
-                <!-- Add first data component here -->
-                <td> 
-                    <a href="/datasources/DS0017/#Command%20Execution">Command Execution</a>
-                </td>
-                    <td>
-                                <p>Monitor for execution of encryption-related tools before outbound data transfer, use of symmetric encryption algorithms (AES, RC4, Blowfish) in scripts or binaries, or file encryption activity followed by network communication.</p><p>Analytic 1 - Detecting Symmetric Encryption Before Exfiltration </p><p><code> (EventCode=1 OR source="/var/log/audit/audit.log" type="execve")| where (command IN ("openssl enc -aes-256-cbc", "gpg -c", "python -c 'import Crypto.Cipher.AES'", "certutil -encode"))| eval risk_score=case(    command IN ("openssl enc -aes-256-cbc", "gpg -c"), 9,    command IN ("python -c 'import Crypto.Cipher.AES'", "certutil -encode"), 8)| where risk_score &gt;= 8| stats count by _time, host, user, command, risk_score</code></p>
-
-                    </td>
-            </tr>
-            <tr class="datasource" id="uses-DS0022">
-                <td>
-                    <a href="/datasources/DS0022">DS0022</a>
-                </td>
-                <td class="nowrap">
-                    <a href="/datasources/DS0022">File</a>
-                </td>
-                <!-- Add first data component here -->
-                <td> 
-                    <a href="/datasources/DS0022/#File%20Access">File Access</a>
-                </td>
-                    <td>
-                                <p>Monitor for files being encrypted before transfer, temporary storage of encrypted files before exfiltration, or files with unusual extensions indicative of encryption (.aes, .enc, .bin).</p><p>Analytic 1 - Detecting Encrypted Files Before Exfiltration </p><p><code> (EventCode=11 OR EventCode=4663 OR source="/var/log/audit/audit.log" type="open")| where (file_path IN ("/tmp/<em>", "/var/tmp/</em>", "/home/<em>/Downloads/</em>", "C:\Users\*\Documents\exfil") AND file_extension IN ("aes", "enc", "bin"))| eval risk_score=case(    file_extension="aes" OR file_extension="enc", 9,    file_extension="bin", 8)| where risk_score &gt;= 8| stats count by _time, host, user, file_path, file_extension, risk_score</code></p>
-
-                    </td>
-            </tr>
-            <tr class="datasource" id="uses-DS0029">
-                <td>
-                    <a href="/datasources/DS0029">DS0029</a>
-                </td>
-                <td class="nowrap">
-                    <a href="/datasources/DS0029">Network Traffic</a>
-                </td>
-                <!-- Add first data component here -->
-                <td> 
-                    <a href="/datasources/DS0029/#Network%20Connection%20Creation">Network Connection Creation</a>
-                </td>
-                    <td>
-                                <p>Monitor for outbound network connections using traditionally non-encrypted protocols, connections where data sent is significantly larger than data received, traffic spikes over uncommon ports (e.g., FTP, SMB, SMTP, ICMP), or traffic patterns indicative of encrypted payload transmission.</p><p>Analytic 1 - Detecting Symmetric Encrypted Exfiltration via Alternative Protocols</p><p><code> (EventCode=3 OR source="zeek_conn.log" OR source="firewall_logs")| where (dest_port IN (21, 25, 53, 139, 445, 587, 990) AND bytes_out &gt; 10000000)| stats count, sum(bytes_out) as total_bytes by _time, host, process, dest_ip, dest_port| where count &gt;= 3 AND total_bytes &gt; 50000000| eval risk_score=case(    total_bytes &gt; 100000000, 9,    total_bytes &gt; 50000000, 8)| where risk_score &gt;= 8| table host, dest_ip, total_bytes, dest_port, risk_score</code></p>
-
-                    </td>
-            </tr>
-                    <tr class="datacomponent datasource" id="uses-DS0029-Network Traffic Content">
-                        <td></td>
-                        <td></td>
-                        <td>
-                            <a href="/datasources/DS0029/#Network%20Traffic%20Content">Network Traffic Content</a>
+                <tr class="detection_strategy" id="uses-DET0503">
+                        <td rowspan="4">
+                            <a href="/detectionstrategies/DET0503">DET0503</a>
                         </td>
-                            <td>
-                                        <p>Monitor for encrypted payloads using symmetric cryptography over plaintext channels, detection of RC4, AES, or Blowfish in network traffic, or HTTP, FTP, or DNS packets containing unusually long Base64 or XOR-encoded strings.</p><p>Analytic 1 - Detecting Encrypted Payloads in Alternative Protocols</p><p><code> (EventCode=3 OR source="zeek_http.log" OR source="dns.log")| where (uri_length &gt; 200 OR request_body_length &gt; 5000)| eval encoded_data=if(match(uri, "([A-Za-z0-9+/=]{100,})") OR match(request_body, "([A-Za-z0-9+/=]{100,})"), 1, 0)| where encoded_data=1| stats count by _time, host, user, uri, request_body_length, risk_score| eval risk_score=case(    request_body_length &gt; 10000, 9,    request_body_length &gt; 5000, 8)| where risk_score &gt;= 8| table host, uri, request_body_length, risk_score</code></p>
-
-                            </td>
-                    </tr>
-                    <tr class="datacomponent datasource" id="uses-DS0029-Network Traffic Flow">
-                        <td></td>
-                        <td></td>
-                        <td>
-                            <a href="/datasources/DS0029/#Network%20Traffic%20Flow">Network Traffic Flow</a>
+                        <td rowspan="4">
+                            <a href="/detectionstrategies/DET0503">Behavioral Detection Strategy for Exfiltration Over Symmetric Encrypted Non-C2 Protocol</a>
                         </td>
-                            <td>
-                                        <p>Monitor network data for uncommon data flows. Processes utilizing the network that do not normally have network communication or have never been seen before are suspicious.</p>
-
-                            </td>
-                    </tr>
+                    <td>
+                        <a href="/detectionstrategies/DET0503#AN1389">AN1389</a>
+                    </td>
+                    <td>
+                                <p>Detects the execution of non-browser processes establishing outbound encrypted network connections using uncommon symmetric encryption protocols (e.g., AES via PowerShell or custom scripts) to alternate external destinations.</p>
+</a>
+                    </td>
+                </tr>
+                <tr class="detection_strategy" id="uses-DET0503">
+                    <td>
+                        <a href="/detectionstrategies/DET0503#AN1390">AN1390</a>
+                    </td>
+                    <td>
+                                <p>Detects command-line utilities or scripts using encryption libraries or symmetric algorithms (e.g., OpenSSL AES, GPG, Python + PyCrypto) in conjunction with outbound file transfers or traffic to external destinations.</p>
+</a>
+                    </td>
+                </tr>
+                <tr class="detection_strategy" id="uses-DET0503">
+                    <td>
+                        <a href="/detectionstrategies/DET0503#AN1391">AN1391</a>
+                    </td>
+                    <td>
+                                <p>Detects symmetric key-based encryption operations (e.g., AES via Python, AppleScript, or OpenSSL) followed by unusual outbound connections from non-browser applications or scripted tools.</p>
+</a>
+                    </td>
+                </tr>
+                <tr class="detection_strategy" id="uses-DET0503">
+                    <td>
+                        <a href="/detectionstrategies/DET0503#AN1392">AN1392</a>
+                    </td>
+                    <td>
+                                <p>Detects unexpected encrypted egress traffic from management services (e.g., hostd) or guest VMs utilizing symmetric encryption without traditional protocols (e.g., FTP with embedded AES ciphertext).</p>
+</a>
+                    </td>
+                </tr>
     </tbody>
 </table>
 </div>
@@ -561,7 +545,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3 col-footer">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v17.1&#013;Website  v4.2.3">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v18.0&#013;Website  v4.4.0">Website Changelog</a></u>
                                 </div>
                                 <div class="px-3">
                                     <u class="footer-link"><a href="/resources/legal-and-branding/privacy/#" class="footer-link" onclick="Osano.cm.showDrawer('osano-cm-dom-info-dialog-open')">Cookie Preferences</a></u>

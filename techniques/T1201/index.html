@@ -93,12 +93,11 @@
                         </li>
                         <li class="nav-item dropdown">
                                 
-    <a class="nav-link dropdown-toggle" href="/datasources" id="navbarDropdown" role="button"
+    <a class="nav-link dropdown-toggle" href="/mitigations" id="navbarDropdown" role="button"
     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         <b>Defenses</b>
     </a>
     <div class="dropdown-menu " aria-labelledby="navbarDropdown">
-                <a class="dropdown-item" href="/datasources">Data Sources</a>
                 
 <div class="dropright dropdown">
 <a class="dropdown-item dropdown-toggle" href="/mitigations/" id="navbarDropdown" role="button"
@@ -113,6 +112,19 @@
 </div>
 
                 <a class="dropdown-item" href="/assets">Assets</a>
+                
+<div class="dropright dropdown">
+<a class="dropdown-item dropdown-toggle" href="/detectionstrategies/" id="navbarDropdown" role="button"
+    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <b>Detections</b>
+    </a>
+    <div class="dropdown-menu " aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="/detectionstrategies/">Detection Strategies</a>
+            <a class="dropdown-item" href="/analytics/">Analytics</a>
+            <a class="dropdown-item" href="/datacomponents">Data Components</a>
+    </div>
+</div>
+
     </div>
 
 
@@ -176,7 +188,7 @@
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
                     <div class="container-fluid banner-message">
-                        
+                        ATT&CK v18 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v18-8f82d839ee9e'>blog post</a> or <a href='https://attack.mitre.org/resources/updates/'>changelog</a> for more information.
 
                     </div>
             </div>
@@ -277,7 +289,7 @@
                                             <div class="row card-data">
                                                 <div class="col-md-1 px-0 text-center"></div>
                                                 <div class="col-md-11 pl-0">
-                                                    <span class="h5 card-title">Last Modified:&nbsp;</span>15 April 2025
+                                                    <span class="h5 card-title">Last Modified:&nbsp;</span>24 October 2025
                                                 </div>
                                             </div>
                                     </div>
@@ -287,13 +299,13 @@
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Permalink to this version of T1201" 
-           href="/versions/v17/techniques/T1201/" data-test-ignore="true">Version Permalink</a>
+           href="/versions/v18/techniques/T1201/" data-test-ignore="true">Version Permalink</a>
     </div>
     <div class="permalink">
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Go to the live version of T1201" 
-           href="/versions/v17/techniques/T1201/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+           href="/versions/v18/techniques/T1201/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
     </div>
 </div>
 
@@ -435,66 +447,87 @@
                                     </tbody>
                                 </table>
                                 </div>
-                            <h2 class="pt-3" id="detection">Detection</h2>
+                                <h2 class="pt-3" id="detection">Detection Strategy</h2>
                                 <div class="tables-mobile">
 <table class="table datasources-table table-bordered">
     <thead>
         <tr>
             <th class="p-2" scope="col">ID</th>
-            <th class="p-2 nowrap" scope="col">Data Source</th>
-            <th class="p-2 nowrap" scope="col">Data Component</th>
-            <th class="p-2" scope="col">Detects</th>
+            <th class="p-2 nowrap" scope="col">Name</th>
+            <th class="p-2 nowrap" scope="col">Analytic ID</th>
+            <th class="p-2 nowrap" scope="col">Analytic Description</th>
         </tr>
     </thead>
     <tbody>
-            <tr class="datasource" id="uses-DS0017">
-                <td>
-                    <a href="/datasources/DS0017">DS0017</a>
-                </td>
-                <td class="nowrap">
-                    <a href="/datasources/DS0017">Command</a>
-                </td>
-                <!-- Add first data component here -->
-                <td> 
-                    <a href="/datasources/DS0017/#Command%20Execution">Command Execution</a>
-                </td>
+                <tr class="detection_strategy" id="uses-DET0161">
+                        <td rowspan="7">
+                            <a href="/detectionstrategies/DET0161">DET0161</a>
+                        </td>
+                        <td rowspan="7">
+                            <a href="/detectionstrategies/DET0161">Password Policy Discovery – cross-platform behavior-chain analytics</a>
+                        </td>
                     <td>
-                                <p>Monitor executed commands and arguments for actions that may attempt to access detailed information about the password policy used within an enterprise network or cloud environment. For network devices, monitor executed commands in AAA logs, especially those run by unexpected or unauthorized users.</p>
-
+                        <a href="/detectionstrategies/DET0161#AN0455">AN0455</a>
                     </td>
-            </tr>
-            <tr class="datasource" id="uses-DS0009">
-                <td>
-                    <a href="/datasources/DS0009">DS0009</a>
-                </td>
-                <td class="nowrap">
-                    <a href="/datasources/DS0009">Process</a>
-                </td>
-                <!-- Add first data component here -->
-                <td> 
-                    <a href="/datasources/DS0009/#Process%20Creation">Process Creation</a>
-                </td>
                     <td>
-                                <p>Monitor for newly executed processes that may attempt to access detailed information about the password policy used within an enterprise network or cloud environment.</p>
-
+                                <p>Cause→effect chain: (1) a user or service spawns a shell/PowerShell that queries local/domain password policy via commands/cmdlets (e.g., <code>net accounts</code>, <code>Get-ADDefaultDomainPasswordPolicy</code>, <code>secedit /export</code>); (2) optional directory/LDAP reads from DCs; (3) same principal performs adjacent Discovery or credential-related actions within a short window. Correlate sysmon process creation with PowerShell ScriptBlock and Security logs.</p>
+</a>
                     </td>
-            </tr>
-            <tr class="datasource" id="uses-DS0002">
-                <td>
-                    <a href="/datasources/DS0002">DS0002</a>
-                </td>
-                <td class="nowrap">
-                    <a href="/datasources/DS0002">User Account</a>
-                </td>
-                <!-- Add first data component here -->
-                <td> 
-                    <a href="/datasources/DS0002/#User%20Account%20Metadata">User Account Metadata</a>
-                </td>
+                </tr>
+                <tr class="detection_strategy" id="uses-DET0161">
                     <td>
-                                <p>Monitor for contextual data about an account that may attempt to access detailed information about the password policy used within an enterprise network or cloud environment.</p>
-
+                        <a href="/detectionstrategies/DET0161#AN0456">AN0456</a>
                     </td>
-            </tr>
+                    <td>
+                                <p>Chain: (1) interactive/non-interactive <code>chage -l</code>, <code>grep</code>/<code>cat</code> of PAM config (e.g., <code>/etc/pam.d/common-password</code>, <code>/etc/security/pwquality.conf</code>); (2) optional reads of <code>/etc/login.defs</code>; (3) same user performs account enumeration or password change attempts shortly after. Use auditd <code>execve</code> and file read events plus shell history collection.</p>
+</a>
+                    </td>
+                </tr>
+                <tr class="detection_strategy" id="uses-DET0161">
+                    <td>
+                        <a href="/detectionstrategies/DET0161#AN0457">AN0457</a>
+                    </td>
+                    <td>
+                                <p>Chain: (1) execution of <code>pwpolicy</code> or MDM/DirectoryService reads of account policies; (2) optional read of <code>/Library/Preferences/com.apple.loginwindow</code> or config profiles; (3) follow-on credential probing or lateral movement by same user/session. Use unified logs and process telemetry.</p>
+</a>
+                    </td>
+                </tr>
+                <tr class="detection_strategy" id="uses-DET0161">
+                    <td>
+                        <a href="/detectionstrategies/DET0161#AN0458">AN0458</a>
+                    </td>
+                    <td>
+                                <p>Chain: (1) cloud API calls that fetch tenant/organization password policy (e.g., AWS <code>GetAccountPasswordPolicy</code>, GCP/OCI equivalents or IAM settings reads); (2) within a short window, the same principal creates users, rotates creds, or changes auth settings. Use cloud audit logs.</p>
+</a>
+                    </td>
+                </tr>
+                <tr class="detection_strategy" id="uses-DET0161">
+                    <td>
+                        <a href="/detectionstrategies/DET0161#AN0459">AN0459</a>
+                    </td>
+                    <td>
+                                <p>Chain: (1) IdP policy/read operations by a principal (e.g., Microsoft Entra/Graph requests to read password or authentication policies); (2) adjacent risky changes (role assignment, app consent) by same principal. Use IdP audit logs.</p>
+</a>
+                    </td>
+                </tr>
+                <tr class="detection_strategy" id="uses-DET0161">
+                    <td>
+                        <a href="/detectionstrategies/DET0161#AN0460">AN0460</a>
+                    </td>
+                    <td>
+                                <p>Chain: (1) SaaS admin API or PowerShell remote session reads tenant password/authentication settings (e.g., M365 Unified Audit Log ‘Cmdlet’ with <code>Get-MsolPasswordPolicy</code>/<code>Get-OrganizationConfig</code> parameters that expose password settings); (2) same session proceeds to mailbox or tenant changes.</p>
+</a>
+                    </td>
+                </tr>
+                <tr class="detection_strategy" id="uses-DET0161">
+                    <td>
+                        <a href="/detectionstrategies/DET0161#AN0461">AN0461</a>
+                    </td>
+                    <td>
+                                <p>Chain: (1) privileged CLI sessions run read-only commands that dump AAA/password policies (e.g., <code>show aaa</code>, <code>show password-policy</code>); (2) same account changes AAA or user DB shortly after. Use network device AAA/command accounting or syslog.</p>
+</a>
+                    </td>
+                </tr>
     </tbody>
 </table>
 </div>
@@ -731,7 +764,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3 col-footer">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v17.1&#013;Website  v4.2.3">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v18.0&#013;Website  v4.4.0">Website Changelog</a></u>
                                 </div>
                                 <div class="px-3">
                                     <u class="footer-link"><a href="/resources/legal-and-branding/privacy/#" class="footer-link" onclick="Osano.cm.showDrawer('osano-cm-dom-info-dialog-open')">Cookie Preferences</a></u>
