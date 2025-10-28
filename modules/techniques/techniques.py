@@ -398,6 +398,20 @@ def get_assets_table_data(technique, reference_list):
 
 
 def get_analytic_list(analytics, reference_list):
+    """Build a list of analytics with their IDs and descriptions, updating the reference list as needed.
+
+    Parameters
+    ----------
+    analytics : dict
+        Mapping of analytics where each value includes 'external_references' and 'description'.
+    reference_list : dict
+        Reference accumulator passed to update_reference_list; may be modified by the helper.
+
+    Returns
+    -------
+    list[dict]
+        List of dictionaries with keys 'id' and 'description' for each analytic.
+    """
     analytics_list = []
     for keys, values in analytics.items():
         reference_list = util.buildhelpers.update_reference_list(reference_list, values)

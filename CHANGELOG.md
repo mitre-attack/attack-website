@@ -1,298 +1,307 @@
-# v4.3.0 (2025-09-25)
+# Website Changelog
 
-## Features
+## v4.4.0 (2025-10-28)
+
+### Features
+
+* Release ATT&CK content version 18.0.
+  See detailed changes [here](https://github.com/mitre/cti/releases/tag/ATT%26CK-v18.0).
+
+## v4.3.0 (2025-09-25)
+
+### Features
 
 * Update versions module to speed up how previous versions are created
 * Previous versions of website only archive ATT&CK object pages and redirect Resource pages to the latest version
 * Add Excel file table to ATT&CK data and tools for easier access to previous versions
 
-# v4.2.3 (2025-05-06)
+## v4.2.3 (2025-05-06)
 
-## Features
+### Features
 
 * Release ATT&CK content version 17.1.
   See detailed changes [here](https://github.com/mitre/cti/releases/tag/ATT%26CK-v17.1).
 
-# v4.2.2 (2025-04-22)
+## v4.2.2 (2025-04-22)
 
-## Features
+### Features
 
 * Release ATT&CK content version 17.0.
   See detailed changes [here](https://github.com/mitre/cti/releases/tag/ATT%26CK-v17.0).
 * Update Python to version 3.13.3
 
-# v4.2.1 (2024-11-12)
+## v4.2.1 (2024-11-12)
 
-## Features
+### Features
 
 * Release ATT&CK content version 16.1.
   See detailed changes [here](https://github.com/mitre/cti/releases/tag/ATT%26CK-v16.1).
 
-# v4.2.0 (2024-10-31)
+## v4.2.0 (2024-10-31)
 
-## Features
+### Features
 
 * Release ATT&CK content version 16.0.
   See detailed changes [here](https://github.com/mitre/cti/releases/tag/ATT%26CK-v16.0).
 
-# v4.1.6 (2024-08-15)
+## v4.1.6 (2024-08-15)
 
-## Docs
+### Docs
 
 * Add updated ATT&CK poster on Getting Started page.
 * Update training pages to have embedded YouTube player.
 
-# v4.1.5 (2024-07-18)
+## v4.1.5 (2024-07-18)
 
-## Misc
+### Misc
 
 * Added new ATT&CK trainings.
 * Moved sidebar headings around to add ATT&CKcon to be at the top level.
 
-# v4.1.4 (2024-06-19)
+## v4.1.4 (2024-06-19)
 
-## Misc
+### Misc
 
 * Updated CTI Training to latest version.
 * Updated banner related to ATT&CKcon 5.0.
 
-# v4.1.3 (2024-05-02)
+## v4.1.3 (2024-05-02)
 
 * Release ATT&CK content version 15.1.
   See detailed changes [here](https://github.com/mitre/cti/releases/tag/ATT%26CK-v15.1).
 
-# v4.1.2 (2024-04-23)
+## v4.1.2 (2024-04-23)
 
 * Release [ATT&CK content version 15.0](https://github.com/mitre/cti/releases/tag/ATT%26CK-v15.0).
   See the release notes [here](https://attack.mitre.org/resources/updates/updates-april-2024/).
 
-# v4.1.1 (2024-02-05)
+## v4.1.1 (2024-02-05)
 
-## Misc
+### Misc
 
 * Added Lightning Talk YouTube links for ATT&CKcon 4.0
 
-## Bugfixes
+### Bugfixes
 
 * Changed priority of random page module to be able to load pages from the random page button and dropdown
 * Fixed title and images on attack data and tools page
 
-# v4.1.0 (2024-01-22)
+## v4.1.0 (2024-01-22)
 
-## Bugfixes
+### Bugfixes
 
 * Updated Benefactors page. [#477](https://github.com/mitre-attack/attack-website/issues/477)
 * Fixed offline hosting issue for Fontawesome fonts. [#488](https://github.com/mitre-attack/attack-website/issues/488)
 
-# v4.0.8 (2023-11-22)
+## v4.0.8 (2023-11-22)
 
-## Bugfixes
+### Bugfixes
 
 * Add mobile datasources to excel output.
 
-## Misc
+### Misc
 
 * Updated Caldera description.
 * Enforce better SSL security practices when building the website.
 
-# v4.0.7 (2023-11-14)
+## v4.0.7 (2023-11-14)
 
-## Features
+### Features
 
 * Release ATT&CK content version 14.1.
   See detailed changes [here](https://github.com/mitre/cti/releases/tag/ATT%26CK-v14.1).
 
-# v4.0.6 (2023-10-31)
+## v4.0.6 (2023-10-31)
 
-## Features
+### Features
 
 * Data sources table can now be sorted and filtered based on domains. [#454](https://github.com/mitre-attack/attack-website/issues/454)
 * Release [ATT&CK content version 14.0](https://github.com/mitre/cti/releases/tag/ATT%26CK-v14.0).
   See the release notes [here](https://attack.mitre.org/resources/updates/updates-october-2023/).
 
-# v4.0.5 (2023-09-01)
+## v4.0.5 (2023-09-01)
 
-## Features
+### Features
 
 * The sidebar is now collapsable and displayed properly in mobile view [#450](https://github.com/mitre-attack/attack-website/issues/450)
 
-## Bugfixes
+### Bugfixes
 
 * Changed the UUID generation logic to use CONTENT_VERSION and WEBSITE_VERSION as seeds for idempotent UUID creation. This prevents the creation of redundant IndexedDB tables. [#455](https://github.com/mitre-attack/attack-website/issues/455)
 
-# v4.0.4 (2023-08-11)
+## v4.0.4 (2023-08-11)
 
-## Features
+### Features
 
 * Sidebar is now resizable. [#349](https://github.com/mitre-attack/attack-website/issues/349)
 * Update the resource pages to have a sidebar. [#441](https://github.com/mitre-attack/attack-website/issues/441)
 * Add a page for the ATT&CK brand guide. [#445](https://github.com/mitre-attack/attack-website/issues/445)
 * Clean up the FAQ and ATT&CKcon pages in the Resources section to split them into more readable pages. [#446](https://github.com/mitre-attack/attack-website/issues/446)
 
-## Bugfixes
+### Bugfixes
 
 * Minor adjustment to print layout to not show scrollbars anymore. [#403](https://github.com/mitre-attack/attack-website/issues/403)
 
-## Improved Documentation
+### Improved Documentation
 
 * Update README and developer documentation on how to set up local environment using Docker. [#427](https://github.com/mitre-attack/attack-website/issues/427)
 
-## Misc
+### Misc
 
 * Configure Sonarcloud to track project metrics better. [#431](https://github.com/mitre-attack/attack-website/issues/431)
 
-# v4.0.3 (2023-05-09)
+## v4.0.3 (2023-05-09)
 
-## Features
+### Features
 
 * Release ATT&CK content version 13.1.
   See detailed changes [here](https://github.com/mitre/cti/releases/tag/ATT%26CK-v13.1).
 
-# v4.0.2 (2023-04-27)
+## v4.0.2 (2023-04-27)
 
-## Features
+### Features
 
 * Release [ATT&CK content version 13.0](https://github.com/mitre/cti/releases/tag/ATT%26CK-v13.0).
   See the release notes [here](https://attack.mitre.org/resources/updates/updates-april-2023/).
 
-## Misc
+### Misc
 
 * Center align the Contact page information. [#399](https://github.com/mitre-attack/attack-website/issues/399)
 * Update mitreattack-python to latest. [#400](https://github.com/mitre-attack/attack-website/issues/400)
 
-# v4.0.1 (2022-11-08)
+## v4.0.1 (2022-11-08)
 
-## Features
+### Features
 
 * Release ATT&CK content version 12.1.
   See detailed changes [here](https://github.com/mitre/cti/releases/tag/ATT%26CK-v12.1).
 
-## Bugfixes
+### Bugfixes
 
 * Fixed Data Source pages to not display sections for Data Components that have no detections associated with them.
 
-## Miscellaneous
+### Miscellaneous
 
 * Refactored CHANGELOG headers to conform to latest template for version and date.
 
-# v4.0.0 (2022-10-25)
+## v4.0.0 (2022-10-25)
 
-## Features
+### Features
 
 * Release [ATT&CK content version 12.0](https://github.com/mitre/cti/releases/tag/ATT%26CK-v12.0).
   See the release notes [here](https://attack.mitre.org/resources/updates/updates-october-2022/).
 * Add support for [Campaigns](https://github.com/mitre/cti/blob/master/USAGE.md#campaigns) [#384](https://github.com/mitre-attack/attack-website/issues/384)
 
-# v3.6.7 (2022-08-24)
+## v3.6.7 (2022-08-24)
 
-## Bugfixes
+### Bugfixes
 
 * Update mitreattack-python library dependency to get diff_stix script to work again. [#386](https://github.com/mitre-attack/attack-website/issues/386)
 
-# v3.6.6 (2022-08-23)
+## v3.6.6 (2022-08-23)
 
-## Bugfixes
+### Bugfixes
 
 * Removed deprecated objects from search results. [#352](https://github.com/mitre-attack/attack-website/issues/352)
 
-# v3.6.5 (2022-07-17)
+## v3.6.5 (2022-07-17)
 
-## Bugfixes
+### Bugfixes
 
 * Resource pages now display properly when displayed on large monitors. [#378](https://github.com/mitre-attack/attack-website/issues/378)
 
-# v3.6.4 (2022-07-07)
+## v3.6.4 (2022-07-07)
 
 This release promotes the Mobile sub-techniques from beta to stable.
 It also fixes a few minor STIX abnormalities for ICS Techniques.
 
-## Features
+### Features
 
 * Release ATT&CK content version 11.3.
 * Updated resources page with ATT&CKcon 3.0 presentations.
 
-# v3.6.3 (2022-06-30)
+## v3.6.3 (2022-06-30)
 
-## Bugfixes
+### Bugfixes
 
 * Deprecated subtechniques will no longer be displayed.
 * Add [mobile-subtechniques-crosswalk.json](https://attack.mitre.org/docs/subtechniques/mobile-subtechniques-crosswalk.json)
 
-## Features
+### Features
 
 * Added optional Google Analytics to the attack-theme Pelican template
 * Fixed link in v11 Updates page to go to Boot or Logon Autostart Execution: Plist Modification (T1547.011)
 
-# v3.6.2 (2022-05-24)
+## v3.6.2 (2022-05-24)
 
-## Features
+### Features
 
 * Release ATT&CK content version 11.2.
   See detailed changes [here](https://github.com/mitre/cti/releases/tag/ATT%26CK-v11.2).
 
-# v3.6.1 (2022-05-12)
+## v3.6.1 (2022-05-12)
 
-## Features
+### Features
 
 * Release ATT&CK content version 11.1.
   See detailed changes [here](https://github.com/mitre/cti/releases/tag/ATT%26CK-v11.1).
 * Update requirements.txt dependencies to latest versions of libraries, and only includes libraries directly used
 
-# v3.6.0 (2022-04-25)
+## v3.6.0 (2022-04-25)
 
-## Features
+### Features
 
 * Release [ATT&CK content version 11.0](https://github.com/mitre/cti/releases/tag/ATT%26CK-v11.0).
   See the release notes [here](https://attack.mitre.org/resources/updates/updates-april-2022/).
 * Add LinkById test that checks STIX used to build the site for any unparseable ATT&CK IDs. LinkById is a construct used in ATT&CK Workbench
 
-## Bugfixes
+### Bugfixes
 
 * Fixed brackets inside of descriptions from being duplicated. See issue [#353](https://github.com/mitre-attack/attack-website/issues/343).
 * Fixed non-deprecated relationships between mitigations and techniques from showing up on technique pages. See issue [#358](https://github.com/mitre-attack/attack-website/issues/358).
 * Fixed non-deprecated software created by Workbench from appearing as deprecated in the page's description. See issue [#355](https://github.com/mitre-attack/attack-website/issues/355).
 
-# v3.5.0 (2022-01-07)
+## v3.5.0 (2022-01-07)
 
-## Features
+### Features
 
 * Updated ATT&CK Navigator and layer versions. See issue [#343](https://github.com/mitre-attack/attack-website/issues/343).
 
-# v3.4.3 (2021-11-24)
+## v3.4.3 (2021-11-24)
 
-## Bugfixes
+### Bugfixes
 
 * Fixed footer on tactic list pages. See issue [#339](https://github.com/mitre-attack/attack-website/issues/339).
 * Fixed table scrolling on technique and tactic list pages.
 * Fixed deprecation marker on tactic list pages for deprecated domains.
 
-# v3.4.2 (2021-11-10)
+## v3.4.2 (2021-11-10)
 
-## Features
+### Features
 
 * Release ATT&CK content version 10.1.
   See detailed changes [here](https://github.com/mitre/cti/releases/tag/ATT%26CK-v10.1).
 * Added deprecation card to deprecated mitigations, groups, and software as already observed in deprecated techniques.
 
-## Bugfixes
+### Bugfixes
 
 * Fixed an issue where release notes were incorrectly linking data source pages.
 
-# v3.4.1 (2021-10-27)
+## v3.4.1 (2021-10-27)
 
-## Features
+### Features
 
 * Minor UI readability improvement to toolbar that displays ATT&CK content and website version.
 * Added random query string to site.js to prevent that file from being cached between releases.
 * ATT&CK in Excel only creates hyperlinks to documents that were created by attackToExcel.py.
 
-## Bugfixes
+### Bugfixes
 
 * Fixed an issue where deprecated and revoked sub-techniques could appear on matrices.
 
-# v3.4.0 (2021-10-21)
+## v3.4.0 (2021-10-21)
 
-## Features
+### Features
 
 * Release [ATT&CK content version 10.0](https://github.com/mitre/cti/releases/tag/ATT%26CK-v10.0).
   See the release notes [here](https://attack.mitre.org/resources/updates/updates-october-2021/).
@@ -306,27 +315,27 @@ It also fixes a few minor STIX abnormalities for ICS Techniques.
 * Added definitions to technique, tactic, mitigation list pages.
 * Improved supports remote definition for techniques.
 
-## Bugfixes
+### Bugfixes
 
 * Fixed dockerfile to not fail due to test warning. See issue [#326](https://github.com/mitre-attack/attack-website/issues/326).
 * Fixed build from crashing when a technique does not have a defined platform. See issue [#329](https://github.com/mitre-attack/attack-website/issues/329).
 * Fixed build from crashing when a tactic does not have defined techniques. See issue [#73](https://github.com/mitre-attack/attack-website/issues/73).
 * Fixed build from crashing when an object that supports references does not have a defined reference. See issue [#321](https://github.com/mitre-attack/attack-website/issues/321).
 
-# v3.3.1 (2021-07-01)
+## v3.3.1 (2021-07-01)
 
-## Features
+### Features
 
 * Updated docs to clarify that both STIX 2.0 and STIX 2.1 input data is supported. See issue [#317](https://github.com/mitre-attack/attack-website/issues/317).
 * Updated [privacy policy](https://attack.mitre.org/resources/legal-and-branding/privacy/).
 
-## Bugfixes
+### Bugfixes
 
 * Hyperlinks in matrices will no longer direct users to attack.mitre.org on custom instances of the site. See issue [#319](https://github.com/mitre-attack/attack-website/issues/319).
 
-# v3.3.0 (2021-06-30)
+## v3.3.0 (2021-06-30)
 
-## Features
+### Features
 
 * Improved usability of matrix side layout to better differentiate tactic columns. See issue [#273](https://github.com/mitre-attack/attack-website/issues/273).
 * Improved matrix layout selection to include layout in dropdown title. See issue [#277](https://github.com/mitre-attack/attack-website/issues/277).
@@ -334,45 +343,45 @@ It also fixes a few minor STIX abnormalities for ICS Techniques.
 * Updated the [working with ATT&CK](https://attack.mitre.org/resources/attack-data-and-tools/) page to mention [ATT&CK Workbench](https://github.com/center-for-threat-informed-defense/attack-workbench-frontend) and [STIX 2.1 support](https://github.com/mitre-attack/attack-stix-data).
 * Updated matrix poster to most recent version of ATT&CK.
 
-## Bugfixes
+### Bugfixes
 
 * Moved and renamed redirections module to main modules. Prevents broken hyperlinks from revoked objects that would appear when running the build without the optional --extras flag. See issue [#278](https://github.com/mitre-attack/attack-website/issues/278).
 * Fixed broken links on the Getting Started page. See issue [#281](https://github.com/mitre-attack/attack-website/issues/281).
 * Updated Dockerfile to build from Ubuntu 20.04 LTS. See issue [#312](https://github.com/mitre-attack/attack-website/issues/312).
 
-# v3.2.3 (2021-06-16)
+## v3.2.3 (2021-06-16)
 
-## Features
+### Features
 
 * Added support for deprecated relationships, software and groups. Deprecated relationships, software and groups will not appear on the website UI but can be added to STIX bundles. See issue [#302](https://github.com/mitre-attack/attack-website/issues/302) and [#305](https://github.com/mitre-attack/attack-website/issues/305).
 * Added support for input data with more than one object with the same STIX or ATT&CK ID which can occur if there are multiple versions of the object present in the data. Website will display the most recently modified object depending on the deprecation status. See issue [#304](https://github.com/mitre-attack/attack-website/issues/304).
 * Sorted sub-techniques by ATT&CK ID on Techniques Used tables. See issue [#314](https://github.com/mitre-attack/attack-website/issues/314).
 
-## Bugfixes
+### Bugfixes
 
 * Fixed Dockerfile which would not run on the current website version. See issue [#313](https://github.com/mitre-attack/attack-website/issues/313).
 * Fixed some issues where objects would appear in the wrong domain under specific circumstances. See issue [#310](https://github.com/mitre-attack/attack-website/issues/310).
 
-# v3.2.2 (2021-05-20)
+## v3.2.2 (2021-05-20)
 
-## Features
+### Features
 
 * Improved testing of external links to report all instances of non-200 responses (instead of just 404 responses) and provide better reporting on the results of the test.
 
-## Bugfixes
+### Bugfixes
 
 * Added missing groups excel in the ATT&CK in Excel section of [Working with ATT&CK](https://attack.mitre.org/resources/attack-data-and-tools/).
 * Fixed CTI training ticket number 4473845 -> 473845. See issue [#296](https://github.com/mitre-attack/attack-website/issues/296).
 
-# v3.2.1 (2021-04-29)
+## v3.2.1 (2021-04-29)
 
-## Bugfixes
+### Bugfixes
 
 * Removing duplicate "Command: Command Execution" data source from (sub-)techniques.
 
-# v3.2.0 (2021-04-29)
+## v3.2.0 (2021-04-29)
 
-## Features
+### Features
 
 * Release [ATT&CK content version 9.0](https://github.com/mitre/cti/releases/tag/ATT%26CK-v9.0).
   See the release notes [here](https://attack.mitre.org/resources/updates/updates-april-2021/index.html).
@@ -391,42 +400,42 @@ It also fixes a few minor STIX abnormalities for ICS Techniques.
 * Improved the [Working with ATT&CK](https://attack.mitre.org/resources/attack-data-and-tools/) page with additional information about ATT&CK data and the tools with which it can be manipulated. The new page also includes generated Excel spreadsheets representing the ATT&CK knowledge base (see also [mitreattack-python](https://github.com/mitre-attack/mitreattack-python)'s attackToExcel converter). See issue [#142](https://github.com/mitre-attack/attack-website/issues/142).
 * Data sources in technique cards are now hyperlinks to the [attack-datasources GitHub repository](https://github.com/mitre-attack/attack-datasources).
 
-## Bugfixes
+### Bugfixes
 
 * Fixed a bug with automatic redirection generation which was causing some redirects to build in the wrong directory.
 
-# v3.1.1 (2021-03-23)
+## v3.1.1 (2021-03-23)
 
-## Features
+### Features
 
 * Updated ATT&CKcon page with ATT&CKcon Power Hour.
 
-# v3.1 (2021-01-27)
+## v3.1 (2021-01-27)
 
-## Features
+### Features
 
 * Release ATT&CK content version 8.2.
   See detailed changes [here](https://github.com/mitre/cti/releases/tag/ATT%26CK-v8.2).
 * Updated Navigator layers to version 4.1 so that users are no longer warned that they are out of date.
 * Updated introductory video on [getting started](https://attack.mitre.org/resources/) page.
 
-# No website version update (2020-11-12)
+## No website version update (2020-11-12)
 
-## Features
+### Features
 
 * Release ATT&CK content version 8.1.
   See detailed changes [here](https://github.com/mitre/cti/releases/tag/ATT%26CK-v8.1).
 * new reporting and procedure examples for `G0102`
 
-## Bugfixes
+### Bugfixes
 
 * Fixed typo "stressor" to "stresser"
 * Fixed type and version for `S0154`
 * Fixed contributors for `T1598`, `T1598.001`, `T1598.002`, `T1598.003`, and `S0514`
 
-# v3.0 (2020-10-27)
+## v3.0 (2020-10-27)
 
-## Features
+### Features
 
 * Release [ATT&CK content version 8.0](https://github.com/mitre/cti/releases/tag/ATT%26CK-v8.0).
   See the release notes [here](https://attack.mitre.org/resources/updates/updates-october-2020/index.html).
@@ -444,7 +453,7 @@ It also fixes a few minor STIX abnormalities for ICS Techniques.
 * Website built by users are visually distinct from attack.mitre.org unless brand flag is added as an argument. See issue [#240](https://github.com/mitre-attack/attack-website/issues/240).
 * Website is built without specific related ATT&CK content such as resources, contribute, and blog unless specified. See issue [#241](https://github.com/mitre-attack/attack-website/issues/241).
 
-## Bugfixes
+### Bugfixes
 
 * Fixed bug where bootstrap dropdown menu buttons require two clicks to open the first time they are opened. See issue [#152](https://github.com/mitre-attack/attack-website/issues/152).
 * Fixed subdirectory support for navigator links on groups and software pages. See issue [#170](https://github.com/mitre-attack/attack-website/issues/170).
@@ -452,40 +461,40 @@ It also fixes a few minor STIX abnormalities for ICS Techniques.
 * Fixed (for most scenarios) slow loading of the search index when using Firefox. See issues [#167](https://github.com/mitre-attack/attack-website/issues/167) and [#187](https://github.com/mitre-attack/attack-website/issues/187).
 * Fixed versioning feature ran under a subdirectory. See issue [#200](https://github.com/mitre-attack/attack-website/issues/200).
 
-# v2.1.4 (2020-08-08)
+## v2.1.4 (2020-08-08)
 
-## Features
+### Features
 
 * Updated roadmap and matrix poster on the [resources](https://attack.mitre.org/resources/) page. See issue [#255](https://github.com/mitre-attack/attack-website/issues/255).
 
-# v2.1.3 (2020-08-06)
+## v2.1.3 (2020-08-06)
 
-## Features
+### Features
 
 * Added note on the [CTI training page](https://attack.mitre.org/resources/learn-more-about-attack/training/cti/) to indicate that ATT&CK v6 should be used instead of ATT&CK v7. See issue [#221](https://github.com/mitre-attack/attack-website/issues/221).
 
-# No website version update (2020-07-15)
+## No website version update (2020-07-15)
 
-## Features
+### Features
 
 * Release [ATT&CK content version 7.2](https://github.com/mitre/cti/releases/tag/ATT%26CK-v7.2).
 
-## Bugfixes
+### Bugfixes
 
 * Removed Windows platform from Modify Authentication Process: [Pluggable Authentication Modules](https://attack.mitre.org/techniques/T1556/003/).
 * Updated contributors for Account Manipulation: [Additional Azure Service Principal Credentials](https://attack.mitre.org/techniques/T1098/001/).
 * Added missing `x_mitre_is_subtechnique` field to several techniques.
 * Updated T1064 in the sub-technique crosswalks.
 
-# v2.1.2 (2020-07-13)
+## v2.1.2 (2020-07-13)
 
-## Features
+### Features
 
 * Release [ATT&CK content version 7.1](https://github.com/mitre/cti/releases/tag/ATT%26CK-v7.1).
 * Added links to ATT&CK Navigator layers for the July 2020 release. See issues [attack-website#208](https://github.com/mitre-attack/attack-website/issues/208), and [attack-navigator#194](https://github.com/mitre-attack/attack-navigator/issues/194).
 * Updated contribute page. See issue [#207](https://github.com/mitre-attack/attack-website/issues/207).
 
-## STIX Bugfixes
+### STIX Bugfixes
 
 * Removed Azure platform from Brute Force: [Password Cracking](https://attack.mitre.org/techniques/T1110/002/).
 * Added Linux and macOS platforms to [Deobfuscate/Decode Files or Information](https://attack.mitre.org/techniques/T1140/) and Impair Defenses: [Indicator Blocking](https://attack.mitre.org/techniques/T1562/006/).
@@ -502,7 +511,7 @@ It also fixes a few minor STIX abnormalities for ICS Techniques.
     | Added the relationship [Dark Caracal](https://attack.mitre.org/groups/G0070/) ⟹ [Pallas](https://attack.mitre.org/software/S0399/) to mobile-attack | Relationship moved from enterprise |
     | Added the relationship [Bouncing Golf](https://attack.mitre.org/groups/G0097/) ⟹ [GolfSpy](https://attack.mitre.org/software/S0421/) to mobile-attack | Relationship moved from enterprise |
 
-### Website Bugfixes
+#### Website Bugfixes
 
 * Corrected the end date of v6 in the [preserved version](https://attack.mitre.org/versions/v6/), on the [Versions of ATT&CK page](https://attack.mitre.org/resources/versions/), and [v6 release notes](https://attack.mitre.org/resources/updates/updates-october-2019/index.html). See issue [#204](https://github.com/mitre-attack/attack-website/issues/204).
 * Removed links to the `/beta/` website from the changelog and March 2020 release notes. See issue [#205](https://github.com/mitre-attack/attack-website/issues/205).
@@ -511,22 +520,22 @@ It also fixes a few minor STIX abnormalities for ICS Techniques.
 * Fixed the preserved v6 and v3 versions of the site so that the search interface doesn't send the user to the current site when they click on links. See issue [#215](https://github.com/mitre-attack/attack-website/issues/215).
 * Fixed a typo on the enterprise matrices.
 
-# v2.1.1 (2020-07-08)
+## v2.1.1 (2020-07-08)
 
-## Features
+### Features
 
 * Improved matrix page header layout with versioning feature. See issue [#190](https://github.com/mitre-attack/attack-website/issues/190).
 * Added versioning feature to [tour](https://attack.mitre.org/?tour=true). See issue [#191](https://github.com/mitre-attack/attack-website/issues/191).
 
-## Bugfixes
+### Bugfixes
 
 * Fixed number of tactics displayed on tactics overview pages. See issue [#183](https://github.com/mitre-attack/attack-website/issues/183).
 * Fixed objects without descriptions not showing up on techniques used tables. See issue [#186](https://github.com/mitre-attack/attack-website/issues/186).
 * Fixed a bug where contributor lists were delimited with commas instead of semicolons on group and software pages. See issue [#196](https://github.com/mitre-attack/attack-website/issues/196).
 
-# v2.1 (2020-07-08)
+## v2.1 (2020-07-08)
 
-## Features
+### Features
 
 * Release [ATT&CK content version 7.0](https://github.com/mitre/cti/releases/tag/ATT%26CK-v7.0).
   See the release notes [here](https://attack.mitre.org/resources/updates/updates-july-2020/index.html).
@@ -537,7 +546,7 @@ It also fixes a few minor STIX abnormalities for ICS Techniques.
 * Added Navigator layers to the changelog of the sub-techniques update. See issue [#126](https://github.com/mitre-attack/attack-website/issues/126).
 * Updated [contribute page](https://attack.mitre.org/resources/engage-with-attack/contribute). See issue [#162](https://github.com/mitre-attack/attack-website/issues/162).
 
-## Bugfixes
+### Bugfixes
 
 * Added internet explorer support for the sub-techniques matrix. Improved behavior of sub-techniques matrix in Edge browser. See issue [#114](https://github.com/mitre-attack/attack-website/issues/114).
 * Fixed bug where sidenav wouldn't open the correct tactic when opening the sub-technique of a technique. See issue [#78](https://github.com/mitre-attack/attack-website/issues/78).
@@ -548,9 +557,9 @@ It also fixes a few minor STIX abnormalities for ICS Techniques.
 * Fixed outdated ATT&CK Navigator link on the contact page. See issue [#143](https://github.com/mitre-attack/attack-website/issues/143).
 * Updated incorrect technique count on March 2020 update. See issue [#141](https://github.com/mitre-attack/attack-website/issues/141).
 
-# v2.0 (2020-07-07)
+## v2.0 (2020-07-07)
 
-## Features
+### Features
 
 * Release [ATT&CK content version 7.0-beta](https://github.com/mitre/cti/releases/tag/ATT%26CK-v7.0-beta).
   See the release notes [here](https://attack.mitre.org/resources/updates/updates-march-2020/index.html).
@@ -579,17 +588,17 @@ It also fixes a few minor STIX abnormalities for ICS Techniques.
 * Matrix timestamps are now calculated from the modified date on the x-mitre-matrix STIX object. Additionally, said timestamps are now formatted the same as modified dates on other pages of the website. See issue [#27](https://github.com/mitre-attack/attack-website/issues/27).
 * Revisions to the layout of the matrix pages to improve readability when multiple matrices occur within a domain.
 
-# v1.3.1 (2020-06-17)
+## v1.3.1 (2020-06-17)
 
-## Bugfixes
+### Bugfixes
 
 * Fixed navigator links on groups and software pages that were repeating the domain on the URI. See issues [#169](https://github.com/mitre-attack/attack-website/issues/169) and [#192](https://github.com/mitre-attack/attack-website/issues/192).
 
-# v1.3 (2020-06-10)
+## v1.3 (2020-06-10)
 
 This update includes a major refactor of the ATT&CK catalog versioning system, previously referred to as "previous versions."
 
-## Features
+### Features
 
 * Versions have been moved from `/previous/monthYear` to `/versions/v#` which should be more predictable and consistent with the way the versions are referred to elsewhere. Redirects have been created so that users who bookmarked the old URLs will get sent to the new ones. See issue [#174](https://github.com/mitre-attack/attack-website/issues/174).
 * Added a permalink to the current version of the site. See issue [#175](https://github.com/mitre-attack/attack-website/issues/175).
@@ -602,36 +611,36 @@ This update includes a major refactor of the ATT&CK catalog versioning system, p
   * Revised blurb on how versions work to explain our methodology behind the catalog version numbers and versioning system.
 * Updated past release notes to mention the version number for each release.
 
-# No website version update (2020-03-31)
+## No website version update (2020-03-31)
 
 The sub-techniques beta is now live! Read the <a target='_blank' href='https://medium.com/mitre-attack/attack-subs-what-you-need-to-know-99bce414ae0b'>release blog post</a> for more details.
 
-## Features
+### Features
 
 * Added sub-techniques release announcement banner.
 * Added sub-techniques release docs
 
-# No website version update (2020-03-09)
+## No website version update (2020-03-09)
 
-## Features
+### Features
 
 * Release [ATT&CK content version 6.3](https://github.com/mitre/cti/releases/tag/ATT%26CK-v6.3).
 
-## Bugfixes
+### Bugfixes
 
 * Fixed typo in M1026.
 * Updated copyright statement marking-definition to match that on [https://attack.mitre.org](https://attack.mitre.org).
 * Fixed invalid bundle IDs on marking-definition objects.
 
-# v1.2.4 (2020-03-06)
+## v1.2.4 (2020-03-06)
 
-## Bugfixes
+### Bugfixes
 
 * Minor revision to the ATT&CK logo.
 
-# v1.2.3 (2020-03-04)
+## v1.2.3 (2020-03-04)
 
-## Features
+### Features
 
 * Updated trademark language. See issue [#54](https://github.com/mitre-attack/attack-website/issues/54).
 * Updated ATT&CK™ to ATT&CK®. See issue [#55](https://github.com/mitre-attack/attack-website/issues/55).
@@ -640,25 +649,25 @@ The sub-techniques beta is now live! Read the <a target='_blank' href='https://m
 * Updated copyrights to 2020. See issue [#58](https://github.com/mitre-attack/attack-website/issues/58).
 * Updated README. See issue [#59](https://github.com/mitre-attack/attack-website/issues/59).
 
-# v1.2.2 (2020-02-20)
+## v1.2.2 (2020-02-20)
 
-## Bugfixes
+### Bugfixes
 
 * Added redirects to for matrix poster and roadmap. See issue [#85](https://github.com/mitre-attack/attack-website/issues/85)
 
-# v1.2.1 (2020-02-18)
+## v1.2.1 (2020-02-18)
 
-## Features
+### Features
 
 * Updated the _roadmap_ and _matrix poster_ documents on the [General Information](https://attack.mitre.org/resources/) page.
 
-## Bugfixes
+### Bugfixes
 
 * Fixed PRE-ATT&CK side-navigation toggle on tactics and techniques. See issue [#81](https://github.com/mitre-attack/attack-website/issues/81).
 
-# v1.2 (2020-02-17)
+## v1.2 (2020-02-17)
 
-## Features
+### Features
 
 * Added Docker support, enabling users to easily build and host a docker container of the ATT&CK Website. See issue [#17](https://github.com/mitre-attack/attack-website/issues/17).
 * Added configuration options to specify url of attached [ATT&CK Navigator](https://github.com/mitre-attack/attack-navigator) instance. See issue [#18](https://github.com/mitre-attack/attack-website/issues/18).
@@ -667,19 +676,19 @@ The sub-techniques beta is now live! Read the <a target='_blank' href='https://m
 * Updated navigation drawer on technique, tactic, and mitigation pages to make domains more accessible. See issue [#53](https://github.com/mitre-attack/attack-website/issues/53).
 * Major overhaul of site search UI. See issue [#4](https://github.com/mitre-attack/attack-website/issues/4).
 
-## Bugfixes
+### Bugfixes
 
 * Sticky footer should be less temperamental when the page resizes. See issue [#51](https://github.com/mitre-attack/attack-website/issues/51).
 
-# v1.1.1 (2020-01-07)
+## v1.1.1 (2020-01-07)
 
-## Features
+### Features
 
 * Added links to [ATT&CK for ICS](https://collaborate.mitre.org/attackics/index.php/Main_Page).
 
-# v1.1 (2020-01-03)
+## v1.1 (2020-01-03)
 
-## Features
+### Features
 
 * Added created and last modified dates to object pages. See issue [#38](https://github.com/mitre-attack/attack-website/issues/38).
 * Added ATT&CK training to website. See issue [#22](https://github.com/mitre-attack/attack-website/issues/22).
@@ -688,50 +697,50 @@ The sub-techniques beta is now live! Read the <a target='_blank' href='https://m
 * Added website and content version number to the footer. See issue [#10](https://github.com/mitre-attack/attack-website/issues/10).
 * Added changelog page to website reachable by version number link in the footer.
 
-# v1.0.4 (2019-12-05)
+## v1.0.4 (2019-12-05)
 
-## Bugfixes
+### Bugfixes
 
 * Fixed a typo in the software side-navigation header. See issue [#39](https://github.com/mitre-attack/attack-website/issues/39).
 
-# v1.0.3 (2019-12-02)
+## v1.0.3 (2019-12-02)
 
-## Features
+### Features
 
 * Release [ATT&CK content version 6.2](https://github.com/mitre/cti/releases/tag/ATT%26CK-v6.2).
 * Updated roadmap to latest version. See issue [#31](https://github.com/mitre-attack/attack-website/issues/31).
 
-## Bugfixes
+### Bugfixes
 
 * Updated contributors for T1036 and T1497.
 
-# v1.0.2 (2019-11-25)
+## v1.0.2 (2019-11-25)
 
-## Bugfixes
+### Bugfixes
 
 * Removed google analytics and google-site-verification from source code. See issue [#11](https://github.com/mitre-attack/attack-website/issues/11).
 
-# v1.0.1 (2019-11-22)
+## v1.0.1 (2019-11-22)
 
-## Bugfixes
+### Bugfixes
 
 * Fixed incorrect initial state for the side-navigation on the cloud matrix page. See issue [#8](https://github.com/mitre-attack/attack-website/issues/8).
 
-# v1.0 (2019-11-21)
+## v1.0 (2019-11-21)
 
 This is the initial release of the website source code.
 
-## Features
+### Features
 
 * Release [ATT&CK content version 6.1](https://github.com/mitre/cti/releases/tag/ATT%26CK-v6.1).
 
-## Bugfixes
+### Bugfixes
 
 * Fixed missing external_reference value in Office Application Startup (T1137).
 
-# No website version (2019-10-24)
+## No website version (2019-10-24)
 
-## Features
+### Features
 
 * Release [ATT&CK content version 6.0](https://github.com/mitre/cti/releases/tag/ATT%26CK-v6.0).
   See the release notes [here](https://attack.mitre.org/resources/updates/updates-october-2019/index.html).
