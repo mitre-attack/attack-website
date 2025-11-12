@@ -1,5 +1,6 @@
 import argparse
 import time
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 from dotenv import load_dotenv
 from loguru import logger
@@ -222,6 +223,57 @@ def remove_from_build(arg_modules, arg_extras):
     remove_from_menu()
 
 
+def run_module_with_timing(ptr):
+    """Run a single module and return timing information."""
+    module_name = ptr["module_name"]
+    logger.info(f"RUNNING MODULE: {module_name}")
+    start_time = time.time()
+    try:
+        ptr["run_module"]()
+        end_time = time.time()
+        elapsed = end_time - start_time
+        logger.info(f"FINISHED MODULE: {module_name} in {elapsed:.2f} seconds")
+        return module_name, elapsed, None
+    except Exception as e:
+        end_time = time.time()
+        elapsed = end_time - start_time
+        logger.error(f"ERROR in MODULE: {module_name} after {elapsed:.2f} seconds: {e}")
+        return module_name, elapsed, e
+
+
+def run_modules_in_parallel(module_group, group_name):
+    """Run a group of modules in parallel using ThreadPoolExecutor."""
+    if not module_group:
+        return
+
+    logger.info(f"Running {group_name} ({len(module_group)} modules) in parallel...")
+    group_start = time.time()
+
+    # Use ThreadPoolExecutor to run modules concurrently
+    # Use min of module count or 8 threads to avoid overwhelming the system
+    max_workers = min(len(module_group), 8)
+
+    with ThreadPoolExecutor(max_workers=max_workers) as executor:
+        # Submit all modules to the executor
+        future_to_module = {executor.submit(run_module_with_timing, ptr): ptr for ptr in module_group}
+
+        # Wait for all to complete and handle results
+        errors = []
+        for future in as_completed(future_to_module):
+            module_name, elapsed, error = future.result()
+            if error:
+                errors.append((module_name, error))
+
+        if errors:
+            logger.error(f"Errors occurred in {group_name}:")
+            for module_name, error in errors:
+                logger.error(f"  - {module_name}: {error}")
+            raise RuntimeError(f"Failed modules in {group_name}: {[m for m, _ in errors]}")
+
+    group_end = time.time()
+    logger.info(f"Completed {group_name} in {group_end - group_start:.2f} seconds")
+
+
 def main():
     """Entry point for the update script."""
     # Get args
@@ -245,13 +297,35 @@ def main():
     # Start time of update
     update_start = time.time()
 
-    # Get running modules and priorities
-    for ptr in modules.run_ptr:
-        logger.info(f"RUNNING MODULE: {ptr['module_name']}")
-        start_time = time.time()
-        ptr["run_module"]()
-        end_time = time.time()
-        logger.info(f"FINISHED MODULE: {ptr['module_name']} in {end_time - start_time:.2f} seconds")
+    # Group modules by priority ranges for parallel execution
+    # Priority 0: clean - must run first
+    # Priority 1-15: content generation - can run in parallel
+    # Priority 16-16.9: website_build, random_page - can run in parallel after content
+    # Priority 17: search - must run after website_build (indexes HTML)
+    # Priority 18+: subdirectory, tests - can run in parallel after search
+
+    clean_modules = [ptr for ptr in modules.run_ptr if ptr["priority"] < 1]
+    content_modules = [ptr for ptr in modules.run_ptr if 1 <= ptr["priority"] < 16]
+    build_modules = [ptr for ptr in modules.run_ptr if 16 <= ptr["priority"] < 17]
+    search_modules = [ptr for ptr in modules.run_ptr if 17 <= ptr["priority"] < 18]
+    final_modules = [ptr for ptr in modules.run_ptr if ptr["priority"] >= 18]
+
+    # Stage 1: Run clean first (sequential)
+    for ptr in clean_modules:
+        run_module_with_timing(ptr)
+
+    # Stage 2: Run content generation modules in parallel
+    run_modules_in_parallel(content_modules, "content generation modules")
+
+    # Stage 3: Run build modules in parallel
+    run_modules_in_parallel(build_modules, "build modules")
+
+    # Stage 4: Run search (sequential - must be after build)
+    for ptr in search_modules:
+        run_module_with_timing(ptr)
+
+    # Stage 5: Run final modules in parallel
+    run_modules_in_parallel(final_modules, "final modules")
 
     # Print end of module
     update_end = time.time()
