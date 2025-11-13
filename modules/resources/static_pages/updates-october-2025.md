@@ -8,7 +8,7 @@ save_as: resources/updates/updates-october-2025/index.html
 
 | Version | Start Date | End Date | Data | Changelogs |
 |:--------|:-----------|:---------|:-----|:-----------|
-| [ATT&CK v18](/versions/v18) | October 28, 2025 | Current version of ATT&CK | [v18.0 on MITRE/CTI](https://github.com/mitre/cti/releases/tag/ATT%26CK-v18.0) | 17.1 - 18.0 [Details](/docs/changelogs/v17.1-v18.0/changelog-detailed.html) ([JSON](/docs/changelogs/v17.1-v18.0/changelog.json)) |
+| [ATT&CK v18](/versions/v18) | October 28, 2025 | Current version of ATT&CK | [v18.0 on MITRE/CTI](https://github.com/mitre/cti/releases/tag/ATT%26CK-v18.0) <br> [v18.1 on MITRE/CTI](https://github.com/mitre/cti/releases/tag/ATT%26CK-v18.1) | 17.1 - 18.0 [Details](/docs/changelogs/v17.1-v18.0/changelog-detailed.html) ([JSON](/docs/changelogs/v17.1-v18.0/changelog.json)) <br> 18.0 - 18.1 [Details](/docs/changelogs/v18.0-v18.1/changelog-detailed.html) ([JSON](/docs/changelogs/v18.0-v18.1/changelog.json)) |
 
 The October 2025 (v18) ATT&CK release updates Techniques, Groups, Campaigns and Software for Enterprise, Mobile, and ICS.
 
@@ -20,13 +20,13 @@ This release also includes a [human-readable detailed changelog](/docs/changelog
 
 ## Statistics
 
-This version of ATT&CK contains 910 Software, 176 Groups, and 55 Campaigns.
+This version of ATT&CK contains 910 Pieces of Software, 176 Groups, and 55 Campaigns.
 
 Broken out by domain:
 
-* Enterprise: 14 Tactics, 216 Techniques, 475 Sub-Techniques, 172 Groups, 784 Software, 52 Campaigns, 44 Mitigations, 691 Detection Strategies, 1739 Analytics, and 106 Data Components
-* Mobile: 12 Tactics, 77 Techniques, 47 Sub-Techniques, 17 Groups, 122 Software, 3 Campaigns, 13 Mitigations, 124 Detection Strategies, 211 Analytics, and 17 Data Components
-* ICS: 12 Tactics, 83 Techniques, 14 Groups, 23 Software, 7 Campaigns, 52 Mitigations, 18 Assets, 83 Detection Strategies, 82 Analytics, and 36 Data Components
+* Enterprise: 14 Tactics, 216 Techniques, 475 Sub-Techniques, 172 Groups, 784 Pieces of Software, 52 Campaigns, 44 Mitigations, 691 Detection Strategies, 1739 Analytics, and 106 Data Components
+* Mobile: 12 Tactics, 77 Techniques, 47 Sub-Techniques, 17 Groups, 122 Pieces of Software, 3 Campaigns, 13 Mitigations, 124 Detection Strategies, 211 Analytics, and 17 Data Components
+* ICS: 12 Tactics, 83 Techniques, 14 Groups, 23 Pieces of Software, 7 Campaigns, 52 Mitigations, 18 Assets, 83 Detection Strategies, 82 Analytics, and 36 Data Components
 
 ## Release Notes Terminology
 
