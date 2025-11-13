@@ -231,7 +231,7 @@
                         <div class="row">
                             <div class="col-md-8">
                                     <div class="description-body">
-                                                <p>The successful establishment of a new user session following a successful authentication attempt. This typically signifies that a user has provided valid credentials or authentication tokens, and the system has initiated a session associated with that user account. This data is crucial for tracking authentication events and identifying potential unauthorized access. Examples: </p><ul><li>Windows Systems<ul><li>Event ID: 4624<ul><li>Logon Type: 2 (Interactive) or 10 (Remote Interactive via RDP).</li><li>Account Name: JohnDoe</li><li>Source Network Address: 192.168.1.100</li><li>Authentication Package: NTLM</li></ul></li></ul></li><li>Linux Systems<ul><li>/var/log/utmp or /var/log/wtmp:<ul><li>Log format: login user [tty] from [source_ip]</li><li>User: jane</li><li>IP: 10.0.0.5</li><li>Timestamp: 2024-12-28 08:30:00</li></ul></li></ul></li><li>macOS Systems<ul><li>/var/log/asl.log or unified logging framework:<ul><li>Log: com.apple.securityd: Authentication succeeded for user 'admin'</li></ul></li></ul></li><li>Cloud Environments<ul><li>Azure Sign-In Logs:<ul><li>Activity: Sign-in successful</li><li>Client App: Browser</li><li>Location: Unknown (Country: X)</li></ul></li></ul></li><li>Google Workspace<ul><li>Activity: Login<ul><li>Event Type: successful_login</li><li>Source IP: 203.0.113.55</li></ul></li></ul></li></ul><p>This data component can be collected through the following measures:</p><ul><li>Windows Systems<ul><li>Event Logs: Monitor Security Event Logs using Event ID 4624 for successful logons.</li><li>PowerShell Example: <code>Get-EventLog -LogName Security -InstanceId 4624</code></li></ul></li><li>Linux Systems<ul><li>Log Files: Monitor <code>/var/log/utmp</code>, <code>/var/log/wtmp</code>, or <code>/var/log/auth.log</code> for logon events.</li><li>Tools: Use <code>last</code> or <code>who</code> commands to parse login records.</li></ul></li><li>macOS Systems<ul><li>Log Sources: Monitor <code>/var/log/asl.log</code> or Apple Unified Logs using the <code>log show</code> command.</li><li>Command Example: <code>log show --predicate 'eventMessage contains "Authentication succeeded"' --info</code></li></ul></li><li>Cloud Environments<ul><li>Azure AD: Use Azure Monitor to analyze sign-in logs. Example CLI Query: <code>az monitor log-analytics query -w &lt;workspace_id&gt; --analytics-query "AzureActivity | where ActivityStatus == 'Success' and OperationName == 'Sign-in'"</code></li><li>Google Workspace: Enable and monitor Login Audit logs from the Admin Console.</li><li>Office 365: Use Audit Log Search in Microsoft 365 Security &amp; Compliance Center for login-related events.</li></ul></li><li>Network Logs<ul><li>Sources: Network authentication mechanisms (e.g., RADIUS or TACACS logs).</li></ul></li><li>Enable EDR Monitoring: <ul><li>EDR tools monitor logon session activity, including the creation of new sessions.</li><li>Configure alerts for: Suspicious logon types (e.g., Logon Type 10 for RDP or Type 5 for Service). Logons from unusual locations, accounts, or devices.</li><li>Leverage EDR telemetry for session attributes like source IP, session duration, and originating process.</li></ul></li></ul>
+                                                <p>The successful establishment of a new user session following a successful authentication attempt. This typically signifies that a user has provided valid credentials or authentication tokens, and the system has initiated a session associated with that user account. This data is crucial for tracking authentication events and identifying potential unauthorized access. Examples: </p><ul><li>Windows Systems<ul><li>Event ID: 4624<ul><li>Logon Type: 2 (Interactive) or 10 (Remote Interactive via RDP).</li><li>Account Name: JohnDoe</li><li>Source Network Address: 192.168.1.100</li><li>Authentication Package: NTLM</li></ul></li></ul></li><li>Linux Systems<ul><li>/var/log/utmp or /var/log/wtmp:<ul><li>Log format: login user [tty] from [source_ip]</li><li>User: jane</li><li>IP: 10.0.0.5</li><li>Timestamp: 2024-12-28 08:30:00</li></ul></li></ul></li><li>macOS Systems<ul><li>/var/log/asl.log or unified logging framework:<ul><li>Log: com.apple.securityd: Authentication succeeded for user 'admin'</li></ul></li></ul></li><li>Cloud Environments<ul><li>Azure Sign-In Logs:<ul><li>Activity: Sign-in successful</li><li>Client App: Browser</li><li>Location: Unknown (Country: X)</li></ul></li></ul></li><li>Google Workspace<ul><li>Activity: Login<ul><li>Event Type: successful_login</li><li>Source IP: 203.0.113.55</li></ul></li></ul></li></ul>
 
                                     </div>
                             </div>
@@ -256,7 +256,7 @@
                                             </div>
                                             <div class="row card-data">
                                                 <div class="col-md-12">
-                                                    <span class="h5 card-title">Last Modified</span>: 21 October 2025
+                                                    <span class="h5 card-title">Last Modified</span>: 12 November 2025
                                                 </div>
                                             </div>
                                     </div>
@@ -415,11 +415,11 @@
                                                 <td>File access with forged or anomalous SAML claims</td>
                                             </tr>
                                             <tr>
-                                                <td>m365:signin</td>
+                                                <td>m365:signinlogs</td>
                                                 <td>SignInSuccess, RoleAssignmentRead</td>
                                             </tr>
                                             <tr>
-                                                <td>m365:signin</td>
+                                                <td>m365:signinlogs</td>
                                                 <td>Token usage events with device/user mismatch</td>
                                             </tr>
                                             <tr>
@@ -532,23 +532,7 @@
                                             </tr>
                                             <tr>
                                                 <td>WinEventLog:Security</td>
-                                                <td>EventCode=4624</td>
-                                            </tr>
-                                            <tr>
-                                                <td>WinEventLog:Security</td>
                                                 <td>EventCode=4624, 4648</td>
-                                            </tr>
-                                            <tr>
-                                                <td>WinEventLog:Security</td>
-                                                <td>EventCode=4624 with LogonType=9 or smartcard logon</td>
-                                            </tr>
-                                            <tr>
-                                                <td>WinEventLog:Security</td>
-                                                <td>EventCode=4624 (LogonType=10 or 3), EventCode=4648</td>
-                                            </tr>
-                                            <tr>
-                                                <td>WinEventLog:Security</td>
-                                                <td>EventCode=4624 (LogonType=3)</td>
                                             </tr>
                                             <tr>
                                                 <td>WinEventLog:Security</td>
@@ -556,31 +540,7 @@
                                             </tr>
                                             <tr>
                                                 <td>WinEventLog:Security</td>
-                                                <td>EventCode=4624 (LogonType=10), EventCode=4648</td>
-                                            </tr>
-                                            <tr>
-                                                <td>WinEventLog:Security</td>
-                                                <td>EventCode=4624, 4672, 4648</td>
-                                            </tr>
-                                            <tr>
-                                                <td>WinEventLog:Security</td>
-                                                <td>4624</td>
-                                            </tr>
-                                            <tr>
-                                                <td>WinEventLog:Security</td>
-                                                <td>EventCode=4624,4648, 4672</td>
-                                            </tr>
-                                            <tr>
-                                                <td>WinEventLog:Security</td>
-                                                <td>EventCode=4624,4648,4672,4769</td>
-                                            </tr>
-                                            <tr>
-                                                <td>WinEventLog:Security</td>
-                                                <td>EventID=4624</td>
-                                            </tr>
-                                            <tr>
-                                                <td>WinEventLog:Security</td>
-                                                <td>EventCode=4624, 4634</td>
+                                                <td>EventCode=4624</td>
                                             </tr>
                                     </tbody>
                                 </table>
@@ -1355,7 +1315,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3 col-footer">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v18.0&#013;Website  v4.4.0">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v18.1&#013;Website  v4.4.1">Website Changelog</a></u>
                                 </div>
                                 <div class="px-3">
                                     <u class="footer-link"><a href="/resources/legal-and-branding/privacy/#" class="footer-link" onclick="Osano.cm.showDrawer('osano-cm-dom-info-dialog-open')">Cookie Preferences</a></u>

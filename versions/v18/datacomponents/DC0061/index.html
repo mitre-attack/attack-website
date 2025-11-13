@@ -186,7 +186,7 @@
             <!-- banner elements -->
             <div class="col px-0">
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
-                <div class="container-fluid version-banner"><div class="icon-inline baseline mr-1"><img src="/versions/v18/theme/images/icon-warning-24px.svg"></div>Currently viewing <a href="https://github.com/mitre/cti/releases/tag/ATT%26CK-v18.0" target="_blank">ATT&CK v18.0</a> which is the current version of ATT&CK. <a href="/resources/versions/">Learn more about the versioning system</a> or <a href="/">see the live site</a>.</div>
+                <div class="container-fluid version-banner"><div class="icon-inline baseline mr-1"><img src="/versions/v18/theme/images/icon-warning-24px.svg"></div>Currently viewing <a href="https://github.com/mitre/cti/releases/tag/ATT%26CK-v18.1" target="_blank">ATT&CK v18.1</a> which is the current version of ATT&CK. <a href="/resources/versions/">Learn more about the versioning system</a> or <a href="/">see the live site</a>.</div>
                     <div class="container-fluid d-none">
                         ATT&CK v18 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v18-8f82d839ee9e'>blog post</a> or <a href='https://attack.mitre.org/resources/updates/'>changelog</a> for more information.
 
@@ -231,7 +231,7 @@
                         <div class="row">
                             <div class="col-md-8">
                                     <div class="description-body">
-                                                <p>Changes made to a file, including updates to its contents, metadata, access permissions, or attributes. These modifications may indicate legitimate activity (e.g., software updates) or unauthorized changes (e.g., tampering, ransomware, or adversarial modifications). Examples: </p><ul><li>Content Modifications: Changes to the content of a configuration file, such as modifying <code>/etc/ssh/sshd_config</code> on Linux or <code>C:\Windows\System32\drivers\etc\hosts</code> on Windows.</li><li>Permission Changes: Altering file permissions to allow broader access, such as changing a file from <code>644</code> to <code>777</code> on Linux or modifying NTFS permissions on Windows.</li><li>Attribute Modifications: Changing a file's attributes to hidden, read-only, or system on Windows.</li><li>Timestamp Manipulation: Adjusting a file's creation or modification timestamp using tools like <code>touch</code> in Linux or timestomping tools on Windows.</li><li>Software or System File Changes: Modifying system files such as <code>boot.ini</code>, kernel modules, or application binaries.</li></ul><p>This data component can be collected through the following measures:</p><p>Windows</p><ul><li>Event Logs: Enable file system auditing to monitor file modifications using Security Event ID 4670 (File System Audit) or Sysmon Event ID 2 (File creation time changed).</li><li>PowerShell: Use Get-ItemProperty or Get-Acl cmdlets to monitor file properties: <code>Get-Item -Path "C:\path\to\file" | Select-Object Name, Attributes, LastWriteTime</code></li></ul><p>Linux</p><ul><li>File System Monitoring: Use tools like auditd with rules to monitor file modifications: <code>auditctl -w /path/to/file -p wa -k file_modification</code></li><li>Inotify: Use inotifywait to watch for real-time changes to files or directories: <code>inotifywait -m /path/to/file</code></li></ul><p>macOS</p><ul><li>Endpoint Security Framework (ESF): Monitor file modification events using ESF APIs.</li><li>Audit Framework: Configure audit rules to track file changes.</li><li>Command-Line Tools: Use fs_usage to monitor file activities: <code>fs_usage -w /path/to/file</code></li></ul><p>SIEM Tools</p><ul><li>Collect logs from endpoint agents (e.g., Sysmon, Auditd) and file servers to centralize file modification event data.</li></ul>
+                                                <p>Changes made to a file, including updates to its contents, metadata, access permissions, or attributes. These modifications may indicate legitimate activity (e.g., software updates) or unauthorized changes (e.g., tampering, ransomware, or adversarial modifications). Examples: </p><ul><li>Content Modifications: Changes to the content of a configuration file, such as modifying <code>/etc/ssh/sshd_config</code> on Linux or <code>C:\Windows\System32\drivers\etc\hosts</code> on Windows.</li><li>Permission Changes: Altering file permissions to allow broader access, such as changing a file from <code>644</code> to <code>777</code> on Linux or modifying NTFS permissions on Windows.</li><li>Attribute Modifications: Changing a file's attributes to hidden, read-only, or system on Windows.</li><li>Timestamp Manipulation: Adjusting a file's creation or modification timestamp using tools like <code>touch</code> in Linux or timestomping tools on Windows.</li><li>Software or System File Changes: Modifying system files such as <code>boot.ini</code>, kernel modules, or application binaries.</li></ul>
 
                                     </div>
                             </div>
@@ -256,7 +256,7 @@
                                             </div>
                                             <div class="row card-data">
                                                 <div class="col-md-12">
-                                                    <span class="h5 card-title">Last Modified</span>: 21 October 2025
+                                                    <span class="h5 card-title">Last Modified</span>: 12 November 2025
                                                 </div>
                                             </div>
                                     </div>
@@ -835,28 +835,16 @@
                                                 <td>evt.type=write</td>
                                             </tr>
                                             <tr>
-                                                <td>WinEventLog:Application</td>
-                                                <td>81,3033</td>
+                                                <td>WinEventLog:CodeIntegrity</td>
+                                                <td>EventCode=3033</td>
                                             </tr>
                                             <tr>
                                                 <td>WinEventLog:Security</td>
-                                                <td>EventCode=4663</td>
-                                            </tr>
-                                            <tr>
-                                                <td>WinEventLog:Security</td>
-                                                <td>EventCode=4656,4663</td>
-                                            </tr>
-                                            <tr>
-                                                <td>WinEventLog:Security</td>
-                                                <td>EventCode=4670</td>
+                                                <td>EventCode=4663, 4670, 4656</td>
                                             </tr>
                                             <tr>
                                                 <td>WinEventLog:Sysmon</td>
                                                 <td>EventCode=2</td>
-                                            </tr>
-                                            <tr>
-                                                <td>WinEventLog:Sysmon</td>
-                                                <td>EvenCode=2</td>
                                             </tr>
                                             <tr>
                                                 <td>WinEventLog:System</td>
@@ -2262,7 +2250,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3 col-footer">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v18.0&#013;Website  v4.4.0">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v18.1&#013;Website  v4.4.1">Website Changelog</a></u>
                                 </div>
                                 <div class="px-3">
                                     <u class="footer-link"><a href="/resources/legal-and-branding/privacy/#" class="footer-link" onclick="Osano.cm.showDrawer('osano-cm-dom-info-dialog-open')">Cookie Preferences</a></u>

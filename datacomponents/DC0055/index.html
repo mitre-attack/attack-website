@@ -231,7 +231,7 @@
                         <div class="row">
                             <div class="col-md-8">
                                     <div class="description-body">
-                                                <p>To events where a file is opened or accessed, making its contents available to the requester. This includes reading, executing, or interacting with files by authorized or unauthorized entities. Examples include logging file access events (e.g., Windows Event ID 4663), monitoring file reads, and detecting unusual file access patterns. Examples: </p><ul><li>File Read Operations: A user opens a sensitive document (e.g., financial_report.xlsx) on a shared drive.</li><li>File Execution: A script or executable file is accessed and executed (e.g., malware.exe is run from a temporary directory).</li><li>Unauthorized File Access: An unauthorized user attempts to access a protected configuration file (e.g., <code>/etc/passwd</code> on Linux or <code>System32</code> files on Windows).</li><li>File Access Patterns: Bulk access to multiple files in a short time (e.g., mass access to documents on a file server).</li><li>File Access via Network: Files on a network share are accessed remotely (e.g., logs of SMB file access).</li></ul><p>This data component can be collected through the following measures:</p><p>Windows</p><ul><li>Windows Event Logs: Event ID 4663: Captures file system auditing details, including who accessed the file, access type, and file name.</li><li>Sysmon:<ul><li>Event ID 11: Logs file creation time changes.</li><li>Event ID 1 (process creation): Can provide insight into files executed.</li></ul></li><li>PowerShell: Commands to monitor file access in real-time: <code>Get-WinEvent -FilterHashtable @{LogName='Security'; ID=4663}</code></li></ul><p>Linux</p><ul><li>Auditd: Monitor file access events using audit rules: <code>auditctl -w /path/to/file -p rwxa -k file_access</code></li><li>View logs: <code>ausearch -k file_access</code></li><li>Inotify: Use inotify to track file access on Linux: <code>inotifywait -m /path/to/watch -e access</code></li></ul><p>macOS</p><ul><li>Unified Logs: Monitor file access using the macOS Unified Logging System.</li><li>FSEvents: File System Events can track file accesses: <code>fs_usage | grep open</code></li></ul><p>Network Devices</p><ul><li>SMB/CIFS Logs: Monitor file access over network shares using logs from SMB or CIFS protocol.</li><li>NAS Logs: Collect logs from network-attached storage systems for file access events.</li></ul><p>SIEM Integration</p><ul><li>Collect file access logs from all platforms (Windows, Linux, macOS) and centralize in a SIEM for correlation and analysis.</li></ul>
+                                                <p>To events where a file is opened or accessed, making its contents available to the requester. This includes reading, executing, or interacting with files by authorized or unauthorized entities. Examples include logging file access events (e.g., Windows Event ID 4663), monitoring file reads, and detecting unusual file access patterns. Examples: </p><ul><li>File Read Operations: A user opens a sensitive document (e.g., financial_report.xlsx) on a shared drive.</li><li>File Execution: A script or executable file is accessed and executed (e.g., malware.exe is run from a temporary directory).</li><li>Unauthorized File Access: An unauthorized user attempts to access a protected configuration file (e.g., <code>/etc/passwd</code> on Linux or <code>System32</code> files on Windows).</li><li>File Access Patterns: Bulk access to multiple files in a short time (e.g., mass access to documents on a file server).</li><li>File Access via Network: Files on a network share are accessed remotely (e.g., logs of SMB file access).</li></ul>
 
                                     </div>
                             </div>
@@ -256,7 +256,7 @@
                                             </div>
                                             <div class="row card-data">
                                                 <div class="col-md-12">
-                                                    <span class="h5 card-title">Last Modified</span>: 21 October 2025
+                                                    <span class="h5 card-title">Last Modified</span>: 12 November 2025
                                                 </div>
                                             </div>
                                     </div>
@@ -293,10 +293,6 @@
                                             <tr>
                                                 <td>auditd:PATH</td>
                                                 <td>open: Access to sensitive log files (/var/log/auth.log, /var/log/secure, /var/log/syslog)</td>
-                                            </tr>
-                                            <tr>
-                                                <td>auditd:PATH</td>
-                                                <td>path</td>
                                             </tr>
                                             <tr>
                                                 <td>auditd:PATH</td>
@@ -684,27 +680,7 @@
                                             </tr>
                                             <tr>
                                                 <td>WinEventLog:Security</td>
-                                                <td>EventCode=4663</td>
-                                            </tr>
-                                            <tr>
-                                                <td>WinEventLog:Security</td>
-                                                <td>EventCode=4656, 4663</td>
-                                            </tr>
-                                            <tr>
-                                                <td>WinEventLog:Security</td>
-                                                <td>EventCode=4656,4663</td>
-                                            </tr>
-                                            <tr>
-                                                <td>WinEventLog:Security</td>
-                                                <td>EventCode=4670, 4663</td>
-                                            </tr>
-                                            <tr>
-                                                <td>WinEventLog:Security</td>
-                                                <td>EventCode=4656</td>
-                                            </tr>
-                                            <tr>
-                                                <td>WinEventLog:Security</td>
-                                                <td>EventCode=5145, 4663</td>
+                                                <td>EventCode=4663, 4670, 4656</td>
                                             </tr>
                                     </tbody>
                                 </table>
@@ -1853,7 +1829,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3 col-footer">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v18.0&#013;Website  v4.4.0">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v18.1&#013;Website  v4.4.1">Website Changelog</a></u>
                                 </div>
                                 <div class="px-3">
                                     <u class="footer-link"><a href="/resources/legal-and-branding/privacy/#" class="footer-link" onclick="Osano.cm.showDrawer('osano-cm-dom-info-dialog-open')">Cookie Preferences</a></u>

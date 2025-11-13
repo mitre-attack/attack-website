@@ -231,7 +231,7 @@
                         <div class="row">
                             <div class="col-md-8">
                                     <div class="description-body">
-                                                <p>Command Execution involves monitoring and capturing the execution of textual commands (including shell commands, cmdlets, and scripts) within an operating system or application. These commands may include arguments or parameters and are typically executed through interpreters such as <code>cmd.exe</code>, <code>bash</code>, <code>zsh</code>, <code>PowerShell</code>, or programmatic execution. Examples: </p><ul><li>Windows Command Prompt<ul><li>dir – Lists directory contents.</li><li>net user – Queries or manipulates user accounts.</li><li>tasklist – Lists running processes.</li></ul></li><li>PowerShell<ul><li>Get-Process – Retrieves processes running on a system.</li><li>Set-ExecutionPolicy – Changes PowerShell script execution policies.</li><li>Invoke-WebRequest – Downloads remote resources.</li></ul></li><li>Linux Shell<ul><li>ls – Lists files in a directory.</li><li>cat /etc/passwd – Reads the user accounts file.</li><li>curl http://malicious-site.com – Retrieves content from a malicious URL.</li></ul></li><li>Container Environments<ul><li>docker exec – Executes a command inside a running container.</li><li>kubectl exec – Runs commands in Kubernetes pods.</li></ul></li><li>macOS Terminal<ul><li>open – Opens files or URLs.</li><li>dscl . -list /Users – Lists all users on the system.</li><li>osascript -e – Executes AppleScript commands.</li></ul></li></ul><p>This data component can be collected through the following measures:</p><p>Enable Command Logging</p><ul><li>Windows:<ul><li>Enable PowerShell logging: <code>Set-ExecutionPolicy Bypass</code>, <code>Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\PowerShell\ScriptBlockLogging" -Name EnableScriptBlockLogging -Value 1</code></li><li>Enable Windows Event Logging:<ul><li>Event ID 4688: Tracks process creation, including command-line arguments.</li><li>Event ID 4104: Logs PowerShell script block execution.</li></ul></li></ul></li><li>Linux/macOS:<ul><li>Enable shell history logging in <code>.bashrc</code> or <code>.zshrc</code>: <code>export HISTTIMEFORMAT="%d/%m/%y %T "</code>, <code>export PROMPT_COMMAND='history -a; history -w'</code></li><li>Use audit frameworks (e.g., <code>auditd</code>) to log command executions. Example rule to log all <code>execve</code> syscalls: <code>-a always,exit -F arch=b64 -S execve -k cmd_exec</code></li></ul></li><li>Containers:<ul><li>Use runtime-specific tools like Docker’s --log-driver or Kubernetes Audit Logs to capture exec commands.</li></ul></li></ul><p>Integrate with Centralized Logging</p><ul><li>Collect logs using a SIEM (e.g., Splunk) or cloud-based log aggregation tools like AWS CloudWatch or Azure Monitor. Example Splunk Search for Windows Event 4688:<br /><code>index=windows EventID=4688 CommandLine=*</code></li></ul><p>Use Endpoint Detection and Response (EDR) Tools</p><ul><li>Monitor command executions via EDR solutions </li></ul><p>Deploy Sysmon for Advanced Logging (Windows)</p><ul><li>Use Sysmon's Event ID 1 to log process creation with command-line arguments</li></ul>
+                                                <p>Command Execution involves monitoring and capturing the execution of textual commands (including shell commands, cmdlets, and scripts) within an operating system or application. These commands may include arguments or parameters and are typically executed through interpreters such as <code>cmd.exe</code>, <code>bash</code>, <code>zsh</code>, <code>PowerShell</code>, or programmatic execution. Examples: </p><ul><li>Windows Command Prompt<ul><li>dir – Lists directory contents.</li><li>net user – Queries or manipulates user accounts.</li><li>tasklist – Lists running processes.</li></ul></li><li>PowerShell<ul><li>Get-Process – Retrieves processes running on a system.</li><li>Set-ExecutionPolicy – Changes PowerShell script execution policies.</li><li>Invoke-WebRequest – Downloads remote resources.</li></ul></li><li>Linux Shell<ul><li>ls – Lists files in a directory.</li><li>cat /etc/passwd – Reads the user accounts file.</li><li>curl http://malicious-site.com – Retrieves content from a malicious URL.</li></ul></li><li>Container Environments<ul><li>docker exec – Executes a command inside a running container.</li><li>kubectl exec – Runs commands in Kubernetes pods.</li></ul></li><li>macOS Terminal<ul><li>open – Opens files or URLs.</li><li>dscl . -list /Users – Lists all users on the system.</li><li>osascript -e – Executes AppleScript commands.</li></ul></li></ul>
 
                                     </div>
                             </div>
@@ -256,7 +256,7 @@
                                             </div>
                                             <div class="row card-data">
                                                 <div class="col-md-12">
-                                                    <span class="h5 card-title">Last Modified</span>: 21 October 2025
+                                                    <span class="h5 card-title">Last Modified</span>: 12 November 2025
                                                 </div>
                                             </div>
                                     </div>
@@ -579,7 +579,7 @@
                                                 <td>Intune PowerShell Scripts</td>
                                             </tr>
                                             <tr>
-                                                <td>azure:signinLogs</td>
+                                                <td>azure:signinlogs</td>
                                                 <td>OperationName=SetDomainAuthentication OR Update-MsolFederatedDomain</td>
                                             </tr>
                                             <tr>
@@ -856,7 +856,7 @@
                                             </tr>
                                             <tr>
                                                 <td>linux:syslog</td>
-                                                <td>/var/log/syslog or journalctl</td>
+                                                <td>cron activity</td>
                                             </tr>
                                             <tr>
                                                 <td>linux:syslog</td>
@@ -1364,15 +1364,11 @@
                                             </tr>
                                             <tr>
                                                 <td>WinEventLog:PowerShell</td>
-                                                <td>EventCode=4104</td>
+                                                <td>EventCode=4103, 4104, 4105, 4106</td>
                                             </tr>
                                             <tr>
                                                 <td>WinEventLog:PowerShell</td>
                                                 <td>Execution of Microsoft script to enumerate custom forms in Outlook mailbox</td>
-                                            </tr>
-                                            <tr>
-                                                <td>WinEventLog:Powershell</td>
-                                                <td>EventCode=4104</td>
                                             </tr>
                                             <tr>
                                                 <td>WinEventLog:PowerShell</td>
@@ -1381,14 +1377,6 @@
                                             <tr>
                                                 <td>WinEventLog:PowerShell</td>
                                                 <td>PowerShell launched from outlook.exe or triggered without user invocation</td>
-                                            </tr>
-                                            <tr>
-                                                <td>WinEventLog:PowerShell</td>
-                                                <td>EventCode=4103,4104</td>
-                                            </tr>
-                                            <tr>
-                                                <td>WinEventLog:PowerShell</td>
-                                                <td>EventCode=4103</td>
                                             </tr>
                                             <tr>
                                                 <td>WinEventLog:PowerShell</td>
@@ -1408,10 +1396,6 @@
                                             </tr>
                                             <tr>
                                                 <td>WinEventLog:PowerShell</td>
-                                                <td>EventCode=4103,4104,4105, 4106</td>
-                                            </tr>
-                                            <tr>
-                                                <td>WinEventLog:PowerShell</td>
                                                 <td>Execution of PowerShell without -NoProfile flag</td>
                                             </tr>
                                             <tr>
@@ -1419,20 +1403,8 @@
                                                 <td>EventCode=4101</td>
                                             </tr>
                                             <tr>
-                                                <td>WinEventLog:PowerShell</td>
-                                                <td>EventCode=4105</td>
-                                            </tr>
-                                            <tr>
-                                                <td>WinEventLog:PowerShell</td>
-                                                <td>EventCode=4106</td>
-                                            </tr>
-                                            <tr>
-                                                <td>WinEventLog:PowerShell</td>
-                                                <td>EventCode=4103, 4104</td>
-                                            </tr>
-                                            <tr>
                                                 <td>WinEventLog:Security</td>
-                                                <td>EventCode=4104</td>
+                                                <td>EventCode=4103, 4104, 4105, 4106</td>
                                             </tr>
                                     </tbody>
                                 </table>
@@ -4022,7 +3994,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3 col-footer">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v18.0&#013;Website  v4.4.0">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v18.1&#013;Website  v4.4.1">Website Changelog</a></u>
                                 </div>
                                 <div class="px-3">
                                     <u class="footer-link"><a href="/resources/legal-and-branding/privacy/#" class="footer-link" onclick="Osano.cm.showDrawer('osano-cm-dom-info-dialog-open')">Cookie Preferences</a></u>

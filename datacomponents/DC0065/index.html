@@ -231,7 +231,7 @@
                         <div class="row">
                             <div class="col-md-8">
                                     <div class="description-body">
-                                                <p>Changes made to an existing service or daemon, such as modifying the service name, start type, execution parameters, or security configurations.</p><p>*Data Collection Measures: *</p><ul><li>Windows Event Logs<ul><li>Event ID 7040 - Detects modifications to the startup behavior of a service.</li><li>Event ID 7045 - Can capture changes made to existing services.</li><li>Event ID 7036 - Tracks when services start or stop, potentially indicating malicious tampering.</li><li>Event ID 4697 - Can detect when an adversary reinstalls a service with different parameters.</li></ul></li><li>Sysmon Logs<ul><li>Sysmon Event ID 13 - Detects changes to service configurations in the Windows Registry (e.g., <code>HKLM\SYSTEM\CurrentControlSet\Services\</code>).</li><li>Sysmon Event ID 1 - Can track execution of <code>sc.exe</code> or <code>PowerShell Set-Service</code>.</li></ul></li><li>PowerShell Logging<ul><li>Event ID 4104 (Script Block Logging) - Captures execution of commands like <code>Set-Service</code>, <code>New-Service</code>, or <code>sc config</code>.</li><li>Command-Line Logging (Event ID 4688) - Tracks usage of service modification commands:<ul><li><code>sc config &lt;service_name&gt; start= auto</code>  </li><li><code>sc qc &lt;service_name&gt;</code>  </li></ul></li></ul></li><li>Linux/macOS Collection Methods<ul><li>Systemd Journals (<code>journalctl -u &lt;service_name&gt;</code>) Tracks modifications to systemd service configurations.</li><li>Daemon Logs (<code>/var/log/syslog</code>, <code>/var/log/messages</code>, <code>/var/log/daemon.log</code>) Captures changes to service state and execution parameters.</li><li>AuditD Rules for Service Modification <ul><li>Monitor modifications to <code>/etc/systemd/system/</code> for new or altered service unit files: <code>auditctl -w /etc/systemd/system/ -p wa -k service_modification</code></li><li>Track execution of <code>systemctl</code> or <code>service</code> commands: <code>auditctl -a always,exit -F arch=b64 -S execve -F a0=systemctl -F key=service_mod</code></li></ul></li><li>OSQuery for Linux/macOS Monitoring<ul><li>Query modified services using OSQuery’s <code>processes</code> or <code>system_info</code> tables: <code>SELECT * FROM systemd_units WHERE state != 'running';</code></li></ul></li><li>macOS Launch Daemon/Agent Modification<ul><li>Monitor for changes in:<ul><li><code>/Library/LaunchDaemons/</code></li><li><code>/Library/LaunchAgents/</code></li></ul></li><li>Track modifications to <code>.plist</code> files indicating persistence attempts.</li></ul></li></ul></li></ul>
+                                                <p>Changes made to an existing service or daemon, such as modifying the service name, start type, execution parameters, or security configurations.</p>
 
                                     </div>
                             </div>
@@ -256,7 +256,7 @@
                                             </div>
                                             <div class="row card-data">
                                                 <div class="col-md-12">
-                                                    <span class="h5 card-title">Last Modified</span>: 21 October 2025
+                                                    <span class="h5 card-title">Last Modified</span>: 12 November 2025
                                                 </div>
                                             </div>
                                     </div>
@@ -399,7 +399,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3 col-footer">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v18.0&#013;Website  v4.4.0">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v18.1&#013;Website  v4.4.1">Website Changelog</a></u>
                                 </div>
                                 <div class="px-3">
                                     <u class="footer-link"><a href="/resources/legal-and-branding/privacy/#" class="footer-link" onclick="Osano.cm.showDrawer('osano-cm-dom-info-dialog-open')">Cookie Preferences</a></u>

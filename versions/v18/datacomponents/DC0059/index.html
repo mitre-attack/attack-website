@@ -186,7 +186,7 @@
             <!-- banner elements -->
             <div class="col px-0">
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
-                <div class="container-fluid version-banner"><div class="icon-inline baseline mr-1"><img src="/versions/v18/theme/images/icon-warning-24px.svg"></div>Currently viewing <a href="https://github.com/mitre/cti/releases/tag/ATT%26CK-v18.0" target="_blank">ATT&CK v18.0</a> which is the current version of ATT&CK. <a href="/resources/versions/">Learn more about the versioning system</a> or <a href="/">see the live site</a>.</div>
+                <div class="container-fluid version-banner"><div class="icon-inline baseline mr-1"><img src="/versions/v18/theme/images/icon-warning-24px.svg"></div>Currently viewing <a href="https://github.com/mitre/cti/releases/tag/ATT%26CK-v18.1" target="_blank">ATT&CK v18.1</a> which is the current version of ATT&CK. <a href="/resources/versions/">Learn more about the versioning system</a> or <a href="/">see the live site</a>.</div>
                     <div class="container-fluid d-none">
                         ATT&CK v18 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v18-8f82d839ee9e'>blog post</a> or <a href='https://attack.mitre.org/resources/updates/'>changelog</a> for more information.
 
@@ -231,7 +231,7 @@
                         <div class="row">
                             <div class="col-md-8">
                                     <div class="description-body">
-                                                <p>contextual information about a file, including attributes such as the file's name, size, type, content (e.g., signatures, headers, media), user/owner, permissions, timestamps, and other related properties. File metadata provides insights into a file's characteristics and can be used to detect malicious activity, unauthorized modifications, or other anomalies. Examples: </p><ul><li>File Ownership and Permissions: Checking the owner and permissions of a critical configuration file like /etc/passwd on Linux or C:\Windows\System32\config\SAM on Windows.</li><li>Timestamps: Analyzing the creation, modification, and access timestamps of a file.</li><li>File Content and Signatures: Extracting the headers of an executable file to verify its signature or detect packing/obfuscation.</li><li>File Attributes: Analyzing attributes like hidden, system, or read-only flags in Windows.</li><li>File Hashes: Generating MD5, SHA-1, or SHA-256 hashes of files to compare against threat intelligence feeds.</li><li>File Location: Monitoring files located in unusual directories or paths, such as temporary or user folders.</li></ul><p>This data component can be collected through the following measures:</p><p>Windows</p><ul><li>Sysinternals Tools: Use <code>AccessEnum</code> or <code>PSFile</code> to retrieve metadata about file access and permissions.</li><li>Windows Event Logs: Enable object access auditing and monitor events like 4663 (Object Access) and 5140 (A network share object was accessed).</li><li>PowerShell: Use Get-Item or Get-ChildItem cmdlets: <code>Get-ChildItem -Path "C:\Path\To\Directory" -Recurse | Select-Object Name, Length, LastWriteTime, Attributes</code></li></ul><p>Linux</p><ul><li>File System Commands: Use <code>ls -l</code> or stat to retrieve file metadata: <code>stat /path/to/file</code></li><li>Auditd: Configure audit rules to log metadata access: <code>auditctl -w /path/to/file -p wa -k file_metadata</code></li><li>Filesystem Integrity Tools: Tools like tripwire or AIDE (Advanced Intrusion Detection Environment) can monitor file metadata changes.</li></ul><p>macOS</p><ul><li>FSEvents: Use FSEvents to track file metadata changes.</li><li>Endpoint Security Framework (ESF): Capture metadata-related events via ESF APIs.</li><li>Command-Line Tools: Use ls -l or xattr for file attributes: <code>ls -l@ /path/to/file</code></li></ul><p>SIEM Integration</p><ul><li>Forward file metadata logs from endpoint or network devices to a SIEM for centralized analysis.</li></ul>
+                                                <p>contextual information about a file, including attributes such as the file's name, size, type, content (e.g., signatures, headers, media), user/owner, permissions, timestamps, and other related properties. File metadata provides insights into a file's characteristics and can be used to detect malicious activity, unauthorized modifications, or other anomalies. Examples: </p><ul><li>File Ownership and Permissions: Checking the owner and permissions of a critical configuration file like /etc/passwd on Linux or C:\Windows\System32\config\SAM on Windows.</li><li>Timestamps: Analyzing the creation, modification, and access timestamps of a file.</li><li>File Content and Signatures: Extracting the headers of an executable file to verify its signature or detect packing/obfuscation.</li><li>File Attributes: Analyzing attributes like hidden, system, or read-only flags in Windows.</li><li>File Hashes: Generating MD5, SHA-1, or SHA-256 hashes of files to compare against threat intelligence feeds.</li><li>File Location: Monitoring files located in unusual directories or paths, such as temporary or user folders.</li></ul>
 
                                     </div>
                             </div>
@@ -256,7 +256,7 @@
                                             </div>
                                             <div class="row card-data">
                                                 <div class="col-md-12">
-                                                    <span class="h5 card-title">Last Modified</span>: 21 October 2025
+                                                    <span class="h5 card-title">Last Modified</span>: 12 November 2025
                                                 </div>
                                             </div>
                                     </div>
@@ -296,7 +296,7 @@
                                             </tr>
                                             <tr>
                                                 <td>auditd:SYSCALL</td>
-                                                <td>path</td>
+                                                <td>PATH</td>
                                             </tr>
                                             <tr>
                                                 <td>auditd:SYSCALL</td>
@@ -608,15 +608,11 @@
                                             </tr>
                                             <tr>
                                                 <td>WinEventLog:Security</td>
-                                                <td>EventCode=4670</td>
+                                                <td>EventCode=4663, 4670, 4656</td>
                                             </tr>
                                             <tr>
                                                 <td>WinEventLog:Security</td>
                                                 <td>EventCode=4663, 4656, 4658</td>
-                                            </tr>
-                                            <tr>
-                                                <td>WinEventLog:Security</td>
-                                                <td>EventCode=4663</td>
                                             </tr>
                                             <tr>
                                                 <td>WinEventLog:Setup</td>
@@ -625,10 +621,6 @@
                                             <tr>
                                                 <td>WinEventLog:Sysmon</td>
                                                 <td>EventCode=15</td>
-                                            </tr>
-                                            <tr>
-                                                <td>WinEventLog:Sysmon</td>
-                                                <td>EventCode=15 </td>
                                             </tr>
                                             <tr>
                                                 <td>WinEventLog:Windows Defender</td>
@@ -1466,7 +1458,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3 col-footer">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v18.0&#013;Website  v4.4.0">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v18.1&#013;Website  v4.4.1">Website Changelog</a></u>
                                 </div>
                                 <div class="px-3">
                                     <u class="footer-link"><a href="/resources/legal-and-branding/privacy/#" class="footer-link" onclick="Osano.cm.showDrawer('osano-cm-dom-info-dialog-open')">Cookie Preferences</a></u>

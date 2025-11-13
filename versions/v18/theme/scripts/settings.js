@@ -1,3 +1,3 @@
 var base_url = "/versions/v18/";
-var build_uuid = "bfe0ec6f-9a90-a009-9a1b-f200d8786e9c";
+var build_uuid = "c3a6e041-5599-6cbb-ddc3-f2152d1abe8e";
 var tour_steps = {};
