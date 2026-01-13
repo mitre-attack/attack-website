@@ -14,159 +14,163 @@
 {% import 'macros/notes.html' as notes %}
 
 {% block head %}
-    {{ super () }}
-    {% if parsed.deprecated %}
-    <meta name="robots" content="noindex, nofollow">
-    {% endif %}
-{%  endblock %}
+{{ super () }}
+{% if parsed.deprecated %}
+<meta name="robots" content="noindex, nofollow">
+{% endif %}
+{% endblock %}
 
 {% block innerleft %}
 <!--stop-indexing-for-search-->
 <div id="v-tab" role="tablist" aria-orientation="vertical" class="h-100">
-        {{ navigation.sidenav(parsed.side_menu_data, output_file) }}
-    </div>
+  {{ navigation.sidenav(parsed.side_menu_data, output_file) }}
+</div>
 <!--start-indexing-for-search-->
 {% endblock %}
 
 {% block innerright %}
 {{ super () }}
 
-    <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="/">Home</a></li>
-        <li class="breadcrumb-item"><a href="/assets/">Assets</a></li>
-        <li class="breadcrumb-item">{{ parsed.name }}</li>
-    </ol>
-    <div class="tab-pane fade show active" id="v-{{pages.title}}" role="tabpanel" aria-labelledby="v-{{pages.title}}-tab"></div>
-    <div class="row">
-        <div class="col-xl-12">
-            <div class="jumbotron jumbotron-fluid">
-                <div class="container-fluid">
-                    <h1>{{ parsed.name }}</h1>
+<ol class="breadcrumb">
+  <li class="breadcrumb-item"><a href="/">Home</a></li>
+  <li class="breadcrumb-item"><a href="/assets/">Assets</a></li>
+  <li class="breadcrumb-item">{{ parsed.name }}</li>
+</ol>
+<div class="tab-pane fade show active" id="v-{{pages.title}}" role="tabpanel" aria-labelledby="v-{{pages.title}}-tab">
+</div>
+<div class="row">
+  <div class="col-xl-12">
+    <div class="jumbotron jumbotron-fluid">
+      <div class="container-fluid">
+        <h1>{{ parsed.name }}</h1>
 
-                    {% if parsed.deprecated %}
-                        {% if parsed.descr %}
-                            {{ deprecated.deprecated(clean_output.stixToHTML(parsed.descr, firstParagraphOnly=True)) }}
-                        {% else %}
-                            {{ deprecated.deprecated("This asset has been deprecated.") }}
-                        {% endif %}
-                    {% else %}
-                        <div class="row">
-                            <div class="col-md-8">
-                                {% if parsed.descr %}
-                                    <div class="description-body">
-                                        {{ clean_output.stixToHTML(parsed.descr, parsed.citations) }}
-                                    </div>
-                                {% endif %}
-                                {% if parsed.notes %}
-                                    {{ notes.notes_section(parsed.notes) }}
-                                {% endif %}
-                            </div>
-                            <div class="col-md-4">
-                                <div class="card">
-                                    <div class="card-body">
-                                        {% if parsed.attack_id %}
-                                            <div id="card-id" class="row card-data">
-                                                <div class="col-md-12">
-                                                    <span class="h5 card-title">ID</span>: {{ parsed.attack_id }}
-                                                </div>
-                                            </div>
-                                        {% endif %}
-                                        {% if parsed.platforms %}
-                                            <div class="row card-data">
-                                                <div class="col-md-1 px-0 text-center">
-                                                    <span data-toggle="tooltip" data-placement="left" title="" data-test-ignore="true" data-original-title="The system an adversary is operating within; could be an operating system or application">&#9432;</span>
-                                                </div>
-                                                <div class="col-md-11 pl-0">
-                                                    <span class="h5 card-title">{{ "Platform" if parsed.platforms | length < 2 else "Platforms" }}</span>: {{parsed.platforms}}
-                                                </div>
-                                            </div>
-                                        {% endif %}
-                                        {% if parsed.sectors %}
-                                            <div class="row card-data">
-                                                <div class="col-md-12">
-                                                    <span class="h5 card-title">{{ "Sector" if parsed.sectors | length < 2 else "Sectors" }}</span>: {{parsed.sectors}}
-                                                </div>
-                                            </div>
-                                        {% endif %}
-                                        {% if parsed.contributors_list %}
-                                            <div class="row card-data">
-                                                <div class="col-md-12">
-                                                    <span class="h5 card-title">Contributors</span>: {{ parsed.contributors_list|join("; ") }}
-                                                </div>
-                                            </div>
-                                        {% endif %}
-                                        {% if parsed.version %}
-                                            <div class="row card-data">
-                                                <div class="col-md-12">
-                                                    <span class="h5 card-title">Version</span>: {{ parsed.version }}
-                                                </div>
-                                            </div>
-                                        {% endif %}
-                                        {% if parsed.created %}
-                                            <div class="row card-data">
-                                                <div class="col-md-12">
-                                                    <span class="h5 card-title">Created</span>: {{ parsed.created }}
-                                                </div>
-                                            </div>
-                                        {% endif %}
-                                        {% if parsed.modified %}
-                                            <div class="row card-data">
-                                                <div class="col-md-12">
-                                                    <span class="h5 card-title">Last Modified</span>: {{ parsed.modified }}
-                                                </div>
-                                            </div>
-                                        {% endif %}
-                                    </div>
-                                </div>
-                                {% if parsed.versioning_feature %}
-                                    {{ versioning.permalink_button(output_file, parsed.attack_id)}}
-                                {% endif %}
-                            </div>
-                        </div>
-
-                        {% if parsed.related_assets_table %}
-                            <h2 class="pt-3" id="relatedAssets">Related Assets</h2>
-                            <table class="table table-bordered table-alternate mt-2" aria-describedby="related-assets-table">
-                                <thead>
-                                    <tr>
-                                        <th scope="col">Name</th>
-                                        <th scope="col">Sectors</th>
-                                        <th scope="col">Description</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% for related_asset in parsed.related_assets_table %}
-                                    <tr>
-                                        <td>{{ related_asset.name }}</td>
-                                        <td>{{ related_asset.sectors }}</td>
-                                        <td>
-                                            {{ clean_output.stixToHTML(related_asset.descr, parsed.citations) }}
-                                        </td>
-                                    </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
-                        {% endif %}
-
-                        {% if parsed.technique_table_data %}
-                            {{ navigator.layer_links(parsed.attack_id, "assets", parsed.layers) }}
-                            {{ techniques_used.techniques_used(parsed.technique_table_data, "Techniques", true, "", parsed.citations) }}
-                        {% endif %}
-
-                        {{ citations.reference_section(parsed.citations) }}
-                    {% endif %}
-                </div>
+        {% if parsed.deprecated %}
+        {% if parsed.descr %}
+        {{ deprecated.deprecated(clean_output.stixToHTML(parsed.descr, firstParagraphOnly=True)) }}
+        {% else %}
+        {{ deprecated.deprecated("This asset has been deprecated.") }}
+        {% endif %}
+        {% else %}
+        <div class="row">
+          <div class="col-md-8">
+            {% if parsed.descr %}
+            <div class="description-body">
+              {{ clean_output.stixToHTML(parsed.descr, parsed.citations) }}
             </div>
+            {% endif %}
+            {% if parsed.notes %}
+            {{ notes.notes_section(parsed.notes) }}
+            {% endif %}
+          </div>
+          <div class="col-md-4">
+            <div class="card">
+              <div class="card-body">
+                {% if parsed.attack_id %}
+                <div id="card-id" class="row card-data">
+                  <div class="col-md-12">
+                    <span class="h5 card-title">ID</span>: {{ parsed.attack_id }}
+                  </div>
+                </div>
+                {% endif %}
+                {% if parsed.platforms %}
+                <div class="row card-data">
+                  <div class="col-md-1 px-0 text-center">
+                    <span data-toggle="tooltip" data-placement="left" title="" data-test-ignore="true"
+                      data-original-title="The system an adversary is operating within; could be an operating system or application">&#9432;</span>
+                  </div>
+                  <div class="col-md-11 pl-0">
+                    <span class="h5 card-title">{{ "Platform" if parsed.platforms | length < 2 else "Platforms"
+                        }}</span>: {{parsed.platforms}}
+                  </div>
+                </div>
+                {% endif %}
+                {% if parsed.sectors %}
+                <div class="row card-data">
+                  <div class="col-md-12">
+                    <span class="h5 card-title">{{ "Sector" if parsed.sectors | length < 2 else "Sectors" }}</span>:
+                        {{parsed.sectors}}
+                  </div>
+                </div>
+                {% endif %}
+                {% if parsed.contributors_list %}
+                <div class="row card-data">
+                  <div class="col-md-12">
+                    <span class="h5 card-title">Contributors</span>: {{ parsed.contributors_list|join("; ") }}
+                  </div>
+                </div>
+                {% endif %}
+                {% if parsed.version %}
+                <div class="row card-data">
+                  <div class="col-md-12">
+                    <span class="h5 card-title">Version</span>: {{ parsed.version }}
+                  </div>
+                </div>
+                {% endif %}
+                {% if parsed.created %}
+                <div class="row card-data">
+                  <div class="col-md-12">
+                    <span class="h5 card-title">Created</span>: {{ parsed.created }}
+                  </div>
+                </div>
+                {% endif %}
+                {% if parsed.modified %}
+                <div class="row card-data">
+                  <div class="col-md-12">
+                    <span class="h5 card-title">Last Modified</span>: {{ parsed.modified }}
+                  </div>
+                </div>
+                {% endif %}
+              </div>
+            </div>
+            {% if parsed.versioning_feature %}
+            {{ versioning.permalink_button(output_file, parsed.attack_id)}}
+            {% endif %}
+          </div>
         </div>
+
+        {% if parsed.related_assets_table %}
+        <h2 class="pt-3" id="relatedAssets">Related Assets</h2>
+        <table class="table table-bordered table-alternate mt-2" aria-describedby="related-assets-table">
+          <thead>
+            <tr>
+              <th scope="col">Name</th>
+              <th scope="col">Sectors</th>
+              <th scope="col">Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for related_asset in parsed.related_assets_table %}
+            <tr>
+              <td>{{ related_asset.name }}</td>
+              <td>{{ related_asset.sectors }}</td>
+              <td>
+                {{ clean_output.stixToHTML(related_asset.descr, parsed.citations) }}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        {% endif %}
+
+        {% if parsed.technique_table_data %}
+        {{ navigator.layer_links(parsed.attack_id, "assets", parsed.layers) }}
+        {{ techniques_used.techniques_used(parsed.technique_table_data, "Techniques", true, "", parsed.citations) }}
+        {% endif %}
+
+        {{ citations.reference_section(parsed.citations) }}
+        {% endif %}
+      </div>
     </div>
+  </div>
+</div>
 
 {% endblock %}
 
 {% block scripts %}
-    {{ super() }}
-    <!--SCRIPTS-->
-    <script src="/theme/scripts/navigation.js"></script>
-    <script src="/theme/scripts/bootstrap-tourist.js"></script>
-    <script src="/theme/scripts/settings.js"></script>
-    <script src="/theme/scripts/tour/tour-relationships.js"></script>
+{{ super() }}
+<!--SCRIPTS-->
+<script src="/theme/scripts/navigation.js"></script>
+<script src="/theme/scripts/bootstrap-tourist.js"></script>
+<script src="/theme/scripts/settings.js"></script>
+<script src="/theme/scripts/tour/tour-relationships.js"></script>
 {% endblock %}

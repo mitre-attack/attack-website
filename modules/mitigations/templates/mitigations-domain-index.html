@@ -1,14 +1,14 @@
-{% extends "general/two-column.html" %} 
+{% extends "general/two-column.html" %}
 {% import 'macros/navigation.html' as navigation %}
 {% import 'macros/clean_output.html' as clean_output %}
 
 {% set parsed = page.data | from_json %}
 {% if parsed.domain == "mobile" %}
-    {% set title = "Mitigations - Mobile | MITRE ATT&CK&reg;" -%}
-{% elif parsed.domain == "enterprise" %} 
-    {% set title = "Mitigations - Enterprise | MITRE ATT&CK&reg;" -%}
-{% else %} 
-    {% set title = "Mitigations - ICS | MITRE ATT&CK&reg;" -%}
+{% set title = "Mitigations - Mobile | MITRE ATT&CK&reg;" -%}
+{% elif parsed.domain == "enterprise" %}
+{% set title = "Mitigations - Enterprise | MITRE ATT&CK&reg;" -%}
+{% else %}
+{% set title = "Mitigations - ICS | MITRE ATT&CK&reg;" -%}
 {% endif %}
 {% set active_page = "mitigations" -%}
 
@@ -19,79 +19,81 @@
 {% endblock %}
 
 {% block innerright %}
-    {{ super () }}
-    <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="/">Home</a></li>
-        <li class="breadcrumb-item"><a href="/mitigations/ics/">Mitigations</a></li>
-        {% if parsed.domain == "mobile" %}
-            <li class="breadcrumb-item">Mobile</li>
-        {% elif parsed.domain == "enterprise" %}
-            <li class="breadcrumb-item">Enterprise</li>
-        {% else %}
-            <li class="breadcrumb-item">ICS</li>
-        {% endif %}
-    </ol>
-    <div class="tab-pane fade show active" id="v-{{pages.title}}" role="tabpanel" aria-labelledby="v-{{pages.title}}-tab"></div>
-    <div class="row">
-        <div class="col-xl-12">
-            <div class="jumbotron jumbotron-fluid">
-                <div class="container-fluid">
-                    <div class="overflow-x-auto">
-                        <div class="row">
-                            <div class="col-md-10">
-                                <h1>
-                                    {% if parsed.domain == "mobile" %}
-                                        Mobile Mitigations
-                                    {% elif parsed.domain == "enterprise" %}
-                                        Enterprise Mitigations
-                                    {% elif parsed.domain == "ics" %}
-                                        ICS Mitigations
-                                    {% endif %}
-                                </h1>
+{{ super () }}
+<ol class="breadcrumb">
+  <li class="breadcrumb-item"><a href="/">Home</a></li>
+  <li class="breadcrumb-item"><a href="/mitigations/ics/">Mitigations</a></li>
+  {% if parsed.domain == "mobile" %}
+  <li class="breadcrumb-item">Mobile</li>
+  {% elif parsed.domain == "enterprise" %}
+  <li class="breadcrumb-item">Enterprise</li>
+  {% else %}
+  <li class="breadcrumb-item">ICS</li>
+  {% endif %}
+</ol>
+<div class="tab-pane fade show active" id="v-{{pages.title}}" role="tabpanel" aria-labelledby="v-{{pages.title}}-tab">
+</div>
+<div class="row">
+  <div class="col-xl-12">
+    <div class="jumbotron jumbotron-fluid">
+      <div class="container-fluid">
+        <div class="overflow-x-auto">
+          <div class="row">
+            <div class="col-md-10">
+              <h1>
+                {% if parsed.domain == "mobile" %}
+                Mobile Mitigations
+                {% elif parsed.domain == "enterprise" %}
+                Enterprise Mitigations
+                {% elif parsed.domain == "ics" %}
+                ICS Mitigations
+                {% endif %}
+              </h1>
 
-                                <p>
-                                    Mitigations represent security concepts and classes of technologies that can be used to prevent a technique or sub-technique from being successfully executed.
-                                </p>
-                            </div>
-                            <div class="col-md-2 div-count">
-                                <h6 class="table-object-count">Mitigations: {{parsed.mitigation_list_len}}</h6>
-                            </div>
-                        </div>
-                        <div class="tables-mobile">
-                        <table class="table table-bordered table-alternate mt-2">
-                            <thead>
-                                <tr>
-                                    <th scope="col">ID</th>
-                                    <th scope="col">Name</th>
-                                    <th scope="col">Description</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            {% for row in parsed.mitigation_table if not row.deprecated %}
-                                <tr>
-                                    <td>
-                                        <a href="/mitigations/{{row.id}}"> {{row.id}} </a>
-                                    </td>
-                                    <td>
-                                        <a href="/mitigations/{{row.id}}"> {{row.name}} </a>
-                                    </td>
-                                    <td>
-                                        {{clean_output.stixToHTML(row.descr, firstParagraphOnly=True)}}
-                                    </td>
-                                </tr>
-                            {% endfor %}
-                            </tbody>
-                        </table>
-                        </div>
-                    </div>
-                </div>
+              <p>
+                Mitigations represent security concepts and classes of technologies that can be used to prevent a
+                technique or sub-technique from being successfully executed.
+              </p>
             </div>
+            <div class="col-md-2 div-count">
+              <h6 class="table-object-count">Mitigations: {{parsed.mitigation_list_len}}</h6>
+            </div>
+          </div>
+          <div class="tables-mobile">
+            <table class="table table-bordered table-alternate mt-2">
+              <thead>
+                <tr>
+                  <th scope="col">ID</th>
+                  <th scope="col">Name</th>
+                  <th scope="col">Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for row in parsed.mitigation_table if not row.deprecated %}
+                <tr>
+                  <td>
+                    <a href="/mitigations/{{row.id}}"> {{row.id}} </a>
+                  </td>
+                  <td>
+                    <a href="/mitigations/{{row.id}}"> {{row.name}} </a>
+                  </td>
+                  <td>
+                    {{clean_output.stixToHTML(row.descr, firstParagraphOnly=True)}}
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
         </div>
+      </div>
     </div>
+  </div>
+</div>
 {% endblock %}
 
 {% block scripts %}
-    {{ super() }}
-    <!--SCRIPTS-->
-    <script src="/theme/scripts/sidebar-load-all.js"></script>
+{{ super() }}
+<!--SCRIPTS-->
+<script src="/theme/scripts/sidebar-load-all.js"></script>
 {% endblock %}
