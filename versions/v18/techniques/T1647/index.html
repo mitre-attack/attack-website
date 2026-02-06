@@ -3,7 +3,7 @@
 <html lang='en'>
 
 <head>
-        <script src=https://cmp.osano.com/AzyhULTdPkqmy4aDN/83f786b4-d60d-4938-b70a-73afd166380a/osano.js></script>
+    <script src=https://cmp.osano.com/AzyhULTdPkqmy4aDN/83f786b4-d60d-4938-b70a-73afd166380a/osano.js></script>
     <style>
         .osano-cm-widget{display: none;}
     </style>
@@ -20,7 +20,8 @@
         <meta name='viewport' content='width=device-width, initial-scale=1,shrink-to-fit=no'>
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <link rel='shortcut icon' href='/versions/v18/theme/favicon.ico' type='image/x-icon'>
-        <title>Plist File Modification, Technique T1647 - Enterprise | MITRE ATT&CK&reg;</title>
+        <title>Plist File Modification, Technique T1647 - Enterprise | MITRE
+ATT&CK&reg;</title>
         <!-- USWDS CSS -->
         <!-- Bootstrap CSS -->
         <link rel='stylesheet' href='/versions/v18/theme/style/vendors/bootstrap.min.css' />
@@ -167,6 +168,9 @@
                             <a href="/resources/engage-with-attack/benefactors/"  class="nav-link" ><b>Benefactors</b></a>
                         </li>
                         <li class="nav-item">
+                            <a href="/resources/engage-with-attack/contribute/"  class="nav-link" ><b>Contribute</b></a>
+                        </li>
+                        <li class="nav-item">
                                 <a href="https://medium.com/mitre-attack/" target="_blank" class="nav-link">
         <b>Blog</b>&nbsp;
         <img src="/versions/v18/theme/images/external-site.svg" alt="External site" class="external-icon" />
@@ -187,10 +191,6 @@
             <div class="col px-0">
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <div class="container-fluid version-banner"><div class="icon-inline baseline mr-1"><img src="/versions/v18/theme/images/icon-warning-24px.svg"></div>Currently viewing <a href="https://github.com/mitre/cti/releases/tag/ATT%26CK-v18.1" target="_blank">ATT&CK v18.1</a> which is the current version of ATT&CK. <a href="/resources/versions/">Learn more about the versioning system</a> or <a href="/">see the live site</a>.</div>
-                    <div class="container-fluid d-none">
-                        ATT&CK v18 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v18-8f82d839ee9e'>blog post</a> or <a href='https://attack.mitre.org/resources/updates/'>changelog</a> for more information.
-
-                    </div>
             </div>
         </div>
         <div class="row flex-grow-1 flex-shrink-0">
@@ -210,85 +210,88 @@
      
     <div class="tab-content col-xl-9 pt-4" id="v-tabContent">
         <div class="tab-pane fade show active" id="v-attckmatrix" role="tabpanel" aria-labelledby="v-attckmatrix-tab">
-    
-    <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="/versions/v18/">Home</a></li>
-            <li class="breadcrumb-item"><a href="/versions/v18/techniques/enterprise">Techniques</a></li>
-            <li class="breadcrumb-item"><a href="/versions/v18/techniques/enterprise">Enterprise</a></li>
-        <li class="breadcrumb-item">Plist File Modification</li>
-    </ol>
-    <div class="tab-pane fade show active" id="v-" role="tabpanel" aria-labelledby="v--tab"></div>
-    <div class="row">
-        <div class="col-xl-12">
-            <div class="jumbotron jumbotron-fluid">
-                <div class="container-fluid">
-                    <h1 id="">
-                        Plist File Modification
-                    </h1>
 
-                        <div class="row">
-                            <div class="col-md-8">
+<ol class="breadcrumb">
+  <li class="breadcrumb-item"><a href="/versions/v18/">Home</a></li>
+  <li class="breadcrumb-item"><a href="/versions/v18/techniques/enterprise">Techniques</a></li>
+  <li class="breadcrumb-item"><a href="/versions/v18/techniques/enterprise">Enterprise</a></li>
+  <li class="breadcrumb-item">Plist File Modification</li>
+</ol>
+<div class="tab-pane fade show active" id="v-" role="tabpanel" aria-labelledby="v--tab">
+</div>
+<div class="row">
+  <div class="col-xl-12">
+    <div class="jumbotron jumbotron-fluid">
+      <div class="container-fluid">
+        <h1 id="">
+          Plist File Modification
+        </h1>
 
-                                    <div class="description-body">
-                                                <p>Adversaries may modify property list files (plist files) to enable other malicious activity, while also potentially evading and bypassing system defenses. macOS applications use plist files, such as the <code>info.plist</code> file, to store properties and configuration settings that inform the operating system how to handle the application at runtime. Plist files are structured metadata in key-value pairs formatted in XML based on Apple's Core Foundation DTD. Plist files can be saved in text or binary format.<span onclick=scrollToRef('scite-1') id="scite-ref-1-a" class="scite-citeref-number" title="FileInfo.com team. (2019, November 26). .PLIST File Extension. Retrieved October 12, 2021."data-reference="fileinfo plist file description"><sup><a href="https://fileinfo.com/extension/plist" target="_blank" data-hasqtip="0" aria-describedby="qtip-0">[1]</a></sup></span> </p><p>Adversaries can modify key-value pairs in plist files to influence system behaviors, such as hiding the execution of an application (i.e. <a href="/versions/v18/techniques/T1564/003">Hidden Window</a>) or running additional commands for persistence (ex: <a href="/versions/v18/techniques/T1543/001">Launch Agent</a>/<a href="/versions/v18/techniques/T1543/004">Launch Daemon</a> or <a href="/versions/v18/techniques/T1547/007">Re-opened Applications</a>).</p><p>For example, adversaries can add a malicious application path to the <code>~/Library/Preferences/com.apple.dock.plist</code> file, which controls apps that appear in the Dock. Adversaries can also modify the <code>LSUIElement</code> key in an application’s <code>info.plist</code> file  to run the app in the background. Adversaries can also insert key-value pairs to insert environment variables, such as <code>LSEnvironment</code>, to enable persistence via <a href="/versions/v18/techniques/T1574/006">Dynamic Linker Hijacking</a>.<span onclick=scrollToRef('scite-2') id="scite-ref-2-a" class="scite-citeref-number" title="Patrick Wardle. (2022, January 1). The Art of Mac Malware Volume 0x1:Analysis. Retrieved April 19, 2022."data-reference="wardle chp2 persistence"><sup><a href="https://taomm.org/PDFs/vol1/CH%200x02%20Persistence.pdf" target="_blank" data-hasqtip="1" aria-describedby="qtip-1">[2]</a></sup></span><span onclick=scrollToRef('scite-3') id="scite-ref-3-a" class="scite-citeref-number" title="ESET. (2012, January 1). OSX/Flashback. Retrieved April 19, 2022."data-reference="eset_osx_flashback"><sup><a href="https://www.welivesecurity.com/wp-content/uploads/200x/white-papers/osx_flashback.pdf" target="_blank" data-hasqtip="2" aria-describedby="qtip-2">[3]</a></sup></span></p>
+        <div class="row">
+          <div class="col-md-8">
 
-                                    </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="card">
-                                    <div class="card-body">
-                                            <div class="row card-data" id="card-id">
-                                                <div class="col-md-1 px-0 text-center"></div>
-                                                <div class="col-md-11 pl-0">
-                                                    <span class="h5 card-title">ID:&nbsp;</span>T1647
-                                                </div>
-                                            </div>
-                                        <!--stop-indexing-for-search-->
-                                        <div class="row card-data">
-                                            <div class="col-md-1 px-0 text-center"></div>
-                                            <div class="col-md-11 pl-0">
-                                                    <span class="h5 card-title">Sub-techniques:&nbsp;</span>
-                                                        No sub-techniques
-                                            </div>
-                                        </div>
-                                        <!--start-indexing-for-search-->
-                                            <div id="card-tactics" class="row card-data">
-                                                <div class="col-md-1 px-0 text-center">
-                                                    <span data-toggle="tooltip" data-placement="left" title="" data-test-ignore="true" data-original-title="The tactic objectives that the (sub-)technique can be used to accomplish">&#9432;</span>
-                                                </div>
-                                                <div class="col-md-11 pl-0">
-                                                    <span class="h5 card-title">Tactic:</span>
-                                                        <a href="/versions/v18/tactics/TA0005">Defense Evasion</a>                                                </div>
-                                            </div>
-                                            <div class="row card-data">
-                                                <div class="col-md-1 px-0 text-center">
-                                                    <span data-toggle="tooltip" data-placement="left" title="" data-test-ignore="true" data-original-title="The system an adversary is operating within; could be an operating system or application">&#9432;</span>
-                                                </div>
-                                                <div class="col-md-11 pl-0">
-                                                    <span class="h5 card-title">Platforms:&nbsp;</span>macOS
-                                                </div>
-                                            </div>
-                                            <div class="row card-data">
-                                                <div class="col-md-1 px-0 text-center"></div>
-                                                <div class="col-md-11 pl-0">
-                                                    <span class="h5 card-title">Version:&nbsp;</span>1.0
-                                                </div>
-                                            </div>
-                                            <div class="row card-data">
-                                                <div class="col-md-1 px-0 text-center"></div>
-                                                <div class="col-md-11 pl-0">
-                                                    <span class="h5 card-title">Created:&nbsp;</span>09 April 2022
-                                                </div>
-                                            </div>
-                                            <div class="row card-data">
-                                                <div class="col-md-1 px-0 text-center"></div>
-                                                <div class="col-md-11 pl-0">
-                                                    <span class="h5 card-title">Last Modified:&nbsp;</span>24 October 2025
-                                                </div>
-                                            </div>
-                                    </div>
-                                </div>
-                                    <div class="text-center pt-2 version-button permalink">
+            <div class="description-body">
+                      <p>Adversaries may modify property list files (plist files) to enable other malicious activity, while also potentially evading and bypassing system defenses. macOS applications use plist files, such as the <code>info.plist</code> file, to store properties and configuration settings that inform the operating system how to handle the application at runtime. Plist files are structured metadata in key-value pairs formatted in XML based on Apple's Core Foundation DTD. Plist files can be saved in text or binary format.<span onclick=scrollToRef('scite-1') id="scite-ref-1-a" class="scite-citeref-number" title="FileInfo.com team. (2019, November 26). .PLIST File Extension. Retrieved October 12, 2021."data-reference="fileinfo plist file description"><sup><a href="https://fileinfo.com/extension/plist" target="_blank" data-hasqtip="0" aria-describedby="qtip-0">[1]</a></sup></span> </p><p>Adversaries can modify key-value pairs in plist files to influence system behaviors, such as hiding the execution of an application (i.e. <a href="/versions/v18/techniques/T1564/003">Hidden Window</a>) or running additional commands for persistence (ex: <a href="/versions/v18/techniques/T1543/001">Launch Agent</a>/<a href="/versions/v18/techniques/T1543/004">Launch Daemon</a> or <a href="/versions/v18/techniques/T1547/007">Re-opened Applications</a>).</p><p>For example, adversaries can add a malicious application path to the <code>~/Library/Preferences/com.apple.dock.plist</code> file, which controls apps that appear in the Dock. Adversaries can also modify the <code>LSUIElement</code> key in an application’s <code>info.plist</code> file  to run the app in the background. Adversaries can also insert key-value pairs to insert environment variables, such as <code>LSEnvironment</code>, to enable persistence via <a href="/versions/v18/techniques/T1574/006">Dynamic Linker Hijacking</a>.<span onclick=scrollToRef('scite-2') id="scite-ref-2-a" class="scite-citeref-number" title="Patrick Wardle. (2022, January 1). The Art of Mac Malware Volume 0x1:Analysis. Retrieved April 19, 2022."data-reference="wardle chp2 persistence"><sup><a href="https://taomm.org/PDFs/vol1/CH%200x02%20Persistence.pdf" target="_blank" data-hasqtip="1" aria-describedby="qtip-1">[2]</a></sup></span><span onclick=scrollToRef('scite-3') id="scite-ref-3-a" class="scite-citeref-number" title="ESET. (2012, January 1). OSX/Flashback. Retrieved April 19, 2022."data-reference="eset_osx_flashback"><sup><a href="https://www.welivesecurity.com/wp-content/uploads/200x/white-papers/osx_flashback.pdf" target="_blank" data-hasqtip="2" aria-describedby="qtip-2">[3]</a></sup></span></p>
+
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card">
+              <div class="card-body">
+                <div class="row card-data" id="card-id">
+                  <div class="col-md-1 px-0 text-center"></div>
+                  <div class="col-md-11 pl-0">
+                    <span class="h5 card-title">ID:&nbsp;</span>T1647
+                  </div>
+                </div>
+                <!--stop-indexing-for-search-->
+                <div class="row card-data">
+                  <div class="col-md-1 px-0 text-center"></div>
+                  <div class="col-md-11 pl-0">
+                    <span class="h5 card-title">Sub-techniques:&nbsp;</span>
+                    No sub-techniques
+                  </div>
+                </div>
+                <!--start-indexing-for-search-->
+                <div id="card-tactics" class="row card-data">
+                  <div class="col-md-1 px-0 text-center">
+                    <span data-toggle="tooltip" data-placement="left" title="" data-test-ignore="true"
+                      data-original-title="The tactic objectives that the (sub-)technique can be used to accomplish">&#9432;</span>
+                  </div>
+                  <div class="col-md-11 pl-0">
+                    <span class="h5 card-title">Tactic:</span>
+                        <a href="/versions/v18/tactics/TA0005">Defense Evasion</a>                  </div>
+                </div>
+                <div class="row card-data">
+                  <div class="col-md-1 px-0 text-center">
+                    <span data-toggle="tooltip" data-placement="left" title="" data-test-ignore="true"
+                      data-original-title="The system an adversary is operating within; could be an operating system or application">&#9432;</span>
+                  </div>
+                  <div class="col-md-11 pl-0">
+                    <span class="h5 card-title">Platforms:&nbsp;</span>macOS
+                  </div>
+                </div>
+                <div class="row card-data">
+                  <div class="col-md-1 px-0 text-center"></div>
+                  <div class="col-md-11 pl-0">
+                    <span class="h5 card-title">Version:&nbsp;</span>1.0
+                  </div>
+                </div>
+                <div class="row card-data">
+                  <div class="col-md-1 px-0 text-center"></div>
+                  <div class="col-md-11 pl-0">
+                    <span class="h5 card-title">Created:&nbsp;</span>09 April 2022
+                  </div>
+                </div>
+                <div class="row card-data">
+                  <div class="col-md-1 px-0 text-center"></div>
+                  <div class="col-md-11 pl-0">
+                    <span class="h5 card-title">Last Modified:&nbsp;</span>24 October 2025
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="text-center pt-2 version-button permalink">
     <div class="live">
         <a data-toggle="tooltip" 
            data-placement="bottom" 
@@ -303,74 +306,74 @@
     </div>
 </div>
 
-                            </div>
-                        </div>
-                            <h2 class="pt-3" id ="examples">Procedure Examples</h2>
-                            <div class="tables-mobile">
-                            <table class="table table-bordered table-alternate mt-2">
-                                <thead>
-                                    <tr>
-                                        <th scope="col">ID</th>
-                                        <th scope="col">Name</th>
-                                        <th scope="col">Description</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                        <tr>
-                                            <td>
-                                                <a href="/versions/v18/software/S1153"> S1153 </a>
-                                            </td>
-                                            <td>
-                                                <a href="/versions/v18/software/S1153"> Cuckoo Stealer </a>
-                                            </td>
-                                            <td>
-                                                            <p><a href="/versions/v18/software/S1153">Cuckoo Stealer</a> can create and populate property list (plist) files to enable execution.<span onclick=scrollToRef('scite-4') id="scite-ref-4-a" class="scite-citeref-number" title="Kohler, A. and Lopez, C. (2024, April 30). Malware: Cuckoo Behaves Like Cross Between Infostealer and Spyware. Retrieved August 20, 2024."data-reference="Kandji Cuckoo April 2024"><sup><a href="https://www.kandji.io/blog/malware-cuckoo-infostealer-spyware" target="_blank" data-hasqtip="3" aria-describedby="qtip-3">[4]</a></sup></span><span onclick=scrollToRef('scite-5') id="scite-ref-5-a" class="scite-citeref-number" title="Stokes, P. (2024, May 9). macOS Cuckoo Stealer | Ensuring Detection and Defense as New Samples Rapidly Emerge. Retrieved August 20, 2024."data-reference="SentinelOne Cuckoo Stealer May 2024"><sup><a href="https://www.sentinelone.com/blog/macos-cuckoo-stealer-ensuring-detection-and-defense-as-new-samples-rapidly-emerge/" target="_blank" data-hasqtip="4" aria-describedby="qtip-4">[5]</a></sup></span></p>
+          </div>
+        </div>
+        <h2 class="pt-3" id="examples">Procedure Examples</h2>
+        <div class="tables-mobile">
+          <table class="table table-bordered table-alternate mt-2">
+            <thead>
+              <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Name</th>
+                <th scope="col">Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <a href="/versions/v18/software/S1153"> S1153 </a>
+                </td>
+                <td>
+                  <a href="/versions/v18/software/S1153"> Cuckoo Stealer </a>
+                </td>
+                <td>
+                          <p><a href="/versions/v18/software/S1153">Cuckoo Stealer</a> can create and populate property list (plist) files to enable execution.<span onclick=scrollToRef('scite-4') id="scite-ref-4-a" class="scite-citeref-number" title="Kohler, A. and Lopez, C. (2024, April 30). Malware: Cuckoo Behaves Like Cross Between Infostealer and Spyware. Retrieved August 20, 2024."data-reference="Kandji Cuckoo April 2024"><sup><a href="https://www.kandji.io/blog/malware-cuckoo-infostealer-spyware" target="_blank" data-hasqtip="3" aria-describedby="qtip-3">[4]</a></sup></span><span onclick=scrollToRef('scite-5') id="scite-ref-5-a" class="scite-citeref-number" title="Stokes, P. (2024, May 9). macOS Cuckoo Stealer | Ensuring Detection and Defense as New Samples Rapidly Emerge. Retrieved August 20, 2024."data-reference="SentinelOne Cuckoo Stealer May 2024"><sup><a href="https://www.sentinelone.com/blog/macos-cuckoo-stealer-ensuring-detection-and-defense-as-new-samples-rapidly-emerge/" target="_blank" data-hasqtip="4" aria-describedby="qtip-4">[5]</a></sup></span></p>
 
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <a href="/versions/v18/software/S0658"> S0658 </a>
-                                            </td>
-                                            <td>
-                                                <a href="/versions/v18/software/S0658"> XCSSET </a>
-                                            </td>
-                                            <td>
-                                                            <p>In older versions, <a href="/versions/v18/software/S0658">XCSSET</a> uses the <code>plutil</code> command to modify the <code>LSUIElement</code>, <code>DFBundleDisplayName</code>, and <code>CFBundleIdentifier</code> keys in the <code>/Contents/Info.plist</code> file to change how <a href="/versions/v18/software/S0658">XCSSET</a> is visible on the system. In later versions, <a href="/versions/v18/software/S0658">XCSSET</a> leverages a third-party notarized <code>dockutil</code> tool to modify the <code>.plist</code> file responsible for presenting applications to the user in the Dock and LaunchPad to point to a malicious application.<span onclick=scrollToRef('scite-6') id="scite-ref-6-a" class="scite-citeref-number" title="Mac Threat Response, Mobile Research Team. (2020, August 13). The XCSSET Malware: Inserts Malicious Code Into Xcode Projects, Performs UXSS Backdoor Planting in Safari, and Leverages Two Zero-day Exploits. Retrieved October 5, 2021."data-reference="trendmicro xcsset xcode project 2020"><sup><a href="https://documents.trendmicro.com/assets/pdf/XCSSET_Technical_Brief.pdf" target="_blank" data-hasqtip="5" aria-describedby="qtip-5">[6]</a></sup></span><span onclick=scrollToRef('scite-7') id="scite-ref-7-a" class="scite-citeref-number" title="Microsoft Threat Intelligence. (2025, March 11). New XCSSET malware adds new obfuscation, persistence techniques to infect Xcode projects. Retrieved April 2, 2025."data-reference="Microsoft March 2025 XCSSET"><sup><a href="https://www.microsoft.com/en-us/security/blog/2025/03/11/new-xcsset-malware-adds-new-obfuscation-persistence-techniques-to-infect-xcode-projects/" target="_blank" data-hasqtip="6" aria-describedby="qtip-6">[7]</a></sup></span></p>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <a href="/versions/v18/software/S0658"> S0658 </a>
+                </td>
+                <td>
+                  <a href="/versions/v18/software/S0658"> XCSSET </a>
+                </td>
+                <td>
+                          <p>In older versions, <a href="/versions/v18/software/S0658">XCSSET</a> uses the <code>plutil</code> command to modify the <code>LSUIElement</code>, <code>DFBundleDisplayName</code>, and <code>CFBundleIdentifier</code> keys in the <code>/Contents/Info.plist</code> file to change how <a href="/versions/v18/software/S0658">XCSSET</a> is visible on the system. In later versions, <a href="/versions/v18/software/S0658">XCSSET</a> leverages a third-party notarized <code>dockutil</code> tool to modify the <code>.plist</code> file responsible for presenting applications to the user in the Dock and LaunchPad to point to a malicious application.<span onclick=scrollToRef('scite-6') id="scite-ref-6-a" class="scite-citeref-number" title="Mac Threat Response, Mobile Research Team. (2020, August 13). The XCSSET Malware: Inserts Malicious Code Into Xcode Projects, Performs UXSS Backdoor Planting in Safari, and Leverages Two Zero-day Exploits. Retrieved October 5, 2021."data-reference="trendmicro xcsset xcode project 2020"><sup><a href="https://documents.trendmicro.com/assets/pdf/XCSSET_Technical_Brief.pdf" target="_blank" data-hasqtip="5" aria-describedby="qtip-5">[6]</a></sup></span><span onclick=scrollToRef('scite-7') id="scite-ref-7-a" class="scite-citeref-number" title="Microsoft Threat Intelligence. (2025, March 11). New XCSSET malware adds new obfuscation, persistence techniques to infect Xcode projects. Retrieved April 2, 2025."data-reference="Microsoft March 2025 XCSSET"><sup><a href="https://www.microsoft.com/en-us/security/blog/2025/03/11/new-xcsset-malware-adds-new-obfuscation-persistence-techniques-to-infect-xcode-projects/" target="_blank" data-hasqtip="6" aria-describedby="qtip-6">[7]</a></sup></span></p>
 
-                                            </td>
-                                        </tr>
-                                </tbody>
-                            </table>
-                            </div>
-                            <h2 class="pt-3" id ="mitigations">Mitigations</h2>
-                            <div class="tables-mobile">
-                                <table class="table table-bordered table-alternate mt-2">
-                                    <thead>
-                                        <tr>
-                                            <th scope="col">ID</th>
-                                            <th scope="col">Mitigation</th>
-                                            <th scope="col">Description</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                            <tr>
-                                                <td>
-                                                    <a href="/versions/v18/mitigations/M1013"> M1013 </a>
-                                                </td>
-                                                <td>
-                                                    <a href="/versions/v18/mitigations/M1013"> Application Developer Guidance </a>
-                                                </td>
-                                                <td>
-                                                                <p>Ensure applications are using Apple's developer guidance which enables hardened runtime.<span onclick=scrollToRef('scite-8') id="scite-ref-8-a" class="scite-citeref-number" title="Apple Inc.. (2021, January 1). Hardened Runtime: Manage security protections and resource access for your macOS apps.. Retrieved March 24, 2021."data-reference="Apple Developer Doco Hardened Runtime"><sup><a href="https://developer.apple.com/documentation/security/hardened_runtime" target="_blank" data-hasqtip="7" aria-describedby="qtip-7">[8]</a></sup></span></p>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <h2 class="pt-3" id="mitigations">Mitigations</h2>
+        <div class="tables-mobile">
+          <table class="table table-bordered table-alternate mt-2">
+            <thead>
+              <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Mitigation</th>
+                <th scope="col">Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <a href="/versions/v18/mitigations/M1013"> M1013 </a>
+                </td>
+                <td>
+                  <a href="/versions/v18/mitigations/M1013"> Application Developer Guidance </a>
+                </td>
+                <td>
+                          <p>Ensure applications are using Apple's developer guidance which enables hardened runtime.<span onclick=scrollToRef('scite-8') id="scite-ref-8-a" class="scite-citeref-number" title="Apple Inc.. (2021, January 1). Hardened Runtime: Manage security protections and resource access for your macOS apps.. Retrieved March 24, 2021."data-reference="Apple Developer Doco Hardened Runtime"><sup><a href="https://developer.apple.com/documentation/security/hardened_runtime" target="_blank" data-hasqtip="7" aria-describedby="qtip-7">[8]</a></sup></span></p>
 
-                                                </td>
-                                            </tr>
-                                    </tbody>
-                                </table>
-                                </div>
-                                <h2 class="pt-3" id="detection">Detection Strategy</h2>
-                                <div class="tables-mobile">
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <h2 class="pt-3" id="detection">Detection Strategy</h2>
+        <div class="tables-mobile">
 <table class="table datasources-table table-bordered">
     <thead>
         <tr>
@@ -401,7 +404,7 @@
 </div>
 
 
-                            <h2 class="pt-3" id="references">References</h2>
+                <h2 class="pt-3" id="references">References</h2>
 
         <div class="row">
             <div class="col">
@@ -512,11 +515,11 @@
         </div>
 
 
-                </div>
-            </div>
-        </div>
+      </div>
     </div>
-    
+  </div>
+</div>
+
         </div>
     </div>
 
@@ -625,7 +628,7 @@
 <!--SCRIPTS-->
 <script src="/versions/v18/theme/scripts/bootstrap-tourist.js"></script>
 <script src="/versions/v18/theme/scripts/settings.js"></script>
-    <script src="/versions/v18/theme/scripts/tour/tour-techniques.js"></script>
+<script src="/versions/v18/theme/scripts/tour/tour-techniques.js"></script>
 <script src="/versions/v18/theme/scripts/sidebar-load-all.js"></script>
 </body>
 </html>
