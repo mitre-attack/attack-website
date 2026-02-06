@@ -12,11 +12,11 @@
 {% set active_page = "detectionstrategies" -%}
 
 {% block head %}
-    {{ super () }}
-    {% if parsed.deprecated %}
-        <meta name="robots" content="noindex, nofollow">
-    {% endif %}
-{%  endblock %}
+{{ super () }}
+{% if parsed.deprecated %}
+<meta name="robots" content="noindex, nofollow">
+{% endif %}
+{% endblock %}
 
 {% block innerleft %}
 <!--stop-indexing-for-search-->
@@ -27,200 +27,203 @@
 {% block innerright %}
 {{ super () }}
 
-    <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="/">Home</a></li>
-        <li class="breadcrumb-item"><a href="/detectionstrategies/">Detection Strategies</a></li>
-        <li class="breadcrumb-item">{{ parsed.name }}</li>
-    </ol>
+<ol class="breadcrumb">
+  <li class="breadcrumb-item"><a href="/">Home</a></li>
+  <li class="breadcrumb-item"><a href="/detectionstrategies/">Detection Strategies</a></li>
+  <li class="breadcrumb-item">{{ parsed.name }}</li>
+</ol>
 
-    <div class="tab-pane fade show active" id="v-{{pages.title}}" role="tabpanel" aria-labelledby="v-{{pages.title}}-tab"></div>
-    
-    <div class="row">
-        <div class="col-xl-12">
-            <div class="jumbotron jumbotron-fluid">
-                <div class="container-fluid">
-                    <h1>
-                        {{ parsed.name }}
-                    </h1>
+<div class="tab-pane fade show active" id="v-{{pages.title}}" role="tabpanel" aria-labelledby="v-{{pages.title}}-tab">
+</div>
 
-                    {% if parsed.deprecated %}
-                        {{ deprecated.deprecated("This detection strategy has been deprecated.") }}
-                    {% else %}
-                        <div class="row">
-                            <div class="col-md-8">
-                                {% if parsed.technique_detected %}
-                                    <h4>
-                                        Technique Detected:&nbsp;
-                                        <a href="{{parsed.technique_detected.url}}">
-                                            {{parsed.technique_detected.name}} | {{parsed.technique_detected.attack_id}}
-                                        </a>
-                                    </h4>
-                                    {% if parsed.technique_detected.detects %}
-                                        <div class="description-body">
-                                            {{clean_output.stixToHTML(parsed.technique_detected.detects, parsed.citations)}}
-                                        </div>
-                                    {% endif %}
-                                {% endif %}
-                                {% if parsed.notes %}
-                                    {{ notes.notes_section(parsed.notes) }}
-                                {% endif %}
-                            </div>
-                            <div class="col-md-4">
-                                <div class="card">
-                                    <div class="card-body">
-                                        {% if parsed.attack_id %}
-                                            <div class="card-data"><span class="h5 card-title">ID:</span> {{parsed.attack_id}}</div>
-                                        {% endif %}
-                                        {% if parsed.domains %}
-                                            <div class="row card-data">
-                                                <div class="col-md-12">
-                                                    <span class="h5 card-title">Domains</span>: {{ parsed.domains|join(", ") }}
-                                                </div>
-                                            </div>
-                                        {% endif %}
-                                        {% if parsed.analytic_ids %}
-                                            <div class="row card-data">
-                                                <div class="col-md-12">
-                                                    <span class="h5 card-title">Analytics</span>: {{ parsed.analytic_ids|join(", ") }}
-                                                </div>
-                                            </div>
-                                        {% endif %}
-                                        {% if parsed.contributors %}
-                                            <div class="row card-data">
-                                                <div class="col-md-12">
-                                                    <span class="h5 card-title">Contributors</span>: {{ parsed.contributors|join("; ") }}
-                                                </div>
-                                            </div>
-                                        {% endif %}
-                                        {% if parsed.version %}
-                                            <div class="row card-data">
-                                                <div class="col-md-12">
-                                                    <span class="h5 card-title">Version</span>: {{ parsed.version }}
-                                                </div>
-                                            </div>
-                                        {% endif %}
-                                        {% if parsed.created %}
-                                            <div class="row card-data">
-                                                <div class="col-md-12">
-                                                    <span class="h5 card-title">Created</span>: {{ parsed.created }}
-                                                </div>
-                                            </div>
-                                        {% endif %}
-                                        {% if parsed.modified %}
-                                            <div class="row card-data">
-                                                <div class="col-md-12">
-                                                    <span class="h5 card-title">Last Modified</span>: {{ parsed.modified }}
-                                                </div>
-                                            </div>
-                                        {% endif %}
-                                    </div>
-                                </div>
-                                {% if parsed.versioning_feature %}
-                                    {{ versioning.permalink_button(output_file, parsed.attack_id)}}
-                                {% endif %}
-                            </div>
-                        </div>
+<div class="row">
+  <div class="col-xl-12">
+    <div class="jumbotron jumbotron-fluid">
+      <div class="container-fluid">
+        <h1>
+          {{ parsed.name }}
+        </h1>
 
-                        {% if parsed.analytics %}
-                        <div id="analytics-tabs">
-                            <h2 class="pt-3" id="analytics">Analytics</h2>
-                            <ul class="nav nav-tabs mb-2" role="tablist">
-                                {% for platform in parsed.analytics.keys() %}
-                                    {% set platform_id = platform|replace(' ', '_') %}
-                                    <li class="nav-item">
-                                        <a class="nav-link {% if loop.first %}active{% endif %}" id="tab-{{ platform_id }}" data-toggle="tab" href="#pane-{{ platform_id }}" role="tab" aria-selected="true">
-                                            {{ platform }}
-                                        </a>
-                                    </li>
-                                {% endfor %}
-                            </ul>
-                            <div class="tab-content card card-body p-3">
-                                {% for platform in parsed.analytics.keys() %}
-                                    {% set platform_id = platform|replace(' ', '_') %}
-                                    <div class="tab-pane fade {% if loop.first %}show active{% endif %}" id="pane-{{ platform_id }}" role="tabpanel" aria-labelledby="tab-{{ platform_id }}">
-                                        {% for analytic in parsed.analytics[platform] %}
-                                            <h4 class="pt-3" id="{{analytic.id}}">{{ analytic.id }}</h4>
-                                            <div>
-                                                {{clean_output.stixToHTML(analytic.description, parsed.citations)}}
-                                            </div>
-
-                                            {% if analytic.log_source_table %}
-                                                <h5 class="pt-3" id="{{analytic.id}}-log-sources">Log Sources</h5>
-                                                <div class="tables-mobile">
-                                                    <table class="table table-bordered table-alternate mt-2">
-                                                        <thead>
-                                                            <tr>
-                                                                <th scope="col">Data Component</th>
-                                                                <th scope="col">Name</th>
-                                                                <th scope="col">Channel</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            {% for datacomponent_id in analytic.log_source_table %}
-                                                                {% set datacomponent = analytic.log_source_table[datacomponent_id].datacomponent %}
-                                                                {% set log_sources = analytic.log_source_table[datacomponent_id].log_sources %}
-                                                                {% for log_source in log_sources %}
-                                                                    <tr>
-                                                                        {% if loop.first %}
-                                                                            <td rowspan="{{ log_sources|length }}">
-                                                                                <a href="{{ datacomponent.url }}">
-                                                                                    {{ datacomponent.name }} ({{ datacomponent_id }})
-                                                                                </a>
-                                                                            </td>
-                                                                        {% endif %}
-                                                                        <td>{{ log_source.name }}</td>
-                                                                        <td>{{ log_source.channel }}</td>
-                                                                    </tr>
-                                                                {% endfor %}
-                                                            {% endfor %}
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                            {% endif %}
-
-                                            {% if analytic.mutable_elements %}
-                                                <h5 class="pt-3" id="{{analytic.id}}-mutable-elements">Mutable Elements</h5>
-                                                <div class="tables-mobile">
-                                                    <table class="table table-bordered table-alternate mt-2">
-                                                        <thead>
-                                                            <tr>
-                                                                <th scope="col">Field</th>
-                                                                <th scope="col">Description</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            {% for elem in analytic.mutable_elements %}
-                                                                <tr>
-                                                                    <td>{{ elem.field }}</td>
-                                                                    <td>{{ elem.description }}</td>
-                                                                </tr>
-                                                            {% endfor %}
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                            {% endif %}
-                                        {% endfor %}
-                                    </div>
-                                {% endfor %}
-                            </div>
-                        </div>
-                        {% endif %}
-
-                        {{ citations.reference_section(parsed.citations) }}
-                    {% endif %}
-                </div>
+        {% if parsed.deprecated %}
+        {{ deprecated.deprecated("This detection strategy has been deprecated.") }}
+        {% else %}
+        <div class="row">
+          <div class="col-md-8">
+            {% if parsed.technique_detected %}
+            <h4>
+              Technique Detected:&nbsp;
+              <a href="{{parsed.technique_detected.url}}">
+                {{parsed.technique_detected.name}} | {{parsed.technique_detected.attack_id}}
+              </a>
+            </h4>
+            {% if parsed.technique_detected.detects %}
+            <div class="description-body">
+              {{clean_output.stixToHTML(parsed.technique_detected.detects, parsed.citations)}}
             </div>
+            {% endif %}
+            {% endif %}
+            {% if parsed.notes %}
+            {{ notes.notes_section(parsed.notes) }}
+            {% endif %}
+          </div>
+          <div class="col-md-4">
+            <div class="card">
+              <div class="card-body">
+                {% if parsed.attack_id %}
+                <div class="card-data"><span class="h5 card-title">ID:</span> {{parsed.attack_id}}</div>
+                {% endif %}
+                {% if parsed.domains %}
+                <div class="row card-data">
+                  <div class="col-md-12">
+                    <span class="h5 card-title">Domains</span>: {{ parsed.domains|join(", ") }}
+                  </div>
+                </div>
+                {% endif %}
+                {% if parsed.analytic_ids %}
+                <div class="row card-data">
+                  <div class="col-md-12">
+                    <span class="h5 card-title">Analytics</span>: {{ parsed.analytic_ids|join(", ") }}
+                  </div>
+                </div>
+                {% endif %}
+                {% if parsed.contributors %}
+                <div class="row card-data">
+                  <div class="col-md-12">
+                    <span class="h5 card-title">Contributors</span>: {{ parsed.contributors|join("; ") }}
+                  </div>
+                </div>
+                {% endif %}
+                {% if parsed.version %}
+                <div class="row card-data">
+                  <div class="col-md-12">
+                    <span class="h5 card-title">Version</span>: {{ parsed.version }}
+                  </div>
+                </div>
+                {% endif %}
+                {% if parsed.created %}
+                <div class="row card-data">
+                  <div class="col-md-12">
+                    <span class="h5 card-title">Created</span>: {{ parsed.created }}
+                  </div>
+                </div>
+                {% endif %}
+                {% if parsed.modified %}
+                <div class="row card-data">
+                  <div class="col-md-12">
+                    <span class="h5 card-title">Last Modified</span>: {{ parsed.modified }}
+                  </div>
+                </div>
+                {% endif %}
+              </div>
+            </div>
+            {% if parsed.versioning_feature %}
+            {{ versioning.permalink_button(output_file, parsed.attack_id)}}
+            {% endif %}
+          </div>
         </div>
+
+        {% if parsed.analytics %}
+        <div id="analytics-tabs">
+          <h2 class="pt-3" id="analytics">Analytics</h2>
+          <ul class="nav nav-tabs mb-2" role="tablist">
+            {% for platform in parsed.analytics.keys() %}
+            {% set platform_id = platform|replace(' ', '_') %}
+            <li class="nav-item">
+              <a class="nav-link {% if loop.first %}active{% endif %}" id="tab-{{ platform_id }}" data-toggle="tab"
+                href="#pane-{{ platform_id }}" role="tab" aria-selected="true">
+                {{ platform }}
+              </a>
+            </li>
+            {% endfor %}
+          </ul>
+          <div class="tab-content card card-body p-3">
+            {% for platform in parsed.analytics.keys() %}
+            {% set platform_id = platform|replace(' ', '_') %}
+            <div class="tab-pane fade {% if loop.first %}show active{% endif %}" id="pane-{{ platform_id }}"
+              role="tabpanel" aria-labelledby="tab-{{ platform_id }}">
+              {% for analytic in parsed.analytics[platform] %}
+              <h4 class="pt-3" id="{{analytic.id}}">{{ analytic.id }}</h4>
+              <div>
+                {{clean_output.stixToHTML(analytic.description, parsed.citations)}}
+              </div>
+
+              {% if analytic.log_source_table %}
+              <h5 class="pt-3" id="{{analytic.id}}-log-sources">Log Sources</h5>
+              <div class="tables-mobile">
+                <table class="table table-bordered table-alternate mt-2">
+                  <thead>
+                    <tr>
+                      <th scope="col">Data Component</th>
+                      <th scope="col">Name</th>
+                      <th scope="col">Channel</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for datacomponent_id in analytic.log_source_table %}
+                    {% set datacomponent = analytic.log_source_table[datacomponent_id].datacomponent %}
+                    {% set log_sources = analytic.log_source_table[datacomponent_id].log_sources %}
+                    {% for log_source in log_sources %}
+                    <tr>
+                      {% if loop.first %}
+                      <td rowspan="{{ log_sources|length }}">
+                        <a href="{{ datacomponent.url }}">
+                          {{ datacomponent.name }} ({{ datacomponent_id }})
+                        </a>
+                      </td>
+                      {% endif %}
+                      <td>{{ log_source.name }}</td>
+                      <td>{{ log_source.channel }}</td>
+                    </tr>
+                    {% endfor %}
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+              {% endif %}
+
+              {% if analytic.mutable_elements %}
+              <h5 class="pt-3" id="{{analytic.id}}-mutable-elements">Mutable Elements</h5>
+              <div class="tables-mobile">
+                <table class="table table-bordered table-alternate mt-2">
+                  <thead>
+                    <tr>
+                      <th scope="col">Field</th>
+                      <th scope="col">Description</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for elem in analytic.mutable_elements %}
+                    <tr>
+                      <td>{{ elem.field }}</td>
+                      <td>{{ elem.description }}</td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+              {% endif %}
+              {% endfor %}
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+        {% endif %}
+
+        {{ citations.reference_section(parsed.citations) }}
+        {% endif %}
+      </div>
     </div>
+  </div>
+</div>
 
 {% endblock %}
 
 {% block scripts %}
-    {{ super() }}
-    <!--SCRIPTS-->
-    <script src="/theme/scripts/sidebar-load-all.js"></script>
-    <script src="/theme/scripts/bootstrap-tourist.js"></script>
-    <script src="/theme/scripts/settings.js"></script>
-    <script src="/theme/scripts/analytics-tab-nav.js"></script>
-    <script src="/theme/scripts/tour/tour-relationships.js"></script>
+{{ super() }}
+<!--SCRIPTS-->
+<script src="/theme/scripts/sidebar-load-all.js"></script>
+<script src="/theme/scripts/bootstrap-tourist.js"></script>
+<script src="/theme/scripts/settings.js"></script>
+<script src="/theme/scripts/analytics-tab-nav.js"></script>
+<script src="/theme/scripts/tour/tour-relationships.js"></script>
 {% endblock %}

@@ -78,14 +78,6 @@ training_detection_engineering_md = (
 # FAQ md
 faq_md = "Title: Frequently Asked Questions\nTemplate: general/faq-overview\nsave_as: resources/faq/index.html\ndata: "
 
-# Contribute md
-contribute_md = (
-    "Title: Contribute\n"
-    "Template: resources/contribute\n"
-    "save_as: resources/engage-with-attack/contribute/index.html\n"
-    "data: "
-)
-
 resources_redirections_location = "modules/resources/resources_redirections.json"
 
 # Brand md

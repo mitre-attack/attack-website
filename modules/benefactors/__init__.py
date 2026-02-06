@@ -1,6 +1,5 @@
 from . import benefactors
 from . import benefactors_config
-import json
 
 
 def get_priority():

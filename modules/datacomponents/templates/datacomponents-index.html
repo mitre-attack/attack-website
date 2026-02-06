@@ -12,90 +12,93 @@
 {% endblock %}
 
 {% block innerright %}
-    {{ super () }}
-    <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="/">Home</a></li>
-        <li class="breadcrumb-item">Data Components</li>
-    </ol>
-    <div class="tab-pane fade show active" id="v-{{ pages.title }}" role="tabpanel" aria-labelledby="v-{{ pages.title }}-tab"></div>
-    <div class="row">
-        <div class="col-xl-12">
-            <div class="jumbotron jumbotron-fluid">
-                <div class="container-fluid">
-                    <div class="overflow-x-auto">
-                        <h1>Data Components</h1>
-                        <p>
-                            Data Components identify the specific properties/values relevant to detecting a given ATT&CK technique or sub-technique.
-                        </p>
-                        <h6 class="table-object-count">Data Components:&nbsp;<span class="total-count">{{ parsed.total_count }}</span></h6>
-                        <div class="tables-mobile">
-                        <table class="table table-bordered table-alternate mt-2" id="domain-sort-table">
-                            <thead>
-                                <tr>
-                                    <th scope="col">ID</th>
-                                    <th scope="col">Name</th>
-                                    <th scope="col">
-                                        <div class="dropdown">
-                                            Domain
-                                            <i class="fa-solid fa-sm fa-filter"></i>
-                                            <div class="dropdown-content">
-                                                <div id="filterMenu" class="data-sources-menu">
-                                                    <div class="custom-control custom-switch">
-                                                        <input type="checkbox" checked="checked" id="Enterprise" onchange="showDomain()">
-                                                        <label for="Enterprise">Enterprise</label>
-                                                    </div>
-                                                    <div class="custom-control custom-switch">
-                                                        <input type="checkbox" checked="checked" id="Mobile" onchange="showDomain()">
-                                                        <label for="Mobile">Mobile</label>
-                                                    </div>
-                                                    <div class="custom-control custom-switch">
-                                                        <input type="checkbox" checked="checked" id="ICS" onchange="showDomain()">
-                                                        <label for="ICS">ICS</label>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </th>
-                                    <th scope="col">Description</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for row in parsed.datacomponent_table %}
-                                    <tr>
-                                        <td>
-                                            <a href="/datacomponents/{{ row.id | upper }}"> {{ row.id | upper }} </a>
-                                        </td>
-                                        <td>
-                                            {% if row.deprecated %}
-                                                <span style="color: red">****Deprecation Warning****</span>
-                                            {% endif %}
-                                            <a href="/datacomponents/{{ row.id | upper }}"> {{ row.name }} </a>
-                                        </td>
-                                        <td>
-                                            {% for domain in row.domains %}
-                                                {{ domain }}
-                                                <br>
-                                            {% endfor %}
-                                        </td>
-                                        <td>
-                                            {{clean_output.stixToHTML(row.description, firstParagraphOnly=True)}}
-                                        </td>
-                                    </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
+{{ super () }}
+<ol class="breadcrumb">
+  <li class="breadcrumb-item"><a href="/">Home</a></li>
+  <li class="breadcrumb-item">Data Components</li>
+</ol>
+<div class="tab-pane fade show active" id="v-{{ pages.title }}" role="tabpanel"
+  aria-labelledby="v-{{ pages.title }}-tab"></div>
+<div class="row">
+  <div class="col-xl-12">
+    <div class="jumbotron jumbotron-fluid">
+      <div class="container-fluid">
+        <div class="overflow-x-auto">
+          <h1>Data Components</h1>
+          <p>
+            Data Components identify the specific properties/values relevant to detecting a given ATT&CK technique or
+            sub-technique.
+          </p>
+          <h6 class="table-object-count">Data Components:&nbsp;<span class="total-count">{{ parsed.total_count }}</span>
+          </h6>
+          <div class="tables-mobile">
+            <table class="table table-bordered table-alternate mt-2" id="domain-sort-table">
+              <thead>
+                <tr>
+                  <th scope="col">ID</th>
+                  <th scope="col">Name</th>
+                  <th scope="col">
+                    <div class="dropdown">
+                      Domain
+                      <i class="fa-solid fa-sm fa-filter"></i>
+                      <div class="dropdown-content">
+                        <div id="filterMenu" class="data-sources-menu">
+                          <div class="custom-control custom-switch">
+                            <input type="checkbox" checked="checked" id="Enterprise" onchange="showDomain()">
+                            <label for="Enterprise">Enterprise</label>
+                          </div>
+                          <div class="custom-control custom-switch">
+                            <input type="checkbox" checked="checked" id="Mobile" onchange="showDomain()">
+                            <label for="Mobile">Mobile</label>
+                          </div>
+                          <div class="custom-control custom-switch">
+                            <input type="checkbox" checked="checked" id="ICS" onchange="showDomain()">
+                            <label for="ICS">ICS</label>
+                          </div>
                         </div>
+                      </div>
                     </div>
-                </div>
-            </div>
+                  </th>
+                  <th scope="col">Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for row in parsed.datacomponent_table %}
+                <tr>
+                  <td>
+                    <a href="/datacomponents/{{ row.id | upper }}"> {{ row.id | upper }} </a>
+                  </td>
+                  <td>
+                    {% if row.deprecated %}
+                    <span style="color: red">****Deprecation Warning****</span>
+                    {% endif %}
+                    <a href="/datacomponents/{{ row.id | upper }}"> {{ row.name }} </a>
+                  </td>
+                  <td>
+                    {% for domain in row.domains %}
+                    {{ domain }}
+                    <br>
+                    {% endfor %}
+                  </td>
+                  <td>
+                    {{clean_output.stixToHTML(row.description, firstParagraphOnly=True)}}
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
         </div>
+      </div>
     </div>
-    
+  </div>
+</div>
+
 {% endblock %}
 
 {% block scripts %}
-    {{ super() }}
-    <!--SCRIPTS-->
-    <script src="/theme/scripts/sidebar-load-all.js"></script>
-    <script src="/theme/scripts/domain_table.js"></script>
+{{ super() }}
+<!--SCRIPTS-->
+<script src="/theme/scripts/sidebar-load-all.js"></script>
+<script src="/theme/scripts/domain_table.js"></script>
 {% endblock %}

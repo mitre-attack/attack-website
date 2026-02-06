@@ -51,7 +51,6 @@ def generate_resources():
     copy_docs(module_docs_path=resources_config.docs_path)
     generate_working_with_attack()
     generate_presentation_archive()
-    generate_contribute_page()
     generate_training_pages()
     generate_brand_page()
     generate_attackcon_page()
@@ -377,43 +376,6 @@ def generate_sidebar_resources():
         os.path.join(site_config.resources_markdown_path, "sidebar_resources.md"), "w", encoding="utf8"
     ) as md_file:
         md_file.write(sidebar_resources_md)
-
-
-def generate_contribute_page():
-    """Responsible for generating the markdown pages of the contribute pages."""
-    logger.info("Generating contributing page")
-
-    ms = util.relationshipgetters.get_ms()
-    contributors = util.stixhelpers.get_contributors(ms)
-
-    data = {}
-
-    data["contributors"] = []
-
-    contributors_first_col = []
-    contributors_second_col = []
-    contributors_third_col = []
-
-    third = math.ceil(len(contributors) / 3)
-
-    for index in range(0, third):
-        contributors_first_col.append(contributors[index])
-
-    for index in range(third, 2 * third):
-        contributors_second_col.append(contributors[index])
-
-    for index in range(2 * third, len(contributors)):
-        contributors_third_col.append(contributors[index])
-
-    data["contributors"].append(contributors_first_col)
-    data["contributors"].append(contributors_second_col)
-    data["contributors"].append(contributors_third_col)
-
-    subs = resources_config.contribute_md + json.dumps(data)
-
-    # Open markdown file for the contribute page
-    with open(os.path.join(site_config.resources_markdown_path, "contribute.md"), "w", encoding="utf8") as md_file:
-        md_file.write(subs)
 
 
 def generate_presentation_archive():

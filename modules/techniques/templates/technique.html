@@ -8,32 +8,35 @@
 
 {% import 'macros/notes.html' as notes %}
 {% if parsed.parent_name %}
-    {% set title = parsed.parent_name + ": " -%}
+{% set title = parsed.parent_name + ": " -%}
 {% else %}
-    {% set title = "" -%}
+{% set title = "" -%}
 {% endif %}
 {% set title_prefix = parsed.parent_name + ": " if parsed.is_subtechnique else "" %}
 {% set title_type = "Sub-technique" if parsed.is_subtechnique else "Technique" %}
 {% import 'macros/versioning.html' as versioning %}
 
 {% if parsed.domain == "mobile" %}
-    {% set title = title_prefix + parsed.name + ", " + title_type + " " + parsed.attack_id + " - Mobile | MITRE ATT&CK&reg;" -%}
+{% set title = title_prefix + parsed.name + ", " + title_type + " " + parsed.attack_id + " - Mobile | MITRE ATT&CK&reg;"
+-%}
 {% elif parsed.domain == "enterprise" %}
-    {% set title = title_prefix + parsed.name + ", " + title_type + " " + parsed.attack_id + " - Enterprise | MITRE ATT&CK&reg;" -%}
+{% set title = title_prefix + parsed.name + ", " + title_type + " " + parsed.attack_id + " - Enterprise | MITRE
+ATT&CK&reg;" -%}
 {% elif parsed.domain == "ics" %}
-    {% set title = title_prefix + parsed.name + ", " + title_type + " " + parsed.attack_id + " - ICS | MITRE ATT&CK&reg;" -%}
+{% set title = title_prefix + parsed.name + ", " + title_type + " " + parsed.attack_id + " - ICS | MITRE ATT&CK&reg;"
+-%}
 {% else %}
-    {% set title = title_prefix + parsed.name + ", " + title_type + " " + parsed.attack_id + " | MITRE ATT&CK&reg;" -%}
+{% set title = title_prefix + parsed.name + ", " + title_type + " " + parsed.attack_id + " | MITRE ATT&CK&reg;" -%}
 {% endif %}
 
 {% set active_page = "techniques" -%}
 
 {% block head %}
-    {{ super () }}
-    {% if parsed.deprecated %}
-    <meta name="robots" content="noindex, nofollow">
-    {% endif %}
-{%  endblock %}
+{{ super () }}
+{% if parsed.deprecated %}
+<meta name="robots" content="noindex, nofollow">
+{% endif %}
+{% endblock %}
 
 {% block innerleft %}
 <!--stop-indexing-for-search-->
@@ -42,407 +45,426 @@
 {% endblock %}
 
 {% block innerright %}
-    {{ super () }}
-    <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="/">Home</a></li>
-        {% if parsed.domain == 'enterprise' %}
-            <li class="breadcrumb-item"><a href="/techniques/enterprise">Techniques</a></li>
-        {% elif parsed.domain == 'mobile' %}
-            <li class="breadcrumb-item"><a href="/techniques/mobile">Techniques</a></li>
-        {% elif parsed.domain == 'ics' %}
-            <li class="breadcrumb-item"><a href="/techniques/ics">Techniques</a></li>
+{{ super () }}
+<ol class="breadcrumb">
+  <li class="breadcrumb-item"><a href="/">Home</a></li>
+  {% if parsed.domain == 'enterprise' %}
+  <li class="breadcrumb-item"><a href="/techniques/enterprise">Techniques</a></li>
+  {% elif parsed.domain == 'mobile' %}
+  <li class="breadcrumb-item"><a href="/techniques/mobile">Techniques</a></li>
+  {% elif parsed.domain == 'ics' %}
+  <li class="breadcrumb-item"><a href="/techniques/ics">Techniques</a></li>
+  {% else %}
+  <li class="breadcrumb-item"><a href="/techniques/">Techniques</a></li>
+  {% endif %}
+  {% if parsed.domain == 'enterprise' %}
+  <li class="breadcrumb-item"><a href="/techniques/enterprise">Enterprise</a></li>
+  {% elif parsed.domain == 'ics' %}
+  <li class="breadcrumb-item"><a href="/techniques/ics">ICS</a></li>
+  {% elif parsed.domain == 'mobile'%}
+  <li class="breadcrumb-item"><a href="/techniques/mobile">Mobile</a></li>
+  {% endif %}
+  {% if parsed.is_subtechnique %}
+  <li class="breadcrumb-item"><a href="/techniques/{{parsed.parent_id}}">{{parsed.parent_name}}</a></li>
+  {% endif %}
+  <li class="breadcrumb-item">{{parsed.name}}</li>
+</ol>
+<div class="tab-pane fade show active" id="v-{{pages.title}}" role="tabpanel" aria-labelledby="v-{{pages.title}}-tab">
+</div>
+<div class="row">
+  <div class="col-xl-12">
+    <div class="jumbotron jumbotron-fluid">
+      <div class="container-fluid">
+        <h1 id="">
+          {% if parsed.is_subtechnique %}
+          <span id="subtechnique-parent-name">{{parsed.parent_name}}:</span>
+          {% endif %}
+          {{parsed.name}}
+        </h1>
+
+        {% if parsed.deprecated %}
+        {% if parsed.descr %}
+        {{deprecated.deprecated(clean_output.stixToHTML(parsed.descr, firstParagraphOnly=True))}}
         {% else %}
-            <li class="breadcrumb-item"><a href="/techniques/">Techniques</a></li>
+        {{deprecated.deprecated("This technique has been deprecated.")}}
         {% endif %}
-        {% if parsed.domain == 'enterprise' %}
-            <li class="breadcrumb-item"><a href="/techniques/enterprise">Enterprise</a></li>
-        {% elif parsed.domain == 'ics' %}
-            <li class="breadcrumb-item"><a href="/techniques/ics">ICS</a></li>
-        {% elif parsed.domain == 'mobile'%}
-            <li class="breadcrumb-item"><a href="/techniques/mobile">Mobile</a></li>
-        {% endif %}
-        {% if parsed.is_subtechnique %}
-            <li class="breadcrumb-item"><a href="/techniques/{{parsed.parent_id}}">{{parsed.parent_name}}</a></li>
-        {% endif %}
-        <li class="breadcrumb-item">{{parsed.name}}</li>
-    </ol>
-    <div class="tab-pane fade show active" id="v-{{pages.title}}" role="tabpanel" aria-labelledby="v-{{pages.title}}-tab"></div>
-    <div class="row">
-        <div class="col-xl-12">
-            <div class="jumbotron jumbotron-fluid">
-                <div class="container-fluid">
-                    <h1 id="">
-                        {% if parsed.is_subtechnique %}
-                            <span id="subtechnique-parent-name">{{parsed.parent_name}}:</span>
-                        {% endif %}
-                        {{parsed.name}}
-                    </h1>
-
-                    {% if parsed.deprecated %}
-                        {% if parsed.descr %}
-                            {{deprecated.deprecated(clean_output.stixToHTML(parsed.descr, firstParagraphOnly=True))}}
-                        {% else %}
-                            {{deprecated.deprecated("This technique has been deprecated.")}}
-                        {% endif %}
-                    {% else %}
-                        <div class="row">
-                            <div class="col-md-8">
-                                {% if parsed.subtechniques and not (parsed.is_subtechnique and (parsed.subtechniques | length == 1)) %}
-                                    <!--stop-indexing-for-search-->
-                                    <div class="card-block pb-2">
-                                        <div class="card">
-                                            <div class="card-header collapsed" id="subtechniques-card-header" data-toggle="collapse" data-target="#subtechniques-card-body" aria-expanded="false" aria-controls="subtechniques-card-body">
-                                                {% if parsed.is_subtechnique %}
-                                                    <h5 class="mb-0" id ="sub-techniques">Other sub-techniques of {{parsed.parent_name}} ({{parsed.subtechniques|length}})</h5>
-                                                {% else %}
-                                                    <h5 class="mb-0" id ="sub-techniques">Sub-techniques ({{parsed.subtechniques|length}})</h5>
-                                                {% endif %}
-                                            </div>
-                                            <div id="subtechniques-card-body" class="card-body p-0 collapse" aria-labelledby="subtechniques-card-header">
-                                                <table class="table table-bordered">
-                                                    <thead>
-                                                        <tr>
-                                                            <th scope="col">ID</th>
-                                                            <th scope="col">Name</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        {% for subtechnique in parsed.subtechniques %}
-                                                            <tr>
-                                                                {% if (output_file | clean_path) != subtechnique.path %}
-                                                                    <td>
-                                                                        <a href="{{subtechnique.path}}" class="subtechnique-table-item" data-subtechnique_id="{{subtechnique.id}}"> {{subtechnique.id}} </a>
-                                                                    </td>
-                                                                    <td>
-                                                                        <a href="{{subtechnique.path}}" class="subtechnique-table-item" data-subtechnique_id="{{subtechnique.id}}"> {{subtechnique.name}} </a>
-                                                                    </td>
-                                                                {% else %}
-                                                                    <td class="active">
-                                                                        {{subtechnique.id}}
-                                                                    </td>
-                                                                    <td class="active">
-                                                                        {{subtechnique.name}}
-                                                                    </td>
-                                                                {% endif %}
-                                                            </tr>
-                                                        {% endfor %}
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!--start-indexing-for-search-->
-                                {% endif %}
-
-                                {% if parsed.descr %}
-                                    <div class="description-body">
-                                        {{clean_output.stixToHTML(parsed.descr, parsed.citations)}}
-                                    </div>
-                                {% endif %}
-                                {% if parsed.notes %}
-                                    {{ notes.notes_section(parsed.notes) }}
-                                {% endif %}
-                            </div>
-                            <div class="col-md-4">
-                                <div class="card">
-                                    <div class="card-body">
-                                        {% if parsed.attack_id %}
-                                            <div class="row card-data" id="card-id">
-                                                <div class="col-md-1 px-0 text-center"></div>
-                                                <div class="col-md-11 pl-0">
-                                                    <span class="h5 card-title">ID:&nbsp;</span>{{parsed.attack_id}}
-                                                </div>
-                                            </div>
-                                        {% endif %}
-                                        <!--stop-indexing-for-search-->
-                                        <div class="row card-data">
-                                            <div class="col-md-1 px-0 text-center"></div>
-                                            <div class="col-md-11 pl-0">
-                                                {% if not parsed.is_subtechnique %}
-                                                    <span class="h5 card-title">Sub-techniques:&nbsp;</span>
-                                                    {% if parsed.subtechniques %}
-                                                        {% for subtechnique in parsed.subtechniques %}
-                                                            <a href="/techniques/{{parsed.attack_id}}/{{subtechnique.id.split(".")[1]}}">{{subtechnique.id}}</a>{% if not loop.last %},{% endif %}
-                                                        {% endfor %}
-                                                    {% else %}
-                                                        No sub-techniques
-                                                    {% endif %}
-                                                {% else %}
-                                                    <span class="h5 card-title">Sub-technique of:&nbsp;</span>
-                                                    <a href="/techniques/{{parsed.parent_id}}">{{parsed.parent_id}}</a>
-                                                {% endif %}
-                                            </div>
-                                        </div>
-                                        <!--start-indexing-for-search-->
-                                        {% if parsed.tactic_type %}
-                                            <div class="row card-data">
-                                                <div class="col-md-1 px-0 text-center"></div>
-                                                <div class="col-md-11 pl-0">
-                                                    <span class="h5 card-title">Tactic Type:&nbsp;</span>{{parsed.tactic_type}}
-                                                </div>
-                                            </div>
-                                        {% endif %}
-                                        {% if parsed.tactics %}
-                                            <div id="card-tactics" class="row card-data">
-                                                <div class="col-md-1 px-0 text-center">
-                                                    <span data-toggle="tooltip" data-placement="left" title="" data-test-ignore="true" data-original-title="The tactic objectives that the (sub-)technique can be used to accomplish">&#9432;</span>
-                                                </div>
-                                                <div class="col-md-11 pl-0">
-                                                    <span class="h5 card-title">{{"Tactic" if parsed.tactics | length < 2 else "Tactics"}}:</span>
-                                                    {% for tactic in parsed.tactics %}
-                                                        <a href="/tactics/{{tactic.id}}">{{tactic.name}}</a>{% if not loop.last %},{% endif %}
-                                                    {% endfor %}
-                                                </div>
-                                            </div>
-                                        {% endif %}
-                                        {% if parsed.platforms %}
-                                            <div class="row card-data">
-                                                <div class="col-md-1 px-0 text-center">
-                                                    <span data-toggle="tooltip" data-placement="left" title="" data-test-ignore="true" data-original-title="The system an adversary is operating within; could be an operating system or application">&#9432;</span>
-                                                </div>
-                                                <div class="col-md-11 pl-0">
-                                                    <span class="h5 card-title">{{ "Platform" if parsed.platforms | length < 2 else "Platforms" }}:&nbsp;</span>{{parsed.platforms}}
-                                                </div>
-                                            </div>
-                                        {% endif %}
-                                        {% if parsed.sysreqs %}
-                                            <div class="row card-data">
-                                                <div class="col-md-1 px-0 text-center">
-                                                    <span data-toggle="tooltip" data-placement="left" title="" data-test-ignore="true" data-original-title="Additional information on requirements the adversary needs to meet or about the state of the system (software, patch level, etc.) that may be required for the (sub-)technique to work">&#9432;</span>
-                                                </div>
-                                                <div class="col-md-11 pl-0">
-                                                    <span class="h5 card-title">System Requirements:&nbsp;</span>{{parsed.sysreqs}}
-                                                </div>
-                                            </div>
-                                        {% endif %}
-                                        {% if parsed.perms %}
-                                            <div class="row card-data">
-                                                <div class="col-md-1 px-0 text-center">
-                                                    <span data-toggle="tooltip" data-placement="left" title="" data-test-ignore="true" data-original-title="The lowest level of permissions the adversary is required to be operating within to perform the (sub-)technique on a system">&#9432;</span>
-                                                </div>
-                                                <div class="col-md-11 pl-0">
-                                                    <span class="h5 card-title">Permissions Required:&nbsp;</span>{{parsed.perms}}
-                                                </div>
-                                            </div>
-                                        {% endif %}
-                                        {% if parsed.eff_perms%}
-                                            <div class="row card-data">
-                                                <div class="col-md-1 px-0 text-center">
-                                                    <span data-toggle="tooltip" data-placement="left" title="" data-test-ignore="true" data-original-title="The level of permissions the adversary will attain by performing the (sub-)technique">&#9432;</span>
-                                                </div>
-                                                <div class="col-md-11 pl-0">
-                                                    <span class="h5 card-title">Effective Permissions:&nbsp;</span>{{parsed.eff_perms}}
-                                                </div>
-                                            </div>
-                                        {% endif %}
-                                        {% if parsed.supports_remote %}
-                                            <div class="row card-data">
-                                                <div class="col-md-1 px-0 text-center">
-                                                    <span data-toggle="tooltip" data-placement="left" title="" data-test-ignore="true" data-original-title="If the (sub-)technique can invoke an instance of itself remotely without relying on external tools/techniques">&#9432;</span>
-                                                </div>
-                                                <div class="col-md-11 pl-0">
-                                                    <span class="h5 card-title">Supports Remote:&nbsp;</span>{{parsed.supports_remote}}
-                                                </div>
-                                            </div>
-                                        {% endif %}
-                                        {% if parsed.network_reqs %}
-                                            <div class="row card-data">
-                                                <div class="col-md-1 px-0 text-center"></div>
-                                                <div class="col-md-11 pl-0">
-                                                    <span class="h5 card-title">Requires Network:&nbsp;</span>{{parsed.network_reqs}}
-                                                </div>
-                                            </div>
-                                        {% endif %}
-                                        {% if parsed.def_bypass %}
-                                            <div class="row card-data">
-                                                <div class="col-md-1 px-0 text-center">
-                                                    <span data-toggle="tooltip" data-placement="left" title="" data-test-ignore="true" data-original-title="If the (sub-)technique can be used to bypass or evade a particular defensive tool, methodology, or process">&#9432;</span>
-                                                </div>
-                                                <div class="col-md-11 pl-0">
-                                                    <span class="h5 card-title">Defense Bypassed:&nbsp;</span>{{parsed.def_bypass}}
-                                                </div>
-                                            </div>
-                                        {% endif %}
-                                        {% if parsed.impact_type %}
-                                            <div class="row card-data">
-                                                <div class="col-md-1 px-0 text-center">
-                                                    <span data-toggle="tooltip" data-placement="left" title="" data-test-ignore="true" data-original-title="Denotes if the (sub-)technique can be used for integrity or availability attacks">&#9432;</span>
-                                                </div>
-                                                <div class="col-md-11 pl-0">
-                                                    <span class="h5 card-title">Impact Type:&nbsp;</span>{{parsed.impact_type}}
-                                                </div>
-                                            </div>
-                                        {% endif %}
-                                        {% if parsed.capecs %}
-                                            <div class="row card-data">
-                                                <div class="col-md-1 px-0 text-center">
-                                                    <span data-toggle="tooltip" data-placement="left" title="" data-test-ignore="true" data-original-title="CAPEC IDs associated with the (sub-)technique">&#9432;</span>
-                                                </div>
-                                                <div class="col-md-11 pl-0">
-                                                    <span class="h5 card-title">CAPEC ID:</span>
-                                                    {% for capec in parsed.capecs %}
-                                                        <a href="{{capec.url}}" target="_blank">{{capec.id}}{% if not loop.last %},{% endif %}</a>
-                                                    {% endfor %}
-                                                </div>
-                                            </div>
-                                        {% endif %}
-                                        {% if parsed.mtcs %}
-                                            <div class="row card-data">
-                                                <div class="col-md-1 px-0 text-center">
-                                                    <span data-toggle="tooltip" data-placement="left" title="" data-test-ignore="true" data-original-title="NIST Mobile Threat Catalogue IDs associated with the technique">&#9432;</span>
-                                                </div>
-                                                <div class="col-md-11 pl-0">
-                                                    <span class="h5 card-title">MTC ID:</span>
-                                                    {% for mtc in parsed.mtcs %}
-                                                        <a href="{{mtc.url}}" target="_blank">{{mtc.id}}{% if not loop.last %},{% endif %}</a>
-                                                    {% endfor %}
-                                                </div>
-                                            </div>
-                                        {% endif %}
-                                        {% if parsed.contributors %}
-                                            <div class="row card-data">
-                                                <div class="col-md-1 px-0 text-center"></div>
-                                                <div class="col-md-11 pl-0">
-                                                    <span class="h5 card-title">Contributors:&nbsp;</span>{{parsed.contributors}}
-                                                </div>
-                                            </div>
-                                        {% endif %}
-                                        {% if parsed.version %}
-                                            <div class="row card-data">
-                                                <div class="col-md-1 px-0 text-center"></div>
-                                                <div class="col-md-11 pl-0">
-                                                    <span class="h5 card-title">Version:&nbsp;</span>{{parsed.version}}
-                                                </div>
-                                            </div>
-                                        {% endif %}
-                                        {% if parsed.created %}
-                                            <div class="row card-data">
-                                                <div class="col-md-1 px-0 text-center"></div>
-                                                <div class="col-md-11 pl-0">
-                                                    <span class="h5 card-title">Created:&nbsp;</span>{{parsed.created}}
-                                                </div>
-                                            </div>
-                                        {% endif %}
-                                        {% if parsed.modified %}
-                                            <div class="row card-data">
-                                                <div class="col-md-1 px-0 text-center"></div>
-                                                <div class="col-md-11 pl-0">
-                                                    <span class="h5 card-title">Last Modified:&nbsp;</span>{{parsed.modified}}
-                                                </div>
-                                            </div>
-                                        {% endif %}
-                                    </div>
-                                </div>
-                                {% if parsed.versioning_feature %}
-                                    {{ versioning.permalink_button(output_file, parsed.attack_id)}}
-                                {% endif %}
-                            </div>
-                        </div>
-                        {% if parsed.examples_table %}
-                            <h2 class="pt-3" id ="examples">Procedure Examples</h2>
-                            <div class="tables-mobile">
-                            <table class="table table-bordered table-alternate mt-2">
-                                <thead>
-                                    <tr>
-                                        <th scope="col">ID</th>
-                                        <th scope="col">Name</th>
-                                        <th scope="col">Description</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% for example in parsed.examples_table %}
-                                        <tr>
-                                            <td>
-                                                <a href="/{{example.path}}/{{example.id}}"> {{example.id}} </a>
-                                            </td>
-                                            <td>
-                                                <a href="/{{example.path}}/{{example.id}}"> {{example.name}} </a>
-                                            </td>
-                                            <td>
-                                                {% if example.descr %}
-                                                    {{clean_output.stixToHTML(example.descr, parsed.citations)}}
-                                                {% endif %}
-                                            </td>
-                                        </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
-                            </div>
-                        {% endif %}
-                        {% if parsed.assets_table %}
-                            <h2 class="pt-3" id ="assets">Targeted Assets</h2>
-                            <table class="table table-bordered table-alternate mt-2" aria-describedby="asset-table">
-                                <thead>
-                                    <tr>
-                                        <th scope="col">ID</th>
-                                        <th scope="col">Asset</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% for asset in parsed.assets_table %}
-                                        <tr>
-                                            <td>
-                                                <a href="/assets/{{asset.id}}"> {{asset.id}} </a>
-                                            </td>
-                                            <td>
-                                                <a href="/assets/{{asset.id}}"> {{asset.name}} </a>
-                                            </td>
-                                        </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
-                        {% endif %}
-                        {% if parsed.domain != 'pre' %}
-                            <h2 class="pt-3" id ="mitigations">Mitigations</h2>
-                            {% if parsed.mitigation_table %}
-                            <div class="tables-mobile">
-                                <table class="table table-bordered table-alternate mt-2">
-                                    <thead>
-                                        <tr>
-                                            <th scope="col">ID</th>
-                                            <th scope="col">Mitigation</th>
-                                            <th scope="col">Description</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {% for mit in parsed.mitigation_table %}
-                                            <tr>
-                                                <td>
-                                                    <a href="/mitigations/{{mit.mid}}"> {{mit.mid}} </a>
-                                                </td>
-                                                <td>
-                                                    <a href="/mitigations/{{mit.mid}}"> {{mit.name}} </a>
-                                                </td>
-                                                <td>
-                                                    {% if mit.descr %}
-                                                        {{clean_output.stixToHTML(mit.descr, parsed.citations)}}
-                                                    {% endif %}
-                                                </td>
-                                            </tr>
-                                        {% endfor %}
-                                    </tbody>
-                                </table>
-                                </div>
-                            {% else %}
-                                <p>
-                                    This type of attack technique cannot be easily mitigated with preventive controls since
-                                    it is based on the abuse of system features.
-                                </p>
-                            {% endif %}
-                        {% endif %}
-                        {% if parsed.detections_strategies_table %}
-                                <h2 class="pt-3" id="detection">Detection Strategy</h2>
-                                {{detection_strategies_table_techniques.detection_strategies_table_techniques(parsed.detections_strategies_table, parsed.citations)}}
-                        {% endif %}
-
-                    {{ citations.reference_section(parsed.citations) }}
-
-                    {% endif %}
+        {% else %}
+        <div class="row">
+          <div class="col-md-8">
+            {% if parsed.subtechniques and not (parsed.is_subtechnique and (parsed.subtechniques | length == 1)) %}
+            <!--stop-indexing-for-search-->
+            <div class="card-block pb-2">
+              <div class="card">
+                <div class="card-header collapsed" id="subtechniques-card-header" data-toggle="collapse"
+                  data-target="#subtechniques-card-body" aria-expanded="false" aria-controls="subtechniques-card-body">
+                  {% if parsed.is_subtechnique %}
+                  <h5 class="mb-0" id="sub-techniques">Other sub-techniques of {{parsed.parent_name}}
+                    ({{parsed.subtechniques|length}})</h5>
+                  {% else %}
+                  <h5 class="mb-0" id="sub-techniques">Sub-techniques ({{parsed.subtechniques|length}})</h5>
+                  {% endif %}
                 </div>
+                <div id="subtechniques-card-body" class="card-body p-0 collapse"
+                  aria-labelledby="subtechniques-card-header">
+                  <table class="table table-bordered">
+                    <thead>
+                      <tr>
+                        <th scope="col">ID</th>
+                        <th scope="col">Name</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for subtechnique in parsed.subtechniques %}
+                      <tr>
+                        {% if (output_file | clean_path) != subtechnique.path %}
+                        <td>
+                          <a href="{{subtechnique.path}}" class="subtechnique-table-item"
+                            data-subtechnique_id="{{subtechnique.id}}"> {{subtechnique.id}} </a>
+                        </td>
+                        <td>
+                          <a href="{{subtechnique.path}}" class="subtechnique-table-item"
+                            data-subtechnique_id="{{subtechnique.id}}"> {{subtechnique.name}} </a>
+                        </td>
+                        {% else %}
+                        <td class="active">
+                          {{subtechnique.id}}
+                        </td>
+                        <td class="active">
+                          {{subtechnique.name}}
+                        </td>
+                        {% endif %}
+                      </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
             </div>
+            <!--start-indexing-for-search-->
+            {% endif %}
+
+            {% if parsed.descr %}
+            <div class="description-body">
+              {{clean_output.stixToHTML(parsed.descr, parsed.citations)}}
+            </div>
+            {% endif %}
+            {% if parsed.notes %}
+            {{ notes.notes_section(parsed.notes) }}
+            {% endif %}
+          </div>
+          <div class="col-md-4">
+            <div class="card">
+              <div class="card-body">
+                {% if parsed.attack_id %}
+                <div class="row card-data" id="card-id">
+                  <div class="col-md-1 px-0 text-center"></div>
+                  <div class="col-md-11 pl-0">
+                    <span class="h5 card-title">ID:&nbsp;</span>{{parsed.attack_id}}
+                  </div>
+                </div>
+                {% endif %}
+                <!--stop-indexing-for-search-->
+                <div class="row card-data">
+                  <div class="col-md-1 px-0 text-center"></div>
+                  <div class="col-md-11 pl-0">
+                    {% if not parsed.is_subtechnique %}
+                    <span class="h5 card-title">Sub-techniques:&nbsp;</span>
+                    {% if parsed.subtechniques %}
+                    {% for subtechnique in parsed.subtechniques %}
+                    <a href="/techniques/{{parsed.attack_id}}/{{subtechnique.id.split("
+                      .")[1]}}">{{subtechnique.id}}</a>{% if not loop.last %},{% endif %}
+                    {% endfor %}
+                    {% else %}
+                    No sub-techniques
+                    {% endif %}
+                    {% else %}
+                    <span class="h5 card-title">Sub-technique of:&nbsp;</span>
+                    <a href="/techniques/{{parsed.parent_id}}">{{parsed.parent_id}}</a>
+                    {% endif %}
+                  </div>
+                </div>
+                <!--start-indexing-for-search-->
+                {% if parsed.tactic_type %}
+                <div class="row card-data">
+                  <div class="col-md-1 px-0 text-center"></div>
+                  <div class="col-md-11 pl-0">
+                    <span class="h5 card-title">Tactic Type:&nbsp;</span>{{parsed.tactic_type}}
+                  </div>
+                </div>
+                {% endif %}
+                {% if parsed.tactics %}
+                <div id="card-tactics" class="row card-data">
+                  <div class="col-md-1 px-0 text-center">
+                    <span data-toggle="tooltip" data-placement="left" title="" data-test-ignore="true"
+                      data-original-title="The tactic objectives that the (sub-)technique can be used to accomplish">&#9432;</span>
+                  </div>
+                  <div class="col-md-11 pl-0">
+                    <span class="h5 card-title">{{"Tactic" if parsed.tactics | length < 2 else "Tactics" }}:</span>
+                        {% for tactic in parsed.tactics %}
+                        <a href="/tactics/{{tactic.id}}">{{tactic.name}}</a>{% if not loop.last %},{% endif %}
+                        {% endfor %}
+                  </div>
+                </div>
+                {% endif %}
+                {% if parsed.platforms %}
+                <div class="row card-data">
+                  <div class="col-md-1 px-0 text-center">
+                    <span data-toggle="tooltip" data-placement="left" title="" data-test-ignore="true"
+                      data-original-title="The system an adversary is operating within; could be an operating system or application">&#9432;</span>
+                  </div>
+                  <div class="col-md-11 pl-0">
+                    <span class="h5 card-title">{{ "Platform" if parsed.platforms | length < 2 else "Platforms"
+                        }}:&nbsp;</span>{{parsed.platforms}}
+                  </div>
+                </div>
+                {% endif %}
+                {% if parsed.sysreqs %}
+                <div class="row card-data">
+                  <div class="col-md-1 px-0 text-center">
+                    <span data-toggle="tooltip" data-placement="left" title="" data-test-ignore="true"
+                      data-original-title="Additional information on requirements the adversary needs to meet or about the state of the system (software, patch level, etc.) that may be required for the (sub-)technique to work">&#9432;</span>
+                  </div>
+                  <div class="col-md-11 pl-0">
+                    <span class="h5 card-title">System Requirements:&nbsp;</span>{{parsed.sysreqs}}
+                  </div>
+                </div>
+                {% endif %}
+                {% if parsed.perms %}
+                <div class="row card-data">
+                  <div class="col-md-1 px-0 text-center">
+                    <span data-toggle="tooltip" data-placement="left" title="" data-test-ignore="true"
+                      data-original-title="The lowest level of permissions the adversary is required to be operating within to perform the (sub-)technique on a system">&#9432;</span>
+                  </div>
+                  <div class="col-md-11 pl-0">
+                    <span class="h5 card-title">Permissions Required:&nbsp;</span>{{parsed.perms}}
+                  </div>
+                </div>
+                {% endif %}
+                {% if parsed.eff_perms%}
+                <div class="row card-data">
+                  <div class="col-md-1 px-0 text-center">
+                    <span data-toggle="tooltip" data-placement="left" title="" data-test-ignore="true"
+                      data-original-title="The level of permissions the adversary will attain by performing the (sub-)technique">&#9432;</span>
+                  </div>
+                  <div class="col-md-11 pl-0">
+                    <span class="h5 card-title">Effective Permissions:&nbsp;</span>{{parsed.eff_perms}}
+                  </div>
+                </div>
+                {% endif %}
+                {% if parsed.supports_remote %}
+                <div class="row card-data">
+                  <div class="col-md-1 px-0 text-center">
+                    <span data-toggle="tooltip" data-placement="left" title="" data-test-ignore="true"
+                      data-original-title="If the (sub-)technique can invoke an instance of itself remotely without relying on external tools/techniques">&#9432;</span>
+                  </div>
+                  <div class="col-md-11 pl-0">
+                    <span class="h5 card-title">Supports Remote:&nbsp;</span>{{parsed.supports_remote}}
+                  </div>
+                </div>
+                {% endif %}
+                {% if parsed.network_reqs %}
+                <div class="row card-data">
+                  <div class="col-md-1 px-0 text-center"></div>
+                  <div class="col-md-11 pl-0">
+                    <span class="h5 card-title">Requires Network:&nbsp;</span>{{parsed.network_reqs}}
+                  </div>
+                </div>
+                {% endif %}
+                {% if parsed.def_bypass %}
+                <div class="row card-data">
+                  <div class="col-md-1 px-0 text-center">
+                    <span data-toggle="tooltip" data-placement="left" title="" data-test-ignore="true"
+                      data-original-title="If the (sub-)technique can be used to bypass or evade a particular defensive tool, methodology, or process">&#9432;</span>
+                  </div>
+                  <div class="col-md-11 pl-0">
+                    <span class="h5 card-title">Defense Bypassed:&nbsp;</span>{{parsed.def_bypass}}
+                  </div>
+                </div>
+                {% endif %}
+                {% if parsed.impact_type %}
+                <div class="row card-data">
+                  <div class="col-md-1 px-0 text-center">
+                    <span data-toggle="tooltip" data-placement="left" title="" data-test-ignore="true"
+                      data-original-title="Denotes if the (sub-)technique can be used for integrity or availability attacks">&#9432;</span>
+                  </div>
+                  <div class="col-md-11 pl-0">
+                    <span class="h5 card-title">Impact Type:&nbsp;</span>{{parsed.impact_type}}
+                  </div>
+                </div>
+                {% endif %}
+                {% if parsed.capecs %}
+                <div class="row card-data">
+                  <div class="col-md-1 px-0 text-center">
+                    <span data-toggle="tooltip" data-placement="left" title="" data-test-ignore="true"
+                      data-original-title="CAPEC IDs associated with the (sub-)technique">&#9432;</span>
+                  </div>
+                  <div class="col-md-11 pl-0">
+                    <span class="h5 card-title">CAPEC ID:</span>
+                    {% for capec in parsed.capecs %}
+                    <a href="{{capec.url}}" target="_blank">{{capec.id}}{% if not loop.last %},{% endif %}</a>
+                    {% endfor %}
+                  </div>
+                </div>
+                {% endif %}
+                {% if parsed.mtcs %}
+                <div class="row card-data">
+                  <div class="col-md-1 px-0 text-center">
+                    <span data-toggle="tooltip" data-placement="left" title="" data-test-ignore="true"
+                      data-original-title="NIST Mobile Threat Catalogue IDs associated with the technique">&#9432;</span>
+                  </div>
+                  <div class="col-md-11 pl-0">
+                    <span class="h5 card-title">MTC ID:</span>
+                    {% for mtc in parsed.mtcs %}
+                    <a href="{{mtc.url}}" target="_blank">{{mtc.id}}{% if not loop.last %},{% endif %}</a>
+                    {% endfor %}
+                  </div>
+                </div>
+                {% endif %}
+                {% if parsed.contributors %}
+                <div class="row card-data">
+                  <div class="col-md-1 px-0 text-center"></div>
+                  <div class="col-md-11 pl-0">
+                    <span class="h5 card-title">Contributors:&nbsp;</span>{{parsed.contributors}}
+                  </div>
+                </div>
+                {% endif %}
+                {% if parsed.version %}
+                <div class="row card-data">
+                  <div class="col-md-1 px-0 text-center"></div>
+                  <div class="col-md-11 pl-0">
+                    <span class="h5 card-title">Version:&nbsp;</span>{{parsed.version}}
+                  </div>
+                </div>
+                {% endif %}
+                {% if parsed.created %}
+                <div class="row card-data">
+                  <div class="col-md-1 px-0 text-center"></div>
+                  <div class="col-md-11 pl-0">
+                    <span class="h5 card-title">Created:&nbsp;</span>{{parsed.created}}
+                  </div>
+                </div>
+                {% endif %}
+                {% if parsed.modified %}
+                <div class="row card-data">
+                  <div class="col-md-1 px-0 text-center"></div>
+                  <div class="col-md-11 pl-0">
+                    <span class="h5 card-title">Last Modified:&nbsp;</span>{{parsed.modified}}
+                  </div>
+                </div>
+                {% endif %}
+              </div>
+            </div>
+            {% if parsed.versioning_feature %}
+            {{ versioning.permalink_button(output_file, parsed.attack_id)}}
+            {% endif %}
+          </div>
         </div>
+        {% if parsed.examples_table %}
+        <h2 class="pt-3" id="examples">Procedure Examples</h2>
+        <div class="tables-mobile">
+          <table class="table table-bordered table-alternate mt-2">
+            <thead>
+              <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Name</th>
+                <th scope="col">Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for example in parsed.examples_table %}
+              <tr>
+                <td>
+                  <a href="/{{example.path}}/{{example.id}}"> {{example.id}} </a>
+                </td>
+                <td>
+                  <a href="/{{example.path}}/{{example.id}}"> {{example.name}} </a>
+                </td>
+                <td>
+                  {% if example.descr %}
+                  {{clean_output.stixToHTML(example.descr, parsed.citations)}}
+                  {% endif %}
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        {% endif %}
+        {% if parsed.assets_table %}
+        <h2 class="pt-3" id="assets">Targeted Assets</h2>
+        <table class="table table-bordered table-alternate mt-2" aria-describedby="asset-table">
+          <thead>
+            <tr>
+              <th scope="col">ID</th>
+              <th scope="col">Asset</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for asset in parsed.assets_table %}
+            <tr>
+              <td>
+                <a href="/assets/{{asset.id}}"> {{asset.id}} </a>
+              </td>
+              <td>
+                <a href="/assets/{{asset.id}}"> {{asset.name}} </a>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        {% endif %}
+        {% if parsed.domain != 'pre' %}
+        <h2 class="pt-3" id="mitigations">Mitigations</h2>
+        {% if parsed.mitigation_table %}
+        <div class="tables-mobile">
+          <table class="table table-bordered table-alternate mt-2">
+            <thead>
+              <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Mitigation</th>
+                <th scope="col">Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for mit in parsed.mitigation_table %}
+              <tr>
+                <td>
+                  <a href="/mitigations/{{mit.mid}}"> {{mit.mid}} </a>
+                </td>
+                <td>
+                  <a href="/mitigations/{{mit.mid}}"> {{mit.name}} </a>
+                </td>
+                <td>
+                  {% if mit.descr %}
+                  {{clean_output.stixToHTML(mit.descr, parsed.citations)}}
+                  {% endif %}
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        {% else %}
+        <p>
+          This type of attack technique cannot be easily mitigated with preventive controls since
+          it is based on the abuse of system features.
+        </p>
+        {% endif %}
+        {% endif %}
+        {% if parsed.detections_strategies_table %}
+        <h2 class="pt-3" id="detection">Detection Strategy</h2>
+        {{detection_strategies_table_techniques.detection_strategies_table_techniques(parsed.detections_strategies_table,
+        parsed.citations)}}
+        {% endif %}
+
+        {{ citations.reference_section(parsed.citations) }}
+
+        {% endif %}
+      </div>
     </div>
-    {{page.scripts}}
+  </div>
+</div>
+{{page.scripts}}
 {% endblock %}
 
 {% block scripts %}
@@ -451,9 +473,9 @@
 <script src="/theme/scripts/bootstrap-tourist.js"></script>
 <script src="/theme/scripts/settings.js"></script>
 {% if parsed.is_subtechnique %}
-    <script src="/theme/scripts/tour/tour-subtechniques.js"></script>
+<script src="/theme/scripts/tour/tour-subtechniques.js"></script>
 {% else %}
-    <script src="/theme/scripts/tour/tour-techniques.js"></script>
+<script src="/theme/scripts/tour/tour-techniques.js"></script>
 {% endif %}
 <script src="/theme/scripts/sidebar-load-all.js"></script>
 {% endblock %}

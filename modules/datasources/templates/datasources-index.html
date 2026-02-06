@@ -1,4 +1,4 @@
-{% extends "general/two-column.html" %} 
+{% extends "general/two-column.html" %}
 {% set title = "Data Sources | MITRE ATT&CK&reg;" %}
 {% set parsed = page.data | from_json %}
 {% set active_page = "datasources" -%}
@@ -8,100 +8,103 @@
 {% block innerleft %}
 <!--stop-indexing-for-search-->
 <div id="v-tab" role="tablist" aria-orientation="vertical" class="h-100">
-        {{ navigation.sidenav(parsed.side_menu_data, output_file) }} 
-    </div>
+  {{ navigation.sidenav(parsed.side_menu_data, output_file) }}
+</div>
 <!--start-indexing-for-search-->
 {% endblock %}
 
 {% block innerright %}
-    {{ super () }}
-    <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="/">Home</a></li>
-        <li class="breadcrumb-item">Data Sources</li>
-    </ol>
-    <div class="tab-pane fade show active" id="v-{{pages.title}}" role="tabpanel" aria-labelledby="v-{{pages.title}}-tab"></div>
-    <div class="row">
-        <div class="col-xl-12">
-            <div class="jumbotron jumbotron-fluid">
-                <div class="container-fluid">
-                    <div class="overflow-x-auto">
-                        <h1>Data Sources</h1>
-                        <p>Data sources represent the various subjects/topics of information that can be collected by sensors/logs. Data sources also include data components, which identify specific properties/values of a data source relevant to detecting a given ATT&CK technique or sub-technique.</p>
-                        <h6 class="table-object-count"></h6>
-                        <table class="table table-bordered table-alternate mt-2" id="ds-table">
-                            <thead>
-                                <tr>
-                                    <th scope="col" onclick="sortTable(0)">ID
-                                        <i id="arrow-down-0" class="fa-solid fa-fw fa-chevron-down"></i>
-                                        <i id="arrow-up-0" class="fa-solid fa-fw fa-chevron-up"></i>
-                                    </th>
-                                    <th scope="col" onclick="sortTable(1)">Name
-                                        <i id="arrow-down-1" class="fa-solid fa-fw fa-chevron-down"></i>
-                                        <i id="arrow-up-1" class="fa-solid fa-fw fa-chevron-up"></i>
-                                    </th>
-                                    <th scope="col">
-                                        <div class="dropdown">
-                                            Domain
-                                            <i class="fa-solid fa-sm fa-filter"></i>
-                                            <div class="dropdown-content">
-                                                <div id="filterMenu" class="data-sources-menu">
-                                                    <div class="custom-control custom-switch">
-                                                        <input type="checkbox" checked="checked" id="Enterprise" onchange="showDomain()">
-                                                        <label for="Enterprise">Enterprise</label>
-                                                    </div>
-                                                    <div class="custom-control custom-switch">
-                                                        <input type="checkbox" checked="checked" id="Mobile" onchange="showDomain()">
-                                                        <label for="Mobile">Mobile</label>
-                                                    </div>
-                                                    <div class="custom-control custom-switch">
-                                                        <input type="checkbox" checked="checked" id="ICS" onchange="showDomain()">
-                                                        <label for="ICS">ICS</label>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </th>
-                                    <th scope="col">Description</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for row in parsed.datasources_table %}
-                                    <tr>
-                                        <td>
-                                            <a href="/datasources/{{row.id|upper}}"> {{row.id|upper}} </a>
-                                        </td>
-                                        <td>
-                                            <a href="/datasources/{{row.id|upper}}"> {{row.name}} </a>
-                                        </td>
-                                        <td>
-                                            {% for dom in row.domains %}
-                                                {{dom}}
-                                                <br>
-                                            {% endfor %}
-                                        </td>
-                                        <td>
-                                            {% if row.deprecated %}
-                                                <font color="red">****Deprecation Warning****</font>
-                                            {% endif %}
-                                            {{clean_output.stixToHTML(row.descr)}}                                            
-                                        </td>
-                                    </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
+{{ super () }}
+<ol class="breadcrumb">
+  <li class="breadcrumb-item"><a href="/">Home</a></li>
+  <li class="breadcrumb-item">Data Sources</li>
+</ol>
+<div class="tab-pane fade show active" id="v-{{pages.title}}" role="tabpanel" aria-labelledby="v-{{pages.title}}-tab">
+</div>
+<div class="row">
+  <div class="col-xl-12">
+    <div class="jumbotron jumbotron-fluid">
+      <div class="container-fluid">
+        <div class="overflow-x-auto">
+          <h1>Data Sources</h1>
+          <p>Data sources represent the various subjects/topics of information that can be collected by sensors/logs.
+            Data sources also include data components, which identify specific properties/values of a data source
+            relevant to detecting a given ATT&CK technique or sub-technique.</p>
+          <h6 class="table-object-count"></h6>
+          <table class="table table-bordered table-alternate mt-2" id="ds-table">
+            <thead>
+              <tr>
+                <th scope="col" onclick="sortTable(0)">ID
+                  <i id="arrow-down-0" class="fa-solid fa-fw fa-chevron-down"></i>
+                  <i id="arrow-up-0" class="fa-solid fa-fw fa-chevron-up"></i>
+                </th>
+                <th scope="col" onclick="sortTable(1)">Name
+                  <i id="arrow-down-1" class="fa-solid fa-fw fa-chevron-down"></i>
+                  <i id="arrow-up-1" class="fa-solid fa-fw fa-chevron-up"></i>
+                </th>
+                <th scope="col">
+                  <div class="dropdown">
+                    Domain
+                    <i class="fa-solid fa-sm fa-filter"></i>
+                    <div class="dropdown-content">
+                      <div id="filterMenu" class="data-sources-menu">
+                        <div class="custom-control custom-switch">
+                          <input type="checkbox" checked="checked" id="Enterprise" onchange="showDomain()">
+                          <label for="Enterprise">Enterprise</label>
+                        </div>
+                        <div class="custom-control custom-switch">
+                          <input type="checkbox" checked="checked" id="Mobile" onchange="showDomain()">
+                          <label for="Mobile">Mobile</label>
+                        </div>
+                        <div class="custom-control custom-switch">
+                          <input type="checkbox" checked="checked" id="ICS" onchange="showDomain()">
+                          <label for="ICS">ICS</label>
+                        </div>
+                      </div>
                     </div>
-                </div>
-            </div>
+                  </div>
+                </th>
+                <th scope="col">Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for row in parsed.datasources_table %}
+              <tr>
+                <td>
+                  <a href="/datasources/{{row.id|upper}}"> {{row.id|upper}} </a>
+                </td>
+                <td>
+                  <a href="/datasources/{{row.id|upper}}"> {{row.name}} </a>
+                </td>
+                <td>
+                  {% for dom in row.domains %}
+                  {{dom}}
+                  <br>
+                  {% endfor %}
+                </td>
+                <td>
+                  {% if row.deprecated %}
+                  <font color="red">****Deprecation Warning****</font>
+                  {% endif %}
+                  {{clean_output.stixToHTML(row.descr)}}
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
         </div>
+      </div>
     </div>
-    
+  </div>
+</div>
+
 {% endblock %}
 
 {% block scripts %}
-    {{ super() }}
-    <!--SCRIPTS-->
-    <script src="/theme/scripts/filter/filter.js?{{ range(1, 9002) | random }}""></script>
-    <script src="/theme/scripts/mobileview-datasources.js"></script>
-    <script src="/theme/scripts/navigation.js"></script>
-    <script src="/theme/scripts/domain_table.js"></script>
+{{ super() }}
+<!--SCRIPTS-->
+<script src="/theme/scripts/filter/filter.js?{{ range(1, 9002) | random }}""></script>
+    <script src=" /theme/scripts/mobileview-datasources.js"></script>
+<script src="/theme/scripts/navigation.js"></script>
+<script src="/theme/scripts/domain_table.js"></script>
 {% endblock %}

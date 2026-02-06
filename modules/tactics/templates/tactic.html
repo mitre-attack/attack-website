@@ -1,4 +1,4 @@
-{% extends "general/two-column.html" -%} 
+{% extends "general/two-column.html" -%}
 {% import 'macros/navigation.html' as navigation %}
 {% import 'macros/table_with_subtechniques.html' as technique_table %}
 {% import 'macros/versioning.html' as versioning %}
@@ -8,20 +8,20 @@
 
 {% set parsed = page.data | from_json %}
 {% if parsed.domain == "mobile" %}
-   {% set title = parsed.name + ", Tactic " + parsed.attack_id + " - Mobile | MITRE ATT&CK&reg;" -%}
+{% set title = parsed.name + ", Tactic " + parsed.attack_id + " - Mobile | MITRE ATT&CK&reg;" -%}
 {% elif parsed.domain == "enterprise" %}
-   {% set title = parsed.name + ", Tactic " + parsed.attack_id + " - Enterprise | MITRE ATT&CK&reg;" -%}
-{% elif parsed.domain == "ics" %} 
-   {% set title = parsed.name + ", Tactic " + parsed.attack_id + " - ICS | MITRE ATT&CK&reg;" -%}
+{% set title = parsed.name + ", Tactic " + parsed.attack_id + " - Enterprise | MITRE ATT&CK&reg;" -%}
+{% elif parsed.domain == "ics" %}
+{% set title = parsed.name + ", Tactic " + parsed.attack_id + " - ICS | MITRE ATT&CK&reg;" -%}
 {% endif %}
 {% set active_page = "tactics" -%}
 
 {% block head %}
-    {{ super () }}
-    {% if parsed.deprecated %}
-    <meta name="robots" content="noindex, nofollow">
-    {% endif %}
-{%  endblock %}
+{{ super () }}
+{% if parsed.deprecated %}
+<meta name="robots" content="noindex, nofollow">
+{% endif %}
+{% endblock %}
 
 {% block innerleft %}
 <!--stop-indexing-for-search-->
@@ -30,81 +30,83 @@
 {% endblock %}
 
 {% block innerright %}
-    {{ super () }}
-    <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="/">Home</a></li>
-        {% if parsed.domain == 'enterprise' %}
-            <li class="breadcrumb-item"><a href="/tactics/enterprise">Tactics</a></li>
-        {% elif parsed.domain == 'mobile' %}
-            <li class="breadcrumb-item"><a href="/tactics/mobile">Tactics</a></li>
-        {% elif parsed.domain == 'ics' %}
-            <li class="breadcrumb-item"><a href="/tactics/ics">Tactics</a></li>
-        {% else %}
-            <li class="breadcrumb-item"><a href="/tactics/">Tactics</a></li>
-        {% endif %}
-        {% if parsed.domain == 'enterprise' %}
-            <li class="breadcrumb-item"><a href="/tactics/enterprise">Enterprise</a></li>
-        {% elif parsed.domain == 'mobile'%}
-            <li class="breadcrumb-item"><a href="/tactics/mobile">Mobile</a></li>
-        {% elif parsed.domain == 'ics' %}
-            <li class="breadcrumb-item"><a href="/tactics/ics">ICS</a></li>
-        {% endif %}
-        <li class="breadcrumb-item">{{parsed.name}}</li>
-    </ol>
-    <div class="tab-pane fade show active" id="v-{{pages.title}}" role="tabpanel" aria-labelledby="v-{{pages.title}}-tab"></div>
-    <div class="row">
-        <div class="col-xl-12">
-            <div class="jumbotron jumbotron-fluid">
-                <div class="container-fluid">
-                    <h1>
-                        {{parsed.name}}
-                    </h1>
+{{ super () }}
+<ol class="breadcrumb">
+  <li class="breadcrumb-item"><a href="/">Home</a></li>
+  {% if parsed.domain == 'enterprise' %}
+  <li class="breadcrumb-item"><a href="/tactics/enterprise">Tactics</a></li>
+  {% elif parsed.domain == 'mobile' %}
+  <li class="breadcrumb-item"><a href="/tactics/mobile">Tactics</a></li>
+  {% elif parsed.domain == 'ics' %}
+  <li class="breadcrumb-item"><a href="/tactics/ics">Tactics</a></li>
+  {% else %}
+  <li class="breadcrumb-item"><a href="/tactics/">Tactics</a></li>
+  {% endif %}
+  {% if parsed.domain == 'enterprise' %}
+  <li class="breadcrumb-item"><a href="/tactics/enterprise">Enterprise</a></li>
+  {% elif parsed.domain == 'mobile'%}
+  <li class="breadcrumb-item"><a href="/tactics/mobile">Mobile</a></li>
+  {% elif parsed.domain == 'ics' %}
+  <li class="breadcrumb-item"><a href="/tactics/ics">ICS</a></li>
+  {% endif %}
+  <li class="breadcrumb-item">{{parsed.name}}</li>
+</ol>
+<div class="tab-pane fade show active" id="v-{{pages.title}}" role="tabpanel" aria-labelledby="v-{{pages.title}}-tab">
+</div>
+<div class="row">
+  <div class="col-xl-12">
+    <div class="jumbotron jumbotron-fluid">
+      <div class="container-fluid">
+        <h1>
+          {{parsed.name}}
+        </h1>
 
-                    {% if parsed.deprecated %}
-                        {% if parsed.descr %}
-                            {{deprecated.deprecated(clean_output.stixToHTML(parsed.descr, firstParagraphOnly=True))}}
-                        {% else %}
-                            {{deprecated.deprecated("This tactic has been deprecated.")}}
-                        {% endif %}
-                    {% else %}
-                        <div class="row">
-                            <div class="col-md-8">
-                                <div class="description-body">
-                                    {{clean_output.stixToHTML(parsed.descr)}}
-                                </div>
-                                {% if parsed.notes %}
-                                    {{ notes.notes_section(parsed.notes) }}
-                                {% endif %}
-                            </div>
-                            <div class="col-md-4">
-                                <div class="card">
-                                    <div class="card-body">
-                                        <div class="card-data"><span class="h5 card-title">ID:</span> {{parsed.attack_id}}</div>    
-                                        {% if parsed.created %}
-                                            <div class="card-data"><span class="h5 card-title">Created:&nbsp;</span>{{parsed.created}}</div>
-                                        {% endif %}
-                                        {% if parsed.modified %}
-                                            <div class="card-data"><span class="h5 card-title">Last Modified:&nbsp;</span>{{parsed.modified}}</div>
-                                        {% endif %}              
-                                    </div>
-                                </div>
-                                {% if parsed.versioning_feature %}
-                                    {{ versioning.permalink_button(output_file, parsed.attack_id)}}
-                                {% endif %}
-                            </div>
-                        </div>
-                        <h2 class="pt-3" id ="techniques">Techniques</h2><h6 class="table-object-count">Techniques: {{parsed.techniques_table_len}}</h6>
-                        {{technique_table.table_with_subtechniques(parsed.techniques_table)}}
-                    {% endif %}
-                </div>
+        {% if parsed.deprecated %}
+        {% if parsed.descr %}
+        {{deprecated.deprecated(clean_output.stixToHTML(parsed.descr, firstParagraphOnly=True))}}
+        {% else %}
+        {{deprecated.deprecated("This tactic has been deprecated.")}}
+        {% endif %}
+        {% else %}
+        <div class="row">
+          <div class="col-md-8">
+            <div class="description-body">
+              {{clean_output.stixToHTML(parsed.descr)}}
             </div>
+            {% if parsed.notes %}
+            {{ notes.notes_section(parsed.notes) }}
+            {% endif %}
+          </div>
+          <div class="col-md-4">
+            <div class="card">
+              <div class="card-body">
+                <div class="card-data"><span class="h5 card-title">ID:</span> {{parsed.attack_id}}</div>
+                {% if parsed.created %}
+                <div class="card-data"><span class="h5 card-title">Created:&nbsp;</span>{{parsed.created}}</div>
+                {% endif %}
+                {% if parsed.modified %}
+                <div class="card-data"><span class="h5 card-title">Last Modified:&nbsp;</span>{{parsed.modified}}</div>
+                {% endif %}
+              </div>
+            </div>
+            {% if parsed.versioning_feature %}
+            {{ versioning.permalink_button(output_file, parsed.attack_id)}}
+            {% endif %}
+          </div>
         </div>
+        <h2 class="pt-3" id="techniques">Techniques</h2>
+        <h6 class="table-object-count">Techniques: {{parsed.techniques_table_len}}</h6>
+        {{technique_table.table_with_subtechniques(parsed.techniques_table)}}
+        {% endif %}
+      </div>
     </div>
-    {{parsed.scripts}}
+  </div>
+</div>
+{{parsed.scripts}}
 {% endblock %}
 
 {% block scripts %}
-    {{ super() }}
-    <!--SCRIPTS-->
-    <script src="/theme/scripts/sidebar-load-all.js"></script>
+{{ super() }}
+<!--SCRIPTS-->
+<script src="/theme/scripts/sidebar-load-all.js"></script>
 {% endblock %}
