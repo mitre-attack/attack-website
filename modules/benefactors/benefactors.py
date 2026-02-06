@@ -6,7 +6,7 @@ from . import benefactors_config
 
 
 def generate_benefactors():
-    """Generate benefactors page markdown"""
+    """Generate benefactors page markdown."""
     # Create content pages directory if does not already exist
     util.buildhelpers.create_content_pages_dir()
 

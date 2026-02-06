@@ -34,7 +34,7 @@ module_choices = [
     "subdirectory",
     "tests",
 ]
-extras = ["resources", "versions", "blog", "stixtests", "benefactors"]
+extras = ["resources", "versions", "blog", "stixtests", "benefactors", "contribute"]
 test_choices = ["size", "links", "external_links", "citations"]
 
 
