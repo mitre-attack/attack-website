@@ -1,3 +1,5 @@
+from loguru import logger
+
 from . import relationshiphelpers as rsh
 from . import stixhelpers
 
@@ -473,6 +475,9 @@ def get_logsource_to_detections_mapping():
     for detection_strategy in detectionstrategy_list:
         analytics_list_for_detection_strategy = stixhelpers.get_analytics_from_detection_strategy(detection_strategy)
         for analytic_list_for_detection_strategy in analytics_list_for_detection_strategy.values():
+            if analytic_list_for_detection_strategy is None:
+                logger.error(f"No analytic relationships found for Detection strategy {detection_strategy['id']}")
+                continue
             log_sources = analytic_list_for_detection_strategy.get("x_mitre_log_source_references", [])
             for log_source in log_sources:
                 log_source_id = log_source.get("x_mitre_data_component_ref")

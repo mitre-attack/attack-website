@@ -1,8 +1,9 @@
 import json
 import os
 
-from modules import util
 from loguru import logger
+
+from modules import util
 
 from . import analytics_config
 

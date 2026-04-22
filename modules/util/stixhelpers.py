@@ -308,7 +308,19 @@ def get_analytics_from_detection_strategy(detection_strategy):
     all_analytics = relationshipgetters.get_analytic_list()
     analytics_map = {analytic["id"]: analytic for analytic in all_analytics}
     analytic_refs = detection_strategy.get("x_mitre_analytic_refs", [])
-    return {ref: analytics_map.get(ref) for ref in analytic_refs}
+    detection_strategy_id = buildhelpers.get_attack_id(detection_strategy) or detection_strategy.get("id")
+    detection_strategy_name = detection_strategy.get("name", "<unknown>")
+    analytics_for_detection_strategy = {}
+
+    for analytic_ref in analytic_refs:
+        analytic = analytics_map.get(analytic_ref)
+        if analytic is None:
+            logger.error(
+                f"Detection strategy {detection_strategy_id} ({detection_strategy_name}) references missing analytic {analytic_ref}"
+            )
+        analytics_for_detection_strategy[analytic_ref] = analytic
+
+    return analytics_for_detection_strategy
 
 
 def add_replace_or_ignore(stix_objs, attack_id_objs, obj_in_question):
