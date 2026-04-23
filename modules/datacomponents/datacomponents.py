@@ -140,6 +140,10 @@ def generate_datacomponent_md(datacomponent, notes, mappings):
     datacomponent_information = mappings.get(datacomponent.get("id"), [])
     detection_strategies = []
     for detection_strategy, analytic, log_source in datacomponent_information:
+        # Skip revoked or deprecated detection strategies
+        if util.buildhelpers.is_deprecated(detection_strategy) or util.buildhelpers.is_revoked(detection_strategy):
+            continue
+
         technique_detected = util.relationshipgetters.get_techniques_detected_by_detectionstrategy().get(
             detection_strategy["id"], [None]
         )
