@@ -15,6 +15,7 @@ mitigation_overview_md = (
     "Title: Mitigation Overview \n"
     "Template: general/redirect-index \n"
     "RedirectLink: /mitigations/enterprise/ \n"
+    "private: True \n"
     "save_as: mitigations/index.html \n"
 )
 

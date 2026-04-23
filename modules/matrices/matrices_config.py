@@ -14,6 +14,7 @@ matrix_overview_md = (
     "Title: Matrix Overview \n"
     "Template: general/redirect-index \n"
     "RedirectLink: /matrices/enterprise/ \n"
+    "private: True \n"
     "save_as: matrices/index.html"
 )
 
