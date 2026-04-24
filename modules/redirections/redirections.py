@@ -23,7 +23,7 @@ def generate_redirections():
     generated_save_as = set()
 
     for domain in site_config.domains:
-        if domain["deprecated"] or (redirections_config.redirects_paths.get(domain["name"]) == None):
+        if domain["deprecated"] or domain["name"] == "pre-attack":
             continue
         generate_markdown_files(domain["name"], generated_save_as)
 
@@ -114,9 +114,10 @@ def generate_obj_redirect(redirect_link, new_attack_id, old_attack_id, domain, g
         old_attack_id = util.buildhelpers.redirection_subtechnique(old_attack_id)
 
     data["to"] = f"/{redirect_link['new']}/{new_attack_id}"
-    data["from"] = f"{redirections_config.redirects_paths[domain]}{redirect_link['old']}/{old_attack_id}"
 
-    _write_redirect_file(data, generated_save_as)
+    if domain in redirections_config.redirects_paths:
+        data["from"] = f"{redirections_config.redirects_paths[domain]}{redirect_link['old']}/{old_attack_id}"
+        _write_redirect_file(data, generated_save_as)
 
     if new_attack_id != old_attack_id:
         data["from"] = f"{redirect_link['new']}/{old_attack_id}"
