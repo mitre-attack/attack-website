@@ -20,8 +20,4 @@ mobile_redirect_dict = {"course-of-action": {"old": "Mitigation", "new": "mitiga
 mobile_redirect_types_dict = [["course-of-action"]]
 
 # File paths dictionary
-redirects_paths = {
-    "enterprise-attack": "wiki/",
-    "mobile-attack": "mobile/index.php/",
-    "ics-attack": "ics/",
-}
+redirects_paths = {"enterprise-attack": "wiki/", "mobile-attack": "mobile/index.php/"}
