@@ -28,8 +28,6 @@ technique_overview_md = (
     "save_as: techniques/index.html \n"
 )
 
-techniques_redirection_location = "modules/techniques/techniques_redirections.json"
-
 # String template for all techniques
 sub_technique_md = Template(
     "Title: ${name}-${domain}\n"
