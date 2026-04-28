@@ -403,7 +403,7 @@ def get_analytic_list(analytics, reference_list):
     Parameters
     ----------
     analytics : dict
-        Mapping of analytics where each value includes 'external_references' and 'description'.
+        Mapping of analytics where the key is an Analytic STIX ID and value is an Analytic STIX object.
     reference_list : dict
         Reference accumulator passed to update_reference_list; may be modified by the helper.
 
@@ -413,11 +413,18 @@ def get_analytic_list(analytics, reference_list):
         List of dictionaries with keys 'id' and 'description' for each analytic.
     """
     analytics_list = []
-    for keys, values in analytics.items():
-        reference_list = util.buildhelpers.update_reference_list(reference_list, values)
-        analytics_list.append(
-            {"id": values["external_references"][0]["external_id"], "description": values["description"]}
-        )
+    for analytix_stix_id, analytic in analytics.items():
+        if analytic is None:
+            logger.error(f"Analytic {analytix_stix_id} is missing from the STIX objects.")
+            continue
+
+        attack_id = util.buildhelpers.get_attack_id(analytic)
+        if not attack_id:
+            logger.error(f"Analytic {analytix_stix_id} does not have an ATT&CK ID.")
+            continue
+
+        reference_list = util.buildhelpers.update_reference_list(reference_list, analytic)
+        analytics_list.append({"id": attack_id, "description": analytic.get("description", "")})
     return analytics_list
 
 

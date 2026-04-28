@@ -24,3 +24,8 @@ module.exports.loadMoreResultsButton = $('#load-more-results-button');
 
 // search parsing icon
 module.exports.searchParsingIcon = $('#search-parsing-icon');
+
+// inline search filters
+module.exports.searchFilters = $('#search-filters');
+module.exports.searchFiltersPanel = $('#search-filters-panel');
+module.exports.searchFiltersToggle = $('#search-filters-toggle');

@@ -24,6 +24,7 @@ technique_overview_md = (
     "Title: Overview \n"
     "Template: general/redirect-index \n"
     "RedirectLink: /techniques/enterprise/ \n"
+    "private: True \n"
     "save_as: techniques/index.html \n"
 )
 

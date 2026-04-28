@@ -102,6 +102,15 @@ def get_datacomponents(srcs):
     return results
 
 
+def _append_tactic_if_present(src, tactics, tactic_id, matrix_ref):
+    """Append tactic to list when present, otherwise log and skip missing refs."""
+    tactic_matches = src.query([stix2.Filter("id", "=", tactic_id)])
+    if tactic_matches:
+        tactics.append(tactic_matches[0])
+    else:
+        logger.warning(f"Skipping missing tactic ref '{tactic_id}' from matrix '{matrix_ref}'")
+
+
 def get_tactic_list(src, domain, matrix_id=None):
     """Read the STIX and return a list of all tactics in the STIX."""
     tactics = []
@@ -117,11 +126,13 @@ def get_tactic_list(src, domain, matrix_id=None):
         for curr_matrix in matrices:
             if curr_matrix["id"] == matrix_id:
                 for tactic_id in curr_matrix["tactic_refs"]:
-                    tactics.append(src.query([stix2.Filter("id", "=", tactic_id)])[0])
+                    _append_tactic_if_present(
+                        src=src, tactics=tactics, tactic_id=tactic_id, matrix_ref=curr_matrix["id"]
+                    )
     else:
         for matrix in matrices:
             for tactic_id in matrix["tactic_refs"]:
-                tactics.append(src.query([stix2.Filter("id", "=", tactic_id)])[0])
+                _append_tactic_if_present(src=src, tactics=tactics, tactic_id=tactic_id, matrix_ref=matrix["id"])
 
     # Filter out by domain
     tactics = [x for x in tactics if not hasattr(x, "x_mitre_domains") or domain in x.get("x_mitre_domains")]
@@ -297,7 +308,19 @@ def get_analytics_from_detection_strategy(detection_strategy):
     all_analytics = relationshipgetters.get_analytic_list()
     analytics_map = {analytic["id"]: analytic for analytic in all_analytics}
     analytic_refs = detection_strategy.get("x_mitre_analytic_refs", [])
-    return {ref: analytics_map.get(ref) for ref in analytic_refs}
+    detection_strategy_id = buildhelpers.get_attack_id(detection_strategy) or detection_strategy.get("id")
+    detection_strategy_name = detection_strategy.get("name", "<unknown>")
+    analytics_for_detection_strategy = {}
+
+    for analytic_ref in analytic_refs:
+        analytic = analytics_map.get(analytic_ref)
+        if analytic is None:
+            logger.error(
+                f"Detection strategy {detection_strategy_id} ({detection_strategy_name}) references missing analytic {analytic_ref}"
+            )
+        analytics_for_detection_strategy[analytic_ref] = analytic
+
+    return analytics_for_detection_strategy
 
 
 def add_replace_or_ignore(stix_objs, attack_id_objs, obj_in_question):

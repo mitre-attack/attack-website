@@ -8,7 +8,7 @@ save_as: resources/updates/updates-october-2025/index.html
 
 | Version | Start Date | End Date | Data | Changelogs |
 |:--------|:-----------|:---------|:-----|:-----------|
-| [ATT&CK v18](/versions/v18) | October 28, 2025 | Current version of ATT&CK | [v18.0 on MITRE/CTI](https://github.com/mitre/cti/releases/tag/ATT%26CK-v18.0) <br> [v18.1 on MITRE/CTI](https://github.com/mitre/cti/releases/tag/ATT%26CK-v18.1) | 17.1 - 18.0 [Details](/docs/changelogs/v17.1-v18.0/changelog-detailed.html) ([JSON](/docs/changelogs/v17.1-v18.0/changelog.json)) <br> 18.0 - 18.1 [Details](/docs/changelogs/v18.0-v18.1/changelog-detailed.html) ([JSON](/docs/changelogs/v18.0-v18.1/changelog.json)) |
+| [ATT&CK v18](/versions/v18) | October 28, 2025 | April 27, 2026 | [v18.0 on MITRE/CTI](https://github.com/mitre/cti/releases/tag/ATT%26CK-v18.0) <br> [v18.1 on MITRE/CTI](https://github.com/mitre/cti/releases/tag/ATT%26CK-v18.1) | 17.1 - 18.0 [Details](/docs/changelogs/v17.1-v18.0/changelog-detailed.html) ([JSON](/docs/changelogs/v17.1-v18.0/changelog.json)) <br> 18.0 - 18.1 [Details](/docs/changelogs/v18.0-v18.1/changelog-detailed.html) ([JSON](/docs/changelogs/v18.0-v18.1/changelog.json)) |
 
 The October 2025 (v18) ATT&CK release updates Techniques, Groups, Campaigns and Software for Enterprise, Mobile, and ICS.
 

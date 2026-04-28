@@ -7,7 +7,6 @@ import urllib.parse
 from datetime import datetime
 
 from loguru import logger
-from mitreattack.attackToExcel import attackToExcel
 
 import modules
 from modules import site_config, util
@@ -278,42 +277,11 @@ def generate_static_pages():
 
 
 def generate_working_with_attack():
-    """Responsible for generating Access Data & Tools and creating Excel files."""
+    """Responsible for generating Access Data & Tools using pre-staged Excel files only."""
     logger.info("Generating Access Data & Tools page")
-    docs_dir = os.path.join(site_config.docs_dir)
-    os.makedirs(docs_dir, exist_ok=True)
-
-    ms = util.relationshipgetters.get_ms()
-    for domain in site_config.domains:
-        if domain["deprecated"]:
-            continue
-
-        domain_name = domain["name"]
-        attackToExcel.export(
-            domain=domain_name,
-            version=site_config.full_attack_version,
-            output_dir=docs_dir,
-            mem_store=ms[domain_name],
-        )
-        src_dir = os.path.join(docs_dir, f"{domain_name}-{site_config.full_attack_version}")
-        if not os.path.isdir(src_dir):
-            logger.error(f"Excel files not generated/found in: {src_dir}")
-
-        # TODO: delete this block if we end up with greater control of how to generate output in mitreattack-python
-        dst_dir = os.path.join(docs_dir, "attack-excel-files", site_config.full_attack_version, domain_name)
-        os.makedirs(dst_dir, exist_ok=True)
-        for fname in os.listdir(src_dir):
-            if fname.endswith(".xlsx"):
-                old_path = os.path.join(src_dir, fname)
-                new_path = os.path.join(dst_dir, fname)
-                logger.debug(f"Moving {old_path} to {new_path}")
-                shutil.move(old_path, new_path)
-        try:
-            logger.debug(f"Removing directory: {src_dir}")
-            os.rmdir(src_dir)
-        except OSError:
-            pass
-
+    # Excel spreadsheets are expected to be pre-staged under
+    # modules/resources/docs/attack-excel-files and copied to content/docs
+    # by copy_docs(). No spreadsheets are generated during the build.
     attack_excel_root = "content/docs/attack-excel-files"
     logger.debug(f"Scanning for ATT&CK Excel files in: {attack_excel_root}")
 
@@ -322,6 +290,14 @@ def generate_working_with_attack():
         key=lambda v: tuple(map(int, re.findall(r"\d+", v))),
         reverse=True,
     )
+
+    # Warn if the current ATT&CK version has no pre-staged Excel files
+    if site_config.full_attack_version not in versions:
+        logger.warning(
+            f"No pre-staged Excel files found for current ATT&CK version: {site_config.full_attack_version}. "
+            "These files are not generated during build; ensure the correct spreadsheets are copied into "
+            f"{attack_excel_root}/{site_config.full_attack_version}/."
+        )
 
     excel_files_by_version = {}
     for version in versions:

@@ -22,6 +22,24 @@ TIMEZONE = os.environ.get("PELICAN_TIMEZONE", "America/New_York")
 DEFAULT_LANG = os.environ.get("PELICAN_DEFAULT_LANG", "en")
 
 THEME = "attack-theme"
+PLUGINS = ["sitemap"]
+SITEMAP = {
+    "format": "xml",
+    "priorities": {
+        "articles": 0.5,
+        "indexes": 0.5,
+        "pages": 0.5,
+    },
+    "changefreqs": {
+        "articles": "monthly",
+        "indexes": "daily",
+        "pages": "monthly",
+    },
+    "exclude": [
+        r"^404\.html$",
+        r"^versions/",
+    ],
+}
 ARCHIVES_SAVE_AS = ""
 AUTHOR_SAVE_AS = ""
 AUTHORS_SAVE_AS = ""

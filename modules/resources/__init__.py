@@ -27,6 +27,12 @@ def get_menu():
                 "external_link": False,
                 "children": [],
             },
+            {
+                "display_name": "ATT&CK Advisory Council",
+                "url": "/resources/attack-advisory-council/",
+                "external_link": False,
+                "children": [],
+            },
             {"display_name": "ATT&CKcon", "url": "/resources/attackcon/", "external_link": False, "children": []},
             {
                 "display_name": "ATT&CK Data & Tools",

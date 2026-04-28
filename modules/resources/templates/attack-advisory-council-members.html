@@ -1,0 +1,277 @@
+{% extends "general/two-column.html" %}
+{% set active_page = "resources" -%}
+{% set title = "ATT&CK Advisory Council Members & Bios | MITRE ATT&CK&reg;" -%}
+{% import "resources/attack-advisory-council-bio-data.html" as council_data %}
+
+{% block head %}
+{{ super() }}
+<style>
+  .a2c-members .member-card {
+    border: 1px solid #d9e1e8;
+    border-radius: 8px;
+    background: #fff;
+  }
+
+  .a2c-members details {
+    border: none;
+  }
+
+  .a2c-members summary {
+    cursor: default;
+    padding: 1rem;
+    list-style: none;
+  }
+
+  .a2c-members summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .a2c-members .member-header {
+    display: flex;
+    gap: 0.75rem;
+    align-items: flex-start;
+  }
+
+  .a2c-members .portrait {
+    /* Mobile-first size */
+    width: 112px;
+    height: 112px;
+    border-radius: 50%;
+    object-fit: cover;
+    /* Bias crop slightly upward to keep eyes in frame */
+    object-position: 50% 20%;
+    /* Ensure square box even if a browser ignores explicit height */
+    aspect-ratio: 1 / 1;
+    display: block;
+  }
+
+  /* Scale portraits up on larger screens */
+  /* Mobile wrapping: let text flow around the circular image */
+  @media (max-width: 575.98px) {
+    .a2c-members .member-header {
+      display: block;
+      overflow: hidden; /* contain floated image */
+    }
+    .a2c-members .portrait {
+      float: left;
+      margin: 0 0.75rem 0.5rem 0;
+      shape-outside: circle(50%);
+      -webkit-shape-outside: circle(50%);
+    }
+  }
+
+  @media (min-width: 576px) {
+    .a2c-members .portrait {
+      width: 128px;
+      height: 128px;
+    }
+  }
+  @media (min-width: 992px) {
+    .a2c-members .portrait {
+      width: 160px;
+      height: 160px;
+    }
+  }
+  @media (min-width: 1200px) {
+    .a2c-members .portrait {
+      width: 192px;
+      height: 192px;
+    }
+  }
+
+  .a2c-members .member-card > .member-header {
+    padding: 1rem;
+  }
+
+  .a2c-members .bio-body {
+    padding: 0 1rem 1rem 1rem;
+  }
+
+  .a2c-members .member-bio-preview {
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .a2c-members .member-title-org {
+    font-style: italic;
+  }
+
+  .a2c-members .toggle-label {
+    font-weight: 600;
+    color: #005b94;
+    text-decoration: underline;
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    font: inherit;
+    cursor: pointer;
+  }
+
+  .a2c-members .toggle-label .show-less {
+    display: none;
+  }
+
+  .a2c-members details[open] .toggle-label .show-more {
+    display: none;
+  }
+
+  .a2c-members details[open] .toggle-label .show-less {
+    display: inline;
+  }
+</style>
+{% endblock %}
+
+{% block innerleft %}
+<div id="sidebars"></div>
+{% endblock %}
+
+{% block innerright %}
+<ol class="breadcrumb">
+  <li class="breadcrumb-item"><a href="/">Home</a></li>
+  <li class="breadcrumb-item"><a href="/resources">Resources</a></li>
+  <li class="breadcrumb-item"><a href="/resources/attack-advisory-council/">ATT&amp;CK Advisory Council</a></li>
+  <li class="breadcrumb-item">Members &amp; Bios</li>
+</ol>
+
+<div class="container-fluid pb-4">
+  <h1>ATT&amp;CK Advisory Council Members &amp; Bios</h1>
+  <p class="mb-4">
+    The ATT&amp;CK Advisory Council includes leaders from cybersecurity strategy, policy, and operations across public and private sectors.
+  </p>
+
+  <div class="row a2c-members">
+    {% for member in council_data.members %}
+    <div class="col-12 col-lg-6 mb-3">
+      {# Compute safely whether a long bio exists beyond the short bio #}
+      {% set short = member.bio_short or '' %}
+      {% set long = member.bio_long or '' %}
+      {% set bio_remainder = '' %}
+      {% if long %}
+        {% if short and long.startswith(short) %}
+          {% set bio_remainder = long | replace(short, '', 1) | trim %}
+        {% else %}
+          {% set bio_remainder = long | trim %}
+        {% endif %}
+      {% endif %}
+
+      {% if bio_remainder %}
+      <div class="member-card">
+        <details>
+          <summary>
+            <div class="member-header">
+              <img class="portrait" src="{{ member.image | default(council_data.placeholder_image) }}" alt="Portrait of {{ member.name }}" loading="lazy" decoding="async">
+              <div>
+                <strong>{{ member.name }}</strong>
+                <div class="member-title-org">
+                  {# Prefer separate title and org if available; fallback to legacy org string #}
+                  {% if member.title and member.org %}
+                    {{ member.title }}, {{ member.org }}
+                  {% elif member.title %}
+                    {{ member.title }}
+                  {% elif member.org %}
+                    {{ member.org }}
+                  {% endif %}
+                </div>
+                {% if short %}<p class="member-bio-preview">{{ short }}</p>{% endif %}
+                <button type="button" class="toggle-label" aria-expanded="false" aria-controls="bio-{{ loop.index0 }}">
+                  <span class="show-more">Read more</span>
+                  <span class="show-less">Show less</span>
+                </button>
+              </div>
+            </div>
+          </summary>
+        <div id="bio-{{ loop.index0 }}" class="bio-body" data-bio="{{ (bio_remainder | replace('\r\n', '\n') | trim) | e }}">
+          {% set normalized = bio_remainder | replace('\r\n', '\n') | trim %}
+          {% set html = '<p>' ~ (normalized | e | replace('\n\n', '</p><p>') | replace('\n', ' ')) ~ '</p>' %}
+          {{ html | safe }}
+        </div>
+      </details>
+      </div>
+      {% else %}
+      <div class="member-card">
+        <div class="member-header">
+          <img class="portrait" src="{{ member.image | default(council_data.placeholder_image) }}" alt="Portrait of {{ member.name }}" loading="lazy" decoding="async">
+          <div>
+            <strong>{{ member.name }}</strong>
+            <div class="member-title-org">
+              {% if member.title and member.org %}
+                {{ member.title }}, {{ member.org }}
+              {% elif member.title %}
+                {{ member.title }}
+              {% elif member.org %}
+                {{ member.org }}
+              {% endif %}
+            </div>
+            {% if short %}<p class="member-bio-preview">{{ short }}</p>{% endif %}
+          </div>
+        </div>
+      </div>
+      {% endif %}
+    </div>
+    {% endfor %}
+  </div>
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script src="/theme/scripts/sidebar-load-all.js"></script>
+<script>
+  // Only allow the Read more/Show less control to toggle expansion
+  document.addEventListener('DOMContentLoaded', function () {
+    function mdToHtml(md) {
+      // Minimal inline Markdown parser for links [text](url) and paragraphs.
+      if (!md) return '';
+      // Convert [text](url) into <a>
+      var html = md.replace(/\[([^\]]+)\]\(([^\)\s]+)\)/g, function(_, text, url) {
+        try {
+          var safeText = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+          var safeUrl = url.replace(/"/g, '&quot;');
+          return '<a href="' + safeUrl + '" rel="noopener noreferrer">' + safeText + '</a>';
+        } catch (e) {
+          return text;
+        }
+      });
+      // Normalize newlines and split on blank lines for paragraphs
+      html = html.replace(/\r\n/g, '\n');
+      var parts = html.split(/\n\s*\n/).map(function(p){ return p.trim().replace(/\n+/g, ' '); }).filter(Boolean);
+      return '<p>' + parts.join('</p><p>') + '</p>';
+    }
+
+    // Make only the Read more/Show less button toggle the details
+    document.querySelectorAll('.a2c-members details').forEach(function (detailsEl) {
+      var button = detailsEl.querySelector('.toggle-label');
+      if (!button) return;
+      button.addEventListener('click', function (e) {
+        e.preventDefault();
+        detailsEl.open = !detailsEl.open;
+        button.setAttribute('aria-expanded', detailsEl.open ? 'true' : 'false');
+      });
+      // Prevent toggling when clicking the summary area outside the button
+      var summary = detailsEl.querySelector('summary');
+      if (summary) {
+        summary.addEventListener('click', function (e) {
+          if (!e.target.closest('.toggle-label')) {
+            e.preventDefault();
+          }
+        });
+        summary.addEventListener('keydown', function (e) {
+          var key = e.key || e.code;
+          if ((key === 'Enter' || key === ' ' || key === 'Spacebar') && !e.target.closest('.toggle-label')) {
+            e.preventDefault();
+          }
+        });
+      }
+    });
+
+    // Render markdown links in bios at runtime
+    document.querySelectorAll('.a2c-members .bio-body').forEach(function (el) {
+      var md = el.getAttribute('data-bio');
+      if (!md) return;
+      el.innerHTML = mdToHtml(md);
+    });
+  });
+</script>
+{% endblock %}

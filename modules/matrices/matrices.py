@@ -141,8 +141,10 @@ def get_sub_matrices(matrix):
     platform_techniques = util.buildhelpers.filter_deprecated_revoked(platform_techniques)
     # get relevant tactics
     all_tactics = util.stixhelpers.get_all_of_type(domain_ms, ["x-mitre-tactic"])
+    tactic_by_id = {}
     tactic_id_to_shortname = {}
     for tactic in all_tactics:
+        tactic_by_id[tactic["id"]] = tactic
         if "x_mitre_shortname" in tactic:
             tactic_id_to_shortname[tactic["id"]] = tactic["x_mitre_shortname"]
         else:
@@ -210,23 +212,30 @@ def get_sub_matrices(matrix):
         return obj
 
     def techniques_in_tactic(tactic_id):
-        """helper function mapping a tactic_id
-        to a structured tactic object including the (filtered) techniques
-        in the tactic"""
+        """Map a tactic_id to a structured tactic object.
+
+        Include the (filtered) techniques in the tactic
+        """
+        shortname = tactic_id_to_shortname.get(tactic_id)
+        if not shortname:
+            logger.warning(f"Tactic not found or missing shortname: {tactic_id}")
+            return []
         # filter platform techniques to those inside of this tactic
         techniques = list(
-            filter(lambda technique: tactic_id_to_shortname[tactic_id] in phase_names(technique), platform_techniques)
+            filter(lambda technique: shortname in phase_names(technique), platform_techniques)
         )
         # transform into format required by matrix macro
         return list(map(lambda t: transform_technique(t, tactic_id), techniques))
 
     def transform_tactic(tactic_id):
-        """transform a tactic object into the format required by the matrix macro"""
-        tactic_obj = list(filter(lambda t: t["id"] == tactic_id, all_tactics))[0]
+        """Transform a tactic object into the format required by the matrix macro."""
+        obj = {"techniques": []}
+        tactic_obj = tactic_by_id.get(tactic_id)
+        if not tactic_obj:
+            logger.warning(f"Tactic reference not found in bundle: {tactic_id}")
+            return obj
 
         attack_id = util.buildhelpers.get_attack_id(tactic_obj)
-
-        obj = {"techniques": []}
 
         if attack_id:
             obj["id"] = tactic_id

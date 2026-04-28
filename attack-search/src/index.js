@@ -37,6 +37,7 @@ const openSearch = function () {
 // Close search overlay
 const closeSearch = function () {
   searchInput.val('');
+  if (searchService) searchService.clearSession();
   searchOverlay.hide();
   searchOverlay.addClass('hidden');
 };
@@ -172,6 +173,62 @@ loadMoreResultsButton.on('click', () => {
   loadMoreResultsButton.blur(); // onfocus
 });
 
+$('[data-search-filter-toggle]').on('click', () => {
+  if (searchService) searchService.toggleFiltersPanel();
+});
+
+$('[data-search-filter-dropdown-toggle]').on('click', (e) => {
+  e.stopPropagation();
+  if (searchService) {
+    searchService.toggleFilterDropdown($(e.currentTarget).data('search-filter-dropdown-toggle'));
+  }
+});
+
+$('[data-search-filter-dropdown]').on('click', (e) => {
+  e.stopPropagation();
+});
+
+$(document).on('click', () => {
+  if (searchService) searchService.closeFilterDropdowns();
+});
+
+$(document).on('keyup', (e) => {
+  if (e.key === 'Escape' && searchService) searchService.closeFilterDropdowns();
+});
+
+$('[data-search-filter-page-type]').on('click', (e) => {
+  if (searchService) searchService.togglePageType($(e.currentTarget).data('search-filter-page-type'));
+});
+
+$('[data-search-filter-domain]').on('click', (e) => {
+  if (searchService) searchService.toggleDomain($(e.currentTarget).data('search-filter-domain'));
+});
+
+$('[data-search-filter-page-types-action]').on('click', (e) => {
+  if (!searchService) return;
+  const action = $(e.currentTarget).data('search-filter-page-types-action');
+
+  if (action === 'all') searchService.selectAllPageTypes();
+  if (action === 'none') searchService.clearPageTypes();
+});
+
+$('[data-search-filter-domain-action]').on('click', (e) => {
+  if (!searchService) return;
+  const action = $(e.currentTarget).data('search-filter-domain-action');
+
+  if (action === 'all') searchService.selectAllDomains();
+  if (action === 'none') searchService.clearDomains();
+});
+
+$('[data-search-filter-group-action]').on('click', (e) => {
+  if (!searchService) return;
+  const button = $(e.currentTarget);
+  searchService.setPageTypeGroupSelected(
+    button.data('search-filter-group'),
+    button.data('search-filter-group-action') === 'all',
+  );
+});
+
 // Add compatibility patches for Internet Explorer
 if (!String.prototype.includes) {
   String.prototype.includes = function (search, start) {
@@ -195,4 +252,3 @@ console.debug('search module is loaded.');
 
 // Initialize the search service when the module loads
 initializeSearchService();
-

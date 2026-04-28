@@ -139,9 +139,9 @@ resources_markdown_path = "content/pages/resources/"
 
 # Redirect md string template
 redirect_md_index = Template(
-    "Title: ${title}\nTemplate: general/redirect-index\nRedirectLink: ${to}\nsave_as: ${from}/index.html"
+    "Title: ${title}\nTemplate: general/redirect-index\nRedirectLink: ${to}\nprivate: True\nsave_as: ${from}/index.html"
 )
-redirect_md = Template("Title: ${title}\nTemplate: general/redirect-index\nRedirectLink: ${to}\nsave_as: ${from}")
+redirect_md = Template("Title: ${title}\nTemplate: general/redirect-index\nRedirectLink: ${to}\nprivate: True\nsave_as: ${from}")
 
 # Custom_alphabet used to sort list of dictionaries by domain name
 # depending on domain ordering
@@ -173,7 +173,7 @@ layer_md = Template(
     "Title: ${domain} Techniques\nTemplate: general/json\nsave_as: ${path}/${attack_id}-${domain}-layer.json\njson: "
 )
 layer_version = "4.5"
-navigator_version = "5.2.0"
+navigator_version = "5.3.2"
 
 # Directory for test reports
 test_report_directory = "reports"

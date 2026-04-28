@@ -1,5 +1,13 @@
 # Website Changelog
 
+## v4.4.2 (2026-04-28)
+
+### Features
+
+* Add filters for website search
+* Release ATT&CK content version 19.0.
+  See detailed changes [here](https://github.com/mitre/cti/releases/tag/ATT%26CK-v19.0).
+
 ## v4.4.1 (2025-11-13)
 
 ### Features

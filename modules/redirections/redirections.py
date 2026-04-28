@@ -20,13 +20,15 @@ def generate_redirections():
         redirections_filename=redirections_config.redirections_location, redirect_md=site_config.redirect_md_index
     )
 
+    generated_save_as = set()
+
     for domain in site_config.domains:
-        if domain["deprecated"] or (redirections_config.redirects_paths.get(domain["name"]) == None):
+        if domain["deprecated"] or domain["name"] == "pre-attack":
             continue
-        generate_markdown_files(domain["name"])
+        generate_markdown_files(domain["name"], generated_save_as)
 
 
-def generate_markdown_files(domain):
+def generate_markdown_files(domain, generated_save_as):
     """Given a domain, changes all the old links to new redirected links."""
     # Reads the json attack STIX and creates a list of the ATT&CK Tactics
     ms = util.relationshipgetters.get_ms()
@@ -49,6 +51,7 @@ def generate_markdown_files(domain):
                                 new_attack_id=revoked_attack_id,
                                 old_attack_id=old_attack_id,
                                 domain=domain,
+                                generated_save_as=generated_save_as,
                             )
 
                             if old_attack_id != new_attack_id:
@@ -57,6 +60,7 @@ def generate_markdown_files(domain):
                                     new_attack_id=revoked_attack_id,
                                     old_attack_id=new_attack_id,
                                     domain=domain,
+                                    generated_save_as=generated_save_as,
                                 )
                 else:
                     generate_obj_redirect(
@@ -64,6 +68,7 @@ def generate_markdown_files(domain):
                         new_attack_id=new_attack_id,
                         old_attack_id=old_attack_id,
                         domain=domain,
+                        generated_save_as=generated_save_as,
                     )
 
     if domain == "mobile-attack":
@@ -74,11 +79,28 @@ def generate_markdown_files(domain):
 
                 if new_attack_id:
                     generate_obj_redirect(
-                        redirections_config.mobile_redirect_dict[types[0]], new_attack_id, old_attack_id, domain
+                        redirections_config.mobile_redirect_dict[types[0]],
+                        new_attack_id,
+                        old_attack_id,
+                        domain,
+                        generated_save_as,
                     )
 
 
-def generate_obj_redirect(redirect_link, new_attack_id, old_attack_id, domain):
+def _write_redirect_file(data, generated_save_as):
+    save_as = f"{data['from']}/index.html"
+    if save_as in generated_save_as:
+        return
+
+    generated_save_as.add(save_as)
+
+    subs = site_config.redirect_md_index.substitute(data)
+    redirect_file = os.path.join(site_config.redirects_markdown_path, f"{data['title']}.md")
+    with open(redirect_file, "w", encoding="utf8") as md_file:
+        md_file.write(subs)
+
+
+def generate_obj_redirect(redirect_link, new_attack_id, old_attack_id, domain, generated_save_as):
     """Responsible for generating redirects markdown for given data."""
     data = {}
 
@@ -92,22 +114,16 @@ def generate_obj_redirect(redirect_link, new_attack_id, old_attack_id, domain):
         old_attack_id = util.buildhelpers.redirection_subtechnique(old_attack_id)
 
     data["to"] = f"/{redirect_link['new']}/{new_attack_id}"
-    data["from"] = f"{redirections_config.redirects_paths[domain]}{redirect_link['old']}/{old_attack_id}"
 
-    subs = site_config.redirect_md_index.substitute(data)
-
-    redirect_file = os.path.join(site_config.redirects_markdown_path, f"{data['title']}.md")
-    with open(redirect_file, "w", encoding="utf8") as md_file:
-        md_file.write(subs)
+    if domain in redirections_config.redirects_paths:
+        data["from"] = f"{redirections_config.redirects_paths[domain]}{redirect_link['old']}/{old_attack_id}"
+        _write_redirect_file(data, generated_save_as)
 
     if new_attack_id != old_attack_id:
         data["from"] = f"{redirect_link['new']}/{old_attack_id}"
-
-        subs = site_config.redirect_md_index.substitute(data)
-
         redirect_file = os.path.join(site_config.redirects_markdown_path, f"{redirect_link['new']}{data['title']}.md")
-        with open(redirect_file, "w", encoding="utf8") as md_file:
-            md_file.write(subs)
+        data["title"] = os.path.splitext(os.path.basename(redirect_file))[0]
+        _write_redirect_file(data, generated_save_as)
 
 
 def get_new_and_old_ids(obj):

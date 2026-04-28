@@ -24,6 +24,7 @@ tactic_overview_md = (
     "Title: Tactics overview \n"
     "Template: general/redirect-index \n"
     "RedirectLink: /tactics/enterprise/ \n"
+    "private: True \n"
     "save_as: tactics/index.html \n"
 )
 
