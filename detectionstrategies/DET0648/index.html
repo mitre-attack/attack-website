@@ -42,7 +42,7 @@
             <!-- header elements -->
             <header class="col px-0">
                     <nav class='navbar navbar-expand-lg navbar-dark position-static'>
-        <a class='navbar-brand' href='/'><img src="/theme/images/mitre_attack_logo.png" class="attack-logo"></a>
+        <a class='navbar-brand' href='/'><img src="/theme/images/mitre_attack_logo.png" class="attack-logo" alt="ATT&CK Home"></a>
         <button class='navbar-toggler' type='button' data-toggle='collapse' data-target='#navbarCollapse'
                 aria-controls='navbarCollapse' aria-expanded='false' aria-label='Toggle navigation'>
                 <span class='navbar-toggler-icon'></span>
@@ -152,6 +152,7 @@
     <div class="dropdown-menu " aria-labelledby="navbarDropdown">
                 <a class="dropdown-item" href="/resources/">Get Started</a>
                 <a class="dropdown-item" href="/resources/learn-more-about-attack/">Learn More about ATT&CK</a>
+                <a class="dropdown-item" href="/resources/attack-advisory-council/">ATT&CK Advisory Council</a>
                 <a class="dropdown-item" href="/resources/attackcon/">ATT&CKcon</a>
                 <a class="dropdown-item" href="/resources/attack-data-and-tools/">ATT&CK Data & Tools</a>
                 <a class="dropdown-item" href="/resources/faq/">FAQ</a>
@@ -191,7 +192,7 @@
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
                     <div class="container-fluid banner-message">
-                        ATT&CK v19 will be released April 28th! Check out this <a href='https://medium.com/mitre-attack/defense-evasion-split-5d533545fa32'>blog post</a> for information on the planned deprecation of Enterprise's Defense Evasion tactic in the upcoming release.
+                        ATT&CK v19 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v19-ff329cb65d66'>blog post</a> for more information.
                     </div>
             </div>
         </div>
@@ -276,13 +277,13 @@
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Permalink to this version of DET0648" 
-           href="/versions/v18/detectionstrategies/DET0648/" data-test-ignore="true">Version Permalink</a>
+           href="/versions/v19/detectionstrategies/DET0648/" data-test-ignore="true">Version Permalink</a>
     </div>
     <div class="permalink">
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Go to the live version of DET0648" 
-           href="/versions/v18/detectionstrategies/DET0648/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+           href="/versions/v19/detectionstrategies/DET0648/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
     </div>
 </div>
 
@@ -310,7 +311,7 @@
               role="tabpanel" aria-labelledby="tab-Android">
               <h4 class="pt-3" id="AN1728">AN1728</h4>
               <div>
-                        <p>Application vetting services can detect unnecessary and potentially abused location permissions.<br />On Android 10 and later, the system shows a notification to the user when an app has been accessing device location in the background.<br />Application vetting services can detect unnecessary and potentially abused API calls.<br />The user can review which applications have location permissions in the operating system’s settings menu.</p>
+                        <p>Correlates (1) acquisition of foreground or background location permission sufficient for continuous geolocation evaluation, (2) repeated location checks or registration of geofence monitoring in background or low-interaction states, and (3) transition into sensitive behavior only after the device enters, exits, or remains within a qualifying geographic region. The defender observes a causal chain where an application suppresses malicious or higher-risk behavior until a location-derived condition is satisfied, then initiates follow-on actions such as network communication, background processing, or protected resource access.</p>
 
               </div>
 
@@ -327,50 +328,82 @@
                   <tbody>
                     <tr>
                       <td rowspan="1">
+                        <a href="/datacomponents/DC0123">
+                          Application State (DC0123)
+                        </a>
+                      </td>
+                      <td>MobileEDR:telemetry</td>
+                      <td>application remains dormant, low-activity, or background-resident across non-qualifying locations and transitions into active execution only after geographic condition is met</td>
+                    </tr>
+                    <tr>
+                      <td rowspan="1">
                         <a href="/datacomponents/DC0114">
-                          Permissions Requests (DC0114)
+                          Application Permission (DC0114)
                         </a>
                       </td>
-                      <td>Application Vetting</td>
-                      <td>None</td>
+                      <td>android:MDMLog</td>
+                      <td>application granted ACCESS_FINE_LOCATION and, when required for background operation, ACCESS_BACKGROUND_LOCATION + capability state sufficient for persistent geolocation monitoring before later guarded activity</td>
                     </tr>
                     <tr>
                       <td rowspan="1">
-                        <a href="/datacomponents/DC0117">
-                          System Notifications (DC0117)
+                        <a href="/datacomponents/DC0021">
+                          OS API Execution (DC0021)
                         </a>
                       </td>
-                      <td>User Interface</td>
-                      <td>None</td>
-                    </tr>
-                    <tr>
-                      <td rowspan="1">
-                        <a href="/datacomponents/DC0112">
-                          API Calls (DC0112)
-                        </a>
-                      </td>
-                      <td>Application Vetting</td>
-                      <td>None</td>
-                    </tr>
-                    <tr>
-                      <td rowspan="1">
-                        <a href="/datacomponents/DC0118">
-                          System Settings (DC0118)
-                        </a>
-                      </td>
-                      <td>User Interface</td>
-                      <td>None</td>
+                      <td>MobileEDR:telemetry</td>
+                      <td>application invokes geolocation or geofencing framework operations (e.g., location polling or geofence registration/evaluation) and sensitive framework activity begins only after region match or location threshold condition</td>
                     </tr>
                   </tbody>
                 </table>
               </div>
 
+              <h5 class="pt-3" id="AN1728-mutable-elements">Mutable Elements</h5>
+              <div class="tables-mobile">
+                <table class="table table-bordered table-alternate mt-2">
+                  <thead>
+                    <tr>
+                      <th scope="col">Field</th>
+                      <th scope="col">Description</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>TimeWindow</td>
+                      <td>Correlation window between location evaluation, region transition, and guarded execution</td>
+                    </tr>
+                    <tr>
+                      <td>RegionMatchThreshold</td>
+                      <td>Defines proximity, radius, or duration within region required before subsequent activity is considered geographically gated</td>
+                    </tr>
+                    <tr>
+                      <td>BackgroundLocationRequired</td>
+                      <td>Whether suspiciousness increases when background location permission is present and activity occurs outside foreground use</td>
+                    </tr>
+                    <tr>
+                      <td>DormancyThreshold</td>
+                      <td>Amount of low-activity or dormant runtime before location-qualified activation</td>
+                    </tr>
+                    <tr>
+                      <td>AllowedAppList</td>
+                      <td>Baseline of legitimate apps expected to use geofencing or conditional location-based features</td>
+                    </tr>
+                    <tr>
+                      <td>ForegroundStateRequired</td>
+                      <td>Whether execution should be considered higher fidelity only when it begins from background or without recent user interaction</td>
+                    </tr>
+                    <tr>
+                      <td>UplinkBytesThreshold</td>
+                      <td>Minimum outbound traffic volume used to distinguish meaningful post-match activity from benign telemetry</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
             </div>
             <div class="tab-pane fade " id="pane-iOS"
               role="tabpanel" aria-labelledby="tab-iOS">
               <h4 class="pt-3" id="AN1729">AN1729</h4>
               <div>
-                        <p>Application vetting services can detect unnecessary and potentially abused location permissions.<br />On Android 10 and later, the system shows a notification to the user when an app has been accessing device location in the background.<br />Application vetting services can detect unnecessary and potentially abused API calls.<br />The user can review which applications have location permissions in the operating system’s settings menu.</p>
+                        <p>Correlates (1) application possession and use of location authorization sufficient for ongoing geographic evaluation, (2) repeated location or region-monitoring behavior with limited visible feature activation outside target area, and (3) abrupt onset of network communication, background execution, or feature activation only after a qualifying location context is reached. Because direct visibility into every geofence callback is often weaker on iOS, the defender relies more heavily on the combination of location authorization state, repeated location access, app state transition, and downstream behavior that begins after region alignment.</p>
 
               </div>
 
@@ -388,43 +421,66 @@
                     <tr>
                       <td rowspan="1">
                         <a href="/datacomponents/DC0114">
-                          Permissions Requests (DC0114)
+                          Application Permission (DC0114)
                         </a>
                       </td>
-                      <td>Application Vetting</td>
-                      <td>None</td>
+                      <td>iOS:MDMLog</td>
+                      <td>application authorized for when-in-use or always location access and, where relevant, background execution capability sufficient for continued geographic evaluation before later guarded behavior</td>
                     </tr>
                     <tr>
                       <td rowspan="1">
-                        <a href="/datacomponents/DC0117">
-                          System Notifications (DC0117)
+                        <a href="/datacomponents/DC0021">
+                          OS API Execution (DC0021)
                         </a>
                       </td>
-                      <td>User Interface</td>
-                      <td>None</td>
-                    </tr>
-                    <tr>
-                      <td rowspan="1">
-                        <a href="/datacomponents/DC0112">
-                          API Calls (DC0112)
-                        </a>
-                      </td>
-                      <td>Application Vetting</td>
-                      <td>None</td>
-                    </tr>
-                    <tr>
-                      <td rowspan="1">
-                        <a href="/datacomponents/DC0118">
-                          System Settings (DC0118)
-                        </a>
-                      </td>
-                      <td>User Interface</td>
-                      <td>None</td>
+                      <td>MobileEDR:telemetry</td>
+                      <td>application exhibits repeated location-context evaluation followed by delayed privileged framework use or feature activation only after target region match</td>
                     </tr>
                   </tbody>
                 </table>
               </div>
 
+              <h5 class="pt-3" id="AN1729-mutable-elements">Mutable Elements</h5>
+              <div class="tables-mobile">
+                <table class="table table-bordered table-alternate mt-2">
+                  <thead>
+                    <tr>
+                      <th scope="col">Field</th>
+                      <th scope="col">Description</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>TimeWindow</td>
+                      <td>Correlation window between location access, region qualification, and guarded activity</td>
+                    </tr>
+                    <tr>
+                      <td>AuthorizationMode</td>
+                      <td>Expected risk weighting for when-in-use versus always authorization and whether background behavior occurs under that mode</td>
+                    </tr>
+                    <tr>
+                      <td>RegionMatchThreshold</td>
+                      <td>Defines geospatial or dwell-time threshold used to infer region-based activation</td>
+                    </tr>
+                    <tr>
+                      <td>DormancyThreshold</td>
+                      <td>Duration of inactivity or suppressed behavior before location-qualified activation</td>
+                    </tr>
+                    <tr>
+                      <td>ExpectedBackgroundModes</td>
+                      <td>Baseline of apps legitimately using location-driven background execution or region monitoring</td>
+                    </tr>
+                    <tr>
+                      <td>AllowedDestinationList</td>
+                      <td>Expected destinations for apps whose network activity legitimately depends on user location</td>
+                    </tr>
+                    <tr>
+                      <td>UserInteractionThreshold</td>
+                      <td>Acceptable recency of user interaction before post-location activation is considered suspicious</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         </div>
@@ -450,6 +506,256 @@
             <div class="search-icons">
                 <div class="search-parsing-icon spinner-border" style="display: none" id="search-parsing-icon"></div>
                 <div class="close-search-icon" id="close-search-icon">&times;</div>
+            </div>
+        </div>
+        <div class="search-filters" id="search-filters">
+            <div class="search-filter-summary">
+                <div class="search-filter-dropdown">
+                    <button type="button" class="search-filter-summary-chip"
+                        data-search-filter-dropdown-toggle="core" aria-controls="search-filter-dropdown-core"
+                        aria-expanded="false">
+                        Core Objects: <span data-search-filter-summary="group-core">All</span>
+                    </button>
+                    <div class="search-filter-dropdown-menu" id="search-filter-dropdown-core"
+                        data-search-filter-dropdown="core" aria-hidden="true" style="display: none;">
+                        <div class="search-filter-group-heading">
+                            <span>Core ATT&CK Objects</span>
+                            <span class="search-filter-actions">
+                                <button type="button" data-search-filter-group="core"
+                                    data-search-filter-group-action="all">All</button>
+                                <button type="button" data-search-filter-group="core"
+                                    data-search-filter-group-action="none">None</button>
+                            </span>
+                        </div>
+                        <div class="search-filter-chips">
+                            <button type="button" data-search-filter-page-type="matrices">Matrices <span
+                                class="search-filter-count">0</span></button>
+                            <button type="button" data-search-filter-page-type="tactics">Tactics <span
+                                class="search-filter-count">0</span></button>
+                            <button type="button" data-search-filter-page-type="techniques">Techniques <span
+                                class="search-filter-count">0</span></button>
+                            <button type="button" data-search-filter-page-type="sub-techniques">Sub-Techniques <span
+                                class="search-filter-count">0</span></button>
+                        </div>
+                    </div>
+                </div>
+                <div class="search-filter-dropdown">
+                    <button type="button" class="search-filter-summary-chip"
+                        data-search-filter-dropdown-toggle="defenses" aria-controls="search-filter-dropdown-defenses"
+                        aria-expanded="false">
+                        Defenses: <span data-search-filter-summary="group-defenses">All</span>
+                    </button>
+                    <div class="search-filter-dropdown-menu" id="search-filter-dropdown-defenses"
+                        data-search-filter-dropdown="defenses" aria-hidden="true" style="display: none;">
+                        <div class="search-filter-group-heading">
+                            <span>Defenses</span>
+                            <span class="search-filter-actions">
+                                <button type="button" data-search-filter-group="defenses"
+                                    data-search-filter-group-action="all">All</button>
+                                <button type="button" data-search-filter-group="defenses"
+                                    data-search-filter-group-action="none">None</button>
+                            </span>
+                        </div>
+                        <div class="search-filter-chips">
+                            <button type="button" data-search-filter-page-type="mitigations">Mitigations <span
+                                class="search-filter-count">0</span></button>
+                            <button type="button" data-search-filter-page-type="assets">Assets <span
+                                class="search-filter-count">0</span></button>
+                            <button type="button" data-search-filter-page-type="detectionstrategies">Detection
+                                Strategies <span class="search-filter-count">0</span></button>
+                            <button type="button" data-search-filter-page-type="analytics">Analytics <span
+                                class="search-filter-count">0</span></button>
+                            <button type="button" data-search-filter-page-type="datacomponents">Data Components <span
+                                class="search-filter-count">0</span></button>
+                        </div>
+                    </div>
+                </div>
+                <div class="search-filter-dropdown">
+                    <button type="button" class="search-filter-summary-chip"
+                        data-search-filter-dropdown-toggle="cti" aria-controls="search-filter-dropdown-cti"
+                        aria-expanded="false">
+                        CTI: <span data-search-filter-summary="group-cti">All</span>
+                    </button>
+                    <div class="search-filter-dropdown-menu" id="search-filter-dropdown-cti"
+                        data-search-filter-dropdown="cti" aria-hidden="true" style="display: none;">
+                        <div class="search-filter-group-heading">
+                            <span>CTI</span>
+                            <span class="search-filter-actions">
+                                <button type="button" data-search-filter-group="cti"
+                                    data-search-filter-group-action="all">All</button>
+                                <button type="button" data-search-filter-group="cti"
+                                    data-search-filter-group-action="none">None</button>
+                            </span>
+                        </div>
+                        <div class="search-filter-chips">
+                            <button type="button" data-search-filter-page-type="groups">Groups <span
+                                class="search-filter-count">0</span></button>
+                            <button type="button" data-search-filter-page-type="software">Software <span
+                                class="search-filter-count">0</span></button>
+                            <button type="button" data-search-filter-page-type="campaigns">Campaigns <span
+                                class="search-filter-count">0</span></button>
+                        </div>
+                    </div>
+                </div>
+                <div class="search-filter-dropdown">
+                    <button type="button" class="search-filter-summary-chip"
+                        data-search-filter-dropdown-toggle="reference" aria-controls="search-filter-dropdown-reference"
+                        aria-expanded="false">
+                        Reference: <span data-search-filter-summary="group-reference">All</span>
+                    </button>
+                    <div class="search-filter-dropdown-menu" id="search-filter-dropdown-reference"
+                        data-search-filter-dropdown="reference" aria-hidden="true" style="display: none;">
+                        <div class="search-filter-group-heading">
+                            <span>Reference</span>
+                            <span class="search-filter-actions">
+                                <button type="button" data-search-filter-group="reference"
+                                    data-search-filter-group-action="all">All</button>
+                                <button type="button" data-search-filter-group="reference"
+                                    data-search-filter-group-action="none">None</button>
+                            </span>
+                        </div>
+                        <div class="search-filter-chips">
+                            <button type="button" data-search-filter-page-type="resources">Resources <span
+                                class="search-filter-count">0</span></button>
+                        </div>
+                    </div>
+                </div>
+                <div class="search-filter-dropdown">
+                    <button type="button" class="search-filter-summary-chip"
+                        data-search-filter-dropdown-toggle="domains" aria-controls="search-filter-dropdown-domains"
+                        aria-expanded="false">
+                        Domains: <span data-search-filter-summary="domains">All</span>
+                    </button>
+                    <div class="search-filter-dropdown-menu" id="search-filter-dropdown-domains"
+                        data-search-filter-dropdown="domains" aria-hidden="true" style="display: none;">
+                        <div class="search-filter-group-heading">
+                            <span>Domains</span>
+                            <span class="search-filter-actions">
+                                <button type="button" data-search-filter-domain-action="all">All</button>
+                                <button type="button" data-search-filter-domain-action="none">None</button>
+                            </span>
+                        </div>
+                        <div class="search-filter-chips">
+                            <button type="button" data-search-filter-domain="enterprise">Enterprise <span
+                                class="search-filter-count">0</span></button>
+                            <button type="button" data-search-filter-domain="mobile">Mobile <span
+                                class="search-filter-count">0</span></button>
+                            <button type="button" data-search-filter-domain="ics">ICS <span
+                                class="search-filter-count">0</span></button>
+                        </div>
+                    </div>
+                </div>
+                <button type="button" class="search-filter-summary-chip" id="search-filters-toggle"
+                    data-search-filter-toggle aria-controls="search-filters-panel" aria-expanded="false">
+                    Show all Filters
+                </button>
+            </div>
+            <div class="search-filters-panel" id="search-filters-panel" aria-hidden="true" style="display: none;">
+                <div class="search-filter-heading">
+                    <span>Page type</span>
+                    <span class="search-filter-actions">
+                        <button type="button" data-search-filter-page-types-action="all">All</button>
+                        <button type="button" data-search-filter-page-types-action="none">None</button>
+                    </span>
+                </div>
+
+                <div class="search-filter-group">
+                    <div class="search-filter-group-heading">
+                        <span>Core ATT&CK Objects</span>
+                        <span class="search-filter-actions">
+                            <button type="button" data-search-filter-group="core"
+                                data-search-filter-group-action="all">All</button>
+                            <button type="button" data-search-filter-group="core"
+                                data-search-filter-group-action="none">None</button>
+                        </span>
+                    </div>
+                    <div class="search-filter-chips">
+                        <button type="button" data-search-filter-page-type="matrices">Matrices <span
+                            class="search-filter-count">0</span></button>
+                        <button type="button" data-search-filter-page-type="tactics">Tactics <span
+                            class="search-filter-count">0</span></button>
+                        <button type="button" data-search-filter-page-type="techniques">Techniques <span
+                            class="search-filter-count">0</span></button>
+                        <button type="button" data-search-filter-page-type="sub-techniques">Sub-Techniques <span
+                            class="search-filter-count">0</span></button>
+                    </div>
+                </div>
+
+                <div class="search-filter-group">
+                    <div class="search-filter-group-heading">
+                        <span>Defenses</span>
+                        <span class="search-filter-actions">
+                            <button type="button" data-search-filter-group="defenses"
+                                data-search-filter-group-action="all">All</button>
+                            <button type="button" data-search-filter-group="defenses"
+                                data-search-filter-group-action="none">None</button>
+                        </span>
+                    </div>
+                    <div class="search-filter-chips">
+                        <button type="button" data-search-filter-page-type="mitigations">Mitigations <span
+                            class="search-filter-count">0</span></button>
+                        <button type="button" data-search-filter-page-type="assets">Assets <span
+                            class="search-filter-count">0</span></button>
+                        <button type="button" data-search-filter-page-type="detectionstrategies">Detection Strategies
+                            <span class="search-filter-count">0</span></button>
+                        <button type="button" data-search-filter-page-type="analytics">Analytics <span
+                            class="search-filter-count">0</span></button>
+                        <button type="button" data-search-filter-page-type="datacomponents">Data Components <span
+                            class="search-filter-count">0</span></button>
+                    </div>
+                </div>
+
+                <div class="search-filter-group">
+                    <div class="search-filter-group-heading">
+                        <span>CTI</span>
+                        <span class="search-filter-actions">
+                            <button type="button" data-search-filter-group="cti"
+                                data-search-filter-group-action="all">All</button>
+                            <button type="button" data-search-filter-group="cti"
+                                data-search-filter-group-action="none">None</button>
+                        </span>
+                    </div>
+                    <div class="search-filter-chips">
+                        <button type="button" data-search-filter-page-type="groups">Groups <span
+                            class="search-filter-count">0</span></button>
+                        <button type="button" data-search-filter-page-type="software">Software <span
+                            class="search-filter-count">0</span></button>
+                        <button type="button" data-search-filter-page-type="campaigns">Campaigns <span
+                            class="search-filter-count">0</span></button>
+                    </div>
+                </div>
+
+                <div class="search-filter-group">
+                    <div class="search-filter-group-heading">
+                        <span>Reference</span>
+                        <span class="search-filter-actions">
+                            <button type="button" data-search-filter-group="reference"
+                                data-search-filter-group-action="all">All</button>
+                            <button type="button" data-search-filter-group="reference"
+                                data-search-filter-group-action="none">None</button>
+                        </span>
+                    </div>
+                    <div class="search-filter-chips">
+                        <button type="button" data-search-filter-page-type="resources">Resources <span
+                            class="search-filter-count">0</span></button>
+                    </div>
+                </div>
+
+                <div class="search-filter-heading">
+                    <span>Domain</span>
+                    <span class="search-filter-actions">
+                        <button type="button" data-search-filter-domain-action="all">All</button>
+                        <button type="button" data-search-filter-domain-action="none">None</button>
+                    </span>
+                </div>
+                <div class="search-filter-chips">
+                    <button type="button" data-search-filter-domain="enterprise">Enterprise <span
+                        class="search-filter-count">0</span></button>
+                    <button type="button" data-search-filter-domain="mobile">Mobile <span
+                        class="search-filter-count">0</span></button>
+                    <button type="button" data-search-filter-domain="ics">ICS <span
+                        class="search-filter-count">0</span></button>
+                </div>
             </div>
         </div>
         <!-- results and controls for loading more results -->
@@ -490,7 +796,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3 col-footer">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v18.1&#013;Website  v4.4.1">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v19.0&#013;Website  v4.4.2">Website Changelog</a></u>
                                 </div>
                                 <div class="px-3">
                                     <u class="footer-link"><a href="/resources/legal-and-branding/privacy/#" class="footer-link" onclick="Osano.cm.showDrawer('osano-cm-dom-info-dialog-open')">Cookie Preferences</a></u>
@@ -498,7 +804,7 @@
                             </div>
                             <div class="row">
                                 <small class="px-3">
-                                    &copy;&nbsp;2015&nbsp;-&nbsp;2025, The MITRE Corporation. MITRE ATT&CK and ATT&CK are registered trademarks of The MITRE Corporation.
+                                    &copy;&nbsp;2015&nbsp;-&nbsp;2026, The MITRE Corporation. MITRE ATT&CK and ATT&CK are registered trademarks of The MITRE Corporation.
                                 </small>
                             </div>
                         </div>

@@ -42,7 +42,7 @@
             <!-- header elements -->
             <header class="col px-0">
                     <nav class='navbar navbar-expand-lg navbar-dark position-static'>
-        <a class='navbar-brand' href='/'><img src="/theme/images/mitre_attack_logo.png" class="attack-logo"></a>
+        <a class='navbar-brand' href='/'><img src="/theme/images/mitre_attack_logo.png" class="attack-logo" alt="ATT&CK Home"></a>
         <button class='navbar-toggler' type='button' data-toggle='collapse' data-target='#navbarCollapse'
                 aria-controls='navbarCollapse' aria-expanded='false' aria-label='Toggle navigation'>
                 <span class='navbar-toggler-icon'></span>
@@ -152,6 +152,7 @@
     <div class="dropdown-menu " aria-labelledby="navbarDropdown">
                 <a class="dropdown-item" href="/resources/">Get Started</a>
                 <a class="dropdown-item" href="/resources/learn-more-about-attack/">Learn More about ATT&CK</a>
+                <a class="dropdown-item" href="/resources/attack-advisory-council/">ATT&CK Advisory Council</a>
                 <a class="dropdown-item" href="/resources/attackcon/">ATT&CKcon</a>
                 <a class="dropdown-item" href="/resources/attack-data-and-tools/">ATT&CK Data & Tools</a>
                 <a class="dropdown-item" href="/resources/faq/">FAQ</a>
@@ -191,7 +192,7 @@
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
                     <div class="container-fluid banner-message">
-                        ATT&CK v19 will be released April 28th! Check out this <a href='https://medium.com/mitre-attack/defense-evasion-split-5d533545fa32'>blog post</a> for information on the planned deprecation of Enterprise's Defense Evasion tactic in the upcoming release.
+                        ATT&CK v19 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v19-ff329cb65d66'>blog post</a> for more information.
                     </div>
             </div>
         </div>
@@ -276,13 +277,13 @@
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Permalink to this version of DET0677" 
-           href="/versions/v18/detectionstrategies/DET0677/" data-test-ignore="true">Version Permalink</a>
+           href="/versions/v19/detectionstrategies/DET0677/" data-test-ignore="true">Version Permalink</a>
     </div>
     <div class="permalink">
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Go to the live version of DET0677" 
-           href="/versions/v18/detectionstrategies/DET0677/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+           href="/versions/v19/detectionstrategies/DET0677/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
     </div>
 </div>
 
@@ -304,11 +305,97 @@
               role="tabpanel" aria-labelledby="tab-Android">
               <h4 class="pt-3" id="AN1780">AN1780</h4>
               <div>
-                        <p>Detection of steganography is difficult unless detectable artifacts with a known signature are left behind by the obfuscation process. Look for strings are other signatures left in system artifacts related to decoding steganography.</p>
+                        <p>Defender correlates an app's opaque media ingress (download/IPC) with high-entropy or anomalous edits to image/audio/video files in app-writable storage (e.g., bursts of bitmap/codec operations, EXIF/IPTC/XMP mutation, suspicious container growth), followed by decoding/extraction behavior (new non-media artifact derived from the edited media) and optional exfiltration/sharing of the stego media. Focus is on: (1) opaque media arrival → (2) rapid metadata or pixel-domain mutations with atypical size/entropy deltas → (3a) decoded payload creation or dynamic load from decoded path, and/or (3b) upload/share of the modified media within a tight window.</p>
 
               </div>
 
+              <h5 class="pt-3" id="AN1780-log-sources">Log Sources</h5>
+              <div class="tables-mobile">
+                <table class="table table-bordered table-alternate mt-2">
+                  <thead>
+                    <tr>
+                      <th scope="col">Data Component</th>
+                      <th scope="col">Name</th>
+                      <th scope="col">Channel</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td rowspan="1">
+                        <a href="/datacomponents/DC0085">
+                          Network Traffic Content (DC0085)
+                        </a>
+                      </td>
+                      <td>NSM:Flow</td>
+                      <td>HTTP(S)/QUIC media download with opaque content types (image/*, audio/*, video/*) from non-gallery domains or CDNs not previously used by the app</td>
+                    </tr>
+                    <tr>
+                      <td rowspan="1">
+                        <a href="/datacomponents/DC0061">
+                          File Modification (DC0061)
+                        </a>
+                      </td>
+                      <td>android:logcat</td>
+                      <td>INSERT or UPDATE of image/*, audio/*, video/* via ContentResolver with same URI re-written within short window; abnormal MIME/container change</td>
+                    </tr>
+                    <tr>
+                      <td rowspan="1">
+                        <a href="/datacomponents/DC0039">
+                          File Creation (DC0039)
+                        </a>
+                      </td>
+                      <td>android:logcat</td>
+                      <td>App UID writes edited media to container paths (e.g., /data/data/<pkg>/files/, .../cache/, /storage/emulated/0/Pictures/<pkg>/) with high delta in size vs. original and elevated estimated segment entropy  </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
 
+              <h5 class="pt-3" id="AN1780-mutable-elements">Mutable Elements</h5>
+              <div class="tables-mobile">
+                <table class="table table-bordered table-alternate mt-2">
+                  <thead>
+                    <tr>
+                      <th scope="col">Field</th>
+                      <th scope="col">Description</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>TimeWindowSeconds</td>
+                      <td>Max time between media download/ingress, edit, and payload use/share (e.g., 10–120s depending on device performance).</td>
+                    </tr>
+                    <tr>
+                      <td>PayloadEntropyThresholdMediaSegment</td>
+                      <td>Minimum Shannon entropy for edited media regions or container deltas (e.g., ≥ 7.1) to flag likely embedded payloads.</td>
+                    </tr>
+                    <tr>
+                      <td>SizeDeltaRatio</td>
+                      <td>Minimum growth ratio between pre/post edit media (e.g., ≥ 1.25) to reduce noise from normal compression.</td>
+                    </tr>
+                    <tr>
+                      <td>EditBurstWriteCount</td>
+                      <td>Minimum sequential small-write count to indicate chunked embedding or re-encode bursts.</td>
+                    </tr>
+                    <tr>
+                      <td>SuspiciousMimeTransitions</td>
+                      <td>List of atypical MIME/container transitions (e.g., PNG→JPEG with EXIF injection, WAV→M4A) for local tuning.</td>
+                    </tr>
+                    <tr>
+                      <td>KnownGoodMediaAppsAllowlist</td>
+                      <td>Trusted editors/camera apps allowed to perform frequent edits without alerting.</td>
+                    </tr>
+                    <tr>
+                      <td>NetworkCDNAllowlist</td>
+                      <td>CDNs/domains expected to host user media for the enterprise; suppresses FP for legitimate apps.</td>
+                    </tr>
+                    <tr>
+                      <td>UserContext</td>
+                      <td>Foreground, Work Profile, developer mode flags used to scope analytics.</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         </div>
@@ -334,6 +421,256 @@
             <div class="search-icons">
                 <div class="search-parsing-icon spinner-border" style="display: none" id="search-parsing-icon"></div>
                 <div class="close-search-icon" id="close-search-icon">&times;</div>
+            </div>
+        </div>
+        <div class="search-filters" id="search-filters">
+            <div class="search-filter-summary">
+                <div class="search-filter-dropdown">
+                    <button type="button" class="search-filter-summary-chip"
+                        data-search-filter-dropdown-toggle="core" aria-controls="search-filter-dropdown-core"
+                        aria-expanded="false">
+                        Core Objects: <span data-search-filter-summary="group-core">All</span>
+                    </button>
+                    <div class="search-filter-dropdown-menu" id="search-filter-dropdown-core"
+                        data-search-filter-dropdown="core" aria-hidden="true" style="display: none;">
+                        <div class="search-filter-group-heading">
+                            <span>Core ATT&CK Objects</span>
+                            <span class="search-filter-actions">
+                                <button type="button" data-search-filter-group="core"
+                                    data-search-filter-group-action="all">All</button>
+                                <button type="button" data-search-filter-group="core"
+                                    data-search-filter-group-action="none">None</button>
+                            </span>
+                        </div>
+                        <div class="search-filter-chips">
+                            <button type="button" data-search-filter-page-type="matrices">Matrices <span
+                                class="search-filter-count">0</span></button>
+                            <button type="button" data-search-filter-page-type="tactics">Tactics <span
+                                class="search-filter-count">0</span></button>
+                            <button type="button" data-search-filter-page-type="techniques">Techniques <span
+                                class="search-filter-count">0</span></button>
+                            <button type="button" data-search-filter-page-type="sub-techniques">Sub-Techniques <span
+                                class="search-filter-count">0</span></button>
+                        </div>
+                    </div>
+                </div>
+                <div class="search-filter-dropdown">
+                    <button type="button" class="search-filter-summary-chip"
+                        data-search-filter-dropdown-toggle="defenses" aria-controls="search-filter-dropdown-defenses"
+                        aria-expanded="false">
+                        Defenses: <span data-search-filter-summary="group-defenses">All</span>
+                    </button>
+                    <div class="search-filter-dropdown-menu" id="search-filter-dropdown-defenses"
+                        data-search-filter-dropdown="defenses" aria-hidden="true" style="display: none;">
+                        <div class="search-filter-group-heading">
+                            <span>Defenses</span>
+                            <span class="search-filter-actions">
+                                <button type="button" data-search-filter-group="defenses"
+                                    data-search-filter-group-action="all">All</button>
+                                <button type="button" data-search-filter-group="defenses"
+                                    data-search-filter-group-action="none">None</button>
+                            </span>
+                        </div>
+                        <div class="search-filter-chips">
+                            <button type="button" data-search-filter-page-type="mitigations">Mitigations <span
+                                class="search-filter-count">0</span></button>
+                            <button type="button" data-search-filter-page-type="assets">Assets <span
+                                class="search-filter-count">0</span></button>
+                            <button type="button" data-search-filter-page-type="detectionstrategies">Detection
+                                Strategies <span class="search-filter-count">0</span></button>
+                            <button type="button" data-search-filter-page-type="analytics">Analytics <span
+                                class="search-filter-count">0</span></button>
+                            <button type="button" data-search-filter-page-type="datacomponents">Data Components <span
+                                class="search-filter-count">0</span></button>
+                        </div>
+                    </div>
+                </div>
+                <div class="search-filter-dropdown">
+                    <button type="button" class="search-filter-summary-chip"
+                        data-search-filter-dropdown-toggle="cti" aria-controls="search-filter-dropdown-cti"
+                        aria-expanded="false">
+                        CTI: <span data-search-filter-summary="group-cti">All</span>
+                    </button>
+                    <div class="search-filter-dropdown-menu" id="search-filter-dropdown-cti"
+                        data-search-filter-dropdown="cti" aria-hidden="true" style="display: none;">
+                        <div class="search-filter-group-heading">
+                            <span>CTI</span>
+                            <span class="search-filter-actions">
+                                <button type="button" data-search-filter-group="cti"
+                                    data-search-filter-group-action="all">All</button>
+                                <button type="button" data-search-filter-group="cti"
+                                    data-search-filter-group-action="none">None</button>
+                            </span>
+                        </div>
+                        <div class="search-filter-chips">
+                            <button type="button" data-search-filter-page-type="groups">Groups <span
+                                class="search-filter-count">0</span></button>
+                            <button type="button" data-search-filter-page-type="software">Software <span
+                                class="search-filter-count">0</span></button>
+                            <button type="button" data-search-filter-page-type="campaigns">Campaigns <span
+                                class="search-filter-count">0</span></button>
+                        </div>
+                    </div>
+                </div>
+                <div class="search-filter-dropdown">
+                    <button type="button" class="search-filter-summary-chip"
+                        data-search-filter-dropdown-toggle="reference" aria-controls="search-filter-dropdown-reference"
+                        aria-expanded="false">
+                        Reference: <span data-search-filter-summary="group-reference">All</span>
+                    </button>
+                    <div class="search-filter-dropdown-menu" id="search-filter-dropdown-reference"
+                        data-search-filter-dropdown="reference" aria-hidden="true" style="display: none;">
+                        <div class="search-filter-group-heading">
+                            <span>Reference</span>
+                            <span class="search-filter-actions">
+                                <button type="button" data-search-filter-group="reference"
+                                    data-search-filter-group-action="all">All</button>
+                                <button type="button" data-search-filter-group="reference"
+                                    data-search-filter-group-action="none">None</button>
+                            </span>
+                        </div>
+                        <div class="search-filter-chips">
+                            <button type="button" data-search-filter-page-type="resources">Resources <span
+                                class="search-filter-count">0</span></button>
+                        </div>
+                    </div>
+                </div>
+                <div class="search-filter-dropdown">
+                    <button type="button" class="search-filter-summary-chip"
+                        data-search-filter-dropdown-toggle="domains" aria-controls="search-filter-dropdown-domains"
+                        aria-expanded="false">
+                        Domains: <span data-search-filter-summary="domains">All</span>
+                    </button>
+                    <div class="search-filter-dropdown-menu" id="search-filter-dropdown-domains"
+                        data-search-filter-dropdown="domains" aria-hidden="true" style="display: none;">
+                        <div class="search-filter-group-heading">
+                            <span>Domains</span>
+                            <span class="search-filter-actions">
+                                <button type="button" data-search-filter-domain-action="all">All</button>
+                                <button type="button" data-search-filter-domain-action="none">None</button>
+                            </span>
+                        </div>
+                        <div class="search-filter-chips">
+                            <button type="button" data-search-filter-domain="enterprise">Enterprise <span
+                                class="search-filter-count">0</span></button>
+                            <button type="button" data-search-filter-domain="mobile">Mobile <span
+                                class="search-filter-count">0</span></button>
+                            <button type="button" data-search-filter-domain="ics">ICS <span
+                                class="search-filter-count">0</span></button>
+                        </div>
+                    </div>
+                </div>
+                <button type="button" class="search-filter-summary-chip" id="search-filters-toggle"
+                    data-search-filter-toggle aria-controls="search-filters-panel" aria-expanded="false">
+                    Show all Filters
+                </button>
+            </div>
+            <div class="search-filters-panel" id="search-filters-panel" aria-hidden="true" style="display: none;">
+                <div class="search-filter-heading">
+                    <span>Page type</span>
+                    <span class="search-filter-actions">
+                        <button type="button" data-search-filter-page-types-action="all">All</button>
+                        <button type="button" data-search-filter-page-types-action="none">None</button>
+                    </span>
+                </div>
+
+                <div class="search-filter-group">
+                    <div class="search-filter-group-heading">
+                        <span>Core ATT&CK Objects</span>
+                        <span class="search-filter-actions">
+                            <button type="button" data-search-filter-group="core"
+                                data-search-filter-group-action="all">All</button>
+                            <button type="button" data-search-filter-group="core"
+                                data-search-filter-group-action="none">None</button>
+                        </span>
+                    </div>
+                    <div class="search-filter-chips">
+                        <button type="button" data-search-filter-page-type="matrices">Matrices <span
+                            class="search-filter-count">0</span></button>
+                        <button type="button" data-search-filter-page-type="tactics">Tactics <span
+                            class="search-filter-count">0</span></button>
+                        <button type="button" data-search-filter-page-type="techniques">Techniques <span
+                            class="search-filter-count">0</span></button>
+                        <button type="button" data-search-filter-page-type="sub-techniques">Sub-Techniques <span
+                            class="search-filter-count">0</span></button>
+                    </div>
+                </div>
+
+                <div class="search-filter-group">
+                    <div class="search-filter-group-heading">
+                        <span>Defenses</span>
+                        <span class="search-filter-actions">
+                            <button type="button" data-search-filter-group="defenses"
+                                data-search-filter-group-action="all">All</button>
+                            <button type="button" data-search-filter-group="defenses"
+                                data-search-filter-group-action="none">None</button>
+                        </span>
+                    </div>
+                    <div class="search-filter-chips">
+                        <button type="button" data-search-filter-page-type="mitigations">Mitigations <span
+                            class="search-filter-count">0</span></button>
+                        <button type="button" data-search-filter-page-type="assets">Assets <span
+                            class="search-filter-count">0</span></button>
+                        <button type="button" data-search-filter-page-type="detectionstrategies">Detection Strategies
+                            <span class="search-filter-count">0</span></button>
+                        <button type="button" data-search-filter-page-type="analytics">Analytics <span
+                            class="search-filter-count">0</span></button>
+                        <button type="button" data-search-filter-page-type="datacomponents">Data Components <span
+                            class="search-filter-count">0</span></button>
+                    </div>
+                </div>
+
+                <div class="search-filter-group">
+                    <div class="search-filter-group-heading">
+                        <span>CTI</span>
+                        <span class="search-filter-actions">
+                            <button type="button" data-search-filter-group="cti"
+                                data-search-filter-group-action="all">All</button>
+                            <button type="button" data-search-filter-group="cti"
+                                data-search-filter-group-action="none">None</button>
+                        </span>
+                    </div>
+                    <div class="search-filter-chips">
+                        <button type="button" data-search-filter-page-type="groups">Groups <span
+                            class="search-filter-count">0</span></button>
+                        <button type="button" data-search-filter-page-type="software">Software <span
+                            class="search-filter-count">0</span></button>
+                        <button type="button" data-search-filter-page-type="campaigns">Campaigns <span
+                            class="search-filter-count">0</span></button>
+                    </div>
+                </div>
+
+                <div class="search-filter-group">
+                    <div class="search-filter-group-heading">
+                        <span>Reference</span>
+                        <span class="search-filter-actions">
+                            <button type="button" data-search-filter-group="reference"
+                                data-search-filter-group-action="all">All</button>
+                            <button type="button" data-search-filter-group="reference"
+                                data-search-filter-group-action="none">None</button>
+                        </span>
+                    </div>
+                    <div class="search-filter-chips">
+                        <button type="button" data-search-filter-page-type="resources">Resources <span
+                            class="search-filter-count">0</span></button>
+                    </div>
+                </div>
+
+                <div class="search-filter-heading">
+                    <span>Domain</span>
+                    <span class="search-filter-actions">
+                        <button type="button" data-search-filter-domain-action="all">All</button>
+                        <button type="button" data-search-filter-domain-action="none">None</button>
+                    </span>
+                </div>
+                <div class="search-filter-chips">
+                    <button type="button" data-search-filter-domain="enterprise">Enterprise <span
+                        class="search-filter-count">0</span></button>
+                    <button type="button" data-search-filter-domain="mobile">Mobile <span
+                        class="search-filter-count">0</span></button>
+                    <button type="button" data-search-filter-domain="ics">ICS <span
+                        class="search-filter-count">0</span></button>
+                </div>
             </div>
         </div>
         <!-- results and controls for loading more results -->
@@ -374,7 +711,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3 col-footer">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v18.1&#013;Website  v4.4.1">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v19.0&#013;Website  v4.4.2">Website Changelog</a></u>
                                 </div>
                                 <div class="px-3">
                                     <u class="footer-link"><a href="/resources/legal-and-branding/privacy/#" class="footer-link" onclick="Osano.cm.showDrawer('osano-cm-dom-info-dialog-open')">Cookie Preferences</a></u>
@@ -382,7 +719,7 @@
                             </div>
                             <div class="row">
                                 <small class="px-3">
-                                    &copy;&nbsp;2015&nbsp;-&nbsp;2025, The MITRE Corporation. MITRE ATT&CK and ATT&CK are registered trademarks of The MITRE Corporation.
+                                    &copy;&nbsp;2015&nbsp;-&nbsp;2026, The MITRE Corporation. MITRE ATT&CK and ATT&CK are registered trademarks of The MITRE Corporation.
                                 </small>
                             </div>
                         </div>

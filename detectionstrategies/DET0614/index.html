@@ -42,7 +42,7 @@
             <!-- header elements -->
             <header class="col px-0">
                     <nav class='navbar navbar-expand-lg navbar-dark position-static'>
-        <a class='navbar-brand' href='/'><img src="/theme/images/mitre_attack_logo.png" class="attack-logo"></a>
+        <a class='navbar-brand' href='/'><img src="/theme/images/mitre_attack_logo.png" class="attack-logo" alt="ATT&CK Home"></a>
         <button class='navbar-toggler' type='button' data-toggle='collapse' data-target='#navbarCollapse'
                 aria-controls='navbarCollapse' aria-expanded='false' aria-label='Toggle navigation'>
                 <span class='navbar-toggler-icon'></span>
@@ -152,6 +152,7 @@
     <div class="dropdown-menu " aria-labelledby="navbarDropdown">
                 <a class="dropdown-item" href="/resources/">Get Started</a>
                 <a class="dropdown-item" href="/resources/learn-more-about-attack/">Learn More about ATT&CK</a>
+                <a class="dropdown-item" href="/resources/attack-advisory-council/">ATT&CK Advisory Council</a>
                 <a class="dropdown-item" href="/resources/attackcon/">ATT&CKcon</a>
                 <a class="dropdown-item" href="/resources/attack-data-and-tools/">ATT&CK Data & Tools</a>
                 <a class="dropdown-item" href="/resources/faq/">FAQ</a>
@@ -191,7 +192,7 @@
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
                     <div class="container-fluid banner-message">
-                        ATT&CK v19 will be released April 28th! Check out this <a href='https://medium.com/mitre-attack/defense-evasion-split-5d533545fa32'>blog post</a> for information on the planned deprecation of Enterprise's Defense Evasion tactic in the upcoming release.
+                        ATT&CK v19 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v19-ff329cb65d66'>blog post</a> for more information.
                     </div>
             </div>
         </div>
@@ -276,13 +277,13 @@
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Permalink to this version of DET0614" 
-           href="/versions/v18/detectionstrategies/DET0614/" data-test-ignore="true">Version Permalink</a>
+           href="/versions/v19/detectionstrategies/DET0614/" data-test-ignore="true">Version Permalink</a>
     </div>
     <div class="permalink">
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Go to the live version of DET0614" 
-           href="/versions/v18/detectionstrategies/DET0614/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+           href="/versions/v19/detectionstrategies/DET0614/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
     </div>
 </div>
 
@@ -310,7 +311,7 @@
               role="tabpanel" aria-labelledby="tab-Android">
               <h4 class="pt-3" id="AN1669">AN1669</h4>
               <div>
-                        <p>Mobile security products can often alert the user if their device is vulnerable to known exploits.</p>
+                        <p>A defender correlates navigation to external web content in a browser or embedded WebView with immediate script-heavy or exploit-preparation network activity, followed by abnormal browser/WebView process behavior, suspicious file or download artifacts, or rapid post-visit capability shifts such as new package install attempts, overlay prompts, permission requests, or outbound command traffic inconsistent with normal browsing.</p>
 
               </div>
 
@@ -327,23 +328,100 @@
                   <tbody>
                     <tr>
                       <td rowspan="1">
-                        <a href="/datacomponents/DC0018">
-                          Host Status (DC0018)
+                        <a href="/datacomponents/DC0114">
+                          Application Permission (DC0114)
                         </a>
                       </td>
-                      <td>Sensor Health</td>
-                      <td>None</td>
+                      <td>android:MDMLog</td>
+                      <td>New permission prompt, package install attempt, accessibility/overlay special access request, or other post-browse capability escalation following browser/WebView activity</td>
+                    </tr>
+                    <tr>
+                      <td rowspan="1">
+                        <a href="/datacomponents/DC0021">
+                          OS API Execution (DC0021)
+                        </a>
+                      </td>
+                      <td>MobileEDR:telemetry</td>
+                      <td>Browser/WebView framework usage indicating external URL load, script execution enablement, file download initiation, intent handoff, or package install prompt sequence</td>
+                    </tr>
+                    <tr>
+                      <td rowspan="1">
+                        <a href="/datacomponents/DC0085">
+                          Network Traffic Content (DC0085)
+                        </a>
+                      </td>
+                      <td>NSM:Flow</td>
+                      <td>Application-layer web traffic showing suspicious redirect chains, iframe/ad-tech cascades, user-agent or environment fingerprinting requests, or staged payload retrieval after page visit</td>
+                    </tr>
+                    <tr>
+                      <td rowspan="1">
+                        <a href="/datacomponents/DC0039">
+                          File Creation (DC0039)
+                        </a>
+                      </td>
+                      <td>MobileEDR:telemetry</td>
+                      <td>Browser/WebView process creates downloaded payloads, temporary files, dropped archives, or unusual cached web artifacts shortly after visiting external content</td>
+                    </tr>
+                    <tr>
+                      <td rowspan="1">
+                        <a href="/datacomponents/DC0032">
+                          Process Creation (DC0032)
+                        </a>
+                      </td>
+                      <td>MobileEDR:telemetry</td>
+                      <td>Browser or WebView-hosting application brought to foreground and navigates to external content, followed by abnormal state transition, crash, restart, or process spawn behavior</td>
                     </tr>
                   </tbody>
                 </table>
               </div>
 
+              <h5 class="pt-3" id="AN1669-mutable-elements">Mutable Elements</h5>
+              <div class="tables-mobile">
+                <table class="table table-bordered table-alternate mt-2">
+                  <thead>
+                    <tr>
+                      <th scope="col">Field</th>
+                      <th scope="col">Description</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>NavigationToExploitWindow</td>
+                      <td>Time window used to correlate web navigation with redirects, fingerprinting, downloads, or post-visit capability changes.</td>
+                    </tr>
+                    <tr>
+                      <td>AllowedBrowserApps</td>
+                      <td>Allow-list of expected browsers or sanctioned WebView-hosting apps used in the enterprise.</td>
+                    </tr>
+                    <tr>
+                      <td>RedirectChainThreshold</td>
+                      <td>Threshold for suspicious number of redirects or cross-domain hops during a single browsing session.</td>
+                    </tr>
+                    <tr>
+                      <td>NewDomainBurstThreshold</td>
+                      <td>Threshold for the number of newly observed domains contacted in a short browsing window.</td>
+                    </tr>
+                    <tr>
+                      <td>DownloadArtifactThreshold</td>
+                      <td>Threshold for suspicious downloaded or cached artifacts created after navigation.</td>
+                    </tr>
+                    <tr>
+                      <td>PostVisitCapabilityShiftRequired</td>
+                      <td>Determines whether to require a new install/prompt/permission/overlay event after browsing to raise confidence.</td>
+                    </tr>
+                    <tr>
+                      <td>AllowedAdTechDomains</td>
+                      <td>Baseline of normal advertising/CDN/tracking domains to reduce false positives from legitimate browsing.</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
             </div>
             <div class="tab-pane fade " id="pane-iOS"
               role="tabpanel" aria-labelledby="tab-iOS">
               <h4 class="pt-3" id="AN1670">AN1670</h4>
               <div>
-                        <p>Mobile security products can often alert the user if their device is vulnerable to known exploits.</p>
+                        <p>A defender correlates Safari or embedded web content navigation with short-lived but abnormal web session behavior such as staged redirects, environment fingerprinting, or exploit-preparation fetches, followed by browser/WebView instability, unusual file handling, profile/download prompts, or near-term changes in device or application behavior inconsistent with normal browsing.</p>
 
               </div>
 
@@ -360,17 +438,85 @@
                   <tbody>
                     <tr>
                       <td rowspan="1">
-                        <a href="/datacomponents/DC0018">
-                          Host Status (DC0018)
+                        <a href="/datacomponents/DC0085">
+                          Network Traffic Content (DC0085)
                         </a>
                       </td>
-                      <td>Sensor Health</td>
-                      <td>None</td>
+                      <td>NSM:Flow</td>
+                      <td>Application-layer web traffic showing suspicious redirect chains, iframe/ad-tech cascades, user-agent or environment fingerprinting requests, or staged payload retrieval after page visit</td>
+                    </tr>
+                    <tr>
+                      <td rowspan="1">
+                        <a href="/datacomponents/DC0039">
+                          File Creation (DC0039)
+                        </a>
+                      </td>
+                      <td>MobileEDR:telemetry</td>
+                      <td>Browser/WebView process creates downloaded payloads, temporary files, dropped archives, or unusual cached web artifacts shortly after visiting external content</td>
+                    </tr>
+                    <tr>
+                      <td rowspan="1">
+                        <a href="/datacomponents/DC0032">
+                          Process Creation (DC0032)
+                        </a>
+                      </td>
+                      <td>MobileEDR:telemetry</td>
+                      <td>Browser or WebView-hosting application brought to foreground and navigates to external content, followed by abnormal state transition, crash, restart, or process spawn behavior</td>
+                    </tr>
+                    <tr>
+                      <td rowspan="1">
+                        <a href="/datacomponents/DC0114">
+                          Application Permission (DC0114)
+                        </a>
+                      </td>
+                      <td>iOS:MDMLog</td>
+                      <td>Post-browse configuration profile prompt, managed/unmanaged app handoff anomaly, or compliance-relevant state change shortly after browser activity</td>
                     </tr>
                   </tbody>
                 </table>
               </div>
 
+              <h5 class="pt-3" id="AN1670-mutable-elements">Mutable Elements</h5>
+              <div class="tables-mobile">
+                <table class="table table-bordered table-alternate mt-2">
+                  <thead>
+                    <tr>
+                      <th scope="col">Field</th>
+                      <th scope="col">Description</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>NavigationToExploitWindow</td>
+                      <td>Time window linking Safari/WebView navigation to redirects, downloads, crashes, or post-visit state changes.</td>
+                    </tr>
+                    <tr>
+                      <td>AllowedBrowserApps</td>
+                      <td>Allow-list of expected browsers and sanctioned embedded web container apps.</td>
+                    </tr>
+                    <tr>
+                      <td>RedirectChainThreshold</td>
+                      <td>Threshold for suspicious redirect depth or cross-domain chaining.</td>
+                    </tr>
+                    <tr>
+                      <td>FingerprintingRequestThreshold</td>
+                      <td>Threshold for suspicious browser/environment enumeration requests during browsing session.</td>
+                    </tr>
+                    <tr>
+                      <td>DownloadArtifactThreshold</td>
+                      <td>Threshold for suspicious downloaded files, profiles, or cached artifacts created after page visit.</td>
+                    </tr>
+                    <tr>
+                      <td>PostVisitBehaviorShiftThreshold</td>
+                      <td>Threshold for abnormal changes in app/device behavior after browsing, such as repeated browser crashes or unexpected handoffs.</td>
+                    </tr>
+                    <tr>
+                      <td>AllowedAdTechDomains</td>
+                      <td>Baseline of expected ad-tech, CDN, and analytics domains to suppress benign browsing noise.</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         </div>
@@ -396,6 +542,256 @@
             <div class="search-icons">
                 <div class="search-parsing-icon spinner-border" style="display: none" id="search-parsing-icon"></div>
                 <div class="close-search-icon" id="close-search-icon">&times;</div>
+            </div>
+        </div>
+        <div class="search-filters" id="search-filters">
+            <div class="search-filter-summary">
+                <div class="search-filter-dropdown">
+                    <button type="button" class="search-filter-summary-chip"
+                        data-search-filter-dropdown-toggle="core" aria-controls="search-filter-dropdown-core"
+                        aria-expanded="false">
+                        Core Objects: <span data-search-filter-summary="group-core">All</span>
+                    </button>
+                    <div class="search-filter-dropdown-menu" id="search-filter-dropdown-core"
+                        data-search-filter-dropdown="core" aria-hidden="true" style="display: none;">
+                        <div class="search-filter-group-heading">
+                            <span>Core ATT&CK Objects</span>
+                            <span class="search-filter-actions">
+                                <button type="button" data-search-filter-group="core"
+                                    data-search-filter-group-action="all">All</button>
+                                <button type="button" data-search-filter-group="core"
+                                    data-search-filter-group-action="none">None</button>
+                            </span>
+                        </div>
+                        <div class="search-filter-chips">
+                            <button type="button" data-search-filter-page-type="matrices">Matrices <span
+                                class="search-filter-count">0</span></button>
+                            <button type="button" data-search-filter-page-type="tactics">Tactics <span
+                                class="search-filter-count">0</span></button>
+                            <button type="button" data-search-filter-page-type="techniques">Techniques <span
+                                class="search-filter-count">0</span></button>
+                            <button type="button" data-search-filter-page-type="sub-techniques">Sub-Techniques <span
+                                class="search-filter-count">0</span></button>
+                        </div>
+                    </div>
+                </div>
+                <div class="search-filter-dropdown">
+                    <button type="button" class="search-filter-summary-chip"
+                        data-search-filter-dropdown-toggle="defenses" aria-controls="search-filter-dropdown-defenses"
+                        aria-expanded="false">
+                        Defenses: <span data-search-filter-summary="group-defenses">All</span>
+                    </button>
+                    <div class="search-filter-dropdown-menu" id="search-filter-dropdown-defenses"
+                        data-search-filter-dropdown="defenses" aria-hidden="true" style="display: none;">
+                        <div class="search-filter-group-heading">
+                            <span>Defenses</span>
+                            <span class="search-filter-actions">
+                                <button type="button" data-search-filter-group="defenses"
+                                    data-search-filter-group-action="all">All</button>
+                                <button type="button" data-search-filter-group="defenses"
+                                    data-search-filter-group-action="none">None</button>
+                            </span>
+                        </div>
+                        <div class="search-filter-chips">
+                            <button type="button" data-search-filter-page-type="mitigations">Mitigations <span
+                                class="search-filter-count">0</span></button>
+                            <button type="button" data-search-filter-page-type="assets">Assets <span
+                                class="search-filter-count">0</span></button>
+                            <button type="button" data-search-filter-page-type="detectionstrategies">Detection
+                                Strategies <span class="search-filter-count">0</span></button>
+                            <button type="button" data-search-filter-page-type="analytics">Analytics <span
+                                class="search-filter-count">0</span></button>
+                            <button type="button" data-search-filter-page-type="datacomponents">Data Components <span
+                                class="search-filter-count">0</span></button>
+                        </div>
+                    </div>
+                </div>
+                <div class="search-filter-dropdown">
+                    <button type="button" class="search-filter-summary-chip"
+                        data-search-filter-dropdown-toggle="cti" aria-controls="search-filter-dropdown-cti"
+                        aria-expanded="false">
+                        CTI: <span data-search-filter-summary="group-cti">All</span>
+                    </button>
+                    <div class="search-filter-dropdown-menu" id="search-filter-dropdown-cti"
+                        data-search-filter-dropdown="cti" aria-hidden="true" style="display: none;">
+                        <div class="search-filter-group-heading">
+                            <span>CTI</span>
+                            <span class="search-filter-actions">
+                                <button type="button" data-search-filter-group="cti"
+                                    data-search-filter-group-action="all">All</button>
+                                <button type="button" data-search-filter-group="cti"
+                                    data-search-filter-group-action="none">None</button>
+                            </span>
+                        </div>
+                        <div class="search-filter-chips">
+                            <button type="button" data-search-filter-page-type="groups">Groups <span
+                                class="search-filter-count">0</span></button>
+                            <button type="button" data-search-filter-page-type="software">Software <span
+                                class="search-filter-count">0</span></button>
+                            <button type="button" data-search-filter-page-type="campaigns">Campaigns <span
+                                class="search-filter-count">0</span></button>
+                        </div>
+                    </div>
+                </div>
+                <div class="search-filter-dropdown">
+                    <button type="button" class="search-filter-summary-chip"
+                        data-search-filter-dropdown-toggle="reference" aria-controls="search-filter-dropdown-reference"
+                        aria-expanded="false">
+                        Reference: <span data-search-filter-summary="group-reference">All</span>
+                    </button>
+                    <div class="search-filter-dropdown-menu" id="search-filter-dropdown-reference"
+                        data-search-filter-dropdown="reference" aria-hidden="true" style="display: none;">
+                        <div class="search-filter-group-heading">
+                            <span>Reference</span>
+                            <span class="search-filter-actions">
+                                <button type="button" data-search-filter-group="reference"
+                                    data-search-filter-group-action="all">All</button>
+                                <button type="button" data-search-filter-group="reference"
+                                    data-search-filter-group-action="none">None</button>
+                            </span>
+                        </div>
+                        <div class="search-filter-chips">
+                            <button type="button" data-search-filter-page-type="resources">Resources <span
+                                class="search-filter-count">0</span></button>
+                        </div>
+                    </div>
+                </div>
+                <div class="search-filter-dropdown">
+                    <button type="button" class="search-filter-summary-chip"
+                        data-search-filter-dropdown-toggle="domains" aria-controls="search-filter-dropdown-domains"
+                        aria-expanded="false">
+                        Domains: <span data-search-filter-summary="domains">All</span>
+                    </button>
+                    <div class="search-filter-dropdown-menu" id="search-filter-dropdown-domains"
+                        data-search-filter-dropdown="domains" aria-hidden="true" style="display: none;">
+                        <div class="search-filter-group-heading">
+                            <span>Domains</span>
+                            <span class="search-filter-actions">
+                                <button type="button" data-search-filter-domain-action="all">All</button>
+                                <button type="button" data-search-filter-domain-action="none">None</button>
+                            </span>
+                        </div>
+                        <div class="search-filter-chips">
+                            <button type="button" data-search-filter-domain="enterprise">Enterprise <span
+                                class="search-filter-count">0</span></button>
+                            <button type="button" data-search-filter-domain="mobile">Mobile <span
+                                class="search-filter-count">0</span></button>
+                            <button type="button" data-search-filter-domain="ics">ICS <span
+                                class="search-filter-count">0</span></button>
+                        </div>
+                    </div>
+                </div>
+                <button type="button" class="search-filter-summary-chip" id="search-filters-toggle"
+                    data-search-filter-toggle aria-controls="search-filters-panel" aria-expanded="false">
+                    Show all Filters
+                </button>
+            </div>
+            <div class="search-filters-panel" id="search-filters-panel" aria-hidden="true" style="display: none;">
+                <div class="search-filter-heading">
+                    <span>Page type</span>
+                    <span class="search-filter-actions">
+                        <button type="button" data-search-filter-page-types-action="all">All</button>
+                        <button type="button" data-search-filter-page-types-action="none">None</button>
+                    </span>
+                </div>
+
+                <div class="search-filter-group">
+                    <div class="search-filter-group-heading">
+                        <span>Core ATT&CK Objects</span>
+                        <span class="search-filter-actions">
+                            <button type="button" data-search-filter-group="core"
+                                data-search-filter-group-action="all">All</button>
+                            <button type="button" data-search-filter-group="core"
+                                data-search-filter-group-action="none">None</button>
+                        </span>
+                    </div>
+                    <div class="search-filter-chips">
+                        <button type="button" data-search-filter-page-type="matrices">Matrices <span
+                            class="search-filter-count">0</span></button>
+                        <button type="button" data-search-filter-page-type="tactics">Tactics <span
+                            class="search-filter-count">0</span></button>
+                        <button type="button" data-search-filter-page-type="techniques">Techniques <span
+                            class="search-filter-count">0</span></button>
+                        <button type="button" data-search-filter-page-type="sub-techniques">Sub-Techniques <span
+                            class="search-filter-count">0</span></button>
+                    </div>
+                </div>
+
+                <div class="search-filter-group">
+                    <div class="search-filter-group-heading">
+                        <span>Defenses</span>
+                        <span class="search-filter-actions">
+                            <button type="button" data-search-filter-group="defenses"
+                                data-search-filter-group-action="all">All</button>
+                            <button type="button" data-search-filter-group="defenses"
+                                data-search-filter-group-action="none">None</button>
+                        </span>
+                    </div>
+                    <div class="search-filter-chips">
+                        <button type="button" data-search-filter-page-type="mitigations">Mitigations <span
+                            class="search-filter-count">0</span></button>
+                        <button type="button" data-search-filter-page-type="assets">Assets <span
+                            class="search-filter-count">0</span></button>
+                        <button type="button" data-search-filter-page-type="detectionstrategies">Detection Strategies
+                            <span class="search-filter-count">0</span></button>
+                        <button type="button" data-search-filter-page-type="analytics">Analytics <span
+                            class="search-filter-count">0</span></button>
+                        <button type="button" data-search-filter-page-type="datacomponents">Data Components <span
+                            class="search-filter-count">0</span></button>
+                    </div>
+                </div>
+
+                <div class="search-filter-group">
+                    <div class="search-filter-group-heading">
+                        <span>CTI</span>
+                        <span class="search-filter-actions">
+                            <button type="button" data-search-filter-group="cti"
+                                data-search-filter-group-action="all">All</button>
+                            <button type="button" data-search-filter-group="cti"
+                                data-search-filter-group-action="none">None</button>
+                        </span>
+                    </div>
+                    <div class="search-filter-chips">
+                        <button type="button" data-search-filter-page-type="groups">Groups <span
+                            class="search-filter-count">0</span></button>
+                        <button type="button" data-search-filter-page-type="software">Software <span
+                            class="search-filter-count">0</span></button>
+                        <button type="button" data-search-filter-page-type="campaigns">Campaigns <span
+                            class="search-filter-count">0</span></button>
+                    </div>
+                </div>
+
+                <div class="search-filter-group">
+                    <div class="search-filter-group-heading">
+                        <span>Reference</span>
+                        <span class="search-filter-actions">
+                            <button type="button" data-search-filter-group="reference"
+                                data-search-filter-group-action="all">All</button>
+                            <button type="button" data-search-filter-group="reference"
+                                data-search-filter-group-action="none">None</button>
+                        </span>
+                    </div>
+                    <div class="search-filter-chips">
+                        <button type="button" data-search-filter-page-type="resources">Resources <span
+                            class="search-filter-count">0</span></button>
+                    </div>
+                </div>
+
+                <div class="search-filter-heading">
+                    <span>Domain</span>
+                    <span class="search-filter-actions">
+                        <button type="button" data-search-filter-domain-action="all">All</button>
+                        <button type="button" data-search-filter-domain-action="none">None</button>
+                    </span>
+                </div>
+                <div class="search-filter-chips">
+                    <button type="button" data-search-filter-domain="enterprise">Enterprise <span
+                        class="search-filter-count">0</span></button>
+                    <button type="button" data-search-filter-domain="mobile">Mobile <span
+                        class="search-filter-count">0</span></button>
+                    <button type="button" data-search-filter-domain="ics">ICS <span
+                        class="search-filter-count">0</span></button>
+                </div>
             </div>
         </div>
         <!-- results and controls for loading more results -->
@@ -436,7 +832,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3 col-footer">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v18.1&#013;Website  v4.4.1">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v19.0&#013;Website  v4.4.2">Website Changelog</a></u>
                                 </div>
                                 <div class="px-3">
                                     <u class="footer-link"><a href="/resources/legal-and-branding/privacy/#" class="footer-link" onclick="Osano.cm.showDrawer('osano-cm-dom-info-dialog-open')">Cookie Preferences</a></u>
@@ -444,7 +840,7 @@
                             </div>
                             <div class="row">
                                 <small class="px-3">
-                                    &copy;&nbsp;2015&nbsp;-&nbsp;2025, The MITRE Corporation. MITRE ATT&CK and ATT&CK are registered trademarks of The MITRE Corporation.
+                                    &copy;&nbsp;2015&nbsp;-&nbsp;2026, The MITRE Corporation. MITRE ATT&CK and ATT&CK are registered trademarks of The MITRE Corporation.
                                 </small>
                             </div>
                         </div>

@@ -42,7 +42,7 @@
             <!-- header elements -->
             <header class="col px-0">
                     <nav class='navbar navbar-expand-lg navbar-dark position-static'>
-        <a class='navbar-brand' href='/'><img src="/theme/images/mitre_attack_logo.png" class="attack-logo"></a>
+        <a class='navbar-brand' href='/'><img src="/theme/images/mitre_attack_logo.png" class="attack-logo" alt="ATT&CK Home"></a>
         <button class='navbar-toggler' type='button' data-toggle='collapse' data-target='#navbarCollapse'
                 aria-controls='navbarCollapse' aria-expanded='false' aria-label='Toggle navigation'>
                 <span class='navbar-toggler-icon'></span>
@@ -152,6 +152,7 @@
     <div class="dropdown-menu " aria-labelledby="navbarDropdown">
                 <a class="dropdown-item" href="/resources/">Get Started</a>
                 <a class="dropdown-item" href="/resources/learn-more-about-attack/">Learn More about ATT&CK</a>
+                <a class="dropdown-item" href="/resources/attack-advisory-council/">ATT&CK Advisory Council</a>
                 <a class="dropdown-item" href="/resources/attackcon/">ATT&CKcon</a>
                 <a class="dropdown-item" href="/resources/attack-data-and-tools/">ATT&CK Data & Tools</a>
                 <a class="dropdown-item" href="/resources/faq/">FAQ</a>
@@ -191,7 +192,7 @@
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
                     <div class="container-fluid banner-message">
-                        ATT&CK v19 will be released April 28th! Check out this <a href='https://medium.com/mitre-attack/defense-evasion-split-5d533545fa32'>blog post</a> for information on the planned deprecation of Enterprise's Defense Evasion tactic in the upcoming release.
+                        ATT&CK v19 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v19-ff329cb65d66'>blog post</a> for more information.
                     </div>
             </div>
         </div>
@@ -249,7 +250,7 @@
                 </div>
                 <div class="row card-data">
                   <div class="col-md-12">
-                    <span class="h5 card-title">Version</span>: 2.0
+                    <span class="h5 card-title">Version</span>: 2.1
                   </div>
                 </div>
                 <div class="row card-data">
@@ -259,7 +260,7 @@
                 </div>
                 <div class="row card-data">
                   <div class="col-md-12">
-                    <span class="h5 card-title">Last Modified</span>: 21 October 2025
+                    <span class="h5 card-title">Last Modified</span>: 22 April 2026
                   </div>
                 </div>
               </div>
@@ -412,6 +413,18 @@
               <tr>
                 <td>IDS:TLSInspection</td>
                 <td>Malformed certs, incomplete asymmetric handshakes, or invalid CAs</td>
+              </tr>
+              <tr>
+                <td>iOS:unifiedlog</td>
+                <td>Per-app VPN flow logging indicating opaque/archived payload transfer preceding local decode</td>
+              </tr>
+              <tr>
+                <td>iOS:unifiedlog</td>
+                <td>Per-App VPN flow with code-like content types (application/octet-stream, application/zip, text/javascript, application/x-mach-o)</td>
+              </tr>
+              <tr>
+                <td>iOS:unifiedlog</td>
+                <td>WKWebView navigation to domain visually similar to target brand (IDN/punycode/alike score)</td>
               </tr>
               <tr>
                 <td>linux:syslog</td>
@@ -620,6 +633,10 @@
               <tr>
                 <td>NSM:Connections</td>
                 <td>Unusual POST requests to admin or upload endpoints</td>
+              </tr>
+              <tr>
+                <td>NSM:Connections</td>
+                <td>Outbound connections to internal enterprise services exhibiting anomalous protocol behavior, malformed sessions, or exploit-consistent traffic patterns</td>
               </tr>
               <tr>
                 <td>NSM:Content</td>
@@ -1202,12 +1219,156 @@
                 <td>Suspicious POSTs to upload endpoints</td>
               </tr>
               <tr>
+                <td>NSM:Flow</td>
+                <td>TLS/HTTP download with atypical MIME (application/octet-stream, application/x-zip, application/x-gzip) followed by local decode/write</td>
+              </tr>
+              <tr>
+                <td>NSM:Flow</td>
+                <td>HTTP(S)/QUIC media download with opaque content types (image/*, audio/*, video/*) from non-gallery domains or CDNs not previously used by the app</td>
+              </tr>
+              <tr>
+                <td>NSM:Flow</td>
+                <td>HTTP(S)/QUIC download of executable/opaque content (application/octet-stream, application/zip, application/java-archive, application/x-dex, application/x-sharedlib, text/javascript)</td>
+              </tr>
+              <tr>
+                <td>NSM:Flow</td>
+                <td>burst of DNS queries/connection attempts to RFC1918 or local gateway immediately after scans</td>
+              </tr>
+              <tr>
+                <td>NSM:Flow</td>
+                <td>HTTPS sessions exhibiting periodic request cadence or structured payload exchanges inconsistent with application baseline</td>
+              </tr>
+              <tr>
+                <td>NSM:Flow</td>
+                <td>Application-layer indicators observable via enterprise network controls (HTTP method, URI path pattern class, TLS SNI, JA3/ALPN when available, DNS qname/type) showing anomalous or low-and-slow command polling behavior</td>
+              </tr>
+              <tr>
+                <td>NSM:Flow</td>
+                <td>Near-term increase in traffic to identity endpoints associated with SMS MFA, account recovery, or OTP verification (IdP, banking, crypto), correlated to SIM/service loss</td>
+              </tr>
+              <tr>
+                <td>NSM:Flow</td>
+                <td>Abrupt shift from cellular egress to Wi-Fi-only egress, or new VPN/proxy session establishment following cellular service loss</td>
+              </tr>
+              <tr>
+                <td>NSM:Flow</td>
+                <td>Application-layer web traffic showing suspicious redirect chains, iframe/ad-tech cascades, user-agent or environment fingerprinting requests, or staged payload retrieval after page visit</td>
+              </tr>
+              <tr>
+                <td>NSM:Flow</td>
+                <td>Application initiates HTTPS connection with repeated certificate validation failure under enterprise proxy followed by direct network retry or stable opaque TLS communication to same endpoint within correlation window</td>
+              </tr>
+              <tr>
+                <td>NSM:Flow</td>
+                <td>App-destination pair shows consistent inspection bypass/refusal pattern followed by direct encrypted communication or repeated short-lived TLS sessions to same endpoint within correlation window</td>
+              </tr>
+              <tr>
+                <td>NSM:Flow</td>
+                <td>Application retrieves remote content from non-baselined domain or IP and the transfer direction is inbound to device during the file acquisition phase</td>
+              </tr>
+              <tr>
+                <td>NSM:Flow</td>
+                <td>Managed iOS app retrieves remote content from non-baselined domain or IP with inbound payload transfer during the acquisition phase</td>
+              </tr>
+              <tr>
+                <td>NSM:Flow</td>
+                <td>Device shows correlated inbound session establishment followed by outbound connections to separate external destinations with overlapping timing and relay-like byte symmetry</td>
+              </tr>
+              <tr>
+                <td>NSM:Flow</td>
+                <td>Traffic spike preceding control crash</td>
+              </tr>
+              <tr>
+                <td>NSM:Inspection</td>
+                <td>TLS session from mobile app fails, resets, or refuses enterprise interception while same destination/app pair repeatedly establishes direct encrypted communication pattern consistent with pinned certificate/public-key validation</td>
+              </tr>
+              <tr>
+                <td>NSM:Inspection</td>
+                <td>TLS handshake from iOS app repeatedly fails or is rejected only when enterprise SSL inspection certificate is presented, indicating certificate or public-key pin validation effect</td>
+              </tr>
+              <tr>
                 <td>saas:box</td>
                 <td>API calls exceeding baseline thresholds</td>
               </tr>
               <tr>
                 <td>saas:confluence</td>
                 <td>REST API access from non-browser agents</td>
+              </tr>
+              <tr>
+                <td>TelecomLogs:SS7Signaling</td>
+                <td>Subscriber information queries, routing requests, or location update messages with anomalous node identifiers or unexpected origin patterns</td>
+              </tr>
+              <tr>
+                <td>TelecomLogs:SS7Signaling</td>
+                <td>Location resolution, routing, or subscriber information exchanges with anomalous signaling paths or node identities</td>
+              </tr>
+              <tr>
+                <td>Traffic</td>
+                <td>None</td>
+              </tr>
+              <tr>
+                <td>VPN:MobileProxy</td>
+                <td>Supervised or newly activated device initiates outbound connections to destinations outside Apple, MDM, update, or enterprise-managed baselines while locked, with no recent user interaction, or before expected app enrollment completion</td>
+              </tr>
+              <tr>
+                <td>VPN:MobileProxy</td>
+                <td>Application or device component communicates with legitimate external web-service infrastructure such as cloud storage, social media, messaging, collaboration, paste, code-hosting, CDN-backed API, or generic HTTPS service in a pattern inconsistent with the app's approved network baseline, timing, or service class</td>
+              </tr>
+              <tr>
+                <td>VPN:MobileProxy</td>
+                <td>Supervised device or managed app communicates with legitimate external web-service infrastructure such as cloud storage, messaging, collaboration, social, paste, or generic HTTPS API platforms in a pattern inconsistent with expected service baseline, managed app role, or normal background refresh behavior</td>
+              </tr>
+              <tr>
+                <td>VPN:MobileProxy</td>
+                <td>App-attributed HTTP GET or HTTPS session to public web platform (social, paste, collaboration, cloud storage, code-hosting) returned content followed by outbound connection to a different domain or IP within TimeWindow</td>
+              </tr>
+              <tr>
+                <td>VPN:MobileProxy</td>
+                <td>DNS query or TLS SNI for previously unseen domain occurred within TimeWindow after session to legitimate web-service domain from same app identity</td>
+              </tr>
+              <tr>
+                <td>VPN:MobileProxy</td>
+                <td>Initial session to public web-service domain transferred small response payload followed by connection to new external endpoint with different ASN or domain category</td>
+              </tr>
+              <tr>
+                <td>VPN:MobileProxy</td>
+                <td>App-attributed session to public web-service domain included inbound content retrieval followed by outbound POST, PUT, upload, comment, message send, document update, or API write to same service class within TimeWindow</td>
+              </tr>
+              <tr>
+                <td>VPN:MobileProxy</td>
+                <td>Repeated alternating inbound and outbound sessions to same public web-service domain or API endpoint occurred from same app identity with stable recurrence interval</td>
+              </tr>
+              <tr>
+                <td>VPN:MobileProxy</td>
+                <td>Outbound write operation to public web-service domain occurred after small inbound response retrieval from same domain or service class without preceding user-visible foreground activity</td>
+              </tr>
+              <tr>
+                <td>VPN:MobileProxy</td>
+                <td>App-attributed HTTP GET, content fetch, sync pull, or inbound-oriented HTTPS session to public web-service domain recurred within TimeWindow without app-attributed POST, PUT, PATCH, upload, comment, message send, or API write to same service class</td>
+              </tr>
+              <tr>
+                <td>VPN:MobileProxy</td>
+                <td>Repeated app-attributed retrieval from same public web-service domain or API endpoint occurred at stable recurrence interval with low outbound volume relative to inbound content</td>
+              </tr>
+              <tr>
+                <td>VPN:MobileProxy</td>
+                <td>Inbound content retrieval from public web-service domain occurred without subsequent writeback to same service class and was followed by local or downstream activity outside normal app sync profile</td>
+              </tr>
+              <tr>
+                <td>VPN:MobileProxy</td>
+                <td>TLS handshake, HTTP method/header pattern, or WebSocket upgrade was observed on destination port outside approved port set for detected protocol during app-attributed outbound session</td>
+              </tr>
+              <tr>
+                <td>VPN:MobileProxy</td>
+                <td>Repeated app-attributed sessions to same destination or service class used non-standard destination port with stable recurrence interval or persistent connection behavior</td>
+              </tr>
+              <tr>
+                <td>VPN:MobileProxy</td>
+                <td>Destination port was not in approved protocol-to-port mapping for app identity or service class and session did not match known enterprise proxy, relay, or developer tooling exception</td>
+              </tr>
+              <tr>
+                <td>VPN:MobileProxy</td>
+                <td>Observed protocol-to-port pairing was outside approved mapping for managed bundle or service class and did not match enterprise proxy, relay, or developer tooling exception</td>
               </tr>
               <tr>
                 <td>WebProxy:AccessLogs</td>
@@ -1742,6 +1903,17 @@
                     <a href="/techniques/T0830">T0830</a>
                 </td>
             </tr>
+            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--a6da6dc3-19fe-4d1c-ab77-843c08377a19">
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0685">DET0685</a>
+                </td>
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0685">Detection of Application Layer Protocol</a>
+                </td>
+                <td rowspan="">
+                    <a href="/techniques/T1437">T1437</a>
+                </td>
+            </tr>
             <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--442bf059-f7cf-460b-8200-f35e1e0a0c78">
                 <td rowspan="">
                     <a href="/detectionstrategies/DET0734">DET0734</a>
@@ -1751,6 +1923,28 @@
                 </td>
                 <td rowspan="">
                     <a href="/techniques/T0802">T0802</a>
+                </td>
+            </tr>
+            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--1da26733-88c3-4cc8-8758-e2d65934f713">
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0700">DET0700</a>
+                </td>
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0700">Detection of Bidirectional Communication</a>
+                </td>
+                <td rowspan="">
+                    <a href="/techniques/T1481/002">T1481.002</a>
+                </td>
+            </tr>
+            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--c4ddc0d7-0296-4d92-9ae1-1a4b7b5d1640">
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0908">DET0908</a>
+                </td>
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0908">Detection of Broadcast Discovery</a>
+                </td>
+                <td rowspan="">
+                    <a href="/techniques/T0846/002">T0846.002</a>
                 </td>
             </tr>
             <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--3ea60ac7-87a3-4033-9089-258941d8388a">
@@ -1819,6 +2013,17 @@
                     <a href="/techniques/T1586">T1586</a>
                 </td>
             </tr>
+            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--ef792e16-8b1c-452d-a3ae-1ad4b5577a4d">
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0604">DET0604</a>
+                </td>
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0604">Detection of Compromise Hardware Supply Chain</a>
+                </td>
+                <td rowspan="">
+                    <a href="/techniques/T1474/002">T1474.002</a>
+                </td>
+            </tr>
             <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--887ae691-a519-4b68-af26-bcea1483cef7">
                 <td rowspan="">
                     <a href="/detectionstrategies/DET0759">DET0759</a>
@@ -1841,6 +2046,17 @@
                     <a href="/techniques/T1056/003">T1056.003</a>
                 </td>
             </tr>
+            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--83a0e3a2-5828-4707-84f5-eec67cf6b50e">
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0617">DET0617</a>
+                </td>
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0617">Detection of Dead Drop Resolver</a>
+                </td>
+                <td rowspan="">
+                    <a href="/techniques/T1481/001">T1481.001</a>
+                </td>
+            </tr>
             <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--b04e83cc-8ace-4880-8953-7ce55eb8c427">
                 <td rowspan="">
                     <a href="/detectionstrategies/DET0756">DET0756</a>
@@ -1849,7 +2065,18 @@
                     <a href="/detectionstrategies/DET0756">Detection of Default Credentials</a>
                 </td>
                 <td rowspan="">
-                    <a href="/techniques/T0812">T0812</a>
+                    <a href="/techniques/T1694/001">T1694.001</a>
+                </td>
+            </tr>
+            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--3a3820cd-260b-43d0-b5af-89b7ba81a044">
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0900">DET0900</a>
+                </td>
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0900">Detection of Defense Impairment</a>
+                </td>
+                <td rowspan="">
+                    <a href="/techniques/T1687">T1687</a>
                 </td>
             </tr>
             <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--08c090e3-c56f-4a8b-80f6-307a1daf46ea">
@@ -1894,6 +2121,17 @@
                 </td>
                 <td rowspan="">
                     <a href="/techniques/T1407">T1407</a>
+                </td>
+            </tr>
+            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--c6c7da3e-4366-473e-af4e-3cc67d8ea1fa">
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0614">DET0614</a>
+                </td>
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0614">Detection of Drive-By Compromise</a>
+                </td>
+                <td rowspan="">
+                    <a href="/techniques/T1456">T1456</a>
                 </td>
             </tr>
             <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--89e95503-b02c-43da-90b3-15584b27e6d6">
@@ -2006,6 +2244,17 @@
                     <a href="/techniques/T1071/002">T1071.002</a>
                 </td>
             </tr>
+            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--73773bb8-c63b-4d48-9b48-33440f12a514">
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0904">DET0904</a>
+                </td>
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0904">Detection of Firmware Modification</a>
+                </td>
+                <td rowspan="">
+                    <a href="/techniques/T1693">T1693</a>
+                </td>
+            </tr>
             <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--b5ec4351-ee04-4beb-a019-b1f6d0e00894">
                 <td rowspan="">
                     <a href="/detectionstrategies/DET0841">DET0841</a>
@@ -2017,6 +2266,17 @@
                     <a href="/techniques/T1589">T1589</a>
                 </td>
             </tr>
+            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--4809a26b-8527-49dc-81aa-ac2750fd3b75">
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0676">DET0676</a>
+                </td>
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0676">Detection of GUI Input Capture</a>
+                </td>
+                <td rowspan="">
+                    <a href="/techniques/T1417/002">T1417.002</a>
+                </td>
+            </tr>
             <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--de675cf4-144e-485c-a761-c72ebcb9e2bc">
                 <td rowspan="">
                     <a href="/detectionstrategies/DET0798">DET0798</a>
@@ -2025,7 +2285,40 @@
                     <a href="/detectionstrategies/DET0798">Detection of Hardcoded Credentials</a>
                 </td>
                 <td rowspan="">
-                    <a href="/techniques/T0891">T0891</a>
+                    <a href="/techniques/T1694/002">T1694.002</a>
+                </td>
+            </tr>
+            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--a7e4704b-4286-4928-88df-d0c151432495">
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0662">DET0662</a>
+                </td>
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0662">Detection of Impersonate SS7 Nodes</a>
+                </td>
+                <td rowspan="">
+                    <a href="/techniques/T1430/002">T1430.002</a>
+                </td>
+            </tr>
+            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--5aa9f16e-253d-4ca6-b5e2-8311e5a76290">
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0718">DET0718</a>
+                </td>
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0718">Detection of Ingress Tool Transfer</a>
+                </td>
+                <td rowspan="">
+                    <a href="/techniques/T1544">T1544</a>
+                </td>
+            </tr>
+            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--ff6456fc-576d-4da5-b561-b58f70961b15">
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0905">DET0905</a>
+                </td>
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0905">Detection of Insecure Credentials</a>
+                </td>
+                <td rowspan="">
+                    <a href="/techniques/T1694">T1694</a>
                 </td>
             </tr>
             <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--c7aea5e8-cd8b-4f79-be41-3a446cdde7b7">
@@ -2113,7 +2406,7 @@
                     <a href="/detectionstrategies/DET0790">Detection of Module Firmware</a>
                 </td>
                 <td rowspan="">
-                    <a href="/techniques/T0839">T0839</a>
+                    <a href="/techniques/T1693/002">T1693.002</a>
                 </td>
             </tr>
             <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--60a55b7b-29a5-437e-83a7-edbe6f3c4415">
@@ -2127,6 +2420,17 @@
                     <a href="/techniques/T0801">T0801</a>
                 </td>
             </tr>
+            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--56bf71a3-a28b-4a8f-84ed-3a71449d47c0">
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0909">DET0909</a>
+                </td>
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0909">Detection of Multicast Discovery</a>
+                </td>
+                <td rowspan="">
+                    <a href="/techniques/T0846/003">T0846.003</a>
+                </td>
+            </tr>
             <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--2cb544af-ef54-4376-9608-b399ad67d3d6">
                 <td rowspan="">
                     <a href="/detectionstrategies/DET0457">DET0457</a>
@@ -2136,6 +2440,50 @@
                 </td>
                 <td rowspan="">
                     <a href="/techniques/T1095">T1095</a>
+                </td>
+            </tr>
+            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--7a921c8c-fdc6-4526-aba6-2632360b7f0f">
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0706">DET0706</a>
+                </td>
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0706">Detection of Non-Standard Port</a>
+                </td>
+                <td rowspan="">
+                    <a href="/techniques/T1509">T1509</a>
+                </td>
+            </tr>
+            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--7c507410-2dc7-4159-88ec-b2228547ae67">
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0720">DET0720</a>
+                </td>
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0720">Detection of Obfuscated Files or Information</a>
+                </td>
+                <td rowspan="">
+                    <a href="/techniques/T1406">T1406</a>
+                </td>
+            </tr>
+            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--3ec475a9-b33f-42b3-a1b1-755b5fa9389b">
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0610">DET0610</a>
+                </td>
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0610">Detection of One-Way Communication</a>
+                </td>
+                <td rowspan="">
+                    <a href="/techniques/T1481/003">T1481.003</a>
+                </td>
+            </tr>
+            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--c1645705-a26f-45b2-aa68-ff5c93dfc0f4">
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0915">DET0915</a>
+                </td>
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0915">Detection of Online Edit</a>
+                </td>
+                <td rowspan="">
+                    <a href="/techniques/T0843/002">T0843.002</a>
                 </td>
             </tr>
             <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--0546176b-5ea4-407d-acb7-382b55c7e883">
@@ -2171,6 +2519,28 @@
                     <a href="/techniques/T0861">T0861</a>
                 </td>
             </tr>
+            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--6bdde391-76eb-4bd7-9e19-e805ab98b7ac">
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0907">DET0907</a>
+                </td>
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0907">Detection of Port Scan</a>
+                </td>
+                <td rowspan="">
+                    <a href="/techniques/T0846/001">T0846.001</a>
+                </td>
+            </tr>
+            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--e90f1c0c-f2c5-4fe1-942f-411574df043f">
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0914">DET0914</a>
+                </td>
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0914">Detection of Program Append</a>
+                </td>
+                <td rowspan="">
+                    <a href="/techniques/T0843/003">T0843.003</a>
+                </td>
+            </tr>
             <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--709e05b2-6400-43a2-9bbf-b64f6017b023">
                 <td rowspan="">
                     <a href="/detectionstrategies/DET0752">DET0752</a>
@@ -2182,6 +2552,17 @@
                     <a href="/techniques/T0843">T0843</a>
                 </td>
             </tr>
+            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--2e99cd65-aad4-4796-9013-79837d498eb6">
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0913">DET0913</a>
+                </td>
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0913">Detection of Program Download All</a>
+                </td>
+                <td rowspan="">
+                    <a href="/techniques/T0843/001">T0843.001</a>
+                </td>
+            </tr>
             <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--6f921aa8-deb3-4286-8101-26a7cbe80c0e">
                 <td rowspan="">
                     <a href="/detectionstrategies/DET0761">DET0761</a>
@@ -2191,6 +2572,17 @@
                 </td>
                 <td rowspan="">
                     <a href="/techniques/T0845">T0845</a>
+                </td>
+            </tr>
+            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--973a4da0-af9c-4d57-ab62-21fbc308f8b3">
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0631">DET0631</a>
+                </td>
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0631">Detection of Proxy Through Victim</a>
+                </td>
+                <td rowspan="">
+                    <a href="/techniques/T1604">T1604</a>
                 </td>
             </tr>
             <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--20f11806-1639-49c5-ae0b-84633a142870">
@@ -2257,6 +2649,17 @@
                 </td>
                 <td rowspan="">
                     <a href="/techniques/T1595/001">T1595.001</a>
+                </td>
+            </tr>
+            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--59e56dc2-725e-4f55-ab2c-154dbe42bc4d">
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0658">DET0658</a>
+                </td>
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0658">Detection of SIM Card Swap</a>
+                </td>
+                <td rowspan="">
+                    <a href="/techniques/T1451">T1451</a>
                 </td>
             </tr>
             <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--172b779a-9d14-4c5f-ba4c-3e784b4ae1b6">
@@ -2333,7 +2736,7 @@
                     <a href="/detectionstrategies/DET0746">Detection of Spoof Reporting Message</a>
                 </td>
                 <td rowspan="">
-                    <a href="/techniques/T0856">T0856</a>
+                    <a href="/techniques/T1692/002">T1692.002</a>
                 </td>
             </tr>
             <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--ad21a251-e824-4368-a04c-8a480ee653cc">
@@ -2347,6 +2750,17 @@
                     <a href="/techniques/T1036/012">T1036.012</a>
                 </td>
             </tr>
+            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--c1b65a72-9f74-4849-9797-1a9c655d9a04">
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0646">DET0646</a>
+                </td>
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0646">Detection of SSL Pinning</a>
+                </td>
+                <td rowspan="">
+                    <a href="/techniques/T1521/003">T1521.003</a>
+                </td>
+            </tr>
             <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--732d2487-3241-4866-8bb5-044bb4acdd3b">
                 <td rowspan="">
                     <a href="/detectionstrategies/DET0799">DET0799</a>
@@ -2358,6 +2772,17 @@
                     <a href="/techniques/T0869">T0869</a>
                 </td>
             </tr>
+            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--545bde30-2b8c-47d3-bd34-fa188348b967">
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0677">DET0677</a>
+                </td>
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0677">Detection of Steganography</a>
+                </td>
+                <td rowspan="">
+                    <a href="/techniques/T1406/001">T1406.001</a>
+                </td>
+            </tr>
             <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--09f46edf-33f9-4c23-af2f-74864c27f616">
                 <td rowspan="">
                     <a href="/detectionstrategies/DET0731">DET0731</a>
@@ -2366,7 +2791,18 @@
                     <a href="/detectionstrategies/DET0731">Detection of System Firmware</a>
                 </td>
                 <td rowspan="">
-                    <a href="/techniques/T0857">T0857</a>
+                    <a href="/techniques/T1693/001">T1693.001</a>
+                </td>
+            </tr>
+            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--7ea45fed-cd52-4e26-96d5-31d3fd2c7b22">
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0636">DET0636</a>
+                </td>
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0636">Detection of System Network Connections Discovery</a>
+                </td>
+                <td rowspan="">
+                    <a href="/techniques/T1421">T1421</a>
                 </td>
             </tr>
             <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--7c45d09a-030e-4b30-b2d9-41fee3daa293">
@@ -2388,7 +2824,7 @@
                     <a href="/detectionstrategies/DET0794">Detection of Unauthorized Command Message</a>
                 </td>
                 <td rowspan="">
-                    <a href="/techniques/T0855">T0855</a>
+                    <a href="/techniques/T1692/001">T1692.001</a>
                 </td>
             </tr>
             <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--3796aa06-65fe-4b9d-9d31-e6491b722632">
@@ -2400,6 +2836,17 @@
                 </td>
                 <td rowspan="">
                     <a href="/techniques/T1003/006">T1003.006</a>
+                </td>
+            </tr>
+            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--f487a605-0acb-4b12-b157-33b75ebd9a40">
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0902">DET0902</a>
+                </td>
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0902">Detection of Unauthorized Message</a>
+                </td>
+                <td rowspan="">
+                    <a href="/techniques/T1692">T1692</a>
                 </td>
             </tr>
             <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--eabde43f-1872-499d-9642-85a6959c4d28">
@@ -2433,6 +2880,28 @@
                 </td>
                 <td rowspan="">
                     <a href="/techniques/T1071/001">T1071.001</a>
+                </td>
+            </tr>
+            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--395c6e70-21f8-4613-bdec-96ecba03a5b4">
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0620">DET0620</a>
+                </td>
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0620">Detection of Web Protocols</a>
+                </td>
+                <td rowspan="">
+                    <a href="/techniques/T1437/001">T1437.001</a>
+                </td>
+            </tr>
+            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--69f0f372-4bb1-4c0e-b81a-d425b2f6f31f">
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0672">DET0672</a>
+                </td>
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0672">Detection of Web Service</a>
+                </td>
+                <td rowspan="">
+                    <a href="/techniques/T1481">T1481</a>
                 </td>
             </tr>
             <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--95d3b171-2fc3-4e58-a5c9-4d98c3691c88">
@@ -3222,6 +3691,256 @@
                 <div class="close-search-icon" id="close-search-icon">&times;</div>
             </div>
         </div>
+        <div class="search-filters" id="search-filters">
+            <div class="search-filter-summary">
+                <div class="search-filter-dropdown">
+                    <button type="button" class="search-filter-summary-chip"
+                        data-search-filter-dropdown-toggle="core" aria-controls="search-filter-dropdown-core"
+                        aria-expanded="false">
+                        Core Objects: <span data-search-filter-summary="group-core">All</span>
+                    </button>
+                    <div class="search-filter-dropdown-menu" id="search-filter-dropdown-core"
+                        data-search-filter-dropdown="core" aria-hidden="true" style="display: none;">
+                        <div class="search-filter-group-heading">
+                            <span>Core ATT&CK Objects</span>
+                            <span class="search-filter-actions">
+                                <button type="button" data-search-filter-group="core"
+                                    data-search-filter-group-action="all">All</button>
+                                <button type="button" data-search-filter-group="core"
+                                    data-search-filter-group-action="none">None</button>
+                            </span>
+                        </div>
+                        <div class="search-filter-chips">
+                            <button type="button" data-search-filter-page-type="matrices">Matrices <span
+                                class="search-filter-count">0</span></button>
+                            <button type="button" data-search-filter-page-type="tactics">Tactics <span
+                                class="search-filter-count">0</span></button>
+                            <button type="button" data-search-filter-page-type="techniques">Techniques <span
+                                class="search-filter-count">0</span></button>
+                            <button type="button" data-search-filter-page-type="sub-techniques">Sub-Techniques <span
+                                class="search-filter-count">0</span></button>
+                        </div>
+                    </div>
+                </div>
+                <div class="search-filter-dropdown">
+                    <button type="button" class="search-filter-summary-chip"
+                        data-search-filter-dropdown-toggle="defenses" aria-controls="search-filter-dropdown-defenses"
+                        aria-expanded="false">
+                        Defenses: <span data-search-filter-summary="group-defenses">All</span>
+                    </button>
+                    <div class="search-filter-dropdown-menu" id="search-filter-dropdown-defenses"
+                        data-search-filter-dropdown="defenses" aria-hidden="true" style="display: none;">
+                        <div class="search-filter-group-heading">
+                            <span>Defenses</span>
+                            <span class="search-filter-actions">
+                                <button type="button" data-search-filter-group="defenses"
+                                    data-search-filter-group-action="all">All</button>
+                                <button type="button" data-search-filter-group="defenses"
+                                    data-search-filter-group-action="none">None</button>
+                            </span>
+                        </div>
+                        <div class="search-filter-chips">
+                            <button type="button" data-search-filter-page-type="mitigations">Mitigations <span
+                                class="search-filter-count">0</span></button>
+                            <button type="button" data-search-filter-page-type="assets">Assets <span
+                                class="search-filter-count">0</span></button>
+                            <button type="button" data-search-filter-page-type="detectionstrategies">Detection
+                                Strategies <span class="search-filter-count">0</span></button>
+                            <button type="button" data-search-filter-page-type="analytics">Analytics <span
+                                class="search-filter-count">0</span></button>
+                            <button type="button" data-search-filter-page-type="datacomponents">Data Components <span
+                                class="search-filter-count">0</span></button>
+                        </div>
+                    </div>
+                </div>
+                <div class="search-filter-dropdown">
+                    <button type="button" class="search-filter-summary-chip"
+                        data-search-filter-dropdown-toggle="cti" aria-controls="search-filter-dropdown-cti"
+                        aria-expanded="false">
+                        CTI: <span data-search-filter-summary="group-cti">All</span>
+                    </button>
+                    <div class="search-filter-dropdown-menu" id="search-filter-dropdown-cti"
+                        data-search-filter-dropdown="cti" aria-hidden="true" style="display: none;">
+                        <div class="search-filter-group-heading">
+                            <span>CTI</span>
+                            <span class="search-filter-actions">
+                                <button type="button" data-search-filter-group="cti"
+                                    data-search-filter-group-action="all">All</button>
+                                <button type="button" data-search-filter-group="cti"
+                                    data-search-filter-group-action="none">None</button>
+                            </span>
+                        </div>
+                        <div class="search-filter-chips">
+                            <button type="button" data-search-filter-page-type="groups">Groups <span
+                                class="search-filter-count">0</span></button>
+                            <button type="button" data-search-filter-page-type="software">Software <span
+                                class="search-filter-count">0</span></button>
+                            <button type="button" data-search-filter-page-type="campaigns">Campaigns <span
+                                class="search-filter-count">0</span></button>
+                        </div>
+                    </div>
+                </div>
+                <div class="search-filter-dropdown">
+                    <button type="button" class="search-filter-summary-chip"
+                        data-search-filter-dropdown-toggle="reference" aria-controls="search-filter-dropdown-reference"
+                        aria-expanded="false">
+                        Reference: <span data-search-filter-summary="group-reference">All</span>
+                    </button>
+                    <div class="search-filter-dropdown-menu" id="search-filter-dropdown-reference"
+                        data-search-filter-dropdown="reference" aria-hidden="true" style="display: none;">
+                        <div class="search-filter-group-heading">
+                            <span>Reference</span>
+                            <span class="search-filter-actions">
+                                <button type="button" data-search-filter-group="reference"
+                                    data-search-filter-group-action="all">All</button>
+                                <button type="button" data-search-filter-group="reference"
+                                    data-search-filter-group-action="none">None</button>
+                            </span>
+                        </div>
+                        <div class="search-filter-chips">
+                            <button type="button" data-search-filter-page-type="resources">Resources <span
+                                class="search-filter-count">0</span></button>
+                        </div>
+                    </div>
+                </div>
+                <div class="search-filter-dropdown">
+                    <button type="button" class="search-filter-summary-chip"
+                        data-search-filter-dropdown-toggle="domains" aria-controls="search-filter-dropdown-domains"
+                        aria-expanded="false">
+                        Domains: <span data-search-filter-summary="domains">All</span>
+                    </button>
+                    <div class="search-filter-dropdown-menu" id="search-filter-dropdown-domains"
+                        data-search-filter-dropdown="domains" aria-hidden="true" style="display: none;">
+                        <div class="search-filter-group-heading">
+                            <span>Domains</span>
+                            <span class="search-filter-actions">
+                                <button type="button" data-search-filter-domain-action="all">All</button>
+                                <button type="button" data-search-filter-domain-action="none">None</button>
+                            </span>
+                        </div>
+                        <div class="search-filter-chips">
+                            <button type="button" data-search-filter-domain="enterprise">Enterprise <span
+                                class="search-filter-count">0</span></button>
+                            <button type="button" data-search-filter-domain="mobile">Mobile <span
+                                class="search-filter-count">0</span></button>
+                            <button type="button" data-search-filter-domain="ics">ICS <span
+                                class="search-filter-count">0</span></button>
+                        </div>
+                    </div>
+                </div>
+                <button type="button" class="search-filter-summary-chip" id="search-filters-toggle"
+                    data-search-filter-toggle aria-controls="search-filters-panel" aria-expanded="false">
+                    Show all Filters
+                </button>
+            </div>
+            <div class="search-filters-panel" id="search-filters-panel" aria-hidden="true" style="display: none;">
+                <div class="search-filter-heading">
+                    <span>Page type</span>
+                    <span class="search-filter-actions">
+                        <button type="button" data-search-filter-page-types-action="all">All</button>
+                        <button type="button" data-search-filter-page-types-action="none">None</button>
+                    </span>
+                </div>
+
+                <div class="search-filter-group">
+                    <div class="search-filter-group-heading">
+                        <span>Core ATT&CK Objects</span>
+                        <span class="search-filter-actions">
+                            <button type="button" data-search-filter-group="core"
+                                data-search-filter-group-action="all">All</button>
+                            <button type="button" data-search-filter-group="core"
+                                data-search-filter-group-action="none">None</button>
+                        </span>
+                    </div>
+                    <div class="search-filter-chips">
+                        <button type="button" data-search-filter-page-type="matrices">Matrices <span
+                            class="search-filter-count">0</span></button>
+                        <button type="button" data-search-filter-page-type="tactics">Tactics <span
+                            class="search-filter-count">0</span></button>
+                        <button type="button" data-search-filter-page-type="techniques">Techniques <span
+                            class="search-filter-count">0</span></button>
+                        <button type="button" data-search-filter-page-type="sub-techniques">Sub-Techniques <span
+                            class="search-filter-count">0</span></button>
+                    </div>
+                </div>
+
+                <div class="search-filter-group">
+                    <div class="search-filter-group-heading">
+                        <span>Defenses</span>
+                        <span class="search-filter-actions">
+                            <button type="button" data-search-filter-group="defenses"
+                                data-search-filter-group-action="all">All</button>
+                            <button type="button" data-search-filter-group="defenses"
+                                data-search-filter-group-action="none">None</button>
+                        </span>
+                    </div>
+                    <div class="search-filter-chips">
+                        <button type="button" data-search-filter-page-type="mitigations">Mitigations <span
+                            class="search-filter-count">0</span></button>
+                        <button type="button" data-search-filter-page-type="assets">Assets <span
+                            class="search-filter-count">0</span></button>
+                        <button type="button" data-search-filter-page-type="detectionstrategies">Detection Strategies
+                            <span class="search-filter-count">0</span></button>
+                        <button type="button" data-search-filter-page-type="analytics">Analytics <span
+                            class="search-filter-count">0</span></button>
+                        <button type="button" data-search-filter-page-type="datacomponents">Data Components <span
+                            class="search-filter-count">0</span></button>
+                    </div>
+                </div>
+
+                <div class="search-filter-group">
+                    <div class="search-filter-group-heading">
+                        <span>CTI</span>
+                        <span class="search-filter-actions">
+                            <button type="button" data-search-filter-group="cti"
+                                data-search-filter-group-action="all">All</button>
+                            <button type="button" data-search-filter-group="cti"
+                                data-search-filter-group-action="none">None</button>
+                        </span>
+                    </div>
+                    <div class="search-filter-chips">
+                        <button type="button" data-search-filter-page-type="groups">Groups <span
+                            class="search-filter-count">0</span></button>
+                        <button type="button" data-search-filter-page-type="software">Software <span
+                            class="search-filter-count">0</span></button>
+                        <button type="button" data-search-filter-page-type="campaigns">Campaigns <span
+                            class="search-filter-count">0</span></button>
+                    </div>
+                </div>
+
+                <div class="search-filter-group">
+                    <div class="search-filter-group-heading">
+                        <span>Reference</span>
+                        <span class="search-filter-actions">
+                            <button type="button" data-search-filter-group="reference"
+                                data-search-filter-group-action="all">All</button>
+                            <button type="button" data-search-filter-group="reference"
+                                data-search-filter-group-action="none">None</button>
+                        </span>
+                    </div>
+                    <div class="search-filter-chips">
+                        <button type="button" data-search-filter-page-type="resources">Resources <span
+                            class="search-filter-count">0</span></button>
+                    </div>
+                </div>
+
+                <div class="search-filter-heading">
+                    <span>Domain</span>
+                    <span class="search-filter-actions">
+                        <button type="button" data-search-filter-domain-action="all">All</button>
+                        <button type="button" data-search-filter-domain-action="none">None</button>
+                    </span>
+                </div>
+                <div class="search-filter-chips">
+                    <button type="button" data-search-filter-domain="enterprise">Enterprise <span
+                        class="search-filter-count">0</span></button>
+                    <button type="button" data-search-filter-domain="mobile">Mobile <span
+                        class="search-filter-count">0</span></button>
+                    <button type="button" data-search-filter-domain="ics">ICS <span
+                        class="search-filter-count">0</span></button>
+                </div>
+            </div>
+        </div>
         <!-- results and controls for loading more results -->
         <div id="search-body" class="search-body">
             <div class="results" id="search-results">
@@ -3260,7 +3979,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3 col-footer">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v18.1&#013;Website  v4.4.1">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v19.0&#013;Website  v4.4.2">Website Changelog</a></u>
                                 </div>
                                 <div class="px-3">
                                     <u class="footer-link"><a href="/resources/legal-and-branding/privacy/#" class="footer-link" onclick="Osano.cm.showDrawer('osano-cm-dom-info-dialog-open')">Cookie Preferences</a></u>
@@ -3268,7 +3987,7 @@
                             </div>
                             <div class="row">
                                 <small class="px-3">
-                                    &copy;&nbsp;2015&nbsp;-&nbsp;2025, The MITRE Corporation. MITRE ATT&CK and ATT&CK are registered trademarks of The MITRE Corporation.
+                                    &copy;&nbsp;2015&nbsp;-&nbsp;2026, The MITRE Corporation. MITRE ATT&CK and ATT&CK are registered trademarks of The MITRE Corporation.
                                 </small>
                             </div>
                         </div>

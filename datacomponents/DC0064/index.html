@@ -42,7 +42,7 @@
             <!-- header elements -->
             <header class="col px-0">
                     <nav class='navbar navbar-expand-lg navbar-dark position-static'>
-        <a class='navbar-brand' href='/'><img src="/theme/images/mitre_attack_logo.png" class="attack-logo"></a>
+        <a class='navbar-brand' href='/'><img src="/theme/images/mitre_attack_logo.png" class="attack-logo" alt="ATT&CK Home"></a>
         <button class='navbar-toggler' type='button' data-toggle='collapse' data-target='#navbarCollapse'
                 aria-controls='navbarCollapse' aria-expanded='false' aria-label='Toggle navigation'>
                 <span class='navbar-toggler-icon'></span>
@@ -152,6 +152,7 @@
     <div class="dropdown-menu " aria-labelledby="navbarDropdown">
                 <a class="dropdown-item" href="/resources/">Get Started</a>
                 <a class="dropdown-item" href="/resources/learn-more-about-attack/">Learn More about ATT&CK</a>
+                <a class="dropdown-item" href="/resources/attack-advisory-council/">ATT&CK Advisory Council</a>
                 <a class="dropdown-item" href="/resources/attackcon/">ATT&CKcon</a>
                 <a class="dropdown-item" href="/resources/attack-data-and-tools/">ATT&CK Data & Tools</a>
                 <a class="dropdown-item" href="/resources/faq/">FAQ</a>
@@ -191,7 +192,7 @@
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
                     <div class="container-fluid banner-message">
-                        ATT&CK v19 will be released April 28th! Check out this <a href='https://medium.com/mitre-attack/defense-evasion-split-5d533545fa32'>blog post</a> for information on the planned deprecation of Enterprise's Defense Evasion tactic in the upcoming release.
+                        ATT&CK v19 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v19-ff329cb65d66'>blog post</a> for more information.
                     </div>
             </div>
         </div>
@@ -249,7 +250,7 @@
                 </div>
                 <div class="row card-data">
                   <div class="col-md-12">
-                    <span class="h5 card-title">Version</span>: 2.0
+                    <span class="h5 card-title">Version</span>: 2.1
                   </div>
                 </div>
                 <div class="row card-data">
@@ -259,7 +260,7 @@
                 </div>
                 <div class="row card-data">
                   <div class="col-md-12">
-                    <span class="h5 card-title">Last Modified</span>: 12 November 2025
+                    <span class="h5 card-title">Last Modified</span>: 24 April 2026
                   </div>
                 </div>
               </div>
@@ -278,8 +279,16 @@
             </thead>
             <tbody>
               <tr>
+                <td>android:logcat</td>
+                <td>Command 'pm list packages' executed by app sandbox or child proc</td>
+              </tr>
+              <tr>
                 <td>auditd:CONFIG_CHANGE</td>
                 <td>udev rule reload or trigger command executed</td>
+              </tr>
+              <tr>
+                <td>auditd:EXECVE</td>
+                <td>execve of script/interpreter (bash, python, node) with suspicious encoded or non-printable content</td>
               </tr>
               <tr>
                 <td>auditd:EXECVE</td>
@@ -352,6 +361,14 @@
               <tr>
                 <td>auditd:EXECVE</td>
                 <td>curl -T, rclone copy</td>
+              </tr>
+              <tr>
+                <td>auditd:EXECVE</td>
+                <td>execve of curl,wget,bash,sh,python with piped or remote content</td>
+              </tr>
+              <tr>
+                <td>auditd:EXECVE</td>
+                <td>execve, kill, ptrace, insmod, rmmod targeting security processes</td>
               </tr>
               <tr>
                 <td>auditd:PROCTITLE</td>
@@ -672,6 +689,10 @@
               <tr>
                 <td>esxi:hostd</td>
                 <td>execution + payload hints</td>
+              </tr>
+              <tr>
+                <td>esxi:shell</td>
+                <td>esxcli system syslog config set/reload, services.sh restart/stop</td>
               </tr>
               <tr>
                 <td>esxi:shell</td>
@@ -1176,6 +1197,18 @@
               <tr>
                 <td>macos:unifiedlog</td>
                 <td>Execution of commands like `ls -l@`, `xattr -l`, or custom tools interacting with resource forks</td>
+              </tr>
+              <tr>
+                <td>macos:unifiedlog</td>
+                <td>Execution of osascript, sh, bash, zsh, installer, open</td>
+              </tr>
+              <tr>
+                <td>MobileEDR:telemetry</td>
+                <td>Application spawns shell, command interpreter, or command-executing child process with arguments during command-execution phase</td>
+              </tr>
+              <tr>
+                <td>MobileEDR:telemetry</td>
+                <td>Application spawns Unix shell process or superuser binary such as sh, su, toybox, toolbox, or shell-like child process with parameters during execution phase</td>
               </tr>
               <tr>
                 <td>networkdevice:cli</td>
@@ -2094,6 +2127,17 @@
                     <a href="/techniques/T1114/002">T1114.002</a>
                 </td>
             </tr>
+            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--48923678-0fb6-4d14-986b-2f6adeb8c421">
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0899">DET0899</a>
+                </td>
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0899">Detect Social Engineering</a>
+                </td>
+                <td rowspan="">
+                    <a href="/techniques/T1684">T1684</a>
+                </td>
+            </tr>
             <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--73cde34a-247f-4ebc-87a5-ab6a9c400f40">
                 <td rowspan="">
                     <a href="/detectionstrategies/DET0452">DET0452</a>
@@ -2168,7 +2212,7 @@
                     <a href="/detectionstrategies/DET0350">Detecting Downgrade Attacks</a>
                 </td>
                 <td rowspan="">
-                    <a href="/techniques/T1562/010">T1562.010</a>
+                    <a href="/techniques/T1689">T1689</a>
                 </td>
             </tr>
             <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--101e19ca-f902-4c2d-8ceb-ddd07a43f1a7">
@@ -2369,6 +2413,28 @@
                     <a href="/techniques/T1074">T1074</a>
                 </td>
             </tr>
+            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--3a3820cd-260b-43d0-b5af-89b7ba81a044">
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0900">DET0900</a>
+                </td>
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0900">Detection of Defense Impairment</a>
+                </td>
+                <td rowspan="">
+                    <a href="/techniques/T1687">T1687</a>
+                </td>
+            </tr>
+            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--a21019ad-f6d2-4806-be7b-01ba27c63147">
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0497">DET0497</a>
+                </td>
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0497">Detection of Defense Impairment through Disabled or Modified Tools across OS Platforms.</a>
+                </td>
+                <td rowspan="">
+                    <a href="/techniques/T1685">T1685</a>
+                </td>
+            </tr>
             <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--ee674b38-f59a-4f21-860a-19d065e13aaf">
                 <td rowspan="">
                     <a href="/detectionstrategies/DET0426">DET0426</a>
@@ -2388,7 +2454,7 @@
                     <a href="/detectionstrategies/DET0145">Detection of Disabled or Modified System Firewalls across OS Platforms.</a>
                 </td>
                 <td rowspan="">
-                    <a href="/techniques/T1562/004">T1562.004</a>
+                    <a href="/techniques/T1686">T1686</a>
                 </td>
             </tr>
             <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--3414f3b8-17a2-438c-8bbc-a261a04da8bc">
@@ -2710,6 +2776,17 @@
                     <a href="/techniques/T0853">T0853</a>
                 </td>
             </tr>
+            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--9935655b-cd9b-485f-84ea-1b3b4b765413">
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0680">DET0680</a>
+                </td>
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0680">Detection of Security Software Discovery</a>
+                </td>
+                <td rowspan="">
+                    <a href="/techniques/T1418/001">T1418.001</a>
+                </td>
+            </tr>
             <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--7c1262bb-c0d1-4e0c-bab8-a232f7bed9d5">
                 <td rowspan="">
                     <a href="/detectionstrategies/DET0897">DET0897</a>
@@ -2730,6 +2807,17 @@
                 </td>
                 <td rowspan="">
                     <a href="/techniques/T0881">T0881</a>
+                </td>
+            </tr>
+            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--69ceab63-17ce-4e42-b247-055a180e6c2b">
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0600">DET0600</a>
+                </td>
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0600">Detection of Software Discovery</a>
+                </td>
+                <td rowspan="">
+                    <a href="/techniques/T1418">T1418</a>
                 </td>
             </tr>
             <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--519082ce-24ab-4f6b-9e86-b9443758c9d4">
@@ -2796,6 +2884,17 @@
                 </td>
                 <td rowspan="">
                     <a href="/techniques/T1484/002">T1484.002</a>
+                </td>
+            </tr>
+            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--3a114d11-0850-4c33-b828-359e59b15250">
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0306">DET0306</a>
+                </td>
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0306">Detection of Unauthorized Network Firewall Rule Modification</a>
+                </td>
+                <td rowspan="">
+                    <a href="/techniques/T1686/002">T1686.002</a>
                 </td>
             </tr>
             <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--34fc0ca7-338c-4eb4-b4ac-618f56378dd5">
@@ -2897,6 +2996,17 @@
                     <a href="/techniques/T1132">T1132</a>
                 </td>
             </tr>
+            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--8577b89d-01e2-4423-8657-caff7ed22737">
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0563">DET0563</a>
+                </td>
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0563">Detection Strategy for Defense Impairment via Prevent Command History Logging across OS platforms.</a>
+                </td>
+                <td rowspan="">
+                    <a href="/techniques/T1690">T1690</a>
+                </td>
+            </tr>
             <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--ff6c2db6-cc1b-47e0-89a6-536f83b74906">
                 <td rowspan="">
                     <a href="/detectionstrategies/DET0579">DET0579</a>
@@ -2913,10 +3023,10 @@
                     <a href="/detectionstrategies/DET0062">DET0062</a>
                 </td>
                 <td rowspan="">
-                    <a href="/detectionstrategies/DET0062">Detection Strategy for Disable or Modify Linux Audit System</a>
+                    <a href="/detectionstrategies/DET0062">Detection Strategy for Disable or Modify Linux Audit System Log</a>
                 </td>
                 <td rowspan="">
-                    <a href="/techniques/T1562/012">T1562.012</a>
+                    <a href="/techniques/T1685/004">T1685.004</a>
                 </td>
             </tr>
             <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--3a016ed2-47e0-414b-b90e-a44d1437354e">
@@ -3172,39 +3282,6 @@
                     <a href="/techniques/T1564/011">T1564.011</a>
                 </td>
             </tr>
-            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--e8e88bcd-0294-48d2-bd3c-0408814f4a69">
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0317">DET0317</a>
-                </td>
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0317">Detection Strategy for Impair Defenses Across Platforms</a>
-                </td>
-                <td rowspan="">
-                    <a href="/techniques/T1562">T1562</a>
-                </td>
-            </tr>
-            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--0596d971-9552-4cd0-a5aa-4385cf707371">
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0239">DET0239</a>
-                </td>
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0239">Detection Strategy for Impair Defenses Indicator Blocking</a>
-                </td>
-                <td rowspan="">
-                    <a href="/techniques/T1562/006">T1562.006</a>
-                </td>
-            </tr>
-            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--8577b89d-01e2-4423-8657-caff7ed22737">
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0563">DET0563</a>
-                </td>
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0563">Detection Strategy for Impair Defenses via Impair Command History Logging across OS platforms.</a>
-                </td>
-                <td rowspan="">
-                    <a href="/techniques/T1562/003">T1562.003</a>
-                </td>
-            </tr>
             <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--1e08be7e-451c-4b10-9e65-b6dbf8d54b38">
                 <td rowspan="">
                     <a href="/detectionstrategies/DET0286">DET0286</a>
@@ -3213,7 +3290,7 @@
                     <a href="/detectionstrategies/DET0286">Detection Strategy for Impersonation</a>
                 </td>
                 <td rowspan="">
-                    <a href="/techniques/T1656">T1656</a>
+                    <a href="/techniques/T1684/001">T1684.001</a>
                 </td>
             </tr>
             <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--f54b8799-acfd-4df4-a2c4-e83071750bde">
@@ -3225,6 +3302,17 @@
                 </td>
                 <td rowspan="">
                     <a href="/techniques/T1674">T1674</a>
+                </td>
+            </tr>
+            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--ded7322c-64ba-4f6b-9aca-77a537798cab">
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0920">DET0920</a>
+                </td>
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0920">Detection Strategy for Invisible Unicode</a>
+                </td>
+                <td rowspan="">
+                    <a href="/techniques/T1027/018">T1027.018</a>
                 </td>
             </tr>
             <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--df1da8e4-cabf-42f0-8f5f-2fa8086b1423">
@@ -3876,17 +3964,6 @@
                     <a href="/techniques/T1205">T1205</a>
                 </td>
             </tr>
-            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--3a114d11-0850-4c33-b828-359e59b15250">
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0306">DET0306</a>
-                </td>
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0306">Unauthorized Network Firewall Rule Modification (T1562.013)</a>
-                </td>
-                <td rowspan="">
-                    <a href="/techniques/T1562/013">T1562.013</a>
-                </td>
-            </tr>
             <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--3243e976-0cf8-4f18-8b50-38b9ee5bfc4c">
                 <td rowspan="">
                     <a href="/detectionstrategies/DET0351">DET0351</a>
@@ -3959,6 +4036,256 @@
                 <div class="close-search-icon" id="close-search-icon">&times;</div>
             </div>
         </div>
+        <div class="search-filters" id="search-filters">
+            <div class="search-filter-summary">
+                <div class="search-filter-dropdown">
+                    <button type="button" class="search-filter-summary-chip"
+                        data-search-filter-dropdown-toggle="core" aria-controls="search-filter-dropdown-core"
+                        aria-expanded="false">
+                        Core Objects: <span data-search-filter-summary="group-core">All</span>
+                    </button>
+                    <div class="search-filter-dropdown-menu" id="search-filter-dropdown-core"
+                        data-search-filter-dropdown="core" aria-hidden="true" style="display: none;">
+                        <div class="search-filter-group-heading">
+                            <span>Core ATT&CK Objects</span>
+                            <span class="search-filter-actions">
+                                <button type="button" data-search-filter-group="core"
+                                    data-search-filter-group-action="all">All</button>
+                                <button type="button" data-search-filter-group="core"
+                                    data-search-filter-group-action="none">None</button>
+                            </span>
+                        </div>
+                        <div class="search-filter-chips">
+                            <button type="button" data-search-filter-page-type="matrices">Matrices <span
+                                class="search-filter-count">0</span></button>
+                            <button type="button" data-search-filter-page-type="tactics">Tactics <span
+                                class="search-filter-count">0</span></button>
+                            <button type="button" data-search-filter-page-type="techniques">Techniques <span
+                                class="search-filter-count">0</span></button>
+                            <button type="button" data-search-filter-page-type="sub-techniques">Sub-Techniques <span
+                                class="search-filter-count">0</span></button>
+                        </div>
+                    </div>
+                </div>
+                <div class="search-filter-dropdown">
+                    <button type="button" class="search-filter-summary-chip"
+                        data-search-filter-dropdown-toggle="defenses" aria-controls="search-filter-dropdown-defenses"
+                        aria-expanded="false">
+                        Defenses: <span data-search-filter-summary="group-defenses">All</span>
+                    </button>
+                    <div class="search-filter-dropdown-menu" id="search-filter-dropdown-defenses"
+                        data-search-filter-dropdown="defenses" aria-hidden="true" style="display: none;">
+                        <div class="search-filter-group-heading">
+                            <span>Defenses</span>
+                            <span class="search-filter-actions">
+                                <button type="button" data-search-filter-group="defenses"
+                                    data-search-filter-group-action="all">All</button>
+                                <button type="button" data-search-filter-group="defenses"
+                                    data-search-filter-group-action="none">None</button>
+                            </span>
+                        </div>
+                        <div class="search-filter-chips">
+                            <button type="button" data-search-filter-page-type="mitigations">Mitigations <span
+                                class="search-filter-count">0</span></button>
+                            <button type="button" data-search-filter-page-type="assets">Assets <span
+                                class="search-filter-count">0</span></button>
+                            <button type="button" data-search-filter-page-type="detectionstrategies">Detection
+                                Strategies <span class="search-filter-count">0</span></button>
+                            <button type="button" data-search-filter-page-type="analytics">Analytics <span
+                                class="search-filter-count">0</span></button>
+                            <button type="button" data-search-filter-page-type="datacomponents">Data Components <span
+                                class="search-filter-count">0</span></button>
+                        </div>
+                    </div>
+                </div>
+                <div class="search-filter-dropdown">
+                    <button type="button" class="search-filter-summary-chip"
+                        data-search-filter-dropdown-toggle="cti" aria-controls="search-filter-dropdown-cti"
+                        aria-expanded="false">
+                        CTI: <span data-search-filter-summary="group-cti">All</span>
+                    </button>
+                    <div class="search-filter-dropdown-menu" id="search-filter-dropdown-cti"
+                        data-search-filter-dropdown="cti" aria-hidden="true" style="display: none;">
+                        <div class="search-filter-group-heading">
+                            <span>CTI</span>
+                            <span class="search-filter-actions">
+                                <button type="button" data-search-filter-group="cti"
+                                    data-search-filter-group-action="all">All</button>
+                                <button type="button" data-search-filter-group="cti"
+                                    data-search-filter-group-action="none">None</button>
+                            </span>
+                        </div>
+                        <div class="search-filter-chips">
+                            <button type="button" data-search-filter-page-type="groups">Groups <span
+                                class="search-filter-count">0</span></button>
+                            <button type="button" data-search-filter-page-type="software">Software <span
+                                class="search-filter-count">0</span></button>
+                            <button type="button" data-search-filter-page-type="campaigns">Campaigns <span
+                                class="search-filter-count">0</span></button>
+                        </div>
+                    </div>
+                </div>
+                <div class="search-filter-dropdown">
+                    <button type="button" class="search-filter-summary-chip"
+                        data-search-filter-dropdown-toggle="reference" aria-controls="search-filter-dropdown-reference"
+                        aria-expanded="false">
+                        Reference: <span data-search-filter-summary="group-reference">All</span>
+                    </button>
+                    <div class="search-filter-dropdown-menu" id="search-filter-dropdown-reference"
+                        data-search-filter-dropdown="reference" aria-hidden="true" style="display: none;">
+                        <div class="search-filter-group-heading">
+                            <span>Reference</span>
+                            <span class="search-filter-actions">
+                                <button type="button" data-search-filter-group="reference"
+                                    data-search-filter-group-action="all">All</button>
+                                <button type="button" data-search-filter-group="reference"
+                                    data-search-filter-group-action="none">None</button>
+                            </span>
+                        </div>
+                        <div class="search-filter-chips">
+                            <button type="button" data-search-filter-page-type="resources">Resources <span
+                                class="search-filter-count">0</span></button>
+                        </div>
+                    </div>
+                </div>
+                <div class="search-filter-dropdown">
+                    <button type="button" class="search-filter-summary-chip"
+                        data-search-filter-dropdown-toggle="domains" aria-controls="search-filter-dropdown-domains"
+                        aria-expanded="false">
+                        Domains: <span data-search-filter-summary="domains">All</span>
+                    </button>
+                    <div class="search-filter-dropdown-menu" id="search-filter-dropdown-domains"
+                        data-search-filter-dropdown="domains" aria-hidden="true" style="display: none;">
+                        <div class="search-filter-group-heading">
+                            <span>Domains</span>
+                            <span class="search-filter-actions">
+                                <button type="button" data-search-filter-domain-action="all">All</button>
+                                <button type="button" data-search-filter-domain-action="none">None</button>
+                            </span>
+                        </div>
+                        <div class="search-filter-chips">
+                            <button type="button" data-search-filter-domain="enterprise">Enterprise <span
+                                class="search-filter-count">0</span></button>
+                            <button type="button" data-search-filter-domain="mobile">Mobile <span
+                                class="search-filter-count">0</span></button>
+                            <button type="button" data-search-filter-domain="ics">ICS <span
+                                class="search-filter-count">0</span></button>
+                        </div>
+                    </div>
+                </div>
+                <button type="button" class="search-filter-summary-chip" id="search-filters-toggle"
+                    data-search-filter-toggle aria-controls="search-filters-panel" aria-expanded="false">
+                    Show all Filters
+                </button>
+            </div>
+            <div class="search-filters-panel" id="search-filters-panel" aria-hidden="true" style="display: none;">
+                <div class="search-filter-heading">
+                    <span>Page type</span>
+                    <span class="search-filter-actions">
+                        <button type="button" data-search-filter-page-types-action="all">All</button>
+                        <button type="button" data-search-filter-page-types-action="none">None</button>
+                    </span>
+                </div>
+
+                <div class="search-filter-group">
+                    <div class="search-filter-group-heading">
+                        <span>Core ATT&CK Objects</span>
+                        <span class="search-filter-actions">
+                            <button type="button" data-search-filter-group="core"
+                                data-search-filter-group-action="all">All</button>
+                            <button type="button" data-search-filter-group="core"
+                                data-search-filter-group-action="none">None</button>
+                        </span>
+                    </div>
+                    <div class="search-filter-chips">
+                        <button type="button" data-search-filter-page-type="matrices">Matrices <span
+                            class="search-filter-count">0</span></button>
+                        <button type="button" data-search-filter-page-type="tactics">Tactics <span
+                            class="search-filter-count">0</span></button>
+                        <button type="button" data-search-filter-page-type="techniques">Techniques <span
+                            class="search-filter-count">0</span></button>
+                        <button type="button" data-search-filter-page-type="sub-techniques">Sub-Techniques <span
+                            class="search-filter-count">0</span></button>
+                    </div>
+                </div>
+
+                <div class="search-filter-group">
+                    <div class="search-filter-group-heading">
+                        <span>Defenses</span>
+                        <span class="search-filter-actions">
+                            <button type="button" data-search-filter-group="defenses"
+                                data-search-filter-group-action="all">All</button>
+                            <button type="button" data-search-filter-group="defenses"
+                                data-search-filter-group-action="none">None</button>
+                        </span>
+                    </div>
+                    <div class="search-filter-chips">
+                        <button type="button" data-search-filter-page-type="mitigations">Mitigations <span
+                            class="search-filter-count">0</span></button>
+                        <button type="button" data-search-filter-page-type="assets">Assets <span
+                            class="search-filter-count">0</span></button>
+                        <button type="button" data-search-filter-page-type="detectionstrategies">Detection Strategies
+                            <span class="search-filter-count">0</span></button>
+                        <button type="button" data-search-filter-page-type="analytics">Analytics <span
+                            class="search-filter-count">0</span></button>
+                        <button type="button" data-search-filter-page-type="datacomponents">Data Components <span
+                            class="search-filter-count">0</span></button>
+                    </div>
+                </div>
+
+                <div class="search-filter-group">
+                    <div class="search-filter-group-heading">
+                        <span>CTI</span>
+                        <span class="search-filter-actions">
+                            <button type="button" data-search-filter-group="cti"
+                                data-search-filter-group-action="all">All</button>
+                            <button type="button" data-search-filter-group="cti"
+                                data-search-filter-group-action="none">None</button>
+                        </span>
+                    </div>
+                    <div class="search-filter-chips">
+                        <button type="button" data-search-filter-page-type="groups">Groups <span
+                            class="search-filter-count">0</span></button>
+                        <button type="button" data-search-filter-page-type="software">Software <span
+                            class="search-filter-count">0</span></button>
+                        <button type="button" data-search-filter-page-type="campaigns">Campaigns <span
+                            class="search-filter-count">0</span></button>
+                    </div>
+                </div>
+
+                <div class="search-filter-group">
+                    <div class="search-filter-group-heading">
+                        <span>Reference</span>
+                        <span class="search-filter-actions">
+                            <button type="button" data-search-filter-group="reference"
+                                data-search-filter-group-action="all">All</button>
+                            <button type="button" data-search-filter-group="reference"
+                                data-search-filter-group-action="none">None</button>
+                        </span>
+                    </div>
+                    <div class="search-filter-chips">
+                        <button type="button" data-search-filter-page-type="resources">Resources <span
+                            class="search-filter-count">0</span></button>
+                    </div>
+                </div>
+
+                <div class="search-filter-heading">
+                    <span>Domain</span>
+                    <span class="search-filter-actions">
+                        <button type="button" data-search-filter-domain-action="all">All</button>
+                        <button type="button" data-search-filter-domain-action="none">None</button>
+                    </span>
+                </div>
+                <div class="search-filter-chips">
+                    <button type="button" data-search-filter-domain="enterprise">Enterprise <span
+                        class="search-filter-count">0</span></button>
+                    <button type="button" data-search-filter-domain="mobile">Mobile <span
+                        class="search-filter-count">0</span></button>
+                    <button type="button" data-search-filter-domain="ics">ICS <span
+                        class="search-filter-count">0</span></button>
+                </div>
+            </div>
+        </div>
         <!-- results and controls for loading more results -->
         <div id="search-body" class="search-body">
             <div class="results" id="search-results">
@@ -3997,7 +4324,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3 col-footer">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v18.1&#013;Website  v4.4.1">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v19.0&#013;Website  v4.4.2">Website Changelog</a></u>
                                 </div>
                                 <div class="px-3">
                                     <u class="footer-link"><a href="/resources/legal-and-branding/privacy/#" class="footer-link" onclick="Osano.cm.showDrawer('osano-cm-dom-info-dialog-open')">Cookie Preferences</a></u>
@@ -4005,7 +4332,7 @@
                             </div>
                             <div class="row">
                                 <small class="px-3">
-                                    &copy;&nbsp;2015&nbsp;-&nbsp;2025, The MITRE Corporation. MITRE ATT&CK and ATT&CK are registered trademarks of The MITRE Corporation.
+                                    &copy;&nbsp;2015&nbsp;-&nbsp;2026, The MITRE Corporation. MITRE ATT&CK and ATT&CK are registered trademarks of The MITRE Corporation.
                                 </small>
                             </div>
                         </div>

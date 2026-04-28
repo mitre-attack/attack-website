@@ -20,8 +20,7 @@
         <meta name='viewport' content='width=device-width, initial-scale=1,shrink-to-fit=no'>
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <link rel='shortcut icon' href='/theme/favicon.ico' type='image/x-icon'>
-        <title>Obfuscated Files or Information: Dynamic API Resolution, Sub-technique T1027.007 - Enterprise | MITRE
-ATT&CK&reg;</title>
+        <title>Obfuscated Files or Information: Dynamic API Resolution, Sub-technique T1027.007 - Enterprise | MITRE ATT&CK&reg;</title>
         <!-- USWDS CSS -->
         <!-- Bootstrap CSS -->
         <link rel='stylesheet' href='/theme/style/vendors/bootstrap.min.css' />
@@ -43,7 +42,7 @@ ATT&CK&reg;</title>
             <!-- header elements -->
             <header class="col px-0">
                     <nav class='navbar navbar-expand-lg navbar-dark position-static'>
-        <a class='navbar-brand' href='/'><img src="/theme/images/mitre_attack_logo.png" class="attack-logo"></a>
+        <a class='navbar-brand' href='/'><img src="/theme/images/mitre_attack_logo.png" class="attack-logo" alt="ATT&CK Home"></a>
         <button class='navbar-toggler' type='button' data-toggle='collapse' data-target='#navbarCollapse'
                 aria-controls='navbarCollapse' aria-expanded='false' aria-label='Toggle navigation'>
                 <span class='navbar-toggler-icon'></span>
@@ -153,6 +152,7 @@ ATT&CK&reg;</title>
     <div class="dropdown-menu " aria-labelledby="navbarDropdown">
                 <a class="dropdown-item" href="/resources/">Get Started</a>
                 <a class="dropdown-item" href="/resources/learn-more-about-attack/">Learn More about ATT&CK</a>
+                <a class="dropdown-item" href="/resources/attack-advisory-council/">ATT&CK Advisory Council</a>
                 <a class="dropdown-item" href="/resources/attackcon/">ATT&CKcon</a>
                 <a class="dropdown-item" href="/resources/attack-data-and-tools/">ATT&CK Data & Tools</a>
                 <a class="dropdown-item" href="/resources/faq/">FAQ</a>
@@ -192,7 +192,7 @@ ATT&CK&reg;</title>
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
                     <div class="container-fluid banner-message">
-                        ATT&CK v19 will be released April 28th! Check out this <a href='https://medium.com/mitre-attack/defense-evasion-split-5d533545fa32'>blog post</a> for information on the planned deprecation of Enterprise's Defense Evasion tactic in the upcoming release.
+                        ATT&CK v19 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v19-ff329cb65d66'>blog post</a> for more information.
                     </div>
             </div>
         </div>
@@ -240,7 +240,7 @@ ATT&CK&reg;</title>
                 <div class="card-header collapsed" id="subtechniques-card-header" data-toggle="collapse"
                   data-target="#subtechniques-card-body" aria-expanded="false" aria-controls="subtechniques-card-body">
                   <h5 class="mb-0" id="sub-techniques">Other sub-techniques of Obfuscated Files or Information
-                    (17)</h5>
+                    (18)</h5>
                 </div>
                 <div id="subtechniques-card-body" class="card-body p-0 collapse"
                   aria-labelledby="subtechniques-card-header">
@@ -420,6 +420,16 @@ ATT&CK&reg;</title>
                             data-subtechnique_id="T1027.017"> SVG Smuggling </a>
                         </td>
                       </tr>
+                      <tr>
+                        <td>
+                          <a href="/techniques/T1027/018/" class="subtechnique-table-item"
+                            data-subtechnique_id="T1027.018"> T1027.018 </a>
+                        </td>
+                        <td>
+                          <a href="/techniques/T1027/018/" class="subtechnique-table-item"
+                            data-subtechnique_id="T1027.018"> Invisible Unicode </a>
+                        </td>
+                      </tr>
                     </tbody>
                   </table>
                 </div>
@@ -428,7 +438,7 @@ ATT&CK&reg;</title>
             <!--start-indexing-for-search-->
 
             <div class="description-body">
-                      <p>Adversaries may obfuscate then dynamically resolve API functions called by their malware in order to conceal malicious functionalities and impair defensive analysis. Malware commonly uses various <a href="/techniques/T1106">Native API</a> functions provided by the OS to perform various tasks such as those involving processes, files, and other system artifacts.</p><p>API functions called by malware may leave static artifacts such as strings in payload files. Defensive analysts may also uncover which functions a binary file may execute via an import address table (IAT) or other structures that help dynamically link calling code to the shared modules that provide functions.<span onclick=scrollToRef('scite-1') id="scite-ref-1-a" class="scite-citeref-number" title="Brennan, M. (2022, February 16). Hackers No Hashing: Randomizing API Hashes to Evade Cobalt Strike Shellcode Detection. Retrieved August 22, 2022."data-reference="Huntress API Hash"><sup><a href="https://www.huntress.com/blog/hackers-no-hashing-randomizing-api-hashes-to-evade-cobalt-strike-shellcode-detection" target="_blank" data-hasqtip="0" aria-describedby="qtip-0">[1]</a></sup></span><span onclick=scrollToRef('scite-2') id="scite-ref-2-a" class="scite-citeref-number" title="spotheplanet. (n.d.). Windows API Hashing in Malware. Retrieved August 22, 2022."data-reference="IRED API Hashing"><sup><a href="https://www.ired.team/offensive-security/defense-evasion/windows-api-hashing-in-malware" target="_blank" data-hasqtip="1" aria-describedby="qtip-1">[2]</a></sup></span></p><p>To avoid static or other defensive analysis, adversaries may use dynamic API resolution to conceal malware characteristics and functionalities. Similar to <a href="/techniques/T1027/002">Software Packing</a>, dynamic API resolution may change file signatures and obfuscate malicious API function calls until they are resolved and invoked during runtime.</p><p>Various methods may be used to obfuscate malware calls to API functions. For example, hashes of function names are commonly stored in malware in lieu of literal strings. Malware can use these hashes (or other identifiers) to manually reproduce the linking and loading process using functions such as <code>GetProcAddress()</code> and <code>LoadLibrary()</code>. These hashes/identifiers can also be further obfuscated using encryption or other string manipulation tricks (requiring various forms of <a href="/techniques/T1140">Deobfuscate/Decode Files or Information</a> during execution).<span onclick=scrollToRef('scite-3') id="scite-ref-3-a" class="scite-citeref-number" title="Choi, S. (2015, August 6). Obfuscated API Functions in Modern Packers. Retrieved August 22, 2022."data-reference="BlackHat API Packers"><sup><a href="https://www.blackhat.com/docs/us-15/materials/us-15-Choi-API-Deobfuscator-Resolving-Obfuscated-API-Functions-In-Modern-Packers.pdf" target="_blank" data-hasqtip="2" aria-describedby="qtip-2">[3]</a></sup></span><span onclick=scrollToRef('scite-4') id="scite-ref-4-a" class="scite-citeref-number" title="drakonia. (2022, August 10). HInvoke and avoiding PInvoke. Retrieved August 22, 2022."data-reference="Drakonia HInvoke"><sup><a href="https://dr4k0nia.github.io/dotnet/coding/2022/08/10/HInvoke-and-avoiding-PInvoke.html?s=03" target="_blank" data-hasqtip="3" aria-describedby="qtip-3">[4]</a></sup></span><span onclick=scrollToRef('scite-1') id="scite-ref-1-a" class="scite-citeref-number" title="Brennan, M. (2022, February 16). Hackers No Hashing: Randomizing API Hashes to Evade Cobalt Strike Shellcode Detection. Retrieved August 22, 2022."data-reference="Huntress API Hash"><sup><a href="https://www.huntress.com/blog/hackers-no-hashing-randomizing-api-hashes-to-evade-cobalt-strike-shellcode-detection" target="_blank" data-hasqtip="0" aria-describedby="qtip-0">[1]</a></sup></span></p>
+                      <p>Adversaries may obfuscate then dynamically resolve API functions called by their malware in order to conceal malicious functionalities and impair defensive analysis. Malware commonly uses various <a href="/techniques/T1106">Native API</a> functions provided by the OS to perform various tasks such as those involving processes, files, and other system artifacts.</p><p>API functions called by malware may leave static artifacts such as strings in payload files. Defensive analysts may also uncover which functions a binary file may execute via an import address table (IAT) or other structures that help dynamically link calling code to the shared modules that provide functions.<span onclick=scrollToRef('scite-1') id="scite-ref-1-a" class="scite-citeref-number" title="Brennan, M. (2022, February 16). Hackers No Hashing: Randomizing API Hashes to Evade Cobalt Strike Shellcode Detection. Retrieved August 22, 2022."data-reference="Huntress API Hash"><sup><a href="https://www.huntress.com/blog/hackers-no-hashing-randomizing-api-hashes-to-evade-cobalt-strike-shellcode-detection" target="_blank" data-hasqtip="0" aria-describedby="qtip-0">[1]</a></sup></span><span onclick=scrollToRef('scite-2') id="scite-ref-2-a" class="scite-citeref-number" title="spotheplanet. (n.d.). Windows API Hashing in Malware. Retrieved August 22, 2022."data-reference="IRED API Hashing"><sup><a href="https://www.ired.team/offensive-security/defense-evasion/windows-api-hashing-in-malware" target="_blank" data-hasqtip="1" aria-describedby="qtip-1">[2]</a></sup></span></p><p>To avoid static or other defensive analysis, adversaries may use dynamic API resolution to conceal malware characteristics and functionalities. Similar to <a href="/techniques/T1027/002">Software Packing</a>, dynamic API resolution may change file signatures and obfuscate malicious API function calls until they are resolved and invoked during runtime.</p><p>Various methods may be used to obfuscate malware calls to API functions. For example, hashes of function names are commonly stored in malware in lieu of literal strings. Malware can use these hashes (or other identifiers) to manually reproduce the linking and loading process using functions such as <code>GetProcAddress()</code> and <code>LoadLibrary()</code>. These hashes/identifiers can also be further obfuscated using encryption or other string manipulation tricks (requiring various forms of <a href="/techniques/T1140">Deobfuscate/Decode Files or Information</a> during execution).<span onclick=scrollToRef('scite-3') id="scite-ref-3-a" class="scite-citeref-number" title="Choi, S. (2015, August 6). Obfuscated API Functions in Modern Packers. Retrieved August 22, 2022."data-reference="BlackHat API Packers"><sup><a href="https://www.blackhat.com/docs/us-15/materials/us-15-Choi-API-Deobfuscator-Resolving-Obfuscated-API-Functions-In-Modern-Packers.pdf" target="_blank" data-hasqtip="2" aria-describedby="qtip-2">[3]</a></sup></span><span onclick=scrollToRef('scite-4') id="scite-ref-4-a" class="scite-citeref-number" title="drakonia. (2022, August 10). HInvoke and avoiding PInvoke. Retrieved August 22, 2022."data-reference="Drakonia HInvoke"><sup><a href="https://dr4k0nia.github.io/posts/HInvoke-and-avoiding-PInvoke/" target="_blank" data-hasqtip="3" aria-describedby="qtip-3">[4]</a></sup></span><span onclick=scrollToRef('scite-1') id="scite-ref-1-a" class="scite-citeref-number" title="Brennan, M. (2022, February 16). Hackers No Hashing: Randomizing API Hashes to Evade Cobalt Strike Shellcode Detection. Retrieved August 22, 2022."data-reference="Huntress API Hash"><sup><a href="https://www.huntress.com/blog/hackers-no-hashing-randomizing-api-hashes-to-evade-cobalt-strike-shellcode-detection" target="_blank" data-hasqtip="0" aria-describedby="qtip-0">[1]</a></sup></span></p>
 
             </div>
           </div>
@@ -457,7 +467,7 @@ ATT&CK&reg;</title>
                   </div>
                   <div class="col-md-11 pl-0">
                     <span class="h5 card-title">Tactic:</span>
-                        <a href="/tactics/TA0005">Defense Evasion</a>                  </div>
+                        <a href="/tactics/TA0005">Stealth</a>                  </div>
                 </div>
                 <div class="row card-data">
                   <div class="col-md-1 px-0 text-center">
@@ -471,7 +481,7 @@ ATT&CK&reg;</title>
                 <div class="row card-data">
                   <div class="col-md-1 px-0 text-center"></div>
                   <div class="col-md-11 pl-0">
-                    <span class="h5 card-title">Version:&nbsp;</span>1.0
+                    <span class="h5 card-title">Version:&nbsp;</span>2.0
                   </div>
                 </div>
                 <div class="row card-data">
@@ -483,7 +493,7 @@ ATT&CK&reg;</title>
                 <div class="row card-data">
                   <div class="col-md-1 px-0 text-center"></div>
                   <div class="col-md-11 pl-0">
-                    <span class="h5 card-title">Last Modified:&nbsp;</span>15 April 2025
+                    <span class="h5 card-title">Last Modified:&nbsp;</span>15 April 2026
                   </div>
                 </div>
               </div>
@@ -493,13 +503,13 @@ ATT&CK&reg;</title>
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Permalink to this version of T1027.007" 
-           href="/versions/v18/techniques/T1027/007/" data-test-ignore="true">Version Permalink</a>
+           href="/versions/v19/techniques/T1027/007/" data-test-ignore="true">Version Permalink</a>
     </div>
     <div class="permalink">
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Go to the live version of T1027.007" 
-           href="/versions/v18/techniques/T1027/007/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+           href="/versions/v19/techniques/T1027/007/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
     </div>
 </div>
 
@@ -590,13 +600,49 @@ ATT&CK&reg;</title>
               </tr>
               <tr>
                 <td>
+                  <a href="/software/S9023"> S9023 </a>
+                </td>
+                <td>
+                  <a href="/software/S9023"> HiddenFace </a>
+                </td>
+                <td>
+                          <p><a href="/software/S9023">HiddenFace</a> can dynamically resolve Windows APIs.<span onclick=scrollToRef('scite-13') id="scite-ref-13-a" class="scite-citeref-number" title="Breitenbacher, D. (2024). Unmasking HiddenFace. Retrieved April 17, 2026."data-reference="ESET HiddenFace 2024"><sup><a href="https://jsac.jpcert.or.jp/archive/2024/pdf/JSAC2024_2_8_Breitenbacher_en.pdf" target="_blank" data-hasqtip="12" aria-describedby="qtip-12">[13]</a></sup></span><span onclick=scrollToRef('scite-14') id="scite-ref-14-a" class="scite-citeref-number" title="Trend Micro. (2024, November 19). Spot the Difference: Earth Kasha's New LODEINFO Campaign And The Correlation Analysis With The APT10 Umbrella. Retrieved April 17, 2026."data-reference="Trend Micro Earth Kasha NOV 2024"><sup><a href="https://www.trendmicro.com/en_us/research/24/k/lodeinfo-campaign-of-earth-kasha.html" target="_blank" data-hasqtip="13" aria-describedby="qtip-13">[14]</a></sup></span></p>
+
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <a href="/software/S9007"> S9007 </a>
+                </td>
+                <td>
+                  <a href="/software/S9007"> HTTPTroy </a>
+                </td>
+                <td>
+                          <p><a href="/software/S9007">HTTPTroy</a> has utilized dynamic API resolution by reconstructing API calls during runtime using combinations of arithmetic and logical operations to complicate static analysis.<span onclick=scrollToRef('scite-15') id="scite-ref-15-a" class="scite-citeref-number" title="Alexndru-Cristian Bardas. (2025, October 30). DPRK’s Playbook: Kimsuky’s HttpTroy and Lazarus’s New BLINDINGCAN Variant. Retrieved April 8, 2026."data-reference="Gen Digital Kimsuky HTTPTroy October 2025"><sup><a href="https://www.gendigital.com/blog/insights/research/dprk-kimsuky-lazarus-analysis" target="_blank" data-hasqtip="14" aria-describedby="qtip-14">[15]</a></sup></span></p>
+
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <a href="/groups/G0094"> G0094 </a>
+                </td>
+                <td>
+                  <a href="/groups/G0094"> Kimsuky </a>
+                </td>
+                <td>
+                          <p><a href="/groups/G0094">Kimsuky</a> has leveraged dynamic API resolution using custom hashing techniques.<span onclick=scrollToRef('scite-15') id="scite-ref-15-a" class="scite-citeref-number" title="Alexndru-Cristian Bardas. (2025, October 30). DPRK’s Playbook: Kimsuky’s HttpTroy and Lazarus’s New BLINDINGCAN Variant. Retrieved April 8, 2026."data-reference="Gen Digital Kimsuky HTTPTroy October 2025"><sup><a href="https://www.gendigital.com/blog/insights/research/dprk-kimsuky-lazarus-analysis" target="_blank" data-hasqtip="14" aria-describedby="qtip-14">[15]</a></sup></span> </p>
+
+                </td>
+              </tr>
+              <tr>
+                <td>
                   <a href="/software/S1160"> S1160 </a>
                 </td>
                 <td>
                   <a href="/software/S1160"> Latrodectus </a>
                 </td>
                 <td>
-                          <p><a href="/software/S1160">Latrodectus</a> can resolve Windows APIs dynamically by hash.<span onclick=scrollToRef('scite-13') id="scite-ref-13-a" class="scite-citeref-number" title="Proofpoint Threat Research and Team Cymru S2 Threat Research. (2024, April 4). Latrodectus: This Spider Bytes Like Ice . Retrieved May 31, 2024."data-reference="Latrodectus APR 2024"><sup><a href="https://www.proofpoint.com/us/blog/threat-insight/latrodectus-spider-bytes-ice" target="_blank" data-hasqtip="12" aria-describedby="qtip-12">[13]</a></sup></span></p>
+                          <p><a href="/software/S1160">Latrodectus</a> can resolve Windows APIs dynamically by hash.<span onclick=scrollToRef('scite-16') id="scite-ref-16-a" class="scite-citeref-number" title="Proofpoint Threat Research and Team Cymru S2 Threat Research. (2024, April 4). Latrodectus: This Spider Bytes Like Ice . Retrieved May 31, 2024."data-reference="Latrodectus APR 2024"><sup><a href="https://www.proofpoint.com/us/blog/threat-insight/latrodectus-spider-bytes-ice" target="_blank" data-hasqtip="15" aria-describedby="qtip-15">[16]</a></sup></span></p>
 
                 </td>
               </tr>
@@ -608,7 +654,31 @@ ATT&CK&reg;</title>
                   <a href="/groups/G0032"> Lazarus Group </a>
                 </td>
                 <td>
-                          <p><a href="/groups/G0032">Lazarus Group</a> has used a custom hashing method to resolve APIs used in shellcode.<span onclick=scrollToRef('scite-14') id="scite-ref-14-a" class="scite-citeref-number" title="Saini, A. and Hossein, J. (2022, January 27). North Korea’s Lazarus APT leverages Windows Update client, GitHub in latest campaign. Retrieved January 27, 2022."data-reference="Lazarus APT January 2022"><sup><a href="https://blog.malwarebytes.com/threat-intelligence/2022/01/north-koreas-lazarus-apt-leverages-windows-update-client-github-in-latest-campaign/" target="_blank" data-hasqtip="13" aria-describedby="qtip-13">[14]</a></sup></span></p>
+                          <p><a href="/groups/G0032">Lazarus Group</a> has used a custom hashing method to resolve APIs used in shellcode.<span onclick=scrollToRef('scite-17') id="scite-ref-17-a" class="scite-citeref-number" title="Saini, A. and Hossein, J. (2022, January 27). North Korea’s Lazarus APT leverages Windows Update client, GitHub in latest campaign. Retrieved January 27, 2022."data-reference="Lazarus APT January 2022"><sup><a href="https://blog.malwarebytes.com/threat-intelligence/2022/01/north-koreas-lazarus-apt-leverages-windows-update-client-github-in-latest-campaign/" target="_blank" data-hasqtip="16" aria-describedby="qtip-16">[17]</a></sup></span></p>
+
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <a href="/software/S9020"> S9020 </a>
+                </td>
+                <td>
+                  <a href="/software/S9020"> LODEINFO </a>
+                </td>
+                <td>
+                          <p><a href="/software/S9020">LODEINFO</a> can use a hashing algorithm to dynamically resolve API function addresses.<span onclick=scrollToRef('scite-18') id="scite-ref-18-a" class="scite-citeref-number" title="Ishimaru, S. (2022, October 31). APT10: Tracking down LODEINFO 2022, part II. Retrieved April 17, 2026."data-reference="Kaspersky LODEINFO Part II OCT 2022"><sup><a href="https://securelist.com/apt10-tracking-down-lodeinfo-2022-part-ii/107745/" target="_blank" data-hasqtip="17" aria-describedby="qtip-17">[18]</a></sup></span></p>
+
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <a href="/software/S9036"> S9036 </a>
+                </td>
+                <td>
+                  <a href="/software/S9036"> LP-Notes </a>
+                </td>
+                <td>
+                          <p><a href="/software/S9036">LP-Notes</a> has dynamically resolved API functions during the C runtime startup.<span onclick=scrollToRef('scite-19') id="scite-ref-19-a" class="scite-citeref-number" title="ESET Research. (2025, December 2). MuddyWater: Snakes by the riverbank. Retrieved February 17, 2026."data-reference="ESET_MuddyWater_Dec2025"><sup><a href="https://www.welivesecurity.com/en/eset-research/muddywater-snakes-riverbank/" target="_blank" data-hasqtip="18" aria-describedby="qtip-18">[19]</a></sup></span> </p>
 
                 </td>
               </tr>
@@ -620,7 +690,7 @@ ATT&CK&reg;</title>
                   <a href="/groups/G0129"> Mustang Panda </a>
                 </td>
                 <td>
-                          <p><a href="/groups/G0129">Mustang Panda</a> has leveraged obfuscated Windows API function calls that were concealed as unique names, or hashes of the Windows API.<span onclick=scrollToRef('scite-15') id="scite-ref-15-a" class="scite-citeref-number" title="Alexandre Cote Cyr. (2022, March 23). Mustang Panda’s Hodur: Old tricks, new Korplug variant. Retrieved September 9, 2025."data-reference="Eset PlugX Korplug Mustang Panda March 2022"><sup><a href="https://www.welivesecurity.com/2022/03/23/mustang-panda-hodur-old-tricks-new-korplug-variant/" target="_blank" data-hasqtip="14" aria-describedby="qtip-14">[15]</a></sup></span></p>
+                          <p><a href="/groups/G0129">Mustang Panda</a> has leveraged obfuscated Windows API function calls that were concealed as unique names, or hashes of the Windows API.<span onclick=scrollToRef('scite-20') id="scite-ref-20-a" class="scite-citeref-number" title="Alexandre Cote Cyr. (2022, March 23). Mustang Panda’s Hodur: Old tricks, new Korplug variant. Retrieved September 9, 2025."data-reference="Eset PlugX Korplug Mustang Panda March 2022"><sup><a href="https://www.welivesecurity.com/2022/03/23/mustang-panda-hodur-old-tricks-new-korplug-variant/" target="_blank" data-hasqtip="19" aria-describedby="qtip-19">[20]</a></sup></span></p>
 
                 </td>
               </tr>
@@ -632,7 +702,7 @@ ATT&CK&reg;</title>
                   <a href="/software/S0013"> PlugX </a>
                 </td>
                 <td>
-                          <p><a href="/software/S0013">PlugX</a> has leveraged obfuscated Windows API function calls that were concealed as unique names, or hashes of the Windows API.<span onclick=scrollToRef('scite-15') id="scite-ref-15-a" class="scite-citeref-number" title="Alexandre Cote Cyr. (2022, March 23). Mustang Panda’s Hodur: Old tricks, new Korplug variant. Retrieved September 9, 2025."data-reference="Eset PlugX Korplug Mustang Panda March 2022"><sup><a href="https://www.welivesecurity.com/2022/03/23/mustang-panda-hodur-old-tricks-new-korplug-variant/" target="_blank" data-hasqtip="14" aria-describedby="qtip-14">[15]</a></sup></span></p>
+                          <p><a href="/software/S0013">PlugX</a> has leveraged obfuscated Windows API function calls that were concealed as unique names, or hashes of the Windows API.<span onclick=scrollToRef('scite-20') id="scite-ref-20-a" class="scite-citeref-number" title="Alexandre Cote Cyr. (2022, March 23). Mustang Panda’s Hodur: Old tricks, new Korplug variant. Retrieved September 9, 2025."data-reference="Eset PlugX Korplug Mustang Panda March 2022"><sup><a href="https://www.welivesecurity.com/2022/03/23/mustang-panda-hodur-old-tricks-new-korplug-variant/" target="_blank" data-hasqtip="19" aria-describedby="qtip-19">[20]</a></sup></span></p>
 
                 </td>
               </tr>
@@ -644,7 +714,7 @@ ATT&CK&reg;</title>
                   <a href="/software/S0147"> Pteranodon </a>
                 </td>
                 <td>
-                          <p><a href="/software/S0147">Pteranodon</a> can use a dynamic Windows hashing algorithm to map API components.<span onclick=scrollToRef('scite-16') id="scite-ref-16-a" class="scite-citeref-number" title="Microsoft Threat Intelligence Center. (2022, February 4). ACTINIUM targets Ukrainian organizations. Retrieved February 18, 2022."data-reference="Microsoft Actinium February 2022"><sup><a href="https://www.microsoft.com/security/blog/2022/02/04/actinium-targets-ukrainian-organizations/" target="_blank" data-hasqtip="15" aria-describedby="qtip-15">[16]</a></sup></span></p>
+                          <p><a href="/software/S0147">Pteranodon</a> can use a dynamic Windows hashing algorithm to map API components.<span onclick=scrollToRef('scite-21') id="scite-ref-21-a" class="scite-citeref-number" title="Microsoft Threat Intelligence Center. (2022, February 4). ACTINIUM targets Ukrainian organizations. Retrieved February 18, 2022."data-reference="Microsoft Actinium February 2022"><sup><a href="https://www.microsoft.com/security/blog/2022/02/04/actinium-targets-ukrainian-organizations/" target="_blank" data-hasqtip="20" aria-describedby="qtip-20">[21]</a></sup></span></p>
 
                 </td>
               </tr>
@@ -656,7 +726,7 @@ ATT&CK&reg;</title>
                   <a href="/software/S1148"> Raccoon Stealer </a>
                 </td>
                 <td>
-                          <p><a href="/software/S1148">Raccoon Stealer</a> dynamically links key WinApi functions during execution.<span onclick=scrollToRef('scite-17') id="scite-ref-17-a" class="scite-citeref-number" title="Quentin Bourgue, Pierre le Bourhis, & Sekoia TDR. (2022, June 28). Raccoon Stealer v2 - Part 1: The return of the dead. Retrieved August 1, 2024."data-reference="Sekoia Raccoon1 2022"><sup><a href="https://blog.sekoia.io/raccoon-stealer-v2-part-1-the-return-of-the-dead/" target="_blank" data-hasqtip="16" aria-describedby="qtip-16">[17]</a></sup></span><span onclick=scrollToRef('scite-18') id="scite-ref-18-a" class="scite-citeref-number" title="Pierre Le Bourhis, Quentin Bourgue, & Sekoia TDR. (2022, June 29). Raccoon Stealer v2 - Part 2: In-depth analysis. Retrieved August 1, 2024."data-reference="Sekoia Raccoon2 2022"><sup><a href="https://blog.sekoia.io/raccoon-stealer-v2-part-2-in-depth-analysis/" target="_blank" data-hasqtip="17" aria-describedby="qtip-17">[18]</a></sup></span></p>
+                          <p><a href="/software/S1148">Raccoon Stealer</a> dynamically links key WinApi functions during execution.<span onclick=scrollToRef('scite-22') id="scite-ref-22-a" class="scite-citeref-number" title="Quentin Bourgue, Pierre le Bourhis, & Sekoia TDR. (2022, June 28). Raccoon Stealer v2 - Part 1: The return of the dead. Retrieved August 1, 2024."data-reference="Sekoia Raccoon1 2022"><sup><a href="https://blog.sekoia.io/raccoon-stealer-v2-part-1-the-return-of-the-dead/" target="_blank" data-hasqtip="21" aria-describedby="qtip-21">[22]</a></sup></span><span onclick=scrollToRef('scite-23') id="scite-ref-23-a" class="scite-citeref-number" title="Pierre Le Bourhis, Quentin Bourgue, & Sekoia TDR. (2022, June 29). Raccoon Stealer v2 - Part 2: In-depth analysis. Retrieved August 1, 2024."data-reference="Sekoia Raccoon2 2022"><sup><a href="https://blog.sekoia.io/raccoon-stealer-v2-part-2-in-depth-analysis/" target="_blank" data-hasqtip="22" aria-describedby="qtip-22">[23]</a></sup></span></p>
 
                 </td>
               </tr>
@@ -668,7 +738,7 @@ ATT&CK&reg;</title>
                   <a href="/software/S1099"> Samurai </a>
                 </td>
                 <td>
-                          <p><a href="/software/S1099">Samurai</a> can encrypt API name strings with an XOR-based algorithm.<span onclick=scrollToRef('scite-19') id="scite-ref-19-a" class="scite-citeref-number" title="Dedola, G. (2022, June 21). APT ToddyCat. Retrieved January 3, 2024."data-reference="Kaspersky ToddyCat June 2022"><sup><a href="https://securelist.com/toddycat/106799/" target="_blank" data-hasqtip="18" aria-describedby="qtip-18">[19]</a></sup></span></p>
+                          <p><a href="/software/S1099">Samurai</a> can encrypt API name strings with an XOR-based algorithm.<span onclick=scrollToRef('scite-24') id="scite-ref-24-a" class="scite-citeref-number" title="Dedola, G. (2022, June 21). APT ToddyCat. Retrieved January 3, 2024."data-reference="Kaspersky ToddyCat June 2022"><sup><a href="https://securelist.com/toddycat/106799/" target="_blank" data-hasqtip="23" aria-describedby="qtip-23">[24]</a></sup></span></p>
 
                 </td>
               </tr>
@@ -680,7 +750,7 @@ ATT&CK&reg;</title>
                   <a href="/software/S1232"> SplatDropper </a>
                 </td>
                 <td>
-                          <p><a href="/software/S1232">SplatDropper</a> has leveraged hashed Windows API calls using a seed value of "131313".<span onclick=scrollToRef('scite-20') id="scite-ref-20-a" class="scite-citeref-number" title="Sudeep Singh. (2025, April 16). Latest Mustang Panda Arsenal: PAKLOG, CorKLOG, and SplatCloak | P2. Retrieved September 12, 2025."data-reference="Zscaler PAKLOG CorkLog SplatCloak Splatdropper April 2025"><sup><a href="https://www.zscaler.com/blogs/security-research/latest-mustang-panda-arsenal-paklog-corklog-and-splatcloak-p2" target="_blank" data-hasqtip="19" aria-describedby="qtip-19">[20]</a></sup></span></p>
+                          <p><a href="/software/S1232">SplatDropper</a> has leveraged hashed Windows API calls using a seed value of "131313".<span onclick=scrollToRef('scite-25') id="scite-ref-25-a" class="scite-citeref-number" title="Sudeep Singh. (2025, April 16). Latest Mustang Panda Arsenal: PAKLOG, CorKLOG, and SplatCloak | P2. Retrieved September 12, 2025."data-reference="Zscaler PAKLOG CorkLog SplatCloak Splatdropper April 2025"><sup><a href="https://www.zscaler.com/blogs/security-research/latest-mustang-panda-arsenal-paklog-corklog-and-splatcloak-p2" target="_blank" data-hasqtip="24" aria-describedby="qtip-24">[25]</a></sup></span></p>
 
                 </td>
               </tr>
@@ -692,7 +762,7 @@ ATT&CK&reg;</title>
                   <a href="/software/S1239"> TONESHELL </a>
                 </td>
                 <td>
-                          <p><a href="/software/S1239">TONESHELL</a> has utilized a modified DJB2 algorithm to resolve APIs.<span onclick=scrollToRef('scite-21') id="scite-ref-21-a" class="scite-citeref-number" title="Sudeep Singh. (2025, April 16). Latest Mustang Panda Arsenal: ToneShell and StarProxy | P1. Retrieved July 21, 2025."data-reference="Zscaler"><sup><a href="https://www.zscaler.com/blogs/security-research/latest-mustang-panda-arsenal-toneshell-and-starproxy-p1" target="_blank" data-hasqtip="20" aria-describedby="qtip-20">[21]</a></sup></span></p>
+                          <p><a href="/software/S1239">TONESHELL</a> has utilized a modified DJB2 algorithm to resolve APIs.<span onclick=scrollToRef('scite-26') id="scite-ref-26-a" class="scite-citeref-number" title="Sudeep Singh. (2025, April 16). Latest Mustang Panda Arsenal: ToneShell and StarProxy | P1. Retrieved July 21, 2025."data-reference="Zscaler"><sup><a href="https://www.zscaler.com/blogs/security-research/latest-mustang-panda-arsenal-toneshell-and-starproxy-p1" target="_blank" data-hasqtip="25" aria-describedby="qtip-25">[26]</a></sup></span></p>
 
                 </td>
               </tr>
@@ -781,7 +851,7 @@ ATT&CK&reg;</title>
         <li>
             <span  id="scite-4" class="scite-citation">
                 <span class="scite-citation-text">
-                    <a rel="nofollow" class="external text" name="scite-4" href="https://dr4k0nia.github.io/dotnet/coding/2022/08/10/HInvoke-and-avoiding-PInvoke.html?s=03" target="_blank">
+                    <a rel="nofollow" class="external text" name="scite-4" href="https://dr4k0nia.github.io/posts/HInvoke-and-avoiding-PInvoke/" target="_blank">
                         drakonia. (2022, August 10). HInvoke and avoiding PInvoke. Retrieved August 22, 2022.
                     </a>
                 </span>
@@ -873,11 +943,7 @@ ATT&CK&reg;</title>
         </li>
 
 
-                </ol>
-            </div>
-            <div class="col">
-                    <ol start="12.0">
-                                
+                            
         <li>
             <span  id="scite-12" class="scite-citation">
                 <span class="scite-citation-text">
@@ -889,24 +955,28 @@ ATT&CK&reg;</title>
         </li>
 
 
-                                
+                            
         <li>
             <span  id="scite-13" class="scite-citation">
                 <span class="scite-citation-text">
-                    <a rel="nofollow" class="external text" name="scite-13" href="https://www.proofpoint.com/us/blog/threat-insight/latrodectus-spider-bytes-ice" target="_blank">
-                        Proofpoint Threat Research and Team Cymru S2 Threat Research. (2024, April 4). Latrodectus: This Spider Bytes Like Ice . Retrieved May 31, 2024.
+                    <a rel="nofollow" class="external text" name="scite-13" href="https://jsac.jpcert.or.jp/archive/2024/pdf/JSAC2024_2_8_Breitenbacher_en.pdf" target="_blank">
+                        Breitenbacher, D. (2024). Unmasking HiddenFace. Retrieved April 17, 2026.
                     </a>
                 </span>
             </span>
         </li>
 
 
+                </ol>
+            </div>
+            <div class="col">
+                    <ol start="14.0">
                                 
         <li>
             <span  id="scite-14" class="scite-citation">
                 <span class="scite-citation-text">
-                    <a rel="nofollow" class="external text" name="scite-14" href="https://blog.malwarebytes.com/threat-intelligence/2022/01/north-koreas-lazarus-apt-leverages-windows-update-client-github-in-latest-campaign/" target="_blank">
-                        Saini, A. and Hossein, J. (2022, January 27). North Korea’s Lazarus APT leverages Windows Update client, GitHub in latest campaign. Retrieved January 27, 2022.
+                    <a rel="nofollow" class="external text" name="scite-14" href="https://www.trendmicro.com/en_us/research/24/k/lodeinfo-campaign-of-earth-kasha.html" target="_blank">
+                        Trend Micro. (2024, November 19). Spot the Difference: Earth Kasha's New LODEINFO Campaign And The Correlation Analysis With The APT10 Umbrella. Retrieved April 17, 2026.
                     </a>
                 </span>
             </span>
@@ -917,8 +987,8 @@ ATT&CK&reg;</title>
         <li>
             <span  id="scite-15" class="scite-citation">
                 <span class="scite-citation-text">
-                    <a rel="nofollow" class="external text" name="scite-15" href="https://www.welivesecurity.com/2022/03/23/mustang-panda-hodur-old-tricks-new-korplug-variant/" target="_blank">
-                        Alexandre Cote Cyr. (2022, March 23). Mustang Panda’s Hodur: Old tricks, new Korplug variant. Retrieved September 9, 2025.
+                    <a rel="nofollow" class="external text" name="scite-15" href="https://www.gendigital.com/blog/insights/research/dprk-kimsuky-lazarus-analysis" target="_blank">
+                        Alexndru-Cristian Bardas. (2025, October 30). DPRK’s Playbook: Kimsuky’s HttpTroy and Lazarus’s New BLINDINGCAN Variant. Retrieved April 8, 2026.
                     </a>
                 </span>
             </span>
@@ -929,8 +999,8 @@ ATT&CK&reg;</title>
         <li>
             <span  id="scite-16" class="scite-citation">
                 <span class="scite-citation-text">
-                    <a rel="nofollow" class="external text" name="scite-16" href="https://www.microsoft.com/security/blog/2022/02/04/actinium-targets-ukrainian-organizations/" target="_blank">
-                        Microsoft Threat Intelligence Center. (2022, February 4). ACTINIUM targets Ukrainian organizations. Retrieved February 18, 2022.
+                    <a rel="nofollow" class="external text" name="scite-16" href="https://www.proofpoint.com/us/blog/threat-insight/latrodectus-spider-bytes-ice" target="_blank">
+                        Proofpoint Threat Research and Team Cymru S2 Threat Research. (2024, April 4). Latrodectus: This Spider Bytes Like Ice . Retrieved May 31, 2024.
                     </a>
                 </span>
             </span>
@@ -941,8 +1011,8 @@ ATT&CK&reg;</title>
         <li>
             <span  id="scite-17" class="scite-citation">
                 <span class="scite-citation-text">
-                    <a rel="nofollow" class="external text" name="scite-17" href="https://blog.sekoia.io/raccoon-stealer-v2-part-1-the-return-of-the-dead/" target="_blank">
-                        Quentin Bourgue, Pierre le Bourhis, & Sekoia TDR. (2022, June 28). Raccoon Stealer v2 - Part 1: The return of the dead. Retrieved August 1, 2024.
+                    <a rel="nofollow" class="external text" name="scite-17" href="https://blog.malwarebytes.com/threat-intelligence/2022/01/north-koreas-lazarus-apt-leverages-windows-update-client-github-in-latest-campaign/" target="_blank">
+                        Saini, A. and Hossein, J. (2022, January 27). North Korea’s Lazarus APT leverages Windows Update client, GitHub in latest campaign. Retrieved January 27, 2022.
                     </a>
                 </span>
             </span>
@@ -953,8 +1023,8 @@ ATT&CK&reg;</title>
         <li>
             <span  id="scite-18" class="scite-citation">
                 <span class="scite-citation-text">
-                    <a rel="nofollow" class="external text" name="scite-18" href="https://blog.sekoia.io/raccoon-stealer-v2-part-2-in-depth-analysis/" target="_blank">
-                        Pierre Le Bourhis, Quentin Bourgue, & Sekoia TDR. (2022, June 29). Raccoon Stealer v2 - Part 2: In-depth analysis. Retrieved August 1, 2024.
+                    <a rel="nofollow" class="external text" name="scite-18" href="https://securelist.com/apt10-tracking-down-lodeinfo-2022-part-ii/107745/" target="_blank">
+                        Ishimaru, S. (2022, October 31). APT10: Tracking down LODEINFO 2022, part II. Retrieved April 17, 2026.
                     </a>
                 </span>
             </span>
@@ -965,8 +1035,8 @@ ATT&CK&reg;</title>
         <li>
             <span  id="scite-19" class="scite-citation">
                 <span class="scite-citation-text">
-                    <a rel="nofollow" class="external text" name="scite-19" href="https://securelist.com/toddycat/106799/" target="_blank">
-                        Dedola, G. (2022, June 21). APT ToddyCat. Retrieved January 3, 2024.
+                    <a rel="nofollow" class="external text" name="scite-19" href="https://www.welivesecurity.com/en/eset-research/muddywater-snakes-riverbank/" target="_blank">
+                        ESET Research. (2025, December 2). MuddyWater: Snakes by the riverbank. Retrieved February 17, 2026.
                     </a>
                 </span>
             </span>
@@ -977,8 +1047,8 @@ ATT&CK&reg;</title>
         <li>
             <span  id="scite-20" class="scite-citation">
                 <span class="scite-citation-text">
-                    <a rel="nofollow" class="external text" name="scite-20" href="https://www.zscaler.com/blogs/security-research/latest-mustang-panda-arsenal-paklog-corklog-and-splatcloak-p2" target="_blank">
-                        Sudeep Singh. (2025, April 16). Latest Mustang Panda Arsenal: PAKLOG, CorKLOG, and SplatCloak | P2. Retrieved September 12, 2025.
+                    <a rel="nofollow" class="external text" name="scite-20" href="https://www.welivesecurity.com/2022/03/23/mustang-panda-hodur-old-tricks-new-korplug-variant/" target="_blank">
+                        Alexandre Cote Cyr. (2022, March 23). Mustang Panda’s Hodur: Old tricks, new Korplug variant. Retrieved September 9, 2025.
                     </a>
                 </span>
             </span>
@@ -989,7 +1059,67 @@ ATT&CK&reg;</title>
         <li>
             <span  id="scite-21" class="scite-citation">
                 <span class="scite-citation-text">
-                    <a rel="nofollow" class="external text" name="scite-21" href="https://www.zscaler.com/blogs/security-research/latest-mustang-panda-arsenal-toneshell-and-starproxy-p1" target="_blank">
+                    <a rel="nofollow" class="external text" name="scite-21" href="https://www.microsoft.com/security/blog/2022/02/04/actinium-targets-ukrainian-organizations/" target="_blank">
+                        Microsoft Threat Intelligence Center. (2022, February 4). ACTINIUM targets Ukrainian organizations. Retrieved February 18, 2022.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-22" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-22" href="https://blog.sekoia.io/raccoon-stealer-v2-part-1-the-return-of-the-dead/" target="_blank">
+                        Quentin Bourgue, Pierre le Bourhis, & Sekoia TDR. (2022, June 28). Raccoon Stealer v2 - Part 1: The return of the dead. Retrieved August 1, 2024.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-23" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-23" href="https://blog.sekoia.io/raccoon-stealer-v2-part-2-in-depth-analysis/" target="_blank">
+                        Pierre Le Bourhis, Quentin Bourgue, & Sekoia TDR. (2022, June 29). Raccoon Stealer v2 - Part 2: In-depth analysis. Retrieved August 1, 2024.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-24" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-24" href="https://securelist.com/toddycat/106799/" target="_blank">
+                        Dedola, G. (2022, June 21). APT ToddyCat. Retrieved January 3, 2024.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-25" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-25" href="https://www.zscaler.com/blogs/security-research/latest-mustang-panda-arsenal-paklog-corklog-and-splatcloak-p2" target="_blank">
+                        Sudeep Singh. (2025, April 16). Latest Mustang Panda Arsenal: PAKLOG, CorKLOG, and SplatCloak | P2. Retrieved September 12, 2025.
+                    </a>
+                </span>
+            </span>
+        </li>
+
+
+                                
+        <li>
+            <span  id="scite-26" class="scite-citation">
+                <span class="scite-citation-text">
+                    <a rel="nofollow" class="external text" name="scite-26" href="https://www.zscaler.com/blogs/security-research/latest-mustang-panda-arsenal-toneshell-and-starproxy-p1" target="_blank">
                         Sudeep Singh. (2025, April 16). Latest Mustang Panda Arsenal: ToneShell and StarProxy | P1. Retrieved July 21, 2025.
                     </a>
                 </span>
@@ -1023,6 +1153,256 @@ ATT&CK&reg;</title>
             <div class="search-icons">
                 <div class="search-parsing-icon spinner-border" style="display: none" id="search-parsing-icon"></div>
                 <div class="close-search-icon" id="close-search-icon">&times;</div>
+            </div>
+        </div>
+        <div class="search-filters" id="search-filters">
+            <div class="search-filter-summary">
+                <div class="search-filter-dropdown">
+                    <button type="button" class="search-filter-summary-chip"
+                        data-search-filter-dropdown-toggle="core" aria-controls="search-filter-dropdown-core"
+                        aria-expanded="false">
+                        Core Objects: <span data-search-filter-summary="group-core">All</span>
+                    </button>
+                    <div class="search-filter-dropdown-menu" id="search-filter-dropdown-core"
+                        data-search-filter-dropdown="core" aria-hidden="true" style="display: none;">
+                        <div class="search-filter-group-heading">
+                            <span>Core ATT&CK Objects</span>
+                            <span class="search-filter-actions">
+                                <button type="button" data-search-filter-group="core"
+                                    data-search-filter-group-action="all">All</button>
+                                <button type="button" data-search-filter-group="core"
+                                    data-search-filter-group-action="none">None</button>
+                            </span>
+                        </div>
+                        <div class="search-filter-chips">
+                            <button type="button" data-search-filter-page-type="matrices">Matrices <span
+                                class="search-filter-count">0</span></button>
+                            <button type="button" data-search-filter-page-type="tactics">Tactics <span
+                                class="search-filter-count">0</span></button>
+                            <button type="button" data-search-filter-page-type="techniques">Techniques <span
+                                class="search-filter-count">0</span></button>
+                            <button type="button" data-search-filter-page-type="sub-techniques">Sub-Techniques <span
+                                class="search-filter-count">0</span></button>
+                        </div>
+                    </div>
+                </div>
+                <div class="search-filter-dropdown">
+                    <button type="button" class="search-filter-summary-chip"
+                        data-search-filter-dropdown-toggle="defenses" aria-controls="search-filter-dropdown-defenses"
+                        aria-expanded="false">
+                        Defenses: <span data-search-filter-summary="group-defenses">All</span>
+                    </button>
+                    <div class="search-filter-dropdown-menu" id="search-filter-dropdown-defenses"
+                        data-search-filter-dropdown="defenses" aria-hidden="true" style="display: none;">
+                        <div class="search-filter-group-heading">
+                            <span>Defenses</span>
+                            <span class="search-filter-actions">
+                                <button type="button" data-search-filter-group="defenses"
+                                    data-search-filter-group-action="all">All</button>
+                                <button type="button" data-search-filter-group="defenses"
+                                    data-search-filter-group-action="none">None</button>
+                            </span>
+                        </div>
+                        <div class="search-filter-chips">
+                            <button type="button" data-search-filter-page-type="mitigations">Mitigations <span
+                                class="search-filter-count">0</span></button>
+                            <button type="button" data-search-filter-page-type="assets">Assets <span
+                                class="search-filter-count">0</span></button>
+                            <button type="button" data-search-filter-page-type="detectionstrategies">Detection
+                                Strategies <span class="search-filter-count">0</span></button>
+                            <button type="button" data-search-filter-page-type="analytics">Analytics <span
+                                class="search-filter-count">0</span></button>
+                            <button type="button" data-search-filter-page-type="datacomponents">Data Components <span
+                                class="search-filter-count">0</span></button>
+                        </div>
+                    </div>
+                </div>
+                <div class="search-filter-dropdown">
+                    <button type="button" class="search-filter-summary-chip"
+                        data-search-filter-dropdown-toggle="cti" aria-controls="search-filter-dropdown-cti"
+                        aria-expanded="false">
+                        CTI: <span data-search-filter-summary="group-cti">All</span>
+                    </button>
+                    <div class="search-filter-dropdown-menu" id="search-filter-dropdown-cti"
+                        data-search-filter-dropdown="cti" aria-hidden="true" style="display: none;">
+                        <div class="search-filter-group-heading">
+                            <span>CTI</span>
+                            <span class="search-filter-actions">
+                                <button type="button" data-search-filter-group="cti"
+                                    data-search-filter-group-action="all">All</button>
+                                <button type="button" data-search-filter-group="cti"
+                                    data-search-filter-group-action="none">None</button>
+                            </span>
+                        </div>
+                        <div class="search-filter-chips">
+                            <button type="button" data-search-filter-page-type="groups">Groups <span
+                                class="search-filter-count">0</span></button>
+                            <button type="button" data-search-filter-page-type="software">Software <span
+                                class="search-filter-count">0</span></button>
+                            <button type="button" data-search-filter-page-type="campaigns">Campaigns <span
+                                class="search-filter-count">0</span></button>
+                        </div>
+                    </div>
+                </div>
+                <div class="search-filter-dropdown">
+                    <button type="button" class="search-filter-summary-chip"
+                        data-search-filter-dropdown-toggle="reference" aria-controls="search-filter-dropdown-reference"
+                        aria-expanded="false">
+                        Reference: <span data-search-filter-summary="group-reference">All</span>
+                    </button>
+                    <div class="search-filter-dropdown-menu" id="search-filter-dropdown-reference"
+                        data-search-filter-dropdown="reference" aria-hidden="true" style="display: none;">
+                        <div class="search-filter-group-heading">
+                            <span>Reference</span>
+                            <span class="search-filter-actions">
+                                <button type="button" data-search-filter-group="reference"
+                                    data-search-filter-group-action="all">All</button>
+                                <button type="button" data-search-filter-group="reference"
+                                    data-search-filter-group-action="none">None</button>
+                            </span>
+                        </div>
+                        <div class="search-filter-chips">
+                            <button type="button" data-search-filter-page-type="resources">Resources <span
+                                class="search-filter-count">0</span></button>
+                        </div>
+                    </div>
+                </div>
+                <div class="search-filter-dropdown">
+                    <button type="button" class="search-filter-summary-chip"
+                        data-search-filter-dropdown-toggle="domains" aria-controls="search-filter-dropdown-domains"
+                        aria-expanded="false">
+                        Domains: <span data-search-filter-summary="domains">All</span>
+                    </button>
+                    <div class="search-filter-dropdown-menu" id="search-filter-dropdown-domains"
+                        data-search-filter-dropdown="domains" aria-hidden="true" style="display: none;">
+                        <div class="search-filter-group-heading">
+                            <span>Domains</span>
+                            <span class="search-filter-actions">
+                                <button type="button" data-search-filter-domain-action="all">All</button>
+                                <button type="button" data-search-filter-domain-action="none">None</button>
+                            </span>
+                        </div>
+                        <div class="search-filter-chips">
+                            <button type="button" data-search-filter-domain="enterprise">Enterprise <span
+                                class="search-filter-count">0</span></button>
+                            <button type="button" data-search-filter-domain="mobile">Mobile <span
+                                class="search-filter-count">0</span></button>
+                            <button type="button" data-search-filter-domain="ics">ICS <span
+                                class="search-filter-count">0</span></button>
+                        </div>
+                    </div>
+                </div>
+                <button type="button" class="search-filter-summary-chip" id="search-filters-toggle"
+                    data-search-filter-toggle aria-controls="search-filters-panel" aria-expanded="false">
+                    Show all Filters
+                </button>
+            </div>
+            <div class="search-filters-panel" id="search-filters-panel" aria-hidden="true" style="display: none;">
+                <div class="search-filter-heading">
+                    <span>Page type</span>
+                    <span class="search-filter-actions">
+                        <button type="button" data-search-filter-page-types-action="all">All</button>
+                        <button type="button" data-search-filter-page-types-action="none">None</button>
+                    </span>
+                </div>
+
+                <div class="search-filter-group">
+                    <div class="search-filter-group-heading">
+                        <span>Core ATT&CK Objects</span>
+                        <span class="search-filter-actions">
+                            <button type="button" data-search-filter-group="core"
+                                data-search-filter-group-action="all">All</button>
+                            <button type="button" data-search-filter-group="core"
+                                data-search-filter-group-action="none">None</button>
+                        </span>
+                    </div>
+                    <div class="search-filter-chips">
+                        <button type="button" data-search-filter-page-type="matrices">Matrices <span
+                            class="search-filter-count">0</span></button>
+                        <button type="button" data-search-filter-page-type="tactics">Tactics <span
+                            class="search-filter-count">0</span></button>
+                        <button type="button" data-search-filter-page-type="techniques">Techniques <span
+                            class="search-filter-count">0</span></button>
+                        <button type="button" data-search-filter-page-type="sub-techniques">Sub-Techniques <span
+                            class="search-filter-count">0</span></button>
+                    </div>
+                </div>
+
+                <div class="search-filter-group">
+                    <div class="search-filter-group-heading">
+                        <span>Defenses</span>
+                        <span class="search-filter-actions">
+                            <button type="button" data-search-filter-group="defenses"
+                                data-search-filter-group-action="all">All</button>
+                            <button type="button" data-search-filter-group="defenses"
+                                data-search-filter-group-action="none">None</button>
+                        </span>
+                    </div>
+                    <div class="search-filter-chips">
+                        <button type="button" data-search-filter-page-type="mitigations">Mitigations <span
+                            class="search-filter-count">0</span></button>
+                        <button type="button" data-search-filter-page-type="assets">Assets <span
+                            class="search-filter-count">0</span></button>
+                        <button type="button" data-search-filter-page-type="detectionstrategies">Detection Strategies
+                            <span class="search-filter-count">0</span></button>
+                        <button type="button" data-search-filter-page-type="analytics">Analytics <span
+                            class="search-filter-count">0</span></button>
+                        <button type="button" data-search-filter-page-type="datacomponents">Data Components <span
+                            class="search-filter-count">0</span></button>
+                    </div>
+                </div>
+
+                <div class="search-filter-group">
+                    <div class="search-filter-group-heading">
+                        <span>CTI</span>
+                        <span class="search-filter-actions">
+                            <button type="button" data-search-filter-group="cti"
+                                data-search-filter-group-action="all">All</button>
+                            <button type="button" data-search-filter-group="cti"
+                                data-search-filter-group-action="none">None</button>
+                        </span>
+                    </div>
+                    <div class="search-filter-chips">
+                        <button type="button" data-search-filter-page-type="groups">Groups <span
+                            class="search-filter-count">0</span></button>
+                        <button type="button" data-search-filter-page-type="software">Software <span
+                            class="search-filter-count">0</span></button>
+                        <button type="button" data-search-filter-page-type="campaigns">Campaigns <span
+                            class="search-filter-count">0</span></button>
+                    </div>
+                </div>
+
+                <div class="search-filter-group">
+                    <div class="search-filter-group-heading">
+                        <span>Reference</span>
+                        <span class="search-filter-actions">
+                            <button type="button" data-search-filter-group="reference"
+                                data-search-filter-group-action="all">All</button>
+                            <button type="button" data-search-filter-group="reference"
+                                data-search-filter-group-action="none">None</button>
+                        </span>
+                    </div>
+                    <div class="search-filter-chips">
+                        <button type="button" data-search-filter-page-type="resources">Resources <span
+                            class="search-filter-count">0</span></button>
+                    </div>
+                </div>
+
+                <div class="search-filter-heading">
+                    <span>Domain</span>
+                    <span class="search-filter-actions">
+                        <button type="button" data-search-filter-domain-action="all">All</button>
+                        <button type="button" data-search-filter-domain-action="none">None</button>
+                    </span>
+                </div>
+                <div class="search-filter-chips">
+                    <button type="button" data-search-filter-domain="enterprise">Enterprise <span
+                        class="search-filter-count">0</span></button>
+                    <button type="button" data-search-filter-domain="mobile">Mobile <span
+                        class="search-filter-count">0</span></button>
+                    <button type="button" data-search-filter-domain="ics">ICS <span
+                        class="search-filter-count">0</span></button>
+                </div>
             </div>
         </div>
         <!-- results and controls for loading more results -->
@@ -1063,7 +1443,7 @@ ATT&CK&reg;</title>
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3 col-footer">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v18.1&#013;Website  v4.4.1">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v19.0&#013;Website  v4.4.2">Website Changelog</a></u>
                                 </div>
                                 <div class="px-3">
                                     <u class="footer-link"><a href="/resources/legal-and-branding/privacy/#" class="footer-link" onclick="Osano.cm.showDrawer('osano-cm-dom-info-dialog-open')">Cookie Preferences</a></u>
@@ -1071,7 +1451,7 @@ ATT&CK&reg;</title>
                             </div>
                             <div class="row">
                                 <small class="px-3">
-                                    &copy;&nbsp;2015&nbsp;-&nbsp;2025, The MITRE Corporation. MITRE ATT&CK and ATT&CK are registered trademarks of The MITRE Corporation.
+                                    &copy;&nbsp;2015&nbsp;-&nbsp;2026, The MITRE Corporation. MITRE ATT&CK and ATT&CK are registered trademarks of The MITRE Corporation.
                                 </small>
                             </div>
                         </div>
