@@ -15,9 +15,11 @@ sub_types = ["mobile", "enterprise", "ics"]
 types_hash = set(types)
 sub_types_hash = set(sub_types)
 dist_words = 0
+domains = ["enterprise", "mobile", "ics"]
 
 
 def generate_index():
+    """Generate JSON search indexes from the built website output."""
     logger.info("Creating searchable index for the site")
     index_data = defaultdict(list)
     global_id_counter = 0
@@ -36,30 +38,7 @@ def generate_index():
 
             path = absolute_path[6:]
 
-            if path.startswith("/mitigations/"):
-                file_type = "mitigations"
-            elif path.startswith("/assets/"):
-                file_type = "assets"
-            elif path.startswith("/matrices/"):
-                file_type = "matrices"
-            elif path.startswith("/groups/"):
-                file_type = "groups"
-            elif path.startswith("/campaigns/"):
-                file_type = "campaigns"
-            elif path.startswith("/datacomponents/"):
-                file_type = "datacomponents"
-            elif path.startswith("/software/"):
-                file_type = "software"
-            elif path.startswith("/tactics/"):
-                file_type = "tactics"
-            elif path.startswith("/techniques/"):
-                file_type = "techniques"
-            elif path.startswith("/detectionstrategies/"):
-                file_type = "detectionstrategies"
-            elif path.startswith("/analytics/"):
-                file_type = "analytics"
-            else:
-                file_type = "misc"
+            file_type = get_page_type(path)
 
             if not skipindex:
                 index_data[file_type].append(
@@ -68,6 +47,8 @@ def generate_index():
                         "title": title,
                         "path": path,
                         "content": cleancontent,
+                        "pageType": file_type,
+                        "domains": get_domains(title),
                     }
                 )
                 global_id_counter += 1
@@ -102,10 +83,51 @@ def generate_index():
     preserve_current_version()
 
 
+def get_page_type(path):
+    """Get the search page type for a generated site path."""
+    if re.match(r"^/techniques/[^/]+/[^/]+/index\.html$", path):
+        return "sub-techniques"
+    if path.startswith("/mitigations/"):
+        return "mitigations"
+    if path.startswith("/assets/"):
+        return "assets"
+    if path.startswith("/matrices/"):
+        return "matrices"
+    if path.startswith("/groups/"):
+        return "groups"
+    if path.startswith("/campaigns/"):
+        return "campaigns"
+    if path.startswith("/datacomponents/"):
+        return "datacomponents"
+    if path.startswith("/software/"):
+        return "software"
+    if path.startswith("/tactics/"):
+        return "tactics"
+    if path.startswith("/techniques/"):
+        return "techniques"
+    if path.startswith("/detectionstrategies/"):
+        return "detectionstrategies"
+    if path.startswith("/analytics/"):
+        return "analytics"
+    return "resources"
+
+
+def get_domains(title):
+    """Get explicit ATT&CK domains encoded in the page title."""
+    page_domains = []
+
+    for domain in domains:
+        if re.search(rf"(^| - ){domain}( - |$)", title, re.IGNORECASE):
+            page_domains.append(domain)
+
+    return page_domains
+
+
 skiplines = ["breadcrumb-item", "nav-link"]
 
 
 def skipline(line):
+    """Return whether a line should be excluded from indexed search content."""
     for skip in skiplines:
         if skip in line:
             return True

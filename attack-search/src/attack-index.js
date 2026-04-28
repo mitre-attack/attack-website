@@ -21,7 +21,7 @@ module.exports = class AttackIndex {
                     tokenize: 'strict',
                     optimize: true,
                     resolution: 9,
-                    minlength: 3,
+                    minlength: 2,
                     context: {
                         depth: 3,
                         resolution: 2,

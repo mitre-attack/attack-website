@@ -7,7 +7,61 @@ const { IndexedDBWrapper } = require("./indexed-db-wrapper.js");
 const AttackIndex = require('./attack-index.js');
 
 // eslint-disable-next-line import/extensions
-const { loadMoreResults, searchBody } = require('./components.js');
+const {
+  loadMoreResults,
+  searchBody,
+  searchFiltersPanel,
+  searchFiltersToggle,
+} = require('./components.js');
+
+const PAGE_TYPE_GROUPS = [
+  {
+    key: 'core',
+    label: 'Core ATT&CK Objects',
+    pageTypes: ['matrices', 'tactics', 'techniques', 'sub-techniques'],
+  },
+  {
+    key: 'defenses',
+    label: 'Defenses',
+    pageTypes: ['mitigations', 'assets', 'detectionstrategies', 'analytics', 'datacomponents'],
+  },
+  {
+    key: 'cti',
+    label: 'CTI',
+    pageTypes: ['groups', 'software', 'campaigns'],
+  },
+  {
+    key: 'reference',
+    label: 'Reference',
+    pageTypes: ['resources'],
+  },
+];
+
+const PAGE_TYPE_LABELS = {
+  analytics: 'Analytics',
+  assets: 'Assets',
+  campaigns: 'Campaigns',
+  datacomponents: 'Data Components',
+  detectionstrategies: 'Detection Strategies',
+  groups: 'Groups',
+  matrices: 'Matrices',
+  mitigations: 'Mitigations',
+  resources: 'Resources',
+  software: 'Software',
+  'sub-techniques': 'Sub-Techniques',
+  tactics: 'Tactics',
+  techniques: 'Techniques',
+};
+
+const DOMAIN_LABELS = {
+  enterprise: 'Enterprise',
+  ics: 'ICS',
+  mobile: 'Mobile',
+};
+
+const PAGE_TYPES = PAGE_TYPE_GROUPS.flatMap((group) => group.pageTypes);
+const DOMAINS = Object.keys(DOMAIN_LABELS);
+const FILTER_DROPDOWNS = PAGE_TYPE_GROUPS.map((group) => group.key).concat('domains');
 
 module.exports = class SearchService {
 
@@ -43,6 +97,17 @@ module.exports = class SearchService {
     };
 
     this.render_container = $(`#${tag}`);
+
+    this.selectedPageTypes = new Set(PAGE_TYPES);
+    this.selectedDomains = new Set(DOMAINS);
+    this.allSearchResults = [];
+    this.searchResults = [];
+    this.filtersExpanded = false;
+    this.openFilterDropdown = null;
+
+    if (this.render_container?.on) {
+      this.render_container.on('click', '#clear-search-filters', () => this.resetFilters());
+    }
 
     /**
      * The following two IndexedDBWrapper instances initialize two IndexedDB tables. Each instance corresponds to one
@@ -98,16 +163,18 @@ module.exports = class SearchService {
     if (documents) {
       console.debug('Indexing documents: ', documents);
 
-      this.maxSearchResults = documents.length;
+      const searchableDocuments = documents.map(document => this.#normalizeDocumentMetadata(document));
+
+      this.maxSearchResults = searchableDocuments.length;
 
       // Add the data to the in-memory FlexSearch instance
-      this.attackIndex.addBulk(documents);
+      this.attackIndex.addBulk(searchableDocuments);
 
       console.debug('Backing up search index...');
 
       // Backup the in-memory FlexSearch index for later restoration
       await this.backupSearchIndex();
-      await this.contentDb.bulkPut(documents, 100);
+      await this.contentDb.bulkPut(searchableDocuments, 100);
 
       console.debug('Backup of search index completed.');
     } else {
@@ -177,7 +244,9 @@ module.exports = class SearchService {
     const docs = await Promise.all(getPromises);
 
     // Filter out null or undefined documents
-    return docs.filter(doc => doc !== null && doc !== undefined);
+    return docs
+      .filter(doc => doc !== null && doc !== undefined)
+      .map(doc => this.#normalizeDocumentMetadata(doc));
   }
 
   /**
@@ -193,6 +262,15 @@ module.exports = class SearchService {
     this.offset = 0;
     this.#cleanTheQuery(query);
     this.render_container.html('');
+
+    if (this.currentQuery.clean === '') {
+      this.allSearchResults = [];
+      this.searchResults = [];
+      this.#renderSearchResults([]);
+      this.#updateFilterControls();
+      return;
+    }
+
     const results = await this.attackIndex.search(this.currentQuery.clean, ["title", "content"], this.maxSearchResults);
     console.debug('search index results: ', results);
 
@@ -215,9 +293,8 @@ module.exports = class SearchService {
      *     ]
      */
 
-    this.searchResults = await this.#setSearchResults(results);
-    const firstPage = this.searchResults.slice(0, this.pageLimit);
-    this.#renderSearchResults(firstPage);
+    this.allSearchResults = await this.#setSearchResults(results);
+    this.#renderFilteredSearchResults();
   }
 
   /**
@@ -249,27 +326,27 @@ module.exports = class SearchService {
   #renderSearchResults(page) {
     if (page.length > 0) {
       // Render the search results
-      searchBody.show();
+      searchBody?.show?.();
       const self = this;
       let resultHTML = page.map((result) => self.#resultToHTML(result));
       resultHTML = resultHTML.join('');
-      this.render_container.append(resultHTML);
+      if (this.render_container?.append) this.render_container.append(resultHTML);
 
       // if there are more pages to show
       if (this.offset + this.pageLimit < this.searchResults.length) {
-        loadMoreResults.show();
+        loadMoreResults?.show?.();
       } else {
-        loadMoreResults.hide();
+        loadMoreResults?.hide?.();
       }
 
     } else if (this.currentQuery.clean !== '') {
       // search with no results
-      searchBody.show();
-      this.render_container.html(`<div class="search-result">no results</div>`);
-      loadMoreResults.hide();
+      searchBody?.show?.();
+      if (this.render_container?.html) this.render_container.html(this.#emptyResultsHTML());
+      loadMoreResults?.hide?.();
     } else {
       // query for empty string
-      searchBody.hide();
+      searchBody?.hide?.();
     }
   }
 
@@ -321,6 +398,196 @@ module.exports = class SearchService {
   }
 
   /**
+   * Filters a result set using the selected page type and domain filters.
+   * @param {Array<Object>} documents - Search results to filter.
+   * @returns {Array<Object>} Filtered documents.
+   */
+  applyFilters(documents) {
+    return documents
+      .map(document => this.#normalizeDocumentMetadata(document))
+      .filter(document => this.#matchesSelectedPageTypes(document) && this.#matchesSelectedDomains(document));
+  }
+
+  /**
+   * Sets selected page type filters.
+   * @param {Array<string>} pageTypes - Page type keys to select.
+   */
+  setSelectedPageTypes(pageTypes) {
+    this.selectedPageTypes = new Set(pageTypes.filter(pageType => PAGE_TYPES.includes(pageType)));
+    this.#renderFilteredSearchResults();
+  }
+
+  /**
+   * Sets selected domain filters.
+   * @param {Array<string>} domains - Domain keys to select.
+   */
+  setSelectedDomains(domains) {
+    this.selectedDomains = new Set(domains.filter(domain => DOMAINS.includes(domain)));
+    this.#renderFilteredSearchResults();
+  }
+
+  /**
+   * Toggles one page type.
+   * @param {string} pageType - Page type key to toggle.
+   */
+  togglePageType(pageType) {
+    if (!PAGE_TYPES.includes(pageType)) return;
+    this.#toggleSetValue(this.selectedPageTypes, pageType);
+    this.#renderFilteredSearchResults();
+  }
+
+  /**
+   * Toggles one domain.
+   * @param {string} domain - Domain key to toggle.
+   */
+  toggleDomain(domain) {
+    if (!DOMAINS.includes(domain)) return;
+    this.#toggleSetValue(this.selectedDomains, domain);
+    this.#renderFilteredSearchResults();
+  }
+
+  /**
+   * Selects or clears all page types in a group.
+   * @param {string} groupKey - Page type group key.
+   * @param {boolean} selected - Whether group values should be selected.
+   */
+  setPageTypeGroupSelected(groupKey, selected) {
+    const group = PAGE_TYPE_GROUPS.find(candidate => candidate.key === groupKey);
+    if (!group) return;
+
+    group.pageTypes.forEach((pageType) => {
+      if (selected) {
+        this.selectedPageTypes.add(pageType);
+      } else {
+        this.selectedPageTypes.delete(pageType);
+      }
+    });
+    this.#renderFilteredSearchResults();
+  }
+
+  /**
+   * Selects every page type.
+   */
+  selectAllPageTypes() {
+    this.selectedPageTypes = new Set(PAGE_TYPES);
+    this.#renderFilteredSearchResults();
+  }
+
+  /**
+   * Clears every page type.
+   */
+  clearPageTypes() {
+    this.selectedPageTypes = new Set();
+    this.#renderFilteredSearchResults();
+  }
+
+  /**
+   * Selects every domain.
+   */
+  selectAllDomains() {
+    this.selectedDomains = new Set(DOMAINS);
+    this.#renderFilteredSearchResults();
+  }
+
+  /**
+   * Clears every domain.
+   */
+  clearDomains() {
+    this.selectedDomains = new Set();
+    this.#renderFilteredSearchResults();
+  }
+
+  /**
+   * Resets all filters to their default all-selected state.
+   */
+  resetFilters() {
+    this.selectedPageTypes = new Set(PAGE_TYPES);
+    this.selectedDomains = new Set(DOMAINS);
+    this.#renderFilteredSearchResults();
+  }
+
+  /**
+   * Clears query-scoped search state and resets filters to the default all-selected state.
+   */
+  clearSession() {
+    this.currentQuery.clean = '';
+    this.allSearchResults = [];
+    this.searchResults = [];
+    this.selectedPageTypes = new Set(PAGE_TYPES);
+    this.selectedDomains = new Set(DOMAINS);
+    this.filtersExpanded = false;
+    this.openFilterDropdown = null;
+    if (this.render_container?.html) this.render_container.html('');
+    this.#updateFilterControls();
+    searchBody?.hide?.();
+    loadMoreResults?.hide?.();
+  }
+
+  /**
+   * Opens or closes one compact filter dropdown.
+   * @param {string} dropdownKey - Filter dropdown key to toggle.
+   */
+  toggleFilterDropdown(dropdownKey) {
+    if (!FILTER_DROPDOWNS.includes(dropdownKey)) return;
+
+    this.openFilterDropdown = this.openFilterDropdown === dropdownKey ? null : dropdownKey;
+    if (this.openFilterDropdown) this.filtersExpanded = false;
+    this.#updateFilterControls();
+  }
+
+  /**
+   * Closes any compact filter dropdown.
+   */
+  closeFilterDropdowns() {
+    if (!this.openFilterDropdown) return;
+
+    this.openFilterDropdown = null;
+    this.#updateFilterControls();
+  }
+
+  /**
+   * Gets the currently open compact filter dropdown.
+   * @returns {?string} Current dropdown key, or null if every compact dropdown is closed.
+   */
+  getOpenFilterDropdown() {
+    return this.openFilterDropdown;
+  }
+
+  /**
+   * Opens or closes the inline filters panel.
+   */
+  toggleFiltersPanel() {
+    this.filtersExpanded = !this.filtersExpanded;
+    if (this.filtersExpanded) this.openFilterDropdown = null;
+    this.#updateFilterControls();
+  }
+
+  /**
+   * Counts filter matches for the current query result set.
+   * @param {Array<Object>} documents - Search results to count.
+   * @returns {{pageTypes: Object, domains: Object}} Filter counts.
+   */
+  getFilterCounts(documents) {
+    const normalizedDocuments = documents.map(document => this.#normalizeDocumentMetadata(document));
+    const pageTypes = {};
+    const domains = {};
+
+    PAGE_TYPES.forEach((pageType) => {
+      pageTypes[pageType] = normalizedDocuments.filter(document => (
+        document.pageType === pageType && this.#matchesSelectedDomains(document)
+      )).length;
+    });
+
+    DOMAINS.forEach((domain) => {
+      domains[domain] = normalizedDocuments.filter(document => (
+        this.#matchesSelectedPageTypes(document) && document.domains.includes(domain)
+      )).length;
+    });
+
+    return { pageTypes, domains };
+  }
+
+  /**
    * Asynchronously loads and renders more search results by increasing the current offset.
    * This method is used for paginating the search results.
    *
@@ -332,6 +599,120 @@ module.exports = class SearchService {
     const nextPage = this.searchResults.slice(this.offset, this.offset + this.pageLimit);
     console.debug('search index results: ', nextPage);
     this.#renderSearchResults(nextPage);
+  }
+
+  #renderFilteredSearchResults() {
+    this.offset = 0;
+    if (this.render_container?.html) this.render_container.html('');
+    this.searchResults = this.applyFilters(this.allSearchResults);
+    this.#updateFilterControls();
+    this.#renderSearchResults(this.searchResults.slice(0, this.pageLimit));
+  }
+
+  #matchesSelectedPageTypes(document) {
+    return this.selectedPageTypes.has(document.pageType);
+  }
+
+  #matchesSelectedDomains(document) {
+    if (this.selectedDomains.size === DOMAINS.length) return true;
+    if (this.selectedDomains.size === 0) return false;
+    return document.domains.some(domain => this.selectedDomains.has(domain));
+  }
+
+  #toggleSetValue(targetSet, value) {
+    if (targetSet.has(value)) {
+      targetSet.delete(value);
+    } else {
+      targetSet.add(value);
+    }
+  }
+
+  #updateFilterControls() {
+    const counts = this.getFilterCounts(this.allSearchResults);
+
+    this.#setElementText(
+      $('[data-search-filter-summary="page-types"]'),
+      this.#selectedSummary(this.selectedPageTypes, PAGE_TYPES),
+    );
+    this.#setElementText(
+      $('[data-search-filter-summary="domains"]'),
+      this.#selectedSummary(this.selectedDomains, DOMAINS),
+    );
+    PAGE_TYPE_GROUPS.forEach((group) => {
+      this.#setElementText(
+        $(`[data-search-filter-summary="group-${group.key}"]`),
+        this.#selectedSummary(
+          new Set(group.pageTypes.filter((pageType) => this.selectedPageTypes.has(pageType))),
+          group.pageTypes,
+        ),
+      );
+    });
+
+    PAGE_TYPES.forEach((pageType) => {
+      const button = $(`[data-search-filter-page-type="${pageType}"]`);
+      this.#toggleElementClass(button, 'selected', this.selectedPageTypes.has(pageType));
+      this.#setElementAttribute(button, 'aria-pressed', this.selectedPageTypes.has(pageType).toString());
+      this.#setElementText(button?.find?.('.search-filter-count'), counts.pageTypes[pageType]);
+    });
+
+    DOMAINS.forEach((domain) => {
+      const button = $(`[data-search-filter-domain="${domain}"]`);
+      this.#toggleElementClass(button, 'selected', this.selectedDomains.has(domain));
+      this.#setElementAttribute(button, 'aria-pressed', this.selectedDomains.has(domain).toString());
+      this.#setElementText(button?.find?.('.search-filter-count'), counts.domains[domain]);
+    });
+
+    searchFiltersPanel?.toggle?.(this.filtersExpanded);
+    this.#setElementAttribute(searchFiltersPanel, 'aria-hidden', (!this.filtersExpanded).toString());
+    this.#setElementText(searchFiltersToggle, this.filtersExpanded ? 'Hide all Filters' : 'Show all Filters');
+    this.#setElementAttribute(searchFiltersToggle, 'aria-expanded', this.filtersExpanded.toString());
+
+    FILTER_DROPDOWNS.forEach((dropdownKey) => {
+      const isOpen = this.openFilterDropdown === dropdownKey;
+      const toggle = $(`[data-search-filter-dropdown-toggle="${dropdownKey}"]`);
+      const dropdown = $(`[data-search-filter-dropdown="${dropdownKey}"]`);
+
+      this.#toggleElementClass(toggle, 'open', isOpen);
+      this.#setElementAttribute(toggle, 'aria-expanded', isOpen.toString());
+      dropdown?.toggle?.(isOpen);
+      this.#setElementAttribute(dropdown, 'aria-hidden', (!isOpen).toString());
+    });
+  }
+
+  #setElementText(element, value) {
+    if (element?.text) element.text(value);
+  }
+
+  #setElementAttribute(element, name, value) {
+    if (element?.attr) element.attr(name, value);
+  }
+
+  #toggleElementClass(element, className, value) {
+    if (element?.toggleClass) element.toggleClass(className, value);
+  }
+
+  #selectedSummary(selectedValues, allValues) {
+    if (selectedValues.size === allValues.length) return 'All';
+    return `${selectedValues.size} selected`;
+  }
+
+  #emptyResultsHTML() {
+    const filtersAreActive = (
+      this.selectedPageTypes.size !== PAGE_TYPES.length || this.selectedDomains.size !== DOMAINS.length
+    );
+    if (!filtersAreActive) return '<div class="search-result">no results</div>';
+
+    return `
+            <div class="search-result search-no-results">
+                <div class="title">no results</div>
+                <div class="preview">
+                    Active filters may be limiting results.
+                    <button type="button" class="btn btn-default btn-sm" id="clear-search-filters">
+                        clear filters
+                    </button>
+                </div>
+            </div>
+        `;
   }
 
   /**
@@ -348,13 +729,13 @@ module.exports = class SearchService {
     this.currentQuery.clean = query.trim();
 
     // build joined string
-    const joined = `(${this.currentQuery.clean.split(' ').join('|')})`;
+    const joined = `(${this.currentQuery.clean.split(/\s+/).join('|')})`;
     this.currentQuery.joined = new RegExp(joined, 'gi');
 
     // Build regex for each word
 
     // remove double spaces which causes query to match on every 0 length string and flip out
-    const escaped = this.currentQuery.clean.replace(/\s+/, ' ');
+    const escaped = this.currentQuery.clean.replace(/\s+/g, ' ');
 
     // The following map code is modifying the current_query object by setting its words property to an array of
     // objects. Each object in the array represents a word that was entered as part of a search query, along with a
@@ -521,11 +902,54 @@ module.exports = class SearchService {
                 <div class="title">
                     <a href="${path}">${title}</a>
                 </div>
+                ${this.#resultBadgesHTML(result)}
                 <div class="preview">
                     ${preview}
                 </div>
             </div>
         `; // end template
+  }
+
+  #resultBadgesHTML(result) {
+    const badges = [];
+    const pageTypeLabel = PAGE_TYPE_LABELS[result.pageType];
+
+    if (pageTypeLabel) badges.push(pageTypeLabel);
+    result.domains.forEach((domain) => {
+      if (DOMAIN_LABELS[domain]) badges.push(DOMAIN_LABELS[domain]);
+    });
+
+    if (badges.length === 0) return '';
+
+    return `
+                <div class="search-result-badges">
+                    ${badges.map(badge => `<span class="search-result-badge">${badge}</span>`).join('')}
+                </div>
+        `;
+  }
+
+  #normalizeDocumentMetadata(document) {
+    return {
+      ...document,
+      pageType: PAGE_TYPES.includes(document.pageType) ? document.pageType : this.#inferPageType(document.path),
+      domains: Array.isArray(document.domains) ? document.domains.filter(domain => DOMAINS.includes(domain)) : [],
+    };
+  }
+
+  #inferPageType(path = '') {
+    if (/^\/techniques\/[^/]+\/[^/]+\/index\.html$/.test(path)) return 'sub-techniques';
+    if (path.startsWith('/analytics/')) return 'analytics';
+    if (path.startsWith('/assets/')) return 'assets';
+    if (path.startsWith('/campaigns/')) return 'campaigns';
+    if (path.startsWith('/datacomponents/')) return 'datacomponents';
+    if (path.startsWith('/detectionstrategies/')) return 'detectionstrategies';
+    if (path.startsWith('/groups/')) return 'groups';
+    if (path.startsWith('/matrices/')) return 'matrices';
+    if (path.startsWith('/mitigations/')) return 'mitigations';
+    if (path.startsWith('/software/')) return 'software';
+    if (path.startsWith('/tactics/')) return 'tactics';
+    if (path.startsWith('/techniques/')) return 'techniques';
+    return 'resources';
   }
 
 }

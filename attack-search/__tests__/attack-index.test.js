@@ -64,8 +64,22 @@ describe('AttackIndex', () => {
         expect(results).toEqual(expectedResult);
     });
 
+    test('Searches two-character content terms', async () => {
+        const data = {
+            id: 1,
+            title: 'Spearphishing Link',
+            content: 'By using a QR code, the URL may not be exposed',
+        };
+
+        await attackIndex.add(data);
+
+        const results = await attackIndex.search('qr', ['content'], 5, 0);
+
+        expect(results).toEqual([{field: 'content', result: [1]}]);
+    });
+
     test('Bulk add documents to FlexSearch', async () => {
-        attackIndex.addBulk(data);
+        await attackIndex.addBulk(data);
 
         // Search the title index for "The"
         const results = await attackIndex.search('The', ['title']);
@@ -77,7 +91,7 @@ describe('AttackIndex', () => {
     });
 
     test('Paginate FlexSearch responses', async () => {
-        attackIndex.addBulk(data);
+        await attackIndex.addBulk(data);
 
         /**
          * limit, offset --> [ paginatedSearchResults ]
@@ -121,9 +135,9 @@ describe('AttackIndex', () => {
 
     test('Resolve search results', async () => {
         // Index the data
-        attackIndex.addBulk(data);
+        await attackIndex.addBulk(data);
 
-        const results = await attackIndex.search('of', ['title','content'], 10, 0);
+        const results = await attackIndex.search('learning', ['title','content'], 10, 0);
 
         /**
          * results:  [

@@ -1,7 +1,5 @@
 const SearchService = require("../src/search-service");
-const { JSDOM } = require('jsdom');
-const { document } = new JSDOM('').window;
-global.document = document;
+import 'fake-indexeddb/auto';
 
 // The following line is necessary to mock the jQuery library and
 // provide a default implementation for the '$' function in the test
