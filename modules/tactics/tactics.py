@@ -37,7 +37,8 @@ def generate_tactics():
         )
         tactics[domain["name"]] = util.stixhelpers.get_tactic_list(ms[domain["name"]], domain["name"])
 
-    side_nav_data = util.buildhelpers.get_side_nav_domains_data("tactics", tactics)
+    active_tactics = get_active_tactics_by_domain(tactics)
+    side_nav_data = util.buildhelpers.get_side_nav_domains_data("tactics", active_tactics)
     generate_sidebar_tactics(side_nav_data)
 
     for domain in site_config.domains:
@@ -56,11 +57,13 @@ def generate_tactics():
 def generate_domain_markdown(domain, techniques, tactics, side_nav_data, notes, deprecated=None):
     """Generate tactic index markdown for each domain and generates shared data for tactics."""
     if tactics[domain]:
+        active_tactics = get_active_tactics(tactics[domain])
+
         # Write out the markdown file for overview of domain
-        data = {"domain": domain.split("-")[0], "tactics_list_len": str(len(tactics[domain]))}
+        data = {"domain": domain.split("-")[0], "tactics_list_len": str(len(active_tactics))}
 
         data["side_menu_data"] = side_nav_data
-        data["tactics_table"] = get_domain_table_data(tactics[domain])
+        data["tactics_table"] = get_domain_table_data(active_tactics)
 
         if deprecated:
             data["deprecated"] = deprecated
@@ -84,6 +87,18 @@ def generate_domain_markdown(domain, techniques, tactics, side_nav_data, notes, 
         return True
 
     return False
+
+
+def get_active_tactics(tactic_list):
+    """Return tactics that should appear in domain index tables."""
+    return [
+        tactic for tactic in tactic_list if not tactic.get("x_mitre_deprecated") and not tactic.get("revoked")
+    ]
+
+
+def get_active_tactics_by_domain(tactics_by_domain):
+    """Return active tactics grouped by domain."""
+    return {domain: get_active_tactics(tactic_list) for domain, tactic_list in tactics_by_domain.items()}
 
 
 def generate_tactic_md(tactic, domain, tactic_list, techniques, side_nav_data, notes):
@@ -146,7 +161,7 @@ def get_domain_table_data(tactic_list):
     tactic_table = []
 
     # Set up the tactics table for a domain
-    for tactic in tactic_list:
+    for tactic in get_active_tactics(tactic_list):
         attack_id = util.buildhelpers.get_attack_id(tactic)
 
         if attack_id:
