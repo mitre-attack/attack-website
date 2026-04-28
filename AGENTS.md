@@ -14,17 +14,23 @@ This file is guidance for coding agents working in `attack-website`.
 
 - Root Python build system generates the static site via `update-attack.py`.
 - `attack-search/` is a separate Node/CommonJS project for the search bundle.
+- Search source and tests live in `attack-search/src/` and `attack-search/__tests__/`.
 - `attack-style/` is a separate Node/Sass project for CSS output.
+- SCSS entrypoints are `attack-style/style-attack.scss` and `attack-style/style-user.scss`.
 - `attack-theme/` contains Jinja templates, static assets, and legacy browser JS.
+- Theme templates and static assets live in `attack-theme/templates/` and `attack-theme/static/`.
 - `modules/` contains Python modules that generate ATT&CK site content.
 - `test/` provides an Nginx Docker environment for validating the built site.
 
 ## Environment Expectations
 
 - Python 3 is required for the main build.
+- When managing a local Python environment, prefer `uv` with a virtual environment at `.venv` in the git repository root.
 - Node.js and npm are required for `attack-search/` and `attack-style/`.
 - Docker is the preferred way to validate the final static output in an Nginx-like environment.
 - CI currently uses Python `3.13` and Node `18.x` in `.github/workflows/gh-pages.yml`.
+- Prefer CI versions when reproducing CI behavior; Docker and development docs may reference older base images.
+- Production-like builds may depend on environment variables from `.github/workflows/gh-pages.yml`, including `GOOGLE_ANALYTICS`, `GOOGLE_SITE_VERIFICATION`, `INCLUDE_OSANO`, and `PELICAN_SITEURL`.
 
 ## High-Value Commands
 
@@ -32,13 +38,15 @@ Run commands from the repo root unless a subdirectory is called out.
 
 ### Install
 
-- Python deps: `python3 -m pip install -r requirements.txt`
+- Preferred Python env: `uv venv .venv`
+- Python deps: `uv pip install -r requirements.txt`
 - Search deps: `cd attack-search && npm ci`
 - Style deps: `cd attack-style && npm ci`
+- Prefer `npm ci` over `npm install`; do not update lockfiles unless dependency changes are part of the task.
 
 ### Build
 
-- Main website build: `python3 update-attack.py --attack-brand --extras --no-test-exitstatus`
+- Main website build: `uv run python update-attack.py --attack-brand --extras --no-test-exitstatus`
 - Search bundle: `cd attack-search && npm run build`
 - Search dev bundle: `cd attack-search && npm run build:dev`
 - Copy built search bundle into site output: `cd attack-search && npm run copy`
@@ -55,9 +63,9 @@ Run commands from the repo root unless a subdirectory is called out.
 
 ### Lint And Format
 
-- Python lint (configured, not wired into CI): `ruff .`
-- Python format: `black .`
-- Python import sort: `isort .`
+- Python lint (configured, not wired into CI): `ruff check .`
+- Python lint autofix: `ruff check --fix .`
+- Python format: `ruff format .`
 - Search lint: `cd attack-search && npm run lint`
 - Search lint autofix: `cd attack-search && npm run lint:fix`
 - Style lint: `cd attack-style && npm run lint`
@@ -68,15 +76,16 @@ Run commands from the repo root unless a subdirectory is called out.
 - Single Jest test file: `cd attack-search && npm test -- __tests__/search-service.test.js`
 - Alternate single Jest file: `cd attack-search && npx jest __tests__/search-service.test.js`
 - Main Python-driven site tests run through the build script, not `pytest`.
-- Run specific site test categories: `python3 update-attack.py -m tests -t size`
-- Multiple site test categories: `python3 update-attack.py -m tests -t links external_links citations`
+- Run specific site test categories: `uv run python update-attack.py -m tests -t size`
+- Multiple site test categories: `uv run python update-attack.py -m tests -t links external_links citations`
 
 ### Important Command Notes
 
 - There is no root `package.json`, `Makefile`, or single universal test runner.
-- CI clearly builds the site and search bundle, but does not currently enforce Jest, ESLint, Stylelint, Ruff, Black, or type checks.
+- CI clearly builds the site and search bundle, but does not currently enforce Jest, ESLint, Stylelint, Ruff, or type checks.
 - For Python-side testing, the narrowest supported scope is a named category (`size`, `links`, `external_links`, `citations`), not an individual test file.
 - Preferred production-like validation is Nginx via Docker, not Pelican's built-in dev server.
+- Pelican's built-in development server does not match production Nginx routing behavior.
 
 ## Source Of Truth
 
@@ -86,19 +95,25 @@ Run commands from the repo root unless a subdirectory is called out.
 - In templates, respect comments that mark generated files or source-of-truth files.
 - Example: `attack-theme/templates/general/base-template.html` explicitly says to edit `base-template.html`, not generated `base.html`.
 
+## Generated And Volatile Outputs
+
+- Do not edit `output/` as source; regenerate it through the build pipeline.
+- Avoid direct edits to `attack-search/dist/` and `attack-style/dist/` unless the task explicitly targets generated artifacts.
+- Avoid direct edits to copied assets in `attack-theme/static/` when a source file in `attack-style/` or another generator owns the output.
+- Preserve generated-file comments and edit the named source template or source asset instead.
+
 ## Python Style
 
 - Use 4-space indentation.
-- Match Black formatting and the configured 120-character line length.
+- Match Ruff formatting and the configured 120-character line length.
 - Keep imports grouped as standard library, third-party, then local imports.
-- Use `isort` with the Black profile when reorganizing imports.
+- Use Ruff when reorganizing imports.
 - Prefer `snake_case` for variables, functions, and module names.
 - Reserve `UPPER_CASE` for constants or config-like values.
 - Keep modules function-oriented and simple; the codebase uses few classes outside JS.
 - Type hints are not a dominant convention here; do not introduce a large typing layer unless the touched area already uses it.
 - Python type hints are desired to be added over time.
-- Docstrings are present for many public helpers; follow surrounding patterns instead of adding blanket documentation everywhere.
-- Python docstring format follow numpy conventions
+- Python docstrings should follow NumPy conventions.
 
 ## Python Error Handling
 
@@ -117,6 +132,7 @@ Run commands from the repo root unless a subdirectory is called out.
 - Modern JS features are acceptable in `attack-search/` (async/await, private methods, optional chaining, nullish coalescing).
 - Favor small, explicit DOM interactions over framework-style abstractions; this repo is not React-based.
 - In legacy `attack-theme/static/scripts/`, preserve the file's existing style rather than forcing `attack-search/` conventions into older code.
+- Preserve browser compatibility assumptions in legacy theme scripts; avoid modernizing syntax there unless the build path transpiles it.
 
 ## JavaScript Error Handling And Testing
 
@@ -150,21 +166,31 @@ Run commands from the repo root unless a subdirectory is called out.
 - Avoid renaming public paths, generated content paths, or ATT&CK URL structures unless required.
 - Preserve comments that explain generation behavior, browser compatibility, or build caveats.
 
+## Do Not
+
+- Do not treat generated output as canonical source.
+- Do not change ATT&CK URL structures, permalink behavior, or `index.html` generation casually.
+- Do not convert `attack-search/` from CommonJS to ESM unless the task explicitly requires it.
+- Do not add frontend frameworks for small browser interactions.
+- Do not assume Pelican's development server is sufficient for routing-sensitive validation.
+
 ## Agent Workflow Expectations
 
 - Before editing, identify which subsystem you are in: root Python build, `attack-search/`, `attack-style/`, `attack-theme/`, or `modules/`.
 - Run the narrowest relevant validation for the files you touched.
-- If you changed `attack-search/`, run at least its relevant Jest or ESLint command.
-- If you changed SCSS, run `cd attack-style && npm run lint` and usually rebuild styles.
+- If you changed `attack-search/`, run relevant Jest tests and/or `cd attack-search && npm run lint`.
+- If you changed SCSS, run `cd attack-style && npm run lint` and usually `cd attack-style && npm run build`.
 - If you changed root build or content-generation code, run at least the relevant `update-attack.py` build or targeted test category.
 - If your change affects rendered output or routing, validate with the Docker Nginx test environment when practical.
+- For template, routing, or generated-output behavior changes, run the site build and prefer Docker/Nginx validation when practical.
 
 ## Git And Contribution Notes
 
 - Pull requests should target the `develop` branch per `CONTRIBUTING.md`.
 - The PR template expects a reviewer and a `CHANGELOG.md` update when appropriate.
+- `pyproject.toml` configures Towncrier for `CHANGELOG.md`; prefer the repository's release-note fragment workflow when one is present instead of hand-editing generated changelog sections.
 - Do not assume `master` is the integration branch just because GitHub Pages deploys from it.
-- Use Conventional Commit style git messages
+- Use Conventional Commit style git messages.
 
 ## When Unsure
 
