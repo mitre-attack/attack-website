@@ -176,8 +176,8 @@ describe('SearchService filters', () => {
     expect(searchService.applyFilters(documents).map(result => result.id)).toEqual([1, 2, 7]);
   });
 
-  test('pagination uses ten-result pages and a compact five-page window', () => {
-    const manyDocuments = Array.from({ length: 47 }, (_, index) => ({
+  test('pagination exposes first last and five nearby pages for larger result sets', () => {
+    const manyDocuments = Array.from({ length: 183 }, (_, index) => ({
       id: index + 1,
       title: `Result ${index + 1}`,
       content: 'Credential result',
@@ -192,16 +192,16 @@ describe('SearchService filters', () => {
       currentPage: 1,
       endResult: 10,
       pageSize: 10,
-      pages: [1, 2, 3, 4, 5],
+      pages: [1, 2, 3, 4, 5, 'ellipsis', 19],
       showPagination: true,
       startResult: 1,
-      totalPages: 5,
-      totalResults: 47,
+      totalPages: 19,
+      totalResults: 183,
     });
 
-    searchService.goToPage(4);
+    searchService.goToPage(12);
 
-    expect(searchService.getPaginationState().pages).toEqual([1, 2, 3, 4, 5]);
-    expect(searchService.getPaginationState().startResult).toBe(31);
+    expect(searchService.getPaginationState().pages).toEqual([1, 'ellipsis', 10, 11, 12, 13, 14, 'ellipsis', 19]);
+    expect(searchService.getPaginationState().startResult).toBe(111);
   });
 });

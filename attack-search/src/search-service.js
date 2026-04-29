@@ -730,8 +730,76 @@ module.exports = class SearchService {
   #pageWindow(totalPages) {
     if (totalPages <= 5) return Array.from({ length: totalPages }, (_, index) => index + 1);
 
-    const startPage = Math.min(Math.max(this.currentPage - 2, 1), totalPages - 4);
-    return Array.from({ length: 5 }, (_, index) => startPage + index);
+    const nearStart = this.currentPage <= 3;
+    const nearEnd = this.currentPage >= totalPages - 2;
+    const nearbyStart = nearStart
+      ? 2
+      : Math.max(2, Math.min(this.currentPage - 2, totalPages - 5));
+    const nearbyEnd = nearEnd
+      ? totalPages - 1
+      : Math.min(totalPages - 1, Math.max(this.currentPage + 2, 5));
+    const pages = [1];
+
+    if (nearbyStart > 2) pages.push('ellipsis');
+
+    pages.push(
+      ...Array.from(
+        { length: nearbyEnd - nearbyStart + 1 },
+        (_, index) => nearbyStart + index,
+      ),
+    );
+
+    if (nearbyEnd < totalPages - 1) pages.push('ellipsis');
+
+    pages.push(totalPages);
+    return pages;
+  }
+
+  #paginationPageToHTML(page) {
+    if (page === 'ellipsis') {
+      return '<span class="search-pagination-ellipsis" aria-hidden="true">&hellip;</span>';
+    }
+
+    const currentClass = page === this.currentPage ? ' current' : '';
+    const currentAttribute = page === this.currentPage ? 'aria-current="page"' : '';
+
+    return `
+                        <button type="button" class="search-pagination-page${currentClass}"
+                            data-search-page="${page}" ${currentAttribute}>
+                            ${page}
+                        </button>
+                    `;
+  }
+
+  #noResultsHTML() {
+    return '<div class="search-results-count" aria-live="polite">No results</div>';
+  }
+
+  #paginationControlsHTML(pagination) {
+    return `
+            <div class="search-pagination" aria-label="Search results pages">
+                <button type="button" class="search-pagination-control search-pagination-control-icon"
+                    data-search-page="${this.currentPage - 1}" aria-label="Previous page"
+                    ${this.currentPage === 1 ? 'disabled' : ''}>
+                    <span class="search-pagination-icon search-pagination-icon-prev" aria-hidden="true"></span>
+                </button>
+                <span class="search-pagination-pages">
+                    ${pagination.pages.map((page) => this.#paginationPageToHTML(page)).join('')}
+                </span>
+                <span class="search-pagination-mobile">Page ${pagination.currentPage} of ${pagination.totalPages}</span>
+                <button type="button" class="search-pagination-control search-pagination-control-icon"
+                    data-search-page="${this.currentPage + 1}" aria-label="Next page"
+                    ${this.currentPage === pagination.totalPages ? 'disabled' : ''}>
+                    <span class="search-pagination-icon search-pagination-icon-next" aria-hidden="true"></span>
+                </button>
+            </div>
+        `;
+  }
+
+  #resultsCountHTML(countLabel) {
+    return `
+            <div class="search-results-count" aria-live="polite">${countLabel}</div>
+        `;
   }
 
   #renderResultsFooter() {
@@ -742,7 +810,7 @@ module.exports = class SearchService {
 
     const pagination = this.getPaginationState();
     if (pagination.totalResults === 0) {
-      this.#setElementHTML(searchResultsFooter, '<div class="search-results-count" aria-live="polite">No results</div>');
+      this.#setElementHTML(searchResultsFooter, this.#noResultsHTML());
       this.#clearResultsPagination();
       return;
     }
@@ -751,27 +819,9 @@ module.exports = class SearchService {
       ? `${pagination.startResult}-${pagination.endResult} of ${pagination.totalResults} results`
       : `${pagination.totalResults} ${pagination.totalResults === 1 ? 'result' : 'results'}`;
 
-    const paginationHTML = pagination.showPagination ? `
-            <div class="search-pagination" aria-label="Search results pages">
-                <button type="button" class="search-pagination-control" data-search-page="${this.currentPage - 1}"
-                    ${this.currentPage === 1 ? 'disabled' : ''}>Prev</button>
-                <span class="search-pagination-pages">
-                    ${pagination.pages.map(page => `
-                        <button type="button" class="search-pagination-page${page === this.currentPage ? ' current' : ''}"
-                            data-search-page="${page}" ${page === this.currentPage ? 'aria-current="page"' : ''}>
-                            ${page}
-                        </button>
-                    `).join('')}
-                </span>
-                <span class="search-pagination-mobile">Page ${pagination.currentPage} of ${pagination.totalPages}</span>
-                <button type="button" class="search-pagination-control" data-search-page="${this.currentPage + 1}"
-                    ${this.currentPage === pagination.totalPages ? 'disabled' : ''}>Next</button>
-            </div>
-        ` : '';
+    const paginationHTML = pagination.showPagination ? this.#paginationControlsHTML(pagination) : '';
 
-    this.#setElementHTML(searchResultsFooter, `
-            <div class="search-results-count" aria-live="polite">${countLabel}</div>
-        `);
+    this.#setElementHTML(searchResultsFooter, this.#resultsCountHTML(countLabel));
     this.#setElementHTML(searchResultsPagination, paginationHTML);
   }
 

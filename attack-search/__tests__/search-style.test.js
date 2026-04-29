@@ -30,4 +30,21 @@ describe('search styles', () => {
     expect(styles).toContain('border-color: color-functions.color(deemphasis);');
     expect(styles).toContain('background: color-functions.color(deemphasis);');
   });
+
+  test('renders search pagination controls as accessible icon buttons', () => {
+    const searchService = fs.readFileSync(
+      path.join(__dirname, '../src/search-service.js'),
+      'utf8',
+    );
+    const styles = fs.readFileSync(
+      path.join(__dirname, '../../attack-style/components/_search.scss'),
+      'utf8',
+    );
+
+    expect(searchService).toContain('aria-label="Previous page"');
+    expect(searchService).toContain('aria-label="Next page"');
+    expect(searchService).not.toContain('>Prev</button>');
+    expect(searchService).not.toContain('>Next</button>');
+    expect(styles).toContain('.search-pagination-icon');
+  });
 });
