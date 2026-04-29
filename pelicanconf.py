@@ -22,8 +22,7 @@ TIMEZONE = os.environ.get("PELICAN_TIMEZONE", "America/New_York")
 DEFAULT_LANG = os.environ.get("PELICAN_DEFAULT_LANG", "en")
 
 THEME = "attack-theme"
-# TODO: re-enable sitemap when it doesn't generate a 100+ MB file
-# PLUGINS = ["sitemap"]
+PLUGINS = ["sitemap"]
 SITEMAP = {
     "format": "xml",
     "priorities": {
