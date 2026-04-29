@@ -79,7 +79,7 @@ module.exports = class SearchService {
     // 2* buffer is roughly the size of the result preview
     this.buffer = 200;
 
-    this.pageLimit = 5;
+    this.pageLimit = 10;
     this.currentPage = 1;
 
     this.currentQuery = {

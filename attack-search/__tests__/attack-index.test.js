@@ -84,8 +84,8 @@ describe('AttackIndex', () => {
         // Search the title index for "The"
         const results = await attackIndex.search('The', ['title']);
 
-        // Index 2 through 6 (inclusive) should have "The" in the title
-        const expectedResult = [{"field":"title","result":[2,3,4,5,6]}]
+        // Index 2 through 10 (inclusive) should have "The" in the title
+        const expectedResult = [{"field":"title","result":[2,3,4,5,6,7,8,9,10]}]
 
         expect(results).toEqual(expectedResult);
     });

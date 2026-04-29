@@ -40,11 +40,11 @@ module.exports = class AttackIndex {
      * Searches the FlexSearch instance.
      * @param {string} query - The search query.
      * @param {Array<string>} fields - The index fields to search: ['title'], ['content'], or ['title', 'content'].
-     * @param {number} [limit=5] - The maximum number of results to return.
+     * @param {number} [limit=10] - The maximum number of results to return.
      * @param {number} [offset=0] - The offset to start the search results from.
      * @returns {Promise<Array<Object>>} - An array of search results.
      */
-    async search(query, fields, limit = 5, offset = 0) {
+    async search(query, fields, limit = 10, offset = 0) {
 
         // Validate input fields
         const allowedFields = [

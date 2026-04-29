@@ -176,7 +176,7 @@ describe('SearchService filters', () => {
     expect(searchService.applyFilters(documents).map(result => result.id)).toEqual([1, 2, 7]);
   });
 
-  test('pagination uses five-result pages and a compact five-page window', () => {
+  test('pagination uses ten-result pages and a compact five-page window', () => {
     const manyDocuments = Array.from({ length: 47 }, (_, index) => ({
       id: index + 1,
       title: `Result ${index + 1}`,
@@ -190,18 +190,18 @@ describe('SearchService filters', () => {
 
     expect(searchService.getPaginationState()).toEqual({
       currentPage: 1,
-      endResult: 5,
-      pageSize: 5,
+      endResult: 10,
+      pageSize: 10,
       pages: [1, 2, 3, 4, 5],
       showPagination: true,
       startResult: 1,
-      totalPages: 10,
+      totalPages: 5,
       totalResults: 47,
     });
 
     searchService.goToPage(4);
 
-    expect(searchService.getPaginationState().pages).toEqual([2, 3, 4, 5, 6]);
-    expect(searchService.getPaginationState().startResult).toBe(16);
+    expect(searchService.getPaginationState().pages).toEqual([1, 2, 3, 4, 5]);
+    expect(searchService.getPaginationState().startResult).toBe(31);
   });
 });
