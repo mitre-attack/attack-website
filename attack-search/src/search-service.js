@@ -1005,16 +1005,20 @@ module.exports = class SearchService {
     const badges = [];
     const pageTypeLabel = this.#pageTypeBadgeLabel(result);
 
-    if (pageTypeLabel) badges.push(pageTypeLabel);
+    if (pageTypeLabel) badges.push({ label: pageTypeLabel, className: 'search-result-badge-page-type' });
     result.domains.forEach((domain) => {
-      if (DOMAIN_LABELS[domain]) badges.push(DOMAIN_LABELS[domain]);
+      if (DOMAIN_LABELS[domain]) {
+        badges.push({ label: DOMAIN_LABELS[domain], className: 'search-result-badge-domain' });
+      }
     });
 
     if (badges.length === 0) return '';
 
     return `
                 <div class="search-result-badges">
-                    ${badges.map(badge => `<span class="search-result-badge">${badge}</span>`).join('')}
+                    ${badges.map((badge) => `
+                        <span class="search-result-badge ${badge.className}">${badge.label}</span>
+                    `).join('')}
                 </div>
         `;
   }
