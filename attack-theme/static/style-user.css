@@ -1861,9 +1861,11 @@ div#sidebars {
   background: white;
   color: #39434c;
   width: 100%;
+  height: 100%;
   display: flex;
   flex-flow: column;
   max-height: 100%;
+  min-height: 0;
 }
 .overlay.search .overlay-inner .search-header {
   flex-shrink: 0;
@@ -1886,8 +1888,8 @@ div#sidebars {
 }
 .overlay.search .overlay-inner .search-header .search-icons {
   position: absolute;
-  top: 0px;
-  right: 0px;
+  top: 0;
+  right: 0;
 }
 .overlay.search .overlay-inner .search-header .search-icons > div {
   display: inline-block;
@@ -1914,7 +1916,8 @@ div#sidebars {
   flex-shrink: 0;
   padding: 0 50px 12px;
 }
-.overlay.search .overlay-inner .search-filters button {
+.overlay.search .overlay-inner .search-filters button,
+.overlay.search .overlay-inner .search-filters .search-filter-chip {
   min-height: 36px;
   border: 1px solid rgb(223.125, 223.125, 223.125);
   border-radius: 4px;
@@ -1951,13 +1954,6 @@ div#sidebars {
   background: white;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
 }
-.overlay.search .overlay-inner .search-filters .search-filters-panel {
-  margin-top: 12px;
-  padding: 14px;
-  border: 1px solid rgb(223.125, 223.125, 223.125);
-  border-radius: 8px;
-}
-.overlay.search .overlay-inner .search-filters .search-filter-heading,
 .overlay.search .overlay-inner .search-filters .search-filter-group-heading {
   display: flex;
   align-items: center;
@@ -1965,13 +1961,6 @@ div#sidebars {
   gap: 12px;
   margin-bottom: 8px;
   font-weight: 700;
-}
-.overlay.search .overlay-inner .search-filters .search-filter-heading {
-  text-transform: uppercase;
-  font-size: 0.8rem;
-}
-.overlay.search .overlay-inner .search-filters .search-filter-group {
-  margin-bottom: 14px;
 }
 .overlay.search .overlay-inner .search-filters .search-filter-actions {
   display: inline-flex;
@@ -1987,10 +1976,24 @@ div#sidebars {
   flex-wrap: wrap;
   gap: 8px;
 }
-.overlay.search .overlay-inner .search-filters .search-filter-chips button {
+.overlay.search .overlay-inner .search-filters .search-filter-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
   padding: 5px 10px;
 }
-.overlay.search .overlay-inner .search-filters .search-filter-chips button.selected {
+.overlay.search .overlay-inner .search-filters .search-filter-chip input[type=checkbox] {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+.overlay.search .overlay-inner .search-filters .search-filter-chip.selected {
   border-color: #303435;
   background: #303435;
   color: #eaeaea;
@@ -2000,12 +2003,26 @@ div#sidebars {
   font-size: 0.8em;
   opacity: 0.8;
 }
+.overlay.search .overlay-inner .search-filters:not(.has-query) .search-filter-count {
+  display: none;
+}
 .overlay.search .overlay-inner .search-body {
   flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
   padding: 0 50px;
   border-top: 1px solid rgb(223.125, 223.125, 223.125);
   margin-bottom: 25px;
+  overflow: hidden;
+  scrollbar-gutter: stable;
+}
+.overlay.search .overlay-inner .search-body .results {
+  flex: 1 1 auto;
+  min-height: 0;
   overflow-y: auto;
+  padding-bottom: 64px;
+  scrollbar-gutter: stable;
 }
 .overlay.search .overlay-inner .search-body .results .search-result:first-child {
   margin-top: 1.5rem;
@@ -2029,8 +2046,59 @@ div#sidebars {
   gap: 8px;
   flex-wrap: wrap;
 }
-.overlay.search .overlay-inner .search-body .load-more-results {
-  text-align: center;
+.overlay.search .overlay-inner .search-body .search-results-footer {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 0;
+  margin-bottom: 10px;
+}
+.overlay.search .overlay-inner .search-body .search-results-count {
+  font-weight: 700;
+}
+.overlay.search .overlay-inner .search-body .search-results-pagination {
+  flex-shrink: 0;
+  display: flex;
+  justify-content: flex-end;
+  min-height: 58px;
+  padding: 12px 0 14px;
+  border-top: 1px solid rgb(223.125, 223.125, 223.125);
+  background: white;
+}
+.overlay.search .overlay-inner .search-body .search-results-pagination:empty {
+  display: none;
+}
+.overlay.search .overlay-inner .search-body .search-pagination {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.overlay.search .overlay-inner .search-body .search-pagination button {
+  min-height: 36px;
+  padding: 5px 12px;
+  border: 1px solid rgb(223.125, 223.125, 223.125);
+  border-radius: 4px;
+  background: white;
+  color: #39434c;
+  cursor: pointer;
+  font-weight: 700;
+}
+.overlay.search .overlay-inner .search-body .search-pagination button.current {
+  border-color: #303435;
+  background: #303435;
+  color: #eaeaea;
+}
+.overlay.search .overlay-inner .search-body .search-pagination button:disabled {
+  cursor: default;
+  opacity: 0.5;
+}
+.overlay.search .overlay-inner .search-body .search-pagination-pages {
+  display: inline-flex;
+  gap: 5px;
+}
+.overlay.search .overlay-inner .search-body .search-pagination-mobile {
+  display: none;
 }
 
 .page-search {
@@ -2043,7 +2111,7 @@ div#sidebars {
     flex-basis: 50vh !important;
   }
 }
-@media screen and (min-width: 1px) and (max-width: 767.8px) {
+@media screen and (width >= 1px) and (width <= 767.8px) {
   .overlay.search {
     padding: 15px !important;
   }
@@ -2059,27 +2127,36 @@ div#sidebars {
     padding-left: 15px !important;
     padding-right: 15px !important;
   }
-  .overlay.search .search-filters button {
+  .overlay.search .search-filters button,
+  .overlay.search .search-filter-chip {
     min-height: 40px;
   }
   .overlay.search .search-filter-dropdown {
     position: static !important;
   }
   .overlay.search .search-filter-dropdown-menu {
+    position: static !important;
+    margin-top: 6px !important;
     left: 15px !important;
     right: 15px !important;
     width: auto !important;
     min-width: 0 !important;
     max-width: none !important;
   }
-  .overlay.search .search-filters-panel {
-    padding: 10px !important;
-  }
-  .overlay.search .search-filter-heading,
   .overlay.search .search-filter-group-heading {
     align-items: flex-start !important;
     flex-direction: column !important;
     gap: 5px !important;
+  }
+  .overlay.search .search-results-footer {
+    align-items: flex-start !important;
+    flex-direction: column !important;
+  }
+  .overlay.search .search-pagination-pages {
+    display: none !important;
+  }
+  .overlay.search .search-pagination-mobile {
+    display: inline-block !important;
   }
   .close-search-icon {
     font-size: 25px !important;

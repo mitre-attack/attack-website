@@ -9,6 +9,7 @@ from loguru import logger
 
 import modules
 from modules import site_config, versions
+from modules.util import buildhelpers, relationshipgetters
 
 types = ["software", "groups", "tactics", "techniques"]
 sub_types = ["mobile", "enterprise", "ics"]
@@ -16,6 +17,18 @@ types_hash = set(types)
 sub_types_hash = set(sub_types)
 dist_words = 0
 domains = ["enterprise", "mobile", "ics"]
+domain_source_suffix = "-attack"
+object_path_prefixes = {
+    "campaign": "campaigns",
+    "course-of-action": "mitigations",
+    "intrusion-set": "groups",
+    "malware": "software",
+    "tool": "software",
+    "x-mitre-analytic": "analytics",
+    "x-mitre-asset": "assets",
+    "x-mitre-data-component": "datacomponents",
+    "x-mitre-detection-strategy": "detectionstrategies",
+}
 
 
 def generate_index():
@@ -23,6 +36,7 @@ def generate_index():
     logger.info("Creating searchable index for the site")
     index_data = defaultdict(list)
     global_id_counter = 0
+    domain_lookup = build_domain_lookup()
 
     for root, __, files in os.walk(site_config.web_directory):
         skip = False
@@ -38,6 +52,9 @@ def generate_index():
 
             path = absolute_path[6:]
 
+            if should_skip_search_path(path):
+                continue
+
             file_type = get_page_type(path)
 
             if not skipindex:
@@ -48,7 +65,7 @@ def generate_index():
                         "path": path,
                         "content": cleancontent,
                         "pageType": file_type,
-                        "domains": get_domains(title),
+                        "domains": get_domains(title, path, domain_lookup),
                     }
                 )
                 global_id_counter += 1
@@ -109,18 +126,98 @@ def get_page_type(path):
         return "detectionstrategies"
     if path.startswith("/analytics/"):
         return "analytics"
-    return "resources"
+    if path.startswith("/resources/"):
+        return "resources"
+    return "misc"
 
 
-def get_domains(title):
-    """Get explicit ATT&CK domains encoded in the page title."""
-    page_domains = []
+def should_skip_search_path(path):
+    """Return whether a generated path is a helper page that should not be searchable."""
+    return bool(re.search(r"/sidebar-[^/]+/index\.html$", path))
+
+
+def get_domains(title, path=None, domain_lookup=None):
+    """Get ATT&CK domains for a search result, preferring source metadata before title inference."""
+    if path and domain_lookup and path in domain_lookup:
+        return sorted(domain_lookup[path], key=domains.index)
+
+    page_domains = set()
 
     for domain in domains:
         if re.search(rf"(^| - ){domain}( - |$)", title, re.IGNORECASE):
-            page_domains.append(domain)
+            page_domains.add(domain)
 
-    return page_domains
+    return sorted(page_domains, key=domains.index)
+
+
+def build_domain_lookup():
+    """Build generated-page path to domain mappings from STIX source bundle membership."""
+    domain_lookup = defaultdict(set)
+
+    try:
+        memory_stores = relationshipgetters.get_ms()
+    except Exception as exc:
+        logger.debug(f"Unable to build source-domain lookup for search index: {exc}")
+        return domain_lookup
+
+    for domain_config in site_config.domains:
+        domain = normalize_domain(domain_config["name"])
+        if domain_config["deprecated"] or domain not in domains:
+            continue
+
+        memory_store = memory_stores.get(domain_config["name"])
+        if not memory_store:
+            continue
+
+        for stix_object in memory_store.query():
+            object_path = get_object_search_path(stix_object)
+            if object_path:
+                domain_lookup[object_path].add(domain)
+
+            for explicit_domain in normalize_domains(stix_object.get("x_mitre_domains", [])):
+                if object_path:
+                    domain_lookup[object_path].add(explicit_domain)
+
+    return domain_lookup
+
+
+def get_object_search_path(stix_object):
+    """Return generated search path for a STIX object when it maps to one searchable detail page."""
+    attack_id = buildhelpers.get_attack_id(stix_object)
+    if not attack_id:
+        return None
+
+    if stix_object.get("type") == "attack-pattern":
+        if "." in attack_id:
+            parent_id, sub_id = attack_id.split(".", 1)
+            return f"/techniques/{parent_id}/{sub_id}/index.html"
+        return f"/techniques/{attack_id}/index.html"
+
+    path_prefix = object_path_prefixes.get(stix_object.get("type"))
+    if not path_prefix:
+        return None
+
+    return f"/{path_prefix}/{attack_id}/index.html"
+
+
+def normalize_domains(source_domains):
+    """Normalize STIX domain names to search filter keys."""
+    if isinstance(source_domains, str):
+        source_domains = [source_domains]
+
+    normalized_domains = []
+
+    for source_domain in source_domains:
+        domain = normalize_domain(source_domain)
+        if domain in domains:
+            normalized_domains.append(domain)
+
+    return normalized_domains
+
+
+def normalize_domain(source_domain):
+    """Normalize domain source names such as enterprise-attack to enterprise."""
+    return str(source_domain).removesuffix(domain_source_suffix).lower()
 
 
 skiplines = ["breadcrumb-item", "nav-link"]

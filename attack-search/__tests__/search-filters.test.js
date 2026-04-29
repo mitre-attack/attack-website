@@ -49,6 +49,20 @@ describe('SearchService filters', () => {
         pageType: 'resources',
         domains: [],
       },
+      {
+        id: 6,
+        title: 'Uncategorized',
+        content: 'Credential uncategorized material',
+        pageType: 'misc',
+        domains: [],
+      },
+      {
+        id: 7,
+        title: 'Multi-domain analytic',
+        content: 'Credential analytic',
+        pageType: 'analytics',
+        domains: ['enterprise', 'mobile'],
+      },
     ];
   });
 
@@ -61,6 +75,16 @@ describe('SearchService filters', () => {
     expect(searchService.applyFilters(documents)).toEqual(documents);
   });
 
+  test('unknown page types are searchable by default but excluded by narrowed page type filters', () => {
+    searchService.setSelectedPageTypes(['techniques']);
+
+    expect(searchService.applyFilters(documents).map(result => result.id)).toEqual([1]);
+
+    searchService.selectAllPageTypes();
+
+    expect(searchService.applyFilters(documents).map(result => result.id)).toEqual([1, 2, 3, 4, 5, 6, 7]);
+  });
+
   test('page type filters treat techniques and sub-techniques independently', () => {
     searchService.setSelectedPageTypes(['techniques']);
 
@@ -70,7 +94,7 @@ describe('SearchService filters', () => {
   test('domain filters only match documents with explicit selected domains', () => {
     searchService.setSelectedDomains(['enterprise']);
 
-    expect(searchService.applyFilters(documents).map(result => result.id)).toEqual([1, 2]);
+    expect(searchService.applyFilters(documents).map(result => result.id)).toEqual([1, 2, 7]);
   });
 
   test('empty page type selection returns no results', () => {
@@ -86,7 +110,7 @@ describe('SearchService filters', () => {
     const counts = searchService.getFilterCounts(documents);
 
     expect(counts.pageTypes).toEqual({
-      analytics: 0,
+      analytics: 1,
       assets: 0,
       campaigns: 0,
       datacomponents: 0,
@@ -102,9 +126,20 @@ describe('SearchService filters', () => {
     });
     expect(counts.domains).toEqual({
       enterprise: 2,
-      ics: 0,
       mobile: 1,
+      ics: 0,
     });
+  });
+
+  test('multi-domain results count once per matching domain but once in total results', () => {
+    const counts = searchService.getFilterCounts(documents);
+
+    expect(counts.domains).toEqual({
+      enterprise: 3,
+      mobile: 2,
+      ics: 0,
+    });
+    expect(searchService.applyFilters(documents)).toHaveLength(7);
   });
 
   test('clear session resets filters and query-scoped results', () => {
@@ -138,15 +173,35 @@ describe('SearchService filters', () => {
     searchService.closeFilterDropdowns();
 
     expect(searchService.getOpenFilterDropdown()).toBeNull();
-    expect(searchService.applyFilters(documents).map(result => result.id)).toEqual([1, 2]);
+    expect(searchService.applyFilters(documents).map(result => result.id)).toEqual([1, 2, 7]);
   });
 
-  test('full filters panel closes subgroup dropdowns', () => {
-    searchService.toggleFilterDropdown('cti');
+  test('pagination uses five-result pages and a compact five-page window', () => {
+    const manyDocuments = Array.from({ length: 47 }, (_, index) => ({
+      id: index + 1,
+      title: `Result ${index + 1}`,
+      content: 'Credential result',
+      pageType: 'resources',
+      domains: [],
+    }));
 
-    searchService.toggleFiltersPanel();
+    searchService.allSearchResults = manyDocuments;
+    searchService.resetFilters();
 
-    expect(searchService.getOpenFilterDropdown()).toBeNull();
-    expect(searchService.filtersExpanded).toBe(true);
+    expect(searchService.getPaginationState()).toEqual({
+      currentPage: 1,
+      endResult: 5,
+      pageSize: 5,
+      pages: [1, 2, 3, 4, 5],
+      showPagination: true,
+      startResult: 1,
+      totalPages: 10,
+      totalResults: 47,
+    });
+
+    searchService.goToPage(4);
+
+    expect(searchService.getPaginationState().pages).toEqual([2, 3, 4, 5, 6]);
+    expect(searchService.getPaginationState().startResult).toBe(16);
   });
 });

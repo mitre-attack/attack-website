@@ -8,10 +8,9 @@ const AttackIndex = require('./attack-index.js');
 
 // eslint-disable-next-line import/extensions
 const {
-  loadMoreResults,
   searchBody,
-  searchFiltersPanel,
-  searchFiltersToggle,
+  searchResultsFooter,
+  searchResultsPagination,
 } = require('./components.js');
 
 const PAGE_TYPE_GROUPS = [
@@ -55,12 +54,13 @@ const PAGE_TYPE_LABELS = {
 
 const DOMAIN_LABELS = {
   enterprise: 'Enterprise',
-  ics: 'ICS',
   mobile: 'Mobile',
+  ics: 'ICS',
 };
 
 const PAGE_TYPES = PAGE_TYPE_GROUPS.flatMap((group) => group.pageTypes);
-const DOMAINS = Object.keys(DOMAIN_LABELS);
+const DEFAULT_PAGE_TYPES = PAGE_TYPES.concat('misc');
+const DOMAINS = ['enterprise', 'mobile', 'ics'];
 const FILTER_DROPDOWNS = PAGE_TYPE_GROUPS.map((group) => group.key).concat('domains');
 
 module.exports = class SearchService {
@@ -79,9 +79,8 @@ module.exports = class SearchService {
     // 2* buffer is roughly the size of the result preview
     this.buffer = 200;
 
-    // Sets the maximum number of search results displayed on a single page.
-    // Clicking "Load more results" will add ${pageLimit} additional results to the current page.
     this.pageLimit = 5;
+    this.currentPage = 1;
 
     this.currentQuery = {
       clean: '',
@@ -98,11 +97,10 @@ module.exports = class SearchService {
 
     this.render_container = $(`#${tag}`);
 
-    this.selectedPageTypes = new Set(PAGE_TYPES);
+    this.selectedPageTypes = new Set(DEFAULT_PAGE_TYPES);
     this.selectedDomains = new Set(DOMAINS);
     this.allSearchResults = [];
     this.searchResults = [];
-    this.filtersExpanded = false;
     this.openFilterDropdown = null;
 
     if (this.render_container?.on) {
@@ -259,13 +257,14 @@ module.exports = class SearchService {
    * @param {string} query - The raw search query string.
    */
   async query(query) {
-    this.offset = 0;
+    this.currentPage = 1;
     this.#cleanTheQuery(query);
     this.render_container.html('');
 
     if (this.currentQuery.clean === '') {
       this.allSearchResults = [];
       this.searchResults = [];
+      this.currentPage = 1;
       this.#renderSearchResults([]);
       this.#updateFilterControls();
       return;
@@ -332,21 +331,17 @@ module.exports = class SearchService {
       resultHTML = resultHTML.join('');
       if (this.render_container?.append) this.render_container.append(resultHTML);
 
-      // if there are more pages to show
-      if (this.offset + this.pageLimit < this.searchResults.length) {
-        loadMoreResults?.show?.();
-      } else {
-        loadMoreResults?.hide?.();
-      }
+      this.#renderResultsFooter();
 
     } else if (this.currentQuery.clean !== '') {
       // search with no results
       searchBody?.show?.();
       if (this.render_container?.html) this.render_container.html(this.#emptyResultsHTML());
-      loadMoreResults?.hide?.();
+      this.#renderResultsFooter();
     } else {
       // query for empty string
       searchBody?.hide?.();
+      this.#clearResultsFooter();
     }
   }
 
@@ -432,6 +427,7 @@ module.exports = class SearchService {
    */
   togglePageType(pageType) {
     if (!PAGE_TYPES.includes(pageType)) return;
+    this.selectedPageTypes.delete('misc');
     this.#toggleSetValue(this.selectedPageTypes, pageType);
     this.#renderFilteredSearchResults();
   }
@@ -462,6 +458,7 @@ module.exports = class SearchService {
         this.selectedPageTypes.delete(pageType);
       }
     });
+    this.selectedPageTypes.delete('misc');
     this.#renderFilteredSearchResults();
   }
 
@@ -469,7 +466,7 @@ module.exports = class SearchService {
    * Selects every page type.
    */
   selectAllPageTypes() {
-    this.selectedPageTypes = new Set(PAGE_TYPES);
+    this.selectedPageTypes = new Set(DEFAULT_PAGE_TYPES);
     this.#renderFilteredSearchResults();
   }
 
@@ -501,7 +498,7 @@ module.exports = class SearchService {
    * Resets all filters to their default all-selected state.
    */
   resetFilters() {
-    this.selectedPageTypes = new Set(PAGE_TYPES);
+    this.selectedPageTypes = new Set(DEFAULT_PAGE_TYPES);
     this.selectedDomains = new Set(DOMAINS);
     this.#renderFilteredSearchResults();
   }
@@ -513,14 +510,14 @@ module.exports = class SearchService {
     this.currentQuery.clean = '';
     this.allSearchResults = [];
     this.searchResults = [];
-    this.selectedPageTypes = new Set(PAGE_TYPES);
+    this.selectedPageTypes = new Set(DEFAULT_PAGE_TYPES);
     this.selectedDomains = new Set(DOMAINS);
-    this.filtersExpanded = false;
+    this.currentPage = 1;
     this.openFilterDropdown = null;
     if (this.render_container?.html) this.render_container.html('');
     this.#updateFilterControls();
     searchBody?.hide?.();
-    loadMoreResults?.hide?.();
+    this.#clearResultsFooter();
   }
 
   /**
@@ -531,7 +528,6 @@ module.exports = class SearchService {
     if (!FILTER_DROPDOWNS.includes(dropdownKey)) return;
 
     this.openFilterDropdown = this.openFilterDropdown === dropdownKey ? null : dropdownKey;
-    if (this.openFilterDropdown) this.filtersExpanded = false;
     this.#updateFilterControls();
   }
 
@@ -539,10 +535,11 @@ module.exports = class SearchService {
    * Closes any compact filter dropdown.
    */
   closeFilterDropdowns() {
-    if (!this.openFilterDropdown) return;
+    if (!this.openFilterDropdown) return false;
 
     this.openFilterDropdown = null;
     this.#updateFilterControls();
+    return true;
   }
 
   /**
@@ -551,15 +548,6 @@ module.exports = class SearchService {
    */
   getOpenFilterDropdown() {
     return this.openFilterDropdown;
-  }
-
-  /**
-   * Opens or closes the inline filters panel.
-   */
-  toggleFiltersPanel() {
-    this.filtersExpanded = !this.filtersExpanded;
-    if (this.filtersExpanded) this.openFilterDropdown = null;
-    this.#updateFilterControls();
   }
 
   /**
@@ -587,26 +575,45 @@ module.exports = class SearchService {
     return { pageTypes, domains };
   }
 
-  /**
-   * Asynchronously loads and renders more search results by increasing the current offset.
-   * This method is used for paginating the search results.
-   *
-   * @async
-   * @function
-   */
-  async loadMoreResults() {
-    this.offset += this.pageLimit;
-    const nextPage = this.searchResults.slice(this.offset, this.offset + this.pageLimit);
-    console.debug('search index results: ', nextPage);
-    this.#renderSearchResults(nextPage);
+  goToPage(pageNumber) {
+    const totalPages = Math.max(1, Math.ceil(this.searchResults.length / this.pageLimit));
+    const nextPage = Math.min(Math.max(pageNumber, 1), totalPages);
+    if (nextPage === this.currentPage) return;
+
+    this.currentPage = nextPage;
+    this.#renderCurrentSearchResultPage();
+    searchBody?.scrollTop?.(0);
+  }
+
+  getPaginationState() {
+    const totalResults = this.searchResults.length;
+    const totalPages = Math.max(1, Math.ceil(totalResults / this.pageLimit));
+    const startResult = totalResults === 0 ? 0 : ((this.currentPage - 1) * this.pageLimit) + 1;
+    const endResult = Math.min(this.currentPage * this.pageLimit, totalResults);
+
+    return {
+      currentPage: this.currentPage,
+      endResult,
+      pageSize: this.pageLimit,
+      pages: this.#pageWindow(totalPages),
+      showPagination: totalPages > 1,
+      startResult,
+      totalPages,
+      totalResults,
+    };
   }
 
   #renderFilteredSearchResults() {
-    this.offset = 0;
+    this.currentPage = 1;
+    this.#renderCurrentSearchResultPage();
+  }
+
+  #renderCurrentSearchResultPage() {
     if (this.render_container?.html) this.render_container.html('');
     this.searchResults = this.applyFilters(this.allSearchResults);
     this.#updateFilterControls();
-    this.#renderSearchResults(this.searchResults.slice(0, this.pageLimit));
+    const startIndex = (this.currentPage - 1) * this.pageLimit;
+    this.#renderSearchResults(this.searchResults.slice(startIndex, startIndex + this.pageLimit));
   }
 
   #matchesSelectedPageTypes(document) {
@@ -632,11 +639,11 @@ module.exports = class SearchService {
 
     this.#setElementText(
       $('[data-search-filter-summary="page-types"]'),
-      this.#selectedSummary(this.selectedPageTypes, PAGE_TYPES),
+      this.#selectedSummary(this.selectedPageTypes, PAGE_TYPES, PAGE_TYPE_LABELS),
     );
     this.#setElementText(
       $('[data-search-filter-summary="domains"]'),
-      this.#selectedSummary(this.selectedDomains, DOMAINS),
+      this.#selectedSummary(this.selectedDomains, DOMAINS, DOMAIN_LABELS),
     );
     PAGE_TYPE_GROUPS.forEach((group) => {
       this.#setElementText(
@@ -644,28 +651,31 @@ module.exports = class SearchService {
         this.#selectedSummary(
           new Set(group.pageTypes.filter((pageType) => this.selectedPageTypes.has(pageType))),
           group.pageTypes,
+          PAGE_TYPE_LABELS,
         ),
       );
     });
 
     PAGE_TYPES.forEach((pageType) => {
       const button = $(`[data-search-filter-page-type="${pageType}"]`);
-      this.#toggleElementClass(button, 'selected', this.selectedPageTypes.has(pageType));
-      this.#setElementAttribute(button, 'aria-pressed', this.selectedPageTypes.has(pageType).toString());
-      this.#setElementText(button?.find?.('.search-filter-count'), counts.pageTypes[pageType]);
+      const selected = this.selectedPageTypes.has(pageType);
+      const chip = button?.closest?.('.search-filter-chip');
+      this.#toggleElementClass(chip, 'selected', selected);
+      this.#setElementProperty(button, 'checked', selected);
+      this.#setElementText(chip?.find?.('.search-filter-count'), this.#countLabel(counts.pageTypes[pageType]));
     });
 
     DOMAINS.forEach((domain) => {
       const button = $(`[data-search-filter-domain="${domain}"]`);
-      this.#toggleElementClass(button, 'selected', this.selectedDomains.has(domain));
-      this.#setElementAttribute(button, 'aria-pressed', this.selectedDomains.has(domain).toString());
-      this.#setElementText(button?.find?.('.search-filter-count'), counts.domains[domain]);
+      const selected = this.selectedDomains.has(domain);
+      const chip = button?.closest?.('.search-filter-chip');
+      this.#toggleElementClass(chip, 'selected', selected);
+      this.#setElementProperty(button, 'checked', selected);
+      this.#setElementText(chip?.find?.('.search-filter-count'), this.#countLabel(counts.domains[domain]));
     });
 
-    searchFiltersPanel?.toggle?.(this.filtersExpanded);
-    this.#setElementAttribute(searchFiltersPanel, 'aria-hidden', (!this.filtersExpanded).toString());
-    this.#setElementText(searchFiltersToggle, this.filtersExpanded ? 'Hide all Filters' : 'Show all Filters');
-    this.#setElementAttribute(searchFiltersToggle, 'aria-expanded', this.filtersExpanded.toString());
+    $('[data-search-filter-reset]')?.toggle?.(this.#visibleFiltersAreActive());
+    $('#search-filters')?.toggleClass?.('has-query', this.currentQuery.clean !== '');
 
     FILTER_DROPDOWNS.forEach((dropdownKey) => {
       const isOpen = this.openFilterDropdown === dropdownKey;
@@ -687,28 +697,109 @@ module.exports = class SearchService {
     if (element?.attr) element.attr(name, value);
   }
 
+  #setElementProperty(element, name, value) {
+    if (element?.prop) element.prop(name, value);
+  }
+
   #toggleElementClass(element, className, value) {
     if (element?.toggleClass) element.toggleClass(className, value);
   }
 
-  #selectedSummary(selectedValues, allValues) {
-    if (selectedValues.size === allValues.length) return 'All';
-    return `${selectedValues.size} selected`;
+  #selectedSummary(selectedValues, allValues, labels) {
+    const visibleSelectedValues = allValues.filter(value => selectedValues.has(value));
+    if (visibleSelectedValues.length === allValues.length) return 'All';
+    if (visibleSelectedValues.length === 0) return 'None';
+    if (visibleSelectedValues.length <= 2) {
+      return visibleSelectedValues.map(value => labels[value]).join(', ');
+    }
+    return `${visibleSelectedValues.length} selected`;
+  }
+
+  #countLabel(count) {
+    return this.currentQuery.clean === '' ? '' : count;
+  }
+
+  #visibleFiltersAreActive() {
+    const selectedVisiblePageTypes = PAGE_TYPES.filter(pageType => this.selectedPageTypes.has(pageType));
+    return (
+      selectedVisiblePageTypes.length !== PAGE_TYPES.length ||
+      this.selectedDomains.size !== DOMAINS.length
+    );
+  }
+
+  #pageWindow(totalPages) {
+    if (totalPages <= 5) return Array.from({ length: totalPages }, (_, index) => index + 1);
+
+    const startPage = Math.min(Math.max(this.currentPage - 2, 1), totalPages - 4);
+    return Array.from({ length: 5 }, (_, index) => startPage + index);
+  }
+
+  #renderResultsFooter() {
+    if (this.currentQuery.clean === '') {
+      this.#clearResultsFooter();
+      return;
+    }
+
+    const pagination = this.getPaginationState();
+    if (pagination.totalResults === 0) {
+      this.#setElementHTML(searchResultsFooter, '<div class="search-results-count" aria-live="polite">No results</div>');
+      this.#clearResultsPagination();
+      return;
+    }
+
+    const countLabel = pagination.showPagination
+      ? `${pagination.startResult}-${pagination.endResult} of ${pagination.totalResults} results`
+      : `${pagination.totalResults} ${pagination.totalResults === 1 ? 'result' : 'results'}`;
+
+    const paginationHTML = pagination.showPagination ? `
+            <div class="search-pagination" aria-label="Search results pages">
+                <button type="button" class="search-pagination-control" data-search-page="${this.currentPage - 1}"
+                    ${this.currentPage === 1 ? 'disabled' : ''}>Prev</button>
+                <span class="search-pagination-pages">
+                    ${pagination.pages.map(page => `
+                        <button type="button" class="search-pagination-page${page === this.currentPage ? ' current' : ''}"
+                            data-search-page="${page}" ${page === this.currentPage ? 'aria-current="page"' : ''}>
+                            ${page}
+                        </button>
+                    `).join('')}
+                </span>
+                <span class="search-pagination-mobile">Page ${pagination.currentPage} of ${pagination.totalPages}</span>
+                <button type="button" class="search-pagination-control" data-search-page="${this.currentPage + 1}"
+                    ${this.currentPage === pagination.totalPages ? 'disabled' : ''}>Next</button>
+            </div>
+        ` : '';
+
+    this.#setElementHTML(searchResultsFooter, `
+            <div class="search-results-count" aria-live="polite">${countLabel}</div>
+        `);
+    this.#setElementHTML(searchResultsPagination, paginationHTML);
+  }
+
+  #clearResultsFooter() {
+    this.#setElementHTML(searchResultsFooter, '');
+    this.#clearResultsPagination();
+  }
+
+  #clearResultsPagination() {
+    this.#setElementHTML(searchResultsPagination, '');
+  }
+
+  #setElementHTML(element, value) {
+    if (element?.html) element.html(value);
   }
 
   #emptyResultsHTML() {
-    const filtersAreActive = (
-      this.selectedPageTypes.size !== PAGE_TYPES.length || this.selectedDomains.size !== DOMAINS.length
-    );
-    if (!filtersAreActive) return '<div class="search-result">no results</div>';
+    if (!this.#visibleFiltersAreActive() || this.allSearchResults.length === 0) {
+      return '<div class="search-result">No results</div>';
+    }
 
     return `
             <div class="search-result search-no-results">
-                <div class="title">no results</div>
+                <div class="title">No results match the selected filters</div>
                 <div class="preview">
-                    Active filters may be limiting results.
-                    <button type="button" class="btn btn-default btn-sm" id="clear-search-filters">
-                        clear filters
+                    <button type="button" class="btn btn-default btn-sm" id="clear-search-filters"
+                        data-search-filter-reset>
+                        Reset filters
                     </button>
                 </div>
             </div>
@@ -912,7 +1003,7 @@ module.exports = class SearchService {
 
   #resultBadgesHTML(result) {
     const badges = [];
-    const pageTypeLabel = PAGE_TYPE_LABELS[result.pageType];
+    const pageTypeLabel = this.#pageTypeBadgeLabel(result);
 
     if (pageTypeLabel) badges.push(pageTypeLabel);
     result.domains.forEach((domain) => {
@@ -931,7 +1022,7 @@ module.exports = class SearchService {
   #normalizeDocumentMetadata(document) {
     return {
       ...document,
-      pageType: PAGE_TYPES.includes(document.pageType) ? document.pageType : this.#inferPageType(document.path),
+      pageType: DEFAULT_PAGE_TYPES.includes(document.pageType) ? document.pageType : this.#inferPageType(document.path),
       domains: Array.isArray(document.domains) ? document.domains.filter(domain => DOMAINS.includes(domain)) : [],
     };
   }
@@ -949,7 +1040,33 @@ module.exports = class SearchService {
     if (path.startsWith('/software/')) return 'software';
     if (path.startsWith('/tactics/')) return 'tactics';
     if (path.startsWith('/techniques/')) return 'techniques';
-    return 'resources';
+    if (path.startsWith('/resources/')) return 'resources';
+    return 'misc';
+  }
+
+  #pageTypeBadgeLabel(result) {
+    if (result.pageType === 'misc') return null;
+    if (this.#isOverviewPage(result.path)) return PAGE_TYPE_LABELS[result.pageType];
+
+    return {
+      analytics: 'Analytic',
+      assets: 'Asset',
+      campaigns: 'Campaign',
+      datacomponents: 'Data Component',
+      detectionstrategies: 'Detection Strategy',
+      groups: 'Group',
+      matrices: 'Matrix',
+      mitigations: 'Mitigation',
+      resources: 'Resource',
+      software: 'Software',
+      'sub-techniques': 'Sub-Technique',
+      tactics: 'Tactic',
+      techniques: 'Technique',
+    }[result.pageType];
+  }
+
+  #isOverviewPage(path = '') {
+    return /^\/[^/]+\/index\.html$/.test(path) || /^\/(matrices|tactics|techniques|mitigations)\/(enterprise|mobile|ics)\/index\.html$/.test(path);
   }
 
 }

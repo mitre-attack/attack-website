@@ -1,4 +1,5 @@
 const baseURL = ''; // TODO migrate from base_url (generated via Pelican)
+const searchCacheSchemaVersion = 2;
 
 const searchFilePaths = [
   'campaigns.json',
@@ -6,6 +7,7 @@ const searchFilePaths = [
   'datacomponents.json',
   'groups.json',
   'matrices.json',
+  'misc.json',
   'mitigations.json',
   'resources.json',
   'software.json',
@@ -17,5 +19,6 @@ const searchFilePaths = [
 ];
 module.exports = {
   baseURL,
+  searchCacheSchemaVersion,
   searchFilePaths,
 };
