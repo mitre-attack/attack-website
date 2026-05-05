@@ -117,7 +117,9 @@ modules/resources/docs/changelogs/v<previous-ATT&CK-version>-v<current-ATT&CK-ve
 * Update notes
   * Add new file: `modules/resources/static_pages/updates-<month>-<year>.md`
   * Update former updates announcement file to specify end date of old release
-  * TODO - write a script to update the html table data for new releases
+  * Create the release-summary table for the new updates page
+    * This is the markdown table at the top of the release announcement that lists the ATT&CK version, start/end dates, MITRE/CTI release links, and changelog links
+    * TODO - write a script to create the html table data for new releases
 * Update CHANGELOG.md
   * Add a bullet point to the Features section in the following format
 
