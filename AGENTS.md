@@ -188,7 +188,7 @@ Run commands from the repo root unless a subdirectory is called out.
 
 - Pull requests should target the `develop` branch per `CONTRIBUTING.md`.
 - The PR template expects a reviewer and a `CHANGELOG.md` update when appropriate.
-- `pyproject.toml` configures Towncrier for `CHANGELOG.md`; prefer the repository's release-note fragment workflow when one is present instead of hand-editing generated changelog sections.
+- The website version is configured in `modules/site_config.py`; keep it aligned with release tags and docs.
 - Do not assume `master` is the integration branch just because GitHub Pages deploys from it.
 - Use Conventional Commit style git messages.
 

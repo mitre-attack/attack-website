@@ -15,7 +15,8 @@ If you are only updating the banner and nothing else, follow these steps.
 ## Website changes
 
 1. Verify that all features/bugs/documentation updates are tied to issues from the [issue tracker](https://github.com/mitre-attack/attack-website/issues).
-    *   Run `git status`, then stage and commit changes to `CHANGELOG.md`
+
+    * Update and commit any necessary changes to `CHANGELOG.md`
 
 2. Merge the `master` branch into the `develop` branch, since commits to `master` may have been made for banner updates.
 
@@ -26,7 +27,7 @@ If you are only updating the banner and nothing else, follow these steps.
 
 3. Verify that all required changes for the next release are present in the `develop` branch, including merging finished feature/bugfix branches.
 
-    * Update the website version number in `pyproject.toml`
+    * Update the website version number in `modules/site_config.py`
     * Update any dependencies needed in `requirements.txt`.
     * If applicable, update the year in the following files:
         * `attack-theme/templates/general/base-template.html`
@@ -65,42 +66,25 @@ Consult these sections as needed for step 4 in the above list.
 
 * Create a detailed changelog for the release:
   * Create a new folder: `modules/resources/docs/changelogs/v<previous-ATT&CK-version>-v<current-ATT&CK-version>`
-  * Create a detailed changelog using mitreattack-python
+  * Create a detailed changelog and excel files using mitreattack-python
 
   ```sh
-  # Clone mitreattack-python repo and download latest ATT&CK STIX
-  git clone git@github.com:mitre-attack/mitreattack-python.git
-  cd mitreattack-python
-  python3 -m venv venv
-  . venv/bin/activate
-  pip install -r requirements-dev.txt
-  pip install -e .
-  cd examples/
-  download_attack_stix --all
+  ATTACK_WEBSITE_REPO="/path/to/attack-website/repo"
+  ATTACK_PREVIOUS_VERSION=18.1
+  ATTACK_CURRENT_VERSION=19.0
 
-  # update the generate_multiple_attack_diffs.py file to have the correct comparison pairs
-  # The `-w` flag uses ATT&CK website paths for links to generated layers and changelog JSON
-  # run the script
-  python generate_multiple_attack_diffs.py -w
+  # generate detailed changelog
+  uvx --from mitreattack-python attack-changelog \
+    --attack-website-links \
+    --old-version ${ATTACK_PREVIOUS_VERSION} \
+    --new-version ${ATTACK_CURRENT_VERSION} \
+    --output-dir ${ATTACK_WEBSITE_REPO}/modules/resources/docs/changelogs/v${ATTACK_PREVIOUS_VERSION}-v${ATTACK_CURRENT_VERSION}
+
+  # generate excel files
+  uvx --from mitreattack-python attack-to-excel from-release \
+    --version ${ATTACK_CURRENT_VERSION} \
+    --output=${ATTACK_WEBSITE_REPO}/modules/resources/docs/attack-excel-files
   ```
-  * The generated output will be written under:
-`examples/output/v<previous-ATT&CK-version>-v<current-ATT&CK-version>`
-  * Copy the following generated files into
-modules/resources/docs/changelogs/v<previous-ATT&CK-version>-v<current-ATT&CK-version>: 
-    * `changelog-detailed.html`
-    * `changelog.json`
-    * Any ATT&CK Navigator layer files that were generated
-
-* Create excel files for this release using mitreattack-python
-  * From the examples/ directory, run:
-  ```sh
-  # get the excel files for the latest attack version
-  # Example - python generate_excel_files.py -a v19.0
-  python generate_excel_files.py -a <attack-version>
-
-  ```
-  * This creates a version folder such as `v19.0/` containing the generated Excel outputs for the ATT&CK domains.
-  * Copy that version folder into `modules/resources/docs/attack-excel-files`
 
 ### Major release
 
