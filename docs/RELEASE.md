@@ -16,7 +16,7 @@ If you are only updating the banner and nothing else, follow these steps.
 
 1. Verify that all features/bugs/documentation updates are tied to issues from the [issue tracker](https://github.com/mitre-attack/attack-website/issues).
 
-    * Make sure that each issue that is addressed has a corresponding `<issue-#>.[feature | bugfix | doc | misc]` in the `newsfragments/` directory.
+    * Update and commit any necessary changes to `CHANGELOG.md`
 
 2. Merge the `master` branch into the `develop` branch, since commits to `master` may have been made for banner updates.
 
@@ -27,7 +27,7 @@ If you are only updating the banner and nothing else, follow these steps.
 
 3. Verify that all required changes for the next release are present in the `develop` branch, including merging finished feature/bugfix branches.
 
-    * Update the website version number in `pyproject.toml`
+    * Update the website version number in `modules/site_config.py`
     * Update any dependencies needed in `requirements.txt`.
     * If applicable, update the year in the following files:
         * `attack-theme/templates/general/base-template.html`
@@ -36,44 +36,21 @@ If you are only updating the banner and nothing else, follow these steps.
         * `LICENSE.txt`
         * `README.md`
 
-4. Use `towncrier` to update the `CHANGELOG`
+4. If this website build includes ATT&CK/STIX content updates, see the appropriate section below for either Major or Minor ATT&CK releases
 
-     * Run `towncrier --draft`.
-     * If everything looks good, then proceed with running `towncrier`.
-         * This will delete the newsfragment files.
-         * Doublecheck the `CHANGELOG.md` file since the template isn't perfect and whitespace issues get introduced.
-             * Here is an example of `towncrier` output.
-               Notice that it adds a bunch of hyphens under the main header and adds a trailing newline.
-               These lines can be removed to ensure consistency with the rest of the CHANGELOG.md file.
-
-      ```text
-        # v4.0.0 (2022-10-25)
-        --------------------- <--- DELETE THIS LINE
-        ## Features
-
-        * Add support for [Campaigns](https://github.com/mitre/cti/blob/master/USAGE.md#campaigns) [#384]
-        (https://github.com/mitre-attack/attack-website/issues/384)
-        <newline>
-        <newline>  <-- DELETE THIS LINE
-      ```
-
-    * Run `git status`, then stage and commit changes to `CHANGELOG.md` and removed files from `newsfragments/`.
-
-5. If this website build includes ATT&CK/STIX content updates, see the appropriate section below for either Major or Minor ATT&CK releases
-
-6. Build the website locally to do one final test that it looks correct
+5. Build the website locally to do one final test that it looks correct
 
     * e.g. `python update-attack.py --attack-brand --extras --no-test-exitstatus`
     * Look in the generated `reports/broken-links-report.txt` for broken links.
       Any broken links that start with `/versions/v*` can be ignored.
 
-7. Commit and push changes to the `develop` branch.
+6. Commit and push changes to the `develop` branch.
 
-8. Open a pull request from `develop` to `master` <https://github.com/mitre-attack/attack-website/pulls>.
+7. Open a pull request from `develop` to `master` <https://github.com/mitre-attack/attack-website/pulls>.
 
     * PR naming convention: "Update website to X.Y.Z"
 
-9. After the PR is accepted, tag the commit in the master branch and push the changes
+8. After the PR is accepted, tag the commit in the master branch and push the changes
 
     ```bash
     git checkout master
@@ -85,35 +62,29 @@ If you are only updating the banner and nothing else, follow these steps.
 
 ## ATT&CK Content updates
 
-Consult these sections as needed for step 5 in the above list.
+Consult these sections as needed for step 4 in the above list.
 
 * Create a detailed changelog for the release:
   * Create a new folder: `modules/resources/docs/changelogs/v<previous-ATT&CK-version>-v<current-ATT&CK-version>`
-  * Create a detailed changelog using mitreattack-python
+  * Create a detailed changelog and excel files using mitreattack-python
 
   ```sh
-  # Clone mitreattack-python repo and download latest ATT&CK STIX
-  git clone git@github.com:mitre-attack/mitreattack-python.git
-  cd mitreattack-python
-  python3 -m venv venv
-  . venv/bin/activate
-  pip install -r requirements-dev.txt
-  pip install -e .
-  cd examples/
-  download_attack_stix --all
+  ATTACK_WEBSITE_REPO="/path/to/attack-website/repo"
+  ATTACK_PREVIOUS_VERSION=18.1
+  ATTACK_CURRENT_VERSION=19.0
 
-  # update the generate_multiple_attack_diffs.py file to have the correct comparison pairs
-  # run the script
-  python generate_multiple_attack_diffs.py
+  # generate detailed changelog
+  uvx --from mitreattack-python attack-changelog \
+    --attack-website-links \
+    --old-version ${ATTACK_PREVIOUS_VERSION} \
+    --new-version ${ATTACK_CURRENT_VERSION} \
+    --output-dir ${ATTACK_WEBSITE_REPO}/modules/resources/docs/changelogs/v${ATTACK_PREVIOUS_VERSION}-v${ATTACK_CURRENT_VERSION}
 
+  # generate excel files
+  uvx --from mitreattack-python attack-to-excel from-release \
+    --version ${ATTACK_CURRENT_VERSION} \
+    --output=${ATTACK_WEBSITE_REPO}/modules/resources/docs/attack-excel-files
   ```
-
-  * Manually modify the detailed changelog's href's at the top for links to the Navigator layers and changelog.json
-    * TODO: one day modify the script above to not need this edit anymore
-  * Put the following files from the `diff_stix` command into the folder created above
-    * `changelog-detailed.html`
-    * `changelog.json`
-    * Any ATT&CK Navigator layer files that were generated
 
 ### Major release
 
@@ -124,12 +95,15 @@ Consult these sections as needed for step 5 in the above list.
     * `cti_url`: should be tag URL for the release on the mitre/cti repo
     * `commit`: should be sha256 hash of latest commit from mitre-attack/attack-website on the `gh-pages` branch prior to new content release
 
-* Run the `archive-website.py` script to get the previously released archives of the ATT&CK website
+* (If not already completed for this release) Run the `archive-website.py` script to get the previously released archives of the ATT&CK website
   * Upload the `tar.gz` of the latest previous version of the website to the [Archived Website Files](https://github.com/mitre-attack/attack-website/releases/tag/archived-website-files) release
   * Optional - If sufficient changes were made to the archive process then re-upload all `tar.gz` files
 * Update notes
   * Add new file: `modules/resources/static_pages/updates-<month>-<year>.md`
   * Update former updates announcement file to specify end date of old release
+  * Create the release-summary table for the new updates page
+    * This is the markdown table at the top of the release announcement that lists the ATT&CK version, start/end dates, MITRE/CTI release links, and changelog links
+    * TODO - write a script to create the html table data for new releases
 * Update CHANGELOG.md
   * Add a bullet point to the Features section in the following format
 
@@ -150,6 +124,7 @@ Check the layer specification version [here](https://github.com/mitre-attack/att
   * Minor releases currently don't get their own update page, so make the following updates to the table at the top of the page:
     * Under the Data column: Add a new entry for the latest tag, using `<br />` to separate them
     * Under the Changelogs column: Add a new entry for the latest detailed changelog, for both HTML and JSON (also using `<br />` as a separator)
+    * TODO - write a script to update the html table data for new releases
 * Update CHANGELOG.md
   * Add a bullet point to the Features section in the following format
 

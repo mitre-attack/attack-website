@@ -10,9 +10,10 @@ const $ = require('jquery');
  */
 
 // Import required modules with the correct file extension
-const { baseURL, searchFilePaths } = require('./settings.js');
+const { baseURL, searchCacheSchemaVersion, searchFilePaths } = require('./settings.js');
 const Debouncer = require('./debouncer.js');
 const SearchService = require('./search-service.js');
+const { loadSearchDocuments } = require('./search-loader.js');
 
 // Import required components
 const {
@@ -23,8 +24,44 @@ const {
   searchButton,
   searchIcon,
   closeButton,
-  loadMoreResultsButton,
 } = require('./components.js');
+
+const searchCacheKey = `saved_uuid_search_schema_${searchCacheSchemaVersion}`;
+let searchService;
+let openFilterDropdownKey = null;
+
+const setFilterDropdownOpenState = function (dropdownKey, isOpen) {
+  const toggle = $(`[data-search-filter-dropdown-toggle="${dropdownKey}"]`);
+  const dropdown = $(`[data-search-filter-dropdown="${dropdownKey}"]`);
+
+  toggle.toggleClass('open', isOpen);
+  toggle.attr('aria-expanded', isOpen.toString());
+  dropdown.toggle(isOpen);
+  dropdown.attr('aria-hidden', (!isOpen).toString());
+};
+
+const toggleFilterDropdown = function (dropdownKey) {
+  if (searchService) {
+    searchService.toggleFilterDropdown(dropdownKey);
+    return;
+  }
+
+  const previousDropdownKey = openFilterDropdownKey;
+  const isOpening = previousDropdownKey !== dropdownKey;
+
+  if (previousDropdownKey) setFilterDropdownOpenState(previousDropdownKey, false);
+  openFilterDropdownKey = isOpening ? dropdownKey : null;
+  if (openFilterDropdownKey) setFilterDropdownOpenState(openFilterDropdownKey, true);
+};
+
+const closeFilterDropdowns = function () {
+  if (searchService?.closeFilterDropdowns?.()) return true;
+  if (!openFilterDropdownKey) return false;
+
+  setFilterDropdownOpenState(openFilterDropdownKey, false);
+  openFilterDropdownKey = null;
+  return true;
+};
 
 // Open search overlay
 const openSearch = function () {
@@ -38,6 +75,7 @@ const openSearch = function () {
 const closeSearch = function () {
   searchInput.val('');
   if (searchService) searchService.clearSession();
+  closeFilterDropdowns();
   searchOverlay.hide();
   searchOverlay.addClass('hidden');
 };
@@ -50,7 +88,8 @@ async function initializeSearchService() {
   console.debug('Initializing search service...');
   searchParsingIcon.show();
 
-  const saved_uuid = localStorage.getItem('saved_uuid');
+  const saved_uuid = localStorage.getItem(searchCacheKey);
+  const cachedBuildId = `${build_uuid}-search-${searchCacheSchemaVersion}`;
   console.debug(`Retrieved the saved_uuid from localStorage: ${saved_uuid}`);
 
   // Check if the browser supports IndexedDB. Search service can only work in environments that support IndexedDB.
@@ -58,7 +97,7 @@ async function initializeSearchService() {
     // Verify if the buildUUID is already cached in LocalStorage. This check is performed to determine if the search
     // service has been initialized. Each website build instance possesses a unique buildUUID, preventing different
     // website builds from sharing the same search index.
-    if (saved_uuid && saved_uuid === build_uuid) {
+    if (saved_uuid && saved_uuid === cachedBuildId) {
       // Restore search service from IndexedDB
       try {
         console.debug('Initializing SearchService (assume documents already cached)...');
@@ -79,26 +118,14 @@ async function initializeSearchService() {
       console.debug('Documents not cached yet.');
 
       const baseUrl = `${baseURL}/search/`;
-      const jsonFiles = [];
-
-      // Download all JSON files from directory
-      // Loop through the searchFilePaths array to construct the URLs
-      searchFilePaths.forEach(function(filename) {
-        jsonFiles.push(baseUrl + filename);
-      });
-
-      // Use Promise.all() to download all files concurrently
-      Promise.all(jsonFiles.map(url => $.getJSON(url)))
-        .then(data => {
-          // Concatenate all file data into a single array
-          const combinedData = data.reduce((acc, curr) => acc.concat(curr), []);
-
-          // Initialize search service with combined data
-          searchService = new SearchService('search-results', build_uuid);
+      loadSearchDocuments(baseUrl, searchFilePaths, $.getJSON)
+        .then(combinedData => {
+          searchService = new SearchService('search-results', cachedBuildId);
           return searchService.initializeAsync(combinedData);
         })
         .then(() => {
-          localStorage.setItem('saved_uuid', build_uuid);
+          localStorage.setItem(searchCacheKey, cachedBuildId);
+          localStorage.removeItem('saved_uuid');
           console.debug('SearchService is initialized.');
           searchParsingIcon.hide();
           searchServiceIsLoaded = true;
@@ -121,9 +148,6 @@ async function initializeSearchService() {
   }
 }
 
-// Declare search service variable
-let searchService;
-
 // Perform a search using the search service
 const search = async function (query) {
   console.debug(`search -> Received search query: ${query}`);
@@ -142,6 +166,21 @@ const search = async function (query) {
 
 // Instantiate a debouncer
 const debounce = new Debouncer(300);
+let lastTouchActivation = 0;
+
+const shouldHandleActivation = function (e) {
+  if (e.type === 'touchend') {
+    lastTouchActivation = Date.now();
+    e.preventDefault();
+    e.stopPropagation();
+    return true;
+  }
+
+  if (Date.now() - lastTouchActivation < 700) return false;
+
+  e.stopPropagation();
+  return true;
+};
 
 // Set up event handlers for closing search
 searchOverlay.on('click', function (e) {
@@ -149,7 +188,9 @@ searchOverlay.on('click', function (e) {
   closeSearch();
 });
 $(document).keyup((e) => {
-  e.key === 'Escape' ? closeSearch() : null;
+  if (e.key !== 'Escape') return;
+  if (closeFilterDropdowns()) return;
+  closeSearch();
 });
 
 // Set up event handler for close button
@@ -167,52 +208,31 @@ searchInput.on('input', (e) => {
   });
 });
 
-// Set up event handler for load more results button
-loadMoreResultsButton.on('click', () => {
-  if (searchService) searchService.loadMoreResults();
-  loadMoreResultsButton.blur(); // onfocus
+$('[data-search-filter-dropdown-toggle]').on('touchend click', (e) => {
+  if (!shouldHandleActivation(e)) return;
+  toggleFilterDropdown($(e.currentTarget).data('search-filter-dropdown-toggle'));
 });
 
-$('[data-search-filter-toggle]').on('click', () => {
-  if (searchService) searchService.toggleFiltersPanel();
-});
-
-$('[data-search-filter-dropdown-toggle]').on('click', (e) => {
-  e.stopPropagation();
-  if (searchService) {
-    searchService.toggleFilterDropdown($(e.currentTarget).data('search-filter-dropdown-toggle'));
-  }
-});
-
-$('[data-search-filter-dropdown]').on('click', (e) => {
+$('[data-search-filter-dropdown]').on('touchend click', (e) => {
   e.stopPropagation();
 });
 
-$(document).on('click', () => {
-  if (searchService) searchService.closeFilterDropdowns();
+$(document).on('touchend click', () => {
+  closeFilterDropdowns();
 });
 
-$(document).on('keyup', (e) => {
-  if (e.key === 'Escape' && searchService) searchService.closeFilterDropdowns();
-});
-
-$('[data-search-filter-page-type]').on('click', (e) => {
+$('[data-search-filter-page-type]').on('touchend change', (e) => {
+  if (!shouldHandleActivation(e)) return;
   if (searchService) searchService.togglePageType($(e.currentTarget).data('search-filter-page-type'));
 });
 
-$('[data-search-filter-domain]').on('click', (e) => {
+$('[data-search-filter-domain]').on('touchend change', (e) => {
+  if (!shouldHandleActivation(e)) return;
   if (searchService) searchService.toggleDomain($(e.currentTarget).data('search-filter-domain'));
 });
 
-$('[data-search-filter-page-types-action]').on('click', (e) => {
-  if (!searchService) return;
-  const action = $(e.currentTarget).data('search-filter-page-types-action');
-
-  if (action === 'all') searchService.selectAllPageTypes();
-  if (action === 'none') searchService.clearPageTypes();
-});
-
-$('[data-search-filter-domain-action]').on('click', (e) => {
+$('[data-search-filter-domain-action]').on('touchend click', (e) => {
+  if (!shouldHandleActivation(e)) return;
   if (!searchService) return;
   const action = $(e.currentTarget).data('search-filter-domain-action');
 
@@ -220,13 +240,23 @@ $('[data-search-filter-domain-action]').on('click', (e) => {
   if (action === 'none') searchService.clearDomains();
 });
 
-$('[data-search-filter-group-action]').on('click', (e) => {
+$('[data-search-filter-group-action]').on('touchend click', (e) => {
+  if (!shouldHandleActivation(e)) return;
   if (!searchService) return;
   const button = $(e.currentTarget);
   searchService.setPageTypeGroupSelected(
     button.data('search-filter-group'),
     button.data('search-filter-group-action') === 'all',
   );
+});
+
+$('[data-search-filter-reset]').on('touchend click', (e) => {
+  if (!shouldHandleActivation(e)) return;
+  if (searchService) searchService.resetFilters();
+});
+
+$(document).on('click', '[data-search-page]', (e) => {
+  if (searchService) searchService.goToPage(Number($(e.currentTarget).data('search-page')));
 });
 
 // Add compatibility patches for Internet Explorer

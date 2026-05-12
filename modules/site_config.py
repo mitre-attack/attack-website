@@ -9,6 +9,7 @@ import modules
 load_dotenv()
 
 attack_version = ""
+website_version = "4.4.3"
 
 # Read versions file for ATT&CK version
 with open("data/versions.json", "r", encoding="utf8") as f:
@@ -170,7 +171,12 @@ custom_alphabet += rest_of_alphabet
 #     domain: "enterprise", "mobile", "ics"
 #     path: the path to the object, e.g "software/S1001" or "groups/G2021"
 layer_md = Template(
-    "Title: ${domain} Techniques\nTemplate: general/json\nsave_as: ${path}/${attack_id}-${domain}-layer.json\njson: "
+    "Title: ${attack_id} ${domain} Techniques Layer\n"
+    "Template: general/json\n"
+    "url: ${path}/${attack_id}-${domain}-layer.json\n"
+    "private: True\n"
+    "save_as: ${path}/${attack_id}-${domain}-layer.json\n"
+    "json: "
 )
 layer_version = "4.5"
 navigator_version = "5.3.2"

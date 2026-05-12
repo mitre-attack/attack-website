@@ -18,14 +18,12 @@ module.exports.searchInput = $('#search-input');
 // body of search results
 module.exports.searchBody = $('#search-body');
 
-// button to show more results
-module.exports.loadMoreResults = $('#load-more-results');
-module.exports.loadMoreResultsButton = $('#load-more-results-button');
-
 // search parsing icon
 module.exports.searchParsingIcon = $('#search-parsing-icon');
 
 // inline search filters
 module.exports.searchFilters = $('#search-filters');
-module.exports.searchFiltersPanel = $('#search-filters-panel');
-module.exports.searchFiltersToggle = $('#search-filters-toggle');
+
+// search result pagination and counts
+module.exports.searchResultsFooter = $('#search-results-footer');
+module.exports.searchResultsPagination = $('#search-results-pagination');
