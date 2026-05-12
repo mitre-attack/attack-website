@@ -8,7 +8,7 @@ save_as: resources/updates/updates-april-2026/index.html
 
 | Version | Start Date | End Date | Data | Changelogs |
 |:--------|:-----------|:---------|:-----|:-----------|
-| [ATT&CK v19](/versions/v19) | April 28, 2026 | Current version of ATT&CK | [v19.0 on MITRE/CTI](https://github.com/mitre/cti/releases/tag/ATT%26CK-v19.0) | 18.1 - 19.0 [Details](/docs/changelogs/v18.1-v19.0/changelog-detailed.html) ([JSON](/docs/changelogs/v18.1-v19.0/changelog.json)) |
+| [ATT&CK v19](/versions/v19) | April 28, 2026 | Current version of ATT&CK | [v19.0 on MITRE/CTI](https://github.com/mitre/cti/releases/tag/ATT%26CK-v19.0) <br /> [v19.1 on MITRE/CTI](https://github.com/mitre/cti/releases/tag/ATT%26CK-v19.1) | 18.1 - 19.0 [Details](/docs/changelogs/v18.1-v19.0/changelog-detailed.html) ([JSON](/docs/changelogs/v18.1-v19.0/changelog.json)) <br />19.0 - 19.1 [Details](/docs/changelogs/v19.0-v19.1/changelog-detailed.html) ([JSON](/docs/changelogs/v19.0-v19.1/changelog.json)) |
 
 The April 2026 (v19) ATT&CK release updates Techniques, Groups, Campaigns and Software for Enterprise, Mobile, and ICS.
 

@@ -9,7 +9,7 @@ import modules
 load_dotenv()
 
 attack_version = ""
-website_version = "4.4.2"
+website_version = "4.4.3"
 
 # Read versions file for ATT&CK version
 with open("data/versions.json", "r", encoding="utf8") as f:
