@@ -5,6 +5,7 @@ import re
 import shutil
 import urllib.parse
 from datetime import datetime
+from zoneinfo import ZoneInfo
 
 from loguru import logger
 
@@ -159,6 +160,7 @@ def generate_attackcon_page():
     with open(os.path.join(site_config.data_directory, "attackcon.json"), "r", encoding="utf8") as f:
         attackcon = json.load(f)
     attackcon = sorted(attackcon, key=lambda a: datetime.strptime(a["date"], "%B %Y"), reverse=True)
+    add_attackcon_cfp_status(attackcon)
 
     # Below code used to get a list of all attackcon children
     for i in range(len(attackcon)):
@@ -195,6 +197,32 @@ def generate_attackcon_page():
         f_name = "attackcon-" + attackcon[i]["date"].lower().replace(" ", "-") + ".md"
         with open(os.path.join(site_config.resources_markdown_path, f_name), "w", encoding="utf8") as md_file:
             md_file.write(attackcon_content)
+
+
+def add_attackcon_cfp_status(attackcon, now=None):
+    """Add build-time CFP display status to ATT&CKcon records.
+
+    Parameters
+    ----------
+    attackcon : list
+        ATT&CKcon records loaded from ``data/attackcon.json``.
+    now : datetime, optional
+        Current time. Defaults to the current Eastern time.
+    """
+    if now is None:
+        now = datetime.now(ZoneInfo("America/New_York"))
+    elif now.tzinfo is None:
+        now = now.replace(tzinfo=ZoneInfo("America/New_York"))
+
+    for con in attackcon:
+        con["show_cfp"] = False
+        if "cfp_link" not in con or "cfp_deadline_et" not in con:
+            continue
+
+        cfp_deadline = datetime.fromisoformat(con["cfp_deadline_et"])
+        if cfp_deadline.tzinfo is None:
+            cfp_deadline = cfp_deadline.replace(tzinfo=ZoneInfo("America/New_York"))
+        con["show_cfp"] = now < cfp_deadline
 
 
 def generate_faq_page():

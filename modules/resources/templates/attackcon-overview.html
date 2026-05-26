@@ -24,10 +24,48 @@
 
     {% set ifSponsor = "sponsors_img_list" in con %}
     {% if "banner_img" in con %}
-    <p>
-      <img src="{{ con.banner_img }}" alt="ATT&CKcon Banner" {% if ifSponsor %} width="90%" {% else %} width="100%" {%
-        endif %}>
+    <p class="attackcon-banner text-center">
+      <img src="{{ con.banner_img }}" alt="ATT&CKcon Banner"
+        style="max-width: {{ con.banner_img_max_width }}; width: 100%; height: auto;">
     </p>
+    {% endif %}
+
+    {% if "event_dates" in con and "event_location" in con %}
+    <div class="card card-attackcon mb-4">
+      <div class="card-body">
+        <h2 class="h4"><strong>{{ con.title }} Event Details</strong></h2>
+        <p class="lead mb-2"><strong>Dates:</strong> {{ con.event_dates }}<br><strong>Location:</strong> {{ con.event_location }}
+          {% if con.show_cfp %}
+          <br><strong>Call for Proposal deadline:</strong> {{ con.cfp_deadline_et | format_cfp_deadline }}
+          {% endif %}
+        </p>
+        {% if "event_link" in con %}
+        <p>Visit the official event site for registration, sponsorship, speaker, and attendee information.</p>
+        <a target="_blank" rel="noopener" href="{{ con.event_link }}">
+          <button type="button" class="slide-button">
+            <span class="slide-button-text">
+              <span>Visit {{ con.title }} Event Site</span>
+            </span>
+            <span class="slide-button-icon">
+              <i class="fa fa-external-link"></i>
+            </span>
+          </button>
+        </a>
+        {% endif %}
+        {% if con.show_cfp %}
+        <a class="my-2 ml-2" target="_blank" rel="noopener" href="{{ con.cfp_link }}">
+          <button type="button" class="slide-button slide-button-secondary">
+            <span class="slide-button-text">
+              <span>View Call for Proposal details</span>
+            </span>
+            <span class="slide-button-icon">
+              <i class="fa fa-external-link"></i>
+            </span>
+          </button>
+        </a>
+        {% endif %}
+      </div>
+    </div>
     {% endif %}
 
     {% if "description" in con %}
@@ -44,6 +82,7 @@
     {% if "banner_img" in con %}
     <div class="attackcon-columns">
       <div class="presentations card-block card-attackcon" id="presentations">
+        {% if "presentations" in con and con.presentations|length > 0 %}
         <input type="text" class="page-search" id="searchPresentation" onkeyup="searchPresentation()"
           placeholder="Search Presentations">
         <h5><strong>Presentations</strong></h5>
@@ -126,6 +165,10 @@
           </div>
         </div>
         {% endfor %}
+        {% else %}
+        <h5><strong>Presentations</strong></h5>
+        <p>Presentation details are not available yet. Check the event site for current {{ con.title }} information.</p>
+        {% endif %}
       </div>
       <div class="sponsors">
         {% if "sponsors_img_list" in con %}

@@ -2,6 +2,8 @@
 import json
 import os
 import re
+from datetime import datetime
+from zoneinfo import ZoneInfo
 
 import markdown
 
@@ -42,6 +44,15 @@ def remove_whitespace(word):
 
 def escape_spaces(word):
     return "%20".join(word.split(" "))
+
+
+def format_cfp_deadline(deadline_et):
+    eastern_deadline = datetime.fromisoformat(deadline_et)
+    if eastern_deadline.tzinfo is None:
+        eastern_deadline = eastern_deadline.replace(tzinfo=ZoneInfo("America/New_York"))
+    eastern_deadline = eastern_deadline.astimezone(ZoneInfo("America/New_York"))
+    eastern_date = f"{eastern_deadline.strftime('%A, %B')} {eastern_deadline.day}, {eastern_deadline.year}"
+    return f"{eastern_date} at {eastern_deadline.strftime('%-I:%M %p ET')}"
 
 
 def clean_path(path):
