@@ -131,15 +131,27 @@ def generate_base_html():
     logger.debug(f"{banner_message=}")
 
     if site_config.args.attack_brand:
-        if website_build_config.base_page_data["BANNER_MESSAGE"].startswith("This is a custom instance"):
+        if banner_message.startswith("This is a custom instance"):
             website_build_config.base_page_data["BANNER_ENABLED"] = False
+
+    base_page_data = website_build_config.base_page_data.copy()
+    jinja_string_fields = [
+        "BANNER_MESSAGE",
+        "CONTENT_VERSION",
+        "WEBSITE_VERSION",
+        "CHANGELOG_LOCATION",
+        "LOGO_HEADER",
+        "LOGO_FOOTER",
+    ]
+    for field in jinja_string_fields:
+        base_page_data[field] = json.dumps(base_page_data[field])
 
     with open(
         os.path.join(website_build_config.template_dir, "base-template.html"), "r", encoding="utf8"
     ) as base_template_file:
         base_template_str = base_template_file.read()
         base_template = Template(base_template_str)
-        subs = base_template.substitute(website_build_config.base_page_data)
+        subs = base_template.substitute(base_page_data)
 
     with open(os.path.join(website_build_config.template_dir, "base.html"), "w", encoding="utf8") as base_file:
         base_file.write(subs)
@@ -227,6 +239,7 @@ def generate_changelog_page():
 
 
 def pelican_content():
+    """Build the generated markdown content with Pelican."""
     logger.info("Building website with Pelican")
     pelican_cmd = "pelican content"
 
