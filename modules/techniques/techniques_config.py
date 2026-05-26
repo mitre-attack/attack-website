@@ -11,12 +11,22 @@ techniques_templates_path = "modules/techniques/templates/"
 
 # String template for all techniques
 technique_md = Template(
-    "Title: ${name}-${domain}\nTemplate: techniques/technique\nsave_as: techniques/${attack_id}/index.html\ndata: "
+    "Title: ${name}-${domain}\n"
+    "Slug: technique-${attack_id}\n"
+    "url: /techniques/${attack_id}/\n"
+    "Template: techniques/technique\n"
+    "save_as: techniques/${attack_id}/index.html\n"
+    "data: "
 )
 
 # String template for domains
 technique_domain_md = Template(
-    "Title: Techniques\nTemplate: techniques/techniques-domain-index\nsave_as: techniques/${domain}/index.html\ndata: "
+    "Title: Techniques\n"
+    "Slug: techniques-${domain}\n"
+    "url: /techniques/${domain}/\n"
+    "Template: techniques/techniques-domain-index\n"
+    "save_as: techniques/${domain}/index.html\n"
+    "data: "
 )
 
 # Overview md template
@@ -33,6 +43,8 @@ techniques_redirection_location = "modules/techniques/techniques_redirections.js
 # String template for all techniques
 sub_technique_md = Template(
     "Title: ${name}-${domain}\n"
+    "Slug: technique-${parent_id}-${sub_number}\n"
+    "url: /techniques/${parent_id}/${sub_number}/\n"
     "Template: techniques/technique\n"
     "save_as: techniques/${parent_id}/${sub_number}/index.html\n"
     "data: "

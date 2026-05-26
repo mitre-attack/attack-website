@@ -5,6 +5,7 @@ import re
 import shutil
 import urllib.parse
 from datetime import datetime
+from pathlib import Path
 from zoneinfo import ZoneInfo
 
 from loguru import logger
@@ -289,6 +290,13 @@ def generate_static_pages():
     for static_page in os.listdir(static_pages_dir):
         with open(os.path.join(static_pages_dir, static_page), "r", encoding="utf8") as md:
             content = md.read()
+            slug = util.buildhelpers.metadata_slug("resource", Path(static_page).stem)
+            content = util.buildhelpers.ensure_metadata_line(content, "Slug", slug)
+            save_as = util.buildhelpers.get_save_as_metadata(content)
+            if save_as and not util.buildhelpers.has_metadata_line(content, "url"):
+                content = util.buildhelpers.ensure_metadata_line(
+                    content, "url", util.buildhelpers.public_url_from_save_as(save_as)
+                )
 
             if static_page.startswith("updates-"):
                 with open(

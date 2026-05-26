@@ -11,7 +11,14 @@ group_markdown_path = "content/pages/groups/"
 group_index_md = "Title: Group overview\nTemplate: groups/groups-index\nsave_as: groups/index.html\ndata: "
 
 # String template for group page
-group_md = Template("Title: ${name}\nTemplate: groups/group\nsave_as: groups/${attack_id}/index.html\ndata: ")
+group_md = Template(
+    "Title: ${name}\n"
+    "Slug: group-${attack_id}\n"
+    "url: /groups/${attack_id}/\n"
+    "Template: groups/group\n"
+    "save_as: groups/${attack_id}/index.html\n"
+    "data: "
+)
 
 # Path for templates
 groups_templates_path = "modules/groups/templates/"

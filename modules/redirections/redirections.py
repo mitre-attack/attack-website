@@ -93,6 +93,8 @@ def _write_redirect_file(data, generated_save_as):
         return
 
     generated_save_as.add(save_as)
+    data["slug"] = util.buildhelpers.metadata_slug("redirect", data["from"])
+    data["url"] = util.buildhelpers.public_url_from_save_as(save_as)
 
     subs = site_config.redirect_md_index.substitute(data)
     redirect_file = os.path.join(site_config.redirects_markdown_path, f"{data['title']}.md")

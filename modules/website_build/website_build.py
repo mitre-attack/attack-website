@@ -2,6 +2,7 @@ import hashlib
 import json
 import os
 import subprocess
+from pathlib import Path
 from string import Template
 
 from loguru import logger
@@ -241,6 +242,7 @@ def generate_changelog_page():
 def pelican_content():
     """Build the generated markdown content with Pelican."""
     logger.info("Building website with Pelican")
+    normalize_generated_page_urls()
     pelican_cmd = "pelican content"
 
     if site_config.subdirectory:
@@ -281,6 +283,24 @@ def pelican_content():
         raise
 
 
+def normalize_generated_page_urls():
+    """Ensure generated Markdown page URLs match their save_as output paths."""
+    pages_dir = Path(site_config.pages_dir)
+    if not pages_dir.exists():
+        return
+
+    for page in pages_dir.rglob("*.md"):
+        content = page.read_text(encoding="utf8")
+        save_as = util.buildhelpers.get_save_as_metadata(content)
+        if not save_as:
+            continue
+
+        url = util.buildhelpers.public_url_from_save_as(save_as).lstrip("/")
+        updated_content = util.buildhelpers.set_metadata_line(content, "url", url)
+        if updated_content != content:
+            page.write_text(updated_content, encoding="utf8")
+
+
 def remove_pelican_settings():
     """Remove pelican settings."""
     logger.info("Removing additional Pelican settings")
@@ -301,6 +321,13 @@ def generate_static_pages():
     for static_page in os.listdir(static_pages_dir):
         with open(os.path.join(static_pages_dir, static_page), "r", encoding="utf8") as md:
             content = md.read()
+            slug = util.buildhelpers.metadata_slug("resource", Path(static_page).stem)
+            content = util.buildhelpers.ensure_metadata_line(content, "Slug", slug)
+            save_as = util.buildhelpers.get_save_as_metadata(content)
+            if save_as and not util.buildhelpers.has_metadata_line(content, "url"):
+                content = util.buildhelpers.ensure_metadata_line(
+                    content, "url", util.buildhelpers.public_url_from_save_as(save_as)
+                )
 
             with open(
                 os.path.join(website_build_config.website_build_markdown_path, static_page), "w", encoding="utf8"

@@ -20,6 +20,63 @@ def timestamp():
     return timestamp
 
 
+def metadata_slug(*parts):
+    """Return a stable Pelican metadata slug from IDs or path parts."""
+    text = "-".join(str(part) for part in parts if part)
+    text = text.replace("/", "-").replace(".", "-").replace("_", "-")
+    return "-".join(text.lower().split())
+
+
+def public_url_from_save_as(save_as):
+    """Return the public site URL represented by a Pelican save_as path."""
+    path = save_as.strip().lstrip("/")
+    if path == "index.html":
+        return "/"
+    if path.endswith("/index.html"):
+        return "/" + path[: -len("index.html")]
+    return "/" + path
+
+
+def has_metadata_line(content, field):
+    """Return whether content already has a Pelican metadata field."""
+    return re.search(rf"^{re.escape(field)}\s*:", content, re.IGNORECASE | re.MULTILINE) is not None
+
+
+def ensure_metadata_line(content, field, value):
+    """Insert a Pelican metadata line after Title when the field is absent."""
+    if has_metadata_line(content, field):
+        return content
+
+    line = f"{field}: {value}"
+    final_newline = content.endswith("\n")
+    lines = content.splitlines()
+
+    for index, existing_line in enumerate(lines):
+        if re.match(r"^Title\s*:", existing_line, re.IGNORECASE):
+            lines.insert(index + 1, line)
+            updated_content = "\n".join(lines)
+            return updated_content + ("\n" if final_newline else "")
+
+    return line + "\n" + content
+
+
+def set_metadata_line(content, field, value):
+    """Set a Pelican metadata field, inserting it after Title when absent."""
+    line = f"{field}: {value}"
+    pattern = rf"^{re.escape(field)}\s*:.*$"
+    if has_metadata_line(content, field):
+        return re.sub(pattern, line, content, count=1, flags=re.IGNORECASE | re.MULTILINE)
+    return ensure_metadata_line(content, field, value)
+
+
+def get_save_as_metadata(content):
+    """Return the first save_as metadata value from a Markdown page."""
+    match = re.search(r"^save_as\s*:\s*(.+?)\s*$", content, re.IGNORECASE | re.MULTILINE)
+    if match:
+        return match.group(1)
+    return None
+
+
 def get_created_and_modified_dates(obj):
     """Given an object, return the modified and created dates."""
     dates = {}
@@ -862,6 +919,12 @@ def generate_redirections(redirections_filename, redirect_md=None):
             os.mkdir(site_config.redirects_markdown_path)
 
         for obj in redirects:
+            if redirect_md == site_config.redirect_md:
+                save_as = obj["from"]
+            else:
+                save_as = f"{obj['from']}/index.html"
+            obj["slug"] = metadata_slug("redirect", obj["from"])
+            obj["url"] = public_url_from_save_as(save_as)
             subs = redirect_md.substitute(obj)
 
             redirect_md_file = os.path.join(site_config.redirects_markdown_path, f"{obj['title']}.md")

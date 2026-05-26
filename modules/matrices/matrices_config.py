@@ -19,7 +19,14 @@ matrix_overview_md = (
 )
 
 # String template for main domain matrices
-matrix_md = Template("Title: Matrix-${domain}\nTemplate: matrices/matrix\nsave_as: matrices/${path}/index.html\ndata: ")
+matrix_md = Template(
+    "Title: Matrix-${domain}\n"
+    "Slug: ${slug}\n"
+    "url: /matrices/${path}/\n"
+    "Template: matrices/matrix\n"
+    "save_as: matrices/${path}/index.html\n"
+    "data: "
+)
 
 # String template for platform matrices
 platform_md = Template(

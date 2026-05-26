@@ -4,6 +4,7 @@ import os
 from loguru import logger
 
 from modules import site_config, util
+from modules.util.buildhelpers import metadata_slug
 
 from . import matrices_config
 
@@ -66,6 +67,7 @@ def generate_platform_matrices(matrix, notes, side_menu_data=None):
 
     data["descr"] = matrix["descr"]
     data["path"] = matrix["path"]
+    data["slug"] = metadata_slug("matrix", data["path"])
 
     data["versioning_feature"] = site_config.check_versions_module()
     data["resources"] = site_config.check_resources_module()
@@ -94,6 +96,7 @@ def generate_deprecated_matrix(matrix, side_menu_data=None):
     data["name"] = matrix["name"]
     data["domain"] = matrix["matrix"].split("-")[0]
     data["path"] = matrix["path"]
+    data["slug"] = metadata_slug("matrix", data["path"])
     data["deprecated"] = True
 
     ms = util.relationshipgetters.get_ms()
