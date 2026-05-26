@@ -144,7 +144,7 @@ def generate_base_html():
         "LOGO_FOOTER",
     ]
     for field in jinja_string_fields:
-        base_page_data[field] = json.dumps(base_page_data[field])
+        base_page_data[field] = json.dumps(base_page_data[field], ensure_ascii=False)
 
     with open(
         os.path.join(website_build_config.template_dir, "base-template.html"), "r", encoding="utf8"
