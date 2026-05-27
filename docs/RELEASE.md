@@ -46,19 +46,7 @@ If you are only updating the banner and nothing else, follow these steps.
 
 6. Commit and push changes to the `develop` branch.
 
-7. Open a pull request from `develop` to `master` <https://github.com/mitre-attack/attack-website/pulls>.
-
-    * PR naming convention: "Update website to X.Y.Z"
-
-8. After the PR is accepted, tag the commit in the master branch and push the changes
-
-    ```bash
-    git checkout master
-    git pull
-    git tag -a "website-vX.Y.Z" -m "website-vX.Y.Z"
-    git push
-    git push --tags
-    ```
+7. Open and accept the pull request from `develop` to `master` <https://github.com/mitre-attack/attack-website/pulls>.
 
 ## ATT&CK Content updates
 

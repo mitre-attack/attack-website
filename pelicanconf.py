@@ -67,6 +67,7 @@ JINJA_FILTERS = {
     "clean_path": custom_jinja_filters.clean_path,
     "remove_whitespace": custom_jinja_filters.remove_whitespace,
     "escape_spaces": custom_jinja_filters.escape_spaces,
+    "format_cfp_deadline": custom_jinja_filters.format_cfp_deadline,
     "stixToHTML": custom_jinja_filters.stixToHTML,
     "permalink": custom_jinja_filters.permalink,
 }

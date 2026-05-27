@@ -13,7 +13,12 @@ campaign_index_md = (
 
 # String template for campaign page
 campaign_md = Template(
-    "Title: ${name}\nTemplate: campaigns/campaign\nsave_as: campaigns/${attack_id}/index.html\ndata: "
+    "Title: ${name}\n"
+    "Slug: campaign-${attack_id}\n"
+    "url: /campaigns/${attack_id}/\n"
+    "Template: campaigns/campaign\n"
+    "save_as: campaigns/${attack_id}/index.html\n"
+    "data: "
 )
 
 # Path for templates

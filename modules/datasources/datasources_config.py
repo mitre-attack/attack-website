@@ -16,7 +16,12 @@ datasource_index_md = (
 
 # String template for data source page
 datasource_md = Template(
-    "Title: ${name}\nTemplate: datasources/datasource\nsave_as: datasources/${attack_id}/index.html\ndata: "
+    "Title: ${name}\n"
+    "Slug: datasource-${attack_id}\n"
+    "url: /datasources/${attack_id}/\n"
+    "Template: datasources/datasource\n"
+    "save_as: datasources/${attack_id}/index.html\n"
+    "data: "
 )
 
 # Path for templates

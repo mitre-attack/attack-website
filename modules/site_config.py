@@ -140,9 +140,23 @@ resources_markdown_path = "content/pages/resources/"
 
 # Redirect md string template
 redirect_md_index = Template(
-    "Title: ${title}\nTemplate: general/redirect-index\nRedirectLink: ${to}\nprivate: True\nsave_as: ${from}/index.html"
+    "Title: ${title}\n"
+    "Slug: ${slug}\n"
+    "url: ${url}\n"
+    "Template: general/redirect-index\n"
+    "RedirectLink: ${to}\n"
+    "private: True\n"
+    "save_as: ${from}/index.html"
 )
-redirect_md = Template("Title: ${title}\nTemplate: general/redirect-index\nRedirectLink: ${to}\nprivate: True\nsave_as: ${from}")
+redirect_md = Template(
+    "Title: ${title}\n"
+    "Slug: ${slug}\n"
+    "url: ${url}\n"
+    "Template: general/redirect-index\n"
+    "RedirectLink: ${to}\n"
+    "private: True\n"
+    "save_as: ${from}"
+)
 
 # Custom_alphabet used to sort list of dictionaries by domain name
 # depending on domain ordering

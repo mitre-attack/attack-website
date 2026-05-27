@@ -21,7 +21,12 @@ detectionstrategy_index_md = (
 
 # String template for individual page
 detectionstrategy_md = Template(
-    "Title: ${name}\nTemplate: detectionstrategies/detectionstrategy\nsave_as: detectionstrategies/${attack_id}/index.html\ndata: "
+    "Title: ${name}\n"
+    "Slug: detectionstrategy-${attack_id}\n"
+    "url: /detectionstrategies/${attack_id}/\n"
+    "Template: detectionstrategies/detectionstrategy\n"
+    "save_as: detectionstrategies/${attack_id}/index.html\n"
+    "data: "
 )
 
 sidebar_detectionstrategies_md = (

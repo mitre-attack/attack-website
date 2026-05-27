@@ -22,6 +22,8 @@ mitigation_overview_md = (
 # String template for domains
 mitigation_domain_md = Template(
     "Title: Mitigations\n"
+    "Slug: mitigations-${domain}\n"
+    "url: /mitigations/${domain}/\n"
     "Template: mitigations/mitigations-domain-index\n"
     "save_as: mitigations/${domain}/index.html\n"
     "data: "
@@ -29,7 +31,12 @@ mitigation_domain_md = Template(
 
 # String template for all mitigations
 mitigation_md = Template(
-    "Title: ${name}-${domain}\nTemplate: mitigations/mitigation\nsave_as: mitigations/${attack_id}/index.html\ndata: "
+    "Title: ${name}-${domain}\n"
+    "Slug: mitigation-${attack_id}\n"
+    "url: /mitigations/${attack_id}/\n"
+    "Template: mitigations/mitigation\n"
+    "save_as: mitigations/${attack_id}/index.html\n"
+    "data: "
 )
 
 sidebar_mitigations_md = (
