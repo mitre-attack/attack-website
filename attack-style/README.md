@@ -54,3 +54,17 @@ To set up the ATT&CK Style package, follow these steps:
     ```
 
 The files are now ready to be used in the process to build the ATT&CK website!
+
+## Documentation
+
+Style documentation is maintained as Markdown files next to the SCSS source.
+Use these files as the source of truth for how each style folder is organized:
+
+* `abstracts/README.md`
+* `base/README.md`
+* `layout/README.md`
+* `components/README.md`
+* `themes/README.md`
+
+When adding or changing SCSS behavior, update the nearest Markdown file in the same folder.
+These docs are committed source files, not generated output.
