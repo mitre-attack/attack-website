@@ -52,6 +52,36 @@ describe('SearchService', () => {
         expect(tableResults).toEqual(data);
     });
 
+    test('Backup search index completes when FlexSearch exports fewer than nine persisted chunks', async () => {
+        const exportedChunks = [
+            ['title.1.map', 'title map data'],
+            ['content.1.map', 'content map data'],
+            ['content.1.ctx', 'content context data'],
+            ['1.reg', 'register data'],
+        ];
+
+        searchService.attackIndex = {
+            index: {
+                export: jest.fn((handler) => {
+                    exportedChunks.forEach(([key, value], index) => {
+                        setTimeout(() => handler(key, value), index);
+                    });
+                }),
+            },
+        };
+        searchService.searchIndexDb = {
+            put: jest.fn(() => Promise.resolve()),
+        };
+
+        const result = await Promise.race([
+            searchService.backupSearchIndex().then(() => 'completed'),
+            new Promise((resolve) => setTimeout(() => resolve('timed out'), 250)),
+        ]);
+
+        expect(result).toBe('completed');
+        expect(searchService.searchIndexDb.put).toHaveBeenCalledTimes(exportedChunks.length);
+    });
+
     test('Resolve search results', async () => {
         await searchService.initializeAsync(data);
         
