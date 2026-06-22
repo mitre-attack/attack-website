@@ -190,25 +190,46 @@ module.exports = class SearchService {
    * @returns {Promise<Array<string>>}
    */
   async backupSearchIndex() {
+    return new Promise((resolve, reject) => {
+      let idleTimer = null;
+      let pendingWrites = 0;
+      let settled = false;
 
-    const keys = [];
-    let processedKeys = 0;
+      const resolveWhenIdle = () => {
+        clearTimeout(idleTimer);
+        idleTimer = setTimeout(() => {
+          if (!settled && pendingWrites === 0) {
+            settled = true;
+            resolve(true);
+          }
+        }, 100);
+      };
 
-    // totalKeys(x) = (3 * #searchFields) + 3
-    //                          ^
-    //                    title + content --> 2 fields
-    const totalKeys = 9;
+      const rejectOnce = (error) => {
+        if (settled) return;
+        settled = true;
+        clearTimeout(idleTimer);
+        reject(error);
+      };
 
-    return new Promise((resolve) => {
-      this.attackIndex.index.export(async (key, data) => {
-        await this.searchIndexDb.put({ key, data });
-        keys.push(key);
-        processedKeys++;
+      this.attackIndex.index.export((key, data) => {
+        clearTimeout(idleTimer);
 
-        if (processedKeys === totalKeys) {
-          resolve(true);
+        if (data === undefined) {
+          resolveWhenIdle();
+          return null;
         }
+
+        pendingWrites++;
+        return this.searchIndexDb.put({ key, data })
+          .catch(rejectOnce)
+          .finally(() => {
+            pendingWrites--;
+            resolveWhenIdle();
+          });
       });
+
+      resolveWhenIdle();
     });
   }
 
