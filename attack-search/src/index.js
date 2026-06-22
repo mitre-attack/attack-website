@@ -10,7 +10,12 @@ const $ = require('jquery');
  */
 
 // Import required modules with the correct file extension
-const { baseURL, searchCacheSchemaVersion, searchFilePaths } = require('./settings.js');
+const {
+  baseURL,
+  searchCacheCompatibilityVersion,
+  searchCacheSchemaVersion,
+  searchFilePaths,
+} = require('./settings.js');
 const Debouncer = require('./debouncer.js');
 const SearchService = require('./search-service.js');
 const { loadSearchDocuments } = require('./search-loader.js');
@@ -26,7 +31,8 @@ const {
   closeButton,
 } = require('./components.js');
 
-const searchCacheKey = `saved_uuid_search_schema_${searchCacheSchemaVersion}`;
+const searchCacheVersion = `${searchCacheSchemaVersion}-${searchCacheCompatibilityVersion}`;
+const searchCacheKey = `saved_uuid_search_schema_${searchCacheVersion}`;
 let searchService;
 let openFilterDropdownKey = null;
 
@@ -89,7 +95,7 @@ async function initializeSearchService() {
   searchParsingIcon.show();
 
   const saved_uuid = localStorage.getItem(searchCacheKey);
-  const cachedBuildId = `${build_uuid}-search-${searchCacheSchemaVersion}`;
+  const cachedBuildId = `${build_uuid}-search-${searchCacheVersion}`;
   console.debug(`Retrieved the saved_uuid from localStorage: ${saved_uuid}`);
 
   // Check if the browser supports IndexedDB. Search service can only work in environments that support IndexedDB.

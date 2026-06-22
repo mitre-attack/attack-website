@@ -83,6 +83,16 @@ describe('search event bindings', () => {
     expect(eventsForSelector('[data-search-filter-reset]')).toContain('touchend');
   });
 
+  test('search cache key includes the serialized index compatibility version', () => {
+    const { searchCacheCompatibilityVersion, searchCacheSchemaVersion } = require('../src/settings');
+
+    require('../src/index');
+
+    expect(global.localStorage.getItem).toHaveBeenCalledWith(
+      `saved_uuid_search_schema_${searchCacheSchemaVersion}-${searchCacheCompatibilityVersion}`,
+    );
+  });
+
   test('dropdown toggles open before the search service is initialized', () => {
     require('../src/index');
 
