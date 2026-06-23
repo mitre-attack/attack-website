@@ -166,7 +166,7 @@ module.exports = class SearchService {
       this.maxSearchResults = searchableDocuments.length;
 
       // Add the data to the in-memory FlexSearch instance
-      this.attackIndex.addBulk(searchableDocuments);
+      await this.attackIndex.addBulk(searchableDocuments);
 
       console.debug('Backing up search index...');
 
