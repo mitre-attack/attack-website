@@ -1,7 +1,7 @@
 const baseURL = ''; // TODO migrate from base_url (generated via Pelican)
 const packageJson = require('../package.json');
 
-const searchCacheSchemaVersion = 2;
+const searchCacheSchemaVersion = 3;
 const flexSearchVersion = packageJson.dependencies.flexsearch.replace(/^[^\d]*/, '');
 const searchCacheCompatibilityVersion = `flexsearch-${flexSearchVersion}`;
 
