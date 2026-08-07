@@ -482,23 +482,20 @@ def get_stix_memory_stores():
     ms = {}
     srcs = []
 
-    stix_output_dir = Path(f"{site_config.web_directory}/stix")
-    stix_output_dir.mkdir(parents=True, exist_ok=True)
-
     for domain in site_config.domains:
-        stix_filename = None
         logger.info(f"Loading {domain['name']} domain STIX from: {domain['location']}")
 
         # Download json from http or https
-        stix_filename = f"{stix_output_dir}/{domain['name']}.json"
+        stix_filename = get_stix_file_path(domain_name=domain["name"])
+        stix_filename.parent.mkdir(parents=True, exist_ok=True)
         if domain["location"].startswith("http"):
-            download_stix_file(url=domain["location"], filepath=stix_filename)
+            download_stix_file(url=domain["location"], filepath=str(stix_filename))
         else:
             shutil.copy(domain["location"], str(stix_filename))
 
         if os.path.exists(stix_filename):
             ms[domain["name"]] = stix2.MemoryStore()
-            ms[domain["name"]].load_from_file(stix_filename)
+            ms[domain["name"]].load_from_file(str(stix_filename))
         else:
             logger.error(f"\n{stix_filename} file does not exist.")
             exit()
@@ -507,6 +504,11 @@ def get_stix_memory_stores():
             srcs.append(ms[domain["name"]])
 
     return ms, srcs
+
+
+def get_stix_file_path(domain_name: str) -> Path:
+    """Return the path where a domain's STIX bundle is materialized."""
+    return Path(site_config.web_directory) / "stix" / f"{domain_name}.json"
 
 
 def get_contributors(ms):
