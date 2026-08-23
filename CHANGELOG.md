@@ -1,5 +1,11 @@
 # Website Changelog
 
+## Unreleased
+
+### Bug Fixes
+
+* Settle the search index write when an IndexedDB write fails, instead of leaving the promise pending and the search spinner up.
+
 ## v5.0.0 (2026-08-06)
 
 * Release ATT&CK content version 19.2.
