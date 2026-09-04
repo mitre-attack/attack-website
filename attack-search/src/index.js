@@ -89,6 +89,23 @@ const closeSearch = function () {
 // Variable to check if search service is loaded
 let searchServiceIsLoaded = false;
 
+// Set once the index cannot be built at all. Without it `search` waits for a flag that is
+// never going to flip and the parsing spinner runs for as long as the page is open.
+let searchServiceUnavailable = false;
+
+// Put the search controls into their unavailable state and explain why on hover.
+function markSearchUnavailable(reason) {
+  searchServiceUnavailable = true;
+  searchServiceIsLoaded = false;
+  searchInput.prop('disabled', true);
+  searchButton.prop('disabled', true);
+  searchIcon.removeClass('search-icon');
+  searchIcon.addClass('error-icon');
+  searchButton.prop('title', reason);
+}
+
+const SEARCH_INDEX_FAILED_MESSAGE = 'The search index could not be built. Reload the page to try again.';
+
 // Initialize the search service
 async function initializeSearchService() {
   console.debug('Initializing search service...');
@@ -111,12 +128,12 @@ async function initializeSearchService() {
         await searchService.initializeAsync(null); // Passing null will instruct the search service to attempt
         // restoring itself from the IndexedDB
         console.debug('SearchService is initialized.');
+        searchServiceIsLoaded = true;
       } catch (error) {
         console.error('Failed to initialize SearchService:', error);
-        searchServiceIsLoaded = false;
+        markSearchUnavailable(SEARCH_INDEX_FAILED_MESSAGE);
       } finally {
         searchParsingIcon.hide();
-        searchServiceIsLoaded = true;
       }
     }
     else {
@@ -139,18 +156,14 @@ async function initializeSearchService() {
         .catch(error => {
           console.error('Failed to initialize SearchService:', error);
           searchParsingIcon.hide();
-          searchServiceIsLoaded = false;
+          markSearchUnavailable(SEARCH_INDEX_FAILED_MESSAGE);
         });
     }
   }
   else {
     // Disable the search button and display an error icon with a hover effect that displays a message/explanation
     console.error('Search is only available in browsers that support IndexedDB. Please try using Firefox, Chrome, Safari, or another browser that supports IndexedDB.');
-    searchInput.prop('disabled', true);
-    searchButton.prop('disabled', true);
-    searchIcon.removeClass('search-icon');
-    searchIcon.addClass('error-icon');
-    searchButton.prop('title', 'To use the search feature, please make sure your browser supports IndexedDB. If not, consider upgrading your browser or switching to a supported browser such as Firefox, Chrome, or Safari.')
+    markSearchUnavailable('To use the search feature, please make sure your browser supports IndexedDB. If not, consider upgrading your browser or switching to a supported browser such as Firefox, Chrome, or Safari.');
   }
 }
 
@@ -158,11 +171,16 @@ async function initializeSearchService() {
 const search = async function (query) {
   console.debug(`search -> Received search query: ${query}`);
 
-  // Wait until the search service is loaded
-  while (!searchServiceIsLoaded) {
+  // Wait until the search service is loaded, or until we know it never will be.
+  while (!searchServiceIsLoaded && !searchServiceUnavailable) {
     console.debug('search -> search index is not loaded...');
     searchParsingIcon.show();
     await new Promise(resolve => setTimeout(resolve, 100));
+  }
+
+  if (searchServiceUnavailable) {
+    searchParsingIcon.hide();
+    return;
   }
 
   console.debug(`Executing search: ${query}`);

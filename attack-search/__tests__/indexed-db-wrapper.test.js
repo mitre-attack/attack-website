@@ -57,4 +57,29 @@ describe('IndexedDBWrapper', () => {
         const count = await contentDb.count();
         expect(count).toEqual(data.length);
     });
+
+    // A failed write must settle the promise. Racing against a sentinel tells a
+    // rejection apart from a promise that never settles at all, which a plain
+    // rejects assertion cannot do: it would time out and look like a slow test.
+    const settle = (promise) => Promise.race([
+        promise.then(() => 'resolved', (error) => `rejected:${error.message}`),
+        new Promise((resolve) => setTimeout(() => resolve('HUNG'), 1000)),
+    ]);
+
+    test('Bulk put rejects when the underlying write fails', async () => {
+        jest.spyOn(contentDb.indexeddb[contentDb.tableName], 'bulkPut')
+            .mockRejectedValue(new Error('QuotaExceededError'));
+
+        await expect(settle(contentDb.bulkPut(data))).resolves.toBe('rejected:QuotaExceededError');
+    });
+
+    test('Bulk put rejects when a later chunk fails', async () => {
+        let calls = 0;
+        jest.spyOn(contentDb.indexeddb[contentDb.tableName], 'bulkPut')
+            .mockImplementation(() => (++calls === 2
+                ? Promise.reject(new Error('DatabaseClosedError'))
+                : Promise.resolve()));
+
+        await expect(settle(contentDb.bulkPut(data, 1))).resolves.toBe('rejected:DatabaseClosedError');
+    });
 });
