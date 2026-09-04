@@ -5,7 +5,7 @@
 ### Bug Fixes
 
 * Settle the search index write when an IndexedDB write fails, instead of leaving the promise pending and the search spinner up.
-* Disable the search controls and explain why when the search index cannot be built, instead of leaving the spinner running for as long as the page is open.
+* Disable the search controls and explain why when the search index cannot be built, instead of leaving the spinner running for as long as the page is open. A failed restore from the cached index is no longer reported as a successful load.
 
 ## v5.0.0 (2026-08-06)
 
