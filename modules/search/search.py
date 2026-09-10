@@ -29,6 +29,7 @@ object_path_prefixes = {
     "x-mitre-data-component": "datacomponents",
     "x-mitre-detection-strategy": "detectionstrategies",
 }
+searchable_object_path_prefixes = set(object_path_prefixes.values()) | {"techniques"}
 
 
 def generate_index():
@@ -64,6 +65,7 @@ def generate_index():
                         "title": title,
                         "path": path,
                         "content": cleancontent,
+                        "attackId": get_search_attack_id(path),
                         "pageType": file_type,
                         "domains": get_domains(title, path, domain_lookup),
                     }
@@ -134,6 +136,19 @@ def get_page_type(path):
 def should_skip_search_path(path):
     """Return whether a generated path is a helper page that should not be searchable."""
     return bool(re.search(r"/sidebar-[^/]+/index\.html$", path))
+
+
+def get_search_attack_id(path):
+    """Return the ATT&CK ID represented by a canonical object detail-page path."""
+    subtechnique_match = re.fullmatch(r"/techniques/(T\d+)/(\d{3})/index\.html", path)
+    if subtechnique_match:
+        return f"{subtechnique_match.group(1)}.{subtechnique_match.group(2)}"
+
+    object_match = re.fullmatch(r"/([^/]+)/([A-Z]+\d+(?:\.\d+)?)/index\.html", path)
+    if object_match and object_match.group(1) in searchable_object_path_prefixes:
+        return object_match.group(2)
+
+    return None
 
 
 def get_domains(title, path=None, domain_lookup=None):

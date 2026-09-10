@@ -22,11 +22,17 @@ describe('SearchService', () => {
     });
 
     beforeEach(() => {
+        global.base_url = '/';
         searchService = new SearchService('search-service', null);
+        searchService.render_container = {
+            append: jest.fn(),
+            html: jest.fn(),
+        };
     });
 
     afterEach(async () => {
         searchService = null;
+        delete global.base_url;
     });
 
     it('Access data from mock-index.json', () => {
@@ -110,5 +116,94 @@ describe('SearchService', () => {
             expect(doc.id).toEqual(positions[index]);
         });
 
+    });
+
+    test('Keeps only exact ATT&CK ID matches and references, with the object first', async () => {
+        const documents = {
+            1: {
+                id: 1,
+                title: 'TA577, Group G1037',
+                path: '/groups/G1037/index.html',
+                content: 'A group with no reference to the queried technique.',
+                attackId: 'G1037',
+            },
+            2: {
+                id: 2,
+                title: 'Ingress Tool Transfer, Technique T1105 - Enterprise',
+                path: '/techniques/T1105/index.html',
+                content: 'The T1105 technique.',
+                attackId: 'T1105',
+            },
+            3: {
+                id: 3,
+                title: 'A valid reference',
+                path: '/resources/reference/index.html',
+                content: 'This page references T1105.',
+            },
+        };
+        searchService.attackIndex.search = jest.fn().mockResolvedValue([{ field: 'title', result: [1, 2, 3] }]);
+        searchService.resolveSearchResults = jest.fn(async positions => positions.map(position => documents[position]));
+
+        await searchService.query('t1105');
+
+        expect(searchService.allSearchResults.map(result => result.id)).toEqual([2, 3]);
+    });
+
+    test('Treats a four-digit query as an exact ATT&CK ID suffix search', async () => {
+        const documents = {
+            1: {
+                id: 1,
+                title: 'TA577, Group G1037',
+                path: '/groups/G1037/index.html',
+                content: 'A group with no reference to the queried technique.',
+                attackId: 'G1037',
+            },
+            2: {
+                id: 2,
+                title: 'Data from Local System, Technique T1005 - Enterprise',
+                path: '/techniques/T1005/index.html',
+                content: 'The T1005 technique.',
+                attackId: 'T1005',
+            },
+            3: {
+                id: 3,
+                title: 'Matching software, Software S1005',
+                path: '/software/S1005/index.html',
+                content: 'The S1005 software.',
+                attackId: 'S1005',
+            },
+            4: {
+                id: 4,
+                title: 'A valid reference',
+                path: '/resources/reference/index.html',
+                content: 'This page references T1005.',
+            },
+            5: {
+                id: 5,
+                title: 'Data from Local System: Archive Collected Data, Sub-technique T1005.001',
+                path: '/techniques/T1005/001/index.html',
+                content: 'The T1005.001 sub-technique.',
+                attackId: 'T1005.001',
+            },
+        };
+        searchService.attackIndex.search = jest.fn().mockResolvedValue([{ field: 'title', result: [1, 3, 4, 2, 5] }]);
+        searchService.resolveSearchResults = jest.fn(async positions => positions.map(position => documents[position]));
+
+        await searchService.query('1005');
+
+        expect(searchService.allSearchResults.map(result => result.id)).toEqual([2, 5, 3, 4]);
+    });
+
+    test('Preserves result ordering for non-ID queries', async () => {
+        const documents = {
+            1: { id: 1, title: 'First result', path: '/resources/faq/index.html', content: 'Resources' },
+            2: { id: 2, title: 'Second result', path: '/resources/attackcon/index.html', content: 'Resources' },
+        };
+        searchService.attackIndex.search = jest.fn().mockResolvedValue([{ field: 'title', result: [1, 2] }]);
+        searchService.resolveSearchResults = jest.fn(async positions => positions.map(position => documents[position]));
+
+        await searchService.query('Resources');
+
+        expect(searchService.allSearchResults.map(result => result.id)).toEqual([1, 2]);
     });
 });
