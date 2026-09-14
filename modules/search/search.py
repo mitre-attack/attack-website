@@ -28,8 +28,9 @@ object_path_prefixes = {
     "x-mitre-asset": "assets",
     "x-mitre-data-component": "datacomponents",
     "x-mitre-detection-strategy": "detectionstrategies",
+    "x-mitre-tactic": "tactics",
 }
-searchable_object_path_prefixes = set(object_path_prefixes.values()) | {"techniques"}
+attack_id_path_prefixes = set(object_path_prefixes.values()) | {"techniques"}
 
 
 def generate_index():
@@ -145,7 +146,7 @@ def get_search_attack_id(path):
         return f"{subtechnique_match.group(1)}.{subtechnique_match.group(2)}"
 
     object_match = re.fullmatch(r"/([^/]+)/([A-Z]+\d+(?:\.\d+)?)/index\.html", path)
-    if object_match and object_match.group(1) in searchable_object_path_prefixes:
+    if object_match and object_match.group(1) in attack_id_path_prefixes:
         return object_match.group(2)
 
     return None

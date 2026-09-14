@@ -194,6 +194,30 @@ describe('SearchService', () => {
         expect(searchService.allSearchResults.map(result => result.id)).toEqual([2, 5, 3, 4]);
     });
 
+    test.each(['TA0001', '0001'])('Promotes a tactic page for ATT&CK ID query %s', async (query) => {
+        const documents = {
+            1: {
+                id: 1,
+                title: 'A valid reference',
+                path: '/resources/reference/index.html',
+                content: 'This page references TA0001.',
+            },
+            2: {
+                id: 2,
+                title: 'Initial Access, Tactic TA0001 - Enterprise',
+                path: '/tactics/TA0001/index.html',
+                content: 'The TA0001 tactic.',
+                attackId: 'TA0001',
+            },
+        };
+        searchService.attackIndex.search = jest.fn().mockResolvedValue([{ field: 'title', result: [1, 2] }]);
+        searchService.resolveSearchResults = jest.fn(async positions => positions.map(position => documents[position]));
+
+        await searchService.query(query);
+
+        expect(searchService.allSearchResults.map(result => result.id)).toEqual([2, 1]);
+    });
+
     test('Preserves result ordering for non-ID queries', async () => {
         const documents = {
             1: { id: 1, title: 'First result', path: '/resources/faq/index.html', content: 'Resources' },
