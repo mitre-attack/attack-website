@@ -1,10 +1,11 @@
 # ATT&CK Style
 
 ATT&CK Style is a JavaScript package that builds the CSS styles for the ATT&CK website.
-The outputs are simply 2 CSS files:
+The outputs are 3 CSS files:
 
 * `dist/style-attack.css`
 * `dist/style-user.css`
+* `dist/style-archive.css` (preserved-site appearance compatibility)
 
 These files are then copied into `<ATT&CK-website-git-repo>/attack-theme/static/`.
 Currently this is done manually - no automation.
@@ -47,7 +48,7 @@ To set up the ATT&CK Style package, follow these steps:
 
 2. **Copy CSS Files**:
 
-   Copy both `dist/style-attack.css` and `dist/style-user.css` to `<ATT&CK-website-git-repo>/attack-theme/static/`.
+   Copy `dist/style-attack.css`, `dist/style-user.css`, and `dist/style-archive.css` to `<ATT&CK-website-git-repo>/attack-theme/static/`.
 
     ```bash
     npm run copy
