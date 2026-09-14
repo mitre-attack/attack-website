@@ -104,6 +104,23 @@ function markSearchUnavailable(reason) {
   searchButton.prop('title', reason);
 }
 
+// Remove a failed cached index so the next page load rebuilds it instead of retrying
+// the same restore path. Cache cleanup is best-effort and must not mask the original
+// initialization failure or prevent the unavailable UI state from being shown.
+async function invalidateSearchCache() {
+  try {
+    localStorage.removeItem(searchCacheKey);
+  } catch (error) {
+    console.error('Failed to remove the search cache marker:', error);
+  }
+
+  try {
+    await searchService.db.indexeddb.delete();
+  } catch (error) {
+    console.error('Failed to delete the cached search index:', error);
+  }
+}
+
 const SEARCH_INDEX_FAILED_MESSAGE = 'The search index could not be built. Reload the page to try again.';
 
 // Initialize the search service
@@ -132,6 +149,7 @@ async function initializeSearchService() {
       } catch (error) {
         console.error('Failed to initialize SearchService:', error);
         markSearchUnavailable(SEARCH_INDEX_FAILED_MESSAGE);
+        await invalidateSearchCache();
       } finally {
         searchParsingIcon.hide();
       }

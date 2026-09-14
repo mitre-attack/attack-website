@@ -129,12 +129,14 @@ describe('search event bindings', () => {
   });
 
   test('a failed restore from the cache is not reported as a successful load', async () => {
-    await loadIndexWithAFailingWarmRestore();
+    const { cacheKey, deleteCachedDatabase } = await loadIndexWithAFailingWarmRestore();
 
     // The catch used to set the loaded flag false and the finally set it straight back to
     // true, so `search` went on to query an index that was never populated.
     expect(mockJqueryApis['#search-input'].prop).toHaveBeenCalledWith('disabled', true);
     expect(mockJqueryApis['#search-icon'].addClass).toHaveBeenCalledWith('error-icon');
+    expect(global.localStorage.removeItem).toHaveBeenCalledWith(cacheKey);
+    expect(deleteCachedDatabase).toHaveBeenCalledTimes(1);
   });
 
   test('a failed index build puts the search controls into their unavailable state', async () => {
@@ -172,11 +174,17 @@ async function loadIndexWithAFailingColdStart() {
 async function loadIndexWithAFailingWarmRestore() {
   const { searchCacheCompatibilityVersion, searchCacheSchemaVersion } = require('../src/settings');
   const version = `${searchCacheSchemaVersion}-${searchCacheCompatibilityVersion}`;
+  const cacheKey = `saved_uuid_search_schema_${version}`;
+  const deleteCachedDatabase = jest.fn(() => Promise.resolve());
 
   global.window = { indexedDB: {} };
   global.localStorage.getItem.mockReturnValue(`${global.build_uuid}-search-${version}`);
 
   jest.doMock('../src/search-service.js', () => class {
+    constructor() {
+      this.db = { indexeddb: { delete: deleteCachedDatabase } };
+    }
+
     initializeAsync() {
       return Promise.reject(new Error('cached index is unreadable'));
     }
@@ -184,6 +192,8 @@ async function loadIndexWithAFailingWarmRestore() {
 
   require('../src/index');
   await new Promise(resolve => setImmediate(resolve));
+
+  return { cacheKey, deleteCachedDatabase };
 }
 
 function eventsForSelector(selector) {
