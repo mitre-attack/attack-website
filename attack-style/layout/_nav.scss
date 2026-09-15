@@ -11,6 +11,24 @@
   text-decoration: underline;
 }
 
+@mixin dark-theme-toggle {
+  .theme-toggle-track {
+    background: color-functions.color(secondary);
+  }
+
+  .theme-toggle-icon-light {
+    color: color-functions.on-color(primary);
+  }
+
+  .theme-toggle-icon-dark {
+    color: color-functions.color(secondary);
+  }
+
+  .theme-toggle-thumb {
+    transform: translateX(utilities.to-rem(22));
+  }
+}
+
 /* Top NAVIGATION */ // top navigation bar across the web site
 .navbar {
   background-color: color-functions.color(primary);
@@ -124,7 +142,11 @@
       position: relative;
       z-index: 2;
       visibility: visible;
-      display: inline-block;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: utilities.to-rem(12);
+      height: utilities.to-rem(12);
       font-size: utilities.to-rem(12);
       line-height: 1;
     }
@@ -137,6 +159,11 @@
         background: rgb(0 0 0 / 35%);
         box-shadow: 0 0 0 utilities.to-rem(2) rgb(255 255 255 / 30%);
       }
+    }
+
+    &:focus {
+      outline: 0;
+      box-shadow: none;
     }
 
     .theme-toggle-icon-light {
@@ -157,20 +184,18 @@
     }
 
     &[data-theme-effective="dark"] {
-      .theme-toggle-track {
-        background: color-functions.color(secondary);
-      }
+      @include dark-theme-toggle;
+    }
 
-      .theme-toggle-icon-light {
-        color: color-functions.on-color(primary);
-      }
+    // The theme script sets the root preference in the document head. Use it to
+    // paint the saved state before DOMContentLoaded initializes the control.
+    :root[data-theme="dark"] & {
+      @include dark-theme-toggle;
+    }
 
-      .theme-toggle-icon-dark {
-        color: color-functions.color(secondary);
-      }
-
-      .theme-toggle-thumb {
-        transform: translateX(utilities.to-rem(22));
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme]) & {
+        @include dark-theme-toggle;
       }
     }
   }

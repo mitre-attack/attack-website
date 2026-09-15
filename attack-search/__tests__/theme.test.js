@@ -251,6 +251,27 @@ describe('site theme', () => {
     expect(colors).toContain('--attack-color-banner: #263a49;');
   });
 
+  test('renders the matrix Navigator link with a theme-aware icon', () => {
+    const matrix = fs.readFileSync(
+      path.join(__dirname, '../../modules/matrices/templates/matrix.html'),
+      'utf8',
+    );
+
+    expect(matrix).toContain('fa-up-right-from-square');
+    expect(matrix).not.toContain('external-site-dark.jpeg');
+  });
+
+  test('paints the initial toggle state from the root theme and suppresses the Bootstrap focus ring', () => {
+    const nav = fs.readFileSync(
+      path.join(__dirname, '../../attack-style/layout/_nav.scss'),
+      'utf8',
+    );
+
+    expect(nav).toContain(':root[data-theme="dark"] &');
+    expect(nav).toContain(':root:not([data-theme]) &');
+    expect(nav).toMatch(/&:focus\s*\{\s*outline: 0;\s*box-shadow: none;/);
+  });
+
   test('uses a warm metadata label color only in dark mode', () => {
     const colors = fs.readFileSync(
       path.join(__dirname, '../../attack-style/themes/_palette.scss'),
