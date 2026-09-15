@@ -155,6 +155,22 @@
             updateControl();
         }
 
+        function handleToggleClick(event) {
+            if (!event.target || typeof event.target.closest !== 'function') return;
+
+            const clickedToggle = event.target.closest('[data-theme-toggle]');
+            if (!clickedToggle) return;
+
+            event.preventDefault();
+            toggle = clickedToggle;
+            const currentTheme = effectiveTheme(preference, systemTheme);
+            setPreference(currentTheme === 'dark' ? 'light' : 'dark');
+        }
+
+        // The head script runs before the toggle markup is parsed. Delegation makes
+        // the visible control interactive without waiting for DOMContentLoaded.
+        document.addEventListener('click', handleToggleClick);
+
         function handleSystemThemeChange() {
             if (preference === 'system') updateControl();
         }
@@ -183,14 +199,6 @@
                     toggle.textContent = 'Dark mode';
                     banner.appendChild(toggle);
                 }
-            }
-
-            if (toggle) {
-                toggle.addEventListener('click', event => {
-                    event.preventDefault();
-                    const currentTheme = effectiveTheme(preference, systemTheme);
-                    setPreference(currentTheme === 'dark' ? 'light' : 'dark');
-                });
             }
 
             if (typeof systemTheme.addEventListener === 'function') {

@@ -107,6 +107,38 @@ describe('site theme', () => {
     expect(fixture.storage.setItem).toHaveBeenCalledWith(theme.STORAGE_KEY, expectedPreference);
   });
 
+  test('handles toggle clicks before DOMContentLoaded without double toggling after initialization', () => {
+    const fixture = createControllerFixture({ storedPreference: 'dark' });
+    fixture.document.readyState = 'loading';
+
+    theme.bootstrap(fixture);
+
+    // The stored preference is still applied synchronously to prevent a light-theme flash.
+    expect(fixture.document.documentElement.setAttribute).toHaveBeenLastCalledWith('data-theme', 'dark');
+
+    fixture.document.dispatchClick({ closest: jest.fn(() => fixture.toggle) });
+
+    expect(fixture.storage.setItem).toHaveBeenLastCalledWith(theme.STORAGE_KEY, 'light');
+    expect(fixture.toggle.setAttribute).toHaveBeenCalledWith('aria-checked', 'false');
+
+    fixture.document.dispatchDOMContentLoaded();
+    fixture.toggle.click();
+
+    expect(fixture.storage.setItem).toHaveBeenLastCalledWith(theme.STORAGE_KEY, 'dark');
+    expect(fixture.storage.setItem).toHaveBeenCalledTimes(2);
+    expect(fixture.toggle.setAttribute).toHaveBeenCalledWith('aria-checked', 'true');
+  });
+
+  test('ignores delegated clicks outside the theme toggle', () => {
+    const fixture = createControllerFixture();
+    const controller = theme.createThemeController(fixture);
+
+    fixture.document.dispatchClick({ closest: jest.fn(() => null) });
+    controller.init();
+
+    expect(fixture.storage.setItem).not.toHaveBeenCalled();
+  });
+
   test('continues applying a choice when storage access fails', () => {
     const fixture = createControllerFixture();
     fixture.storage.setItem.mockImplementation(() => {
@@ -309,20 +341,33 @@ function createRoot() {
 
 function createElement() {
   const listeners = {};
-  return {
+  let dispatchClick;
+  const element = {
     classList: { toggle: jest.fn() },
     setAttribute: jest.fn(),
     addEventListener: jest.fn((eventName, listener) => {
       listeners[eventName] = listener;
     }),
-    click: () => listeners.click({ preventDefault: jest.fn() }),
+    closest: jest.fn(selector => (selector === '[data-theme-toggle]' ? element : null)),
+    connectClickDispatcher: dispatcher => {
+      dispatchClick = dispatcher;
+    },
+    click: () => {
+      const event = { preventDefault: jest.fn(), target: element };
+      if (listeners.click) listeners.click(event);
+      if (dispatchClick) dispatchClick(event);
+    },
   };
+
+  return element;
 }
 
 function createControllerFixture({ storedPreference = null, systemDark = false } = {}) {
   const root = createRoot();
   const toggle = createElement();
   let changeListener;
+  let clickListener;
+  let domContentLoadedListener;
   let storageListener;
   const mediaQuery = {
     matches: systemDark,
@@ -334,6 +379,12 @@ function createControllerFixture({ storedPreference = null, systemDark = false }
   const document = {
     documentElement: root,
     querySelector: jest.fn(selector => (selector === '[data-theme-toggle]' ? toggle : null)),
+    addEventListener: jest.fn((eventName, listener) => {
+      if (eventName === 'click') clickListener = listener;
+      if (eventName === 'DOMContentLoaded') domContentLoadedListener = listener;
+    }),
+    dispatchClick: target => clickListener({ preventDefault: jest.fn(), target }),
+    dispatchDOMContentLoaded: () => domContentLoadedListener(),
     defaultView: {
       addEventListener: jest.fn((eventName, listener) => {
         if (eventName === 'storage') storageListener = listener;
@@ -341,6 +392,7 @@ function createControllerFixture({ storedPreference = null, systemDark = false }
       dispatchStorage: event => storageListener(event),
     },
   };
+  toggle.connectClickDispatcher(event => clickListener(event));
 
   return {
     document,
