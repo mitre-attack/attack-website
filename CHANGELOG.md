@@ -1,5 +1,11 @@
 # Website Changelog
 
+## Unreleased
+
+### Features
+
+* Add dark mode!
+
 ## v5.0.0 (2026-08-06)
 
 * Release ATT&CK content version 19.2.

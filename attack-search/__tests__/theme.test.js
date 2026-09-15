@@ -145,6 +145,48 @@ describe('site theme', () => {
     expect(fixture.toggle.setAttribute).toHaveBeenCalledWith('aria-label', 'Switch to dark mode');
   });
 
+  test('synchronizes a theme change from another tab without writing it back', () => {
+    const fixture = createControllerFixture({ storedPreference: 'light' });
+    theme.createThemeController(fixture).init();
+
+    fixture.storage.getItem.mockReturnValue('dark');
+    fixture.document.defaultView.dispatchStorage({
+      key: theme.STORAGE_KEY,
+      storageArea: fixture.storage,
+    });
+
+    expect(fixture.document.documentElement.setAttribute).toHaveBeenLastCalledWith('data-theme', 'dark');
+    expect(fixture.toggle.setAttribute).toHaveBeenCalledWith('aria-checked', 'true');
+    expect(fixture.storage.setItem).not.toHaveBeenCalled();
+    fixture.toggle.click();
+    expect(fixture.storage.setItem).toHaveBeenCalledWith(theme.STORAGE_KEY, 'light');
+  });
+
+  test.each([null, 'attack-website-theme'])('returns to the system theme after storage removal (%s)', key => {
+    const fixture = createControllerFixture({ storedPreference: 'dark', systemDark: false });
+    theme.createThemeController(fixture).init();
+
+    fixture.storage.getItem.mockReturnValue(null);
+    fixture.document.defaultView.dispatchStorage({ key, storageArea: fixture.storage });
+
+    expect(fixture.document.documentElement.removeAttribute).toHaveBeenCalledWith('data-theme');
+    expect(fixture.toggle.setAttribute).toHaveBeenCalledWith('aria-checked', 'false');
+    fixture.mediaQuery.matches = true;
+    fixture.mediaQuery.dispatchChange();
+    expect(fixture.toggle.setAttribute).toHaveBeenLastCalledWith('data-theme-effective', 'dark');
+  });
+
+  test('ignores unrelated storage keys and storage areas', () => {
+    const fixture = createControllerFixture({ storedPreference: 'light' });
+    theme.createThemeController(fixture).init();
+    fixture.storage.getItem.mockClear();
+
+    fixture.document.defaultView.dispatchStorage({ key: 'other', storageArea: fixture.storage });
+    fixture.document.defaultView.dispatchStorage({ key: theme.STORAGE_KEY, storageArea: createStorage('dark') });
+
+    expect(fixture.storage.getItem).not.toHaveBeenCalled();
+  });
+
   test('loads the early theme script before styles and renders one toggle before search', () => {
     const template = fs.readFileSync(
       path.join(__dirname, '../../attack-theme/templates/general/base-template.html'),
@@ -157,7 +199,8 @@ describe('site theme', () => {
 
     expect(template).toContain('<meta name="color-scheme" content="light dark">');
     expect(template.indexOf('/theme/scripts/theme.js')).toBeLessThan(template.indexOf('bootstrap.min.css'));
-    expect(navigation.indexOf('data-theme-toggle')).toBeLessThan(navigation.indexOf('id="search-button"'));
+    expect(navigation.match(/\bdata-theme-toggle(?=[\s>])/g)).toHaveLength(1);
+    expect(navigation.indexOf('id="theme-toggle"')).toBeLessThan(navigation.indexOf('id="search-button"'));
     expect(navigation).toContain('role="switch"');
     expect(navigation).toContain('class="theme-toggle-track"');
     expect(navigation).toContain('class="theme-toggle-thumb"');
@@ -259,6 +302,7 @@ function createControllerFixture({ storedPreference = null, systemDark = false }
   const root = createRoot();
   const toggle = createElement();
   let changeListener;
+  let storageListener;
   const mediaQuery = {
     matches: systemDark,
     addEventListener: jest.fn((eventName, listener) => {
@@ -269,6 +313,12 @@ function createControllerFixture({ storedPreference = null, systemDark = false }
   const document = {
     documentElement: root,
     querySelector: jest.fn(selector => (selector === '[data-theme-toggle]' ? toggle : null)),
+    defaultView: {
+      addEventListener: jest.fn((eventName, listener) => {
+        if (eventName === 'storage') storageListener = listener;
+      }),
+      dispatchStorage: event => storageListener(event),
+    },
   };
 
   return {

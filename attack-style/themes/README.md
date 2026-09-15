@@ -21,6 +21,8 @@ The site has two independent theme layers. The brand layer is selected at build 
 
 The light/dark appearance is selected at runtime. With no `data-theme` attribute on the root element, the stylesheet follows `prefers-color-scheme`. The single navigation toggle stores an explicit `data-theme="light"` or `data-theme="dark"` override after the user first switches themes.
 
+On collapsed navigation, the same toggle moves immediately left of the hamburger when it fits alongside the logo. If space is insufficient, it returns to its menu slot before Search; desktop keeps that original slot. Placement follows Bootstrap's hamburger visibility and measured element widths, including changes to the logo or browser size. Saved preferences synchronize across pages and open tabs on the same origin and browser profile.
+
 Most styling should use semantic color helpers from `abstracts/_color-functions.scss`. Add a token to `_palette.scss` when a component needs a distinct theme-aware surface or foreground instead of embedding a light-only color in that component.
 
 ## Preserved Sites
