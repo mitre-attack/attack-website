@@ -313,8 +313,82 @@ module.exports = class SearchService {
      *     ]
      */
 
-    this.allSearchResults = await this.#setSearchResults(results);
+    this.allSearchResults = this.#filterAndPromoteExactAttackIdMatches(await this.#setSearchResults(results));
     this.#renderFilteredSearchResults();
+  }
+
+  /**
+   * Limits ATT&CK ID searches to matching objects, their sub-techniques, and genuine references.
+   * Non-ID and multi-token queries retain FlexSearch's existing ordering.
+   *
+   * @private
+   * @param {Array<Object>} documents - Search results in their existing relevance order.
+   * @returns {Array<Object>} Exact ATT&CK ID results, with the matching object detail page first when applicable.
+   */
+  #filterAndPromoteExactAttackIdMatches(documents) {
+    const query = this.currentQuery.clean;
+    const isExactAttackId = /^[A-Z]+\d+(?:\.\d+)?$/i.test(query);
+    const isNumericIdSuffix = /^\d{4}$/.test(query);
+    // If user queries for normal text and not attack ids, normal search takes place
+    if (!isExactAttackId && !isNumericIdSuffix) return documents;
+
+    const normalizedQuery = query.toUpperCase();
+
+    // Collect the IDs stored on object-detail search records. Resource and reference pages have no attackId.
+    const candidateAttackIds = documents
+      .map(document => document.attackId?.toUpperCase())
+      .filter(Boolean);
+
+    let directAttackIds;
+    if (isExactAttackId) {
+      // A complete query such as T1005 refers directly to that one ID.
+      directAttackIds = [normalizedQuery];
+    } else {
+      // A numeric query such as 1005 may match T1005, S1005, or another complete ATT&CK ID.
+      const numericSuffixPattern = new RegExp(`^[A-Z]+${normalizedQuery}$`);
+      directAttackIds = [...new Set(candidateAttackIds.filter(attackId => numericSuffixPattern.test(attackId)))];
+    }
+
+    // Include sub-techniques of a matching parent technique, such as T1005.001 for a T1005 query.
+    const subTechniqueIds = candidateAttackIds.filter((attackId) => directAttackIds.some((directAttackId) => (
+      directAttackId.startsWith('T')
+      && !directAttackId.includes('.')
+      && attackId.startsWith(`${directAttackId}.`)
+    )));
+    const matchingAttackIds = [...new Set([...directAttackIds, ...subTechniqueIds])];
+    if (matchingAttackIds.length === 0) return [];
+
+    // Put parent techniques first, then their sub-techniques, followed by other matching ATT&CK object types.
+    const exactMatches = documents.filter(document => matchingAttackIds.includes(document.attackId?.toUpperCase()));
+    exactMatches.sort((first, second) => {
+      const firstIsTechnique = first.attackId.startsWith('T');
+      const secondIsTechnique = second.attackId.startsWith('T');
+      if (firstIsTechnique !== secondIsTechnique) return firstIsTechnique ? -1 : 1;
+
+      const firstIsSubTechnique = first.attackId.includes('.');
+      const secondIsSubTechnique = second.attackId.includes('.');
+      if (firstIsSubTechnique !== secondIsSubTechnique) return firstIsSubTechnique ? 1 : -1;
+
+      return 0;
+    });
+
+    // Escape dots in sub-technique IDs before making one expression that matches only whole IDs.
+    const escapedIds = matchingAttackIds.map(attackId => attackId.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
+    // A trailing period is valid sentence punctuation, unless it begins a sub-technique suffix such as .001.
+    const exactIdInText = new RegExp(
+      `(^|[^A-Z0-9.])(?:${escapedIds.join('|')})(?=$|[^A-Z0-9.]|\\.(?!\\d))`,
+      'i',
+    );
+
+    // Add pages that reference a matching ID, but do not add an object-detail page twice.
+    const referencedDocuments = documents.filter((document) => {
+      const title = document.title ?? '';
+      const content = document.content ?? '';
+      const referencesMatchingId = exactIdInText.test(title) || exactIdInText.test(content);
+      return referencesMatchingId && !exactMatches.includes(document);
+    });
+
+    return exactMatches.concat(referencedDocuments);
   }
 
   /**

@@ -185,18 +185,39 @@ def deploy_previous_version(version_data):
 
     if os.path.exists(archive_path):
         logger.info(f"{version_name}: extracting from local archive {archive_filename}")
-        extract_tar_gz(archive_path=archive_path, dest_path=dest_path)
-        return
-
-    if download_archive(url=archive_url, local_path=archive_path):
+    elif download_archive(url=archive_url, local_path=archive_path):
         logger.info(f"{version_name}: extracting downloaded archive {archive_filename}")
-        extract_tar_gz(archive_path=archive_path, dest_path=dest_path)
-        return
-
-    # this saves the cleaned up version archive for the future
-    logger.warning(f"{version_name}: download failed, falling back to git archive")
-    create_version_archive(version_data=version_data, output_dir=archive_dir)
+    else:
+        # This saves the cleaned up version archive for the future.
+        logger.warning(f"{version_name}: download failed, falling back to git archive")
+        create_version_archive(version_data=version_data, output_dir=archive_dir)
     extract_tar_gz(archive_path=archive_path, dest_path=dest_path)
+    add_archive_theme(dest_path)
+
+
+def add_archive_theme(version_path: str) -> None:
+    """Add appearance support to deployed archived pages without changing the saved archive.
+
+    Parameters
+    ----------
+    version_path : str
+        Directory containing the extracted historical site.
+    """
+    prefix = "/" + site_config.subdirectory.strip("/") if site_config.subdirectory else ""
+    theme_assets = (
+        f'<script src="{prefix}/theme/scripts/theme.js" data-archive-theme></script>\n'
+        f'<link rel="stylesheet" href="{prefix}/theme/style-archive.css">\n'
+    )
+    for path in Path(version_path).rglob("*.html"):
+        if not path.is_file():
+            continue
+        html = path.read_text(encoding="utf8")
+        # Sidebar fragments and redirects have no banner. Newer archives may
+        # already have native theme support and must not receive a second UI.
+        if "version-banner" not in html or "data-archive-theme" in html or "data-theme-toggle" in html:
+            continue
+        html = re.sub(r"</head\s*>", lambda _: theme_assets + "</head>", html, count=1, flags=re.IGNORECASE)
+        path.write_text(html, encoding="utf8")
 
 
 def process_html_file(path: str, version_url_path: str, is_current: bool, version_data: dict):

@@ -1,5 +1,18 @@
 # Website Changelog
 
+## Unreleased
+
+### Features
+
+* Add dark mode!
+
+### Bug Fixes
+
+* Improve search results for exact ATT&CK ID and numeric ID queries by prioritizing matching object pages and relevant references.
+* Fix sidebar loading for HTTPS redirects.
+* Settle the search index write when an IndexedDB write fails, instead of leaving the promise pending and the search spinner up.
+* Disable the search controls and explain why when the search index cannot be built, instead of leaving the spinner running for as long as the page is open.
+
 ## v5.0.0 (2026-08-06)
 
 * Release ATT&CK content version 19.2.
