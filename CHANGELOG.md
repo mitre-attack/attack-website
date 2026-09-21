@@ -1,6 +1,6 @@
 # Website Changelog
 
-## Unreleased
+## v5.1.0 (2026-09-21)
 
 ### Features
 
