@@ -20,7 +20,7 @@ describe('search styles', () => {
 
     const badgeStyle = styles.match(/\.search-result-badge\s*\{(?<body>[^}]+)\}/)?.groups?.body ?? '';
 
-    expect(badgeStyle).toContain('color: white;');
+    expect(badgeStyle).toContain('color: color-functions.on-color(active);');
     expect(badgeStyle).toContain('font-size: 0.8rem;');
 
     expect(styles).toContain('.search-result-badge-page-type');

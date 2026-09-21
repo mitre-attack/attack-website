@@ -1,0 +1,130 @@
+@use "palette";
+
+:root,
+:root[data-theme="light"] {
+  @include palette.light-colors;
+
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    @include palette.dark-colors;
+
+    color-scheme: dark;
+  }
+}
+
+:root[data-theme="dark"] {
+  @include palette.dark-colors;
+
+  color-scheme: dark;
+}
+
+// Normalize Bootstrap surfaces that otherwise retain hard-coded light colors.
+.form-control,
+.custom-select,
+.bootstrap-select > .dropdown-toggle,
+.dropdown-menu,
+.list-group-item,
+.modal-content,
+.popover,
+.popover-body,
+.page-link,
+.input-group-text {
+  color: var(--attack-on-color-body);
+  background-color: var(--attack-color-body);
+  border-color: var(--attack-border-color-body);
+}
+
+.custom-select {
+  background-image: var(--attack-select-arrow);
+}
+
+.form-control:focus,
+.custom-select:focus {
+  color: var(--attack-on-color-body);
+  background-color: var(--attack-color-body);
+  border-color: var(--attack-color-active);
+  box-shadow: 0 0 0 0.2rem rgb(76 159 254 / 25%);
+}
+
+.dropdown-item,
+.page-link {
+  color: var(--attack-color-link);
+}
+
+.dropdown-item:hover,
+.dropdown-item:focus,
+.page-link:hover,
+.page-link:focus {
+  color: var(--attack-on-color-body-emphasis);
+  background-color: var(--attack-color-body-alternate);
+}
+
+.form-control:disabled,
+.form-control[readonly],
+.custom-select:disabled,
+.page-item.disabled .page-link {
+  color: var(--attack-on-color-body-deemphasis);
+  background-color: var(--attack-color-body-alternate);
+}
+
+.dropdown-divider,
+hr {
+  border-color: var(--attack-border-color-body);
+}
+
+.table {
+  color: var(--attack-on-color-body);
+}
+
+.text-danger {
+  color: var(--attack-color-danger) !important;
+}
+
+.btn-outline-secondary {
+  color: var(--attack-on-color-body);
+  border-color: var(--attack-on-color-body-deemphasis);
+
+  &:disabled,
+  &.disabled {
+    color: var(--attack-on-color-body-deemphasis);
+    background-color: transparent;
+  }
+
+  &:not(:disabled, .disabled):hover,
+  &:not(:disabled, .disabled):focus,
+  &:not(:disabled, .disabled):active {
+    color: var(--attack-on-color-active);
+    background-color: var(--attack-color-active);
+    border-color: var(--attack-color-active);
+  }
+}
+
+.nav-tabs .nav-link {
+  color: var(--attack-color-link);
+  border-color: transparent;
+}
+
+.nav-tabs .nav-link:hover,
+.nav-tabs .nav-link:focus {
+  border-color: var(--attack-border-color-body);
+}
+
+.nav-tabs .nav-link.active,
+.nav-tabs .nav-item.show .nav-link {
+  color: var(--attack-on-color-body);
+  background-color: var(--attack-color-body);
+  border-color: var(--attack-border-color-body) var(--attack-border-color-body) var(--attack-color-body);
+}
+
+@media print {
+  :root,
+  :root[data-theme],
+  :root:not([data-theme]) {
+    @include palette.light-colors;
+
+    color-scheme: light;
+  }
+}

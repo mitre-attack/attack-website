@@ -36,16 +36,10 @@ def run_tests():
             logger.debug(f"Skipping validation for {domain['name']} because it is deprecated")
             continue
 
-        # TODO: refactor this to use a function rather than copy/paste from modules/util/stixhelpers.py
-        # this can be used because it was called previously in modules/util/stixhelpers.py to download the file
-        if domain["location"].startswith("http"):
-            download_dir = Path(f"{site_config.web_directory}/stix")
-            stix_filename = f"{download_dir}/{domain['name']}.json"
-        else:
-            stix_filename = domain["location"]
+        stix_filename = util.stixhelpers.get_stix_file_path(domain["name"])
 
         logger.info(f"Validating STIX for domain: {domain['name']}")
-        results = stix2validator.validate_file(fn=stix_filename, options=options)
+        results = stix2validator.validate_file(fn=str(stix_filename), options=options)
         if results.is_valid:
             logger.info(f"File {stix_filename} is valid")
         else:

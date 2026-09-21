@@ -1,18 +1,37 @@
 # syntax=docker/dockerfile:1.7
 
-FROM node:26-bookworm-slim AS search-build
+FROM node:26-trixie-slim AS assets-build
 
-WORKDIR /src/attack-search
+ARG ATTACK_WEBSITE_OS_CA_TRUST_SETUP_COMMAND=":"
 
-COPY attack-search/package*.json ./
-RUN npm ci
+RUN apt update \
+    && apt install -y --no-install-recommends ca-certificates curl \
+    && sh -ec "${ATTACK_WEBSITE_OS_CA_TRUST_SETUP_COMMAND}" \
+    && rm -rf /var/lib/apt/lists/*
 
-COPY attack-search/webpack.config.cjs ./
-COPY attack-search/src ./src
-RUN npm run build
+# Install pre-built Just (official installer)
+RUN curl --proto '=https' --tlsv1.2 -fsSL https://just.systems/install.sh -o /tmp/install-just.sh \
+    && bash /tmp/install-just.sh --tag 1.58.0 --to /usr/local/bin \
+    && rm /tmp/install-just.sh \
+    && test "$(just --version)" = "just 1.58.0"
+
+WORKDIR /src/attack-website
+
+COPY attack-search/package*.json ./attack-search/
+COPY attack-style/package*.json ./attack-style/
+RUN npm --prefix attack-search ci && npm --prefix attack-style ci
+
+COPY justfile ./
+COPY attack-search/webpack.config.cjs ./attack-search/
+COPY attack-search/.babelrc ./attack-search/
+COPY attack-search/src ./attack-search/src
+COPY attack-style/ ./attack-style/
+
+# Regenerate the committed theme assets using the same copy commands as local builds.
+RUN just build-assets
 
 
-FROM python:3.13-slim-bookworm AS site-base
+FROM python:3.13-slim-trixie AS site-base
 
 ARG PELICAN_SITEURL=""
 ARG ATTACK_WEBSITE_BANNER_ENABLED=""
@@ -55,10 +74,15 @@ ENV PELICAN_SITEURL=${PELICAN_SITEURL} \
     PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1
 
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends ca-certificates curl git \
+RUN apt update \
+    && apt install -y --no-install-recommends ca-certificates curl git \
     && sh -ec "${ATTACK_WEBSITE_OS_CA_TRUST_SETUP_COMMAND}" \
     && rm -rf /var/lib/apt/lists/*
+
+RUN curl --proto '=https' --tlsv1.2 -fsSL https://just.systems/install.sh -o /tmp/install-just.sh \
+    && bash /tmp/install-just.sh --tag 1.58.0 --to /usr/local/bin \
+    && rm /tmp/install-just.sh \
+    && test "$(just --version)" = "just 1.58.0"
 
 WORKDIR /src/attack-website
 
@@ -69,9 +93,8 @@ RUN python3 -m pip install --no-cache-dir wheel \
 
 COPY . ./
 
-# The generator copies theme assets into output/, so place the generated search bundle
-# in the theme before running it.
-COPY --from=search-build /src/attack-search/dist/search_bundle.js attack-theme/static/scripts/search_bundle.js
+# Copy the complete staged asset set before Pelican renders and preserves the site.
+COPY --from=assets-build /src/attack-website/attack-theme/static/ attack-theme/static/
 
 
 FROM site-base AS website-build
@@ -94,7 +117,7 @@ RUN --mount=type=secret,id=workbench_api_key,required=false \
             set -- "$@" --extras "$extra"; \
         done; \
     fi; \
-    python3 update-attack.py "$@" \
+    just build-website "$@" \
         --version-archive-dir "${ATTACK_WEBSITE_VERSION_ARCHIVE_DIR}"
 
 

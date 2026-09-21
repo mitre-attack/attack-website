@@ -1,6 +1,15 @@
 # Docker build guide
 
-The root `Dockerfile` builds the search bundle, generates the static website, and serves the resulting site with Nginx. It uses Node.js 26 (`node:26-bookworm-slim`), Python 3.13 (`python:3.13-slim-bookworm`), and `nginx:stable-alpine`.
+The root `Dockerfile` uses the [Just build commands](DEVELOPMENT.md#commands-and-generator-options) to compile Sass and search before generating the static website, then serves the resulting site with Nginx. It uses Node.js 26 (`node:26-trixie-slim`), Python 3.13 (`python:3.13-slim-trixie`), and `nginx:stable-alpine`.
+
+The `assets-build` stage runs `just build-assets`; the Python stage runs
+`just build-website`. Both stages use Just's official
+[pre-built binary installer](https://just.systems/man/en/pre-built-binaries.html)
+with `--tag 1.58.0 --to /usr/local/bin` and verify the installed version.
+The installer selects the binary for the build stage's architecture.
+Docker rebuilds assets from source, while GitHub Pages uses committed assets.
+Just is installed inside the build images and is not required on the host for this
+Docker-only workflow. The final Nginx image does not include Just.
 
 ## Build and run
 
@@ -70,4 +79,4 @@ docker build \
   -t attack-website .
 ```
 
-The Dockerfile also supports `ATTACK_WEBSITE_OS_CA_TRUST_SETUP_COMMAND` and `ATTACK_WEBSITE_PYTHON_CA_TRUST_SETUP_COMMAND` for environments that require additional certificate trust configuration. Both default to the POSIX no-op command (`:`).
+The Dockerfile also supports `ATTACK_WEBSITE_OS_CA_TRUST_SETUP_COMMAND` and `ATTACK_WEBSITE_PYTHON_CA_TRUST_SETUP_COMMAND` for environments that require additional certificate trust configuration. Both default to the POSIX no-op command (`:`). The OS trust setup runs in both build stages before downloading Just.

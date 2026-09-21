@@ -20,10 +20,10 @@ jobs:
           python-version: '3.13'
           cache: 'pip'
 
-      - name: Setup Node.js environment
-        uses: actions/setup-node@v4
+      - name: Install Just
+        uses: extractions/setup-just@v3
         with:
-          node-version: '26.x'
+          just-version: '1.58.0'
 
       - name: Upgrade pip
         run: python3 -m pip install --upgrade pip
@@ -44,7 +44,7 @@ jobs:
 
       - name: Build website
         run: >-
-          python3 update-attack.py --attack-brand
+          just build-website --attack-brand
           --all-extras
           --no-test-exitstatus
         env:
@@ -58,14 +58,6 @@ jobs:
 
       - name: Remove STIX directory
         run: rm -rf output/stix/
-
-      - name: Build ATT&CK Search module
-        run: |
-          cd attack-search
-          npm ci
-          npm run build
-          cp dist/search_bundle.js ../output/theme/scripts/
-          cd ..
 
       - name: Add BlueSky Identification
         if: ${{ vars.BLUESKY_ID != '' }}

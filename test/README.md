@@ -9,33 +9,28 @@ This allows developers to catch and fix issues before pushing to GitHub Pages, t
 Ensure you have the following installed on your local system:
 
 - Docker
-- Node.js and npm
-- Python 3 and pip
+- [Just](https://just.systems/man/en/installation.html) 1.58.0 or newer
+- [uv](https://docs.astral.sh/uv/getting-started/installation/) and Python 3.13
+- Node.js 26 and npm
 
 ## Building the Web Application
 
-Before starting the Docker container, you need to build the static web content locally.
-The web application is composed of two modules: the Pelican content, and the ATT&CK search module.
+Before starting the Docker container, install dependencies and build from the
+repository root. Just is required for these local build commands:
 
-1. Generate the static web pages (i.e., the Pelican content) by running the following command from the root of the project:
+```shell
+just install-deps
+just build-full-website --attack-brand --all-extras
+```
 
-    ```shell
-    python3 update-attack.py --attack-brand \
-        --all-extras \
-        --no-test-exitstatus
-    ```
+Installation creates or reuses the root `.venv` and installs both npm packages.
+The build compiles and stages Search and Style, then generates the site in `output/`.
+For content-only changes, run `just build-website --attack-brand --all-extras`.
+The website targets use the Python generator's defaults unless you explicitly pass
+options. See the [developer guide](../docs/DEVELOPMENT.md) for setup and build options.
 
-    The static web content will be written to a folder called "output".
-
-2. Build the search module by running the following commands:
-
-    ```shell
-    cd attack-search
-    npm ci
-    npm run build
-    cp dist/search_bundle.js ../output/theme/scripts/
-    cd ..
-    ```
+After changing anything in `attack-style/` or `attack-search/`, rebuild the affected
+assets and commit the generated files in `attack-theme/static/` alongside your changes.
 
 ## Using the Docker Test Environment
 

@@ -1,14 +1,21 @@
 # ATT&CK Style
 
 ATT&CK Style is a JavaScript package that builds the CSS styles for the ATT&CK website.
-The outputs are simply 2 CSS files:
+The outputs are 3 CSS files:
 
 * `dist/style-attack.css`
 * `dist/style-user.css`
+* `dist/style-archive.css` (preserved-site appearance compatibility)
 
 These files are then copied into `<ATT&CK-website-git-repo>/attack-theme/static/`.
-Currently this is done manually - no automation.
-But also, the CSS is not updated very often.
+Use `npm run build-copy` to compile and copy all three files, or use the repository's
+[build commands](../docs/DEVELOPMENT.md#commands-and-generator-options) to build the complete website.
+Intermediate `dist/` outputs are ignored; the three compiled CSS files in the theme
+must be regenerated and committed after changing anything in `attack-style/`, just
+like the compiled ATT&CK Search bundle after changes to `attack-search/`. GitHub Pages
+uses the committed assets without rebuilding or comparing them against source.
+The repository build interface requires [Just](../docs/DEVELOPMENT.md); use
+`just build-style` to compile and stage this package or `just build-assets` for both.
 
 ## Installation
 
@@ -16,7 +23,7 @@ To set up the ATT&CK Style package, follow these steps:
 
 1. **Prerequisite: Ensure Node.js is Installed**:
 
-   Make sure you have the latest Node.js LTS version installed.
+   Use Node.js 26 to match Docker.
 
 2. **Navigate to the attack-style Sub-folder**:
 
@@ -31,7 +38,7 @@ To set up the ATT&CK Style package, follow these steps:
    Run the following command to install the necessary dependencies:
 
     ```bash
-    npm install
+    npm ci
     ```
 
 ## Build
@@ -47,7 +54,7 @@ To set up the ATT&CK Style package, follow these steps:
 
 2. **Copy CSS Files**:
 
-   Copy both `dist/style-attack.css` and `dist/style-user.css` to `<ATT&CK-website-git-repo>/attack-theme/static/`.
+   Copy `dist/style-attack.css`, `dist/style-user.css`, and `dist/style-archive.css` to `<ATT&CK-website-git-repo>/attack-theme/static/`.
 
     ```bash
     npm run copy

@@ -23,7 +23,7 @@ class TableWrapper {
      */
     async bulkPut(data, chunkSize = 100) {
 
-        return new Promise(async (resolve) => {
+        return new Promise((resolve, reject) => {
             /**
              * Schedules work using requestIdleCallback if supported, or setTimeout as a fallback.
              * @param {Function} callback - The function to be executed when the browser is idle or after the specified delay.
@@ -44,23 +44,28 @@ class TableWrapper {
              * @param {number} start - The index of the first item in the data array to be included in the current chunk.
              */
             const putChunk = async (start) => {
-                // If all data has been processed, resolve the promise
-                if (start >= data.length) {
-                    resolve();
-                    return;
+                try {
+                    // If all data has been processed, resolve the promise
+                    if (start >= data.length) {
+                        resolve();
+                        return;
+                    }
+
+                    // Determine the end index for the current chunk
+                    const end = Math.min(start + chunkSize, data.length);
+
+                    // Extract the chunk from the data array
+                    const chunk = data.slice(start, end);
+
+                    // Insert the chunk into the IndexedDB table
+                    await this.indexeddb[this.tableName].bulkPut(chunk);
+
+                    // Schedule the next chunk to be processed
+                    scheduleWork(() => putChunk(end));
+                } catch (error) {
+                    // Nothing else settles this promise, so callers would wait forever.
+                    reject(error);
                 }
-
-                // Determine the end index for the current chunk
-                const end = Math.min(start + chunkSize, data.length);
-
-                // Extract the chunk from the data array
-                const chunk = data.slice(start, end);
-
-                // Insert the chunk into the IndexedDB table
-                await this.indexeddb[this.tableName].bulkPut(chunk);
-
-                // Schedule the next chunk to be processed
-                scheduleWork(() => putChunk(end));
             };
 
             // Start processing the data array by inserting the first chunk

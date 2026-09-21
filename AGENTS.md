@@ -16,7 +16,7 @@ This file is guidance for coding agents working in `attack-website`.
 - `attack-search/` is a separate Node/CommonJS project for the search bundle.
 - Search source and tests live in `attack-search/src/` and `attack-search/__tests__/`.
 - `attack-style/` is a separate Node/Sass project for CSS output.
-- SCSS entrypoints are `attack-style/style-attack.scss` and `attack-style/style-user.scss`.
+- SCSS entrypoints are `attack-style/style-attack.scss`, `attack-style/style-user.scss`, and `attack-style/style-archive.scss`.
 - `attack-theme/` contains Jinja templates, static assets, and legacy browser JS.
 - Theme templates and static assets live in `attack-theme/templates/` and `attack-theme/static/`.
 - `modules/` contains Python modules that generate ATT&CK site content.
@@ -28,7 +28,8 @@ This file is guidance for coding agents working in `attack-website`.
 - When managing a local Python environment, prefer `uv` with a virtual environment at `.venv` in the git repository root.
 - Node.js and npm are required for `attack-search/` and `attack-style/`.
 - Docker is the preferred way to validate the final static output in an Nginx-like environment.
-- CI currently uses Python `3.13` and Node `18.x` in `.github/workflows/gh-pages.yml`.
+- Just `1.58.0` or newer is required for shared build commands. CI and Docker pin Just `1.58.0`.
+- CI uses Python `3.13`; Docker uses Python `3.13` and Node `26`. CI consumes committed assets without npm.
 - Prefer CI versions when reproducing CI behavior; Docker and development docs may reference older base images.
 - Production-like builds may depend on environment variables from `.github/workflows/gh-pages.yml`, including `ATTACK_WEBSITE_GOOGLE_ANALYTICS`, `ATTACK_WEBSITE_GOOGLE_SITE_VERIFICATION`, `ATTACK_WEBSITE_INCLUDE_OSANO`, and `PELICAN_SITEURL`.
 
@@ -38,7 +39,8 @@ Run commands from the repo root unless a subdirectory is called out.
 
 ### Install
 
-- Preferred Python env: `uv venv .venv`
+- All local dependencies: `just install-deps` (creates/reuses root `.venv` and runs `npm ci` in both packages)
+- Preferred Python env for manual setup: `uv venv --python 3.13 .venv`
 - Python deps: `uv pip install -r requirements.txt`
 - Search deps: `cd attack-search && npm ci`
 - Style deps: `cd attack-style && npm ci`
@@ -46,10 +48,16 @@ Run commands from the repo root unless a subdirectory is called out.
 
 ### Build
 
-- Main website build: `uv run python update-attack.py --attack-brand --all-extras --no-test-exitstatus`
+- Complete website build: `just build-full-website --attack-brand --all-extras`
+- Website using staged assets: `just build-website --attack-brand --all-extras`
+- Compile and stage assets: `just build-search`, `just build-style`, or `just build-assets`
+- Website targets retain Python CLI defaults unless flags are explicitly supplied; builds do not install dependencies.
+- Python generator and targeted checks: `uv run python update-attack.py ...`
+- Shared build ordering, prerequisites, and Docker integration: `docs/DEVELOPMENT.md`
 - Search bundle: `cd attack-search && npm run build`
 - Search dev bundle: `cd attack-search && npm run build:dev`
-- Copy built search bundle into site output: `cd attack-search && npm run copy`
+- Copy the compiled search bundle into theme static assets: `cd attack-search && npm run copy`
+- Search build + copy into theme static assets: `cd attack-search && npm run build-copy`
 - Style build: `cd attack-style && npm run build`
 - Style build + copy into theme static assets: `cd attack-style && npm run build-copy`
 
@@ -81,8 +89,8 @@ Run commands from the repo root unless a subdirectory is called out.
 
 ### Important Command Notes
 
-- There is no root `package.json`, `Makefile`, or single universal test runner.
-- CI clearly builds the site and search bundle, but does not currently enforce Jest, ESLint, Stylelint, Ruff, or type checks.
+- `justfile` defines the shared asset/site build commands. There is no root `package.json`, `Makefile`, or single universal test runner.
+- CI builds the site using committed assets without rebuilding or verifying them against source. Docker rebuilds assets. CI does not currently enforce Jest, ESLint, Stylelint, Ruff, or type checks.
 - For Python-side testing, the narrowest supported scope is a named category (`size`, `links`, `external_links`, `citations`), not an individual test file.
 - Preferred production-like validation is Nginx via Docker, not Pelican's built-in dev server.
 - Pelican's built-in development server does not match production Nginx routing behavior.
@@ -99,8 +107,10 @@ Run commands from the repo root unless a subdirectory is called out.
 
 - Do not edit `output/` as source; regenerate it through the build pipeline.
 - Avoid direct edits to `attack-search/dist/` and `attack-style/dist/` unless the task explicitly targets generated artifacts.
-- Avoid direct edits to copied assets in `attack-theme/static/` when a source file in `attack-style/` or another generator owns the output.
+- Avoid direct edits to copied assets in `attack-theme/static/` when a source file in `attack-style/`, `attack-search/` or another generator owns the output.
 - Preserve generated-file comments and edit the named source template or source asset instead.
+- Ignore intermediate outputs in `attack-search/dist/` and `attack-style/dist/`, but commit the compiled theme CSS and `attack-theme/static/scripts/search_bundle.js` together with frontend source changes. After changing anything in either package, regenerate its assets with `just build-search`, `just build-style`, or `just build-assets`. Keeping them current is the developer's responsibility.
+- Keep the build-specific `attack-theme/static/scripts/settings.js` ignored; see `docs/DEVELOPMENT.md` for its runtime configuration role.
 
 ## Python Style
 

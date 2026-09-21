@@ -1,55 +1,55 @@
-@use "sass:color";
-@use "sass:map";
-@use "sass:string";
-@use "variables";
-
-// accessor helper for $colors. Gets the color of the named pair
+// Accessor helper for semantic runtime colors.
 @function color($name) {
-  @return map.get(map.get(variables.$colors, $name), "color");
+  @return var(--attack-color-#{$name});
 }
 
-// given a color name, get an alternate version of the color, for patterning
-// if the base color is dark, the alternate will be slightly lighter.
-// if the base color is light, the alternate will be slightly darker.
-// contrast, an optional argument, multiplies to create a more distint or similar color. >1 is more distant, <1 is more similar.
+// Get an explicit alternate surface token. Supported contrast values match the
+// existing call sites and avoid requiring runtime color-mix support.
 @function color-alternate($name, $contrast: 1) {
-  @return color.mix(color.invert(color($name)), color($name), $weight: $contrast * 5%);
+  @if $contrast == 0.8 {
+    @return var(--attack-color-#{$name}-alternate-subtle);
+  }
+
+  @if $contrast == 1 {
+    @return var(--attack-color-#{$name}-alternate);
+  }
+
+  @if $contrast == 1.5 {
+    @return var(--attack-color-#{$name}-alternate-medium);
+  }
+
+  @if $contrast == 2 {
+    @return var(--attack-color-#{$name}-alternate-strong);
+  }
+
+  @if $contrast == 3 {
+    @return var(--attack-color-#{$name}-alternate-strongest);
+  }
+
+  @error "Unsupported alternate color contrast: #{$contrast}";
 }
 
-/// accessor helper for $colors. Gets the on-color of the named pair
+/// Accessor helper for readable text on a semantic color.
 @function on-color($name) {
-  @return map.get(map.get(variables.$colors, $name), "on-color");
+  @return var(--attack-on-color-#{$name});
 }
 
-/// given a color-name, get an emphasized version of the on-color.
-/// The emphasized on-color is less like the background color.
+/// Get an emphasized foreground token for a semantic color.
 @function on-color-emphasis($name) {
-  @return color.mix(color.invert(color($name)), on-color($name));
+  @return var(--attack-on-color-#{$name}-emphasis);
 }
 
-// given a color-name, get an deemphasized version of the on-color.
-// The deemphasized on-color is more like the background color.
+// Get a deemphasized foreground token for a semantic color.
 @function on-color-deemphasis($name) {
-  @return color.mix(color($name), on-color($name), 25%);
+  @return var(--attack-on-color-#{$name}-deemphasis);
 }
 
-// given a color name, compute a border color for the color
+// Get an explicit border token for a semantic color.
 @function border-color($name) {
-  @return color.mix(color.invert(color($name)), color($name), 12.5%);
-
-  // @return rgba(invert(color($name)), 0.125);
+  @return var(--attack-border-color-#{$name});
 }
 
-// given a color name, compute a border color for the color
+// Get an explicit hover/background token for a semantic color.
 @function background-color($name) {
-  @return color.mix(color.invert(color($name)), color($name), 12.5%);
-}
-
-// escape the color. Note param is a color and not a color name: this is not an accessor to the color map above.
-// replaces # with %23 in hex colors
-// see https://codepen.io/gunnarbittersmann/pen/BoovjR for explanation of why we have to escape # for the background image
-@function escape-color($color) {
-  $hex: color.ie-hex-str($color);
-
-  @return "%23" + string.slice($string: #{$hex}, $start-at: 4);  // skip #AA in #AARRGGBB
+  @return var(--attack-background-color-#{$name});
 }

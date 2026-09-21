@@ -40,7 +40,7 @@ If you are only updating the banner and nothing else, follow these steps.
 
 5. Build the website locally to do one final test that it looks correct
 
-    * e.g. `python update-attack.py --attack-brand --all-extras --no-test-exitstatus`
+    * e.g. `just build-full-website --attack-brand --all-extras --no-test-exitstatus`
     * Look in the generated `reports/broken-links-report.txt` for broken links.
       Any broken links that start with `/versions/v*` can be ignored.
 
