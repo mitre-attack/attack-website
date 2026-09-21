@@ -17,6 +17,14 @@ If you find errors or typos in the site content, let us know by sending an email
 Check out our [developer guide](docs/DEVELOPMENT.md) if you are interested in extending the style, content, or functionality of this site.
 It includes instructions on setting up a local version of the site, and workflows for building and running the site using Docker or locally.
 
+Local build commands require [Just](https://just.systems/man/en/installation.html)
+1.58.0 or newer. Install Just, uv, and Node.js 26, then run:
+
+```sh
+just install-deps
+just build-full-website --attack-brand --all-extras
+```
+
 We also have the additional following guides:
 
 * A [deployment guide](./test/README.md) for setting up our testing environment

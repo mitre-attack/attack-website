@@ -1,115 +1,181 @@
-# Developer Guide
+# Developer guide
 
-The sections below explain how to build and run the website locally using Docker & Nginx. If you want to extend the style, content or functionality of this site, see the [customization guide](CUSTOMIZING.md).
+[Workflow 1](#workflow-1-build-and-run-using-docker) builds and serves the website in
+Docker. For faster rebuilds while developing locally, use
+[Workflow 2](#workflow-2-build-locally-and-serve-using-docker).
 
-* Use **Workflow 1** if you need a comprehensive solution that handles both building and serving the website
-* Use **Workflow 2** if you're developing and need to quickly test changes without the overhead of the full Docker build process
-
-Use our [Github Issue Tracker](https://github.com/mitre-attack/attack-website/issues) to let us know of any bugs or other issues you encounter. We also encourage pull requests if you've extended the site in a cool way and want to share back to the community!
-
-If you find errors or typos in the site content, please let us know by sending an email to <attack@mitre.org> with the subject **Website Content Error**, and make sure to include both a description of the error and the URL at which it can be found.
-
-_See the [contribution guide](CONTRIBUTING.md) for more information on making contributions to the ATT&CK website._
+The [customization guide](CUSTOMIZING.md) explains how to change the site's style,
+content, and functionality. To contribute changes, follow the
+[contribution guide](CONTRIBUTING.md).
+Report bugs through the [GitHub issue tracker](https://github.com/mitre-attack/attack-website/issues).
+For errors or typos in site content, email <attack@mitre.org> with the subject
+**Website Content Error**, a description, and the affected URL.
 
 ## Prerequisites
 
-* Docker
-* Node.js and npm (for local build)
-* Python 3 and pip (for local build)
+Docker is the only tool you need on the host for a Docker build. The build images
+include Just, Node.js, Python, and their dependencies.
 
-## Workflow 1: Build and Run Using Docker
+For local builds, install:
 
-This workflow is designed to be a comprehensive, all-in-one solution to building and serving the website. It utilizes a multi-stage Docker build process to handle the entire sequence of operations starting from installing dependencies to generating static files, and ultimately running the website.
+- [Just](https://just.systems/man/en/installation.html) 1.58.0 or newer
+- [uv](https://docs.astral.sh/uv/getting-started/installation/) for Python environment
+  and dependency installation
+- Python 3.13
+- Node.js 26 and npm to build Search and Style
+- Docker
 
-The first stage in this Dockerfile uses Node.js 26 (`node:26-bookworm-slim`) to generate the search bundle.
+On macOS, install Just and uv with `brew install just uv`, then install Node.js 26
+separately. On Windows, use WSL: the recipes and npm scripts require a POSIX shell.
 
-The second stage uses Python 3.13 (`python:3.13-slim-bookworm`) to run `update-attack.py`, which generates the static site.
+## Workflow 1: Build and run using Docker
 
-The final stage is based on a lightweight Nginx image (nginx:stable-alpine) which is configured to serve the static files generated in the previous stage. In other words, once the Docker image is built, you can run a container from this image and have a fully functional version of the website served by an Nginx server.
+From the repository root:
 
-This approach is especially suitable if you need to have an isolated and reproducible build process, as each run starts from a clean state and goes through all the steps necessary to produce a running website.
+```sh
+docker build -t attack-website .
+docker run --rm -p 80:80 attack-website
+```
 
-See the [Docker build guide](DOCKER.md) for build arguments, BuildKit secrets, extra-module selection, and test-exit behavior.
+Open <http://localhost> to view the site. During the build, the `assets-build` stage
+runs `just build-assets` to rebuild Search and Style and copy them into the theme.
+The Python stage then runs `just build-website`. Nginx serves the generated site
+from the final image.
 
-### Steps
+See the [Docker guide](DOCKER.md) for build arguments, branding and extras,
+BuildKit secrets, caches, and test-exit behavior.
 
-1. Build the Docker image:
+## Workflow 2: Build locally and serve using Docker
 
-    ```shell
-    docker build -t attack_website .
-    ```
+From the repository root, install dependencies and build:
 
-2. Run the Docker container:
+```sh
+just install-deps
+just build-full-website --attack-brand --all-extras
+```
 
-    ```shell
-    docker run -p 80:80 attack_website
-    ```
+`install-deps` creates `.venv` with Python 3.13 if needed and installs
+`requirements.txt` there. It also runs `npm ci` in each package directory,
+`attack-search/` and `attack-style/`. If you already have a `.venv`, the command
+reuses it. It leaves global Python packages alone.
 
-   This will start a Docker container with the image you built and forward port 80 from the container to your host machine.
+Run it again when dependencies change. The build commands don't install dependencies.
 
-3. Now, you should be able to view the website by opening a web browser and navigating to `http://localhost`.
+Website builds use `.venv/bin/python` if it exists, or `python3` from PATH otherwise.
+To use a different interpreter, set `PYTHON` to its executable path. Just also adds
+that interpreter's directory to PATH so it can find tools such as Pelican. You don't
+need to activate the virtual environment, and you can run Just from any repository
+subdirectory.
 
-## Workflow 2: Build Locally and Serve Using Docker
+The build copies Search and Style into the theme before generating the site in
+`output/` (or its configured subdirectory). If you've only changed content, use
+`just build-website --attack-brand --all-extras` to reuse the staged assets.
+The flags in these examples enable branding and extras; Just leaves both opt-in.
 
-This workflow, on the other hand, is optimized for developers who need a faster iteration cycle for testing changes to the website. It allows for the website to be built manually on your local system, which can offer more control and faster feedback while making changes to the codebase.
+Serve the output with the test Nginx image, still from the repository root:
 
-In this workflow, the test image defined in `test/Dockerfile` is much simpler and serves a single purpose: to run an Nginx server that hosts the website. However, instead of embedding the website's static files within the Docker image (as in Workflow 1), these files are provided to the Docker container at runtime through a Docker volume. This volume points to the output/ directory on your local file system, where the build artifacts are located.
+```sh
+docker build -t attack-website-test test/
+docker run --rm -p 80:80 -v "$(pwd)/output:/workspace:ro" attack-website-test
+```
 
-The main advantage of this approach is that you can modify the website's source files, run the build process locally, and then refresh your browser to see the changes without having to rebuild the Docker image. This can greatly accelerate the feedback loop when you're making frequent changes to the site.
+Open <http://localhost>. Rebuild locally and refresh the browser to see changes.
+The [test environment guide](../test/README.md) covers the helper script and server
+usage. Validate with Nginx, since Pelican's built-in development server handles
+routing differently from production.
 
-### Steps
+## Commands and generator options
 
-1. Ensure you have Node.js, npm, Python 3, and pip installed on your local machine.
+Run `just` or `just --list` to list commands.
 
-2. Build the static web content locally. The web application is composed of two modules: the Pelican content, and the ATT&CK search module.
+| Command | Behavior |
+| --- | --- |
+| `just install-deps` | Install Python and both npm packages' dependencies |
+| `just build-search` | Compile and stage the production Search bundle |
+| `just build-style` | Compile and stage all three stylesheets |
+| `just build-assets` | Compile and stage both Search and Style |
+| `just build-website` | Generate the website using existing staged assets |
+| `just build-full-website` | Rebuild both asset sets, then generate the website |
 
-    * Build the Pelican content by running the following command from the root of the project:
+Both website commands use the defaults from `update-attack.py`, so branding and
+optional modules remain opt-in. Add generator options after the command. You don't
+need an extra `--` separator:
 
-        ```shell
-        python3 update-attack.py --attack-brand \
-            --all-extras \
-            --no-test-exitstatus
-        ```
+```sh
+just build-website --attack-brand --all-extras
+just build-full-website --attack-brand --extras resources --extras blog
+just build-website --banner "Preview website"
+just build-website --help
+```
 
-      The static web content will be written to a folder called "output".
+Just passes repeated options and quoted values through unchanged.
+`ATTACK_WEBSITE_*` and `PELICAN_*` environment settings also apply. The Search,
+Style, and assets commands don't accept generator options. To work with individual
+modules, you can also run `.venv/bin/python update-attack.py` directly.
 
-    * Build the search module by running the following commands:
+If dependency installation, asset compilation, or website generation fails, the
+command exits with a nonzero status. Failing site checks also stop the build unless
+you pass `--no-test-exitstatus` or set `ATTACK_WEBSITE_TEST_EXITSTATUS=false`.
+GitHub Pages explicitly overrides this behavior. Run Jest and linters separately.
 
-        ```shell
-        cd attack-search
-        npm ci
-        npm run build
-        cp dist/search_bundle.js ../output/theme/scripts/
-        cd ..
-        ```
+## Compiled assets and developer responsibility
 
-3. Build the Docker image for the test environment:
+After changing anything in `attack-style/` or `attack-search/`, rebuild the affected
+assets and commit the generated files in `attack-theme/static/` with your changes.
 
-    ```shell
-    cd test
-    docker build -t attack-website-test .
-    ```
+Use `just build-style`, `just build-search`, or `just build-assets` to regenerate
+files instead of editing them by hand. Both packages also have `npm run build`,
+`npm run copy`, and `npm run build-copy` commands. Just calls `build-copy`, which
+copies the compiled files into the theme. These commands work before `output/`
+exists and don't copy files into the live site output.
 
-4. Run the Docker container for the test environment:
+| Files | Git policy |
+| --- | --- |
+| `attack-style/dist/`, `attack-search/dist/` | Ignored intermediate output |
+| `attack-search/compilation-stats.json` | Ignored development output |
+| `attack-theme/static/style-{attack,user,archive}.css` | Committed compiled assets |
+| `attack-theme/static/scripts/search_bundle.js` | Committed compiled asset |
+| `attack-theme/static/scripts/settings.js` | Ignored, generated for each site build |
 
-    ```shell
-    docker run -p 80:80 -v $(pwd)/../output:/workspace attack-website-test
-    ```
+GitHub Pages installs Just and Python dependencies, then runs `just build-website`
+using the committed assets. It doesn't install npm dependencies, rebuild bundles,
+or compare them with regenerated output. You are responsible for committing
+up-to-date bundles.
 
-   This will start a Docker container with the test environment image, forward port 80 from the container to your host machine, and mount the "output" directory from your local workspace to the "/workspace" directory inside the container. This allows Nginx to serve the static web content you built.
+Before generating the website, Just checks that all four staged assets exist and
+contain data. It doesn't check whether they match your source changes. The asset
+and full-website commands always recompile the selected assets, even if their
+source hasn't changed.
 
-   Please see [test/README.md](../test/README.md) for further usage details on the test environment image.
+## Build order and generated search files
 
-5. Now, you should be able to view the website by opening a web browser and navigating to `http://localhost`.
+Search uses three kinds of generated files:
 
-Please note that Workflow 1 is the preferred method as it closely emulates our production environment.
-Workflow 2 is recommended for those who prefer or need to build the website locally before testing it.
+| File | Producer and inputs |
+| --- | --- |
+| `search_bundle.js` | Webpack compiles Search source and dependencies; it does not read generated HTML or search JSON |
+| `settings.js` | Python generates deployment paths, version identity, and dataset-specific tour settings |
+| `search/*.json` | Python extracts searchable data from rendered HTML and STIX metadata |
 
-## Disclaimer re: Pelican's Built-in Web Server
+The build order is:
 
-We advise that you avoid using Pelican's built-in web server for serving the website.
-Pelican uses a different set of rules for path matching compared to Nginx, which is used in our production environment.
-As a result, the behavior of the built-in server may differ from the production environment, potentially leading to discrepancies and overlooked issues.
+1. Put compiled CSS and Search in `attack-theme/static/` by rebuilding them or using
+   the committed assets.
+2. Python cleans generated output and prepares content and runtime settings.
+3. Pelican renders HTML and copies the staged theme into the site.
+4. Python builds search JSON, preserves the current-version snapshot when the
+   `versions` extra is enabled, and runs remaining processing and site checks.
 
-To ensure that your testing environment is as close as possible to the production environment, we recommend using the workflows outlined in this guide.
-Both workflows leverage Nginx, which more closely emulate the behavior of the production environment, improving your ability to catch potential issues before they reach production.
+The current-version snapshot already exists by the time generation finishes, so
+copying assets into live `output/` afterward won't update it. Copy them into the
+theme before generation so both the live site and the snapshot receive them.
+Historical archives keep their own assets.
+
+The theme's generated `settings.js` is a separate file from
+`attack-search/src/settings.js`, which Webpack compiles into the bundle. The theme
+file contains `base_url`, a version-derived `build_uuid`, and dataset-dependent
+`tour_steps`. Cleanup deletes it, the tour and website modules regenerate it, and
+version preservation adjusts it for archived pages. Keep it ignored: its contents
+apply to one dataset and deployment.
+See [settings generation](../modules/website_build/website_build.py),
+[tour generation](../modules/tour/tour.py), and [archive rewriting](../modules/versions/versions.py).

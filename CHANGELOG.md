@@ -5,6 +5,8 @@
 ### Features
 
 * Add dark mode!
+* Move Docker's Node and Python build stages to Debian Trixie.
+* Add Just build commands for Search, Style, assets, and website generation.
 
 ### Bug Fixes
 
