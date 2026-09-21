@@ -9,7 +9,7 @@ else{
 if (mod_name.includes('contact')){
     mod_entry = "/" + "resources/sidebar-resources"
 }
-$("#sidebars").load(mod_entry, function() {
+$("#sidebars").load(`${mod_entry}/`, function() {
     let old_winlocation = window.location.href;
     if (mod_name.includes('versions')){
         let v_number = mod_name[2];
