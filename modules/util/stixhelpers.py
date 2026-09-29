@@ -583,7 +583,13 @@ def download_stix_file(url, filepath):
 def get_url_from_stix(stix_object, is_subtechnique=False):
     """Parse the website url from a stix object."""
     if stix_object.get("external_references"):
-        url = stix_object["external_references"][0]["url"]
+        first_external_reference = stix_object["external_references"][0]
+        url = first_external_reference.get("url")
+        if not url:
+            attack_id = buildhelpers.get_attack_id(stix_object)
+            stix_id = stix_object["id"]
+            logger.warning(f"[{stix_id}] [{attack_id}] has no URL in its first external reference")
+            return None
         split_url = url.split("/")
         splitfrom = -3 if is_subtechnique else -2
         link = "/".join(split_url[splitfrom:])
