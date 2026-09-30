@@ -15,6 +15,7 @@ SUCCESS = 0
 FAILURE = 1
 WARNING = 2
 BROKEN_LINKBYID = -14
+INVALID_STIX_BUNDLE = -15
 
 # Used to reset text color
 RESET = "\033[0m"  # mode 0  = reset

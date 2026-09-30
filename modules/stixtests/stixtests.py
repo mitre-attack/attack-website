@@ -16,6 +16,7 @@ def run_tests():
     """Run tests"""
     error_list = []
     tests = 0
+    invalid_stix_domains = []
 
     logger.info("Removing old reports")
     reports = [stixtests_config.linkbyids_report_filename]
@@ -39,11 +40,14 @@ def run_tests():
         stix_filename = util.stixhelpers.get_stix_file_path(domain["name"])
 
         logger.info(f"Validating STIX for domain: {domain['name']}")
+        tests += 1
         results = stix2validator.validate_file(fn=str(stix_filename), options=options)
         if results.is_valid:
             logger.info(f"File {stix_filename} is valid")
         else:
             logger.error(f"File {stix_filename} is invalid:")
+            error_list.append(stixtests_config.INVALID_STIX_BUNDLE)
+            invalid_stix_domains.append(domain["name"])
 
             stix2validator.print_results(results)
 
@@ -77,6 +81,8 @@ def run_tests():
                 error_count=broken_linkbyids_count,
                 error_type="Broken LinkByIds",
             )
+        if invalid_stix_domains:
+            logger.error(f"STIX validation failed for: {', '.join(invalid_stix_domains)}")
 
     if not site_config.args.override_exit_status:
         handle_exit(error_list)
@@ -193,5 +199,5 @@ def handle_exit(exit_codes):
         # Exit on failure if any of these exit codes are found
         # Regarding the link checker, only exit on failure if a problem
         # is found on an internal link
-        if stixtests_config.BROKEN_LINKBYID in exit_codes:
+        if stixtests_config.BROKEN_LINKBYID in exit_codes or stixtests_config.INVALID_STIX_BUNDLE in exit_codes:
             exit(stixtests_config.FAILURE)
