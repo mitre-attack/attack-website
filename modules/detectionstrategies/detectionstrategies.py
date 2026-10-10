@@ -80,21 +80,19 @@ def generate_markdown_files():
 def get_detection_assets(technique_list):
     """Get assets for each detection targeted by a technique"""
     assets = []
-    for technique in technique_list:
+    for technique in technique_list or []:
         stix_id = technique["object"]["id"]
         technique_assets = util.relationshipgetters.get_assets_targeted_by_techniques().get(stix_id)
 
-    assets.append({
-        "assets": [
+        assets.extend([
             {
                 "id": util.buildhelpers.get_attack_id(asset["object"]),
                 "asset": asset["object"]["name"]
             }
             for asset in technique_assets or []
-        ]
-    })
+        ])
 
-    return assets
+    return sorted(assets, key=lambda asset: asset["id"])
 
 def get_detection_strategy_table(detection_strategy_list):
     """Generate detection strategy table for the overview page."""
