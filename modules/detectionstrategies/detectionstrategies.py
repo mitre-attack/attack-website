@@ -77,6 +77,24 @@ def generate_markdown_files():
 
     return has_detection_strategies
 
+def get_detection_assets(technique_list):
+    """Get assets for each detection targeted by a technique"""
+    assets = []
+    for technique in technique_list:
+        stix_id = technique["object"]["id"]
+        technique_assets = util.relationshipgetters.get_assets_targeted_by_techniques().get(stix_id)
+
+    assets.append({
+        "assets": [
+            {
+                "id": util.buildhelpers.get_attack_id(asset["object"]),
+                "asset": asset["object"]["name"]
+            }
+            for asset in technique_assets or []
+        ]
+    })
+
+    return assets
 
 def get_detection_strategy_table(detection_strategy_list):
     """Generate detection strategy table for the overview page."""
@@ -87,12 +105,17 @@ def get_detection_strategy_table(detection_strategy_list):
         if not attack_id:
             continue
 
+        stix_id = detection_strategy["id"]
+        techniques = util.relationshipgetters.get_techniques_detected_by_detectionstrategy().get(stix_id)
+        assets = get_detection_assets(techniques)
+
         domains = detection_strategy.get("x_mitre_domains", [])
         domain_names = [util.buildhelpers.get_domain_display_name(domain) for domain in domains]
         row = {
             "id": attack_id,
             "name": detection_strategy.get("name"),
             "domains": domain_names,
+            "assets": assets,
             "deprecated": detection_strategy.get("x_mitre_deprecated", False),
         }
         detection_strategy_table.append(row)
