@@ -105,17 +105,12 @@ def get_detection_strategy_table(detection_strategy_list):
         if not attack_id:
             continue
 
-        stix_id = detection_strategy["id"]
-        techniques = util.relationshipgetters.get_techniques_detected_by_detectionstrategy().get(stix_id)
-        assets = get_detection_assets(techniques)
-
         domains = detection_strategy.get("x_mitre_domains", [])
         domain_names = [util.buildhelpers.get_domain_display_name(domain) for domain in domains]
         row = {
             "id": attack_id,
             "name": detection_strategy.get("name"),
             "domains": domain_names,
-            "assets": assets,
             "deprecated": detection_strategy.get("x_mitre_deprecated", False),
         }
         detection_strategy_table.append(row)
@@ -130,6 +125,9 @@ def generate_detection_strategy_md(detection_strategy, notes):
     if not attack_id:
         return
 
+    stix_id = detection_strategy["id"]
+    techniques = util.relationshipgetters.get_techniques_detected_by_detectionstrategy().get(stix_id)
+    assets = get_detection_assets(techniques)
     dates = util.buildhelpers.get_created_and_modified_dates(detection_strategy)
 
     # Build reference list
@@ -154,6 +152,7 @@ def generate_detection_strategy_md(detection_strategy, notes):
         "analytics": analytics_by_platform,
         "analytic_ids": analytic_ids,
         "versioning_feature": site_config.check_versions_module(),
+        "assets": assets,
     }
 
     subs = detectionstrategies_config.detectionstrategy_md.substitute(data)
