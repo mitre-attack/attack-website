@@ -16,6 +16,6 @@ The biggest change in ATT&CK v20 is expanded coverage of recent adversary activi
 
 It also un-deprecates the Mobile Technique Deliver Malicious Application via Other Means, last seen in ATT&CK v11. ICS Detection Strategies now include platform and Asset context, and Mobile Detection Strategies account for the visibility limits of Android and iOS.
 
-An [accompanying blog post](https://medium.com/@arobertson_79988/att-ck-v20-critical-infra-campaigns-adversary-use-abuse-of-ai-iranian-cyber-9701dd75ffb4) describes these changes as well as additional improvements across ATT&CK's various domains and platforms.
+An [accompanying blog post](https://medium.com/mitre-attack/attack-v20-9701dd75ffb4) describes these changes as well as additional improvements across ATT&CK's various domains and platforms.
 
 This release also includes a human-readable detailed changelog showing more specifically what changed in updated ATT&CK objects, and a machine-readable JSON changelog, whose format is described in [ATT&CK's GitHub](https://github.com/mitre-attack/mitreattack-python/blob/main/mitreattack/diffStix/README.md).
