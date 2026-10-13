@@ -207,7 +207,7 @@
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
                     <div class="container-fluid banner-message">
-                        ATT&CKcon 7.0 registration is open! Join us October 27-28, 2026 in McLean, VA or virtually. <a href="https://na.eventscloud.com/website/93925/">Register in person</a> or <a href="https://mitre.brandlive.com/MITRE-ATTACKcon-7-0">register virtually</a>. See the <a href="https://na.eventscloud.com/website/93925/faq/">FAQ</a> for hotel and venue details.
+                        ATT&CK v20 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v20-9701dd75ffb4'>blog post</a> for more information. <a href='https://na.eventscloud.com/website/93925/'>ATT&CKcon 7.0</a> is October 27-28, 2026 in McLean, VA.
                     </div>
             </div>
         </div>
@@ -275,7 +275,7 @@
                 </div>
                 <div class="row card-data">
                   <div class="col-md-12">
-                    <span class="h5 card-title">Last Modified</span>: 12 May 2026
+                    <span class="h5 card-title">Last Modified</span>: 13 October 2026
                   </div>
                 </div>
               </div>
@@ -456,6 +456,34 @@
               <tr>
                 <td>auditd:SYSCALL</td>
                 <td>open/write syscalls targeting web directory files</td>
+              </tr>
+              <tr>
+                <td>auditd:SYSCALL+PATH</td>
+                <td>Linux Audit SYSCALL+PATH records: write to Industrial Control Systems (ICS) alarm configuration file by User Identifier (UID) not in authorized alarm admin UIDs</td>
+              </tr>
+              <tr>
+                <td>auditd:SYSCALL+PATH</td>
+                <td>Linux Audit SYSCALL+PATH records: write to /etc/ld.so.preload by User Identifier (UID) outside authorized admin list</td>
+              </tr>
+              <tr>
+                <td>auditd:SYSCALL+PATH</td>
+                <td>Linux Audit SYSCALL+PATH records: PATH record shows modification of udev/autofs configuration that references an executable or script outside the authorized ICS software inventory</td>
+              </tr>
+              <tr>
+                <td>auditd:SYSCALL+PATH</td>
+                <td>Linux Audit SYSCALL+PATH records: modification of bash_history file by uid not normally performing interactive shell sessions</td>
+              </tr>
+              <tr>
+                <td>auditd:SYSCALL+PATH</td>
+                <td>Linux Audit SYSCALL+PATH records: write to alarm threshold config file by uid not in authorized alarm admin User Identifiers (UIDs)</td>
+              </tr>
+              <tr>
+                <td>auditd:SYSCALL+PATH</td>
+                <td>Linux Audit SYSCALL+PATH records: PATH record shows modification of a serial-device configuration file by a UID not in the authorized serial-administration set</td>
+              </tr>
+              <tr>
+                <td>auditd:SYSCALL+PATH</td>
+                <td>Linux Audit SYSCALL+PATH records: write to Siemens project file path by User Identifier (UID) not in authorized Siemens engineering UIDs</td>
               </tr>
               <tr>
                 <td>azure:resource</td>
@@ -806,6 +834,30 @@
                 <td>Terminal/Editor processes modifying web folder</td>
               </tr>
               <tr>
+                <td>mobile:ForensicArtifacts</td>
+                <td>Dynamic filesystem trace or acquired app-container/filesystem artifacts: write() to /sdcard/ path</td>
+              </tr>
+              <tr>
+                <td>mobile:ForensicArtifacts</td>
+                <td>Dynamic filesystem trace or acquired app-container/filesystem artifacts: ContentResolver.update() or write() to path owned by target_app IN $HighValueAppList$ by writer_app != target_app — cross-app data modification</td>
+              </tr>
+              <tr>
+                <td>mobile:ForensicArtifacts</td>
+                <td>Dynamic filesystem trace or acquired app-container/filesystem artifacts: write() to path IN $SystemBinaryPaths$ by process NOT IN $TrustedUpdateSources$</td>
+              </tr>
+              <tr>
+                <td>mobile:ForensicArtifacts</td>
+                <td>Dynamic filesystem trace or acquired app-container/filesystem artifacts: app version change detected in MDM inventory for app_package — update is the binary modification event</td>
+              </tr>
+              <tr>
+                <td>mobile:ForensicArtifacts</td>
+                <td>Dynamic filesystem trace or acquired app-container/filesystem artifacts: app version change in MDM inventory for bundle_id</td>
+              </tr>
+              <tr>
+                <td>mobile:ForensicArtifacts</td>
+                <td>Dynamic filesystem trace or acquired app-container/filesystem artifacts: App inserts, updates, or deletes call log records via CallLog.Calls ContentProvider immediately after call-control action — call log tampering to conceal interception</td>
+              </tr>
+              <tr>
                 <td>MobileEDR:telemetry</td>
                 <td>Application inserts, updates, deletes, hides, or marks message records in SMS store or messaging database immediately after SMS receive or send event</td>
               </tr>
@@ -874,6 +926,10 @@
                 <td>Checksum/hash mismatch between device OS image and baseline known-good version</td>
               </tr>
               <tr>
+                <td>networkdevice:syslog</td>
+                <td>write erase or factory-reset command from source not in approved Network Management System (NMS) Classless Inter-Domain Routing (CIDR) subnet</td>
+              </tr>
+              <tr>
                 <td>sysdig:file</td>
                 <td>evt.type=write</td>
               </tr>
@@ -888,6 +944,10 @@
               <tr>
                 <td>WinEventLog:Sysmon</td>
                 <td>EventCode=2</td>
+              </tr>
+              <tr>
+                <td>WinEventLog:Sysmon</td>
+                <td>Siemens engineering tool opens project file from path not in approved project repository</td>
               </tr>
               <tr>
                 <td>WinEventLog:System</td>
@@ -1347,15 +1407,59 @@
                     <a href="/techniques/T1003/007">T1003.007</a>
                 </td>
             </tr>
-            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--0677c510-fa4d-4a39-a14b-b91f9cde1e23">
+            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--7a96a921-48bc-4fcf-b6b8-86a96315d4ee">
                 <td rowspan="">
-                    <a href="/detectionstrategies/DET0654">DET0654</a>
+                    <a href="/detectionstrategies/DET0623">DET0623</a>
                 </td>
                 <td rowspan="">
-                    <a href="/detectionstrategies/DET0654">Detection of Boot or Logon Initialization Scripts</a>
+                    <a href="/detectionstrategies/DET0623">Detection of Adversary-in-the-Middle</a>
                 </td>
                 <td rowspan="">
-                    <a href="/techniques/T1398">T1398</a>
+                    <a href="/techniques/T1638">T1638</a>
+                </td>
+            </tr>
+            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--105c127f-2777-452e-bf61-b0786ee13861">
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0728">DET0728</a>
+                </td>
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0728">Detection of Alarm Suppression</a>
+                </td>
+                <td rowspan="">
+                    <a href="/techniques/T0878">T0878</a>
+                </td>
+            </tr>
+            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--debfadd8-1df0-43b1-ae16-5f893dfc8bf3">
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0652">DET0652</a>
+                </td>
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0652">Detection of Application Versioning</a>
+                </td>
+                <td rowspan="">
+                    <a href="/techniques/T1661">T1661</a>
+                </td>
+            </tr>
+            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--930b268b-abf0-485f-9854-60c1cfdd2d33">
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0748">DET0748</a>
+                </td>
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0748">Detection of Autorun Image</a>
+                </td>
+                <td rowspan="">
+                    <a href="/techniques/T0895">T0895</a>
+                </td>
+            </tr>
+            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--4ea060f9-f6fc-4122-9544-70afd567ea10">
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0797">DET0797</a>
+                </td>
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0797">Detection of Block Serial COM</a>
+                </td>
+                <td rowspan="">
+                    <a href="/techniques/T1695/001">T1695.001</a>
                 </td>
             </tr>
             <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--0abd72c9-7d7f-4e8a-99d7-5ac2f791eb9d">
@@ -1367,6 +1471,17 @@
                 </td>
                 <td rowspan="">
                     <a href="/techniques/T1616">T1616</a>
+                </td>
+            </tr>
+            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--7c7aa84d-8425-42cc-b0bc-5d384b04d99a">
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0712">DET0712</a>
+                </td>
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0712">Detection of Compromise Client Software Binary</a>
+                </td>
+                <td rowspan="">
+                    <a href="/techniques/T1645">T1645</a>
                 </td>
             </tr>
             <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--8b2a91cd-4a15-4b25-9b75-581298f3ef82">
@@ -1391,6 +1506,17 @@
                     <a href="/techniques/T0809">T0809</a>
                 </td>
             </tr>
+            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--6c1d15de-c055-4514-ac16-9cdd8e9b2764">
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0660">DET0660</a>
+                </td>
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0660">Detection of Data Manipulation</a>
+                </td>
+                <td rowspan="">
+                    <a href="/techniques/T1641">T1641</a>
+                </td>
+            </tr>
             <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--3eb428c7-5192-4ae2-a5a3-022ca9695ec8">
                 <td rowspan="">
                     <a href="/detectionstrategies/DET0270">DET0270</a>
@@ -1411,6 +1537,17 @@
                 </td>
                 <td rowspan="">
                     <a href="/techniques/T1484/001">T1484.001</a>
+                </td>
+            </tr>
+            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--9f3df5ac-caa0-4189-9b9b-dcf2f6bbdc54">
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0722">DET0722</a>
+                </td>
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0722">Detection of Hooking</a>
+                </td>
+                <td rowspan="">
+                    <a href="/techniques/T0874">T0874</a>
                 </td>
             </tr>
             <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--e8b537e6-04eb-4168-a206-88cc041edf50">
@@ -1468,15 +1605,15 @@
                     <a href="/techniques/T1070/010">T1070.010</a>
                 </td>
             </tr>
-            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--06443942-ba28-4d13-b4b4-93317d6eafa5">
+            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--825106d1-6f44-47a1-b8dd-c3e3b6cecab7">
                 <td rowspan="">
-                    <a href="/detectionstrategies/DET0725">DET0725</a>
+                    <a href="/detectionstrategies/DET0777">DET0777</a>
                 </td>
                 <td rowspan="">
-                    <a href="/detectionstrategies/DET0725">Detection of Masquerading</a>
+                    <a href="/detectionstrategies/DET0777">Detection of Modify Alarm Settings</a>
                 </td>
                 <td rowspan="">
-                    <a href="/techniques/T0849">T0849</a>
+                    <a href="/techniques/T0838">T0838</a>
                 </td>
             </tr>
             <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--d080a1b1-5ad1-45a1-8f7b-b736986c20d9">
@@ -1501,17 +1638,6 @@
                     <a href="/techniques/T1003/003">T1003.003</a>
                 </td>
             </tr>
-            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--09754c36-7be2-4536-aad2-a6c3568ba0e5">
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0766">DET0766</a>
-                </td>
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0766">Detection of Project File Infection</a>
-                </td>
-                <td rowspan="">
-                    <a href="/techniques/T0873">T0873</a>
-                </td>
-            </tr>
             <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--7c1262bb-c0d1-4e0c-bab8-a232f7bed9d5">
                 <td rowspan="">
                     <a href="/detectionstrategies/DET0897">DET0897</a>
@@ -1521,17 +1647,6 @@
                 </td>
                 <td rowspan="">
                     <a href="/techniques/T1679">T1679</a>
-                </td>
-            </tr>
-            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--b25c4621-5d38-43ee-871e-0e5c02f2f48c">
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0765">DET0765</a>
-                </td>
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0765">Detection of Service Stop</a>
-                </td>
-                <td rowspan="">
-                    <a href="/techniques/T0881">T0881</a>
                 </td>
             </tr>
             <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--31773402-e407-4ed3-b86c-7a8587dc5ec9">
@@ -1554,17 +1669,6 @@
                 </td>
                 <td rowspan="">
                     <a href="/techniques/T1582">T1582</a>
-                </td>
-            </tr>
-            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--545bde30-2b8c-47d3-bd34-fa188348b967">
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0677">DET0677</a>
-                </td>
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0677">Detection of Steganography</a>
-                </td>
-                <td rowspan="">
-                    <a href="/techniques/T1406/001">T1406.001</a>
                 </td>
             </tr>
             <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--dab6c58b-2f44-4539-93e1-b03990fc1649">
@@ -2515,7 +2619,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3 col-footer">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v19.2&#013;Website  v5.1.0">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v20.0&#013;Website  v5.2.0">Website Changelog</a></u>
                                 </div>
                                 <div class="px-3">
                                     <u class="footer-link"><a href="/resources/legal-and-branding/privacy/#" class="footer-link" onclick="Osano.cm.showDrawer('osano-cm-dom-info-dialog-open')">Cookie Preferences</a></u>

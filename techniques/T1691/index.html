@@ -207,7 +207,7 @@
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
                     <div class="container-fluid banner-message">
-                        ATT&CKcon 7.0 registration is open! Join us October 27-28, 2026 in McLean, VA or virtually. <a href="https://na.eventscloud.com/website/93925/">Register in person</a> or <a href="https://mitre.brandlive.com/MITRE-ATTACKcon-7-0">register virtually</a>. See the <a href="https://na.eventscloud.com/website/93925/faq/">FAQ</a> for hotel and venue details.
+                        ATT&CK v20 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v20-9701dd75ffb4'>blog post</a> for more information. <a href='https://na.eventscloud.com/website/93925/'>ATT&CKcon 7.0</a> is October 27-28, 2026 in McLean, VA.
                     </div>
             </div>
         </div>
@@ -323,6 +323,15 @@
                         <a href="/tactics/TA0107">Inhibit Response Function</a>                  </div>
                 </div>
                 <div class="row card-data">
+                  <div class="col-md-1 px-0 text-center">
+                    <span data-toggle="tooltip" data-placement="left" title="" data-test-ignore="true"
+                      data-original-title="The system an adversary is operating within; could be an operating system or application">&#9432;</span>
+                  </div>
+                  <div class="col-md-11 pl-0">
+                    <span class="h5 card-title">Platforms:&nbsp;</span>Embedded, Linux, Windows
+                  </div>
+                </div>
+                <div class="row card-data">
                   <div class="col-md-1 px-0 text-center"></div>
                   <div class="col-md-11 pl-0">
                     <span class="h5 card-title">Version:&nbsp;</span>1.0
@@ -337,7 +346,7 @@
                 <div class="row card-data">
                   <div class="col-md-1 px-0 text-center"></div>
                   <div class="col-md-11 pl-0">
-                    <span class="h5 card-title">Last Modified:&nbsp;</span>12 May 2026
+                    <span class="h5 card-title">Last Modified:&nbsp;</span>13 October 2026
                   </div>
                 </div>
               </div>
@@ -347,13 +356,13 @@
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Permalink to this version of T1691" 
-           href="/versions/v19/techniques/T1691/" data-test-ignore="true">Version Permalink</a>
+           href="/versions/v20/techniques/T1691/" data-test-ignore="true">Version Permalink</a>
     </div>
     <div class="permalink">
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Go to the live version of T1691" 
-           href="/versions/v19/techniques/T1691/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+           href="/versions/v20/techniques/T1691/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
     </div>
 </div>
 
@@ -505,17 +514,35 @@
     </thead>
     <tbody>
                 <tr class="detection_strategy" id="uses-DET0903">
-                        <td rowspan="1">
+                        <td rowspan="3">
                             <a href="/detectionstrategies/DET0903">DET0903</a>
                         </td>
-                        <td rowspan="1">
+                        <td rowspan="3">
                             <a href="/detectionstrategies/DET0903">Detection of Block Operational Technology Message</a>
                         </td>
                     <td>
                         <a href="/detectionstrategies/DET0903#AN2046">AN2046</a>
                     </td>
                     <td>
-                                <p>Monitor for the termination of processes or services associated with ICS automation protocols and application software which could help detect blocked communications.</p><p>Monitor for lack of operational process data which may help identify a loss of communications. This will not directly detect the technique’s execution, but instead may provide additional evidence that the technique has been used and may complement other detections.</p><p>Monitor application logs for changes to settings and other events associated with network protocols that may be used to block communications.</p><p>Monitor for a loss of network communications, which may indicate this technique is being used.</p><p>Monitor asset alarms which may help identify a loss of communications. Consider correlating alarms with other data sources that indicate traffic has been blocked, such as network traffic. In cases where alternative methods of communicating with outstations exist alarms may still be visible even if messages are blocked.</p>
+                                <p>Real-time monitoring identifies iptables/nftables rule changes on Industrial Control System (ICS) Linux gateways that selectively block one ICS communication traffic type. OT operational-fidelity gate: Alert only when the action is not attributable to an authorized operator/engineering source for the specific target and function, and it is either outside an approved change/maintenance window or lacks matching change-control context; where telemetry permits, require corroborating device, configuration, or process-state effect. Suppress activity that fully matches approved maintenance, commissioning, failover, recovery, or tested control procedures.</p>
+</a>
+                    </td>
+                </tr>
+                <tr class="detection_strategy" id="uses-DET0903">
+                    <td>
+                        <a href="/detectionstrategies/DET0903#AN2213">AN2213</a>
+                    </td>
+                    <td>
+                                <p>Real-time monitoring identifies an abrupt cessation of expected Industrial Control System (ICS) protocol traffic between a Supervisory Control and Data Acquisition (SCADA)/control server and a field device, without a corresponding device alarm or scheduled maintenance event, while the device remains reachable for at least some traffic types. This technique-level analytic synthesizes Command Message blocking (T1691.001) and Reporting Message blocking (T1691.002). OT operational-fidelity gate: Alert only when the action is not attributable to an authorized operator/engineering source for the specific target and function, and it is either outside an approved change/maintenance window or lacks matching change-control context; where telemetry permits, require corroborating device, configuration, or process-state effect. Suppress activity that fully matches approved maintenance, commissioning, failover, recovery, or tested control procedures.</p>
+</a>
+                    </td>
+                </tr>
+                <tr class="detection_strategy" id="uses-DET0903">
+                    <td>
+                        <a href="/detectionstrategies/DET0903#AN2266">AN2266</a>
+                    </td>
+                    <td>
+                                <p>Real-time monitoring identifies Windows host-based firewall or network policy changes that selectively block Industrial Control System (ICS) communication traffic types from Supervisory Control and Data Acquisition (SCADA)/Distributed Control System (DCS) hosts. OT operational-fidelity gate: Alert only when the action is not attributable to an authorized operator/engineering source for the specific target and function, and it is either outside an approved change/maintenance window or lacks matching change-control context; where telemetry permits, require corroborating device, configuration, or process-state effect. Suppress activity that fully matches approved maintenance, commissioning, failover, recovery, or tested control procedures.</p>
 </a>
                     </td>
                 </tr>
@@ -779,7 +806,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3 col-footer">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v19.2&#013;Website  v5.1.0">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v20.0&#013;Website  v5.2.0">Website Changelog</a></u>
                                 </div>
                                 <div class="px-3">
                                     <u class="footer-link"><a href="/resources/legal-and-branding/privacy/#" class="footer-link" onclick="Osano.cm.showDrawer('osano-cm-dom-info-dialog-open')">Cookie Preferences</a></u>

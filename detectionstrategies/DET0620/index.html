@@ -207,7 +207,7 @@
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
                     <div class="container-fluid banner-message">
-                        ATT&CKcon 7.0 registration is open! Join us October 27-28, 2026 in McLean, VA or virtually. <a href="https://na.eventscloud.com/website/93925/">Register in person</a> or <a href="https://mitre.brandlive.com/MITRE-ATTACKcon-7-0">register virtually</a>. See the <a href="https://na.eventscloud.com/website/93925/faq/">FAQ</a> for hotel and venue details.
+                        ATT&CK v20 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v20-9701dd75ffb4'>blog post</a> for more information. <a href='https://na.eventscloud.com/website/93925/'>ATT&CKcon 7.0</a> is October 27-28, 2026 in McLean, VA.
                     </div>
             </div>
         </div>
@@ -292,13 +292,13 @@
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Permalink to this version of DET0620" 
-           href="/versions/v19/detectionstrategies/DET0620/" data-test-ignore="true">Version Permalink</a>
+           href="/versions/v20/detectionstrategies/DET0620/" data-test-ignore="true">Version Permalink</a>
     </div>
     <div class="permalink">
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Go to the live version of DET0620" 
-           href="/versions/v19/detectionstrategies/DET0620/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+           href="/versions/v20/detectionstrategies/DET0620/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
     </div>
 </div>
 
@@ -326,7 +326,7 @@
               role="tabpanel" aria-labelledby="tab-Android">
               <h4 class="pt-3" id="AN1681">AN1681</h4>
               <div>
-                        <p>Defender observes an application establishing recurrent HTTPS or FCM-based communication sessions exhibiting structured cadence, asymmetric request/response sizes, or persistent low-volume polling inconsistent with declared application functionality, potentially embedding command data within web protocol traffic.</p>
+                        <p>For Android, detect Web Protocols by correlating analyst-visible device/network evidence and management state; use streaming or batched telemetry only where the documented collector is deployed. Correlate API Calls via Application Vetting / Instrumented Dynamic Analysis [Dynamic API/runtime trace: FirebaseMessaging.getToken() called for project_id NOT IN $FCMAllowList$ — rogue FCM project registration is the adversary enabling C2 over Google infrastructure]; Network Connection Creation via Android Enterprise Network Logging / Enterprise VPN [DevicePolicyManager.retrieveNetworkLogs(): DnsEvent / ConnectEvent; VPN flow metadata]; Network Traffic Content via Enterprise Secure Web Gateway / Proxy [DNS/HTTP(S) inspection or proxy transaction metadata where enterprise decryption/inspection is deployed]. Alert on a sequence or state change inconsistent with the device/app baseline, approved management policy, or expected user workflow; do not infer unobserved API calls, file/process activity, or payload content from management state alone.</p>
 
               </div>
 
@@ -343,12 +343,30 @@
                   <tbody>
                     <tr>
                       <td rowspan="1">
+                        <a href="/datacomponents/DC0112">
+                          API Calls (DC0112)
+                        </a>
+                      </td>
+                      <td>mobile:DynamicAnalysis</td>
+                      <td>Dynamic API/runtime trace: FirebaseMessaging.getToken() called for project_id NOT IN $FCMAllowList$ — rogue FCM project registration is the adversary enabling C2 over Google infrastructure</td>
+                    </tr>
+                    <tr>
+                      <td rowspan="1">
+                        <a href="/datacomponents/DC0082">
+                          Network Connection Creation (DC0082)
+                        </a>
+                      </td>
+                      <td>android:EnterpriseNetworkLog</td>
+                      <td>DevicePolicyManager.retrieveNetworkLogs(): DnsEvent / ConnectEvent; VPN flow metadata</td>
+                    </tr>
+                    <tr>
+                      <td rowspan="1">
                         <a href="/datacomponents/DC0085">
                           Network Traffic Content (DC0085)
                         </a>
                       </td>
-                      <td>NSM:Flow</td>
-                      <td>HTTPS sessions exhibiting periodic request cadence or structured payload exchanges inconsistent with application baseline</td>
+                      <td>webproxy:applog</td>
+                      <td>DNS/HTTP(S) inspection or proxy transaction metadata where enterprise decryption/inspection is deployed</td>
                     </tr>
                   </tbody>
                 </table>
@@ -365,16 +383,16 @@
                   </thead>
                   <tbody>
                     <tr>
-                      <td>BeaconIntervalVarianceThreshold</td>
-                      <td>Defines acceptable deviation in HTTPS polling cadence</td>
+                      <td>AppBaselineDomains</td>
+                      <td>Per-app CDN/update domains from 30-day baseline.</td>
                     </tr>
                     <tr>
-                      <td>PayloadSymmetryThreshold</td>
-                      <td>Defines acceptable ratio between request and response sizes</td>
+                      <td>FCMAllowList</td>
+                      <td>Enterprise FCM project IDs for deployed apps. Derive from app developer registration.</td>
                     </tr>
                     <tr>
-                      <td>AppNetworkRoleBaseline</td>
-                      <td>Expected mapping between application category and network endpoints</td>
+                      <td>BeaconVarianceThreshold</td>
+                      <td>Default 15% interval variance.</td>
                     </tr>
                   </tbody>
                 </table>
@@ -384,7 +402,7 @@
               role="tabpanel" aria-labelledby="tab-iOS">
               <h4 class="pt-3" id="AN1682">AN1682</h4>
               <div>
-                        <p>Defender observes an application establishing recurrent HTTPS or APNS-related communications exhibiting structured cadence, abnormal session persistence, or notification-triggered network bursts inconsistent with user interaction patterns or declared application behavior.</p>
+                        <p>For iOS, detect Web Protocols by correlating analyst-visible device/network evidence and management state; use streaming or batched telemetry only where the documented collector is deployed. Correlate API Calls via Application Vetting / Instrumented Dynamic Analysis [Dynamic API/runtime trace: UNUserNotificationCenter or legacy UIApplication.registerForRemoteNotifications with Apple Team ID NOT IN $APNSAllowList$ — rogue APNS sender registration]; Network Connection Creation via Apple Network Extension / Enterprise VPN [NEFilterFlow / per-app VPN / secure-web-gateway flow metadata]; Network Traffic Content via Enterprise Secure Web Gateway / Proxy [DNS/HTTP(S) inspection or proxy transaction metadata where enterprise decryption/inspection is deployed]. Alert on a sequence or state change inconsistent with the device/app baseline, approved management policy, or expected user workflow; do not infer unobserved API calls, file/process activity, or payload content from management state alone.</p>
 
               </div>
 
@@ -401,12 +419,30 @@
                   <tbody>
                     <tr>
                       <td rowspan="1">
+                        <a href="/datacomponents/DC0112">
+                          API Calls (DC0112)
+                        </a>
+                      </td>
+                      <td>mobile:DynamicAnalysis</td>
+                      <td>Dynamic API/runtime trace: UNUserNotificationCenter or legacy UIApplication.registerForRemoteNotifications with Apple Team ID NOT IN $APNSAllowList$ — rogue APNS sender registration</td>
+                    </tr>
+                    <tr>
+                      <td rowspan="1">
+                        <a href="/datacomponents/DC0082">
+                          Network Connection Creation (DC0082)
+                        </a>
+                      </td>
+                      <td>iOS:NetworkExtension</td>
+                      <td>NEFilterFlow / per-app VPN / secure-web-gateway flow metadata</td>
+                    </tr>
+                    <tr>
+                      <td rowspan="1">
                         <a href="/datacomponents/DC0085">
                           Network Traffic Content (DC0085)
                         </a>
                       </td>
-                      <td>NSM:Flow</td>
-                      <td>HTTPS sessions exhibiting periodic request cadence or structured payload exchanges inconsistent with application baseline</td>
+                      <td>webproxy:applog</td>
+                      <td>DNS/HTTP(S) inspection or proxy transaction metadata where enterprise decryption/inspection is deployed</td>
                     </tr>
                   </tbody>
                 </table>
@@ -423,16 +459,16 @@
                   </thead>
                   <tbody>
                     <tr>
-                      <td>NotificationWakeFrequencyThreshold</td>
-                      <td>Baseline deviation tolerance for background wake events</td>
+                      <td>AppBaselineDomains</td>
+                      <td>Per-app CDN/update domains from 30-day baseline.</td>
                     </tr>
                     <tr>
-                      <td>HTTPSCadenceAnomalyThreshold</td>
-                      <td>Acceptable deviation in recurring web traffic timing</td>
+                      <td>APNSAllowList</td>
+                      <td>Enterprise Apple Team IDs for deployed apps. Derive from Apple Developer account.</td>
                     </tr>
                     <tr>
-                      <td>SessionPersistenceThreshold</td>
-                      <td>Threshold for abnormal TLS session duration</td>
+                      <td>BeaconVarianceThreshold</td>
+                      <td>Default 15% interval variance.</td>
                     </tr>
                   </tbody>
                 </table>
@@ -440,6 +476,7 @@
             </div>
           </div>
         </div>
+
 
         
       </div>
@@ -658,7 +695,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3 col-footer">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v19.2&#013;Website  v5.1.0">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v20.0&#013;Website  v5.2.0">Website Changelog</a></u>
                                 </div>
                                 <div class="px-3">
                                     <u class="footer-link"><a href="/resources/legal-and-branding/privacy/#" class="footer-link" onclick="Osano.cm.showDrawer('osano-cm-dom-info-dialog-open')">Cookie Preferences</a></u>

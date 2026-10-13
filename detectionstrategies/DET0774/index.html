@@ -207,7 +207,7 @@
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
                     <div class="container-fluid banner-message">
-                        ATT&CKcon 7.0 registration is open! Join us October 27-28, 2026 in McLean, VA or virtually. <a href="https://na.eventscloud.com/website/93925/">Register in person</a> or <a href="https://mitre.brandlive.com/MITRE-ATTACKcon-7-0">register virtually</a>. See the <a href="https://na.eventscloud.com/website/93925/faq/">FAQ</a> for hotel and venue details.
+                        ATT&CK v20 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v20-9701dd75ffb4'>blog post</a> for more information. <a href='https://na.eventscloud.com/website/93925/'>ATT&CKcon 7.0</a> is October 27-28, 2026 in McLean, VA.
                     </div>
             </div>
         </div>
@@ -292,13 +292,13 @@
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Permalink to this version of DET0774" 
-           href="/versions/v19/detectionstrategies/DET0774/" data-test-ignore="true">Version Permalink</a>
+           href="/versions/v20/detectionstrategies/DET0774/" data-test-ignore="true">Version Permalink</a>
     </div>
     <div class="permalink">
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Go to the live version of DET0774" 
-           href="/versions/v19/detectionstrategies/DET0774/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+           href="/versions/v20/detectionstrategies/DET0774/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
     </div>
 </div>
 
@@ -309,18 +309,18 @@
           <h2 class="pt-3" id="analytics">Analytics</h2>
           <ul class="nav nav-tabs mb-2" role="tablist">
             <li class="nav-item">
-              <a class="nav-link active" id="tab-ICS" data-toggle="tab"
-                href="#pane-ICS" role="tab" aria-selected="true">
-                ICS
+              <a class="nav-link active" id="tab-Embedded" data-toggle="tab"
+                href="#pane-Embedded" role="tab" aria-selected="true">
+                Embedded
               </a>
             </li>
           </ul>
           <div class="tab-content card card-body p-3">
-            <div class="tab-pane fade show active" id="pane-ICS"
-              role="tabpanel" aria-labelledby="tab-ICS">
+            <div class="tab-pane fade show active" id="pane-Embedded"
+              role="tabpanel" aria-labelledby="tab-Embedded">
               <h4 class="pt-3" id="AN1906">AN1906</h4>
               <div>
-                        <p>Collecting information from the I/O image requires analyzing the application program running on the PLC for specific data block reads. Detecting this requires obtaining and analyzing a PLC’s application program, either directly from the device or from asset management platforms.</p>
+                        <p>Real-time monitoring identifies a single Industrial Control System (ICS) protocol session reading the complete Input/Output (I/O) image from a field device, rather than the sparse, fixed tag subset that legitimate Supervisory Control and Data Acquisition (SCADA) polling queries, from a source not in the approved control server list. OT operational-fidelity gate: Do not alert on novelty, scan/read volume, or enumeration alone. Alert when the source role is not authorized for discovery/polling and the target scope, address/tag range, protocol, or rate deviates from the established operational baseline. Suppress normal SCADA/HMI/historian polling, commissioning, asset inventory, backup, diagnostics, and approved engineering activity.</p>
 
               </div>
 
@@ -337,19 +337,86 @@
                   <tbody>
                     <tr>
                       <td rowspan="1">
-                        <a href="/datacomponents/DC0111">
-                          Software (DC0111)
+                        <a href="/datacomponents/DC0085">
+                          Network Traffic Content (DC0085)
                         </a>
                       </td>
-                      <td>Asset</td>
-                      <td>None</td>
+                      <td>NSM:Content</td>
+                      <td>single session reads address range covering above full image coverage threshold percent of device total Input/Output (I/O) space, from source not in approved Supervisory Control and Data Acquisition (SCADA) servers</td>
                     </tr>
                   </tbody>
                 </table>
               </div>
 
+              <h5 class="pt-3" id="AN1906-mutable-elements">Mutable Elements</h5>
+              <div class="tables-mobile">
+                <table class="table table-bordered table-alternate mt-2">
+                  <thead>
+                    <tr>
+                      <th scope="col">Field</th>
+                      <th scope="col">Description</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>ApprovedSCADAServers</td>
+                      <td>IP allowlist of legitimate polling sources.</td>
+                    </tr>
+                    <tr>
+                      <td>FullImageCoverageThreshold</td>
+                      <td>Percentage of total device address space read within a single session constituting a full I/O image read.</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
+        </div>
+
+        <div id="assets-tabs">
+          <h2 class="pt-3" id="assets">Targeted Assets</h2>
+          <table class="table table-bordered table-alternate mt-2" aria-describedby="asset-table">
+            <thead>
+              <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Asset</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <a href="/assets/A0003"> A0003 </a>
+                </td>
+                <td>
+                  <a href="/assets/A0003"> Programmable Logic Controller (PLC) </a>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <a href="/assets/A0010"> A0010 </a>
+                </td>
+                <td>
+                  <a href="/assets/A0010"> Safety Controller </a>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <a href="/assets/A0017"> A0017 </a>
+                </td>
+                <td>
+                  <a href="/assets/A0017"> Distributed Control System (DCS) Controller </a>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <a href="/assets/A0018"> A0018 </a>
+                </td>
+                <td>
+                  <a href="/assets/A0018"> Programmable Automation Controller (PAC) </a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
 
         
@@ -569,7 +636,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3 col-footer">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v19.2&#013;Website  v5.1.0">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v20.0&#013;Website  v5.2.0">Website Changelog</a></u>
                                 </div>
                                 <div class="px-3">
                                     <u class="footer-link"><a href="/resources/legal-and-branding/privacy/#" class="footer-link" onclick="Osano.cm.showDrawer('osano-cm-dom-info-dialog-open')">Cookie Preferences</a></u>

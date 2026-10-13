@@ -207,7 +207,7 @@
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
                     <div class="container-fluid banner-message">
-                        ATT&CKcon 7.0 registration is open! Join us October 27-28, 2026 in McLean, VA or virtually. <a href="https://na.eventscloud.com/website/93925/">Register in person</a> or <a href="https://mitre.brandlive.com/MITRE-ATTACKcon-7-0">register virtually</a>. See the <a href="https://na.eventscloud.com/website/93925/faq/">FAQ</a> for hotel and venue details.
+                        ATT&CK v20 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v20-9701dd75ffb4'>blog post</a> for more information. <a href='https://na.eventscloud.com/website/93925/'>ATT&CKcon 7.0</a> is October 27-28, 2026 in McLean, VA.
                     </div>
             </div>
         </div>
@@ -286,7 +286,7 @@
                       data-original-title="The system an adversary is operating within; could be an operating system or application">&#9432;</span>
                   </div>
                   <div class="col-md-11 pl-0">
-                    <span class="h5 card-title">Platforms:&nbsp;</span>None
+                    <span class="h5 card-title">Platforms:&nbsp;</span>Embedded, Linux, Network Devices, Windows
                   </div>
                 </div>
                 <div class="row card-data">
@@ -304,7 +304,7 @@
                 <div class="row card-data">
                   <div class="col-md-1 px-0 text-center"></div>
                   <div class="col-md-11 pl-0">
-                    <span class="h5 card-title">Last Modified:&nbsp;</span>25 April 2025
+                    <span class="h5 card-title">Last Modified:&nbsp;</span>13 October 2026
                   </div>
                 </div>
               </div>
@@ -314,13 +314,13 @@
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Permalink to this version of T0801" 
-           href="/versions/v19/techniques/T0801/" data-test-ignore="true">Version Permalink</a>
+           href="/versions/v20/techniques/T0801/" data-test-ignore="true">Version Permalink</a>
     </div>
     <div class="permalink">
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Go to the live version of T0801" 
-           href="/versions/v19/techniques/T0801/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+           href="/versions/v20/techniques/T0801/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
     </div>
 </div>
 
@@ -526,17 +526,44 @@
     </thead>
     <tbody>
                 <tr class="detection_strategy" id="uses-DET0727">
-                        <td rowspan="1">
+                        <td rowspan="4">
                             <a href="/detectionstrategies/DET0727">DET0727</a>
                         </td>
-                        <td rowspan="1">
+                        <td rowspan="4">
                             <a href="/detectionstrategies/DET0727">Detection of Monitor Process State</a>
                         </td>
                     <td>
                         <a href="/detectionstrategies/DET0727#AN1860">AN1860</a>
                     </td>
                     <td>
-                                <p>Monitor ICS automation network protocols for functions related to reading an operational process state (e.g., "Read" function codes in protocols like DNP3 or Modbus). In some cases, there may be multiple ways to monitor an operational process’ state, one of which is typically used in the operational environment. Monitor for the operating mode being checked in unexpected ways.<br />Monitor applications logs for any access attempts to operational databases (e.g., historians) or other sources of operational data within the ICS environment. These devices should be monitored for adversary collection using techniques relevant to the underlying technologies (e.g., Windows, Linux).</p>
+                                <p>Real-time network monitoring identifies a source issuing read-only Industrial Control System (ICS) protocol requests to multiple field devices at a polling rate exceeding the legitimate Supervisory Control and Data Acquisition (SCADA) baseline, from a source not in the approved control server allowlist. Because the action is read-only, source-identity and rate deviation are the only available distinguishing signals. OT operational-fidelity gate: Do not alert on novelty, scan/read volume, or enumeration alone. Alert when the source role is not authorized for discovery/polling and the target scope, address/tag range, protocol, or rate deviates from the established operational baseline. Suppress normal SCADA/HMI/historian polling, commissioning, asset inventory, backup, diagnostics, and approved engineering activity.</p>
+</a>
+                    </td>
+                </tr>
+                <tr class="detection_strategy" id="uses-DET0727">
+                    <td>
+                        <a href="/detectionstrategies/DET0727#AN2125">AN2125</a>
+                    </td>
+                    <td>
+                                <p>Real-time monitoring identifies a scripting interpreter or custom binary on an Industrial Control System (ICS) Linux asset making sustained, high-frequency Industrial Control System (ICS) protocol read connections to field device IPs, from a User Identifier (UID) not associated with the recognized historian or Supervisory Control and Data Acquisition (SCADA) service account. OT operational-fidelity gate: Do not alert on novelty, scan/read volume, or enumeration alone. Alert when the source role is not authorized for discovery/polling and the target scope, address/tag range, protocol, or rate deviates from the established operational baseline. Suppress normal SCADA/HMI/historian polling, commissioning, asset inventory, backup, diagnostics, and approved engineering activity.</p>
+</a>
+                    </td>
+                </tr>
+                <tr class="detection_strategy" id="uses-DET0727">
+                    <td>
+                        <a href="/detectionstrategies/DET0727#AN2169">AN2169</a>
+                    </td>
+                    <td>
+                                <p>Real-time monitoring identifies NetFlow showing a host generating an anomalously high volume of short-duration flows to multiple field device IPs at regular intervals, from a source not in the approved Supervisory Control and Data Acquisition (SCADA) server list. OT operational-fidelity gate: Do not alert on novelty, scan/read volume, or enumeration alone. Alert when the source role is not authorized for discovery/polling and the target scope, address/tag range, protocol, or rate deviates from the established operational baseline. Suppress normal SCADA/HMI/historian polling, commissioning, asset inventory, backup, diagnostics, and approved engineering activity.</p>
+</a>
+                    </td>
+                </tr>
+                <tr class="detection_strategy" id="uses-DET0727">
+                    <td>
+                        <a href="/detectionstrategies/DET0727#AN2206">AN2206</a>
+                    </td>
+                    <td>
+                                <p>Real-time monitoring identifies a process on an Industrial Control System (ICS) Windows host querying device operating state or process values via vendor Application Programming Interfaces (APIs) at a frequency or scope exceeding documented Human-Machine Interface (HMI) refresh behavior, from a process not in the recognized HMI/Supervisory Control and Data Acquisition (SCADA) application list. OT operational-fidelity gate: Do not alert on novelty, scan/read volume, or enumeration alone. Alert when the source role is not authorized for discovery/polling and the target scope, address/tag range, protocol, or rate deviates from the established operational baseline. Suppress normal SCADA/HMI/historian polling, commissioning, asset inventory, backup, diagnostics, and approved engineering activity.</p>
 </a>
                     </td>
                 </tr>
@@ -824,7 +851,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3 col-footer">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v19.2&#013;Website  v5.1.0">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v20.0&#013;Website  v5.2.0">Website Changelog</a></u>
                                 </div>
                                 <div class="px-3">
                                     <u class="footer-link"><a href="/resources/legal-and-branding/privacy/#" class="footer-link" onclick="Osano.cm.showDrawer('osano-cm-dom-info-dialog-open')">Cookie Preferences</a></u>

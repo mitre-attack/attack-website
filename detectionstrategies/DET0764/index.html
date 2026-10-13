@@ -207,7 +207,7 @@
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
                     <div class="container-fluid banner-message">
-                        ATT&CKcon 7.0 registration is open! Join us October 27-28, 2026 in McLean, VA or virtually. <a href="https://na.eventscloud.com/website/93925/">Register in person</a> or <a href="https://mitre.brandlive.com/MITRE-ATTACKcon-7-0">register virtually</a>. See the <a href="https://na.eventscloud.com/website/93925/faq/">FAQ</a> for hotel and venue details.
+                        ATT&CK v20 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v20-9701dd75ffb4'>blog post</a> for more information. <a href='https://na.eventscloud.com/website/93925/'>ATT&CKcon 7.0</a> is October 27-28, 2026 in McLean, VA.
                     </div>
             </div>
         </div>
@@ -267,7 +267,7 @@
                 </div>
                 <div class="row card-data">
                   <div class="col-md-12">
-                    <span class="h5 card-title">Analytics</span>: AN1896
+                    <span class="h5 card-title">Analytics</span>: AN1896, AN2115, AN2176, AN2238
                   </div>
                 </div>
                 <div class="row card-data">
@@ -282,7 +282,7 @@
                 </div>
                 <div class="row card-data">
                   <div class="col-md-12">
-                    <span class="h5 card-title">Last Modified</span>: 12 May 2026
+                    <span class="h5 card-title">Last Modified</span>: 13 October 2026
                   </div>
                 </div>
               </div>
@@ -292,13 +292,13 @@
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Permalink to this version of DET0764" 
-           href="/versions/v19/detectionstrategies/DET0764/" data-test-ignore="true">Version Permalink</a>
+           href="/versions/v20/detectionstrategies/DET0764/" data-test-ignore="true">Version Permalink</a>
     </div>
     <div class="permalink">
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Go to the live version of DET0764" 
-           href="/versions/v19/detectionstrategies/DET0764/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+           href="/versions/v20/detectionstrategies/DET0764/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
     </div>
 </div>
 
@@ -309,18 +309,36 @@
           <h2 class="pt-3" id="analytics">Analytics</h2>
           <ul class="nav nav-tabs mb-2" role="tablist">
             <li class="nav-item">
-              <a class="nav-link active" id="tab-ICS" data-toggle="tab"
-                href="#pane-ICS" role="tab" aria-selected="true">
-                ICS
+              <a class="nav-link active" id="tab-Windows" data-toggle="tab"
+                href="#pane-Windows" role="tab" aria-selected="true">
+                Windows
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link " id="tab-Linux" data-toggle="tab"
+                href="#pane-Linux" role="tab" aria-selected="true">
+                Linux
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link " id="tab-Network_Devices" data-toggle="tab"
+                href="#pane-Network_Devices" role="tab" aria-selected="true">
+                Network Devices
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link " id="tab-Embedded" data-toggle="tab"
+                href="#pane-Embedded" role="tab" aria-selected="true">
+                Embedded
               </a>
             </li>
           </ul>
           <div class="tab-content card card-body p-3">
-            <div class="tab-pane fade show active" id="pane-ICS"
-              role="tabpanel" aria-labelledby="tab-ICS">
+            <div class="tab-pane fade show active" id="pane-Windows"
+              role="tabpanel" aria-labelledby="tab-Windows">
               <h4 class="pt-3" id="AN1896">AN1896</h4>
               <div>
-                        <p>Monitor HKLM\Software\Policies\Microsoft\Windows NT\DNSClient for changes to the "EnableMulticast" DWORD value. A value of "0" indicates LLMNR is disabled.<br />Host-based implementations of this technique may utilize networking-based system calls or network utility commands (e.g., iptables) to locally intercept traffic. Monitor for relevant process creation events.<br />Monitor for network traffic originating from unknown/unexpected hosts. Local network traffic metadata (such as source MAC addressing) as well as usage of network management protocols such as DHCP may be helpful in identifying hardware. For added context on adversary procedures and background see <a href="/techniques/T1557">Adversary-in-the-Middle</a> and applicable sub-techniques.<br />Monitor for newly constructed services/daemons through Windows event logs for event IDs 4697 and 7045.<br />Monitor network traffic for anomalies associated with known AiTM behavior. For Collection activity where transmitted data is not manipulated, anomalies may be present in network management protocols (e.g., ARP, DHCP).<br />Monitor application logs for changes to settings and other events associated with network protocols and other services commonly abused for AiTM.</p>
+                        <p>Real-time monitoring identifies an Industrial Control System (ICS) Windows host simultaneously holding connections to both the field device subnet and an unexpected external or inter-zone destination, combined with proxy-capable process spawning and ICS vendor application logs showing endpoint or certificate changes. OT operational-fidelity gate: Alert only when the asset's documented role does not permit the connection and the destination/proxy/service is outside the approved communications profile, with process/service identity used as corroboration where available. Suppress approved vendor support, update repositories, remote operations, failover paths, and documented temporary connectivity.</p>
 
               </div>
 
@@ -337,48 +355,146 @@
                   <tbody>
                     <tr>
                       <td rowspan="1">
-                        <a href="/datacomponents/DC0063">
-                          Windows Registry Key Modification (DC0063)
+                        <a href="/datacomponents/DC0038">
+                          Application Log Content (DC0038)
                         </a>
                       </td>
-                      <td>Windows Registry</td>
-                      <td>None</td>
+                      <td>vendorapp:ApplicationLog</td>
+                      <td>Industrial Control Systems (ICS) vendor application log shows endpoint or certificate change without documented maintenance reference</td>
                     </tr>
+                    <tr>
+                      <td rowspan="1">
+                        <a href="/datacomponents/DC0082">
+                          Network Connection Creation (DC0082)
+                        </a>
+                      </td>
+                      <td>WinEventLog:Sysmon</td>
+                      <td>EventCode=3 process holds connections to both device subnet and external/inter-zone destination simultaneously, combined with proxy-capable process spawn</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <h5 class="pt-3" id="AN1896-mutable-elements">Mutable Elements</h5>
+              <div class="tables-mobile">
+                <table class="table table-bordered table-alternate mt-2">
+                  <thead>
+                    <tr>
+                      <th scope="col">Field</th>
+                      <th scope="col">Description</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>AiTMCorrelationWindow</td>
+                      <td>Time window within which a MAC binding change and protocol baseline deviation are considered correlated.</td>
+                    </tr>
+                    <tr>
+                      <td>ExpectedNextHopBaseline</td>
+                      <td>Documented expected network path for device subnet traffic.</td>
+                    </tr>
+                    <tr>
+                      <td>TopologyChangeTicket</td>
+                      <td>Change-management reference confirming an authorized hardware replacement or topology modification.</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="tab-pane fade " id="pane-Linux"
+              role="tabpanel" aria-labelledby="tab-Linux">
+              <h4 class="pt-3" id="AN2115">AN2115</h4>
+              <div>
+                        <p>Real-time monitoring identifies a process on an Industrial Control System (ICS) Linux asset with both a listening socket on an ICS protocol port and an outbound connection to a non-ICS destination, combined with iptables DNAT rules redirecting ICS protocol port traffic. OT operational-fidelity gate: Alert only when the asset's documented role does not permit the connection and the destination/proxy/service is outside the approved communications profile, with process/service identity used as corroboration where available. Suppress approved vendor support, update repositories, remote operations, failover paths, and documented temporary connectivity.</p>
+
+              </div>
+
+              <h5 class="pt-3" id="AN2115-log-sources">Log Sources</h5>
+              <div class="tables-mobile">
+                <table class="table table-bordered table-alternate mt-2">
+                  <thead>
+                    <tr>
+                      <th scope="col">Data Component</th>
+                      <th scope="col">Name</th>
+                      <th scope="col">Channel</th>
+                    </tr>
+                  </thead>
+                  <tbody>
                     <tr>
                       <td rowspan="1">
                         <a href="/datacomponents/DC0032">
                           Process Creation (DC0032)
                         </a>
                       </td>
-                      <td>Process</td>
-                      <td>None</td>
+                      <td>auditd:SYSCALL</td>
+                      <td>Linux Audit SYSCALL/EXECVE/SOCKADDR records (configured audit rule): syscall=execve; command line invokes iptables/nftables to change ICS traffic filtering or redirection outside the authorized network-administration baseline</td>
                     </tr>
+                    <tr>
+                      <td rowspan="1">
+                        <a href="/datacomponents/DC0082">
+                          Network Connection Creation (DC0082)
+                        </a>
+                      </td>
+                      <td>auditd:SYSCALL</td>
+                      <td>Linux Audit SYSCALL/EXECVE/SOCKADDR records (configured audit rule): bind/listen/connect syscalls show one process accepting ICS-protocol connections while also initiating an outbound connection to a non-ICS destination</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <h5 class="pt-3" id="AN2115-mutable-elements">Mutable Elements</h5>
+              <div class="tables-mobile">
+                <table class="table table-bordered table-alternate mt-2">
+                  <thead>
+                    <tr>
+                      <th scope="col">Field</th>
+                      <th scope="col">Description</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>AiTMCorrelationWindow</td>
+                      <td>Time window within which a MAC binding change and protocol baseline deviation are considered correlated.</td>
+                    </tr>
+                    <tr>
+                      <td>ExpectedNextHopBaseline</td>
+                      <td>Documented expected network path for device subnet traffic.</td>
+                    </tr>
+                    <tr>
+                      <td>TopologyChangeTicket</td>
+                      <td>Change-management reference confirming an authorized hardware replacement or topology modification.</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="tab-pane fade " id="pane-Network_Devices"
+              role="tabpanel" aria-labelledby="tab-Network_Devices">
+              <h4 class="pt-3" id="AN2176">AN2176</h4>
+              <div>
+                        <p>Real-time monitoring identifies network device configuration changes (network address translation rules, static routes, access control list modifications) combined with NetFlow path deviations for Industrial Control System (ICS) device traffic and Transport Layer Security (TLS) certificate issuer anomalies in Operational Technology (OT) management traffic. OT operational-fidelity gate: Alert only when the asset's documented role does not permit the connection and the destination/proxy/service is outside the approved communications profile, with process/service identity used as corroboration where available. Suppress approved vendor support, update repositories, remote operations, failover paths, and documented temporary connectivity.</p>
+
+              </div>
+
+              <h5 class="pt-3" id="AN2176-log-sources">Log Sources</h5>
+              <div class="tables-mobile">
+                <table class="table table-bordered table-alternate mt-2">
+                  <thead>
+                    <tr>
+                      <th scope="col">Data Component</th>
+                      <th scope="col">Name</th>
+                      <th scope="col">Channel</th>
+                    </tr>
+                  </thead>
+                  <tbody>
                     <tr>
                       <td rowspan="1">
                         <a href="/datacomponents/DC0078">
                           Network Traffic Flow (DC0078)
                         </a>
                       </td>
-                      <td>Network Traffic</td>
-                      <td>None</td>
-                    </tr>
-                    <tr>
-                      <td rowspan="1">
-                        <a href="/datacomponents/DC0060">
-                          Service Creation (DC0060)
-                        </a>
-                      </td>
-                      <td>Service</td>
-                      <td>None</td>
-                    </tr>
-                    <tr>
-                      <td rowspan="1">
-                        <a href="/datacomponents/DC0085">
-                          Network Traffic Content (DC0085)
-                        </a>
-                      </td>
-                      <td>Network Traffic</td>
-                      <td>None</td>
+                      <td>netflow:ipfix</td>
+                      <td>IPFIX/NetFlow flow record (src/dst IP, src/dst port, protocol, packets/bytes/time): next-hop change for device subnet traffic or unexpected path through new gateway not in expected next-hop baseline</td>
                     </tr>
                     <tr>
                       <td rowspan="1">
@@ -386,15 +502,265 @@
                           Application Log Content (DC0038)
                         </a>
                       </td>
-                      <td>Application Log</td>
-                      <td>None</td>
+                      <td>networkdevice:syslog</td>
+                      <td>Network Address Translation (NAT)/route/Access Control List (ACL) configuration change from source not in approved net admins outside config change window</td>
                     </tr>
                   </tbody>
                 </table>
               </div>
 
+              <h5 class="pt-3" id="AN2176-mutable-elements">Mutable Elements</h5>
+              <div class="tables-mobile">
+                <table class="table table-bordered table-alternate mt-2">
+                  <thead>
+                    <tr>
+                      <th scope="col">Field</th>
+                      <th scope="col">Description</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>AiTMCorrelationWindow</td>
+                      <td>Time window within which a MAC binding change and protocol baseline deviation are considered correlated.</td>
+                    </tr>
+                    <tr>
+                      <td>ExpectedNextHopBaseline</td>
+                      <td>Documented expected network path for device subnet traffic.</td>
+                    </tr>
+                    <tr>
+                      <td>TopologyChangeTicket</td>
+                      <td>Change-management reference confirming an authorized hardware replacement or topology modification.</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="tab-pane fade " id="pane-Embedded"
+              role="tabpanel" aria-labelledby="tab-Embedded">
+              <h4 class="pt-3" id="AN2238">AN2238</h4>
+              <div>
+                        <p>Real-time network monitoring identifies a field device's source Media Access Control (MAC) address changing without a corresponding documented hardware replacement, combined with protocol-level anomalies (transaction identifier reuse, function-code patterns deviating from baseline) for traffic associated with that device Internet Protocol (IP) address. OT operational-fidelity gate: Alert only when the asset's documented role does not permit the connection and the destination/proxy/service is outside the approved communications profile, with process/service identity used as corroboration where available. Suppress approved vendor support, update repositories, remote operations, failover paths, and documented temporary connectivity.</p>
+
+              </div>
+
+              <h5 class="pt-3" id="AN2238-log-sources">Log Sources</h5>
+              <div class="tables-mobile">
+                <table class="table table-bordered table-alternate mt-2">
+                  <thead>
+                    <tr>
+                      <th scope="col">Data Component</th>
+                      <th scope="col">Name</th>
+                      <th scope="col">Channel</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td rowspan="1">
+                        <a href="/datacomponents/DC0078">
+                          Network Traffic Flow (DC0078)
+                        </a>
+                      </td>
+                      <td>NSM:Content</td>
+                      <td>device_ip observed with src_mac differing from enrolled hardware address without corresponding topology change ticket</td>
+                    </tr>
+                    <tr>
+                      <td rowspan="1">
+                        <a href="/datacomponents/DC0085">
+                          Network Traffic Content (DC0085)
+                        </a>
+                      </td>
+                      <td>NSM:Content</td>
+                      <td>transaction identifier reuse pattern or function-code distribution deviates from established per-device baseline within Adversary in the Middle (AiTM) correlation window of the Media Access Control (MAC) address binding change</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <h5 class="pt-3" id="AN2238-mutable-elements">Mutable Elements</h5>
+              <div class="tables-mobile">
+                <table class="table table-bordered table-alternate mt-2">
+                  <thead>
+                    <tr>
+                      <th scope="col">Field</th>
+                      <th scope="col">Description</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>AiTMCorrelationWindow</td>
+                      <td>Time window within which a MAC binding change and protocol baseline deviation are considered correlated.</td>
+                    </tr>
+                    <tr>
+                      <td>ExpectedNextHopBaseline</td>
+                      <td>Documented expected network path for device subnet traffic.</td>
+                    </tr>
+                    <tr>
+                      <td>TopologyChangeTicket</td>
+                      <td>Change-management reference confirming an authorized hardware replacement or topology modification.</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
+        </div>
+
+        <div id="assets-tabs">
+          <h2 class="pt-3" id="assets">Targeted Assets</h2>
+          <table class="table table-bordered table-alternate mt-2" aria-describedby="asset-table">
+            <thead>
+              <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Asset</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <a href="/assets/A0001"> A0001 </a>
+                </td>
+                <td>
+                  <a href="/assets/A0001"> Workstation </a>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <a href="/assets/A0002"> A0002 </a>
+                </td>
+                <td>
+                  <a href="/assets/A0002"> Human-Machine Interface (HMI) </a>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <a href="/assets/A0003"> A0003 </a>
+                </td>
+                <td>
+                  <a href="/assets/A0003"> Programmable Logic Controller (PLC) </a>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <a href="/assets/A0004"> A0004 </a>
+                </td>
+                <td>
+                  <a href="/assets/A0004"> Remote Terminal Unit (RTU) </a>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <a href="/assets/A0005"> A0005 </a>
+                </td>
+                <td>
+                  <a href="/assets/A0005"> Intelligent Electronic Device (IED) </a>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <a href="/assets/A0006"> A0006 </a>
+                </td>
+                <td>
+                  <a href="/assets/A0006"> Data Historian </a>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <a href="/assets/A0007"> A0007 </a>
+                </td>
+                <td>
+                  <a href="/assets/A0007"> Control Server </a>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <a href="/assets/A0008"> A0008 </a>
+                </td>
+                <td>
+                  <a href="/assets/A0008"> Application Server </a>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <a href="/assets/A0009"> A0009 </a>
+                </td>
+                <td>
+                  <a href="/assets/A0009"> Data Gateway </a>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <a href="/assets/A0010"> A0010 </a>
+                </td>
+                <td>
+                  <a href="/assets/A0010"> Safety Controller </a>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <a href="/assets/A0011"> A0011 </a>
+                </td>
+                <td>
+                  <a href="/assets/A0011"> Virtual Private Network (VPN) Server </a>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <a href="/assets/A0012"> A0012 </a>
+                </td>
+                <td>
+                  <a href="/assets/A0012"> Jump Host </a>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <a href="/assets/A0013"> A0013 </a>
+                </td>
+                <td>
+                  <a href="/assets/A0013"> Field I/O </a>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <a href="/assets/A0014"> A0014 </a>
+                </td>
+                <td>
+                  <a href="/assets/A0014"> Routers </a>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <a href="/assets/A0015"> A0015 </a>
+                </td>
+                <td>
+                  <a href="/assets/A0015"> Switch </a>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <a href="/assets/A0016"> A0016 </a>
+                </td>
+                <td>
+                  <a href="/assets/A0016"> Firewall </a>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <a href="/assets/A0017"> A0017 </a>
+                </td>
+                <td>
+                  <a href="/assets/A0017"> Distributed Control System (DCS) Controller </a>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <a href="/assets/A0018"> A0018 </a>
+                </td>
+                <td>
+                  <a href="/assets/A0018"> Programmable Automation Controller (PAC) </a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
 
         
@@ -614,7 +980,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3 col-footer">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v19.2&#013;Website  v5.1.0">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v20.0&#013;Website  v5.2.0">Website Changelog</a></u>
                                 </div>
                                 <div class="px-3">
                                     <u class="footer-link"><a href="/resources/legal-and-branding/privacy/#" class="footer-link" onclick="Osano.cm.showDrawer('osano-cm-dom-info-dialog-open')">Cookie Preferences</a></u>

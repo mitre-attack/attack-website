@@ -207,7 +207,7 @@
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
                     <div class="container-fluid banner-message">
-                        ATT&CKcon 7.0 registration is open! Join us October 27-28, 2026 in McLean, VA or virtually. <a href="https://na.eventscloud.com/website/93925/">Register in person</a> or <a href="https://mitre.brandlive.com/MITRE-ATTACKcon-7-0">register virtually</a>. See the <a href="https://na.eventscloud.com/website/93925/faq/">FAQ</a> for hotel and venue details.
+                        ATT&CK v20 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v20-9701dd75ffb4'>blog post</a> for more information. <a href='https://na.eventscloud.com/website/93925/'>ATT&CKcon 7.0</a> is October 27-28, 2026 in McLean, VA.
                     </div>
             </div>
         </div>
@@ -292,13 +292,13 @@
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Permalink to this version of DET0623" 
-           href="/versions/v19/detectionstrategies/DET0623/" data-test-ignore="true">Version Permalink</a>
+           href="/versions/v20/detectionstrategies/DET0623/" data-test-ignore="true">Version Permalink</a>
     </div>
     <div class="permalink">
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Go to the live version of DET0623" 
-           href="/versions/v19/detectionstrategies/DET0623/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+           href="/versions/v20/detectionstrategies/DET0623/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
     </div>
 </div>
 
@@ -326,7 +326,7 @@
               role="tabpanel" aria-labelledby="tab-Android">
               <h4 class="pt-3" id="AN1687">AN1687</h4>
               <div>
-                        <p>Mobile security products can potentially detect rogue Wi-Fi access points if the adversary is attempting to decrypt traffic using an untrusted SSL certificate. <br />Application vetting services should look for applications that request VPN access. These applications should be heavily scrutinized since VPN functionality is not very common. <br />On both Android and iOS, the user must grant consent to an application to act as a VPN. Both platforms also provide visual context to the user in the top status bar when a VPN connection is active. The user can see registered VPN services in the device settings. </p>
+                        <p>For Android, detect Adversary-in-the-Middle by correlating analyst-visible device/network evidence and management state; use streaming or batched telemetry only where the documented collector is deployed. Correlate File Modification via Application Vetting / Forensic Acquisition [Dynamic filesystem trace or acquired app-container/filesystem artifacts: write() to /sdcard/ path]; Network Traffic Content via Enterprise Secure Web Gateway / Proxy [DNS/HTTP(S) inspection or proxy transaction metadata where enterprise decryption/inspection is deployed]; Protected Configuration via Android Enterprise DPC [DevicePolicyManager policy/compliance/security-state queries and SecurityLog events where supported]. Alert on a sequence or state change inconsistent with the device/app baseline, approved management policy, or expected user workflow; do not infer unobserved API calls, file/process activity, or payload content from management state alone.</p>
 
               </div>
 
@@ -343,12 +343,21 @@
                   <tbody>
                     <tr>
                       <td rowspan="1">
-                        <a href="/datacomponents/DC0082">
-                          Network Connection Creation (DC0082)
+                        <a href="/datacomponents/DC0061">
+                          File Modification (DC0061)
                         </a>
                       </td>
-                      <td>Network Traffic</td>
-                      <td>None</td>
+                      <td>mobile:ForensicArtifacts</td>
+                      <td>Dynamic filesystem trace or acquired app-container/filesystem artifacts: write() to /sdcard/ path</td>
+                    </tr>
+                    <tr>
+                      <td rowspan="1">
+                        <a href="/datacomponents/DC0085">
+                          Network Traffic Content (DC0085)
+                        </a>
+                      </td>
+                      <td>webproxy:applog</td>
+                      <td>DNS/HTTP(S) inspection or proxy transaction metadata where enterprise decryption/inspection is deployed</td>
                     </tr>
                     <tr>
                       <td rowspan="1">
@@ -356,28 +365,40 @@
                           Protected Configuration (DC0115)
                         </a>
                       </td>
-                      <td>Application Vetting</td>
-                      <td>None</td>
-                    </tr>
-                    <tr>
-                      <td rowspan="1">
-                        <a href="/datacomponents/DC0116">
-                          Permissions Request (DC0116)
-                        </a>
-                      </td>
-                      <td>User Interface</td>
-                      <td>None</td>
+                      <td>android:DevicePolicyManager</td>
+                      <td>DevicePolicyManager policy/compliance/security-state queries and SecurityLog events where supported</td>
                     </tr>
                   </tbody>
                 </table>
               </div>
 
+              <h5 class="pt-3" id="AN1687-mutable-elements">Mutable Elements</h5>
+              <div class="tables-mobile">
+                <table class="table table-bordered table-alternate mt-2">
+                  <thead>
+                    <tr>
+                      <th scope="col">Field</th>
+                      <th scope="col">Description</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>ApprovedVPNApps</td>
+                      <td>IT-managed VPN app packages. Minimal.</td>
+                    </tr>
+                    <tr>
+                      <td>HighValueAppList</td>
+                      <td>Banking, payment, enterprise apps writing to external storage.</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
             </div>
             <div class="tab-pane fade " id="pane-iOS"
               role="tabpanel" aria-labelledby="tab-iOS">
               <h4 class="pt-3" id="AN1688">AN1688</h4>
               <div>
-                        <p>Mobile security products can potentially detect rogue Wi-Fi access points if the adversary is attempting to decrypt traffic using an untrusted SSL certificate. <br />Application vetting services should look for applications that request VPN access. These applications should be heavily scrutinized since VPN functionality is not very common. <br />On both Android and iOS, the user must grant consent to an application to act as a VPN. Both platforms also provide visual context to the user in the top status bar when a VPN connection is active. The user can see registered VPN services in the device settings. </p>
+                        <p>For iOS, detect Adversary-in-the-Middle by correlating analyst-visible device/network evidence and management state; use streaming or batched telemetry only where the documented collector is deployed. Correlate Application Permission via Application Vetting [Code-signing entitlements and Info.plist privacy usage-description keys]; Network Traffic Content via Enterprise Secure Web Gateway / Proxy [DNS/HTTP(S) inspection or proxy transaction metadata where enterprise decryption/inspection is deployed]; Protected Configuration via Apple MDM [DeviceInformation / SecurityInfo / ProfileList / restrictions and compliance queries]. Alert on a sequence or state change inconsistent with the device/app baseline, approved management policy, or expected user workflow; do not infer unobserved API calls, file/process activity, or payload content from management state alone.</p>
 
               </div>
 
@@ -394,12 +415,21 @@
                   <tbody>
                     <tr>
                       <td rowspan="1">
-                        <a href="/datacomponents/DC0082">
-                          Network Connection Creation (DC0082)
+                        <a href="/datacomponents/DC0114">
+                          Application Permission (DC0114)
                         </a>
                       </td>
-                      <td>Network Traffic</td>
-                      <td>None</td>
+                      <td>mobile:ApplicationVetting</td>
+                      <td>Code-signing entitlements and Info.plist privacy usage-description keys</td>
+                    </tr>
+                    <tr>
+                      <td rowspan="1">
+                        <a href="/datacomponents/DC0085">
+                          Network Traffic Content (DC0085)
+                        </a>
+                      </td>
+                      <td>webproxy:applog</td>
+                      <td>DNS/HTTP(S) inspection or proxy transaction metadata where enterprise decryption/inspection is deployed</td>
                     </tr>
                     <tr>
                       <td rowspan="1">
@@ -407,25 +437,34 @@
                           Protected Configuration (DC0115)
                         </a>
                       </td>
-                      <td>Application Vetting</td>
-                      <td>None</td>
-                    </tr>
-                    <tr>
-                      <td rowspan="1">
-                        <a href="/datacomponents/DC0116">
-                          Permissions Request (DC0116)
-                        </a>
-                      </td>
-                      <td>User Interface</td>
-                      <td>None</td>
+                      <td>iOS:MDM</td>
+                      <td>DeviceInformation / SecurityInfo / ProfileList / restrictions and compliance queries</td>
                     </tr>
                   </tbody>
                 </table>
               </div>
 
+              <h5 class="pt-3" id="AN1688-mutable-elements">Mutable Elements</h5>
+              <div class="tables-mobile">
+                <table class="table table-bordered table-alternate mt-2">
+                  <thead>
+                    <tr>
+                      <th scope="col">Field</th>
+                      <th scope="col">Description</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>ApprovedVPNApps</td>
+                      <td>IT-approved iOS VPN bundle IDs with Network Extension entitlement. Minimal.</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         </div>
+
 
         
       </div>
@@ -644,7 +683,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3 col-footer">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v19.2&#013;Website  v5.1.0">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v20.0&#013;Website  v5.2.0">Website Changelog</a></u>
                                 </div>
                                 <div class="px-3">
                                     <u class="footer-link"><a href="/resources/legal-and-branding/privacy/#" class="footer-link" onclick="Osano.cm.showDrawer('osano-cm-dom-info-dialog-open')">Cookie Preferences</a></u>

@@ -207,7 +207,7 @@
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
                     <div class="container-fluid banner-message">
-                        ATT&CKcon 7.0 registration is open! Join us October 27-28, 2026 in McLean, VA or virtually. <a href="https://na.eventscloud.com/website/93925/">Register in person</a> or <a href="https://mitre.brandlive.com/MITRE-ATTACKcon-7-0">register virtually</a>. See the <a href="https://na.eventscloud.com/website/93925/faq/">FAQ</a> for hotel and venue details.
+                        ATT&CK v20 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v20-9701dd75ffb4'>blog post</a> for more information. <a href='https://na.eventscloud.com/website/93925/'>ATT&CKcon 7.0</a> is October 27-28, 2026 in McLean, VA.
                     </div>
             </div>
         </div>
@@ -292,13 +292,13 @@
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Permalink to this version of DET0761" 
-           href="/versions/v19/detectionstrategies/DET0761/" data-test-ignore="true">Version Permalink</a>
+           href="/versions/v20/detectionstrategies/DET0761/" data-test-ignore="true">Version Permalink</a>
     </div>
     <div class="permalink">
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Go to the live version of DET0761" 
-           href="/versions/v19/detectionstrategies/DET0761/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+           href="/versions/v20/detectionstrategies/DET0761/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
     </div>
 </div>
 
@@ -309,18 +309,18 @@
           <h2 class="pt-3" id="analytics">Analytics</h2>
           <ul class="nav nav-tabs mb-2" role="tablist">
             <li class="nav-item">
-              <a class="nav-link active" id="tab-ICS" data-toggle="tab"
-                href="#pane-ICS" role="tab" aria-selected="true">
-                ICS
+              <a class="nav-link active" id="tab-Embedded" data-toggle="tab"
+                href="#pane-Embedded" role="tab" aria-selected="true">
+                Embedded
               </a>
             </li>
           </ul>
           <div class="tab-content card card-body p-3">
-            <div class="tab-pane fade show active" id="pane-ICS"
-              role="tabpanel" aria-labelledby="tab-ICS">
+            <div class="tab-pane fade show active" id="pane-Embedded"
+              role="tabpanel" aria-labelledby="tab-Embedded">
               <h4 class="pt-3" id="AN1893">AN1893</h4>
               <div>
-                        <p>Program uploads may be observable in ICS management protocols or file transfer protocols. Note when protocol functions related to program uploads occur. In cases where the ICS protocols is not well understood, one option is to examine network traffic for the program files themselves using signature-based tools.<br />Monitor device communication patterns to identify irregular bulk transfers of data between the embedded ICS asset and other nodes within the network. Note these indicators are dependent on the profile of normal operations and the capabilities of the industrial automation protocols involved (e.g., partial program uploads).<br />Monitor for device alarms produced when program uploads occur, although not all devices will produce such alarms.</p>
+                        <p>Real-time monitoring identifies an Industrial Control System (ICS) protocol session reading back the user program from a field device to a source not in the approved engineering workstation list, where the session byte count is consistent with a substantial portion of the device's program memory. OT operational-fidelity gate: Do not alert on novelty, scan/read volume, or enumeration alone. Alert when the source role is not authorized for discovery/polling and the target scope, address/tag range, protocol, or rate deviates from the established operational baseline. Suppress normal SCADA/HMI/historian polling, commissioning, asset inventory, backup, diagnostics, and approved engineering activity.</p>
 
               </div>
 
@@ -341,17 +341,8 @@
                           Network Traffic Content (DC0085)
                         </a>
                       </td>
-                      <td>Network Traffic</td>
-                      <td>None</td>
-                    </tr>
-                    <tr>
-                      <td rowspan="1">
-                        <a href="/datacomponents/DC0078">
-                          Network Traffic Flow (DC0078)
-                        </a>
-                      </td>
-                      <td>Network Traffic</td>
-                      <td>None</td>
+                      <td>NSM:Content</td>
+                      <td>S7comm Upload Block / Common Industrial Protocol (CIP) Read Program session from source not in engineering workstation list with bytes_recv exceeding program upload size threshold</td>
                     </tr>
                     <tr>
                       <td rowspan="1">
@@ -359,15 +350,86 @@
                           Application Log Content (DC0038)
                         </a>
                       </td>
-                      <td>Application Log</td>
-                      <td>None</td>
+                      <td>engineeringworkstation:ApplicationLog</td>
+                      <td>Engineering application audit/session log: controller program upload initiated outside approved backup/change window and without documented backup purpose</td>
                     </tr>
                   </tbody>
                 </table>
               </div>
 
+              <h5 class="pt-3" id="AN1893-mutable-elements">Mutable Elements</h5>
+              <div class="tables-mobile">
+                <table class="table table-bordered table-alternate mt-2">
+                  <thead>
+                    <tr>
+                      <th scope="col">Field</th>
+                      <th scope="col">Description</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>BackupWindowSchedule</td>
+                      <td>Scheduled periods during which routine backup uploads are expected.</td>
+                    </tr>
+                    <tr>
+                      <td>EngineeringWorkstationList</td>
+                      <td>IP allowlist of workstations authorized to perform program uploads from field devices.</td>
+                    </tr>
+                    <tr>
+                      <td>ProgramUploadSizeThreshold</td>
+                      <td>Minimum byte count for a session to be considered a substantial program readback.</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
+        </div>
+
+        <div id="assets-tabs">
+          <h2 class="pt-3" id="assets">Targeted Assets</h2>
+          <table class="table table-bordered table-alternate mt-2" aria-describedby="asset-table">
+            <thead>
+              <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Asset</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <a href="/assets/A0003"> A0003 </a>
+                </td>
+                <td>
+                  <a href="/assets/A0003"> Programmable Logic Controller (PLC) </a>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <a href="/assets/A0010"> A0010 </a>
+                </td>
+                <td>
+                  <a href="/assets/A0010"> Safety Controller </a>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <a href="/assets/A0017"> A0017 </a>
+                </td>
+                <td>
+                  <a href="/assets/A0017"> Distributed Control System (DCS) Controller </a>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <a href="/assets/A0018"> A0018 </a>
+                </td>
+                <td>
+                  <a href="/assets/A0018"> Programmable Automation Controller (PAC) </a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
 
         
@@ -587,7 +649,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3 col-footer">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v19.2&#013;Website  v5.1.0">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v20.0&#013;Website  v5.2.0">Website Changelog</a></u>
                                 </div>
                                 <div class="px-3">
                                     <u class="footer-link"><a href="/resources/legal-and-branding/privacy/#" class="footer-link" onclick="Osano.cm.showDrawer('osano-cm-dom-info-dialog-open')">Cookie Preferences</a></u>

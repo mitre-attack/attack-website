@@ -207,7 +207,7 @@
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
                     <div class="container-fluid banner-message">
-                        ATT&CKcon 7.0 registration is open! Join us October 27-28, 2026 in McLean, VA or virtually. <a href="https://na.eventscloud.com/website/93925/">Register in person</a> or <a href="https://mitre.brandlive.com/MITRE-ATTACKcon-7-0">register virtually</a>. See the <a href="https://na.eventscloud.com/website/93925/faq/">FAQ</a> for hotel and venue details.
+                        ATT&CK v20 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v20-9701dd75ffb4'>blog post</a> for more information. <a href='https://na.eventscloud.com/website/93925/'>ATT&CKcon 7.0</a> is October 27-28, 2026 in McLean, VA.
                     </div>
             </div>
         </div>
@@ -275,7 +275,7 @@
                 </div>
                 <div class="row card-data">
                   <div class="col-md-12">
-                    <span class="h5 card-title">Last Modified</span>: 12 May 2026
+                    <span class="h5 card-title">Last Modified</span>: 13 October 2026
                   </div>
                 </div>
               </div>
@@ -350,6 +350,10 @@
                 <td>ptrace or process_vm_readv</td>
               </tr>
               <tr>
+                <td>auditd:SYSCALL</td>
+                <td>Linux Audit SYSCALL/EXECVE/SOCKADDR records (configured audit rule): syscall=ptrace/process_vm_readv; process accesses an ICS service process PID from an image or UID not in the debugger/diagnostic allowlist</td>
+              </tr>
+              <tr>
                 <td>EDR:telemetry</td>
                 <td>Sustained or high-frequency location sensor access, including background location usage</td>
               </tr>
@@ -422,6 +426,22 @@
                 <td>vm_read, task_for_pid, or file open to cookie databases</td>
               </tr>
               <tr>
+                <td>mobile:DynamicAnalysis</td>
+                <td>Dynamic API/runtime trace: accessibility_service or notification_listener appears attributed to a bundle IN $LegitimateSystemProcesses$ within $InjectionWindow$ of root detection — injected code requesting special permissions under a legitimate system process identit</td>
+              </tr>
+              <tr>
+                <td>mobile:DynamicAnalysis</td>
+                <td>Dynamic API/runtime trace: kernel log entry at level=fault referencing task_for_pid or get-task-allow violation on SUPERVISED device with Unified Log forwarding — kernel records entitlement violations at fault level; requires supervised MDM with Unified Log export</td>
+              </tr>
+              <tr>
+                <td>mobile:DynamicAnalysis</td>
+                <td>Dynamic API/runtime trace: process in $TargetProcessList$ shows unexpected behavior change (new network destinations, new permission accesses) within $InjectionWindow$ of root status change — behavioral delta in target process post-injection is the anomaly indicator</td>
+              </tr>
+              <tr>
+                <td>mobile:DynamicAnalysis</td>
+                <td>Dynamic API/runtime trace: kernel log at level=fault referencing task_for_pid, mach_vm_write, or get-task-allow outside developer build on SUPERVISED device — Apple Unified Log kernel subsystem records these violations at fault level; supervised MDM with Unified Log</td>
+              </tr>
+              <tr>
                 <td>WinEventLog:Security</td>
                 <td>EventCode=4663, 4670, 4656</td>
               </tr>
@@ -432,6 +452,14 @@
               <tr>
                 <td>WinEventLog:Sysmon</td>
                 <td>EventCode=25</td>
+              </tr>
+              <tr>
+                <td>WinEventLog:Sysmon</td>
+                <td>EventCode=10 where SourceImage outside the approved ICS vendor/process baseline accesses TargetImage associated with an ICS application or service</td>
+              </tr>
+              <tr>
+                <td>WinEventLog:Sysmon</td>
+                <td>EventCode=10 cross-process memory access into Industrial Control Systems (ICS) vendor process from image not in trusted security tool list, followed by unexpected termination within exploit crash correlation window</td>
               </tr>
             </tbody>
           </table>
@@ -898,17 +926,6 @@
                     <a href="/techniques/T1003/005">T1003.005</a>
                 </td>
             </tr>
-            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--7b0e17a4-df7c-4f4b-8b15-e8aac2236fc6">
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0643">DET0643</a>
-                </td>
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0643">Detection of Clipboard Data</a>
-                </td>
-                <td rowspan="">
-                    <a href="/techniques/T1414">T1414</a>
-                </td>
-            </tr>
             <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--793c70fb-bc7a-4a77-95aa-7b0c583f10b4">
                 <td rowspan="">
                     <a href="/detectionstrategies/DET0363">DET0363</a>
@@ -953,48 +970,37 @@
                     <a href="/techniques/T1482">T1482</a>
                 </td>
             </tr>
-            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--4809a26b-8527-49dc-81aa-ac2750fd3b75">
+            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--97914ffd-b189-415e-9309-e63e3be01b1e">
                 <td rowspan="">
-                    <a href="/detectionstrategies/DET0676">DET0676</a>
+                    <a href="/detectionstrategies/DET0795">DET0795</a>
                 </td>
                 <td rowspan="">
-                    <a href="/detectionstrategies/DET0676">Detection of GUI Input Capture</a>
+                    <a href="/detectionstrategies/DET0795">Detection of Exploitation for Evasion</a>
                 </td>
                 <td rowspan="">
-                    <a href="/techniques/T1417/002">T1417.002</a>
-                </td>
-            </tr>
-            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--19522fac-bfd0-4e94-9d75-a61eacbef7c3">
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0705">DET0705</a>
-                </td>
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0705">Detection of Input Capture</a>
-                </td>
-                <td rowspan="">
-                    <a href="/techniques/T1417">T1417</a>
+                    <a href="/techniques/T0820">T0820</a>
                 </td>
             </tr>
-            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--f15826e8-4aa6-497e-bf9f-16c3724bfe72">
+            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--67c2be08-d31a-4385-a637-9d1a907c7a26">
                 <td rowspan="">
-                    <a href="/detectionstrategies/DET0661">DET0661</a>
+                    <a href="/detectionstrategies/DET0767">DET0767</a>
                 </td>
                 <td rowspan="">
-                    <a href="/detectionstrategies/DET0661">Detection of Keylogging</a>
+                    <a href="/detectionstrategies/DET0767">Detection of Exploitation of Remote Services</a>
                 </td>
                 <td rowspan="">
-                    <a href="/techniques/T1417/001">T1417.001</a>
+                    <a href="/techniques/T0866">T0866</a>
                 </td>
             </tr>
-            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--ac9d1b33-cfba-415e-aef2-c4c0b359ed5f">
+            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--9f3df5ac-caa0-4189-9b9b-dcf2f6bbdc54">
                 <td rowspan="">
-                    <a href="/detectionstrategies/DET0675">DET0675</a>
+                    <a href="/detectionstrategies/DET0722">DET0722</a>
                 </td>
                 <td rowspan="">
-                    <a href="/detectionstrategies/DET0675">Detection of Location Tracking</a>
+                    <a href="/detectionstrategies/DET0722">Detection of Hooking</a>
                 </td>
                 <td rowspan="">
-                    <a href="/techniques/T1430">T1430</a>
+                    <a href="/techniques/T0874">T0874</a>
                 </td>
             </tr>
             <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--c29886a9-676a-441a-adcd-6f239f8eb6b0">
@@ -1019,15 +1025,26 @@
                     <a href="/techniques/T1218/003">T1218.003</a>
                 </td>
             </tr>
-            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--7c507410-2dc7-4159-88ec-b2228547ae67">
+            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--b76b67bc-d38b-4b63-a0d0-ebfc7f829db6">
                 <td rowspan="">
-                    <a href="/detectionstrategies/DET0720">DET0720</a>
+                    <a href="/detectionstrategies/DET0632">DET0632</a>
                 </td>
                 <td rowspan="">
-                    <a href="/detectionstrategies/DET0720">Detection of Obfuscated Files or Information</a>
+                    <a href="/detectionstrategies/DET0632">Detection of Process Injection</a>
                 </td>
                 <td rowspan="">
-                    <a href="/techniques/T1406">T1406</a>
+                    <a href="/techniques/T1631">T1631</a>
+                </td>
+            </tr>
+            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--63b2446e-fa01-4440-bcd6-0f8505d630a6">
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0622">DET0622</a>
+                </td>
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0622">Detection of Ptrace System Calls</a>
+                </td>
+                <td rowspan="">
+                    <a href="/techniques/T1631/001">T1631.001</a>
                 </td>
             </tr>
             <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--8ac2b0d0-a589-4c72-9287-a7d9e47065a9">
@@ -1039,28 +1056,6 @@
                 </td>
                 <td rowspan="">
                     <a href="/techniques/T1216">T1216</a>
-                </td>
-            </tr>
-            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--9935655b-cd9b-485f-84ea-1b3b4b765413">
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0680">DET0680</a>
-                </td>
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0680">Detection of Security Software Discovery</a>
-                </td>
-                <td rowspan="">
-                    <a href="/techniques/T1418/001">T1418.001</a>
-                </td>
-            </tr>
-            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--d87dc800-38cb-4d82-b76e-3c501dbd9c0a">
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0621">DET0621</a>
-                </td>
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0621">Detection of Stored Application Data</a>
-                </td>
-                <td rowspan="">
-                    <a href="/techniques/T1409">T1409</a>
                 </td>
             </tr>
             <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--26fdbcb2-abc1-4844-8e5d-2c6039336cb7">
@@ -1604,7 +1599,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3 col-footer">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v19.2&#013;Website  v5.1.0">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v20.0&#013;Website  v5.2.0">Website Changelog</a></u>
                                 </div>
                                 <div class="px-3">
                                     <u class="footer-link"><a href="/resources/legal-and-branding/privacy/#" class="footer-link" onclick="Osano.cm.showDrawer('osano-cm-dom-info-dialog-open')">Cookie Preferences</a></u>

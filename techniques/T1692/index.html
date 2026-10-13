@@ -207,7 +207,7 @@
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
                     <div class="container-fluid banner-message">
-                        ATT&CKcon 7.0 registration is open! Join us October 27-28, 2026 in McLean, VA or virtually. <a href="https://na.eventscloud.com/website/93925/">Register in person</a> or <a href="https://mitre.brandlive.com/MITRE-ATTACKcon-7-0">register virtually</a>. See the <a href="https://na.eventscloud.com/website/93925/faq/">FAQ</a> for hotel and venue details.
+                        ATT&CK v20 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v20-9701dd75ffb4'>blog post</a> for more information. <a href='https://na.eventscloud.com/website/93925/'>ATT&CKcon 7.0</a> is October 27-28, 2026 in McLean, VA.
                     </div>
             </div>
         </div>
@@ -323,6 +323,15 @@
                         <a href="/tactics/TA0103">Evasion</a>,                        <a href="/tactics/TA0106">Impair Process Control</a>                  </div>
                 </div>
                 <div class="row card-data">
+                  <div class="col-md-1 px-0 text-center">
+                    <span data-toggle="tooltip" data-placement="left" title="" data-test-ignore="true"
+                      data-original-title="The system an adversary is operating within; could be an operating system or application">&#9432;</span>
+                  </div>
+                  <div class="col-md-11 pl-0">
+                    <span class="h5 card-title">Platforms:&nbsp;</span>Embedded, Linux, Windows
+                  </div>
+                </div>
+                <div class="row card-data">
                   <div class="col-md-1 px-0 text-center"></div>
                   <div class="col-md-11 pl-0">
                     <span class="h5 card-title">Version:&nbsp;</span>1.0
@@ -337,7 +346,7 @@
                 <div class="row card-data">
                   <div class="col-md-1 px-0 text-center"></div>
                   <div class="col-md-11 pl-0">
-                    <span class="h5 card-title">Last Modified:&nbsp;</span>12 May 2026
+                    <span class="h5 card-title">Last Modified:&nbsp;</span>13 October 2026
                   </div>
                 </div>
               </div>
@@ -347,13 +356,13 @@
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Permalink to this version of T1692" 
-           href="/versions/v19/techniques/T1692/" data-test-ignore="true">Version Permalink</a>
+           href="/versions/v20/techniques/T1692/" data-test-ignore="true">Version Permalink</a>
     </div>
     <div class="permalink">
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Go to the live version of T1692" 
-           href="/versions/v19/techniques/T1692/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+           href="/versions/v20/techniques/T1692/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
     </div>
 </div>
 
@@ -521,17 +530,35 @@
     </thead>
     <tbody>
                 <tr class="detection_strategy" id="uses-DET0902">
-                        <td rowspan="1">
+                        <td rowspan="3">
                             <a href="/detectionstrategies/DET0902">DET0902</a>
                         </td>
-                        <td rowspan="1">
+                        <td rowspan="3">
                             <a href="/detectionstrategies/DET0902">Detection of Unauthorized Message</a>
                         </td>
                     <td>
                         <a href="/detectionstrategies/DET0902#AN2045">AN2045</a>
                     </td>
                     <td>
-                                <p>Unauthorized messages may be detected by reviewing the content of automation protocols, either through detecting based on expected values or comparing to other out of band process data sources. Unauthorized messages may not precisely match legitimate messages which may lead to malformed traffic, although traffic may be malformed for benign reasons. Monitor messages for changes in how they are constructed.</p><p>Monitor for anomalous or unexpected messages that may result in changes to the process operation observable via asset application logs (e.g., discrete write, logic and device configuration, mode changes, safety triggers).</p><p>Consider monitoring for <a href="/techniques/T0848">Rogue Master</a> and <a href="/techniques/T0830">Adversary-in-the-Middle</a> activity which may precede this technique.</p>
+                                <p>Real-time monitoring identifies an Industrial Control System (ICS) protocol message arriving at a device from a source whose identity is not in the approved communication baseline for that destination, where the message is structurally valid but originates outside the documented set of legitimate communicators. This technique-level analytic synthesizes Command Message (T1692.001) and Reporting Message (T1692.002). OT operational-fidelity gate: Alert only when the action is not attributable to an authorized operator/engineering source for the specific target and function, and it is either outside an approved change/maintenance window or lacks matching change-control context; where telemetry permits, require corroborating device, configuration, or process-state effect. Suppress activity that fully matches approved maintenance, commissioning, failover, recovery, or tested control procedures.</p>
+</a>
+                    </td>
+                </tr>
+                <tr class="detection_strategy" id="uses-DET0902">
+                    <td>
+                        <a href="/detectionstrategies/DET0902#AN2160">AN2160</a>
+                    </td>
+                    <td>
+                                <p>Real-time monitoring identifies an Industrial Control System (ICS) protocol library loaded by a Linux process not in the authorized ICS applications list, making connections to the device subnet. OT operational-fidelity gate: Alert only when the action is not attributable to an authorized operator/engineering source for the specific target and function, and it is either outside an approved change/maintenance window or lacks matching change-control context; where telemetry permits, require corroborating device, configuration, or process-state effect. Suppress activity that fully matches approved maintenance, commissioning, failover, recovery, or tested control procedures.</p>
+</a>
+                    </td>
+                </tr>
+                <tr class="detection_strategy" id="uses-DET0902">
+                    <td>
+                        <a href="/detectionstrategies/DET0902#AN2283">AN2283</a>
+                    </td>
+                    <td>
+                                <p>Real-time monitoring identifies a Windows process making Industrial Control System (ICS) protocol connections to device subnets from a process not in the authorized ICS applications list, structurally valid traffic from an unauthorized source. OT operational-fidelity gate: Alert only when the action is not attributable to an authorized operator/engineering source for the specific target and function, and it is either outside an approved change/maintenance window or lacks matching change-control context; where telemetry permits, require corroborating device, configuration, or process-state effect. Suppress activity that fully matches approved maintenance, commissioning, failover, recovery, or tested control procedures.</p>
 </a>
                     </td>
                 </tr>
@@ -831,7 +858,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3 col-footer">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v19.2&#013;Website  v5.1.0">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v20.0&#013;Website  v5.2.0">Website Changelog</a></u>
                                 </div>
                                 <div class="px-3">
                                     <u class="footer-link"><a href="/resources/legal-and-branding/privacy/#" class="footer-link" onclick="Osano.cm.showDrawer('osano-cm-dom-info-dialog-open')">Cookie Preferences</a></u>

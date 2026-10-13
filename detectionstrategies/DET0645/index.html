@@ -207,7 +207,7 @@
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
                     <div class="container-fluid banner-message">
-                        ATT&CKcon 7.0 registration is open! Join us October 27-28, 2026 in McLean, VA or virtually. <a href="https://na.eventscloud.com/website/93925/">Register in person</a> or <a href="https://mitre.brandlive.com/MITRE-ATTACKcon-7-0">register virtually</a>. See the <a href="https://na.eventscloud.com/website/93925/faq/">FAQ</a> for hotel and venue details.
+                        ATT&CK v20 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v20-9701dd75ffb4'>blog post</a> for more information. <a href='https://na.eventscloud.com/website/93925/'>ATT&CKcon 7.0</a> is October 27-28, 2026 in McLean, VA.
                     </div>
             </div>
         </div>
@@ -292,13 +292,13 @@
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Permalink to this version of DET0645" 
-           href="/versions/v19/detectionstrategies/DET0645/" data-test-ignore="true">Version Permalink</a>
+           href="/versions/v20/detectionstrategies/DET0645/" data-test-ignore="true">Version Permalink</a>
     </div>
     <div class="permalink">
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Go to the live version of DET0645" 
-           href="/versions/v19/detectionstrategies/DET0645/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+           href="/versions/v20/detectionstrategies/DET0645/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
     </div>
 </div>
 
@@ -326,7 +326,7 @@
               role="tabpanel" aria-labelledby="tab-Android">
               <h4 class="pt-3" id="AN1723">AN1723</h4>
               <div>
-                        <p>A lock-state transition telemetry, special access or privileged interaction capability, security-sensitive framework use, and immediate downstream activity while the user-interaction context is weak or inconsistent. This yields stronger coverage on Android than iOS.</p>
+                        <p>For Android, detect Lockscreen Bypass by correlating analyst-visible device/network evidence and management state; use streaming or batched telemetry only where the documented collector is deployed. Correlate Application Permission via Android Enterprise DPC / Application Vetting [DevicePolicyManager.getPermissionGrantState(); PackageManager manifest/requested-permission review]; Application State via Android Enterprise / EMM [Managed package inventory/status and package metadata]; Protected Configuration via Android Enterprise DPC [DevicePolicyManager policy/compliance/security-state queries and SecurityLog events where supported]. Alert on a sequence or state change inconsistent with the device/app baseline, approved management policy, or expected user workflow; do not infer unobserved API calls, file/process activity, or payload content from management state alone.</p>
 
               </div>
 
@@ -343,21 +343,12 @@
                   <tbody>
                     <tr>
                       <td rowspan="1">
-                        <a href="/datacomponents/DC0115">
-                          Protected Configuration (DC0115)
-                        </a>
-                      </td>
-                      <td>android:MDMLog</td>
-                      <td>Biometric, credential, lockscreen, trust-agent, Smart Lock, or device-admin-related protected device configuration changed</td>
-                    </tr>
-                    <tr>
-                      <td rowspan="1">
                         <a href="/datacomponents/DC0114">
                           Application Permission (DC0114)
                         </a>
                       </td>
-                      <td>android:MDMLog</td>
-                      <td>Application gains or is observed with elevated interaction capability such as accessibility, overlay, device admin, notification access, or other authentication-adjacent special access</td>
+                      <td>android:DevicePolicyManager</td>
+                      <td>DevicePolicyManager.getPermissionGrantState(); PackageManager manifest/requested-permission review</td>
                     </tr>
                     <tr>
                       <td rowspan="1">
@@ -365,8 +356,17 @@
                           Application State (DC0123)
                         </a>
                       </td>
-                      <td>MobileEDR:telemetry</td>
-                      <td>pplication or service remains active, foregrounds, or overlays during device locked state or immediately at unlock transition with weak recent user interaction context</td>
+                      <td>android:EMM</td>
+                      <td>Managed package inventory/status and package metadata</td>
+                    </tr>
+                    <tr>
+                      <td rowspan="1">
+                        <a href="/datacomponents/DC0115">
+                          Protected Configuration (DC0115)
+                        </a>
+                      </td>
+                      <td>android:DevicePolicyManager</td>
+                      <td>DevicePolicyManager policy/compliance/security-state queries and SecurityLog events where supported</td>
                     </tr>
                   </tbody>
                 </table>
@@ -383,36 +383,16 @@
                   </thead>
                   <tbody>
                     <tr>
-                      <td>TimeWindow</td>
-                      <td>Maximum allowed time between locked-state boundary, suspicious app/framework activity, and unlock transition.</td>
+                      <td>AuthPolicyAllowList</td>
+                      <td>MDM-managed authentication policy changes only. Any lock policy weakening outside MDM-authorized change is anomalous. Derive from MDM policy management logs.</td>
                     </tr>
                     <tr>
-                      <td>AllowedAppList</td>
-                      <td>Approved apps permitted to hold accessibility, overlay, device-admin, or other authentication-adjacent special access.</td>
+                      <td>ElevationAllowList</td>
+                      <td>Approved accessibility and Device Admin apps that may interact with lockscreen for legitimate purposes (enterprise kiosk). Derive from MDM catalog.</td>
                     </tr>
                     <tr>
-                      <td>ForegroundStateRequired</td>
-                      <td>Whether a benign authentication-adjacent app is expected to be visible in the foreground during unlock-related operations.</td>
-                    </tr>
-                    <tr>
-                      <td>RecentUserInteractionWindow</td>
-                      <td>Time threshold for treating the unlock as user-driven based on touch, motion, or interaction context.</td>
-                    </tr>
-                    <tr>
-                      <td>ExpectedUnlockPopulation</td>
-                      <td>User or device groups expected to use alternative lockscreen workflows, enterprise trust agents, or kiosk-like modes.</td>
-                    </tr>
-                    <tr>
-                      <td>TrustedDestinationAllowList</td>
-                      <td>Expected destinations contacted immediately after legitimate unlock by enterprise apps.</td>
-                    </tr>
-                    <tr>
-                      <td>UplinkBytesThreshold</td>
-                      <td>Threshold for suspicious immediate post-unlock outbound traffic.</td>
-                    </tr>
-                    <tr>
-                      <td>SensorUseAllowList</td>
-                      <td>Apps expected to access camera or other sensors near the authentication boundary.</td>
+                      <td>LockBypassWindow</td>
+                      <td>Default 10s between lock state and anomalous app activity. Lock-bypass is near-instantaneous.</td>
                     </tr>
                   </tbody>
                 </table>
@@ -422,7 +402,7 @@
               role="tabpanel" aria-labelledby="tab-iOS">
               <h4 class="pt-3" id="AN1724">AN1724</h4>
               <div>
-                        <p>Defender correlates an iOS-specific reduced-confidence chain where a supervised or managed device transitions from locked or inactive state to interactive or application-active state with weak evidence of expected user authentication, often accompanied by abnormal protected posture change, trust-state change, unexpected app wake, sensor use, or immediate downstream communication. Because direct visibility into lockscreen bypass mechanics on iOS is limited, the analytic prioritizes strong device-state effects and post-unlock behavior rather than pretending to observe the exact bypass method.</p>
+                        <p>For iOS, detect Lockscreen Bypass from documented management, network, or vetting evidence; treat state queries as periodic observations rather than real-time events. Correlate Application State via Apple MDM [InstalledApplicationList / ManagedApplicationList]; Protected Configuration via Apple MDM [DeviceInformation / SecurityInfo / ProfileList / restrictions and compliance queries]. Alert on a sequence or state change inconsistent with the device/app baseline, approved management policy, or expected user workflow; do not infer unobserved API calls, file/process activity, or payload content from management state alone.</p>
 
               </div>
 
@@ -439,21 +419,21 @@
                   <tbody>
                     <tr>
                       <td rowspan="1">
-                        <a href="/datacomponents/DC0115">
-                          Protected Configuration (DC0115)
-                        </a>
-                      </td>
-                      <td>iOS:MDMLog</td>
-                      <td>Passcode, biometrics, attention-aware authentication, or supervised-device lock policy changed in a way that weakens or alters the authentication boundary</td>
-                    </tr>
-                    <tr>
-                      <td rowspan="1">
                         <a href="/datacomponents/DC0123">
                           Application State (DC0123)
                         </a>
                       </td>
-                      <td>MobileEDR:telemetry</td>
-                      <td>Application wakes, becomes active, refreshes, or foregrounds immediately after locked or inactive state transition with weak recent user interaction</td>
+                      <td>iOS:MDM</td>
+                      <td>InstalledApplicationList / ManagedApplicationList</td>
+                    </tr>
+                    <tr>
+                      <td rowspan="1">
+                        <a href="/datacomponents/DC0115">
+                          Protected Configuration (DC0115)
+                        </a>
+                      </td>
+                      <td>iOS:MDM</td>
+                      <td>DeviceInformation / SecurityInfo / ProfileList / restrictions and compliance queries</td>
                     </tr>
                   </tbody>
                 </table>
@@ -470,36 +450,16 @@
                   </thead>
                   <tbody>
                     <tr>
-                      <td>TimeWindow</td>
-                      <td>Maximum allowed span between locked or inactive device state, suspicious app/service activity, and interactive transition.</td>
+                      <td>AuthPolicyAllowList</td>
+                      <td>MDM-managed authentication policy changes only. Any lock policy weakening outside MDM-authorized change is anomalous. Derive from MDM policy management logs.</td>
                     </tr>
                     <tr>
-                      <td>AllowedAppList</td>
-                      <td>Apps allowed to wake, foreground, or access protected resources near legitimate authentication events.</td>
+                      <td>ElevationAllowList</td>
+                      <td>Approved accessibility and Device Admin apps that may interact with lockscreen for legitimate purposes (enterprise kiosk). Derive from MDM catalog.</td>
                     </tr>
                     <tr>
-                      <td>SupervisedOnly</td>
-                      <td>Whether the analytic should only apply to supervised devices with high-confidence MDM policy telemetry.</td>
-                    </tr>
-                    <tr>
-                      <td>RecentUserInteractionWindow</td>
-                      <td>Time threshold for treating the transition as expected and user-driven.</td>
-                    </tr>
-                    <tr>
-                      <td>ExpectedUnlockPopulation</td>
-                      <td>User or device groups expected to use atypical enterprise lockscreen workflows, kiosk-like modes, or accessibility accommodations.</td>
-                    </tr>
-                    <tr>
-                      <td>SensorUseAllowList</td>
-                      <td>Apps expected to access camera or biometric-adjacent resources near the authentication boundary.</td>
-                    </tr>
-                    <tr>
-                      <td>TrustedDestinationAllowList</td>
-                      <td>Expected destinations contacted immediately after legitimate app activation post-authentication.</td>
-                    </tr>
-                    <tr>
-                      <td>UplinkBytesThreshold</td>
-                      <td>Threshold for suspicious immediate outbound traffic after suspicious unlock-adjacent activity.</td>
+                      <td>LockBypassWindow</td>
+                      <td>Default 10s between lock state and anomalous app activity. Lock-bypass is near-instantaneous.</td>
                     </tr>
                   </tbody>
                 </table>
@@ -507,6 +467,7 @@
             </div>
           </div>
         </div>
+
 
         
       </div>
@@ -725,7 +686,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3 col-footer">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v19.2&#013;Website  v5.1.0">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v20.0&#013;Website  v5.2.0">Website Changelog</a></u>
                                 </div>
                                 <div class="px-3">
                                     <u class="footer-link"><a href="/resources/legal-and-branding/privacy/#" class="footer-link" onclick="Osano.cm.showDrawer('osano-cm-dom-info-dialog-open')">Cookie Preferences</a></u>

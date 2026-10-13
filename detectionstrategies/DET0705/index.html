@@ -207,7 +207,7 @@
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
                     <div class="container-fluid banner-message">
-                        ATT&CKcon 7.0 registration is open! Join us October 27-28, 2026 in McLean, VA or virtually. <a href="https://na.eventscloud.com/website/93925/">Register in person</a> or <a href="https://mitre.brandlive.com/MITRE-ATTACKcon-7-0">register virtually</a>. See the <a href="https://na.eventscloud.com/website/93925/faq/">FAQ</a> for hotel and venue details.
+                        ATT&CK v20 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v20-9701dd75ffb4'>blog post</a> for more information. <a href='https://na.eventscloud.com/website/93925/'>ATT&CKcon 7.0</a> is October 27-28, 2026 in McLean, VA.
                     </div>
             </div>
         </div>
@@ -292,13 +292,13 @@
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Permalink to this version of DET0705" 
-           href="/versions/v19/detectionstrategies/DET0705/" data-test-ignore="true">Version Permalink</a>
+           href="/versions/v20/detectionstrategies/DET0705/" data-test-ignore="true">Version Permalink</a>
     </div>
     <div class="permalink">
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Go to the live version of DET0705" 
-           href="/versions/v19/detectionstrategies/DET0705/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+           href="/versions/v20/detectionstrategies/DET0705/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
     </div>
 </div>
 
@@ -326,7 +326,7 @@
               role="tabpanel" aria-labelledby="tab-Android">
               <h4 class="pt-3" id="AN1825">AN1825</h4>
               <div>
-                        <p>Defender observes an app gaining input-observation capability (AccessibilityService enablement, default IME set, draw-over-apps permission), then creating an intercept surface (overlay window, accessibility event stream consumption or IME keystroke callbacks), followed by persistence (local keylog/clipboard dump) and/or small, frequent network egress. Chain: capability/permission → listener/overlay activation → bursty input read events → local write → near-term exfil.</p>
+                        <p>For Android, detect Input Capture by correlating analyst-visible device/network evidence and management state; use streaming or batched telemetry only where the documented collector is deployed. Correlate API Calls via Application Vetting / Instrumented Dynamic Analysis [Dynamic API/runtime trace: AccessibilityEvent.TYPE_VIEW_TEXT_CHANGED received by listener_app NOT IN $AccessibilityAllowList$]; Network Traffic Flow via Android Enterprise Network Logging / Enterprise VPN [DevicePolicyManager.retrieveNetworkLogs(): DnsEvent / ConnectEvent; VPN flow metadata]; Permissions Request via Android Enterprise DPC / Application Vetting [DevicePolicyManager.getPermissionGrantState(); PackageManager manifest/requested-permission review]. Alert on a sequence or state change inconsistent with the device/app baseline, approved management policy, or expected user workflow; do not infer unobserved API calls, file/process activity, or payload content from management state alone.</p>
 
               </div>
 
@@ -343,39 +343,30 @@
                   <tbody>
                     <tr>
                       <td rowspan="1">
-                        <a href="/datacomponents/DC0035">
-                          Process Access (DC0035)
+                        <a href="/datacomponents/DC0112">
+                          API Calls (DC0112)
                         </a>
                       </td>
-                      <td>android:logcat</td>
-                      <td>Grant/activation of BIND_ACCESSIBILITY_SERVICE, BIND_INPUT_METHOD, SYSTEM_ALERT_WINDOW, POST_NOTIFICATIONS for <pkg></td>
+                      <td>mobile:DynamicAnalysis</td>
+                      <td>Dynamic API/runtime trace: AccessibilityEvent.TYPE_VIEW_TEXT_CHANGED received by listener_app NOT IN $AccessibilityAllowList$</td>
                     </tr>
                     <tr>
                       <td rowspan="1">
-                        <a href="/datacomponents/DC0021">
-                          OS API Execution (DC0021)
+                        <a href="/datacomponents/DC0078">
+                          Network Traffic Flow (DC0078)
                         </a>
                       </td>
-                      <td>android:logcat</td>
-                      <td>AccessibilityService connected|TYPE_VIEW_TEXT_CHANGED|TYPE_VIEW_FOCUSED events for other packages</td>
+                      <td>android:EnterpriseNetworkLog</td>
+                      <td>DevicePolicyManager.retrieveNetworkLogs(): DnsEvent / ConnectEvent; VPN flow metadata</td>
                     </tr>
                     <tr>
                       <td rowspan="1">
-                        <a href="/datacomponents/DC0038">
-                          Application Log Content (DC0038)
+                        <a href="/datacomponents/DC0116">
+                          Permissions Request (DC0116)
                         </a>
                       </td>
-                      <td>android:logcat</td>
-                      <td>Default IME changed/active: imeId=<pkg>, onStartInput/onFinishInput high frequency. TYPE_APPLICATION_OVERLAY|addView .* showing on top of package <otherPkg></td>
-                    </tr>
-                    <tr>
-                      <td rowspan="1">
-                        <a href="/datacomponents/DC0039">
-                          File Creation (DC0039)
-                        </a>
-                      </td>
-                      <td>android:logcat</td>
-                      <td>CREATE/WRITE paths like /data/data/<pkg>/files/(keys|inputs)/.*\\.db|\\.txt|\\.log</td>
+                      <td>android:DevicePolicyManager</td>
+                      <td>DevicePolicyManager.getPermissionGrantState(); PackageManager manifest/requested-permission review</td>
                     </tr>
                   </tbody>
                 </table>
@@ -392,28 +383,24 @@
                   </thead>
                   <tbody>
                     <tr>
-                      <td>TimeWindowSeconds</td>
-                      <td>Max time from input intercept to persist/exfil (e.g., 5–45s).</td>
+                      <td>AccessibilityAllowList</td>
+                      <td>Approved assistive tech, screen readers, approved IME apps. Keep minimal. Derive from MDM catalog.</td>
                     </tr>
                     <tr>
-                      <td>MinInputEventBurst</td>
-                      <td>Minimum count of input events within window to flag harvesting (e.g., ≥5).</td>
+                      <td>TargetAppList</td>
+                      <td>Banking, auth, enterprise SSO, email app packages. Derive from MDM app catalog by data tier.</td>
                     </tr>
                     <tr>
-                      <td>OverlayRequired</td>
-                      <td>Require overlay creation if Accessibility not present (true/false).</td>
+                      <td>KeylogUplinkThreshold</td>
+                      <td>Default 10KB — keystroke logs are small but high-value. Tightening: 1KB.</td>
                     </tr>
                     <tr>
-                      <td>PersistPathRegex</td>
-                      <td>Regex for keylog/clipboard dump destinations in app container.</td>
+                      <td>InputExfilWindow</td>
+                      <td>Default 300s.</td>
                     </tr>
                     <tr>
-                      <td>ExfilDomainAllowlist</td>
-                      <td>Known-good analytics/CDN endpoints to suppress FPs.</td>
-                    </tr>
-                    <tr>
-                      <td>UserContext</td>
-                      <td>Foreground/background/Work Profile or Kiosk policy to scope alerts.</td>
+                      <td>AppCDNList</td>
+                      <td>Per-app CDN. Derive by measurement.</td>
                     </tr>
                   </tbody>
                 </table>
@@ -423,7 +410,7 @@
               role="tabpanel" aria-labelledby="tab-iOS">
               <h4 class="pt-3" id="AN1826">AN1826</h4>
               <div>
-                        <p>Defender observes an app enabling or using input-capture surfaces (custom keyboard extension with Full Access, abnormal UI text entry interception, pasteboard polling adjacent to login screens), then persisting and/or exfiltrating captured input. Chain: capability/consent (TCC for keyboard Full Access or input privacy domains) → intercept behavior (keyboard extension active, repeated text field ‘editingChanged’/secure entry focus, background pasteboard reads) → local write → near-term egress.</p>
+                        <p>For iOS, detect Input Capture by correlating analyst-visible device/network evidence and management state; use streaming or batched telemetry only where the documented collector is deployed. Correlate Application State via Apple MDM [InstalledApplicationList / ManagedApplicationList]; Network Traffic Flow via Apple Network Extension / Enterprise VPN [NEFilterFlow / per-app VPN / secure-web-gateway flow metadata]; Permissions Request via Application Vetting [Code-signing entitlements and Info.plist privacy usage-description keys]. Alert on a sequence or state change inconsistent with the device/app baseline, approved management policy, or expected user workflow; do not infer unobserved API calls, file/process activity, or payload content from management state alone.</p>
 
               </div>
 
@@ -440,30 +427,30 @@
                   <tbody>
                     <tr>
                       <td rowspan="1">
-                        <a href="/datacomponents/DC0035">
-                          Process Access (DC0035)
+                        <a href="/datacomponents/DC0123">
+                          Application State (DC0123)
                         </a>
                       </td>
-                      <td>iOS:unifiedlog</td>
-                      <td>Keyboard extension Full Access change; privacy grant touching input/keyboard categories for <bundle_id></td>
+                      <td>iOS:MDM</td>
+                      <td>InstalledApplicationList / ManagedApplicationList</td>
                     </tr>
                     <tr>
                       <td rowspan="1">
-                        <a href="/datacomponents/DC0038">
-                          Application Log Content (DC0038)
+                        <a href="/datacomponents/DC0078">
+                          Network Traffic Flow (DC0078)
                         </a>
                       </td>
-                      <td>iOS:unifiedlog</td>
-                      <td>UIWindow/UIView events indicating secure text entry focus, editingChanged bursts, unexpected firstResponder cycling</td>
+                      <td>iOS:NetworkExtension</td>
+                      <td>NEFilterFlow / per-app VPN / secure-web-gateway flow metadata</td>
                     </tr>
                     <tr>
                       <td rowspan="1">
-                        <a href="/datacomponents/DC0039">
-                          File Creation (DC0039)
+                        <a href="/datacomponents/DC0116">
+                          Permissions Request (DC0116)
                         </a>
                       </td>
-                      <td>iOS:unifiedlog</td>
-                      <td>CREATE/WRITE clipboard/keylog artifacts (clipboard.db, keys_*.txt) in container</td>
+                      <td>mobile:ApplicationVetting</td>
+                      <td>Code-signing entitlements and Info.plist privacy usage-description keys</td>
                     </tr>
                   </tbody>
                 </table>
@@ -480,28 +467,20 @@
                   </thead>
                   <tbody>
                     <tr>
-                      <td>TimeWindowSeconds</td>
-                      <td>Max time from intercept to persist/exfil (e.g., 5–60s).</td>
+                      <td>KeyboardAllowList</td>
+                      <td>IT-approved keyboard bundle IDs. Keep minimal.</td>
                     </tr>
                     <tr>
-                      <td>MinKeyEventBurst</td>
-                      <td>Minimum key/commit or editingChanged count to flag harvesting (e.g., ≥10).</td>
+                      <td>KeyboardVendorEndpoints</td>
+                      <td>Known cloud sync endpoints for each approved keyboard vendor.</td>
                     </tr>
                     <tr>
-                      <td>KeyboardFullAccessRequired</td>
-                      <td>Require keyboard Full Access to escalate severity (true/false).</td>
+                      <td>KeystrokeFrequencyThreshold</td>
+                      <td>Default 2 packets/sec — matches human average typing rate. Derive from keystroke baseline measurement.</td>
                     </tr>
                     <tr>
-                      <td>PersistPathRegex</td>
-                      <td>Regex for keylog/clipboard dump files.</td>
-                    </tr>
-                    <tr>
-                      <td>ExfilDomainAllowlist</td>
-                      <td>Known-good enterprise/analytics endpoints.</td>
-                    </tr>
-                    <tr>
-                      <td>UserContext</td>
-                      <td>Foreground state, Focus modes, MDM policy.</td>
+                      <td>KeylogSessionThreshold</td>
+                      <td>Default 300s sustained — confirms ongoing capture vs one-time sync.</td>
                     </tr>
                   </tbody>
                 </table>
@@ -509,6 +488,7 @@
             </div>
           </div>
         </div>
+
 
         
       </div>
@@ -727,7 +707,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3 col-footer">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v19.2&#013;Website  v5.1.0">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v20.0&#013;Website  v5.2.0">Website Changelog</a></u>
                                 </div>
                                 <div class="px-3">
                                     <u class="footer-link"><a href="/resources/legal-and-branding/privacy/#" class="footer-link" onclick="Osano.cm.showDrawer('osano-cm-dom-info-dialog-open')">Cookie Preferences</a></u>

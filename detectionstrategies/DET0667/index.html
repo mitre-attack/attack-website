@@ -207,7 +207,7 @@
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
                     <div class="container-fluid banner-message">
-                        ATT&CKcon 7.0 registration is open! Join us October 27-28, 2026 in McLean, VA or virtually. <a href="https://na.eventscloud.com/website/93925/">Register in person</a> or <a href="https://mitre.brandlive.com/MITRE-ATTACKcon-7-0">register virtually</a>. See the <a href="https://na.eventscloud.com/website/93925/faq/">FAQ</a> for hotel and venue details.
+                        ATT&CK v20 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v20-9701dd75ffb4'>blog post</a> for more information. <a href='https://na.eventscloud.com/website/93925/'>ATT&CKcon 7.0</a> is October 27-28, 2026 in McLean, VA.
                     </div>
             </div>
         </div>
@@ -292,13 +292,13 @@
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Permalink to this version of DET0667" 
-           href="/versions/v19/detectionstrategies/DET0667/" data-test-ignore="true">Version Permalink</a>
+           href="/versions/v20/detectionstrategies/DET0667/" data-test-ignore="true">Version Permalink</a>
     </div>
     <div class="permalink">
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Go to the live version of DET0667" 
-           href="/versions/v19/detectionstrategies/DET0667/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+           href="/versions/v20/detectionstrategies/DET0667/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
     </div>
 </div>
 
@@ -326,7 +326,7 @@
               role="tabpanel" aria-labelledby="tab-Android">
               <h4 class="pt-3" id="AN1762">AN1762</h4>
               <div>
-                        <p>An application generates, imports, or accesses asymmetric keypairs (e.g., RSA/ECC), uses a public key to encrypt outbound data or establish encrypted sessions, and transmits resulting ciphertext in structured communication patterns. Detection correlates keypair lifecycle activity + asymmetric crypto API usage + data transformation + background execution context + network transmission, especially when inconsistent with expected application functionality.</p>
+                        <p>For Android, detect Asymmetric Cryptography from documented management, network, or vetting evidence; treat state queries as periodic observations rather than real-time events. Correlate Application Permission via Android Enterprise DPC / Application Vetting [DevicePolicyManager.getPermissionGrantState(); PackageManager manifest/requested-permission review]; Application State via Android Enterprise / EMM [Managed package inventory/status and package metadata]; File Creation via Application Vetting / Forensic Acquisition [Dynamic filesystem trace or acquired app-container/filesystem artifacts: App writes asymmetric-encrypted blob or encoded ciphertext to local staging path before network transmission — encrypted staging artifact]. Alert on a sequence or state change inconsistent with the device/app baseline, approved management policy, or expected user workflow; do not infer unobserved API calls, file/process activity, or payload content from management state alone.</p>
 
               </div>
 
@@ -342,26 +342,13 @@
                   </thead>
                   <tbody>
                     <tr>
-                      <td rowspan="2">
-                        <a href="/datacomponents/DC0021">
-                          OS API Execution (DC0021)
-                        </a>
-                      </td>
-                      <td>MobileEDR:telemetry</td>
-                      <td>App invokes asymmetric cryptographic operations (e.g., RSA/ECC keypair generation OR public key encryption OR signature operations) on outbound data buffers</td>
-                    </tr>
-                    <tr>
-                      <td>MobileEDR:telemetry</td>
-                      <td>Keypair generation, import, or access events (public/private key usage) occurring prior to network communication</td>
-                    </tr>
-                    <tr>
                       <td rowspan="1">
-                        <a href="/datacomponents/DC0039">
-                          File Creation (DC0039)
+                        <a href="/datacomponents/DC0114">
+                          Application Permission (DC0114)
                         </a>
                       </td>
-                      <td>MobileEDR:telemetry</td>
-                      <td>App writes asymmetric-encrypted blobs or encoded ciphertext to local buffers or files prior to transmission</td>
+                      <td>android:DevicePolicyManager</td>
+                      <td>DevicePolicyManager.getPermissionGrantState(); PackageManager manifest/requested-permission review</td>
                     </tr>
                     <tr>
                       <td rowspan="1">
@@ -369,17 +356,30 @@
                           Application State (DC0123)
                         </a>
                       </td>
-                      <td>MobileEDR:telemetry</td>
-                      <td>Asymmetric crypto operations occur while app_state=background OR device_locked=true OR no recent user interaction</td>
+                      <td>android:EMM</td>
+                      <td>Managed package inventory/status and package metadata</td>
                     </tr>
                     <tr>
                       <td rowspan="1">
-                        <a href="/datacomponents/DC0114">
-                          Application Permission (DC0114)
+                        <a href="/datacomponents/DC0039">
+                          File Creation (DC0039)
                         </a>
                       </td>
-                      <td>android:MDMLog</td>
-                      <td>App not in approved cryptographic or secure communication category performing keypair + encryption + transmission behavior</td>
+                      <td>mobile:ForensicArtifacts</td>
+                      <td>Dynamic filesystem trace or acquired app-container/filesystem artifacts: App writes asymmetric-encrypted blob or encoded ciphertext to local staging path before network transmission — encrypted staging artifact</td>
+                    </tr>
+                    <tr>
+                      <td rowspan="2">
+                        <a href="/datacomponents/DC0021">
+                          OS API Execution (DC0021)
+                        </a>
+                      </td>
+                      <td>mobile:DynamicAnalysis</td>
+                      <td>Dynamic API/runtime trace: App invokes RSA/ECC keypair generation, public-key import, or asymmetric encryption operations (KeyPairGenerator, Cipher.RSA, ECDH) NOT IN $ApprovedCryptoApps$ before network transmission</td>
+                    </tr>
+                    <tr>
+                      <td>mobile:DynamicAnalysis</td>
+                      <td>Dynamic API/runtime trace: Keypair generation, import, or private-key access events occurring prior to outbound communication not matching app declared secure-communication function</td>
                     </tr>
                   </tbody>
                 </table>
@@ -396,24 +396,16 @@
                   </thead>
                   <tbody>
                     <tr>
-                      <td>TimeWindow</td>
-                      <td>Correlation window between keypair usage and outbound communication</td>
+                      <td>ApprovedCryptoApps</td>
+                      <td>VPN clients, enterprise secure messaging, MDM agent, apps with documented asymmetric crypto need (certificate-pinned enterprise apps). Derive from MDM catalog.</td>
                     </tr>
                     <tr>
-                      <td>AllowedCryptoApps</td>
-                      <td>Apps expected to use asymmetric cryptography (e.g., secure messaging, VPN, enterprise auth apps)</td>
+                      <td>InteractionThreshold</td>
+                      <td>Default 300s.</td>
                     </tr>
                     <tr>
-                      <td>ForegroundStateRequired</td>
-                      <td>Whether key generation/encryption should occur only during user interaction</td>
-                    </tr>
-                    <tr>
-                      <td>KeyGenerationThreshold</td>
-                      <td>Frequency of keypair generation/import events considered anomalous</td>
-                    </tr>
-                    <tr>
-                      <td>PayloadSizeVariance</td>
-                      <td>Expected variability in payload sizes due to asymmetric encryption overhead</td>
+                      <td>AppCDNList</td>
+                      <td>30-day per-app network destination baseline.</td>
                     </tr>
                   </tbody>
                 </table>
@@ -460,6 +452,7 @@
             </div>
           </div>
         </div>
+
 
         
       </div>
@@ -678,7 +671,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3 col-footer">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v19.2&#013;Website  v5.1.0">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v20.0&#013;Website  v5.2.0">Website Changelog</a></u>
                                 </div>
                                 <div class="px-3">
                                     <u class="footer-link"><a href="/resources/legal-and-branding/privacy/#" class="footer-link" onclick="Osano.cm.showDrawer('osano-cm-dom-info-dialog-open')">Cookie Preferences</a></u>

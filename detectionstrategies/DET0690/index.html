@@ -207,7 +207,7 @@
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
                     <div class="container-fluid banner-message">
-                        ATT&CKcon 7.0 registration is open! Join us October 27-28, 2026 in McLean, VA or virtually. <a href="https://na.eventscloud.com/website/93925/">Register in person</a> or <a href="https://mitre.brandlive.com/MITRE-ATTACKcon-7-0">register virtually</a>. See the <a href="https://na.eventscloud.com/website/93925/faq/">FAQ</a> for hotel and venue details.
+                        ATT&CK v20 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v20-9701dd75ffb4'>blog post</a> for more information. <a href='https://na.eventscloud.com/website/93925/'>ATT&CKcon 7.0</a> is October 27-28, 2026 in McLean, VA.
                     </div>
             </div>
         </div>
@@ -292,13 +292,13 @@
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Permalink to this version of DET0690" 
-           href="/versions/v19/detectionstrategies/DET0690/" data-test-ignore="true">Version Permalink</a>
+           href="/versions/v20/detectionstrategies/DET0690/" data-test-ignore="true">Version Permalink</a>
     </div>
     <div class="permalink">
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Go to the live version of DET0690" 
-           href="/versions/v19/detectionstrategies/DET0690/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+           href="/versions/v20/detectionstrategies/DET0690/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
     </div>
 </div>
 
@@ -320,7 +320,7 @@
               role="tabpanel" aria-labelledby="tab-Android">
               <h4 class="pt-3" id="AN1801">AN1801</h4>
               <div>
-                        <p>Correlates (1) a malicious application gaining or using a removal-capable control path, such as device owner or delegated app-management authority, accessibility service control over uninstall UI, or rooted filesystem access, (2) initiation of uninstall or package-removal behavior, and (3) disappearance of the application from installed-state inventory or app runtime immediately afterward, often with a short-lived final burst of local cleanup or outbound communication. The defender observes a causal chain where the application first establishes the ability to remove itself, then triggers uninstall or deletion, and then vanishes from expected app presence while device activity continues.</p>
+                        <p>For Android, detect Uninstall Malicious Application from documented management, network, or vetting evidence; treat state queries as periodic observations rather than real-time events. Correlate Application Permission via Android Enterprise DPC / Application Vetting [DevicePolicyManager.getPermissionGrantState(); PackageManager manifest/requested-permission review]; File Deletion via Application Vetting / Forensic Acquisition [Dynamic filesystem trace or acquired app-container/filesystem artifacts: App deletes package files or local state immediately before package inventory disappearance — pre-removal evidence cleanup]; OS API Execution via Application Vetting / Instrumented Dynamic Analysis [Dynamic API/runtime trace: App invokes PackageInstaller uninstall or pm uninstall for own package or companion package NOT IN $ProtectedPackageList$ without user-initiated UI flow matching]. Alert on a sequence or state change inconsistent with the device/app baseline, approved management policy, or expected user workflow; do not infer unobserved API calls, file/process activity, or payload content from management state alone.</p>
 
               </div>
 
@@ -336,30 +336,13 @@
                   </thead>
                   <tbody>
                     <tr>
-                      <td rowspan="3">
+                      <td rowspan="1">
                         <a href="/datacomponents/DC0114">
                           Application Permission (DC0114)
                         </a>
                       </td>
-                      <td>android:MDMLog</td>
-                      <td>application holds device-owner, profile-owner, or delegated app-management authority capable of package removal before uninstall event</td>
-                    </tr>
-                    <tr>
-                      <td>android:MDMLog</td>
-                      <td>application has accessibility service privileges immediately before package-removal UI flow and subsequent application disappearance</td>
-                    </tr>
-                    <tr>
-                      <td>android:MDMLog</td>
-                      <td>device posture indicates rooted, compromised, or non-compliant state before package files disappear without standard managed uninstall workflow</td>
-                    </tr>
-                    <tr>
-                      <td rowspan="1">
-                        <a href="/datacomponents/DC0021">
-                          OS API Execution (DC0021)
-                        </a>
-                      </td>
-                      <td>MobileEDR:telemetry</td>
-                      <td>application invokes uninstall-related package-management operations, accessibility-driven uninstall confirmation actions, or privileged file-removal operations immediately before installed-state loss</td>
+                      <td>android:DevicePolicyManager</td>
+                      <td>DevicePolicyManager.getPermissionGrantState(); PackageManager manifest/requested-permission review</td>
                     </tr>
                     <tr>
                       <td rowspan="1">
@@ -367,8 +350,17 @@
                           File Deletion (DC0040)
                         </a>
                       </td>
-                      <td>MobileEDR:telemetry</td>
-                      <td>application deletes package files, cleanup artifacts, or app-local state immediately before disappearance from installed inventory or runtime</td>
+                      <td>mobile:ForensicArtifacts</td>
+                      <td>Dynamic filesystem trace or acquired app-container/filesystem artifacts: App deletes package files or local state immediately before package inventory disappearance — pre-removal evidence cleanup</td>
+                    </tr>
+                    <tr>
+                      <td rowspan="1">
+                        <a href="/datacomponents/DC0021">
+                          OS API Execution (DC0021)
+                        </a>
+                      </td>
+                      <td>mobile:DynamicAnalysis</td>
+                      <td>Dynamic API/runtime trace: App invokes PackageInstaller uninstall or pm uninstall for own package or companion package NOT IN $ProtectedPackageList$ without user-initiated UI flow matching</td>
                     </tr>
                   </tbody>
                 </table>
@@ -385,28 +377,12 @@
                   </thead>
                   <tbody>
                     <tr>
-                      <td>TimeWindow</td>
-                      <td>Correlation window between uninstall-capable control, removal action, and app disappearance</td>
+                      <td>MDMAgentList</td>
+                      <td>MDM agent packages authorized for managed uninstall. Derive from MDM enrollment policy.</td>
                     </tr>
                     <tr>
-                      <td>RemovalAuthoritySet</td>
-                      <td>Roles or privileges considered capable of enabling silent or assisted uninstall, such as device owner, delegated app-management authority, accessibility, or rooted filesystem access</td>
-                    </tr>
-                    <tr>
-                      <td>AllowedRemovalApps</td>
-                      <td>Legitimate enterprise or device-management apps allowed to uninstall applications</td>
-                    </tr>
-                    <tr>
-                      <td>RemovalAttemptSignalSet</td>
-                      <td>Signals used to recognize uninstall initiation, such as package-removal actions, uninstall intent flows, or accessibility-driven confirmation steps</td>
-                    </tr>
-                    <tr>
-                      <td>DisappearanceThreshold</td>
-                      <td>Maximum time between removal action and loss of installed-state visibility</td>
-                    </tr>
-                    <tr>
-                      <td>UplinkBytesThreshold</td>
-                      <td>Outbound traffic threshold used to confirm final activity before self-removal</td>
+                      <td>ProtectedPackageList</td>
+                      <td>Security-critical packages that should never be self-uninstalled: MDM agent, MTD, enterprise required apps. Any self-uninstall of these is highest-confidence malicious.</td>
                     </tr>
                   </tbody>
                 </table>
@@ -414,6 +390,7 @@
             </div>
           </div>
         </div>
+
 
         
       </div>
@@ -632,7 +609,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3 col-footer">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v19.2&#013;Website  v5.1.0">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v20.0&#013;Website  v5.2.0">Website Changelog</a></u>
                                 </div>
                                 <div class="px-3">
                                     <u class="footer-link"><a href="/resources/legal-and-branding/privacy/#" class="footer-link" onclick="Osano.cm.showDrawer('osano-cm-dom-info-dialog-open')">Cookie Preferences</a></u>

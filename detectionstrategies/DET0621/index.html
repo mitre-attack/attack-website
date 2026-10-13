@@ -207,7 +207,7 @@
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
                     <div class="container-fluid banner-message">
-                        ATT&CKcon 7.0 registration is open! Join us October 27-28, 2026 in McLean, VA or virtually. <a href="https://na.eventscloud.com/website/93925/">Register in person</a> or <a href="https://mitre.brandlive.com/MITRE-ATTACKcon-7-0">register virtually</a>. See the <a href="https://na.eventscloud.com/website/93925/faq/">FAQ</a> for hotel and venue details.
+                        ATT&CK v20 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v20-9701dd75ffb4'>blog post</a> for more information. <a href='https://na.eventscloud.com/website/93925/'>ATT&CKcon 7.0</a> is October 27-28, 2026 in McLean, VA.
                     </div>
             </div>
         </div>
@@ -292,13 +292,13 @@
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Permalink to this version of DET0621" 
-           href="/versions/v19/detectionstrategies/DET0621/" data-test-ignore="true">Version Permalink</a>
+           href="/versions/v20/detectionstrategies/DET0621/" data-test-ignore="true">Version Permalink</a>
     </div>
     <div class="permalink">
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Go to the live version of DET0621" 
-           href="/versions/v19/detectionstrategies/DET0621/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+           href="/versions/v20/detectionstrategies/DET0621/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
     </div>
 </div>
 
@@ -326,7 +326,7 @@
               role="tabpanel" aria-labelledby="tab-Android">
               <h4 class="pt-3" id="AN1683">AN1683</h4>
               <div>
-                        <p>Defender correlates an app escalating file visibility (permissions/flags, legacy storage modes) with enumeration of other apps’ storage or exported ContentProviders, followed by bulk reads/copies from target paths (including shared/external storage) and optional archive/encode then share/upload. Sequence: storage capability/permission gain → target discovery (provider queries, directory listing) → high-volume cross-app data reads from writable/shared paths → archive/encode → exfil/share within a short window.</p>
+                        <p>For Android, detect Stored Application Data by correlating analyst-visible device/network evidence and management state; use streaming or batched telemetry only where the documented collector is deployed. Correlate Application Permission via Android Enterprise DPC / Application Vetting [DevicePolicyManager.getPermissionGrantState(); PackageManager manifest/requested-permission review]; File Access via Application Vetting / Forensic Acquisition [Dynamic filesystem trace or acquired app-container/filesystem artifacts: open() for read on path IN /sdcard/ OR on path with file_permissions=777]; Network Traffic Flow via Android Enterprise Network Logging / Enterprise VPN [DevicePolicyManager.retrieveNetworkLogs(): DnsEvent / ConnectEvent; VPN flow metadata]. Alert on a sequence or state change inconsistent with the device/app baseline, approved management policy, or expected user workflow; do not infer unobserved API calls, file/process activity, or payload content from management state alone.</p>
 
               </div>
 
@@ -343,21 +343,12 @@
                   <tbody>
                     <tr>
                       <td rowspan="1">
-                        <a href="/datacomponents/DC0035">
-                          Process Access (DC0035)
+                        <a href="/datacomponents/DC0114">
+                          Application Permission (DC0114)
                         </a>
                       </td>
-                      <td>android:logcat</td>
-                      <td>Runtime grant or manifest presence for MANAGE_EXTERNAL_STORAGE/READ_EXTERNAL_STORAGE/READ_MEDIA_*; legacy external storage mode detection</td>
-                    </tr>
-                    <tr>
-                      <td rowspan="1">
-                        <a href="/datacomponents/DC0021">
-                          OS API Execution (DC0021)
-                        </a>
-                      </td>
-                      <td>android:logcat</td>
-                      <td>QUERY on exported ContentProviders of other packages (content://<other.pkg>/*) or MediaStore scoped queries immediately preceding file reads</td>
+                      <td>android:DevicePolicyManager</td>
+                      <td>DevicePolicyManager.getPermissionGrantState(); PackageManager manifest/requested-permission review</td>
                     </tr>
                     <tr>
                       <td rowspan="1">
@@ -365,17 +356,17 @@
                           File Access (DC0055)
                         </a>
                       </td>
-                      <td>android:logcat</td>
-                      <td>READ or COPY operations where path matches external/shared locations of other apps (e.g., /storage/emulated/0/Android/data/<otherpkg>/files/, /storage/emulated/0/Download/<app>/*)</td>
+                      <td>mobile:ForensicArtifacts</td>
+                      <td>Dynamic filesystem trace or acquired app-container/filesystem artifacts: open() for read on path IN /sdcard/ OR on path with file_permissions=777</td>
                     </tr>
                     <tr>
                       <td rowspan="1">
-                        <a href="/datacomponents/DC0039">
-                          File Creation (DC0039)
+                        <a href="/datacomponents/DC0078">
+                          Network Traffic Flow (DC0078)
                         </a>
                       </td>
-                      <td>android:logcat</td>
-                      <td>CREATE/WRITE of archive or container (.zip/.gz/.7z/.db copy) that aggregates files pulled from other-package paths</td>
+                      <td>android:EnterpriseNetworkLog</td>
+                      <td>DevicePolicyManager.retrieveNetworkLogs(): DnsEvent / ConnectEvent; VPN flow metadata</td>
                     </tr>
                   </tbody>
                 </table>
@@ -392,32 +383,24 @@
                   </thead>
                   <tbody>
                     <tr>
-                      <td>TimeWindowSeconds</td>
-                      <td>Correlation window to tie discovery → reads → package → exfil (e.g., 15–120s).</td>
+                      <td>HighValueAppList</td>
+                      <td>Banking, email, authenticator, messaging app packages. Derive from MDM app catalog by data-sensitivity tier.</td>
                     </tr>
                     <tr>
-                      <td>ExternalStoragePathRegex</td>
-                      <td>Regex for cross-app paths on external/shared storage to monitor.</td>
+                      <td>ApprovedStorageReaders</td>
+                      <td>Media players, file managers, MDM agent. Derive from MDM catalog.</td>
                     </tr>
                     <tr>
-                      <td>SuspiciousProviders</td>
-                      <td>List of exported/weakly-protected content providers under scrutiny.</td>
+                      <td>UplinkThreshold</td>
+                      <td>Default 500KB. Tightening: 100KB. Derive from per-app upload baseline.</td>
                     </tr>
                     <tr>
-                      <td>MinBytesRead</td>
-                      <td>Lower bound on cumulative read volume to avoid noisy single-file accesses.</td>
+                      <td>AppCDNList</td>
+                      <td>Per-app known upload destinations. Derive by measurement.</td>
                     </tr>
                     <tr>
-                      <td>ArchiveExtensions</td>
-                      <td>Extensions considered packaging (.zip,.gz,.7z,.tar,.db copies).</td>
-                    </tr>
-                    <tr>
-                      <td>ExfilDomainAllowlist</td>
-                      <td>Known good CDNs/APIs to reduce false positives.</td>
-                    </tr>
-                    <tr>
-                      <td>UserContext</td>
-                      <td>Foreground/background, Work Profile, developer mode to scope alerts.</td>
+                      <td>ExfilWindow</td>
+                      <td>Default 120s.</td>
                     </tr>
                   </tbody>
                 </table>
@@ -427,7 +410,7 @@
               role="tabpanel" aria-labelledby="tab-iOS">
               <h4 class="pt-3" id="AN1684">AN1684</h4>
               <div>
-                        <p>Defender correlates attempts to access other apps’ data via shared containers (App Groups), Photos/Files providers, pasteboard abuse, or jailbroken cross-container reads, followed by aggregation/packaging and optional exfil/share. Sequence: capability/consent (TCC/entitlements) → target discovery (AppGroup/Photos/Files enumeration, URL schemes) → bulk read from shared/foreign container or provider → package/encode → exfil/share.</p>
+                        <p>For iOS, detect Stored Application Data by correlating analyst-visible device/network evidence and management state; use streaming or batched telemetry only where the documented collector is deployed. Correlate Application State via Apple MDM [InstalledApplicationList / ManagedApplicationList]; Host Status via Apple MDM [DeviceInformation / SecurityInfo / ProfileList / restrictions and compliance queries]; Network Traffic Flow via Apple Network Extension / Enterprise VPN [NEFilterFlow / per-app VPN / secure-web-gateway flow metadata]. Alert on a sequence or state change inconsistent with the device/app baseline, approved management policy, or expected user workflow; do not infer unobserved API calls, file/process activity, or payload content from management state alone.</p>
 
               </div>
 
@@ -444,39 +427,30 @@
                   <tbody>
                     <tr>
                       <td rowspan="1">
-                        <a href="/datacomponents/DC0035">
-                          Process Access (DC0035)
+                        <a href="/datacomponents/DC0123">
+                          Application State (DC0123)
                         </a>
                       </td>
-                      <td>iOS:unifiedlog</td>
-                      <td>Privacy (TCC) prompts/grants for Photos/Files or access changes indicating new visibility into user/app data</td>
+                      <td>iOS:MDM</td>
+                      <td>InstalledApplicationList / ManagedApplicationList</td>
                     </tr>
                     <tr>
                       <td rowspan="1">
-                        <a href="/datacomponents/DC0055">
-                          File Access (DC0055)
+                        <a href="/datacomponents/DC0018">
+                          Host Status (DC0018)
                         </a>
                       </td>
-                      <td>iOS:unifiedlog</td>
-                      <td>READ operations from App Group containers (/var/mobile/Containers/Shared/AppGroup/...) or Files/Photos provider mountpoints, especially when group not owned by bundle</td>
+                      <td>iOS:MDM</td>
+                      <td>DeviceInformation / SecurityInfo / ProfileList / restrictions and compliance queries</td>
                     </tr>
                     <tr>
                       <td rowspan="1">
-                        <a href="/datacomponents/DC0038">
-                          Application Log Content (DC0038)
+                        <a href="/datacomponents/DC0078">
+                          Network Traffic Flow (DC0078)
                         </a>
                       </td>
-                      <td>iOS:unifiedlog</td>
-                      <td>Repeated or large UIPasteboard reads; background pasteboard access shortly before packaging</td>
-                    </tr>
-                    <tr>
-                      <td rowspan="1">
-                        <a href="/datacomponents/DC0039">
-                          File Creation (DC0039)
-                        </a>
-                      </td>
-                      <td>iOS:unifiedlog</td>
-                      <td>CREATE/WRITE of archive/container (.zip/.gz/.7z/.db export) aggregating recently read items</td>
+                      <td>iOS:NetworkExtension</td>
+                      <td>NEFilterFlow / per-app VPN / secure-web-gateway flow metadata</td>
                     </tr>
                   </tbody>
                 </table>
@@ -493,32 +467,24 @@
                   </thead>
                   <tbody>
                     <tr>
-                      <td>TimeWindowSeconds</td>
-                      <td>Correlation window for consent/discovery → read → package → exfil (e.g., 20–180s).</td>
+                      <td>HighValueAppList</td>
+                      <td>Banking, authentication, enterprise email, cryptocurrency wallet bundle IDs. Derive from MDM app catalog by data-sensitivity tier.</td>
                     </tr>
                     <tr>
-                      <td>AppGroupAllowlist</td>
-                      <td>Allowed App Group IDs for each bundle to reduce FPs.</td>
+                      <td>DataDumpMin</td>
+                      <td>Default 50KB — minimum for meaningful app database content.</td>
                     </tr>
                     <tr>
-                      <td>ProviderScope</td>
-                      <td>Files/Photos provider collections permitted for the app.</td>
+                      <td>DataDumpMax</td>
+                      <td>Default 10MB — cap to exclude media exfil which is larger.</td>
                     </tr>
                     <tr>
-                      <td>MinBytesRead</td>
-                      <td>Lower bound on cumulative read size to signal collection vs casual access.</td>
+                      <td>AppCDNList</td>
+                      <td>Per-device CDN baseline, 30-day.</td>
                     </tr>
                     <tr>
-                      <td>ArchiveExtensions</td>
-                      <td>Packaging extensions to track when aggregating data.</td>
-                    </tr>
-                    <tr>
-                      <td>ExfilDomainAllowlist</td>
-                      <td>Known-good enterprise domains/CDNs for uploads.</td>
-                    </tr>
-                    <tr>
-                      <td>UserContext</td>
-                      <td>Foreground/background and Work Profile state to scope analytics.</td>
+                      <td>ExfilWindow</td>
+                      <td>Default 300s after jailbreak detection.</td>
                     </tr>
                   </tbody>
                 </table>
@@ -526,6 +492,7 @@
             </div>
           </div>
         </div>
+
 
         
       </div>
@@ -744,7 +711,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3 col-footer">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v19.2&#013;Website  v5.1.0">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v20.0&#013;Website  v5.2.0">Website Changelog</a></u>
                                 </div>
                                 <div class="px-3">
                                     <u class="footer-link"><a href="/resources/legal-and-branding/privacy/#" class="footer-link" onclick="Osano.cm.showDrawer('osano-cm-dom-info-dialog-open')">Cookie Preferences</a></u>

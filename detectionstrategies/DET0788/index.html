@@ -207,7 +207,7 @@
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
                     <div class="container-fluid banner-message">
-                        ATT&CKcon 7.0 registration is open! Join us October 27-28, 2026 in McLean, VA or virtually. <a href="https://na.eventscloud.com/website/93925/">Register in person</a> or <a href="https://mitre.brandlive.com/MITRE-ATTACKcon-7-0">register virtually</a>. See the <a href="https://na.eventscloud.com/website/93925/faq/">FAQ</a> for hotel and venue details.
+                        ATT&CK v20 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v20-9701dd75ffb4'>blog post</a> for more information. <a href='https://na.eventscloud.com/website/93925/'>ATT&CKcon 7.0</a> is October 27-28, 2026 in McLean, VA.
                     </div>
             </div>
         </div>
@@ -267,7 +267,7 @@
                 </div>
                 <div class="row card-data">
                   <div class="col-md-12">
-                    <span class="h5 card-title">Analytics</span>: AN1920
+                    <span class="h5 card-title">Analytics</span>: AN1920, AN2149, AN2177, AN2210
                   </div>
                 </div>
                 <div class="row card-data">
@@ -282,7 +282,7 @@
                 </div>
                 <div class="row card-data">
                   <div class="col-md-12">
-                    <span class="h5 card-title">Last Modified</span>: 12 May 2026
+                    <span class="h5 card-title">Last Modified</span>: 13 October 2026
                   </div>
                 </div>
               </div>
@@ -292,13 +292,13 @@
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Permalink to this version of DET0788" 
-           href="/versions/v19/detectionstrategies/DET0788/" data-test-ignore="true">Version Permalink</a>
+           href="/versions/v20/detectionstrategies/DET0788/" data-test-ignore="true">Version Permalink</a>
     </div>
     <div class="permalink">
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Go to the live version of DET0788" 
-           href="/versions/v19/detectionstrategies/DET0788/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+           href="/versions/v20/detectionstrategies/DET0788/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
     </div>
 </div>
 
@@ -309,18 +309,36 @@
           <h2 class="pt-3" id="analytics">Analytics</h2>
           <ul class="nav nav-tabs mb-2" role="tablist">
             <li class="nav-item">
-              <a class="nav-link active" id="tab-ICS" data-toggle="tab"
-                href="#pane-ICS" role="tab" aria-selected="true">
-                ICS
+              <a class="nav-link active" id="tab-Embedded" data-toggle="tab"
+                href="#pane-Embedded" role="tab" aria-selected="true">
+                Embedded
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link " id="tab-Linux" data-toggle="tab"
+                href="#pane-Linux" role="tab" aria-selected="true">
+                Linux
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link " id="tab-Network_Devices" data-toggle="tab"
+                href="#pane-Network_Devices" role="tab" aria-selected="true">
+                Network Devices
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link " id="tab-Windows" data-toggle="tab"
+                href="#pane-Windows" role="tab" aria-selected="true">
+                Windows
               </a>
             </li>
           </ul>
           <div class="tab-content card card-body p-3">
-            <div class="tab-pane fade show active" id="pane-ICS"
-              role="tabpanel" aria-labelledby="tab-ICS">
+            <div class="tab-pane fade show active" id="pane-Embedded"
+              role="tabpanel" aria-labelledby="tab-Embedded">
               <h4 class="pt-3" id="AN1920">AN1920</h4>
               <div>
-                        <p>Monitor ICS automation protocols for anomalies related to reading point or tag data, such as new assets using these functions, changes in volume or timing, or unusual information being queried. Many protocols provide multiple ways to achieve the same result (e.g., functions with/without an acknowledgment or functions that operate on a single point vs. multiple points). Monitor for changes in the functions used.<br />Monitor asset application logs which may provide information about requests for points or tags. Look for anomalies related to reading point or tag data, such as new assets using these functions, changes in volume or timing, or unusual information being queried. Many devices provide multiple ways to achieve the same result (e.g., functions with/without an acknowledgment or functions that operate on a single point vs. multiple points). Monitor for changes in the functions used.</p>
+                        <p>Real-time monitoring identifies an Industrial Control System (ICS) protocol session that systematically enumerates a device's full tag/object namespace from a source not in the approved control server list, where the enumeration pattern covers the complete address/object space rather than the sparse, fixed tag set legitimate Supervisory Control and Data Acquisition (SCADA) polling queries. OT operational-fidelity gate: Do not alert on novelty, scan/read volume, or enumeration alone. Alert when the source role is not authorized for discovery/polling and the target scope, address/tag range, protocol, or rate deviates from the established operational baseline. Suppress normal SCADA/HMI/historian polling, commissioning, asset inventory, backup, diagnostics, and approved engineering activity.</p>
 
               </div>
 
@@ -337,28 +355,321 @@
                   <tbody>
                     <tr>
                       <td rowspan="1">
+                        <a href="/datacomponents/DC0038">
+                          Application Log Content (DC0038)
+                        </a>
+                      </td>
+                      <td>opc:applog</td>
+                      <td>client_id not in approved Open Platform Communications (OPC) clients traversing entire tag tree rather than known fixed subset</td>
+                    </tr>
+                    <tr>
+                      <td rowspan="1">
                         <a href="/datacomponents/DC0085">
                           Network Traffic Content (DC0085)
                         </a>
                       </td>
-                      <td>Network Traffic</td>
-                      <td>None</td>
+                      <td>NSM:Content</td>
+                      <td>Open Platform Communications Unified Architecture (OPC UA) BrowseNamespace or Distributed Network Protocol 3 (DNP3) object 0 all-variation read or Common Industrial Protocol (CIP) Get_Attributes_All from source not in approved Supervisory Control and Data Acquisition (SCADA) servers, covering above namespace coverage threshold percent of device tag space</td>
                     </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <h5 class="pt-3" id="AN1920-mutable-elements">Mutable Elements</h5>
+              <div class="tables-mobile">
+                <table class="table table-bordered table-alternate mt-2">
+                  <thead>
+                    <tr>
+                      <th scope="col">Field</th>
+                      <th scope="col">Description</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>ApprovedOPCClients</td>
+                      <td>Allowlist of OPC client identities authorized for namespace browsing.</td>
+                    </tr>
+                    <tr>
+                      <td>ApprovedSCADAServers</td>
+                      <td>IP allowlist of legitimate polling/browsing sources.</td>
+                    </tr>
+                    <tr>
+                      <td>NamespaceCoverageThreshold</td>
+                      <td>Percentage of total device tag/object space accessed within a session constituting full enumeration.</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="tab-pane fade " id="pane-Linux"
+              role="tabpanel" aria-labelledby="tab-Linux">
+              <h4 class="pt-3" id="AN2149">AN2149</h4>
+              <div>
+                        <p>Real-time monitoring identifies an Open Platform Communications (OPC) Unified Architecture (UA) client process on a Linux Industrial Control System (ICS) host calling browse/enumerate operations against the full namespace, from a User Identifier (UID) not associated with recognized monitoring tools. OT operational-fidelity gate: Do not alert on novelty, scan/read volume, or enumeration alone. Alert when the source role is not authorized for discovery/polling and the target scope, address/tag range, protocol, or rate deviates from the established operational baseline. Suppress normal SCADA/HMI/historian polling, commissioning, asset inventory, backup, diagnostics, and approved engineering activity.</p>
+
+              </div>
+
+              <h5 class="pt-3" id="AN2149-log-sources">Log Sources</h5>
+              <div class="tables-mobile">
+                <table class="table table-bordered table-alternate mt-2">
+                  <thead>
+                    <tr>
+                      <th scope="col">Data Component</th>
+                      <th scope="col">Name</th>
+                      <th scope="col">Channel</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td rowspan="1">
+                        <a href="/datacomponents/DC0085">
+                          Network Traffic Content (DC0085)
+                        </a>
+                      </td>
+                      <td>NSM:Content</td>
+                      <td>OPC UA Browse/BrowseNext request to namespace or system-information objects from a client identity or source not in the approved monitoring baseline</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <h5 class="pt-3" id="AN2149-mutable-elements">Mutable Elements</h5>
+              <div class="tables-mobile">
+                <table class="table table-bordered table-alternate mt-2">
+                  <thead>
+                    <tr>
+                      <th scope="col">Field</th>
+                      <th scope="col">Description</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>ApprovedOPCClients</td>
+                      <td>Allowlist of OPC client identities authorized for namespace browsing.</td>
+                    </tr>
+                    <tr>
+                      <td>ApprovedSCADAServers</td>
+                      <td>IP allowlist of legitimate polling/browsing sources.</td>
+                    </tr>
+                    <tr>
+                      <td>NamespaceCoverageThreshold</td>
+                      <td>Percentage of total device tag/object space accessed within a session constituting full enumeration.</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="tab-pane fade " id="pane-Network_Devices"
+              role="tabpanel" aria-labelledby="tab-Network_Devices">
+              <h4 class="pt-3" id="AN2177">AN2177</h4>
+              <div>
+                        <p>Real-time monitoring identifies NetFlow showing a source making sequential connections to multiple field device Internet Protocol (IP) addresses, each resulting in large response payloads characteristic of directory listing rather than value reads. OT operational-fidelity gate: Do not alert on novelty, scan/read volume, or enumeration alone. Alert when the source role is not authorized for discovery/polling and the target scope, address/tag range, protocol, or rate deviates from the established operational baseline. Suppress normal SCADA/HMI/historian polling, commissioning, asset inventory, backup, diagnostics, and approved engineering activity.</p>
+
+              </div>
+
+              <h5 class="pt-3" id="AN2177-log-sources">Log Sources</h5>
+              <div class="tables-mobile">
+                <table class="table table-bordered table-alternate mt-2">
+                  <thead>
+                    <tr>
+                      <th scope="col">Data Component</th>
+                      <th scope="col">Name</th>
+                      <th scope="col">Channel</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td rowspan="1">
+                        <a href="/datacomponents/DC0078">
+                          Network Traffic Flow (DC0078)
+                        </a>
+                      </td>
+                      <td>netflow:ipfix</td>
+                      <td>IPFIX/NetFlow flow record (src/dst IP, src/dst port, protocol, packets/bytes/time): sequential connections from single source to multiple device Internet Protocol (IP) addresses resulting in large response payloads characteristic of directory listing</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <h5 class="pt-3" id="AN2177-mutable-elements">Mutable Elements</h5>
+              <div class="tables-mobile">
+                <table class="table table-bordered table-alternate mt-2">
+                  <thead>
+                    <tr>
+                      <th scope="col">Field</th>
+                      <th scope="col">Description</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>ApprovedOPCClients</td>
+                      <td>Allowlist of OPC client identities authorized for namespace browsing.</td>
+                    </tr>
+                    <tr>
+                      <td>ApprovedSCADAServers</td>
+                      <td>IP allowlist of legitimate polling/browsing sources.</td>
+                    </tr>
+                    <tr>
+                      <td>NamespaceCoverageThreshold</td>
+                      <td>Percentage of total device tag/object space accessed within a session constituting full enumeration.</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="tab-pane fade " id="pane-Windows"
+              role="tabpanel" aria-labelledby="tab-Windows">
+              <h4 class="pt-3" id="AN2210">AN2210</h4>
+              <div>
+                        <p>Real-time monitoring identifies an Open Platform Communications (OPC) client process on an Industrial Control System (ICS) Windows host calling BrowseNamespace or GetProperties to enumerate the full tag tree, from a process not associated with a recognized Human-Machine Interface (HMI) or historian tool. OT operational-fidelity gate: Do not alert on novelty, scan/read volume, or enumeration alone. Alert when the source role is not authorized for discovery/polling and the target scope, address/tag range, protocol, or rate deviates from the established operational baseline. Suppress normal SCADA/HMI/historian polling, commissioning, asset inventory, backup, diagnostics, and approved engineering activity.</p>
+
+              </div>
+
+              <h5 class="pt-3" id="AN2210-log-sources">Log Sources</h5>
+              <div class="tables-mobile">
+                <table class="table table-bordered table-alternate mt-2">
+                  <thead>
+                    <tr>
+                      <th scope="col">Data Component</th>
+                      <th scope="col">Name</th>
+                      <th scope="col">Channel</th>
+                    </tr>
+                  </thead>
+                  <tbody>
                     <tr>
                       <td rowspan="1">
                         <a href="/datacomponents/DC0038">
                           Application Log Content (DC0038)
                         </a>
                       </td>
-                      <td>Application Log</td>
-                      <td>None</td>
+                      <td>opc:applog</td>
+                      <td>Open Platform Communications (OPC) client not in approved OPC clients calling BrowseNamespace traversing entire tag tree</td>
                     </tr>
                   </tbody>
                 </table>
               </div>
 
+              <h5 class="pt-3" id="AN2210-mutable-elements">Mutable Elements</h5>
+              <div class="tables-mobile">
+                <table class="table table-bordered table-alternate mt-2">
+                  <thead>
+                    <tr>
+                      <th scope="col">Field</th>
+                      <th scope="col">Description</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>ApprovedOPCClients</td>
+                      <td>Allowlist of OPC client identities authorized for namespace browsing.</td>
+                    </tr>
+                    <tr>
+                      <td>ApprovedSCADAServers</td>
+                      <td>IP allowlist of legitimate polling/browsing sources.</td>
+                    </tr>
+                    <tr>
+                      <td>NamespaceCoverageThreshold</td>
+                      <td>Percentage of total device tag/object space accessed within a session constituting full enumeration.</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
+        </div>
+
+        <div id="assets-tabs">
+          <h2 class="pt-3" id="assets">Targeted Assets</h2>
+          <table class="table table-bordered table-alternate mt-2" aria-describedby="asset-table">
+            <thead>
+              <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Asset</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <a href="/assets/A0002"> A0002 </a>
+                </td>
+                <td>
+                  <a href="/assets/A0002"> Human-Machine Interface (HMI) </a>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <a href="/assets/A0003"> A0003 </a>
+                </td>
+                <td>
+                  <a href="/assets/A0003"> Programmable Logic Controller (PLC) </a>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <a href="/assets/A0004"> A0004 </a>
+                </td>
+                <td>
+                  <a href="/assets/A0004"> Remote Terminal Unit (RTU) </a>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <a href="/assets/A0005"> A0005 </a>
+                </td>
+                <td>
+                  <a href="/assets/A0005"> Intelligent Electronic Device (IED) </a>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <a href="/assets/A0006"> A0006 </a>
+                </td>
+                <td>
+                  <a href="/assets/A0006"> Data Historian </a>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <a href="/assets/A0007"> A0007 </a>
+                </td>
+                <td>
+                  <a href="/assets/A0007"> Control Server </a>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <a href="/assets/A0009"> A0009 </a>
+                </td>
+                <td>
+                  <a href="/assets/A0009"> Data Gateway </a>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <a href="/assets/A0010"> A0010 </a>
+                </td>
+                <td>
+                  <a href="/assets/A0010"> Safety Controller </a>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <a href="/assets/A0017"> A0017 </a>
+                </td>
+                <td>
+                  <a href="/assets/A0017"> Distributed Control System (DCS) Controller </a>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <a href="/assets/A0018"> A0018 </a>
+                </td>
+                <td>
+                  <a href="/assets/A0018"> Programmable Automation Controller (PAC) </a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
 
         
@@ -578,7 +889,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3 col-footer">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v19.2&#013;Website  v5.1.0">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v20.0&#013;Website  v5.2.0">Website Changelog</a></u>
                                 </div>
                                 <div class="px-3">
                                     <u class="footer-link"><a href="/resources/legal-and-branding/privacy/#" class="footer-link" onclick="Osano.cm.showDrawer('osano-cm-dom-info-dialog-open')">Cookie Preferences</a></u>

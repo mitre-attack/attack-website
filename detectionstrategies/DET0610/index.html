@@ -207,7 +207,7 @@
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
                     <div class="container-fluid banner-message">
-                        ATT&CKcon 7.0 registration is open! Join us October 27-28, 2026 in McLean, VA or virtually. <a href="https://na.eventscloud.com/website/93925/">Register in person</a> or <a href="https://mitre.brandlive.com/MITRE-ATTACKcon-7-0">register virtually</a>. See the <a href="https://na.eventscloud.com/website/93925/faq/">FAQ</a> for hotel and venue details.
+                        ATT&CK v20 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v20-9701dd75ffb4'>blog post</a> for more information. <a href='https://na.eventscloud.com/website/93925/'>ATT&CKcon 7.0</a> is October 27-28, 2026 in McLean, VA.
                     </div>
             </div>
         </div>
@@ -292,13 +292,13 @@
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Permalink to this version of DET0610" 
-           href="/versions/v19/detectionstrategies/DET0610/" data-test-ignore="true">Version Permalink</a>
+           href="/versions/v20/detectionstrategies/DET0610/" data-test-ignore="true">Version Permalink</a>
     </div>
     <div class="permalink">
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Go to the live version of DET0610" 
-           href="/versions/v19/detectionstrategies/DET0610/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+           href="/versions/v20/detectionstrategies/DET0610/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
     </div>
 </div>
 
@@ -326,7 +326,7 @@
               role="tabpanel" aria-labelledby="tab-Android">
               <h4 class="pt-3" id="AN1663">AN1663</h4>
               <div>
-                        <p>The defender correlates repeated or periodic app-attributed retrieval from a legitimate public web-service platform with runtime conditions showing that the retrieval is not aligned to normal foreground consumption, user interaction, or approved app role. The strongest Android evidence is a managed or installed app repeatedly issuing inbound-oriented GET, fetch, sync, or content-pull operations to social, collaboration, paste, code-hosting, cloud-storage, messaging, or generic HTTPS platforms while the app is backgrounded, while the device is locked, or without recent user interaction, and without a corresponding outbound writeback to that same service class during the operational window. The detection is strengthened when the retrieval is temporally adjacent to scheduled/background execution, local state changes, or later downstream effects that do not require the same public platform to receive output.</p>
+                        <p>For Android, detect One-Way Communication by correlating analyst-visible device/network evidence and management state; use streaming or batched telemetry only where the documented collector is deployed. Correlate Application Permission via Android Enterprise DPC / Application Vetting [DevicePolicyManager.getPermissionGrantState(); PackageManager manifest/requested-permission review]; Application State via Android Enterprise / EMM [Managed package inventory/status and package metadata]; Network Traffic Content via Enterprise Secure Web Gateway / Proxy [DNS/HTTP(S) inspection or proxy transaction metadata where enterprise decryption/inspection is deployed]. Alert on a sequence or state change inconsistent with the device/app baseline, approved management policy, or expected user workflow; do not infer unobserved API calls, file/process activity, or payload content from management state alone.</p>
 
               </div>
 
@@ -342,47 +342,31 @@
                   </thead>
                   <tbody>
                     <tr>
-                      <td rowspan="3">
-                        <a href="/datacomponents/DC0085">
-                          Network Traffic Content (DC0085)
-                        </a>
-                      </td>
-                      <td>VPN:MobileProxy</td>
-                      <td>App-attributed HTTP GET, content fetch, sync pull, or inbound-oriented HTTPS session to public web-service domain recurred within TimeWindow without app-attributed POST, PUT, PATCH, upload, comment, message send, or API write to same service class</td>
-                    </tr>
-                    <tr>
-                      <td>VPN:MobileProxy</td>
-                      <td>Repeated app-attributed retrieval from same public web-service domain or API endpoint occurred at stable recurrence interval with low outbound volume relative to inbound content</td>
-                    </tr>
-                    <tr>
-                      <td>VPN:MobileProxy</td>
-                      <td>Inbound content retrieval from public web-service domain occurred without subsequent writeback to same service class and was followed by local or downstream activity outside normal app sync profile</td>
-                    </tr>
-                    <tr>
-                      <td rowspan="3">
-                        <a href="/datacomponents/DC0123">
-                          Application State (DC0123)
-                        </a>
-                      </td>
-                      <td>MobileEDR:telemetry</td>
-                      <td>AppState=background when repeated retrieval from public web-service domain began and no foreground transition occurred during the retrieval sequence</td>
-                    </tr>
-                    <tr>
-                      <td>MobileEDR:telemetry</td>
-                      <td>DeviceLockState=locked during repeated inbound retrieval sequence from public web-service platform</td>
-                    </tr>
-                    <tr>
-                      <td>MobileEDR:telemetry</td>
-                      <td>LastUserInteractionDelta exceeded threshold before repeated retrieval sequence from public web-service domain from same app identity</td>
-                    </tr>
-                    <tr>
                       <td rowspan="1">
                         <a href="/datacomponents/DC0114">
                           Application Permission (DC0114)
                         </a>
                       </td>
-                      <td>android:MDMLog</td>
-                      <td>App identity performing repeated one-way retrieval was unmanaged, outside approved app baseline, or not permitted to use detected public web-service class for background content retrieval</td>
+                      <td>android:DevicePolicyManager</td>
+                      <td>DevicePolicyManager.getPermissionGrantState(); PackageManager manifest/requested-permission review</td>
+                    </tr>
+                    <tr>
+                      <td rowspan="1">
+                        <a href="/datacomponents/DC0123">
+                          Application State (DC0123)
+                        </a>
+                      </td>
+                      <td>android:EMM</td>
+                      <td>Managed package inventory/status and package metadata</td>
+                    </tr>
+                    <tr>
+                      <td rowspan="1">
+                        <a href="/datacomponents/DC0085">
+                          Network Traffic Content (DC0085)
+                        </a>
+                      </td>
+                      <td>webproxy:applog</td>
+                      <td>DNS/HTTP(S) inspection or proxy transaction metadata where enterprise decryption/inspection is deployed</td>
                     </tr>
                   </tbody>
                 </table>
@@ -399,36 +383,16 @@
                   </thead>
                   <tbody>
                     <tr>
-                      <td>TimeWindow</td>
-                      <td>Correlation window used to evaluate recurring retrieval and absence of same-service writeback.</td>
+                      <td>ApprovedPlatformApps</td>
+                      <td>Apps approved for periodic read access to each platform. News readers (RSS/social), weather apps — legitimate pollers. Unknown apps periodically polling paste/code platforms are anomalous.</td>
                     </tr>
                     <tr>
-                      <td>AllowedAppList</td>
-                      <td>Approved app identities vary by organization, role, and device group.</td>
+                      <td>PollingIntervalThreshold</td>
+                      <td>Default 900s (15 min) maximum interval between fetches to same platform from background. More frequent background polling without user activity = C2 check-in.</td>
                     </tr>
                     <tr>
-                      <td>AllowedServiceClasses</td>
-                      <td>Some apps legitimately retrieve content from collaboration, messaging, storage, or code-hosting services.</td>
-                    </tr>
-                    <tr>
-                      <td>AllowedReadOnlyMappings</td>
-                      <td>Defines which apps are expected to only retrieve, and under what foreground/background conditions.</td>
-                    </tr>
-                    <tr>
-                      <td>RecentUserInteractionWindow</td>
-                      <td>Defines how close retrieval must be to user activity to be considered expected</td>
-                    </tr>
-                    <tr>
-                      <td>BeaconIntervalTolerance</td>
-                      <td>Allowed recurrence interval for benign refresh, sync, or polling behavior differs by app category</td>
-                    </tr>
-                    <tr>
-                      <td>ForegroundStateRequired</td>
-                      <td>Some apps should only retrieve from certain public service classes while foregrounded</td>
-                    </tr>
-                    <tr>
-                      <td>InboundOutboundRatioThreshold</td>
-                      <td>Expected ratio of inbound to outbound bytes for benign app refresh behavior varies by workload.</td>
+                      <td>CommandProcessWindow</td>
+                      <td>Default 30s between platform content retrieval and behavioral change (new connection, file write). Command processing is near-synchronous.</td>
                     </tr>
                   </tbody>
                 </table>
@@ -438,7 +402,7 @@
               role="tabpanel" aria-labelledby="tab-iOS">
               <h4 class="pt-3" id="AN1664">AN1664</h4>
               <div>
-                        <p>The defender correlates repeated retrieval-oriented communication from a supervised device or managed iOS app to a legitimate public web-service platform where the activity remains primarily inbound and does not produce corresponding writeback to that same service class during the operational window. The strongest iOS evidence is managed-app or device-attributed communication to collaboration, social, messaging, storage, or generic HTTPS platforms where inbound fetches or content pulls recur during background refresh, while the device is locked, or without recent user interaction, and no matching POST, upload, update, or message-send activity to that same public service class is observed. Because direct local runtime visibility is weaker than Android, the primary analytic is anchored on network directionality plus supervised managed-app and device-state context.</p>
+                        <p>For iOS, detect One-Way Communication by correlating analyst-visible device/network evidence and management state; use streaming or batched telemetry only where the documented collector is deployed. Correlate Application Permission via Application Vetting [Code-signing entitlements and Info.plist privacy usage-description keys]; Application State via Apple MDM [InstalledApplicationList / ManagedApplicationList]; Network Traffic Content via Enterprise Secure Web Gateway / Proxy [DNS/HTTP(S) inspection or proxy transaction metadata where enterprise decryption/inspection is deployed]. Alert on a sequence or state change inconsistent with the device/app baseline, approved management policy, or expected user workflow; do not infer unobserved API calls, file/process activity, or payload content from management state alone.</p>
 
               </div>
 
@@ -454,43 +418,31 @@
                   </thead>
                   <tbody>
                     <tr>
-                      <td rowspan="3">
-                        <a href="/datacomponents/DC0085">
-                          Network Traffic Content (DC0085)
-                        </a>
-                      </td>
-                      <td>VPN:MobileProxy</td>
-                      <td>App-attributed HTTP GET, content fetch, sync pull, or inbound-oriented HTTPS session to public web-service domain recurred within TimeWindow without app-attributed POST, PUT, PATCH, upload, comment, message send, or API write to same service class</td>
-                    </tr>
-                    <tr>
-                      <td>VPN:MobileProxy</td>
-                      <td>Repeated app-attributed retrieval from same public web-service domain or API endpoint occurred at stable recurrence interval with low outbound volume relative to inbound content</td>
-                    </tr>
-                    <tr>
-                      <td>VPN:MobileProxy</td>
-                      <td>Inbound content retrieval from public web-service domain occurred without subsequent writeback to same service class and was followed by local or downstream activity outside normal app sync profile</td>
-                    </tr>
-                    <tr>
-                      <td rowspan="2">
-                        <a href="/datacomponents/DC0123">
-                          Application State (DC0123)
-                        </a>
-                      </td>
-                      <td>MobileEDR:telemetry</td>
-                      <td>DeviceLockState=locked during repeated inbound retrieval sequence from public web-service platform</td>
-                    </tr>
-                    <tr>
-                      <td>MobileEDR:telemetry</td>
-                      <td>LastUserInteractionDelta exceeded threshold before repeated retrieval sequence from public web-service domain from same app identity</td>
-                    </tr>
-                    <tr>
                       <td rowspan="1">
                         <a href="/datacomponents/DC0114">
                           Application Permission (DC0114)
                         </a>
                       </td>
-                      <td>iOS:MDMLog</td>
-                      <td>Bundle performing repeated one-way retrieval was not present in approved managed-app baseline or was not permitted to use detected public web-service class for background content retrieval</td>
+                      <td>mobile:ApplicationVetting</td>
+                      <td>Code-signing entitlements and Info.plist privacy usage-description keys</td>
+                    </tr>
+                    <tr>
+                      <td rowspan="1">
+                        <a href="/datacomponents/DC0123">
+                          Application State (DC0123)
+                        </a>
+                      </td>
+                      <td>iOS:MDM</td>
+                      <td>InstalledApplicationList / ManagedApplicationList</td>
+                    </tr>
+                    <tr>
+                      <td rowspan="1">
+                        <a href="/datacomponents/DC0085">
+                          Network Traffic Content (DC0085)
+                        </a>
+                      </td>
+                      <td>webproxy:applog</td>
+                      <td>DNS/HTTP(S) inspection or proxy transaction metadata where enterprise decryption/inspection is deployed</td>
                     </tr>
                   </tbody>
                 </table>
@@ -507,40 +459,16 @@
                   </thead>
                   <tbody>
                     <tr>
-                      <td>TimeWindow</td>
-                      <td>Correlation window used to evaluate recurring retrieval and absence of same-service writeback.</td>
+                      <td>ApprovedPlatformApps</td>
+                      <td>Apps approved for periodic read access to each platform. News readers (RSS/social), weather apps — legitimate pollers. Unknown apps periodically polling paste/code platforms are anomalous.</td>
                     </tr>
                     <tr>
-                      <td>SupervisedRequired</td>
-                      <td>Strongest app-governance and bundle-baseline analytics depend on supervised iOS devices.</td>
+                      <td>PollingIntervalThreshold</td>
+                      <td>Default 900s (15 min) maximum interval between fetches to same platform from background. More frequent background polling without user activity = C2 check-in.</td>
                     </tr>
                     <tr>
-                      <td>AllowedManagedApps</td>
-                      <td>Approved managed bundle identities vary by organization and device profile.</td>
-                    </tr>
-                    <tr>
-                      <td>AllowedServiceClasses</td>
-                      <td>Some managed apps legitimately retrieve content from storage, collaboration, or messaging services.</td>
-                    </tr>
-                    <tr>
-                      <td>AllowedReadOnlyMappings</td>
-                      <td>Defines which bundles are expected to retrieve without writeback, and in what context.</td>
-                    </tr>
-                    <tr>
-                      <td>BackgroundRefreshBaseline</td>
-                      <td>Expected background retrieval behavior differs across managed app categories.</td>
-                    </tr>
-                    <tr>
-                      <td>RecentUserInteractionWindow</td>
-                      <td>Defines how close retrieval must be to user activity to be considered expected.</td>
-                    </tr>
-                    <tr>
-                      <td>BeaconIntervalTolerance</td>
-                      <td>Allowed recurrence interval for benign refresh, polling, or sync behavior differs by bundle type.</td>
-                    </tr>
-                    <tr>
-                      <td>InboundOutboundRatioThreshold</td>
-                      <td>Expected ratio of inbound to outbound bytes for benign managed-app refresh behavior varies by workflow.</td>
+                      <td>CommandProcessWindow</td>
+                      <td>Default 30s between platform content retrieval and behavioral change (new connection, file write). Command processing is near-synchronous.</td>
                     </tr>
                   </tbody>
                 </table>
@@ -548,6 +476,7 @@
             </div>
           </div>
         </div>
+
 
         
       </div>
@@ -766,7 +695,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3 col-footer">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v19.2&#013;Website  v5.1.0">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v20.0&#013;Website  v5.2.0">Website Changelog</a></u>
                                 </div>
                                 <div class="px-3">
                                     <u class="footer-link"><a href="/resources/legal-and-branding/privacy/#" class="footer-link" onclick="Osano.cm.showDrawer('osano-cm-dom-info-dialog-open')">Cookie Preferences</a></u>

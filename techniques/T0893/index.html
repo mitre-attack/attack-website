@@ -207,7 +207,7 @@
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
                     <div class="container-fluid banner-message">
-                        ATT&CKcon 7.0 registration is open! Join us October 27-28, 2026 in McLean, VA or virtually. <a href="https://na.eventscloud.com/website/93925/">Register in person</a> or <a href="https://mitre.brandlive.com/MITRE-ATTACKcon-7-0">register virtually</a>. See the <a href="https://na.eventscloud.com/website/93925/faq/">FAQ</a> for hotel and venue details.
+                        ATT&CK v20 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v20-9701dd75ffb4'>blog post</a> for more information. <a href='https://na.eventscloud.com/website/93925/'>ATT&CKcon 7.0</a> is October 27-28, 2026 in McLean, VA.
                     </div>
             </div>
         </div>
@@ -286,7 +286,7 @@
                       data-original-title="The system an adversary is operating within; could be an operating system or application">&#9432;</span>
                   </div>
                   <div class="col-md-11 pl-0">
-                    <span class="h5 card-title">Platforms:&nbsp;</span>None
+                    <span class="h5 card-title">Platforms:&nbsp;</span>Embedded, Linux, Network Devices, Windows
                   </div>
                 </div>
                 <div class="row card-data">
@@ -304,7 +304,7 @@
                 <div class="row card-data">
                   <div class="col-md-1 px-0 text-center"></div>
                   <div class="col-md-11 pl-0">
-                    <span class="h5 card-title">Last Modified:&nbsp;</span>15 April 2025
+                    <span class="h5 card-title">Last Modified:&nbsp;</span>13 October 2026
                   </div>
                 </div>
               </div>
@@ -314,13 +314,13 @@
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Permalink to this version of T0893" 
-           href="/versions/v19/techniques/T0893/" data-test-ignore="true">Version Permalink</a>
+           href="/versions/v20/techniques/T0893/" data-test-ignore="true">Version Permalink</a>
     </div>
     <div class="permalink">
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Go to the live version of T0893" 
-           href="/versions/v19/techniques/T0893/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+           href="/versions/v20/techniques/T0893/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
     </div>
 </div>
 
@@ -357,7 +357,7 @@
                   <a href="/software/S0038"> Duqu </a>
                 </td>
                 <td>
-                          <p><a href="/software/S0038">Duqu</a> downloads additional modules for the collection of data from local systems. The modules are named: infostealer 1, infostealer 2 and reconnaissance. <span onclick=scrollToRef('scite-2') id="scite-ref-2-a" class="scite-citeref-number" title="Symantec   W32.Duqu The precursor to the next Stuxnet Retrieved. 2019/11/03 "data-reference="Symantec"><sup><a href="https://docs.broadcom.com/doc/w32-duqu-11-en" target="_blank" data-hasqtip="1" aria-describedby="qtip-1">[2]</a></sup></span></p>
+                          <p><a href="/software/S0038">Duqu</a> downloads additional modules for the collection of data from local systems. The modules are named: infostealer 1, infostealer 2 and reconnaissance.<span onclick=scrollToRef('scite-2') id="scite-ref-2-a" class="scite-citeref-number" title="Symantec Security Response. (2011, November). W32.Duqu: The precursor to the next Stuxnet. Retrieved September 17, 2015."data-reference="Symantec W32.Duqu"><sup><a href="https://web.archive.org/web/20111213083345/https://www.symantec.com/content/en/us/enterprise/media/security_response/whitepapers/w32_duqu_the_precursor_to_the_next_stuxnet.pdf" target="_blank" data-hasqtip="1" aria-describedby="qtip-1">[2]</a></sup></span></p>
 
                 </td>
               </tr>
@@ -526,17 +526,44 @@
     </thead>
     <tbody>
                 <tr class="detection_strategy" id="uses-DET0749">
-                        <td rowspan="1">
+                        <td rowspan="4">
                             <a href="/detectionstrategies/DET0749">DET0749</a>
                         </td>
-                        <td rowspan="1">
+                        <td rowspan="4">
                             <a href="/detectionstrategies/DET0749">Detection of Data from Local System</a>
                         </td>
                     <td>
                         <a href="/detectionstrategies/DET0749#AN1881">AN1881</a>
                     </td>
                     <td>
-                                <p>Monitor for unexpected/abnormal access to files that may be malicious collection of local data, such as user files (e.g., .pdf, .docx, .jpg, .dwg   ) or local databases.<br />Monitor for newly executed processes that may search local system sources, such as file systems or local databases, to find files of interest and sensitive data.<br />Monitor for any suspicious attempts to enable scripts running on a system. If scripts are not commonly used on a system, but enabled, scripts running out of cycle from patching or other administrator functions are suspicious. Scripts should be captured from the file system when possible to determine their actions and intent. Data may also be acquired through Windows system management tools such as <a href="/techniques/T1047">Windows Management Instrumentation</a> and <a href="/techniques/T1059/001">PowerShell</a>.<br />Monitor for API calls that may search local system sources, such as file systems or local databases, to find files of interest and sensitive data. <br />Monitor executed commands and arguments that may search and collect local system sources, such as file systems or local databases, to find files of interest and sensitive data. Remote access tools with built-in features may interact directly with the Windows API to gather data. Data may also be acquired through Windows system management tools such as <a href="/techniques/T1047">Windows Management Instrumentation</a> and <a href="/techniques/T1059/001">PowerShell</a>.</p>
+                                <p>Monitor Windows Security Event ID 4663 on explicitly audited ICS data paths and correlate repeated ReadData/ListDirectory access across multiple sensitive files or directories by an account/process outside the approved engineering, backup, or application baseline. This requires Object Access auditing and SACLs on the monitored paths; Sysmon does not provide generic file-read telemetry. Alert when the bulk-read pattern occurs outside an approved backup/export window or is followed by staging, compression, or network transfer.</p>
+</a>
+                    </td>
+                </tr>
+                <tr class="detection_strategy" id="uses-DET0749">
+                    <td>
+                        <a href="/detectionstrategies/DET0749#AN2137">AN2137</a>
+                    </td>
+                    <td>
+                                <p>Real-time monitoring identifies a Linux process performing sequential reads across multiple ICS configuration or data paths by a UID outside approved backup, engineering, or vendor-application accounts. OT operational-fidelity gate: Do not alert on novelty, scan/read volume, or enumeration alone. Alert when the source role is not authorized for discovery/polling and the target scope, address/tag range, protocol, or rate deviates from the established operational baseline. Suppress normal SCADA/HMI/historian polling, commissioning, asset inventory, backup, diagnostics, and approved engineering activity.</p>
+</a>
+                    </td>
+                </tr>
+                <tr class="detection_strategy" id="uses-DET0749">
+                    <td>
+                        <a href="/detectionstrategies/DET0749#AN2174">AN2174</a>
+                    </td>
+                    <td>
+                                <p>Real-time monitoring identifies large outbound data transfers from Industrial Control System (ICS) server Internet Protocol (IP) addresses to destinations outside the approved ICS zone, following a pattern of bulk reads from engineering document stores or historian databases. OT operational-fidelity gate: Do not alert on novelty, scan/read volume, or enumeration alone. Alert when the source role is not authorized for discovery/polling and the target scope, address/tag range, protocol, or rate deviates from the established operational baseline. Suppress normal SCADA/HMI/historian polling, commissioning, asset inventory, backup, diagnostics, and approved engineering activity.</p>
+</a>
+                    </td>
+                </tr>
+                <tr class="detection_strategy" id="uses-DET0749">
+                    <td>
+                        <a href="/detectionstrategies/DET0749#AN2244">AN2244</a>
+                    </td>
+                    <td>
+                                <p>Real-time monitoring identifies Industrial Control System (ICS) protocol sessions that bulk-read configuration data, program blocks, or data record objects from field devices -- function code sequences retrieving entire data dictionaries rather than operational process values -- from a source with no prior history of configuration-read sessions. OT operational-fidelity gate: Do not alert on novelty, scan/read volume, or enumeration alone. Alert when the source role is not authorized for discovery/polling and the target scope, address/tag range, protocol, or rate deviates from the established operational baseline. Suppress normal SCADA/HMI/historian polling, commissioning, asset inventory, backup, diagnostics, and approved engineering activity.</p>
 </a>
                     </td>
                 </tr>
@@ -566,8 +593,8 @@
         <li>
             <span  id="scite-2" class="scite-citation">
                 <span class="scite-citation-text">
-                    <a rel="nofollow" class="external text" name="scite-2" href="https://docs.broadcom.com/doc/w32-duqu-11-en" target="_blank">
-                        Symantec   W32.Duqu The precursor to the next Stuxnet Retrieved. 2019/11/03 
+                    <a rel="nofollow" class="external text" name="scite-2" href="https://web.archive.org/web/20111213083345/https://www.symantec.com/content/en/us/enterprise/media/security_response/whitepapers/w32_duqu_the_precursor_to_the_next_stuxnet.pdf" target="_blank">
+                        Symantec Security Response. (2011, November). W32.Duqu: The precursor to the next Stuxnet. Retrieved September 17, 2015.
                     </a>
                 </span>
             </span>
@@ -836,7 +863,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3 col-footer">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v19.2&#013;Website  v5.1.0">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v20.0&#013;Website  v5.2.0">Website Changelog</a></u>
                                 </div>
                                 <div class="px-3">
                                     <u class="footer-link"><a href="/resources/legal-and-branding/privacy/#" class="footer-link" onclick="Osano.cm.showDrawer('osano-cm-dom-info-dialog-open')">Cookie Preferences</a></u>

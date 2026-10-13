@@ -207,7 +207,7 @@
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
                     <div class="container-fluid banner-message">
-                        ATT&CKcon 7.0 registration is open! Join us October 27-28, 2026 in McLean, VA or virtually. <a href="https://na.eventscloud.com/website/93925/">Register in person</a> or <a href="https://mitre.brandlive.com/MITRE-ATTACKcon-7-0">register virtually</a>. See the <a href="https://na.eventscloud.com/website/93925/faq/">FAQ</a> for hotel and venue details.
+                        ATT&CK v20 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v20-9701dd75ffb4'>blog post</a> for more information. <a href='https://na.eventscloud.com/website/93925/'>ATT&CKcon 7.0</a> is October 27-28, 2026 in McLean, VA.
                     </div>
             </div>
         </div>
@@ -265,7 +265,7 @@
                 </div>
                 <div class="row card-data">
                   <div class="col-md-12">
-                    <span class="h5 card-title">Version</span>: 3.0
+                    <span class="h5 card-title">Version</span>: 3.1
                   </div>
                 </div>
                 <div class="row card-data">
@@ -275,7 +275,7 @@
                 </div>
                 <div class="row card-data">
                   <div class="col-md-12">
-                    <span class="h5 card-title">Last Modified</span>: 12 May 2026
+                    <span class="h5 card-title">Last Modified</span>: 13 October 2026
                   </div>
                 </div>
               </div>
@@ -452,6 +452,10 @@
               <tr>
                 <td>auditd:SYSCALL</td>
                 <td>attempts to read /proc/* entries at scale (openat/getdents64/readlink) or access denied for /proc traversal; correlate to app UID</td>
+              </tr>
+              <tr>
+                <td>auditd:SYSCALL+PATH</td>
+                <td>Linux Audit SYSCALL+PATH records: PATH records show sequential reads of ICS documentation/configuration files by a UID not in the authorized engineering or backup account set</td>
               </tr>
               <tr>
                 <td>azure:activity</td>
@@ -726,6 +730,34 @@
                 <td>Recent download opened or executed</td>
               </tr>
               <tr>
+                <td>mobile:ForensicArtifacts</td>
+                <td>Dynamic filesystem trace or acquired app-container/filesystem artifacts: open() for read on path IN /sdcard/ OR on path with file_permissions=777</td>
+              </tr>
+              <tr>
+                <td>mobile:ForensicArtifacts</td>
+                <td>Dynamic filesystem trace or acquired app-container/filesystem artifacts: opendir() or File.listFiles() on path IN $ExternalStoragePaths$ called > $FileEnumThreshold$ times within $EnumWindow$ by app NOT IN $FileEnumAllowList$</td>
+              </tr>
+              <tr>
+                <td>mobile:ForensicArtifacts</td>
+                <td>Dynamic filesystem trace or acquired app-container/filesystem artifacts: opendir('/proc/') with recursive listdir by app NOT IN $ProcessDiscoveryAllowList$ on device with android_version < $HidepidVersion$</td>
+              </tr>
+              <tr>
+                <td>mobile:ForensicArtifacts</td>
+                <td>Dynamic filesystem trace or acquired app-container/filesystem artifacts: open() for read on /proc/cpuinfo</td>
+              </tr>
+              <tr>
+                <td>mobile:ForensicArtifacts</td>
+                <td>Dynamic filesystem trace or acquired app-container/filesystem artifacts: App reads files across $MinDirectoryCount$+ distinct parent directories with file_read_count > $FileReadRateThreshold$ within $DataCollectionWindow$ in background or low-interaction state — bulk cross-directory read is the collection signal</td>
+              </tr>
+              <tr>
+                <td>mobile:ForensicArtifacts</td>
+                <td>Dynamic filesystem trace or acquired app-container/filesystem artifacts: App reads multiple files from Photos library, Files provider, or iCloud Drive in background or lock-adjacent state exceeding $FileReadRateThreshold$ within $DataCollectionWindow$</td>
+              </tr>
+              <tr>
+                <td>mobile:ForensicArtifacts</td>
+                <td>Dynamic filesystem trace or acquired app-container/filesystem artifacts: App loads executable or library from writable external directory (/sdcard/, app cache, /data/local/tmp/) — writable-path library load is exploitable hijack vector</td>
+              </tr>
+              <tr>
                 <td>MobileEDR:telemetry</td>
                 <td>Application reads multiple local container files, browser-history artifacts, messaging artifacts, or local records in rapid sequence during the collection phase</td>
               </tr>
@@ -744,6 +776,22 @@
               <tr>
                 <td>WinEventLog:Security</td>
                 <td>EventCode=4663, 4670, 4656</td>
+              </tr>
+              <tr>
+                <td>WinEventLog:Security</td>
+                <td>Windows Security Event ID 4663 (requires Object Access auditing and SACL on monitored paths): repeated ReadData/ListDirectory access across ICS data paths by an unapproved process/account</td>
+              </tr>
+              <tr>
+                <td>WinEventLog:Security</td>
+                <td>Windows Security Event ID 4663 (requires Object Access auditing/SACL): engineering process reads/opens project file from unapproved repository/removable-media/network-share path</td>
+              </tr>
+              <tr>
+                <td>WinEventLog:Security</td>
+                <td>Windows Security Event ID 4663 (requires Object Access auditing/SACL): Siemens engineering process reads/opens project file from unapproved repository/removable-media/network-share path</td>
+              </tr>
+              <tr>
+                <td>WinEventLog:Sysmon</td>
+                <td>Sequential file reads across multiple Industrial Control Systems (ICS) data paths by image not in authorized ICS applications, exceeding bulk access threshold within a short window</td>
               </tr>
             </tbody>
           </table>
@@ -1001,6 +1049,17 @@
                     <a href="/techniques/T1552/001">T1552.001</a>
                 </td>
             </tr>
+            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--0567c079-3df3-404a-b69d-1690efd638b4">
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0927">DET0927</a>
+                </td>
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0927">Detect AI-Enabled Exfiltration</a>
+                </td>
+                <td rowspan="">
+                    <a href="/techniques/T1700">T1700</a>
+                </td>
+            </tr>
             <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--1a273fde-f4fc-4ca0-94d4-7df285167b5e">
                 <td rowspan="">
                     <a href="/detectionstrategies/DET0430">DET0430</a>
@@ -1166,15 +1225,15 @@
                     <a href="/techniques/T1057">T1057</a>
                 </td>
             </tr>
-            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--442bf059-f7cf-460b-8200-f35e1e0a0c78">
+            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--930b268b-abf0-485f-9854-60c1cfdd2d33">
                 <td rowspan="">
-                    <a href="/detectionstrategies/DET0734">DET0734</a>
+                    <a href="/detectionstrategies/DET0748">DET0748</a>
                 </td>
                 <td rowspan="">
-                    <a href="/detectionstrategies/DET0734">Detection of Automated Collection</a>
+                    <a href="/detectionstrategies/DET0748">Detection of Autorun Image</a>
                 </td>
                 <td rowspan="">
-                    <a href="/techniques/T0802">T0802</a>
+                    <a href="/techniques/T0895">T0895</a>
                 </td>
             </tr>
             <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--267a6c25-8d34-47ae-8357-9ae173adaa13">
@@ -1230,6 +1289,17 @@
                 </td>
                 <td rowspan="">
                     <a href="/techniques/T1052">T1052</a>
+                </td>
+            </tr>
+            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--a366d027-d797-4957-949a-870aed0766dd">
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0754">DET0754</a>
+                </td>
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0754">Detection of Data from Information Repositories</a>
+                </td>
+                <td rowspan="">
+                    <a href="/techniques/T0811">T0811</a>
                 </td>
             </tr>
             <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--a5942766-8bd2-4747-baaf-a5850f08f550">
@@ -1364,6 +1434,17 @@
                     <a href="/techniques/T1424">T1424</a>
                 </td>
             </tr>
+            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--09754c36-7be2-4536-aad2-a6c3568ba0e5">
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0766">DET0766</a>
+                </td>
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0766">Detection of Project File Infection</a>
+                </td>
+                <td rowspan="">
+                    <a href="/techniques/T0873">T0873</a>
+                </td>
+            </tr>
             <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--20f11806-1639-49c5-ae0b-84633a142870">
                 <td rowspan="">
                     <a href="/detectionstrategies/DET0071">DET0071</a>
@@ -1375,48 +1456,15 @@
                     <a href="/techniques/T1074/002">T1074.002</a>
                 </td>
             </tr>
-            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--ec442b22-3dc8-4b2b-8294-b76b0f01d748">
+            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--31773402-e407-4ed3-b86c-7a8587dc5ec9">
                 <td rowspan="">
-                    <a href="/detectionstrategies/DET0739">DET0739</a>
+                    <a href="/detectionstrategies/DET0906">DET0906</a>
                 </td>
                 <td rowspan="">
-                    <a href="/detectionstrategies/DET0739">Detection of Remote System Discovery</a>
+                    <a href="/detectionstrategies/DET0906">Detection of Siemens Project File Format Infection</a>
                 </td>
                 <td rowspan="">
-                    <a href="/techniques/T0846">T0846</a>
-                </td>
-            </tr>
-            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--636329e6-32b9-4a71-acf8-ae6d01a6b4ef">
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0787">DET0787</a>
-                </td>
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0787">Detection of Remote System Information Discovery</a>
-                </td>
-                <td rowspan="">
-                    <a href="/techniques/T0888">T0888</a>
-                </td>
-            </tr>
-            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--cb273244-c117-4e32-afc7-f72f4e44e179">
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0733">DET0733</a>
-                </td>
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0733">Detection of Replication Through Removable Media</a>
-                </td>
-                <td rowspan="">
-                    <a href="/techniques/T0847">T0847</a>
-                </td>
-            </tr>
-            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--411f7c72-356c-4de6-bbf0-27a7952d3be5">
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0656">DET0656</a>
-                </td>
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0656">Detection of Steal Application Access Token</a>
-                </td>
-                <td rowspan="">
-                    <a href="/techniques/T1635">T1635</a>
+                    <a href="/techniques/T0873/001">T0873.001</a>
                 </td>
             </tr>
             <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--d87dc800-38cb-4d82-b76e-3c501dbd9c0a">
@@ -1430,6 +1478,17 @@
                     <a href="/techniques/T1409">T1409</a>
                 </td>
             </tr>
+            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--0bd280ab-7977-4ef9-b577-6c6a6014b179">
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0625">DET0625</a>
+                </td>
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0625">Detection of System Checks</a>
+                </td>
+                <td rowspan="">
+                    <a href="/techniques/T1633/001">T1633.001</a>
+                </td>
+            </tr>
             <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--f6dd18b4-8534-4883-8d57-80655418bed4">
                 <td rowspan="">
                     <a href="/detectionstrategies/DET0220">DET0220</a>
@@ -1439,17 +1498,6 @@
                 </td>
                 <td rowspan="">
                     <a href="/techniques/T1052/001">T1052.001</a>
-                </td>
-            </tr>
-            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--eabde43f-1872-499d-9642-85a6959c4d28">
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0791">DET0791</a>
-                </td>
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0791">Detection of User Execution</a>
-                </td>
-                <td rowspan="">
-                    <a href="/techniques/T0863">T0863</a>
                 </td>
             </tr>
             <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--26fdbcb2-abc1-4844-8e5d-2c6039336cb7">
@@ -2136,7 +2184,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3 col-footer">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v19.2&#013;Website  v5.1.0">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v20.0&#013;Website  v5.2.0">Website Changelog</a></u>
                                 </div>
                                 <div class="px-3">
                                     <u class="footer-link"><a href="/resources/legal-and-branding/privacy/#" class="footer-link" onclick="Osano.cm.showDrawer('osano-cm-dom-info-dialog-open')">Cookie Preferences</a></u>

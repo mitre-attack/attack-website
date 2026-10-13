@@ -207,7 +207,7 @@
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
                     <div class="container-fluid banner-message">
-                        ATT&CKcon 7.0 registration is open! Join us October 27-28, 2026 in McLean, VA or virtually. <a href="https://na.eventscloud.com/website/93925/">Register in person</a> or <a href="https://mitre.brandlive.com/MITRE-ATTACKcon-7-0">register virtually</a>. See the <a href="https://na.eventscloud.com/website/93925/faq/">FAQ</a> for hotel and venue details.
+                        ATT&CK v20 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v20-9701dd75ffb4'>blog post</a> for more information. <a href='https://na.eventscloud.com/website/93925/'>ATT&CKcon 7.0</a> is October 27-28, 2026 in McLean, VA.
                     </div>
             </div>
         </div>
@@ -292,13 +292,13 @@
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Permalink to this version of DET0692" 
-           href="/versions/v19/detectionstrategies/DET0692/" data-test-ignore="true">Version Permalink</a>
+           href="/versions/v20/detectionstrategies/DET0692/" data-test-ignore="true">Version Permalink</a>
     </div>
     <div class="permalink">
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Go to the live version of DET0692" 
-           href="/versions/v19/detectionstrategies/DET0692/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+           href="/versions/v20/detectionstrategies/DET0692/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
     </div>
 </div>
 
@@ -326,7 +326,7 @@
               role="tabpanel" aria-labelledby="tab-Android">
               <h4 class="pt-3" id="AN1804">AN1804</h4>
               <div>
-                        <p>Defender observes an app/package attempting to enumerate running processes by triggering restricted process visibility mechanisms (e.g., repeated queries for running tasks/services, rapid iteration over process identifiers, or access attempts against /proc entries) that are atypical for its declared function and occur without an associated user-facing diagnostic workflow. The detection relies on correlating (1) OS/API calls or shell/system utility execution indicative of process listing or /proc traversal, (2) app privilege context (root, debug build, device owner/profile owner, accessibility/IME status), (3) background execution state, and (4) optional follow-on behaviors consistent with automated discovery (short bursts of local IPC probes, network beacons immediately after enumeration, or rapid targeting of specific high-value package/process names). The analytic should describe what is observable: repeated enumeration signals + privilege context + timing relationship, not the adversary’s intent.</p>
+                        <p>For Android, detect Process Discovery by correlating analyst-visible device/network evidence and management state; use streaming or batched telemetry only where the documented collector is deployed. Correlate File Access via Application Vetting / Forensic Acquisition [Dynamic filesystem trace or acquired app-container/filesystem artifacts: opendir('/proc/') with recursive listdir by app NOT IN $ProcessDiscoveryAllowList$ on device with android_version &lt; $HidepidVersion$]; Network Connection Creation via Android Enterprise Network Logging / Enterprise VPN [DevicePolicyManager.retrieveNetworkLogs(): DnsEvent / ConnectEvent; VPN flow metadata]; Process Metadata via Application Vetting / Instrumented Dynamic Analysis [Dynamic API/runtime trace: running process names read from /proc/<PID>/status or /proc/<PID>/cmdline by app NOT IN $ProcessDiscoveryAllowList$]. Alert on a sequence or state change inconsistent with the device/app baseline, approved management policy, or expected user workflow; do not infer unobserved API calls, file/process activity, or payload content from management state alone.</p>
 
               </div>
 
@@ -343,30 +343,30 @@
                   <tbody>
                     <tr>
                       <td rowspan="1">
-                        <a href="/datacomponents/DC0021">
-                          OS API Execution (DC0021)
-                        </a>
-                      </td>
-                      <td>android:logcat</td>
-                      <td>repeated queries or dumps related to running tasks/services/process state by same package/UID (e.g., getRunningAppProcesses, running services/task inspection)</td>
-                    </tr>
-                    <tr>
-                      <td rowspan="1">
-                        <a href="/datacomponents/DC0032">
-                          Process Creation (DC0032)
-                        </a>
-                      </td>
-                      <td>android:logcat</td>
-                      <td>unexpected spikes in fork/exec/app process start events for helper utilities used for enumeration (ps, toybox/toolbox variants) from same UID</td>
-                    </tr>
-                    <tr>
-                      <td rowspan="1">
                         <a href="/datacomponents/DC0055">
                           File Access (DC0055)
                         </a>
                       </td>
-                      <td>auditd:SYSCALL</td>
-                      <td>attempts to read /proc/* entries at scale (openat/getdents64/readlink) or access denied for /proc traversal; correlate to app UID</td>
+                      <td>mobile:ForensicArtifacts</td>
+                      <td>Dynamic filesystem trace or acquired app-container/filesystem artifacts: opendir('/proc/') with recursive listdir by app NOT IN $ProcessDiscoveryAllowList$ on device with android_version < $HidepidVersion$</td>
+                    </tr>
+                    <tr>
+                      <td rowspan="1">
+                        <a href="/datacomponents/DC0082">
+                          Network Connection Creation (DC0082)
+                        </a>
+                      </td>
+                      <td>android:EnterpriseNetworkLog</td>
+                      <td>DevicePolicyManager.retrieveNetworkLogs(): DnsEvent / ConnectEvent; VPN flow metadata</td>
+                    </tr>
+                    <tr>
+                      <td rowspan="1">
+                        <a href="/datacomponents/DC0034">
+                          Process Metadata (DC0034)
+                        </a>
+                      </td>
+                      <td>mobile:DynamicAnalysis</td>
+                      <td>Dynamic API/runtime trace: running process names read from /proc/<PID>/status or /proc/<PID>/cmdline by app NOT IN $ProcessDiscoveryAllowList$</td>
                     </tr>
                   </tbody>
                 </table>
@@ -383,36 +383,20 @@
                   </thead>
                   <tbody>
                     <tr>
-                      <td>TimeWindowSeconds</td>
-                      <td>Correlation window for enumeration → follow-on activity (e.g., 60–600s).</td>
+                      <td>ProcessDiscoveryAllowList</td>
+                      <td>System diagnostic tools, MDM agent. Minimal.</td>
                     </tr>
                     <tr>
-                      <td>MinEnumerationSignals</td>
-                      <td>Minimum count of process enumeration indicators to alert (tune by OS build and telemetry quality).</td>
+                      <td>HidepidVersion</td>
+                      <td>7.0 (Nougat) — hidepid enabled. Derive from MDM OS version telemetry.</td>
                     </tr>
                     <tr>
-                      <td>ProcTraversalThreshold</td>
-                      <td>How many distinct /proc paths opened within the window counts as enumeration (e.g., ≥50).</td>
+                      <td>AppCDNList</td>
+                      <td>Per-app CDN. Derive by measurement.</td>
                     </tr>
                     <tr>
-                      <td>BackgroundOnly</td>
-                      <td>If true, require background state to reduce legitimate in-app diagnostics noise.</td>
-                    </tr>
-                    <tr>
-                      <td>AllowlistedPackages</td>
-                      <td>Legitimate security/diagnostic/MDM agents expected to inspect processes.</td>
-                    </tr>
-                    <tr>
-                      <td>HighValueProcessNames</td>
-                      <td>Process/package names of interest (e.g., security agents, banking apps) used only as enrichment, not a signature.</td>
-                    </tr>
-                    <tr>
-                      <td>NetworkProbePorts</td>
-                      <td>Ports considered a ‘probe/beacon’ after enumeration (53/80/443/etc.).</td>
-                    </tr>
-                    <tr>
-                      <td>PrivilegeEscalationGate</td>
-                      <td>If true, increase severity when enumeration co-occurs with root/debuggable/jailbreak-like posture.</td>
+                      <td>FollowOnWindow</td>
+                      <td>Default 120s.</td>
                     </tr>
                   </tbody>
                 </table>
@@ -422,7 +406,7 @@
               role="tabpanel" aria-labelledby="tab-iOS">
               <h4 class="pt-3" id="AN1805">AN1805</h4>
               <div>
-                        <p>Defender observes signals consistent with attempted process listing on iOS where modern OS protections generally prevent broad process enumeration for non-root apps. Detections therefore focus on: (1) feasibility gating via integrity/jailbreak posture, and (2) observable security/log anomalies consistent with attempts to query process tables or restricted system interfaces (e.g., repeated sandbox denials, suspicious sysctl-like access attempts, or abnormal use of private frameworks). Correlate integrity compromise indicators with repeated restricted-access events and optional follow-on behaviors (rapid targeting of specific bundles/services or immediate network beacons) to raise confidence that process discovery is occurring.</p>
+                        <p>For iOS, detect Process Discovery by correlating analyst-visible device/network evidence and management state; use streaming or batched telemetry only where the documented collector is deployed. Correlate Application State via Apple MDM [InstalledApplicationList / ManagedApplicationList]; Host Status via Apple MDM [DeviceInformation / SecurityInfo / ProfileList / restrictions and compliance queries]; Network Traffic Flow via Apple Network Extension / Enterprise VPN [NEFilterFlow / per-app VPN / secure-web-gateway flow metadata]. Alert on a sequence or state change inconsistent with the device/app baseline, approved management policy, or expected user workflow; do not infer unobserved API calls, file/process activity, or payload content from management state alone.</p>
 
               </div>
 
@@ -439,25 +423,30 @@
                   <tbody>
                     <tr>
                       <td rowspan="1">
+                        <a href="/datacomponents/DC0123">
+                          Application State (DC0123)
+                        </a>
+                      </td>
+                      <td>iOS:MDM</td>
+                      <td>InstalledApplicationList / ManagedApplicationList</td>
+                    </tr>
+                    <tr>
+                      <td rowspan="1">
                         <a href="/datacomponents/DC0018">
                           Host Status (DC0018)
                         </a>
                       </td>
-                      <td>MDM:DeviceIntegrity</td>
-                      <td>jailbreak/root compromise indicators or integrity attestation failures enabling process visibility</td>
+                      <td>iOS:MDM</td>
+                      <td>DeviceInformation / SecurityInfo / ProfileList / restrictions and compliance queries</td>
                     </tr>
                     <tr>
-                      <td rowspan="2">
-                        <a href="/datacomponents/DC0038">
-                          Application Log Content (DC0038)
+                      <td rowspan="1">
+                        <a href="/datacomponents/DC0078">
+                          Network Traffic Flow (DC0078)
                         </a>
                       </td>
-                      <td>iOS:unifiedlog</td>
-                      <td>repeated sandbox denials related to restricted process/system interfaces consistent with process-table querying attempts</td>
-                    </tr>
-                    <tr>
-                      <td>iOS:unifiedlog</td>
-                      <td>security-relevant kernel log messages indicating restricted system interface access attempts by app process (device-dependent visibility)</td>
+                      <td>iOS:NetworkExtension</td>
+                      <td>NEFilterFlow / per-app VPN / secure-web-gateway flow metadata</td>
                     </tr>
                   </tbody>
                 </table>
@@ -474,20 +463,8 @@
                   </thead>
                   <tbody>
                     <tr>
-                      <td>IntegritySignalRequired</td>
-                      <td>If true, alert only when integrity/jailbreak posture indicates process discovery is feasible.</td>
-                    </tr>
-                    <tr>
-                      <td>MinSandboxDenials</td>
-                      <td>Threshold for sandbox denials within a window to treat as sustained restricted-access attempts.</td>
-                    </tr>
-                    <tr>
-                      <td>TimeWindowSeconds</td>
-                      <td>Correlation window between integrity signals and sandbox/network events (e.g., 1–24 hours).</td>
-                    </tr>
-                    <tr>
-                      <td>AllowlistedBundles</td>
-                      <td>Enterprise monitoring/networking apps that may generate benign sandbox noise.</td>
+                      <td>GuardrailWindow</td>
+                      <td>Default 300s — time in which C2 expected post-jailbreak on non-managed device.</td>
                     </tr>
                   </tbody>
                 </table>
@@ -495,6 +472,7 @@
             </div>
           </div>
         </div>
+
 
         
       </div>
@@ -713,7 +691,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3 col-footer">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v19.2&#013;Website  v5.1.0">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v20.0&#013;Website  v5.2.0">Website Changelog</a></u>
                                 </div>
                                 <div class="px-3">
                                     <u class="footer-link"><a href="/resources/legal-and-branding/privacy/#" class="footer-link" onclick="Osano.cm.showDrawer('osano-cm-dom-info-dialog-open')">Cookie Preferences</a></u>

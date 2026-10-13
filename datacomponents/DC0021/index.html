@@ -207,7 +207,7 @@
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
                     <div class="container-fluid banner-message">
-                        ATT&CKcon 7.0 registration is open! Join us October 27-28, 2026 in McLean, VA or virtually. <a href="https://na.eventscloud.com/website/93925/">Register in person</a> or <a href="https://mitre.brandlive.com/MITRE-ATTACKcon-7-0">register virtually</a>. See the <a href="https://na.eventscloud.com/website/93925/faq/">FAQ</a> for hotel and venue details.
+                        ATT&CK v20 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v20-9701dd75ffb4'>blog post</a> for more information. <a href='https://na.eventscloud.com/website/93925/'>ATT&CKcon 7.0</a> is October 27-28, 2026 in McLean, VA.
                     </div>
             </div>
         </div>
@@ -265,7 +265,7 @@
                 </div>
                 <div class="row card-data">
                   <div class="col-md-12">
-                    <span class="h5 card-title">Version</span>: 2.1
+                    <span class="h5 card-title">Version</span>: 2.2
                   </div>
                 </div>
                 <div class="row card-data">
@@ -275,7 +275,7 @@
                 </div>
                 <div class="row card-data">
                   <div class="col-md-12">
-                    <span class="h5 card-title">Last Modified</span>: 12 May 2026
+                    <span class="h5 card-title">Last Modified</span>: 13 October 2026
                   </div>
                 </div>
               </div>
@@ -434,6 +434,14 @@
                 <td>execve of dd or sed targeting /proc/*/mem</td>
               </tr>
               <tr>
+                <td>auditd:SYSCALL</td>
+                <td>Linux Audit SYSCALL/EXECVE/SOCKADDR records (configured audit rule): dlopen() of Industrial Control Systems (ICS) vendor shared library by process not in authorized ICS applications, followed by write-capable network connection to device subnet</td>
+              </tr>
+              <tr>
+                <td>auditd:SYSCALL</td>
+                <td>Linux Audit SYSCALL/EXECVE/SOCKADDR records (configured audit rule): ioctl or mmap syscall against Industrial Control Systems (ICS) hardware device file from process not in authorized ICS applications</td>
+              </tr>
+              <tr>
                 <td>AWS:CloudTrail</td>
                 <td>GetMetadata, DescribeInstanceIdentity</td>
               </tr>
@@ -468,6 +476,10 @@
               <tr>
                 <td>EDR:memory</td>
                 <td>MemoryWriteToExecutable</td>
+              </tr>
+              <tr>
+                <td>edr:Syscall</td>
+                <td>DeviceIoControl or raw socket creation to Industrial Control Systems (ICS) protocol port from process not in authorized ICS applications, bypassing documented vendor Software Development Kit (SDK) call pattern</td>
               </tr>
               <tr>
                 <td>esxi:hostd</td>
@@ -564,6 +576,10 @@
               <tr>
                 <td>fs:fsusage</td>
                 <td>Detached process execution with no associated parent</td>
+              </tr>
+              <tr>
+                <td>iOS:unifiedlog</td>
+                <td>kernel fault referencing ptrace OR task_for_pid OR get-task-allow outside developer-signed build + MDM integrity_check=fail within KernelFaultWindow where no developer entitlement justifies kernel-level process access</td>
               </tr>
               <tr>
                 <td>iOS:unifiedlog</td>
@@ -676,6 +692,282 @@
               <tr>
                 <td>macos:unifiedlog</td>
                 <td>Execution of input detection APIs (e.g., CGEventSourceKeyState)</td>
+              </tr>
+              <tr>
+                <td>mobile:DynamicAnalysis</td>
+                <td>Dynamic API/runtime trace: App invokes DevicePolicyManager.lockNow(), creates persistent fullscreen overlay (TYPE_APPLICATION_OVERLAY covering full screen), or uses accessibility to block UI interaction — lock or UI-denial API invocation</td>
+              </tr>
+              <tr>
+                <td>mobile:DynamicAnalysis</td>
+                <td>Dynamic API/runtime trace: Background work scheduler or persistent service triggered the platform retrieval without user interaction</td>
+              </tr>
+              <tr>
+                <td>mobile:DynamicAnalysis</td>
+                <td>Dynamic API/runtime trace: Background task or networking subsystem event immediately before platform retrieval</td>
+              </tr>
+              <tr>
+                <td>mobile:DynamicAnalysis</td>
+                <td>Dynamic API/runtime trace: App invokes DevicePolicyManager.resetPassword(), lockNow(), wipeData(), or setCameraDisabled() immediately after Device Admin activation without MDM-initiated policy context or user interaction</td>
+              </tr>
+              <tr>
+                <td>mobile:DynamicAnalysis</td>
+                <td>Dynamic API/runtime trace: App invokes file management, storage-clear, or wipe operations in background state following network upload without user-initiated delete action</td>
+              </tr>
+              <tr>
+                <td>mobile:DynamicAnalysis</td>
+                <td>Dynamic API/runtime trace: App invokes custom TLS trust evaluation, OkHttp CertificatePinner, or custom-anchor TrustManager NOT IN $ApprovedPinningApps$ — custom pin validation is the evasion mechanism</td>
+              </tr>
+              <tr>
+                <td>mobile:DynamicAnalysis</td>
+                <td>Dynamic API/runtime trace: App invokes RSA/ECC keypair generation, public-key import, or asymmetric encryption operations (KeyPairGenerator, Cipher.RSA, ECDH) NOT IN $ApprovedCryptoApps$ before network transmission</td>
+              </tr>
+              <tr>
+                <td>mobile:DynamicAnalysis</td>
+                <td>Dynamic API/runtime trace: Keypair generation, import, or private-key access events occurring prior to outbound communication not matching app declared secure-communication function</td>
+              </tr>
+              <tr>
+                <td>mobile:DynamicAnalysis</td>
+                <td>Dynamic API/runtime trace: MediaProjection capture session, accessibility-based foreground content observation, or privileged screencap/screenrecord invocation from app while different app is foregrounded — cross-app screen content access</td>
+              </tr>
+              <tr>
+                <td>mobile:DynamicAnalysis</td>
+                <td>Dynamic API/runtime trace: Multiple applications invoking core system APIs (sensor, permission, telephony, PackageManager) show inconsistent, suppressed, or modified return values compared to OS-expected behavior — cross-app API result inconsistency is the runtime hi</td>
+              </tr>
+              <tr>
+                <td>mobile:DynamicAnalysis</td>
+                <td>Dynamic API/runtime trace: Device integrity degradation (root detected, system partition modification, SafetyNet/Play Integrity failure) coincident with anomalous system API behavior affecting runtime resolution</td>
+              </tr>
+              <tr>
+                <td>mobile:DynamicAnalysis</td>
+                <td>Dynamic API/runtime trace: App invokes PackageInstaller uninstall or pm uninstall for own package or companion package NOT IN $ProtectedPackageList$ without user-initiated UI flow matching</td>
+              </tr>
+              <tr>
+                <td>mobile:DynamicAnalysis</td>
+                <td>Dynamic API/runtime trace: Background scheduler or persistent service triggers retrieve-then-write cycle</td>
+              </tr>
+              <tr>
+                <td>mobile:DynamicAnalysis</td>
+                <td>Dynamic API/runtime trace: Background task activation immediately before retrieve-then-write cycle on supervised device</td>
+              </tr>
+              <tr>
+                <td>mobile:DynamicAnalysis</td>
+                <td>Dynamic API/runtime trace: Application registers BroadcastReceiver via registerReceiver() or manifest-declared receiver for sensitive system intents (BOOT_COMPLETED, SMS_RECEIVED, ACTION_PACKAGE_REPLACED, CONNECTIVITY_CHANGE, USER_PRESENT) NOT IN $ApprovedReceiverApp</td>
+              </tr>
+              <tr>
+                <td>mobile:DynamicAnalysis</td>
+                <td>Dynamic API/runtime trace: App invokes PackageManager.setComponentEnabledSetting() to COMPONENT_ENABLED_STATE_DISABLED on its own LAUNCHER activity while continuing active background or foreground-service execution</td>
+              </tr>
+              <tr>
+                <td>mobile:DynamicAnalysis</td>
+                <td>Dynamic API/runtime trace: Unified Log entry at level=fault in subsystem com.apple.kernel or com.apple.sandbox within $KernelFaultWindow$ of integrity_check failure — kernel-level fault coincident with integrity failure is the exploit-execution signal; requires super</td>
+              </tr>
+              <tr>
+                <td>mobile:DynamicAnalysis</td>
+                <td>Dynamic API/runtime trace: ConnectivityManager, TelephonyManager, or WifiManager framework callbacks report repeated failure, disable, or oscillation events outside expected coverage-transition pattern</td>
+              </tr>
+              <tr>
+                <td>mobile:DynamicAnalysis</td>
+                <td>Dynamic API/runtime trace: ContentResolver, DocumentProvider, StorageAccessFramework, or bulk stream I/O invocations exceed $FileModificationRateThreshold$ operations per minute across distinct file paths — API-level operation rate distinguishes ransomware from norma</td>
+              </tr>
+              <tr>
+                <td>mobile:DynamicAnalysis</td>
+                <td>Dynamic API/runtime trace: Known application begins first-seen or expanded use of content providers, account services, accessibility, or network destinations not in $AppBehaviorBaseline$ post-update</td>
+              </tr>
+              <tr>
+                <td>mobile:DynamicAnalysis</td>
+                <td>Dynamic API/runtime trace: Known app begins first-seen use of protected framework categories (location, microphone, contacts) or background task patterns post-update</td>
+              </tr>
+              <tr>
+                <td>mobile:DynamicAnalysis</td>
+                <td>Dynamic API/runtime trace: App begins first-seen network connections to destinations matching known-malicious SDK C2 patterns or outside $SDKBaselineEndpoints$ for embedded SDK namespace</td>
+              </tr>
+              <tr>
+                <td>mobile:DynamicAnalysis</td>
+                <td>Dynamic API/runtime trace: Known app begins first-seen use of protected categories (analytics, location, contacts) matching known-SDK behavior patterns post-update</td>
+              </tr>
+              <tr>
+                <td>mobile:DynamicAnalysis</td>
+                <td>Dynamic API/runtime trace: Recently updated trusted app invokes special-access paths, account services, or accessibility not present in prior version baseline</td>
+              </tr>
+              <tr>
+                <td>mobile:DynamicAnalysis</td>
+                <td>Dynamic API/runtime trace: Launch services, extension-handling, or framework subsystem anomalies occur near install or first launch of recently updated trusted app on supervised device</td>
+              </tr>
+              <tr>
+                <td>mobile:DynamicAnalysis</td>
+                <td>Dynamic API/runtime trace: App uses background work scheduler, JobScheduler, or persistent service to trigger web-service resolver fetch without user interaction</td>
+              </tr>
+              <tr>
+                <td>mobile:DynamicAnalysis</td>
+                <td>Dynamic API/runtime trace: Background task or networking subsystem event occurs immediately before web-service resolver fetch</td>
+              </tr>
+              <tr>
+                <td>mobile:DynamicAnalysis</td>
+                <td>Dynamic API/runtime trace: Background work scheduler, foreground service, or persistent service activates</td>
+              </tr>
+              <tr>
+                <td>mobile:DynamicAnalysis</td>
+                <td>Dynamic API/runtime trace: Background task or persistent networking event activates</td>
+              </tr>
+              <tr>
+                <td>mobile:DynamicAnalysis</td>
+                <td>Dynamic API/runtime trace: Accessibility-enabled app NOT IN $AccessibilityAllowList$ invokes performAction() click, global action (GLOBAL_ACTION_BACK/HOME/RECENTS), or insertText() on a UI element belonging to a different foregrounded app — cross-app UI action is the</td>
+              </tr>
+              <tr>
+                <td>mobile:DynamicAnalysis</td>
+                <td>Dynamic API/runtime trace: App intercepts notification content from source_app IN $HighValueNotifApps$ (banking, auth, messaging) while AppState=background</td>
+              </tr>
+              <tr>
+                <td>mobile:DynamicAnalysis</td>
+                <td>Dynamic API/runtime trace: App invokes cryptographic functions (javax.crypto.Cipher, Android KeyStore, AES/RSA/ECC operations) on data buffer followed by encode-then-transmit sequence NOT matching app declared network function — app-layer crypto on data before transm</td>
+              </tr>
+              <tr>
+                <td>mobile:DynamicAnalysis</td>
+                <td>Dynamic API/runtime trace: App invokes ContentResolver or SAF (Storage Access Framework) queries across multiple user-data paths outside its own sandbox in background state</td>
+              </tr>
+              <tr>
+                <td>mobile:DynamicAnalysis</td>
+                <td>Dynamic API/runtime trace: Managed app accesses broad local data scope without user-initiated document picker interaction on supervised device</td>
+              </tr>
+              <tr>
+                <td>mobile:DynamicAnalysis</td>
+                <td>Dynamic API/runtime trace: App invokes startForegroundService() or startForeground() NOT IN $ApprovedForegroundServiceApps$</td>
+              </tr>
+              <tr>
+                <td>mobile:DynamicAnalysis</td>
+                <td>Dynamic API/runtime trace: App invokes DownloadManager, URLConnection, or OkHttp download to write retrieved content to app-controlled path outside original APK scope — programmatic download of executable artifact</td>
+              </tr>
+              <tr>
+                <td>mobile:DynamicAnalysis</td>
+                <td>Dynamic API/runtime trace: Managed app performs post-download processing, dynamic resource handling, or module preparation immediately after retrieval from non-CDN source on supervised device</td>
+              </tr>
+              <tr>
+                <td>mobile:DynamicAnalysis</td>
+                <td>Dynamic API/runtime trace: App loads native library (.so) or resolves JNI bridge NOT IN $ApprovedNativeLibraries$ immediately before suspicious lower-level activity (sensor access, file write, network connection) — native code loading before anomalous activity is the</td>
+              </tr>
+              <tr>
+                <td>mobile:DynamicAnalysis</td>
+                <td>Dynamic API/runtime trace: App transitions from managed-code execution into JNI/native function context or attaches native thread,</td>
+              </tr>
+              <tr>
+                <td>mobile:DynamicAnalysis</td>
+                <td>Dynamic API/runtime trace: App is replaced or reinstalled</td>
+              </tr>
+              <tr>
+                <td>mobile:DynamicAnalysis</td>
+                <td>Dynamic API/runtime trace: App enqueues WorkManager work, schedules JobScheduler job, or sets AlarmManager with repeating interval NOT IN $ApprovedSchedulerApps$</td>
+              </tr>
+              <tr>
+                <td>mobile:DynamicAnalysis</td>
+                <td>Dynamic API/runtime trace: Managed app creates NSBackgroundActivityScheduler activity or registers BGTask with repeating=true or deferred interval outside $ApprovedSchedulerApps$ function</td>
+              </tr>
+              <tr>
+                <td>mobile:DynamicAnalysis</td>
+                <td>Dynamic API/runtime trace: App initializes proxy-capable or raw-socket networking constructs (ServerSocket, SOCKS proxy client, bidirectional relay) NOT IN $ApprovedProxyApps$ — proxy initialization is the technique enabler</td>
+              </tr>
+              <tr>
+                <td>mobile:DynamicAnalysis</td>
+                <td>Dynamic API/runtime trace: App invokes TelecomManager.answerCall(), placeCall(), endCall(), or ConnectionService call-handling operations without corresponding user-initiated call UI interaction</td>
+              </tr>
+              <tr>
+                <td>mobile:DynamicAnalysis</td>
+                <td>Dynamic API/runtime trace: App process loads external code module or native library from non-system path injected into zygote or app_process runtime — abnormal library injection path is the hooking mechanism indicator</td>
+              </tr>
+              <tr>
+                <td>mobile:DynamicAnalysis</td>
+                <td>Dynamic API/runtime trace: App invokes SensorManager.registerListener() for TYPE_ACCELEROMETER or TYPE_GYROSCOPE NOT IN $ApprovedMotionApps$ followed by conditional execution branching correlated with sensor readings — motion sensing followed by behavioral conditiona</td>
+              </tr>
+              <tr>
+                <td>mobile:DynamicAnalysis</td>
+                <td>Dynamic API/runtime trace: App invokes ZIP, GZIP, or bulk-buffer packaging routines (ZipOutputStream, DeflaterOutputStream, similar) on previously accessed local data in background state</td>
+              </tr>
+              <tr>
+                <td>mobile:DynamicAnalysis</td>
+                <td>Dynamic API/runtime trace: App applies encryption to newly created archive or staged data blob before network transmission — encrypt-after-archive confirms adversary-controlled packing for exfil</td>
+              </tr>
+              <tr>
+                <td>mobile:DynamicAnalysis</td>
+                <td>Dynamic API/runtime trace: App performs bulk data transformation or packaging-like processing on collected records prior to outbound transfer on supervised device</td>
+              </tr>
+              <tr>
+                <td>mobile:DynamicAnalysis</td>
+                <td>Dynamic API/runtime trace: App registers BroadcastReceiver or schedules job for system events (BOOT_COMPLETED, SMS_RECEIVED, ACTION_PACKAGE_REPLACED, CONNECTIVITY_CHANGE, ACTION_USER_PRESENT) NOT IN $ApprovedEventTriggerApps$ — sensitive system event registration is</td>
+              </tr>
+              <tr>
+                <td>mobile:DynamicAnalysis</td>
+                <td>Dynamic API/runtime trace: App loads library or executes component</td>
+              </tr>
+              <tr>
+                <td>mobile:DynamicAnalysis</td>
+                <td>Dynamic API/runtime trace: App invokes privileged framework APIs (accessibility performAction, WindowManager.addView TYPE_APPLICATION_OVERLAY, PackageInstaller) immediately after acquiring elevation control mechanism without expected user settings navigation time</td>
+              </tr>
+              <tr>
+                <td>mobile:DynamicAnalysis</td>
+                <td>Dynamic API/runtime trace: App performs burst of environmental check APIs (Build properties, TelephonyManager IMSI, PackageManager security-tool query) at cold launch before user interaction — multi-category environment fingerprint is the guardrail setup</td>
+              </tr>
+              <tr>
+                <td>mobile:DynamicAnalysis</td>
+                <td>Dynamic API/runtime trace: App performs UIDevice model + iOS version + enrollment state checks at cold launch before user interaction — device fingerprinting guardrail setup</td>
+              </tr>
+              <tr>
+                <td>mobile:DynamicAnalysis</td>
+                <td>Dynamic API/runtime trace: App invokes package management, DevicePolicyManager, or settings operations capable of disabling security tooling — API invocation to disable security control</td>
+              </tr>
+              <tr>
+                <td>mobile:DynamicAnalysis</td>
+                <td>Dynamic API/runtime trace: App invokes accessibility global actions (back, home, recents) or DevicePolicyManager removal-resistance operations when package-management or uninstall UI is in foreground — active uninstall interference</td>
+              </tr>
+              <tr>
+                <td>mobile:DynamicAnalysis</td>
+                <td>Dynamic API/runtime trace: App invokes package manager operations (disable component, clear data, request uninstall) or settings modifications targeting security tool packages IN $SecurityToolPackageList$</td>
+              </tr>
+              <tr>
+                <td>mobile:DynamicAnalysis</td>
+                <td>Dynamic API/runtime trace: App invokes file deletion, database truncation, log clearing, or app-data-clear operations within $CleanupWindow$ of prior data access or network exfiltration event — post-exfil cleanup chain</td>
+              </tr>
+              <tr>
+                <td>mobile:DynamicAnalysis</td>
+                <td>Dynamic API/runtime trace: App invokes file deletion, container-local database truncation, or cache-clear operations on supervised device within $CleanupWindow$ of prior data access or upload event</td>
+              </tr>
+              <tr>
+                <td>mobile:DynamicAnalysis</td>
+                <td>Dynamic API/runtime trace: Protected resource use, privileged API invocation, or telephony/accessibility/overlay access occurs from system-app context while device is locked or before normal setup completion</td>
+              </tr>
+              <tr>
+                <td>mobile:DynamicAnalysis</td>
+                <td>Dynamic API/runtime trace: Supplemental baseband, IOKit, accessory, security, or activation-related subsystem anomalies on supervised device at activation — Unified Log supplemental confirmation</td>
+              </tr>
+              <tr>
+                <td>MobileEDR:telemetry</td>
+                <td>UIDevice.current.model AND CMMotionManager.isDeviceMotionAvailable AND UIScreen.main.scale all read within $EnvCheckWindow$ at cold launch by app NOT IN $SystemEnumAllowList$</td>
+              </tr>
+              <tr>
+                <td>MobileEDR:telemetry</td>
+                <td>System.getProperty() AND SensorManager.getSensorList() AND getNetworkInterfaces() all called > $EnvCheckThreshold$ calls within $EnvCheckWindow$ by app NOT IN $SystemEnumAllowList$ where app_state=background</td>
+              </tr>
+              <tr>
+                <td>MobileEDR:telemetry</td>
+                <td>PackageInstaller.install() with install_initiator NOT IN ApprovedInstallSources + MDM policy_violation raised within InstallWindow where approved sources do not include this installer origin</td>
+              </tr>
+              <tr>
+                <td>MobileEDR:telemetry</td>
+                <td>ptrace with action IN (PTRACE_ATTACH, PTRACE_POKETEXT, PTRACE_POKEDATA, PTRACE_SETREGS) where caller_uid != target_uid + MDM developer_mode=false within PtraceWindow where no debug session justifies memory write to unrelated process</td>
+              </tr>
+              <tr>
+                <td>MobileEDR:telemetry</td>
+                <td>process accesses memory region or task port beyond declared entitlement set + MDM integrity_check=fail within same device session where declared entitlements do not justify observed resource access</td>
+              </tr>
+              <tr>
+                <td>MobileEDR:telemetry</td>
+                <td>ptrace(PTRACE_ATTACH) from caller_pid where caller is NOT parent of target AND NOT in DebuggerAllowList + MDM usb_debug=false within PtraceWindow where developer context does not justify cross-process attach</td>
+              </tr>
+              <tr>
+                <td>MobileEDR:telemetry</td>
+                <td>dylib loaded into process address space with path OR behavioral hash matching KnownJailbreakLibPatterns + MDM compliance=pass within same device session where compliance posture does not justify library presence</td>
+              </tr>
+              <tr>
+                <td>MobileEDR:telemetry</td>
+                <td>execve/execveat with effective UID=0 from path NOT IN KnownSystemBinPaths + MDM compliance root_status=false within same device context where compliance state does not justify elevated execution</td>
               </tr>
               <tr>
                 <td>MobileEDR:telemetry</td>
@@ -1240,17 +1532,6 @@
                     <a href="/techniques/T1218/014">T1218.014</a>
                 </td>
             </tr>
-            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--0c7e55b4-57b2-4a0f-ba0e-f50eab1a95f0">
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0697">DET0697</a>
-                </td>
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0697">Detection of Abuse Accessibility Features</a>
-                </td>
-                <td rowspan="">
-                    <a href="/techniques/T1453">T1453</a>
-                </td>
-            </tr>
             <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--9bfe6e65-c691-44fa-9d00-bf7fd5e6479f">
                 <td rowspan="">
                     <a href="/detectionstrategies/DET0642">DET0642</a>
@@ -1271,28 +1552,6 @@
                 </td>
                 <td rowspan="">
                     <a href="/techniques/T1517">T1517</a>
-                </td>
-            </tr>
-            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--98f14414-883e-4da3-930a-19a8faa1be41">
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0635">DET0635</a>
-                </td>
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0635">Detection of Accounts</a>
-                </td>
-                <td rowspan="">
-                    <a href="/techniques/T1636/005">T1636.005</a>
-                </td>
-            </tr>
-            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--a6da6dc3-19fe-4d1c-ab77-843c08377a19">
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0685">DET0685</a>
-                </td>
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0685">Detection of Application Layer Protocol</a>
-                </td>
-                <td rowspan="">
-                    <a href="/techniques/T1437">T1437</a>
                 </td>
             </tr>
             <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--d2daf569-4fc9-46a3-97b7-4d3d76c04a64">
@@ -1328,17 +1587,6 @@
                     <a href="/techniques/T1521/002">T1521.002</a>
                 </td>
             </tr>
-            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--3e6673dc-e2c7-440e-b632-d25e3e9f92cc">
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0673">DET0673</a>
-                </td>
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0673">Detection of Audio Capture</a>
-                </td>
-                <td rowspan="">
-                    <a href="/techniques/T1429">T1429</a>
-                </td>
-            </tr>
             <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--1da26733-88c3-4cc8-8758-e2d65934f713">
                 <td rowspan="">
                     <a href="/detectionstrategies/DET0700">DET0700</a>
@@ -1361,17 +1609,6 @@
                     <a href="/techniques/T1624/001">T1624.001</a>
                 </td>
             </tr>
-            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--0cb492cd-7d01-46b2-b1f4-afddec10eaf2">
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0674">DET0674</a>
-                </td>
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0674">Detection of Calendar Entries</a>
-                </td>
-                <td rowspan="">
-                    <a href="/techniques/T1636/001">T1636.001</a>
-                </td>
-            </tr>
             <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--0abd72c9-7d7f-4e8a-99d7-5ac2f791eb9d">
                 <td rowspan="">
                     <a href="/detectionstrategies/DET0703">DET0703</a>
@@ -1381,28 +1618,6 @@
                 </td>
                 <td rowspan="">
                     <a href="/techniques/T1616">T1616</a>
-                </td>
-            </tr>
-            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--0a21ca34-ffa0-4b6f-b88c-9ffdb6a7c38f">
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0602">DET0602</a>
-                </td>
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0602">Detection of Call Log</a>
-                </td>
-                <td rowspan="">
-                    <a href="/techniques/T1636/002">T1636.002</a>
-                </td>
-            </tr>
-            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--7b0e17a4-df7c-4f4b-8b15-e8aac2236fc6">
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0643">DET0643</a>
-                </td>
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0643">Detection of Clipboard Data</a>
-                </td>
-                <td rowspan="">
-                    <a href="/techniques/T1414">T1414</a>
                 </td>
             </tr>
             <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--113d83d6-e0a2-44af-955d-288bd4ef21c4">
@@ -1449,17 +1664,6 @@
                     <a href="/techniques/T1474/003">T1474.003</a>
                 </td>
             </tr>
-            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--03c7f8c1-0239-44a2-89e2-4cd6b47940ac">
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0679">DET0679</a>
-                </td>
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0679">Detection of Contact List</a>
-                </td>
-                <td rowspan="">
-                    <a href="/techniques/T1636/003">T1636.003</a>
-                </td>
-            </tr>
             <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--132ead25-5d93-4616-9847-a4c37d33d3e6">
                 <td rowspan="">
                     <a href="/detectionstrategies/DET0678">DET0678</a>
@@ -1480,17 +1684,6 @@
                 </td>
                 <td rowspan="">
                     <a href="/techniques/T1533">T1533</a>
-                </td>
-            </tr>
-            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--3a772c6d-fda2-404a-86aa-85a0bdbb43e9">
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0749">DET0749</a>
-                </td>
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0749">Detection of Data from Local System</a>
-                </td>
-                <td rowspan="">
-                    <a href="/techniques/T0893">T0893</a>
                 </td>
             </tr>
             <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--83a0e3a2-5828-4707-84f5-eec67cf6b50e">
@@ -1535,28 +1728,6 @@
                 </td>
                 <td rowspan="">
                     <a href="/techniques/T1629/003">T1629.003</a>
-                </td>
-            </tr>
-            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--996f14f4-3419-45f6-af22-edc15f5d5d19">
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0618">DET0618</a>
-                </td>
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0618">Detection of Download New Code at Runtime</a>
-                </td>
-                <td rowspan="">
-                    <a href="/techniques/T1407">T1407</a>
-                </td>
-            </tr>
-            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--c6c7da3e-4366-473e-af4e-3cc67d8ea1fa">
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0614">DET0614</a>
-                </td>
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0614">Detection of Drive-By Compromise</a>
-                </td>
-                <td rowspan="">
-                    <a href="/techniques/T1456">T1456</a>
                 </td>
             </tr>
             <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--6e373a06-358b-4078-a8ab-1f5c1730ddf4">
@@ -1614,17 +1785,6 @@
                     <a href="/techniques/T1404">T1404</a>
                 </td>
             </tr>
-            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--afab91d6-8af3-47cd-b899-cacfbb8cad6d">
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0682">DET0682</a>
-                </td>
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0682">Detection of File and Directory Discovery</a>
-                </td>
-                <td rowspan="">
-                    <a href="/techniques/T1420">T1420</a>
-                </td>
-            </tr>
             <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--5848450c-38a7-421d-910c-9a10870f4ea3">
                 <td rowspan="">
                     <a href="/detectionstrategies/DET0638">DET0638</a>
@@ -1658,17 +1818,6 @@
                     <a href="/techniques/T1627/001">T1627.001</a>
                 </td>
             </tr>
-            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--4809a26b-8527-49dc-81aa-ac2750fd3b75">
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0676">DET0676</a>
-                </td>
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0676">Detection of GUI Input Capture</a>
-                </td>
-                <td rowspan="">
-                    <a href="/techniques/T1417/002">T1417.002</a>
-                </td>
-            </tr>
             <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--b5259538-b169-47fd-a57c-521ad3f3a858">
                 <td rowspan="">
                     <a href="/detectionstrategies/DET0694">DET0694</a>
@@ -1689,17 +1838,6 @@
                 </td>
                 <td rowspan="">
                     <a href="/techniques/T1617">T1617</a>
-                </td>
-            </tr>
-            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--9f3df5ac-caa0-4189-9b9b-dcf2f6bbdc54">
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0722">DET0722</a>
-                </td>
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0722">Detection of Hooking</a>
-                </td>
-                <td rowspan="">
-                    <a href="/techniques/T0874">T0874</a>
                 </td>
             </tr>
             <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--5560747b-ad67-478e-b3f2-14e55864e532">
@@ -1724,17 +1862,6 @@
                     <a href="/techniques/T1630">T1630</a>
                 </td>
             </tr>
-            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--e8b537e6-04eb-4168-a206-88cc041edf50">
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0750">DET0750</a>
-                </td>
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0750">Detection of Indicator Removal on Host</a>
-                </td>
-                <td rowspan="">
-                    <a href="/techniques/T0872">T0872</a>
-                </td>
-            </tr>
             <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--5aa9f16e-253d-4ca6-b5e2-8311e5a76290">
                 <td rowspan="">
                     <a href="/detectionstrategies/DET0718">DET0718</a>
@@ -1746,17 +1873,6 @@
                     <a href="/techniques/T1544">T1544</a>
                 </td>
             </tr>
-            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--19522fac-bfd0-4e94-9d75-a61eacbef7c3">
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0705">DET0705</a>
-                </td>
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0705">Detection of Input Capture</a>
-                </td>
-                <td rowspan="">
-                    <a href="/techniques/T1417">T1417</a>
-                </td>
-            </tr>
             <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--12a7802a-b0c2-4823-b03d-e59b2c4bc4de">
                 <td rowspan="">
                     <a href="/detectionstrategies/DET0612">DET0612</a>
@@ -1766,28 +1882,6 @@
                 </td>
                 <td rowspan="">
                     <a href="/techniques/T1516">T1516</a>
-                </td>
-            </tr>
-            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--f15826e8-4aa6-497e-bf9f-16c3724bfe72">
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0661">DET0661</a>
-                </td>
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0661">Detection of Keylogging</a>
-                </td>
-                <td rowspan="">
-                    <a href="/techniques/T1417/001">T1417.001</a>
-                </td>
-            </tr>
-            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--ac9d1b33-cfba-415e-aef2-c4c0b359ed5f">
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0675">DET0675</a>
-                </td>
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0675">Detection of Location Tracking</a>
-                </td>
-                <td rowspan="">
-                    <a href="/techniques/T1430">T1430</a>
                 </td>
             </tr>
             <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--d22f1848-fc32-4fdb-999b-9c0845fb6552">
@@ -1823,17 +1917,6 @@
                     <a href="/techniques/T0834">T0834</a>
                 </td>
             </tr>
-            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--441ded70-7e25-47f1-b55c-0fafb7d4f44c">
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0770">DET0770</a>
-                </td>
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0770">Detection of Network Connection Enumeration</a>
-                </td>
-                <td rowspan="">
-                    <a href="/techniques/T0840">T0840</a>
-                </td>
-            </tr>
             <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--86f11b86-e189-47f1-8436-e46c7f0a4a69">
                 <td rowspan="">
                     <a href="/detectionstrategies/DET0639">DET0639</a>
@@ -1856,17 +1939,6 @@
                     <a href="/techniques/T1509">T1509</a>
                 </td>
             </tr>
-            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--7c507410-2dc7-4159-88ec-b2228547ae67">
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0720">DET0720</a>
-                </td>
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0720">Detection of Obfuscated Files or Information</a>
-                </td>
-                <td rowspan="">
-                    <a href="/techniques/T1406">T1406</a>
-                </td>
-            </tr>
             <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--7a9d4531-4ff8-4228-8abd-29da8bd2942f">
                 <td rowspan="">
                     <a href="/detectionstrategies/DET0598">DET0598</a>
@@ -1878,17 +1950,6 @@
                     <a href="/techniques/T1629/001">T1629.001</a>
                 </td>
             </tr>
-            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--0e600ee5-de14-46f8-ada2-c0aee4ce969e">
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0692">DET0692</a>
-                </td>
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0692">Detection of Process Discovery</a>
-                </td>
-                <td rowspan="">
-                    <a href="/techniques/T1424">T1424</a>
-                </td>
-            </tr>
             <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--973a4da0-af9c-4d57-ab62-21fbc308f8b3">
                 <td rowspan="">
                     <a href="/detectionstrategies/DET0631">DET0631</a>
@@ -1898,17 +1959,6 @@
                 </td>
                 <td rowspan="">
                     <a href="/techniques/T1604">T1604</a>
-                </td>
-            </tr>
-            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--3b8a3713-0f0a-433c-82bd-13b2f9224206">
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0691">DET0691</a>
-                </td>
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0691">Detection of Replication Through Removable Media</a>
-                </td>
-                <td rowspan="">
-                    <a href="/techniques/T1458">T1458</a>
                 </td>
             </tr>
             <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--ea1efe01-98ef-4a49-a30d-72fde6750985">
@@ -1933,50 +1983,6 @@
                     <a href="/techniques/T1513">T1513</a>
                 </td>
             </tr>
-            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--3e884c49-75ca-449e-83cb-3517ee88e0f1">
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0751">DET0751</a>
-                </td>
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0751">Detection of Screen Capture</a>
-                </td>
-                <td rowspan="">
-                    <a href="/techniques/T0852">T0852</a>
-                </td>
-            </tr>
-            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--9935655b-cd9b-485f-84ea-1b3b4b765413">
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0680">DET0680</a>
-                </td>
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0680">Detection of Security Software Discovery</a>
-                </td>
-                <td rowspan="">
-                    <a href="/techniques/T1418/001">T1418.001</a>
-                </td>
-            </tr>
-            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--b25c4621-5d38-43ee-871e-0e5c02f2f48c">
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0765">DET0765</a>
-                </td>
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0765">Detection of Service Stop</a>
-                </td>
-                <td rowspan="">
-                    <a href="/techniques/T0881">T0881</a>
-                </td>
-            </tr>
-            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--59e56dc2-725e-4f55-ab2c-154dbe42bc4d">
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0658">DET0658</a>
-                </td>
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0658">Detection of SIM Card Swap</a>
-                </td>
-                <td rowspan="">
-                    <a href="/techniques/T1451">T1451</a>
-                </td>
-            </tr>
             <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--142329a9-ff29-4bc2-af36-7294afc5fee4">
                 <td rowspan="">
                     <a href="/detectionstrategies/DET0599">DET0599</a>
@@ -1986,28 +1992,6 @@
                 </td>
                 <td rowspan="">
                     <a href="/techniques/T1582">T1582</a>
-                </td>
-            </tr>
-            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--69ceab63-17ce-4e42-b247-055a180e6c2b">
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0600">DET0600</a>
-                </td>
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0600">Detection of Software Discovery</a>
-                </td>
-                <td rowspan="">
-                    <a href="/techniques/T1418">T1418</a>
-                </td>
-            </tr>
-            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--34d06ebf-867e-4cd2-8e44-c849fcaab072">
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0644">DET0644</a>
-                </td>
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0644">Detection of Software Packing</a>
-                </td>
-                <td rowspan="">
-                    <a href="/techniques/T1406/002">T1406.002</a>
                 </td>
             </tr>
             <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--ad21a251-e824-4368-a04c-8a480ee653cc">
@@ -2030,28 +2014,6 @@
                 </td>
                 <td rowspan="">
                     <a href="/techniques/T1521/003">T1521.003</a>
-                </td>
-            </tr>
-            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--411f7c72-356c-4de6-bbf0-27a7952d3be5">
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0656">DET0656</a>
-                </td>
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0656">Detection of Steal Application Access Token</a>
-                </td>
-                <td rowspan="">
-                    <a href="/techniques/T1635">T1635</a>
-                </td>
-            </tr>
-            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--d87dc800-38cb-4d82-b76e-3c501dbd9c0a">
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0621">DET0621</a>
-                </td>
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0621">Detection of Stored Application Data</a>
-                </td>
-                <td rowspan="">
-                    <a href="/techniques/T1409">T1409</a>
                 </td>
             </tr>
             <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--8d518627-1df4-4bf8-b1fb-0828fb9f6d31">
@@ -2085,28 +2047,6 @@
                 </td>
                 <td rowspan="">
                     <a href="/techniques/T1521/001">T1521.001</a>
-                </td>
-            </tr>
-            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--0a60e161-3347-49e6-9687-123e8a06c620">
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0601">DET0601</a>
-                </td>
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0601">Detection of System Information Discovery</a>
-                </td>
-                <td rowspan="">
-                    <a href="/techniques/T1426">T1426</a>
-                </td>
-            </tr>
-            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--7ea45fed-cd52-4e26-96d5-31d3fd2c7b22">
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0636">DET0636</a>
-                </td>
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0636">Detection of System Network Connections Discovery</a>
-                </td>
-                <td rowspan="">
-                    <a href="/techniques/T1421">T1421</a>
                 </td>
             </tr>
             <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--7c45d09a-030e-4b30-b2d9-41fee3daa293">
@@ -2162,17 +2102,6 @@
                 </td>
                 <td rowspan="">
                     <a href="/techniques/T1512">T1512</a>
-                </td>
-            </tr>
-            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--24ad5d49-a170-4e03-a194-3cc68ee81e1e">
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0606">DET0606</a>
-                </td>
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0606">Detection of Virtualization Solution</a>
-                </td>
-                <td rowspan="">
-                    <a href="/techniques/T1670">T1670</a>
                 </td>
             </tr>
             <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--69f0f372-4bb1-4c0e-b81a-d425b2f6f31f">
@@ -2705,7 +2634,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3 col-footer">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v19.2&#013;Website  v5.1.0">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v20.0&#013;Website  v5.2.0">Website Changelog</a></u>
                                 </div>
                                 <div class="px-3">
                                     <u class="footer-link"><a href="/resources/legal-and-branding/privacy/#" class="footer-link" onclick="Osano.cm.showDrawer('osano-cm-dom-info-dialog-open')">Cookie Preferences</a></u>

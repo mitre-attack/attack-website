@@ -207,7 +207,7 @@
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
                     <div class="container-fluid banner-message">
-                        ATT&CKcon 7.0 registration is open! Join us October 27-28, 2026 in McLean, VA or virtually. <a href="https://na.eventscloud.com/website/93925/">Register in person</a> or <a href="https://mitre.brandlive.com/MITRE-ATTACKcon-7-0">register virtually</a>. See the <a href="https://na.eventscloud.com/website/93925/faq/">FAQ</a> for hotel and venue details.
+                        ATT&CK v20 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v20-9701dd75ffb4'>blog post</a> for more information. <a href='https://na.eventscloud.com/website/93925/'>ATT&CKcon 7.0</a> is October 27-28, 2026 in McLean, VA.
                     </div>
             </div>
         </div>
@@ -292,13 +292,13 @@
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Permalink to this version of DET0653" 
-           href="/versions/v19/detectionstrategies/DET0653/" data-test-ignore="true">Version Permalink</a>
+           href="/versions/v20/detectionstrategies/DET0653/" data-test-ignore="true">Version Permalink</a>
     </div>
     <div class="permalink">
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Go to the live version of DET0653" 
-           href="/versions/v19/detectionstrategies/DET0653/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+           href="/versions/v20/detectionstrategies/DET0653/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
     </div>
 </div>
 
@@ -326,7 +326,7 @@
               role="tabpanel" aria-labelledby="tab-Android">
               <h4 class="pt-3" id="AN1737">AN1737</h4>
               <div>
-                        <p>Correlates (1) application access to device- or environment-specific attributes used to validate target conditions, (2) suppression of sensitive behavior until those attributes match an expected value, and (3) immediate transition into protected actions such as sensor use, file access, or network communication only after the condition is satisfied. The defender observes a causal chain where an app repeatedly evaluates device state or environment context and withholds execution until a target-specific match occurs.</p>
+                        <p>For Android, detect Execution Guardrails from documented management, network, or vetting evidence; treat state queries as periodic observations rather than real-time events. Correlate Application Permission via Android Enterprise DPC / Application Vetting [DevicePolicyManager.getPermissionGrantState(); PackageManager manifest/requested-permission review]; Application State via Android Enterprise / EMM [Managed package inventory/status and package metadata]; OS API Execution via Application Vetting / Instrumented Dynamic Analysis [Dynamic API/runtime trace: App performs burst of environmental check APIs (Build properties, TelephonyManager IMSI, PackageManager security-tool query) at cold launch before user interaction — multi-category environment fingerprint is the guardrail setup]. Alert on a sequence or state change inconsistent with the device/app baseline, approved management policy, or expected user workflow; do not infer unobserved API calls, file/process activity, or payload content from management state alone.</p>
 
               </div>
 
@@ -347,8 +347,17 @@
                           Application Permission (DC0114)
                         </a>
                       </td>
-                      <td>android:MDMLog</td>
-                      <td>application holds permissions enabling environment validation (e.g., location, phone state, nearby device/network context) and subsequently delays protected activity until qualifying values are present</td>
+                      <td>android:DevicePolicyManager</td>
+                      <td>DevicePolicyManager.getPermissionGrantState(); PackageManager manifest/requested-permission review</td>
+                    </tr>
+                    <tr>
+                      <td rowspan="1">
+                        <a href="/datacomponents/DC0123">
+                          Application State (DC0123)
+                        </a>
+                      </td>
+                      <td>android:EMM</td>
+                      <td>Managed package inventory/status and package metadata</td>
                     </tr>
                     <tr>
                       <td rowspan="1">
@@ -356,8 +365,8 @@
                           OS API Execution (DC0021)
                         </a>
                       </td>
-                      <td>MobileEDR:telemetry</td>
-                      <td>application queries target-selection attributes (e.g., location, SIM/operator, locale, device state, network identity) and then conditionally invokes sensitive framework APIs only after expected value is observed</td>
+                      <td>mobile:DynamicAnalysis</td>
+                      <td>Dynamic API/runtime trace: App performs burst of environmental check APIs (Build properties, TelephonyManager IMSI, PackageManager security-tool query) at cold launch before user interaction — multi-category environment fingerprint is the guardrail setup</td>
                     </tr>
                   </tbody>
                 </table>
@@ -374,28 +383,12 @@
                   </thead>
                   <tbody>
                     <tr>
-                      <td>TimeWindow</td>
-                      <td>Correlation window between environment checks and subsequent guarded execution</td>
+                      <td>GuardrailCheckWindow</td>
+                      <td>Default 30s at cold launch. Environmental checks at launch before user interaction are guardrail setup. Post-interaction checks may be feature-driven.</td>
                     </tr>
                     <tr>
-                      <td>TargetAttributeSet</td>
-                      <td>Environment attributes treated as likely guardrail inputs, such as locale, geolocation, carrier, Wi-Fi identity, device model, or lock state</td>
-                    </tr>
-                    <tr>
-                      <td>DormancyThreshold</td>
-                      <td>Amount of suppressed or low-activity runtime before sensitive behavior begins</td>
-                    </tr>
-                    <tr>
-                      <td>AllowedAppList</td>
-                      <td>Baseline of legitimate apps expected to evaluate environment attributes before conditional feature activation</td>
-                    </tr>
-                    <tr>
-                      <td>ForegroundStateRequired</td>
-                      <td>Whether guarded execution is only suspicious when activated from background or without recent user interaction</td>
-                    </tr>
-                    <tr>
-                      <td>UplinkBytesThreshold</td>
-                      <td>Minimum outbound traffic volume used to distinguish meaningful guarded execution from benign telemetry</td>
+                      <td>PopulationComparisonRequired</td>
+                      <td>Behavioral fork detection requires telemetry across multiple device populations (enrolled vs unenrolled). Without population comparison, single-device detection is Low confidence.</td>
                     </tr>
                   </tbody>
                 </table>
@@ -405,7 +398,7 @@
               role="tabpanel" aria-labelledby="tab-iOS">
               <h4 class="pt-3" id="AN1738">AN1738</h4>
               <div>
-                        <p>Detects conditional execution by correlating (1) application access to constrained environment signals such as location, locale, network context, device state, or user interaction timing, (2) prolonged inactivity or feature suppression despite available permissions, and (3) abrupt initiation of higher-risk behavior only when the expected target context is present. Because direct observation of some runtime decision logic is weaker on iOS, the defender relies more heavily on lifecycle, sensor, and downstream network effects following target-condition alignment.</p>
+                        <p>For iOS, detect Execution Guardrails from documented management, network, or vetting evidence; treat state queries as periodic observations rather than real-time events. Correlate Application Permission via Application Vetting [Code-signing entitlements and Info.plist privacy usage-description keys]; Application State via Apple MDM [InstalledApplicationList / ManagedApplicationList]; OS API Execution via Application Vetting / Instrumented Dynamic Analysis [Dynamic API/runtime trace: App performs UIDevice model + iOS version + enrollment state checks at cold launch before user interaction — device fingerprinting guardrail setup]. Alert on a sequence or state change inconsistent with the device/app baseline, approved management policy, or expected user workflow; do not infer unobserved API calls, file/process activity, or payload content from management state alone.</p>
 
               </div>
 
@@ -422,21 +415,21 @@
                   <tbody>
                     <tr>
                       <td rowspan="1">
-                        <a href="/datacomponents/DC0123">
-                          Application State (DC0123)
-                        </a>
-                      </td>
-                      <td>MobileEDR:telemetry</td>
-                      <td>application remains inactive across normal execution windows and transitions into background or foreground activity burst only when qualifying device context, lock state, locale, or network condition exists</td>
-                    </tr>
-                    <tr>
-                      <td rowspan="1">
                         <a href="/datacomponents/DC0114">
                           Application Permission (DC0114)
                         </a>
                       </td>
-                      <td>iOS:MDMLog</td>
-                      <td>application has approved capabilities required for conditional execution (e.g., location/background modes) but observed behavior is deferred until target-specific state is present</td>
+                      <td>mobile:ApplicationVetting</td>
+                      <td>Code-signing entitlements and Info.plist privacy usage-description keys</td>
+                    </tr>
+                    <tr>
+                      <td rowspan="1">
+                        <a href="/datacomponents/DC0123">
+                          Application State (DC0123)
+                        </a>
+                      </td>
+                      <td>iOS:MDM</td>
+                      <td>InstalledApplicationList / ManagedApplicationList</td>
                     </tr>
                     <tr>
                       <td rowspan="1">
@@ -444,8 +437,8 @@
                           OS API Execution (DC0021)
                         </a>
                       </td>
-                      <td>MobileEDR:telemetry</td>
-                      <td>application exhibits repeated environment-context evaluation followed by delayed privileged framework use only after target-specific match</td>
+                      <td>mobile:DynamicAnalysis</td>
+                      <td>Dynamic API/runtime trace: App performs UIDevice model + iOS version + enrollment state checks at cold launch before user interaction — device fingerprinting guardrail setup</td>
                     </tr>
                   </tbody>
                 </table>
@@ -462,28 +455,12 @@
                   </thead>
                   <tbody>
                     <tr>
-                      <td>TimeWindow</td>
-                      <td>Correlation window between context checks and guarded execution</td>
+                      <td>GuardrailCheckWindow</td>
+                      <td>Default 30s at cold launch. Environmental checks at launch before user interaction are guardrail setup. Post-interaction checks may be feature-driven.</td>
                     </tr>
                     <tr>
-                      <td>TargetContextSet</td>
-                      <td>Expected environment properties used for gating, such as location region, locale, SSID/network context, device lock state, or user activity timing</td>
-                    </tr>
-                    <tr>
-                      <td>DormancyThreshold</td>
-                      <td>Duration of inactivity before guarded behavior begins</td>
-                    </tr>
-                    <tr>
-                      <td>ExpectedBackgroundModes</td>
-                      <td>Baseline of legitimate apps whose feature activation is context-dependent in background execution</td>
-                    </tr>
-                    <tr>
-                      <td>AllowedDestinationList</td>
-                      <td>Expected destinations for apps whose network activity legitimately begins only in certain contexts</td>
-                    </tr>
-                    <tr>
-                      <td>UserInteractionThreshold</td>
-                      <td>Acceptable recency of user interaction before guarded execution is considered suspicious</td>
+                      <td>PopulationComparisonRequired</td>
+                      <td>Behavioral fork detection requires telemetry across multiple device populations (enrolled vs unenrolled). Without population comparison, single-device detection is Low confidence.</td>
                     </tr>
                   </tbody>
                 </table>
@@ -491,6 +468,7 @@
             </div>
           </div>
         </div>
+
 
         
       </div>
@@ -709,7 +687,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3 col-footer">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v19.2&#013;Website  v5.1.0">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v20.0&#013;Website  v5.2.0">Website Changelog</a></u>
                                 </div>
                                 <div class="px-3">
                                     <u class="footer-link"><a href="/resources/legal-and-branding/privacy/#" class="footer-link" onclick="Osano.cm.showDrawer('osano-cm-dom-info-dialog-open')">Cookie Preferences</a></u>

@@ -207,7 +207,7 @@
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
                     <div class="container-fluid banner-message">
-                        ATT&CKcon 7.0 registration is open! Join us October 27-28, 2026 in McLean, VA or virtually. <a href="https://na.eventscloud.com/website/93925/">Register in person</a> or <a href="https://mitre.brandlive.com/MITRE-ATTACKcon-7-0">register virtually</a>. See the <a href="https://na.eventscloud.com/website/93925/faq/">FAQ</a> for hotel and venue details.
+                        ATT&CK v20 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v20-9701dd75ffb4'>blog post</a> for more information. <a href='https://na.eventscloud.com/website/93925/'>ATT&CKcon 7.0</a> is October 27-28, 2026 in McLean, VA.
                     </div>
             </div>
         </div>
@@ -267,7 +267,7 @@
                 </div>
                 <div class="row card-data">
                   <div class="col-md-12">
-                    <span class="h5 card-title">Analytics</span>: AN1857
+                    <span class="h5 card-title">Analytics</span>: AN1857, AN2122, AN2182, AN2217
                   </div>
                 </div>
                 <div class="row card-data">
@@ -282,7 +282,7 @@
                 </div>
                 <div class="row card-data">
                   <div class="col-md-12">
-                    <span class="h5 card-title">Last Modified</span>: 12 May 2026
+                    <span class="h5 card-title">Last Modified</span>: 13 October 2026
                   </div>
                 </div>
               </div>
@@ -292,13 +292,13 @@
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Permalink to this version of DET0724" 
-           href="/versions/v19/detectionstrategies/DET0724/" data-test-ignore="true">Version Permalink</a>
+           href="/versions/v20/detectionstrategies/DET0724/" data-test-ignore="true">Version Permalink</a>
     </div>
     <div class="permalink">
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Go to the live version of DET0724" 
-           href="/versions/v19/detectionstrategies/DET0724/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+           href="/versions/v20/detectionstrategies/DET0724/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
     </div>
 </div>
 
@@ -309,18 +309,36 @@
           <h2 class="pt-3" id="analytics">Analytics</h2>
           <ul class="nav nav-tabs mb-2" role="tablist">
             <li class="nav-item">
-              <a class="nav-link active" id="tab-ICS" data-toggle="tab"
-                href="#pane-ICS" role="tab" aria-selected="true">
-                ICS
+              <a class="nav-link active" id="tab-Windows" data-toggle="tab"
+                href="#pane-Windows" role="tab" aria-selected="true">
+                Windows
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link " id="tab-Linux" data-toggle="tab"
+                href="#pane-Linux" role="tab" aria-selected="true">
+                Linux
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link " id="tab-Network_Devices" data-toggle="tab"
+                href="#pane-Network_Devices" role="tab" aria-selected="true">
+                Network Devices
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link " id="tab-Embedded" data-toggle="tab"
+                href="#pane-Embedded" role="tab" aria-selected="true">
+                Embedded
               </a>
             </li>
           </ul>
           <div class="tab-content card card-body p-3">
-            <div class="tab-pane fade show active" id="pane-ICS"
-              role="tabpanel" aria-labelledby="tab-ICS">
+            <div class="tab-pane fade show active" id="pane-Windows"
+              role="tabpanel" aria-labelledby="tab-Windows">
               <h4 class="pt-3" id="AN1857">AN1857</h4>
               <div>
-                        <p>Monitor for an authentication attempt by a user that may obtain and abuse credentials of existing accounts as a means of gaining Initial Access, Persistence, Privilege Escalation, or Defense Evasion.<br />Monitor for logon behavior that may abuse credentials of existing accounts as a means of gaining Lateral Movement or Persistence. Correlate other security systems with login information (e.g., a user has an active login session but has not entered the building or does not have VPN access). <br />Monitor for suspicious account behavior across systems that share accounts, either user, admin, or service accounts. Examples: one account logged into multiple systems simultaneously; multiple accounts logged into the same machine simultaneously; accounts logged in at odd times or outside of business hours. Activity may be from interactive login sessions or process ownership from accounts being used to execute binaries on a remote system as a particular account.</p>
+                        <p>Real-time monitoring identifies an Industrial Control System (ICS)-role account authenticating via interactive or remote logon from a workstation not in the approved host inventory, or outside the account's established usage pattern, immediately followed within a short window by that session connecting to the field device network or ICS application. OT operational-fidelity gate: Alert only when the account/device/session violates the approved identity + source host/jump path/zone policy and is corroborated by access to a protected OT asset, execution, configuration change, or another security-relevant follow-on event. Suppress approved shift activity, vendor support, break-glass use, commissioning, and documented remote-access windows.</p>
 
               </div>
 
@@ -337,21 +355,12 @@
                   <tbody>
                     <tr>
                       <td rowspan="1">
-                        <a href="/datacomponents/DC0002">
-                          User Account Authentication (DC0002)
-                        </a>
-                      </td>
-                      <td>User Account</td>
-                      <td>None</td>
-                    </tr>
-                    <tr>
-                      <td rowspan="1">
                         <a href="/datacomponents/DC0067">
                           Logon Session Creation (DC0067)
                         </a>
                       </td>
-                      <td>Logon Session</td>
-                      <td>None</td>
+                      <td>WinEventLog:Security</td>
+                      <td>Windows Security Event ID 4624/4625: EventCode=4624 for Industrial Control Systems (ICS)-role account from workstation not in approved host list or outside office hours window</td>
                     </tr>
                     <tr>
                       <td rowspan="1">
@@ -359,15 +368,448 @@
                           Logon Session Metadata (DC0088)
                         </a>
                       </td>
-                      <td>Logon Session</td>
-                      <td>None</td>
+                      <td>WinEventLog:Security</td>
+                      <td>Windows Security Event ID 4624/4625: EventCode=4672 for Industrial Control Systems (ICS)-role account from anomalous session</td>
+                    </tr>
+                    <tr>
+                      <td rowspan="1">
+                        <a href="/datacomponents/DC0002">
+                          User Account Authentication (DC0002)
+                        </a>
+                      </td>
+                      <td>WinEventLog:Security</td>
+                      <td>Windows Security Event ID 4624/4625: EventCode=4648 for Industrial Control Systems (ICS)-role account from process outside approved ICS vendor process list</td>
+                    </tr>
+                    <tr>
+                      <td rowspan="1">
+                        <a href="/datacomponents/DC0082">
+                          Network Connection Creation (DC0082)
+                        </a>
+                      </td>
+                      <td>WinEventLog:Sysmon</td>
+                      <td>EventCode=3 to device subnet within auth-to-device window of the anomalous logon</td>
                     </tr>
                   </tbody>
                 </table>
               </div>
 
+              <h5 class="pt-3" id="AN1857-mutable-elements">Mutable Elements</h5>
+              <div class="tables-mobile">
+                <table class="table table-bordered table-alternate mt-2">
+                  <thead>
+                    <tr>
+                      <th scope="col">Field</th>
+                      <th scope="col">Description</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>ApprovedAdminCIDR</td>
+                      <td>IP ranges from which SSH administrative access to ICS Linux assets is authorized.</td>
+                    </tr>
+                    <tr>
+                      <td>ApprovedHostList</td>
+                      <td>Inventory of workstations/jump hosts from which ICS-role accounts are authorized to authenticate.</td>
+                    </tr>
+                    <tr>
+                      <td>ApprovedNMSCIDR</td>
+                      <td>IP ranges from which network device administrative access is authorized.</td>
+                    </tr>
+                    <tr>
+                      <td>AuthToDeviceWindow</td>
+                      <td>Time window after anomalous logon within which device-subnet connection is considered correlated, typically 5-15 minutes.</td>
+                    </tr>
+                    <tr>
+                      <td>ICSRoleAccountPatterns</td>
+                      <td>Naming convention or group-membership pattern identifying accounts with engineering, operator, or ICS service roles.</td>
+                    </tr>
+                    <tr>
+                      <td>OfficeHoursWindow</td>
+                      <td>Defined normal working hours for interactive ICS engineering activity, widened for 24/7 shift-based operations.</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="tab-pane fade " id="pane-Linux"
+              role="tabpanel" aria-labelledby="tab-Linux">
+              <h4 class="pt-3" id="AN2122">AN2122</h4>
+              <div>
+                        <p>Real-time monitoring identifies Secure Shell (SSH) or local authentication by an Industrial Control System (ICS) service or operator account from a source Internet Protocol (IP) address outside the approved administrative Classless Inter-Domain Routing (CIDR) subnet, or a sudo/su escalation event by an ICS service account that does not normally require interactive privilege escalation, correlated with subsequent execution of ICS engineering tools. OT operational-fidelity gate: Alert only when the account/device/session violates the approved identity + source host/jump path/zone policy and is corroborated by access to a protected OT asset, execution, configuration change, or another security-relevant follow-on event. Suppress approved shift activity, vendor support, break-glass use, commissioning, and documented remote-access windows.</p>
+
+              </div>
+
+              <h5 class="pt-3" id="AN2122-log-sources">Log Sources</h5>
+              <div class="tables-mobile">
+                <table class="table table-bordered table-alternate mt-2">
+                  <thead>
+                    <tr>
+                      <th scope="col">Data Component</th>
+                      <th scope="col">Name</th>
+                      <th scope="col">Channel</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td rowspan="1">
+                        <a href="/datacomponents/DC0067">
+                          Logon Session Creation (DC0067)
+                        </a>
+                      </td>
+                      <td>auditd:SYSCALL</td>
+                      <td>Linux Audit SYSCALL/EXECVE/SOCKADDR records (configured audit rule): sudo/su success for Industrial Control Systems (ICS) service account UID without the expected automated invocation pattern</td>
+                    </tr>
+                    <tr>
+                      <td rowspan="1">
+                        <a href="/datacomponents/DC0002">
+                          User Account Authentication (DC0002)
+                        </a>
+                      </td>
+                      <td>syslog:auth</td>
+                      <td>sshd Accepted publickey/password for Industrial Control Systems (ICS)-role account from source not in approved admin CIDR</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <h5 class="pt-3" id="AN2122-mutable-elements">Mutable Elements</h5>
+              <div class="tables-mobile">
+                <table class="table table-bordered table-alternate mt-2">
+                  <thead>
+                    <tr>
+                      <th scope="col">Field</th>
+                      <th scope="col">Description</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>ApprovedAdminCIDR</td>
+                      <td>IP ranges from which SSH administrative access to ICS Linux assets is authorized.</td>
+                    </tr>
+                    <tr>
+                      <td>ApprovedHostList</td>
+                      <td>Inventory of workstations/jump hosts from which ICS-role accounts are authorized to authenticate.</td>
+                    </tr>
+                    <tr>
+                      <td>ApprovedNMSCIDR</td>
+                      <td>IP ranges from which network device administrative access is authorized.</td>
+                    </tr>
+                    <tr>
+                      <td>AuthToDeviceWindow</td>
+                      <td>Time window after anomalous logon within which device-subnet connection is considered correlated, typically 5-15 minutes.</td>
+                    </tr>
+                    <tr>
+                      <td>ICSRoleAccountPatterns</td>
+                      <td>Naming convention or group-membership pattern identifying accounts with engineering, operator, or ICS service roles.</td>
+                    </tr>
+                    <tr>
+                      <td>OfficeHoursWindow</td>
+                      <td>Defined normal working hours for interactive ICS engineering activity, widened for 24/7 shift-based operations.</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="tab-pane fade " id="pane-Network_Devices"
+              role="tabpanel" aria-labelledby="tab-Network_Devices">
+              <h4 class="pt-3" id="AN2182">AN2182</h4>
+              <div>
+                        <p>Real-time monitoring identifies network device management session authentication such as Secure Shell (SSH), Remote Authentication Dial-In User Service (RADIUS), and Terminal Access Controller Access-Control System Plus (TACACS+) using valid Industrial Control System (ICS) network administrator credentials but originating from source IPs outside the approved Network Management System (NMS) Classless Inter-Domain Routing (CIDR) subnet or at times inconsistent with the account's normal usage pattern, where the session performs configuration changes not reflected in any open change-control ticket. OT operational-fidelity gate: Alert only when the account/device/session violates the approved identity + source host/jump path/zone policy and is corroborated by access to a protected OT asset, execution, configuration change, or another security-relevant follow-on event. Suppress approved shift activity, vendor support, break-glass use, commissioning, and documented remote-access windows.</p>
+
+              </div>
+
+              <h5 class="pt-3" id="AN2182-log-sources">Log Sources</h5>
+              <div class="tables-mobile">
+                <table class="table table-bordered table-alternate mt-2">
+                  <thead>
+                    <tr>
+                      <th scope="col">Data Component</th>
+                      <th scope="col">Name</th>
+                      <th scope="col">Channel</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td rowspan="1">
+                        <a href="/datacomponents/DC0002">
+                          User Account Authentication (DC0002)
+                        </a>
+                      </td>
+                      <td>networkdevice:aaa</td>
+                      <td>TACACS+/RADIUS authentication success for Industrial Control Systems (ICS) network admin account from source not in approved Network Management System (NMS) Classless Inter-Domain Routing (CIDR) subnet</td>
+                    </tr>
+                    <tr>
+                      <td rowspan="1">
+                        <a href="/datacomponents/DC0038">
+                          Application Log Content (DC0038)
+                        </a>
+                      </td>
+                      <td>networkdevice:syslog</td>
+                      <td>configuration change logged without corresponding change ticket reference following anomalous authentication</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <h5 class="pt-3" id="AN2182-mutable-elements">Mutable Elements</h5>
+              <div class="tables-mobile">
+                <table class="table table-bordered table-alternate mt-2">
+                  <thead>
+                    <tr>
+                      <th scope="col">Field</th>
+                      <th scope="col">Description</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>ApprovedAdminCIDR</td>
+                      <td>IP ranges from which SSH administrative access to ICS Linux assets is authorized.</td>
+                    </tr>
+                    <tr>
+                      <td>ApprovedHostList</td>
+                      <td>Inventory of workstations/jump hosts from which ICS-role accounts are authorized to authenticate.</td>
+                    </tr>
+                    <tr>
+                      <td>ApprovedNMSCIDR</td>
+                      <td>IP ranges from which network device administrative access is authorized.</td>
+                    </tr>
+                    <tr>
+                      <td>AuthToDeviceWindow</td>
+                      <td>Time window after anomalous logon within which device-subnet connection is considered correlated, typically 5-15 minutes.</td>
+                    </tr>
+                    <tr>
+                      <td>ICSRoleAccountPatterns</td>
+                      <td>Naming convention or group-membership pattern identifying accounts with engineering, operator, or ICS service roles.</td>
+                    </tr>
+                    <tr>
+                      <td>OfficeHoursWindow</td>
+                      <td>Defined normal working hours for interactive ICS engineering activity, widened for 24/7 shift-based operations.</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="tab-pane fade " id="pane-Embedded"
+              role="tabpanel" aria-labelledby="tab-Embedded">
+              <h4 class="pt-3" id="AN2217">AN2217</h4>
+              <div>
+                        <p>Real-time monitoring identifies field device access (Industrial Control System (ICS) protocol sessions, management interface authentication) using credentials or authentication tokens associated with a legitimate engineering account, but from a source Internet Protocol (IP) address or Media Access Control (MAC) address not enrolled as an authorized engineering workstation, where the authenticated session subsequently performs write operations the credential owner has not acknowledged via change control. OT operational-fidelity gate: Alert only when the account/device/session violates the approved identity + source host/jump path/zone policy and is corroborated by access to a protected OT asset, execution, configuration change, or another security-relevant follow-on event. Suppress approved shift activity, vendor support, break-glass use, commissioning, and documented remote-access windows.</p>
+
+              </div>
+
+              <h5 class="pt-3" id="AN2217-log-sources">Log Sources</h5>
+              <div class="tables-mobile">
+                <table class="table table-bordered table-alternate mt-2">
+                  <thead>
+                    <tr>
+                      <th scope="col">Data Component</th>
+                      <th scope="col">Name</th>
+                      <th scope="col">Channel</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td rowspan="1">
+                        <a href="/datacomponents/DC0085">
+                          Network Traffic Content (DC0085)
+                        </a>
+                      </td>
+                      <td>NSM:Content</td>
+                      <td>device authentication session from source Media Access Control (MAC)/Internet Protocol (IP) address not enrolled as authorized engineering workstation, with valid credential</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <h5 class="pt-3" id="AN2217-mutable-elements">Mutable Elements</h5>
+              <div class="tables-mobile">
+                <table class="table table-bordered table-alternate mt-2">
+                  <thead>
+                    <tr>
+                      <th scope="col">Field</th>
+                      <th scope="col">Description</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>ApprovedAdminCIDR</td>
+                      <td>IP ranges from which SSH administrative access to ICS Linux assets is authorized.</td>
+                    </tr>
+                    <tr>
+                      <td>ApprovedHostList</td>
+                      <td>Inventory of workstations/jump hosts from which ICS-role accounts are authorized to authenticate.</td>
+                    </tr>
+                    <tr>
+                      <td>ApprovedNMSCIDR</td>
+                      <td>IP ranges from which network device administrative access is authorized.</td>
+                    </tr>
+                    <tr>
+                      <td>AuthToDeviceWindow</td>
+                      <td>Time window after anomalous logon within which device-subnet connection is considered correlated, typically 5-15 minutes.</td>
+                    </tr>
+                    <tr>
+                      <td>ICSRoleAccountPatterns</td>
+                      <td>Naming convention or group-membership pattern identifying accounts with engineering, operator, or ICS service roles.</td>
+                    </tr>
+                    <tr>
+                      <td>OfficeHoursWindow</td>
+                      <td>Defined normal working hours for interactive ICS engineering activity, widened for 24/7 shift-based operations.</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
+        </div>
+
+        <div id="assets-tabs">
+          <h2 class="pt-3" id="assets">Targeted Assets</h2>
+          <table class="table table-bordered table-alternate mt-2" aria-describedby="asset-table">
+            <thead>
+              <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Asset</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <a href="/assets/A0001"> A0001 </a>
+                </td>
+                <td>
+                  <a href="/assets/A0001"> Workstation </a>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <a href="/assets/A0002"> A0002 </a>
+                </td>
+                <td>
+                  <a href="/assets/A0002"> Human-Machine Interface (HMI) </a>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <a href="/assets/A0003"> A0003 </a>
+                </td>
+                <td>
+                  <a href="/assets/A0003"> Programmable Logic Controller (PLC) </a>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <a href="/assets/A0004"> A0004 </a>
+                </td>
+                <td>
+                  <a href="/assets/A0004"> Remote Terminal Unit (RTU) </a>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <a href="/assets/A0005"> A0005 </a>
+                </td>
+                <td>
+                  <a href="/assets/A0005"> Intelligent Electronic Device (IED) </a>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <a href="/assets/A0006"> A0006 </a>
+                </td>
+                <td>
+                  <a href="/assets/A0006"> Data Historian </a>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <a href="/assets/A0007"> A0007 </a>
+                </td>
+                <td>
+                  <a href="/assets/A0007"> Control Server </a>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <a href="/assets/A0008"> A0008 </a>
+                </td>
+                <td>
+                  <a href="/assets/A0008"> Application Server </a>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <a href="/assets/A0009"> A0009 </a>
+                </td>
+                <td>
+                  <a href="/assets/A0009"> Data Gateway </a>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <a href="/assets/A0010"> A0010 </a>
+                </td>
+                <td>
+                  <a href="/assets/A0010"> Safety Controller </a>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <a href="/assets/A0011"> A0011 </a>
+                </td>
+                <td>
+                  <a href="/assets/A0011"> Virtual Private Network (VPN) Server </a>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <a href="/assets/A0012"> A0012 </a>
+                </td>
+                <td>
+                  <a href="/assets/A0012"> Jump Host </a>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <a href="/assets/A0013"> A0013 </a>
+                </td>
+                <td>
+                  <a href="/assets/A0013"> Field I/O </a>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <a href="/assets/A0015"> A0015 </a>
+                </td>
+                <td>
+                  <a href="/assets/A0015"> Switch </a>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <a href="/assets/A0016"> A0016 </a>
+                </td>
+                <td>
+                  <a href="/assets/A0016"> Firewall </a>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <a href="/assets/A0017"> A0017 </a>
+                </td>
+                <td>
+                  <a href="/assets/A0017"> Distributed Control System (DCS) Controller </a>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <a href="/assets/A0018"> A0018 </a>
+                </td>
+                <td>
+                  <a href="/assets/A0018"> Programmable Automation Controller (PAC) </a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
 
         
@@ -587,7 +1029,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3 col-footer">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v19.2&#013;Website  v5.1.0">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v20.0&#013;Website  v5.2.0">Website Changelog</a></u>
                                 </div>
                                 <div class="px-3">
                                     <u class="footer-link"><a href="/resources/legal-and-branding/privacy/#" class="footer-link" onclick="Osano.cm.showDrawer('osano-cm-dom-info-dialog-open')">Cookie Preferences</a></u>

@@ -207,7 +207,7 @@
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
                     <div class="container-fluid banner-message">
-                        ATT&CKcon 7.0 registration is open! Join us October 27-28, 2026 in McLean, VA or virtually. <a href="https://na.eventscloud.com/website/93925/">Register in person</a> or <a href="https://mitre.brandlive.com/MITRE-ATTACKcon-7-0">register virtually</a>. See the <a href="https://na.eventscloud.com/website/93925/faq/">FAQ</a> for hotel and venue details.
+                        ATT&CK v20 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v20-9701dd75ffb4'>blog post</a> for more information. <a href='https://na.eventscloud.com/website/93925/'>ATT&CKcon 7.0</a> is October 27-28, 2026 in McLean, VA.
                     </div>
             </div>
         </div>
@@ -292,13 +292,13 @@
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Permalink to this version of DET0714" 
-           href="/versions/v19/detectionstrategies/DET0714/" data-test-ignore="true">Version Permalink</a>
+           href="/versions/v20/detectionstrategies/DET0714/" data-test-ignore="true">Version Permalink</a>
     </div>
     <div class="permalink">
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Go to the live version of DET0714" 
-           href="/versions/v19/detectionstrategies/DET0714/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+           href="/versions/v20/detectionstrategies/DET0714/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
     </div>
 </div>
 
@@ -320,7 +320,7 @@
               role="tabpanel" aria-labelledby="tab-Android">
               <h4 class="pt-3" id="AN1842">AN1842</h4>
               <div>
-                        <p>Correlates (1) suppression or disablement of launcher-visible application components or effective reduction of user-facing launcher presence, (2) persistence of installed application state after icon suppression, and (3) continued runtime activity such as background execution, framework use, sensor access, or network communication after the icon becomes unavailable or is replaced by reduced-discoverability launcher behavior. The defender observes a causal chain where an app removes or reduces its launcher visibility while remaining operational and continuing meaningful activity.</p>
+                        <p>For Android, detect Suppress Application Icon from documented management, network, or vetting evidence; treat state queries as periodic observations rather than real-time events. Correlate Application Permission via Android Enterprise DPC / Application Vetting [DevicePolicyManager.getPermissionGrantState(); PackageManager manifest/requested-permission review]; OS API Execution via Application Vetting / Instrumented Dynamic Analysis [Dynamic API/runtime trace: App invokes PackageManager.setComponentEnabledSetting() to COMPONENT_ENABLED_STATE_DISABLED on its own LAUNCHER activity while continuing active background or foreground-service execution]. Alert on a sequence or state change inconsistent with the device/app baseline, approved management policy, or expected user workflow; do not infer unobserved API calls, file/process activity, or payload content from management state alone.</p>
 
               </div>
 
@@ -341,8 +341,8 @@
                           Application Permission (DC0114)
                         </a>
                       </td>
-                      <td>android:MDMLog</td>
-                      <td>installed application remains present while launcher-visible activity or component discoverability changes to hidden, disabled, or synthesized-settings-entry state prior to later runtime activity</td>
+                      <td>android:DevicePolicyManager</td>
+                      <td>DevicePolicyManager.getPermissionGrantState(); PackageManager manifest/requested-permission review</td>
                     </tr>
                     <tr>
                       <td rowspan="1">
@@ -350,8 +350,8 @@
                           OS API Execution (DC0021)
                         </a>
                       </td>
-                      <td>MobileEDR:telemetry</td>
-                      <td>application invokes package or component state changes affecting launcher-facing activity availability and subsequently continues operational framework activity after icon suppression</td>
+                      <td>mobile:DynamicAnalysis</td>
+                      <td>Dynamic API/runtime trace: App invokes PackageManager.setComponentEnabledSetting() to COMPONENT_ENABLED_STATE_DISABLED on its own LAUNCHER activity while continuing active background or foreground-service execution</td>
                     </tr>
                   </tbody>
                 </table>
@@ -368,28 +368,12 @@
                   </thead>
                   <tbody>
                     <tr>
-                      <td>TimeWindow</td>
-                      <td>Correlation window between icon suppression and later runtime activity</td>
+                      <td>KnownHeadlessApps</td>
+                      <td>Enterprise apps legitimately designed without launcher icons (MDM agent, background sync daemons). Derive from MDM catalog. Tightening: empty — all icon suppression during active execution is flagged.</td>
                     </tr>
                     <tr>
-                      <td>AllowedAppList</td>
-                      <td>Baseline of legitimate apps permitted to reduce launcher visibility, such as managed agents, work-profile utilities, or system applications</td>
-                    </tr>
-                    <tr>
-                      <td>ForegroundStateRequired</td>
-                      <td>Whether post-suppression behavior is only suspicious when no recent foreground interaction is present</td>
-                    </tr>
-                    <tr>
-                      <td>SuppressionMode</td>
-                      <td>Environment-specific handling of hidden, disabled, or synthesized launcher behavior depending on Android version and management posture</td>
-                    </tr>
-                    <tr>
-                      <td>UplinkBytesThreshold</td>
-                      <td>Minimum outbound traffic volume used to distinguish meaningful hidden operation from benign background maintenance</td>
-                    </tr>
-                    <tr>
-                      <td>SensorAfterSuppressionThreshold</td>
-                      <td>Threshold for sensor access frequency after launcher visibility is reduced</td>
+                      <td>ApprovedMediaApps</td>
+                      <td>Media editing, backup, and secure note apps with legitimate need to manage media file visibility. Derive from MDM catalog. Tightening: empty — any app hiding multimedia files post-collection is anomalous.</td>
                     </tr>
                   </tbody>
                 </table>
@@ -397,6 +381,7 @@
             </div>
           </div>
         </div>
+
 
         
       </div>
@@ -615,7 +600,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3 col-footer">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v19.2&#013;Website  v5.1.0">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v20.0&#013;Website  v5.2.0">Website Changelog</a></u>
                                 </div>
                                 <div class="px-3">
                                     <u class="footer-link"><a href="/resources/legal-and-branding/privacy/#" class="footer-link" onclick="Osano.cm.showDrawer('osano-cm-dom-info-dialog-open')">Cookie Preferences</a></u>

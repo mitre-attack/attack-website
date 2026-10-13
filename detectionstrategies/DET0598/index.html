@@ -207,7 +207,7 @@
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
                     <div class="container-fluid banner-message">
-                        ATT&CKcon 7.0 registration is open! Join us October 27-28, 2026 in McLean, VA or virtually. <a href="https://na.eventscloud.com/website/93925/">Register in person</a> or <a href="https://mitre.brandlive.com/MITRE-ATTACKcon-7-0">register virtually</a>. See the <a href="https://na.eventscloud.com/website/93925/faq/">FAQ</a> for hotel and venue details.
+                        ATT&CK v20 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v20-9701dd75ffb4'>blog post</a> for more information. <a href='https://na.eventscloud.com/website/93925/'>ATT&CKcon 7.0</a> is October 27-28, 2026 in McLean, VA.
                     </div>
             </div>
         </div>
@@ -292,13 +292,13 @@
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Permalink to this version of DET0598" 
-           href="/versions/v19/detectionstrategies/DET0598/" data-test-ignore="true">Version Permalink</a>
+           href="/versions/v20/detectionstrategies/DET0598/" data-test-ignore="true">Version Permalink</a>
     </div>
     <div class="permalink">
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Go to the live version of DET0598" 
-           href="/versions/v19/detectionstrategies/DET0598/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+           href="/versions/v20/detectionstrategies/DET0598/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
     </div>
 </div>
 
@@ -320,7 +320,7 @@
               role="tabpanel" aria-labelledby="tab-Android">
               <h4 class="pt-3" id="AN1644">AN1644</h4>
               <div>
-                        <p>Correlates (1) an application obtaining or maintaining elevated control mechanisms capable of resisting removal (device administrator, accessibility control, managed-owner posture), (2) user navigation into uninstall or application-management flows, and (3) immediate UI redirection, back-navigation injection, modal dismissal, or failed uninstall completion followed by continued app presence. Defender observes a causal chain where a removal attempt is actively disrupted and the target application remains installed.</p>
+                        <p>For Android, detect Prevent Application Removal from documented management, network, or vetting evidence; treat state queries as periodic observations rather than real-time events. Correlate Application Permission via Android Enterprise DPC / Application Vetting [DevicePolicyManager.getPermissionGrantState(); PackageManager manifest/requested-permission review]; OS API Execution via Application Vetting / Instrumented Dynamic Analysis [Dynamic API/runtime trace: App invokes accessibility global actions (back, home, recents) or DevicePolicyManager removal-resistance operations when package-management or uninstall UI is in foreground — active uninstall interference]. Alert on a sequence or state change inconsistent with the device/app baseline, approved management policy, or expected user workflow; do not infer unobserved API calls, file/process activity, or payload content from management state alone.</p>
 
               </div>
 
@@ -336,17 +336,13 @@
                   </thead>
                   <tbody>
                     <tr>
-                      <td rowspan="2">
+                      <td rowspan="1">
                         <a href="/datacomponents/DC0114">
                           Application Permission (DC0114)
                         </a>
                       </td>
-                      <td>android:MDMLog</td>
-                      <td>application enabled as device administrator, device owner, profile owner, or equivalent elevated management role before uninstall attempt</td>
-                    </tr>
-                    <tr>
-                      <td>android:MDMLog</td>
-                      <td>application granted accessibility service privileges capable of screen observation or global action invocation before removal attempt</td>
+                      <td>android:DevicePolicyManager</td>
+                      <td>DevicePolicyManager.getPermissionGrantState(); PackageManager manifest/requested-permission review</td>
                     </tr>
                     <tr>
                       <td rowspan="1">
@@ -354,8 +350,8 @@
                           OS API Execution (DC0021)
                         </a>
                       </td>
-                      <td>MobileEDR:telemetry</td>
-                      <td>application invokes accessibility global actions (back/home/recents) or observes package-management UI immediately after uninstall/settings screen becomes foreground</td>
+                      <td>mobile:DynamicAnalysis</td>
+                      <td>Dynamic API/runtime trace: App invokes accessibility global actions (back, home, recents) or DevicePolicyManager removal-resistance operations when package-management or uninstall UI is in foreground — active uninstall interference</td>
                     </tr>
                   </tbody>
                 </table>
@@ -372,28 +368,8 @@
                   </thead>
                   <tbody>
                     <tr>
-                      <td>TimeWindow</td>
-                      <td>Correlation window between uninstall UI entry, interference event, and continued install state</td>
-                    </tr>
-                    <tr>
-                      <td>ProtectedRoleSet</td>
-                      <td>Set of elevated roles considered removal-resistant (device admin, owner modes, accessibility)</td>
-                    </tr>
-                    <tr>
-                      <td>GlobalActionSet</td>
-                      <td>UI actions considered suspicious during uninstall flows (BACK, HOME, RECENTS)</td>
-                    </tr>
-                    <tr>
-                      <td>AllowedAccessibilityApps</td>
-                      <td>Known legitimate accessibility services expected to use global actions</td>
-                    </tr>
-                    <tr>
-                      <td>UninstallRetryThreshold</td>
-                      <td>Number of repeated uninstall attempts before escalation</td>
-                    </tr>
-                    <tr>
-                      <td>UplinkBytesThreshold</td>
-                      <td>Outbound traffic threshold confirming continued meaningful activity after failed removal</td>
+                      <td>RemovalResistanceAllowList</td>
+                      <td>MDM agent (legitimate Device Admin that cannot be removed by user is expected). Any other app using removal-resistance mechanisms should be flagged. Derive from MDM enrollment policy.</td>
                     </tr>
                   </tbody>
                 </table>
@@ -401,6 +377,7 @@
             </div>
           </div>
         </div>
+
 
         
       </div>
@@ -619,7 +596,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3 col-footer">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v19.2&#013;Website  v5.1.0">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v20.0&#013;Website  v5.2.0">Website Changelog</a></u>
                                 </div>
                                 <div class="px-3">
                                     <u class="footer-link"><a href="/resources/legal-and-branding/privacy/#" class="footer-link" onclick="Osano.cm.showDrawer('osano-cm-dom-info-dialog-open')">Cookie Preferences</a></u>

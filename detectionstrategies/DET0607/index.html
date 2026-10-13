@@ -207,7 +207,7 @@
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
                     <div class="container-fluid banner-message">
-                        ATT&CKcon 7.0 registration is open! Join us October 27-28, 2026 in McLean, VA or virtually. <a href="https://na.eventscloud.com/website/93925/">Register in person</a> or <a href="https://mitre.brandlive.com/MITRE-ATTACKcon-7-0">register virtually</a>. See the <a href="https://na.eventscloud.com/website/93925/faq/">FAQ</a> for hotel and venue details.
+                        ATT&CK v20 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v20-9701dd75ffb4'>blog post</a> for more information. <a href='https://na.eventscloud.com/website/93925/'>ATT&CKcon 7.0</a> is October 27-28, 2026 in McLean, VA.
                     </div>
             </div>
         </div>
@@ -292,13 +292,13 @@
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Permalink to this version of DET0607" 
-           href="/versions/v19/detectionstrategies/DET0607/" data-test-ignore="true">Version Permalink</a>
+           href="/versions/v20/detectionstrategies/DET0607/" data-test-ignore="true">Version Permalink</a>
     </div>
     <div class="permalink">
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Go to the live version of DET0607" 
-           href="/versions/v19/detectionstrategies/DET0607/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+           href="/versions/v20/detectionstrategies/DET0607/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
     </div>
 </div>
 
@@ -326,7 +326,7 @@
               role="tabpanel" aria-labelledby="tab-Android">
               <h4 class="pt-3" id="AN1657">AN1657</h4>
               <div>
-                        <p>The defender correlates app-driven shell-launch behavior with subsequent execution of Unix shell processes or shell-script activity under the same app context, especially when execution occurs from background state, without recent user interaction, or is followed by file-system, privilege-escalation, or network effects inconsistent with the app's declared role. The analytic prioritizes Android-observable control-plane effects: Runtime or ProcessBuilder invocation, spawn of sh/toybox/toolbox/su or equivalent shell process, script-file staging or redirected output, and post-execution network or local artifact creation.</p>
+                        <p>For Android, detect Unix Shell from documented management, network, or vetting evidence; treat state queries as periodic observations rather than real-time events. Correlate Command Execution via Application Vetting / Instrumented Dynamic Analysis [Dynamic API/runtime trace: Unix shell process (sh, bash, busybox sh, toybox) spawns as child of app process with command-line arguments indicating scripted operation — shell with arguments confirms script execution not interactive terminal]; Process Creation via Application Vetting / Managed Device Telemetry [Application invokes Runtime.exec(), ProcessBuilder.start(), or JNI-backed launcher with sh, bash, toybox, toolbox, or su as command argument NOT IN $ApprovedShellApps$ — explicit Unix shell invocation]. Alert on a sequence or state change inconsistent with the device/app baseline, approved management policy, or expected user workflow; do not infer unobserved API calls, file/process activity, or payload content from management state alone.</p>
 
               </div>
 
@@ -343,21 +343,21 @@
                   <tbody>
                     <tr>
                       <td rowspan="1">
-                        <a href="/datacomponents/DC0032">
-                          Process Creation (DC0032)
-                        </a>
-                      </td>
-                      <td>MobileEDR:telemetry</td>
-                      <td>Application invokes Runtime.exec, ProcessBuilder, JNI-backed command launcher, or equivalent command-execution bridge immediately before shell or command process creation</td>
-                    </tr>
-                    <tr>
-                      <td rowspan="1">
                         <a href="/datacomponents/DC0064">
                           Command Execution (DC0064)
                         </a>
                       </td>
-                      <td>MobileEDR:telemetry</td>
-                      <td>Application spawns Unix shell process or superuser binary such as sh, su, toybox, toolbox, or shell-like child process with parameters during execution phase</td>
+                      <td>mobile:DynamicAnalysis</td>
+                      <td>Dynamic API/runtime trace: Unix shell process (sh, bash, busybox sh, toybox) spawns as child of app process with command-line arguments indicating scripted operation — shell with arguments confirms script execution not interactive terminal</td>
+                    </tr>
+                    <tr>
+                      <td rowspan="1">
+                        <a href="/datacomponents/DC0032">
+                          Process Creation (DC0032)
+                        </a>
+                      </td>
+                      <td>mobile:DynamicAnalysis</td>
+                      <td>Application invokes Runtime.exec(), ProcessBuilder.start(), or JNI-backed launcher with sh, bash, toybox, toolbox, or su as command argument NOT IN $ApprovedShellApps$ — explicit Unix shell invocation</td>
                     </tr>
                   </tbody>
                 </table>
@@ -374,36 +374,12 @@
                   </thead>
                   <tbody>
                     <tr>
-                      <td>TimeWindow</td>
-                      <td>Correlation window between shell-launch method use, Unix shell process creation, and follow-on file or network effects</td>
+                      <td>ApprovedShellApps</td>
+                      <td>Terminal emulator apps (developer fleet only). Production managed devices: empty — no app should spawn Unix shells. Derive from IT device classification.</td>
                     </tr>
                     <tr>
-                      <td>AllowedAppList</td>
-                      <td>Apps legitimately expected to run shells, such as approved terminal apps, enterprise support tools, device management agents, or developer tooling</td>
-                    </tr>
-                    <tr>
-                      <td>AllowedProcessPatterns</td>
-                      <td>Expected shell binaries, parent-child process chains, and helper-process patterns for approved apps</td>
-                    </tr>
-                    <tr>
-                      <td>ForegroundStateRequired</td>
-                      <td>Whether Unix shell execution should occur only during active user-driven workflows</td>
-                    </tr>
-                    <tr>
-                      <td>CommandArgumentRiskPatterns</td>
-                      <td>Environment-specific list of suspicious shell arguments, pipes, redirection, chaining operators, or privilege-escalation references</td>
-                    </tr>
-                    <tr>
-                      <td>SensitivePathPatterns</td>
-                      <td>Environment-specific list of high-value file paths or system locations touched after shell execution</td>
-                    </tr>
-                    <tr>
-                      <td>PostExecutionWriteThreshold</td>
-                      <td>Minimum number or size of artifacts created after shell execution to increase confidence</td>
-                    </tr>
-                    <tr>
-                      <td>UplinkBytesThreshold</td>
-                      <td>Minimum outbound volume after shell execution to treat network behavior as meaningful</td>
+                      <td>ShellActivityWindow</td>
+                      <td>Default 30s between shell spawn and follow-on file/network activity.</td>
                     </tr>
                   </tbody>
                 </table>
@@ -413,7 +389,7 @@
               role="tabpanel" aria-labelledby="tab-iOS">
               <h4 class="pt-3" id="AN1658">AN1658</h4>
               <div>
-                        <p>The defender correlates managed-app process-launch or shell-like execution effects with subsequent file or network activity by the same app, then raises confidence when execution occurs in background context, without recent user interaction, or appears tied to command delivery or output exfiltration. Because direct Unix-shell observability is typically weaker on iOS and child processes remain constrained by the app sandbox, the analytic anchors on process-execution effects where available and then on lifecycle, file, and network side effects rather than assuming rich shell-parameter visibility in all environments.</p>
+                        <p>For iOS, detect Unix Shell from documented management, network, or vetting evidence; treat state queries as periodic observations rather than real-time events. Correlate Command Execution via Application Vetting / Instrumented Dynamic Analysis [Dynamic API/runtime trace: Shell or command-executing child process with arguments spawned under managed app context on supervised iOS device]; Process Creation via Application Vetting / Managed Device Telemetry [Managed iOS app invokes process-launch behavior resulting in sh, bash, or equivalent shell child process on supervised device — any shell spawn on stock iOS is a jailbreak indicator]. Alert on a sequence or state change inconsistent with the device/app baseline, approved management policy, or expected user workflow; do not infer unobserved API calls, file/process activity, or payload content from management state alone.</p>
 
               </div>
 
@@ -430,12 +406,21 @@
                   <tbody>
                     <tr>
                       <td rowspan="1">
+                        <a href="/datacomponents/DC0064">
+                          Command Execution (DC0064)
+                        </a>
+                      </td>
+                      <td>mobile:DynamicAnalysis</td>
+                      <td>Dynamic API/runtime trace: Shell or command-executing child process with arguments spawned under managed app context on supervised iOS device</td>
+                    </tr>
+                    <tr>
+                      <td rowspan="1">
                         <a href="/datacomponents/DC0032">
                           Process Creation (DC0032)
                         </a>
                       </td>
-                      <td>MobileEDR:telemetry</td>
-                      <td>Managed app invokes lower-level OS process-launch or command-execution behavior before file or network effects, including interpreter-like execution flow where visible to sensor</td>
+                      <td>mobile:DynamicAnalysis</td>
+                      <td>Managed iOS app invokes process-launch behavior resulting in sh, bash, or equivalent shell child process on supervised device — any shell spawn on stock iOS is a jailbreak indicator</td>
                     </tr>
                   </tbody>
                 </table>
@@ -452,28 +437,12 @@
                   </thead>
                   <tbody>
                     <tr>
-                      <td>TimeWindow</td>
-                      <td>Correlation window between shell-like execution indication, process effects, and follow-on file or network behavior</td>
+                      <td>ApprovedShellApps</td>
+                      <td>Terminal emulator apps (developer fleet only). Production managed devices: empty — no app should spawn Unix shells. Derive from IT device classification.</td>
                     </tr>
                     <tr>
-                      <td>AllowedAppList</td>
-                      <td>Managed apps legitimately expected to perform debugging, remote support, or enterprise automation tasks</td>
-                    </tr>
-                    <tr>
-                      <td>AllowedProcessPatterns</td>
-                      <td>Expected helper-process or process-launch patterns for approved managed apps</td>
-                    </tr>
-                    <tr>
-                      <td>ForegroundStateRequired</td>
-                      <td>Whether shell-like execution should occur only during active user-driven workflows</td>
-                    </tr>
-                    <tr>
-                      <td>ArtifactPathPatterns</td>
-                      <td>Expected temporary or output file locations for approved app behavior</td>
-                    </tr>
-                    <tr>
-                      <td>UplinkBytesThreshold</td>
-                      <td>Minimum outbound volume after shell-like execution to treat network behavior as meaningful</td>
+                      <td>ShellActivityWindow</td>
+                      <td>Default 30s between shell spawn and follow-on file/network activity.</td>
                     </tr>
                   </tbody>
                 </table>
@@ -481,6 +450,7 @@
             </div>
           </div>
         </div>
+
 
         
       </div>
@@ -699,7 +669,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3 col-footer">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v19.2&#013;Website  v5.1.0">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v20.0&#013;Website  v5.2.0">Website Changelog</a></u>
                                 </div>
                                 <div class="px-3">
                                     <u class="footer-link"><a href="/resources/legal-and-branding/privacy/#" class="footer-link" onclick="Osano.cm.showDrawer('osano-cm-dom-info-dialog-open')">Cookie Preferences</a></u>

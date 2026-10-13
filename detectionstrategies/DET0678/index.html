@@ -207,7 +207,7 @@
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
                     <div class="container-fluid banner-message">
-                        ATT&CKcon 7.0 registration is open! Join us October 27-28, 2026 in McLean, VA or virtually. <a href="https://na.eventscloud.com/website/93925/">Register in person</a> or <a href="https://mitre.brandlive.com/MITRE-ATTACKcon-7-0">register virtually</a>. See the <a href="https://na.eventscloud.com/website/93925/faq/">FAQ</a> for hotel and venue details.
+                        ATT&CK v20 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v20-9701dd75ffb4'>blog post</a> for more information. <a href='https://na.eventscloud.com/website/93925/'>ATT&CKcon 7.0</a> is October 27-28, 2026 in McLean, VA.
                     </div>
             </div>
         </div>
@@ -292,13 +292,13 @@
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Permalink to this version of DET0678" 
-           href="/versions/v19/detectionstrategies/DET0678/" data-test-ignore="true">Version Permalink</a>
+           href="/versions/v20/detectionstrategies/DET0678/" data-test-ignore="true">Version Permalink</a>
     </div>
     <div class="permalink">
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Go to the live version of DET0678" 
-           href="/versions/v19/detectionstrategies/DET0678/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+           href="/versions/v20/detectionstrategies/DET0678/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
     </div>
 </div>
 
@@ -320,7 +320,7 @@
               role="tabpanel" aria-labelledby="tab-Android">
               <h4 class="pt-3" id="AN1781">AN1781</h4>
               <div>
-                        <p>An application with access to broad file scopes or sensitive storage areas becomes active, performs abnormal burst file reads and writes across many user or shared-storage locations, transforms file content or extensions at scale in a short window, and causes rapid file inaccessibility, rewrite, or replacement inconsistent with normal sync, backup, media processing, or document-editing behavior. The defender correlates capability state, app lifecycle, framework use, bulk file-write effects, and optional network communications to distinguish encrypt-for-impact behavior from benign bulk file operations.</p>
+                        <p>For Android, detect Data Encrypted for Impact by correlating analyst-visible device/network evidence and management state; use streaming or batched telemetry only where the documented collector is deployed. Correlate Application Permission via Android Enterprise DPC / Application Vetting [DevicePolicyManager.getPermissionGrantState(); PackageManager manifest/requested-permission review]; Application State via Android Enterprise / EMM [Managed package inventory/status and package metadata]; OS API Execution via Application Vetting / Instrumented Dynamic Analysis [Dynamic API/runtime trace: ContentResolver, DocumentProvider, StorageAccessFramework, or bulk stream I/O invocations exceed $FileModificationRateThreshold$ operations per minute across distinct file paths — API-level operation rate distinguishes ransomware from norma]. Alert on a sequence or state change inconsistent with the device/app baseline, approved management policy, or expected user workflow; do not infer unobserved API calls, file/process activity, or payload content from management state alone.</p>
 
               </div>
 
@@ -337,21 +337,12 @@
                   <tbody>
                     <tr>
                       <td rowspan="1">
-                        <a href="/datacomponents/DC0115">
-                          Protected Configuration (DC0115)
-                        </a>
-                      </td>
-                      <td>android:MDMLog</td>
-                      <td>Managed storage, backup, enterprise file access, or device policy state remains unchanged while bulk destructive file transformation occurs</td>
-                    </tr>
-                    <tr>
-                      <td rowspan="1">
                         <a href="/datacomponents/DC0114">
                           Application Permission (DC0114)
                         </a>
                       </td>
-                      <td>MobileEDR:telemetry</td>
-                      <td>Application holds or is granted broad storage, document-provider, media, or file-management capability inconsistent with its expected role before or during bulk file transformation</td>
+                      <td>android:DevicePolicyManager</td>
+                      <td>DevicePolicyManager.getPermissionGrantState(); PackageManager manifest/requested-permission review</td>
                     </tr>
                     <tr>
                       <td rowspan="1">
@@ -359,8 +350,8 @@
                           Application State (DC0123)
                         </a>
                       </td>
-                      <td>MobileEDR:telemetry</td>
-                      <td>Application runs in foreground, service, or sustained background-active state while concentrated file transformation occurs with weak or no recent user interaction</td>
+                      <td>android:EMM</td>
+                      <td>Managed package inventory/status and package metadata</td>
                     </tr>
                     <tr>
                       <td rowspan="1">
@@ -368,8 +359,17 @@
                           OS API Execution (DC0021)
                         </a>
                       </td>
-                      <td>MobileEDR:telemetry</td>
-                      <td>Content resolver, document provider, media store, storage access framework, bulk stream processing, or repeated crypto-adjacent framework use observed during multi-file transformation</td>
+                      <td>mobile:DynamicAnalysis</td>
+                      <td>Dynamic API/runtime trace: ContentResolver, DocumentProvider, StorageAccessFramework, or bulk stream I/O invocations exceed $FileModificationRateThreshold$ operations per minute across distinct file paths — API-level operation rate distinguishes ransomware from norma</td>
+                    </tr>
+                    <tr>
+                      <td rowspan="1">
+                        <a href="/datacomponents/DC0115">
+                          Protected Configuration (DC0115)
+                        </a>
+                      </td>
+                      <td>android:DevicePolicyManager</td>
+                      <td>DevicePolicyManager policy/compliance/security-state queries and SecurityLog events where supported</td>
                     </tr>
                   </tbody>
                 </table>
@@ -386,44 +386,20 @@
                   </thead>
                   <tbody>
                     <tr>
-                      <td>TimeWindow</td>
-                      <td>Maximum correlation span between app activation, framework use, and burst file transformation.</td>
+                      <td>ApprovedFileManagerApps</td>
+                      <td>Approved file management and backup apps. Derive from MDM catalog. Tightening: empty — all MANAGE_EXTERNAL_STORAGE holders flagged outside MDM agent.</td>
                     </tr>
                     <tr>
-                      <td>AllowedAppList</td>
-                      <td>Approved apps allowed to perform legitimate broad file operations such as backup, sync, AV scanning, enterprise migration, media editing, or document management.</td>
+                      <td>FileModificationRateThreshold</td>
+                      <td>Default 50 file writes/minute across 3+ directories. Derive from legitimate backup/sync app baseline. Tightening: 20 writes/min — catches slower encryption.</td>
                     </tr>
                     <tr>
-                      <td>ForegroundStateRequired</td>
-                      <td>Whether a benign bulk file operation is expected to occur only while the app is visible and actively used.</td>
+                      <td>MinDirectoryCount</td>
+                      <td>Default 3 distinct parent directories within window. Single-directory encryption is less confident.</td>
                     </tr>
                     <tr>
-                      <td>RecentUserInteractionWindow</td>
-                      <td>Threshold for determining whether large-scale file transformation was user-driven versus unattended.</td>
-                    </tr>
-                    <tr>
-                      <td>FileWriteBurstThreshold</td>
-                      <td>Threshold for number of file create, overwrite, rename, or replace actions within the correlation window.</td>
-                    </tr>
-                    <tr>
-                      <td>DistinctDirectoryThreshold</td>
-                      <td>Threshold for number of distinct folders or content roots touched during the file-impact burst.</td>
-                    </tr>
-                    <tr>
-                      <td>ExtensionChangeThreshold</td>
-                      <td>Threshold for suspicious file extension changes or replacement-file patterns indicative of mass transformation.</td>
-                    </tr>
-                    <tr>
-                      <td>BytesWrittenThreshold</td>
-                      <td>Threshold for cumulative bytes written during the impact window.</td>
-                    </tr>
-                    <tr>
-                      <td>ProtectedPathAllowList</td>
-                      <td>Known paths, document roots, or work-profile storage locations where benign enterprise migration or sync tooling may rewrite many files.</td>
-                    </tr>
-                    <tr>
-                      <td>DestinationAllowList</td>
-                      <td>Expected network destinations contacted by legitimate storage, sync, backup, or MDM remediation apps.</td>
+                      <td>RansomwareWindow</td>
+                      <td>Default 60s observation window for rate calculation.</td>
                     </tr>
                   </tbody>
                 </table>
@@ -431,6 +407,7 @@
             </div>
           </div>
         </div>
+
 
         
       </div>
@@ -649,7 +626,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3 col-footer">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v19.2&#013;Website  v5.1.0">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v20.0&#013;Website  v5.2.0">Website Changelog</a></u>
                                 </div>
                                 <div class="px-3">
                                     <u class="footer-link"><a href="/resources/legal-and-branding/privacy/#" class="footer-link" onclick="Osano.cm.showDrawer('osano-cm-dom-info-dialog-open')">Cookie Preferences</a></u>

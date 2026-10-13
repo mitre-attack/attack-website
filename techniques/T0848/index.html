@@ -207,7 +207,7 @@
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
                     <div class="container-fluid banner-message">
-                        ATT&CKcon 7.0 registration is open! Join us October 27-28, 2026 in McLean, VA or virtually. <a href="https://na.eventscloud.com/website/93925/">Register in person</a> or <a href="https://mitre.brandlive.com/MITRE-ATTACKcon-7-0">register virtually</a>. See the <a href="https://na.eventscloud.com/website/93925/faq/">FAQ</a> for hotel and venue details.
+                        ATT&CK v20 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v20-9701dd75ffb4'>blog post</a> for more information. <a href='https://na.eventscloud.com/website/93925/'>ATT&CKcon 7.0</a> is October 27-28, 2026 in McLean, VA.
                     </div>
             </div>
         </div>
@@ -286,7 +286,7 @@
                       data-original-title="The system an adversary is operating within; could be an operating system or application">&#9432;</span>
                   </div>
                   <div class="col-md-11 pl-0">
-                    <span class="h5 card-title">Platforms:&nbsp;</span>None
+                    <span class="h5 card-title">Platforms:&nbsp;</span>Embedded, Linux, Network Devices, Windows
                   </div>
                 </div>
                 <div class="row card-data">
@@ -304,7 +304,7 @@
                 <div class="row card-data">
                   <div class="col-md-1 px-0 text-center"></div>
                   <div class="col-md-11 pl-0">
-                    <span class="h5 card-title">Last Modified:&nbsp;</span>16 April 2025
+                    <span class="h5 card-title">Last Modified:&nbsp;</span>13 October 2026
                   </div>
                 </div>
               </div>
@@ -314,13 +314,13 @@
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Permalink to this version of T0848" 
-           href="/versions/v19/techniques/T0848/" data-test-ignore="true">Version Permalink</a>
+           href="/versions/v20/techniques/T0848/" data-test-ignore="true">Version Permalink</a>
     </div>
     <div class="permalink">
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Go to the live version of T0848" 
-           href="/versions/v19/techniques/T0848/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+           href="/versions/v20/techniques/T0848/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
     </div>
 </div>
 
@@ -345,7 +345,7 @@
                   <a href="/campaigns/C0020"> Maroochy Water Breach </a>
                 </td>
                 <td>
-                          <p>In the <a href="https://attack.mitre.org/campaigns/C0020">Maroochy Water Breach</a>, the adversary falsified network addresses in order to send false data and instructions to pumping stations.<span onclick=scrollToRef('scite-3') id="scite-ref-3-a" class="scite-citeref-number" title="Marshall Abrams 2008, July 23 Malicious Control System Cyber Security Attack Case Study Maroochy Water Services, Australia Retrieved. 2018/03/27 "data-reference="Marshall Abrams July 2008"><sup><a href="https://www.mitre.org/sites/default/files/pdf/08_1145.pdf" target="_blank" data-hasqtip="2" aria-describedby="qtip-2">[3]</a></sup></span></p>
+                          <p>In the <a href="/campaigns/C0020">Maroochy Water Breach</a>, the adversary falsified network addresses in order to send false data and instructions to pumping stations.<span onclick=scrollToRef('scite-3') id="scite-ref-3-a" class="scite-citeref-number" title="Marshall Abrams 2008, July 23 Malicious Control System Cyber Security Attack Case Study Maroochy Water Services, Australia Retrieved. 2018/03/27 "data-reference="Marshall Abrams July 2008"><sup><a href="https://www.mitre.org/sites/default/files/pdf/08_1145.pdf" target="_blank" data-hasqtip="2" aria-describedby="qtip-2">[3]</a></sup></span></p>
 
                 </td>
               </tr>
@@ -530,17 +530,44 @@
     </thead>
     <tbody>
                 <tr class="detection_strategy" id="uses-DET0792">
-                        <td rowspan="1">
+                        <td rowspan="4">
                             <a href="/detectionstrategies/DET0792">DET0792</a>
                         </td>
-                        <td rowspan="1">
+                        <td rowspan="4">
                             <a href="/detectionstrategies/DET0792">Detection of Rogue Master</a>
                         </td>
                     <td>
                         <a href="/detectionstrategies/DET0792#AN1924">AN1924</a>
                     </td>
                     <td>
-                                <p>Consult asset management systems which may help with the detection of computer systems or network devices that should not exist on a network.<br />Monitor for network traffic originating from unknown/unexpected devices or addresses.  Local network traffic metadata could be used to identify unexpected connections, including unknown/unexpected source MAC addresses connecting to ports associated with operational protocols. Also, network management protocols such as DHCP and ARP may be helpful in identifying unexpected devices. <br />Monitor for new master devices communicating with outstations, which may be visible in alarms within the ICS environment.<br />Monitor for unexpected ICS protocol functions from new and existing devices. Monitoring known devices requires ICS function level insight to determine if an unauthorized device is issuing commands (e.g., a historian).<br />Monitor for new master devices communicating with outstation assets, which may be visible in asset application logs.</p>
+                                <p>Real-time monitoring identifies Industrial Control System (ICS) master-role command traffic originating from a source not in the approved control server inventory, directed at multiple field devices in a pattern consistent with control-server behavior. Documented in Maroochy Water Services (falsified PDS/station addresses to impersonate the master) and the 2017 Dallas Siren incident (rogue radio transmitter to 156 sirens). OT operational-fidelity gate: Alert only when the master/station identity or source is not authorized for the target device and command function, or when a normally authorized master violates its configured role/sequence and produces a corroborating device/process-state change. Suppress legitimate redundancy/failover, hot-standby promotion, commissioning, and approved engineering master activity.</p>
+</a>
+                    </td>
+                </tr>
+                <tr class="detection_strategy" id="uses-DET0792">
+                    <td>
+                        <a href="/detectionstrategies/DET0792#AN2151">AN2151</a>
+                    </td>
+                    <td>
+                                <p>Real-time monitoring identifies a Linux process opening Industrial Control System (ICS) protocol master connections to multiple field device Internet Protocol (IP) addresses, from a host that is not the authorized Supervisory Control and Data Acquisition (SCADA) server. OT operational-fidelity gate: Alert only when the master/station identity or source is not authorized for the target device and command function, or when a normally authorized master violates its configured role/sequence and produces a corroborating device/process-state change. Suppress legitimate redundancy/failover, hot-standby promotion, commissioning, and approved engineering master activity.</p>
+</a>
+                    </td>
+                </tr>
+                <tr class="detection_strategy" id="uses-DET0792">
+                    <td>
+                        <a href="/detectionstrategies/DET0792#AN2178">AN2178</a>
+                    </td>
+                    <td>
+                                <p>Real-time monitoring identifies a new device appearing on the Industrial Control System (ICS) network with network behavior consistent with an ICS master station, with a Media Access Control (MAC) address not in the approved device inventory. OT operational-fidelity gate: Alert only when the master/station identity or source is not authorized for the target device and command function, or when a normally authorized master violates its configured role/sequence and produces a corroborating device/process-state change. Suppress legitimate redundancy/failover, hot-standby promotion, commissioning, and approved engineering master activity.</p>
+</a>
+                    </td>
+                </tr>
+                <tr class="detection_strategy" id="uses-DET0792">
+                    <td>
+                        <a href="/detectionstrategies/DET0792#AN2278">AN2278</a>
+                    </td>
+                    <td>
+                                <p>Real-time monitoring identifies Industrial Control System (ICS) protocol master-role traffic originating from a Windows host that is not the authorized Supervisory Control and Data Acquisition (SCADA) or Distributed Control System (DCS) server. OT operational-fidelity gate: Alert only when the master/station identity or source is not authorized for the target device and command function, or when a normally authorized master violates its configured role/sequence and produces a corroborating device/process-state change. Suppress legitimate redundancy/failover, hot-standby promotion, commissioning, and approved engineering master activity.</p>
 </a>
                     </td>
                 </tr>
@@ -864,7 +891,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3 col-footer">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v19.2&#013;Website  v5.1.0">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v20.0&#013;Website  v5.2.0">Website Changelog</a></u>
                                 </div>
                                 <div class="px-3">
                                     <u class="footer-link"><a href="/resources/legal-and-branding/privacy/#" class="footer-link" onclick="Osano.cm.showDrawer('osano-cm-dom-info-dialog-open')">Cookie Preferences</a></u>

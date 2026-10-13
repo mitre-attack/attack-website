@@ -207,7 +207,7 @@
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
                     <div class="container-fluid banner-message">
-                        ATT&CKcon 7.0 registration is open! Join us October 27-28, 2026 in McLean, VA or virtually. <a href="https://na.eventscloud.com/website/93925/">Register in person</a> or <a href="https://mitre.brandlive.com/MITRE-ATTACKcon-7-0">register virtually</a>. See the <a href="https://na.eventscloud.com/website/93925/faq/">FAQ</a> for hotel and venue details.
+                        ATT&CK v20 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v20-9701dd75ffb4'>blog post</a> for more information. <a href='https://na.eventscloud.com/website/93925/'>ATT&CKcon 7.0</a> is October 27-28, 2026 in McLean, VA.
                     </div>
             </div>
         </div>
@@ -286,7 +286,7 @@
                       data-original-title="The system an adversary is operating within; could be an operating system or application">&#9432;</span>
                   </div>
                   <div class="col-md-11 pl-0">
-                    <span class="h5 card-title">Platforms:&nbsp;</span>None
+                    <span class="h5 card-title">Platforms:&nbsp;</span>Embedded, Linux, Network Devices, Windows
                   </div>
                 </div>
                 <div class="row card-data">
@@ -310,7 +310,7 @@
                 <div class="row card-data">
                   <div class="col-md-1 px-0 text-center"></div>
                   <div class="col-md-11 pl-0">
-                    <span class="h5 card-title">Last Modified:&nbsp;</span>16 April 2025
+                    <span class="h5 card-title">Last Modified:&nbsp;</span>13 October 2026
                   </div>
                 </div>
               </div>
@@ -320,13 +320,13 @@
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Permalink to this version of T0830" 
-           href="/versions/v19/techniques/T0830/" data-test-ignore="true">Version Permalink</a>
+           href="/versions/v20/techniques/T0830/" data-test-ignore="true">Version Permalink</a>
     </div>
     <div class="permalink">
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Go to the live version of T0830" 
-           href="/versions/v19/techniques/T0830/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+           href="/versions/v20/techniques/T0830/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
     </div>
 </div>
 
@@ -351,7 +351,7 @@
                   <a href="/campaigns/C0030"> Triton Safety Instrumented System Attack </a>
                 </td>
                 <td>
-                          <p>In the <a href="https://attack.mitre.org/campaigns/C0030">Triton Safety Instrumented System Attack</a>, <a href="/groups/G0088">TEMP.Veles</a> changed phone numbers tied to certain specific accounts in a designated contact list. They then used the changed phone numbers to redirect network traffic to websites controlled by them, thereby allowing them to capture and use any login codes sent to the devices via text message.<span onclick=scrollToRef('scite-3') id="scite-ref-3-a" class="scite-citeref-number" title="Blake Sobczak. (2019, March 7). The inside story of the world’s most dangerous malware. Retrieved March 25, 2024."data-reference="Triton-EENews-2017"><sup><a href="https://www.eenews.net/articles/the-inside-story-of-the-worlds-most-dangerous-malware/" target="_blank" data-hasqtip="2" aria-describedby="qtip-2">[3]</a></sup></span></p>
+                          <p>In the <a href="/campaigns/C0030">Triton Safety Instrumented System Attack</a>, <a href="/groups/G0088">TEMP.Veles</a> changed phone numbers tied to certain specific accounts in a designated contact list. They then used the changed phone numbers to redirect network traffic to websites controlled by them, thereby allowing them to capture and use any login codes sent to the devices via text message.<span onclick=scrollToRef('scite-3') id="scite-ref-3-a" class="scite-citeref-number" title="Blake Sobczak. (2019, March 7). The inside story of the world’s most dangerous malware. Retrieved March 25, 2024."data-reference="Triton-EENews-2017"><sup><a href="https://www.eenews.net/articles/the-inside-story-of-the-worlds-most-dangerous-malware/" target="_blank" data-hasqtip="2" aria-describedby="qtip-2">[3]</a></sup></span></p>
 
                 </td>
               </tr>
@@ -648,17 +648,44 @@
     </thead>
     <tbody>
                 <tr class="detection_strategy" id="uses-DET0764">
-                        <td rowspan="1">
+                        <td rowspan="4">
                             <a href="/detectionstrategies/DET0764">DET0764</a>
                         </td>
-                        <td rowspan="1">
+                        <td rowspan="4">
                             <a href="/detectionstrategies/DET0764">Detection of Adversary-in-the-Middle</a>
                         </td>
                     <td>
                         <a href="/detectionstrategies/DET0764#AN1896">AN1896</a>
                     </td>
                     <td>
-                                <p>Monitor HKLM\Software\Policies\Microsoft\Windows NT\DNSClient for changes to the "EnableMulticast" DWORD value. A value of "0" indicates LLMNR is disabled.<br />Host-based implementations of this technique may utilize networking-based system calls or network utility commands (e.g., iptables) to locally intercept traffic. Monitor for relevant process creation events.<br />Monitor for network traffic originating from unknown/unexpected hosts. Local network traffic metadata (such as source MAC addressing) as well as usage of network management protocols such as DHCP may be helpful in identifying hardware. For added context on adversary procedures and background see <a href="/techniques/T1557">Adversary-in-the-Middle</a> and applicable sub-techniques.<br />Monitor for newly constructed services/daemons through Windows event logs for event IDs 4697 and 7045.<br />Monitor network traffic for anomalies associated with known AiTM behavior. For Collection activity where transmitted data is not manipulated, anomalies may be present in network management protocols (e.g., ARP, DHCP).<br />Monitor application logs for changes to settings and other events associated with network protocols and other services commonly abused for AiTM.</p>
+                                <p>Real-time monitoring identifies an Industrial Control System (ICS) Windows host simultaneously holding connections to both the field device subnet and an unexpected external or inter-zone destination, combined with proxy-capable process spawning and ICS vendor application logs showing endpoint or certificate changes. OT operational-fidelity gate: Alert only when the asset's documented role does not permit the connection and the destination/proxy/service is outside the approved communications profile, with process/service identity used as corroboration where available. Suppress approved vendor support, update repositories, remote operations, failover paths, and documented temporary connectivity.</p>
+</a>
+                    </td>
+                </tr>
+                <tr class="detection_strategy" id="uses-DET0764">
+                    <td>
+                        <a href="/detectionstrategies/DET0764#AN2115">AN2115</a>
+                    </td>
+                    <td>
+                                <p>Real-time monitoring identifies a process on an Industrial Control System (ICS) Linux asset with both a listening socket on an ICS protocol port and an outbound connection to a non-ICS destination, combined with iptables DNAT rules redirecting ICS protocol port traffic. OT operational-fidelity gate: Alert only when the asset's documented role does not permit the connection and the destination/proxy/service is outside the approved communications profile, with process/service identity used as corroboration where available. Suppress approved vendor support, update repositories, remote operations, failover paths, and documented temporary connectivity.</p>
+</a>
+                    </td>
+                </tr>
+                <tr class="detection_strategy" id="uses-DET0764">
+                    <td>
+                        <a href="/detectionstrategies/DET0764#AN2176">AN2176</a>
+                    </td>
+                    <td>
+                                <p>Real-time monitoring identifies network device configuration changes (network address translation rules, static routes, access control list modifications) combined with NetFlow path deviations for Industrial Control System (ICS) device traffic and Transport Layer Security (TLS) certificate issuer anomalies in Operational Technology (OT) management traffic. OT operational-fidelity gate: Alert only when the asset's documented role does not permit the connection and the destination/proxy/service is outside the approved communications profile, with process/service identity used as corroboration where available. Suppress approved vendor support, update repositories, remote operations, failover paths, and documented temporary connectivity.</p>
+</a>
+                    </td>
+                </tr>
+                <tr class="detection_strategy" id="uses-DET0764">
+                    <td>
+                        <a href="/detectionstrategies/DET0764#AN2238">AN2238</a>
+                    </td>
+                    <td>
+                                <p>Real-time network monitoring identifies a field device's source Media Access Control (MAC) address changing without a corresponding documented hardware replacement, combined with protocol-level anomalies (transaction identifier reuse, function-code patterns deviating from baseline) for traffic associated with that device Internet Protocol (IP) address. OT operational-fidelity gate: Alert only when the asset's documented role does not permit the connection and the destination/proxy/service is outside the approved communications profile, with process/service identity used as corroboration where available. Suppress approved vendor support, update repositories, remote operations, failover paths, and documented temporary connectivity.</p>
 </a>
                     </td>
                 </tr>
@@ -958,7 +985,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3 col-footer">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v19.2&#013;Website  v5.1.0">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v20.0&#013;Website  v5.2.0">Website Changelog</a></u>
                                 </div>
                                 <div class="px-3">
                                     <u class="footer-link"><a href="/resources/legal-and-branding/privacy/#" class="footer-link" onclick="Osano.cm.showDrawer('osano-cm-dom-info-dialog-open')">Cookie Preferences</a></u>

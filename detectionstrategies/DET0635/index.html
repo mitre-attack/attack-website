@@ -207,7 +207,7 @@
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
                     <div class="container-fluid banner-message">
-                        ATT&CKcon 7.0 registration is open! Join us October 27-28, 2026 in McLean, VA or virtually. <a href="https://na.eventscloud.com/website/93925/">Register in person</a> or <a href="https://mitre.brandlive.com/MITRE-ATTACKcon-7-0">register virtually</a>. See the <a href="https://na.eventscloud.com/website/93925/faq/">FAQ</a> for hotel and venue details.
+                        ATT&CK v20 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v20-9701dd75ffb4'>blog post</a> for more information. <a href='https://na.eventscloud.com/website/93925/'>ATT&CKcon 7.0</a> is October 27-28, 2026 in McLean, VA.
                     </div>
             </div>
         </div>
@@ -292,13 +292,13 @@
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Permalink to this version of DET0635" 
-           href="/versions/v19/detectionstrategies/DET0635/" data-test-ignore="true">Version Permalink</a>
+           href="/versions/v20/detectionstrategies/DET0635/" data-test-ignore="true">Version Permalink</a>
     </div>
     <div class="permalink">
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Go to the live version of DET0635" 
-           href="/versions/v19/detectionstrategies/DET0635/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+           href="/versions/v20/detectionstrategies/DET0635/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
     </div>
 </div>
 
@@ -326,7 +326,7 @@
               role="tabpanel" aria-labelledby="tab-Android">
               <h4 class="pt-3" id="AN1708">AN1708</h4>
               <div>
-                        <p>OLD: Monitor for API calls that are related to the AccountManager API on Android and Keychain services on iOS.<br />Application vetting services may look for <code>MANAGE_ACCOUNTS</code> in an Android application’s manifest. Most applications do not need access to accounts, so extra scrutiny may be applied to those that request it.</p><p>NEW: A defender observes an Android application invoking the AccountManager API.  </p>
+                        <p>For Android, detect Accounts by correlating analyst-visible device/network evidence and management state; use streaming or batched telemetry only where the documented collector is deployed. Correlate API Calls via Application Vetting / Instrumented Dynamic Analysis [Dynamic API/runtime trace: AccountManager.getAccounts() OR getAccountsByType() called &gt; $AccountEnumThreshold$ times within $AccountEnumWindow$ by app NOT IN $ApprovedAuthenticatorApps$]; Network Traffic Flow via Android Enterprise Network Logging / Enterprise VPN [DevicePolicyManager.retrieveNetworkLogs(): DnsEvent / ConnectEvent; VPN flow metadata]; Permissions Request via Android Enterprise DPC / Application Vetting [DevicePolicyManager.getPermissionGrantState(); PackageManager manifest/requested-permission review]. Alert on a sequence or state change inconsistent with the device/app baseline, approved management policy, or expected user workflow; do not infer unobserved API calls, file/process activity, or payload content from management state alone.</p>
 
               </div>
 
@@ -343,23 +343,78 @@
                   <tbody>
                     <tr>
                       <td rowspan="1">
-                        <a href="/datacomponents/DC0021">
-                          OS API Execution (DC0021)
+                        <a href="/datacomponents/DC0112">
+                          API Calls (DC0112)
                         </a>
                       </td>
-                      <td>android:logcat</td>
-                      <td>Invocation of AccountManager.getAccounts()</td>
+                      <td>mobile:DynamicAnalysis</td>
+                      <td>Dynamic API/runtime trace: AccountManager.getAccounts() OR getAccountsByType() called > $AccountEnumThreshold$ times within $AccountEnumWindow$ by app NOT IN $ApprovedAuthenticatorApps$</td>
+                    </tr>
+                    <tr>
+                      <td rowspan="1">
+                        <a href="/datacomponents/DC0078">
+                          Network Traffic Flow (DC0078)
+                        </a>
+                      </td>
+                      <td>android:EnterpriseNetworkLog</td>
+                      <td>DevicePolicyManager.retrieveNetworkLogs(): DnsEvent / ConnectEvent; VPN flow metadata</td>
+                    </tr>
+                    <tr>
+                      <td rowspan="1">
+                        <a href="/datacomponents/DC0116">
+                          Permissions Request (DC0116)
+                        </a>
+                      </td>
+                      <td>android:DevicePolicyManager</td>
+                      <td>DevicePolicyManager.getPermissionGrantState(); PackageManager manifest/requested-permission review</td>
                     </tr>
                   </tbody>
                 </table>
               </div>
 
+              <h5 class="pt-3" id="AN1708-mutable-elements">Mutable Elements</h5>
+              <div class="tables-mobile">
+                <table class="table table-bordered table-alternate mt-2">
+                  <thead>
+                    <tr>
+                      <th scope="col">Field</th>
+                      <th scope="col">Description</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>ApprovedAuthenticatorApps</td>
+                      <td>MDM agent, approved authenticator, sync adapter apps. Minimal.</td>
+                    </tr>
+                    <tr>
+                      <td>AccountEnumThreshold</td>
+                      <td>Default 5 calls — sync adapters call getAccountsByType once per type; bulk = enumeration.</td>
+                    </tr>
+                    <tr>
+                      <td>AccountEnumWindow</td>
+                      <td>Default 60s.</td>
+                    </tr>
+                    <tr>
+                      <td>AccountUplinkThreshold</td>
+                      <td>Default 5KB — account metadata is small; even small upload is significant.</td>
+                    </tr>
+                    <tr>
+                      <td>AppCDNList</td>
+                      <td>Per-app CDN. Derive by measurement.</td>
+                    </tr>
+                    <tr>
+                      <td>ExfilWindow</td>
+                      <td>Default 120s.</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
             </div>
             <div class="tab-pane fade " id="pane-iOS"
               role="tabpanel" aria-labelledby="tab-iOS">
               <h4 class="pt-3" id="AN1709">AN1709</h4>
               <div>
-                        <p>Monitor for API calls that are related to the AccountManager API on Android and Keychain services on iOS.<br />Application vetting services may look for <code>MANAGE_ACCOUNTS</code> in an Android application’s manifest. Most applications do not need access to accounts, so extra scrutiny may be applied to those that request it.</p>
+                        <p>For iOS, detect Accounts by correlating analyst-visible device/network evidence and management state; use streaming or batched telemetry only where the documented collector is deployed. Correlate API Calls via Application Vetting / Instrumented Dynamic Analysis [Dynamic API/runtime trace: SecItemCopyMatching() called with kSecMatchLimitAll]; Application Permission via Application Vetting [Code-signing entitlements and Info.plist privacy usage-description keys]; Network Traffic Content via Enterprise Secure Web Gateway / Proxy [DNS/HTTP(S) inspection or proxy transaction metadata where enterprise decryption/inspection is deployed]. Alert on a sequence or state change inconsistent with the device/app baseline, approved management policy, or expected user workflow; do not infer unobserved API calls, file/process activity, or payload content from management state alone.</p>
 
               </div>
 
@@ -376,12 +431,12 @@
                   <tbody>
                     <tr>
                       <td rowspan="1">
-                        <a href="/datacomponents/DC0021">
-                          OS API Execution (DC0021)
+                        <a href="/datacomponents/DC0112">
+                          API Calls (DC0112)
                         </a>
                       </td>
-                      <td>Process</td>
-                      <td>None</td>
+                      <td>mobile:DynamicAnalysis</td>
+                      <td>Dynamic API/runtime trace: SecItemCopyMatching() called with kSecMatchLimitAll</td>
                     </tr>
                     <tr>
                       <td rowspan="1">
@@ -389,16 +444,51 @@
                           Application Permission (DC0114)
                         </a>
                       </td>
-                      <td>Application Vetting</td>
-                      <td>None</td>
+                      <td>mobile:ApplicationVetting</td>
+                      <td>Code-signing entitlements and Info.plist privacy usage-description keys</td>
+                    </tr>
+                    <tr>
+                      <td rowspan="1">
+                        <a href="/datacomponents/DC0085">
+                          Network Traffic Content (DC0085)
+                        </a>
+                      </td>
+                      <td>webproxy:applog</td>
+                      <td>DNS/HTTP(S) inspection or proxy transaction metadata where enterprise decryption/inspection is deployed</td>
                     </tr>
                   </tbody>
                 </table>
               </div>
 
+              <h5 class="pt-3" id="AN1709-mutable-elements">Mutable Elements</h5>
+              <div class="tables-mobile">
+                <table class="table table-bordered table-alternate mt-2">
+                  <thead>
+                    <tr>
+                      <th scope="col">Field</th>
+                      <th scope="col">Description</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>AccountUplinkThreshold</td>
+                      <td>Default 5KB — credential metadata is small.</td>
+                    </tr>
+                    <tr>
+                      <td>AppCDNList</td>
+                      <td>Per-app CDN. Derive by measurement.</td>
+                    </tr>
+                    <tr>
+                      <td>ExfilWindow</td>
+                      <td>Default 120s.</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         </div>
+
 
         
       </div>
@@ -617,7 +707,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3 col-footer">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v19.2&#013;Website  v5.1.0">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v20.0&#013;Website  v5.2.0">Website Changelog</a></u>
                                 </div>
                                 <div class="px-3">
                                     <u class="footer-link"><a href="/resources/legal-and-branding/privacy/#" class="footer-link" onclick="Osano.cm.showDrawer('osano-cm-dom-info-dialog-open')">Cookie Preferences</a></u>

@@ -207,7 +207,7 @@
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
                     <div class="container-fluid banner-message">
-                        ATT&CKcon 7.0 registration is open! Join us October 27-28, 2026 in McLean, VA or virtually. <a href="https://na.eventscloud.com/website/93925/">Register in person</a> or <a href="https://mitre.brandlive.com/MITRE-ATTACKcon-7-0">register virtually</a>. See the <a href="https://na.eventscloud.com/website/93925/faq/">FAQ</a> for hotel and venue details.
+                        ATT&CK v20 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v20-9701dd75ffb4'>blog post</a> for more information. <a href='https://na.eventscloud.com/website/93925/'>ATT&CKcon 7.0</a> is October 27-28, 2026 in McLean, VA.
                     </div>
             </div>
         </div>
@@ -292,13 +292,13 @@
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Permalink to this version of DET0672" 
-           href="/versions/v19/detectionstrategies/DET0672/" data-test-ignore="true">Version Permalink</a>
+           href="/versions/v20/detectionstrategies/DET0672/" data-test-ignore="true">Version Permalink</a>
     </div>
     <div class="permalink">
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Go to the live version of DET0672" 
-           href="/versions/v19/detectionstrategies/DET0672/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+           href="/versions/v20/detectionstrategies/DET0672/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
     </div>
 </div>
 
@@ -326,7 +326,7 @@
               role="tabpanel" aria-labelledby="tab-Android">
               <h4 class="pt-3" id="AN1770">AN1770</h4>
               <div>
-                        <p>The defender correlates outbound communication from an application or service to legitimate external web platforms with mobile runtime context showing that the communication is inconsistent with the app's approved role, expected destinations, user interaction pattern, or device state. The strongest Android evidence is a managed or installed app communicating with cloud storage, social, messaging, code-hosting, or generic HTTPS web-service infrastructure shortly after background activation, protected-resource use, or local staging activity, especially when the device is locked, user interaction is absent, or the app's historical network baseline does not include that service class.</p>
+                        <p>For Android, detect Web Service by correlating analyst-visible device/network evidence and management state; use streaming or batched telemetry only where the documented collector is deployed. Correlate Application Permission via Android Enterprise DPC / Application Vetting [DevicePolicyManager.getPermissionGrantState(); PackageManager manifest/requested-permission review]; Application State via Android Enterprise / EMM [Managed package inventory/status and package metadata]; File Creation via Application Vetting / Forensic Acquisition [Dynamic filesystem trace or acquired app-container/filesystem artifacts: App stages or caches content retrieved from web-service platform locally before initiating secondary network connection]. Alert on a sequence or state change inconsistent with the device/app baseline, approved management policy, or expected user workflow; do not infer unobserved API calls, file/process activity, or payload content from management state alone.</p>
 
               </div>
 
@@ -343,12 +343,12 @@
                   <tbody>
                     <tr>
                       <td rowspan="1">
-                        <a href="/datacomponents/DC0085">
-                          Network Traffic Content (DC0085)
+                        <a href="/datacomponents/DC0114">
+                          Application Permission (DC0114)
                         </a>
                       </td>
-                      <td>VPN:MobileProxy</td>
-                      <td>Application or device component communicates with legitimate external web-service infrastructure such as cloud storage, social media, messaging, collaboration, paste, code-hosting, CDN-backed API, or generic HTTPS service in a pattern inconsistent with the app's approved network baseline, timing, or service class</td>
+                      <td>android:DevicePolicyManager</td>
+                      <td>DevicePolicyManager.getPermissionGrantState(); PackageManager manifest/requested-permission review</td>
                     </tr>
                     <tr>
                       <td rowspan="1">
@@ -356,8 +356,8 @@
                           Application State (DC0123)
                         </a>
                       </td>
-                      <td>MobileEDR:telemetry</td>
-                      <td>App communicating with external web service is backgrounded, persistent, recently awakened, or active while device is locked or without recent user interaction in a way inconsistent with expected app behavior</td>
+                      <td>android:EMM</td>
+                      <td>Managed package inventory/status and package metadata</td>
                     </tr>
                     <tr>
                       <td rowspan="1">
@@ -365,8 +365,17 @@
                           File Creation (DC0039)
                         </a>
                       </td>
-                      <td>MobileEDR:telemetry</td>
-                      <td>App stages, buffers, caches, or exports data locally immediately before communication with legitimate external web-service endpoints in a way inconsistent with normal sync or offline workflow</td>
+                      <td>mobile:ForensicArtifacts</td>
+                      <td>Dynamic filesystem trace or acquired app-container/filesystem artifacts: App stages or caches content retrieved from web-service platform locally before initiating secondary network connection</td>
+                    </tr>
+                    <tr>
+                      <td rowspan="1">
+                        <a href="/datacomponents/DC0085">
+                          Network Traffic Content (DC0085)
+                        </a>
+                      </td>
+                      <td>webproxy:applog</td>
+                      <td>DNS/HTTP(S) inspection or proxy transaction metadata where enterprise decryption/inspection is deployed</td>
                     </tr>
                     <tr>
                       <td rowspan="1">
@@ -374,17 +383,8 @@
                           OS API Execution (DC0021)
                         </a>
                       </td>
-                      <td>MobileEDR:telemetry</td>
-                      <td>App uses Android framework behaviors associated with background work scheduling, network job execution, IPC/provider access, overlay or accessibility-like interaction, or unusual package visibility immediately adjacent to web-service communication</td>
-                    </tr>
-                    <tr>
-                      <td rowspan="1">
-                        <a href="/datacomponents/DC0114">
-                          Application Permission (DC0114)
-                        </a>
-                      </td>
-                      <td>android:MDMLog</td>
-                      <td>App communicating with legitimate web-service infrastructure is unmanaged, newly installed, recently updated, outside approved app list, or shows baseline drift in role, installer source, or expected capability profile</td>
+                      <td>mobile:DynamicAnalysis</td>
+                      <td>Dynamic API/runtime trace: App uses background work scheduler, JobScheduler, or persistent service to trigger web-service resolver fetch without user interaction</td>
                     </tr>
                   </tbody>
                 </table>
@@ -401,40 +401,16 @@
                   </thead>
                   <tbody>
                     <tr>
-                      <td>TimeWindow</td>
-                      <td>Correlation window linking app state, resource use, staging activity, and web-service communication.</td>
+                      <td>ApprovedWebServiceApps</td>
+                      <td>Per-platform approved apps for each web service (e.g., GitHub: com.github.android; Dropbox: com.dropbox.android). Derive from MDM catalog. Apps accessing web service platforms outside their declared function are anomalous.</td>
                     </tr>
                     <tr>
-                      <td>AllowedAppList</td>
-                      <td>Approved app identities and expected business roles vary by fleet and device group.</td>
+                      <td>AppDeclaredCDN</td>
+                      <td>Per-app declared network destinations from Info.plist or AndroidManifest network config. Legitimate web-service access should be declared.</td>
                     </tr>
                     <tr>
-                      <td>AllowedServiceClasses</td>
-                      <td>Some organizations legitimately use cloud storage, messaging, or collaboration services from mobile apps.</td>
-                    </tr>
-                    <tr>
-                      <td>AllowedDestinations</td>
-                      <td>Expected domains, SNI values, CDNs, API endpoints, and redirectors vary by application and tenant.</td>
-                    </tr>
-                    <tr>
-                      <td>ForegroundStateRequired</td>
-                      <td>Certain apps may legitimately communicate only in foreground, while others support background sync.</td>
-                    </tr>
-                    <tr>
-                      <td>RecentUserInteractionWindow</td>
-                      <td>Defines how close traffic must be to user activity to be considered expected.</td>
-                    </tr>
-                    <tr>
-                      <td>BeaconIntervalTolerance</td>
-                      <td>Recurring connection periodicity thresholds vary with push, sync, and collaboration workloads.</td>
-                    </tr>
-                    <tr>
-                      <td>UplinkBytesThreshold</td>
-                      <td>Data volume threshold for suspicious transfer to legitimate web-service infrastructure.</td>
-                    </tr>
-                    <tr>
-                      <td>ExpectedBackgroundBehavior</td>
-                      <td>Normal background communication differs across app categories such as mail, chat, navigation, and security tools.</td>
+                      <td>ResolverPivotWindow</td>
+                      <td>Default 120s between web-service platform session and novel C2 connection. Tightening: 30s — synchronous resolve-then-connect. Loosening: 300s — catches deferred pivot.</td>
                     </tr>
                   </tbody>
                 </table>
@@ -444,7 +420,7 @@
               role="tabpanel" aria-labelledby="tab-iOS">
               <h4 class="pt-3" id="AN1771">AN1771</h4>
               <div>
-                        <p>The defender correlates communication to legitimate external web-service platforms with supervised managed-app context and device-state information showing that the traffic is inconsistent with the app's expected role, background-refresh profile, or user interaction timing. On iOS, the strongest reliable evidence is network telemetry tied to a managed app or device plus app state and supervision context, especially when traffic to social, collaboration, cloud-storage, or generic HTTPS platforms occurs shortly after background activity, while the device is locked, or without expected user-driven foreground execution. Direct low-level framework visibility is weaker than Android, so primary analytic confidence should be anchored to supervised app context plus network behavior rather than assumed host-level proof.</p>
+                        <p>For iOS, detect Web Service by correlating analyst-visible device/network evidence and management state; use streaming or batched telemetry only where the documented collector is deployed. Correlate Application Permission via Application Vetting [Code-signing entitlements and Info.plist privacy usage-description keys]; Application State via Apple MDM [InstalledApplicationList / ManagedApplicationList]; Network Traffic Content via Enterprise Secure Web Gateway / Proxy [DNS/HTTP(S) inspection or proxy transaction metadata where enterprise decryption/inspection is deployed]. Alert on a sequence or state change inconsistent with the device/app baseline, approved management policy, or expected user workflow; do not infer unobserved API calls, file/process activity, or payload content from management state alone.</p>
 
               </div>
 
@@ -461,12 +437,12 @@
                   <tbody>
                     <tr>
                       <td rowspan="1">
-                        <a href="/datacomponents/DC0085">
-                          Network Traffic Content (DC0085)
+                        <a href="/datacomponents/DC0114">
+                          Application Permission (DC0114)
                         </a>
                       </td>
-                      <td>VPN:MobileProxy</td>
-                      <td>Supervised device or managed app communicates with legitimate external web-service infrastructure such as cloud storage, messaging, collaboration, social, paste, or generic HTTPS API platforms in a pattern inconsistent with expected service baseline, managed app role, or normal background refresh behavior</td>
+                      <td>mobile:ApplicationVetting</td>
+                      <td>Code-signing entitlements and Info.plist privacy usage-description keys</td>
                     </tr>
                     <tr>
                       <td rowspan="1">
@@ -474,17 +450,17 @@
                           Application State (DC0123)
                         </a>
                       </td>
-                      <td>MobileEDR:telemetry</td>
-                      <td>Managed app shows background activity, refresh, or lock-state-adjacent execution temporally aligned to web-service communication without expected foreground use or recent user interaction</td>
+                      <td>iOS:MDM</td>
+                      <td>InstalledApplicationList / ManagedApplicationList</td>
                     </tr>
                     <tr>
                       <td rowspan="1">
-                        <a href="/datacomponents/DC0114">
-                          Application Permission (DC0114)
+                        <a href="/datacomponents/DC0085">
+                          Network Traffic Content (DC0085)
                         </a>
                       </td>
-                      <td>iOS:MDMLog</td>
-                      <td>Managed app communicating with legitimate web-service infrastructure is newly installed, recently updated, outside expected managed-app set, or displays baseline drift in app role, release path, or business justification</td>
+                      <td>webproxy:applog</td>
+                      <td>DNS/HTTP(S) inspection or proxy transaction metadata where enterprise decryption/inspection is deployed</td>
                     </tr>
                     <tr>
                       <td rowspan="1">
@@ -492,8 +468,8 @@
                           OS API Execution (DC0021)
                         </a>
                       </td>
-                      <td>iOS:unifiedlog</td>
-                      <td>Supplemental launch, background task, networking, or extension-handling anomalies occur temporally adjacent to suspicious web-service communication from a managed app or supervised device</td>
+                      <td>mobile:DynamicAnalysis</td>
+                      <td>Dynamic API/runtime trace: Background task or networking subsystem event occurs immediately before web-service resolver fetch</td>
                     </tr>
                   </tbody>
                 </table>
@@ -510,40 +486,16 @@
                   </thead>
                   <tbody>
                     <tr>
-                      <td>TimeWindow</td>
-                      <td>Correlation window between app state changes and communication with legitimate web-service infrastructure.</td>
+                      <td>ApprovedWebServiceApps</td>
+                      <td>Per-platform approved apps for each web service (e.g., GitHub: com.github.android; Dropbox: com.dropbox.android). Derive from MDM catalog. Apps accessing web service platforms outside their declared function are anomalous.</td>
                     </tr>
                     <tr>
-                      <td>SupervisedRequired</td>
-                      <td>Strongest app context and managed state analytics depend on supervised iOS devices.</td>
+                      <td>AppDeclaredCDN</td>
+                      <td>Per-app declared network destinations from Info.plist or AndroidManifest network config. Legitimate web-service access should be declared.</td>
                     </tr>
                     <tr>
-                      <td>AllowedManagedApps</td>
-                      <td>Approved managed apps and expected business use vary by organization and device profile.</td>
-                    </tr>
-                    <tr>
-                      <td>AllowedServiceClasses</td>
-                      <td>Some managed apps legitimately communicate with collaboration, cloud-storage, or messaging services.</td>
-                    </tr>
-                    <tr>
-                      <td>AllowedDestinations</td>
-                      <td>Expected Apple, enterprise, SaaS, CDN, and API destinations vary by app and tenant.</td>
-                    </tr>
-                    <tr>
-                      <td>BackgroundRefreshBaseline</td>
-                      <td>Normal background network behavior differs across mail, chat, navigation, and enterprise apps.</td>
-                    </tr>
-                    <tr>
-                      <td>RecentUserInteractionWindow</td>
-                      <td>Defines how close traffic must be to user activity to be considered expected.</td>
-                    </tr>
-                    <tr>
-                      <td>BeaconIntervalTolerance</td>
-                      <td>Allowed periodicity for sync, push, and refresh traffic varies across app categories.</td>
-                    </tr>
-                    <tr>
-                      <td>UplinkBytesThreshold</td>
-                      <td>Threshold for suspicious transfer volume to legitimate web-service platforms.</td>
+                      <td>ResolverPivotWindow</td>
+                      <td>Default 120s between web-service platform session and novel C2 connection. Tightening: 30s — synchronous resolve-then-connect. Loosening: 300s — catches deferred pivot.</td>
                     </tr>
                   </tbody>
                 </table>
@@ -551,6 +503,7 @@
             </div>
           </div>
         </div>
+
 
         
       </div>
@@ -769,7 +722,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3 col-footer">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v19.2&#013;Website  v5.1.0">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v20.0&#013;Website  v5.2.0">Website Changelog</a></u>
                                 </div>
                                 <div class="px-3">
                                     <u class="footer-link"><a href="/resources/legal-and-branding/privacy/#" class="footer-link" onclick="Osano.cm.showDrawer('osano-cm-dom-info-dialog-open')">Cookie Preferences</a></u>

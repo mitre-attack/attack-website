@@ -207,7 +207,7 @@
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
                     <div class="container-fluid banner-message">
-                        ATT&CKcon 7.0 registration is open! Join us October 27-28, 2026 in McLean, VA or virtually. <a href="https://na.eventscloud.com/website/93925/">Register in person</a> or <a href="https://mitre.brandlive.com/MITRE-ATTACKcon-7-0">register virtually</a>. See the <a href="https://na.eventscloud.com/website/93925/faq/">FAQ</a> for hotel and venue details.
+                        ATT&CK v20 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v20-9701dd75ffb4'>blog post</a> for more information. <a href='https://na.eventscloud.com/website/93925/'>ATT&CKcon 7.0</a> is October 27-28, 2026 in McLean, VA.
                     </div>
             </div>
         </div>
@@ -286,7 +286,7 @@
                       data-original-title="The system an adversary is operating within; could be an operating system or application">&#9432;</span>
                   </div>
                   <div class="col-md-11 pl-0">
-                    <span class="h5 card-title">Platforms:&nbsp;</span>None
+                    <span class="h5 card-title">Platforms:&nbsp;</span>Embedded, Linux, Network Devices, Windows
                   </div>
                 </div>
                 <div class="row card-data">
@@ -304,7 +304,7 @@
                 <div class="row card-data">
                   <div class="col-md-1 px-0 text-center"></div>
                   <div class="col-md-11 pl-0">
-                    <span class="h5 card-title">Last Modified:&nbsp;</span>15 April 2025
+                    <span class="h5 card-title">Last Modified:&nbsp;</span>13 October 2026
                   </div>
                 </div>
               </div>
@@ -314,13 +314,13 @@
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Permalink to this version of T0847" 
-           href="/versions/v19/techniques/T0847/" data-test-ignore="true">Version Permalink</a>
+           href="/versions/v20/techniques/T0847/" data-test-ignore="true">Version Permalink</a>
     </div>
     <div class="permalink">
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Go to the live version of T0847" 
-           href="/versions/v19/techniques/T0847/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+           href="/versions/v20/techniques/T0847/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
     </div>
 </div>
 
@@ -558,17 +558,44 @@
     </thead>
     <tbody>
                 <tr class="detection_strategy" id="uses-DET0733">
-                        <td rowspan="1">
+                        <td rowspan="4">
                             <a href="/detectionstrategies/DET0733">DET0733</a>
                         </td>
-                        <td rowspan="1">
+                        <td rowspan="4">
                             <a href="/detectionstrategies/DET0733">Detection of Replication Through Removable Media</a>
                         </td>
                     <td>
                         <a href="/detectionstrategies/DET0733#AN1866">AN1866</a>
                     </td>
                     <td>
-                                <p>Monitor for newly executed processes that execute from removable media after it is mounted or when initiated by a user. If a remote access tool is used in this manner to move laterally, then additional actions are likely to occur after execution, such as opening network connections for Command and Control and system and network information Discovery. <br />Monitor for newly constructed files copied to or from removable media.<br />Monitor for newly constructed drive letters or mount points to removable media.<br />Monitor for files accessed on removable media, particularly those with executable content.</p>
+                                <p>Real-time monitoring identifies a Universal Serial Bus (USB) storage device insertion event on an Industrial Control System (ICS) engineering or Human-Machine Interface (HMI) workstation where the device's hardware identifier (ID) is not in the authorized USB allowlist, immediately followed by process execution from the removable drive's path. Documented as the primary infection vector for Stuxnet, which specifically targeted air-gapped Siemens engineering environments via infected USB drives. OT operational-fidelity gate: Alert only when the account/device/session violates the approved identity + source host/jump path/zone policy and is corroborated by access to a protected OT asset, execution, configuration change, or another security-relevant follow-on event. Suppress approved shift activity, vendor support, break-glass use, commissioning, and documented remote-access windows.</p>
+</a>
+                    </td>
+                </tr>
+                <tr class="detection_strategy" id="uses-DET0733">
+                    <td>
+                        <a href="/detectionstrategies/DET0733#AN2127">AN2127</a>
+                    </td>
+                    <td>
+                                <p>Real-time monitoring identifies a mount event for removable storage media on an Industrial Control System (ICS) Linux asset, followed by execution of a binary from the mounted path within a short window. OT operational-fidelity gate: Alert only when the account/device/session violates the approved identity + source host/jump path/zone policy and is corroborated by access to a protected OT asset, execution, configuration change, or another security-relevant follow-on event. Suppress approved shift activity, vendor support, break-glass use, commissioning, and documented remote-access windows.</p>
+</a>
+                    </td>
+                </tr>
+                <tr class="detection_strategy" id="uses-DET0733">
+                    <td>
+                        <a href="/detectionstrategies/DET0733#AN2190">AN2190</a>
+                    </td>
+                    <td>
+                                <p>Real-time monitoring identifies a new device connecting to an Industrial Control System (ICS) network switch port that was previously unused or previously assigned to a different device Media Access Control (MAC) address immediately following physical access to the environment, with subsequent Industrial Control System (ICS) protocol traffic to field devices. OT operational-fidelity gate: Alert only when the account/device/session violates the approved identity + source host/jump path/zone policy and is corroborated by access to a protected OT asset, execution, configuration change, or another security-relevant follow-on event. Suppress approved shift activity, vendor support, break-glass use, commissioning, and documented remote-access windows.</p>
+</a>
+                    </td>
+                </tr>
+                <tr class="detection_strategy" id="uses-DET0733">
+                    <td>
+                        <a href="/detectionstrategies/DET0733#AN2228">AN2228</a>
+                    </td>
+                    <td>
+                                <p>Real-time monitoring identifies an Industrial Control System (ICS) protocol file-transfer service such as Distributed Network Protocol 3 (DNP3) File Transfer Object or Internet Electrotechnical Commision (IEC) 61850 file service being used to place files on a field device from a source not in the approved engineering workstation list, outside a scheduled maintenance window, where the transfer source is a device not previously enrolled. OT operational-fidelity gate: Alert only when the account/device/session violates the approved identity + source host/jump path/zone policy and is corroborated by access to a protected OT asset, execution, configuration change, or another security-relevant follow-on event. Suppress approved shift activity, vendor support, break-glass use, commissioning, and documented remote-access windows.</p>
 </a>
                     </td>
                 </tr>
@@ -964,7 +991,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3 col-footer">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v19.2&#013;Website  v5.1.0">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v20.0&#013;Website  v5.2.0">Website Changelog</a></u>
                                 </div>
                                 <div class="px-3">
                                     <u class="footer-link"><a href="/resources/legal-and-branding/privacy/#" class="footer-link" onclick="Osano.cm.showDrawer('osano-cm-dom-info-dialog-open')">Cookie Preferences</a></u>

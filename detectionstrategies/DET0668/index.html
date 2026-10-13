@@ -207,7 +207,7 @@
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
                     <div class="container-fluid banner-message">
-                        ATT&CKcon 7.0 registration is open! Join us October 27-28, 2026 in McLean, VA or virtually. <a href="https://na.eventscloud.com/website/93925/">Register in person</a> or <a href="https://mitre.brandlive.com/MITRE-ATTACKcon-7-0">register virtually</a>. See the <a href="https://na.eventscloud.com/website/93925/faq/">FAQ</a> for hotel and venue details.
+                        ATT&CK v20 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v20-9701dd75ffb4'>blog post</a> for more information. <a href='https://na.eventscloud.com/website/93925/'>ATT&CKcon 7.0</a> is October 27-28, 2026 in McLean, VA.
                     </div>
             </div>
         </div>
@@ -292,13 +292,13 @@
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Permalink to this version of DET0668" 
-           href="/versions/v19/detectionstrategies/DET0668/" data-test-ignore="true">Version Permalink</a>
+           href="/versions/v20/detectionstrategies/DET0668/" data-test-ignore="true">Version Permalink</a>
     </div>
     <div class="permalink">
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Go to the live version of DET0668" 
-           href="/versions/v19/detectionstrategies/DET0668/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+           href="/versions/v20/detectionstrategies/DET0668/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
     </div>
 </div>
 
@@ -320,7 +320,7 @@
               role="tabpanel" aria-labelledby="tab-Android">
               <h4 class="pt-3" id="AN1764">AN1764</h4>
               <div>
-                        <p>The defender correlates Android screen-capture-capable behavior from an app identity with runtime context showing that foreground content from another app is being captured outside expected user-driven workflows. The strongest Android evidence is MediaProjection-like capture initiation, accessibility-assisted observation of foreground UI content, or privileged screencap or screenrecord behavior, followed by screenshot or video artifact creation, buffer growth, or outbound transfer. The detection is strengthened when the capturing app is backgrounded, operates as a foreground service without clear user-driven recording intent, captures while another sensitive app is foregrounded, runs with accessibility or elevated access inconsistent with its role, or performs capture without recent user interaction.</p>
+                        <p>For Android, detect Screen Capture from documented management, network, or vetting evidence; treat state queries as periodic observations rather than real-time events. Correlate Application Permission via Android Enterprise DPC / Application Vetting [DevicePolicyManager.getPermissionGrantState(); PackageManager manifest/requested-permission review]; Application State via Android Enterprise / EMM [Managed package inventory/status and package metadata]; OS API Execution via Application Vetting / Instrumented Dynamic Analysis [Dynamic API/runtime trace: MediaProjection capture session, accessibility-based foreground content observation, or privileged screencap/screenrecord invocation from app while different app is foregrounded — cross-app screen content access]. Alert on a sequence or state change inconsistent with the device/app baseline, approved management policy, or expected user workflow; do not infer unobserved API calls, file/process activity, or payload content from management state alone.</p>
 
               </div>
 
@@ -336,47 +336,31 @@
                   </thead>
                   <tbody>
                     <tr>
-                      <td rowspan="3">
-                        <a href="/datacomponents/DC0021">
-                          OS API Execution (DC0021)
-                        </a>
-                      </td>
-                      <td>MobileEDR:telemetry</td>
-                      <td>MediaProjection-style screen capture session began from app identity while a different app was foregrounded and capture path was not mapped to approved recording workflow</td>
-                    </tr>
-                    <tr>
-                      <td>MobileEDR:telemetry</td>
-                      <td>Accessibility-service activity from app identity coincided with foreground content observation and subsequent screenshot, frame buffer, or screenrecord artifact behavior within TimeWindow</td>
-                    </tr>
-                    <tr>
-                      <td>MobileEDR:telemetry</td>
-                      <td>Privileged screencap, screenrecord, adb-driven capture, or root-context screen acquisition behavior occurred from app, shell, or elevated identity while foreground app context changed or sensitive app remained active</td>
-                    </tr>
-                    <tr>
-                      <td rowspan="3">
-                        <a href="/datacomponents/DC0123">
-                          Application State (DC0123)
-                        </a>
-                      </td>
-                      <td>MobileEDR:telemetry</td>
-                      <td>Capturing app remained backgrounded or foreground-service-only while screen capture session occurred and another app was foregrounded during capture interval</td>
-                    </tr>
-                    <tr>
-                      <td>MobileEDR:telemetry</td>
-                      <td>LastUserInteractionDelta exceeded threshold before screen capture session start and no expected foreground transition or consent-linked interaction occurred during capture interval</td>
-                    </tr>
-                    <tr>
-                      <td>MobileEDR:telemetry</td>
-                      <td>Sensitive app category remained foregrounded during screen capture session from different app identity</td>
-                    </tr>
-                    <tr>
                       <td rowspan="1">
                         <a href="/datacomponents/DC0114">
                           Application Permission (DC0114)
                         </a>
                       </td>
-                      <td>android:MDMLog</td>
-                      <td>App identity performing screen capture had unapproved accessibility posture, capture-related special access, unmanaged state, or was not approved for screen recording or assistive observation workflows</td>
+                      <td>android:DevicePolicyManager</td>
+                      <td>DevicePolicyManager.getPermissionGrantState(); PackageManager manifest/requested-permission review</td>
+                    </tr>
+                    <tr>
+                      <td rowspan="1">
+                        <a href="/datacomponents/DC0123">
+                          Application State (DC0123)
+                        </a>
+                      </td>
+                      <td>android:EMM</td>
+                      <td>Managed package inventory/status and package metadata</td>
+                    </tr>
+                    <tr>
+                      <td rowspan="1">
+                        <a href="/datacomponents/DC0021">
+                          OS API Execution (DC0021)
+                        </a>
+                      </td>
+                      <td>mobile:DynamicAnalysis</td>
+                      <td>Dynamic API/runtime trace: MediaProjection capture session, accessibility-based foreground content observation, or privileged screencap/screenrecord invocation from app while different app is foregrounded — cross-app screen content access</td>
                     </tr>
                   </tbody>
                 </table>
@@ -393,40 +377,16 @@
                   </thead>
                   <tbody>
                     <tr>
-                      <td>TimeWindow</td>
-                      <td>Correlation window linking capture-path invocation, foreground-app context, artifact creation, and optional upload.</td>
+                      <td>ScreenCaptureAllowList</td>
+                      <td>Approved screen recording apps (enterprise device management, approved accessibility tools, MDM-provisioned remote support). Minimal list. Derive from MDM catalog.</td>
                     </tr>
                     <tr>
-                      <td>AllowedAppList</td>
-                      <td>Approved screen-recording, accessibility, remote-support, or QA/testing apps vary by organization and device group.</td>
+                      <td>CaptureInteractionThreshold</td>
+                      <td>Default 10s. Screen capture sessions starting >10s after last user interaction with capture app not foregrounded are covert.</td>
                     </tr>
                     <tr>
-                      <td>AllowedAccessibilityApps</td>
-                      <td>Approved accessibility-enabled apps vary by assistive and enterprise workflow.</td>
-                    </tr>
-                    <tr>
-                      <td>AllowedForegroundServiceCaptureApps</td>
-                      <td>Some approved apps may legitimately use foreground services during screen recording.</td>
-                    </tr>
-                    <tr>
-                      <td>RecentUserInteractionWindow</td>
-                      <td>Defines how close capture initiation must be to user interaction to be considered expected.</td>
-                    </tr>
-                    <tr>
-                      <td>SensitiveForegroundAppCategories</td>
-                      <td>Categories such as banking, identity, messaging, or enterprise apps may warrant higher sensitivity during capture.</td>
-                    </tr>
-                    <tr>
-                      <td>ArtifactWriteThreshold</td>
-                      <td>Minimum screenshot/video/cache write volume indicating probable screen-capture output.</td>
-                    </tr>
-                    <tr>
-                      <td>UplinkBytesThreshold</td>
-                      <td>Threshold for suspicious outbound transfer after capture.</td>
-                    </tr>
-                    <tr>
-                      <td>ConsentInteractionGracePeriod</td>
-                      <td>Grace period allowed for expected user consent or explicit initiation before capture is treated as suspicious.</td>
+                      <td>TargetAppList</td>
+                      <td>Banking, enterprise SSO, auth, email apps. Screen capture of these is highest-confidence malicious.</td>
                     </tr>
                   </tbody>
                 </table>
@@ -434,6 +394,7 @@
             </div>
           </div>
         </div>
+
 
         
       </div>
@@ -652,7 +613,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3 col-footer">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v19.2&#013;Website  v5.1.0">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v20.0&#013;Website  v5.2.0">Website Changelog</a></u>
                                 </div>
                                 <div class="px-3">
                                     <u class="footer-link"><a href="/resources/legal-and-branding/privacy/#" class="footer-link" onclick="Osano.cm.showDrawer('osano-cm-dom-info-dialog-open')">Cookie Preferences</a></u>

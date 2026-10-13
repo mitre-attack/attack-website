@@ -207,7 +207,7 @@
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
                     <div class="container-fluid banner-message">
-                        ATT&CKcon 7.0 registration is open! Join us October 27-28, 2026 in McLean, VA or virtually. <a href="https://na.eventscloud.com/website/93925/">Register in person</a> or <a href="https://mitre.brandlive.com/MITRE-ATTACKcon-7-0">register virtually</a>. See the <a href="https://na.eventscloud.com/website/93925/faq/">FAQ</a> for hotel and venue details.
+                        ATT&CK v20 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v20-9701dd75ffb4'>blog post</a> for more information. <a href='https://na.eventscloud.com/website/93925/'>ATT&CKcon 7.0</a> is October 27-28, 2026 in McLean, VA.
                     </div>
             </div>
         </div>
@@ -292,13 +292,13 @@
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Permalink to this version of DET0679" 
-           href="/versions/v19/detectionstrategies/DET0679/" data-test-ignore="true">Version Permalink</a>
+           href="/versions/v20/detectionstrategies/DET0679/" data-test-ignore="true">Version Permalink</a>
     </div>
     <div class="permalink">
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Go to the live version of DET0679" 
-           href="/versions/v19/detectionstrategies/DET0679/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+           href="/versions/v20/detectionstrategies/DET0679/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
     </div>
 </div>
 
@@ -326,7 +326,7 @@
               role="tabpanel" aria-labelledby="tab-Android">
               <h4 class="pt-3" id="AN1782">AN1782</h4>
               <div>
-                        <p>OLD: Application vetting services could look for <code>android.permission.READ_CONTACTS</code> in an Android application’s manifest, or <code>NSContactsUsageDescription</code> in an iOS application’s <code>Info.plist</code> file. Most applications do not need contact list access, so extra scrutiny could be applied to those that request it.<br />On both Android and iOS, the user can manage which applications have permission to access the contact list through the device settings screen, revoking the permission if necessary. </p><p>NEW: A defender observes an Android application requesting for android.permission.READ_CONTACTS, which may also be listed in the application's manifest file. </p>
+                        <p>For Android, detect Contact List by correlating analyst-visible device/network evidence and management state; use streaming or batched telemetry only where the documented collector is deployed. Correlate API Calls via Application Vetting / Instrumented Dynamic Analysis [Dynamic API/runtime trace: ContentResolver.query(ContactsContract) with projection=all_fields]; Network Traffic Flow via Android Enterprise Network Logging / Enterprise VPN [DevicePolicyManager.retrieveNetworkLogs(): DnsEvent / ConnectEvent; VPN flow metadata]; Permissions Request via Android Enterprise DPC / Application Vetting [DevicePolicyManager.getPermissionGrantState(); PackageManager manifest/requested-permission review]. Alert on a sequence or state change inconsistent with the device/app baseline, approved management policy, or expected user workflow; do not infer unobserved API calls, file/process activity, or payload content from management state alone.</p>
 
               </div>
 
@@ -343,32 +343,74 @@
                   <tbody>
                     <tr>
                       <td rowspan="1">
-                        <a href="/datacomponents/DC0021">
-                          OS API Execution (DC0021)
+                        <a href="/datacomponents/DC0112">
+                          API Calls (DC0112)
                         </a>
                       </td>
-                      <td>android:logcat</td>
-                      <td>Invocation of ContactsContract.Contacts.getLookupUri() and/or ContactsContract.Contacts.lookupContact()</td>
+                      <td>mobile:DynamicAnalysis</td>
+                      <td>Dynamic API/runtime trace: ContentResolver.query(ContactsContract) with projection=all_fields</td>
                     </tr>
                     <tr>
                       <td rowspan="1">
-                        <a href="/datacomponents/DC0114">
-                          Application Permission (DC0114)
+                        <a href="/datacomponents/DC0078">
+                          Network Traffic Flow (DC0078)
                         </a>
                       </td>
-                      <td>android:MDMLog</td>
-                      <td>Application granted or retaining the READ_CONTACTS permission.</td>
+                      <td>android:EnterpriseNetworkLog</td>
+                      <td>DevicePolicyManager.retrieveNetworkLogs(): DnsEvent / ConnectEvent; VPN flow metadata</td>
+                    </tr>
+                    <tr>
+                      <td rowspan="1">
+                        <a href="/datacomponents/DC0116">
+                          Permissions Request (DC0116)
+                        </a>
+                      </td>
+                      <td>android:DevicePolicyManager</td>
+                      <td>DevicePolicyManager.getPermissionGrantState(); PackageManager manifest/requested-permission review</td>
                     </tr>
                   </tbody>
                 </table>
               </div>
 
+              <h5 class="pt-3" id="AN1782-mutable-elements">Mutable Elements</h5>
+              <div class="tables-mobile">
+                <table class="table table-bordered table-alternate mt-2">
+                  <thead>
+                    <tr>
+                      <th scope="col">Field</th>
+                      <th scope="col">Description</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>ApprovedContactsApps</td>
+                      <td>Approved CRM, exchange sync, address book apps. Derive from MDM catalog.</td>
+                    </tr>
+                    <tr>
+                      <td>ContactQueryThreshold</td>
+                      <td>Default 50 queries/2min — CRM apps legitimately read contacts; tune by app category. Tightening: 20 for unknown apps.</td>
+                    </tr>
+                    <tr>
+                      <td>ContactUplinkThreshold</td>
+                      <td>Default 100KB — contact records average ~4KB; 25 contacts = 100KB.</td>
+                    </tr>
+                    <tr>
+                      <td>ContactSyncCDNList</td>
+                      <td>Exchange, Salesforce, Google People API endpoints.</td>
+                    </tr>
+                    <tr>
+                      <td>ExfilWindow</td>
+                      <td>Default 120s.</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
             </div>
             <div class="tab-pane fade " id="pane-iOS"
               role="tabpanel" aria-labelledby="tab-iOS">
               <h4 class="pt-3" id="AN1783">AN1783</h4>
               <div>
-                        <p>Application vetting services could look for <code>android.permission.READ_CONTACTS</code> in an Android application’s manifest, or <code>NSContactsUsageDescription</code> in an iOS application’s <code>Info.plist</code> file. Most applications do not need contact list access, so extra scrutiny could be applied to those that request it.<br />On both Android and iOS, the user can manage which applications have permission to access the contact list through the device settings screen, revoking the permission if necessary. </p>
+                        <p>For iOS, detect Contact List by correlating analyst-visible device/network evidence and management state; use streaming or batched telemetry only where the documented collector is deployed. Correlate API Calls via Application Vetting / Instrumented Dynamic Analysis [Dynamic API/runtime trace: CNContactStore.enumerateContacts with CNContactFetchRequest.keysToFetch containing all contact keys by app NOT IN $ApprovedContactsApps$]; Network Traffic Flow via Apple Network Extension / Enterprise VPN [NEFilterFlow / per-app VPN / secure-web-gateway flow metadata]; Permissions Request via Application Vetting [Code-signing entitlements and Info.plist privacy usage-description keys]. Alert on a sequence or state change inconsistent with the device/app baseline, approved management policy, or expected user workflow; do not infer unobserved API calls, file/process activity, or payload content from management state alone.</p>
 
               </div>
 
@@ -385,29 +427,68 @@
                   <tbody>
                     <tr>
                       <td rowspan="1">
-                        <a href="/datacomponents/DC0114">
-                          Application Permission (DC0114)
+                        <a href="/datacomponents/DC0112">
+                          API Calls (DC0112)
                         </a>
                       </td>
-                      <td>Application Vetting</td>
-                      <td>None</td>
+                      <td>mobile:DynamicAnalysis</td>
+                      <td>Dynamic API/runtime trace: CNContactStore.enumerateContacts with CNContactFetchRequest.keysToFetch containing all contact keys by app NOT IN $ApprovedContactsApps$</td>
                     </tr>
                     <tr>
                       <td rowspan="1">
-                        <a href="/datacomponents/DC0118">
-                          System Settings (DC0118)
+                        <a href="/datacomponents/DC0078">
+                          Network Traffic Flow (DC0078)
                         </a>
                       </td>
-                      <td>User Interface</td>
-                      <td>None</td>
+                      <td>iOS:NetworkExtension</td>
+                      <td>NEFilterFlow / per-app VPN / secure-web-gateway flow metadata</td>
+                    </tr>
+                    <tr>
+                      <td rowspan="1">
+                        <a href="/datacomponents/DC0116">
+                          Permissions Request (DC0116)
+                        </a>
+                      </td>
+                      <td>mobile:ApplicationVetting</td>
+                      <td>Code-signing entitlements and Info.plist privacy usage-description keys</td>
                     </tr>
                   </tbody>
                 </table>
               </div>
 
+              <h5 class="pt-3" id="AN1783-mutable-elements">Mutable Elements</h5>
+              <div class="tables-mobile">
+                <table class="table table-bordered table-alternate mt-2">
+                  <thead>
+                    <tr>
+                      <th scope="col">Field</th>
+                      <th scope="col">Description</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>ApprovedContactsApps</td>
+                      <td>com.microsoft.outlook, Salesforce, enterprise address book bundles.</td>
+                    </tr>
+                    <tr>
+                      <td>ContactUplinkThreshold</td>
+                      <td>Default 100KB.</td>
+                    </tr>
+                    <tr>
+                      <td>ContactSyncCDNList</td>
+                      <td>Exchange, Salesforce, Google People API endpoints.</td>
+                    </tr>
+                    <tr>
+                      <td>ExfilWindow</td>
+                      <td>Default 120s.</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         </div>
+
 
         
       </div>
@@ -626,7 +707,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3 col-footer">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v19.2&#013;Website  v5.1.0">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v20.0&#013;Website  v5.2.0">Website Changelog</a></u>
                                 </div>
                                 <div class="px-3">
                                     <u class="footer-link"><a href="/resources/legal-and-branding/privacy/#" class="footer-link" onclick="Osano.cm.showDrawer('osano-cm-dom-info-dialog-open')">Cookie Preferences</a></u>

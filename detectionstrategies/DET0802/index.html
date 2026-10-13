@@ -207,7 +207,7 @@
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
                     <div class="container-fluid banner-message">
-                        ATT&CKcon 7.0 registration is open! Join us October 27-28, 2026 in McLean, VA or virtually. <a href="https://na.eventscloud.com/website/93925/">Register in person</a> or <a href="https://mitre.brandlive.com/MITRE-ATTACKcon-7-0">register virtually</a>. See the <a href="https://na.eventscloud.com/website/93925/faq/">FAQ</a> for hotel and venue details.
+                        ATT&CK v20 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v20-9701dd75ffb4'>blog post</a> for more information. <a href='https://na.eventscloud.com/website/93925/'>ATT&CKcon 7.0</a> is October 27-28, 2026 in McLean, VA.
                     </div>
             </div>
         </div>
@@ -267,7 +267,7 @@
                 </div>
                 <div class="row card-data">
                   <div class="col-md-12">
-                    <span class="h5 card-title">Analytics</span>: AN1934
+                    <span class="h5 card-title">Analytics</span>: AN1934, AN2158, AN2179, AN2282
                   </div>
                 </div>
                 <div class="row card-data">
@@ -282,7 +282,7 @@
                 </div>
                 <div class="row card-data">
                   <div class="col-md-12">
-                    <span class="h5 card-title">Last Modified</span>: 12 May 2026
+                    <span class="h5 card-title">Last Modified</span>: 13 October 2026
                   </div>
                 </div>
               </div>
@@ -292,13 +292,13 @@
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Permalink to this version of DET0802" 
-           href="/versions/v19/detectionstrategies/DET0802/" data-test-ignore="true">Version Permalink</a>
+           href="/versions/v20/detectionstrategies/DET0802/" data-test-ignore="true">Version Permalink</a>
     </div>
     <div class="permalink">
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Go to the live version of DET0802" 
-           href="/versions/v19/detectionstrategies/DET0802/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+           href="/versions/v20/detectionstrategies/DET0802/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
     </div>
 </div>
 
@@ -309,18 +309,36 @@
           <h2 class="pt-3" id="analytics">Analytics</h2>
           <ul class="nav nav-tabs mb-2" role="tablist">
             <li class="nav-item">
-              <a class="nav-link active" id="tab-ICS" data-toggle="tab"
-                href="#pane-ICS" role="tab" aria-selected="true">
-                ICS
+              <a class="nav-link active" id="tab-Embedded" data-toggle="tab"
+                href="#pane-Embedded" role="tab" aria-selected="true">
+                Embedded
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link " id="tab-Linux" data-toggle="tab"
+                href="#pane-Linux" role="tab" aria-selected="true">
+                Linux
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link " id="tab-Network_Devices" data-toggle="tab"
+                href="#pane-Network_Devices" role="tab" aria-selected="true">
+                Network Devices
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link " id="tab-Windows" data-toggle="tab"
+                href="#pane-Windows" role="tab" aria-selected="true">
+                Windows
               </a>
             </li>
           </ul>
           <div class="tab-content card card-body p-3">
-            <div class="tab-pane fade show active" id="pane-ICS"
-              role="tabpanel" aria-labelledby="tab-ICS">
+            <div class="tab-pane fade show active" id="pane-Embedded"
+              role="tabpanel" aria-labelledby="tab-Embedded">
               <h4 class="pt-3" id="AN1934">AN1934</h4>
               <div>
-                        <p>Monitor ICS automation network protocols for information that an asset has been placed into Firmware Update Mode.<br />Monitor device alarms that indicate the devices has been placed into Firmware Update Mode, although not all devices produce such alarms.<br />Monitor asset log which may provide information that an asset has been placed into Firmware Update Mode. Some assets may log firmware updates themselves without logging that the device has been placed into update mode.</p>
+                        <p>Real-time monitoring identifies an Industrial Control System (ICS) protocol message sequence placing a field device into firmware-update mode from a source not in the approved engineering workstation list, correlated with the device's alarm telemetry going silent within a short grace period without acknowledgment. Documented precedent: Industroyer exploited CVE-2015-5374 by sending a crafted packet that initiated an incomplete firmware update sequence on Siemens Protection Technology (SIPROTEC) relays. OT operational-fidelity gate: Alert only when the action is not attributable to an authorized operator/engineering source for the specific target and function, and it is either outside an approved change/maintenance window or lacks matching change-control context; where telemetry permits, require corroborating device, configuration, or process-state effect. Suppress activity that fully matches approved maintenance, commissioning, failover, recovery, or tested control procedures.</p>
 
               </div>
 
@@ -337,21 +355,21 @@
                   <tbody>
                     <tr>
                       <td rowspan="1">
-                        <a href="/datacomponents/DC0085">
-                          Network Traffic Content (DC0085)
-                        </a>
-                      </td>
-                      <td>Network Traffic</td>
-                      <td>None</td>
-                    </tr>
-                    <tr>
-                      <td rowspan="1">
                         <a href="/datacomponents/DC0108">
                           Device Alarm (DC0108)
                         </a>
                       </td>
-                      <td>Operational Databases</td>
-                      <td>None</td>
+                      <td>operationaldb:AlarmEvent</td>
+                      <td>device_ip alarm telemetry goes silent within alarm silence grace period of the mode-activation message without operator acknowledgment</td>
+                    </tr>
+                    <tr>
+                      <td rowspan="1">
+                        <a href="/datacomponents/DC0085">
+                          Network Traffic Content (DC0085)
+                        </a>
+                      </td>
+                      <td>NSM:Content</td>
+                      <td>firmware-update-mode activation service from source not in engineering workstation list outside change control window</td>
                     </tr>
                     <tr>
                       <td rowspan="1">
@@ -359,15 +377,332 @@
                           Application Log Content (DC0038)
                         </a>
                       </td>
-                      <td>Application Log</td>
-                      <td>None</td>
+                      <td>engineeringworkstation:ApplicationLog</td>
+                      <td>firmware update mode entry logged without corresponding change ticket reference</td>
                     </tr>
                   </tbody>
                 </table>
               </div>
 
+              <h5 class="pt-3" id="AN1934-mutable-elements">Mutable Elements</h5>
+              <div class="tables-mobile">
+                <table class="table table-bordered table-alternate mt-2">
+                  <thead>
+                    <tr>
+                      <th scope="col">Field</th>
+                      <th scope="col">Description</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>AlarmSilenceGracePeriod</td>
+                      <td>Time window within which alarm telemetry going silent following a mode-change message is considered directly connected.</td>
+                    </tr>
+                    <tr>
+                      <td>AuthorizedFirmwareManagers</td>
+                      <td>Accounts authorized to perform firmware update mode activation.</td>
+                    </tr>
+                    <tr>
+                      <td>ChangeControlWindow</td>
+                      <td>Scheduled maintenance periods during which firmware update mode activation is authorized.</td>
+                    </tr>
+                    <tr>
+                      <td>EngineeringWorkstationList</td>
+                      <td>IP allowlist of workstations authorized to activate firmware update mode.</td>
+                    </tr>
+                    <tr>
+                      <td>MaintenanceWindowSchedule</td>
+                      <td>Recurring scheduled periods when firmware update activities are expected.</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="tab-pane fade " id="pane-Linux"
+              role="tabpanel" aria-labelledby="tab-Linux">
+              <h4 class="pt-3" id="AN2158">AN2158</h4>
+              <div>
+                        <p>Real-time monitoring identifies a firmware update tool on an Industrial Control System (ICS) Linux engineering host initiating firmware-update mode activation outside a scheduled maintenance window, by a User Identifier (UID) not in the approved firmware manager UIDs. OT operational-fidelity gate: Alert only when the action is not attributable to an authorized operator/engineering source for the specific target and function, and it is either outside an approved change/maintenance window or lacks matching change-control context; where telemetry permits, require corroborating device, configuration, or process-state effect. Suppress activity that fully matches approved maintenance, commissioning, failover, recovery, or tested control procedures.</p>
+
+              </div>
+
+              <h5 class="pt-3" id="AN2158-log-sources">Log Sources</h5>
+              <div class="tables-mobile">
+                <table class="table table-bordered table-alternate mt-2">
+                  <thead>
+                    <tr>
+                      <th scope="col">Data Component</th>
+                      <th scope="col">Name</th>
+                      <th scope="col">Channel</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td rowspan="1">
+                        <a href="/datacomponents/DC0032">
+                          Process Creation (DC0032)
+                        </a>
+                      </td>
+                      <td>auditd:SYSCALL</td>
+                      <td>Linux Audit SYSCALL/EXECVE/SOCKADDR records (configured audit rule): syscall=execve; firmware-update utility invoked outside the approved maintenance window or by a UID not in the authorized firmware-management set</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <h5 class="pt-3" id="AN2158-mutable-elements">Mutable Elements</h5>
+              <div class="tables-mobile">
+                <table class="table table-bordered table-alternate mt-2">
+                  <thead>
+                    <tr>
+                      <th scope="col">Field</th>
+                      <th scope="col">Description</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>AlarmSilenceGracePeriod</td>
+                      <td>Time window within which alarm telemetry going silent following a mode-change message is considered directly connected.</td>
+                    </tr>
+                    <tr>
+                      <td>AuthorizedFirmwareManagers</td>
+                      <td>Accounts authorized to perform firmware update mode activation.</td>
+                    </tr>
+                    <tr>
+                      <td>ChangeControlWindow</td>
+                      <td>Scheduled maintenance periods during which firmware update mode activation is authorized.</td>
+                    </tr>
+                    <tr>
+                      <td>EngineeringWorkstationList</td>
+                      <td>IP allowlist of workstations authorized to activate firmware update mode.</td>
+                    </tr>
+                    <tr>
+                      <td>MaintenanceWindowSchedule</td>
+                      <td>Recurring scheduled periods when firmware update activities are expected.</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="tab-pane fade " id="pane-Network_Devices"
+              role="tabpanel" aria-labelledby="tab-Network_Devices">
+              <h4 class="pt-3" id="AN2179">AN2179</h4>
+              <div>
+                        <p>Real-time monitoring identifies transfer protocol traffic such as the Trivial File Transfer Protocol (TFTP) or vendor-specific protocol traffic initiating firmware-update mode on Industrial Control System (ICS) device Internet Protocol (IP) addresses from sources not in the approved engineering workstation list. OT operational-fidelity gate: Alert only when the action is not attributable to an authorized operator/engineering source for the specific target and function, and it is either outside an approved change/maintenance window or lacks matching change-control context; where telemetry permits, require corroborating device, configuration, or process-state effect. Suppress activity that fully matches approved maintenance, commissioning, failover, recovery, or tested control procedures.</p>
+
+              </div>
+
+              <h5 class="pt-3" id="AN2179-log-sources">Log Sources</h5>
+              <div class="tables-mobile">
+                <table class="table table-bordered table-alternate mt-2">
+                  <thead>
+                    <tr>
+                      <th scope="col">Data Component</th>
+                      <th scope="col">Name</th>
+                      <th scope="col">Channel</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td rowspan="1">
+                        <a href="/datacomponents/DC0078">
+                          Network Traffic Flow (DC0078)
+                        </a>
+                      </td>
+                      <td>netflow:ipfix</td>
+                      <td>IPFIX/NetFlow flow record (src/dst IP, src/dst port, protocol, packets/bytes/time): firmware-mode activation protocol session from source not in engineering workstation list</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <h5 class="pt-3" id="AN2179-mutable-elements">Mutable Elements</h5>
+              <div class="tables-mobile">
+                <table class="table table-bordered table-alternate mt-2">
+                  <thead>
+                    <tr>
+                      <th scope="col">Field</th>
+                      <th scope="col">Description</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>AlarmSilenceGracePeriod</td>
+                      <td>Time window within which alarm telemetry going silent following a mode-change message is considered directly connected.</td>
+                    </tr>
+                    <tr>
+                      <td>AuthorizedFirmwareManagers</td>
+                      <td>Accounts authorized to perform firmware update mode activation.</td>
+                    </tr>
+                    <tr>
+                      <td>ChangeControlWindow</td>
+                      <td>Scheduled maintenance periods during which firmware update mode activation is authorized.</td>
+                    </tr>
+                    <tr>
+                      <td>EngineeringWorkstationList</td>
+                      <td>IP allowlist of workstations authorized to activate firmware update mode.</td>
+                    </tr>
+                    <tr>
+                      <td>MaintenanceWindowSchedule</td>
+                      <td>Recurring scheduled periods when firmware update activities are expected.</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="tab-pane fade " id="pane-Windows"
+              role="tabpanel" aria-labelledby="tab-Windows">
+              <h4 class="pt-3" id="AN2282">AN2282</h4>
+              <div>
+                        <p>Real-time monitoring identifies a vendor firmware update tool activating firmware-update mode on a field device from a Windows host, outside a scheduled maintenance window or by an account not in the approved firmware management role. OT operational-fidelity gate: Alert only when the action is not attributable to an authorized operator/engineering source for the specific target and function, and it is either outside an approved change/maintenance window or lacks matching change-control context; where telemetry permits, require corroborating device, configuration, or process-state effect. Suppress activity that fully matches approved maintenance, commissioning, failover, recovery, or tested control procedures.</p>
+
+              </div>
+
+              <h5 class="pt-3" id="AN2282-log-sources">Log Sources</h5>
+              <div class="tables-mobile">
+                <table class="table table-bordered table-alternate mt-2">
+                  <thead>
+                    <tr>
+                      <th scope="col">Data Component</th>
+                      <th scope="col">Name</th>
+                      <th scope="col">Channel</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td rowspan="1">
+                        <a href="/datacomponents/DC0032">
+                          Process Creation (DC0032)
+                        </a>
+                      </td>
+                      <td>WinEventLog:Sysmon</td>
+                      <td>EventCode=1 firmware update tool process activating firmware mode, by account not in authorized firmware managers, outside maintenance window schedule</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <h5 class="pt-3" id="AN2282-mutable-elements">Mutable Elements</h5>
+              <div class="tables-mobile">
+                <table class="table table-bordered table-alternate mt-2">
+                  <thead>
+                    <tr>
+                      <th scope="col">Field</th>
+                      <th scope="col">Description</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>AlarmSilenceGracePeriod</td>
+                      <td>Time window within which alarm telemetry going silent following a mode-change message is considered directly connected.</td>
+                    </tr>
+                    <tr>
+                      <td>AuthorizedFirmwareManagers</td>
+                      <td>Accounts authorized to perform firmware update mode activation.</td>
+                    </tr>
+                    <tr>
+                      <td>ChangeControlWindow</td>
+                      <td>Scheduled maintenance periods during which firmware update mode activation is authorized.</td>
+                    </tr>
+                    <tr>
+                      <td>EngineeringWorkstationList</td>
+                      <td>IP allowlist of workstations authorized to activate firmware update mode.</td>
+                    </tr>
+                    <tr>
+                      <td>MaintenanceWindowSchedule</td>
+                      <td>Recurring scheduled periods when firmware update activities are expected.</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
+        </div>
+
+        <div id="assets-tabs">
+          <h2 class="pt-3" id="assets">Targeted Assets</h2>
+          <table class="table table-bordered table-alternate mt-2" aria-describedby="asset-table">
+            <thead>
+              <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Asset</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <a href="/assets/A0002"> A0002 </a>
+                </td>
+                <td>
+                  <a href="/assets/A0002"> Human-Machine Interface (HMI) </a>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <a href="/assets/A0003"> A0003 </a>
+                </td>
+                <td>
+                  <a href="/assets/A0003"> Programmable Logic Controller (PLC) </a>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <a href="/assets/A0004"> A0004 </a>
+                </td>
+                <td>
+                  <a href="/assets/A0004"> Remote Terminal Unit (RTU) </a>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <a href="/assets/A0005"> A0005 </a>
+                </td>
+                <td>
+                  <a href="/assets/A0005"> Intelligent Electronic Device (IED) </a>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <a href="/assets/A0009"> A0009 </a>
+                </td>
+                <td>
+                  <a href="/assets/A0009"> Data Gateway </a>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <a href="/assets/A0010"> A0010 </a>
+                </td>
+                <td>
+                  <a href="/assets/A0010"> Safety Controller </a>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <a href="/assets/A0013"> A0013 </a>
+                </td>
+                <td>
+                  <a href="/assets/A0013"> Field I/O </a>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <a href="/assets/A0017"> A0017 </a>
+                </td>
+                <td>
+                  <a href="/assets/A0017"> Distributed Control System (DCS) Controller </a>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <a href="/assets/A0018"> A0018 </a>
+                </td>
+                <td>
+                  <a href="/assets/A0018"> Programmable Automation Controller (PAC) </a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
 
         
@@ -587,7 +922,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3 col-footer">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v19.2&#013;Website  v5.1.0">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v20.0&#013;Website  v5.2.0">Website Changelog</a></u>
                                 </div>
                                 <div class="px-3">
                                     <u class="footer-link"><a href="/resources/legal-and-branding/privacy/#" class="footer-link" onclick="Osano.cm.showDrawer('osano-cm-dom-info-dialog-open')">Cookie Preferences</a></u>

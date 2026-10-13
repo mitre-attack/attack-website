@@ -207,7 +207,7 @@
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
                     <div class="container-fluid banner-message">
-                        ATT&CKcon 7.0 registration is open! Join us October 27-28, 2026 in McLean, VA or virtually. <a href="https://na.eventscloud.com/website/93925/">Register in person</a> or <a href="https://mitre.brandlive.com/MITRE-ATTACKcon-7-0">register virtually</a>. See the <a href="https://na.eventscloud.com/website/93925/faq/">FAQ</a> for hotel and venue details.
+                        ATT&CK v20 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v20-9701dd75ffb4'>blog post</a> for more information. <a href='https://na.eventscloud.com/website/93925/'>ATT&CKcon 7.0</a> is October 27-28, 2026 in McLean, VA.
                     </div>
             </div>
         </div>
@@ -292,13 +292,13 @@
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Permalink to this version of DET0658" 
-           href="/versions/v19/detectionstrategies/DET0658/" data-test-ignore="true">Version Permalink</a>
+           href="/versions/v20/detectionstrategies/DET0658/" data-test-ignore="true">Version Permalink</a>
     </div>
     <div class="permalink">
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Go to the live version of DET0658" 
-           href="/versions/v19/detectionstrategies/DET0658/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+           href="/versions/v20/detectionstrategies/DET0658/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
     </div>
 </div>
 
@@ -326,7 +326,7 @@
               role="tabpanel" aria-labelledby="tab-Android">
               <h4 class="pt-3" id="AN1747">AN1747</h4>
               <div>
-                        <p>A defender correlates a sudden carrier identity/service state change (SIM/line identifier change or unexpected loss of cellular service) with near-term device messaging/telephony disruption and a concurrent shift in authentication traffic patterns—such as a spike in SMS-based verification flows or account recovery activity from the same user’s identities—indicating the user’s number may have been transferred to a different SIM/device (SIM swap impact).</p>
+                        <p>For Android, detect SIM Card Swap by correlating analyst-visible device/network evidence and management state; use streaming or batched telemetry only where the documented collector is deployed. Correlate Host Status via Android Enterprise DPC [DevicePolicyManager policy/compliance/security-state queries and SecurityLog events where supported]; System Settings via Android Enterprise DPC [DevicePolicyManager policy/compliance/security-state queries and SecurityLog events where supported]; User Account Authentication via Application Vetting / Identity Provider Telemetry [App authentication flow instrumentation or IdP sign-in/audit events]. Alert on a sequence or state change inconsistent with the device/app baseline, approved management policy, or expected user workflow; do not infer unobserved API calls, file/process activity, or payload content from management state alone.</p>
 
               </div>
 
@@ -343,43 +343,30 @@
                   <tbody>
                     <tr>
                       <td rowspan="1">
+                        <a href="/datacomponents/DC0018">
+                          Host Status (DC0018)
+                        </a>
+                      </td>
+                      <td>android:DevicePolicyManager</td>
+                      <td>DevicePolicyManager policy/compliance/security-state queries and SecurityLog events where supported</td>
+                    </tr>
+                    <tr>
+                      <td rowspan="1">
                         <a href="/datacomponents/DC0118">
                           System Settings (DC0118)
                         </a>
                       </td>
-                      <td>MobileEDR:telemetry</td>
-                      <td>Cellular service state transitions (in-service→no-service), SIM state change, carrier/operator identifier change, or baseband/telephony stack state change observed by agent telemetry</td>
+                      <td>android:DevicePolicyManager</td>
+                      <td>DevicePolicyManager policy/compliance/security-state queries and SecurityLog events where supported</td>
                     </tr>
                     <tr>
                       <td rowspan="1">
-                        <a href="/datacomponents/DC0021">
-                          OS API Execution (DC0021)
+                        <a href="/datacomponents/DC0002">
+                          User Account Authentication (DC0002)
                         </a>
                       </td>
-                      <td>MobileEDR:telemetry</td>
-                      <td>Agent-observable telephony subscription/state API signals indicating SIM/eSIM subscription change (vendor-agnostic: 'telephony subscription changed')</td>
-                    </tr>
-                    <tr>
-                      <td rowspan="1">
-                        <a href="/datacomponents/DC0114">
-                          Application Permission (DC0114)
-                        </a>
-                      </td>
-                      <td>android:MDMLog</td>
-                      <td>Device inventory changes involving phone number/line identifier fields (when available), eSIM profile presence, or compliance signal indicating SIM profile change</td>
-                    </tr>
-                    <tr>
-                      <td rowspan="2">
-                        <a href="/datacomponents/DC0085">
-                          Network Traffic Content (DC0085)
-                        </a>
-                      </td>
-                      <td>NSM:Flow</td>
-                      <td>Near-term increase in traffic to identity endpoints associated with SMS MFA, account recovery, or OTP verification (IdP, banking, crypto), correlated to SIM/service loss</td>
-                    </tr>
-                    <tr>
-                      <td>NSM:Flow</td>
-                      <td>Abrupt shift from cellular egress to Wi-Fi-only egress, or new VPN/proxy session establishment following cellular service loss</td>
+                      <td>idp:AuditLog</td>
+                      <td>App authentication flow instrumentation or IdP sign-in/audit events</td>
                     </tr>
                   </tbody>
                 </table>
@@ -396,28 +383,12 @@
                   </thead>
                   <tbody>
                     <tr>
-                      <td>ServiceLossDurationThreshold</td>
-                      <td>Minimum duration of unexpected cellular service loss before considering it suspicious (reduces noise from transient coverage issues).</td>
+                      <td>CellularLossThreshold</td>
+                      <td>Default 300s service loss. Brief outages are normal; sustained loss + ICCID change is anomalous.</td>
                     </tr>
                     <tr>
-                      <td>SimStateChangeTypes</td>
-                      <td>Which SIM-related state changes to alert on (SIM removed, SIM refresh, operator changed, eSIM profile changed).</td>
-                    </tr>
-                    <tr>
-                      <td>SwapCorrelationWindow</td>
-                      <td>Time window to correlate SIM/service state change with downstream identity traffic anomalies (e.g., 30m–6h).</td>
-                    </tr>
-                    <tr>
-                      <td>IdentityEndpointAllowList</td>
-                      <td>Baseline of expected IdP/banking/crypto identity endpoints for the org; used to reduce false positives.</td>
-                    </tr>
-                    <tr>
-                      <td>AuthTrafficSpikeThreshold</td>
-                      <td>Threshold for increase in OTP/MFA/account recovery traffic volume relative to user baseline.</td>
-                    </tr>
-                    <tr>
-                      <td>UserTravelContext</td>
-                      <td>Optional enrichment—treat carrier changes as lower risk during known travel/roaming windows.</td>
+                      <td>SIMSwapWindow</td>
+                      <td>Default 3600s correlation window.</td>
                     </tr>
                   </tbody>
                 </table>
@@ -427,7 +398,7 @@
               role="tabpanel" aria-labelledby="tab-iOS">
               <h4 class="pt-3" id="AN1748">AN1748</h4>
               <div>
-                        <p>A defender correlates an unexpected change in cellular subscription state (eSIM/SIM profile change, carrier/operator change, or sudden persistent loss of cellular service) with near-term disruption signals and a rapid increase in authentication-related network activity consistent with SMS verification or account recovery flows, suggesting the user’s number has been ported to an adversary-controlled SIM/device (SIM swap impact).</p>
+                        <p>For iOS, detect SIM Card Swap by correlating analyst-visible device/network evidence and management state; use streaming or batched telemetry only where the documented collector is deployed. Correlate Host Status via Apple MDM [DeviceInformation / SecurityInfo / ProfileList / restrictions and compliance queries]; System Settings via Apple MDM [DeviceInformation / SecurityInfo / ProfileList / restrictions and compliance queries]; User Account Authentication via Application Vetting / Identity Provider Telemetry [App authentication flow instrumentation or IdP sign-in/audit events]. Alert on a sequence or state change inconsistent with the device/app baseline, approved management policy, or expected user workflow; do not infer unobserved API calls, file/process activity, or payload content from management state alone.</p>
 
               </div>
 
@@ -444,43 +415,30 @@
                   <tbody>
                     <tr>
                       <td rowspan="1">
+                        <a href="/datacomponents/DC0018">
+                          Host Status (DC0018)
+                        </a>
+                      </td>
+                      <td>iOS:MDM</td>
+                      <td>DeviceInformation / SecurityInfo / ProfileList / restrictions and compliance queries</td>
+                    </tr>
+                    <tr>
+                      <td rowspan="1">
                         <a href="/datacomponents/DC0118">
                           System Settings (DC0118)
                         </a>
                       </td>
-                      <td>MobileEDR:telemetry</td>
-                      <td>Cellular service state transitions (in-service→no-service), SIM state change, carrier/operator identifier change, or baseband/telephony stack state change observed by agent telemetry</td>
+                      <td>iOS:MDM</td>
+                      <td>DeviceInformation / SecurityInfo / ProfileList / restrictions and compliance queries</td>
                     </tr>
                     <tr>
                       <td rowspan="1">
-                        <a href="/datacomponents/DC0114">
-                          Application Permission (DC0114)
+                        <a href="/datacomponents/DC0002">
+                          User Account Authentication (DC0002)
                         </a>
                       </td>
-                      <td>iOS:MDMLog</td>
-                      <td>Managed device inventory change indicating cellular plan/eSIM profile updates (where available via supervised iOS + MDM reporting)</td>
-                    </tr>
-                    <tr>
-                      <td rowspan="1">
-                        <a href="/datacomponents/DC0021">
-                          OS API Execution (DC0021)
-                        </a>
-                      </td>
-                      <td>MobileEDR:telemetry</td>
-                      <td>Agent-observable telephony subscription/state API signals indicating SIM/eSIM subscription change (vendor-agnostic: 'telephony subscription changed')</td>
-                    </tr>
-                    <tr>
-                      <td rowspan="2">
-                        <a href="/datacomponents/DC0085">
-                          Network Traffic Content (DC0085)
-                        </a>
-                      </td>
-                      <td>NSM:Flow</td>
-                      <td>Near-term increase in traffic to identity endpoints associated with SMS MFA, account recovery, or OTP verification (IdP, banking, crypto), correlated to SIM/service loss</td>
-                    </tr>
-                    <tr>
-                      <td>NSM:Flow</td>
-                      <td>Abrupt shift from cellular egress to Wi-Fi-only egress, or new VPN/proxy session establishment following cellular service loss</td>
+                      <td>idp:AuditLog</td>
+                      <td>App authentication flow instrumentation or IdP sign-in/audit events</td>
                     </tr>
                   </tbody>
                 </table>
@@ -497,28 +455,12 @@
                   </thead>
                   <tbody>
                     <tr>
-                      <td>SupervisedInventoryAvailability</td>
-                      <td>Tuning based on whether supervised iOS + MDM provides sufficient subscription/eSIM visibility; otherwise rely on agent + network signals.</td>
+                      <td>CellularLossThreshold</td>
+                      <td>Default 300s.</td>
                     </tr>
                     <tr>
-                      <td>ServiceLossDurationThreshold</td>
-                      <td>Minimum persistent no-service duration required to reduce false positives from normal carrier fluctuations.</td>
-                    </tr>
-                    <tr>
-                      <td>SwapCorrelationWindow</td>
-                      <td>Time window to link subscription disruption with identity/auth network anomalies.</td>
-                    </tr>
-                    <tr>
-                      <td>AuthTrafficSpikeThreshold</td>
-                      <td>Threshold for suspicious increase in OTP/MFA/account recovery traffic relative to device/user baseline.</td>
-                    </tr>
-                    <tr>
-                      <td>RoamingExpectedRegions</td>
-                      <td>Tuning to reduce false positives when the user is traveling or roaming across carrier networks.</td>
-                    </tr>
-                    <tr>
-                      <td>IdentityEndpointAllowList</td>
-                      <td>Baseline list of expected identity endpoints (IdP, banking, crypto) for the device/user population</td>
+                      <td>SIMSwapWindow</td>
+                      <td>Default 3600s.</td>
                     </tr>
                   </tbody>
                 </table>
@@ -526,6 +468,7 @@
             </div>
           </div>
         </div>
+
 
         
       </div>
@@ -744,7 +687,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3 col-footer">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v19.2&#013;Website  v5.1.0">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v20.0&#013;Website  v5.2.0">Website Changelog</a></u>
                                 </div>
                                 <div class="px-3">
                                     <u class="footer-link"><a href="/resources/legal-and-branding/privacy/#" class="footer-link" onclick="Osano.cm.showDrawer('osano-cm-dom-info-dialog-open')">Cookie Preferences</a></u>

@@ -207,7 +207,7 @@
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
                     <div class="container-fluid banner-message">
-                        ATT&CKcon 7.0 registration is open! Join us October 27-28, 2026 in McLean, VA or virtually. <a href="https://na.eventscloud.com/website/93925/">Register in person</a> or <a href="https://mitre.brandlive.com/MITRE-ATTACKcon-7-0">register virtually</a>. See the <a href="https://na.eventscloud.com/website/93925/faq/">FAQ</a> for hotel and venue details.
+                        ATT&CK v20 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v20-9701dd75ffb4'>blog post</a> for more information. <a href='https://na.eventscloud.com/website/93925/'>ATT&CKcon 7.0</a> is October 27-28, 2026 in McLean, VA.
                     </div>
             </div>
         </div>
@@ -292,13 +292,13 @@
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Permalink to this version of DET0644" 
-           href="/versions/v19/detectionstrategies/DET0644/" data-test-ignore="true">Version Permalink</a>
+           href="/versions/v20/detectionstrategies/DET0644/" data-test-ignore="true">Version Permalink</a>
     </div>
     <div class="permalink">
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Go to the live version of DET0644" 
-           href="/versions/v19/detectionstrategies/DET0644/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+           href="/versions/v20/detectionstrategies/DET0644/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
     </div>
 </div>
 
@@ -326,7 +326,7 @@
               role="tabpanel" aria-labelledby="tab-iOS">
               <h4 class="pt-3" id="AN1721">AN1721</h4>
               <div>
-                        <p>From the defender view: a sandboxed process receives/creates a high-entropy Mach-O/bundle or encrypted segment, performs in-memory decrypt/unpack (mmap/mprotect RW→RX or RWX), optionally drops a transient image in app-writable dirs, then loads it through dyld/dlopen or spawns it. We correlate: (1) opaque blob write/arrival → (2) kernel memory protection changes → (3) dyld/dlopen from app-writable path or posix_spawn of a recently created image → (4) (optional) code-sign evaluation anomalies for the new image.</p>
+                        <p>For iOS, detect Software Packing by correlating analyst-visible device/network evidence and management state; use streaming or batched telemetry only where the documented collector is deployed. Correlate Application Permission via Application Vetting [Code-signing entitlements and Info.plist privacy usage-description keys]; Network Traffic Flow via Apple Network Extension / Enterprise VPN [NEFilterFlow / per-app VPN / secure-web-gateway flow metadata]; Protected Configuration via Apple MDM [DeviceInformation / SecurityInfo / ProfileList / restrictions and compliance queries]. Alert on a sequence or state change inconsistent with the device/app baseline, approved management policy, or expected user workflow; do not infer unobserved API calls, file/process activity, or payload content from management state alone.</p>
 
               </div>
 
@@ -343,30 +343,30 @@
                   <tbody>
                     <tr>
                       <td rowspan="1">
-                        <a href="/datacomponents/DC0039">
-                          File Creation (DC0039)
+                        <a href="/datacomponents/DC0114">
+                          Application Permission (DC0114)
                         </a>
                       </td>
-                      <td>iOS:unifiedlog</td>
-                      <td>Create/write of high-entropy Mach-O/bundle or generic blob in /var/mobile/Containers/Data/Application/<GUID>/(tmp|Library/Caches)/</td>
+                      <td>mobile:ApplicationVetting</td>
+                      <td>Code-signing entitlements and Info.plist privacy usage-description keys</td>
                     </tr>
                     <tr>
                       <td rowspan="1">
-                        <a href="/datacomponents/DC0021">
-                          OS API Execution (DC0021)
+                        <a href="/datacomponents/DC0078">
+                          Network Traffic Flow (DC0078)
                         </a>
                       </td>
-                      <td>iOS:unifiedlog</td>
-                      <td>mmap/mprotect transitions to PROT_EXEC for pages associated with recently written files</td>
+                      <td>iOS:NetworkExtension</td>
+                      <td>NEFilterFlow / per-app VPN / secure-web-gateway flow metadata</td>
                     </tr>
                     <tr>
                       <td rowspan="1">
-                        <a href="/datacomponents/DC0016">
-                          Module Load (DC0016)
+                        <a href="/datacomponents/DC0115">
+                          Protected Configuration (DC0115)
                         </a>
                       </td>
-                      <td>iOS:unifiedlog</td>
-                      <td>dlopen/image load from app-writable path (tmp, Caches) outside bundled resources</td>
+                      <td>iOS:MDM</td>
+                      <td>DeviceInformation / SecurityInfo / ProfileList / restrictions and compliance queries</td>
                     </tr>
                   </tbody>
                 </table>
@@ -383,28 +383,20 @@
                   </thead>
                   <tbody>
                     <tr>
-                      <td>TimeWindowSeconds</td>
-                      <td>Correlation window from write→rwx→load/exec (e.g., 5–45s).</td>
+                      <td>MDMApprovedCatalog</td>
+                      <td>MDM-managed app list. All enterprise-cert-signed apps should be in this catalog.</td>
                     </tr>
                     <tr>
-                      <td>PayloadEntropyThreshold</td>
-                      <td>Entropy to flag packed blobs (e.g., ≥ 7.3).</td>
+                      <td>AppCDNList</td>
+                      <td>Per-app declared CDN from app documentation or 30-day baseline.</td>
                     </tr>
                     <tr>
-                      <td>RWXPageMinKB</td>
-                      <td>Minimum RWX allocation size (e.g., ≥ 32KB).</td>
+                      <td>CertInstallWindow</td>
+                      <td>Default 3600s between cert profile and app install.</td>
                     </tr>
                     <tr>
-                      <td>KnownJITAllowlist</td>
-                      <td>Bundle IDs legitimately using JIT to avoid RWX false positives.</td>
-                    </tr>
-                    <tr>
-                      <td>WritableLoadPathRegex</td>
-                      <td>Regex for app-writable load paths (tmp, Caches) outside app bundle.</td>
-                    </tr>
-                    <tr>
-                      <td>UnsignedExecPolicy</td>
-                      <td>Tuning if enterprise/dev provisioning allows non-App Store binaries.</td>
+                      <td>PostLaunchWindow</td>
+                      <td>Default 300s after first app launch.</td>
                     </tr>
                   </tbody>
                 </table>
@@ -414,7 +406,7 @@
               role="tabpanel" aria-labelledby="tab-Android">
               <h4 class="pt-3" id="AN1722">AN1722</h4>
               <div>
-                        <p>From the defender view: a sandboxed app handles a high-entropy executable blob, performs rapid decode/decrypt in memory (often with RW→RX or execmem friction), optionally emits a transient .dex/.so into app-writable paths, then immediately loads/executes it (DexClassLoader/dlopen) or spawns a helper. We correlate: (1) opaque blob write/arrival → (2) decode/unpack or memory protection change → (3) new code artifact or byte[] class definition → (4) dynamic load/exec within a tight window.</p>
+                        <p>For Android, detect Software Packing by correlating analyst-visible device/network evidence and management state; use streaming or batched telemetry only where the documented collector is deployed. Correlate File Metadata via Application Vetting / Forensic Acquisition [Dynamic filesystem trace or acquired app-container/filesystem artifacts: DEX file entropy &gt; $PackerEntropyThreshold$ at install time for app NOT IN $MDMApprovedCatalog$]; Module Load via Application Vetting / Instrumented Dynamic Analysis [Dynamic API/runtime trace: DexClassLoader() called at runtime with path NOT matching any file in original APK manifest within $PackerExecWindow$ of app launch]; Network Connection Creation via Android Enterprise Network Logging / Enterprise VPN [DevicePolicyManager.retrieveNetworkLogs(): DnsEvent / ConnectEvent; VPN flow metadata]. Alert on a sequence or state change inconsistent with the device/app baseline, approved management policy, or expected user workflow; do not infer unobserved API calls, file/process activity, or payload content from management state alone.</p>
 
               </div>
 
@@ -431,12 +423,12 @@
                   <tbody>
                     <tr>
                       <td rowspan="1">
-                        <a href="/datacomponents/DC0039">
-                          File Creation (DC0039)
+                        <a href="/datacomponents/DC0059">
+                          File Metadata (DC0059)
                         </a>
                       </td>
-                      <td>android:logcat</td>
-                      <td>Create/write of high-entropy files in /data/data/<pkg>/(files|cache)/ or /storage/emulated/0/<...> with .dex/.so/.jar/.tmp/.bin</td>
+                      <td>mobile:ForensicArtifacts</td>
+                      <td>Dynamic filesystem trace or acquired app-container/filesystem artifacts: DEX file entropy > $PackerEntropyThreshold$ at install time for app NOT IN $MDMApprovedCatalog$</td>
                     </tr>
                     <tr>
                       <td rowspan="1">
@@ -444,26 +436,17 @@
                           Module Load (DC0016)
                         </a>
                       </td>
-                      <td>android:logcat</td>
-                      <td>DexClassLoader/PathClassLoader loading from app-writable path OR reflective defineClass on byte[] payload</td>
+                      <td>mobile:DynamicAnalysis</td>
+                      <td>Dynamic API/runtime trace: DexClassLoader() called at runtime with path NOT matching any file in original APK manifest within $PackerExecWindow$ of app launch</td>
                     </tr>
                     <tr>
                       <td rowspan="1">
-                        <a href="/datacomponents/DC0021">
-                          OS API Execution (DC0021)
+                        <a href="/datacomponents/DC0082">
+                          Network Connection Creation (DC0082)
                         </a>
                       </td>
-                      <td>android:logcat</td>
-                      <td>SELinux AVC for execmem/execute_no_trans/mprotect following recent writes by same UID</td>
-                    </tr>
-                    <tr>
-                      <td rowspan="1">
-                        <a href="/datacomponents/DC0032">
-                          Process Creation (DC0032)
-                        </a>
-                      </td>
-                      <td>android:logcat</td>
-                      <td>dlopen of a recently created .so OR short-lived child (/system/bin/sh,toybox,linker) spawned by app_process</td>
+                      <td>android:EnterpriseNetworkLog</td>
+                      <td>DevicePolicyManager.retrieveNetworkLogs(): DnsEvent / ConnectEvent; VPN flow metadata</td>
                     </tr>
                   </tbody>
                 </table>
@@ -480,28 +463,24 @@
                   </thead>
                   <tbody>
                     <tr>
-                      <td>TimeWindowSeconds</td>
-                      <td>Correlation window from write→unpack→load (e.g., 5–45s; device-dependent).</td>
+                      <td>PackerEntropyThreshold</td>
+                      <td>Default 7.5 bits Shannon entropy. Legitimate DEX: ~6.5 bits. Calibrate from fleet clean-app baseline. Tightening: 7.8 — fewer FP on obfuscated legitimate apps.</td>
                     </tr>
                     <tr>
-                      <td>PayloadEntropyThreshold</td>
-                      <td>Entropy to flag packed blobs (e.g., ≥ 7.2).</td>
+                      <td>MDMApprovedCatalog</td>
+                      <td>MDM-managed app list. Apps in catalog are pre-vetted. Derive from MDM platform.</td>
                     </tr>
                     <tr>
-                      <td>RWXPageMinKB</td>
-                      <td>Minimum RWX allocation size to reduce noise (e.g., ≥ 32KB).</td>
+                      <td>PackerExecWindow</td>
+                      <td>Default 300s after app launch. Tightening: 60s — catches immediate unpack.</td>
                     </tr>
                     <tr>
-                      <td>ExecPathRegex</td>
-                      <td>Regex for suspicious .dex/.so/.jar/temp paths under app container.</td>
+                      <td>AppCDNList</td>
+                      <td>Per-app CDN baseline. Derive by measurement.</td>
                     </tr>
                     <tr>
-                      <td>KnownGoodLoadersAllowlist</td>
-                      <td>Legit libraries/bundles expected to load from writable paths (test/dev builds).</td>
-                    </tr>
-                    <tr>
-                      <td>UserContext</td>
-                      <td>Foreground/background, Work Profile, developer mode to scope alerts.</td>
+                      <td>PostLoadWindow</td>
+                      <td>Default 120s.</td>
                     </tr>
                   </tbody>
                 </table>
@@ -509,6 +488,7 @@
             </div>
           </div>
         </div>
+
 
         
       </div>
@@ -727,7 +707,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3 col-footer">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v19.2&#013;Website  v5.1.0">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v20.0&#013;Website  v5.2.0">Website Changelog</a></u>
                                 </div>
                                 <div class="px-3">
                                     <u class="footer-link"><a href="/resources/legal-and-branding/privacy/#" class="footer-link" onclick="Osano.cm.showDrawer('osano-cm-dom-info-dialog-open')">Cookie Preferences</a></u>

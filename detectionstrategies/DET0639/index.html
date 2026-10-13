@@ -207,7 +207,7 @@
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
                     <div class="container-fluid banner-message">
-                        ATT&CKcon 7.0 registration is open! Join us October 27-28, 2026 in McLean, VA or virtually. <a href="https://na.eventscloud.com/website/93925/">Register in person</a> or <a href="https://mitre.brandlive.com/MITRE-ATTACKcon-7-0">register virtually</a>. See the <a href="https://na.eventscloud.com/website/93925/faq/">FAQ</a> for hotel and venue details.
+                        ATT&CK v20 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v20-9701dd75ffb4'>blog post</a> for more information. <a href='https://na.eventscloud.com/website/93925/'>ATT&CKcon 7.0</a> is October 27-28, 2026 in McLean, VA.
                     </div>
             </div>
         </div>
@@ -292,13 +292,13 @@
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Permalink to this version of DET0639" 
-           href="/versions/v19/detectionstrategies/DET0639/" data-test-ignore="true">Version Permalink</a>
+           href="/versions/v20/detectionstrategies/DET0639/" data-test-ignore="true">Version Permalink</a>
     </div>
     <div class="permalink">
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Go to the live version of DET0639" 
-           href="/versions/v19/detectionstrategies/DET0639/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+           href="/versions/v20/detectionstrategies/DET0639/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
     </div>
 </div>
 
@@ -326,7 +326,7 @@
               role="tabpanel" aria-labelledby="tab-Android">
               <h4 class="pt-3" id="AN1713">AN1713</h4>
               <div>
-                        <p>Defender correlates an Android-specific causal chain where device connectivity degrades or oscillates across one or more radios, applications lose or repeatedly reattempt network access, and the radio or network failure pattern is inconsistent with ordinary mobility, coverage transition, or user-initiated airplane mode behavior. The defender correlates radio state, connectivity framework behavior, application state, network session failures, and location/network-provider degradation to distinguish network denial effects from routine weak-signal conditions.</p>
+                        <p>For Android, detect Network Denial of Service by correlating analyst-visible device/network evidence and management state; use streaming or batched telemetry only where the documented collector is deployed. Correlate Application Permission via Android Enterprise DPC / Application Vetting [DevicePolicyManager.getPermissionGrantState(); PackageManager manifest/requested-permission review]; OS API Execution via Application Vetting / Instrumented Dynamic Analysis [Dynamic API/runtime trace: ConnectivityManager, TelephonyManager, or WifiManager framework callbacks report repeated failure, disable, or oscillation events outside expected coverage-transition pattern]; Protected Configuration via Android Enterprise DPC [DevicePolicyManager policy/compliance/security-state queries and SecurityLog events where supported]. Alert on a sequence or state change inconsistent with the device/app baseline, approved management policy, or expected user workflow; do not infer unobserved API calls, file/process activity, or payload content from management state alone.</p>
 
               </div>
 
@@ -343,30 +343,12 @@
                   <tbody>
                     <tr>
                       <td rowspan="1">
-                        <a href="/datacomponents/DC0118">
-                          System Settings (DC0118)
+                        <a href="/datacomponents/DC0114">
+                          Application Permission (DC0114)
                         </a>
                       </td>
-                      <td>android:MDMLog</td>
-                      <td>No user-initiated airplane mode, radio disablement, or managed network setting change occurred during repeated connectivity degradation</td>
-                    </tr>
-                    <tr>
-                      <td rowspan="1">
-                        <a href="/datacomponents/DC0115">
-                          Protected Configuration (DC0115)
-                        </a>
-                      </td>
-                      <td>android:MDMLog</td>
-                      <td>Managed Wi-Fi, VPN, cellular, or location-related policy state remains unchanged while network capability degrades</td>
-                    </tr>
-                    <tr>
-                      <td rowspan="1">
-                        <a href="/datacomponents/DC0123">
-                          Application State (DC0123)
-                        </a>
-                      </td>
-                      <td>MobileEDR:telemetry</td>
-                      <td>Foreground or background applications remain active while network-dependent activity stalls, retries, or transitions into repeated failure state</td>
+                      <td>android:DevicePolicyManager</td>
+                      <td>DevicePolicyManager.getPermissionGrantState(); PackageManager manifest/requested-permission review</td>
                     </tr>
                     <tr>
                       <td rowspan="1">
@@ -374,17 +356,26 @@
                           OS API Execution (DC0021)
                         </a>
                       </td>
-                      <td>MobileEDR:telemetry</td>
-                      <td>Connectivity manager, telephony, Wi-Fi, network callback, or location-provider framework reports repeated unavailable, disconnected, suspended, or degraded state transitions</td>
+                      <td>mobile:DynamicAnalysis</td>
+                      <td>Dynamic API/runtime trace: ConnectivityManager, TelephonyManager, or WifiManager framework callbacks report repeated failure, disable, or oscillation events outside expected coverage-transition pattern</td>
                     </tr>
                     <tr>
                       <td rowspan="1">
-                        <a href="/datacomponents/DC0114">
-                          Application Permission (DC0114)
+                        <a href="/datacomponents/DC0115">
+                          Protected Configuration (DC0115)
                         </a>
                       </td>
-                      <td>MobileEDR:telemetry</td>
-                      <td>App with network-, telephony-, Wi-Fi-, or location-adjacent capability is impacted by abrupt repeated service loss while permissions remain unchanged</td>
+                      <td>android:DevicePolicyManager</td>
+                      <td>DevicePolicyManager policy/compliance/security-state queries and SecurityLog events where supported</td>
+                    </tr>
+                    <tr>
+                      <td rowspan="1">
+                        <a href="/datacomponents/DC0118">
+                          System Settings (DC0118)
+                        </a>
+                      </td>
+                      <td>android:DevicePolicyManager</td>
+                      <td>DevicePolicyManager policy/compliance/security-state queries and SecurityLog events where supported</td>
                     </tr>
                   </tbody>
                 </table>
@@ -440,7 +431,7 @@
               role="tabpanel" aria-labelledby="tab-iOS">
               <h4 class="pt-3" id="AN1714">AN1714</h4>
               <div>
-                        <p>Defender correlates an iOS-specific reduced-confidence chain where a managed or supervised device remains active but experiences abrupt loss of network-dependent functionality, repeated session failure, or sustained communication inability without matching configuration changes or ordinary user action. Because direct radio-layer and RF-cause visibility is weaker on iOS, the defender emphasizes device posture, application wake or foreground behavior during service loss, protected network-policy stability, and downstream failure patterns observed in VPN or proxy telemetry.</p>
+                        <p>For iOS, detect Network Denial of Service from documented management, network, or vetting evidence; treat state queries as periodic observations rather than real-time events. Correlate Application State via Apple MDM [InstalledApplicationList / ManagedApplicationList]; Protected Configuration via Apple MDM [DeviceInformation / SecurityInfo / ProfileList / restrictions and compliance queries]; System Settings via Apple MDM [DeviceInformation / SecurityInfo / ProfileList / restrictions and compliance queries]. Alert on a sequence or state change inconsistent with the device/app baseline, approved management policy, or expected user workflow; do not infer unobserved API calls, file/process activity, or payload content from management state alone.</p>
 
               </div>
 
@@ -457,12 +448,21 @@
                   <tbody>
                     <tr>
                       <td rowspan="1">
+                        <a href="/datacomponents/DC0123">
+                          Application State (DC0123)
+                        </a>
+                      </td>
+                      <td>iOS:MDM</td>
+                      <td>InstalledApplicationList / ManagedApplicationList</td>
+                    </tr>
+                    <tr>
+                      <td rowspan="1">
                         <a href="/datacomponents/DC0115">
                           Protected Configuration (DC0115)
                         </a>
                       </td>
-                      <td>iOS:MDMLog</td>
-                      <td>Managed Wi-Fi, VPN, cellular, or location-service policy remains unchanged while device connectivity repeatedly degrades</td>
+                      <td>iOS:MDM</td>
+                      <td>DeviceInformation / SecurityInfo / ProfileList / restrictions and compliance queries</td>
                     </tr>
                     <tr>
                       <td rowspan="1">
@@ -470,35 +470,8 @@
                           System Settings (DC0118)
                         </a>
                       </td>
-                      <td>iOS:MDMLog</td>
-                      <td>No user-initiated airplane mode or radio-related setting change occurred while applications experience repeated network unavailability</td>
-                    </tr>
-                    <tr>
-                      <td rowspan="1">
-                        <a href="/datacomponents/DC0123">
-                          Application State (DC0123)
-                        </a>
-                      </td>
-                      <td>MobileEDR:telemetry</td>
-                      <td>Foreground or background applications remain active while network-dependent activity stalls, retries, or transitions into repeated failure state</td>
-                    </tr>
-                    <tr>
-                      <td rowspan="1">
-                        <a href="/datacomponents/DC0021">
-                          OS API Execution (DC0021)
-                        </a>
-                      </td>
-                      <td>MobileEDR:telemetry</td>
-                      <td>Observed network-path, reachability, DNS, transport, or location-provider framework reports repeated unavailable or failed state near active device use</td>
-                    </tr>
-                    <tr>
-                      <td rowspan="1">
-                        <a href="/datacomponents/DC0114">
-                          Application Permission (DC0114)
-                        </a>
-                      </td>
-                      <td>MobileEDR:telemetry</td>
-                      <td>Network- or location-dependent app capability state remains unchanged while the app experiences sustained communication failure</td>
+                      <td>iOS:MDM</td>
+                      <td>DeviceInformation / SecurityInfo / ProfileList / restrictions and compliance queries</td>
                     </tr>
                   </tbody>
                 </table>
@@ -552,6 +525,7 @@
             </div>
           </div>
         </div>
+
 
         
       </div>
@@ -770,7 +744,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3 col-footer">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v19.2&#013;Website  v5.1.0">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v20.0&#013;Website  v5.2.0">Website Changelog</a></u>
                                 </div>
                                 <div class="px-3">
                                     <u class="footer-link"><a href="/resources/legal-and-branding/privacy/#" class="footer-link" onclick="Osano.cm.showDrawer('osano-cm-dom-info-dialog-open')">Cookie Preferences</a></u>

@@ -207,7 +207,7 @@
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
                     <div class="container-fluid banner-message">
-                        ATT&CKcon 7.0 registration is open! Join us October 27-28, 2026 in McLean, VA or virtually. <a href="https://na.eventscloud.com/website/93925/">Register in person</a> or <a href="https://mitre.brandlive.com/MITRE-ATTACKcon-7-0">register virtually</a>. See the <a href="https://na.eventscloud.com/website/93925/faq/">FAQ</a> for hotel and venue details.
+                        ATT&CK v20 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v20-9701dd75ffb4'>blog post</a> for more information. <a href='https://na.eventscloud.com/website/93925/'>ATT&CKcon 7.0</a> is October 27-28, 2026 in McLean, VA.
                     </div>
             </div>
         </div>
@@ -292,13 +292,13 @@
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Permalink to this version of DET0637" 
-           href="/versions/v19/detectionstrategies/DET0637/" data-test-ignore="true">Version Permalink</a>
+           href="/versions/v20/detectionstrategies/DET0637/" data-test-ignore="true">Version Permalink</a>
     </div>
     <div class="permalink">
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Go to the live version of DET0637" 
-           href="/versions/v19/detectionstrategies/DET0637/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+           href="/versions/v20/detectionstrategies/DET0637/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
     </div>
 </div>
 
@@ -320,7 +320,7 @@
               role="tabpanel" aria-labelledby="tab-Android">
               <h4 class="pt-3" id="AN1711">AN1711</h4>
               <div>
-                        <p>The defender correlates foreground service start or promotion activity with persistent-notification presentation, long-lived application execution, and continued access to while-in-use sensors or network activity outside expected user-driven context. The analytic looks for an application invoking foreground service APIs, sustaining a foreground state longer than expected for its declared role, and retaining camera, microphone, location, or other sensor access while the device is locked, the app lacks recent interaction, or the notification identity/function does not match the application’s behavior.</p>
+                        <p>For Android, detect Foreground Persistence by correlating analyst-visible device/network evidence and management state; use streaming or batched telemetry only where the documented collector is deployed. Correlate Application State via Android Enterprise / EMM [Managed package inventory/status and package metadata]; OS API Execution via Application Vetting / Instrumented Dynamic Analysis [Dynamic API/runtime trace: App invokes startForegroundService() or startForeground() NOT IN $ApprovedForegroundServiceApps$]; System Settings via Android Enterprise DPC [DevicePolicyManager policy/compliance/security-state queries and SecurityLog events where supported]. Alert on a sequence or state change inconsistent with the device/app baseline, approved management policy, or expected user workflow; do not infer unobserved API calls, file/process activity, or payload content from management state alone.</p>
 
               </div>
 
@@ -337,21 +337,21 @@
                   <tbody>
                     <tr>
                       <td rowspan="1">
-                        <a href="/datacomponents/DC0021">
-                          OS API Execution (DC0021)
-                        </a>
-                      </td>
-                      <td>MobileEDR:telemetry</td>
-                      <td>Application calls startForegroundService() or startForeground() / ServiceCompat.startForeground() and transitions to persistent foreground-service execution at the start of the chain</td>
-                    </tr>
-                    <tr>
-                      <td rowspan="1">
                         <a href="/datacomponents/DC0123">
                           Application State (DC0123)
                         </a>
                       </td>
-                      <td>MobileEDR:telemetry</td>
-                      <td>Persistent foreground-service notification is created, updated, or remains visible while app behavior or notification identity is inconsistent with declared function during the persistence interval</td>
+                      <td>android:EMM</td>
+                      <td>Managed package inventory/status and package metadata</td>
+                    </tr>
+                    <tr>
+                      <td rowspan="1">
+                        <a href="/datacomponents/DC0021">
+                          OS API Execution (DC0021)
+                        </a>
+                      </td>
+                      <td>mobile:DynamicAnalysis</td>
+                      <td>Dynamic API/runtime trace: App invokes startForegroundService() or startForeground() NOT IN $ApprovedForegroundServiceApps$</td>
                     </tr>
                     <tr>
                       <td rowspan="1">
@@ -359,8 +359,8 @@
                           System Settings (DC0118)
                         </a>
                       </td>
-                      <td>MobileEDR:telemetry</td>
-                      <td>Foreground service continues accessing camera, microphone, location, or other while-in-use sensors after service promotion and outside recent user interaction</td>
+                      <td>android:DevicePolicyManager</td>
+                      <td>DevicePolicyManager policy/compliance/security-state queries and SecurityLog events where supported</td>
                     </tr>
                   </tbody>
                 </table>
@@ -377,32 +377,16 @@
                   </thead>
                   <tbody>
                     <tr>
-                      <td>AllowedAppList</td>
-                      <td>Apps legitimately expected to run foreground services such as navigation, fitness, calling, media playback, enterprise VPN, accessibility, or device-management apps</td>
-                    </tr>
-                    <tr>
-                      <td>AllowedServiceTypes</td>
-                      <td>Approved foreground service types and role-to-type mappings, especially for Android 14+ and later</td>
+                      <td>ApprovedForegroundServiceApps</td>
+                      <td>Media players, navigation apps, VoIP apps, approved fitness trackers — apps with legitimate foreground service need. Derive from MDM catalog. Tightening: strict list.</td>
                     </tr>
                     <tr>
                       <td>ForegroundDurationThreshold</td>
-                      <td>Duration a foreground service may legitimately remain active before suspicion increases</td>
+                      <td>Default 3600s (1 hour) sustained foreground service. Legitimate foreground services (music playback, navigation) have user-aligned durations. Extended overnight foreground service is persistence abuse.</td>
                     </tr>
                     <tr>
-                      <td>SensorAfterPromotionWindow</td>
-                      <td>Maximum expected delay between service promotion and sensor activation for legitimate workflows</td>
-                    </tr>
-                    <tr>
-                      <td>NotificationMismatchPatterns</td>
-                      <td>Patterns indicating misleading or impersonating foreground notifications, such as benign-looking text or mismatched app function</td>
-                    </tr>
-                    <tr>
-                      <td>RecentInteractionThreshold</td>
-                      <td>How recently the user must have interacted with the app for sensor or network activity to be considered expected</td>
-                    </tr>
-                    <tr>
-                      <td>UplinkBytesThreshold</td>
-                      <td>Minimum sustained outbound volume or beacon frequency during persistent foreground execution</td>
+                      <td>InteractionThreshold</td>
+                      <td>Default 300s. Foreground service accessing sensors >5min after last user touch is covert.</td>
                     </tr>
                   </tbody>
                 </table>
@@ -410,6 +394,7 @@
             </div>
           </div>
         </div>
+
 
         
       </div>
@@ -628,7 +613,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3 col-footer">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v19.2&#013;Website  v5.1.0">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v20.0&#013;Website  v5.2.0">Website Changelog</a></u>
                                 </div>
                                 <div class="px-3">
                                     <u class="footer-link"><a href="/resources/legal-and-branding/privacy/#" class="footer-link" onclick="Osano.cm.showDrawer('osano-cm-dom-info-dialog-open')">Cookie Preferences</a></u>

@@ -207,7 +207,7 @@
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
                     <div class="container-fluid banner-message">
-                        ATT&CKcon 7.0 registration is open! Join us October 27-28, 2026 in McLean, VA or virtually. <a href="https://na.eventscloud.com/website/93925/">Register in person</a> or <a href="https://mitre.brandlive.com/MITRE-ATTACKcon-7-0">register virtually</a>. See the <a href="https://na.eventscloud.com/website/93925/faq/">FAQ</a> for hotel and venue details.
+                        ATT&CK v20 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v20-9701dd75ffb4'>blog post</a> for more information. <a href='https://na.eventscloud.com/website/93925/'>ATT&CKcon 7.0</a> is October 27-28, 2026 in McLean, VA.
                     </div>
             </div>
         </div>
@@ -330,13 +330,13 @@
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Permalink to this version of T1407" 
-           href="/versions/v19/techniques/T1407/" data-test-ignore="true">Version Permalink</a>
+           href="/versions/v20/techniques/T1407/" data-test-ignore="true">Version Permalink</a>
     </div>
     <div class="permalink">
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Go to the live version of T1407" 
-           href="/versions/v19/techniques/T1407/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+           href="/versions/v20/techniques/T1407/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
     </div>
 </div>
 
@@ -885,7 +885,7 @@
                         <a href="/detectionstrategies/DET0618#AN1677">AN1677</a>
                     </td>
                     <td>
-                                <p>From the defender’s view: an app retrieves opaque code (DEX/SO/JAR/JS) over the network or IPC, writes it into an app-writable path, optionally performs verification-bypass behaviors (reflection, addJavascriptInterface exposure, or execmem friction), and then loads/executes that code via DexClassLoader/PathClassLoader, dlopen, or WebView bridge invocation within a short window. The analytic correlates Network Content → File Creation/Modification → OS API Execution (loader/syscall/SELinux friction) → Module Load (DexClassLoader/dlopen) and, for WebView paths, Application Log signals of JavaScript interface attachment.</p>
+                                <p>For Android, detect Download New Code at Runtime by correlating analyst-visible device/network evidence and management state; use streaming or batched telemetry only where the documented collector is deployed. Correlate File Metadata via Application Vetting / Forensic Acquisition [Dynamic filesystem trace or acquired app-container/filesystem artifacts: app_version in MDM == prior_version while dynamic code load from network is observed — confirms this is not a legitimate update]; Module Load via Application Vetting / Instrumented Dynamic Analysis [Dynamic API/runtime trace: DexClassLoader() or System.load() or WebView.loadUrl(javascript:) called with content_source='network_download' within $CodeDownloadWindow$ of download event]; Network Connection Creation via Android Enterprise Network Logging / Enterprise VPN [DevicePolicyManager.retrieveNetworkLogs(): DnsEvent / ConnectEvent; VPN flow metadata]. Alert on a sequence or state change inconsistent with the device/app baseline, approved management policy, or expected user workflow; do not infer unobserved API calls, file/process activity, or payload content from management state alone.</p>
 </a>
                     </td>
                 </tr>
@@ -894,7 +894,7 @@
                         <a href="/detectionstrategies/DET0618#AN1678">AN1678</a>
                     </td>
                     <td>
-                                <p>From the defender’s view: a sandboxed app retrieves code-like content (JS/Mach-O/bundles), writes it to container tmp/Caches, performs memory permission changes (RW→RX/RWX) or directly loads via dyld/dlopen from writable paths, sometimes preceded by 3rd-party hotpatch frameworks (e.g., JSPatch-like behavior) or script engine evaluation. The analytic correlates Network Content → File Creation → OS API Execution (memory permission change) → Module Load (dyld/dlopen) and/or Process Access (codesign validation touches), with optional scripting engine events.</p>
+                                <p>For iOS, detect Download New Code at Runtime by correlating analyst-visible device/network evidence and management state; use streaming or batched telemetry only where the documented collector is deployed. Correlate Application Permission via Application Vetting [Code-signing entitlements and Info.plist privacy usage-description keys]; Network Traffic Content via Enterprise Secure Web Gateway / Proxy [DNS/HTTP(S) inspection or proxy transaction metadata where enterprise decryption/inspection is deployed]; Network Traffic Flow via Apple Network Extension / Enterprise VPN [NEFilterFlow / per-app VPN / secure-web-gateway flow metadata]. Alert on a sequence or state change inconsistent with the device/app baseline, approved management policy, or expected user workflow; do not infer unobserved API calls, file/process activity, or payload content from management state alone.</p>
 </a>
                     </td>
                 </tr>
@@ -1614,7 +1614,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3 col-footer">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v19.2&#013;Website  v5.1.0">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v20.0&#013;Website  v5.2.0">Website Changelog</a></u>
                                 </div>
                                 <div class="px-3">
                                     <u class="footer-link"><a href="/resources/legal-and-branding/privacy/#" class="footer-link" onclick="Osano.cm.showDrawer('osano-cm-dom-info-dialog-open')">Cookie Preferences</a></u>

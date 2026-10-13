@@ -207,7 +207,7 @@
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
                     <div class="container-fluid banner-message">
-                        ATT&CKcon 7.0 registration is open! Join us October 27-28, 2026 in McLean, VA or virtually. <a href="https://na.eventscloud.com/website/93925/">Register in person</a> or <a href="https://mitre.brandlive.com/MITRE-ATTACKcon-7-0">register virtually</a>. See the <a href="https://na.eventscloud.com/website/93925/faq/">FAQ</a> for hotel and venue details.
+                        ATT&CK v20 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v20-9701dd75ffb4'>blog post</a> for more information. <a href='https://na.eventscloud.com/website/93925/'>ATT&CKcon 7.0</a> is October 27-28, 2026 in McLean, VA.
                     </div>
             </div>
         </div>
@@ -265,7 +265,7 @@
                 </div>
                 <div class="row card-data">
                   <div class="col-md-12">
-                    <span class="h5 card-title">Version</span>: 2.1
+                    <span class="h5 card-title">Version</span>: 2.2
                   </div>
                 </div>
                 <div class="row card-data">
@@ -275,7 +275,7 @@
                 </div>
                 <div class="row card-data">
                   <div class="col-md-12">
-                    <span class="h5 card-title">Last Modified</span>: 12 May 2026
+                    <span class="h5 card-title">Last Modified</span>: 13 October 2026
                   </div>
                 </div>
               </div>
@@ -294,8 +294,24 @@
             </thead>
             <tbody>
               <tr>
+                <td>android:DevicePolicyManager</td>
+                <td>DevicePolicyManager.getPermissionGrantState(); PackageManager manifest/requested-permission review</td>
+              </tr>
+              <tr>
                 <td>android:logcat</td>
                 <td>READ_EXTERNAL_STORAGE / MANAGE_EXTERNAL_STORAGE permission present or toggled at runtime</td>
+              </tr>
+              <tr>
+                <td>android:MDMLog</td>
+                <td>policy_violation WHERE install_unknown_apps changed to enabled + MobileEDR app_install with signing_cert NOT IN EnterpriseCertList within TimeWindow where enterprise policy does not permit this cert or install source</td>
+              </tr>
+              <tr>
+                <td>android:MDMLog</td>
+                <td>policy_violation WHERE unknown_sources=enabled OR play_protect_status=disabled + MobileEDR app_install event from non-com.android.vending source within PolicyViolationWindow where MDM policy does not permit unknown source installs</td>
+              </tr>
+              <tr>
+                <td>android:MDMLog</td>
+                <td>root_status=false AND MobileEDR reports UID=0 binary execution within ComplianceCheckWindow where MDM-reported state does not justify observed privilege</td>
               </tr>
               <tr>
                 <td>android:MDMLog</td>
@@ -527,6 +543,22 @@
               </tr>
               <tr>
                 <td>iOS:MDMLog</td>
+                <td>MDM integrity_check=fail AND jailbreak_status=true — active integrity failure on jailbroken device confirms exploitation beyond passive jailbreak presence</td>
+              </tr>
+              <tr>
+                <td>iOS:MDMLog</td>
+                <td>certificate trust status = user_trusted for cert NOT IN $EnterpriseCertList$ within $ProfileInstallWindow$</td>
+              </tr>
+              <tr>
+                <td>iOS:MDMLog</td>
+                <td>profile_install where install_initiator != MDM_SERVER + cert_trust_type=enterprise within ProfileInstallWindow where MDM provisioning does not justify out-of-band profile installation</td>
+              </tr>
+              <tr>
+                <td>iOS:MDMLog</td>
+                <td>compliance_status=pass AND MobileEDR dylib load event with lib_path matching KnownJailbreakLibPatterns within same device session where clean compliance does not justify jailbreak library presence</td>
+              </tr>
+              <tr>
+                <td>iOS:MDMLog</td>
                 <td>Application installed with NSMicrophoneUsageDescription entitlement indicating microphone capability</td>
               </tr>
               <tr>
@@ -606,6 +638,10 @@
                 <td>application authorized for when-in-use or always location access and, where relevant, background execution capability sufficient for continued geographic evaluation before later guarded behavior</td>
               </tr>
               <tr>
+                <td>mobile:ApplicationVetting</td>
+                <td>Code-signing entitlements and Info.plist privacy usage-description keys</td>
+              </tr>
+              <tr>
                 <td>MobileEDR:telemetry</td>
                 <td>App with network-, telephony-, Wi-Fi-, or location-adjacent capability is impacted by abrupt repeated service loss while permissions remain unchanged</td>
               </tr>
@@ -675,15 +711,26 @@
                     <a href="/techniques/T1636/005">T1636.005</a>
                 </td>
             </tr>
-            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--debfadd8-1df0-43b1-ae16-5f893dfc8bf3">
+            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--7a96a921-48bc-4fcf-b6b8-86a96315d4ee">
                 <td rowspan="">
-                    <a href="/detectionstrategies/DET0652">DET0652</a>
+                    <a href="/detectionstrategies/DET0623">DET0623</a>
                 </td>
                 <td rowspan="">
-                    <a href="/detectionstrategies/DET0652">Detection of Application Versioning</a>
+                    <a href="/detectionstrategies/DET0623">Detection of Adversary-in-the-Middle</a>
                 </td>
                 <td rowspan="">
-                    <a href="/techniques/T1661">T1661</a>
+                    <a href="/techniques/T1638">T1638</a>
+                </td>
+            </tr>
+            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--a6da6dc3-19fe-4d1c-ab77-843c08377a19">
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0685">DET0685</a>
+                </td>
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0685">Detection of Application Layer Protocol</a>
+                </td>
+                <td rowspan="">
+                    <a href="/techniques/T1437">T1437</a>
                 </td>
             </tr>
             <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--b66555c6-297c-4769-affe-8f268b7c3c78">
@@ -730,15 +777,15 @@
                     <a href="/techniques/T1481/002">T1481.002</a>
                 </td>
             </tr>
-            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--0cb492cd-7d01-46b2-b1f4-afddec10eaf2">
+            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--0677c510-fa4d-4a39-a14b-b91f9cde1e23">
                 <td rowspan="">
-                    <a href="/detectionstrategies/DET0674">DET0674</a>
+                    <a href="/detectionstrategies/DET0654">DET0654</a>
                 </td>
                 <td rowspan="">
-                    <a href="/detectionstrategies/DET0674">Detection of Calendar Entries</a>
+                    <a href="/detectionstrategies/DET0654">Detection of Boot or Logon Initialization Scripts</a>
                 </td>
                 <td rowspan="">
-                    <a href="/techniques/T1636/001">T1636.001</a>
+                    <a href="/techniques/T1398">T1398</a>
                 </td>
             </tr>
             <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--0abd72c9-7d7f-4e8a-99d7-5ac2f791eb9d">
@@ -752,15 +799,15 @@
                     <a href="/techniques/T1616">T1616</a>
                 </td>
             </tr>
-            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--0a21ca34-ffa0-4b6f-b88c-9ffdb6a7c38f">
+            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--ab6215b7-19e0-4644-b340-40b6dcc90a48">
                 <td rowspan="">
-                    <a href="/detectionstrategies/DET0602">DET0602</a>
+                    <a href="/detectionstrategies/DET0619">DET0619</a>
                 </td>
                 <td rowspan="">
-                    <a href="/detectionstrategies/DET0602">Detection of Call Log</a>
+                    <a href="/detectionstrategies/DET0619">Detection of Code Signing Policy Modification</a>
                 </td>
                 <td rowspan="">
-                    <a href="/techniques/T1636/002">T1636.002</a>
+                    <a href="/techniques/T1632/001">T1632.001</a>
                 </td>
             </tr>
             <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--113d83d6-e0a2-44af-955d-288bd4ef21c4">
@@ -805,28 +852,6 @@
                 </td>
                 <td rowspan="">
                     <a href="/techniques/T1474/003">T1474.003</a>
-                </td>
-            </tr>
-            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--03c7f8c1-0239-44a2-89e2-4cd6b47940ac">
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0679">DET0679</a>
-                </td>
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0679">Detection of Contact List</a>
-                </td>
-                <td rowspan="">
-                    <a href="/techniques/T1636/003">T1636.003</a>
-                </td>
-            </tr>
-            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--f181f7e1-f70c-4ab3-b8c5-5c0a08ea98d1">
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0671">DET0671</a>
-                </td>
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0671">Detection of Data Destruction</a>
-                </td>
-                <td rowspan="">
-                    <a href="/techniques/T1662">T1662</a>
                 </td>
             </tr>
             <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--132ead25-5d93-4616-9847-a4c37d33d3e6">
@@ -895,15 +920,37 @@
                     <a href="/techniques/T1629/003">T1629.003</a>
                 </td>
             </tr>
-            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--c6c7da3e-4366-473e-af4e-3cc67d8ea1fa">
+            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--bd3d39c3-e5d5-4ce7-9e1b-1b9598352dc5">
                 <td rowspan="">
-                    <a href="/detectionstrategies/DET0614">DET0614</a>
+                    <a href="/detectionstrategies/DET0669">DET0669</a>
                 </td>
                 <td rowspan="">
-                    <a href="/detectionstrategies/DET0614">Detection of Drive-By Compromise</a>
+                    <a href="/detectionstrategies/DET0669">Detection of Domain Generation Algorithms</a>
                 </td>
                 <td rowspan="">
-                    <a href="/techniques/T1456">T1456</a>
+                    <a href="/techniques/T1637/001">T1637.001</a>
+                </td>
+            </tr>
+            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--996f14f4-3419-45f6-af22-edc15f5d5d19">
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0618">DET0618</a>
+                </td>
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0618">Detection of Download New Code at Runtime</a>
+                </td>
+                <td rowspan="">
+                    <a href="/techniques/T1407">T1407</a>
+                </td>
+            </tr>
+            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--1147c50d-907a-4c0d-8375-e23cadeae5f9">
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0613">DET0613</a>
+                </td>
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0613">Detection of Dynamic Resolution</a>
+                </td>
+                <td rowspan="">
+                    <a href="/techniques/T1637">T1637</a>
                 </td>
             </tr>
             <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--6e373a06-358b-4078-a8ab-1f5c1730ddf4">
@@ -939,15 +986,26 @@
                     <a href="/techniques/T1627">T1627</a>
                 </td>
             </tr>
-            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--afab91d6-8af3-47cd-b899-cacfbb8cad6d">
+            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--5d42f7a1-78dd-4569-936e-78fe4601cb73">
                 <td rowspan="">
-                    <a href="/detectionstrategies/DET0682">DET0682</a>
+                    <a href="/detectionstrategies/DET0665">DET0665</a>
                 </td>
                 <td rowspan="">
-                    <a href="/detectionstrategies/DET0682">Detection of File and Directory Discovery</a>
+                    <a href="/detectionstrategies/DET0665">Detection of Exploitation for Privilege Escalation</a>
                 </td>
                 <td rowspan="">
-                    <a href="/techniques/T1420">T1420</a>
+                    <a href="/techniques/T1404">T1404</a>
+                </td>
+            </tr>
+            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--39efdb0b-2a05-4caf-8f37-876dfad294d6">
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0663">DET0663</a>
+                </td>
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0663">Detection of Exploitation of Remote Services</a>
+                </td>
+                <td rowspan="">
+                    <a href="/techniques/T1428">T1428</a>
                 </td>
             </tr>
             <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--5848450c-38a7-421d-910c-9a10870f4ea3">
@@ -961,17 +1019,6 @@
                     <a href="/techniques/T1630/002">T1630.002</a>
                 </td>
             </tr>
-            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--12414f0e-85ca-4403-873a-6d415c2020f4">
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0608">DET0608</a>
-                </td>
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0608">Detection of Generate Traffic from Victim</a>
-                </td>
-                <td rowspan="">
-                    <a href="/techniques/T1643">T1643</a>
-                </td>
-            </tr>
             <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--19bf9f62-3909-4d68-b287-bb9ccd826fe5">
                 <td rowspan="">
                     <a href="/detectionstrategies/DET0648">DET0648</a>
@@ -981,6 +1028,17 @@
                 </td>
                 <td rowspan="">
                     <a href="/techniques/T1627/001">T1627.001</a>
+                </td>
+            </tr>
+            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--4809a26b-8527-49dc-81aa-ac2750fd3b75">
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0676">DET0676</a>
+                </td>
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0676">Detection of GUI Input Capture</a>
+                </td>
+                <td rowspan="">
+                    <a href="/techniques/T1417/002">T1417.002</a>
                 </td>
             </tr>
             <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--11b4d80e-e15b-45b5-81c8-5ebbcdd814f1">
@@ -1038,17 +1096,6 @@
                     <a href="/techniques/T1544">T1544</a>
                 </td>
             </tr>
-            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--2627c9c4-0241-41b7-b494-657cc58d4611">
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0708">DET0708</a>
-                </td>
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0708">Detection of Internet Connection Discovery</a>
-                </td>
-                <td rowspan="">
-                    <a href="/techniques/T1422/001">T1422.001</a>
-                </td>
-            </tr>
             <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--ac9d1b33-cfba-415e-aef2-c4c0b359ed5f">
                 <td rowspan="">
                     <a href="/detectionstrategies/DET0675">DET0675</a>
@@ -1069,6 +1116,28 @@
                 </td>
                 <td rowspan="">
                     <a href="/techniques/T1461">T1461</a>
+                </td>
+            </tr>
+            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--d314d955-a323-4e87-a8e5-317b0b8ed203">
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0715">DET0715</a>
+                </td>
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0715">Detection of Masquerading</a>
+                </td>
+                <td rowspan="">
+                    <a href="/techniques/T1655">T1655</a>
+                </td>
+            </tr>
+            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--91b70fb4-8e86-4dd2-a988-33d64cc46d4e">
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0609">DET0609</a>
+                </td>
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0609">Detection of Match Legitimate Name or Location</a>
+                </td>
+                <td rowspan="">
+                    <a href="/techniques/T1655/001">T1655.001</a>
                 </td>
             </tr>
             <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--10403bf9-7ba1-427a-9320-b4069d2c2eff">
@@ -1104,6 +1173,17 @@
                     <a href="/techniques/T1509">T1509</a>
                 </td>
             </tr>
+            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--7c507410-2dc7-4159-88ec-b2228547ae67">
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0720">DET0720</a>
+                </td>
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0720">Detection of Obfuscated Files or Information</a>
+                </td>
+                <td rowspan="">
+                    <a href="/techniques/T1406">T1406</a>
+                </td>
+            </tr>
             <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--3ec475a9-b33f-42b3-a1b1-755b5fa9389b">
                 <td rowspan="">
                     <a href="/detectionstrategies/DET0610">DET0610</a>
@@ -1113,6 +1193,17 @@
                 </td>
                 <td rowspan="">
                     <a href="/techniques/T1481/003">T1481.003</a>
+                </td>
+            </tr>
+            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--d9ca9fb7-01dd-465c-86a1-a48b6812b1c5">
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0688">DET0688</a>
+                </td>
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0688">Detection of Out of Band Data</a>
+                </td>
+                <td rowspan="">
+                    <a href="/techniques/T1644">T1644</a>
                 </td>
             </tr>
             <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--7a9d4531-4ff8-4228-8abd-29da8bd2942f">
@@ -1126,17 +1217,6 @@
                     <a href="/techniques/T1629/001">T1629.001</a>
                 </td>
             </tr>
-            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--48e300f8-190e-46fa-a56d-8701f7a152d3">
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0681">DET0681</a>
-                </td>
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0681">Detection of Protected User Data</a>
-                </td>
-                <td rowspan="">
-                    <a href="/techniques/T1636">T1636</a>
-                </td>
-            </tr>
             <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--973a4da0-af9c-4d57-ab62-21fbc308f8b3">
                 <td rowspan="">
                     <a href="/detectionstrategies/DET0631">DET0631</a>
@@ -1146,6 +1226,17 @@
                 </td>
                 <td rowspan="">
                     <a href="/techniques/T1604">T1604</a>
+                </td>
+            </tr>
+            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--c2155dfa-140f-4da9-bfe8-61481a9693c0">
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0624">DET0624</a>
+                </td>
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0624">Detection of Remote Access Software</a>
+                </td>
+                <td rowspan="">
+                    <a href="/techniques/T1663">T1663</a>
                 </td>
             </tr>
             <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--3b8a3713-0f0a-433c-82bd-13b2f9224206">
@@ -1170,15 +1261,15 @@
                     <a href="/techniques/T1513">T1513</a>
                 </td>
             </tr>
-            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--59e56dc2-725e-4f55-ab2c-154dbe42bc4d">
+            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--9935655b-cd9b-485f-84ea-1b3b4b765413">
                 <td rowspan="">
-                    <a href="/detectionstrategies/DET0658">DET0658</a>
+                    <a href="/detectionstrategies/DET0680">DET0680</a>
                 </td>
                 <td rowspan="">
-                    <a href="/detectionstrategies/DET0658">Detection of SIM Card Swap</a>
+                    <a href="/detectionstrategies/DET0680">Detection of Security Software Discovery</a>
                 </td>
                 <td rowspan="">
-                    <a href="/techniques/T1451">T1451</a>
+                    <a href="/techniques/T1418/001">T1418.001</a>
                 </td>
             </tr>
             <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--142329a9-ff29-4bc2-af36-7294afc5fee4">
@@ -1192,15 +1283,15 @@
                     <a href="/techniques/T1582">T1582</a>
                 </td>
             </tr>
-            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--aeb736c8-1c17-4fac-888e-122581ad6e0c">
+            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--34d06ebf-867e-4cd2-8e44-c849fcaab072">
                 <td rowspan="">
-                    <a href="/detectionstrategies/DET0686">DET0686</a>
+                    <a href="/detectionstrategies/DET0644">DET0644</a>
                 </td>
                 <td rowspan="">
-                    <a href="/detectionstrategies/DET0686">Detection of SMS Messages</a>
+                    <a href="/detectionstrategies/DET0644">Detection of Software Packing</a>
                 </td>
                 <td rowspan="">
-                    <a href="/techniques/T1636/004">T1636.004</a>
+                    <a href="/techniques/T1406/002">T1406.002</a>
                 </td>
             </tr>
             <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--c1b65a72-9f74-4849-9797-1a9c655d9a04">
@@ -1212,6 +1303,39 @@
                 </td>
                 <td rowspan="">
                     <a href="/techniques/T1521/003">T1521.003</a>
+                </td>
+            </tr>
+            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--411f7c72-356c-4de6-bbf0-27a7952d3be5">
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0656">DET0656</a>
+                </td>
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0656">Detection of Steal Application Access Token</a>
+                </td>
+                <td rowspan="">
+                    <a href="/techniques/T1635">T1635</a>
+                </td>
+            </tr>
+            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--d87dc800-38cb-4d82-b76e-3c501dbd9c0a">
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0621">DET0621</a>
+                </td>
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0621">Detection of Stored Application Data</a>
+                </td>
+                <td rowspan="">
+                    <a href="/techniques/T1409">T1409</a>
+                </td>
+            </tr>
+            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--668d7e7b-dc4e-4f51-93b4-ef87cb15d507">
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0657">DET0657</a>
+                </td>
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0657">Detection of Subvert Trust Controls</a>
+                </td>
+                <td rowspan="">
+                    <a href="/techniques/T1632">T1632</a>
                 </td>
             </tr>
             <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--8d518627-1df4-4bf8-b1fb-0828fb9f6d31">
@@ -1247,17 +1371,6 @@
                     <a href="/techniques/T1521/001">T1521.001</a>
                 </td>
             </tr>
-            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--538bc808-b0f5-4f86-81f2-63be2cf63e80">
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0634">DET0634</a>
-                </td>
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0634">Detection of System Network Configuration Discovery</a>
-                </td>
-                <td rowspan="">
-                    <a href="/techniques/T1422">T1422</a>
-                </td>
-            </tr>
             <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--5a9d7ef3-35bf-4a89-8f61-084e2eecc070">
                 <td rowspan="">
                     <a href="/detectionstrategies/DET0690">DET0690</a>
@@ -1267,6 +1380,17 @@
                 </td>
                 <td rowspan="">
                     <a href="/techniques/T1630/001">T1630.001</a>
+                </td>
+            </tr>
+            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--0ec6ab45-a114-4ded-ba5e-a16982ccd64b">
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0626">DET0626</a>
+                </td>
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0626">Detection of URI Hijacking</a>
+                </td>
+                <td rowspan="">
+                    <a href="/techniques/T1635/001">T1635.001</a>
                 </td>
             </tr>
             <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--cb6a0874-0cb3-4d44-a77e-e93d4a26d50b">
@@ -1300,17 +1424,6 @@
                 </td>
                 <td rowspan="">
                     <a href="/techniques/T1481">T1481</a>
-                </td>
-            </tr>
-            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--f06f44c7-97ff-4f8d-8c72-650c98e0ebdc">
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0709">DET0709</a>
-                </td>
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0709">Detection of Wi-Fi Discovery</a>
-                </td>
-                <td rowspan="">
-                    <a href="/techniques/T1422/002">T1422.002</a>
                 </td>
             </tr>
     </tbody>
@@ -1535,7 +1648,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3 col-footer">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v19.2&#013;Website  v5.1.0">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v20.0&#013;Website  v5.2.0">Website Changelog</a></u>
                                 </div>
                                 <div class="px-3">
                                     <u class="footer-link"><a href="/resources/legal-and-branding/privacy/#" class="footer-link" onclick="Osano.cm.showDrawer('osano-cm-dom-info-dialog-open')">Cookie Preferences</a></u>

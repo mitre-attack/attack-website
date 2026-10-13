@@ -207,7 +207,7 @@
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
                     <div class="container-fluid banner-message">
-                        ATT&CKcon 7.0 registration is open! Join us October 27-28, 2026 in McLean, VA or virtually. <a href="https://na.eventscloud.com/website/93925/">Register in person</a> or <a href="https://mitre.brandlive.com/MITRE-ATTACKcon-7-0">register virtually</a>. See the <a href="https://na.eventscloud.com/website/93925/faq/">FAQ</a> for hotel and venue details.
+                        ATT&CK v20 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v20-9701dd75ffb4'>blog post</a> for more information. <a href='https://na.eventscloud.com/website/93925/'>ATT&CKcon 7.0</a> is October 27-28, 2026 in McLean, VA.
                     </div>
             </div>
         </div>
@@ -275,7 +275,7 @@
                 </div>
                 <div class="row card-data">
                   <div class="col-md-12">
-                    <span class="h5 card-title">Last Modified</span>: 12 May 2026
+                    <span class="h5 card-title">Last Modified</span>: 13 October 2026
                   </div>
                 </div>
               </div>
@@ -350,6 +350,14 @@
                 <td>chmod, chown, setxattr, or file writes to /etc/ssl/* or /usr/local/share/ca-certificates/*</td>
               </tr>
               <tr>
+                <td>auditd:SYSCALL+PATH</td>
+                <td>Linux Audit SYSCALL+PATH records: package installation creates files outside the documented package manifest</td>
+              </tr>
+              <tr>
+                <td>auditd:SYSCALL+PATH</td>
+                <td>Linux Audit SYSCALL+PATH records: write to Industrial Control Systems (ICS) project file path by uid not in authorized engineering User Identifiers (UIDs) or from path not in approved project sources</td>
+              </tr>
+              <tr>
                 <td>ebpf:syscalls</td>
                 <td>Unexpected container volume unmount + file deletion</td>
               </tr>
@@ -392,6 +400,10 @@
               <tr>
                 <td>File</td>
                 <td>None</td>
+              </tr>
+              <tr>
+                <td>fim:hashcompare</td>
+                <td>installed binary hash does not match vendor-published checksum for claimed version</td>
               </tr>
               <tr>
                 <td>fs:fileevents</td>
@@ -472,6 +484,10 @@
               <tr>
                 <td>linux:osquery</td>
                 <td>hash, rpm_packages, deb_packages, file_events</td>
+              </tr>
+              <tr>
+                <td>linux:pkgintegrity</td>
+                <td>rpm -V/dpkg --verify checksum mismatch for installed Industrial Control Systems (ICS) package binary</td>
               </tr>
               <tr>
                 <td>linux:syslog</td>
@@ -594,6 +610,42 @@
                 <td>File creation or modification with com.apple.ResourceFork extended attribute</td>
               </tr>
               <tr>
+                <td>mobile:ForensicArtifacts</td>
+                <td>Dynamic filesystem trace or acquired app-container/filesystem artifacts: DEX file entropy > $PackerEntropyThreshold$ at install time for app NOT IN $MDMApprovedCatalog$</td>
+              </tr>
+              <tr>
+                <td>mobile:ForensicArtifacts</td>
+                <td>Dynamic filesystem trace or acquired app-container/filesystem artifacts: app_version in MDM == prior_version while dynamic code load from network is observed — confirms this is not a legitimate update</td>
+              </tr>
+              <tr>
+                <td>mobile:ForensicArtifacts</td>
+                <td>Dynamic filesystem trace or acquired app-container/filesystem artifacts: binary with file_permissions including setuid bit (mode & 04000) at path NOT IN $KnownSystemBinPaths$ — setuid outside system bin directories is the renamed-root-binary indicator</td>
+              </tr>
+              <tr>
+                <td>mobile:ForensicArtifacts</td>
+                <td>Dynamic filesystem trace or acquired app-container/filesystem artifacts: file hash changes for binary at $SystemBinaryPaths$ relative to known-good baseline — hash deviation confirms modification</td>
+              </tr>
+              <tr>
+                <td>mobile:ForensicArtifacts</td>
+                <td>Dynamic filesystem trace or acquired app-container/filesystem artifacts: MDM supervised integrity_check=fail following jailbreak detection — integrity check failure on supervised Jamf/Intune enrolled device indicates filesystem modifications beyond passive jailbreak presence</td>
+              </tr>
+              <tr>
+                <td>mobile:ForensicArtifacts</td>
+                <td>Dynamic filesystem trace or acquired app-container/filesystem artifacts: installed app package_name Levenshtein distance <= $NameDistanceThreshold$ to entry in $KnownAppCatalog$</td>
+              </tr>
+              <tr>
+                <td>mobile:ForensicArtifacts</td>
+                <td>Dynamic filesystem trace or acquired app-container/filesystem artifacts: bundle_id LIKE $KnownSystemNamespace$</td>
+              </tr>
+              <tr>
+                <td>mobile:ForensicArtifacts</td>
+                <td>Dynamic filesystem trace or acquired app-container/filesystem artifacts: app package_name distance <= $NameDistanceThreshold$ from $KnownAppCatalog$ entry</td>
+              </tr>
+              <tr>
+                <td>mobile:ForensicArtifacts</td>
+                <td>Dynamic filesystem trace or acquired app-container/filesystem artifacts: display_name Levenshtein distance <= $NameDistanceThreshold$ from $KnownIOSAppCatalog$ entry</td>
+              </tr>
+              <tr>
                 <td>networkdevice:syslog</td>
                 <td>OS version query results inconsistent with expected or approved version list</td>
               </tr>
@@ -648,6 +700,18 @@
               <tr>
                 <td>WinEventLog:Sysmon</td>
                 <td>EventCode=15</td>
+              </tr>
+              <tr>
+                <td>WinEventLog:Sysmon</td>
+                <td>Microsoft-Windows-Sysmon/Operational Event ID 11 FileCreate/overwrite or Event ID 2 FileCreateTime, as applicable: Process creation and file creation correlation: vendor installer creates files outside vendor install manifest or spawns undocumented child process</td>
+              </tr>
+              <tr>
+                <td>WinEventLog:Sysmon</td>
+                <td>EventCode=11 matching Industrial Control Systems (ICS) vendor binary name in a path outside vendor install paths</td>
+              </tr>
+              <tr>
+                <td>WinEventLog:Sysmon</td>
+                <td>Microsoft-Windows-Sysmon/Operational Event ID 11 FileCreate/overwrite or Event ID 2 FileCreateTime, as applicable: Engineering tool process opens project file from path not in approved project repository (removable media, email attachment cache, untrusted network share)</td>
               </tr>
               <tr>
                 <td>WinEventLog:Windows Defender</td>
@@ -869,37 +933,48 @@
                     <a href="/techniques/T1001/002">T1001.002</a>
                 </td>
             </tr>
-            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--0677c510-fa4d-4a39-a14b-b91f9cde1e23">
+            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--7c7aa84d-8425-42cc-b0bc-5d384b04d99a">
                 <td rowspan="">
-                    <a href="/detectionstrategies/DET0654">DET0654</a>
+                    <a href="/detectionstrategies/DET0712">DET0712</a>
                 </td>
                 <td rowspan="">
-                    <a href="/detectionstrategies/DET0654">Detection of Boot or Logon Initialization Scripts</a>
+                    <a href="/detectionstrategies/DET0712">Detection of Compromise Client Software Binary</a>
                 </td>
                 <td rowspan="">
-                    <a href="/techniques/T1398">T1398</a>
-                </td>
-            </tr>
-            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--e8b537e6-04eb-4168-a206-88cc041edf50">
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0750">DET0750</a>
-                </td>
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0750">Detection of Indicator Removal on Host</a>
-                </td>
-                <td rowspan="">
-                    <a href="/techniques/T0872">T0872</a>
+                    <a href="/techniques/T1645">T1645</a>
                 </td>
             </tr>
-            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--62587e44-0623-4b14-bd45-126430eaed4a">
+            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--0f41110f-099f-468f-af46-65d2a34f05d9">
                 <td rowspan="">
-                    <a href="/detectionstrategies/DET0745">DET0745</a>
+                    <a href="/detectionstrategies/DET0710">DET0710</a>
                 </td>
                 <td rowspan="">
-                    <a href="/detectionstrategies/DET0745">Detection of Lateral Tool Transfer</a>
+                    <a href="/detectionstrategies/DET0710">Detection of Disguise Root/Jailbreak Indicators</a>
                 </td>
                 <td rowspan="">
-                    <a href="/techniques/T0867">T0867</a>
+                    <a href="/techniques/T1630/003">T1630.003</a>
+                </td>
+            </tr>
+            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--996f14f4-3419-45f6-af22-edc15f5d5d19">
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0618">DET0618</a>
+                </td>
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0618">Detection of Download New Code at Runtime</a>
+                </td>
+                <td rowspan="">
+                    <a href="/techniques/T1407">T1407</a>
+                </td>
+            </tr>
+            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--d314d955-a323-4e87-a8e5-317b0b8ed203">
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0715">DET0715</a>
+                </td>
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0715">Detection of Masquerading</a>
+                </td>
+                <td rowspan="">
+                    <a href="/techniques/T1655">T1655</a>
                 </td>
             </tr>
             <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--06443942-ba28-4d13-b4b4-93317d6eafa5">
@@ -911,6 +986,39 @@
                 </td>
                 <td rowspan="">
                     <a href="/techniques/T0849">T0849</a>
+                </td>
+            </tr>
+            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--91b70fb4-8e86-4dd2-a988-33d64cc46d4e">
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0609">DET0609</a>
+                </td>
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0609">Detection of Match Legitimate Name or Location</a>
+                </td>
+                <td rowspan="">
+                    <a href="/techniques/T1655/001">T1655.001</a>
+                </td>
+            </tr>
+            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--09754c36-7be2-4536-aad2-a6c3568ba0e5">
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0766">DET0766</a>
+                </td>
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0766">Detection of Project File Infection</a>
+                </td>
+                <td rowspan="">
+                    <a href="/techniques/T0873">T0873</a>
+                </td>
+            </tr>
+            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--34d06ebf-867e-4cd2-8e44-c849fcaab072">
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0644">DET0644</a>
+                </td>
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0644">Detection of Software Packing</a>
+                </td>
+                <td rowspan="">
+                    <a href="/techniques/T1406/002">T1406.002</a>
                 </td>
             </tr>
             <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--58b4bda4-d69a-4a20-ab67-308c4451a5e8">
@@ -1663,7 +1771,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3 col-footer">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v19.2&#013;Website  v5.1.0">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v20.0&#013;Website  v5.2.0">Website Changelog</a></u>
                                 </div>
                                 <div class="px-3">
                                     <u class="footer-link"><a href="/resources/legal-and-branding/privacy/#" class="footer-link" onclick="Osano.cm.showDrawer('osano-cm-dom-info-dialog-open')">Cookie Preferences</a></u>

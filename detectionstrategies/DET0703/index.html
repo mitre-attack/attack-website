@@ -207,7 +207,7 @@
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
                     <div class="container-fluid banner-message">
-                        ATT&CKcon 7.0 registration is open! Join us October 27-28, 2026 in McLean, VA or virtually. <a href="https://na.eventscloud.com/website/93925/">Register in person</a> or <a href="https://mitre.brandlive.com/MITRE-ATTACKcon-7-0">register virtually</a>. See the <a href="https://na.eventscloud.com/website/93925/faq/">FAQ</a> for hotel and venue details.
+                        ATT&CK v20 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v20-9701dd75ffb4'>blog post</a> for more information. <a href='https://na.eventscloud.com/website/93925/'>ATT&CKcon 7.0</a> is October 27-28, 2026 in McLean, VA.
                     </div>
             </div>
         </div>
@@ -292,13 +292,13 @@
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Permalink to this version of DET0703" 
-           href="/versions/v19/detectionstrategies/DET0703/" data-test-ignore="true">Version Permalink</a>
+           href="/versions/v20/detectionstrategies/DET0703/" data-test-ignore="true">Version Permalink</a>
     </div>
     <div class="permalink">
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Go to the live version of DET0703" 
-           href="/versions/v19/detectionstrategies/DET0703/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+           href="/versions/v20/detectionstrategies/DET0703/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
     </div>
 </div>
 
@@ -320,7 +320,7 @@
               role="tabpanel" aria-labelledby="tab-Android">
               <h4 class="pt-3" id="AN1822">AN1822</h4>
               <div>
-                        <p>The defender correlates call-control capability or telecom role state with subsequent unauthorized call initiation, answer, block, redirect, or concealment behavior by an application outside expected telephony workflows. The analytic prioritizes Android-observable control-plane effects: dangerous or role-gated call-control permissions, default dialer or ConnectionService-related role changes, telecom framework invocation for call placement or handling, write activity against call-log records, and call-control activity occurring from background or locked-device context without recent user interaction.</p>
+                        <p>For Android, detect Call Control from documented management, network, or vetting evidence; treat state queries as periodic observations rather than real-time events. Correlate Application Permission via Android Enterprise DPC / Application Vetting [DevicePolicyManager.getPermissionGrantState(); PackageManager manifest/requested-permission review]; File Modification via Application Vetting / Forensic Acquisition [Dynamic filesystem trace or acquired app-container/filesystem artifacts: App inserts, updates, or deletes call log records via CallLog.Calls ContentProvider immediately after call-control action — call log tampering to conceal interception]; OS API Execution via Application Vetting / Instrumented Dynamic Analysis [Dynamic API/runtime trace: App invokes TelecomManager.answerCall(), placeCall(), endCall(), or ConnectionService call-handling operations without corresponding user-initiated call UI interaction]. Alert on a sequence or state change inconsistent with the device/app baseline, approved management policy, or expected user workflow; do not infer unobserved API calls, file/process activity, or payload content from management state alone.</p>
 
               </div>
 
@@ -336,26 +336,13 @@
                   </thead>
                   <tbody>
                     <tr>
-                      <td rowspan="2">
+                      <td rowspan="1">
                         <a href="/datacomponents/DC0114">
                           Application Permission (DC0114)
                         </a>
                       </td>
-                      <td>android:MDMLog</td>
-                      <td>Managed app granted call-control-relevant permissions or telecom role state inconsistent with approved enterprise function before call-control activity</td>
-                    </tr>
-                    <tr>
-                      <td>android:MDMLog</td>
-                      <td>Default phone or telecom-handling role changes to non-baselined application or managed app unexpectedly becomes dialer/call-handling app during call-control phase</td>
-                    </tr>
-                    <tr>
-                      <td rowspan="1">
-                        <a href="/datacomponents/DC0021">
-                          OS API Execution (DC0021)
-                        </a>
-                      </td>
-                      <td>MobileEDR:telemetry</td>
-                      <td>Application invokes call placement, answer, redirect, block, screening, or ConnectionService call-handling APIs during unauthorized call-control phase</td>
+                      <td>android:DevicePolicyManager</td>
+                      <td>DevicePolicyManager.getPermissionGrantState(); PackageManager manifest/requested-permission review</td>
                     </tr>
                     <tr>
                       <td rowspan="1">
@@ -363,8 +350,17 @@
                           File Modification (DC0061)
                         </a>
                       </td>
-                      <td>MobileEDR:telemetry</td>
-                      <td>Application inserts, updates, deletes, or rewrites call-log records immediately after call-control action to conceal, alter, or synthesize call history</td>
+                      <td>mobile:ForensicArtifacts</td>
+                      <td>Dynamic filesystem trace or acquired app-container/filesystem artifacts: App inserts, updates, or deletes call log records via CallLog.Calls ContentProvider immediately after call-control action — call log tampering to conceal interception</td>
+                    </tr>
+                    <tr>
+                      <td rowspan="1">
+                        <a href="/datacomponents/DC0021">
+                          OS API Execution (DC0021)
+                        </a>
+                      </td>
+                      <td>mobile:DynamicAnalysis</td>
+                      <td>Dynamic API/runtime trace: App invokes TelecomManager.answerCall(), placeCall(), endCall(), or ConnectionService call-handling operations without corresponding user-initiated call UI interaction</td>
                     </tr>
                   </tbody>
                 </table>
@@ -381,36 +377,12 @@
                   </thead>
                   <tbody>
                     <tr>
-                      <td>TimeWindow</td>
-                      <td>Correlation window between permission or role state, call-control action, call-log mutation, and follow-on network communication</td>
+                      <td>ApprovedTelecomApps</td>
+                      <td>Default dialer, approved VoIP apps, enterprise call manager. Derive from MDM catalog. Tightening: system dialer and MDM-pushed VoIP only.</td>
                     </tr>
                     <tr>
-                      <td>AllowedAppList</td>
-                      <td>Apps legitimately expected to initiate or manage calls, such as default dialers, carrier tools, enterprise communications apps, or approved call-screening apps</td>
-                    </tr>
-                    <tr>
-                      <td>AllowedDialerRoles</td>
-                      <td>Approved packages allowed to become default dialer or telecom-managing app on managed devices</td>
-                    </tr>
-                    <tr>
-                      <td>AllowedDestinationList</td>
-                      <td>Approved network destinations associated with legitimate VoIP, carrier, or enterprise communications workflows</td>
-                    </tr>
-                    <tr>
-                      <td>ForegroundStateRequired</td>
-                      <td>Whether call-control actions should occur only during active user-driven workflows</td>
-                    </tr>
-                    <tr>
-                      <td>CallLogModificationThreshold</td>
-                      <td>Number of call-log insert, update, or delete operations within a short interval required before alerting</td>
-                    </tr>
-                    <tr>
-                      <td>CallActionRateThreshold</td>
-                      <td>Maximum expected rate of call placement, answer, redirect, or block actions for legitimate app behavior</td>
-                    </tr>
-                    <tr>
-                      <td>HighRiskNumberPatterns</td>
-                      <td>Environment-specific list of suspicious, premium-rate, or adversary-known phone-number patterns</td>
+                      <td>CallInteractionThreshold</td>
+                      <td>Default 10s between incoming call event and app call-answer action without user UI. Silent answer within 10s of ring without user touch is covert.</td>
                     </tr>
                   </tbody>
                 </table>
@@ -418,6 +390,7 @@
             </div>
           </div>
         </div>
+
 
         
       </div>
@@ -636,7 +609,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3 col-footer">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v19.2&#013;Website  v5.1.0">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v20.0&#013;Website  v5.2.0">Website Changelog</a></u>
                                 </div>
                                 <div class="px-3">
                                     <u class="footer-link"><a href="/resources/legal-and-branding/privacy/#" class="footer-link" onclick="Osano.cm.showDrawer('osano-cm-dom-info-dialog-open')">Cookie Preferences</a></u>

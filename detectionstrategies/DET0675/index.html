@@ -207,7 +207,7 @@
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
                     <div class="container-fluid banner-message">
-                        ATT&CKcon 7.0 registration is open! Join us October 27-28, 2026 in McLean, VA or virtually. <a href="https://na.eventscloud.com/website/93925/">Register in person</a> or <a href="https://mitre.brandlive.com/MITRE-ATTACKcon-7-0">register virtually</a>. See the <a href="https://na.eventscloud.com/website/93925/faq/">FAQ</a> for hotel and venue details.
+                        ATT&CK v20 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v20-9701dd75ffb4'>blog post</a> for more information. <a href='https://na.eventscloud.com/website/93925/'>ATT&CKcon 7.0</a> is October 27-28, 2026 in McLean, VA.
                     </div>
             </div>
         </div>
@@ -292,13 +292,13 @@
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Permalink to this version of DET0675" 
-           href="/versions/v19/detectionstrategies/DET0675/" data-test-ignore="true">Version Permalink</a>
+           href="/versions/v20/detectionstrategies/DET0675/" data-test-ignore="true">Version Permalink</a>
     </div>
     <div class="permalink">
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Go to the live version of DET0675" 
-           href="/versions/v19/detectionstrategies/DET0675/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+           href="/versions/v20/detectionstrategies/DET0675/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
     </div>
 </div>
 
@@ -326,7 +326,7 @@
               role="tabpanel" aria-labelledby="tab-Android">
               <h4 class="pt-3" id="AN1776">AN1776</h4>
               <div>
-                        <p>Defender correlates an application gaining/retaining fine or background location capability with subsequent location sensor sessions that occur while the app is backgrounded or the device is locked, followed by repeated location reads at a periodic cadence and near-term outbound connections to domains not typical for fleet navigation/MDM services, indicating covert location tracking.</p>
+                        <p>For Android, detect Location Tracking by correlating analyst-visible device/network evidence and management state; use streaming or batched telemetry only where the documented collector is deployed. Correlate API Calls via Application Vetting / Instrumented Dynamic Analysis [Dynamic API/runtime trace: LocationManager.requestLocationUpdates() called with minTime &lt; $LocationUpdateFreqThreshold$ by app NOT IN $LocationAllowList$]; Network Traffic Content via Enterprise Secure Web Gateway / Proxy [DNS/HTTP(S) inspection or proxy transaction metadata where enterprise decryption/inspection is deployed]; Permissions Request via Android Enterprise DPC / Application Vetting [DevicePolicyManager.getPermissionGrantState(); PackageManager manifest/requested-permission review]. Alert on a sequence or state change inconsistent with the device/app baseline, approved management policy, or expected user workflow; do not infer unobserved API calls, file/process activity, or payload content from management state alone.</p>
 
               </div>
 
@@ -343,30 +343,30 @@
                   <tbody>
                     <tr>
                       <td rowspan="1">
-                        <a href="/datacomponents/DC0021">
-                          OS API Execution (DC0021)
+                        <a href="/datacomponents/DC0112">
+                          API Calls (DC0112)
                         </a>
                       </td>
-                      <td>android:logcat</td>
-                      <td>Application invokes LocationManager, FusedLocationProviderClient, or GPS/location sensor APIs</td>
+                      <td>mobile:DynamicAnalysis</td>
+                      <td>Dynamic API/runtime trace: LocationManager.requestLocationUpdates() called with minTime < $LocationUpdateFreqThreshold$ by app NOT IN $LocationAllowList$</td>
                     </tr>
                     <tr>
                       <td rowspan="1">
-                        <a href="/datacomponents/DC0035">
-                          Process Access (DC0035)
+                        <a href="/datacomponents/DC0085">
+                          Network Traffic Content (DC0085)
                         </a>
                       </td>
-                      <td>EDR:telemetry</td>
-                      <td>Sustained or high-frequency location sensor access, including background location usage</td>
+                      <td>webproxy:applog</td>
+                      <td>DNS/HTTP(S) inspection or proxy transaction metadata where enterprise decryption/inspection is deployed</td>
                     </tr>
                     <tr>
                       <td rowspan="1">
-                        <a href="/datacomponents/DC0114">
-                          Application Permission (DC0114)
+                        <a href="/datacomponents/DC0116">
+                          Permissions Request (DC0116)
                         </a>
                       </td>
-                      <td>android:MDMLog</td>
-                      <td>Application granted/retaining ACCESS_FINE_LOCATION and/or ACCESS_COARSE_LOCATION; background location capability present (ACCESS_BACKGROUND_LOCATION on Android 10+)</td>
+                      <td>android:DevicePolicyManager</td>
+                      <td>DevicePolicyManager.getPermissionGrantState(); PackageManager manifest/requested-permission review</td>
                     </tr>
                   </tbody>
                 </table>
@@ -383,32 +383,20 @@
                   </thead>
                   <tbody>
                     <tr>
-                      <td>LocationSamplingFrequencyThreshold</td>
-                      <td>Defines acceptable rate of location queries before triggering anomaly conditions</td>
+                      <td>LocationAllowList</td>
+                      <td>Navigation, delivery, enterprise fleet management apps. Derive from MDM catalog.</td>
                     </tr>
                     <tr>
-                      <td>BackgroundLocationPolicy</td>
-                      <td>Baseline of legitimate background location usage across applications</td>
+                      <td>LocationUpdateFreqThreshold</td>
+                      <td>Default 60000ms (1 min) — below this = continuous surveillance vs occasional check-in.</td>
                     </tr>
                     <tr>
-                      <td>LocationToNetworkTimeWindow</td>
-                      <td>Temporal linkage between location access and outbound traffic</td>
+                      <td>LocationCDNList</td>
+                      <td>Google Maps, Apple Maps, Mapbox, enterprise fleet CDN endpoints.</td>
                     </tr>
                     <tr>
-                      <td>UserInteractionWindow</td>
-                      <td>Maximum time since last user interaction before location access becomes suspicious.</td>
-                    </tr>
-                    <tr>
-                      <td>AllowedLocationApps</td>
-                      <td>Allow-list of expected location-heavy apps (maps, rideshare, fleet apps) for the enterprise device population</td>
-                    </tr>
-                    <tr>
-                      <td>DevicePolicySensitivity</td>
-                      <td>Tuning for how aggressively to treat background location permission as risky depending on org policy.</td>
-                    </tr>
-                    <tr>
-                      <td>AllowedDestinationsBaseline</td>
-                      <td>Baseline of expected domains/IPs for legitimate location services (OEM, mapping SDKs, MDM endpoints) to reduce false positives.</td>
+                      <td>ExfilWindow</td>
+                      <td>Default 300s.</td>
                     </tr>
                   </tbody>
                 </table>
@@ -418,7 +406,7 @@
               role="tabpanel" aria-labelledby="tab-iOS">
               <h4 class="pt-3" id="AN1777">AN1777</h4>
               <div>
-                        <p>Defender correlates an application’s location authorization level (When-In-Use vs Always) and entitlement posture with observed location sensor activity that occurs without proximate user interaction, including background updates, followed by periodic outbound network sessions aligned to location update timing—suggesting covert or policy-violating location tracking.</p>
+                        <p>For iOS, detect Location Tracking by correlating analyst-visible device/network evidence and management state; use streaming or batched telemetry only where the documented collector is deployed. Correlate Application Permission via Application Vetting [Code-signing entitlements and Info.plist privacy usage-description keys]; Network Traffic Flow via Apple Network Extension / Enterprise VPN [NEFilterFlow / per-app VPN / secure-web-gateway flow metadata]; Permissions Request via Application Vetting [Code-signing entitlements and Info.plist privacy usage-description keys]. Alert on a sequence or state change inconsistent with the device/app baseline, approved management policy, or expected user workflow; do not infer unobserved API calls, file/process activity, or payload content from management state alone.</p>
 
               </div>
 
@@ -435,21 +423,30 @@
                   <tbody>
                     <tr>
                       <td rowspan="1">
-                        <a href="/datacomponents/DC0021">
-                          OS API Execution (DC0021)
-                        </a>
-                      </td>
-                      <td>iOS:unifiedlog</td>
-                      <td>Application activates CoreLocation services or CLLocationManager APIs</td>
-                    </tr>
-                    <tr>
-                      <td rowspan="1">
                         <a href="/datacomponents/DC0114">
                           Application Permission (DC0114)
                         </a>
                       </td>
-                      <td>iOS:MDMLog</td>
-                      <td>App installed with location usage declarations (WhenInUse/Always usage description) and granted authorization level via managed policy state</td>
+                      <td>mobile:ApplicationVetting</td>
+                      <td>Code-signing entitlements and Info.plist privacy usage-description keys</td>
+                    </tr>
+                    <tr>
+                      <td rowspan="1">
+                        <a href="/datacomponents/DC0078">
+                          Network Traffic Flow (DC0078)
+                        </a>
+                      </td>
+                      <td>iOS:NetworkExtension</td>
+                      <td>NEFilterFlow / per-app VPN / secure-web-gateway flow metadata</td>
+                    </tr>
+                    <tr>
+                      <td rowspan="1">
+                        <a href="/datacomponents/DC0116">
+                          Permissions Request (DC0116)
+                        </a>
+                      </td>
+                      <td>mobile:ApplicationVetting</td>
+                      <td>Code-signing entitlements and Info.plist privacy usage-description keys</td>
                     </tr>
                   </tbody>
                 </table>
@@ -466,16 +463,12 @@
                   </thead>
                   <tbody>
                     <tr>
-                      <td>ForegroundLocationExpectation</td>
-                      <td>Defines legitimate location usage relative to app state</td>
+                      <td>LocationAllowList</td>
+                      <td>Navigation, delivery, enterprise fleet app bundle IDs.</td>
                     </tr>
                     <tr>
-                      <td>LocationAccessDurationThreshold</td>
-                      <td>Baseline deviation tolerance for sustained location tracking</td>
-                    </tr>
-                    <tr>
-                      <td>LocationToTransmissionWindow</td>
-                      <td>Temporal threshold linking location access to network activity</td>
+                      <td>LocationCDNList</td>
+                      <td>Apple Maps, Google Maps, Mapbox, enterprise fleet endpoints.</td>
                     </tr>
                   </tbody>
                 </table>
@@ -483,6 +476,7 @@
             </div>
           </div>
         </div>
+
 
         
       </div>
@@ -701,7 +695,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3 col-footer">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v19.2&#013;Website  v5.1.0">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v20.0&#013;Website  v5.2.0">Website Changelog</a></u>
                                 </div>
                                 <div class="px-3">
                                     <u class="footer-link"><a href="/resources/legal-and-branding/privacy/#" class="footer-link" onclick="Osano.cm.showDrawer('osano-cm-dom-info-dialog-open')">Cookie Preferences</a></u>

@@ -207,7 +207,7 @@
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
                     <div class="container-fluid banner-message">
-                        ATT&CKcon 7.0 registration is open! Join us October 27-28, 2026 in McLean, VA or virtually. <a href="https://na.eventscloud.com/website/93925/">Register in person</a> or <a href="https://mitre.brandlive.com/MITRE-ATTACKcon-7-0">register virtually</a>. See the <a href="https://na.eventscloud.com/website/93925/faq/">FAQ</a> for hotel and venue details.
+                        ATT&CK v20 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v20-9701dd75ffb4'>blog post</a> for more information. <a href='https://na.eventscloud.com/website/93925/'>ATT&CKcon 7.0</a> is October 27-28, 2026 in McLean, VA.
                     </div>
             </div>
         </div>
@@ -292,13 +292,13 @@
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Permalink to this version of DET0641" 
-           href="/versions/v19/detectionstrategies/DET0641/" data-test-ignore="true">Version Permalink</a>
+           href="/versions/v20/detectionstrategies/DET0641/" data-test-ignore="true">Version Permalink</a>
     </div>
     <div class="permalink">
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Go to the live version of DET0641" 
-           href="/versions/v19/detectionstrategies/DET0641/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+           href="/versions/v20/detectionstrategies/DET0641/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
     </div>
 </div>
 
@@ -326,7 +326,7 @@
               role="tabpanel" aria-labelledby="tab-Android">
               <h4 class="pt-3" id="AN1716">AN1716</h4>
               <div>
-                        <p>An application performs explicit cryptographic operations (e.g., symmetric/asymmetric encryption routines) on locally collected or generated data, followed by structured outbound network communication that does not align with expected application behavior, particularly when occurring in the background or without user interaction. Detection correlates crypto API usage + data staging + application state + network transmission patterns.</p>
+                        <p>For Android, detect Encrypted Channel from documented management, network, or vetting evidence; treat state queries as periodic observations rather than real-time events. Correlate Application Permission via Android Enterprise DPC / Application Vetting [DevicePolicyManager.getPermissionGrantState(); PackageManager manifest/requested-permission review]; Application State via Android Enterprise / EMM [Managed package inventory/status and package metadata]; File Creation via Application Vetting / Forensic Acquisition [Dynamic filesystem trace or acquired app-container/filesystem artifacts: App writes high-entropy blob (Shannon entropy &gt; $EntropyThreshold$) to local staging path immediately before outbound transmission — encrypted staging artifact confirms app-layer encryption occurred]. Alert on a sequence or state change inconsistent with the device/app baseline, approved management policy, or expected user workflow; do not infer unobserved API calls, file/process activity, or payload content from management state alone.</p>
 
               </div>
 
@@ -343,21 +343,12 @@
                   <tbody>
                     <tr>
                       <td rowspan="1">
-                        <a href="/datacomponents/DC0021">
-                          OS API Execution (DC0021)
+                        <a href="/datacomponents/DC0114">
+                          Application Permission (DC0114)
                         </a>
                       </td>
-                      <td>MobileEDR:telemetry</td>
-                      <td>App invokes cryptographic functions (e.g., AES/RSA/KeyStore usage) on buffer data followed by encode/transform operations not tied to normal app workflows</td>
-                    </tr>
-                    <tr>
-                      <td rowspan="1">
-                        <a href="/datacomponents/DC0039">
-                          File Creation (DC0039)
-                        </a>
-                      </td>
-                      <td>MobileEDR:telemetry</td>
-                      <td>App writes encoded/encrypted blobs (high entropy data) to local storage or memory buffers prior to transmission</td>
+                      <td>android:DevicePolicyManager</td>
+                      <td>DevicePolicyManager.getPermissionGrantState(); PackageManager manifest/requested-permission review</td>
                     </tr>
                     <tr>
                       <td rowspan="1">
@@ -365,17 +356,26 @@
                           Application State (DC0123)
                         </a>
                       </td>
-                      <td>MobileEDR:telemetry</td>
-                      <td>Crypto + data staging occurs while app_state=background OR device_locked=true OR no recent user interaction</td>
+                      <td>android:EMM</td>
+                      <td>Managed package inventory/status and package metadata</td>
                     </tr>
                     <tr>
                       <td rowspan="1">
-                        <a href="/datacomponents/DC0114">
-                          Application Permission (DC0114)
+                        <a href="/datacomponents/DC0039">
+                          File Creation (DC0039)
                         </a>
                       </td>
-                      <td>android:MDMLog</td>
-                      <td>App not in enterprise-approved list performing network + crypto behavior inconsistent with declared functionality</td>
+                      <td>mobile:ForensicArtifacts</td>
+                      <td>Dynamic filesystem trace or acquired app-container/filesystem artifacts: App writes high-entropy blob (Shannon entropy > $EntropyThreshold$) to local staging path immediately before outbound transmission — encrypted staging artifact confirms app-layer encryption occurred</td>
+                    </tr>
+                    <tr>
+                      <td rowspan="1">
+                        <a href="/datacomponents/DC0021">
+                          OS API Execution (DC0021)
+                        </a>
+                      </td>
+                      <td>mobile:DynamicAnalysis</td>
+                      <td>Dynamic API/runtime trace: App invokes cryptographic functions (javax.crypto.Cipher, Android KeyStore, AES/RSA/ECC operations) on data buffer followed by encode-then-transmit sequence NOT matching app declared network function — app-layer crypto on data before transm</td>
                     </tr>
                   </tbody>
                 </table>
@@ -392,24 +392,20 @@
                   </thead>
                   <tbody>
                     <tr>
-                      <td>TimeWindow</td>
-                      <td>Time correlation between crypto operation and outbound network transmission</td>
+                      <td>ApprovedCryptoApps</td>
+                      <td>VPN clients, enterprise secure messaging (Signal, approved messaging), MDM agent, encryption-declared apps. Derive from MDM catalog.</td>
                     </tr>
                     <tr>
                       <td>EntropyThreshold</td>
-                      <td>Threshold for detecting encoded/encrypted payloads based on entropy scoring</td>
+                      <td>Default 7.0 bits Shannon entropy for staged file. Calibrate from legitimate app file baseline. Files above threshold are likely encrypted or compressed.</td>
                     </tr>
                     <tr>
-                      <td>AllowedCryptoApps</td>
-                      <td>Apps expected to perform encryption (e.g., VPNs, messaging apps)</td>
+                      <td>AppCDNList</td>
+                      <td>30-day per-app network destination baseline.</td>
                     </tr>
                     <tr>
-                      <td>ForegroundStateRequired</td>
-                      <td>Whether encryption + transmission should only occur during user interaction</td>
-                    </tr>
-                    <tr>
-                      <td>BeaconIntervalVariance</td>
-                      <td>Expected jitter/interval for legitimate app traffic vs beaconing patterns</td>
+                      <td>InteractionThreshold</td>
+                      <td>Default 300s.</td>
                     </tr>
                   </tbody>
                 </table>
@@ -456,6 +452,7 @@
             </div>
           </div>
         </div>
+
 
         
       </div>
@@ -674,7 +671,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3 col-footer">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v19.2&#013;Website  v5.1.0">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v20.0&#013;Website  v5.2.0">Website Changelog</a></u>
                                 </div>
                                 <div class="px-3">
                                     <u class="footer-link"><a href="/resources/legal-and-branding/privacy/#" class="footer-link" onclick="Osano.cm.showDrawer('osano-cm-dom-info-dialog-open')">Cookie Preferences</a></u>

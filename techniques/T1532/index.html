@@ -207,7 +207,7 @@
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
                     <div class="container-fluid banner-message">
-                        ATT&CKcon 7.0 registration is open! Join us October 27-28, 2026 in McLean, VA or virtually. <a href="https://na.eventscloud.com/website/93925/">Register in person</a> or <a href="https://mitre.brandlive.com/MITRE-ATTACKcon-7-0">register virtually</a>. See the <a href="https://na.eventscloud.com/website/93925/faq/">FAQ</a> for hotel and venue details.
+                        ATT&CK v20 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v20-9701dd75ffb4'>blog post</a> for more information. <a href='https://na.eventscloud.com/website/93925/'>ATT&CKcon 7.0</a> is October 27-28, 2026 in McLean, VA.
                     </div>
             </div>
         </div>
@@ -320,13 +320,13 @@
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Permalink to this version of T1532" 
-           href="/versions/v19/techniques/T1532/" data-test-ignore="true">Version Permalink</a>
+           href="/versions/v20/techniques/T1532/" data-test-ignore="true">Version Permalink</a>
     </div>
     <div class="permalink">
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Go to the live version of T1532" 
-           href="/versions/v19/techniques/T1532/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+           href="/versions/v20/techniques/T1532/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
     </div>
 </div>
 
@@ -399,7 +399,7 @@
                   <a href="/campaigns/C0033"> C0033 </a>
                 </td>
                 <td>
-                          <p>During <a href="https://attack.mitre.org/campaigns/C0033">C0033</a>, <a href="/groups/G0056">PROMETHIUM</a> used <a href="/software/S0491">StrongPity</a> to exfiltrate encrypted data to the C2 server.<span onclick=scrollToRef('scite-5') id="scite-ref-5-a" class="scite-citeref-number" title="Stefanko, L. (2023, January 10). StrongPity espionage campaign targeting Android users. Retrieved January 31, 2023."data-reference="welivesec_strongpity"><sup><a href="https://www.welivesecurity.com/2023/01/10/strongpity-espionage-campaign-targeting-android-users/" target="_blank" data-hasqtip="4" aria-describedby="qtip-4">[5]</a></sup></span> </p>
+                          <p>During <a href="/campaigns/C0033">C0033</a>, <a href="/groups/G0056">PROMETHIUM</a> used <a href="/software/S0491">StrongPity</a> to exfiltrate encrypted data to the C2 server.<span onclick=scrollToRef('scite-5') id="scite-ref-5-a" class="scite-citeref-number" title="Stefanko, L. (2023, January 10). StrongPity espionage campaign targeting Android users. Retrieved January 31, 2023."data-reference="welivesec_strongpity"><sup><a href="https://www.welivesecurity.com/2023/01/10/strongpity-espionage-campaign-targeting-android-users/" target="_blank" data-hasqtip="4" aria-describedby="qtip-4">[5]</a></sup></span> </p>
 
                 </td>
               </tr>
@@ -542,7 +542,7 @@
                         <a href="/detectionstrategies/DET0670#AN1767">AN1767</a>
                     </td>
                     <td>
-                                <p>The defender correlates recent access to locally collected or protected data with subsequent compression, packaging, or encryption behavior inside the same app context, followed by creation of archive-like or high-entropy output and optional near-term network transmission. The analytic prioritizes Android runtime and storage effects: application data access or sensor-derived collection, compression/encryption framework use, archive/blob creation in app-accessible storage, and background or device-locked execution inconsistent with the app’s declared function.</p>
+                                <p>For Android, detect Archive Collected Data from documented management, network, or vetting evidence; treat state queries as periodic observations rather than real-time events. Correlate Application Permission via Android Enterprise DPC / Application Vetting [DevicePolicyManager.getPermissionGrantState(); PackageManager manifest/requested-permission review]; File Creation via Application Vetting / Forensic Acquisition [Dynamic filesystem trace or acquired app-container/filesystem artifacts: App reads files across multiple directories or databases in background state (collection phase) then invokes archive or compression routines on collected content — read-then-archive sequence is the staging chain]; File Creation via Application Vetting / Forensic Acquisition [Dynamic filesystem trace or acquired app-container/filesystem artifacts: App writes archive-like container, high-entropy packaged blob, or .zip/.gz output to app-private or cache path after bulk data collection — archive artifact in private storage is the staging evidence]. Alert on a sequence or state change inconsistent with the device/app baseline, approved management policy, or expected user workflow; do not infer unobserved API calls, file/process activity, or payload content from management state alone.</p>
 </a>
                     </td>
                 </tr>
@@ -551,7 +551,7 @@
                         <a href="/detectionstrategies/DET0670#AN1768">AN1768</a>
                     </td>
                     <td>
-                                <p>The defender correlates managed-app data access and lifecycle context with indirect evidence of packaging or encryption prior to outbound transfer. Because direct archive/compression visibility is generally weaker on iOS, the analytic anchors on app lifecycle state, file/output effects observable by mobile EDR where available, managed app role via MDM, and downstream network uploads that closely follow creation of new large or high-entropy local artifacts. Confidence is lower when only network effects are available.</p>
+                                <p>For iOS, detect Archive Collected Data from documented management, network, or vetting evidence; treat state queries as periodic observations rather than real-time events. Correlate Application Permission via Application Vetting [Code-signing entitlements and Info.plist privacy usage-description keys]; Application State via Apple MDM [InstalledApplicationList / ManagedApplicationList]; File Creation via Application Vetting / Forensic Acquisition [Dynamic filesystem trace or acquired app-container/filesystem artifacts: App writes large container, temp package, or high-entropy blob to container-local storage after clustered data access — staged archive artifact]. Alert on a sequence or state change inconsistent with the device/app baseline, approved management policy, or expected user workflow; do not infer unobserved API calls, file/process activity, or payload content from management state alone.</p>
 </a>
                     </td>
                 </tr>
@@ -971,7 +971,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3 col-footer">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v19.2&#013;Website  v5.1.0">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v20.0&#013;Website  v5.2.0">Website Changelog</a></u>
                                 </div>
                                 <div class="px-3">
                                     <u class="footer-link"><a href="/resources/legal-and-branding/privacy/#" class="footer-link" onclick="Osano.cm.showDrawer('osano-cm-dom-info-dialog-open')">Cookie Preferences</a></u>

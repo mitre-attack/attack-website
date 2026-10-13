@@ -207,7 +207,7 @@
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
                     <div class="container-fluid banner-message">
-                        ATT&CKcon 7.0 registration is open! Join us October 27-28, 2026 in McLean, VA or virtually. <a href="https://na.eventscloud.com/website/93925/">Register in person</a> or <a href="https://mitre.brandlive.com/MITRE-ATTACKcon-7-0">register virtually</a>. See the <a href="https://na.eventscloud.com/website/93925/faq/">FAQ</a> for hotel and venue details.
+                        ATT&CK v20 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v20-9701dd75ffb4'>blog post</a> for more information. <a href='https://na.eventscloud.com/website/93925/'>ATT&CKcon 7.0</a> is October 27-28, 2026 in McLean, VA.
                     </div>
             </div>
         </div>
@@ -286,7 +286,7 @@
                       data-original-title="The system an adversary is operating within; could be an operating system or application">&#9432;</span>
                   </div>
                   <div class="col-md-11 pl-0">
-                    <span class="h5 card-title">Platforms:&nbsp;</span>None
+                    <span class="h5 card-title">Platforms:&nbsp;</span>Embedded, Linux, Windows
                   </div>
                 </div>
                 <div class="row card-data">
@@ -304,7 +304,7 @@
                 <div class="row card-data">
                   <div class="col-md-1 px-0 text-center"></div>
                   <div class="col-md-11 pl-0">
-                    <span class="h5 card-title">Last Modified:&nbsp;</span>15 April 2025
+                    <span class="h5 card-title">Last Modified:&nbsp;</span>13 October 2026
                   </div>
                 </div>
               </div>
@@ -314,13 +314,13 @@
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Permalink to this version of T0894" 
-           href="/versions/v19/techniques/T0894/" data-test-ignore="true">Version Permalink</a>
+           href="/versions/v20/techniques/T0894/" data-test-ignore="true">Version Permalink</a>
     </div>
     <div class="permalink">
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Go to the live version of T0894" 
-           href="/versions/v19/techniques/T0894/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+           href="/versions/v20/techniques/T0894/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
     </div>
 </div>
 
@@ -345,7 +345,7 @@
                   <a href="/campaigns/C0034"> 2022 Ukraine Electric Power Attack </a>
                 </td>
                 <td>
-                          <p>During the <a href="https://attack.mitre.org/campaigns/C0034">2022 Ukraine Electric Power Attack</a>, <a href="/groups/G0034">Sandworm Team</a> executed a MicroSCADA application binary <code>scilc.exe</code> to send a predefined list of SCADA instructions specified in a file defined by the adversary, <code>s1.txt</code>. The executed command <code>C:\sc\prog\exec\scilc.exe -do pack\scil\s1.txt</code> leverages the SCADA software to send unauthorized command messages to remote substations.<span onclick=scrollToRef('scite-4') id="scite-ref-4-a" class="scite-citeref-number" title="Ken Proska, John Wolfram, Jared Wilson, Dan Black, Keith Lunden, Daniel Kapellmann Zafra, Nathan Brubaker, Tyler Mclellan, Chris Sistrunk. (2023, November 9). Sandworm Disrupts Power in Ukraine Using a Novel Attack Against Operational Technology. Retrieved March 28, 2024."data-reference="Mandiant-Sandworm-Ukraine-2022"><sup><a href="https://www.mandiant.com/resources/blog/sandworm-disrupts-power-ukraine-operational-technology" target="_blank" data-hasqtip="3" aria-describedby="qtip-3">[4]</a></sup></span></p>
+                          <p>During the <a href="/campaigns/C0034">2022 Ukraine Electric Power Attack</a>, <a href="/groups/G0034">Sandworm Team</a> executed a MicroSCADA application binary <code>scilc.exe</code> to send a predefined list of SCADA instructions specified in a file defined by the adversary, <code>s1.txt</code>. The executed command <code>C:\sc\prog\exec\scilc.exe -do pack\scil\s1.txt</code> leverages the SCADA software to send unauthorized command messages to remote substations.<span onclick=scrollToRef('scite-4') id="scite-ref-4-a" class="scite-citeref-number" title="Ken Proska, John Wolfram, Jared Wilson, Dan Black, Keith Lunden, Daniel Kapellmann Zafra, Nathan Brubaker, Tyler Mclellan, Chris Sistrunk. (2023, November 9). Sandworm Disrupts Power in Ukraine Using a Novel Attack Against Operational Technology. Retrieved March 28, 2024."data-reference="Mandiant-Sandworm-Ukraine-2022"><sup><a href="https://www.mandiant.com/resources/blog/sandworm-disrupts-power-ukraine-operational-technology" target="_blank" data-hasqtip="3" aria-describedby="qtip-3">[4]</a></sup></span></p>
 
                 </td>
               </tr>
@@ -450,17 +450,35 @@
     </thead>
     <tbody>
                 <tr class="detection_strategy" id="uses-DET0793">
-                        <td rowspan="1">
+                        <td rowspan="3">
                             <a href="/detectionstrategies/DET0793">DET0793</a>
                         </td>
-                        <td rowspan="1">
+                        <td rowspan="3">
                             <a href="/detectionstrategies/DET0793">Detection of System Binary Proxy Execution</a>
                         </td>
                     <td>
                         <a href="/detectionstrategies/DET0793#AN1925">AN1925</a>
                     </td>
                     <td>
-                                <p>Monitor for any suspicious attempts to enable script execution on a system. If scripts are not commonly used on a system, but enabled, scripts running out of cycle from patching or other administrator functions are suspicious. Scripts should be captured from the file system when possible to determine their actions and intent.<br />Monitor executed commands and associated arguments for application programs which support executing custom code, scripts, commands, or executables. <br />Monitor for unusual processes execution, especially for processes that allow the proxy execution of malicious files.</p>
+                                <p>Real-time monitoring identifies a trusted, signed Windows system binary executing with command-line arguments inconsistent with its documented administrative purpose -- specifically arguments indicating payload decoding, remote content execution, or script invocation -- on an Industrial Control System (ICS) host. OT operational-fidelity gate: Alert only when execution violates an approved signer/hash/path/parent/process or tool allowlist, or originates from an unauthorized user/tool, and is tied to an OT asset or follow-on OT-relevant action. Suppress vendor-signed software, approved engineering utilities, diagnostics, patching, backup, and documented maintenance.</p>
+</a>
+                    </td>
+                </tr>
+                <tr class="detection_strategy" id="uses-DET0793">
+                    <td>
+                        <a href="/detectionstrategies/DET0793#AN2152">AN2152</a>
+                    </td>
+                    <td>
+                                <p>Real-time monitoring identifies system binaries (bash, python, perl, awk, dd) on Industrial Control System (ICS) Linux assets executing with arguments that pipe or decode external content rather than performing their documented administrative function. OT operational-fidelity gate: Alert only when execution violates an approved signer/hash/path/parent/process or tool allowlist, or originates from an unauthorized user/tool, and is tied to an OT asset or follow-on OT-relevant action. Suppress vendor-signed software, approved engineering utilities, diagnostics, patching, backup, and documented maintenance.</p>
+</a>
+                    </td>
+                </tr>
+                <tr class="detection_strategy" id="uses-DET0793">
+                    <td>
+                        <a href="/detectionstrategies/DET0793#AN2242">AN2242</a>
+                    </td>
+                    <td>
+                                <p>Real-time monitoring identifies Industrial Control System (ICS) protocol messages using embedded device built-in utilities or vendor-supplied diagnostic tools to execute payloads, from sources not in the approved engineering workstation list, containing payloads inconsistent with legitimate diagnostic use. OT operational-fidelity gate: Alert only when execution violates an approved signer/hash/path/parent/process or tool allowlist, or originates from an unauthorized user/tool, and is tied to an OT asset or follow-on OT-relevant action. Suppress vendor-signed software, approved engineering utilities, diagnostics, patching, backup, and documented maintenance.</p>
 </a>
                     </td>
                 </tr>
@@ -748,7 +766,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3 col-footer">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v19.2&#013;Website  v5.1.0">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v20.0&#013;Website  v5.2.0">Website Changelog</a></u>
                                 </div>
                                 <div class="px-3">
                                     <u class="footer-link"><a href="/resources/legal-and-branding/privacy/#" class="footer-link" onclick="Osano.cm.showDrawer('osano-cm-dom-info-dialog-open')">Cookie Preferences</a></u>

@@ -207,7 +207,7 @@
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
                     <div class="container-fluid banner-message">
-                        ATT&CKcon 7.0 registration is open! Join us October 27-28, 2026 in McLean, VA or virtually. <a href="https://na.eventscloud.com/website/93925/">Register in person</a> or <a href="https://mitre.brandlive.com/MITRE-ATTACKcon-7-0">register virtually</a>. See the <a href="https://na.eventscloud.com/website/93925/faq/">FAQ</a> for hotel and venue details.
+                        ATT&CK v20 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v20-9701dd75ffb4'>blog post</a> for more information. <a href='https://na.eventscloud.com/website/93925/'>ATT&CKcon 7.0</a> is October 27-28, 2026 in McLean, VA.
                     </div>
             </div>
         </div>
@@ -292,13 +292,13 @@
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Permalink to this version of DET0604" 
-           href="/versions/v19/detectionstrategies/DET0604/" data-test-ignore="true">Version Permalink</a>
+           href="/versions/v20/detectionstrategies/DET0604/" data-test-ignore="true">Version Permalink</a>
     </div>
     <div class="permalink">
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Go to the live version of DET0604" 
-           href="/versions/v19/detectionstrategies/DET0604/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+           href="/versions/v20/detectionstrategies/DET0604/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
     </div>
 </div>
 
@@ -326,7 +326,7 @@
               role="tabpanel" aria-labelledby="tab-Android">
               <h4 class="pt-3" id="AN1653">AN1653</h4>
               <div>
-                        <p>The defender observes a newly enrolled or recently activated device presenting abnormal integrity, hardware-backed attestation, or firmware/build relationships at the management plane, followed by privileged or system-context access to protected resources or framework paths, and then outbound communication inconsistent with setup state, lock state, or recent user interaction. The causal sequence is strongest when the device has not yet reached a normal trusted posture but still exhibits system-level capability use or network activity.</p>
+                        <p>For Android, detect Compromise Hardware Supply Chain by correlating analyst-visible device/network evidence and management state; use streaming or batched telemetry only where the documented collector is deployed. Correlate Application Permission via Android Enterprise DPC / Application Vetting [DevicePolicyManager.getPermissionGrantState(); PackageManager manifest/requested-permission review]; Application State via Android Enterprise / EMM [Managed package inventory/status and package metadata]; Network Traffic Content via Enterprise Secure Web Gateway / Proxy [DNS/HTTP(S) inspection or proxy transaction metadata where enterprise decryption/inspection is deployed]. Alert on a sequence or state change inconsistent with the device/app baseline, approved management policy, or expected user workflow; do not infer unobserved API calls, file/process activity, or payload content from management state alone.</p>
 
               </div>
 
@@ -347,8 +347,8 @@
                           Application Permission (DC0114)
                         </a>
                       </td>
-                      <td>android:MDMLog</td>
-                      <td>Device enrollment or compliance event shows failed or degraded verified boot, hardware-backed attestation mismatch, patch/build/baseband inconsistency, or unexpected device property drift near first contact</td>
+                      <td>android:DevicePolicyManager</td>
+                      <td>DevicePolicyManager.getPermissionGrantState(); PackageManager manifest/requested-permission review</td>
                     </tr>
                     <tr>
                       <td rowspan="1">
@@ -356,8 +356,17 @@
                           Application State (DC0123)
                         </a>
                       </td>
-                      <td>MobileEDR:telemetry</td>
-                      <td>Protected resource use or privileged framework access occurs while device is locked, before normal setup completion, or from an app/service not in foreground and not on approved preload list</td>
+                      <td>android:EMM</td>
+                      <td>Managed package inventory/status and package metadata</td>
+                    </tr>
+                    <tr>
+                      <td rowspan="1">
+                        <a href="/datacomponents/DC0085">
+                          Network Traffic Content (DC0085)
+                        </a>
+                      </td>
+                      <td>webproxy:applog</td>
+                      <td>DNS/HTTP(S) inspection or proxy transaction metadata where enterprise decryption/inspection is deployed</td>
                     </tr>
                     <tr>
                       <td rowspan="1">
@@ -365,8 +374,8 @@
                           OS API Execution (DC0021)
                         </a>
                       </td>
-                      <td>MobileEDR:telemetry</td>
-                      <td>Privileged or OEM-context framework/API use tied to telephony, device policy, accessibility, overlay, input injection, package visibility, or protected settings modification from an identity not expected for the device model or approved image</td>
+                      <td>mobile:DynamicAnalysis</td>
+                      <td>Dynamic API/runtime trace: Protected resource use, privileged API invocation, or telephony/accessibility/overlay access occurs from system-app context while device is locked or before normal setup completion</td>
                     </tr>
                   </tbody>
                 </table>
@@ -422,7 +431,7 @@
               role="tabpanel" aria-labelledby="tab-iOS">
               <h4 class="pt-3" id="AN1654">AN1654</h4>
               <div>
-                        <p>The defender observes a device at activation, supervision, or enrollment time with unusual management-plane posture, inventory, or trust characteristics and then relies primarily on downstream network effects and device state inconsistencies rather than direct low-level process telemetry. On iOS, the most reliable sequence is supervision/attestation or inventory concern near first contact followed by network egress or protected-state behavior that is inconsistent with lock state, setup phase, or expected managed app activity.</p>
+                        <p>For iOS, detect Compromise Hardware Supply Chain by correlating analyst-visible device/network evidence and management state; use streaming or batched telemetry only where the documented collector is deployed. Correlate Application Permission via Application Vetting [Code-signing entitlements and Info.plist privacy usage-description keys]; Application State via Apple MDM [InstalledApplicationList / ManagedApplicationList]; Network Traffic Content via Enterprise Secure Web Gateway / Proxy [DNS/HTTP(S) inspection or proxy transaction metadata where enterprise decryption/inspection is deployed]. Alert on a sequence or state change inconsistent with the device/app baseline, approved management policy, or expected user workflow; do not infer unobserved API calls, file/process activity, or payload content from management state alone.</p>
 
               </div>
 
@@ -443,17 +452,8 @@
                           Application Permission (DC0114)
                         </a>
                       </td>
-                      <td>iOS:MDMLog</td>
-                      <td>Supervised enrollment, activation, or inventory event reveals unexpected device property relationships, anomalous managed posture, unexplained configuration drift near first contact, or identity/inventory characteristics inconsistent with approved procurement baseline</td>
-                    </tr>
-                    <tr>
-                      <td rowspan="1">
-                        <a href="/datacomponents/DC0085">
-                          Network Traffic Content (DC0085)
-                        </a>
-                      </td>
-                      <td>VPN:MobileProxy</td>
-                      <td>Supervised or newly activated device initiates outbound connections to destinations outside Apple, MDM, update, or enterprise-managed baselines while locked, with no recent user interaction, or before expected app enrollment completion</td>
+                      <td>mobile:ApplicationVetting</td>
+                      <td>Code-signing entitlements and Info.plist privacy usage-description keys</td>
                     </tr>
                     <tr>
                       <td rowspan="1">
@@ -461,8 +461,17 @@
                           Application State (DC0123)
                         </a>
                       </td>
-                      <td>MobileEDR:telemetry</td>
-                      <td>Managed app or device-originated network activity occurs while the device is locked or before expected managed app initialization sequence, inconsistent with expected background refresh baseline</td>
+                      <td>iOS:MDM</td>
+                      <td>InstalledApplicationList / ManagedApplicationList</td>
+                    </tr>
+                    <tr>
+                      <td rowspan="1">
+                        <a href="/datacomponents/DC0085">
+                          Network Traffic Content (DC0085)
+                        </a>
+                      </td>
+                      <td>webproxy:applog</td>
+                      <td>DNS/HTTP(S) inspection or proxy transaction metadata where enterprise decryption/inspection is deployed</td>
                     </tr>
                     <tr>
                       <td rowspan="1">
@@ -470,8 +479,8 @@
                           OS API Execution (DC0021)
                         </a>
                       </td>
-                      <td>iOS:unifiedlog</td>
-                      <td>Supplemental anomaly in baseband, IOKit, accessory, security, or activation-related subsystem logging temporally adjacent to suspicious posture or network behavior</td>
+                      <td>mobile:DynamicAnalysis</td>
+                      <td>Dynamic API/runtime trace: Supplemental baseband, IOKit, accessory, security, or activation-related subsystem anomalies on supervised device at activation — Unified Log supplemental confirmation</td>
                     </tr>
                   </tbody>
                 </table>
@@ -521,6 +530,7 @@
             </div>
           </div>
         </div>
+
 
         
       </div>
@@ -739,7 +749,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3 col-footer">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v19.2&#013;Website  v5.1.0">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v20.0&#013;Website  v5.2.0">Website Changelog</a></u>
                                 </div>
                                 <div class="px-3">
                                     <u class="footer-link"><a href="/resources/legal-and-branding/privacy/#" class="footer-link" onclick="Osano.cm.showDrawer('osano-cm-dom-info-dialog-open')">Cookie Preferences</a></u>

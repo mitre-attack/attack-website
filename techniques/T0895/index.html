@@ -207,7 +207,7 @@
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
                     <div class="container-fluid banner-message">
-                        ATT&CKcon 7.0 registration is open! Join us October 27-28, 2026 in McLean, VA or virtually. <a href="https://na.eventscloud.com/website/93925/">Register in person</a> or <a href="https://mitre.brandlive.com/MITRE-ATTACKcon-7-0">register virtually</a>. See the <a href="https://na.eventscloud.com/website/93925/faq/">FAQ</a> for hotel and venue details.
+                        ATT&CK v20 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v20-9701dd75ffb4'>blog post</a> for more information. <a href='https://na.eventscloud.com/website/93925/'>ATT&CKcon 7.0</a> is October 27-28, 2026 in McLean, VA.
                     </div>
             </div>
         </div>
@@ -281,6 +281,15 @@
                         <a href="/tactics/TA0104">Execution</a>                  </div>
                 </div>
                 <div class="row card-data">
+                  <div class="col-md-1 px-0 text-center">
+                    <span data-toggle="tooltip" data-placement="left" title="" data-test-ignore="true"
+                      data-original-title="The system an adversary is operating within; could be an operating system or application">&#9432;</span>
+                  </div>
+                  <div class="col-md-11 pl-0">
+                    <span class="h5 card-title">Platforms:&nbsp;</span>Embedded, Linux, Windows
+                  </div>
+                </div>
+                <div class="row card-data">
                   <div class="col-md-1 px-0 text-center"></div>
                   <div class="col-md-11 pl-0">
                     <span class="h5 card-title">Version:&nbsp;</span>1.0
@@ -295,7 +304,7 @@
                 <div class="row card-data">
                   <div class="col-md-1 px-0 text-center"></div>
                   <div class="col-md-11 pl-0">
-                    <span class="h5 card-title">Last Modified:&nbsp;</span>15 April 2025
+                    <span class="h5 card-title">Last Modified:&nbsp;</span>13 October 2026
                   </div>
                 </div>
               </div>
@@ -305,13 +314,13 @@
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Permalink to this version of T0895" 
-           href="/versions/v19/techniques/T0895/" data-test-ignore="true">Version Permalink</a>
+           href="/versions/v20/techniques/T0895/" data-test-ignore="true">Version Permalink</a>
     </div>
     <div class="permalink">
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Go to the live version of T0895" 
-           href="/versions/v19/techniques/T0895/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+           href="/versions/v20/techniques/T0895/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
     </div>
 </div>
 
@@ -336,7 +345,7 @@
                   <a href="/campaigns/C0034"> 2022 Ukraine Electric Power Attack </a>
                 </td>
                 <td>
-                          <p>During the <a href="https://attack.mitre.org/campaigns/C0034">2022 Ukraine Electric Power Attack</a>, <a href="/groups/G0034">Sandworm Team</a> used existing hypervisor access to map an ISO image named <code>a.iso</code> to a virtual machine running a SCADA server. The SCADA server’s operating system was configured to autorun CD-ROM images, and as a result, a malicious VBS script on the ISO image was automatically executed.<span onclick=scrollToRef('scite-1') id="scite-ref-1-a" class="scite-citeref-number" title="Ken Proska, John Wolfram, Jared Wilson, Dan Black, Keith Lunden, Daniel Kapellmann Zafra, Nathan Brubaker, Tyler Mclellan, Chris Sistrunk. (2023, November 9). Sandworm Disrupts Power in Ukraine Using a Novel Attack Against Operational Technology. Retrieved March 28, 2024."data-reference="Mandiant-Sandworm-Ukraine-2022"><sup><a href="https://www.mandiant.com/resources/blog/sandworm-disrupts-power-ukraine-operational-technology" target="_blank" data-hasqtip="0" aria-describedby="qtip-0">[1]</a></sup></span></p>
+                          <p>During the <a href="/campaigns/C0034">2022 Ukraine Electric Power Attack</a>, <a href="/groups/G0034">Sandworm Team</a> used existing hypervisor access to map an ISO image named <code>a.iso</code> to a virtual machine running a SCADA server. The SCADA server’s operating system was configured to autorun CD-ROM images, and as a result, a malicious VBS script on the ISO image was automatically executed.<span onclick=scrollToRef('scite-1') id="scite-ref-1-a" class="scite-citeref-number" title="Ken Proska, John Wolfram, Jared Wilson, Dan Black, Keith Lunden, Daniel Kapellmann Zafra, Nathan Brubaker, Tyler Mclellan, Chris Sistrunk. (2023, November 9). Sandworm Disrupts Power in Ukraine Using a Novel Attack Against Operational Technology. Retrieved March 28, 2024."data-reference="Mandiant-Sandworm-Ukraine-2022"><sup><a href="https://www.mandiant.com/resources/blog/sandworm-disrupts-power-ukraine-operational-technology" target="_blank" data-hasqtip="0" aria-describedby="qtip-0">[1]</a></sup></span></p>
 
                 </td>
               </tr>
@@ -441,17 +450,35 @@
     </thead>
     <tbody>
                 <tr class="detection_strategy" id="uses-DET0748">
-                        <td rowspan="1">
+                        <td rowspan="3">
                             <a href="/detectionstrategies/DET0748">DET0748</a>
                         </td>
-                        <td rowspan="1">
+                        <td rowspan="3">
                             <a href="/detectionstrategies/DET0748">Detection of Autorun Image</a>
                         </td>
                     <td>
                         <a href="/detectionstrategies/DET0748#AN2066">AN2066</a>
                     </td>
                     <td>
-                                <p>Monitor for newly constructed drive letters or mount points to removable media. Monitor for newly executed processes that execute from removable media after it is mounted or when initiated by a user.</p>
+                                <p>Real-time monitoring identifies a field device loading a modified autorun image (boot read-only memory, bootloader firmware) detected by a discrepancy between the device's declared firmware hash and the authorized firmware inventory hash, with post-reboot device behavior diverging from expected (unexpected protocols active, unanticipated network connections). OT operational-fidelity gate: Alert only when execution violates an approved signer/hash/path/parent/process or tool allowlist, or originates from an unauthorized user/tool, and is tied to an OT asset or follow-on OT-relevant action. Suppress vendor-signed software, approved engineering utilities, diagnostics, patching, backup, and documented maintenance.</p>
+</a>
+                    </td>
+                </tr>
+                <tr class="detection_strategy" id="uses-DET0748">
+                    <td>
+                        <a href="/detectionstrategies/DET0748#AN2112">AN2112</a>
+                    </td>
+                    <td>
+                                <p>Real-time monitoring identifies modification of udev rules or autofs configuration that triggers script execution on removable media mount, where the triggered script path is not in the authorized Industrial Control System (ICS) software inventory. OT operational-fidelity gate: Alert only when execution violates an approved signer/hash/path/parent/process or tool allowlist, or originates from an unauthorized user/tool, and is tied to an OT asset or follow-on OT-relevant action. Suppress vendor-signed software, approved engineering utilities, diagnostics, patching, backup, and documented maintenance.</p>
+</a>
+                    </td>
+                </tr>
+                <tr class="detection_strategy" id="uses-DET0748">
+                    <td>
+                        <a href="/detectionstrategies/DET0748#AN2273">AN2273</a>
+                    </td>
+                    <td>
+                                <p>Real-time monitoring identifies a registry write to Windows autorun keys or an AutoPlay/AutoRun configuration change referencing a binary path that is not part of the authorized Industrial Control System (ICS) software inventory, particularly in combination with removable media insertion. OT operational-fidelity gate: Alert only when execution violates an approved signer/hash/path/parent/process or tool allowlist, or originates from an unauthorized user/tool, and is tied to an OT asset or follow-on OT-relevant action. Suppress vendor-signed software, approved engineering utilities, diagnostics, patching, backup, and documented maintenance.</p>
 </a>
                     </td>
                 </tr>
@@ -700,7 +727,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3 col-footer">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v19.2&#013;Website  v5.1.0">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v20.0&#013;Website  v5.2.0">Website Changelog</a></u>
                                 </div>
                                 <div class="px-3">
                                     <u class="footer-link"><a href="/resources/legal-and-branding/privacy/#" class="footer-link" onclick="Osano.cm.showDrawer('osano-cm-dom-info-dialog-open')">Cookie Preferences</a></u>

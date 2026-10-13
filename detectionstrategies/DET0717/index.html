@@ -207,7 +207,7 @@
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
                     <div class="container-fluid banner-message">
-                        ATT&CKcon 7.0 registration is open! Join us October 27-28, 2026 in McLean, VA or virtually. <a href="https://na.eventscloud.com/website/93925/">Register in person</a> or <a href="https://mitre.brandlive.com/MITRE-ATTACKcon-7-0">register virtually</a>. See the <a href="https://na.eventscloud.com/website/93925/faq/">FAQ</a> for hotel and venue details.
+                        ATT&CK v20 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v20-9701dd75ffb4'>blog post</a> for more information. <a href='https://na.eventscloud.com/website/93925/'>ATT&CKcon 7.0</a> is October 27-28, 2026 in McLean, VA.
                     </div>
             </div>
         </div>
@@ -292,13 +292,13 @@
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Permalink to this version of DET0717" 
-           href="/versions/v19/detectionstrategies/DET0717/" data-test-ignore="true">Version Permalink</a>
+           href="/versions/v20/detectionstrategies/DET0717/" data-test-ignore="true">Version Permalink</a>
     </div>
     <div class="permalink">
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Go to the live version of DET0717" 
-           href="/versions/v19/detectionstrategies/DET0717/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+           href="/versions/v20/detectionstrategies/DET0717/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
     </div>
 </div>
 
@@ -320,7 +320,7 @@
               role="tabpanel" aria-labelledby="tab-Android">
               <h4 class="pt-3" id="AN1847">AN1847</h4>
               <div>
-                        <p>The defender correlates application loading or invoking native libraries through JNI or NDK-backed execution paths with subsequent lower-level activity such as native thread creation, sensor access, file operations, or outbound network communication that is inconsistent with the app's declared role or recent user interaction. The analytic prioritizes defender-observable control-plane effects: native library load or JNI bridge use, transition into native execution context, and immediate post-load behavior occurring from background state, locked-device state, or non-baselined app categories.</p>
+                        <p>For Android, detect Native API from documented management, network, or vetting evidence; treat state queries as periodic observations rather than real-time events. Correlate Application Permission via Android Enterprise DPC / Application Vetting [DevicePolicyManager.getPermissionGrantState(); PackageManager manifest/requested-permission review]; Application State via Android Enterprise / EMM [Managed package inventory/status and package metadata]; OS API Execution via Application Vetting / Instrumented Dynamic Analysis [Dynamic API/runtime trace: App loads native library (.so) or resolves JNI bridge NOT IN $ApprovedNativeLibraries$ immediately before suspicious lower-level activity (sensor access, file write, network connection) — native code loading before anomalous activity is the]. Alert on a sequence or state change inconsistent with the device/app baseline, approved management policy, or expected user workflow; do not infer unobserved API calls, file/process activity, or payload content from management state alone.</p>
 
               </div>
 
@@ -336,17 +336,13 @@
                   </thead>
                   <tbody>
                     <tr>
-                      <td rowspan="2">
-                        <a href="/datacomponents/DC0021">
-                          OS API Execution (DC0021)
+                      <td rowspan="1">
+                        <a href="/datacomponents/DC0114">
+                          Application Permission (DC0114)
                         </a>
                       </td>
-                      <td>MobileEDR:telemetry</td>
-                      <td>Application loads or resolves native shared library (.so) or JNI bridge immediately before suspicious native execution phase</td>
-                    </tr>
-                    <tr>
-                      <td>MobileEDR:telemetry</td>
-                      <td>Application transitions from managed code into JNI/native function execution or attaches native thread to runtime during the execution phase</td>
+                      <td>android:DevicePolicyManager</td>
+                      <td>DevicePolicyManager.getPermissionGrantState(); PackageManager manifest/requested-permission review</td>
                     </tr>
                     <tr>
                       <td rowspan="1">
@@ -354,17 +350,21 @@
                           Application State (DC0123)
                         </a>
                       </td>
-                      <td>MobileEDR:telemetry</td>
-                      <td>Native library load or JNI-backed execution occurs while app_state=background or device_locked=true or recent_user_interaction=false during the execution phase</td>
+                      <td>android:EMM</td>
+                      <td>Managed package inventory/status and package metadata</td>
                     </tr>
                     <tr>
-                      <td rowspan="1">
-                        <a href="/datacomponents/DC0114">
-                          Application Permission (DC0114)
+                      <td rowspan="2">
+                        <a href="/datacomponents/DC0021">
+                          OS API Execution (DC0021)
                         </a>
                       </td>
-                      <td>android:MDMLog</td>
-                      <td>Managed application without approved native-code role or expected high-performance/native dependency exhibits native execution behavior inconsistent with enterprise policy baseline</td>
+                      <td>mobile:DynamicAnalysis</td>
+                      <td>Dynamic API/runtime trace: App loads native library (.so) or resolves JNI bridge NOT IN $ApprovedNativeLibraries$ immediately before suspicious lower-level activity (sensor access, file write, network connection) — native code loading before anomalous activity is the</td>
+                    </tr>
+                    <tr>
+                      <td>mobile:DynamicAnalysis</td>
+                      <td>Dynamic API/runtime trace: App transitions from managed-code execution into JNI/native function context or attaches native thread,</td>
                     </tr>
                   </tbody>
                 </table>
@@ -381,32 +381,12 @@
                   </thead>
                   <tbody>
                     <tr>
-                      <td>TimeWindow</td>
-                      <td>Correlation window between native library load, JNI/native execution, and follow-on behavior</td>
+                      <td>ApprovedNativeLibraries</td>
+                      <td>Expected native libraries for each app (game engines: Unity/libil2cpp, Unreal; media: libffmpeg; React Native: libreactnative). Derive from app package manifest and vendor documentation. Tightening: strict per-app allowlist.</td>
                     </tr>
                     <tr>
-                      <td>AllowedAppList</td>
-                      <td>Apps legitimately expected to use native code, such as games, media, enterprise VPN, security tools, or performance-intensive apps</td>
-                    </tr>
-                    <tr>
-                      <td>AllowedLibraryPatterns</td>
-                      <td>Expected native library names, paths, signing attributes, or packaging patterns for approved applications</td>
-                    </tr>
-                    <tr>
-                      <td>ForegroundStateRequired</td>
-                      <td>Whether native execution should only occur during active user-driven workflows for a given app role</td>
-                    </tr>
-                    <tr>
-                      <td>LibraryPathPatterns</td>
-                      <td>Environment-specific list of suspicious temporary, extracted, or dynamically staged native library locations</td>
-                    </tr>
-                    <tr>
-                      <td>PostLoadBehaviorThreshold</td>
-                      <td>Minimum number or severity of suspicious actions after native load required to elevate confidence</td>
-                    </tr>
-                    <tr>
-                      <td>UplinkBytesThreshold</td>
-                      <td>Minimum outbound volume after native execution to treat network activity as meaningful follow-on behavior</td>
+                      <td>NativeActivityWindow</td>
+                      <td>Default 30s between native library load and anomalous activity. Native code executes synchronously after load.</td>
                     </tr>
                   </tbody>
                 </table>
@@ -414,6 +394,7 @@
             </div>
           </div>
         </div>
+
 
         
       </div>
@@ -632,7 +613,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3 col-footer">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v19.2&#013;Website  v5.1.0">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v20.0&#013;Website  v5.2.0">Website Changelog</a></u>
                                 </div>
                                 <div class="px-3">
                                     <u class="footer-link"><a href="/resources/legal-and-branding/privacy/#" class="footer-link" onclick="Osano.cm.showDrawer('osano-cm-dom-info-dialog-open')">Cookie Preferences</a></u>

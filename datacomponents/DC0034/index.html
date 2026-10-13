@@ -207,7 +207,7 @@
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
                     <div class="container-fluid banner-message">
-                        ATT&CKcon 7.0 registration is open! Join us October 27-28, 2026 in McLean, VA or virtually. <a href="https://na.eventscloud.com/website/93925/">Register in person</a> or <a href="https://mitre.brandlive.com/MITRE-ATTACKcon-7-0">register virtually</a>. See the <a href="https://na.eventscloud.com/website/93925/faq/">FAQ</a> for hotel and venue details.
+                        ATT&CK v20 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v20-9701dd75ffb4'>blog post</a> for more information. <a href='https://na.eventscloud.com/website/93925/'>ATT&CKcon 7.0</a> is October 27-28, 2026 in McLean, VA.
                     </div>
             </div>
         </div>
@@ -265,7 +265,7 @@
                 </div>
                 <div class="row card-data">
                   <div class="col-md-12">
-                    <span class="h5 card-title">Version</span>: 2.1
+                    <span class="h5 card-title">Version</span>: 2.2
                   </div>
                 </div>
                 <div class="row card-data">
@@ -275,7 +275,7 @@
                 </div>
                 <div class="row card-data">
                   <div class="col-md-12">
-                    <span class="h5 card-title">Last Modified</span>: 12 May 2026
+                    <span class="h5 card-title">Last Modified</span>: 13 October 2026
                   </div>
                 </div>
               </div>
@@ -314,6 +314,26 @@
                 <td>execve with escalated privileges</td>
               </tr>
               <tr>
+                <td>auditd:SYSCALL</td>
+                <td>Linux Audit SYSCALL/EXECVE/SOCKADDR records (configured audit rule): execve with env containing LD_PRELOAD where exe matches Industrial Control Systems (ICS) service binary list and preload library not in vendor package manifest</td>
+              </tr>
+              <tr>
+                <td>auditd:SYSCALL</td>
+                <td>Linux Audit SYSCALL/EXECVE/SOCKADDR records (configured audit rule): execve where exe basename matches Industrial Control Systems (ICS) daemon names but path outside vendor install paths</td>
+              </tr>
+              <tr>
+                <td>auditd:SYSCALL</td>
+                <td>Linux Audit SYSCALL/EXECVE/SOCKADDR records (configured audit rule): execve of wireless configuration utility setting monitor/promiscuous mode outside change management window</td>
+              </tr>
+              <tr>
+                <td>auditd:SYSCALL</td>
+                <td>Linux Audit SYSCALL/EXECVE/SOCKADDR records (configured audit rule): setuid/setgid to root from a process owned by Industrial Control Systems (ICS) service User Identifier (UID) that was not invoked via sudo</td>
+              </tr>
+              <tr>
+                <td>auditd:SYSCALL</td>
+                <td>Linux Audit SYSCALL/EXECVE/SOCKADDR records (configured audit rule): execve of wireless configuration utility setting monitor mode on Industrial Control Systems (ICS) Linux asset by User Identifier (UID) not in authorized wireless admin UIDs</td>
+              </tr>
+              <tr>
                 <td>AWS:CloudTrail</td>
                 <td>cross-account or unexpected assume role</td>
               </tr>
@@ -324,6 +344,10 @@
               <tr>
                 <td>EDR:hunting</td>
                 <td>Correlation of signer info, parent-child lineage, rare invocation context (user host role), and API surfaces (CreateProcess*, LoadLibrary*)</td>
+              </tr>
+              <tr>
+                <td>edr:ProcessIntegrity</td>
+                <td>Process integrity/hash mismatch detected on Industrial Control Systems (ICS) communication process post-hook-install event</td>
               </tr>
               <tr>
                 <td>EDR:Telemetry</td>
@@ -430,6 +454,14 @@
                 <td>Crash or abnormal termination of security agent or system extension host</td>
               </tr>
               <tr>
+                <td>mobile:DynamicAnalysis</td>
+                <td>Dynamic API/runtime trace: running process names read from /proc/<PID>/status or /proc/<PID>/cmdline by app NOT IN $ProcessDiscoveryAllowList$</td>
+              </tr>
+              <tr>
+                <td>mobile:DynamicAnalysis</td>
+                <td>Dynamic API/runtime trace: process executing with effective UID=0</td>
+              </tr>
+              <tr>
                 <td>networkdevice:syslog</td>
                 <td>Admin activity</td>
               </tr>
@@ -471,7 +503,15 @@
               </tr>
               <tr>
                 <td>WinEventLog:PowerShell</td>
+                <td>EventCode=400/403; engine lifecycle/context</td>
+              </tr>
+              <tr>
+                <td>WinEventLog:PowerShell</td>
                 <td>EventCode=400, 403</td>
+              </tr>
+              <tr>
+                <td>WinEventLog:Sysmon</td>
+                <td>EventCode=1 where image filename matches Industrial Control Systems (ICS) vendor process names but hash not in vendor hash baseline or current directory outside vendor install paths</td>
               </tr>
             </tbody>
           </table>
@@ -619,6 +659,17 @@
                     <a href="/techniques/T1036">T1036</a>
                 </td>
             </tr>
+            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--f8400e7d-3443-4205-aaf3-1592b777416f">
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0929">DET0929</a>
+                </td>
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0929">Behavioral Detection of PowerShell Execution in ICS</a>
+                </td>
+                <td rowspan="">
+                    <a href="/techniques/T1701/001">T1701.001</a>
+                </td>
+            </tr>
             <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--9833b57b-4c83-4f58-b4cf-76f041b29273">
                 <td rowspan="">
                     <a href="/detectionstrategies/DET0508">DET0508</a>
@@ -707,6 +758,28 @@
                     <a href="/techniques/T1687">T1687</a>
                 </td>
             </tr>
+            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--0f41110f-099f-468f-af46-65d2a34f05d9">
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0710">DET0710</a>
+                </td>
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0710">Detection of Disguise Root/Jailbreak Indicators</a>
+                </td>
+                <td rowspan="">
+                    <a href="/techniques/T1630/003">T1630.003</a>
+                </td>
+            </tr>
+            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--0f2e4927-401d-430e-96ed-90feb8df1b03">
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0738">DET0738</a>
+                </td>
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0738">Detection of Exploitation for Privilege Escalation</a>
+                </td>
+                <td rowspan="">
+                    <a href="/techniques/T0890">T0890</a>
+                </td>
+            </tr>
             <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--9f3df5ac-caa0-4189-9b9b-dcf2f6bbdc54">
                 <td rowspan="">
                     <a href="/detectionstrategies/DET0722">DET0722</a>
@@ -729,15 +802,37 @@
                     <a href="/techniques/T0849">T0849</a>
                 </td>
             </tr>
-            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--f9ea25e7-6e63-4ef1-a8ad-47a4a261e175">
+            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--0e600ee5-de14-46f8-ada2-c0aee4ce969e">
                 <td rowspan="">
-                    <a href="/detectionstrategies/DET0735">DET0735</a>
+                    <a href="/detectionstrategies/DET0692">DET0692</a>
                 </td>
                 <td rowspan="">
-                    <a href="/detectionstrategies/DET0735">Detection of Scripting</a>
+                    <a href="/detectionstrategies/DET0692">Detection of Process Discovery</a>
                 </td>
                 <td rowspan="">
-                    <a href="/techniques/T0853">T0853</a>
+                    <a href="/techniques/T1424">T1424</a>
+                </td>
+            </tr>
+            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--7f32731d-7800-483c-b077-c4a187a27ae5">
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0726">DET0726</a>
+                </td>
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0726">Detection of Wireless Compromise</a>
+                </td>
+                <td rowspan="">
+                    <a href="/techniques/T0860">T0860</a>
+                </td>
+            </tr>
+            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--bbb288c7-9e40-46bd-b0a1-db4cfef4e1ee">
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0743">DET0743</a>
+                </td>
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0743">Detection of Wireless Sniffing</a>
+                </td>
+                <td rowspan="">
+                    <a href="/techniques/T0887">T0887</a>
                 </td>
             </tr>
             <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--9646aa18-4ebf-43c8-bf4c-670063bc5ef8">
@@ -1083,7 +1178,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3 col-footer">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v19.2&#013;Website  v5.1.0">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v20.0&#013;Website  v5.2.0">Website Changelog</a></u>
                                 </div>
                                 <div class="px-3">
                                     <u class="footer-link"><a href="/resources/legal-and-branding/privacy/#" class="footer-link" onclick="Osano.cm.showDrawer('osano-cm-dom-info-dialog-open')">Cookie Preferences</a></u>

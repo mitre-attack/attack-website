@@ -207,7 +207,7 @@
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
                     <div class="container-fluid banner-message">
-                        ATT&CKcon 7.0 registration is open! Join us October 27-28, 2026 in McLean, VA or virtually. <a href="https://na.eventscloud.com/website/93925/">Register in person</a> or <a href="https://mitre.brandlive.com/MITRE-ATTACKcon-7-0">register virtually</a>. See the <a href="https://na.eventscloud.com/website/93925/faq/">FAQ</a> for hotel and venue details.
+                        ATT&CK v20 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v20-9701dd75ffb4'>blog post</a> for more information. <a href='https://na.eventscloud.com/website/93925/'>ATT&CKcon 7.0</a> is October 27-28, 2026 in McLean, VA.
                     </div>
             </div>
         </div>
@@ -292,13 +292,13 @@
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Permalink to this version of DET0713" 
-           href="/versions/v19/detectionstrategies/DET0713/" data-test-ignore="true">Version Permalink</a>
+           href="/versions/v20/detectionstrategies/DET0713/" data-test-ignore="true">Version Permalink</a>
     </div>
     <div class="permalink">
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Go to the live version of DET0713" 
-           href="/versions/v19/detectionstrategies/DET0713/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+           href="/versions/v20/detectionstrategies/DET0713/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
     </div>
 </div>
 
@@ -326,7 +326,7 @@
               role="tabpanel" aria-labelledby="tab-Android">
               <h4 class="pt-3" id="AN1840">AN1840</h4>
               <div>
-                        <p>The defender correlates newly granted or recently exercised storage- or privilege-relevant access with burst reads of local files, local databases, or protected records from operating-system or external-storage locations, especially when the reads are inconsistent with app role, occur in background or locked-device context, or are followed by temporary data staging or network transmission. The analytic emphasizes Android-specific observables such as external storage access, app-private database reads where visible to the sensor, and repeated enumeration/read activity against local paths associated with media, tokens, caches, or exported application data.</p>
+                        <p>For Android, detect Data from Local System from documented management, network, or vetting evidence; treat state queries as periodic observations rather than real-time events. Correlate Application Permission via Android Enterprise DPC / Application Vetting [DevicePolicyManager.getPermissionGrantState(); PackageManager manifest/requested-permission review]; File Access via Application Vetting / Forensic Acquisition [Dynamic filesystem trace or acquired app-container/filesystem artifacts: App reads files across $MinDirectoryCount$+ distinct parent directories with file_read_count &gt; $FileReadRateThreshold$ within $DataCollectionWindow$ in background or low-interaction state — bulk cross-directory read is the collection signal]; OS API Execution via Application Vetting / Instrumented Dynamic Analysis [Dynamic API/runtime trace: App invokes ContentResolver or SAF (Storage Access Framework) queries across multiple user-data paths outside its own sandbox in background state]. Alert on a sequence or state change inconsistent with the device/app baseline, approved management policy, or expected user workflow; do not infer unobserved API calls, file/process activity, or payload content from management state alone.</p>
 
               </div>
 
@@ -347,17 +347,8 @@
                           Application Permission (DC0114)
                         </a>
                       </td>
-                      <td>android:MDMLog</td>
-                      <td>Managed app granted or retaining storage-related or elevated access inconsistent with declared function prior to local data access activity</td>
-                    </tr>
-                    <tr>
-                      <td rowspan="1">
-                        <a href="/datacomponents/DC0021">
-                          OS API Execution (DC0021)
-                        </a>
-                      </td>
-                      <td>MobileEDR:telemetry</td>
-                      <td>Application queries or opens multiple local SQLite or app-associated database stores containing records unrelated to the app's declared function during the collection phase</td>
+                      <td>android:DevicePolicyManager</td>
+                      <td>DevicePolicyManager.getPermissionGrantState(); PackageManager manifest/requested-permission review</td>
                     </tr>
                     <tr>
                       <td rowspan="1">
@@ -365,8 +356,17 @@
                           File Access (DC0055)
                         </a>
                       </td>
-                      <td>MobileEDR:telemetry</td>
-                      <td>Application performs burst reads across local system paths, external storage, media directories, cache locations, or local database files within a short interval as the primary collection phase</td>
+                      <td>mobile:ForensicArtifacts</td>
+                      <td>Dynamic filesystem trace or acquired app-container/filesystem artifacts: App reads files across $MinDirectoryCount$+ distinct parent directories with file_read_count > $FileReadRateThreshold$ within $DataCollectionWindow$ in background or low-interaction state — bulk cross-directory read is the collection signal</td>
+                    </tr>
+                    <tr>
+                      <td rowspan="1">
+                        <a href="/datacomponents/DC0021">
+                          OS API Execution (DC0021)
+                        </a>
+                      </td>
+                      <td>mobile:DynamicAnalysis</td>
+                      <td>Dynamic API/runtime trace: App invokes ContentResolver or SAF (Storage Access Framework) queries across multiple user-data paths outside its own sandbox in background state</td>
                     </tr>
                   </tbody>
                 </table>
@@ -383,32 +383,28 @@
                   </thead>
                   <tbody>
                     <tr>
-                      <td>TimeWindow</td>
-                      <td>Correlation window between permission state, local data reads, optional staging, and outbound transfer</td>
+                      <td>ApprovedDataCollectionApps</td>
+                      <td>Approved backup, sync, file manager, and media apps. Derive from MDM catalog. Tightening: strict list — any unapproved app with broad file access is flagged.</td>
                     </tr>
                     <tr>
-                      <td>AllowedAppList</td>
-                      <td>Apps legitimately expected to read local files or databases such as backup, sync, file manager, security, or media management apps</td>
+                      <td>FileReadRateThreshold</td>
+                      <td>Default 50 file reads within window across 3+ directories. Derive from approved backup app baseline. Tightening: 10 reads — catches targeted collection.</td>
                     </tr>
                     <tr>
-                      <td>AllowedPathList</td>
-                      <td>Expected local paths, storage roots, and database locations for legitimate app behavior</td>
+                      <td>MinDirectoryCount</td>
+                      <td>Default 3 distinct parent directories. Single-directory reads may be legitimate (photo editor); cross-directory reads indicate collection sweep.</td>
                     </tr>
                     <tr>
-                      <td>ForegroundStateRequired</td>
-                      <td>Whether sensitive local data access should happen only during active user-driven workflows</td>
+                      <td>DataCollectionWindow</td>
+                      <td>Default 60s observation window.</td>
                     </tr>
                     <tr>
-                      <td>BurstReadThreshold</td>
-                      <td>Minimum number of file or record reads within a short interval required to indicate suspicious collection</td>
+                      <td>AppCDNList</td>
+                      <td>Per-app CDN baseline.</td>
                     </tr>
                     <tr>
-                      <td>SensitivePathPatterns</td>
-                      <td>Environment-specific list of high-value local paths such as external media roots, app export folders, token stores, or browser data locations</td>
-                    </tr>
-                    <tr>
-                      <td>UplinkBytesThreshold</td>
-                      <td>Minimum upload size expected if collection is followed by exfiltration</td>
+                      <td>ExfilWindow</td>
+                      <td>Default 120s between staging and upload.</td>
                     </tr>
                   </tbody>
                 </table>
@@ -418,7 +414,7 @@
               role="tabpanel" aria-labelledby="tab-iOS">
               <h4 class="pt-3" id="AN1841">AN1841</h4>
               <div>
-                        <p>The defender correlates supervised-device app posture and lifecycle context with repeated local file or local-database access effects, especially when a managed app reads browser, messaging, keychain-adjacent, or application-container data outside its expected role and then stages or uploads the result. Because direct low-level local system access visibility is weaker on iOS, the primary analytic is effect-based: managed app identity, file/database access where visible to the mobile sensor, background execution context, and near-term outbound communication.</p>
+                        <p>For iOS, detect Data from Local System primarily during application vetting or controlled analysis rather than assuming a live device SOC feed. Correlate Application Permission via Application Vetting [Code-signing entitlements and Info.plist privacy usage-description keys]; File Access via Application Vetting / Forensic Acquisition [Dynamic filesystem trace or acquired app-container/filesystem artifacts: App reads multiple files from Photos library, Files provider, or iCloud Drive in background or lock-adjacent state exceeding $FileReadRateThreshold$ within $DataCollectionWindow$]; OS API Execution via Application Vetting / Instrumented Dynamic Analysis [Dynamic API/runtime trace: Managed app accesses broad local data scope without user-initiated document picker interaction on supervised device]. Alert on a sequence or state change inconsistent with the device/app baseline, approved management policy, or expected user workflow; do not infer unobserved API calls, file/process activity, or payload content from management state alone.</p>
 
               </div>
 
@@ -439,17 +435,8 @@
                           Application Permission (DC0114)
                         </a>
                       </td>
-                      <td>iOS:MDMLog</td>
-                      <td>Supervised managed app without expected local export, sync, or forensic role accesses or stages local records inconsistent with policy baseline</td>
-                    </tr>
-                    <tr>
-                      <td rowspan="1">
-                        <a href="/datacomponents/DC0021">
-                          OS API Execution (DC0021)
-                        </a>
-                      </td>
-                      <td>MobileEDR:telemetry</td>
-                      <td>Application performs repeated record access, container traversal, or local data extraction processing against local stores before staging or transmission</td>
+                      <td>mobile:ApplicationVetting</td>
+                      <td>Code-signing entitlements and Info.plist privacy usage-description keys</td>
                     </tr>
                     <tr>
                       <td rowspan="1">
@@ -457,8 +444,17 @@
                           File Access (DC0055)
                         </a>
                       </td>
-                      <td>MobileEDR:telemetry</td>
-                      <td>Application reads multiple local container files, browser-history artifacts, messaging artifacts, or local records in rapid sequence during the collection phase</td>
+                      <td>mobile:ForensicArtifacts</td>
+                      <td>Dynamic filesystem trace or acquired app-container/filesystem artifacts: App reads multiple files from Photos library, Files provider, or iCloud Drive in background or lock-adjacent state exceeding $FileReadRateThreshold$ within $DataCollectionWindow$</td>
+                    </tr>
+                    <tr>
+                      <td rowspan="1">
+                        <a href="/datacomponents/DC0021">
+                          OS API Execution (DC0021)
+                        </a>
+                      </td>
+                      <td>mobile:DynamicAnalysis</td>
+                      <td>Dynamic API/runtime trace: Managed app accesses broad local data scope without user-initiated document picker interaction on supervised device</td>
                     </tr>
                   </tbody>
                 </table>
@@ -475,32 +471,28 @@
                   </thead>
                   <tbody>
                     <tr>
-                      <td>TimeWindow</td>
-                      <td>Correlation window between managed app posture, local access activity, optional staging, and upload</td>
+                      <td>ApprovedDataCollectionApps</td>
+                      <td>Approved backup, sync, file manager, and media apps. Derive from MDM catalog. Tightening: strict list — any unapproved app with broad file access is flagged.</td>
                     </tr>
                     <tr>
-                      <td>AllowedAppList</td>
-                      <td>Managed apps expected to access local records such as enterprise sync, backup, or approved investigation tools</td>
+                      <td>FileReadRateThreshold</td>
+                      <td>Default 50 file reads within window across 3+ directories. Derive from approved backup app baseline. Tightening: 10 reads — catches targeted collection.</td>
                     </tr>
                     <tr>
-                      <td>AllowedContainerPatterns</td>
-                      <td>Expected app-container or local artifact locations for legitimate workflows</td>
+                      <td>MinDirectoryCount</td>
+                      <td>Default 3 distinct parent directories. Single-directory reads may be legitimate (photo editor); cross-directory reads indicate collection sweep.</td>
                     </tr>
                     <tr>
-                      <td>ForegroundStateRequired</td>
-                      <td>Whether local record access should happen only during active user interaction</td>
+                      <td>DataCollectionWindow</td>
+                      <td>Default 60s observation window.</td>
                     </tr>
                     <tr>
-                      <td>BurstReadThreshold</td>
-                      <td>Minimum number of local file or record reads in a short interval required for alerting</td>
+                      <td>AppCDNList</td>
+                      <td>Per-app CDN baseline.</td>
                     </tr>
                     <tr>
-                      <td>SensitiveArtifactPatterns</td>
-                      <td>Environment-specific list of high-value browser, messaging, token, or local record artifacts</td>
-                    </tr>
-                    <tr>
-                      <td>UplinkBytesThreshold</td>
-                      <td>Minimum outbound volume consistent with recent local data collection</td>
+                      <td>ExfilWindow</td>
+                      <td>Default 120s between staging and upload.</td>
                     </tr>
                   </tbody>
                 </table>
@@ -508,6 +500,7 @@
             </div>
           </div>
         </div>
+
 
         
       </div>
@@ -726,7 +719,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3 col-footer">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v19.2&#013;Website  v5.1.0">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v20.0&#013;Website  v5.2.0">Website Changelog</a></u>
                                 </div>
                                 <div class="px-3">
                                     <u class="footer-link"><a href="/resources/legal-and-branding/privacy/#" class="footer-link" onclick="Osano.cm.showDrawer('osano-cm-dom-info-dialog-open')">Cookie Preferences</a></u>

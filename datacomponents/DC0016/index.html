@@ -207,7 +207,7 @@
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
                     <div class="container-fluid banner-message">
-                        ATT&CKcon 7.0 registration is open! Join us October 27-28, 2026 in McLean, VA or virtually. <a href="https://na.eventscloud.com/website/93925/">Register in person</a> or <a href="https://mitre.brandlive.com/MITRE-ATTACKcon-7-0">register virtually</a>. See the <a href="https://na.eventscloud.com/website/93925/faq/">FAQ</a> for hotel and venue details.
+                        ATT&CK v20 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v20-9701dd75ffb4'>blog post</a> for more information. <a href='https://na.eventscloud.com/website/93925/'>ATT&CKcon 7.0</a> is October 27-28, 2026 in McLean, VA.
                     </div>
             </div>
         </div>
@@ -265,7 +265,7 @@
                 </div>
                 <div class="row card-data">
                   <div class="col-md-12">
-                    <span class="h5 card-title">Version</span>: 3.0
+                    <span class="h5 card-title">Version</span>: 3.1
                   </div>
                 </div>
                 <div class="row card-data">
@@ -275,7 +275,7 @@
                 </div>
                 <div class="row card-data">
                   <div class="col-md-12">
-                    <span class="h5 card-title">Last Modified</span>: 12 May 2026
+                    <span class="h5 card-title">Last Modified</span>: 13 October 2026
                   </div>
                 </div>
               </div>
@@ -336,6 +336,10 @@
               <tr>
                 <td>auditd:SYSCALL</td>
                 <td>module load or memory map path</td>
+              </tr>
+              <tr>
+                <td>auditd:SYSCALL</td>
+                <td>Linux Audit SYSCALL/EXECVE/SOCKADDR records (configured audit rule): syscall=init_module/finit_module; kernel module loaded from a path or hash not in the authorized ICS host module baseline</td>
               </tr>
               <tr>
                 <td>esxi:vmkernel</td>
@@ -450,6 +454,22 @@
                 <td>launch and dylib load</td>
               </tr>
               <tr>
+                <td>mobile:DynamicAnalysis</td>
+                <td>Dynamic API/runtime trace: DexClassLoader() or dlopen() called with path argument matching file written in preceding $DecryptExecWindow$</td>
+              </tr>
+              <tr>
+                <td>mobile:DynamicAnalysis</td>
+                <td>Dynamic API/runtime trace: DexClassLoader() or dlopen() on path written within $StegoExecWindow$ of media download event — download-write-load chain confirms steganographic payload delivery</td>
+              </tr>
+              <tr>
+                <td>mobile:DynamicAnalysis</td>
+                <td>Dynamic API/runtime trace: DexClassLoader() called at runtime with path NOT matching any file in original APK manifest within $PackerExecWindow$ of app launch</td>
+              </tr>
+              <tr>
+                <td>mobile:DynamicAnalysis</td>
+                <td>Dynamic API/runtime trace: DexClassLoader() or System.load() or WebView.loadUrl(javascript:) called with content_source='network_download' within $CodeDownloadWindow$ of download event</td>
+              </tr>
+              <tr>
                 <td>Module</td>
                 <td>None</td>
               </tr>
@@ -471,7 +491,27 @@
               </tr>
               <tr>
                 <td>WinEventLog:Sysmon</td>
+                <td>EventCode=7; scripting-engine module loads when useful </td>
+              </tr>
+              <tr>
+                <td>WinEventLog:Sysmon</td>
+                <td>EventCode=7; System.Management.Automation or unusual PowerShell-related modules</td>
+              </tr>
+              <tr>
+                <td>WinEventLog:Sysmon</td>
                 <td>EventCode=7</td>
+              </tr>
+              <tr>
+                <td>WinEventLog:Sysmon</td>
+                <td>EventCode=7 of Industrial Control Systems (ICS) vendor communication Dynamic Link Library (DLL) with hash not in signed baseline</td>
+              </tr>
+              <tr>
+                <td>WinEventLog:Sysmon</td>
+                <td>EventCode=7 where an ICS/vendor DLL is loaded by an image outside the authorized ICS application baseline</td>
+              </tr>
+              <tr>
+                <td>WinEventLog:Sysmon</td>
+                <td>EventCode=7 of GDI32.dll/User32.dll by process not in authorized screen capture tools on Human-Machine Interface (HMI)-classified host</td>
               </tr>
             </tbody>
           </table>
@@ -586,6 +626,17 @@
                     <a href="/techniques/T1055/001">T1055.001</a>
                 </td>
             </tr>
+            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--a24f6d21-a614-46bd-9817-f55a576a05ea">
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0936">DET0936</a>
+                </td>
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0936">Behavioral Detection of JavaScript Execution in ICS</a>
+                </td>
+                <td rowspan="">
+                    <a href="/techniques/T1701/006">T1701.006</a>
+                </td>
+            </tr>
             <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--36654ec6-5019-4e79-b299-1fbf3a03e064">
                 <td rowspan="">
                     <a href="/detectionstrategies/DET0529">DET0529</a>
@@ -595,6 +646,17 @@
                 </td>
                 <td rowspan="">
                     <a href="/techniques/T1106">T1106</a>
+                </td>
+            </tr>
+            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--f8400e7d-3443-4205-aaf3-1592b777416f">
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0929">DET0929</a>
+                </td>
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0929">Behavioral Detection of PowerShell Execution in ICS</a>
+                </td>
+                <td rowspan="">
+                    <a href="/techniques/T1701/001">T1701.001</a>
                 </td>
             </tr>
             <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--9833b57b-4c83-4f58-b4cf-76f041b29273">
@@ -617,6 +679,17 @@
                 </td>
                 <td rowspan="">
                     <a href="/techniques/T1059/005">T1059.005</a>
+                </td>
+            </tr>
+            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--57970b21-17a5-4536-a089-5277ebc575f9">
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0932">DET0932</a>
+                </td>
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0932">Behavioral Detection of Visual Basic Execution in ICS</a>
+                </td>
+                <td rowspan="">
+                    <a href="/techniques/T1701/004">T1701.004</a>
                 </td>
             </tr>
             <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--1806ad13-6fa8-4cb0-9d91-c8a989a1d9fe">
@@ -1048,15 +1121,26 @@
                     <a href="/techniques/T1407">T1407</a>
                 </td>
             </tr>
-            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--87493fa2-bb78-4e28-b882-d79eecd10740">
+            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--f1a7e304-d05f-4e48-89b7-8b034f507c32">
                 <td rowspan="">
-                    <a href="/detectionstrategies/DET0772">DET0772</a>
+                    <a href="/detectionstrategies/DET0742">DET0742</a>
                 </td>
                 <td rowspan="">
-                    <a href="/detectionstrategies/DET0772">Detection of Graphical User Interface</a>
+                    <a href="/detectionstrategies/DET0742">Detection of Execution through API</a>
                 </td>
                 <td rowspan="">
-                    <a href="/techniques/T0823">T0823</a>
+                    <a href="/techniques/T0871">T0871</a>
+                </td>
+            </tr>
+            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--9f3df5ac-caa0-4189-9b9b-dcf2f6bbdc54">
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0722">DET0722</a>
+                </td>
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0722">Detection of Hooking</a>
+                </td>
+                <td rowspan="">
+                    <a href="/techniques/T0874">T0874</a>
                 </td>
             </tr>
             <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--00a4e92b-8164-4342-a71c-013ecc777ad0">
@@ -1136,15 +1220,26 @@
                     <a href="/techniques/T1218">T1218</a>
                 </td>
             </tr>
-            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--74b96bd4-dab9-494e-a540-b7c998581fd5">
+            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--04bcf663-e6cd-42bf-8864-f4d1ad345263">
                 <td rowspan="">
-                    <a href="/detectionstrategies/DET0804">DET0804</a>
+                    <a href="/detectionstrategies/DET0780">DET0780</a>
                 </td>
                 <td rowspan="">
-                    <a href="/detectionstrategies/DET0804">Detection of Remote Services</a>
+                    <a href="/detectionstrategies/DET0780">Detection of Rootkit</a>
                 </td>
                 <td rowspan="">
-                    <a href="/techniques/T0886">T0886</a>
+                    <a href="/techniques/T0851">T0851</a>
+                </td>
+            </tr>
+            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--3e884c49-75ca-449e-83cb-3517ee88e0f1">
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0751">DET0751</a>
+                </td>
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0751">Detection of Screen Capture</a>
+                </td>
+                <td rowspan="">
+                    <a href="/techniques/T0852">T0852</a>
                 </td>
             </tr>
             <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--8ac2b0d0-a589-4c72-9287-a7d9e47065a9">
@@ -1158,17 +1253,6 @@
                     <a href="/techniques/T1216">T1216</a>
                 </td>
             </tr>
-            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--f9ea25e7-6e63-4ef1-a8ad-47a4a261e175">
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0735">DET0735</a>
-                </td>
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0735">Detection of Scripting</a>
-                </td>
-                <td rowspan="">
-                    <a href="/techniques/T0853">T0853</a>
-                </td>
-            </tr>
             <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--34d06ebf-867e-4cd2-8e44-c849fcaab072">
                 <td rowspan="">
                     <a href="/detectionstrategies/DET0644">DET0644</a>
@@ -1178,6 +1262,17 @@
                 </td>
                 <td rowspan="">
                     <a href="/techniques/T1406/002">T1406.002</a>
+                </td>
+            </tr>
+            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--545bde30-2b8c-47d3-bd34-fa188348b967">
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0677">DET0677</a>
+                </td>
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0677">Detection of Steganography</a>
+                </td>
+                <td rowspan="">
+                    <a href="/techniques/T1406/001">T1406.001</a>
                 </td>
             </tr>
             <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--fafb9522-c185-48e0-b0a5-e65887f5deb4">
@@ -1985,7 +2080,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3 col-footer">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v19.2&#013;Website  v5.1.0">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v20.0&#013;Website  v5.2.0">Website Changelog</a></u>
                                 </div>
                                 <div class="px-3">
                                     <u class="footer-link"><a href="/resources/legal-and-branding/privacy/#" class="footer-link" onclick="Osano.cm.showDrawer('osano-cm-dom-info-dialog-open')">Cookie Preferences</a></u>

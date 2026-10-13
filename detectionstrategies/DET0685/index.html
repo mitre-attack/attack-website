@@ -207,7 +207,7 @@
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
                     <div class="container-fluid banner-message">
-                        ATT&CKcon 7.0 registration is open! Join us October 27-28, 2026 in McLean, VA or virtually. <a href="https://na.eventscloud.com/website/93925/">Register in person</a> or <a href="https://mitre.brandlive.com/MITRE-ATTACKcon-7-0">register virtually</a>. See the <a href="https://na.eventscloud.com/website/93925/faq/">FAQ</a> for hotel and venue details.
+                        ATT&CK v20 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v20-9701dd75ffb4'>blog post</a> for more information. <a href='https://na.eventscloud.com/website/93925/'>ATT&CKcon 7.0</a> is October 27-28, 2026 in McLean, VA.
                     </div>
             </div>
         </div>
@@ -292,13 +292,13 @@
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Permalink to this version of DET0685" 
-           href="/versions/v19/detectionstrategies/DET0685/" data-test-ignore="true">Version Permalink</a>
+           href="/versions/v20/detectionstrategies/DET0685/" data-test-ignore="true">Version Permalink</a>
     </div>
     <div class="permalink">
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Go to the live version of DET0685" 
-           href="/versions/v19/detectionstrategies/DET0685/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+           href="/versions/v20/detectionstrategies/DET0685/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
     </div>
 </div>
 
@@ -326,7 +326,7 @@
               role="tabpanel" aria-labelledby="tab-Android">
               <h4 class="pt-3" id="AN1793">AN1793</h4>
               <div>
-                        <p>A defender observes an application establishing application-layer network sessions (e.g., HTTP(S), WebSocket, DNS, SMTP/IMAP) with destinations and request patterns that deviate from the enterprise baseline for that app category, especially when sessions occur during background execution or while the device is locked and exhibit beacon-like periodicity, anomalous SNI/Host patterns, or suspicious request/response size symmetry consistent with command polling and tasking over legitimate-looking protocols.</p>
+                        <p>For Android, detect Exfiltration Over Alternative Protocol by correlating analyst-visible device/network evidence and management state; use streaming or batched telemetry only where the documented collector is deployed. Correlate Application Permission via Android Enterprise DPC / Application Vetting [DevicePolicyManager.getPermissionGrantState(); PackageManager manifest/requested-permission review]; Application State via Android Enterprise / EMM [Managed package inventory/status and package metadata]; Network Connection Creation via Android Enterprise Network Logging / Enterprise VPN [DevicePolicyManager.retrieveNetworkLogs(): DnsEvent / ConnectEvent; VPN flow metadata]. Alert on a sequence or state change inconsistent with the device/app baseline, approved management policy, or expected user workflow; do not infer unobserved API calls, file/process activity, or payload content from management state alone.</p>
 
               </div>
 
@@ -343,12 +343,30 @@
                   <tbody>
                     <tr>
                       <td rowspan="1">
-                        <a href="/datacomponents/DC0078">
-                          Network Traffic Flow (DC0078)
+                        <a href="/datacomponents/DC0114">
+                          Application Permission (DC0114)
                         </a>
                       </td>
-                      <td>NSM:Flow</td>
-                      <td>Application-layer protocol traffic exhibiting beacon-like periodicity, anomalous session structure, or protocol misuse patterns</td>
+                      <td>android:DevicePolicyManager</td>
+                      <td>DevicePolicyManager.getPermissionGrantState(); PackageManager manifest/requested-permission review</td>
+                    </tr>
+                    <tr>
+                      <td rowspan="1">
+                        <a href="/datacomponents/DC0123">
+                          Application State (DC0123)
+                        </a>
+                      </td>
+                      <td>android:EMM</td>
+                      <td>Managed package inventory/status and package metadata</td>
+                    </tr>
+                    <tr>
+                      <td rowspan="1">
+                        <a href="/datacomponents/DC0082">
+                          Network Connection Creation (DC0082)
+                        </a>
+                      </td>
+                      <td>android:EnterpriseNetworkLog</td>
+                      <td>DevicePolicyManager.retrieveNetworkLogs(): DnsEvent / ConnectEvent; VPN flow metadata</td>
                     </tr>
                     <tr>
                       <td rowspan="1">
@@ -356,17 +374,17 @@
                           Network Traffic Content (DC0085)
                         </a>
                       </td>
-                      <td>NSM:Flow</td>
-                      <td>Application-layer indicators observable via enterprise network controls (HTTP method, URI path pattern class, TLS SNI, JA3/ALPN when available, DNS qname/type) showing anomalous or low-and-slow command polling behavior</td>
+                      <td>webproxy:applog</td>
+                      <td>DNS/HTTP(S) inspection or proxy transaction metadata where enterprise decryption/inspection is deployed</td>
                     </tr>
                     <tr>
                       <td rowspan="1">
-                        <a href="/datacomponents/DC0021">
-                          OS API Execution (DC0021)
+                        <a href="/datacomponents/DC0078">
+                          Network Traffic Flow (DC0078)
                         </a>
                       </td>
-                      <td>MobileEDR:telemetry</td>
-                      <td>Framework-based networking usage spikes or uncommon networking stacks observed by agent telemetry (e.g., repeated URLSession/OkHttp-like patterns) without corresponding foreground/user interaction</td>
+                      <td>android:EnterpriseNetworkLog</td>
+                      <td>DevicePolicyManager.retrieveNetworkLogs(): DnsEvent / ConnectEvent; VPN flow metadata</td>
                     </tr>
                   </tbody>
                 </table>
@@ -383,16 +401,20 @@
                   </thead>
                   <tbody>
                     <tr>
-                      <td>BeaconIntervalVarianceThreshold</td>
-                      <td>Defines acceptable periodicity variance for network communications</td>
+                      <td>BeaconVarianceThreshold</td>
+                      <td>Default 15% interval variance — human-driven traffic varies more. Derive from baseline traffic analysis.</td>
                     </tr>
                     <tr>
-                      <td>ConnectionFrequencyThreshold</td>
-                      <td>Baseline-dependent threshold for anomalous connection rates</td>
+                      <td>PayloadVarianceThreshold</td>
+                      <td>Default 100 bytes stdev — beacon payloads are uniform; human traffic varies.</td>
                     </tr>
                     <tr>
-                      <td>PayloadEntropyThreshold</td>
-                      <td>Defines anomaly conditions for encoded or structured payload content</td>
+                      <td>AppBaselineDomains</td>
+                      <td>Per-app known CDN/update domains from 30-day baseline. Derive by measurement.</td>
+                    </tr>
+                    <tr>
+                      <td>BeaconMinCount</td>
+                      <td>Default 10 connections — single or few connections are not beacon patterns.</td>
                     </tr>
                   </tbody>
                 </table>
@@ -402,7 +424,7 @@
               role="tabpanel" aria-labelledby="tab-iOS">
               <h4 class="pt-3" id="AN1794">AN1794</h4>
               <div>
-                        <p>A defender observes an application generating application-layer communications that blend with normal traffic (HTTP(S), WebSocket, DNS, mail protocols) but show deviations from enterprise baselines for that bundle ID—such as persistent background network sessions, regular low-volume polling intervals, anomalous SNI/Host destinations, uncommon DNS patterns, or uniform request/response sizing—suggesting command and control over legitimate-looking protocols without relying on tool signatures.</p>
+                        <p>For iOS, detect Application Layer Protocol by correlating analyst-visible device/network evidence and management state; use streaming or batched telemetry only where the documented collector is deployed. Correlate Application Permission via Application Vetting [Code-signing entitlements and Info.plist privacy usage-description keys]; Application State via Apple MDM [InstalledApplicationList / ManagedApplicationList]; Network Connection Creation via Apple Network Extension / Enterprise VPN [NEFilterFlow / per-app VPN / secure-web-gateway flow metadata]. Alert on a sequence or state change inconsistent with the device/app baseline, approved management policy, or expected user workflow; do not infer unobserved API calls, file/process activity, or payload content from management state alone.</p>
 
               </div>
 
@@ -419,12 +441,30 @@
                   <tbody>
                     <tr>
                       <td rowspan="1">
-                        <a href="/datacomponents/DC0078">
-                          Network Traffic Flow (DC0078)
+                        <a href="/datacomponents/DC0114">
+                          Application Permission (DC0114)
                         </a>
                       </td>
-                      <td>NSM:Flow</td>
-                      <td>Application-layer protocol traffic exhibiting beacon-like periodicity, anomalous session structure, or protocol misuse patterns</td>
+                      <td>mobile:ApplicationVetting</td>
+                      <td>Code-signing entitlements and Info.plist privacy usage-description keys</td>
+                    </tr>
+                    <tr>
+                      <td rowspan="1">
+                        <a href="/datacomponents/DC0123">
+                          Application State (DC0123)
+                        </a>
+                      </td>
+                      <td>iOS:MDM</td>
+                      <td>InstalledApplicationList / ManagedApplicationList</td>
+                    </tr>
+                    <tr>
+                      <td rowspan="1">
+                        <a href="/datacomponents/DC0082">
+                          Network Connection Creation (DC0082)
+                        </a>
+                      </td>
+                      <td>iOS:NetworkExtension</td>
+                      <td>NEFilterFlow / per-app VPN / secure-web-gateway flow metadata</td>
                     </tr>
                     <tr>
                       <td rowspan="1">
@@ -432,17 +472,17 @@
                           Network Traffic Content (DC0085)
                         </a>
                       </td>
-                      <td>NSM:Flow</td>
-                      <td>Application-layer indicators observable via enterprise network controls (HTTP method, URI path pattern class, TLS SNI, JA3/ALPN when available, DNS qname/type) showing anomalous or low-and-slow command polling behavior</td>
+                      <td>webproxy:applog</td>
+                      <td>DNS/HTTP(S) inspection or proxy transaction metadata where enterprise decryption/inspection is deployed</td>
                     </tr>
                     <tr>
                       <td rowspan="1">
-                        <a href="/datacomponents/DC0021">
-                          OS API Execution (DC0021)
+                        <a href="/datacomponents/DC0078">
+                          Network Traffic Flow (DC0078)
                         </a>
                       </td>
-                      <td>MobileEDR:telemetry</td>
-                      <td>Framework-based networking usage spikes or uncommon networking stacks observed by agent telemetry (e.g., repeated URLSession/OkHttp-like patterns) without corresponding foreground/user interaction</td>
+                      <td>iOS:NetworkExtension</td>
+                      <td>NEFilterFlow / per-app VPN / secure-web-gateway flow metadata</td>
                     </tr>
                   </tbody>
                 </table>
@@ -459,16 +499,24 @@
                   </thead>
                   <tbody>
                     <tr>
-                      <td>CadenceAnomalyThreshold</td>
-                      <td>Defines acceptable deviation in protocol communication timing</td>
+                      <td>MDMApprovedCatalog</td>
+                      <td>MDM-managed app list.</td>
                     </tr>
                     <tr>
-                      <td>SessionPersistenceThreshold</td>
-                      <td>Baseline deviation tolerance for long-lived sessions</td>
+                      <td>AppBaselineDomains</td>
+                      <td>Per-app CDN/update domains, 30-day baseline.</td>
                     </tr>
                     <tr>
-                      <td>AppNetworkBehaviorBaseline</td>
-                      <td>Expected mapping of application functionality to protocol usage</td>
+                      <td>BeaconVarianceThreshold</td>
+                      <td>Default 15% interval variance. Derive from baseline traffic analysis.</td>
+                    </tr>
+                    <tr>
+                      <td>PayloadVarianceThreshold</td>
+                      <td>Default 100 bytes stdev.</td>
+                    </tr>
+                    <tr>
+                      <td>BeaconMinCount</td>
+                      <td>Default 10 connections.</td>
                     </tr>
                   </tbody>
                 </table>
@@ -476,6 +524,7 @@
             </div>
           </div>
         </div>
+
 
         
       </div>
@@ -694,7 +743,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3 col-footer">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v19.2&#013;Website  v5.1.0">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v20.0&#013;Website  v5.2.0">Website Changelog</a></u>
                                 </div>
                                 <div class="px-3">
                                     <u class="footer-link"><a href="/resources/legal-and-branding/privacy/#" class="footer-link" onclick="Osano.cm.showDrawer('osano-cm-dom-info-dialog-open')">Cookie Preferences</a></u>

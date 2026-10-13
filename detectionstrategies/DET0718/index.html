@@ -207,7 +207,7 @@
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
                     <div class="container-fluid banner-message">
-                        ATT&CKcon 7.0 registration is open! Join us October 27-28, 2026 in McLean, VA or virtually. <a href="https://na.eventscloud.com/website/93925/">Register in person</a> or <a href="https://mitre.brandlive.com/MITRE-ATTACKcon-7-0">register virtually</a>. See the <a href="https://na.eventscloud.com/website/93925/faq/">FAQ</a> for hotel and venue details.
+                        ATT&CK v20 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v20-9701dd75ffb4'>blog post</a> for more information. <a href='https://na.eventscloud.com/website/93925/'>ATT&CKcon 7.0</a> is October 27-28, 2026 in McLean, VA.
                     </div>
             </div>
         </div>
@@ -292,13 +292,13 @@
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Permalink to this version of DET0718" 
-           href="/versions/v19/detectionstrategies/DET0718/" data-test-ignore="true">Version Permalink</a>
+           href="/versions/v20/detectionstrategies/DET0718/" data-test-ignore="true">Version Permalink</a>
     </div>
     <div class="permalink">
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Go to the live version of DET0718" 
-           href="/versions/v19/detectionstrategies/DET0718/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+           href="/versions/v20/detectionstrategies/DET0718/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
     </div>
 </div>
 
@@ -326,7 +326,7 @@
               role="tabpanel" aria-labelledby="tab-Android">
               <h4 class="pt-3" id="AN1848">AN1848</h4>
               <div>
-                        <p>The defender correlates an application establishing outbound retrieval to a non-baselined external source with immediate local creation of a new executable, module, staged payload, overlay asset, or secondary file in app-controlled or shared storage, followed by optional load, invocation, handoff, or repeat retrieval behavior. The analytic prioritizes Android-observable effects: network download activity, DownloadManager or direct HTTP retrieval, file creation in package-specific or external paths, and execution context inconsistent with recent user interaction or the app’s declared role.</p>
+                        <p>For Android, detect Ingress Tool Transfer by correlating analyst-visible device/network evidence and management state; use streaming or batched telemetry only where the documented collector is deployed. Correlate Application Permission via Android Enterprise DPC / Application Vetting [DevicePolicyManager.getPermissionGrantState(); PackageManager manifest/requested-permission review]; Application State via Android Enterprise / EMM [Managed package inventory/status and package metadata]; File Creation via Application Vetting / Forensic Acquisition [Dynamic filesystem trace or acquired app-container/filesystem artifacts: App writes newly retrieved binary, archive, native library (.so), DEX, or script to /data/data/<app>/files/, cache, or shared storage within $IngressWriteWindow$ of network retrieval from non-CDN source]. Alert on a sequence or state change inconsistent with the device/app baseline, approved management policy, or expected user workflow; do not infer unobserved API calls, file/process activity, or payload content from management state alone.</p>
 
               </div>
 
@@ -343,30 +343,12 @@
                   <tbody>
                     <tr>
                       <td rowspan="1">
-                        <a href="/datacomponents/DC0085">
-                          Network Traffic Content (DC0085)
+                        <a href="/datacomponents/DC0114">
+                          Application Permission (DC0114)
                         </a>
                       </td>
-                      <td>NSM:Flow</td>
-                      <td>Application retrieves remote content from non-baselined domain or IP and the transfer direction is inbound to device during the file acquisition phase</td>
-                    </tr>
-                    <tr>
-                      <td rowspan="1">
-                        <a href="/datacomponents/DC0021">
-                          OS API Execution (DC0021)
-                        </a>
-                      </td>
-                      <td>MobileEDR:telemetry</td>
-                      <td>Application invokes direct file retrieval, DownloadManager usage, or streaming write from network response to local storage immediately after remote session establishment</td>
-                    </tr>
-                    <tr>
-                      <td rowspan="1">
-                        <a href="/datacomponents/DC0039">
-                          File Creation (DC0039)
-                        </a>
-                      </td>
-                      <td>MobileEDR:telemetry</td>
-                      <td>Application writes newly retrieved binary, archive, script-like asset, overlay content, library, or opaque payload to app-private, cache, temp, or shared external path as the primary local effect of transfer</td>
+                      <td>android:DevicePolicyManager</td>
+                      <td>DevicePolicyManager.getPermissionGrantState(); PackageManager manifest/requested-permission review</td>
                     </tr>
                     <tr>
                       <td rowspan="1">
@@ -374,17 +356,35 @@
                           Application State (DC0123)
                         </a>
                       </td>
-                      <td>MobileEDR:telemetry</td>
-                      <td>Ingress transfer and local file creation occur while app_state=background or device_locked=true or recent_user_interaction=false during the acquisition phase</td>
+                      <td>android:EMM</td>
+                      <td>Managed package inventory/status and package metadata</td>
                     </tr>
                     <tr>
                       <td rowspan="1">
-                        <a href="/datacomponents/DC0114">
-                          Application Permission (DC0114)
+                        <a href="/datacomponents/DC0039">
+                          File Creation (DC0039)
                         </a>
                       </td>
-                      <td>android:MDMLog</td>
-                      <td>Managed app without approved content-download, update, browser, or file-sync role performs remote payload retrieval and local tool staging</td>
+                      <td>mobile:ForensicArtifacts</td>
+                      <td>Dynamic filesystem trace or acquired app-container/filesystem artifacts: App writes newly retrieved binary, archive, native library (.so), DEX, or script to /data/data/<app>/files/, cache, or shared storage within $IngressWriteWindow$ of network retrieval from non-CDN source</td>
+                    </tr>
+                    <tr>
+                      <td rowspan="1">
+                        <a href="/datacomponents/DC0085">
+                          Network Traffic Content (DC0085)
+                        </a>
+                      </td>
+                      <td>webproxy:applog</td>
+                      <td>DNS/HTTP(S) inspection or proxy transaction metadata where enterprise decryption/inspection is deployed</td>
+                    </tr>
+                    <tr>
+                      <td rowspan="1">
+                        <a href="/datacomponents/DC0021">
+                          OS API Execution (DC0021)
+                        </a>
+                      </td>
+                      <td>mobile:DynamicAnalysis</td>
+                      <td>Dynamic API/runtime trace: App invokes DownloadManager, URLConnection, or OkHttp download to write retrieved content to app-controlled path outside original APK scope — programmatic download of executable artifact</td>
                     </tr>
                   </tbody>
                 </table>
@@ -401,32 +401,20 @@
                   </thead>
                   <tbody>
                     <tr>
-                      <td>TimeWindow</td>
-                      <td>Correlation window between remote retrieval, local write, and any follow-on load or transfer completion</td>
+                      <td>AppCDNList</td>
+                      <td>30-day per-app network destination baseline. Any download from outside this list is anomalous.</td>
                     </tr>
                     <tr>
-                      <td>AllowedAppList</td>
-                      <td>Apps legitimately expected to download files such as browsers, enterprise app stores, backup/sync tools, or content delivery apps</td>
+                      <td>ApprovedDownloadApps</td>
+                      <td>Browser, MDM agent, enterprise content apps approved for remote retrieval. Derive from MDM catalog.</td>
                     </tr>
                     <tr>
-                      <td>AllowedDestinationList</td>
-                      <td>Approved software distribution, CDN, MDM, and enterprise update endpoints</td>
+                      <td>IngressWriteWindow</td>
+                      <td>Default 60s between network retrieval and local file write. Tightening: 15s — synchronous download-write.</td>
                     </tr>
                     <tr>
-                      <td>AllowedPathList</td>
-                      <td>Expected local download, cache, and update paths for legitimate app behavior</td>
-                    </tr>
-                    <tr>
-                      <td>IngressBytesThreshold</td>
-                      <td>Minimum inbound transfer size consistent with a staged secondary tool or payload</td>
-                    </tr>
-                    <tr>
-                      <td>ForegroundStateRequired</td>
-                      <td>Whether file retrieval should occur only during active user-driven workflows</td>
-                    </tr>
-                    <tr>
-                      <td>FileTypeRiskPatterns</td>
-                      <td>Environment-specific set of retrieved file classes considered suspicious such as apk, dex, jar, so, zip, html overlay, or opaque blob</td>
+                      <td>IngressExecWindow</td>
+                      <td>Default 120s between local file write and exec invocation. Tightening: 30s — immediate load after write.</td>
                     </tr>
                   </tbody>
                 </table>
@@ -436,7 +424,7 @@
               role="tabpanel" aria-labelledby="tab-iOS">
               <h4 class="pt-3" id="AN1849">AN1849</h4>
               <div>
-                        <p>The defender correlates managed-app network retrieval from a non-baselined external source with immediate creation of a new local artifact, staged resource, module-like file, or opaque payload inside the app container, followed by optional dynamic loading, handoff, or repeat retrieval behavior. Because iOS offers weaker direct visibility into tool staging internals than Android in many environments, the analytic anchors first on network acquisition plus managed app identity and then strengthens confidence with file creation or process-activity effects where mobile telemetry is available.</p>
+                        <p>For iOS, detect Ingress Tool Transfer by correlating analyst-visible device/network evidence and management state; use streaming or batched telemetry only where the documented collector is deployed. Correlate Application Permission via Application Vetting [Code-signing entitlements and Info.plist privacy usage-description keys]; Application State via Apple MDM [InstalledApplicationList / ManagedApplicationList]; File Creation via Application Vetting / Forensic Acquisition [Dynamic filesystem trace or acquired app-container/filesystem artifacts: Managed app writes newly retrieved container-local file, dylib-like resource, or opaque payload after download from non-CDN source]. Alert on a sequence or state change inconsistent with the device/app baseline, approved management policy, or expected user workflow; do not infer unobserved API calls, file/process activity, or payload content from management state alone.</p>
 
               </div>
 
@@ -453,30 +441,12 @@
                   <tbody>
                     <tr>
                       <td rowspan="1">
-                        <a href="/datacomponents/DC0085">
-                          Network Traffic Content (DC0085)
+                        <a href="/datacomponents/DC0114">
+                          Application Permission (DC0114)
                         </a>
                       </td>
-                      <td>NSM:Flow</td>
-                      <td>Managed iOS app retrieves remote content from non-baselined domain or IP with inbound payload transfer during the acquisition phase</td>
-                    </tr>
-                    <tr>
-                      <td rowspan="1">
-                        <a href="/datacomponents/DC0039">
-                          File Creation (DC0039)
-                        </a>
-                      </td>
-                      <td>MobileEDR:telemetry</td>
-                      <td>Managed app writes newly retrieved container-local asset, dylib-like resource, archive, or opaque payload shortly after remote retrieval as the strongest local effect</td>
-                    </tr>
-                    <tr>
-                      <td rowspan="1">
-                        <a href="/datacomponents/DC0021">
-                          OS API Execution (DC0021)
-                        </a>
-                      </td>
-                      <td>MobileEDR:telemetry</td>
-                      <td>Managed app performs post-download unpacking, dynamic resource handling, or module preparation immediately after local payload creation</td>
+                      <td>mobile:ApplicationVetting</td>
+                      <td>Code-signing entitlements and Info.plist privacy usage-description keys</td>
                     </tr>
                     <tr>
                       <td rowspan="1">
@@ -484,17 +454,35 @@
                           Application State (DC0123)
                         </a>
                       </td>
-                      <td>MobileEDR:telemetry</td>
-                      <td>Ingress retrieval and staging occur while app_state=background or device_locked=true or recent_user_interaction=false during the acquisition phase</td>
+                      <td>iOS:MDM</td>
+                      <td>InstalledApplicationList / ManagedApplicationList</td>
                     </tr>
                     <tr>
                       <td rowspan="1">
-                        <a href="/datacomponents/DC0114">
-                          Application Permission (DC0114)
+                        <a href="/datacomponents/DC0039">
+                          File Creation (DC0039)
                         </a>
                       </td>
-                      <td>iOS:MDMLog</td>
-                      <td>Supervised managed app without approved update, browser, sync, or enterprise-content role retrieves and stages secondary content inconsistent with policy baseline</td>
+                      <td>mobile:ForensicArtifacts</td>
+                      <td>Dynamic filesystem trace or acquired app-container/filesystem artifacts: Managed app writes newly retrieved container-local file, dylib-like resource, or opaque payload after download from non-CDN source</td>
+                    </tr>
+                    <tr>
+                      <td rowspan="1">
+                        <a href="/datacomponents/DC0085">
+                          Network Traffic Content (DC0085)
+                        </a>
+                      </td>
+                      <td>webproxy:applog</td>
+                      <td>DNS/HTTP(S) inspection or proxy transaction metadata where enterprise decryption/inspection is deployed</td>
+                    </tr>
+                    <tr>
+                      <td rowspan="1">
+                        <a href="/datacomponents/DC0021">
+                          OS API Execution (DC0021)
+                        </a>
+                      </td>
+                      <td>mobile:DynamicAnalysis</td>
+                      <td>Dynamic API/runtime trace: Managed app performs post-download processing, dynamic resource handling, or module preparation immediately after retrieval from non-CDN source on supervised device</td>
                     </tr>
                   </tbody>
                 </table>
@@ -511,32 +499,20 @@
                   </thead>
                   <tbody>
                     <tr>
-                      <td>TimeWindow</td>
-                      <td>Correlation window between remote retrieval, local staging, and any follow-on file handling</td>
+                      <td>AppCDNList</td>
+                      <td>30-day per-app network destination baseline. Any download from outside this list is anomalous.</td>
                     </tr>
                     <tr>
-                      <td>AllowedAppList</td>
-                      <td>Managed apps legitimately expected to download secondary content or updates</td>
+                      <td>ApprovedDownloadApps</td>
+                      <td>Browser, MDM agent, enterprise content apps approved for remote retrieval. Derive from MDM catalog.</td>
                     </tr>
                     <tr>
-                      <td>AllowedDestinationList</td>
-                      <td>Approved content, MDM, enterprise, and application-update endpoints</td>
+                      <td>IngressWriteWindow</td>
+                      <td>Default 60s between network retrieval and local file write. Tightening: 15s — synchronous download-write.</td>
                     </tr>
                     <tr>
-                      <td>AllowedContainerPatterns</td>
-                      <td>Expected app-container paths for legitimate downloaded assets</td>
-                    </tr>
-                    <tr>
-                      <td>IngressBytesThreshold</td>
-                      <td>Minimum inbound transfer volume consistent with secondary tool or payload retrieval</td>
-                    </tr>
-                    <tr>
-                      <td>ForegroundStateRequired</td>
-                      <td>Whether retrieval should happen only in active user-driven workflows</td>
-                    </tr>
-                    <tr>
-                      <td>ArtifactRiskPatterns</td>
-                      <td>Environment-specific file or content patterns considered suspicious such as staged dylib-like resources, html overlays, archives, or opaque blobs</td>
+                      <td>IngressExecWindow</td>
+                      <td>Default 120s between local file write and exec invocation. Tightening: 30s — immediate load after write.</td>
                     </tr>
                   </tbody>
                 </table>
@@ -544,6 +520,7 @@
             </div>
           </div>
         </div>
+
 
         
       </div>
@@ -762,7 +739,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3 col-footer">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v19.2&#013;Website  v5.1.0">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v20.0&#013;Website  v5.2.0">Website Changelog</a></u>
                                 </div>
                                 <div class="px-3">
                                     <u class="footer-link"><a href="/resources/legal-and-branding/privacy/#" class="footer-link" onclick="Osano.cm.showDrawer('osano-cm-dom-info-dialog-open')">Cookie Preferences</a></u>

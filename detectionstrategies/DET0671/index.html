@@ -207,7 +207,7 @@
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
                     <div class="container-fluid banner-message">
-                        ATT&CKcon 7.0 registration is open! Join us October 27-28, 2026 in McLean, VA or virtually. <a href="https://na.eventscloud.com/website/93925/">Register in person</a> or <a href="https://mitre.brandlive.com/MITRE-ATTACKcon-7-0">register virtually</a>. See the <a href="https://na.eventscloud.com/website/93925/faq/">FAQ</a> for hotel and venue details.
+                        ATT&CK v20 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v20-9701dd75ffb4'>blog post</a> for more information. <a href='https://na.eventscloud.com/website/93925/'>ATT&CKcon 7.0</a> is October 27-28, 2026 in McLean, VA.
                     </div>
             </div>
         </div>
@@ -292,13 +292,13 @@
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Permalink to this version of DET0671" 
-           href="/versions/v19/detectionstrategies/DET0671/" data-test-ignore="true">Version Permalink</a>
+           href="/versions/v20/detectionstrategies/DET0671/" data-test-ignore="true">Version Permalink</a>
     </div>
     <div class="permalink">
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Go to the live version of DET0671" 
-           href="/versions/v19/detectionstrategies/DET0671/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+           href="/versions/v20/detectionstrategies/DET0671/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
     </div>
 </div>
 
@@ -320,7 +320,7 @@
               role="tabpanel" aria-labelledby="tab-Android">
               <h4 class="pt-3" id="AN1769">AN1769</h4>
               <div>
-                        <p>The user may view applications with administrator access through the device settings and may also notice if user data is inexplicably missing. <br />Command-line activities can potentially be detected through Mobile Threat Defense (MTD) integrations with lower-level OS APIs. This could grant the MTD agents access to running processes and their parameters, potentially detecting file deletion processes.<br />The user is prompted for approval when an application requests device administrator permissions.<br />Application vetting services may detect API calls for deleting files.<br />Mobile security products can detect which applications can request device administrator permissions. Application vetting services could be extra scrutinous of applications that request device administrator permissions.</p>
+                        <p>For Android, detect Data Destruction from documented management, network, or vetting evidence; treat state queries as periodic observations rather than real-time events. Correlate Command Execution via Application Vetting / Instrumented Dynamic Analysis [Dynamic API/runtime trace: pm uninstall OR rm -f called by process NOT IN $MDMAgentPackageList$ for package_count &gt; $BulkUninstallThreshold$ within $DestructionWindow$ — command-line destruction activity]; File Deletion via Application Vetting / Forensic Acquisition [Dynamic filesystem trace or acquired app-container/filesystem artifacts: unlink() or rmdir() on path IN /data/data/ OR /data/user/ OR /sdcard/ by process NOT IN $MDMAgentPackageList$ at rate &gt; $DeletionRateThreshold$ within $DestructionWindow$]; Process Creation via Application Vetting / Managed Device Telemetry [sh or cmd process spawned with arguments containing 'pm uninstall' or 'rm' by parent NOT IN $MDMAgentPackageList$ — shell invocation for destruction commands]. Alert on a sequence or state change inconsistent with the device/app baseline, approved management policy, or expected user workflow; do not infer unobserved API calls, file/process activity, or payload content from management state alone.</p>
 
               </div>
 
@@ -337,56 +337,68 @@
                   <tbody>
                     <tr>
                       <td rowspan="1">
-                        <a href="/datacomponents/DC0118">
-                          System Settings (DC0118)
-                        </a>
-                      </td>
-                      <td>User Interface</td>
-                      <td>None</td>
-                    </tr>
-                    <tr>
-                      <td rowspan="1">
                         <a href="/datacomponents/DC0064">
                           Command Execution (DC0064)
                         </a>
                       </td>
-                      <td>Command</td>
-                      <td>None</td>
+                      <td>mobile:DynamicAnalysis</td>
+                      <td>Dynamic API/runtime trace: pm uninstall OR rm -f called by process NOT IN $MDMAgentPackageList$ for package_count > $BulkUninstallThreshold$ within $DestructionWindow$ — command-line destruction activity</td>
                     </tr>
                     <tr>
                       <td rowspan="1">
-                        <a href="/datacomponents/DC0116">
-                          Permissions Request (DC0116)
+                        <a href="/datacomponents/DC0040">
+                          File Deletion (DC0040)
                         </a>
                       </td>
-                      <td>User Interface</td>
-                      <td>None</td>
+                      <td>mobile:ForensicArtifacts</td>
+                      <td>Dynamic filesystem trace or acquired app-container/filesystem artifacts: unlink() or rmdir() on path IN /data/data/ OR /data/user/ OR /sdcard/ by process NOT IN $MDMAgentPackageList$ at rate > $DeletionRateThreshold$ within $DestructionWindow$</td>
                     </tr>
                     <tr>
                       <td rowspan="1">
-                        <a href="/datacomponents/DC0112">
-                          API Calls (DC0112)
+                        <a href="/datacomponents/DC0032">
+                          Process Creation (DC0032)
                         </a>
                       </td>
-                      <td>Application Vetting</td>
-                      <td>None</td>
-                    </tr>
-                    <tr>
-                      <td rowspan="1">
-                        <a href="/datacomponents/DC0114">
-                          Application Permission (DC0114)
-                        </a>
-                      </td>
-                      <td>Application Vetting</td>
-                      <td>None</td>
+                      <td>mobile:DynamicAnalysis</td>
+                      <td>sh or cmd process spawned with arguments containing 'pm uninstall' or 'rm' by parent NOT IN $MDMAgentPackageList$ — shell invocation for destruction commands</td>
                     </tr>
                   </tbody>
                 </table>
               </div>
 
+              <h5 class="pt-3" id="AN1769-mutable-elements">Mutable Elements</h5>
+              <div class="tables-mobile">
+                <table class="table table-bordered table-alternate mt-2">
+                  <thead>
+                    <tr>
+                      <th scope="col">Field</th>
+                      <th scope="col">Description</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>MDMAgentPackageList</td>
+                      <td>MDM agent, OTA update service.</td>
+                    </tr>
+                    <tr>
+                      <td>DeletionRateThreshold</td>
+                      <td>Default 100 file deletions within window. Derive from MDM-managed wipe baseline.</td>
+                    </tr>
+                    <tr>
+                      <td>BulkUninstallThreshold</td>
+                      <td>Default 5 packages within window. MDM wipe uses different API.</td>
+                    </tr>
+                    <tr>
+                      <td>DestructionWindow</td>
+                      <td>Default 300s.</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         </div>
+
 
         
       </div>
@@ -605,7 +617,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3 col-footer">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v19.2&#013;Website  v5.1.0">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v20.0&#013;Website  v5.2.0">Website Changelog</a></u>
                                 </div>
                                 <div class="px-3">
                                     <u class="footer-link"><a href="/resources/legal-and-branding/privacy/#" class="footer-link" onclick="Osano.cm.showDrawer('osano-cm-dom-info-dialog-open')">Cookie Preferences</a></u>

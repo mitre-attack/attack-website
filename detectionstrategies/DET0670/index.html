@@ -207,7 +207,7 @@
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
                     <div class="container-fluid banner-message">
-                        ATT&CKcon 7.0 registration is open! Join us October 27-28, 2026 in McLean, VA or virtually. <a href="https://na.eventscloud.com/website/93925/">Register in person</a> or <a href="https://mitre.brandlive.com/MITRE-ATTACKcon-7-0">register virtually</a>. See the <a href="https://na.eventscloud.com/website/93925/faq/">FAQ</a> for hotel and venue details.
+                        ATT&CK v20 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v20-9701dd75ffb4'>blog post</a> for more information. <a href='https://na.eventscloud.com/website/93925/'>ATT&CKcon 7.0</a> is October 27-28, 2026 in McLean, VA.
                     </div>
             </div>
         </div>
@@ -292,13 +292,13 @@
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Permalink to this version of DET0670" 
-           href="/versions/v19/detectionstrategies/DET0670/" data-test-ignore="true">Version Permalink</a>
+           href="/versions/v20/detectionstrategies/DET0670/" data-test-ignore="true">Version Permalink</a>
     </div>
     <div class="permalink">
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Go to the live version of DET0670" 
-           href="/versions/v19/detectionstrategies/DET0670/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+           href="/versions/v20/detectionstrategies/DET0670/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
     </div>
 </div>
 
@@ -326,7 +326,7 @@
               role="tabpanel" aria-labelledby="tab-Android">
               <h4 class="pt-3" id="AN1767">AN1767</h4>
               <div>
-                        <p>The defender correlates recent access to locally collected or protected data with subsequent compression, packaging, or encryption behavior inside the same app context, followed by creation of archive-like or high-entropy output and optional near-term network transmission. The analytic prioritizes Android runtime and storage effects: application data access or sensor-derived collection, compression/encryption framework use, archive/blob creation in app-accessible storage, and background or device-locked execution inconsistent with the app’s declared function.</p>
+                        <p>For Android, detect Archive Collected Data from documented management, network, or vetting evidence; treat state queries as periodic observations rather than real-time events. Correlate Application Permission via Android Enterprise DPC / Application Vetting [DevicePolicyManager.getPermissionGrantState(); PackageManager manifest/requested-permission review]; File Creation via Application Vetting / Forensic Acquisition [Dynamic filesystem trace or acquired app-container/filesystem artifacts: App reads files across multiple directories or databases in background state (collection phase) then invokes archive or compression routines on collected content — read-then-archive sequence is the staging chain]; File Creation via Application Vetting / Forensic Acquisition [Dynamic filesystem trace or acquired app-container/filesystem artifacts: App writes archive-like container, high-entropy packaged blob, or .zip/.gz output to app-private or cache path after bulk data collection — archive artifact in private storage is the staging evidence]. Alert on a sequence or state change inconsistent with the device/app baseline, approved management policy, or expected user workflow; do not infer unobserved API calls, file/process activity, or payload content from management state alone.</p>
 
               </div>
 
@@ -342,17 +342,26 @@
                   </thead>
                   <tbody>
                     <tr>
+                      <td rowspan="1">
+                        <a href="/datacomponents/DC0114">
+                          Application Permission (DC0114)
+                        </a>
+                      </td>
+                      <td>android:DevicePolicyManager</td>
+                      <td>DevicePolicyManager.getPermissionGrantState(); PackageManager manifest/requested-permission review</td>
+                    </tr>
+                    <tr>
                       <td rowspan="2">
                         <a href="/datacomponents/DC0039">
                           File Creation (DC0039)
                         </a>
                       </td>
-                      <td>MobileEDR:telemetry</td>
-                      <td>Application reads multiple user-data files, media objects, message stores, or app-private records in burst sequence immediately before packaging or encryption activity</td>
+                      <td>mobile:ForensicArtifacts</td>
+                      <td>Dynamic filesystem trace or acquired app-container/filesystem artifacts: App reads files across multiple directories or databases in background state (collection phase) then invokes archive or compression routines on collected content — read-then-archive sequence is the staging chain</td>
                     </tr>
                     <tr>
-                      <td>MobileEDR:telemetry</td>
-                      <td>Application writes archive-like container or high-entropy packaged blob to app storage, cache, temp path, or shared external path after burst collection activity</td>
+                      <td>mobile:ForensicArtifacts</td>
+                      <td>Dynamic filesystem trace or acquired app-container/filesystem artifacts: App writes archive-like container, high-entropy packaged blob, or .zip/.gz output to app-private or cache path after bulk data collection — archive artifact in private storage is the staging evidence</td>
                     </tr>
                     <tr>
                       <td rowspan="2">
@@ -360,21 +369,12 @@
                           OS API Execution (DC0021)
                         </a>
                       </td>
-                      <td>MobileEDR:telemetry</td>
-                      <td>Application invokes archive, compression, or bulk-buffer packaging routines on previously accessed local data within the same execution chain</td>
+                      <td>mobile:DynamicAnalysis</td>
+                      <td>Dynamic API/runtime trace: App invokes ZIP, GZIP, or bulk-buffer packaging routines (ZipOutputStream, DeflaterOutputStream, similar) on previously accessed local data in background state</td>
                     </tr>
                     <tr>
-                      <td>MobileEDR:telemetry</td>
-                      <td>Application encrypts newly created archive or staged data blob after collection and before storage or outbound transfer</td>
-                    </tr>
-                    <tr>
-                      <td rowspan="1">
-                        <a href="/datacomponents/DC0114">
-                          Application Permission (DC0114)
-                        </a>
-                      </td>
-                      <td>android:MDMLog</td>
-                      <td>Managed application with no declared backup, sync, export, or media-editing role performs bulk local packaging or encrypted archive generation</td>
+                      <td>mobile:DynamicAnalysis</td>
+                      <td>Dynamic API/runtime trace: App applies encryption to newly created archive or staged data blob before network transmission — encrypt-after-archive confirms adversary-controlled packing for exfil</td>
                     </tr>
                   </tbody>
                 </table>
@@ -430,7 +430,7 @@
               role="tabpanel" aria-labelledby="tab-iOS">
               <h4 class="pt-3" id="AN1768">AN1768</h4>
               <div>
-                        <p>The defender correlates managed-app data access and lifecycle context with indirect evidence of packaging or encryption prior to outbound transfer. Because direct archive/compression visibility is generally weaker on iOS, the analytic anchors on app lifecycle state, file/output effects observable by mobile EDR where available, managed app role via MDM, and downstream network uploads that closely follow creation of new large or high-entropy local artifacts. Confidence is lower when only network effects are available.</p>
+                        <p>For iOS, detect Archive Collected Data from documented management, network, or vetting evidence; treat state queries as periodic observations rather than real-time events. Correlate Application Permission via Application Vetting [Code-signing entitlements and Info.plist privacy usage-description keys]; Application State via Apple MDM [InstalledApplicationList / ManagedApplicationList]; File Creation via Application Vetting / Forensic Acquisition [Dynamic filesystem trace or acquired app-container/filesystem artifacts: App writes large container, temp package, or high-entropy blob to container-local storage after clustered data access — staged archive artifact]. Alert on a sequence or state change inconsistent with the device/app baseline, approved management policy, or expected user workflow; do not infer unobserved API calls, file/process activity, or payload content from management state alone.</p>
 
               </div>
 
@@ -451,8 +451,8 @@
                           Application Permission (DC0114)
                         </a>
                       </td>
-                      <td>iOS:MDMLog</td>
-                      <td>Supervised managed app without expected export, backup, or sync role performs local data staging behavior followed by opaque upload activity</td>
+                      <td>mobile:ApplicationVetting</td>
+                      <td>Code-signing entitlements and Info.plist privacy usage-description keys</td>
                     </tr>
                     <tr>
                       <td rowspan="1">
@@ -460,17 +460,8 @@
                           Application State (DC0123)
                         </a>
                       </td>
-                      <td>MobileEDR:telemetry</td>
-                      <td>Managed app enters background-capable execution or resumes processing immediately before archive-like file creation or upload behavior</td>
-                    </tr>
-                    <tr>
-                      <td rowspan="1">
-                        <a href="/datacomponents/DC0021">
-                          OS API Execution (DC0021)
-                        </a>
-                      </td>
-                      <td>MobileEDR:telemetry</td>
-                      <td>Application performs bulk data transformation or packaging-like processing on collected records prior to file creation or upload</td>
+                      <td>iOS:MDM</td>
+                      <td>InstalledApplicationList / ManagedApplicationList</td>
                     </tr>
                     <tr>
                       <td rowspan="1">
@@ -478,8 +469,17 @@
                           File Creation (DC0039)
                         </a>
                       </td>
-                      <td>MobileEDR:telemetry</td>
-                      <td>Application writes new large container, temp package, or high-entropy blob after clustered local data access and before outbound communication</td>
+                      <td>mobile:ForensicArtifacts</td>
+                      <td>Dynamic filesystem trace or acquired app-container/filesystem artifacts: App writes large container, temp package, or high-entropy blob to container-local storage after clustered data access — staged archive artifact</td>
+                    </tr>
+                    <tr>
+                      <td rowspan="1">
+                        <a href="/datacomponents/DC0021">
+                          OS API Execution (DC0021)
+                        </a>
+                      </td>
+                      <td>mobile:DynamicAnalysis</td>
+                      <td>Dynamic API/runtime trace: App performs bulk data transformation or packaging-like processing on collected records prior to outbound transfer on supervised device</td>
                     </tr>
                   </tbody>
                 </table>
@@ -529,6 +529,7 @@
             </div>
           </div>
         </div>
+
 
         
       </div>
@@ -747,7 +748,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3 col-footer">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v19.2&#013;Website  v5.1.0">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v20.0&#013;Website  v5.2.0">Website Changelog</a></u>
                                 </div>
                                 <div class="px-3">
                                     <u class="footer-link"><a href="/resources/legal-and-branding/privacy/#" class="footer-link" onclick="Osano.cm.showDrawer('osano-cm-dom-info-dialog-open')">Cookie Preferences</a></u>

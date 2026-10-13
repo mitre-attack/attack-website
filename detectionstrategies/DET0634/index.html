@@ -207,7 +207,7 @@
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
                     <div class="container-fluid banner-message">
-                        ATT&CKcon 7.0 registration is open! Join us October 27-28, 2026 in McLean, VA or virtually. <a href="https://na.eventscloud.com/website/93925/">Register in person</a> or <a href="https://mitre.brandlive.com/MITRE-ATTACKcon-7-0">register virtually</a>. See the <a href="https://na.eventscloud.com/website/93925/faq/">FAQ</a> for hotel and venue details.
+                        ATT&CK v20 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v20-9701dd75ffb4'>blog post</a> for more information. <a href='https://na.eventscloud.com/website/93925/'>ATT&CKcon 7.0</a> is October 27-28, 2026 in McLean, VA.
                     </div>
             </div>
         </div>
@@ -292,13 +292,13 @@
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Permalink to this version of DET0634" 
-           href="/versions/v19/detectionstrategies/DET0634/" data-test-ignore="true">Version Permalink</a>
+           href="/versions/v20/detectionstrategies/DET0634/" data-test-ignore="true">Version Permalink</a>
     </div>
     <div class="permalink">
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Go to the live version of DET0634" 
-           href="/versions/v19/detectionstrategies/DET0634/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+           href="/versions/v20/detectionstrategies/DET0634/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
     </div>
 </div>
 
@@ -326,7 +326,7 @@
               role="tabpanel" aria-labelledby="tab-Android">
               <h4 class="pt-3" id="AN1706">AN1706</h4>
               <div>
-                        <p>Defender observes an app (package/UID) repeatedly retrieving network interface configuration attributes (local IP/MAC/interface names, active network capabilities, link properties, proxy/DNS settings, or carrier identifiers when permitted) in a short time window, without corresponding user network-management activity. The pattern is characterized by OS API execution for interface/config reads combined with background state, permission/role context (e.g., device owner/profile owner/carrier/default-SMS), and optional follow-on connectivity tests (gateway/DNS/proxy reachability). Correlate across API execution + app state + (optional) local probe to identify automated network configuration discovery rather than routine connectivity checks.</p>
+                        <p>For Android, detect System Network Configuration Discovery by correlating analyst-visible device/network evidence and management state; use streaming or batched telemetry only where the documented collector is deployed. Correlate API Calls via Application Vetting / Instrumented Dynamic Analysis [Dynamic API/runtime trace: NetworkInterface.getNetworkInterfaces()]; Application State via Android Enterprise / EMM [Managed package inventory/status and package metadata]; Network Connection Creation via Android Enterprise Network Logging / Enterprise VPN [DevicePolicyManager.retrieveNetworkLogs(): DnsEvent / ConnectEvent; VPN flow metadata]. Alert on a sequence or state change inconsistent with the device/app baseline, approved management policy, or expected user workflow; do not infer unobserved API calls, file/process activity, or payload content from management state alone.</p>
 
               </div>
 
@@ -343,12 +343,30 @@
                   <tbody>
                     <tr>
                       <td rowspan="1">
-                        <a href="/datacomponents/DC0114">
-                          Application Permission (DC0114)
+                        <a href="/datacomponents/DC0112">
+                          API Calls (DC0112)
                         </a>
                       </td>
-                      <td>Application Vetting</td>
-                      <td>None</td>
+                      <td>mobile:DynamicAnalysis</td>
+                      <td>Dynamic API/runtime trace: NetworkInterface.getNetworkInterfaces()</td>
+                    </tr>
+                    <tr>
+                      <td rowspan="1">
+                        <a href="/datacomponents/DC0123">
+                          Application State (DC0123)
+                        </a>
+                      </td>
+                      <td>android:EMM</td>
+                      <td>Managed package inventory/status and package metadata</td>
+                    </tr>
+                    <tr>
+                      <td rowspan="1">
+                        <a href="/datacomponents/DC0082">
+                          Network Connection Creation (DC0082)
+                        </a>
+                      </td>
+                      <td>android:EnterpriseNetworkLog</td>
+                      <td>DevicePolicyManager.retrieveNetworkLogs(): DnsEvent / ConnectEvent; VPN flow metadata</td>
                     </tr>
                   </tbody>
                 </table>
@@ -365,32 +383,20 @@
                   </thead>
                   <tbody>
                     <tr>
-                      <td>TimeWindowSeconds</td>
-                      <td>Window to correlate config reads with app state and optional connectivity tests (e.g., 30–300s).</td>
+                      <td>NetworkConfigAllowList</td>
+                      <td>Network diagnostic, MDM agent apps. Minimal.</td>
                     </tr>
                     <tr>
-                      <td>MinConfigReadEvents</td>
-                      <td>Minimum number of network-config read signals before flagging (environment dependent; e.g., ≥10/5m).</td>
+                      <td>ConfigScanWindow</td>
+                      <td>Default 30s.</td>
                     </tr>
                     <tr>
-                      <td>BackgroundOnly</td>
-                      <td>If true, require the app to be backgrounded to reduce legitimate network UI/diagnostic activity.</td>
+                      <td>AppCDNList</td>
+                      <td>Per-app CDN. Derive by measurement.</td>
                     </tr>
                     <tr>
-                      <td>AllowlistedPackages</td>
-                      <td>Connectivity/security/MDM apps expected to query network configuration frequently.</td>
-                    </tr>
-                    <tr>
-                      <td>PrivilegedRoleFilter</td>
-                      <td>If true, elevate severity when an app with device-owner/profile-owner/carrier roles performs bursts.</td>
-                    </tr>
-                    <tr>
-                      <td>LocalProbePorts</td>
-                      <td>Ports considered 'connectivity tests' (e.g., 53, 80, 443, 8080, 3128) – tune per environment.</td>
-                    </tr>
-                    <tr>
-                      <td>NetworkChangeSuppressionSeconds</td>
-                      <td>Suppress alerts shortly after legitimate network transitions (Wi-Fi join, VPN connect) to reduce noise.</td>
+                      <td>FollowOnWindow</td>
+                      <td>Default 120s.</td>
                     </tr>
                   </tbody>
                 </table>
@@ -400,7 +406,7 @@
               role="tabpanel" aria-labelledby="tab-iOS">
               <h4 class="pt-3" id="AN1707">AN1707</h4>
               <div>
-                        <p>Application vetting services could look for usage of the <code>READ_PRIVILEGED_PHONE_STATE</code> Android permission. This could indicate that non-system apps are attempting to access information that they do not have access to.</p>
+                        <p>For iOS, detect System Network Configuration Discovery by correlating analyst-visible device/network evidence and management state; use streaming or batched telemetry only where the documented collector is deployed. Correlate Application State via Apple MDM [InstalledApplicationList / ManagedApplicationList]; Host Status via Apple MDM [DeviceInformation / SecurityInfo / ProfileList / restrictions and compliance queries]; Network Traffic Flow via Apple Network Extension / Enterprise VPN [NEFilterFlow / per-app VPN / secure-web-gateway flow metadata]. Alert on a sequence or state change inconsistent with the device/app baseline, approved management policy, or expected user workflow; do not infer unobserved API calls, file/process activity, or payload content from management state alone.</p>
 
               </div>
 
@@ -417,20 +423,64 @@
                   <tbody>
                     <tr>
                       <td rowspan="1">
-                        <a href="/datacomponents/DC0114">
-                          Application Permission (DC0114)
+                        <a href="/datacomponents/DC0123">
+                          Application State (DC0123)
                         </a>
                       </td>
-                      <td>Application Vetting</td>
-                      <td>None</td>
+                      <td>iOS:MDM</td>
+                      <td>InstalledApplicationList / ManagedApplicationList</td>
+                    </tr>
+                    <tr>
+                      <td rowspan="1">
+                        <a href="/datacomponents/DC0018">
+                          Host Status (DC0018)
+                        </a>
+                      </td>
+                      <td>iOS:MDM</td>
+                      <td>DeviceInformation / SecurityInfo / ProfileList / restrictions and compliance queries</td>
+                    </tr>
+                    <tr>
+                      <td rowspan="1">
+                        <a href="/datacomponents/DC0078">
+                          Network Traffic Flow (DC0078)
+                        </a>
+                      </td>
+                      <td>iOS:NetworkExtension</td>
+                      <td>NEFilterFlow / per-app VPN / secure-web-gateway flow metadata</td>
                     </tr>
                   </tbody>
                 </table>
               </div>
 
+              <h5 class="pt-3" id="AN1707-mutable-elements">Mutable Elements</h5>
+              <div class="tables-mobile">
+                <table class="table table-bordered table-alternate mt-2">
+                  <thead>
+                    <tr>
+                      <th scope="col">Field</th>
+                      <th scope="col">Description</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>AppBaselineDomains</td>
+                      <td>Per-device CDN baseline.</td>
+                    </tr>
+                    <tr>
+                      <td>FingerprintUploadMax</td>
+                      <td>Default 10KB — network config fingerprint is small.</td>
+                    </tr>
+                    <tr>
+                      <td>DiscoveryWindow</td>
+                      <td>Default 600s after jailbreak detection while on enterprise network.</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         </div>
+
 
         
       </div>
@@ -649,7 +699,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3 col-footer">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v19.2&#013;Website  v5.1.0">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v20.0&#013;Website  v5.2.0">Website Changelog</a></u>
                                 </div>
                                 <div class="px-3">
                                     <u class="footer-link"><a href="/resources/legal-and-branding/privacy/#" class="footer-link" onclick="Osano.cm.showDrawer('osano-cm-dom-info-dialog-open')">Cookie Preferences</a></u>

@@ -207,7 +207,7 @@
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
                     <div class="container-fluid banner-message">
-                        ATT&CKcon 7.0 registration is open! Join us October 27-28, 2026 in McLean, VA or virtually. <a href="https://na.eventscloud.com/website/93925/">Register in person</a> or <a href="https://mitre.brandlive.com/MITRE-ATTACKcon-7-0">register virtually</a>. See the <a href="https://na.eventscloud.com/website/93925/faq/">FAQ</a> for hotel and venue details.
+                        ATT&CK v20 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v20-9701dd75ffb4'>blog post</a> for more information. <a href='https://na.eventscloud.com/website/93925/'>ATT&CKcon 7.0</a> is October 27-28, 2026 in McLean, VA.
                     </div>
             </div>
         </div>
@@ -292,13 +292,13 @@
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Permalink to this version of DET0707" 
-           href="/versions/v19/detectionstrategies/DET0707/" data-test-ignore="true">Version Permalink</a>
+           href="/versions/v20/detectionstrategies/DET0707/" data-test-ignore="true">Version Permalink</a>
     </div>
     <div class="permalink">
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Go to the live version of DET0707" 
-           href="/versions/v19/detectionstrategies/DET0707/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+           href="/versions/v20/detectionstrategies/DET0707/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
     </div>
 </div>
 
@@ -326,7 +326,7 @@
               role="tabpanel" aria-labelledby="tab-Android">
               <h4 class="pt-3" id="AN1829">AN1829</h4>
               <div>
-                        <p>The defender correlates creation or registration of deferred, repeating, or constraint-based background work with later task execution in the same app context, especially when the task executes without recent user interaction, from background state, or with follow-on file, sensor, or network behavior inconsistent with the app's declared role. The analytic prioritizes Android-observable control-plane effects: WorkManager enqueue operations, JobScheduler or AlarmManager scheduling, later wake or execution of the scheduled work, and post-trigger activity such as network sessions, local staging, or sensor access.</p>
+                        <p>For Android, detect Scheduled Task/Job primarily during application vetting or controlled analysis rather than assuming a live device SOC feed. Correlate OS API Execution via Application Vetting / Instrumented Dynamic Analysis [Dynamic API/runtime trace: App enqueues WorkManager work, schedules JobScheduler job, or sets AlarmManager with repeating interval NOT IN $ApprovedSchedulerApps$]; Scheduled Job Creation via Application Vetting / Forensic Acquisition [Dynamic filesystem trace or acquired app-container/filesystem artifacts: Scheduled task execution creates file, accesses sensor, or initiates network connection immediately after firing, with no recent user interaction triggering the task]. Alert on a sequence or state change inconsistent with the device/app baseline, approved management policy, or expected user workflow; do not infer unobserved API calls, file/process activity, or payload content from management state alone.</p>
 
               </div>
 
@@ -347,8 +347,8 @@
                           OS API Execution (DC0021)
                         </a>
                       </td>
-                      <td>MobileEDR:telemetry</td>
-                      <td>Application enqueues WorkManager work request or schedules JobScheduler or AlarmManager task with delay, periodic interval, or execution constraints during the persistence/execution setup phase</td>
+                      <td>mobile:DynamicAnalysis</td>
+                      <td>Dynamic API/runtime trace: App enqueues WorkManager work, schedules JobScheduler job, or sets AlarmManager with repeating interval NOT IN $ApprovedSchedulerApps$</td>
                     </tr>
                     <tr>
                       <td rowspan="1">
@@ -356,8 +356,8 @@
                           Scheduled Job Creation (DC0001)
                         </a>
                       </td>
-                      <td>MobiledEDR:telemetry</td>
-                      <td>Scheduled task execution creates cache, staged payload, local output, or collected data artifact immediately after wake or job trigger</td>
+                      <td>mobile:ForensicArtifacts</td>
+                      <td>Dynamic filesystem trace or acquired app-container/filesystem artifacts: Scheduled task execution creates file, accesses sensor, or initiates network connection immediately after firing, with no recent user interaction triggering the task</td>
                     </tr>
                   </tbody>
                 </table>
@@ -374,32 +374,12 @@
                   </thead>
                   <tbody>
                     <tr>
-                      <td>TimeWindow</td>
-                      <td>Correlation window between task registration and later execution, and between execution and follow-on behavior</td>
+                      <td>ApprovedSchedulerApps</td>
+                      <td>Apps with legitimate scheduled background work: MDM agent (policy sync), email clients (push sync), approved enterprise apps. Derive from MDM catalog. Any unapproved app using repeating scheduled tasks is anomalous.</td>
                     </tr>
                     <tr>
-                      <td>AllowedAppList</td>
-                      <td>Apps legitimately expected to use WorkManager, JobScheduler, or AlarmManager such as mail, sync, backup, calendar, or enterprise management apps</td>
-                    </tr>
-                    <tr>
-                      <td>AllowedConstraintProfiles</td>
-                      <td>Expected charging, network, idle, or timing constraints for legitimate scheduled work</td>
-                    </tr>
-                    <tr>
-                      <td>AllowedScheduleIntervals</td>
-                      <td>Expected delay or periodic interval ranges for legitimate app behavior</td>
-                    </tr>
-                    <tr>
-                      <td>ForegroundStateRequired</td>
-                      <td>Whether follow-on activity from a scheduled task should only occur during active user-driven workflows for a given app</td>
-                    </tr>
-                    <tr>
-                      <td>TriggerToNetworkWindow</td>
-                      <td>Maximum expected delay between scheduled job trigger and outbound communication</td>
-                    </tr>
-                    <tr>
-                      <td>UplinkBytesThreshold</td>
-                      <td>Minimum outbound volume after scheduled execution to treat network behavior as meaningful</td>
+                      <td>ScheduledIntervalThreshold</td>
+                      <td>Default 900s (15 min) minimum suspicious repeat interval. Shorter intervals indicate high-frequency C2 check-in pattern. Derive from legitimate app scheduler baseline.</td>
                     </tr>
                   </tbody>
                 </table>
@@ -409,7 +389,7 @@
               role="tabpanel" aria-labelledby="tab-iOS">
               <h4 class="pt-3" id="AN1830">AN1830</h4>
               <div>
-                        <p>The defender correlates creation of background scheduler activity with later execution of repeating or deferred work by the same managed app, then raises confidence when the triggered activity produces network, local-write, or other app behavior that occurs outside expected user context. Because iOS exposes weaker direct scheduling observability in many enterprise environments, the analytic anchors first on managed app posture and lifecycle-to-network or lifecycle-to-file effects, with NSBackgroundActivityScheduler-related behavior treated as strongest when runtime telemetry can observe background scheduler usage or execution callbacks.</p>
+                        <p>For iOS, detect Scheduled Task/Job primarily during application vetting or controlled analysis rather than assuming a live device SOC feed. Correlate OS API Execution via Application Vetting / Instrumented Dynamic Analysis [Dynamic API/runtime trace: Managed app creates NSBackgroundActivityScheduler activity or registers BGTask with repeating=true or deferred interval outside $ApprovedSchedulerApps$ function]; Scheduled Job Creation via Application Vetting / Forensic Acquisition [Dynamic filesystem trace or acquired app-container/filesystem artifacts: Scheduled task execution produces network, local-write, or sensor artifact while app_state=background or device_locked=true without user trigger]. Alert on a sequence or state change inconsistent with the device/app baseline, approved management policy, or expected user workflow; do not infer unobserved API calls, file/process activity, or payload content from management state alone.</p>
 
               </div>
 
@@ -426,21 +406,21 @@
                   <tbody>
                     <tr>
                       <td rowspan="1">
-                        <a href="/datacomponents/DC0001">
-                          Scheduled Job Creation (DC0001)
-                        </a>
-                      </td>
-                      <td>MobiledEDR:telemetry</td>
-                      <td>Scheduled task execution creates cache, staged payload, local output, or collected data artifact immediately after wake or job trigger</td>
-                    </tr>
-                    <tr>
-                      <td rowspan="1">
                         <a href="/datacomponents/DC0021">
                           OS API Execution (DC0021)
                         </a>
                       </td>
-                      <td>MobileEDR:telemetry</td>
-                      <td>Application creates or executes NSBackgroundActivityScheduler activity with repeating or deferred invocation semantics during the scheduling and trigger phases</td>
+                      <td>mobile:DynamicAnalysis</td>
+                      <td>Dynamic API/runtime trace: Managed app creates NSBackgroundActivityScheduler activity or registers BGTask with repeating=true or deferred interval outside $ApprovedSchedulerApps$ function</td>
+                    </tr>
+                    <tr>
+                      <td rowspan="1">
+                        <a href="/datacomponents/DC0001">
+                          Scheduled Job Creation (DC0001)
+                        </a>
+                      </td>
+                      <td>mobile:ForensicArtifacts</td>
+                      <td>Dynamic filesystem trace or acquired app-container/filesystem artifacts: Scheduled task execution produces network, local-write, or sensor artifact while app_state=background or device_locked=true without user trigger</td>
                     </tr>
                   </tbody>
                 </table>
@@ -457,28 +437,12 @@
                   </thead>
                   <tbody>
                     <tr>
-                      <td>TimeWindow</td>
-                      <td>Correlation window between scheduler creation, later execution, and follow-on file or network behavior</td>
+                      <td>ApprovedSchedulerApps</td>
+                      <td>Apps with legitimate scheduled background work: MDM agent (policy sync), email clients (push sync), approved enterprise apps. Derive from MDM catalog. Any unapproved app using repeating scheduled tasks is anomalous.</td>
                     </tr>
                     <tr>
-                      <td>AllowedAppList</td>
-                      <td>Managed apps legitimately expected to perform background maintenance or deferred sync behavior</td>
-                    </tr>
-                    <tr>
-                      <td>AllowedExecutionIntervals</td>
-                      <td>Expected repeating interval or defer window for legitimate background activity</td>
-                    </tr>
-                    <tr>
-                      <td>ForegroundStateRequired</td>
-                      <td>Whether follow-on behavior from background scheduler execution should require recent user interaction</td>
-                    </tr>
-                    <tr>
-                      <td>TriggerToNetworkWindow</td>
-                      <td>Maximum expected delay between scheduled execution and outbound communication</td>
-                    </tr>
-                    <tr>
-                      <td>UplinkBytesThreshold</td>
-                      <td>Minimum outbound volume after scheduled execution to treat network behavior as meaningful</td>
+                      <td>ScheduledIntervalThreshold</td>
+                      <td>Default 900s (15 min) minimum suspicious repeat interval. Shorter intervals indicate high-frequency C2 check-in pattern. Derive from legitimate app scheduler baseline.</td>
                     </tr>
                   </tbody>
                 </table>
@@ -486,6 +450,7 @@
             </div>
           </div>
         </div>
+
 
         
       </div>
@@ -704,7 +669,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3 col-footer">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v19.2&#013;Website  v5.1.0">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v20.0&#013;Website  v5.2.0">Website Changelog</a></u>
                                 </div>
                                 <div class="px-3">
                                     <u class="footer-link"><a href="/resources/legal-and-branding/privacy/#" class="footer-link" onclick="Osano.cm.showDrawer('osano-cm-dom-info-dialog-open')">Cookie Preferences</a></u>

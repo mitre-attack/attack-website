@@ -207,7 +207,7 @@
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
                     <div class="container-fluid banner-message">
-                        ATT&CKcon 7.0 registration is open! Join us October 27-28, 2026 in McLean, VA or virtually. <a href="https://na.eventscloud.com/website/93925/">Register in person</a> or <a href="https://mitre.brandlive.com/MITRE-ATTACKcon-7-0">register virtually</a>. See the <a href="https://na.eventscloud.com/website/93925/faq/">FAQ</a> for hotel and venue details.
+                        ATT&CK v20 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v20-9701dd75ffb4'>blog post</a> for more information. <a href='https://na.eventscloud.com/website/93925/'>ATT&CKcon 7.0</a> is October 27-28, 2026 in McLean, VA.
                     </div>
             </div>
         </div>
@@ -267,7 +267,7 @@
                 </div>
                 <div class="row card-data">
                   <div class="col-md-12">
-                    <span class="h5 card-title">Analytics</span>: AN1924
+                    <span class="h5 card-title">Analytics</span>: AN1924, AN2151, AN2178, AN2278
                   </div>
                 </div>
                 <div class="row card-data">
@@ -282,7 +282,7 @@
                 </div>
                 <div class="row card-data">
                   <div class="col-md-12">
-                    <span class="h5 card-title">Last Modified</span>: 12 May 2026
+                    <span class="h5 card-title">Last Modified</span>: 13 October 2026
                   </div>
                 </div>
               </div>
@@ -292,13 +292,13 @@
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Permalink to this version of DET0792" 
-           href="/versions/v19/detectionstrategies/DET0792/" data-test-ignore="true">Version Permalink</a>
+           href="/versions/v20/detectionstrategies/DET0792/" data-test-ignore="true">Version Permalink</a>
     </div>
     <div class="permalink">
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Go to the live version of DET0792" 
-           href="/versions/v19/detectionstrategies/DET0792/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+           href="/versions/v20/detectionstrategies/DET0792/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
     </div>
 </div>
 
@@ -309,18 +309,36 @@
           <h2 class="pt-3" id="analytics">Analytics</h2>
           <ul class="nav nav-tabs mb-2" role="tablist">
             <li class="nav-item">
-              <a class="nav-link active" id="tab-ICS" data-toggle="tab"
-                href="#pane-ICS" role="tab" aria-selected="true">
-                ICS
+              <a class="nav-link active" id="tab-Embedded" data-toggle="tab"
+                href="#pane-Embedded" role="tab" aria-selected="true">
+                Embedded
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link " id="tab-Linux" data-toggle="tab"
+                href="#pane-Linux" role="tab" aria-selected="true">
+                Linux
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link " id="tab-Network_Devices" data-toggle="tab"
+                href="#pane-Network_Devices" role="tab" aria-selected="true">
+                Network Devices
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link " id="tab-Windows" data-toggle="tab"
+                href="#pane-Windows" role="tab" aria-selected="true">
+                Windows
               </a>
             </li>
           </ul>
           <div class="tab-content card card-body p-3">
-            <div class="tab-pane fade show active" id="pane-ICS"
-              role="tabpanel" aria-labelledby="tab-ICS">
+            <div class="tab-pane fade show active" id="pane-Embedded"
+              role="tabpanel" aria-labelledby="tab-Embedded">
               <h4 class="pt-3" id="AN1924">AN1924</h4>
               <div>
-                        <p>Consult asset management systems which may help with the detection of computer systems or network devices that should not exist on a network.<br />Monitor for network traffic originating from unknown/unexpected devices or addresses.  Local network traffic metadata could be used to identify unexpected connections, including unknown/unexpected source MAC addresses connecting to ports associated with operational protocols. Also, network management protocols such as DHCP and ARP may be helpful in identifying unexpected devices. <br />Monitor for new master devices communicating with outstations, which may be visible in alarms within the ICS environment.<br />Monitor for unexpected ICS protocol functions from new and existing devices. Monitoring known devices requires ICS function level insight to determine if an unauthorized device is issuing commands (e.g., a historian).<br />Monitor for new master devices communicating with outstation assets, which may be visible in asset application logs.</p>
+                        <p>Real-time monitoring identifies Industrial Control System (ICS) master-role command traffic originating from a source not in the approved control server inventory, directed at multiple field devices in a pattern consistent with control-server behavior. Documented in Maroochy Water Services (falsified PDS/station addresses to impersonate the master) and the 2017 Dallas Siren incident (rogue radio transmitter to 156 sirens). OT operational-fidelity gate: Alert only when the master/station identity or source is not authorized for the target device and command function, or when a normally authorized master violates its configured role/sequence and produces a corroborating device/process-state change. Suppress legitimate redundancy/failover, hot-standby promotion, commissioning, and approved engineering master activity.</p>
 
               </div>
 
@@ -341,17 +359,8 @@
                           Asset Inventory (DC0110)
                         </a>
                       </td>
-                      <td>Asset</td>
-                      <td>None</td>
-                    </tr>
-                    <tr>
-                      <td rowspan="1">
-                        <a href="/datacomponents/DC0078">
-                          Network Traffic Flow (DC0078)
-                        </a>
-                      </td>
-                      <td>Network Traffic</td>
-                      <td>None</td>
+                      <td>assetinventory:MasterAddress</td>
+                      <td>command traffic uses master/station address not in registered master addresses</td>
                     </tr>
                     <tr>
                       <td rowspan="1">
@@ -359,8 +368,8 @@
                           Device Alarm (DC0108)
                         </a>
                       </td>
-                      <td>Operational Databases</td>
-                      <td>None</td>
+                      <td>operationaldb:AlarmEvent</td>
+                      <td>device receives commands from two distinct master identities within a short window</td>
                     </tr>
                     <tr>
                       <td rowspan="1">
@@ -368,24 +377,308 @@
                           Network Traffic Content (DC0085)
                         </a>
                       </td>
-                      <td>Network Traffic</td>
-                      <td>None</td>
-                    </tr>
-                    <tr>
-                      <td rowspan="1">
-                        <a href="/datacomponents/DC0038">
-                          Application Log Content (DC0038)
-                        </a>
-                      </td>
-                      <td>Application Log</td>
-                      <td>None</td>
+                      <td>NSM:Content</td>
+                      <td>write/control command traffic from source not in approved Supervisory Control and Data Acquisition (SCADA) servers directed at multiple distinct device IPs within rogue master time window</td>
                     </tr>
                   </tbody>
                 </table>
               </div>
 
+              <h5 class="pt-3" id="AN1924-mutable-elements">Mutable Elements</h5>
+              <div class="tables-mobile">
+                <table class="table table-bordered table-alternate mt-2">
+                  <thead>
+                    <tr>
+                      <th scope="col">Field</th>
+                      <th scope="col">Description</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>ApprovedSCADAServers</td>
+                      <td>IP/identity allowlist of legitimate master/control server systems.</td>
+                    </tr>
+                    <tr>
+                      <td>RegisteredMasterAddresses</td>
+                      <td>Inventory of authorized station/master addresses for protocols using logical addressing distinct from IP.</td>
+                    </tr>
+                    <tr>
+                      <td>RogueMasterTimeWindow</td>
+                      <td>Time window within which command traffic to multiple devices from a single unrecognized source is considered a coordinated rogue master event.</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="tab-pane fade " id="pane-Linux"
+              role="tabpanel" aria-labelledby="tab-Linux">
+              <h4 class="pt-3" id="AN2151">AN2151</h4>
+              <div>
+                        <p>Real-time monitoring identifies a Linux process opening Industrial Control System (ICS) protocol master connections to multiple field device Internet Protocol (IP) addresses, from a host that is not the authorized Supervisory Control and Data Acquisition (SCADA) server. OT operational-fidelity gate: Alert only when the master/station identity or source is not authorized for the target device and command function, or when a normally authorized master violates its configured role/sequence and produces a corroborating device/process-state change. Suppress legitimate redundancy/failover, hot-standby promotion, commissioning, and approved engineering master activity.</p>
+
+              </div>
+
+              <h5 class="pt-3" id="AN2151-log-sources">Log Sources</h5>
+              <div class="tables-mobile">
+                <table class="table table-bordered table-alternate mt-2">
+                  <thead>
+                    <tr>
+                      <th scope="col">Data Component</th>
+                      <th scope="col">Name</th>
+                      <th scope="col">Channel</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td rowspan="1">
+                        <a href="/datacomponents/DC0082">
+                          Network Connection Creation (DC0082)
+                        </a>
+                      </td>
+                      <td>auditd:SYSCALL</td>
+                      <td>Linux Audit SYSCALL/EXECVE/SOCKADDR records (configured audit rule): connect syscalls show a host outside the approved SCADA/master set opening ICS-protocol connections to multiple field devices</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <h5 class="pt-3" id="AN2151-mutable-elements">Mutable Elements</h5>
+              <div class="tables-mobile">
+                <table class="table table-bordered table-alternate mt-2">
+                  <thead>
+                    <tr>
+                      <th scope="col">Field</th>
+                      <th scope="col">Description</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>ApprovedSCADAServers</td>
+                      <td>IP/identity allowlist of legitimate master/control server systems.</td>
+                    </tr>
+                    <tr>
+                      <td>RegisteredMasterAddresses</td>
+                      <td>Inventory of authorized station/master addresses for protocols using logical addressing distinct from IP.</td>
+                    </tr>
+                    <tr>
+                      <td>RogueMasterTimeWindow</td>
+                      <td>Time window within which command traffic to multiple devices from a single unrecognized source is considered a coordinated rogue master event.</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="tab-pane fade " id="pane-Network_Devices"
+              role="tabpanel" aria-labelledby="tab-Network_Devices">
+              <h4 class="pt-3" id="AN2178">AN2178</h4>
+              <div>
+                        <p>Real-time monitoring identifies a new device appearing on the Industrial Control System (ICS) network with network behavior consistent with an ICS master station, with a Media Access Control (MAC) address not in the approved device inventory. OT operational-fidelity gate: Alert only when the master/station identity or source is not authorized for the target device and command function, or when a normally authorized master violates its configured role/sequence and produces a corroborating device/process-state change. Suppress legitimate redundancy/failover, hot-standby promotion, commissioning, and approved engineering master activity.</p>
+
+              </div>
+
+              <h5 class="pt-3" id="AN2178-log-sources">Log Sources</h5>
+              <div class="tables-mobile">
+                <table class="table table-bordered table-alternate mt-2">
+                  <thead>
+                    <tr>
+                      <th scope="col">Data Component</th>
+                      <th scope="col">Name</th>
+                      <th scope="col">Channel</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td rowspan="1">
+                        <a href="/datacomponents/DC0078">
+                          Network Traffic Flow (DC0078)
+                        </a>
+                      </td>
+                      <td>netflow:ipfix</td>
+                      <td>IPFIX/NetFlow flow record (src/dst IP, src/dst port, protocol, packets/bytes/time): new device Media Access Control (MAC) address on Industrial Control Systems (ICS) network generating ICS master-pattern traffic such as polling multiple device Internet Protocol (IP) addresses on ICS protocol ports</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <h5 class="pt-3" id="AN2178-mutable-elements">Mutable Elements</h5>
+              <div class="tables-mobile">
+                <table class="table table-bordered table-alternate mt-2">
+                  <thead>
+                    <tr>
+                      <th scope="col">Field</th>
+                      <th scope="col">Description</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>ApprovedSCADAServers</td>
+                      <td>IP/identity allowlist of legitimate master/control server systems.</td>
+                    </tr>
+                    <tr>
+                      <td>RegisteredMasterAddresses</td>
+                      <td>Inventory of authorized station/master addresses for protocols using logical addressing distinct from IP.</td>
+                    </tr>
+                    <tr>
+                      <td>RogueMasterTimeWindow</td>
+                      <td>Time window within which command traffic to multiple devices from a single unrecognized source is considered a coordinated rogue master event.</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="tab-pane fade " id="pane-Windows"
+              role="tabpanel" aria-labelledby="tab-Windows">
+              <h4 class="pt-3" id="AN2278">AN2278</h4>
+              <div>
+                        <p>Real-time monitoring identifies Industrial Control System (ICS) protocol master-role traffic originating from a Windows host that is not the authorized Supervisory Control and Data Acquisition (SCADA) or Distributed Control System (DCS) server. OT operational-fidelity gate: Alert only when the master/station identity or source is not authorized for the target device and command function, or when a normally authorized master violates its configured role/sequence and produces a corroborating device/process-state change. Suppress legitimate redundancy/failover, hot-standby promotion, commissioning, and approved engineering master activity.</p>
+
+              </div>
+
+              <h5 class="pt-3" id="AN2278-log-sources">Log Sources</h5>
+              <div class="tables-mobile">
+                <table class="table table-bordered table-alternate mt-2">
+                  <thead>
+                    <tr>
+                      <th scope="col">Data Component</th>
+                      <th scope="col">Name</th>
+                      <th scope="col">Channel</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td rowspan="1">
+                        <a href="/datacomponents/DC0082">
+                          Network Connection Creation (DC0082)
+                        </a>
+                      </td>
+                      <td>WinEventLog:Sysmon</td>
+                      <td>EventCode=3 unexpected Windows host opening Industrial Control Systems (ICS) protocol connections to multiple field device Internet Protocol (IP) addresses in polling pattern characteristic of master station</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <h5 class="pt-3" id="AN2278-mutable-elements">Mutable Elements</h5>
+              <div class="tables-mobile">
+                <table class="table table-bordered table-alternate mt-2">
+                  <thead>
+                    <tr>
+                      <th scope="col">Field</th>
+                      <th scope="col">Description</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>ApprovedSCADAServers</td>
+                      <td>IP/identity allowlist of legitimate master/control server systems.</td>
+                    </tr>
+                    <tr>
+                      <td>RegisteredMasterAddresses</td>
+                      <td>Inventory of authorized station/master addresses for protocols using logical addressing distinct from IP.</td>
+                    </tr>
+                    <tr>
+                      <td>RogueMasterTimeWindow</td>
+                      <td>Time window within which command traffic to multiple devices from a single unrecognized source is considered a coordinated rogue master event.</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
+        </div>
+
+        <div id="assets-tabs">
+          <h2 class="pt-3" id="assets">Targeted Assets</h2>
+          <table class="table table-bordered table-alternate mt-2" aria-describedby="asset-table">
+            <thead>
+              <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Asset</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <a href="/assets/A0002"> A0002 </a>
+                </td>
+                <td>
+                  <a href="/assets/A0002"> Human-Machine Interface (HMI) </a>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <a href="/assets/A0003"> A0003 </a>
+                </td>
+                <td>
+                  <a href="/assets/A0003"> Programmable Logic Controller (PLC) </a>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <a href="/assets/A0004"> A0004 </a>
+                </td>
+                <td>
+                  <a href="/assets/A0004"> Remote Terminal Unit (RTU) </a>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <a href="/assets/A0005"> A0005 </a>
+                </td>
+                <td>
+                  <a href="/assets/A0005"> Intelligent Electronic Device (IED) </a>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <a href="/assets/A0006"> A0006 </a>
+                </td>
+                <td>
+                  <a href="/assets/A0006"> Data Historian </a>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <a href="/assets/A0007"> A0007 </a>
+                </td>
+                <td>
+                  <a href="/assets/A0007"> Control Server </a>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <a href="/assets/A0009"> A0009 </a>
+                </td>
+                <td>
+                  <a href="/assets/A0009"> Data Gateway </a>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <a href="/assets/A0010"> A0010 </a>
+                </td>
+                <td>
+                  <a href="/assets/A0010"> Safety Controller </a>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <a href="/assets/A0017"> A0017 </a>
+                </td>
+                <td>
+                  <a href="/assets/A0017"> Distributed Control System (DCS) Controller </a>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <a href="/assets/A0018"> A0018 </a>
+                </td>
+                <td>
+                  <a href="/assets/A0018"> Programmable Automation Controller (PAC) </a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
 
         
@@ -605,7 +898,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3 col-footer">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v19.2&#013;Website  v5.1.0">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v20.0&#013;Website  v5.2.0">Website Changelog</a></u>
                                 </div>
                                 <div class="px-3">
                                     <u class="footer-link"><a href="/resources/legal-and-branding/privacy/#" class="footer-link" onclick="Osano.cm.showDrawer('osano-cm-dom-info-dialog-open')">Cookie Preferences</a></u>

@@ -207,7 +207,7 @@
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
                     <div class="container-fluid banner-message">
-                        ATT&CKcon 7.0 registration is open! Join us October 27-28, 2026 in McLean, VA or virtually. <a href="https://na.eventscloud.com/website/93925/">Register in person</a> or <a href="https://mitre.brandlive.com/MITRE-ATTACKcon-7-0">register virtually</a>. See the <a href="https://na.eventscloud.com/website/93925/faq/">FAQ</a> for hotel and venue details.
+                        ATT&CK v20 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v20-9701dd75ffb4'>blog post</a> for more information. <a href='https://na.eventscloud.com/website/93925/'>ATT&CKcon 7.0</a> is October 27-28, 2026 in McLean, VA.
                     </div>
             </div>
         </div>
@@ -292,13 +292,13 @@
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Permalink to this version of DET0626" 
-           href="/versions/v19/detectionstrategies/DET0626/" data-test-ignore="true">Version Permalink</a>
+           href="/versions/v20/detectionstrategies/DET0626/" data-test-ignore="true">Version Permalink</a>
     </div>
     <div class="permalink">
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Go to the live version of DET0626" 
-           href="/versions/v19/detectionstrategies/DET0626/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+           href="/versions/v20/detectionstrategies/DET0626/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
     </div>
 </div>
 
@@ -326,7 +326,7 @@
               role="tabpanel" aria-labelledby="tab-Android">
               <h4 class="pt-3" id="AN1693">AN1693</h4>
               <div>
-                        <p>When vetting applications for potential security weaknesses, the vetting process could look for insecure use of Intents. Defenders should validate the entirety of the URI. For example, the URI's scheme should be <code>https</code> and the URI's host should be on a list of trusted hosts.<span onclick=scrollToRef('scite-1') id="scite-ref-1-a" class="scite-citeref-number" title="Android Developers. (2024, September 24). Webviews – Unsafe URI Loading. Retrieved March 2, 2026."data-reference="Android_UnsafeURILoading_Sept2024"><sup><a href="https://developer.android.com/privacy-and-security/risks/unsafe-uri-loading" target="_blank" data-hasqtip="0" aria-describedby="qtip-0">[1]</a></sup></span></p><p>Developers should be encouraged to use techniques to ensure that the intent can only be sent to an appropriate destination (e.g., use explicit rather than implicit intents, permission checking, checking of the destination app's signing certificate, or utilizing the App Links feature). For mobile applications using OAuth, encourage use of best practice.<span onclick=scrollToRef('scite-2') id="scite-ref-2-a" class="scite-citeref-number" title="W. Denniss and J. Bradley. (2017, October). IETF RFC 8252: OAuth 2.0 for Native Apps. Retrieved November 30, 2018."data-reference="IETF-OAuthNativeApps"><sup><a href="https://tools.ietf.org/html/rfc8252" target="_blank" data-hasqtip="1" aria-describedby="qtip-1">[2]</a></sup></span><span onclick=scrollToRef('scite-3') id="scite-ref-3-a" class="scite-citeref-number" title="Android. (n.d.). Handling App Links. Retrieved December 21, 2016."data-reference="Android-AppLinks"><sup><a href="https://developer.android.com/training/app-links/index.html" target="_blank" data-hasqtip="2" aria-describedby="qtip-2">[3]</a></sup></span></p><p>On Android, users may be presented with a popup to select the appropriate application to open the URI in. If the user sees an application they do not recognize, they can remove it.</p>
+                        <p>For Android, detect URI Hijacking by correlating analyst-visible device/network evidence and management state; use streaming or batched telemetry only where the documented collector is deployed. Correlate API Calls via Application Vetting / Instrumented Dynamic Analysis [Dynamic API/runtime trace: PackageManager reports two or more apps with identical URI scheme intent-filter]; Application Permission via Android Enterprise DPC / Application Vetting [DevicePolicyManager.getPermissionGrantState(); PackageManager manifest/requested-permission review]; Network Traffic Content via Enterprise Secure Web Gateway / Proxy [DNS/HTTP(S) inspection or proxy transaction metadata where enterprise decryption/inspection is deployed]. Alert on a sequence or state change inconsistent with the device/app baseline, approved management policy, or expected user workflow; do not infer unobserved API calls, file/process activity, or payload content from management state alone.</p>
 
               </div>
 
@@ -347,28 +347,62 @@
                           API Calls (DC0112)
                         </a>
                       </td>
-                      <td>Application Vetting</td>
-                      <td>None</td>
+                      <td>mobile:DynamicAnalysis</td>
+                      <td>Dynamic API/runtime trace: PackageManager reports two or more apps with identical URI scheme intent-filter</td>
                     </tr>
                     <tr>
                       <td rowspan="1">
-                        <a href="/datacomponents/DC0117">
-                          System Notifications (DC0117)
+                        <a href="/datacomponents/DC0114">
+                          Application Permission (DC0114)
                         </a>
                       </td>
-                      <td>User Interface</td>
-                      <td>None</td>
+                      <td>android:DevicePolicyManager</td>
+                      <td>DevicePolicyManager.getPermissionGrantState(); PackageManager manifest/requested-permission review</td>
+                    </tr>
+                    <tr>
+                      <td rowspan="1">
+                        <a href="/datacomponents/DC0085">
+                          Network Traffic Content (DC0085)
+                        </a>
+                      </td>
+                      <td>webproxy:applog</td>
+                      <td>DNS/HTTP(S) inspection or proxy transaction metadata where enterprise decryption/inspection is deployed</td>
                     </tr>
                   </tbody>
                 </table>
               </div>
 
+              <h5 class="pt-3" id="AN1693-mutable-elements">Mutable Elements</h5>
+              <div class="tables-mobile">
+                <table class="table table-bordered table-alternate mt-2">
+                  <thead>
+                    <tr>
+                      <th scope="col">Field</th>
+                      <th scope="col">Description</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>ApprovedURIOwners</td>
+                      <td>URI to package owner mapping.</td>
+                    </tr>
+                    <tr>
+                      <td>MDMApprovedCatalog</td>
+                      <td>MDM-managed app list.</td>
+                    </tr>
+                    <tr>
+                      <td>OAuthFlowWindow</td>
+                      <td>Default 30s.</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
             </div>
             <div class="tab-pane fade " id="pane-iOS"
               role="tabpanel" aria-labelledby="tab-iOS">
               <h4 class="pt-3" id="AN1694">AN1694</h4>
               <div>
-                        <p>When vetting applications for potential security weaknesses, the vetting process could look for insecure use of Intents. </p><p>Developers should be encouraged to use techniques to ensure that the intent can only be sent to an appropriate destination (e.g., use explicit rather than implicit intents, permission checking, checking of the destination app's signing certificate, or utilizing the App Links feature). For mobile applications using OAuth, encourage use of best practice.<span onclick=scrollToRef('scite-2') id="scite-ref-2-a" class="scite-citeref-number" title="W. Denniss and J. Bradley. (2017, October). IETF RFC 8252: OAuth 2.0 for Native Apps. Retrieved November 30, 2018."data-reference="IETF-OAuthNativeApps"><sup><a href="https://tools.ietf.org/html/rfc8252" target="_blank" data-hasqtip="1" aria-describedby="qtip-1">[2]</a></sup></span><span onclick=scrollToRef('scite-4') id="scite-ref-4-a" class="scite-citeref-number" title="SecureAuth. (2025). Build an iOS App Using OAuth 2.0 and PKCE. Retrieved March 2, 2026."data-reference="SecureAuth_iOSOAuth_2025"><sup><a href="https://docs.secureauth.com/ciam/en/build-an-ios-app-using-oauth-2-0-and-pkce.html" target="_blank" data-hasqtip="3" aria-describedby="qtip-3">[4]</a></sup></span></p>
+                        <p>For iOS, detect URI Hijacking by correlating analyst-visible device/network evidence and management state; use streaming or batched telemetry only where the documented collector is deployed. Correlate Application Permission via Application Vetting [Code-signing entitlements and Info.plist privacy usage-description keys]; Network Connection Creation via Apple Network Extension / Enterprise VPN [NEFilterFlow / per-app VPN / secure-web-gateway flow metadata]; Network Traffic Content via Enterprise Secure Web Gateway / Proxy [DNS/HTTP(S) inspection or proxy transaction metadata where enterprise decryption/inspection is deployed]. Alert on a sequence or state change inconsistent with the device/app baseline, approved management policy, or expected user workflow; do not infer unobserved API calls, file/process activity, or payload content from management state alone.</p>
 
               </div>
 
@@ -385,92 +419,66 @@
                   <tbody>
                     <tr>
                       <td rowspan="1">
-                        <a href="/datacomponents/DC0112">
-                          API Calls (DC0112)
+                        <a href="/datacomponents/DC0114">
+                          Application Permission (DC0114)
                         </a>
                       </td>
-                      <td>Application Vetting</td>
-                      <td>None</td>
+                      <td>mobile:ApplicationVetting</td>
+                      <td>Code-signing entitlements and Info.plist privacy usage-description keys</td>
                     </tr>
                     <tr>
                       <td rowspan="1">
-                        <a href="/datacomponents/DC0117">
-                          System Notifications (DC0117)
+                        <a href="/datacomponents/DC0082">
+                          Network Connection Creation (DC0082)
                         </a>
                       </td>
-                      <td>User Interface</td>
-                      <td>None</td>
+                      <td>iOS:NetworkExtension</td>
+                      <td>NEFilterFlow / per-app VPN / secure-web-gateway flow metadata</td>
+                    </tr>
+                    <tr>
+                      <td rowspan="1">
+                        <a href="/datacomponents/DC0085">
+                          Network Traffic Content (DC0085)
+                        </a>
+                      </td>
+                      <td>webproxy:applog</td>
+                      <td>DNS/HTTP(S) inspection or proxy transaction metadata where enterprise decryption/inspection is deployed</td>
                     </tr>
                   </tbody>
                 </table>
               </div>
 
+              <h5 class="pt-3" id="AN1694-mutable-elements">Mutable Elements</h5>
+              <div class="tables-mobile">
+                <table class="table table-bordered table-alternate mt-2">
+                  <thead>
+                    <tr>
+                      <th scope="col">Field</th>
+                      <th scope="col">Description</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>ApprovedURIOwners</td>
+                      <td>URI to authorized bundle mapping from enterprise OAuth registration.</td>
+                    </tr>
+                    <tr>
+                      <td>OAuthClientAllowList</td>
+                      <td>Enterprise OAuth client_id to bundle mapping.</td>
+                    </tr>
+                    <tr>
+                      <td>OAuthFlowWindow</td>
+                      <td>Default 30s.</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         </div>
 
-                <h2 class="pt-3" id="references">References</h2>
 
-        <div class="row">
-            <div class="col">
-                <ol>
-                            
-        <li>
-            <span  id="scite-1" class="scite-citation">
-                <span class="scite-citation-text">
-                    <a rel="nofollow" class="external text" name="scite-1" href="https://developer.android.com/privacy-and-security/risks/unsafe-uri-loading" target="_blank">
-                        Android Developers. (2024, September 24). Webviews – Unsafe URI Loading. Retrieved March 2, 2026.
-                    </a>
-                </span>
-            </span>
-        </li>
-
-
-                            
-        <li>
-            <span  id="scite-2" class="scite-citation">
-                <span class="scite-citation-text">
-                    <a rel="nofollow" class="external text" name="scite-2" href="https://tools.ietf.org/html/rfc8252" target="_blank">
-                        W. Denniss and J. Bradley. (2017, October). IETF RFC 8252: OAuth 2.0 for Native Apps. Retrieved November 30, 2018.
-                    </a>
-                </span>
-            </span>
-        </li>
-
-
-                </ol>
-            </div>
-            <div class="col">
-                    <ol start="3.0">
-                                
-        <li>
-            <span  id="scite-3" class="scite-citation">
-                <span class="scite-citation-text">
-                    <a rel="nofollow" class="external text" name="scite-3" href="https://developer.android.com/training/app-links/index.html" target="_blank">
-                        Android. (n.d.). Handling App Links. Retrieved December 21, 2016.
-                    </a>
-                </span>
-            </span>
-        </li>
-
-
-                                
-        <li>
-            <span  id="scite-4" class="scite-citation">
-                <span class="scite-citation-text">
-                    <a rel="nofollow" class="external text" name="scite-4" href="https://docs.secureauth.com/ciam/en/build-an-ios-app-using-oauth-2-0-and-pkce.html" target="_blank">
-                        SecureAuth. (2025). Build an iOS App Using OAuth 2.0 and PKCE. Retrieved March 2, 2026.
-                    </a>
-                </span>
-            </span>
-        </li>
-
-
-  
-                    </ol>
-            </div>             
-        </div>
-
+        
       </div>
     </div>
   </div>
@@ -687,7 +695,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3 col-footer">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v19.2&#013;Website  v5.1.0">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v20.0&#013;Website  v5.2.0">Website Changelog</a></u>
                                 </div>
                                 <div class="px-3">
                                     <u class="footer-link"><a href="/resources/legal-and-branding/privacy/#" class="footer-link" onclick="Osano.cm.showDrawer('osano-cm-dom-info-dialog-open')">Cookie Preferences</a></u>

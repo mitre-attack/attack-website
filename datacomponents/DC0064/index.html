@@ -207,7 +207,7 @@
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
                     <div class="container-fluid banner-message">
-                        ATT&CKcon 7.0 registration is open! Join us October 27-28, 2026 in McLean, VA or virtually. <a href="https://na.eventscloud.com/website/93925/">Register in person</a> or <a href="https://mitre.brandlive.com/MITRE-ATTACKcon-7-0">register virtually</a>. See the <a href="https://na.eventscloud.com/website/93925/faq/">FAQ</a> for hotel and venue details.
+                        ATT&CK v20 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v20-9701dd75ffb4'>blog post</a> for more information. <a href='https://na.eventscloud.com/website/93925/'>ATT&CKcon 7.0</a> is October 27-28, 2026 in McLean, VA.
                     </div>
             </div>
         </div>
@@ -265,7 +265,7 @@
                 </div>
                 <div class="row card-data">
                   <div class="col-md-12">
-                    <span class="h5 card-title">Version</span>: 2.1
+                    <span class="h5 card-title">Version</span>: 2.2
                   </div>
                 </div>
                 <div class="row card-data">
@@ -275,7 +275,7 @@
                 </div>
                 <div class="row card-data">
                   <div class="col-md-12">
-                    <span class="h5 card-title">Last Modified</span>: 12 May 2026
+                    <span class="h5 card-title">Last Modified</span>: 13 October 2026
                   </div>
                 </div>
               </div>
@@ -578,6 +578,26 @@
                 <td>execve: Execution of lsmod, modinfo, or cat /proc/modules</td>
               </tr>
               <tr>
+                <td>auditd:SYSCALL</td>
+                <td>Linux Audit SYSCALL/EXECVE/SOCKADDR records (configured audit rule): sequential reads across ICS data paths by uid not in authorized data access UIDs, followed by tar/zip invocation within a short window</td>
+              </tr>
+              <tr>
+                <td>auditd:SYSCALL</td>
+                <td>Linux Audit SYSCALL/EXECVE/SOCKADDR records (configured audit rule): execve of screenshot utility (scrot, import, xwd) on Industrial Control Systems (ICS) Human-Machine Interface (HMI) by User Identifier (UID) not in approved operator UIDs</td>
+              </tr>
+              <tr>
+                <td>auditd:SYSCALL</td>
+                <td>Linux Audit SYSCALL/EXECVE/SOCKADDR records (configured audit rule): system binary executing with command line piping or decoding external content, from Industrial Control Systems (ICS) service account User Identifier (UID)</td>
+              </tr>
+              <tr>
+                <td>auditd:SYSCALL</td>
+                <td>Linux Audit SYSCALL/EXECVE/SOCKADDR records (configured audit rule): raw socket creation (SOCK_RAW) or tcpdump/tshark execution by uid not in authorized capture User Identifiers (UIDs)</td>
+              </tr>
+              <tr>
+                <td>auditd:SYSCALL</td>
+                <td>Linux Audit SYSCALL/EXECVE/SOCKADDR records (configured audit rule): Industrial Control Systems (ICS) tool execution following Secure Shell (SSH) lateral movement session</td>
+              </tr>
+              <tr>
                 <td>auditd:USER_CMD</td>
                 <td>USER_CMD</td>
               </tr>
@@ -854,16 +874,20 @@
                 <td>methodName: setIamPolicy, startInstance, createServiceAccount</td>
               </tr>
               <tr>
+                <td>gpo:deployment</td>
+                <td>destructive payload deployed via Group Policy Object (GPO) to multiple hosts simultaneously</td>
+              </tr>
+              <tr>
+                <td>historian:applog</td>
+                <td>bulk export query returning above bulk query threshold records from account not in approved historian clients</td>
+              </tr>
+              <tr>
                 <td>kubernetes:audit</td>
                 <td>Shell process (e.g., /bin/sh, /bin/bash) spawned in a container without an interactive session attached (i.e., automation anomaly)</td>
               </tr>
               <tr>
                 <td>kubernetes:audit</td>
                 <td>process execution involving curl, grep, or awk on secrets</td>
-              </tr>
-              <tr>
-                <td>linus:syslog</td>
-                <td>None</td>
               </tr>
               <tr>
                 <td>linux:cli</td>
@@ -892,6 +916,10 @@
               <tr>
                 <td>linux:shell</td>
                 <td>Manual invocation of software enumeration commands via interactive shell</td>
+              </tr>
+              <tr>
+                <td>linux:syslog</td>
+                <td>None</td>
               </tr>
               <tr>
                 <td>linux:syslog</td>
@@ -1218,6 +1246,26 @@
                 <td>Execution of osascript, sh, bash, zsh, installer, open</td>
               </tr>
               <tr>
+                <td>mobile:DynamicAnalysis</td>
+                <td>Dynamic API/runtime trace: Unix shell process (sh, bash, busybox sh, toybox) spawns as child of app process with command-line arguments indicating scripted operation — shell with arguments confirms script execution not interactive terminal</td>
+              </tr>
+              <tr>
+                <td>mobile:DynamicAnalysis</td>
+                <td>Dynamic API/runtime trace: Shell or command-executing child process with arguments spawned under managed app context on supervised iOS device</td>
+              </tr>
+              <tr>
+                <td>mobile:DynamicAnalysis</td>
+                <td>Dynamic API/runtime trace: pm uninstall OR rm -f called by process NOT IN $MDMAgentPackageList$ for package_count > $BulkUninstallThreshold$ within $DestructionWindow$ — command-line destruction activity</td>
+              </tr>
+              <tr>
+                <td>mobile:DynamicAnalysis</td>
+                <td>Dynamic API/runtime trace: App spawns sh, bash, toybox, toolbox, or su child process with command arguments within $ShellActivityWindow$ of shell launch — child shell process with arguments is the script execution signal</td>
+              </tr>
+              <tr>
+                <td>mobile:DynamicAnalysis</td>
+                <td>Dynamic API/runtime trace: Shell process (sh, bash) or command-executing child process spawned under app context on supervised iOS device — any shell spawn on stock iOS indicates jailbreak or kernel exploit</td>
+              </tr>
+              <tr>
                 <td>MobileEDR:telemetry</td>
                 <td>Application spawns shell, command interpreter, or command-executing child process with arguments during command-execution phase</td>
               </tr>
@@ -1319,6 +1367,10 @@
               </tr>
               <tr>
                 <td>networkdevice:syslog</td>
+                <td>CLI command audit / configuration command history</td>
+              </tr>
+              <tr>
+                <td>networkdevice:syslog</td>
                 <td>Command Audit / Configuration Change</td>
               </tr>
               <tr>
@@ -1411,6 +1463,10 @@
               </tr>
               <tr>
                 <td>WinEventLog:PowerShell</td>
+                <td>EventCode=4103/4104/4105/4106; command/script-block content </td>
+              </tr>
+              <tr>
+                <td>WinEventLog:PowerShell</td>
                 <td>Get-ADTrust|GetAllTrustRelationships</td>
               </tr>
               <tr>
@@ -1456,6 +1512,10 @@
               <tr>
                 <td>WinEventLog:Security</td>
                 <td>EventCode=4103, 4104, 4105, 4106</td>
+              </tr>
+              <tr>
+                <td>WinEventLog:Security</td>
+                <td>Windows Security Event ID 4688: EventCode=1102 correlated with any other Medium+ confidence alert on the same host within log clear lookback window</td>
               </tr>
             </tbody>
           </table>
@@ -1568,6 +1628,17 @@
                 </td>
                 <td rowspan="">
                     <a href="/techniques/T1069/003">T1069.003</a>
+                </td>
+            </tr>
+            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--260bc795-4a3d-4ca6-8fd1-5e687112d20c">
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0928">DET0928</a>
+                </td>
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0928">Behavioral Detection of Command and Scripting Abuse in ICS</a>
+                </td>
+                <td rowspan="">
+                    <a href="/techniques/T1701">T1701</a>
                 </td>
             </tr>
             <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--8582f5e6-44a5-4950-b7e8-a3e1b6d58d63">
@@ -1713,6 +1784,17 @@
                     <a href="/techniques/T1069">T1069</a>
                 </td>
             </tr>
+            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--f8400e7d-3443-4205-aaf3-1592b777416f">
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0929">DET0929</a>
+                </td>
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0929">Behavioral Detection of PowerShell Execution in ICS</a>
+                </td>
+                <td rowspan="">
+                    <a href="/techniques/T1701/001">T1701.001</a>
+                </td>
+            </tr>
             <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--f6e514c0-120a-4ab1-ae3d-aa2de14e4324">
                 <td rowspan="">
                     <a href="/detectionstrategies/DET0008">DET0008</a>
@@ -1766,6 +1848,17 @@
                 </td>
                 <td rowspan="">
                     <a href="/techniques/T1059/004">T1059.004</a>
+                </td>
+            </tr>
+            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--02744e21-5d1c-4290-820f-d355fc044f50">
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0931">DET0931</a>
+                </td>
+                <td rowspan="">
+                    <a href="/detectionstrategies/DET0931">Behavioral Detection of Unix Shell Execution in ICS</a>
+                </td>
+                <td rowspan="">
+                    <a href="/techniques/T1701/003">T1701.003</a>
                 </td>
             </tr>
             <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--050d236f-745a-4801-add6-50cb58248615">
@@ -2351,17 +2444,6 @@
                     <a href="/techniques/T1623">T1623</a>
                 </td>
             </tr>
-            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--c0abb110-c80e-4d6a-9f27-f2783f8bbfec">
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0760">DET0760</a>
-                </td>
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0760">Detection of Command-Line Interface</a>
-                </td>
-                <td rowspan="">
-                    <a href="/techniques/T0807">T0807</a>
-                </td>
-            </tr>
             <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--f181f7e1-f70c-4ab3-b8c5-5c0a08ea98d1">
                 <td rowspan="">
                     <a href="/detectionstrategies/DET0671">DET0671</a>
@@ -2527,17 +2609,6 @@
                     <a href="/techniques/T1071/002">T1071.002</a>
                 </td>
             </tr>
-            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--87493fa2-bb78-4e28-b882-d79eecd10740">
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0772">DET0772</a>
-                </td>
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0772">Detection of Graphical User Interface</a>
-                </td>
-                <td rowspan="">
-                    <a href="/techniques/T0823">T0823</a>
-                </td>
-            </tr>
             <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--e8b537e6-04eb-4168-a206-88cc041edf50">
                 <td rowspan="">
                     <a href="/detectionstrategies/DET0750">DET0750</a>
@@ -2547,17 +2618,6 @@
                 </td>
                 <td rowspan="">
                     <a href="/techniques/T0872">T0872</a>
-                </td>
-            </tr>
-            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--62587e44-0623-4b14-bd45-126430eaed4a">
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0745">DET0745</a>
-                </td>
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0745">Detection of Lateral Tool Transfer</a>
-                </td>
-                <td rowspan="">
-                    <a href="/techniques/T0867">T0867</a>
                 </td>
             </tr>
             <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--4dbd7441-627f-4d5a-a060-28fe6a8cbb9e">
@@ -2648,17 +2708,6 @@
                     <a href="/techniques/T1070/010">T1070.010</a>
                 </td>
             </tr>
-            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--06443942-ba28-4d13-b4b4-93317d6eafa5">
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0725">DET0725</a>
-                </td>
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0725">Detection of Masquerading</a>
-                </td>
-                <td rowspan="">
-                    <a href="/techniques/T0849">T0849</a>
-                </td>
-            </tr>
             <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--d080a1b1-5ad1-45a1-8f7b-b736986c20d9">
                 <td rowspan="">
                     <a href="/detectionstrategies/DET0215">DET0215</a>
@@ -2668,17 +2717,6 @@
                 </td>
                 <td rowspan="">
                     <a href="/techniques/T1486">T1486</a>
-                </td>
-            </tr>
-            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--441ded70-7e25-47f1-b55c-0fafb7d4f44c">
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0770">DET0770</a>
-                </td>
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0770">Detection of Network Connection Enumeration</a>
-                </td>
-                <td rowspan="">
-                    <a href="/techniques/T0840">T0840</a>
                 </td>
             </tr>
             <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--f4f3b9a6-2de0-45a5-8936-2ad9288191b9">
@@ -2780,28 +2818,6 @@
                     <a href="/techniques/T1216">T1216</a>
                 </td>
             </tr>
-            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--f9ea25e7-6e63-4ef1-a8ad-47a4a261e175">
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0735">DET0735</a>
-                </td>
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0735">Detection of Scripting</a>
-                </td>
-                <td rowspan="">
-                    <a href="/techniques/T0853">T0853</a>
-                </td>
-            </tr>
-            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--9935655b-cd9b-485f-84ea-1b3b4b765413">
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0680">DET0680</a>
-                </td>
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0680">Detection of Security Software Discovery</a>
-                </td>
-                <td rowspan="">
-                    <a href="/techniques/T1418/001">T1418.001</a>
-                </td>
-            </tr>
             <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--7c1262bb-c0d1-4e0c-bab8-a232f7bed9d5">
                 <td rowspan="">
                     <a href="/detectionstrategies/DET0897">DET0897</a>
@@ -2811,28 +2827,6 @@
                 </td>
                 <td rowspan="">
                     <a href="/techniques/T1679">T1679</a>
-                </td>
-            </tr>
-            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--b25c4621-5d38-43ee-871e-0e5c02f2f48c">
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0765">DET0765</a>
-                </td>
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0765">Detection of Service Stop</a>
-                </td>
-                <td rowspan="">
-                    <a href="/techniques/T0881">T0881</a>
-                </td>
-            </tr>
-            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--69ceab63-17ce-4e42-b247-055a180e6c2b">
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0600">DET0600</a>
-                </td>
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0600">Detection of Software Discovery</a>
-                </td>
-                <td rowspan="">
-                    <a href="/techniques/T1418">T1418</a>
                 </td>
             </tr>
             <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--519082ce-24ab-4f6b-9e86-b9443758c9d4">
@@ -2921,17 +2915,6 @@
                 </td>
                 <td rowspan="">
                     <a href="/techniques/T1623/001">T1623.001</a>
-                </td>
-            </tr>
-            <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--eabde43f-1872-499d-9642-85a6959c4d28">
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0791">DET0791</a>
-                </td>
-                <td rowspan="">
-                    <a href="/detectionstrategies/DET0791">Detection of User Execution</a>
-                </td>
-                <td rowspan="">
-                    <a href="/techniques/T0863">T0863</a>
                 </td>
             </tr>
             <tr class="detection_strategy" id="uses-x-mitre-detection-strategy--e6496b9b-2458-4616-9712-a7c0da7fd3bc">
@@ -4245,7 +4228,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3 col-footer">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v19.2&#013;Website  v5.1.0">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v20.0&#013;Website  v5.2.0">Website Changelog</a></u>
                                 </div>
                                 <div class="px-3">
                                     <u class="footer-link"><a href="/resources/legal-and-branding/privacy/#" class="footer-link" onclick="Osano.cm.showDrawer('osano-cm-dom-info-dialog-open')">Cookie Preferences</a></u>

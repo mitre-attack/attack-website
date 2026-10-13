@@ -207,7 +207,7 @@
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
                     <div class="container-fluid banner-message">
-                        ATT&CKcon 7.0 registration is open! Join us October 27-28, 2026 in McLean, VA or virtually. <a href="https://na.eventscloud.com/website/93925/">Register in person</a> or <a href="https://mitre.brandlive.com/MITRE-ATTACKcon-7-0">register virtually</a>. See the <a href="https://na.eventscloud.com/website/93925/faq/">FAQ</a> for hotel and venue details.
+                        ATT&CK v20 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v20-9701dd75ffb4'>blog post</a> for more information. <a href='https://na.eventscloud.com/website/93925/'>ATT&CKcon 7.0</a> is October 27-28, 2026 in McLean, VA.
                     </div>
             </div>
         </div>
@@ -292,13 +292,13 @@
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Permalink to this version of DET0642" 
-           href="/versions/v19/detectionstrategies/DET0642/" data-test-ignore="true">Version Permalink</a>
+           href="/versions/v20/detectionstrategies/DET0642/" data-test-ignore="true">Version Permalink</a>
     </div>
     <div class="permalink">
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Go to the live version of DET0642" 
-           href="/versions/v19/detectionstrategies/DET0642/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+           href="/versions/v20/detectionstrategies/DET0642/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
     </div>
 </div>
 
@@ -320,7 +320,7 @@
               role="tabpanel" aria-labelledby="tab-Android">
               <h4 class="pt-3" id="AN1718">AN1718</h4>
               <div>
-                        <p>Correlates (1) application interaction with elevation control mechanisms (e.g., Accessibility Service, Device Admin, overlay permissions, package installer flows), (2) rapid transition to elevated capability state without expected user interaction patterns, and (3) immediate privileged actions such as sensor access, UI manipulation, or background persistence. The defender observes a causal chain where an application gains elevated privileges through abuse of system-controlled consent flows and subsequently performs actions inconsistent with normal user-driven authorization.</p>
+                        <p>For Android, detect Abuse Elevation Control Mechanism from documented management, network, or vetting evidence; treat state queries as periodic observations rather than real-time events. Correlate Application Permission via Android Enterprise DPC / Application Vetting [DevicePolicyManager.getPermissionGrantState(); PackageManager manifest/requested-permission review]; OS API Execution via Application Vetting / Instrumented Dynamic Analysis [Dynamic API/runtime trace: App invokes privileged framework APIs (accessibility performAction, WindowManager.addView TYPE_APPLICATION_OVERLAY, PackageInstaller) immediately after acquiring elevation control mechanism without expected user settings navigation time]. Alert on a sequence or state change inconsistent with the device/app baseline, approved management policy, or expected user workflow; do not infer unobserved API calls, file/process activity, or payload content from management state alone.</p>
 
               </div>
 
@@ -341,8 +341,8 @@
                           Application Permission (DC0114)
                         </a>
                       </td>
-                      <td>android:MDMLog</td>
-                      <td>application granted high-risk permission or special access (AccessibilityService, SYSTEM_ALERT_WINDOW, DeviceAdmin) with abnormal grant pattern (e.g., no recent user interaction or rapid sequence of grants)</td>
+                      <td>android:DevicePolicyManager</td>
+                      <td>DevicePolicyManager.getPermissionGrantState(); PackageManager manifest/requested-permission review</td>
                     </tr>
                     <tr>
                       <td rowspan="1">
@@ -350,8 +350,8 @@
                           OS API Execution (DC0021)
                         </a>
                       </td>
-                      <td>MobileEDR:telemetry</td>
-                      <td>application invokes privileged framework APIs (Accessibility events, UI automation, package install flows) immediately following permission grant</td>
+                      <td>mobile:DynamicAnalysis</td>
+                      <td>Dynamic API/runtime trace: App invokes privileged framework APIs (accessibility performAction, WindowManager.addView TYPE_APPLICATION_OVERLAY, PackageInstaller) immediately after acquiring elevation control mechanism without expected user settings navigation time</td>
                     </tr>
                   </tbody>
                 </table>
@@ -368,20 +368,16 @@
                   </thead>
                   <tbody>
                     <tr>
-                      <td>TimeWindow</td>
-                      <td>Defines correlation window between permission grant and privileged behavior</td>
+                      <td>ElevationAllowList</td>
+                      <td>Approved apps for each elevation mechanism: accessibility (approved screen readers), SYSTEM_ALERT_WINDOW (approved chat bubbles), INSTALL_PACKAGES (MDM agent, approved enterprise installer). Derive from MDM catalog.</td>
                     </tr>
                     <tr>
-                      <td>HighRiskPermissionSet</td>
-                      <td>List of permissions or access types considered high-risk (Accessibility, Device Admin, overlay)</td>
+                      <td>ElevationActionWindow</td>
+                      <td>Default 30s between permission acquisition and privileged action invocation. Legitimate use requires user to navigate settings before granting; immediate action post-acquisition is suspicious.</td>
                     </tr>
                     <tr>
-                      <td>UserInteractionThreshold</td>
-                      <td>Defines acceptable proximity of user interaction to permission grant</td>
-                    </tr>
-                    <tr>
-                      <td>AllowedAppList</td>
-                      <td>Baseline of legitimate apps expected to use high-risk permissions</td>
+                      <td>TargetAppList</td>
+                      <td>Banking, auth, enterprise apps. Elevation control abuse against these is high-confidence malicious.</td>
                     </tr>
                   </tbody>
                 </table>
@@ -389,6 +385,7 @@
             </div>
           </div>
         </div>
+
 
         
       </div>
@@ -607,7 +604,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3 col-footer">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v19.2&#013;Website  v5.1.0">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v20.0&#013;Website  v5.2.0">Website Changelog</a></u>
                                 </div>
                                 <div class="px-3">
                                     <u class="footer-link"><a href="/resources/legal-and-branding/privacy/#" class="footer-link" onclick="Osano.cm.showDrawer('osano-cm-dom-info-dialog-open')">Cookie Preferences</a></u>

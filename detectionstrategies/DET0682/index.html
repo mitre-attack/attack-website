@@ -207,7 +207,7 @@
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
                     <div class="container-fluid banner-message">
-                        ATT&CKcon 7.0 registration is open! Join us October 27-28, 2026 in McLean, VA or virtually. <a href="https://na.eventscloud.com/website/93925/">Register in person</a> or <a href="https://mitre.brandlive.com/MITRE-ATTACKcon-7-0">register virtually</a>. See the <a href="https://na.eventscloud.com/website/93925/faq/">FAQ</a> for hotel and venue details.
+                        ATT&CK v20 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v20-9701dd75ffb4'>blog post</a> for more information. <a href='https://na.eventscloud.com/website/93925/'>ATT&CKcon 7.0</a> is October 27-28, 2026 in McLean, VA.
                     </div>
             </div>
         </div>
@@ -292,13 +292,13 @@
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Permalink to this version of DET0682" 
-           href="/versions/v19/detectionstrategies/DET0682/" data-test-ignore="true">Version Permalink</a>
+           href="/versions/v20/detectionstrategies/DET0682/" data-test-ignore="true">Version Permalink</a>
     </div>
     <div class="permalink">
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Go to the live version of DET0682" 
-           href="/versions/v19/detectionstrategies/DET0682/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+           href="/versions/v20/detectionstrategies/DET0682/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
     </div>
 </div>
 
@@ -326,7 +326,7 @@
               role="tabpanel" aria-labelledby="tab-Android">
               <h4 class="pt-3" id="AN1788">AN1788</h4>
               <div>
-                        <p>Defender observes an app (package/UID) issuing high-rate directory or content-index enumerations against external/shared storage or other apps’ Documents/Media providers (logcat:ContentResolver, logcat:StorageAccessFramework), followed within a short window by bulk READ handles or stat/list calls over many distinct paths (logcat:FileIO). Activity occurs without foreground UI or exceeds typical per-app baseline, indicating automated file/dir discovery rather than user-driven browsing. Correlate on package/UID/profile and time proximity.</p>
+                        <p>For Android, detect File and Directory Discovery by correlating analyst-visible device/network evidence and management state; use streaming or batched telemetry only where the documented collector is deployed. Correlate Application State via Android Enterprise / EMM [Managed package inventory/status and package metadata]; File Access via Application Vetting / Forensic Acquisition [Dynamic filesystem trace or acquired app-container/filesystem artifacts: opendir() or File.listFiles() on path IN $ExternalStoragePaths$ called &gt; $FileEnumThreshold$ times within $EnumWindow$ by app NOT IN $FileEnumAllowList$]; Network Traffic Flow via Android Enterprise Network Logging / Enterprise VPN [DevicePolicyManager.retrieveNetworkLogs(): DnsEvent / ConnectEvent; VPN flow metadata]. Alert on a sequence or state change inconsistent with the device/app baseline, approved management policy, or expected user workflow; do not infer unobserved API calls, file/process activity, or payload content from management state alone.</p>
 
               </div>
 
@@ -343,21 +343,12 @@
                   <tbody>
                     <tr>
                       <td rowspan="1">
-                        <a href="/datacomponents/DC0021">
-                          OS API Execution (DC0021)
+                        <a href="/datacomponents/DC0123">
+                          Application State (DC0123)
                         </a>
                       </td>
-                      <td>android:logcat</td>
-                      <td>query() against MediaStore/DocumentsContract URIs (Images/Video/Audio/Downloads/DocumentTree)</td>
-                    </tr>
-                    <tr>
-                      <td rowspan="1">
-                        <a href="/datacomponents/DC0038">
-                          Application Log Content (DC0038)
-                        </a>
-                      </td>
-                      <td>android:logcat</td>
-                      <td>ACTION_OPEN_DOCUMENT_TREE / ACTION_OPEN_DOCUMENT invoked without user gesture or repeatedly in background</td>
+                      <td>android:EMM</td>
+                      <td>Managed package inventory/status and package metadata</td>
                     </tr>
                     <tr>
                       <td rowspan="1">
@@ -365,17 +356,17 @@
                           File Access (DC0055)
                         </a>
                       </td>
-                      <td>android:logcat</td>
-                      <td>READ/LIST/STAT of /sdcard|/storage/emulated/0|/Android/media|/Documents with >N distinct paths in TimeWindow</td>
+                      <td>mobile:ForensicArtifacts</td>
+                      <td>Dynamic filesystem trace or acquired app-container/filesystem artifacts: opendir() or File.listFiles() on path IN $ExternalStoragePaths$ called > $FileEnumThreshold$ times within $EnumWindow$ by app NOT IN $FileEnumAllowList$</td>
                     </tr>
                     <tr>
                       <td rowspan="1">
-                        <a href="/datacomponents/DC0114">
-                          Application Permission (DC0114)
+                        <a href="/datacomponents/DC0078">
+                          Network Traffic Flow (DC0078)
                         </a>
                       </td>
-                      <td>android:logcat</td>
-                      <td>READ_EXTERNAL_STORAGE / MANAGE_EXTERNAL_STORAGE permission present or toggled at runtime</td>
+                      <td>android:EnterpriseNetworkLog</td>
+                      <td>DevicePolicyManager.retrieveNetworkLogs(): DnsEvent / ConnectEvent; VPN flow metadata</td>
                     </tr>
                   </tbody>
                 </table>
@@ -392,28 +383,32 @@
                   </thead>
                   <tbody>
                     <tr>
-                      <td>TimeWindowSeconds</td>
-                      <td>Time window to correlate API queries with file listings (e.g., 30–300s).</td>
+                      <td>ExternalStoragePaths</td>
+                      <td>/sdcard/, /storage/emulated/0/, /mnt/sdcard/. Vary by device.</td>
                     </tr>
                     <tr>
-                      <td>MinDistinctPaths</td>
-                      <td>Minimum unique paths accessed to qualify as discovery (e.g., ≥50).</td>
+                      <td>FileEnumThreshold</td>
+                      <td>Default 100 directory operations within window. Derive from baseline file manager behavior.</td>
                     </tr>
                     <tr>
-                      <td>BackgroundOnly</td>
-                      <td>Require app to be backgrounded to reduce user-driven noise.</td>
+                      <td>EnumWindow</td>
+                      <td>Default 60s.</td>
                     </tr>
                     <tr>
-                      <td>TargetPathRegex</td>
-                      <td>Scope to enterprise-relevant locations (e.g., /Documents, /Android/media/<corp>).</td>
+                      <td>FileEnumAllowList</td>
+                      <td>Approved file managers, media apps, MDM agent.</td>
                     </tr>
                     <tr>
-                      <td>AllowlistedPackages</td>
-                      <td>Backup/DLP/security apps expected to enumerate broadly.</td>
+                      <td>UplinkThreshold</td>
+                      <td>Default 500KB.</td>
                     </tr>
                     <tr>
-                      <td>ProfileScope</td>
-                      <td>Limit to Work Profile to reduce personal data noise.</td>
+                      <td>AppCDNList</td>
+                      <td>Per-app CDN. Derive by measurement.</td>
+                    </tr>
+                    <tr>
+                      <td>ExfilWindow</td>
+                      <td>Default 120s.</td>
                     </tr>
                   </tbody>
                 </table>
@@ -423,7 +418,7 @@
               role="tabpanel" aria-labelledby="tab-iOS">
               <h4 class="pt-3" id="AN1789">AN1789</h4>
               <div>
-                        <p>Defender observes an app (bundle/process) performing large-scope directory listings or metadata reads via FileProvider/NSFileManager against user-visible containers (Files app locations, iCloud/On-My-iPhone) or external providers, with rapid traversal across many folders while the app is backgrounded or without corresponding UI activity (unifiedlogs:FileProvider, unifiedlogs:FileIO). Optional signals include Photo library or document picker bulk enumeration absent recent user gesture. Correlate on bundle/process/profile and path volume within a bounded window.</p>
+                        <p>For iOS, detect File and Directory Discovery by correlating analyst-visible device/network evidence and management state; use streaming or batched telemetry only where the documented collector is deployed. Correlate Application State via Apple MDM [InstalledApplicationList / ManagedApplicationList]; Host Status via Apple MDM [DeviceInformation / SecurityInfo / ProfileList / restrictions and compliance queries]; Network Traffic Flow via Apple Network Extension / Enterprise VPN [NEFilterFlow / per-app VPN / secure-web-gateway flow metadata]. Alert on a sequence or state change inconsistent with the device/app baseline, approved management policy, or expected user workflow; do not infer unobserved API calls, file/process activity, or payload content from management state alone.</p>
 
               </div>
 
@@ -440,30 +435,30 @@
                   <tbody>
                     <tr>
                       <td rowspan="1">
-                        <a href="/datacomponents/DC0021">
-                          OS API Execution (DC0021)
+                        <a href="/datacomponents/DC0123">
+                          Application State (DC0123)
                         </a>
                       </td>
-                      <td>iOS:unifiedlog</td>
-                      <td>enumeratorForContainerItemIdentifier / itemForIdentifier across multiple containers/providers</td>
+                      <td>iOS:MDM</td>
+                      <td>InstalledApplicationList / ManagedApplicationList</td>
                     </tr>
                     <tr>
                       <td rowspan="1">
-                        <a href="/datacomponents/DC0055">
-                          File Access (DC0055)
+                        <a href="/datacomponents/DC0018">
+                          Host Status (DC0018)
                         </a>
                       </td>
-                      <td>iOS:unifiedlog</td>
-                      <td>readdir/stat/read of /private/var/mobile/Containers/Shared/AppGroup|/Library/Mobile Documents|/On\\ My\\ iPhone with >N distinct paths in TimeWindow</td>
+                      <td>iOS:MDM</td>
+                      <td>DeviceInformation / SecurityInfo / ProfileList / restrictions and compliance queries</td>
                     </tr>
                     <tr>
                       <td rowspan="1">
-                        <a href="/datacomponents/DC0038">
-                          Application Log Content (DC0038)
+                        <a href="/datacomponents/DC0078">
+                          Network Traffic Flow (DC0078)
                         </a>
                       </td>
-                      <td>iOS:unifiedlog</td>
-                      <td>UIDocumentPickerViewController presented repeatedly without foreground interaction or with short dwell time</td>
+                      <td>iOS:NetworkExtension</td>
+                      <td>NEFilterFlow / per-app VPN / secure-web-gateway flow metadata</td>
                     </tr>
                   </tbody>
                 </table>
@@ -480,28 +475,24 @@
                   </thead>
                   <tbody>
                     <tr>
-                      <td>TimeWindowSeconds</td>
-                      <td>Correlation window between enumeration API calls and path bursts (e.g., 30–300s).</td>
+                      <td>HighValueAppList</td>
+                      <td>Banking, auth, enterprise apps with sensitive local data.</td>
                     </tr>
                     <tr>
-                      <td>MinDistinctPaths</td>
-                      <td>Minimum number of unique paths to flag discovery (e.g., ≥40).</td>
+                      <td>HighValueAppCount</td>
+                      <td>Default 2 — single app could be accidental; multiple indicates targeted environment.</td>
                     </tr>
                     <tr>
-                      <td>TargetPathRegex</td>
-                      <td>Enterprise-relevant containers/providers to include/exclude.</td>
+                      <td>ConnectionBurstThreshold</td>
+                      <td>Default 5 connections to same dest within window.</td>
                     </tr>
                     <tr>
-                      <td>RequireBackgroundState</td>
-                      <td>Set true to require background discovery for higher confidence.</td>
+                      <td>SmallRequestThreshold</td>
+                      <td>Default 50KB per request — file listing and small file pickups.</td>
                     </tr>
                     <tr>
-                      <td>AllowlistedBundles</td>
-                      <td>Legitimate backup/DLP/file-management apps to suppress.</td>
-                    </tr>
-                    <tr>
-                      <td>ManagedProfileScope</td>
-                      <td>Limit to managed devices/profiles.</td>
+                      <td>ExfilWindow</td>
+                      <td>Default 300s after jailbreak detection.</td>
                     </tr>
                   </tbody>
                 </table>
@@ -509,6 +500,7 @@
             </div>
           </div>
         </div>
+
 
         
       </div>
@@ -727,7 +719,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3 col-footer">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v19.2&#013;Website  v5.1.0">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v20.0&#013;Website  v5.2.0">Website Changelog</a></u>
                                 </div>
                                 <div class="px-3">
                                     <u class="footer-link"><a href="/resources/legal-and-branding/privacy/#" class="footer-link" onclick="Osano.cm.showDrawer('osano-cm-dom-info-dialog-open')">Cookie Preferences</a></u>

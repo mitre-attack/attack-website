@@ -207,7 +207,7 @@
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
                     <div class="container-fluid banner-message">
-                        ATT&CKcon 7.0 registration is open! Join us October 27-28, 2026 in McLean, VA or virtually. <a href="https://na.eventscloud.com/website/93925/">Register in person</a> or <a href="https://mitre.brandlive.com/MITRE-ATTACKcon-7-0">register virtually</a>. See the <a href="https://na.eventscloud.com/website/93925/faq/">FAQ</a> for hotel and venue details.
+                        ATT&CK v20 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v20-9701dd75ffb4'>blog post</a> for more information. <a href='https://na.eventscloud.com/website/93925/'>ATT&CKcon 7.0</a> is October 27-28, 2026 in McLean, VA.
                     </div>
             </div>
         </div>
@@ -292,13 +292,13 @@
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Permalink to this version of DET0721" 
-           href="/versions/v19/detectionstrategies/DET0721/" data-test-ignore="true">Version Permalink</a>
+           href="/versions/v20/detectionstrategies/DET0721/" data-test-ignore="true">Version Permalink</a>
     </div>
     <div class="permalink">
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Go to the live version of DET0721" 
-           href="/versions/v19/detectionstrategies/DET0721/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+           href="/versions/v20/detectionstrategies/DET0721/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
     </div>
 </div>
 
@@ -326,7 +326,7 @@
               role="tabpanel" aria-labelledby="tab-Android">
               <h4 class="pt-3" id="AN1853">AN1853</h4>
               <div>
-                        <p>The defender correlates the arrival, installation, or update of a trusted or expected application with a subsequent deviation in package trust characteristics, permission posture, protected-resource use, framework behavior, or network communication that is inconsistent with the known-good role of that app. The strongest Android evidence is a managed or trusted package whose first-run or post-update behavior introduces unexpected special access, sensitive sensor use, unusual background execution, privileged framework interaction, or outbound communication to destinations outside the app's baseline shortly after installation or update.</p>
+                        <p>For Android, detect Compromise Software Supply Chain from documented management, network, or vetting evidence; treat state queries as periodic observations rather than real-time events. Correlate Application Permission via Android Enterprise DPC / Application Vetting [DevicePolicyManager.getPermissionGrantState(); PackageManager manifest/requested-permission review]; Application State via Android Enterprise / EMM [Managed package inventory/status and package metadata]; File Creation via Application Vetting / Forensic Acquisition [Dynamic filesystem trace or acquired app-container/filesystem artifacts: Compromised app writes staging, cache, or export artifacts inconsistent with its declared function within $PostInstallWindow$]. Alert on a sequence or state change inconsistent with the device/app baseline, approved management policy, or expected user workflow; do not infer unobserved API calls, file/process activity, or payload content from management state alone.</p>
 
               </div>
 
@@ -347,8 +347,8 @@
                           Application Permission (DC0114)
                         </a>
                       </td>
-                      <td>android:MDMLog</td>
-                      <td>Managed or trusted app is newly installed or updated and presents changed package identity, signing relationship, version lineage, installer source, or permission posture inconsistent with approved baseline</td>
+                      <td>android:DevicePolicyManager</td>
+                      <td>DevicePolicyManager.getPermissionGrantState(); PackageManager manifest/requested-permission review</td>
                     </tr>
                     <tr>
                       <td rowspan="1">
@@ -356,17 +356,8 @@
                           Application State (DC0123)
                         </a>
                       </td>
-                      <td>MobileEDR:telemetry</td>
-                      <td>Recently installed or updated trusted app begins background execution, persistent service activity, overlay-like behavior, or lock-state activity inconsistent with its historical baseline or expected first-run sequence</td>
-                    </tr>
-                    <tr>
-                      <td rowspan="1">
-                        <a href="/datacomponents/DC0021">
-                          OS API Execution (DC0021)
-                        </a>
-                      </td>
-                      <td>MobileEDR:telemetry</td>
-                      <td>Recently installed or updated trusted app invokes Android framework paths or special access patterns inconsistent with its role, including accessibility-like behavior, overlay behavior, package visibility expansion, protected settings access, device policy interaction, or unusual IPC/provider access</td>
+                      <td>android:EMM</td>
+                      <td>Managed package inventory/status and package metadata</td>
                     </tr>
                     <tr>
                       <td rowspan="1">
@@ -374,8 +365,17 @@
                           File Creation (DC0039)
                         </a>
                       </td>
-                      <td>MobileEDR:telemetry</td>
-                      <td>Recently installed or updated trusted app writes staging, cache, buffer, or export artifacts inconsistent with its approved function, especially when temporally adjacent to sensitive resource access or outbound transfer</td>
+                      <td>mobile:ForensicArtifacts</td>
+                      <td>Dynamic filesystem trace or acquired app-container/filesystem artifacts: Compromised app writes staging, cache, or export artifacts inconsistent with its declared function within $PostInstallWindow$</td>
+                    </tr>
+                    <tr>
+                      <td rowspan="1">
+                        <a href="/datacomponents/DC0021">
+                          OS API Execution (DC0021)
+                        </a>
+                      </td>
+                      <td>mobile:DynamicAnalysis</td>
+                      <td>Dynamic API/runtime trace: Recently updated trusted app invokes special-access paths, account services, or accessibility not present in prior version baseline</td>
                     </tr>
                   </tbody>
                 </table>
@@ -427,7 +427,7 @@
               role="tabpanel" aria-labelledby="tab-iOS">
               <h4 class="pt-3" id="AN1854">AN1854</h4>
               <div>
-                        <p>Anchor on supervised managed-app install/update or version drift, then correlate with unexpected background activity, managed-app state changes, or egress inconsistent with the app's historical and policy baseline.</p>
+                        <p>For iOS, detect Compromise Software Supply Chain from documented management, network, or vetting evidence; treat state queries as periodic observations rather than real-time events. Correlate Application Permission via Application Vetting [Code-signing entitlements and Info.plist privacy usage-description keys]; Application State via Apple MDM [InstalledApplicationList / ManagedApplicationList]; OS API Execution via Application Vetting / Instrumented Dynamic Analysis [Dynamic API/runtime trace: Launch services, extension-handling, or framework subsystem anomalies occur near install or first launch of recently updated trusted app on supervised device]. Alert on a sequence or state change inconsistent with the device/app baseline, approved management policy, or expected user workflow; do not infer unobserved API calls, file/process activity, or payload content from management state alone.</p>
 
               </div>
 
@@ -448,8 +448,8 @@
                           Application Permission (DC0114)
                         </a>
                       </td>
-                      <td>iOS:MDMLog</td>
-                      <td>Supervised managed app is newly installed or updated and presents unexpected version transition, inventory drift, managed-state change, or app attribute mismatch against approved procurement and release baseline</td>
+                      <td>mobile:ApplicationVetting</td>
+                      <td>Code-signing entitlements and Info.plist privacy usage-description keys</td>
                     </tr>
                     <tr>
                       <td rowspan="1">
@@ -457,8 +457,8 @@
                           Application State (DC0123)
                         </a>
                       </td>
-                      <td>MobileEDR:telemetry</td>
-                      <td>Recently installed or updated managed app begins background activity, persistent refresh, or lock-state-adjacent activity inconsistent with expected first-run behavior, user interaction timing, or historical baseline</td>
+                      <td>iOS:MDM</td>
+                      <td>InstalledApplicationList / ManagedApplicationList</td>
                     </tr>
                     <tr>
                       <td rowspan="1">
@@ -466,8 +466,8 @@
                           OS API Execution (DC0021)
                         </a>
                       </td>
-                      <td>iOS:unifiedlog</td>
-                      <td>Supplemental managed app or system subsystem anomalies near install/update, launch services, extension handling, app activation, or background execution temporally adjacent to suspicious network or lifecycle behavior</td>
+                      <td>mobile:DynamicAnalysis</td>
+                      <td>Dynamic API/runtime trace: Launch services, extension-handling, or framework subsystem anomalies occur near install or first launch of recently updated trusted app on supervised device</td>
                     </tr>
                   </tbody>
                 </table>
@@ -521,6 +521,7 @@
             </div>
           </div>
         </div>
+
 
         
       </div>
@@ -739,7 +740,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3 col-footer">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v19.2&#013;Website  v5.1.0">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v20.0&#013;Website  v5.2.0">Website Changelog</a></u>
                                 </div>
                                 <div class="px-3">
                                     <u class="footer-link"><a href="/resources/legal-and-branding/privacy/#" class="footer-link" onclick="Osano.cm.showDrawer('osano-cm-dom-info-dialog-open')">Cookie Preferences</a></u>

@@ -207,7 +207,7 @@
                 <!-- don't edit or remove the line below even though it's commented out, it gets parsed and replaced by the versioning feature -->
                 <!-- !versions banner! -->
                     <div class="container-fluid banner-message">
-                        ATT&CKcon 7.0 registration is open! Join us October 27-28, 2026 in McLean, VA or virtually. <a href="https://na.eventscloud.com/website/93925/">Register in person</a> or <a href="https://mitre.brandlive.com/MITRE-ATTACKcon-7-0">register virtually</a>. See the <a href="https://na.eventscloud.com/website/93925/faq/">FAQ</a> for hotel and venue details.
+                        ATT&CK v20 has been released! Check out the <a href='https://medium.com/mitre-attack/attack-v20-9701dd75ffb4'>blog post</a> for more information. <a href='https://na.eventscloud.com/website/93925/'>ATT&CKcon 7.0</a> is October 27-28, 2026 in McLean, VA.
                     </div>
             </div>
         </div>
@@ -292,13 +292,13 @@
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Permalink to this version of DET0720" 
-           href="/versions/v19/detectionstrategies/DET0720/" data-test-ignore="true">Version Permalink</a>
+           href="/versions/v20/detectionstrategies/DET0720/" data-test-ignore="true">Version Permalink</a>
     </div>
     <div class="permalink">
         <a data-toggle="tooltip" 
            data-placement="bottom" 
            title="Go to the live version of DET0720" 
-           href="/versions/v19/detectionstrategies/DET0720/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
+           href="/versions/v20/detectionstrategies/DET0720/" data-test-ignore="true">Live Version</a><!--do not change this line without also changing versions.py-->
     </div>
 </div>
 
@@ -326,7 +326,7 @@
               role="tabpanel" aria-labelledby="tab-Android">
               <h4 class="pt-3" id="AN1851">AN1851</h4>
               <div>
-                        <p>Defender correlates a sandboxed app writing high-entropy or encoded artifacts (often in app-private or shared storage), performing decode/decompress/reassembly, then dynamically loading/execing the resulting code (DexClassLoader/JNI dlopen) or spawning a helper process. Sequence: high-entropy file writes → decode/unpack bursts → new .dex/.so/.jar creation in temp/obfuscated paths → dynamic load or shell spawn within a tight window.</p>
+                        <p>For Android, detect Obfuscated Files or Information by correlating analyst-visible device/network evidence and management state; use streaming or batched telemetry only where the documented collector is deployed. Correlate File Creation via Application Vetting / Forensic Acquisition [Dynamic filesystem trace or acquired app-container/filesystem artifacts: open() with O_CREAT on path LIKE '/data/data/%/files/%' for binary or dex content by app_package NOT IN $LegitDynamicLoaders$]; Module Load via Application Vetting / Instrumented Dynamic Analysis [Dynamic API/runtime trace: DexClassLoader() or dlopen() called with path argument matching file written in preceding $DecryptExecWindow$]; Network Connection Creation via Android Enterprise Network Logging / Enterprise VPN [DevicePolicyManager.retrieveNetworkLogs(): DnsEvent / ConnectEvent; VPN flow metadata]. Alert on a sequence or state change inconsistent with the device/app baseline, approved management policy, or expected user workflow; do not infer unobserved API calls, file/process activity, or payload content from management state alone.</p>
 
               </div>
 
@@ -347,39 +347,26 @@
                           File Creation (DC0039)
                         </a>
                       </td>
-                      <td>android:logcat</td>
-                      <td>App UID writes new file with suspicious extension/location (.tmp, .dat, .enc, /data/data/<pkg>/files/, /sdcard/Download/) and high estimated entropy</td>
+                      <td>mobile:ForensicArtifacts</td>
+                      <td>Dynamic filesystem trace or acquired app-container/filesystem artifacts: open() with O_CREAT on path LIKE '/data/data/%/files/%' for binary or dex content by app_package NOT IN $LegitDynamicLoaders$</td>
                     </tr>
                     <tr>
-                      <td rowspan="2">
+                      <td rowspan="1">
                         <a href="/datacomponents/DC0016">
                           Module Load (DC0016)
                         </a>
                       </td>
-                      <td>android:logcat</td>
-                      <td>DexClassLoader/PathClassLoader load attempt from non-standard path or recently created file</td>
-                    </tr>
-                    <tr>
-                      <td>android:logcat</td>
-                      <td>Short burst of file I/O followed by JNI/dlopen of a newly created .so</td>
+                      <td>mobile:DynamicAnalysis</td>
+                      <td>Dynamic API/runtime trace: DexClassLoader() or dlopen() called with path argument matching file written in preceding $DecryptExecWindow$</td>
                     </tr>
                     <tr>
                       <td rowspan="1">
-                        <a href="/datacomponents/DC0112">
-                          API Calls (DC0112)
+                        <a href="/datacomponents/DC0082">
+                          Network Connection Creation (DC0082)
                         </a>
                       </td>
-                      <td>android:logcat</td>
-                      <td>SELinux AVC related to execute_no_trans/execmem after decode/unpack activity by the same app UID</td>
-                    </tr>
-                    <tr>
-                      <td rowspan="1">
-                        <a href="/datacomponents/DC0085">
-                          Network Traffic Content (DC0085)
-                        </a>
-                      </td>
-                      <td>NSM:Flow</td>
-                      <td>TLS/HTTP download with atypical MIME (application/octet-stream, application/x-zip, application/x-gzip) followed by local decode/write</td>
+                      <td>android:EnterpriseNetworkLog</td>
+                      <td>DevicePolicyManager.retrieveNetworkLogs(): DnsEvent / ConnectEvent; VPN flow metadata</td>
                     </tr>
                   </tbody>
                 </table>
@@ -396,32 +383,20 @@
                   </thead>
                   <tbody>
                     <tr>
-                      <td>TimeWindowSeconds</td>
-                      <td>Max interval to correlate write→decode→load stages (e.g., 5–60s depending on device performance).</td>
+                      <td>LegitDynamicLoaders</td>
+                      <td>React Native, Unity, Xamarin runtime packages — legitimate apps that use dynamic code loading. Tightening: empty list (all dynamic loading flagged). Loosening: broad list reduces FP for game engines. Derive from MDM-approved app catalog.</td>
                     </tr>
                     <tr>
-                      <td>PayloadEntropyThreshold</td>
-                      <td>Shannon entropy threshold to flag likely obfuscated blobs (e.g., ≥ 7.2).</td>
+                      <td>DecryptExecWindow</td>
+                      <td>Default 60s between file write and module load. Tightening: 10s — synchronous decrypt-load pattern.</td>
                     </tr>
                     <tr>
-                      <td>SuspiciousWriteDirs</td>
-                      <td>Directories to monitor (e.g., app /files, cache, /sdcard/Download). OEMs vary.</td>
+                      <td>AppCDNList</td>
+                      <td>Per-app known CDN/update endpoints from 30-day network baseline. Derive by measurement.</td>
                     </tr>
                     <tr>
-                      <td>ChunkCountThreshold</td>
-                      <td>Minimum count of small sequential writes (split payload reassembly).</td>
-                    </tr>
-                    <tr>
-                      <td>NetworkCDNAllowlist</td>
-                      <td>Benign CDNs/hosts for large opaque downloads to reduce FPs.</td>
-                    </tr>
-                    <tr>
-                      <td>ExecPathRegex</td>
-                      <td>Regex for newly loaded .dex/.so/.jar/temp artifacts.</td>
-                    </tr>
-                    <tr>
-                      <td>UserContext</td>
-                      <td>Foreground/background or developer mode context to suppress test noise.</td>
+                      <td>PostLoadWindow</td>
+                      <td>Default 120s between module load and novel network connection.</td>
                     </tr>
                   </tbody>
                 </table>
@@ -431,7 +406,7 @@
               role="tabpanel" aria-labelledby="tab-iOS">
               <h4 class="pt-3" id="AN1852">AN1852</h4>
               <div>
-                        <p>Defender correlates a sandboxed app downloading or receiving opaque/encoded blobs, writing high-entropy content into container/tmp, performing decode/decompress/reassembly, and then executing/loaded as Mach-O or bundle (dlopen) or leveraging JIT/RWX pages to run the decoded payload. Sequence: opaque download or IPC → high-entropy writes/split-file bursts → decode/unarchive → new Mach-O/bundle in tmp → dlopen/posix_spawn or RWX region activity.</p>
+                        <p>For iOS, detect Obfuscated Files or Information by correlating analyst-visible device/network evidence and management state; use streaming or batched telemetry only where the documented collector is deployed. Correlate Application Permission via Application Vetting [Code-signing entitlements and Info.plist privacy usage-description keys]; Network Traffic Content via Enterprise Secure Web Gateway / Proxy [DNS/HTTP(S) inspection or proxy transaction metadata where enterprise decryption/inspection is deployed]; Network Traffic Flow via Apple Network Extension / Enterprise VPN [NEFilterFlow / per-app VPN / secure-web-gateway flow metadata]. Alert on a sequence or state change inconsistent with the device/app baseline, approved management policy, or expected user workflow; do not infer unobserved API calls, file/process activity, or payload content from management state alone.</p>
 
               </div>
 
@@ -448,30 +423,12 @@
                   <tbody>
                     <tr>
                       <td rowspan="1">
-                        <a href="/datacomponents/DC0039">
-                          File Creation (DC0039)
+                        <a href="/datacomponents/DC0114">
+                          Application Permission (DC0114)
                         </a>
                       </td>
-                      <td>iOS:unifiedlog</td>
-                      <td>NSFileHandle/NSFileManager writes creating high-entropy files within app container (/var/mobile/Containers/Data/Application/<GUID>/tmp|Library/Caches)</td>
-                    </tr>
-                    <tr>
-                      <td rowspan="1">
-                        <a href="/datacomponents/DC0035">
-                          Process Access (DC0035)
-                        </a>
-                      </td>
-                      <td>iOS:unifiedlog</td>
-                      <td>Code signing validation events referencing newly written local Mach-O/bundle prior to exec or dlopen</td>
-                    </tr>
-                    <tr>
-                      <td rowspan="1">
-                        <a href="/datacomponents/DC0016">
-                          Module Load (DC0016)
-                        </a>
-                      </td>
-                      <td>iOS:unifiedlog</td>
-                      <td>dyld: dlopen/dyld_cache load from non-standard app-writable path</td>
+                      <td>mobile:ApplicationVetting</td>
+                      <td>Code-signing entitlements and Info.plist privacy usage-description keys</td>
                     </tr>
                     <tr>
                       <td rowspan="1">
@@ -479,17 +436,17 @@
                           Network Traffic Content (DC0085)
                         </a>
                       </td>
-                      <td>iOS:unifiedlog</td>
-                      <td>Per-app VPN flow logging indicating opaque/archived payload transfer preceding local decode</td>
+                      <td>webproxy:applog</td>
+                      <td>DNS/HTTP(S) inspection or proxy transaction metadata where enterprise decryption/inspection is deployed</td>
                     </tr>
                     <tr>
                       <td rowspan="1">
-                        <a href="/datacomponents/DC0021">
-                          OS API Execution (DC0021)
+                        <a href="/datacomponents/DC0078">
+                          Network Traffic Flow (DC0078)
                         </a>
                       </td>
-                      <td>iOS:unifiedlog</td>
-                      <td>mmap/mprotect transitions to PROT_EXEC for pages associated with recently written files</td>
+                      <td>iOS:NetworkExtension</td>
+                      <td>NEFilterFlow / per-app VPN / secure-web-gateway flow metadata</td>
                     </tr>
                   </tbody>
                 </table>
@@ -506,28 +463,24 @@
                   </thead>
                   <tbody>
                     <tr>
-                      <td>TimeWindowSeconds</td>
-                      <td>Max interval to link write→decode→load/exec (e.g., 5–45s depending on device and iOS version).</td>
+                      <td>AppCDNList</td>
+                      <td>Per-app declared CDN/update endpoints from 30-day baseline.</td>
                     </tr>
                     <tr>
-                      <td>PayloadEntropyThreshold</td>
-                      <td>Entropy threshold to consider a file obfuscated/packed (e.g., ≥ 7.3).</td>
+                      <td>AppBaselineDomains</td>
+                      <td>Full per-app network destination baseline, 30-day.</td>
                     </tr>
                     <tr>
-                      <td>SplitWriteBurstMin</td>
-                      <td>Minimum count of small sequential writes to flag reassembly behaviors.</td>
+                      <td>ContentEntropyThreshold</td>
+                      <td>Default 7.0 bits Shannon entropy. Calibrate against known-good app responses.</td>
                     </tr>
                     <tr>
-                      <td>AppContainerPaths</td>
-                      <td>Container subpaths to monitor (tmp, Library/Caches, Documents) vary by policy.</td>
+                      <td>MinPayloadSize</td>
+                      <td>Default 1024 bytes — exclude trivial config responses.</td>
                     </tr>
                     <tr>
-                      <td>KnownGoodBundles</td>
-                      <td>Allowlist of legitimate dynamically loaded bundles/plugins to reduce FPs.</td>
-                    </tr>
-                    <tr>
-                      <td>PerAppVPNAllowlist</td>
-                      <td>Known enterprise services carrying opaque archives to avoid false alerts.</td>
+                      <td>BehavioralForkWindow</td>
+                      <td>Default 120s between download and new destination first seen.</td>
                     </tr>
                   </tbody>
                 </table>
@@ -535,6 +488,7 @@
             </div>
           </div>
         </div>
+
 
         
       </div>
@@ -753,7 +707,7 @@
                                         <u class="footer-link"><a href="/resources/legal-and-branding/privacy" class="footer-link">Privacy Policy</a></u>
                                     </div>
                                 <div class="px-3 col-footer">
-                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v19.2&#013;Website  v5.1.0">Website Changelog</a></u>
+                                    <u class="footer-link"><a href="/resources/changelog.html" class="footer-link" data-toggle="tooltip" data-placement="top" data-html="true" title="ATT&amp;CK content v20.0&#013;Website  v5.2.0">Website Changelog</a></u>
                                 </div>
                                 <div class="px-3">
                                     <u class="footer-link"><a href="/resources/legal-and-branding/privacy/#" class="footer-link" onclick="Osano.cm.showDrawer('osano-cm-dom-info-dialog-open')">Cookie Preferences</a></u>
