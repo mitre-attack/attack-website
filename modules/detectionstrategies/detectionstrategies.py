@@ -77,6 +77,22 @@ def generate_markdown_files():
 
     return has_detection_strategies
 
+def get_detection_assets(technique_list):
+    """Get assets for each detection targeted by a technique"""
+    assets = []
+    for technique in technique_list or []:
+        stix_id = technique["object"]["id"]
+        technique_assets = util.relationshipgetters.get_assets_targeted_by_techniques().get(stix_id)
+
+        assets.extend([
+            {
+                "id": util.buildhelpers.get_attack_id(asset["object"]),
+                "asset": asset["object"]["name"]
+            }
+            for asset in technique_assets or []
+        ])
+
+    return sorted(assets, key=lambda asset: asset["id"])
 
 def get_detection_strategy_table(detection_strategy_list):
     """Generate detection strategy table for the overview page."""
@@ -107,6 +123,9 @@ def generate_detection_strategy_md(detection_strategy, notes):
     if not attack_id:
         return
 
+    stix_id = detection_strategy["id"]
+    techniques = util.relationshipgetters.get_techniques_detected_by_detectionstrategy().get(stix_id)
+    assets = get_detection_assets(techniques)
     dates = util.buildhelpers.get_created_and_modified_dates(detection_strategy)
 
     # Build reference list
@@ -131,6 +150,7 @@ def generate_detection_strategy_md(detection_strategy, notes):
         "analytics": analytics_by_platform,
         "analytic_ids": analytic_ids,
         "versioning_feature": site_config.check_versions_module(),
+        "assets": assets,
     }
 
     subs = detectionstrategies_config.detectionstrategy_md.substitute(data)
