@@ -140,7 +140,8 @@ def get_sub_matrices(matrix):
     domain_ms = ms[matrix["matrix"]]
     # get relevant techniques
     techniques = util.stixhelpers.get_techniques(domain_ms, matrix["matrix"])
-    platform_techniques = util.buildhelpers.filter_techniques_by_platform(techniques, matrix["platforms"])
+    filter_platforms = matrix.get("filter_platforms", matrix["platforms"])
+    platform_techniques = util.buildhelpers.filter_techniques_by_platform(techniques, filter_platforms)
     platform_techniques = util.buildhelpers.filter_out_subtechniques(platform_techniques)
     platform_techniques = util.buildhelpers.filter_deprecated_revoked(platform_techniques)
     # get relevant tactics
@@ -195,7 +196,7 @@ def get_sub_matrices(matrix):
                 obj["subtechniques"] = list(filter(lambda st: len(st) > 0, obj["subtechniques"]))
                 # Filter subtechniques by platform
                 obj["subtechniques"] = util.buildhelpers.filter_techniques_by_platform(
-                    obj["subtechniques"], matrix["platforms"]
+                    obj["subtechniques"], filter_platforms
                 )
                 # remove deprecated and revoked
                 obj["subtechniques"] = util.buildhelpers.filter_deprecated_revoked(obj["subtechniques"])

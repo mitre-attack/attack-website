@@ -210,6 +210,8 @@ matrices = [
         "path": "ics",
         "matrix": "ics-attack",
         "platforms": ["Embedded", "Windows", "Linux", "Network Devices"],
+        # Keep platform links while showing all ICS techniques in the domain matrix.
+        "filter_platforms": [],
         "descr": "Below are the tactics and techniques representing the MITRE ATT&CK<sup>&reg;</sup> Matrix for ICS.",
         "subtypes": [
             {
