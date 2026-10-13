@@ -8,7 +8,7 @@ save_as: resources/updates/updates-august-2026/index.html
 
 | Version | Start Date | End Date | Data | Changelog |
 |:--------|:-----------|:---------|:-----|:----------|
-| [ATT&CK v19](/versions/v19) | August 6, 2026 | Current version of ATT&CK | [v19.2 on MITRE/CTI](https://github.com/mitre/cti/releases/tag/ATT%26CK-v19.2) | 19.1 - 19.2 [Details](/docs/changelogs/v19.1-v19.2/changelog-detailed.html) ([JSON](/docs/changelogs/v19.1-v19.2/changelog.json)) |
+| [ATT&CK v19](/versions/v19) | August 6, 2026 | October 13, 2026 | [v19.2 on MITRE/CTI](https://github.com/mitre/cti/releases/tag/ATT%26CK-v19.2) | 19.1 - 19.2 [Details](/docs/changelogs/v19.1-v19.2/changelog-detailed.html) ([JSON](/docs/changelogs/v19.1-v19.2/changelog.json)) |
 
 **Note: This page covers the ATT&CK v19.2 release. For the original ATT&CK v19 release notes, see [Updates - April 2026](/resources/updates/updates-april-2026/).**
 
