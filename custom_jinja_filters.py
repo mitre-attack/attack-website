@@ -159,10 +159,18 @@ def remove_citations(data):
 def filter_urls(data):
     """Filters out URLs to return path and not domain."""
     if not pelican_settings["no_stix_link_replacement"]:
+        if "https://attack.mitre.org/assets/" in data:
+            data = data.replace("https://attack.mitre.org/assets/", "/assets/")
+        if "https://attack.mitre.org/campaigns/" in data:
+            data = data.replace("https://attack.mitre.org/campaigns/", "/campaigns/")
         if "https://attack.mitre.org/groups/" in data:
             data = data.replace("https://attack.mitre.org/groups/", "/groups/")
         if "https://attack.mitre.org/software/" in data:
             data = data.replace("https://attack.mitre.org/software/", "/software/")
+        if "https://attack.mitre.org/mitigations/" in data:
+            data = data.replace("https://attack.mitre.org/mitigations/", "/mitigations/")
+        if "https://attack.mitre.org/tactics/" in data:
+            data = data.replace("https://attack.mitre.org/tactics/", "/tactics/")
         if "https://attack.mitre.org/techniques/" in data:
             data = data.replace("https://attack.mitre.org/techniques/", "/techniques/")
         if "https://attack.mitre.org/technique/" in data:

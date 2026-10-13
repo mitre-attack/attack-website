@@ -61,7 +61,8 @@ def generate_platform_matrices(matrix, notes, side_menu_data=None):
             data["notes"].append(notes.get(matrix_id))
 
     data["platforms"] = [
-        {"name": platform, "path": matrices_config.platform_to_path[platform]} for platform in matrix["platforms"]
+        {"name": platform, "path": matrices_config.platform_to_path[matrix["matrix"]][platform]}
+        for platform in matrix["platforms"]
     ]
     data["navigator_link"] = site_config.navigator_link
 
@@ -139,7 +140,8 @@ def get_sub_matrices(matrix):
     domain_ms = ms[matrix["matrix"]]
     # get relevant techniques
     techniques = util.stixhelpers.get_techniques(domain_ms, matrix["matrix"])
-    platform_techniques = util.buildhelpers.filter_techniques_by_platform(techniques, matrix["platforms"])
+    filter_platforms = matrix.get("filter_platforms", matrix["platforms"])
+    platform_techniques = util.buildhelpers.filter_techniques_by_platform(techniques, filter_platforms)
     platform_techniques = util.buildhelpers.filter_out_subtechniques(platform_techniques)
     platform_techniques = util.buildhelpers.filter_deprecated_revoked(platform_techniques)
     # get relevant tactics
@@ -194,7 +196,7 @@ def get_sub_matrices(matrix):
                 obj["subtechniques"] = list(filter(lambda st: len(st) > 0, obj["subtechniques"]))
                 # Filter subtechniques by platform
                 obj["subtechniques"] = util.buildhelpers.filter_techniques_by_platform(
-                    obj["subtechniques"], matrix["platforms"]
+                    obj["subtechniques"], filter_platforms
                 )
                 # remove deprecated and revoked
                 obj["subtechniques"] = util.buildhelpers.filter_deprecated_revoked(obj["subtechniques"])
@@ -224,9 +226,7 @@ def get_sub_matrices(matrix):
             logger.warning(f"Tactic not found or missing shortname: {tactic_id}")
             return []
         # filter platform techniques to those inside of this tactic
-        techniques = list(
-            filter(lambda technique: shortname in phase_names(technique), platform_techniques)
-        )
+        techniques = list(filter(lambda technique: shortname in phase_names(technique), platform_techniques))
         # transform into format required by matrix macro
         return list(map(lambda t: transform_technique(t, tactic_id), techniques))
 
