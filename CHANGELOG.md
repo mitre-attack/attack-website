@@ -1,5 +1,12 @@
 # Website Changelog
 
+## v5.2.1 (2026-11-05)
+
+### Features
+
+* Release ATT&CK content version 20.1.
+  See detailed changes [here](https://github.com/mitre/cti/releases/tag/ATT%26CK-v20.1).
+
 ## v5.2.0 (2026-10-13)
 
 ### Features
