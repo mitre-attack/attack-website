@@ -8,7 +8,7 @@ save_as: resources/updates/updates-october-2026/index.html
 
 | Version | Start Date | End Date | Data | Changelogs |
 |:--------|:-----------|:---------|:-----|:-----------|
-| [ATT&CK v20](/versions/v20) | October 13, 2026 | Current version of ATT&CK | [v20.0 on MITRE/CTI](https://github.com/mitre/cti/releases/tag/ATT%26CK-v20.0) | 19.2 - 20.0 [Details](/docs/changelogs/v19.2-v20.0/changelog-detailed.html) ([JSON](/docs/changelogs/v19.2-v20.0/changelog.json)) |
+| [ATT&CK v20](/versions/v20) | October 13, 2026 | Current version of ATT&CK | [v20.0 on MITRE/CTI](https://github.com/mitre/cti/releases/tag/ATT%26CK-v20.0) <br> [v20.1 on MITRE/CTI](https://github.com/mitre/cti/releases/tag/ATT%26CK-v20.1) | 19.2 - 20.0 [Details](/docs/changelogs/v19.2-v20.0/changelog-detailed.html) ([JSON](/docs/changelogs/v19.2-v20.0/changelog.json)) <br> 20.0 - 20.1 [Details](/docs/changelogs/v20.0-v20.1/changelog-detailed.html) ([JSON](/docs/changelogs/v20.0-v20.1/changelog.json)) |
 
 The October 2026 (v20) ATT&CK release updates Techniques, Groups, Campaigns and Software for Enterprise, Mobile, and ICS.
 
