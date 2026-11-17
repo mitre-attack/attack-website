@@ -36,19 +36,7 @@ index_matrix = {
     "name": "ATT&CK Matrix for Enterprise",
     "descr": "",  # if specified, adds a subtitle to the index page matrix
     "matrix": "enterprise-attack",
-    "platforms": [
-        "Windows",
-        "macOS",
-        "Linux",
-        "PRE",
-        "Office Suite",
-        "Identity Providers",
-        "SaaS",
-        "IaaS",
-        "Network Devices",
-        "Containers",
-        "ESXi",
-    ],
+    "platforms": [],  # Includes all techniques in the domain.
 }
 
 # ATT&CK overview

@@ -7,8 +7,7 @@ from . import tour_config
 
 
 def generate_tour():
-    """Responsible for dynamically generating tour steps"""
-
+    """Generate tour steps dynamically."""
     # Algorithm
     # For each domain:
     # 1. index (start page, doesn't need to be dynamic)
@@ -31,7 +30,7 @@ def generate_tour():
     if not matrices_found:
         return
 
-    for matrix in matrices.matrices_config.matrices:
+    for matrix in matrices.matrices.get_matrix_definitions():
         if matrix["type"] == "external":
             continue  # link to externally hosted matrix, ignore it
         tours.append(get_tour_steps(matrix))
@@ -59,8 +58,7 @@ def generate_tour():
 
 
 def get_tour_steps(matrix):
-    """Get all the tour steps"""
-
+    """Get all the tour steps."""
     ms = util.relationshipgetters.get_ms()
 
     ms = ms[matrix["matrix"]]
@@ -122,8 +120,7 @@ def get_tour_steps(matrix):
         software_tour = get_group_or_software_with_subtechniques("software")
 
     def choose_software_or_group_tour():
-        """Choose between software or group tour"""
-
+        """Choose between software or group tour."""
         # Return if one or neither of the tours does not exist
         if not group_tour and not software_tour:
             return []
@@ -188,10 +185,10 @@ def get_tour_steps(matrix):
 
 
 def get_technique_with_subtechniques(techs_no_subtechs):
-    """Find first technique with at least 4 sub-techniques and return technique
+    """Find first technique with at least 4 sub-techniques and return technique.
+
     Return technique with the most sub-techniques if not the case
     """
-
     subtech_count_min = 4
     counter = 0
     chosen_tech = {}
@@ -215,8 +212,7 @@ def get_technique_with_subtechniques(techs_no_subtechs):
 
 
 def get_subtech_n_of_technique(technique):
-    """Return ID number of first sub-technique of given technique"""
-
+    """Return ID number of first sub-technique of given technique."""
     subtechniques_of = util.relationshipgetters.get_subtechniques_of()
 
     for subtech in subtechniques_of[technique["id"]]:
@@ -228,8 +224,7 @@ def get_subtech_n_of_technique(technique):
 
 
 def get_group_or_software_with_subtechniques(object_type):
-    """Get group or software with subtechniques"""
-
+    """Get group or software with subtechniques."""
     if object_type == "groups":
         obj_list = util.relationshipgetters.get_group_list()
         techniques_used_by_type = util.relationshipgetters.get_techniques_used_by_groups()
@@ -264,8 +259,7 @@ def get_group_or_software_with_subtechniques(object_type):
 
 
 def find_best_group_or_software(obj_tour_list):
-    """Find group with step 2 and 3 with 2 or more subtechniques"""
-
+    """Find group with step 2 and 3 with 2 or more subtechniques."""
     # Ideal: find Step 2 and Step 3 with most subtechniques
     obj_w_best_step_2_3 = {}
     for obj_tour in obj_tour_list:
@@ -303,10 +297,7 @@ def find_best_group_or_software(obj_tour_list):
 
 
 def techniques_used(technique_list, technique):
-    """Add technique to technique list and make distinction between techniques
-    subtechniques
-    """
-
+    """Add technique to technique list and make distinction between techniques and subtechniques."""
     attack_id = util.buildhelpers.get_attack_id(technique["object"])
     has_subtechniques = False
 
@@ -344,8 +335,7 @@ def techniques_used(technique_list, technique):
 
 
 def get_groups_tour(technique_list):
-    """Get steps 1 through 3 if they are available"""
-
+    """Get steps 1 through 3 if they are available."""
     groups = {}
 
     for technique in technique_list:

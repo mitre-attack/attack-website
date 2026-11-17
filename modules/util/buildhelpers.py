@@ -780,7 +780,7 @@ def filter_deprecated_revoked(sdos):
     for sdo in sdos:
         deprecated = is_deprecated(sdo=sdo)
         revoked = is_revoked(sdo=sdo)
-        if not deprecated or revoked:
+        if not deprecated and not revoked:
             filtered_sdos.append(sdo)
 
     return filtered_sdos

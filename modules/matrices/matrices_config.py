@@ -43,8 +43,9 @@ sidebar_matrices_md = (
     "data: "
 )
 
-# The tree of matricies on /matrices/
-matrices = [
+# Presentation overrides: existing paths, descriptions, ordering, and aggregate groups.
+# Platforms absent from this tree are generated automatically from active STIX techniques.
+matrix_overrides = [
     {
         "name": "Enterprise",
         "type": "local",
@@ -209,6 +210,8 @@ matrices = [
         "type": "local",
         "path": "ics",
         "matrix": "ics-attack",
+        # The ICS data uses this placeholder for platform-independent impacts.
+        "excluded_platforms": ["None"],
         "platforms": ["Embedded", "Windows", "Linux", "Network Devices"],
         # Keep platform links while showing all ICS techniques in the domain matrix.
         "filter_platforms": [],
@@ -261,29 +264,3 @@ deprecated_matrices = [
         "path": "pre",
     }
 ]
-
-platform_to_path = {
-    "enterprise-attack": {
-        "PRE": "enterprise/pre",
-        "Windows": "enterprise/windows",
-        "macOS": "enterprise/macos",
-        "Linux": "enterprise/linux",
-        "Office Suite": "enterprise/cloud/officesuite",
-        "Identity Provider": "enterprise/cloud/identityprovider",
-        "SaaS": "enterprise/cloud/saas",
-        "IaaS": "enterprise/cloud/iaas",
-        "Network Devices": "enterprise/network-devices",
-        "Containers": "enterprise/containers",
-        "ESXi": "enterprise/esxi",
-    },
-    "mobile-attack": {
-        "Android": "mobile/android",
-        "iOS": "mobile/ios",
-    },
-    "ics-attack": {
-        "Embedded": "ics/embedded",
-        "Windows": "ics/windows",
-        "Linux": "ics/linux",
-        "Network Devices": "ics/network-devices",
-    },
-}

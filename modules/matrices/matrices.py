@@ -7,6 +7,18 @@ from modules import site_config, util
 from modules.util.buildhelpers import metadata_slug
 
 from . import matrices_config
+from .platforms import resolve_matrices, select_matrix_techniques
+
+
+def get_matrix_definitions():
+    """Resolve platform pages from the currently loaded domain bundles."""
+    stores = util.relationshipgetters.get_ms()
+    techniques = {
+        matrix["matrix"]: util.stixhelpers.get_techniques(src=stores[matrix["matrix"]], domain=matrix["matrix"])
+        for matrix in matrices_config.matrix_overrides
+        if matrix["type"] == "local"
+    }
+    return resolve_matrices(overrides=matrices_config.matrix_overrides, techniques_by_domain=techniques)
 
 
 def generate_matrices():
@@ -27,11 +39,12 @@ def generate_matrices():
 
     notes = util.relationshipgetters.get_objects_using_notes()
 
-    side_menu_data = util.buildhelpers.get_side_menu_matrices(matrices_config.matrices)
+    definitions = get_matrix_definitions()
+    side_menu_data = util.buildhelpers.get_side_menu_matrices(definitions)
     generate_sidebar_matrices(side_menu_data)
     matrix_generated = False
 
-    for matrix in matrices_config.matrices:
+    for matrix in definitions:
         if matrix["type"] == "external":
             # link to externally hosted matrix, don't create a page for it
             continue
@@ -45,7 +58,7 @@ def generate_matrices():
 
 
 def generate_platform_matrices(matrix, notes, side_menu_data=None):
-    """Given a matrix, generates the matrix markdown"""
+    """Given a matrix, generates the matrix markdown."""
     has_data = False
     data = {}
     data["menu"] = side_menu_data
@@ -60,10 +73,7 @@ def generate_platform_matrices(matrix, notes, side_menu_data=None):
         for matrix_id in matrix_ids:
             data["notes"].append(notes.get(matrix_id))
 
-    data["platforms"] = [
-        {"name": platform, "path": matrices_config.platform_to_path[matrix["matrix"]][platform]}
-        for platform in matrix["platforms"]
-    ]
+    data["platforms"] = matrix["platform_links"]
     data["navigator_link"] = site_config.navigator_link
 
     data["descr"] = matrix["descr"]
@@ -77,7 +87,7 @@ def generate_platform_matrices(matrix, notes, side_menu_data=None):
     subs = subs + json.dumps(data)
 
     with open(
-        os.path.join(matrices_config.matrix_markdown_path, data["domain"] + "-" + matrix["name"] + ".md"),
+        os.path.join(matrices_config.matrix_markdown_path, matrix["path"].replace("/", "-") + ".md"),
         "w",
         encoding="utf8",
     ) as md_file:
@@ -90,8 +100,7 @@ def generate_platform_matrices(matrix, notes, side_menu_data=None):
 
 
 def generate_deprecated_matrix(matrix, side_menu_data=None):
-    """Generate deprecated matrix md file"""
-
+    """Generate deprecated matrix md file."""
     data = {}
     data["menu"] = side_menu_data
     data["name"] = matrix["name"]
@@ -123,17 +132,18 @@ def generate_deprecated_matrix(matrix, side_menu_data=None):
 
 
 def get_matrix_ids(matrices):
-    """Get matrix ids from matrix list"""
+    """Get matrix ids from matrix list."""
     matrix_ids = []
 
     for matrix in matrices:
-        if not matrix["id"] in matrix_ids:
+        if matrix["id"] not in matrix_ids:
             matrix_ids.append(matrix["id"])
 
     return matrix_ids
 
 
 def get_sub_matrices(matrix):
+    """Get sub-matrices for the given matrix."""
     ms = util.relationshipgetters.get_ms()
 
     # memorystore for the current domain
@@ -141,9 +151,9 @@ def get_sub_matrices(matrix):
     # get relevant techniques
     techniques = util.stixhelpers.get_techniques(domain_ms, matrix["matrix"])
     filter_platforms = matrix.get("filter_platforms", matrix["platforms"])
-    platform_techniques = util.buildhelpers.filter_techniques_by_platform(techniques, filter_platforms)
-    platform_techniques = util.buildhelpers.filter_out_subtechniques(platform_techniques)
-    platform_techniques = util.buildhelpers.filter_deprecated_revoked(platform_techniques)
+    platform_techniques = select_matrix_techniques(
+        techniques, filter_platforms, util.relationshipgetters.get_subtechniques_of()
+    )
     # get relevant tactics
     all_tactics = util.stixhelpers.get_all_of_type(domain_ms, ["x-mitre-tactic"])
     tactic_by_id = {}
@@ -164,7 +174,7 @@ def get_sub_matrices(matrix):
 
     # helper functions
     def phase_names(technique):
-        """get kill chain phase names from the given technique"""
+        """Get kill chain phase names from the given technique."""
         if "kill_chain_phases" not in technique:
             logger.warning(f"Technique not assigned to any Tactics: {technique['id']} - {technique['name']}")
             return []
@@ -172,7 +182,7 @@ def get_sub_matrices(matrix):
         return [phase["phase_name"] for phase in phases]
 
     def transform_technique(technique, tactic_id):
-        """transform a technique object into the format required by the matrix macro"""
+        """Transform a technique object into the format required by the matrix macro."""
         attack_id = util.buildhelpers.get_attack_id(technique)
 
         obj = {}

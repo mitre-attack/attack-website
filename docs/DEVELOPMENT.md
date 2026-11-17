@@ -179,3 +179,32 @@ version preservation adjusts it for archived pages. Keep it ignored: its content
 apply to one dataset and deployment.
 See [settings generation](../modules/website_build/website_build.py),
 [tour generation](../modules/tour/tour.py), and [archive rewriting](../modules/versions/versions.py).
+
+## Platform matrix pages
+
+Platform pages are discovered from `x_mitre_platforms` on active techniques and
+subtechniques in each domain's STIX bundle. A new Enterprise platform such as
+`AI` automatically creates `/matrices/enterprise/ai/` and its matrix navigation
+links on the next build. Domain and homepage matrices include all active
+techniques, including those without platforms. A matching subtechnique retains
+its active parent as a container even when the parent does not list that platform.
+
+`matrix_overrides` in `modules/matrices/matrices_config.py` preserves existing
+URLs, descriptions, ordering, and groups such as Cloud. These are presentation
+overrides, not a required platform registry. Unknown platforms use a lowercase,
+hyphenated URL segment and a generic introduction; conflicting paths fail the
+build and require an explicit path override. Groups retain their configured
+membership. Platforms found only on revoked or deprecated techniques do not
+produce pages.
+Domain-specific `excluded_platforms` can omit placeholders from page discovery;
+ICS excludes the literal `None` value while retaining those impact techniques in
+the domain matrix.
+
+Use a normal `just build-website` build after changing bundles. Its cleanup step
+removes old generated pages, including platforms no longer present in active
+data. A selective module build that skips cleanup does not remove stale output.
+The platform regression tests run with:
+
+```sh
+.venv/bin/python -m unittest discover -s test -p 'test_matrix_platforms.py'
+```
